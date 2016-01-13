@@ -16,6 +16,7 @@ import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
+import com.ibm.wala.classLoader.BytecodeLanguage;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.Language;
@@ -41,11 +42,13 @@ import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
+import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.ShrikeIndirectionData.ShrikeLocalName;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -583,17 +586,22 @@ public class SSABuilder extends AbstractIntStackMachine {
           params[i] = workingState.pop();
         }
         Language lang = shrikeCFG.getMethod().getDeclaringClass().getClassLoader().getLanguage();
-        MethodReference m = MethodReference.findOrCreate(lang, loader, instruction.getClassType(), instruction.getMethodName(),
-            instruction.getMethodSignature());
+        MethodReference m = ((BytecodeLanguage)lang).getInvokeMethodReference(loader, instruction);
         IInvokeInstruction.IDispatch code = instruction.getInvocationCode();
         CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);
         int exc = reuseOrCreateException();
+        
+        BootstrapMethod bootstrap = null;
+        if (instruction instanceof InvokeDynamicInstruction) {
+          bootstrap = ((InvokeDynamicInstruction)instruction).getBootstrap();
+        }
+        
         if (instruction.getPushedWordSize() > 0) {
           int result = reuseOrCreateDef();
           workingState.push(result);
-          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site));
+          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site, bootstrap));
         } else {
-          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site));
+          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site, bootstrap));
         }
         doIndirectWrites(bytecodeIndirections.indirectlyWrittenLocals(getCurrentInstructionIndex()), -1);
       }

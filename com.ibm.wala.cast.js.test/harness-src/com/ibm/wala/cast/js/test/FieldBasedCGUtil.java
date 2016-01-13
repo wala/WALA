@@ -23,6 +23,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
+import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -42,6 +43,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * Utility class for building call graphs.
@@ -58,15 +60,15 @@ public class FieldBasedCGUtil {
 		this.translatorFactory = translatorFactory;
 	}
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
-    return buildCG(url, builderType, new NullProgressMonitor(), supportFullPointerAnalysis);
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException, CancelException  {
+    return buildCG(url, builderType, new NullProgressMonitor(), supportFullPointerAnalysis, fExtractor);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException, CancelException  {
     if (url.getFile().endsWith(".js")) {
       return buildScriptCG(url, builderType, monitor, supportFullPointerAnalysis);
     } else {
-      return buildPageCG(url, builderType, monitor, supportFullPointerAnalysis);      
+      return buildPageCG(url, builderType, monitor, supportFullPointerAnalysis, fExtractor);      
     }
   }
   
@@ -85,9 +87,9 @@ public class FieldBasedCGUtil {
 	    return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	  }
 
-	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildPageCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
+	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildPageCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException, CancelException  {
 	  JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory);
-	  SourceModule[] scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders);
+	  SourceModule[] scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders, fExtractor);
 	  return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	}
 

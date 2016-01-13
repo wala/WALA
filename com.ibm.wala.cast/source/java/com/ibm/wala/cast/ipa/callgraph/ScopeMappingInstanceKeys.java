@@ -75,7 +75,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      */
     private final CGNode creator;
 
-    private ScopeMappingInstanceKey(CGNode creator, InstanceKey base) {
+    public ScopeMappingInstanceKey(CGNode creator, InstanceKey base) {
       this.creator = creator;
       this.base = base;
     }

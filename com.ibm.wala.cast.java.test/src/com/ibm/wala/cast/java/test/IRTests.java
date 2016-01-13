@@ -224,7 +224,7 @@ public abstract class IRTests {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
       for (CGNode cgNode : cg.getNodes(mref)) {
-        Assert.assertTrue("failed for " + this.variableName + " in " + cgNode, this.check(cgNode.getMethod(), cgNode.getIR()));
+        Assert.assertTrue("failed for " + this.variableName + " in " + cgNode + "\n" + cgNode.getIR(), this.check(cgNode.getMethod(), cgNode.getIR()));
       }
     }
 
@@ -349,11 +349,10 @@ public abstract class IRTests {
   protected abstract AbstractAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
   public Pair<CallGraph, PointerAnalysis<InstanceKey>> runTest(Collection<String> sources, List<String> libs,
-        String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable) {
+        String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable) throws IllegalArgumentException, CancelException, IOException {
       AbstractAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
 
       CallGraph callGraph;
-      try {
         callGraph = engine.buildDefaultCallGraph();
         //System.err.println(callGraph.toString());
 
@@ -368,19 +367,7 @@ public abstract class IRTests {
         }
 
         return Pair.make(callGraph, engine.getPointerAnalysis());
-      } catch (IllegalArgumentException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (CancelException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-      return null;
-}
+  }
 
   protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) throws IOException {
     Set<String> sourcePaths = HashSetFactory.make();

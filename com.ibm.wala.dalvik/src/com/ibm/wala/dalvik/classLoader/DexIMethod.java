@@ -705,7 +705,7 @@ public class DexIMethod implements IBytecodeMethod {
 	protected void parseBytecode() {
 		org.jf.dexlib.Code.Instruction[] instrucs = eMethod.codeItem.getInstructions();
 
-		//      for (org.jf.dexlib.Code.Instruction inst: instrucs)
+		//      for (org.jfmethod.getInstructionIndex(.dexlib.Code.Instruction inst: instrucs)
 		//      {
 		//          switch (inst.getFormat())
 		//          {
@@ -901,6 +901,12 @@ public class DexIMethod implements IBytecodeMethod {
 					throw new RuntimeException("UnresolvedOdexInstruction"
 							+ inst.opcode.toString() + inst.getFormat());
 				default:
+					instructions.add(new Instruction(currentCodeAddress, Opcode.NOP, this) {
+						@Override
+						public void visit(Visitor visitor) {
+							// no op
+						} 
+					});
 					break;
 				}
 				break;
@@ -2257,8 +2263,6 @@ public class DexIMethod implements IBytecodeMethod {
 			}
 			currentCodeAddress += inst.getSize(currentCodeAddress);
 		}
-
-
 
 		//// comment out start
 		////        Instruction[] iinstructions = new Instruction[instrucs.length];

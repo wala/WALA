@@ -37,8 +37,9 @@ public class CodeScraper implements ClassFileTransformer {
           sourceFile = reader.getCP().getCPUtf8(index);
         }
       }
-      if (className == null || sourceFile == null || !sourceFile.endsWith("java")) try {
+      if (className == null || sourceFile == null || !sourceFile.endsWith("java") || true) try {
         String log = prefix + File.separator + reader.getName() + ".class";
+        (new File(log)).getParentFile().mkdirs();
         FileOutputStream f = new FileOutputStream(log);
         f.write(classfileBuffer);
         f.close();
@@ -54,7 +55,6 @@ public class CodeScraper implements ClassFileTransformer {
   }
 
   public static void premain(String agentArgs, Instrumentation inst) {
-    System.err.println("adding CodeScraper");
     inst.addTransformer(new CodeScraper());
   }
 }

@@ -41,6 +41,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -238,6 +239,15 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     } else {
       return null;
     }
+  }
+
+  public static SourceModule getPrologueFile(final String name) {
+    return new SourceURLModule(JSCallGraphUtil.class.getClassLoader().getResource(name)) {
+      @Override
+      public String getName() {
+        return name;
+      }      
+    };
   }
 
 }

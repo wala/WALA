@@ -265,7 +265,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       int[] params = new int[1];
       params[0] = alloc;
       int exc = getExceptionsForType(t);
-      SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site);
+      SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
       calls.add(s);
       allInstructions.add(s);
     }

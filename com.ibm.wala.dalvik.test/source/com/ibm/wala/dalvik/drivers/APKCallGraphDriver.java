@@ -2,13 +2,11 @@ package com.ibm.wala.dalvik.drivers;
 
 import java.io.File;
 import java.net.URI;
-import java.util.Collections;
 import java.util.Set;
 
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
+import com.ibm.wala.dalvik.test.util.Util;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -35,7 +33,7 @@ public class APKCallGraphDriver {
       return libs.toArray(new URI[ libs.size() ]);
     }
     
-    return DalvikTestBase.androidLibs();
+    return Util.androidLibs();
   }
   
   public static void main(String[] args) {
@@ -104,6 +102,7 @@ public class APKCallGraphDriver {
 	        for(CGNode n : CG) {
 	          code.add(n.getMethod());
 	        }
+	        /*
 	        for(IClass cls : CG.getClassHierarchy()) {
 	          for(IMethod m : cls.getDeclaredMethods()) {
 	            if (m.isAbstract() && !Collections.disjoint(CG.getClassHierarchy().getPossibleTargets(m.getReference()), code)) {
@@ -111,7 +110,7 @@ public class APKCallGraphDriver {
 	            }
 	          }
 	        }
-          
+          */
 	        System.err.println("reachable methods for " + apk);
           for(IMethod m : code) {
             System.err.println("" + m.getDeclaringClass().getName() + " " + m.getName() + m.getDescriptor());

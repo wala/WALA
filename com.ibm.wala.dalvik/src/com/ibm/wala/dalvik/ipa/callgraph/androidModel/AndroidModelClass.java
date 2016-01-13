@@ -1,4 +1,13 @@
 /*
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * This file is a derivative of code released under the terms listed below.  
+ *
+ */
+/*
  *  Copyright (c) 2013,
  *      Tobias Blaschke <code@tobiasblaschke.de>
  *  All rights reserved.
@@ -242,7 +251,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     public void putField(Atom name, TypeReference type) {
         final FieldReference fdRef = FieldReference.findOrCreate(this.getReference(), name, type);
         final int accessFlags = ClassConstants.ACC_STATIC | ClassConstants.ACC_PUBLIC;
-        final IField field = new FieldImpl(this, fdRef, accessFlags, null); 
+        final IField field = new FieldImpl(this, fdRef, accessFlags, null, null); 
 
         this.fields.put(name, field);
     }

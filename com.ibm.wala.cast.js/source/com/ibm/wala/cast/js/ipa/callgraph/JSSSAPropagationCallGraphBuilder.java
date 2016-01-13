@@ -67,6 +67,7 @@ import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractBinaryInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -731,7 +732,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           return node;
         }
 
-        private SSABinaryOpInstruction getInstruction() {
+        private SSAAbstractBinaryInstruction getInstruction() {
           return instruction;
         }
 

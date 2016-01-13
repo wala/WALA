@@ -802,12 +802,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
           newBlock(false);
 
-          addEdge(currentBlock, getCurrentBlock());
           if (target != null) {
+            addEdge(currentBlock, getCurrentBlock());
             addEdge(endBlock, target);
 
             // `null' target is idiom for branch/throw to exit
           } else {
+            if (exception) addEdge(currentBlock, getCurrentBlock());
             addDelayedEdge(endBlock, exitMarker, exception);
           }
 
@@ -1057,7 +1058,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       deadBlocks.remove(dst);
     }
 
-    boolean isDeadBlock(PreBasicBlock block) {
+    public boolean isDeadBlock(PreBasicBlock block) {
       return deadBlocks.contains(block);
     }
 
@@ -1105,6 +1106,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       currentBlock.instructions().add(n);
 
       currentBlock.setLastIndex(inst);
+    }
+    
+    @Override
+    public String toString() { 
+      StringBuffer sb = new StringBuffer(super.toString());
+      for(PreBasicBlock b : blocks) {
+        if (b.firstIndex > 0) {
+          sb.append("\n" + b);
+          for(int i = 0; i < b.instructions.size(); i++) {
+            sb.append("\n" + b.instructions.get(i));
+          }
+        }
+      }
+      return sb.toString();
     }
   }
 
@@ -1504,7 +1519,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Scope getParent();
   }
 
-  private static abstract class AbstractSymbol implements Symbol {
+  public static abstract class AbstractSymbol implements Symbol {
     private Object constantValue;
 
     private boolean isFinalValue;
@@ -1513,7 +1528,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private Object defaultValue;
 
-    AbstractSymbol(Scope definingScope, boolean isFinalValue, Object defaultValue) {
+    protected AbstractSymbol(Scope definingScope, boolean isFinalValue, Object defaultValue) {
       this.definingScope = definingScope;
       this.isFinalValue = isFinalValue;
       this.defaultValue = defaultValue;
@@ -1545,7 +1560,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   };
 
-  private abstract class AbstractScope implements Scope {
+  public abstract class AbstractScope implements Scope {
     private final Scope parent;
 
     private final Map<String, Symbol> values = new LinkedHashMap<String, Symbol>();
@@ -1636,7 +1651,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
     }
 
-    AbstractScope(Scope parent) {
+    protected AbstractScope(Scope parent) {
       this.parent = parent;
     }
 
@@ -1700,7 +1715,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public abstract CAstEntity getEntity();
   };
 
-  private AbstractScope makeScriptScope(final CAstEntity s, Scope parent) {
+  protected AbstractScope makeScriptScope(final CAstEntity s, Scope parent) {
     return new AbstractScope(parent) {
       SymbolTable scriptGlobalSymtab = new SymbolTable(s.getArgumentCount());
 
@@ -2508,7 +2523,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   }
 
-  private class CodeEntityContext extends EntityContext {
+  public class CodeEntityContext extends EntityContext {
     private final Scope topEntityScope;
 
     private final Set<Scope> allEntityScopes;
@@ -2528,7 +2543,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
      */
     private final Map<CAstNode, Integer> results = new LinkedHashMap<CAstNode, Integer>();
 
-    CodeEntityContext(WalkContext parent, Scope entityScope, CAstEntity s) {
+    public CodeEntityContext(WalkContext parent, Scope entityScope, CAstEntity s) {
       super(parent, s);
 
       this.topEntityScope = entityScope;
@@ -3009,7 +3024,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     context.exposeNameSet(entity, isWrite).add(newVal);
   }
 
-  private void setDefaultValue(SymbolTable symtab, int vn, Object value) {
+  public void setDefaultValue(SymbolTable symtab, int vn, Object value) {
     if (value == CAstSymbol.NULL_DEFAULT_VALUE) {
       symtab.setDefaultValue(vn, null);
     } else {
@@ -3387,7 +3402,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     return new UnwindContext(n, context, visitor);
   }
 
-  private Map<CAstEntity, Set<String>> entity2ExposedNames;
+  protected Map<CAstEntity, Set<String>> entity2ExposedNames;
   protected int processFunctionExpr(CAstNode n, WalkContext context) {
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     declareFunction(fn, context);
@@ -4502,7 +4517,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveEachElementGet(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     int result = c.currentScope().allocateTempValue();
     c.setValue(n, result);
-    c.cfg().addInstruction(new EachElementGetInstruction(c.cfg().currentInstruction, result, c.getValue(n.getChild(0))));
+    c.cfg().addInstruction(new EachElementGetInstruction(c.cfg().currentInstruction, result, c.getValue(n.getChild(0)), c.getValue(n.getChild(1))));
   }
 
   @Override
@@ -4514,7 +4529,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveEachElementHasNext(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     int result = c.currentScope().allocateTempValue();
     c.setValue(n, result);
-    c.cfg().addInstruction(new EachElementHasNextInstruction(c.cfg().currentInstruction, result, c.getValue(n.getChild(0))));
+    c.cfg().addInstruction(new EachElementHasNextInstruction(c.cfg().currentInstruction, result, c.getValue(n.getChild(0)), c.getValue(n.getChild(1))));
   }
 
   @Override

@@ -590,12 +590,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef) {
+    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef, int propRef) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef) {
+    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef, int propRef) {
       throw new UnsupportedOperationException();
     }
 

@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>WALA</artifactId>
 		<groupId>com.ibm.wala</groupId>
-		<version>1.3.8-SNAPSHOT</version>
+		<version>1.3.9-SNAPSHOT</version>
 	</parent>
 	<artifactId>com.ibm.wala.cast.js.rhino</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -24,7 +24,7 @@
                                           <artifactItem>
                                             <groupId>org.mozilla</groupId>
                                             <artifactId>rhino</artifactId>
-                                            <version>1.7R3</version>
+                                            <version>1.7.6</version>
                                             <type>jar</type>
                                             <overWrite>false</overWrite>
                                           </artifactItem>

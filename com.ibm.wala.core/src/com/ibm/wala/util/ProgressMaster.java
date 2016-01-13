@@ -10,23 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.util;
 
-import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryUsage;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryNotificationInfo;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryType;
 
+import javax.management.InstanceNotFoundException;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
-import javax.management.NotificationEmitter;
-import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.openmbean.CompositeData;
 
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.sun.management.GarbageCollectionNotificationInfo;
 
 
 
@@ -158,40 +154,37 @@ public class ProgressMaster implements IProgressMonitor {
     @Override
     public void run() {
       try {
-        Map<NotificationEmitter,NotificationListener> gcListeners = Collections.emptyMap();;
-
+        MemoryMXBean gcbean = null;
+        NotificationListener listener = null;
+        
         if (checkMemory) {
-          gcListeners = HashMapFactory.make();
+          for(MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
+            if (pool.getType().equals(MemoryType.HEAP)) {
+              pool.setCollectionUsageThreshold((long) (pool.getUsage().getMax() * MAX_USED_MEM_BEFORE_BACKING_OUT));
+            }
+          }
+          
           final Thread nannyThread = this;
-          List<GarbageCollectorMXBean> gcbeans = ManagementFactory.getGarbageCollectorMXBeans();
-          for (GarbageCollectorMXBean gcbean : gcbeans) {
-            final NotificationEmitter emitter = (NotificationEmitter) gcbean;
-            NotificationFilter filter = new NotificationFilter() {
-              @Override
-              public boolean isNotificationEnabled(Notification notification) {
-                return notification.getType().equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION);
+          gcbean = ManagementFactory.getMemoryMXBean();
+
+          listener = new NotificationListener() {
+            @Override
+            public void handleNotification(Notification notification, Object arg1) {
+              MemoryNotificationInfo info = MemoryNotificationInfo.from((CompositeData) notification.getUserData());
+              long used = info.getUsage().getUsed();
+              long max = Runtime.getRuntime().maxMemory();
+
+              if (((double)used/(double)max) > MAX_USED_MEM_BEFORE_BACKING_OUT) {
+                System.err.println("used " + used + " of " + max);
+                tooMuchMemory = true;
+                nannyThread.interrupt();
               }
-            };
-            NotificationListener listener = new NotificationListener() {
-              @Override
-              public void handleNotification(Notification notification, Object arg1) {
-                GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
-
-                long used = 0;
-                for(MemoryUsage usage : info.getGcInfo().getMemoryUsageAfterGc().values()) {
-                  used += usage.getUsed();
-                }
-
-                long max = Runtime.getRuntime().maxMemory();
-
-                if (((double)used/(double)max) > MAX_USED_MEM_BEFORE_BACKING_OUT) {
-                  tooMuchMemory = true;
-                  nannyThread.interrupt();
-                }
-              }
-            };
-            emitter.addNotificationListener(listener, filter, null);
-            gcListeners.put(emitter,listener);
+            }
+          };
+          try {
+            ManagementFactory.getPlatformMBeanServer().addNotificationListener(gcbean.getObjectName(), listener, null, null);
+          } catch (InstanceNotFoundException e) {
+            throw new Error("cannot find existing bean");
           }
         }
 
@@ -199,11 +192,9 @@ public class ProgressMaster implements IProgressMonitor {
 
         if (checkMemory) {
           try {
-            for(Map.Entry<NotificationEmitter,NotificationListener> gc : gcListeners.entrySet()) {
-              gc.getKey().removeNotificationListener(gc.getValue());
-            }
-          } catch (ListenerNotFoundException e) {
-            assert false : "cannot remove listener that was added";
+          ManagementFactory.getPlatformMBeanServer().removeNotificationListener(gcbean.getObjectName(), listener);
+          } catch (InstanceNotFoundException | ListenerNotFoundException e) {
+            throw new Error("cannot find existing bean");
           }
         }
         
@@ -217,7 +208,7 @@ public class ProgressMaster implements IProgressMonitor {
       }
     }
     
-    private static final double MAX_USED_MEM_BEFORE_BACKING_OUT = .8;
+    private static final double MAX_USED_MEM_BEFORE_BACKING_OUT = .7;
     
   }
 

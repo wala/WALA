@@ -856,7 +856,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
                 if(m.getReturnType().equals(TypeReference.Void))
                 {
-                    SSAInstruction inst = insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site);
+                    SSAInstruction inst = insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site, null);
                     //System.out.println("Emitting(1) InvokeInstruction: "+inst);
                     emitInstruction(inst);
                 } else {
@@ -868,7 +868,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     int dest = dexCFG.getDexMethod().getReturnReg();
 
                     setLocal(dest, result);
-                    SSAInstruction inst = insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site);
+                    SSAInstruction inst = insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site, null);
                     //System.out.println("Emitting(2) InvokeInstruction: "+inst);
                     emitInstruction(inst);
                 }

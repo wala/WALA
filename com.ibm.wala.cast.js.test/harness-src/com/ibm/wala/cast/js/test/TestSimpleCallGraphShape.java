@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -707,7 +708,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
     @Test
     public void testTryFinallyCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {      
-      JSCallGraphBuilderUtil.makeScriptCG("tests", "try-finally-crash.js");
+      JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "try-finally-crash.js");
+      CallGraph CG = B.makeCallGraph(B.getOptions());
+      boolean save = CAstCallGraphUtil.AVOID_DUMP;
+      //CAstCallGraphUtil.AVOID_DUMP = false;
+      CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+      CAstCallGraphUtil.AVOID_DUMP = save;
     }
 
 

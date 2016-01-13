@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -98,7 +97,6 @@ import org.eclipse.jdt.core.dom.LabeledStatement;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.NullLiteral;
 import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
@@ -108,6 +106,7 @@ import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StringLiteral;
@@ -144,6 +143,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -153,7 +153,6 @@ import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -182,7 +181,7 @@ import com.ibm.wala.util.debug.Assertions;
 // * enums (probably in simplename or something. but using resolveConstantExpressionValue() possible)
 
 @SuppressWarnings("unchecked")
-public class JDTJava2CAstTranslator {
+public abstract class JDTJava2CAstTranslator<T extends Position> {
   protected boolean dump = false;
   
   protected final CAst fFactory = new CAstImpl();
@@ -214,21 +213,19 @@ public class JDTJava2CAstTranslator {
 
   protected final DoLoopTranslator doLoopTranslator;
   
-  private final String fullPath;
+  protected final String fullPath;
   
-  private final IFile sourceFile;
-
-  private final CompilationUnit cu;
+  protected final CompilationUnit cu;
 
   //
   // COMPILATION UNITS & TYPES
   //
 
-  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, IFile sourceFile, String fullPath, boolean replicateForDoLoops) {
-    this(sourceLoader, astRoot, sourceFile, fullPath, replicateForDoLoops, false);
+  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, String fullPath, boolean replicateForDoLoops) {
+    this(sourceLoader, astRoot, fullPath, replicateForDoLoops, false);
   }
 
-  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, IFile sourceFile, String fullPath, boolean replicateForDoLoops, boolean dump) {
+  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, String fullPath, boolean replicateForDoLoops, boolean dump) {
     fDivByZeroExcType = FakeExceptionTypeBinding.arithmetic;
     fNullPointerExcType = FakeExceptionTypeBinding.nullPointer;
     fClassCastExcType = FakeExceptionTypeBinding.classCast;
@@ -236,12 +233,11 @@ public class JDTJava2CAstTranslator {
     ExceptionInInitializerError = FakeExceptionTypeBinding.initException;
     OutOfMemoryError = FakeExceptionTypeBinding.outOfMemory;
 
-    this.sourceFile = sourceFile;
     this.fSourceLoader = sourceLoader;
     this.cu = astRoot;
 
     this.fullPath = fullPath;
-    ast = cu.getAST();
+    this.ast = astRoot.getAST();
 
     this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, fFactory);
 
@@ -289,12 +285,12 @@ public class JDTJava2CAstTranslator {
 
     private final ITypeBinding fJdtType; // TAGALONG
 
-    private final JdtPosition fSourcePosition;
+    private final T fSourcePosition;
 
     private final Set<CAstAnnotation> annotations;
     
     public ClassEntity(ITypeBinding jdtType, String name, Collection<CAstQualifier> quals, Collection<CAstEntity> entities,
-        JdtPosition pos, Set<CAstAnnotation> annotations) {
+        T pos, Set<CAstAnnotation> annotations) {
       fName = name;
       fQuals = quals;
       fEntities = entities;
@@ -1099,8 +1095,9 @@ public class JDTJava2CAstTranslator {
           if (fExceptionTypes == null) {
             fExceptionTypes = new LinkedHashSet<CAstType>();
             if (fDecl != null)
-              for (Object exception : fDecl.thrownExceptions())
-                fExceptionTypes.add(fTypeDict.getCAstTypeFor(((Name) exception).resolveTypeBinding()));
+              for (Object exception : fDecl.thrownExceptionTypes())
+                
+                fExceptionTypes.add(fTypeDict.getCAstTypeFor(((SimpleType) exception).resolveBinding()));
           }
           return fExceptionTypes;
         }
@@ -1161,11 +1158,11 @@ public class JDTJava2CAstTranslator {
 
     private final Collection<CAstQualifier> quals;
 
-    private final JdtPosition position;
+    private final T position;
 
     private final Set<CAstAnnotation> annotations;
 
-    private FieldEntity(String name, ITypeBinding type, Collection<CAstQualifier> quals, JdtPosition position, Set<CAstAnnotation> annotations) {
+    private FieldEntity(String name, ITypeBinding type, Collection<CAstQualifier> quals, T position, Set<CAstAnnotation> annotations) {
       super();
       this.type = type;
       this.quals = quals;
@@ -2060,9 +2057,9 @@ public class JDTJava2CAstTranslator {
 
     int start = leftStartPosition;
     int end = right.getStartPosition() + right.getLength();
-    JdtPosition pos = makePosition(start, end);
-    JdtPosition rightPos = makePosition(leftStartPosition, leftStartPosition + leftLength);
-    JdtPosition leftPos = makePosition(right.getStartPosition(), right.getStartPosition() + right.getLength());
+    T pos = makePosition(start, end);
+    T rightPos = makePosition(leftStartPosition, leftStartPosition + leftLength);
+    T leftPos = makePosition(right.getStartPosition(), right.getStartPosition() + right.getLength());
 
     if (op == InfixExpression.Operator.CONDITIONAL_AND) {
       return makeNode(context, fFactory, pos, CAstNode.IF_EXPR, leftNode, rightNode, fFactory.makeConstant(false));
@@ -2414,7 +2411,7 @@ public class JDTJava2CAstTranslator {
           // bundle up statements before this case
           CAstNode stmtNodes[] = currentBlock.toArray(new CAstNode[currentBlock.size()]);
           // make position from start of first statement to end of last statement
-          JdtPosition positionOfAll = makePosition(childContext.pos().getPosition(stmtNodes[0]).getFirstOffset(), childContext
+          T positionOfAll = makePosition(childContext.pos().getPosition(stmtNodes[0]).getFirstOffset(), childContext
               .pos().getPosition(stmtNodes[stmtNodes.length - 1]).getLastOffset());
           caseNodes.add(makeNode(childContext, fFactory, positionOfAll, CAstNode.BLOCK_STMT, stmtNodes));
           currentBlock.clear();
@@ -2428,7 +2425,7 @@ public class JDTJava2CAstTranslator {
       // bundle up statements before this case
       CAstNode stmtNodes[] = currentBlock.toArray(new CAstNode[currentBlock.size()]);
       // make position from start of first statement to end of last statement
-      JdtPosition positionOfAll = makePosition(childContext.pos().getPosition(stmtNodes[0]).getFirstOffset(), childContext.pos()
+      T positionOfAll = makePosition(childContext.pos().getPosition(stmtNodes[0]).getFirstOffset(), childContext.pos()
           .getPosition(stmtNodes[stmtNodes.length - 1]).getLastOffset());
       caseNodes.add(makeNode(childContext, fFactory, positionOfAll, CAstNode.BLOCK_STMT, stmtNodes));
     }
@@ -3292,7 +3289,7 @@ public class JDTJava2CAstTranslator {
     return cn;
   }
 
-  protected CAstNode makeNode(WalkContext wc, CAst Ast, JdtPosition pos, int kind, CAstNode c[]) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, T pos, int kind, CAstNode c[]) {
     CAstNode cn = Ast.makeNode(kind, c);
     wc.pos().setPosition(cn, pos);
     return cn;
@@ -3322,7 +3319,7 @@ public class JDTJava2CAstTranslator {
     return cn;
   }
 
-  protected CAstNode makeNode(WalkContext wc, CAst Ast, JdtPosition pos, int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, T pos, int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
     CAstNode cn = Ast.makeNode(kind, c1, c2, c3);
     wc.pos().setPosition(cn, pos);
     return cn;
@@ -3333,16 +3330,12 @@ public class JDTJava2CAstTranslator {
       wc.pos().setPosition(cn, makePosition(jdtNode));
   }
 
-  public JdtPosition makePosition(ASTNode n) {
+  public T makePosition(ASTNode n) {
     return makePosition(n.getStartPosition(), n.getStartPosition() + n.getLength());
   }
 
-  public JdtPosition makePosition(int start, int end) {
-    return new JdtPosition(start, end, cu.getLineNumber(start), cu.getLineNumber(end), sourceFile, fullPath);
-  }
-
-  
-
+  public abstract T makePosition(int start, int end);
+ 
   // /////////////////////////////////////////////////////////////////
   // // ENUM TRANSFORMATION //////////////////////////////////////////
   // /////////////////////////////////////////////////////////////////

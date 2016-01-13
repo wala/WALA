@@ -20,6 +20,7 @@ import java.util.Set;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
@@ -95,7 +96,7 @@ public class PrintIRs {
     // add model for DOM APIs
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     URL url = (new File(filename)).toURI().toURL();
-    Pair<Set<MappedSourceModule>, File> p = WebUtil.extractScriptFromHTML(url, true);
+    Pair<Set<MappedSourceModule>, File> p = WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory);
     SourceModule[] scripts = p.fst.toArray(new SourceModule[] {});
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(JSCallGraphUtil.getTranslatorFactory());
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));

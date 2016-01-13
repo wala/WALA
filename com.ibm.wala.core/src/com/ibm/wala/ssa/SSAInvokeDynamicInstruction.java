@@ -32,5 +32,8 @@ public class SSAInvokeDynamicInstruction extends SSAInvokeInstruction {
         defs == null ? exception : defs[result == -1 ? 0 : 1], site, bootstrap);
   }
 
-  
+  public BootstrapMethod getBootstrap() {
+    return bootstrap;
+  }
+
 }

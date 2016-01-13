@@ -10,35 +10,28 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.ir;
 
+import java.io.IOException;
 import java.util.Iterator;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.UTF8Convert;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Test that the SSA-numbering of variables in the IR is deterministic.
@@ -48,49 +41,27 @@ import com.ibm.wala.util.warnings.Warnings;
  */
 public class DeterministicIRTest extends WalaTestCase {
 
-  private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
+  private IClassHierarchy cha;
 
-  private static AnalysisScope scope;
+  private final AnalysisOptions options = new AnalysisOptions();
+  
+  protected DeterministicIRTest(IClassHierarchy cha) {
+    this.cha = cha;
+  }
 
-  private static ClassHierarchy cha;
-
-  private static AnalysisOptions options;
-
-  private static AnalysisCache cache;
-
+  public DeterministicIRTest() throws ClassHierarchyException, IOException {
+    this(WalaTestCase.makeCHA());
+  }
+  
   public static void main(String[] args) {
     justThisTest(DeterministicIRTest.class);
   }
 
-  @BeforeClass
-  public static void beforeClass() throws Exception {
-
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
-    options = new AnalysisOptions(scope, null);
-    cache = new AnalysisCache();
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
-
-    try {
-      cha = ClassHierarchy.make(scope, factory);
-    } catch (ClassHierarchyException e) {
-      throw new Exception();
-    }
-  }
-
-  @AfterClass
-  public static void afterClass() throws Exception {
-    Warnings.clear();
-    scope = null;
-    cha = null;
-    options = null;
-    cache = null;
-  }
-
-  /**
+   /**
    * @param method
    */
   private IR doMethod(MethodReference method) {
+    AnalysisCache cache = makeAnalysisCache();
     Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     Assert.assertNotNull("imethod not found", imethod);
@@ -148,26 +119,26 @@ public class DeterministicIRTest extends WalaTestCase {
 
   @Test public void testIR1() {
     // 'remove' is a nice short method
-    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/util/HashMap", Atom.findOrCreateUnicodeAtom("remove"),
+    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "Ljava/util/HashMap", Atom.findOrCreateUnicodeAtom("remove"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Ljava/lang/Object;"))));
   }
 
   @Test public void testIR2() {
     // 'equals' is a nice medium-sized method
-    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/lang/String", Atom.findOrCreateUnicodeAtom("equals"),
+    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "Ljava/lang/String", Atom.findOrCreateUnicodeAtom("equals"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Z"))));
   }
 
   @Test public void testIR3() {
     // 'resolveProxyClass' is a nice long method (at least in Sun libs)
-    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/io/ObjectInputStream", Atom
+    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "Ljava/io/ObjectInputStream", Atom
         .findOrCreateUnicodeAtom("resolveProxyClass"), new ImmutableByteArray(UTF8Convert
         .toUTF8("([Ljava/lang/String;)Ljava/lang/Class;"))));
   }
 
   @Test public void testIR4() {
     // test some corner cases with try-finally
-    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/TryFinally", Atom.findOrCreateUnicodeAtom("test1"),
+    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "LcornerCases/TryFinally", Atom.findOrCreateUnicodeAtom("test1"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/io/InputStream;Ljava/io/InputStream;)V"))));
   }
 }

@@ -32,6 +32,7 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * extracts JavaScript source code from HTML, with no model of the actual
@@ -41,6 +42,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("^[a-zA-Z$_][a-zA-Z\\d$_]*$");
   private static final Pattern LEGAL_JS_KEYWORD_REGEXP = Pattern.compile("^((break)|(case)|(catch)|(continue)|(debugger)|(default)|(delete)|(do)|(else)|(finally)|(for)|(function)|(if)|(in)|(instanceof)|(new)|(return)|(switch)|(this)|(throw)|(try)|(typeof)|(var)|(void)|(while)|(with))$");
 
+  public static Function<Void,JSSourceExtractor> factory = new Function<Void,JSSourceExtractor>() {
+    @Override
+    public JSSourceExtractor apply(Void object) {
+      return new DomLessSourceExtractor();
+    }
+  };
 
   protected interface IGeneratorCallback extends IHtmlCallback {
     void writeToFinalRegion(SourceRegion finalRegion);
@@ -72,9 +79,13 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       addDefaultHandlerInvocations();
     }
  
-    private void addDefaultHandlerInvocations() {
+    protected void writeEntrypoint(String ep) {
+      entrypointRegion.println(ep);
+    }
+    
+    protected void addDefaultHandlerInvocations() {
       // always invoke window.onload
-      entrypointRegion.println("window.onload();");
+      writeEntrypoint("window.onload();");
     }
 
     protected Position makePos(int lineNumber, ITag governingTag) {
@@ -180,8 +191,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         // Defines the function  
         domRegion.println(signatureLine + "\n" + extructJS(attValue) + "\n}", pos, url, true);
         // Run it
-        entrypointRegion.println("\t" + fName + "(null);", pos, url, true);
+        writeEntrypoint("\t" + fName + "(null);", pos, url, true);
       }
+    }
+
+    protected void writeEntrypoint(String text, Position pos, URL url, boolean b) {
+      entrypointRegion.println(text, pos, url, b);
     }
 
     protected static Pair<String,Character> quotify(String value) { 
@@ -281,6 +296,10 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       return file;
     }
 
+    protected void writeEventLoopHeader(SourceRegion finalRegion) {
+      finalRegion.println("while (true){  // event loop model");      
+    }
+    
     @Override
     public void writeToFinalRegion(SourceRegion finalRegion) {
       // wrapping the embedded scripts with a fake method of the window. Required for making this == window.
@@ -292,9 +311,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
       finalRegion.println("  document.URL = new String(\"" + entrypointUrl + "\");");
 
-      finalRegion.println("while (true){ ");
+      writeEventLoopHeader(finalRegion);
       finalRegion.write(entrypointRegion);
-      finalRegion.println("} // while (true)");
+      finalRegion.println("} // event loop model");
         
       finalRegion.println("} // end of window.__MAIN__");
       finalRegion.println("window.__MAIN__();");

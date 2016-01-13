@@ -76,6 +76,7 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAAbstractBinaryInstruction;
 import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
@@ -283,13 +284,13 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef) {
-          return new EachElementGetInstruction(iindex, value, objectRef);
+        public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef, int prevProp) {
+          return new EachElementGetInstruction(iindex, value, objectRef, prevProp);
         }
 
         @Override
-        public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef) {
-          return new EachElementHasNextInstruction(iindex, value, objectRef);
+        public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef, int prop) {
+          return new EachElementHasNextInstruction(iindex, value, objectRef, prop);
         }
 
         @Override
@@ -373,7 +374,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSABinaryOpInstruction BinaryOpInstruction(int iindex, IOperator operator, boolean overflow, boolean unsigned, int result,
+        public SSAAbstractBinaryInstruction BinaryOpInstruction(int iindex, IOperator operator, boolean overflow, boolean unsigned, int result,
             int val1, int val2, boolean mayBeInteger) {
           return new SSABinaryOpInstruction(iindex, operator, result, val1, val2, mayBeInteger) {
             @Override
@@ -469,12 +470,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+        public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+        public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
           throw new UnsupportedOperationException();
         }
 
@@ -602,11 +603,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         @Override
         public SetPrototype SetPrototype(int iindex, int object, int prototype) {
           return new SetPrototype(iindex, object, prototype);
-        }
-
-        @Override
-        public SSAInstruction InvokeInstruction(int i, int[] js, int j, CallSiteReference site, BootstrapMethod bootstrap) {
-          throw new UnsupportedOperationException();
         }
 
       };

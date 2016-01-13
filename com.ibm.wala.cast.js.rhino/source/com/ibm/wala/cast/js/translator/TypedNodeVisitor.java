@@ -25,6 +25,7 @@ import org.mozilla.javascript.ast.ContinueStatement;
 import org.mozilla.javascript.ast.DoLoop;
 import org.mozilla.javascript.ast.ElementGet;
 import org.mozilla.javascript.ast.EmptyExpression;
+import org.mozilla.javascript.ast.EmptyStatement;
 import org.mozilla.javascript.ast.ErrorNode;
 import org.mozilla.javascript.ast.ExpressionStatement;
 import org.mozilla.javascript.ast.ForInLoop;
@@ -104,6 +105,8 @@ public abstract class TypedNodeVisitor<R,A> {
 			return visitElementGet((ElementGet) node, arg);
 		} else if (node instanceof EmptyExpression) {
 			return visitEmptyExpression((EmptyExpression) node, arg);
+    } else if (node instanceof EmptyStatement) {
+      return visitEmptyStatement((EmptyStatement) node, arg);
 		} else if (node instanceof ErrorNode) {
 			return visitErrorNode((ErrorNode) node, arg);
 		} else if (node instanceof ExpressionStatement) {
@@ -219,6 +222,8 @@ public abstract class TypedNodeVisitor<R,A> {
 	public abstract R visitElementGet(ElementGet node, A arg) ;
 
 	public abstract R visitEmptyExpression(EmptyExpression node, A arg) ;
+
+	public abstract R visitEmptyStatement(EmptyStatement node, A arg) ;
 
 	public abstract R visitErrorNode(ErrorNode node, A arg) ;
 

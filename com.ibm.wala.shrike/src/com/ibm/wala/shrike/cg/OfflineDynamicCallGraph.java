@@ -21,6 +21,7 @@ import java.util.Map;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
@@ -61,6 +62,7 @@ public class OfflineDynamicCallGraph {
 	private final static boolean verify = true;
 
 	private static boolean patchExits = true;
+	private static boolean patchCalls = false;
 	
 	private static Class<?> runtime = Runtime.class;
 	
@@ -80,7 +82,9 @@ public class OfflineDynamicCallGraph {
 	        filter = new FileOfClasses(new FileInputStream(args[i+1]));
 	      } else if ("--dont-patch-exits".equals(args[i])) {
 	        patchExits = false;
-	      } else if ("--rt-jar".equals(args[i])) {
+	      } else if ("--patch-calls".equals(args[i])) {
+          patchCalls = true;
+        } else if ("--rt-jar".equals(args[i])) {
 	        System.err.println("using " + args[i+1] + " as stdlib");
 	        OfflineInstrumenter libReader = new OfflineInstrumenter(true);
 	        libReader.addInputJar(new File(args[i+1]));
@@ -208,6 +212,45 @@ public class OfflineDynamicCallGraph {
 				  });
 				}
 
+				if (patchCalls) {
+				  me.visitInstructions(new MethodEditor.Visitor() {
+
+				    @Override
+				    public void visitInvoke(IInvokeInstruction inv) {
+				      final String calleeClass = inv.getClassType();
+				      final String calleeMethod = inv.getMethodName() + inv.getMethodSignature();
+				      addInstructionExceptionHandler(/*"java.lang.Throwable"*/null, new MethodEditor.Patch() {
+				        @Override
+				        public void emitTo(MethodEditor.Output w) {
+				          w.emit(ConstantInstruction.makeString(calleeClass));
+				          w.emit(ConstantInstruction.makeString(calleeMethod));
+				          w.emit(Util.makeInvoke(runtime, "pop", new Class[] {String.class, String.class}));
+				          w.emit(ThrowInstruction.make(true));
+				        }
+				      });
+				      insertBefore(new MethodEditor.Patch() {
+				        @Override
+				        public void emitTo(MethodEditor.Output w) {
+				          w.emit(ConstantInstruction.makeString(calleeClass));
+				          w.emit(ConstantInstruction.makeString(calleeMethod));
+				          // target unknown
+				          w.emit(Util.makeGet(runtime, "NULL_TAG"));
+				          // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+				          w.emit(Util.makeInvoke(runtime, "addToCallStack", new Class[] {String.class, String.class, Object.class}));
+				        }
+				      });
+				      insertAfter(new MethodEditor.Patch() {
+				        @Override
+				        public void emitTo(MethodEditor.Output w) {
+				          w.emit(ConstantInstruction.makeString(calleeClass));
+				          w.emit(ConstantInstruction.makeString(calleeMethod));
+				          w.emit(Util.makeInvoke(runtime, "pop", new Class[] {String.class, String.class}));
+				        }
+				      });
+				    }
+				  });
+				}
+				
 				// this updates the data d
 				me.applyPatches();
 

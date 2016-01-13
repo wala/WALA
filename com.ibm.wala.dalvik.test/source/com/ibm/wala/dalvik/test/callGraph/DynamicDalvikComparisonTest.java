@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.test.callGraph;
 
+import static com.ibm.wala.dalvik.test.util.Util.convertJarToDex;
+import static com.ibm.wala.dalvik.test.util.Util.getJavaJar;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

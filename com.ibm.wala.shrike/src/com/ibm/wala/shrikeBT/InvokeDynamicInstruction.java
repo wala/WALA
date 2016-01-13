@@ -26,7 +26,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   protected String methodName;
   protected String methodType;
   
-  public InvokeDynamicInstruction(short opcode, BootstrapMethod bootstrap, String methodName, String methodType) {
+  private InvokeDynamicInstruction(short opcode, BootstrapMethod bootstrap, String methodName, String methodType) {
     super(opcode);
     this.bootstrap = bootstrap;
     this.methodName = methodName;
@@ -93,7 +93,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
 
   @Override
   public String getClassType() {
-    return getBootstrap().methodClass();
+    return "L" + getBootstrap().methodClass();
   }
 
   @Override

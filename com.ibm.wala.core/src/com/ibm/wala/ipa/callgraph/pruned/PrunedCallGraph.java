@@ -233,6 +233,14 @@ public class PrunedCallGraph implements CallGraph {
 		}
 	}
 
+	 public CGNode getFakeWorldClinitNode() {
+	    if (keep.contains(cg.getFakeWorldClinitNode())) {
+	      return cg.getFakeRootNode();
+	    } else {
+	      return null;
+	    }
+	  }
+
 
 	public Collection<CGNode> getEntrypointNodes() {
 		Collection<CGNode> tmp = cg.getEntrypointNodes();

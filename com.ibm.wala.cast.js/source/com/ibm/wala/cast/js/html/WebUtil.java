@@ -22,6 +22,7 @@ import java.util.Set;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.functions.Function;
 
 public class WebUtil { 
 
@@ -46,9 +47,9 @@ public class WebUtil {
    *         such file exists)
    * @throws Error
    */
-  public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url, boolean useDOMModel) throws Error {
+  public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url, Function<Void,JSSourceExtractor> fSourceExtractor) throws Error {
     try {
-      JSSourceExtractor extractor = useDOMModel? new DefaultSourceExtractor(): new DomLessSourceExtractor();
+      JSSourceExtractor extractor = fSourceExtractor.apply(null);
       Set<MappedSourceModule> sources = extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
       return Pair.make(sources, extractor.getTempFile());
     } catch (IOException e) {
@@ -57,7 +58,7 @@ public class WebUtil {
   }
   
   public static void main(String[] args) throws MalformedURLException, Error {
-    System.err.println(extractScriptFromHTML(new URL(args[0]), Boolean.parseBoolean(args[1])));
+    System.err.println(extractScriptFromHTML(new URL(args[0]), Boolean.parseBoolean(args[1])? DefaultSourceExtractor.factory: DomLessSourceExtractor.factory));
   }
 
   public static Reader getStream(URL url) throws IOException {

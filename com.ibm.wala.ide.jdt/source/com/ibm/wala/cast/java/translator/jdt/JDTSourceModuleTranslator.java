@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -62,6 +63,7 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
+import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -74,6 +76,40 @@ import com.ibm.wala.util.debug.Assertions;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class JDTSourceModuleTranslator implements SourceModuleTranslator {
+  private final class JdtAstToIR extends ASTRequestor {
+    private final Entry<IProject, Map<ICompilationUnit, EclipseSourceFileModule>> proj;
+
+    private JdtAstToIR(Entry<IProject, Map<ICompilationUnit, EclipseSourceFileModule>> proj) {
+      this.proj = proj;
+    }
+
+    @Override
+    public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
+
+      try {
+        JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, proj.getValue().get(source).getIFile(), source.getUnderlyingResource().getLocation().toOSString());
+        final Java2IRTranslator java2ir = makeIRTranslator();
+        java2ir.translate(proj.getValue().get(source), jdt2cast.translateToCAst());
+      } catch (JavaModelException e) {
+        e.printStackTrace();
+      }
+
+      if (! "true".equals(System.getProperty("wala.jdt.quiet"))) {
+        IProblem[] problems = ast.getProblems();
+        int length = problems.length;
+        if (length > 0) {
+          StringBuffer buffer = new StringBuffer();
+          for (int i = 0; i < length; i++) {
+            buffer.append(problems[i].getMessage());
+            buffer.append('\n');
+          }
+          if (length != 0)
+            System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
+        }
+      }
+    }
+  }
+
   protected boolean dump;
   protected JDTSourceLoaderImpl sourceLoader;
 
@@ -136,40 +172,14 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }
 
-    final ASTParser parser = ASTParser.newParser(AST.JLS4);
+    final ASTParser parser = ASTParser.newParser(AST.JLS8);
  
     for (final Map.Entry<IProject,Map<ICompilationUnit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
       parser.setProject(JavaCore.create(proj.getKey()));
       parser.setResolveBindings(true);
  
       Set<ICompilationUnit> units = proj.getValue().keySet();
-      parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new ASTRequestor() {
-        @Override
-        public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
-
-          try {
-            JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, proj.getValue().get(source).getIFile(), source.getUnderlyingResource().getLocation().toOSString());
-            final Java2IRTranslator java2ir = makeIRTranslator();
-            java2ir.translate(proj.getValue().get(source), jdt2cast.translateToCAst());
-          } catch (JavaModelException e) {
-            e.printStackTrace();
-          }
-
-          if (! "true".equals(System.getProperty("wala.jdt.quiet"))) {
-            IProblem[] problems = ast.getProblems();
-            int length = problems.length;
-            if (length > 0) {
-              StringBuffer buffer = new StringBuffer();
-              for (int i = 0; i < length; i++) {
-                buffer.append(problems[i].getMessage());
-                buffer.append('\n');
-              }
-              if (length != 0)
-                System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
-            }
-          }
-        }
-      }, null);
+      parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new JdtAstToIR(proj), null);
 
     }
   }
@@ -178,8 +188,13 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     return new Java2IRTranslator(sourceLoader);
   }
 
-  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, IFile sourceFile, String fullPath) {
-    return new JDTJava2CAstTranslator(sourceLoader, cu, sourceFile, fullPath, false, dump);
+  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, final IFile sourceFile, String fullPath) {
+    return new JDTJava2CAstTranslator<JdtPosition>(sourceLoader, cu, fullPath, false, dump) {
+      @Override
+      public JdtPosition makePosition(int start, int end) {
+        return new JdtPosition(start, end, this.cu.getLineNumber(start), this.cu.getLineNumber(end), sourceFile, this.fullPath);
+      }
+    };
   }
 
 }

@@ -490,7 +490,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         int[] params = new int[1];
         params[0] = alloc;
         int exc = getExceptionsForType(T);
-        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site);
+        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
         calls.add(s);
         allInstructions.add(s);
       }
@@ -558,7 +558,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
         int[] params = new int[1];
         params[0] = i;
-        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, getExceptionsForType(T), site);
+        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, getExceptionsForType(T), site, null);
         calls.add(s);
         allInstructions.add(s);
       }

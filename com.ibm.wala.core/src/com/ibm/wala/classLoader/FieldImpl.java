@@ -18,6 +18,7 @@ import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.types.generics.TypeSignature;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -34,17 +35,31 @@ public final class FieldImpl implements IField {
   
   private final Collection<Annotation> annotations;
 
-  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations) {
+  private final TypeSignature genericSignature;
+  
+  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations, TypeSignature sig) {
     this.declaringClass = declaringClass;
     this.fieldRef = canonicalRef;
     this.accessFlags = accessFlags;
     this.annotations = annotations;
+    this.genericSignature = sig;
     if (declaringClass == null) {
       throw new IllegalArgumentException("null declaringClass");
     }
     if (fieldRef == null) {
       throw new IllegalArgumentException("null canonicalRef");
     }
+  }
+
+  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations) {
+    this(declaringClass, canonicalRef, accessFlags, annotations, null);
+  }
+  
+  /**
+   * @return the genericSignature
+   */
+  public TypeSignature getGenericSignature() {
+    return genericSignature;
   }
 
   /*

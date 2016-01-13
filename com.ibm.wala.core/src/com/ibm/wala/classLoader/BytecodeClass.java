@@ -31,6 +31,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.types.generics.TypeSignature;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -459,6 +460,21 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       }
     }
     
+    // check interfaces for Java 8 default implementation
+    // Java seems to require a single default implementation, so take that on faith here
+    for(IClass iface : getAllImplementedInterfaces()) {
+      for(IMethod m : iface.getDeclaredMethods()) {
+        if (!m.isAbstract() && m.getSelector().equals(selector)) {          
+          if (inheritCache == null) {
+            inheritCache = new BimodalMap<Selector, IMethod>(5);
+          }
+          inheritCache.put(selector, m);
+
+          return m;
+        }
+      }
+    }
+    
     // no method found
     if (inheritCache == null) {
       inheritCache = new BimodalMap<Selector, IMethod>(5);
@@ -552,7 +568,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   protected void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags,
-      Collection<Annotation> annotations) {
+      Collection<Annotation> annotations, TypeSignature sig) {
     TypeName T = null;
     if (fieldType.get(fieldType.length() - 1) == ';') {
       T = TypeName.findOrCreate(fieldType, 0, fieldType.length() - 1);
@@ -561,7 +577,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     TypeReference type = TypeReference.findOrCreate(getClassLoader().getReference(), T);
     FieldReference fr = FieldReference.findOrCreate(getReference(), name, type);
-    FieldImpl f = new FieldImpl(this, fr, accessFlags, annotations);
+    FieldImpl f = new FieldImpl(this, fr, accessFlags, annotations, sig);
     L.add(f);
   }
 

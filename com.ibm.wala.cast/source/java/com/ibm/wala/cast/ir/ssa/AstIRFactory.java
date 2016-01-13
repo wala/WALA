@@ -33,7 +33,7 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
-public class AstIRFactory implements IRFactory {
+public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
   public ControlFlowGraph makeCFG(final IMethod method, final Context context) {
     return ((AstMethod) method).getControlFlowGraph();

@@ -29,6 +29,8 @@ public class BootstrapMethodsReader extends AttributeReader {
     Object callArgument(ClassLoader cl, int i);
     int callArgumentIndex(int i);
     int callArgumentKind(int i);
+    ConstantPoolParser getCP();
+    int getIndexInClassFile();
   }
   
   private BootstrapMethod entries[];
@@ -46,6 +48,7 @@ public class BootstrapMethodsReader extends AttributeReader {
     for(int i = 0; i < entries.length; i++) {
       final int methodHandleOffset = cr.getUShort(attr + base);
       final int argsBase = attr + base + 4;
+      final int index = i;
       
       final int argumentCount = cr.getUShort(attr + base + 2);
       entries[i] = new BootstrapMethod() {
@@ -119,10 +122,10 @@ public class BootstrapMethodsReader extends AttributeReader {
               return cp.getCPLong(index);
             case ClassConstants.CONSTANT_MethodHandle:
               String className = cp.getCPHandleClass(index);
-              Class<?> cls = Class.forName(className.replace('/', '.'), false, cl);
               String eltName = cp.getCPHandleName(index);
               String eltDesc = cp.getCPHandleType(index);
               MethodType type = MethodType.fromMethodDescriptorString(eltDesc, cl);
+              Class<?> cls = Class.forName(className.replace('/', '.'), false, cl);
               Method m = cls.getDeclaredMethod(eltName, type.parameterList().toArray(new Class[type.parameterCount()]));
               Lookup lk = MethodHandles.lookup().in(cls);
               m.setAccessible(true);
@@ -146,6 +149,16 @@ public class BootstrapMethodsReader extends AttributeReader {
             assert false : e;
           }
           return null;
+        }
+
+        @Override
+        public ConstantPoolParser getCP() {
+          return cp;
+        }
+
+        @Override
+        public int getIndexInClassFile() {
+          return index;
         }
       };
       

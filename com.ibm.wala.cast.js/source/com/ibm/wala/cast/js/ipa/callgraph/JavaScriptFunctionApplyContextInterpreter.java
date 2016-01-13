@@ -125,7 +125,9 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     // read an arbitrary property name via EachElementGet
     int curValNum = nargs + 2;
     int eachElementGetResult = curValNum++;
-    S.addStatement(insts.EachElementGetInstruction(S.getNumberOfStatements(), eachElementGetResult, 4));
+    int nullPredVn = curValNum++;
+    S.addConstant(nullPredVn, new ConstantValue(null));
+    S.addStatement(insts.EachElementGetInstruction(S.getNumberOfStatements(), eachElementGetResult, 4, nullPredVn));
     S.getNextProgramCounter();
     // read value from the arbitrary property name
     int propertyReadResult = curValNum++;

@@ -45,7 +45,7 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   }
 
   @Test
-  public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  public void testRewriterDoesNotChangeLabelsBug() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
     // all we need is for it to finish building CG successfully.
   }

@@ -40,6 +40,7 @@ package com.ibm.wala.cast.java.translator.jdt;
 import java.io.IOException;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -49,14 +50,8 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
 public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
-  private boolean dump;
+  protected boolean dump;
   
-  // /**
-  // * A map from ClassLoaderReference to IRTranslatorExtension, so that source files
-  // * in different languages are processed by the right kind of IRTranslatorExtension.
-  // */
-  // that's nice, but there's only one kind of IRTransatorExtension.
-
   public JDTClassLoaderFactory(SetOfClasses exclusions) {
     this(exclusions, false);
   }
@@ -78,7 +73,7 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
     }
   }
 
-  protected JDTSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
+  protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
       throws IOException {
     return new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, dump);
   }

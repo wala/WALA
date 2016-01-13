@@ -32,13 +32,11 @@ import com.ibm.wala.util.CancelException;
 public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
   private static String testJarLocation = getClasspathEntry("com.ibm.wala.core.testdata");
-  
-  private static String testMain = "dynamicCG.MainClass";
-  
-  private CallGraph staticCG(String exclusionsFile) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    
+  private CallGraph staticCG(String mainClass, String exclusionsFile) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, exclusionsFile != null? exclusionsFile: CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "LdynamicCG/MainClass");
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
   }
@@ -46,16 +44,24 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
   @Test
   public void testGraph() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException, InterruptedException  {
     instrument(testJarLocation);
-    run(testMain, null);
-    CallGraph staticCG = staticCG(null);
+    run("dynamicCG.MainClass", null);
+    CallGraph staticCG = staticCG("LdynamicCG/MainClass", null);
+    checkEdges(staticCG);
+  }
+
+  @Test
+  public void testCallbacks() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException, InterruptedException  {
+    instrument(testJarLocation);
+    run("dynamicCG.CallbacksMainClass", null);
+    CallGraph staticCG = staticCG("LdynamicCG/CallbacksMainClass", null);
     checkEdges(staticCG);
   }
 
   @Test
   public void testExclusions() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException, InterruptedException  {
     instrument(testJarLocation);
-    run(testMain, "ShrikeTestExclusions.txt");
-    CallGraph staticCG = staticCG("ShrikeTestExclusions.txt");
+    run("dynamicCG.MainClass", "ShrikeTestExclusions.txt");
+    CallGraph staticCG = staticCG("LdynamicCG/MainClass", "ShrikeTestExclusions.txt");
     checkEdges(staticCG);
   }
 

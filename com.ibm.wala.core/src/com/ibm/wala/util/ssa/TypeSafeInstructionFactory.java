@@ -204,7 +204,7 @@ public class TypeSafeInstructionFactory {
         // TODO somehow check exception?
 
         result.setAssigned();
-        return insts.InvokeInstruction(iindex, result.getNumber(), aParams, exception.getNumber(), site);
+        return insts.InvokeInstruction(iindex, result.getNumber(), aParams, exception.getNumber(), site, null);
     }
 
     /**
@@ -302,7 +302,7 @@ public class TypeSafeInstructionFactory {
 
         // TODO somehow check exception?
 
-        return insts.InvokeInstruction(iindex, aParams, exception.getNumber(), site);
+        return insts.InvokeInstruction(iindex, aParams, exception.getNumber(), site, null);
     }
 
 

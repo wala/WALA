@@ -26,6 +26,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex.PrototypeField;
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
@@ -167,7 +168,7 @@ public abstract class TestPointerAnalyses {
       JSSourceExtractor.USE_TEMP_NAME = false;
 
       FieldBasedCGUtil fb = new FieldBasedCGUtil(factory);
-      Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult = fb.buildCG(page, BuilderType.OPTIMISTIC, true);
+      Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult = fb.buildCG(page, BuilderType.OPTIMISTIC, true, DefaultSourceExtractor.factory);
  
       JSCFABuilder propagationBuilder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(page);
       CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());

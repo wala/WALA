@@ -13,6 +13,7 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,8 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -64,7 +64,7 @@ public abstract class JavaIRTests extends IRTests {
     this(null);
   }
  
-  @Test public void testSimple1() {
+  @Test public void testSimple1() throws IllegalArgumentException, CancelException, IOException {
 
     List<? extends IRAssertion> assertions = Arrays.asList(
         new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "prod", 24),
@@ -79,7 +79,7 @@ public abstract class JavaIRTests extends IRTests {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), assertions, true);
   }
 
-  @Test public void testTwoClasses() {
+  @Test public void testTwoClasses() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -108,7 +108,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testInterfaceTest1() {
+  @Test public void testInterfaceTest1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     /**
@@ -153,7 +153,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testInheritance1() {
+  @Test public void testInheritance1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 'Derived' extends 'Base'
@@ -182,7 +182,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testArray1() {
+  @Test public void testArray1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
@@ -212,7 +212,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testArrayLiteral1() {
+  @Test public void testArrayLiteral1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
@@ -234,7 +234,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testArrayLiteral2() {
+  @Test public void testArrayLiteral2() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * int[] y= { 1, 2, 3, 4 } is represented in the IR as four array store
@@ -291,13 +291,13 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testInheritedField() {
+  @Test public void testInheritedField() throws IllegalArgumentException, CancelException, IOException {
     List<EdgeAssertions> edgeAssertionses = Arrays.asList(EdgeAssertions.make("Source#InheritedField#main#([Ljava/lang/String;)V",
         "Source#B#foo#()V"), EdgeAssertions.make("Source#InheritedField#main#([Ljava/lang/String;)V", "Source#B#bar#()V"));
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), edgeAssertionses, true);
   }
 
-  @Test public void testQualifiedStatic() {
+  @Test public void testQualifiedStatic() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 
@@ -322,7 +322,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testStaticNesting() {
+  @Test public void testStaticNesting() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -349,11 +349,11 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testCastFromNull() {
+  @Test public void testCastFromNull() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
   }
   
-  @Test public void testInnerClass() {
+  @Test public void testInnerClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -374,11 +374,11 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testNullArrayInit() {
+  @Test public void testNullArrayInit() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
   }
 
-  @Test public void testInnerClassA() {
+  @Test public void testInnerClassA() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
@@ -437,7 +437,7 @@ public abstract class JavaIRTests extends IRTests {
 
   }
 
-  @Test public void testInnerClassSuper() {
+  @Test public void testInnerClassSuper() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
@@ -468,7 +468,7 @@ public abstract class JavaIRTests extends IRTests {
 
   }
 
-  @Test public void testLocalClass() {
+  @Test public void testLocalClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -509,7 +509,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testAnonymousClass() {
+  @Test public void testAnonymousClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -529,59 +529,70 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  @Test public void testWhileTest1() {
+  @Test public void testWhileTest1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
   @Test public void testSwitch1() {
+    try {
+      runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
+    } catch (IllegalArgumentException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (CancelException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  @Test public void testException1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testException1() {
+  @Test public void testException2() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testException2() {
+  @Test public void testFinally1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testFinally1() {
+  @Test public void testScoping1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testScoping1() {
+  @Test public void testScoping2() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testScoping2() {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
-  }
-
-  @Test public void testNonPrimaryTopLevel() {
+  @Test public void testNonPrimaryTopLevel() throws IllegalArgumentException, CancelException, IOException {
     runTest(singlePkgTestSrc("p"), rtJar, simplePkgTestEntryPoint("p"), emptyList, true);
   }
 
-  @Test public void testMiniaturList() {
+  @Test public void testMiniaturList() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testMonitor() {
+  @Test public void testMonitor() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testStaticInitializers() {
+  @Test public void testStaticInitializers() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testThread1() {
+  @Test public void testThread1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testCasts() {
+  @Test public void testCasts() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  @Test public void testBreaks() {
+  @Test public void testBreaks() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
@@ -595,7 +606,7 @@ public abstract class JavaIRTests extends IRTests {
     return MethodReference.findOrCreate(clsRef, nameAtom, descr);
   }
 
-  @Test public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException {
+  @Test public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
 
     PointerAnalysis<InstanceKey> pa = x.snd;
@@ -606,7 +617,7 @@ public abstract class JavaIRTests extends IRTests {
     Set<CGNode> roots = cg.getNodes(sliceRootRef);
     Pair<Collection<Statement>, SDG> y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
-    //SlicerTest.dumpSlice(slice);
+    SlicerTest.dumpSlice(slice);
     Assert.assertEquals(0, SlicerTest.countAllocations(slice));
     Assert.assertEquals(1, SlicerTest.countPutfields(slice));
 

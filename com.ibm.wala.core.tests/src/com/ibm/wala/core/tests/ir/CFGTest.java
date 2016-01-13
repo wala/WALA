@@ -10,69 +10,47 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.ir;
 
-import org.junit.AfterClass;
+import java.io.IOException;
+
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Test integrity of CFGs
  */
 public class CFGTest extends WalaTestCase {
+  
+  private final IClassHierarchy cha;
 
-  private static AnalysisScope scope;
-
-  private static ClassHierarchy cha;
-
-  @BeforeClass
-  public static void beforeClass() throws Exception {
-
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), CFGTest.class.getClassLoader());
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
-
-    try {
-      cha = ClassHierarchy.make(scope, factory);
-    } catch (ClassHierarchyException e) {
-      throw new Exception();
-    }
-  }
-
-  @AfterClass
-  public static void afterClass() throws Exception {
-    Warnings.clear();
-    scope = null;
-    cha = null;
-  }
-
+ protected CFGTest(IClassHierarchy cha) {
+   this.cha = cha;
+ }
+ 
+ public CFGTest() throws ClassHierarchyException, IOException {
+   this(WalaTestCase.makeCHA());
+ }
+ 
   public static void main(String[] args) {
     justThisTest(CFGTest.class);
   }
@@ -89,7 +67,7 @@ public class CFGTest extends WalaTestCase {
         Assertions.UNREACHABLE("could not resolve " + mr);
       }
       AnalysisOptions options = new AnalysisOptions();
-      AnalysisCache cache = new AnalysisCache();
+      AnalysisCache cache = makeAnalysisCache();
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
       IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
@@ -133,7 +111,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("hello.Hello.main([Ljava/lang/String;)V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = makeAnalysisCache();
     IR irBefore = cache.getIR(m);
     cache.getSSACache().wipe();
     IR irAfter = cache.getIR(m);
@@ -149,7 +127,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync1()V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
@@ -161,7 +139,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync2()V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
@@ -176,7 +154,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync3()V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
     Assert.assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)));

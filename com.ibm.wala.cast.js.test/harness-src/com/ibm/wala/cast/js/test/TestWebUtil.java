@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -26,14 +27,14 @@ public class TestWebUtil extends WalaTestCase {
   @Test public void testAjaxslt() throws Error {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     Assert.assertTrue(url != null);
-    Set<MappedSourceModule> mod = WebUtil.extractScriptFromHTML( url, true ).fst;
+    Set<MappedSourceModule> mod = WebUtil.extractScriptFromHTML( url, DefaultSourceExtractor.factory ).fst;
     Assert.assertTrue(mod != null);
   }
 
   @Test public void testAjaxpath() throws Error {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     Assert.assertTrue(url != null);
-    Set<MappedSourceModule> mod = WebUtil.extractScriptFromHTML( url, true ).fst;
+    Set<MappedSourceModule> mod = WebUtil.extractScriptFromHTML( url, DefaultSourceExtractor.factory ).fst;
     Assert.assertTrue(mod != null);
   }
 }

@@ -10,12 +10,22 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.util;
 
+import java.io.IOException;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
 
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.tests.ir.AnnotationTest;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.heapTrace.HeapTracer;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -55,24 +65,22 @@ public abstract class WalaTestCase {
     }
   }
 
+  protected AnalysisCache makeAnalysisCache() {
+    return new AnalysisCache();
+  }
+
+  public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
+        (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), AnnotationTest.class.getClassLoader());
+    return ClassHierarchy.make(scope);    
+  }
+
   /**
    * Utility function: each DetoxTestCase subclass can have a main() method that calls this, to create a test suite consisting of
    * just this test. Useful when investigating a single failing test.
    */
   protected static void justThisTest(Class<?> testClass) {
     JUnitCore.runClasses(testClass);
-  }
-
-  protected static void assertBound(String tag, double quantity, double bound) {
-    String msg = tag + ", quantity: " + quantity + ", bound:" + bound;
-    System.err.println(msg);
-    Assert.assertTrue(msg, quantity <= bound);
-  }
-
-  protected static void assertBound(String tag, int quantity, int bound) {
-    String msg = tag + ", quantity: " + quantity + ", bound:" + bound;
-    System.err.println(msg);
-    Assert.assertTrue(msg, quantity <= bound);
   }
 
 }

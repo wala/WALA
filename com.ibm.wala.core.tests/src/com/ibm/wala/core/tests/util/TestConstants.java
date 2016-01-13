@@ -131,6 +131,8 @@ public interface TestConstants {
 
   public final static String SLICE_TEST_PRIM_GETTER_SETTER = "Lslice/TestPrimGetterSetter";
 
+  public final static String SLICE_TEST_PRIM_GETTER_SETTER2 = "Lslice/TestPrimGetterSetter2";
+
   public final static String SLICE_TESTTHIN1 = "Lslice/TestThin1";
 
   public final static String SLICE_TESTTHROWCATCH = "Lslice/TestThrowCatch";
@@ -138,5 +140,7 @@ public interface TestConstants {
   public final static String SLICE_TESTMESSAGEFORMAT = "Lslice/TestMessageFormat";
 
   public final static String SLICE_TESTINETADDR = "Lslice/TestInetAddr";
+
+  public final static String SLICE_JUSTTHROW = "Lslice/JustThrow";
 
 }

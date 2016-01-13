@@ -13,7 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.ssa.SSAAbstractUnaryInstruction;
+import com.ibm.wala.ssa.SSAAbstractBinaryInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
@@ -29,15 +29,15 @@ import com.ibm.wala.types.TypeReference;
  * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
+public class EachElementGetInstruction extends SSAAbstractBinaryInstruction {
 
-  public EachElementGetInstruction(int iindex, int lValue, int objectRef) {
-    super(iindex, lValue, objectRef);
+  public EachElementGetInstruction(int iindex, int lValue, int objectRef, int previousProp) {
+    super(iindex, lValue, objectRef, previousProp);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).EachElementGetInstruction(iindex, (defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
+    return ((AstInstructionFactory)insts).EachElementGetInstruction(iindex, (defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0], (uses == null) ? getUse(1) : uses[1]);
   }
 
   @Override
@@ -53,5 +53,10 @@ public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
   @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
+  }
+
+  @Override
+  public boolean isFallThrough() {
+    return true;
   }
 }

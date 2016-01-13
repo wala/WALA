@@ -22,8 +22,8 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
-import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -59,7 +59,9 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DalvikCallGraphTestBase extends DalvikTestBase {
+import static com.ibm.wala.dalvik.test.util.Util.makeDalvikScope;
+
+public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	
 	protected static <T> Set<T> processCG(CallGraph cg, Predicate<CGNode> filter, Function<CGNode,T> map) {
 		Set<T> result = HashSetFactory.make();

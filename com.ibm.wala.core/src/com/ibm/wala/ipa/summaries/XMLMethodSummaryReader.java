@@ -485,10 +485,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         int defNum = nextLocal;
         symbolTable.put(defVar, new Integer(nextLocal++));
 
-        governingMethod.addStatement(insts.InvokeInstruction(governingMethod.getNumberOfStatements(), defNum, params, exceptionValue, site));
+        governingMethod.addStatement(insts.InvokeInstruction(governingMethod.getNumberOfStatements(), defNum, params, exceptionValue, site, null));
       } else {
         // ignore return value, if any
-        governingMethod.addStatement(insts.InvokeInstruction(governingMethod.getNumberOfStatements(), params, exceptionValue, site));
+        governingMethod.addStatement(insts.InvokeInstruction(governingMethod.getNumberOfStatements(), params, exceptionValue, site, null));
       }
     }
 

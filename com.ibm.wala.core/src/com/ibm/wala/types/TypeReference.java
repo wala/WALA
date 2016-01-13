@@ -344,6 +344,8 @@ public final class TypeReference implements Serializable {
 
   public final static TypeReference Unknown = findOrCreate(ClassLoaderReference.Primordial, UnknownName);
 
+  public final static TypeReference LambdaMetaFactory = findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/invoke/LambdaMetafactory");
+  
   private static TypeReference makePrimitive(TypeName n) {
     return makePrimitive(ClassLoaderReference.Primordial, n);
   }

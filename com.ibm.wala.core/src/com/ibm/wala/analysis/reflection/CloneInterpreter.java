@@ -176,7 +176,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       int[] params = new int[2];
       params[0] = 1;
       params[1] = retValue;
-      SSAInvokeInstruction S = insts.InvokeInstruction(statements.size(), params, exceptionValue, ARRAYCOPY_SITE);
+      SSAInvokeInstruction S = insts.InvokeInstruction(statements.size(), params, exceptionValue, ARRAYCOPY_SITE, null);
       statements.add(S);
     } else {
       // copy the fields over, one by one.

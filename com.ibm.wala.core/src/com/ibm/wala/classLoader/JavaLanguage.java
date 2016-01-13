@@ -28,11 +28,13 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAAbstractBinaryInstruction;
 import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
@@ -116,7 +118,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSABinaryOpInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
+    public SSAAbstractBinaryInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
         int result, int val1, int val2, boolean mayBeInteger) {
       assert !overflow;
       // assert (!unsigned) : "BinaryOpInstuction: unsigned disallowed! iIndex: " + iindex + ", operation: " + val1 + " " + operator.toString() + " " + val2 ;
@@ -227,44 +229,57 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
-      return new SSAInvokeInstruction(iindex, result, params, exception, site) {
-        @Override
-        public Collection<TypeReference> getExceptionTypes() {
-          if (!isStatic()) {
-            return getNullPointerException();
-          } else {
-            return Collections.emptySet();
+    public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+      if (bootstrap != null) {
+        return new SSAInvokeDynamicInstruction(iindex, result, params, exception, site, bootstrap) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
           }
-        }
-      };
-    }
-
-    public SSAInvokeDynamicInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
-      return new SSAInvokeDynamicInstruction(result, params, exception, site, bootstrap) {
-        @Override
-        public Collection<TypeReference> getExceptionTypes() {
-          if (!isStatic()) {
-            return getNullPointerException();
-          } else {
-            return Collections.emptySet();
+        };
+      } else {
+        return new SSAInvokeInstruction(iindex, result, params, exception, site) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
           }
-        }
-      };
+        };
+      }
     }
 
     @Override
-    public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
-      return new SSAInvokeInstruction(iindex, params, exception, site) {
-        @Override
-        public Collection<TypeReference> getExceptionTypes() {
-          if (!isStatic()) {
-            return getNullPointerException();
-          } else {
-            return Collections.emptySet();
+    public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+      if (bootstrap != null) {
+        return new SSAInvokeDynamicInstruction(iindex, params, exception, site, bootstrap) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
           }
-        }
-      };
+        };
+      } else {
+        return new SSAInvokeInstruction(iindex, params, exception, site) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
+          }
+        };
+      }
     }
 
     @Override
@@ -732,5 +747,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   @SuppressWarnings("static-access")
   public PrimitiveType getPrimitive(TypeReference reference) {
     return JavaPrimitiveType.getPrimitive(reference);
+  }
+
+  @Override
+  public MethodReference getInvokeMethodReference(ClassLoaderReference loader, IInvokeInstruction instruction) {
+    return MethodReference.findOrCreate(this, loader, instruction.getClassType(), instruction.getMethodName(),
+        instruction.getMethodSignature());
   }
 }

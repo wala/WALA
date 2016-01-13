@@ -29,6 +29,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.ClassSignature;
+import com.ibm.wala.types.generics.TypeSignature;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
@@ -87,11 +88,20 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         annotations.addAll(getRuntimeInvisibleAnnotations(i));
         annotations.addAll(getRuntimeVisibleAnnotations(i));
         annotations = annotations.isEmpty() ? null : annotations;
-
+        
+        TypeSignature sig = null;
+        SignatureReader signatureReader = getSignatureReader(i);
+        if (signatureReader != null) {
+          String signature = signatureReader.getSignature();
+          if (signature != null) {
+            sig = TypeSignature.make(signature);
+          }
+        }
+        
         if ((accessFlags & ClassConstants.ACC_STATIC) == 0) {
-          addFieldToList(instanceList, name, b, accessFlags, annotations);
+          addFieldToList(instanceList, name, b, accessFlags, annotations, sig);
         } else {
-          addFieldToList(staticList, name, b, accessFlags, annotations);
+          addFieldToList(staticList, name, b, accessFlags, annotations, sig);
         }
       }
       instanceFields = new IField[instanceList.size()];
@@ -306,11 +316,14 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
   }
 
-  private SignatureReader getSignatureReader() throws InvalidClassFileException {
+  private SignatureReader getSignatureReader(int index) throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
-    r.initClassAttributeIterator(attrs);
-
+    if (index == -1) {
+      r.initClassAttributeIterator(attrs);
+    } else {
+      r.initFieldAttributeIterator(index, attrs);
+    }
     // search for the desired attribute
     SignatureReader result = null;
     try {
@@ -328,7 +341,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
 
   public ClassSignature getClassSignature() throws InvalidClassFileException {
     // TODO: cache this later?
-    SignatureReader r = getSignatureReader();
+    SignatureReader r = getSignatureReader(-1);
     if (r == null) {
       return null;
     } else {

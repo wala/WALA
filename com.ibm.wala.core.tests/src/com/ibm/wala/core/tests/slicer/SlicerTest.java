@@ -32,9 +32,14 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFABuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -626,6 +631,46 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
+  /**
+   * Test of using N-CFA builder to distinguish receiver objects for two calls
+   * to a getter method. Also tests disabling SMUSH_PRIMITIVE_HOLDERS to ensure
+   * we get distinct abstract objects for two different primitive holders.
+   */
+  @Test
+  public void testPrimGetterSetter2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TEST_PRIM_GETTER_SETTER2);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    Util.addDefaultSelectors(options, cha);
+    Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    ContextSelector appSelector = null;
+    SSAContextInterpreter appInterpreter = null;
+    SSAPropagationCallGraphBuilder builder = new nCFABuilder(1, cha, options, new AnalysisCache(), appSelector, appInterpreter);
+    // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
+    // NOTE: we disable ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS for this test, since IntWrapper
+    // is a primitive holder
+    builder.setInstanceKeys(new ZeroXInstanceKeys(options, cha, builder.getContextInterpreter(), ZeroXInstanceKeys.ALLOCATIONS
+        | ZeroXInstanceKeys.SMUSH_MANY /* | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS */ | ZeroXInstanceKeys.SMUSH_STRINGS
+        | ZeroXInstanceKeys.SMUSH_THROWABLES));
+
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode test = findMainMethod(cg);
+
+    PartialCallGraph pcg = PartialCallGraph.make(cg, Collections.singleton(test));
+
+    Statement s = findCallToDoNothing(test);
+    System.err.println("Statement: " + s);
+
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.NONE);
+    dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
+  }
   @Test
   public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -690,6 +735,28 @@ public class SlicerTest {
     CallGraph cg = builder.makeCallGraph(options, null);
     SDG sdg = new SDG(cg, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
     GraphIntegrity.check(sdg);
+  }
+
+  @Test
+  public void testJustThrow() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_JUSTTHROW);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = findMainMethod(cg);
+
+    Statement s = findCallToDoNothing(main);
+    System.err.println("Statement: " + s);
+
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    dumpSlice(slice);
   }
 
   public static int countAllocations(Collection<Statement> slice) {
