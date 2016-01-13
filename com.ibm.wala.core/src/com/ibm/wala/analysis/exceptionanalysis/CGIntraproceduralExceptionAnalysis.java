@@ -24,6 +24,12 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ * Wrapper to store multiple intraprocedural analysis for a call graph.
+ * 
+ * @author Stephan Gocht <stephan@gobro.de>
+ *
+ */
 public class CGIntraproceduralExceptionAnalysis {
   private Map<CGNode, IntraproceduralExceptionAnalysis> analysis;
   private Set<TypeReference> exceptions;
@@ -34,10 +40,10 @@ public class CGIntraproceduralExceptionAnalysis {
     this.callGraph = cg;
     this.exceptions = new LinkedHashSet<>();
     this.analysis = new LinkedHashMap<>();
-    for (CGNode node : cg) {      
-      if (node.getIR() == null || node.getIR().isEmptyIR()) {        
+    for (CGNode node : cg) {
+      if (node.getIR() == null || node.getIR().isEmptyIR()) {
         analysis.put(node, IntraproceduralExceptionAnalysis.newDummy());
-      } else {        
+      } else {
         IntraproceduralExceptionAnalysis intraEA;
         intraEA = new IntraproceduralExceptionAnalysis(node, filter.getFilter(node), cha, pointerAnalysis);
         analysis.put(node, intraEA);

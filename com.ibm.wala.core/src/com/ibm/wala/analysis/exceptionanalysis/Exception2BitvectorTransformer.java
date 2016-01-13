@@ -26,7 +26,7 @@ public class Exception2BitvectorTransformer {
     return values;
   }
 
-  public Exception2BitvectorTransformer(Set<TypeReference> exceptions) {    
+  public Exception2BitvectorTransformer(Set<TypeReference> exceptions) {
     createValues(exceptions);
     for (TypeReference exception : exceptions) {
       BitVector bv = new BitVector(values.getSize());
@@ -48,7 +48,7 @@ public class Exception2BitvectorTransformer {
         result.set(pos);
       } else {
         throw new IllegalArgumentException("Got exception I don't know about,"
-             + "make sure only to use exceptions given to the constructor ");            
+            + "make sure only to use exceptions given to the constructor ");
       }
     }
     return result;

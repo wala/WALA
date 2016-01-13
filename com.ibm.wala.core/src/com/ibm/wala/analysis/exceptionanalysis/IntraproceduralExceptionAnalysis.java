@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -35,6 +36,7 @@ import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.ssa.InstructionByIIndexMap;
 
 public class IntraproceduralExceptionAnalysis {
   private Set<TypeReference> exceptions;
@@ -45,6 +47,7 @@ public class IntraproceduralExceptionAnalysis {
   private ExceptionFilter<SSAInstruction> filter;
   private IR ir;
   private boolean dummy = false;
+  private Map<SSAInstruction, Boolean> allExceptionsCaught;
 
   public static IntraproceduralExceptionAnalysis newDummy() {
     return new IntraproceduralExceptionAnalysis();
@@ -104,10 +107,8 @@ public class IntraproceduralExceptionAnalysis {
     this.node = node;
     this.exceptions = new LinkedHashSet<>();
     this.possiblyCaughtExceptions = new LinkedHashSet<>();
+    this.allExceptionsCaught = new InstructionByIIndexMap<>();
     compute();
-    this.filter = null;
-    this.pointerAnalysis = null;
-    this.node = null;
   }
 
   /**
@@ -119,25 +120,26 @@ public class IntraproceduralExceptionAnalysis {
     if (ir != null) {
       for (ISSABasicBlock block : ir.getControlFlowGraph()) {
         SSAInstruction throwingInstruction = getThrowingInstruction(block);
-        if (throwingInstruction != null) {
+        if (throwingInstruction != null && throwingInstruction.isPEI()) {
           Set<TypeReference> thrownExceptions = collectThrownExceptions(throwingInstruction);
           Set<TypeReference> caughtExceptions = collectCaughtExceptions(block);
           Set<TypeReference> filteredExceptions = collectFilteredExceptions(throwingInstruction);
 
           thrownExceptions.removeAll(filteredExceptions);
           thrownExceptions.removeAll(caughtExceptions);
+          this.allExceptionsCaught.put(throwingInstruction, thrownExceptions.isEmpty());
           exceptions.addAll(thrownExceptions);
         }
-        
+
         if (block.isCatchBlock()) {
-          Iterator<TypeReference> it = block.getCaughtExceptionTypes();          
-          while (it.hasNext()) {            
+          Iterator<TypeReference> it = block.getCaughtExceptionTypes();
+          while (it.hasNext()) {
             possiblyCaughtExceptions.add(it.next());
           }
         }
       }
     }
-    
+
     Set<TypeReference> subClasses = new LinkedHashSet<>();
     for (TypeReference caught : possiblyCaughtExceptions) {
       for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
@@ -150,6 +152,7 @@ public class IntraproceduralExceptionAnalysis {
 
   /**
    * Return all exceptions that could be returned from getCaughtExceptions
+   * 
    * @return all exceptions that could be returned from getCaughtExceptions
    */
   public Set<TypeReference> getPossiblyCaughtExceptions() {
@@ -194,7 +197,7 @@ public class IntraproceduralExceptionAnalysis {
    * @return a set of exceptions, which might be thrown from this instruction
    *         within this method
    */
-  private Set<TypeReference> collectThrownExceptions(SSAInstruction throwingInstruction) {
+  public Set<TypeReference> collectThrownExceptions(SSAInstruction throwingInstruction) {
     final LinkedHashSet<TypeReference> result = new LinkedHashSet<>();
     result.addAll(throwingInstruction.getExceptionTypes());
 
@@ -243,11 +246,11 @@ public class IntraproceduralExceptionAnalysis {
    * @return an instruction which may throw exceptions, or null if this block
    *         can't throw exceptions
    */
-  private SSAInstruction getThrowingInstruction(ISSABasicBlock block) {
+  public static SSAInstruction getThrowingInstruction(ISSABasicBlock block) {
     SSAInstruction result = null;
     if (block.getLastInstructionIndex() >= 0) {
       SSAInstruction lastInstruction = block.getLastInstruction();
-      if (lastInstruction != null) {
+      if (lastInstruction != null && lastInstruction.isPEI()) {
         result = lastInstruction;
       }
     }
@@ -282,7 +285,6 @@ public class IntraproceduralExceptionAnalysis {
     return result;
   }
 
-  
   /**
    * Returns all exceptions for the given call site in the given call graph
    * node, which will be caught.
@@ -315,6 +317,11 @@ public class IntraproceduralExceptionAnalysis {
       }
     }
     return result;
+  }
+
+  public boolean hasUncaughtExceptions(SSAInstruction instruction) {
+    Boolean allCaught = this.allExceptionsCaught.get(instruction);
+    return (allCaught == null ? true : !allCaught.booleanValue());
   }
 
   /**

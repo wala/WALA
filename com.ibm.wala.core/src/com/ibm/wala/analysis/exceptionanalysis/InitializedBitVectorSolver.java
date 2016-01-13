@@ -30,8 +30,8 @@ public class InitializedBitVectorSolver extends BitVectorSolver<CGNode> {
   protected BitVectorVariable makeEdgeVariable(CGNode src, CGNode dst) {
     return newBV();
   }
-  
-  private BitVectorVariable newBV(){
+
+  private BitVectorVariable newBV() {
     /*
      * If we do not initialize BitVectorVariable, with a BitVector, it contains
      * null, which may crash in combination with {@link BitVectorMinusVector}
@@ -39,6 +39,6 @@ public class InitializedBitVectorSolver extends BitVectorSolver<CGNode> {
      */
     BitVectorVariable result = new BitVectorVariable();
     result.addAll(new BitVector());
-    return result;    
+    return result;
   }
 }

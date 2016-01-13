@@ -1,7 +1,7 @@
 package com.ibm.wala.ipa.cfg.exceptionpruning;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
@@ -29,37 +29,49 @@ public class ExceptionMatcher {
 				filteredExceptions, cha);
 		return matcher.areAllExceptionsIgnored();
 	}
+	
+	/**
+	 * Returns all exceptions of thrownExceptions which are not filtered by filteredExceptions
+	 * @param thrownExceptions
+	 * @param filteredExceptions
+	 * @param cha
+	 * @return all exceptions of thrownExceptions which are not filtered by filteredExceptions
+	 */
+	public static Set<TypeReference> retainedExceptions(Collection<TypeReference> thrownExceptions,
+      Collection<FilteredException> filteredExceptions, ClassHierarchy cha){
+	   final ExceptionMatcher matcher = new ExceptionMatcher(thrownExceptions,
+	        filteredExceptions, cha);
+	    return matcher.getRetainedExceptions();
+	}
 
 	private Set<TypeReference> ignoreExact;
 	private Set<TypeReference> ignoreSubclass;
+	private final Set<TypeReference> retainedExceptions;
 	private ClassHierarchy cha;
 
 	private final boolean areAllExceptionsIgnored;
 
 	private ExceptionMatcher(Collection<TypeReference> thrownExceptions,
 			Collection<FilteredException> filteredExceptions, ClassHierarchy cha) {
-		this.ignoreExact = new HashSet<>();
-		this.ignoreSubclass = new HashSet<>();
+		this.ignoreExact = new LinkedHashSet<>();
+		this.ignoreSubclass = new LinkedHashSet<>();
 		this.cha = cha;
+		this.retainedExceptions = new LinkedHashSet<>();
 
 		this.fillIgnore(filteredExceptions);
 
-		this.areAllExceptionsIgnored = this
-				.allExceptionsIgnored(thrownExceptions);
+		this.computeRetainedExceptions(thrownExceptions);
+		this.areAllExceptionsIgnored = this.retainedExceptions.isEmpty();
 
 		this.free();
 	}
 
-	private boolean allExceptionsIgnored(
-			Collection<TypeReference> thrownExceptions) {
-		boolean allExceptionsIgnored = true;
-		for (final TypeReference exception : thrownExceptions) {
-			allExceptionsIgnored &= this.isFiltered(exception);
-			if (!allExceptionsIgnored) {
-				break;
-			}
-		}
-		return allExceptionsIgnored;
+	private void computeRetainedExceptions(Collection<TypeReference> thrownExceptions){
+	   for (final TypeReference exception : thrownExceptions) {
+	     if (!this.isFiltered(exception)) {
+	       this.retainedExceptions.add(exception);
+	     }	     
+	   }
 	}
 
 	private boolean areAllExceptionsIgnored() {
@@ -108,4 +120,8 @@ public class ExceptionMatcher {
 
 		return isFiltered;
 	}
+
+  public Set<TypeReference> getRetainedExceptions() {
+    return retainedExceptions;
+  }
 }

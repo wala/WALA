@@ -70,19 +70,18 @@ public class ExceptionTransferFunctionProvider implements ITransferFunctionProvi
 
     Iterator<CallSiteReference> callsites = cg.getPossibleSites(src, dst);
     BitVector filtered = new BitVector(transformer.getValues().getSize());
-    
-    
+
     if (callsites.hasNext()) {
-      
+
       CallSiteReference callsite = callsites.next();
-      
-      Set<TypeReference> caught = new LinkedHashSet<>(); 
-      caught.addAll(intraResult.getAnalysis(src).getCaughtExceptions(callsite));      
+
+      Set<TypeReference> caught = new LinkedHashSet<>();
+      caught.addAll(intraResult.getAnalysis(src).getCaughtExceptions(callsite));
       while (callsites.hasNext()) {
         callsite = callsites.next();
         caught.retainAll(intraResult.getAnalysis(src).getCaughtExceptions(callsite));
       }
-      
+
       filtered = transformer.computeBitVector(caught);
       return new BitVectorMinusVector(filtered);
     } else {
