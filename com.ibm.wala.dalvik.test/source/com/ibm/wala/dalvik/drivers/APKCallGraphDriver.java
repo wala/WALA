@@ -2,8 +2,10 @@ package com.ibm.wala.dalvik.drivers;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Set;
 
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
 import com.ibm.wala.dalvik.test.util.Util;
@@ -17,6 +19,9 @@ import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.io.FileUtil;
 
 public class APKCallGraphDriver {
+  private static final boolean dumpIR = Boolean.parseBoolean(System.getProperty("dumpIR", "false"));
+  private static final boolean addAbstract = Boolean.parseBoolean(System.getProperty("addAbstract", "false"));
+  
   private static int timeout = -1;
 
   private static URI[] libs() {
@@ -98,24 +103,34 @@ public class APKCallGraphDriver {
 	        CG = DalvikCallGraphTestBase.makeAPKCallGraph(libs(), null, apk.getAbsolutePath(), pm, ReflectionOptions.NONE).fst;
 	        System.err.println("Analyzed " + apk + " in " + (System.currentTimeMillis() - time));
 
-	        Set<IMethod> code = HashSetFactory.make();
-	        for(CGNode n : CG) {
-	          code.add(n.getMethod());
-	        }
-	        /*
-	        for(IClass cls : CG.getClassHierarchy()) {
-	          for(IMethod m : cls.getDeclaredMethods()) {
-	            if (m.isAbstract() && !Collections.disjoint(CG.getClassHierarchy().getPossibleTargets(m.getReference()), code)) {
-	              code.add(m);
+	        if (dumpIR) {
+	          for(CGNode n : CG) {
+	            System.err.println(n.getIR());
+	            System.err.println();
+	          }	          
+	        } else {
+	          Set<IMethod> code = HashSetFactory.make();
+	          for(CGNode n : CG) {
+	            code.add(n.getMethod());
+	          }
+
+	          if (addAbstract) {
+	            for(IClass cls : CG.getClassHierarchy()) {
+	              for(IMethod m : cls.getDeclaredMethods()) {
+	                if (m.isAbstract() && !Collections.disjoint(CG.getClassHierarchy().getPossibleTargets(m.getReference()), code)) {
+	                  code.add(m);
+	                }
+	              }
 	            }
 	          }
+
+	          System.err.println("reachable methods for " + apk);
+	          for(IMethod m : code) {
+	            System.err.println("" + m.getDeclaringClass().getName() + " " + m.getName() + m.getDescriptor());
+
+	          }
+	          System.err.println("end of methods");
 	        }
-          */
-	        System.err.println("reachable methods for " + apk);
-          for(IMethod m : code) {
-            System.err.println("" + m.getDeclaringClass().getName() + " " + m.getName() + m.getDescriptor());
-          }
-          System.err.println("end of methods");
 
 	      } catch (Throwable e) {
 	        e.printStackTrace(System.err);
