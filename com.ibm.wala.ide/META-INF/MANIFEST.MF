@@ -17,7 +17,8 @@ Require-Bundle: com.ibm.wala.core,
  org.eclipse.jdt.core,
  org.eclipse.ui.ide,
  org.eclipse.jdt,
- org.eclipse.jdt.launching
+ org.eclipse.jdt.launching,
+ org.eclipse.e4.ui.workbench;bundle-version="1.2.2";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.ibm.wala.ide.classloader,

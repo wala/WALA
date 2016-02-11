@@ -33,7 +33,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.CommandLine;
 
 /**
@@ -54,17 +53,20 @@ public class IFDSExplorerExample {
   public static void main(String[] args) throws IOException, IllegalArgumentException, CallGraphBuilderCancelException,
       WalaException {
     Properties p = CommandLine.parse(args);
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, IFDSExplorer.class.getClassLoader());
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     IClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options, null);
     AnalysisCache cache = new AnalysisCache();
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
+    System.out.println("building CG");
+    CallGraph cg = builder.makeCallGraph(options, null);
+    System.out.println("done with CG");
+    System.out.println("computing reaching defs");
     ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg, cache);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = reachingDefs.analyze();
+    System.out.println("done with reaching defs");
     IFDSExplorer.setDotExe(p.getProperty("dotExe"));
     IFDSExplorer.setGvExe(p.getProperty("viewerExe"));
     IFDSExplorer.viewIFDS(result);

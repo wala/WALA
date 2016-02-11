@@ -59,7 +59,10 @@ public final class WalaProperties {
     }
 
     String dir = p.getProperty(WalaProperties.J2SE_DIR);
-    Assertions.productionAssertion(dir != null);
+    if (dir == null || !(new File(dir)).isDirectory()) {
+      System.err.println("WARNING: java_runtime_dir " + dir + " in wala.properties is invalid.  Using boot class path instead.");
+      return PlatformUtil.getBootClassPathJars();      
+    }
     return getJarsInDirectory(dir);
   }
 
