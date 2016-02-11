@@ -933,7 +933,19 @@ public class PDG implements NumberedGraph<Statement> {
   private void createCalleeParams() {
     if (paramCalleeStatements == null) {
       ArrayList<Statement> list = new ArrayList<Statement>();
-      for (int i = 1; i <= node.getMethod().getNumberOfParameters(); i++) {
+      int paramCount = node.getMethod().getNumberOfParameters();
+      
+      for (Iterator<CGNode> callers = cg.getPredNodes(node); callers.hasNext(); ) {
+        CGNode caller = callers.next();
+        IR callerIR = caller.getIR();
+        for (Iterator<CallSiteReference> sites = cg.getPossibleSites(caller, node); sites.hasNext(); ) {
+          for (SSAAbstractInvokeInstruction inst : callerIR.getCalls(sites.next())) {
+           paramCount = Math.max(paramCount, inst.getNumberOfParameters()-1);
+          }
+        }
+      }
+      
+      for (int i = 1; i <= paramCount; i++) {
         ParamCallee s = new ParamCallee(node, i);
         delegate.addNode(s);
         list.add(s);
