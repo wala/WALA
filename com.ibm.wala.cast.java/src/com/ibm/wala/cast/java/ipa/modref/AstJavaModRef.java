@@ -23,14 +23,14 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 
-public class AstJavaModRef extends AstModRef {
+public class AstJavaModRef<T extends InstanceKey> extends AstModRef<T> {
 
-  protected static class AstJavaRefVisitor 
-      extends AstRefVisitor 
+  protected static class AstJavaRefVisitor<T extends InstanceKey>
+      extends AstRefVisitor<T>
       implements AstJavaInstructionVisitor
   {
       
-    protected AstJavaRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h) {
+    protected AstJavaRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
       super(n, result, pa, (AstHeapModel)h);
     }
 
@@ -47,16 +47,16 @@ public class AstJavaModRef extends AstModRef {
   }
 
   @Override
-  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h) {
+  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
     return new AstJavaRefVisitor(n, result, pa, h);
   }
 
-  protected static class AstJavaModVisitor 
-      extends AstModVisitor 
+  protected static class AstJavaModVisitor<T extends InstanceKey> 
+      extends AstModVisitor<T> 
       implements AstJavaInstructionVisitor
   {
       
-    protected AstJavaModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa) {
+    protected AstJavaModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<T> pa) {
       super(n, result, (AstHeapModel)h, pa);
     }
 
@@ -73,8 +73,8 @@ public class AstJavaModRef extends AstModRef {
   }
  
   @Override
-  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
-    return new AstJavaModVisitor(n, result, h, pa);
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+    return new AstJavaModVisitor<T>(n, result, h, pa);
   }
 
 }

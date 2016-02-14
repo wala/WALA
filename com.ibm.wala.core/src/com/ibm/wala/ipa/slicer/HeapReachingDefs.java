@@ -66,7 +66,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * Computation of reaching definitions for heap locations, relying on pointer analysis
  */
-public class HeapReachingDefs {
+public class HeapReachingDefs<T extends InstanceKey> {
 
   private static final boolean DEBUG = false;
 
@@ -96,7 +96,7 @@ public class HeapReachingDefs {
    * @throws IllegalArgumentException if statements is null
    */
   @SuppressWarnings("unused")
-  public Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis<InstanceKey> pa,
+  public Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis<T> pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions, CallGraph cg) {
 
     if (statements == null) {
@@ -151,7 +151,7 @@ public class HeapReachingDefs {
     private final CallGraph cg;
 
     RDMap(BitVectorSolver<? extends ISSABasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
-        PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
+        PointerAnalysis<T> pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
       if (VERBOSE) {
         System.err.println("Init pointer Key mod ");
@@ -169,7 +169,7 @@ public class HeapReachingDefs {
     }
 
     private void eagerPopulate(Map<PointerKey, MutableIntSet> pointerKeyMod, BitVectorSolver<? extends ISSABasicBlock> solver,
-        OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa,
+        OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis<T> pa,
         Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstruction2Statement) {
       for (Statement s : domain) {
@@ -181,7 +181,7 @@ public class HeapReachingDefs {
      * For each pointerKey, which statements may def it
      */
     private Map<PointerKey, MutableIntSet> initPointerKeyMod(OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
-        PointerAnalysis<InstanceKey> pa) {
+        PointerAnalysis<? extends InstanceKey> pa) {
       Map<PointerKey, MutableIntSet> pointerKeyMod = HashMapFactory.make();
       for (Statement s : domain) {
         switch (s.getKind()) {
@@ -306,7 +306,7 @@ public class HeapReachingDefs {
      */
     OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
         BitVectorSolver<? extends ISSABasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
-        PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
+        PointerAnalysis<T> pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement) {
       switch (s.getKind()) {
       case NORMAL:
@@ -397,7 +397,7 @@ public class HeapReachingDefs {
    * For each statement s, compute the set of statements that may def the heap value read by s.
    */
   private Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<? extends ISSABasicBlock> solver,
-      OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa,
+      OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis<T> pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
       Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
 
@@ -420,7 +420,7 @@ public class HeapReachingDefs {
     return true;
   }
 
-  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa, HeapExclusions exclusions) {
+  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis<? extends InstanceKey> pa, HeapExclusions exclusions) {
     switch (s.getKind()) {
     case NORMAL:
       NormalStatement ns = (NormalStatement) s;
@@ -481,7 +481,7 @@ public class HeapReachingDefs {
 
     private final OrdinalSetMapping<Statement> domain;
 
-    private final PointerAnalysis<InstanceKey> pa;
+    private final PointerAnalysis<? extends InstanceKey> pa;
 
     private final Map<Integer, NormalStatement> ssaInstructionIndex2Statement;
 
@@ -493,12 +493,12 @@ public class HeapReachingDefs {
      */
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
-    public RD(CGNode node, ExplodedControlFlowGraph cfg, PointerAnalysis<InstanceKey> pa, OrdinalSetMapping<Statement> domain,
+    public RD(CGNode node, ExplodedControlFlowGraph cfg, PointerAnalysis<? extends InstanceKey> pa2, OrdinalSetMapping<Statement> domain,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
       this.node = node;
       this.cfg = cfg;
       this.domain = domain;
-      this.pa = pa;
+      this.pa = pa2;
       this.ssaInstructionIndex2Statement = ssaInstructionIndex2Statement;
       this.exclusions = exclusions;
       initHeapReturnCaller();

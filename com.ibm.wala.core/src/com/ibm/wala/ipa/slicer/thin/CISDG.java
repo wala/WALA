@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.ISDG;
@@ -41,7 +42,7 @@ public class CISDG implements ISDG {
   /**
    * the basic SDG, without interprocedural heap edges
    */
-  final SDG noHeap;
+  final SDG<InstanceKey> noHeap;
 
   /**
    * What pointer keys does each statement mod?
@@ -63,7 +64,7 @@ public class CISDG implements ISDG {
    */
   final Map<PointerKey, Set<Statement>> invRef;
 
-  protected CISDG(SDG noHeap, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
+  protected CISDG(SDG<InstanceKey> noHeap, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
     this.noHeap = noHeap;
     this.mod = mod;
     this.ref = ref;

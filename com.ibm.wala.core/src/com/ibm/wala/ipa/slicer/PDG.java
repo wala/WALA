@@ -75,7 +75,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 /**
  * Program dependence graph for a single call graph node
  */
-public class PDG implements NumberedGraph<Statement> {
+public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
 /** BEGIN Custom change: control deps */                
   public enum Dependency {CONTROL_DEP, DATA_AND_CONTROL_DEP};
@@ -106,7 +106,7 @@ public class PDG implements NumberedGraph<Statement> {
 
   private final Collection<PointerKey> locationsHandled = HashSetFactory.make();
 
-  private final PointerAnalysis<InstanceKey> pa;
+  private final PointerAnalysis<T> pa;
 
   private final ExtendedHeapModel heapModel;
 
@@ -132,7 +132,7 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
-  public PDG(final CGNode node, PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  public PDG(final CGNode node, PointerAnalysis<T> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
     this(node, pa, mod, ref, dOptions, cOptions, exclusions, cg, modRef, false);
@@ -144,7 +144,7 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
-  public PDG(final CGNode node, PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  public PDG(final CGNode node, PointerAnalysis<T> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef, boolean ignoreAllocHeapDefs) {
 
@@ -692,7 +692,7 @@ public class PDG implements NumberedGraph<Statement> {
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<Statement>(iterator(), f));
 
-    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs(modRef, heapModel).computeReachingDefs(node, ir, pa, mod,
+    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs<T>(modRef, heapModel).computeReachingDefs(node, ir, pa, mod,
         relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {
