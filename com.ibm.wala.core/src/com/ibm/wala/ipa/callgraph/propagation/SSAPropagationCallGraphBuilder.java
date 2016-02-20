@@ -137,7 +137,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * Doesn't play well with pre-transitive solver; turning off for now.
    */
-  protected final static boolean SHORT_CIRCUIT_SINGLE_USES = true;
+  protected final static boolean SHORT_CIRCUIT_SINGLE_USES = false;
 
   /**
    * Should we change calls to clone() to assignments?
