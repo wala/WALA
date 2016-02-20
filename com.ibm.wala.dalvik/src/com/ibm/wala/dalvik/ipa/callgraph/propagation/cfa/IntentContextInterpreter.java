@@ -117,7 +117,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             return intent.getComponent();
         } else if (intent.getType() == Intent.IntentType.SYSTEM_SERVICE) {
             
-            return null;
+            return AndroidComponent.UNKNOWN;
         } else {
             final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
             if (possibleTargets.size() == 1) {
@@ -257,13 +257,6 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             throw new IllegalArgumentException("node is null");
         }
         final MethodReference target = node.getMethod().getReference();
-
-        { // DEBUG
-            if (target.toString().contains("getSystemService")) {
-                return true;
-            }
-        }
-
         return (
                 intentStarters.isStarter(target) 
         );

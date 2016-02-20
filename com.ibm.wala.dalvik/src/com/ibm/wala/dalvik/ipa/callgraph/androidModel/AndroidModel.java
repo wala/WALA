@@ -584,7 +584,10 @@ public class AndroidModel /* makes SummarizedMethod */
      */
     public SummarizedMethod getMethodAs(MethodReference asMethod, TypeReference caller,
             IntentStarters.StartInfo info, CGNode callerNd) throws CancelException {
-        Set<StarterFlags> flags = info.getFlags();
+        Set<StarterFlags> flags = null;
+        if (info != null) {
+          flags = info.getFlags();
+        }
         //System.out.println("\n\nAS: " + asMethod + "\n\n");
         if (!built) {
             getMethod();

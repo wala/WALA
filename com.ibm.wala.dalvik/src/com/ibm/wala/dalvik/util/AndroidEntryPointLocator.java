@@ -370,7 +370,7 @@ nextMethod:
                             if (eps.add(ep)) {
                                 logger.debug("Heuristic 2b: selecting {}", method);
                             }}
-                        } else {
+                        } else if (method != null) {
                             // The function is taken from the super-class
                             if (this.flags.contains(LocatorFlags.WITH_SUPER)) {
                                 final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
