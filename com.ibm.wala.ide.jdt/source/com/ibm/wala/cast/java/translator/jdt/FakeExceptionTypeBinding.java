@@ -452,4 +452,10 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return null;
   }
 
+  // do not put @Override here, to avoid breaking compilation on older Eclipse versions
+  public IBinding getDeclaringMember() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }
