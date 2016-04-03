@@ -37,3 +37,7 @@ com.ibm.wala.dalvik/src/logback.xml
 com.ibm.wala.ide.jdt.test/testdata/
 edu.kit.wala.smali.test/out/
 target/
+com.ibm.wala.dalvik.test/data/sample.cup
+com.ibm.wala.dalvik.test/parser.java
+com.ibm.wala.dalvik.test/report
+com.ibm.wala.dalvik.test/sym.java
