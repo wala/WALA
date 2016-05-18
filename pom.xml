@@ -54,10 +54,6 @@
     
     <module>com.ibm.wala.scandroid</module>
     
-    <!-- <module>com.ibm.wala.cast.java.polyglot</module> -->
-    <!-- figure out why this dies -->
-    <!-- module>com.ibm.wala.cast.java.polyglot.test</module -->
-    
     <module>com.ibm.wala-repository</module>
     
   </modules>
