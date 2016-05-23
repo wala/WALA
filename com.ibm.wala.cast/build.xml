@@ -60,7 +60,7 @@
   <target name="fetchCommonsIo" depends="CommonsIoPresent" unless="commons.io.present">
     <delete dir="${temp.folder}"/>
     <mkdir dir="${temp.folder}"/>
-	<get src="http://apache.openmirror.de//commons/io/binaries/commons-io-2.4-bin.zip" dest="${temp.folder}/commons-io-2.4.zip"/>
+	<get src="http://archive.apache.org/dist/commons/io/binaries/commons-io-2.4-bin.zip" dest="${temp.folder}/commons-io-2.4.zip"/>
     <unzip src="${temp.folder}/commons-io-2.4.zip" dest="${temp.folder}"/>
     <copy file="${temp.folder}/commons-io-2.4/commons-io-2.4.jar" tofile="${plugin.destination}/lib/commons-io-2.4.jar" />
     <delete dir="${temp.folder}"/>
