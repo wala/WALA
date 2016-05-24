@@ -1,4 +1,4 @@
-package com.ibm.wala.ide.util;
+package com.ibm.wala.cast.java.ecj.util;
 
 import java.io.File;
 import java.io.IOException;

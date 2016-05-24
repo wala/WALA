@@ -31,6 +31,8 @@
     <module>com.ibm.wala.cast.java</module>
     <module>com.ibm.wala.cast.java.test</module>
     <module>com.ibm.wala.cast.java.test.data</module>
+
+    <module>com.ibm.wala.cast.java.ecj</module>
     
     <module>com.ibm.wala.ide-feature</module>
     <module>com.ibm.wala.ide</module>
