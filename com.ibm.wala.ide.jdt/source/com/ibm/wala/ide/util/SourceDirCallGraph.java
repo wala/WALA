@@ -8,7 +8,7 @@ import java.util.jar.JarFile;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroOneContainerCFABuilderFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.cast.java.translator.jdt.ejc.EJCClassLoaderFactory;
+import com.ibm.wala.cast.java.translator.jdt.ejc.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -58,7 +58,7 @@ public class SourceDirCallGraph {
     scope.addToScope(JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(new File(sourceDir)));
     
     // build the class hierarchy
-    IClassHierarchy cha = ClassHierarchy.make(scope, new EJCClassLoaderFactory(scope.getExclusions()));
+    IClassHierarchy cha = ClassHierarchy.make(scope, new ECJClassLoaderFactory(scope.getExclusions()));
     System.out.println(cha.getNumberOfClasses() + " classes");
     System.out.println(Warnings.asString());
     Warnings.clear();

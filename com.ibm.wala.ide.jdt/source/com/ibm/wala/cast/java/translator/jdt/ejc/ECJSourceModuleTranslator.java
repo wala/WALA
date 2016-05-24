@@ -77,11 +77,11 @@ import com.ibm.wala.util.debug.Assertions;
  * @author rfuhrer
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
-public class EJCSourceModuleTranslator implements SourceModuleTranslator {
-  private final class EjcAstToIR extends FileASTRequestor {
+public class ECJSourceModuleTranslator implements SourceModuleTranslator {
+  private final class ECJAstToIR extends FileASTRequestor {
     private final Map<String, ModuleEntry> sourceMap;
     
-    public EjcAstToIR(Map<String, ModuleEntry> sourceMap) {
+    public ECJAstToIR(Map<String, ModuleEntry> sourceMap) {
      this.sourceMap = sourceMap;
     }
 
@@ -108,15 +108,15 @@ public class EJCSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   protected boolean dump;
-  protected EJCSourceLoaderImpl sourceLoader;
+  protected ECJSourceLoaderImpl sourceLoader;
   private final String[] sources;
   private final String[] libs;
   
-  public EJCSourceModuleTranslator(AnalysisScope scope, EJCSourceLoaderImpl sourceLoader) {
+  public ECJSourceModuleTranslator(AnalysisScope scope, ECJSourceLoaderImpl sourceLoader) {
     this(scope, sourceLoader, false);
   }
 
-  public EJCSourceModuleTranslator(AnalysisScope scope, EJCSourceLoaderImpl sourceLoader, boolean dump) {
+  public ECJSourceModuleTranslator(AnalysisScope scope, ECJSourceLoaderImpl sourceLoader, boolean dump) {
     this.sourceLoader = sourceLoader;
     this.dump = dump;
     
@@ -178,7 +178,7 @@ public class EJCSourceModuleTranslator implements SourceModuleTranslator {
     Hashtable options = JavaCore.getOptions();
     options.put(JavaCore.COMPILER_SOURCE, "1.8");
     parser.setCompilerOptions(options);
-    parser.createASTs(sourceFiles, null, new String[0], new EjcAstToIR(sourceMap), new NullProgressMonitor());
+    parser.createASTs(sourceFiles, null, new String[0], new ECJAstToIR(sourceMap), new NullProgressMonitor());
   }
 
   protected Java2IRTranslator makeIRTranslator() {

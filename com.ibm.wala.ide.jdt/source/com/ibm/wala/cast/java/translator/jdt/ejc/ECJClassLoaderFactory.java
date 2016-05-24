@@ -9,16 +9,16 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class EJCClassLoaderFactory extends JDTClassLoaderFactory {
+public class ECJClassLoaderFactory extends JDTClassLoaderFactory {
 
-  public EJCClassLoaderFactory(SetOfClasses exclusions) {
+  public ECJClassLoaderFactory(SetOfClasses exclusions) {
     super(exclusions);
   }
 
   @Override
   protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
       throws IOException {
-    return new EJCSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, dump);
+    return new ECJSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, dump);
   }
 
 }

@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.ibm.wala.cast.java.client;
 
-import com.ibm.wala.cast.java.translator.jdt.ejc.EJCClassLoaderFactory;
+import com.ibm.wala.cast.java.translator.jdt.ejc.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class EJCJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
+public class ECJJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
 
   @Override
   protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions) {
-    return new EJCClassLoaderFactory(exclusions);
+    return new ECJClassLoaderFactory(exclusions);
   }
 
 }

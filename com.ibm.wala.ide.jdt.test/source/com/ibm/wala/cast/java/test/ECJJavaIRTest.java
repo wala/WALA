@@ -9,7 +9,7 @@ package com.ibm.wala.cast.java.test;
 import java.util.Collection;
 import java.util.List;
 
-import com.ibm.wala.cast.java.client.EJCJavaSourceAnalysisEngine;
+import com.ibm.wala.cast.java.client.ECJJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.client.AbstractAnalysisEngine;
@@ -19,15 +19,15 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
-public class EJCJavaIRTest extends JavaIRTests {
+public class ECJJavaIRTest extends JavaIRTests {
   
-  public EJCJavaIRTest() {
+  public ECJJavaIRTest() {
     super(null);
   }
 
   @Override
   protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    JavaSourceAnalysisEngine engine = new EJCJavaSourceAnalysisEngine() {
+    JavaSourceAnalysisEngine engine = new ECJJavaSourceAnalysisEngine() {
       @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);

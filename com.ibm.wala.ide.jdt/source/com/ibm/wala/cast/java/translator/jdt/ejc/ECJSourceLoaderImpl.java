@@ -47,25 +47,25 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class EJCSourceLoaderImpl extends JavaSourceLoaderImpl {
+public class ECJSourceLoaderImpl extends JavaSourceLoaderImpl {
   private final boolean dump;
 
-  public EJCSourceLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
+  public ECJSourceLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
       SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
     this(loader, parent, exclusions, cha);
   }
 
-  public EJCSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+  public ECJSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
     this(loaderRef, parent, exclusions, cha, false);
   }
   
-  public EJCSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha, boolean dump) throws IOException {
+  public ECJSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha, boolean dump) throws IOException {
     super(loaderRef, parent, exclusions, cha);
     this.dump = dump;
   }
 
   @Override
   protected SourceModuleTranslator getTranslator() {
-    return new EJCSourceModuleTranslator(cha.getScope(), this, dump);
+    return new ECJSourceModuleTranslator(cha.getScope(), this, dump);
   }
 }
