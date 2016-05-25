@@ -13,7 +13,7 @@ install:
 script:
  - mvn clean verify -B -q
  - jdk_switcher use oraclejdk7
- - ./build-maven-jars.py "verify -Dgpg.skip"
+ - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
 cache:
   directories:
