@@ -30,6 +30,11 @@ for proj in projects:
     print full_proj
     os.chdir(full_proj)
     mvnCmd = "mvn -f mvncentral.xml clean " + action
-    subprocess.check_output(mvnCmd, shell=True)
+    try:
+        subprocess.check_output(mvnCmd, shell=True)
+    except subprocess.CalledProcessError as e:
+        print "OUTPUT"
+        print e.output
+        raise
     os.chdir("..")    
 
