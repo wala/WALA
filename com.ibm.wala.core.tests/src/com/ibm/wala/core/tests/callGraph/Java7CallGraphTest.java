@@ -49,7 +49,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     F.deleteOnExit();
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    scope.addToScope(ClassLoaderReference.Application, new JarFile(F));
+    scope.addToScope(ClassLoaderReference.Application, new JarFile(F, false));
     
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lpack/ocamljavaMain");

@@ -175,7 +175,7 @@ public class FileProvider {
       return new JarFileModule(new JarFile(filePath, false));
     } else {
       final URLConnection in = url.openConnection();
-      final JarInputStream jarIn = new JarInputStream(in.getInputStream());
+      final JarInputStream jarIn = new JarInputStream(in.getInputStream(), false);
       return new JarStreamModule(jarIn);
     }
   }

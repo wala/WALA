@@ -177,7 +177,7 @@ public class AnalysisScopeReader {
     } else if ("stdlib".equals(entryType)) {
       String[] stdlibs = WalaProperties.getJ2SEJarFiles();
       for (int i = 0; i < stdlibs.length; i++) {
-        scope.addToScope(walaLoader, new JarFile(stdlibs[i]));
+        scope.addToScope(walaLoader, new JarFile(stdlibs[i], false));
       }
     } else {
       Assertions.UNREACHABLE();
@@ -222,7 +222,7 @@ public class AnalysisScopeReader {
       while (paths.hasMoreTokens()) {
         String path = paths.nextToken();
         if (path.endsWith(".jar")) {
-          JarFile jar = new JarFile(path);
+          JarFile jar = new JarFile(path, false);
           scope.addToScope(loader, jar);
           try {
             if (jar.getManifest() != null) {

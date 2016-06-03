@@ -457,7 +457,7 @@ public abstract class IRTests {
       if (libFile.exists()) {
         foundLib = true;
         try {
-          engine.addSystemModule(new JarFileModule(new JarFile(libFile)));
+          engine.addSystemModule(new JarFileModule(new JarFile(libFile, false)));
         } catch (IOException e) {
           Assert.fail(e.getMessage());
         }

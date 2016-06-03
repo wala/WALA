@@ -170,7 +170,7 @@ public abstract class OfflineInstrumenterBase {
         cachedJar.close();
       }
       cachedJarFile = file;
-      cachedJar = new JarFile(file);
+      cachedJar = new JarFile(file, false);
       return cachedJar;
     }
   }
@@ -230,7 +230,7 @@ public abstract class OfflineInstrumenterBase {
    * Add a JAR file containing source classes to instrument.
    */
   final public void addInputJar(File f) throws IOException {
-    JarFile jf = new JarFile(f);
+    JarFile jf = new JarFile(f, false);
     for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements();) {
       JarEntry entry = e.nextElement();
       String name = entry.getName();
