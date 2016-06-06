@@ -11,6 +11,9 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.Util;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
@@ -90,6 +93,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
   public UnaryOperator<NullPointerState> getEdgeTransferFunction(T src, T dst) {
     SSAInstruction instr = getRelevantInstruction(src);
     
+    assert !(instr instanceof SSAPhiInstruction);
     if (instr != null && cfg.hasEdge(src, dst)) {
       instr.visit(visitor);
       if (visitor.noIdentity) {
@@ -133,8 +137,21 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
    * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getNodeTransferFunction(java.lang.Object)
    */
   @Override
-  public UnaryOperator<NullPointerState> getNodeTransferFunction(T node) {
-    throw new UnsupportedOperationException("We do not have such a thing dude!");
+  public UnaryOperator<NullPointerState> getNodeTransferFunction(final T node) {
+    final ArrayList<UnaryOperator<NullPointerState>> phiTransferFunctions = new ArrayList<>(1);
+    for (final Iterator<SSAPhiInstruction> phiIterator = node.iteratePhis(); phiIterator.hasNext(); ) {
+      final SSAPhiInstruction phi = phiIterator.next();
+      int[] uses = new int[phi.getNumberOfUses()];
+      for (int i = 0; i < uses.length; i++) {
+        uses[i] = phi.getUse(i);
+      }
+      phiTransferFunctions.add(NullPointerState.phiValueMeetFunction(phi.getDef(), uses));
+    }
+    if (phiTransferFunctions.size() > 0) {
+      return NullPointerState.phisFunction(phiTransferFunctions);
+    } else {
+      return NullPointerState.identityFunction();
+    }
   }
 
   /* (non-Javadoc)
@@ -150,7 +167,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
    */
   @Override
   public boolean hasNodeTransferFunctions() {
-    return false;
+    return true;
   }
   
   private static class TransferFunctionSSAVisitor implements IVisitor {

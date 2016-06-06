@@ -27,7 +27,7 @@ import com.ibm.wala.fixpoint.AbstractVariable;
 public class ParameterState extends AbstractVariable<ParameterState> {
   /*
    * Inital state is UNKNOWN.
-   * Lattice: UNKNOWN < { NULL, NOT_NULL } < BOTH
+   * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN 
    * 
    * public enum State { UNKNOWN, BOTH, NULL, NOT_NULL }; as defined in NullPointerState
    * 

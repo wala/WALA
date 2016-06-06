@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.cfg.exc.intra;
 
+import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
 import com.ibm.wala.dataflow.graph.DataflowSolver;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -24,16 +25,18 @@ public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<
 
   private final int maxVarNum;
   private final ParameterState parameterState;
+  private final B entry;
   private final IR ir;
 
-  public NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, int[] paramVarNum, IR ir) {
-    this(problem, maxVarNum, paramVarNum, ParameterState.createDefault(ir.getMethod()), ir);
+  public NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, int[] paramVarNum, IR ir, B entry) {
+    this(problem, maxVarNum, paramVarNum, entry, ir, ParameterState.createDefault(ir.getMethod()));
   }
   
-  public NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, int[] paramVarNum, ParameterState initialState, IR ir) {
+  public NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, int[] paramVarNum, B entry, IR ir, ParameterState initialState) {
     super(problem);
     this.maxVarNum = maxVarNum;
     this.parameterState = initialState;
+    this.entry = entry;
     this.ir = ir;
   }
   
@@ -50,7 +53,11 @@ public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<
    */
   @Override
   protected NullPointerState makeNodeVariable(B n, boolean IN) {
-    return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState);
+    if (IN && n.equals(entry)) {
+      return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState, State.BOTH);
+    } else {
+      return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState, State.UNKNOWN);
+    }
   }
 
   @Override
