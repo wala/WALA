@@ -11,6 +11,17 @@ package cfg.exc.intra;
 public class FieldAccess {
   
   
+  static B testParam(boolean unknown, B b1, B b2) {
+    b1 = null;
+    return b1;
+  }
+
+  static B testParam2(boolean unknown, B b1, B b2) {
+    b1.f = 42;
+    return b1;
+  }
+  
+  
   static B testIf(boolean unknown, B b1, B b2) {
     b1.f = 42;
     b2.f = 17;
@@ -36,6 +47,24 @@ public class FieldAccess {
     }
     
     return b3;
+  }
+  
+  static B testIfContinued(boolean unknown, B b1, B b2, B b4) {
+    b1.f = 42;
+
+    B b3;
+    if (unknown) {
+      b3 = b1;
+    } else {
+      b3 = b2;
+    }
+    
+    if (unknown) {
+      b1.f = 42;
+    }
+    
+    b3.f = 17;
+    return b2;
   }
   
   static B testIf3(boolean unknown, B b1) {
@@ -71,6 +100,7 @@ public class FieldAccess {
     
     return b3;
   }
+  
 
 	public static void main(String[] args) {
 
