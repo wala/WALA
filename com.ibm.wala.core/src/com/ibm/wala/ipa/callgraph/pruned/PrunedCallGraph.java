@@ -12,9 +12,11 @@
 package com.ibm.wala.ipa.callgraph.pruned;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -31,15 +33,22 @@ public class PrunedCallGraph implements CallGraph {
 	
 	private CallGraph cg;
 	private Set<CGNode> keep;
+	private Map<CGNode,Set<CGNode>> remove = Collections.emptyMap();
 	
 	public PrunedCallGraph(CallGraph cg, Set<CGNode> keep) {
 		this.cg = cg;
 		this.keep = keep;
 	}
 
+  public PrunedCallGraph(CallGraph cg, Set<CGNode> keep, Map<CGNode,Set<CGNode>> remove) {
+    this(cg, keep);
+    this.remove = remove;
+  }
+  
 	public void removeNodeAndEdges(CGNode n) throws UnsupportedOperationException {
 		cg.removeNodeAndEdges(n);
 		keep.remove(n);
+		remove.remove(n);
 	}
 
 	public Iterator<CGNode> iterator() {
@@ -67,18 +76,23 @@ public class PrunedCallGraph implements CallGraph {
 	public void removeNode(CGNode n) throws UnsupportedOperationException {
 		cg.removeNode(n);
 		keep.remove(n);
+    remove.remove(n);
 	}
 
 	public boolean containsNode(CGNode n) {
 		return cg.containsNode(n) && keep.contains(n);
 	}
 
+	private boolean removedEdge(CGNode src, CGNode target) {
+	  return remove.containsKey(src) && remove.get(src).contains(target);
+	}
+	
 	public Iterator<CGNode> getPredNodes(CGNode n) {
 		Iterator<CGNode> tmp = cg.getPredNodes(n);
 		Collection<CGNode> col = new LinkedList<CGNode>();
 		while (tmp.hasNext()) {
 			CGNode no = tmp.next();
-			if (keep.contains(no)) {
+			if (keep.contains(no) && !removedEdge(no, n)) {
 				col.add(no);
 			}
 		}
@@ -91,7 +105,7 @@ public class PrunedCallGraph implements CallGraph {
 		int cnt = 0;
 		while (tmp.hasNext()) {
 			CGNode no = tmp.next();
-			if (keep.contains(no)) {
+			if (keep.contains(no) && !removedEdge(no, n)) {
 				cnt++;
 			}
 		}
@@ -104,7 +118,7 @@ public class PrunedCallGraph implements CallGraph {
 		Collection<CGNode> col = new LinkedList<CGNode>();
 		while (tmp.hasNext()) {
 			CGNode no = tmp.next();
-			if (keep.contains(no)) {
+			if (keep.contains(no) && !removedEdge(n, no)) {
 				col.add(no);
 			}
 		}
@@ -118,7 +132,7 @@ public class PrunedCallGraph implements CallGraph {
 		int cnt = 0;
 		while (tmp.hasNext()) {
 			CGNode no = tmp.next();
-			if (keep.contains(no)) {
+			if (keep.contains(no) && !removedEdge(n, no)) {
 				cnt++;
 			}
 		}
@@ -154,7 +168,7 @@ public class PrunedCallGraph implements CallGraph {
 
 
 	public boolean hasEdge(CGNode src, CGNode dst) {
-		return cg.hasEdge(src, dst) && keep.contains(src) &&  keep.contains(dst);
+		return cg.hasEdge(src, dst) && keep.contains(src) &&  keep.contains(dst) && !removedEdge(src, dst);
 	}
 
 
@@ -203,7 +217,9 @@ public class PrunedCallGraph implements CallGraph {
 		IntSet tmp = cg.getSuccNodeNumbers(node);
 		BitVectorIntSet kp = new BitVectorIntSet();
 		for (CGNode n : keep) {
-			kp.add(getNumber(n));
+		  if (!removedEdge(node, n)) {
+		    kp.add(getNumber(n));
+		  }
 		}
 		return tmp.intersection(kp);
 	}
@@ -219,7 +235,9 @@ public class PrunedCallGraph implements CallGraph {
 		IntSet tmp = cg.getPredNodeNumbers(node);
 		BitVectorIntSet kp = new BitVectorIntSet();
 		for (CGNode n : keep) {
-			kp.add(getNumber(n));
+      if (!removedEdge(n, node)) {
+        kp.add(getNumber(n));
+      }
 		}
 		return tmp.intersection(kp);
 	}
@@ -287,7 +305,7 @@ public class PrunedCallGraph implements CallGraph {
 		Set<CGNode> tmp = cg.getPossibleTargets(node, site);
 		Set<CGNode> ret = new HashSet<CGNode>();
 		for (CGNode n : tmp) {
-			if (keep.contains(n)) {
+			if (keep.contains(n) && !removedEdge(node, n)) {
 				ret.add(n);
 			}
 		}
@@ -304,7 +322,7 @@ public class PrunedCallGraph implements CallGraph {
 
 
 	public Iterator<CallSiteReference> getPossibleSites(CGNode src,	CGNode target) {
-		if (!(keep.contains(src) && keep.contains(target))){
+		if (!(keep.contains(src) && keep.contains(target)) || removedEdge(src, target)){
 			return null;
 		}
 		return cg.getPossibleSites(src, target);
