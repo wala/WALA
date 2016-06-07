@@ -8,21 +8,21 @@
 package cfg.exc.intra;
 
 
-public class FieldAccess {
+public class FieldAccessDynamic {
   
   
-  public static B testParam(boolean unknown, B b1, B b2) {
+  public B testParam(boolean unknown, B b1, B b2) {
     b1 = null;
     return b1;
   }
 
-  public static B testParam2(boolean unknown, B b1, B b2) {
+  public B testParam2(boolean unknown, B b1, B b2) {
     b1.f = 42;
     return b1;
   }
   
   
-  public static B testIf(boolean unknown, B b1, B b2) {
+  public B testIf(boolean unknown, B b1, B b2) {
     b1.f = 42;
     b2.f = 17;
 
@@ -36,7 +36,7 @@ public class FieldAccess {
     return b3;
   }
 
-  public static B testIf2(boolean unknown, B b1, B b2) {
+  public B testIf2(boolean unknown, B b1, B b2) {
     b1.f = 42;
 
     B b3;
@@ -49,7 +49,7 @@ public class FieldAccess {
     return b3;
   }
   
-  public static B testIfContinued(boolean unknown, B b1, B b2, B b4) {
+  public B testIfContinued(boolean unknown, B b1, B b2, B b4) {
     b1.f = 42;
 
     B b3;
@@ -67,7 +67,7 @@ public class FieldAccess {
     return b2;
   }
   
-  public static B testIf3(boolean unknown, B b1) {
+  public B testIf3(boolean unknown, B b1) {
     if (unknown) {
       b1.f = 42;
     } else {
@@ -77,7 +77,7 @@ public class FieldAccess {
     return b1;
   }
   
-  public static B testWhile(boolean unknown, B b1) {
+  public B testWhile(boolean unknown, B b1) {
     b1.f = 42;
 
     B b3 = null;
@@ -88,7 +88,7 @@ public class FieldAccess {
     return b3;
   }
   
-  public static B testWhile2(boolean unknown, B b1) {
+  public B testWhile2(boolean unknown, B b1) {
     b1.f = 42;
 
     B b3 = new B();
@@ -108,6 +108,7 @@ public class FieldAccess {
 		B b2 = new B();
 		final boolean unknown = (args.length == 0);
 
-		testIf(unknown, b1, b2);
+		FieldAccessDynamic fa = new FieldAccessDynamic();
+		fa.testIf(unknown, b1, b2);
 	}
 }

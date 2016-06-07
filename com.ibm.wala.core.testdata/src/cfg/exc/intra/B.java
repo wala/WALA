@@ -5,6 +5,6 @@ package cfg.exc.intra;
  */
 
 
-class B {
+public class B {
 	int f;
 }
