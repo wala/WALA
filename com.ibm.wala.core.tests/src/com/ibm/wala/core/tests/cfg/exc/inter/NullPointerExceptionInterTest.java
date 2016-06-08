@@ -23,6 +23,7 @@ import com.ibm.wala.cfg.exc.intra.IntraprocNullPointerAnalysis;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -66,14 +67,14 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public static void beforeClass() throws Exception {
     cache = new AnalysisCache();
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), NullPointerExceptionInterTest.class.getClassLoader());
+        (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), NullPointerExceptionInterTest.class.getClassLoader());
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
     try {
       cha = ClassHierarchy.make(scope, factory);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lcfg/exc/inter/CallFieldAccess");
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
       
-      CallGraphBuilder builder = Util.makeVanillaNCFABuilder(3, options, cache, cha, scope);
+      CallGraphBuilder builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
       cg = builder.makeCallGraph(options, null);
     } catch (ClassHierarchyException e) {
       throw new Exception();
@@ -160,5 +161,111 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
     Assert.assertFalse(intraExplodedCFG.hasExceptions());
+  }
+  
+  @Test
+  public void testIf2Exception() throws UnsoundGraphException, CancelException, WalaException {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIf2Exception()Lcfg/exc/intra/B");
+
+    IMethod m = cha.resolveMethod(mr);
+    IR ir = cache.getIR(m);
+    InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
+        NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
+
+    Assert.assertEquals(1, cg.getNodes(mr).size());
+    final CGNode callNode = cg.getNodes(mr).iterator().next();
+
+    ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
+
+    Assert.assertTrue(intraExplodedCFG.hasExceptions());
+  }
+  
+  @Test
+  public void testDynamicIf2Exception() throws UnsoundGraphException, CancelException, WalaException {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIf2Exception()Lcfg/exc/intra/B");
+
+    IMethod m = cha.resolveMethod(mr);
+    
+    Assert.assertEquals(1, cg.getNodes(mr).size());
+    final CGNode callNode = cg.getNodes(mr).iterator().next();
+
+    IR ir = cache.getIR(m);
+    InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
+        NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
+
+
+    ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
+
+    Assert.assertTrue(intraExplodedCFG.hasExceptions());
+  }
+
+  
+  @Test
+  public void testIf2NoException() throws UnsoundGraphException, CancelException, WalaException {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIf2NoException()Lcfg/exc/intra/B");
+
+    IMethod m = cha.resolveMethod(mr);
+    IR ir = cache.getIR(m);
+    InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
+        NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
+
+    Assert.assertEquals(1, cg.getNodes(mr).size());
+    final CGNode callNode = cg.getNodes(mr).iterator().next();
+
+    ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
+    Assert.assertFalse(intraExplodedCFG.hasExceptions());
+  }
+  
+  @Test
+  public void testDynamicIf2NoException() throws UnsoundGraphException, CancelException, WalaException {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIf2NoException()Lcfg/exc/intra/B");
+
+    IMethod m = cha.resolveMethod(mr);
+    IR ir = cache.getIR(m);
+    InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
+        NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
+
+    Assert.assertEquals(1, cg.getNodes(mr).size());
+    final CGNode callNode = cg.getNodes(mr).iterator().next();
+
+    ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
+    Assert.assertFalse(intraExplodedCFG.hasExceptions());
+  }
+  
+
+  @Test
+  public void testGetException() throws UnsoundGraphException, CancelException, WalaException {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callGetException()Lcfg/exc/intra/B");
+
+    IMethod m = cha.resolveMethod(mr);
+    IR ir = cache.getIR(m);
+    InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
+        NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
+
+    Assert.assertEquals(1, cg.getNodes(mr).size());
+    final CGNode callNode = cg.getNodes(mr).iterator().next();
+
+    ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
+
+    Assert.assertTrue(intraExplodedCFG.hasExceptions());
+  }
+  
+  @Test
+  public void testDynamicGetException() throws UnsoundGraphException, CancelException, WalaException {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicGetException()Lcfg/exc/intra/B");
+
+    IMethod m = cha.resolveMethod(mr);
+    
+    Assert.assertEquals(1, cg.getNodes(mr).size());
+    final CGNode callNode = cg.getNodes(mr).iterator().next();
+
+    IR ir = cache.getIR(m);
+    InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
+        NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
+
+
+    ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG = interExplodedCFG.getResult(callNode);
+
+    Assert.assertTrue(intraExplodedCFG.hasExceptions());
   }
 }

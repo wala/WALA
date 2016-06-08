@@ -108,8 +108,6 @@ public class FieldAccessDynamic {
 
     if (unknown) {
       b3.f = 17;
-    } else {
-      System.out.println();
     }
     
     return b3;

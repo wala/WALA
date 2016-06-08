@@ -6,6 +6,6 @@ package cfg.exc.intra;
 
 
 public class B {
-	int f;
-	B b;
+	public int f;
+	public B b;
 }
