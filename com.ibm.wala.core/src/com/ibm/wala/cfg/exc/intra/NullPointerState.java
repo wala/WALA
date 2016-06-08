@@ -102,7 +102,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   }
   
   static UnaryOperator<NullPointerState> phisFunction(Collection<UnaryOperator<NullPointerState>> phiFunctions) {
-    return new PhiValueMeets(phiFunctions);
+    return new OperatorUtil.UnaryOperatorSequence<>(phiFunctions);
   }
 
   boolean isNeverNull(int varNum) {
@@ -311,6 +311,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       boolean changed = false;
+      if (!lhs.equals(rhs)) {
+        lhs.copyState(rhs);
+        changed = true;
+      }
+      lhs.vars[varNum] = State.UNKNOWN;
       for (int from : fromVars) {
           changed |= lhs.meet(varNum, rhs.vars[from]);
       }
@@ -356,7 +361,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public String toString() {
-      StringBuffer str = new StringBuffer("Meet(" + varNum + ", [");
+      StringBuffer str = new StringBuffer("PhiValueMeet(" + varNum + ", [");
       
       for (int i = 0; i < fromVars.length; i++) {
         str.append(fromVars[i]);
@@ -370,51 +375,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
   }
   
-  private static class PhiValueMeets extends UnaryOperator<NullPointerState> {
-    
-    final Collection<UnaryOperator<NullPointerState>> phiTransferFunctions;
-    
-    public PhiValueMeets(Collection<UnaryOperator<NullPointerState>> phiTransferFunctions) {
-      this.phiTransferFunctions = phiTransferFunctions;
-    }
-  
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null) return false;
-      if (getClass() != o.getClass()) return false;
-      
-      PhiValueMeets other = (PhiValueMeets) o;
-      return phiTransferFunctions.equals(other. phiTransferFunctions);
-    }
-  
-    @Override
-    public int hashCode() {
-      return phiTransferFunctions.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-      return phiTransferFunctions.toString();
-    }
-    
-    @Override
-    public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
-      byte changed = FixedPointConstants.NOT_CHANGED;
-      
-      for (UnaryOperator<NullPointerState> phiTransferFunction : phiTransferFunctions) {
-        byte changedPhi = phiTransferFunction.evaluate(lhs, rhs);
-        
-        assert (changedPhi == FixedPointConstants.NOT_CHANGED || changedPhi == FixedPointConstants.CHANGED);
-        if (changedPhi == FixedPointConstants.CHANGED) {
-          changed = FixedPointConstants.CHANGED;
-        }
-      }
-      
-      return changed;
-    }
-  }
-
   
   private static class NullifyFunction extends UnaryOperator<NullPointerState> {
 
