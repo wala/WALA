@@ -101,6 +101,20 @@ public class FieldAccessDynamic {
     return b3;
   }
   
+  public B testGet(boolean unknown, B b1) {
+    b1.f = 42;
+
+    B b3 = b1.b;
+
+    if (unknown) {
+      b3.f = 17;
+    } else {
+      System.out.println();
+    }
+    
+    return b3;
+  }
+  
 
 	public static void main(String[] args) {
 

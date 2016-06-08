@@ -10,26 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.cfg.exc.inter;
 
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.cfg.exc.InterprocAnalysisResult;
 import com.ibm.wala.cfg.exc.NullPointerAnalysis;
 import com.ibm.wala.cfg.exc.intra.IntraprocNullPointerAnalysis;
-import com.ibm.wala.cfg.exc.intra.NullPointerState;
-import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.cfg.exc.intra.NullPointerExceptionIntraTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -43,9 +36,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;

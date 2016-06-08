@@ -7,4 +7,5 @@ package cfg.exc.intra;
 
 public class B {
 	int f;
+	B b;
 }
