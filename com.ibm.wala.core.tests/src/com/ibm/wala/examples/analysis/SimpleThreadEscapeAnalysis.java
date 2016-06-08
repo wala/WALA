@@ -104,7 +104,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
         collectJars(files[i], result);
       }
     } else if (f.getAbsolutePath().endsWith(".jar")) {
-      result.add(new JarFile(f));
+      result.add(new JarFile(f, false));
     }
   }
 
@@ -330,7 +330,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
     Set<JarFile> jars = HashSetFactory.make();
     for (int i = 1; i < args.length; i++) {
-      jars.add(new JarFile(args[i]));
+      jars.add(new JarFile(args[i], false));
     }
 
     Set<IClass> escapingTypes = (new SimpleThreadEscapeAnalysis(jars, mainClassName)).gatherThreadEscapingClasses();
