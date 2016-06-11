@@ -17,6 +17,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
@@ -43,6 +46,8 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public abstract class DynamicCallGraphTestBase extends WalaTestCase {
+  
+  protected boolean testPatchCalls = false;
   
   protected static String getClasspathEntry(String elt) {
     for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
@@ -80,10 +85,15 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         }
       }
       
-      OfflineDynamicCallGraph.main(
-          rtJar == null?
-            new String[]{testJarLocation, "-o", instrumentedJarLocation}:
-            new String[]{testJarLocation, "-o", instrumentedJarLocation, "--rt-jar", rtJar});
+      List<String> args = new ArrayList<String>();
+      args.addAll(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation));
+      if (rtJar != null) {
+        args.addAll(Arrays.asList("--rt-jar", rtJar));
+      }
+      if (testPatchCalls) {
+        args.add("--patch-calls");
+      }
+      OfflineDynamicCallGraph.main(args.toArray(new String[ args.size() ]));
       Assert.assertTrue("expected to create /tmp/test.jar", new File(instrumentedJarLocation).exists());   
       instrumentedJarBuilt = true;
     }

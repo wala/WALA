@@ -684,7 +684,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     this.preprocessor = preprocessor;
   }
 
-  class JavaScriptClass extends AstClass {
+  public class JavaScriptClass extends AstClass {
     private IClass superClass;
 
     private JavaScriptClass(IClassLoader loader, TypeReference classRef, TypeReference superRef,
@@ -720,7 +720,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
   }
 
-  class JavaScriptRootClass extends AstDynamicPropertyClass {
+  public class JavaScriptRootClass extends AstDynamicPropertyClass {
 
     private JavaScriptRootClass(IClassLoader loader, CAstSourcePositionMap.Position sourcePosition) {
       super(sourcePosition, JavaScriptTypes.Root.getName(), loader, (short) 0, emptyMap1, JavaScriptTypes.Root);

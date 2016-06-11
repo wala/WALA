@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
+import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
@@ -57,6 +58,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -283,13 +285,20 @@ public class FlowGraph implements Iterable<Vertex> {
 
       @Override
       public Iterable<PointerKey> getPointerKeys() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Iterable<PointerKey> () {
+          @Override
+          public Iterator<PointerKey> iterator() {
+            return new CompoundIterator<PointerKey>(factory.getArgVertices().iterator(),
+                new CompoundIterator<PointerKey>(factory.getRetVertices().iterator(), 
+                    new CompoundIterator<PointerKey>(factory.getVarVertices().iterator(),
+                        factory.getPropVertices().iterator())));
+          }
+        };
       }
-
+      
       @Override
       public HeapModel getHeapModel() {
-        return new HeapModel() {
+        return new AstHeapModel() {
           
           @Override
           public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
@@ -386,6 +395,30 @@ public class FlowGraph implements Iterable<Vertex> {
           @Override
           public IClassHierarchy getClassHierarchy() {
             assert false;
+            return null;
+          }
+
+          @Override
+          public PointerKey getPointerKeyForArrayLength(InstanceKey I) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public PointerKey getPointerKeyForObjectCatalog(InstanceKey I) {
+            // TODO Auto-generated method stub
             return null;
           }        
         };

@@ -12,4 +12,5 @@ Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.cast,
  com.ibm.wala.shrike
 Export-Package: com.ibm.wala.cast.java.client,
- com.ibm.wala.cast.java.translator.jdt
+ com.ibm.wala.cast.java.translator.jdt,
+ com.ibm.wala.cast.java.translator.jdt.ejc

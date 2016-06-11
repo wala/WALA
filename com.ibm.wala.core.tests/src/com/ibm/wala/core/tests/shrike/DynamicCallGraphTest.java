@@ -31,8 +31,16 @@ import com.ibm.wala.util.CancelException;
 
 public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
-  private static String testJarLocation = getClasspathEntry("com.ibm.wala.core.testdata");
+  protected final String testJarLocation;
+  
+  protected DynamicCallGraphTest(String testJarLocation) {
+    this.testJarLocation = testJarLocation;
+  }
     
+  public DynamicCallGraphTest() {
+    this(getClasspathEntry("com.ibm.wala.core.testdata"));
+  }
+  
   private CallGraph staticCG(String mainClass, String exclusionsFile) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, exclusionsFile != null? exclusionsFile: CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);

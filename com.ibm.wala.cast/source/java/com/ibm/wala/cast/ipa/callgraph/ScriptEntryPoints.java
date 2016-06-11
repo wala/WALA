@@ -26,12 +26,12 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
-  private final IClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
-  private final IClass scriptType;
+  protected final IClass scriptType;
 
-  private class ScriptEntryPoint extends Entrypoint {
-    ScriptEntryPoint(IMethod scriptCodeBody) {
+  public class ScriptEntryPoint extends Entrypoint {
+    public ScriptEntryPoint(IMethod scriptCodeBody) {
       super(scriptCodeBody);
     }
       

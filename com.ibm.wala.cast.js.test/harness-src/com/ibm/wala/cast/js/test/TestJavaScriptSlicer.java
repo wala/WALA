@@ -74,10 +74,10 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
   private Collection<Statement> slice(String file, DataDependenceOptions data, ControlDependenceOptions ctrl) throws IOException, WalaException, CancelException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", file);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-
-    final Collection<Statement> ss = findTargetStatement(CG);
  
     SDG sdg = new SDG(CG, B.getPointerAnalysis(), new JavaScriptModRef(), data, ctrl);
+
+    final Collection<Statement> ss = findTargetStatement(CG);
     Collection<Statement> result = Slicer.computeBackwardSlice(sdg, ss);
     return result;
   }

@@ -16,3 +16,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/dx.jar
+Export-Package: com.ibm.wala.dalvik.test.callGraph,
+ com.ibm.wala.dalvik.test.util

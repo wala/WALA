@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+
 
 /**
  * A return vertex represents the 'arguments' array of a given function.
@@ -17,7 +19,7 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
  * @author Julian Dolby (dolby@us.ibm.com)
  *
  */
-public class ArgVertex extends Vertex {
+public class ArgVertex extends Vertex implements PointerKey {
 	private final FuncVertex func;
 
 	ArgVertex(FuncVertex func) {

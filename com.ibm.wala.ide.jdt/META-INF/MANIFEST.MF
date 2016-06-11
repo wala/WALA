@@ -23,5 +23,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.client,
+ com.ibm.wala.cast.java.translator.jdt,
  com.ibm.wala.ide.jdt,
  com.ibm.wala.ide.util

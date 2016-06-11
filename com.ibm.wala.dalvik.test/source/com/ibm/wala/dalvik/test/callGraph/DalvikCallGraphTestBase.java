@@ -131,12 +131,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
 		AnalysisCache cache = new AnalysisCache(new DexIRFactory());
 
-		Set<LocatorFlags> flags = HashSetFactory.make();
-		flags.add(LocatorFlags.INCLUDE_CALLBACKS);
-		flags.add(LocatorFlags.EP_HEURISTIC);
-		flags.add(LocatorFlags.CB_HEURISTIC);
-		AndroidEntryPointLocator eps = new AndroidEntryPointLocator(flags);
-		List<? extends Entrypoint> es = eps.getEntryPoints(cha);
+		List<? extends Entrypoint> es = getEntrypoints(cha);
 
 		assert ! es.isEmpty();
 		
@@ -152,6 +147,16 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		
 		return Pair.make(callGraph, ptrAnalysis);
 	}
+
+  public static List<? extends Entrypoint> getEntrypoints(final IClassHierarchy cha) {
+    Set<LocatorFlags> flags = HashSetFactory.make();
+		flags.add(LocatorFlags.INCLUDE_CALLBACKS);
+		flags.add(LocatorFlags.EP_HEURISTIC);
+		flags.add(LocatorFlags.CB_HEURISTIC);
+		AndroidEntryPointLocator eps = new AndroidEntryPointLocator(flags);
+		List<? extends Entrypoint> es = eps.getEntryPoints(cha);
+    return es;
+  }
 	
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(URI[] androidLibs, File androidAPIJar, String mainClassName, String dexFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, dexFileName);

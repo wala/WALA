@@ -102,6 +102,10 @@ public class VertexFactory {
 		return value;
 	}
 
+	public Iterable<RetVertex> getRetVertices() {
+	  return retVertexCache.values();
+	}
+	
 	public ArgVertex makeArgVertex(FuncVertex func) {
     ArgVertex value = argVertexCache.get(func);
     if(value == null)
@@ -109,6 +113,10 @@ public class VertexFactory {
     return value;
   }
 
+	public Iterable<ArgVertex> getArgVertices() {
+	  return argVertexCache.values();
+	}
+	
 	public UnknownVertex makeUnknownVertex() {
 		return UnknownVertex.INSTANCE;
 	}
@@ -120,6 +128,10 @@ public class VertexFactory {
 			varVertexCache.put(key, value = new VarVertex(func, valueNumber));
 		return value;
 	}
+
+	 public Iterable<VarVertex> getVarVertices() {
+	    return varVertexCache.values();
+	  }
 
 	public LexicalVarVertex makeLexicalAccessVertex(String definer, String name) {
 		Pair<String, String> key = Pair.make(definer, name);

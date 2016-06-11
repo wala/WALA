@@ -932,7 +932,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       checkForRealizedExitEdges(bb);
     }
 
-    void setCurrentBlockAsHandler() {
+    public void setCurrentBlockAsHandler() {
       currentBlock.makeHandlerBlock();
     }
 
@@ -1395,7 +1395,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     private final String _name;
     private final CAstType type;
     
-    private FinalCAstSymbol(String _name, CAstType type) {
+    public FinalCAstSymbol(String _name, CAstType type) {
       this._name = _name;
       this.type = type;
       assert _name != null;
