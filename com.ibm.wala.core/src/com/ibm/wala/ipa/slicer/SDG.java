@@ -791,10 +791,10 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   }
 
   @Override
-  public PDG getPDG(CGNode node) {
+  public PDG<T> getPDG(CGNode node) {
     PDG result = pdgMap.get(node);
     if (result == null) {
-      result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
+      result = new PDG<T>(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
       pdgMap.put(node, result);
       // Let's not eagerly add nodes, shall we?
       // for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
@@ -822,7 +822,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     return cg.getClassHierarchy();
   }
 
-  public PointerAnalysis<? extends InstanceKey> getPointerAnalysis() {
+  public PointerAnalysis<T> getPointerAnalysis() {
     return pa;
   }
 
