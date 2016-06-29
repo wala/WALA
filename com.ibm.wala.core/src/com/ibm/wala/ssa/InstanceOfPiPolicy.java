@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.ibm.wala.util.collections.Pair;
 
 /**
@@ -73,6 +76,14 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
   @Override
   public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
     return null;
+  }
+
+  @Override
+  public List<Pair<Integer, SSAInstruction>> getPis(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
+      SymbolTable symbolTable) {
+    LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
+    result.add(getPi(cond, def1, def2, symbolTable));
+    return result;
   }
 
 }
