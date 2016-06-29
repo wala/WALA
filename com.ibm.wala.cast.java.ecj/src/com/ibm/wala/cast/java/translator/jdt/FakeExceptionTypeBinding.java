@@ -297,6 +297,12 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return false;
   }
 
+  // add @Override here once Eclipse Mars is no longer supported
+  public boolean isIntersectionType() {
+    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
+    return false;
+  }
+
   @Override
   public boolean isLocal() {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
