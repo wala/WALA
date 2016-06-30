@@ -36,6 +36,11 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
         return original.next();  
       }      
     }
+
+    @Override
+    public void remove() {
+      assert false;
+    }
     
   }
  
