@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import java.util.List;
+
 import com.ibm.wala.util.collections.Pair;
 
 /**
@@ -43,5 +45,8 @@ public interface SSAPiNodePolicy {
    */
   Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
       SymbolTable symbolTable);
+  
+  List<Pair<Integer, SSAInstruction>> getPis(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
+      SymbolTable symbolTable);  
 
 }

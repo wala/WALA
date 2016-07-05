@@ -55,4 +55,15 @@ public class TemporaryFile {
     output.close();
     return F;
   }
+  
+  public static File stringToFile(File F, String... inputs) throws IOException {
+    FileOutputStream output = new FileOutputStream(F);
+    
+    for(String input : inputs) {
+      output.write(input.getBytes());
+    }
+    
+    output.close();
+    return F;
+  }
 }

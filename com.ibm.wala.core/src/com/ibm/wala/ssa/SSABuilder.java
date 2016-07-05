@@ -863,9 +863,11 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     private void maybeInsertPi(SSAConditionalBranchInstruction cond) {
       if (piNodePolicy != null) {
-        Pair<Integer, SSAInstruction> pi = piNodePolicy.getPi(cond, getDef(cond.getUse(0)), getDef(cond.getUse(1)), symbolTable);
-        if (pi != null) {
-          reuseOrCreatePi(pi.snd, pi.fst);
+        for (Pair<Integer, SSAInstruction> pi : piNodePolicy.getPis(cond, getDef(cond.getUse(0)), getDef(cond.getUse(1)),
+            symbolTable)) {
+          if (pi != null) {
+            reuseOrCreatePi(pi.snd, pi.fst);
+          }
         }
       }
     }
