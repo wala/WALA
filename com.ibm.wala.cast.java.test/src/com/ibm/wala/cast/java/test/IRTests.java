@@ -450,7 +450,7 @@ public abstract class IRTests {
     return null;
   }
 
-  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
+  public static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);
