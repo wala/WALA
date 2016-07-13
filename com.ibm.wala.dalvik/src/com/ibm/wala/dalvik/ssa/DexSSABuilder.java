@@ -351,7 +351,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSA2LocalMap localMap,
                 SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
             super(dexCFG);
-            this.piNodePolicy = null;// piNodePolicy;
+            this.piNodePolicy = piNodePolicy;
             this.cfg = cfg;
             this.creators = new SSAInstruction[0];
             this.dexCFG = dexCFG;
