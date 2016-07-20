@@ -67,6 +67,9 @@
       <resource>
         <directory>dat</directory>
       </resource>
+      <resource>
+        <directory>lib</directory>
+      </resource>
     </resources>
     <plugins>
       <plugin>
