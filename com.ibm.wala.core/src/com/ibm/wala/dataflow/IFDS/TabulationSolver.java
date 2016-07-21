@@ -455,7 +455,7 @@ public class TabulationSolver<T, P, F> {
    * @param retSite the return site being propagated to
    * @param retf the flow function
    */
-  private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge edge, final T c, final IntSet D4, final T[] entries,
+  private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge<T> edge, final T c, final IntSet D4, final T[] entries,
       final T retSite, final IFlowFunction retf) {
     D4.foreach(new IntSetAction() {
       @Override
@@ -766,7 +766,7 @@ public class TabulationSolver<T, P, F> {
     return worklist.take();
   }
 
-  private PathEdge peekFromWorkList() {
+  private PathEdge<T> peekFromWorkList() {
     // horrible. don't use in performance-critical
     assert worklist != null;
     PathEdge<T> result = worklist.take();
@@ -929,6 +929,7 @@ public class TabulationSolver<T, P, F> {
       TreeMap<Object, TreeSet<T>> map = new TreeMap<Object, TreeSet<T>>(ToStringComparator.instance());
 
       Comparator<Object> c = new Comparator<Object>() {
+        @SuppressWarnings("rawtypes")
         @Override
         public int compare(Object o1, Object o2) {
           if (!(o1 instanceof IBasicBlock)) {
