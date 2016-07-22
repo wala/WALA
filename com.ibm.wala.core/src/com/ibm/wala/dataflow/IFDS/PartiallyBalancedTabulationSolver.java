@@ -61,6 +61,7 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
               T fakeEntry = problem.getFakeEntry(retSite);
               PathEdge<T> seed = PathEdge.createPathEdge(fakeEntry, d3, retSite, d3);
               addSeed(seed);
+              newReturnExplodedEdge(n, j, retSite, d3);
             }
           }
         } else {

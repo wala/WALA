@@ -344,7 +344,9 @@ public class TabulationSolver<T, P, F> {
         D3.foreach(new IntSetAction() {
           @Override
           public void act(int d3) {
-            propagate(edge.entry, edge.d1, m, d3);
+            if (propagate(edge.entry, edge.d1, m, d3)) {
+              newNormalExplodedEdge(edge.target, edge.d2, m, d3);
+            }
           }
         });
       }
@@ -435,7 +437,7 @@ public class TabulationSolver<T, P, F> {
         IntSetAction action = new IntSetAction() {
           @Override
           public void act(final int d4) {
-            propToReturnSite(c, entries, retSite, d4, D5);
+            propToReturnSite(c, entries, retSite, d4, D5, edge);
           }
         };
         D4.foreach(action);
@@ -461,7 +463,7 @@ public class TabulationSolver<T, P, F> {
       @Override
       public void act(final int d4) {
         final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
-        propToReturnSite(c, entries, retSite, d4, D5);
+        propToReturnSite(c, entries, retSite, d4, D5, edge);
       }
 
     });
@@ -476,8 +478,9 @@ public class TabulationSolver<T, P, F> {
    * @param d4 a fact s.t. <c, d4> -> <callee, d2> was recorded as call flow and <callee, d2> is the source of the summary edge
    *          being applied
    * @param D5 facts to propagate to return site
+   * @param edge the path edge ending at the exit site of the callee
    */
-  private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5) {
+  private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5, final PathEdge<T> edge) {
     if (D5 != null) {
       D5.foreach(new IntSetAction() {
         @Override
@@ -505,7 +508,9 @@ public class TabulationSolver<T, P, F> {
                 public void act(int d3) {
                   // set curPathEdge to be consistent with its setting in processCall() when applying a summary edge
                   curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
-                  propagate(s_p, d3, retSite, d5);
+                  if (propagate(s_p, d3, retSite, d5)) {
+                    newReturnExplodedEdge(edge.target, edge.d2, retSite, d5);
+                  }
                 }
               });
             }
@@ -569,7 +574,9 @@ public class TabulationSolver<T, P, F> {
         D3.foreach(new IntSetAction() {
           @Override
           public void act(int d3) {
-            propagate(edge.entry, edge.d1, m, d3);
+            if (propagate(edge.entry, edge.d1, m, d3)) {
+              newNormalExplodedEdge(edge.target, edge.d2, m, d3);
+            }
           }
         });
       }
@@ -597,7 +604,9 @@ public class TabulationSolver<T, P, F> {
           public void act(int x) {
             assert x >= 0;
             assert edge.d1 >= 0;
-            propagate(edge.entry, edge.d1, returnSite, x);
+            if (propagate(edge.entry, edge.d1, returnSite, x)) {
+              newNormalExplodedEdge(edge.target, edge.d2, returnSite, x);
+            }
           }
         });
       }
@@ -651,6 +660,7 @@ public class TabulationSolver<T, P, F> {
           // we get reuse if we _don't_ propagate a new fact to the callee entry
           final boolean gotReuse = !propagate(calleeEntry, d1, calleeEntry, d1);
           recordCall(edge.target, calleeEntry, d1, gotReuse);
+          newCallExplodedEdge(edge.target, edge.d2, calleeEntry, d1);
           // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
           // call flow
           callFlow.addCallEdge(callNodeNum, edge.d2, d1);
@@ -677,7 +687,7 @@ public class TabulationSolver<T, P, F> {
                     final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                     reachedBySummary.foreach(new IntSetAction() {
                       @Override
-                      public void act(int d2) {
+                      public void act(final int d2) {
                         assert curSummaryEdge == null : "curSummaryEdge should be null here";
                         curSummaryEdge = PathEdge.createPathEdge(calleeEntry, d1, exit, d2);
                         if (retf instanceof IBinaryReturnFlowFunction) {
@@ -686,7 +696,9 @@ public class TabulationSolver<T, P, F> {
                             D5.foreach(new IntSetAction() {
                               @Override
                               public void act(int d5) {
-                                propagate(edge.entry, edge.d1, returnSite, d5);
+                                if (propagate(edge.entry, edge.d1, returnSite, d5)) {
+                                  newReturnExplodedEdge(exit, d2, returnSite, d5);
+                                }
                               }
                             });
                           }
@@ -696,7 +708,9 @@ public class TabulationSolver<T, P, F> {
                             D5.foreach(new IntSetAction() {
                               @Override
                               public void act(int d5) {
-                                propagate(edge.entry, edge.d1, returnSite, d5);
+                                if (propagate(edge.entry, edge.d1, returnSite, d5)) {
+                                  newReturnExplodedEdge(exit, d2, returnSite, d5);                                  
+                                }
                               }
                             });
                           }
@@ -1064,5 +1078,45 @@ public class TabulationSolver<T, P, F> {
 
   protected PathEdge<T> getCurSummaryEdge() {
     return curSummaryEdge;
+  }
+  
+  /**
+   * Indicates that due to a path edge with destination <pred, d1> and a normal flow function application, 
+   * a new path edge with destination <succ, d2> was created.  To be overridden in subclasses.  We also
+   * use this function to record call-to-return flow.
+   *   
+   * @param pred
+   * @param d1
+   * @param succ
+   * @param d2
+   */
+  protected void newNormalExplodedEdge(T pred, int d1, T succ, int d2) {
+    
+  }
+  
+  /**
+   * Indicates that due to a path edge with destination <caller, d1> and application of a call flow function, 
+   * a new path edge with destination <calleeEntry, d2> was created.  To be overridden in subclasses.
+   * 
+   * @param caller
+   * @param d1
+   * @param calleeEntry
+   * @param d2
+   */
+  protected void newCallExplodedEdge(T caller, int d1, T calleeEntry, int d2) {
+    
+  }
+
+  /**
+   * Indicates that due to a path edge with destination <exit, d1> and application of a return flow function, 
+   * a new path edge with destination <returnSite, d2> was created.  To be overridden in subclasses.
+   * 
+   * @param exit
+   * @param d1
+   * @param returnSite
+   * @param d2
+   */
+  protected void newReturnExplodedEdge(T exit, int d1, T returnSite, int d2) {
+    
   }
 }
