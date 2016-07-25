@@ -93,8 +93,8 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   @Override
-  public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {
-    final AnalysisOptions options = new AnalysisOptions(scope, roots);
+  public JSAnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {
+    final JSAnalysisOptions options = new JSAnalysisOptions(scope, roots);
 
     options.setUseConstantSpecificKeys(true);
 
