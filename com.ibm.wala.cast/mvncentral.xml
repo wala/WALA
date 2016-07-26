@@ -65,6 +65,27 @@
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>  
+
+  <profiles>
+    <profile>
+      <id>jdk17</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <properties>
+        <javadoc.options></javadoc.options>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk18</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <javadoc.options>-Xdoclint:none</javadoc.options>
+      </properties>
+    </profile>
+  </profiles>
   
   <build>
     <sourceDirectory>${src.dir}</sourceDirectory>
@@ -107,6 +128,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <additionalparam>${javadoc.options}</additionalparam>
+        </configuration>        
         <version>2.9.1</version>
         <executions>
           <execution>
