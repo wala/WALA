@@ -300,7 +300,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
       List<AnnotationItem> getAnnotations(MethodIdItem m, Set<AnnotationVisibility> types) {
     	  List<AnnotationItem> result = new ArrayList<AnnotationItem>();
     	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
-    	  if (d != null) {
+    	  if (d != null && d.getMethodAnnotations(m) !=  null) {
     		  for(AnnotationItem a : d.getMethodAnnotations(m).getAnnotations()) {
         		  if (types == null || types.contains(a.getVisibility())) {
         			  result.add(a);
