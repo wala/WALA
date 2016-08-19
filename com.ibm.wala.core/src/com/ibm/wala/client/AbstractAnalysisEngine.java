@@ -33,6 +33,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
@@ -42,13 +43,15 @@ import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 
+import static com.ibm.wala.ipa.slicer.Slicer.*;
+
 /**
  * Abstract base class for analysis engine implementations
  * 
  * Some clients choose to build on this, but many don't. I usually don't in new code; I usually don't find the re-use enabled by
  * this class compelling. I would probably nuke this except for some legacy code that uses it.
  */
-public abstract class AbstractAnalysisEngine implements AnalysisEngine {
+public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements AnalysisEngine {
 
   public interface EntrypointBuilder {
     Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha);
@@ -114,7 +117,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * Results of pointer analysis
    */
-  protected PointerAnalysis<InstanceKey> pointerAnalysis;
+  protected PointerAnalysis<I> pointerAnalysis;
 
   /**
    * Graph view of flow of pointers between heap abstractions
@@ -256,17 +259,21 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return scope;
   }
 
-  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
+  public PointerAnalysis<I> getPointerAnalysis() {
     return pointerAnalysis;
   }
 
   public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
-      heapGraph = new BasicHeapGraph(getPointerAnalysis(), cg);
+      heapGraph = new BasicHeapGraph<>(getPointerAnalysis(), cg);
     }
     return heapGraph;
   }
 
+  public SDG<I> getSDG(DataDependenceOptions data, ControlDependenceOptions ctrl) {
+    return new SDG<I>(getCallGraph(), getPointerAnalysis(), data, ctrl);
+  }
+  
   public String getExclusionsFile() {
     return exclusionsFile;
   }

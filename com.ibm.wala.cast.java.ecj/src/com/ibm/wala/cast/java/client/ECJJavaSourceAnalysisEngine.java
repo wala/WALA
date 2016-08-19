@@ -12,9 +12,10 @@ package com.ibm.wala.cast.java.client;
 
 import com.ibm.wala.cast.java.translator.jdt.ejc.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class ECJJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
+public class ECJJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine<InstanceKey> {
 
   @Override
   protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions) {

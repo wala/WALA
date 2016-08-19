@@ -25,11 +25,12 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.io.FileProvider;
 
-abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEngine {
+abstract public class EclipseProjectAnalysisEngine<P, I extends InstanceKey> extends AbstractAnalysisEngine<I> {
 
   protected final P project;
   

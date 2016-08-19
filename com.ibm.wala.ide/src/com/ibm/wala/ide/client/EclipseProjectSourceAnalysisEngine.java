@@ -19,6 +19,7 @@ import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -28,7 +29,7 @@ import com.ibm.wala.util.io.FileProvider;
 /**
  * An {@link EclipseProjectAnalysisEngine} specialized for source code analysis
  */
-abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProjectAnalysisEngine<P> {
+abstract public class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKey> extends EclipseProjectAnalysisEngine<P, I> {
 
   public static final String defaultFileExt = "java";
 

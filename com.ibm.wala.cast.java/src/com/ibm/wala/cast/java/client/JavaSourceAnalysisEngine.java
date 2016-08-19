@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -41,7 +42,7 @@ import com.ibm.wala.util.io.FileProvider;
 
 /**
  */
-public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
+public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I> {
 
   /**
    * Modules which are user-space code
