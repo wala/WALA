@@ -379,10 +379,12 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
                 SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                int p = call.getUse(parameterIndex);
-                Statement s = new ParamCaller(caller, i, p);
-                addNode(s);
-                result.add(s);
+                if (call.getNumberOfUses() > parameterIndex) {
+                  int p = call.getUse(parameterIndex);
+                  Statement s = new ParamCaller(caller, i, p);
+                  addNode(s);
+                  result.add(s);
+                }
               }
             }
           }
