@@ -443,7 +443,7 @@ public class JavaScriptConstructorFunctions {
         FO.write(fun.toString());
         FO.close();
         
-        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL());
+        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, f.toURI().toURL());
         IClass fcls = null;
         for(String nm : fnNames) {
           if (nm.endsWith("_fromctor")) {
