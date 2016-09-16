@@ -4,10 +4,12 @@ var bar = t.substring(0, 10);
 
 var d = new Date("October 13, 1975 11:13:00");
 
-var document = {  
-	fun: function _fun(x) {
-		return x;
-	}
-};
+var document = { };
 
-document[d](bar);
+document[d] = function _fun(x) {
+    return x;
+}
+
+var f = document[d]
+
+f(bar);
