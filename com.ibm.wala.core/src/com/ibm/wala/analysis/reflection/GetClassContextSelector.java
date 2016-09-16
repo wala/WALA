@@ -51,7 +51,7 @@ public class GetClassContextSelector implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+    if (site.getDeclaredTarget().equals(GET_CLASS)) {
       return thisParameter;
     } else {
       return EmptyIntSet.instance;

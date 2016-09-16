@@ -148,8 +148,8 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
       // the commented line is correct, but it doesn't work because
       // of our broken handling of int constants as properties.
       // TODO fix property handling, and then fix this
-//      S.addConstant(constVN, new ConstantValue(Integer.toString(i-1)));
-      S.addConstant(constVN, new ConstantValue(i-1));
+      S.addConstant(constVN, new ConstantValue(Integer.toString(i-1)));
+      //S.addConstant(constVN, new ConstantValue(i-1));
       int propertyReadResult = curValNum++;
       // 4 is position of arguments array
       S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, constVN));

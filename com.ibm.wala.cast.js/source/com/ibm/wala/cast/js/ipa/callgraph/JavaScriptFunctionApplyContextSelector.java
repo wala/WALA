@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
  * 
@@ -57,11 +58,11 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     // 0 for function (synthetic apply), 1 for this (function being invoked), 2
     // for this arg of function being invoked,
     // 3 for arguments array
-    if (caller.getIR().getCalls(site)[0].getNumberOfUses() >= 4) {
-      return IntSetUtil.make(new int[] { 3 }).union(base.getRelevantParameters(caller, site));
-    } else {
-      return base.getRelevantParameters(caller, site);
+    MutableIntSet params = IntSetUtil.make();
+    for(int i = 0; i < 4 && i < caller.getIR().getCalls(site)[0].getNumberOfUses(); i++) {
+      params.add(i);
     }
+    return params.union(base.getRelevantParameters(caller, site));
   }
 
   public static class ApplyContext implements Context {

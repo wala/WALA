@@ -44,8 +44,12 @@ public interface ContextKey {
     public final int index;
 
     public ParameterKey(int index) {
-      super();
       this.index = index;
+    }
+    
+    @Override
+    public String toString() {
+      return "P" + index;
     }
   }
   
