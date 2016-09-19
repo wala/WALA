@@ -139,4 +139,10 @@ public interface Language {
    * @see TypeInference
    */
   PrimitiveType getPrimitive(TypeReference reference);
+  
+  /**
+   * do MethodReference objects have declared parameter types?
+   */
+  boolean methodsHaveDeclaredParameterTypes();
+   
 }

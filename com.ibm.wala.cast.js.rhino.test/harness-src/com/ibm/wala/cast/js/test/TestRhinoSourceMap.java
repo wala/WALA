@@ -18,8 +18,7 @@ import static com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.makeScriptScope;
 import java.io.IOException;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

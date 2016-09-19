@@ -1,4 +1,4 @@
-var t = "this is a long string";
+var t = new String("this is a long string");
 
 var bar = t.substring(0, 10);
 

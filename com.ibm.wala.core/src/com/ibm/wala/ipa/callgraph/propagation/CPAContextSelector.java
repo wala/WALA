@@ -57,7 +57,7 @@ public class CPAContextSelector implements ContextSelector {
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     MutableIntSet s = IntSetUtil.make();
     for(int i = 0; i < caller.getIR().getCalls(site)[0].getNumberOfUses(); i++) {
-      if (dispatchIndex(site, i)) {
+      if (!caller.getMethod().getDeclaringClass().getClassLoader().getLanguage().methodsHaveDeclaredParameterTypes() || dispatchIndex(site, i)) {
         s.add(i);
       }
     }

@@ -40,10 +40,10 @@ public interface ContextKey {
    * context key representing some parameter index, useful, e.g. for CPA-style
    * context-sensitivity policies.
    */
-  public static class ParameterKey implements ContextKey {
+  static class ParameterKey implements ContextKey {
     public final int index;
 
-    public ParameterKey(int index) {
+    private ParameterKey(int index) {
       this.index = index;
     }
     

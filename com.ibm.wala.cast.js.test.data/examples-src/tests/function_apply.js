@@ -12,7 +12,3 @@ var p = id;
 var s = p.apply(null, [theTwo]);
 s();
 
-// test invoking with non-array argsList
-p.apply(null, o);
-
-

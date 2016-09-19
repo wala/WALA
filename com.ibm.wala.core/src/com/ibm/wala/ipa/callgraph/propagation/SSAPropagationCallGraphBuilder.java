@@ -73,7 +73,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -533,7 +532,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         f.apply(keys);
       } else {
         final int p = params[pi];
-        int vn = call.getUse(p);
         InstanceKey[] ik = invariants != null ? invariants[p] : null;
         if (ik != null) {
           if (ik.length > 0) {
@@ -542,12 +540,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               keys[pi] = ik[i];
               rec(pi + 1, rhsi);
             }
-          } else {
+          } /* else {
             if (!site.isDispatch() || p != 0) {
               keys[pi] = null;
               rec(pi + 1, rhsi);
-            }
-          }
+            } 
+          } */
         } else {
           IntSet s = getParamObjects(pi, rhsi);
           if (s != null && !s.isEmpty()) {
@@ -558,12 +556,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 rec(pi + 1, rhsi + 1);
               }
             });
-          } else {
+          } /*else {
             if (!site.isDispatch() || p != 0) {
               keys[pi] = null;
               rec(pi + 1, rhsi + 1);
             }
-          }
+          } */
         }
       }
     }
