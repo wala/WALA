@@ -345,8 +345,7 @@ public class TabulationSolver<T, P, F> {
           @Override
           public void act(int d3) {
             newNormalExplodedEdge(edge, m, d3);
-            if (propagate(edge.entry, edge.d1, m, d3)) {
-            }
+            propagate(edge.entry, edge.d1, m, d3);
           }
         });
       }
@@ -574,8 +573,7 @@ public class TabulationSolver<T, P, F> {
           @Override
           public void act(int d3) {
             newNormalExplodedEdge(edge, m, d3);
-            if (propagate(edge.entry, edge.d1, m, d3)) {
-            }
+            propagate(edge.entry, edge.d1, m, d3);
           }
         });
       }
@@ -604,8 +602,7 @@ public class TabulationSolver<T, P, F> {
             assert x >= 0;
             assert edge.d1 >= 0;
             newNormalExplodedEdge(edge, returnSite, x);
-            if (propagate(edge.entry, edge.d1, returnSite, x)) {
-            }
+            propagate(edge.entry, edge.d1, returnSite, x);
           }
         });
       }
