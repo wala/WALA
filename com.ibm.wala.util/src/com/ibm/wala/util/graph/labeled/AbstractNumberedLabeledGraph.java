@@ -86,4 +86,14 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
   public U getDefaultLabel() {
     return getEdgeManager().getDefaultLabel();
   }
+  
+  @Override
+  protected String edgeString(T from, T to) {
+      Set<? extends U> labels = getEdgeLabels(from, to);
+      if (labels != null && !labels.isEmpty()) {
+        return "-" + labels + "->";
+      } else {
+        return super.edgeString(from, to);
+      }
+  }
 }
