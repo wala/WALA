@@ -16,7 +16,7 @@ import java.util.Set;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.intset.IntSet;
 
-public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumberedGraph<T> implements LabeledGraph<T, U> {
+public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumberedGraph<T> implements LabeledGraph<T, U>, NumberedLabeledGraph<T, U> {
 
   /**
    * @return the object which manages edges in the graph

@@ -15,8 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.cfg.MinimalCFG;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -33,12 +32,12 @@ import com.ibm.wala.util.intset.MutableIntSet;
 /**
  * Control Dependence Graph
  */
-public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> {
+public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
 
   /**
    * Governing control flow-graph. The control dependence graph is computed from this cfg.
    */
-  private final ControlFlowGraph<I, T> cfg;
+  private final MinimalCFG<T> cfg;
 
   /**
    * the EdgeManager for the CDG. It implements the edge part of the standard Graph abstraction, using the control-dependence edges
@@ -127,7 +126,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         MutableIntSet x = IntSetUtil.make();
         if (backwardEdges.containsKey(node)) {
           for(T pred : backwardEdges.get(node)) {
-            x.add(pred.getNumber());
+            x.add(cfg.getNumber(pred));
           }
         }
         return x;
@@ -154,7 +153,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         MutableIntSet x = IntSetUtil.make();
         if (forwardEdges.containsKey(node)) {
           for(T succ : forwardEdges.get(node)) {
-            x.add(succ.getNumber());
+            x.add(cfg.getNumber(succ));
           }
         }
         return x;
@@ -223,7 +222,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
    * @param cfg governing control flow graph
    * @param wantEdgeLabels whether to compute edge labels for CDG edges
    */
-  public ControlDependenceGraph(ControlFlowGraph<I, T> cfg, boolean wantEdgeLabels) {
+  public ControlDependenceGraph(MinimalCFG<T> cfg, boolean wantEdgeLabels) {
     if (cfg == null) {
       throw new IllegalArgumentException("null cfg");
     }
@@ -234,11 +233,11 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
   /**
    * @param cfg governing control flow graph
    */
-  public ControlDependenceGraph(ControlFlowGraph<I, T> cfg) {
+  public ControlDependenceGraph(MinimalCFG<T> cfg) {
     this(cfg, false);
   }
 
-  public ControlFlowGraph getControlFlowGraph() {
+  public MinimalCFG getControlFlowGraph() {
     return cfg;
   }
 
