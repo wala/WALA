@@ -49,7 +49,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * If requested, this is a map from parentXchild Pairs representing edges in the CDG to the labels of the control flow edges that
    * edge corresponds to. The labels are Boolean.True or Boolean.False for conditionals and an Integer for a switch label.
    */
-  private Map<Pair, Set<Object>> edgeLabels;
+  private Map<Pair, Set<? extends Object>> edgeLabels;
 
   /**
    * This is the heart of the CDG computation. Based on Cytron et al., this is the reverse dominance frontier based algorithm for
@@ -77,12 +77,12 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
         T x = ns2.next();
         controlDependence.get(x).add(y);
         if (wantEdgeLabels) {
-          Set<Object> labels = HashSetFactory.make();
+           HashSet<Object> labels = HashSetFactory.make();
           edgeLabels.put(Pair.make(x, y), labels);
           for (Iterator<? extends T> ss = cfg.getSuccNodes(x); ss.hasNext();) {
             T s = ss.next();
             if (RDF.isDominatedBy(s, y)) {
-              labels.add(s);
+              labels.add(makeEdgeLabel(x, y, s));
             }
           }
         }
@@ -92,7 +92,11 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     return controlDependence;
   }
 
-  /**
+  protected Object makeEdgeLabel(T x, T y, T s) {
+    return s;
+  }  
+
+   /**
    * Given the control-dependence edges in a forward direction (i.e. edges from control parents to control children), this method
    * creates an EdgeManager that provides the edge half of the Graph abstraction.
    */
@@ -245,7 +249,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * Return the set of edge labels for the control flow edges that cause the given edge in the CDG. Requires that the CDG be
    * constructed with wantEdgeLabels being true.
    */
-  public Set<Object> getEdgeLabels(Object from, Object to) {
+  public Set<? extends Object> getEdgeLabels(Object from, Object to) {
     return edgeLabels.get(Pair.make(from, to));
   }
 

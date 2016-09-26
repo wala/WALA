@@ -12,8 +12,6 @@ package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
 
-import javax.naming.OperationNotSupportedException;
-
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
