@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Collection;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -19,10 +21,13 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSABuilder;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.ShrikeIndirectionData;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.WalaRuntimeException;
 
 /**
@@ -68,7 +73,25 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
       private void eliminateDeadPhis() {
         DeadAssignmentElimination.perform(this);
       }
-
+      private void pruneExceptionsForSafeArrayCreations() {
+        for (int i = 0; i < newInstrs.length; i++) {
+          SSAInstruction instr = newInstrs[i];
+          if (instr instanceof SSANewInstruction) {
+            SSANewInstruction newInstr = (SSANewInstruction) instr;
+            if (newInstr.getConcreteType().isArrayType()) {
+              int vLength = newInstr.getUse(0);
+              if (symbolTable.isIntegerConstant(vLength) && symbolTable.getIntValue(vLength) >= 0) {
+                newInstrs[i] = new SSANewInstruction(newInstr.iindex, newInstr.getDef(), newInstr.getNewSite(), new int[] { vLength }) {
+                  @Override
+                  public Collection<TypeReference> getExceptionTypes() {
+                    return JavaLanguage.getNewSafeArrayExceptions();
+                  }
+                };
+              }
+            }
+          }
+        }
+      }
       @Override
       protected String instructionPosition(int instructionIndex) {
         try {
@@ -102,6 +125,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
         indirectionData = builder.getIndirectionData();
         
         eliminateDeadPhis();
+        pruneExceptionsForSafeArrayCreations();
 
         setupLocationMap();
       }
