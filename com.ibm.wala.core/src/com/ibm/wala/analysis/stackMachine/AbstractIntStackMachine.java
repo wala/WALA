@@ -703,7 +703,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         result.append(array2StringBuffer(stack, stackHeight));
       }
       result.append("L");
-      result.append(array2StringBuffer(locals, locals.length));
+      result.append(array2StringBuffer(locals, locals==null?0:locals.length));
       result.append(">");
       return result.toString();
     }
