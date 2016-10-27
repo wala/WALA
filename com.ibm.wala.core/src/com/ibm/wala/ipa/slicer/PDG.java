@@ -251,7 +251,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
 
-    ControlDependenceGraph<SSAInstruction, ISSABasicBlock> cdg = new ControlDependenceGraph<SSAInstruction, ISSABasicBlock>(
+    ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(
         controlFlowGraph);
     for (ISSABasicBlock bb : cdg) {
       if (bb.isExitBlock()) {

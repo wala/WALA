@@ -97,6 +97,10 @@ public class JavaScriptConstructorFunctions {
     
     S.addConstant(new Integer(8), new ConstantValue(value));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 8, "$value"));
+    if (value instanceof String) {
+      S.addConstant(9, new ConstantValue(0));
+      S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 9, "length"));
+    }
     S.getNextProgramCounter();
     
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
@@ -286,6 +290,11 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addConstant(new Integer(2), new ConstantValue(""));
+
+    S.addConstant(new Integer(3), new ConstantValue(0));
+    S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 2, 3, "length"));
+    S.getNextProgramCounter();
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
     
@@ -443,7 +452,7 @@ public class JavaScriptConstructorFunctions {
         FO.write(fun.toString());
         FO.close();
         
-        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL());
+        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, f.toURI().toURL());
         IClass fcls = null;
         for(String nm : fnNames) {
           if (nm.endsWith("_fromctor")) {

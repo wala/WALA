@@ -182,15 +182,18 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getNodeManager().removeNode(n);
   }
 
+  protected String edgeString(T from, T to) {
+    return " --> ";
+  }
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
     for (Iterator<? extends T> ns = iterator(); ns.hasNext();) {
       T n = ns.next();
       sb.append(n.toString()).append("\n");
-      for (Iterator<?> ss = getSuccNodes(n); ss.hasNext();) {
-        Object s = ss.next();
-        sb.append("  --> ").append(s);
+      for (Iterator<? extends T> ss = getSuccNodes(n); ss.hasNext();) {
+        T s = ss.next();
+        sb.append(edgeString(n, s)).append(s);
         sb.append("\n");
       }
       sb.append("\n");

@@ -35,8 +35,10 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.translator.jdt.ejc;
+package com.ibm.wala.cast.java.translator.jdt.ecj;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
@@ -61,6 +63,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.RangePosition;
 import com.ibm.wala.classLoader.DirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
@@ -69,6 +72,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.TemporaryFile;
 
 /**
  * A SourceModuleTranslator whose implementation of loadAllSources() uses the PolyglotFrontEnd pseudo-compiler to generate DOMO IR
@@ -128,8 +132,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   private Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
     List<String> sources = new LinkedList<String>();
     List<String> libs = new LinkedList<String>();
-    
-    ClassLoaderReference cl = scope.getApplicationLoader();
+    for (ClassLoaderReference cl : scope.getLoaders()) {
 
     while (cl != null) {
       List<Module> modules = scope.getModules(cl);
@@ -141,14 +144,25 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
           JarFileModule jarFileModule = (JarFileModule) m;
 
           libs.add(jarFileModule.getAbsolutePath());
+        } else if (m instanceof JarStreamModule) {
+        	try  {
+        		File F = File.createTempFile("tmp", "jar");
+        		F.deleteOnExit();
+        		TemporaryFile.streamToFile(F, ((JarStreamModule)m));
+        		libs.add(F.getAbsolutePath());
+        	} catch (IOException e) {
+        		assert false : e;
+        	}
         } else if (m instanceof DirectoryTreeModule) {
           DirectoryTreeModule directoryTreeModule = (DirectoryTreeModule) m;
 
           sources.add(directoryTreeModule.getPath());
-        } else
-          Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
+        } else {
+          //Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
+        }
       }
       cl = cl.getParent();
+    }
     }
     
     return Pair.make(sources.toArray(new String[ sources.size() ]),  libs.toArray(new String[ libs.size() ]));
@@ -174,7 +188,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     String[] sourceFiles = sources.toArray(new String[ sources.size() ]);
     final ASTParser parser = ASTParser.newParser(AST.JLS8);
     parser.setResolveBindings(true);
-    parser.setEnvironment(libs, null, null, false);
+    parser.setEnvironment(libs, this.sources, null, false);
     Hashtable options = JavaCore.getOptions();
     options.put(JavaCore.COMPILER_SOURCE, "1.8");
     parser.setCompilerOptions(options);

@@ -107,7 +107,7 @@ public abstract class FieldBasedCallGraphBuilder {
 	/**
 	 * Main entry point: builds a flow graph, then extracts a call graph and returns it.
 	 */
-	public Pair<JSCallGraph,PointerAnalysis<ObjectVertex>> buildCallGraph(Iterable<Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
+	public Pair<JSCallGraph,PointerAnalysis<ObjectVertex>> buildCallGraph(Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
 		long fgBegin, fgEnd, cgBegin, cgEnd;
 	
 		if(LOG_TIMINGS) fgBegin = System.currentTimeMillis();
@@ -138,7 +138,7 @@ public abstract class FieldBasedCallGraphBuilder {
 	 * Extract a call graph from a given flow graph.
 	 */
 	@SuppressWarnings("deprecation")
-	protected JSCallGraph extract(FlowGraph flowgraph, Iterable<Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
+	protected JSCallGraph extract(FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
 	  // set up call graph
 		final JSCallGraph cg = new JSCallGraph(cha, options, cache);
 		cg.init();
@@ -153,7 +153,7 @@ public abstract class FieldBasedCallGraphBuilder {
 		// set up call edges from fake root to all script nodes
 		AbstractRootMethod fakeRootMethod = (AbstractRootMethod)cg.getFakeRootNode().getMethod();
 		CGNode fakeRootNode = cg.findOrCreateNode(fakeRootMethod, Everywhere.EVERYWHERE);
-		for(Iterator<Entrypoint> iter = eps.iterator(); iter.hasNext();) {
+		for(Iterator<? extends Entrypoint> iter = eps.iterator(); iter.hasNext();) {
 			Entrypoint ep = iter.next();
 			CGNode nd = cg.findOrCreateNode(ep.getMethod(), Everywhere.EVERYWHERE);
 			SSAAbstractInvokeInstruction invk = ep.addCall(fakeRootMethod);

@@ -19,10 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.util.Predicate;
-import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.FilterPredicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
@@ -41,9 +38,8 @@ public class GraphSlicer {
    * 
    * @param <T> type for nodes
    * @param g the graph to slice
-   * @param f identifies targets for the backward slice
+   * @param p identifies targets for the backward slice
    * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is reachable.
-   * @throws WalaException
    */
   public static <T> Set<T> slice(Graph<T> g, Predicate<T> p){
     if (g == null) {

@@ -40,7 +40,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
  * A view of a control flow graph where each basic block corresponds to exactly one SSA instruction index.
- * 
+ *
  * Prototype: Not terribly efficient.
  */
 public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> {
@@ -140,7 +140,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
 
   @Override
   public List<IExplodedBasicBlock> getExceptionalSuccessors(IExplodedBasicBlock bb) {
-    ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;    
+    ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;
     assert eb != null;
     if (eb.equals(exit)) {
       return Collections.emptyList();
@@ -151,7 +151,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       if (eb.isEntryBlock() && orig == null) {
         orig = ir.getControlFlowGraph().entry();
       }
-      
+
       for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(orig)) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
@@ -277,7 +277,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
 
   @Override
   public int getPredNodeCount(IExplodedBasicBlock bb) throws IllegalArgumentException {
-    ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;    
+    ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;
     if (eb == null) {
       throw new IllegalArgumentException("eb == null");
     }
@@ -385,7 +385,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
         return true;
       }
     }
-    
+
     return false;
   }
 
@@ -458,7 +458,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   /**
    * A basic block with exactly one normal instruction (which may be null), corresponding to a single instruction index in the SSA
    * instruction array.
-   * 
+   *
    * The block may also have phis.
    */
   private class ExplodedBasicBlock implements IExplodedBasicBlock {
@@ -633,6 +633,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
         return "ExplodedBlock[" + getNumber() + "](exit:" + getMethod() + ")";
       }
       return "ExplodedBlock[" + getNumber() + "](original:" + original + ")";
+    }
+
+    @Override
+    public int getOriginalNumber() {
+      return original.getNumber();
     }
   }
 

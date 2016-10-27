@@ -42,10 +42,10 @@
    <target name="fetchAjaxslt" depends="ajaxsltPresent" unless="ajaxslt.present">
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}"/>
-     <get src="http://ajaxslt.googlecode.com/files/ajaxslt-0-7.tar.gz" dest="${temp.folder}/ajaxslt-0-7.tar.gz" />
-     <untar src="${temp.folder}/ajaxslt-0-7.tar.gz" dest="${temp.folder}" compression="gzip" />
+     <get src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/ajaxslt-0.8.1.tar.gz" dest="${temp.folder}/ajaxslt-0.8.1.tar.gz"/>
+     <untar src="${temp.folder}/ajaxslt-0.8.1.tar.gz" dest="${temp.folder}" compression="gzip" />
      <copy todir="${plugin.destination}/examples-src/ajaxslt">
-       <fileset dir="${temp.folder}/ajaxslt" />
+       <fileset dir="${temp.folder}/ajaxslt-0.8.1" />
      </copy>
      <delete dir="${temp.folder}"/>
    </target>

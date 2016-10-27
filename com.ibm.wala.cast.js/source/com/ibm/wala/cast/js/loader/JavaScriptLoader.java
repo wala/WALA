@@ -207,6 +207,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     @Override
+    public boolean methodsHaveDeclaredParameterTypes() {
+      return false;
+    }
+
+    @Override
     public JSInstructionFactory instructionFactory() {
       return new JSInstructionFactory() {
 

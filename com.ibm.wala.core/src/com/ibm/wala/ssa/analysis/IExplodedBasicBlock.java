@@ -17,7 +17,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 /**
  * A basic block with exactly one normal instruction (which may be null), corresponding to a single instruction index in the SSA
  * instruction array.
- * 
+ *
  * The block may also have phis.
  */
 public interface IExplodedBasicBlock extends ISSABasicBlock {
@@ -29,9 +29,15 @@ public interface IExplodedBasicBlock extends ISSABasicBlock {
 
   /**
    * if this represents an exception handler block, return the corresponding {@link SSAGetCaughtExceptionInstruction}
-   * 
+   *
    * @throws IllegalArgumentException if this does not represent an exception handler block
    */
   public SSAGetCaughtExceptionInstruction getCatchInstruction();
+
+  /**
+   * get the number of the original basic block containing the instruction of
+   * this exploded block
+   */
+  public int getOriginalNumber();
 
 }

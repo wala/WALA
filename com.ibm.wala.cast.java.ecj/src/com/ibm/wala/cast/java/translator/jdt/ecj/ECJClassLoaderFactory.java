@@ -1,4 +1,4 @@
-package com.ibm.wala.cast.java.translator.jdt.ejc;
+package com.ibm.wala.cast.java.translator.jdt.ecj;
 
 import java.io.IOException;
 

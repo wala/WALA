@@ -107,7 +107,8 @@ class ReflectiveInvocationSelector implements ContextSelector {
    */
   private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     if (instance instanceof ConstantKey) {
-      if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || isConstructorConstant(instance)
+      if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || 
+          isConstructorConstant(instance)
           && targetMethod.getReference().equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
         return true;
       }
@@ -129,7 +130,8 @@ class ReflectiveInvocationSelector implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+    if (site.getDeclaredTarget().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || 
+        site.getDeclaredTarget().equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
       return thisParameter;
     } else {
       return EmptyIntSet.instance;

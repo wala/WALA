@@ -161,7 +161,7 @@ public class GetMethodContextSelector implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+    if (UNDERSTOOD_METHOD_REFS.contains(site.getDeclaredTarget())) {
       return thisParameter;
     } else {
       return EmptyIntSet.instance;

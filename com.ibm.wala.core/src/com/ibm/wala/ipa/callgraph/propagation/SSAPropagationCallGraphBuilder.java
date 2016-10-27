@@ -73,11 +73,11 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -232,6 +232,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     addNodeInstructionConstraints(node, monitor);
 
+    addNodeValueConstraints(node, monitor);
+    
     DefUse du = getCFAContextInterpreter().getDU(node);
     addNodePassthruExceptionConstraints(node, ir, du);
     // conservatively assume something changed
@@ -264,6 +266,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
+  /**
+   * Hook for aubclasses to add pointer flow constraints based on values in a given node
+   * @throws CancelException 
+   */
+  protected void addNodeValueConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
+ 
+  }
+  
   /**
    * Add constraints for a particular basic block.
    * @throws CancelException 
@@ -495,6 +505,73 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
     return result;
+  }
+
+  private class CrossProductRec {
+    private final InstanceKey[][] invariants;
+    private final VoidFunction<InstanceKey[]> f;
+    private final SSAAbstractInvokeInstruction call;
+    private final CGNode caller;
+    private final int[] params;
+    private final CallSiteReference site;
+    private final InstanceKey[] keys;
+
+    private CrossProductRec(InstanceKey[][] invariants, SSAAbstractInvokeInstruction call, CGNode caller,
+        VoidFunction<InstanceKey[]> f) {
+      this.invariants = invariants;
+      this.f = f;
+      this.call = call;
+      this.caller = caller;
+      this.site = call.getCallSite();
+      this.params = IntSetUtil.toArray(getRelevantParameters(caller, site));
+      this.keys  = new InstanceKey[ params.length ];
+    }
+
+    protected void rec(final int pi, final int rhsi) {
+      if (pi == params.length) {
+        f.apply(keys);
+      } else {
+        final int p = params[pi];
+        InstanceKey[] ik = invariants != null ? invariants[p] : null;
+        if (ik != null) {
+          if (ik.length > 0) {
+            for (int i = 0; i < ik.length; i++) {
+              system.findOrCreateIndexForInstanceKey(ik[i]);
+              keys[pi] = ik[i];
+              rec(pi + 1, rhsi);
+            }
+          } /* else {
+            if (!site.isDispatch() || p != 0) {
+              keys[pi] = null;
+              rec(pi + 1, rhsi);
+            } 
+          } */
+        } else {
+          IntSet s = getParamObjects(pi, rhsi);
+          if (s != null && !s.isEmpty()) {
+            s.foreach(new IntSetAction() {
+              @Override
+              public void act(int x) {
+                keys[pi] = system.getInstanceKey(x);
+                rec(pi + 1, rhsi + 1);
+              }
+            });
+          } /*else {
+            if (!site.isDispatch() || p != 0) {
+              keys[pi] = null;
+              rec(pi + 1, rhsi + 1);
+            }
+          } */
+        }
+      }
+    }
+
+    protected IntSet getParamObjects(int paramIndex, int rhsi) {
+      int paramVn = call.getUse(paramIndex);
+      PointerKey var = getPointerKeyForLocal(caller, paramVn);
+      IntSet s = system.findOrCreatePointsToSet(var).getValue();
+      return s;
+    }
   }
 
   /**
@@ -1045,7 +1122,22 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       InstanceKey[][] invariantParameters = invs.computeInvariantParameters(instruction);
-      if (instruction.getCallSite().isStatic()) {
+      
+      IntSet params = getBuilder().getContextSelector().getRelevantParameters(node, instruction.getCallSite());
+      if (!instruction.getCallSite().isStatic() && !params.contains(0) && (invariantParameters == null || invariantParameters[0] == null)) {
+        params = IntSetUtil.makeMutableCopy(params);
+        ((MutableIntSet)params).add(0);
+      }
+
+      if (invariantParameters != null) {
+      for(int i = 0; i < invariantParameters.length; i++) {
+        if (invariantParameters[i] != null) {
+          params = IntSetUtil.makeMutableCopy(params);
+          ((MutableIntSet)params).remove(i);
+        }
+      }
+      }
+      if (params.isEmpty()) {
         for (CGNode n : getBuilder().getTargetsForCall(node, instruction, invariantParameters)) {
           getBuilder().processResolvedCall(node, instruction, n, invariantParameters, uniqueCatch);
           if (DEBUG) {
@@ -1059,11 +1151,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         // Add a side effect that will fire when we determine a value
         // for a dispatch parameter. This side effect will create a new node
         // and new constraints based on the new callee context.
-        IntSet params = getBuilder().getContextSelector().getRelevantParameters(node, instruction.getCallSite());
-        if (! params.contains(0)) {
-          params = IntSetUtil.makeMutableCopy(params);
-          ((MutableIntSet)params).add(0);
-        }
         final int vns[] = new int[ params.size() ];
         params.foreach(new IntSetAction() {
           private int i = 0;
@@ -1635,15 +1722,65 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.uniqueCatch = uniqueCatch;
       this.dispatchIndices = IntSetUtil.toArray(dispatchIndices);
       // we better always be interested in the receiver
-      assert this.dispatchIndices[0] == 0;
+      // assert this.dispatchIndices[0] == 0;
       previousPtrs = new MutableIntSet[dispatchIndices.size()];
       for(int i = 0; i < previousPtrs.length; i++) {
         previousPtrs[i] = IntSetUtil.getDefaultIntSetFactory().make();
       }
     }
 
+    private byte cpa(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
+      final MutableBoolean changed = new MutableBoolean();
+      for(int rhsIndex = 0; rhsIndex < rhs.length; rhsIndex++) { 
+        final int y = rhsIndex;
+        IntSet currentObjs = rhs[rhsIndex].getValue();
+        if (currentObjs != null) {
+          final IntSet oldObjs = previousPtrs[rhsIndex];
+          currentObjs.foreachExcluding(oldObjs, new IntSetAction() {
+            @Override
+            public void act(final int x) {
+              new CrossProductRec(constParams, call, node,
+                  new VoidFunction<InstanceKey[]>() {
+                    @Override
+                    public void apply(InstanceKey[] v) {
+                      IClass recv = null;
+                      if (call.getCallSite().isDispatch()) {
+                        recv = v[0].getConcreteType();
+                      }
+                      CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
+                      if (target != null) {
+                        changed.b = true;
+                        processResolvedCall(node, call, target, constParams, uniqueCatch);
+                        if (!haveAlreadyVisited(target)) {
+                          markDiscovered(target);
+                        }
+                      }  
+                    } 
+                  }) {
+                
+                {
+                  rec(0, 0);
+                }
+                
+                @Override 
+                protected IntSet getParamObjects(int paramVn, int rhsi) {
+                  if (rhsi == y) {
+                    return IntSetUtil.make(new int[]{ x });
+                  } else {
+                    return previousPtrs[rhsi];
+                  }
+                }  
+              };
+            }     
+          });
+          previousPtrs[rhsIndex].addAll(currentObjs);
+        }
+      }
 
-
+      byte sideEffectMask = changed.b ? (byte) SIDE_EFFECT_MASK : 0;
+      return (byte) (NOT_CHANGED | sideEffectMask);
+    }
+ 
     /*
      * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable,
      * com.ibm.wala.dataflow.fixpoint.IVariable)
@@ -1651,6 +1788,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;
+      
+      return cpa(lhs, rhs);
+      
+      /*
       // did evaluating the dispatch operation add a new possible target
       // to the call site?  
       final MutableBoolean addedNewTarget = new MutableBoolean();
@@ -1744,6 +1885,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
       byte sideEffectMask = addedNewTarget.b ? (byte) SIDE_EFFECT_MASK : 0;
       return (byte) (NOT_CHANGED | sideEffectMask);
+      */
     }
 
     private void handleAllReceivers(MutableIntSet receiverVals, InstanceKey[] keys, MutableBoolean sideEffect) {
@@ -1864,51 +2006,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   protected void iterateCrossProduct(final CGNode caller, final SSAAbstractInvokeInstruction call, IntSet parameters,
       final InstanceKey[][] invariants, final VoidFunction<InstanceKey[]> f) {
-    final int params[] = IntSetUtil.toArray(parameters);
-    final InstanceKey[] keys = new InstanceKey[call.getNumberOfParameters()];
-    final CallSiteReference site = call.getCallSite();
-    new Object() {
-      private void rec(final int pi) {
-        if (pi == params.length) {
-          f.apply(keys);
-        } else {
-          final int p = params[pi];
-          int vn = call.getUse(p);
-          PointerKey var = getPointerKeyForLocal(caller, vn);
-          InstanceKey[] ik = invariants != null ? invariants[p] : null;
-          if (ik != null) {
-            if (ik.length > 0) {
-              for (int i = 0; i < ik.length; i++) {
-                system.findOrCreateIndexForInstanceKey(ik[i]);
-                keys[p] = ik[i];
-                rec(pi + 1);
-              }
-            } else {
-              if (!site.isDispatch() || p != 0) {
-                keys[p] = null;
-                rec(pi + 1);
-              }
-            }
-          } else {
-            IntSet s = system.findOrCreatePointsToSet(var).getValue();
-            if (s != null && !s.isEmpty()) {
-              s.foreach(new IntSetAction() {
-                @Override
-                public void act(int x) {
-                  keys[p] = system.getInstanceKey(x);
-                  rec(pi + 1);
-                }
-              });
-            } else {
-              if (!site.isDispatch() || p != 0) {
-                keys[p] = null;
-                rec(pi + 1);
-              }
-            }
-          }
-        }
-      }
-    }.rec(0);
+    new CrossProductRec(invariants, call, caller, f).rec(0, 0);
   }
   
   protected Set<CGNode> getTargetsForCall(final CGNode caller, final SSAAbstractInvokeInstruction instruction, InstanceKey[][] invs) {
@@ -1919,11 +2017,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
     final CallSiteReference site = instruction.getCallSite();
-    IntSet params = contextSelector.getRelevantParameters(caller, site);
-    if (!site.isStatic() && !params.contains(0)) {
-      params = IntSetUtil.makeMutableCopy(params);
-      ((MutableIntSet)params).add(0);
-    }
+    IntSet params = getRelevantParameters(caller, site);
     final Set<CGNode> targets = HashSetFactory.make();
     VoidFunction<InstanceKey[]> f = new VoidFunction<InstanceKey[]>() {
       @Override
@@ -1940,6 +2034,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     };
     iterateCrossProduct(caller, instruction, params, invs, f);
      return targets;
+  }
+
+  private IntSet getRelevantParameters(final CGNode caller, final CallSiteReference site) throws UnimplementedError {
+    IntSet params = contextSelector.getRelevantParameters(caller, site);
+    if (!site.isStatic() && !params.contains(0)) {
+      params = IntSetUtil.makeMutableCopy(params);
+      ((MutableIntSet)params).add(0);
+    }
+    return params;
   }
 
   public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {

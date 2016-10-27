@@ -348,9 +348,9 @@ public abstract class IRTests {
 
   protected abstract AbstractAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
-  public Pair<CallGraph, PointerAnalysis<InstanceKey>> runTest(Collection<String> sources, List<String> libs,
+  public <I extends InstanceKey> Pair<CallGraph, PointerAnalysis<I>> runTest(Collection<String> sources, List<String> libs,
         String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable) throws IllegalArgumentException, CancelException, IOException {
-      AbstractAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
+      AbstractAnalysisEngine<I> engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
 
       CallGraph callGraph;
         callGraph = engine.buildDefaultCallGraph();
@@ -450,7 +450,7 @@ public abstract class IRTests {
     return null;
   }
 
-  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
+  public static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);

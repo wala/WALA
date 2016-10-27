@@ -4,7 +4,7 @@ before_install:
  - "export DISPLAY=:99.0"
  - "sh -e /etc/init.d/xvfb start"
  - "pushd /tmp"
- - "git clone https://github.com/secure-software-engineering/DroidBench.git"
+ - "git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git"
  - "popd"
  - "mkdir -p $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib"
  - "find /usr/local -name dx.jar -exec cp '{}' $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib/dx.jar ';'"

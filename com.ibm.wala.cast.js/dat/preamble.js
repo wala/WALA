@@ -219,6 +219,7 @@ DOMHTMLDocument = function DOMHTMLDocument() {
 }
 
 Location = function Location(){
+	this.hash = new String();
 	this.port = new String();
 	this.port.value = new String();
 	this.host = new String();

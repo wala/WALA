@@ -43,6 +43,12 @@ public final class WalaProperties {
 
   public final static String ANDROID_DEX_TOOL = "android_dx_tool";
 
+  public final static String ANDROID_APK_TOOL = "android_apk_tool";
+  
+  public final static String DROIDEL_TOOL = "droidel_tool";
+  
+  public final static String DROIDEL_ANDROID_JAR = "droidel_android_jar";
+
   /**
    * Determine the classpath noted in wala.properties for J2SE standard libraries
    * 

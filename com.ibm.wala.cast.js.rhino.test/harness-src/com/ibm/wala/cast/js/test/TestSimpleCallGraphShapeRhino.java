@@ -18,8 +18,6 @@ import org.junit.Test;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -40,7 +38,7 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   public void test214631() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "214631.js");
     b.makeCallGraph(b.getOptions());
-    PointerAnalysis<InstanceKey> PA = b.getPointerAnalysis();
+    b.getPointerAnalysis();
     // just make sure this does not crash
   }
 

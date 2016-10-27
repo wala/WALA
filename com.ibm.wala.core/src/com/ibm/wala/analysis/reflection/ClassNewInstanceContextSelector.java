@@ -61,7 +61,7 @@ class ClassNewInstanceContextSelector implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+    if (ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF.equals(site.getDeclaredTarget())) {
       return thisParameter;
     } else {
       return EmptyIntSet.instance;

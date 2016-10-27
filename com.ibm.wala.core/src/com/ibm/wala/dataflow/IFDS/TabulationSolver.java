@@ -52,7 +52,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * <li>it stores summary edges at each callee instead of at each call site.
  * </ul>
  * <p>
- * 
+ *
  * @param <T> type of node in the supergraph
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
@@ -111,7 +111,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * A map from Object (entry node in supergraph) -> LocalPathEdges.
-   * 
+   *
    * Logically, this represents a set of edges (s_p,d_i) -> (n, d_j). The data structure is chosen to attempt to save space over
    * representing each edge explicitly.
    */
@@ -119,7 +119,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * A map from Object (entry node in supergraph) -> CallFlowEdges.
-   * 
+   *
    * Logically, this represents a set of edges (c,d_i) -> (s_p, d_j). The data structure is chosen to attempt to save space over
    * representing each edge explicitly.
    */
@@ -127,7 +127,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * A map from Object (procedure) -> LocalSummaryEdges.
-   * 
+   *
    */
   final protected Map<P, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
 
@@ -196,7 +196,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Solve the dataflow problem.
-   * 
+   *
    * @return a representation of the result
    */
   public TabulationResult<T, P, F> solve() throws CancelException {
@@ -238,7 +238,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * See POPL 95 paper for this algorithm, Figure 3
-   * 
+   *
    * @throws CancelException
    */
   private void forwardTabulateSLRPs() throws CancelException {
@@ -293,7 +293,7 @@ public class TabulationSolver<T, P, F> {
   /**
    * For some reason (either a bug in our code that defeats soft references, or a bad policy in the GC), leaving soft reference
    * caches to clear themselves out doesn't work. Help it out.
-   * 
+   *
    * It's unfortunate that this method exits.
    */
   protected void tendToSoftCaches() {
@@ -305,7 +305,7 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * 
+   *
    */
   protected final void performVerboseAction() {
     verboseCounter++;
@@ -323,7 +323,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Handle lines [33-37] of the algorithm
-   * 
+   *
    * @param edge
    */
   private void processNormal(final PathEdge<T> edge) {
@@ -344,6 +344,7 @@ public class TabulationSolver<T, P, F> {
         D3.foreach(new IntSetAction() {
           @Override
           public void act(int d3) {
+            newNormalExplodedEdge(edge, m, d3);
             propagate(edge.entry, edge.d1, m, d3);
           }
         });
@@ -353,7 +354,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Handle lines [21 - 32] of the algorithm, propagating information from an exit node.
-   * 
+   *
    * Note that we've changed the way we record summary edges. Summary edges are now associated with a callee (s_p,exit), where the
    * original algorithm used a call, return pair in the caller.
    */
@@ -390,9 +391,9 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Propagate information for an "exit" edge to the appropriate return sites
-   * 
+   *
    * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
-   * 
+   *
    * @param edge the edge being processed
    * @param succ numbers of the nodes that are successors of edge.n (the return block in the callee) in the call graph.
    * @param c a call site of edge.s_p
@@ -435,7 +436,7 @@ public class TabulationSolver<T, P, F> {
         IntSetAction action = new IntSetAction() {
           @Override
           public void act(final int d4) {
-            propToReturnSite(c, entries, retSite, d4, D5);
+            propToReturnSite(c, entries, retSite, d4, D5, edge);
           }
         };
         D4.foreach(action);
@@ -445,9 +446,9 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Propagate information for an "exit" edge to a caller return site
-   * 
+   *
    * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
-   * 
+   *
    * @param edge the edge being processed
    * @param c a call site of edge.s_p
    * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
@@ -455,13 +456,13 @@ public class TabulationSolver<T, P, F> {
    * @param retSite the return site being propagated to
    * @param retf the flow function
    */
-  private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge edge, final T c, final IntSet D4, final T[] entries,
+  private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge<T> edge, final T c, final IntSet D4, final T[] entries,
       final T retSite, final IFlowFunction retf) {
     D4.foreach(new IntSetAction() {
       @Override
       public void act(final int d4) {
         final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
-        propToReturnSite(c, entries, retSite, d4, D5);
+        propToReturnSite(c, entries, retSite, d4, D5, edge);
       }
 
     });
@@ -469,15 +470,16 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Propagate information to a particular return site.
-   * 
+   *
    * @param c the corresponding call site
    * @param entries entry nodes in the caller
    * @param retSite the return site
    * @param d4 a fact s.t. <c, d4> -> <callee, d2> was recorded as call flow and <callee, d2> is the source of the summary edge
    *          being applied
    * @param D5 facts to propagate to return site
+   * @param edge the path edge ending at the exit site of the callee
    */
-  private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5) {
+  private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5, final PathEdge<T> edge) {
     if (D5 != null) {
       D5.foreach(new IntSetAction() {
         @Override
@@ -505,6 +507,7 @@ public class TabulationSolver<T, P, F> {
                 public void act(int d3) {
                   // set curPathEdge to be consistent with its setting in processCall() when applying a summary edge
                   curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
+                  newSummaryEdge(curPathEdge, edge, retSite, d5);
                   propagate(s_p, d3, retSite, d5);
                 }
               });
@@ -569,6 +572,7 @@ public class TabulationSolver<T, P, F> {
         D3.foreach(new IntSetAction() {
           @Override
           public void act(int d3) {
+            newNormalExplodedEdge(edge, m, d3);
             propagate(edge.entry, edge.d1, m, d3);
           }
         });
@@ -597,6 +601,7 @@ public class TabulationSolver<T, P, F> {
           public void act(int x) {
             assert x >= 0;
             assert edge.d1 >= 0;
+            newNormalExplodedEdge(edge, returnSite, x);
             propagate(edge.entry, edge.d1, returnSite, x);
           }
         });
@@ -606,7 +611,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * handle a particular callee for some call node.
-   * 
+   *
    * @param edge the path edge being processed
    * @param callNodeNum the number of the call node in the supergraph
    * @param allReturnSites a set collecting return sites for the call. This set is mutated with the return sites for this callee.
@@ -651,6 +656,7 @@ public class TabulationSolver<T, P, F> {
           // we get reuse if we _don't_ propagate a new fact to the callee entry
           final boolean gotReuse = !propagate(calleeEntry, d1, calleeEntry, d1);
           recordCall(edge.target, calleeEntry, d1, gotReuse);
+          newCallExplodedEdge(edge, calleeEntry, d1);
           // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
           // call flow
           callFlow.addCallEdge(callNodeNum, edge.d2, d1);
@@ -677,7 +683,7 @@ public class TabulationSolver<T, P, F> {
                     final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                     reachedBySummary.foreach(new IntSetAction() {
                       @Override
-                      public void act(int d2) {
+                      public void act(final int d2) {
                         assert curSummaryEdge == null : "curSummaryEdge should be null here";
                         curSummaryEdge = PathEdge.createPathEdge(calleeEntry, d1, exit, d2);
                         if (retf instanceof IBinaryReturnFlowFunction) {
@@ -686,6 +692,7 @@ public class TabulationSolver<T, P, F> {
                             D5.foreach(new IntSetAction() {
                               @Override
                               public void act(int d5) {
+                                newSummaryEdge(edge, curSummaryEdge, returnSite, d5);
                                 propagate(edge.entry, edge.d1, returnSite, d5);
                               }
                             });
@@ -696,6 +703,7 @@ public class TabulationSolver<T, P, F> {
                             D5.foreach(new IntSetAction() {
                               @Override
                               public void act(int d5) {
+                                newSummaryEdge(edge, curSummaryEdge, returnSite, d5);
                                 propagate(edge.entry, edge.d1, returnSite, d5);
                               }
                             });
@@ -716,7 +724,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * invoked when a callee is processed with a particular entry fact
-   * 
+   *
    * @param callNode
    * @param callee
    * @param d1 the entry fact
@@ -727,7 +735,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * @return f(call_d, exit_d);
-   * 
+   *
    */
   protected IntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
@@ -739,7 +747,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * @return f(d1)
-   * 
+   *
    */
   protected IntSet computeFlow(int d1, IUnaryFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
@@ -766,7 +774,7 @@ public class TabulationSolver<T, P, F> {
     return worklist.take();
   }
 
-  private PathEdge peekFromWorkList() {
+  private PathEdge<T> peekFromWorkList() {
     // horrible. don't use in performance-critical
     assert worklist != null;
     PathEdge<T> result = worklist.take();
@@ -777,7 +785,7 @@ public class TabulationSolver<T, P, F> {
   /**
    * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Returns <code>true</code> iff the path edge was not previously
    * observed.
-   * 
+   *
    * @param s_p entry block
    * @param i dataflow fact on entry
    * @param n reached block
@@ -813,9 +821,9 @@ public class TabulationSolver<T, P, F> {
   /**
    * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and
    * <s_p,i> -><n, z>.
-   * 
+   *
    * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
-   * 
+   *
    * return -1 if no fact should be propagated
    */
   private int merge(T s_p, int i, T n, int j) {
@@ -883,7 +891,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * get the bitvector of facts that hold at the entry to a given node
-   * 
+   *
    * @return IntSet representing the bitvector
    */
   public IntSet getResult(T node) {
@@ -898,15 +906,15 @@ public class TabulationSolver<T, P, F> {
     	for (PathEdge<T> seed : pSeeds) {
     		allEntries.add(seed.entry);
     	}
-    }    
+    }
 
     for (T entry : allEntries){
     	LocalPathEdges lp = pathEdges.get(entry);
     	if (lp != null) {
     		result.addAll(lp.getReachable(n));
     	}
-    }    	
-    
+    }
+
     return result;
   }
 
@@ -914,7 +922,7 @@ public class TabulationSolver<T, P, F> {
 
     /**
      * get the bitvector of facts that hold at the entry to a given node
-     * 
+     *
      * @return IntSet representing the bitvector
      */
     @Override
@@ -929,6 +937,7 @@ public class TabulationSolver<T, P, F> {
       TreeMap<Object, TreeSet<T>> map = new TreeMap<Object, TreeSet<T>>(ToStringComparator.instance());
 
       Comparator<Object> c = new Comparator<Object>() {
+        @SuppressWarnings("rawtypes")
         @Override
         public int compare(Object o1, Object o2) {
           if (!(o1 instanceof IBasicBlock)) {
@@ -1064,4 +1073,38 @@ public class TabulationSolver<T, P, F> {
   protected PathEdge<T> getCurSummaryEdge() {
     return curSummaryEdge;
   }
+
+  /**
+   * Indicates that due to a path edge <s_p, d1> -> <n, d2> (the 'edge'
+   * parameter) and a normal flow function application, a new path edge <s_p,
+   * d1> -> <m, d3> was created. To be overridden in subclasses. We also use
+   * this function to record call-to-return flow.
+   *
+   */
+  protected void newNormalExplodedEdge(PathEdge<T> edge, T m, int d3) {
+
+  }
+
+  /**
+   * Indicates that due to a path edge 'edge' <s_p, d1> -> <n, d2> and
+   * application of a call flow function, a new path edge <calleeEntry, d3> ->
+   * <calleeEntry, d3> was created. To be overridden in subclasses.
+   *
+   */
+  protected void newCallExplodedEdge(PathEdge<T> edge, T calleeEntry, int d3) {
+
+  }
+
+  /**
+   * Combines [25] and [26-28]. In the caller we have a path edge
+   * 'edgeToCallSite' <s_c, d3> -> <c, d4>, where c is the call site. In the
+   * callee, we have path edge 'calleeSummaryEdge' <s_p, d1> -> <e_p, d2>. Of
+   * course, there is a call edge <c, d4> -> <s_p, d1>. Finally, we have a
+   * return edge <e_p, d2> -> <returnSite, d5>.
+   */
+  protected void newSummaryEdge(PathEdge<T> edgeToCallSite, PathEdge<T> calleeSummaryEdge, T returnSite, int d5) {
+
+  }
+
+
 }

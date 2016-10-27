@@ -1291,6 +1291,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     else
       modifiers = ((FieldDeclaration) n.getParent()).getModifiers();
     boolean isFinal = (modifiers & Modifier.FINAL) != 0;
+    assert n.resolveBinding() != null : n;
     ITypeBinding type = n.resolveBinding().getType();
     Expression init = n.getInitializer();
     CAstNode initNode;
@@ -1778,7 +1779,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     if (n.resolveBinding() instanceof ITypeBinding)
       return makeNode(context, fFactory, null, CAstNode.EMPTY);
 
-    assert n.resolveBinding() instanceof IVariableBinding : "SimpleName's binding is not a variable or a type binding!";
+    assert n.resolveBinding() instanceof IVariableBinding : "SimpleName's binding, " + n.resolveBinding() + ", is not a variable or a type binding!";
 
     IVariableBinding binding = (IVariableBinding) n.resolveBinding();
     binding = binding.getVariableDeclaration(); // ignore weird generic stuff

@@ -754,4 +754,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     return MethodReference.findOrCreate(this, loader, instruction.getClassType(), instruction.getMethodName(),
         instruction.getMethodSignature());
   }
+
+  @Override
+  public boolean methodsHaveDeclaredParameterTypes() {
+    return true;
+  }
 }

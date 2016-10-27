@@ -22,8 +22,8 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * Utilities for dealing with tabulation with partially balanced parentheses.
- * 
- * @param <T> type of node in the supergraph 
+ *
+ * @param <T> type of node in the supergraph
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
  */
@@ -61,6 +61,7 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
               T fakeEntry = problem.getFakeEntry(retSite);
               PathEdge<T> seed = PathEdge.createPathEdge(fakeEntry, d3, retSite, d3);
               addSeed(seed);
+              newUnbalancedExplodedReturnEdge(s_p,  i, n, j, seed);
             }
           }
         } else {
@@ -87,5 +88,14 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
    */
   private boolean wasUsedAsUnbalancedSeed(T s_p, int i) {
    return unbalancedSeeds.contains(Pair.make(s_p, i));
+  }
+
+  /**
+   * A path edge <s_p, i> -> <n, j> was propagated, and <s_p, i> was an unbalanced seed.
+   * So, we added a new seed callerSeed (to some return site) in the caller.  To be overridden
+   * in subclasses.
+   */
+  protected void newUnbalancedExplodedReturnEdge(T s_p, int i, T n, int j, PathEdge<T> callerSeed) {
+
   }
 }

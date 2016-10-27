@@ -56,8 +56,6 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
 
   private final AnalysisCache analysisCache;
   
-  private final AnalysisOptions options = new AnalysisOptions();
-
   private final ExplodedInterproceduralCFG icfg;
 
   protected ICFGSupergraph(ExplodedInterproceduralCFG icfg, AnalysisCache cache) {
@@ -77,18 +75,6 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
 
   public IClassHierarchy getClassHierarchy() {
     return icfg.getCallGraph().getClassHierarchy();
-  }
-
-  public IR getIR(IMethod m, Context c) {
-    //AnalysisOptions options = new AnalysisOptions();
-    IR ir = analysisCache.getSSACache().findOrCreateIR(m, c, options.getSSAOptions());
-    return ir;
-  }
-
-  public IR getIR(CGNode n) {
-    //AnalysisOptions options = new AnalysisOptions();
-    IR ir = analysisCache.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(), options.getSSAOptions());
-    return ir;
   }
 
   @Override

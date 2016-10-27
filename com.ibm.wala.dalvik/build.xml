@@ -85,12 +85,8 @@
 
   <target name="fetchSlf4j" depends="Slf4jPresent" unless="slf4j.present">
     <delete dir="${temp.folder}"/>
-    <mkdir dir="${temp.folder}"/>
     <mkdir dir="${plugin.destination}/lib"/>    
-    <get src="http://www.slf4j.org/dist/slf4j-1.7.2.tar.gz" dest="${temp.folder}/slf4j-1.7.2.tar.gz"/>
-    <untar compression="gzip" src="${temp.folder}/slf4j-1.7.2.tar.gz" dest="${temp.folder}"/>
-    <copy file="${temp.folder}/slf4j-1.7.2/slf4j-api-1.7.2.jar" tofile="${plugin.destination}/lib/slf4j-api-1.7.2.jar" />
-    <delete dir="${temp.folder}"/>
+    <get src="http://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.2/slf4j-api-1.7.2.jar" dest="${plugin.destination}/lib/slf4j-api-1.7.2.jar"/>
   </target>
 
   <target name="getJars" depends="fetchCommonsIo,fetchCommonsCli,fetchGuava,fetchDexlib,fetchLogback,fetchSlf4j" />

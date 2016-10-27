@@ -141,19 +141,25 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   
   private int passActualPropertyValsAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
-    int curValNum = nargs + 2;
+    int nullVn = nargs + 2;
+    S.addConstant(nullVn, new ConstantValue(null));
+    int curValNum = nargs + 3;
     for (int i = 1; i < paramsToPassToInvoked.length; i++) {
       // create a String constant for i-1
       final int constVN = curValNum++;
       // the commented line is correct, but it doesn't work because
       // of our broken handling of int constants as properties.
       // TODO fix property handling, and then fix this
-//      S.addConstant(constVN, new ConstantValue(Integer.toString(i-1)));
-      S.addConstant(constVN, new ConstantValue(i-1));
+      S.addConstant(constVN, new ConstantValue(Integer.toString(i-1)));
+      //S.addConstant(constVN, new ConstantValue(i-1));
       int propertyReadResult = curValNum++;
       // 4 is position of arguments array
+      S.addStatement(insts.PropertyWrite(S.getNumberOfStatements(), 4, constVN, nullVn));
+      S.getNextProgramCounter();
+      
       S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, constVN));
       S.getNextProgramCounter();
+     
       paramsToPassToInvoked[i] = propertyReadResult;
     }
     return curValNum;

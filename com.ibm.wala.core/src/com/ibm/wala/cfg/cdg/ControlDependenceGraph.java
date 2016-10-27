@@ -15,8 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.cfg.MinimalCFG;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -33,12 +32,12 @@ import com.ibm.wala.util.intset.MutableIntSet;
 /**
  * Control Dependence Graph
  */
-public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> {
+public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
 
   /**
    * Governing control flow-graph. The control dependence graph is computed from this cfg.
    */
-  private final ControlFlowGraph<I, T> cfg;
+  private final MinimalCFG<T> cfg;
 
   /**
    * the EdgeManager for the CDG. It implements the edge part of the standard Graph abstraction, using the control-dependence edges
@@ -50,7 +49,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
    * If requested, this is a map from parentXchild Pairs representing edges in the CDG to the labels of the control flow edges that
    * edge corresponds to. The labels are Boolean.True or Boolean.False for conditionals and an Integer for a switch label.
    */
-  private Map<Pair, Set<Object>> edgeLabels;
+  private Map<Pair, Set<? extends Object>> edgeLabels;
 
   /**
    * This is the heart of the CDG computation. Based on Cytron et al., this is the reverse dominance frontier based algorithm for
@@ -78,12 +77,12 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         T x = ns2.next();
         controlDependence.get(x).add(y);
         if (wantEdgeLabels) {
-          Set<Object> labels = HashSetFactory.make();
+           HashSet<Object> labels = HashSetFactory.make();
           edgeLabels.put(Pair.make(x, y), labels);
           for (Iterator<? extends T> ss = cfg.getSuccNodes(x); ss.hasNext();) {
             T s = ss.next();
             if (RDF.isDominatedBy(s, y)) {
-              labels.add(s);
+              labels.add(makeEdgeLabel(x, y, s));
             }
           }
         }
@@ -93,7 +92,11 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
     return controlDependence;
   }
 
-  /**
+  protected Object makeEdgeLabel(T x, T y, T s) {
+    return s;
+  }  
+
+   /**
    * Given the control-dependence edges in a forward direction (i.e. edges from control parents to control children), this method
    * creates an EdgeManager that provides the edge half of the Graph abstraction.
    */
@@ -127,7 +130,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         MutableIntSet x = IntSetUtil.make();
         if (backwardEdges.containsKey(node)) {
           for(T pred : backwardEdges.get(node)) {
-            x.add(pred.getNumber());
+            x.add(cfg.getNumber(pred));
           }
         }
         return x;
@@ -154,7 +157,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         MutableIntSet x = IntSetUtil.make();
         if (forwardEdges.containsKey(node)) {
           for(T succ : forwardEdges.get(node)) {
-            x.add(succ.getNumber());
+            x.add(cfg.getNumber(succ));
           }
         }
         return x;
@@ -223,7 +226,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
    * @param cfg governing control flow graph
    * @param wantEdgeLabels whether to compute edge labels for CDG edges
    */
-  public ControlDependenceGraph(ControlFlowGraph<I, T> cfg, boolean wantEdgeLabels) {
+  public ControlDependenceGraph(MinimalCFG<T> cfg, boolean wantEdgeLabels) {
     if (cfg == null) {
       throw new IllegalArgumentException("null cfg");
     }
@@ -234,11 +237,11 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
   /**
    * @param cfg governing control flow graph
    */
-  public ControlDependenceGraph(ControlFlowGraph<I, T> cfg) {
+  public ControlDependenceGraph(MinimalCFG<T> cfg) {
     this(cfg, false);
   }
 
-  public ControlFlowGraph getControlFlowGraph() {
+  public MinimalCFG getControlFlowGraph() {
     return cfg;
   }
 
@@ -246,7 +249,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
    * Return the set of edge labels for the control flow edges that cause the given edge in the CDG. Requires that the CDG be
    * constructed with wantEdgeLabels being true.
    */
-  public Set<Object> getEdgeLabels(Object from, Object to) {
+  public Set<? extends Object> getEdgeLabels(Object from, Object to) {
     return edgeLabels.get(Pair.make(from, to));
   }
 

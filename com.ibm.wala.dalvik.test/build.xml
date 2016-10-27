@@ -35,6 +35,8 @@
 	<property name="bundleJavacTarget" value="${javacTarget}"/>
 	<property name="bundleBootClasspath" value="${bootclasspath}"/>
 
+	<property environment="env"/>
+
      <target name="sampleLexPresent" depends="init">
         <available file="${plugin.destination}/data/sample.lex" property="sample.lex.present"/>
      </target>
@@ -59,7 +61,20 @@
      <available file="${plugin.destination}/data/android.jar" property="android.jar.present"/>
    </target>
 
-   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchAndroidJar" />
+   <target name="copyDxJar" depends="dxJarPresent" unless="dx.jar.present">
+	<fail unless="env.ANDROID_HOME" message="ANDROID_HOME is not set! Set the environment variable or copy dx.jar manually." />
+	<copy tofile="${basedir}/lib/dx.jar">
+		<first>
+			<fileset dir="${env.ANDROID_HOME}" includes="build-tools/*/lib/dx.jar"/>
+		</first>
+	</copy>
+   </target>
+
+   <target name="dxJarPresent" depends="init">
+	<available file="${basedir}/lib/dx.jar" property="dx.jar.present"/>
+   </target>
+
+   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchAndroidJar,copyDxJar" />
 
 	<target name="init" depends="properties">
 		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
