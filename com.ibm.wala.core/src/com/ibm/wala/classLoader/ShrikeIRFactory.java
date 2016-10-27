@@ -16,12 +16,13 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
+import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSABuilder;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.ShrikeIndirectionData;
@@ -74,13 +75,14 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
         DeadAssignmentElimination.perform(this);
       }
       private void pruneExceptionsForSafeArrayCreations() {
+        DefUse du = new DefUse(this);
         for (int i = 0; i < newInstrs.length; i++) {
           SSAInstruction instr = newInstrs[i];
           if (instr instanceof SSANewInstruction) {
             SSANewInstruction newInstr = (SSANewInstruction) instr;
             if (newInstr.getConcreteType().isArrayType()) {
               int vLength = newInstr.getUse(0);
-              if (symbolTable.isIntegerConstant(vLength) && symbolTable.getIntValue(vLength) >= 0) {
+              if (isNonNegativeConstant(vLength) || isDefdByArrayLength(vLength, du)) {
                 newInstrs[i] = new SSANewInstruction(newInstr.iindex, newInstr.getDef(), newInstr.getNewSite(), new int[] { vLength }) {
                   @Override
                   public Collection<TypeReference> getExceptionTypes() {
@@ -91,6 +93,12 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
             }
           }
         }
+      }
+      private boolean isNonNegativeConstant(int vLength) {
+        return symbolTable.isIntegerConstant(vLength) && symbolTable.getIntValue(vLength) >= 0;
+      }
+      private boolean isDefdByArrayLength(int vLength, DefUse du) {
+        return du.getDef(vLength) instanceof SSAArrayLengthInstruction;
       }
       @Override
       protected String instructionPosition(int instructionIndex) {
