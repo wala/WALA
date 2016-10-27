@@ -50,7 +50,7 @@ import com.ibm.wala.util.collections.Pair;
  *
  */
 public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
   private final Map<CAstNode, List<ExtractionRegion>> region_map = HashMapFactory.make();
   
   private CorrelatedPairExtractionPolicy() {}
