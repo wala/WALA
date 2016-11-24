@@ -99,7 +99,7 @@ public class PropertyNameContextSelector implements ContextSelector {
     @Override
     public ContextItem get(ContextKey key) {
       if (INSTANCE_KEY_KEY.equals(key)) {
-        return ((SingleInstanceFilter)super.get(ContextKey.PARAMETERS[index])).getInstance();        
+        return ContextItem.Value.make(((SingleInstanceFilter)super.get(ContextKey.PARAMETERS[index])).getInstance());        
       } else {
         final ContextItem contextItem = super.get(key);
         return (contextItem instanceof SingleInstanceFilter) ? null : contextItem;
