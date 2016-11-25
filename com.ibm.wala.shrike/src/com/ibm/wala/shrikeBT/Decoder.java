@@ -1101,4 +1101,14 @@ public abstract class Decoder implements Constants {
     }
     return instructionsToBytecodes;
   }
+
+  /**
+   * @return true iff the method decoded by this Decoder contains subroutines (JSRs)
+   */
+  final public boolean containsSubroutines() {
+    if (instructions == null) {
+      throw new Error("Call decode() before calling containsSubroutines()");
+    }
+    return JSRs != null;
+  }
 }
