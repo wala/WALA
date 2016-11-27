@@ -77,7 +77,7 @@ public class Detectable {
   }
 
   /**
-   * swaps elements of a and b for all i: 0 <= i < min(a.length, b.length)
+   * swaps elements of a and b for all i: 0 &lt;= i &lt; min(a.length, b.length)
    * 
    * @param a
    * @param b
@@ -100,7 +100,7 @@ public class Detectable {
   }
 
   /**
-   * Invert the order of all elements of arr with index i: fromIndex <= i <
+   * Invert the order of all elements of arr with index i: fromIndex &lt;= i <
    * toIndex.
    * 
    * @param arr

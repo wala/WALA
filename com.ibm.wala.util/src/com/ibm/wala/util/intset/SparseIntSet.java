@@ -302,7 +302,7 @@ public class SparseIntSet implements IntSet, Serializable {
   }
 
   /**
-   * Reverse of toString(): "{2,3}" -> [2,3]
+   * Reverse of toString(): "{2,3}" -&gt; [2,3]
    * @throws IllegalArgumentException if str is null
    */
   public static int[] parseIntArray(String str)  {

@@ -392,12 +392,12 @@ public class TabulationSolver<T, P, F> {
   /**
    * Propagate information for an "exit" edge to the appropriate return sites
    *
-   * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
+   * [23] for each d5 s.t. {@literal <s_p,d2> -> <returnSite(c),d5>} ..
    *
    * @param edge the edge being processed
    * @param succ numbers of the nodes that are successors of edge.n (the return block in the callee) in the call graph.
    * @param c a call site of edge.s_p
-   * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
+   * @param D4 set of d1 s.t. {@literal <c, d1> -> <edge.s_p, edge.d2>} was recorded as call flow
    */
   private void propagateToReturnSites(final PathEdge<T> edge, final T c, final IntSet D4) {
     P proc = supergraph.getProcOf(c);
@@ -447,11 +447,11 @@ public class TabulationSolver<T, P, F> {
   /**
    * Propagate information for an "exit" edge to a caller return site
    *
-   * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
+   * [23] for each d5 s.t. {@literal <s_p,d2> -> <returnSite(c),d5>} ..
    *
    * @param edge the edge being processed
    * @param c a call site of edge.s_p
-   * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
+   * @param D4 set of d1 s.t. {@literal <c, d1> -> <edge.s_p, edge.d2>} was recorded as call flow
    * @param entries the blocks in the supergraph that are entries for the procedure of c
    * @param retSite the return site being propagated to
    * @param retf the flow function
@@ -474,8 +474,9 @@ public class TabulationSolver<T, P, F> {
    * @param c the corresponding call site
    * @param entries entry nodes in the caller
    * @param retSite the return site
-   * @param d4 a fact s.t. <c, d4> -> <callee, d2> was recorded as call flow and <callee, d2> is the source of the summary edge
-   *          being applied
+   * @param d4 a fact s.t. {@literal <c, d4> -> <callee, d2>} was
+   *          recorded as call flow and {@literal <callee, d2>} is the
+   *          source of the summary edge being applied
    * @param D5 facts to propagate to return site
    * @param edge the path edge ending at the exit site of the callee
    */
@@ -522,7 +523,7 @@ public class TabulationSolver<T, P, F> {
    * @param s_p
    * @param n
    * @param d2 note that s_p must be an entry for procof(n)
-   * @return set of d1 s.t. <s_p, d1> -> <n, d2> is a path edge, or null if none found
+   * @return set of d1 s.t. {@literal <s_p, d1> -> <n, d2>} is a path edge, or null if none found
    */
   protected IntSet getInversePathEdges(T s_p, T n, int d2) {
     int number = supergraph.getLocalBlockNumber(n);
@@ -1000,7 +1001,7 @@ public class TabulationSolver<T, P, F> {
      * @param n1
      * @param d1
      * @param n2
-     * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or null if none found
+     * @return set of d2 s.t. (n1,d1) -&gt; (n2,d2) is recorded as a summary edge, or null if none found
      */
     @Override
     public IntSet getSummaryTargets(T n1, int d1, T n2) {
@@ -1040,7 +1041,7 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or null if none found
+   * @return set of d1 s.t. (n1,d1) -&gt; (n2,d2) is recorded as a summary edge, or null if none found
    * @throws UnsupportedOperationException unconditionally
    */
   public IntSet getSummarySources(T n2, int d2, T n1) throws UnsupportedOperationException {

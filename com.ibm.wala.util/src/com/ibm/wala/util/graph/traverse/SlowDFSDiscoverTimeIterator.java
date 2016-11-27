@@ -26,7 +26,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
   public static final long serialVersionUID = 9439217987188L;
 
   /**
-   * An iterator of child nodes for each node being searched A Map: Node -> Iterator
+   * An iterator of child nodes for each node being searched A Map: Node -&gt; Iterator
    */
   final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 

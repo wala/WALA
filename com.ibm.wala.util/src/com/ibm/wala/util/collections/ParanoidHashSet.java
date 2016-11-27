@@ -27,7 +27,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   public static final long serialVersionUID = 30919839181133333L;
 
   /**
-   * A mapping from Integer (hashcode) -> Set of objects
+   * A mapping from Integer (hashcode) -&gt; Set of objects
    */
   private final Map<Integer, Set<T>> hcFreq;
 

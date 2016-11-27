@@ -45,7 +45,7 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return total length of this attribute in bytes, <bf>including</bf> the
+   * @return total length of this attribute in bytes, <b>including</b> the
    *         first 6 bytes
    * @throws InvalidClassFileException
    */

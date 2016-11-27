@@ -199,7 +199,7 @@ public class LocalPathEdges {
    * 
    * @param n local block number of a basic block n
    * @param d2
-   * @return the sparse int set of d1 s.t. <s_p, d1> -> <n, d2> are recorded as path edges. null if none found
+   * @return the sparse int set of d1 s.t. {@literal <s_p, d1> -> <n, d2>} are recorded as path edges. null if none found
    */
   public IntSet getInverse(int n, int d2) {
     IBinaryNaturalRelation R = paths.get(d2);
@@ -276,7 +276,7 @@ public class LocalPathEdges {
    * @param i
    * @param n local block number of a basic block n
    * @param j
-   * @return true iff we have a path edge <s_p,i>-><n, j>
+   * @return true iff we have a path edge {@literal <s_p,i> -> <n, j>}
    */
   public boolean contains(int i, int n, int j) {
 
@@ -311,7 +311,7 @@ public class LocalPathEdges {
   /**
    * 
    * @param n
-   * @return set of d2 s.t. d1->d2 is a path edge for node n.
+   * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n.
    */
   public IntSet getReachable(int n, int d1) {
     if (PARANOID) {
@@ -323,7 +323,7 @@ public class LocalPathEdges {
   /**
    * Note that this is really slow!!!
    * 
-   * @return set of d2 s.t. d1->d2 is a path edge for node n
+   * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n
    */
   private IntSet getReachableSlow(int n, int d1) {
     MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
@@ -363,7 +363,7 @@ public class LocalPathEdges {
   }
 
   /**
-   * @return set of d2 s.t. d1->d2 is a path edge for node n
+   * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n
    */
   private IntSet getReachableFast(int n, int d1) {
 
@@ -378,7 +378,7 @@ public class LocalPathEdges {
    * TODO: optimize this based on altPaths
    * 
    * @param n the local block number of a node
-   * @return set of d2 s.t \exists d1 s.t. d1->d2 is a path edge for node n
+   * @return set of d2 s.t \exists d1 s.t. d1 -&gt; d2 is a path edge for node n
    */
   public IntSet getReachable(int n) {
     MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();

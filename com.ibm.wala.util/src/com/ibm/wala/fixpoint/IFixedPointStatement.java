@@ -44,10 +44,10 @@ public interface IFixedPointStatement<T extends IVariable> extends INodeWithNumb
    * Evaluate this statement, setting a new value for the left-hand side. The
    * return value is one of the following:
    * <ul>
-   * {@link FixedPointConstants#CHANGED},
-   * {@link FixedPointConstants#CHANGED_AND_FIXED},
-   * {@link FixedPointConstants#NOT_CHANGED}or
-   * {@link FixedPointConstants#NOT_CHANGED_AND_FIXED}.
+   * <li>{@link FixedPointConstants#CHANGED},</li>
+   * <li>{@link FixedPointConstants#CHANGED_AND_FIXED},</li>
+   * <li>{@link FixedPointConstants#NOT_CHANGED}, or</li>
+   * <li>{@link FixedPointConstants#NOT_CHANGED_AND_FIXED}.</li>
    * </ul>
    */
   abstract byte evaluate();

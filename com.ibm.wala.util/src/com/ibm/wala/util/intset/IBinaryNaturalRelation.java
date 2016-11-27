@@ -13,7 +13,7 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.VerboseAction;
 
 /**
- * a relation R(x,y) where x >= 0
+ * a relation R(x,y) where x &gt;= 0
  */
 public interface IBinaryNaturalRelation extends VerboseAction, Iterable<IntPair> {
   /**

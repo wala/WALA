@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 public abstract class Heap<T> {
 
   /**
-   * @return true iff elt1 is considered < elt2
+   * @return true iff elt1 is considered &lt; elt2
    */
   abstract protected boolean compareElements(T elt1, T elt2);
 

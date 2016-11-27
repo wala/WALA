@@ -242,7 +242,7 @@ public class CodeScanner {
   }
 
   /**
-   * @return Set <TypeReference>
+   * @return {@link Set}&lt;{@link TypeReference}&gt;
    * @throws IllegalArgumentException if statements == null
    */
   public static Set<TypeReference> getCaughtExceptions(final Language l, SSAInstruction[] statements) throws IllegalArgumentException {

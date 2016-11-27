@@ -46,7 +46,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
   /**
    * smallStore[i][x] holds
    * <ul>
-   * <li>if >=0, the ith integer associated with x
+   * <li>if &gt;=0, the ith integer associated with x
    * <li>if -2, then use the delegateStore instead of the small store
    * <li>if -1, then R(x) is empty
    * </ul>

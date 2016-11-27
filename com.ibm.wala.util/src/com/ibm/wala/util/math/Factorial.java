@@ -68,7 +68,7 @@ public class Factorial {
    * Factorial on doubles; avoids overflow problems present when using integers.
    * 
    * @param n arg on which to compute factorial
-   * @return (<code>double</code> approximation to) factorial of largest positive integer <= (n_ + epsilon)
+   * @return (<code>double</code> approximation to) factorial of largest positive integer &lt;= (n_ + epsilon)
    */
   public static double fact(double n) {
     n += 1e-6;

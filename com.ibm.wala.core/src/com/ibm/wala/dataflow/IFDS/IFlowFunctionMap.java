@@ -20,7 +20,7 @@ public interface IFlowFunctionMap<T> {
   /**
    * @param src
    * @param dest
-   * @return the flow function for a "normal" edge in the supergraph from src->dest
+   * @return the flow function for a "normal" edge in the supergraph from src -&gt; dest
    */
   public IUnaryFlowFunction getNormalFlowFunction(T src, T dest);
 
@@ -29,7 +29,7 @@ public interface IFlowFunctionMap<T> {
    * @param dest the entry of the callee
    * @param ret the block that will be returned to, in the caller. This can be null .. signifying that facts can flow
    *        into the callee but not return
-   * @return the flow function for a "call" edge in the supergraph from src->dest
+   * @return the flow function for a "call" edge in the supergraph from src -&gt; dest
    */
   public IUnaryFlowFunction getCallFlowFunction(T src, T dest, T ret);
 
@@ -37,22 +37,22 @@ public interface IFlowFunctionMap<T> {
    * @param call supergraph node of the call instruction for this return edge.
    * @param src
    * @param dest
-   * @return the flow function for a "return" edge in the supergraph from src->dest
+   * @return the flow function for a "return" edge in the supergraph from src -&gt; dest
    */
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest);
 
   /**
    * @param src
    * @param dest
-   * @return the flow function for a "call-to-return" edge in the supergraph from src->dest
+   * @return the flow function for a "call-to-return" edge in the supergraph from src -&gt; dest
    */
   public IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest);
 
   /**
    * @param src
    * @param dest
-   * @return the flow function for a "call-to-return" edge in the supergraph from src->dest, when the supergraph does
-   *         not contain any callees of src. This happens via, e.g., slicing.
+   * @return the flow function for a "call-to-return" edge in the supergraph from src -&gt; dest,
+   *         when the supergraph does not contain any callees of src. This happens via, e.g., slicing.
    */
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest);
 }

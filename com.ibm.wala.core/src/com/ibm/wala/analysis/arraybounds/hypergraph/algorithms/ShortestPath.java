@@ -81,7 +81,7 @@ public class ShortestPath<T> {
   /**
    * @param weight
    * @param otherWeight
-   * @return weight > otherWeight
+   * @return weight &gt; otherWeight
    */
   private boolean greaterThen(Weight weight, Weight otherWeight) {
     return otherWeight.getType() == Type.NOT_SET || this.comparator.compare(weight, otherWeight) > 0;
@@ -90,7 +90,7 @@ public class ShortestPath<T> {
   /**
    * @param weight
    * @param otherWeight
-   * @return weight < otherWeight
+   * @return weight &lt; otherWeight
    */
   private boolean lessThen(Weight weight, Weight otherWeight) {
     return otherWeight.getType() == Type.NOT_SET || this.comparator.compare(weight, otherWeight) < 0;
