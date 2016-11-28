@@ -7,7 +7,7 @@ import java.util.Collection;
  * combination with {@link ExceptionFilter2EdgeFilter}. For more Details see
  * package-info.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  * @param <Instruction>
  */

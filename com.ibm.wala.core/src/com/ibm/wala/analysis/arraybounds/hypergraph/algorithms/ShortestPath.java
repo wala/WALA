@@ -13,7 +13,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeigh
 
 /**
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  * @param <T>
  *          NodeValueType

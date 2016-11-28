@@ -5,7 +5,7 @@ package arraybounds;
  * All array accesses in the following class are unnecessary and they will be
  * detected correctly by the array bounds analysis.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class Detectable {

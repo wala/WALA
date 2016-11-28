@@ -6,7 +6,7 @@ import com.ibm.wala.types.TypeReference;
  * FilteredException represents either a single exception or an exception and
  * all its subclasses.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class FilteredException {

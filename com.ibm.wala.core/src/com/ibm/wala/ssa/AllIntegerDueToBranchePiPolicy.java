@@ -20,7 +20,7 @@ import com.ibm.wala.util.collections.Pair;
  * A policy, that adds pi nodes for all variables, that are used in a branch
  * instruction.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
 

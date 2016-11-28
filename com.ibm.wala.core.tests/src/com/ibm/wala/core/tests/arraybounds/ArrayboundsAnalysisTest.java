@@ -41,7 +41,7 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
  * 
  * So there is no explicit check for specific lines.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ArrayboundsAnalysisTest {

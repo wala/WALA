@@ -15,7 +15,7 @@ import com.ibm.wala.types.TypeReference;
  * Adapter for using {@link ArrayOutOfBoundsAnalysis}. This filter is filtering
  * ArrayOutOfBoundException, which can not occur.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ArrayOutOfBoundFilter implements ExceptionFilter<SSAInstruction> {

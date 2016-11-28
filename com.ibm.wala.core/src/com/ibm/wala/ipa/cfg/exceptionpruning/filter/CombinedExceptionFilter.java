@@ -9,7 +9,7 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
 /**
  * Use this class to combine multiple {@link ExceptionFilter}
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class CombinedExceptionFilter<Instruction> implements ExceptionFilter<Instruction> {
 	private final Collection<ExceptionFilter<Instruction>> exceptionFilter;
