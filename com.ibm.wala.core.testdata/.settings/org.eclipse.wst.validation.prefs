@@ -5,5 +5,5 @@ USER_PREFERENCE=overrideGlobalPreferencestruedisableAllValidationfalseversion1.2
 eclipse.preferences.version=1
 override=true
 suspend=false
-vals/org.eclipse.wst.html.core.HTMLValidator/groups=0107include06111contentType136org.eclipse.wst.html.core.htmlsourceT07fileext04htmlF07fileext05xhtmlF07fileext03htmF07fileext04htplF07fileext03wmlF0107exclude0204file141ocaml/ocamljava-2.0-alpha1/doc/concurrentT0204file137ocaml/ocamljava-2.0-alpha1/doc/manualT02
+vals/org.eclipse.wst.html.core.HTMLValidator/groups=0107include06111contentType136org.eclipse.wst.html.core.htmlsourceT07fileext04htmlF07fileext05xhtmlF07fileext03htmF07fileext04htplF07fileext03wmlF0107exclude0304file141ocaml/ocamljava-2.0-alpha1/doc/concurrentT0204file137ocaml/ocamljava-2.0-alpha1/doc/manualT0204file139target/site/dependency-convergence.htmlT03
 vf.version=3
