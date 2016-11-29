@@ -172,7 +172,7 @@ public class HeapTracer {
 
     /**
      * @param fdir
-     * @return Collection <String>representing the class names in a particular
+     * @return {@link Collection}&lt;{@link String}&gt; representing the class names in a particular
      *         file
      */
     /**
@@ -180,7 +180,7 @@ public class HeapTracer {
      *            root of the classpath governing file f
      * @param f
      *            a File or directory
-     * @return Collection <String>representing the class names in f
+     * @return {@link Collection}&lt;{@link String}&gt; representing the class names in f
      */
     private static Collection<String> findClassNames(String rootDir, File f) {
 	HashSet<String> result = HashSetFactory.make();

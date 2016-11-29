@@ -54,7 +54,7 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
  * For an example how to use the exception pruning see
  * {@link PruneArrayOutOfBoundExceptionEdge#computeCfgAndPrunedCFG(IMethod)}
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class PruneArrayOutOfBoundExceptionEdge {

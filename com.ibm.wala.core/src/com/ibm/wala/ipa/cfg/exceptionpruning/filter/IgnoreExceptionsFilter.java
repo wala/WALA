@@ -11,7 +11,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * For filtering specific exceptions.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class IgnoreExceptionsFilter implements ExceptionFilter<SSAInstruction> {

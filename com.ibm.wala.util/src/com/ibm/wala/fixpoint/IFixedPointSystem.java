@@ -31,14 +31,14 @@ public interface IFixedPointSystem<T extends IVariable> {
   /**
    * Return an Iterator of the {@link IFixedPointStatement}s in this system
    * 
-   * @return Iterator <Constraint>
+   * @return {@link Iterator}&lt;Constraint&gt;
    */
   public Iterator getStatements();
 
   /**
    * Return an Iterator of the variables in this graph
    * 
-   * @return Iterator <IVariable>
+   * @return {@link Iterator}&lt;{@link IVariable}&gt;
    */
   public Iterator getVariables();
 
@@ -53,12 +53,12 @@ public interface IFixedPointSystem<T extends IVariable> {
   boolean containsVariable(T v);
 
   /**
-   * @return Iterator <statement>, the statements that use the variable
+   * @return {@link Iterator}&lt;statement&gt;, the statements that use the variable
    */
   Iterator getStatementsThatUse(T v);
 
   /**
-   * @return Iterator <statement>, the statements that def the variable
+   * @return {@link Iterator}&lt;statement&gt;, the statements that def the variable
    */
   Iterator getStatementsThatDef(T v);
 

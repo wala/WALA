@@ -10,7 +10,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeigh
 /**
  * A DirectedHyperEdge is an edge of a {@link DirectedHyperGraph}.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  * @param <T>
  *            Type used in HyperNodes (HyperNode<T>)

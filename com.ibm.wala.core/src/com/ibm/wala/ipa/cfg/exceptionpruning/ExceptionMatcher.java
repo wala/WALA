@@ -12,7 +12,7 @@ import com.ibm.wala.types.TypeReference;
  * Helper class to check if an exception is part of a set of filtered
  * exceptions.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ExceptionMatcher {

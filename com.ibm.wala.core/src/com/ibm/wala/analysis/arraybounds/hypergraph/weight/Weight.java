@@ -9,7 +9,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
  * unlimited is given by the chosen order (see {@link NormalOrder} and
  * {@link ReverseOrder}).
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class Weight {
 	public enum Type {

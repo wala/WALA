@@ -9,7 +9,7 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
  * Normalizes a binary operation with a constant by providing direct access to
  * assigned = other op constant.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class BinaryOpWithConstant {

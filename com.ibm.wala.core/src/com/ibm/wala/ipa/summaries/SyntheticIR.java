@@ -70,7 +70,7 @@ public class SyntheticIR extends IR {
   /**
    * Set up the symbol table according to statements in the IR
    * 
-   * @param constants Map: value number (Integer) -> ConstantValue
+   * @param constants Map: value number (Integer) -&gt; ConstantValue
    */
   private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants,
       AbstractCFG cfg) {

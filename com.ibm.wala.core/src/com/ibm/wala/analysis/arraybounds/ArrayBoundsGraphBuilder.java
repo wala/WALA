@@ -27,7 +27,7 @@ import com.ibm.wala.ssa.SSAPiInstruction;
 
 /**
  * @see ArrayBoundsGraph
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ArrayBoundsGraphBuilder {
 	private final IR ir;

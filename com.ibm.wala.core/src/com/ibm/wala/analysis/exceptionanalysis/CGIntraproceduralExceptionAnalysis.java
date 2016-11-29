@@ -27,7 +27,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * Wrapper to store multiple intraprocedural analysis for a call graph.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class CGIntraproceduralExceptionAnalysis {

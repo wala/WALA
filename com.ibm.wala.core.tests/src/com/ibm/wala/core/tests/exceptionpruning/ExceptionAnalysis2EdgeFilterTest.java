@@ -50,7 +50,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * exceptional instructions should be deleted) and that no new edges are
  * inserted.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ExceptionAnalysis2EdgeFilterTest {
