@@ -176,7 +176,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   }
 
   /**
-   * @return min j >= start s.t get(j)
+   * @return min j &gt;= start s.t get(j)
    */
   public int nextSetBit(int start) {
     if (start < 0) {

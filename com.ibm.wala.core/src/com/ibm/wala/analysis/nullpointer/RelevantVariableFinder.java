@@ -29,7 +29,7 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 /**
  * Helper class to find the variable that may be null.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class RelevantVariableFinder implements IVisitor {

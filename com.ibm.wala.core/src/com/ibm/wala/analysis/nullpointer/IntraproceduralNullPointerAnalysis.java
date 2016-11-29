@@ -18,7 +18,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
  * This class is basically a copy of {@link IntraprocNullPointerAnalysis}, but
  * does only provide the result of the analysis instead of a pruned CFG.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class IntraproceduralNullPointerAnalysis {

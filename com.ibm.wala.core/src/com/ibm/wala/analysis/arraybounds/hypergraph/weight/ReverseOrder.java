@@ -10,7 +10,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
  * Defines a reverse Order on Weight: ... > 1 > 0 > -1 > ... > unlimited not_set
  * is not comparable
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ReverseOrder implements Comparator<Weight> {

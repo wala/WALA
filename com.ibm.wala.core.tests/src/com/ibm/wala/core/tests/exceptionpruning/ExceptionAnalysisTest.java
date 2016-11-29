@@ -45,7 +45,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * interprocedural is right. As well as the number of caught exceptions for each
  * call site.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ExceptionAnalysisTest {

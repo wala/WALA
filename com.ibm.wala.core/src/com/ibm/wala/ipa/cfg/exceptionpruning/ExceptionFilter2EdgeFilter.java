@@ -14,7 +14,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * This class converts an exception filter to an edge filter.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  * @param <Block>
  */

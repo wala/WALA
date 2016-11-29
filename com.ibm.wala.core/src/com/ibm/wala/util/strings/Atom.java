@@ -85,7 +85,7 @@ public final class Atom implements Serializable {
   /**
    * create an Atom from utf8[off] of length len
    * 
-   * @throws IllegalArgumentException if utf8.length <= off
+   * @throws IllegalArgumentException if utf8.length &lt;= off
    */
   public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException, IllegalArgumentException,
       IllegalArgumentException {

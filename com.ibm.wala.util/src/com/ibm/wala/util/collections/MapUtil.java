@@ -26,7 +26,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  */
 public class MapUtil {
   /**
-   * @param M a mapping from Object -> Set
+   * @param M a mapping from Object -&gt; Set
    * @param key
    * @return the Set corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
@@ -97,7 +97,7 @@ public class MapUtil {
   }
 
   /**
-   * @param M a mapping from Object -> Map
+   * @param M a mapping from Object -&gt; Map
    * @param key
    * @return the Map corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
@@ -133,7 +133,7 @@ public class MapUtil {
   }
 
   /**
-   * @param M a mapping from Object -> WeakHashMap
+   * @param M a mapping from Object -&gt; WeakHashMap
    * @param key
    * @return the WeakHashMap corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
@@ -153,8 +153,8 @@ public class MapUtil {
   }
 
   /**
-   * @param m a map from key -> Set <value>
-   * @return inverted map, value -> Set <key>
+   * @param m a map from key -&gt; {@link Set}&lt;value&gt;
+   * @return inverted map, value -&gt; {@link Set}&lt;key&gt;
    * @throws IllegalArgumentException if m is null
    */
   public static <K, V> Map<V, Set<K>> inverseMap(Map<K, Set<V>> m) {

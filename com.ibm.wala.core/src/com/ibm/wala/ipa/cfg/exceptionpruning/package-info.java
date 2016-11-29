@@ -9,7 +9,7 @@
  * This package contains classes for this job and also adapter for some
  * analysis.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 package com.ibm.wala.ipa.cfg.exceptionpruning;

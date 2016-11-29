@@ -228,7 +228,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   /**
-   * @return Map: IClass -> Integer, the number of allocation sites for each type.
+   * @return Map: IClass -&gt; Integer, the number of allocation sites for each type.
    */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
     Map<IClass, Integer> count = HashMapFactory.make();
