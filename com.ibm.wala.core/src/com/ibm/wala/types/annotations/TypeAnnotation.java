@@ -478,6 +478,11 @@ public class TypeAnnotation {
       return varIindex;
     }
 
+    /**
+     * 
+     * @return the name of the local Variable, or null if it could not be determined
+     * (for example, if the LocalVariableTable in the corresponding class file is missing). 
+     */
     public String getName() {
       return name;
     }
@@ -751,8 +756,12 @@ public class TypeAnnotation {
         
         final int varIndex = target.getIndex(0);
         final String name = method.getLocalVariableName(target.getStartPc(0), target.getIndex(0));
+        if (name == null ) {
+          return new LocalVarTarget(varIndex, null);
+        }
         for (int i = 0; i < target.getNrOfRanges(); i++) {
           if ( target.getIndex(i) != varIndex) throw new IllegalArgumentException();
+          
           if (!method.getLocalVariableName(target.getStartPc(0), target.getIndex(0)).equals(name)) {
             throw new IllegalArgumentException();
           }
