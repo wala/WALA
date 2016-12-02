@@ -31,6 +31,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.types.annotations.TypeAnnotation;
 import com.ibm.wala.types.generics.TypeSignature;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -568,7 +569,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   protected void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags,
-      Collection<Annotation> annotations, TypeSignature sig) {
+      Collection<Annotation> annotations, Collection<TypeAnnotation> typeAnnotations, TypeSignature sig) {
     TypeName T = null;
     if (fieldType.get(fieldType.length() - 1) == ';') {
       T = TypeName.findOrCreate(fieldType, 0, fieldType.length() - 1);
@@ -577,7 +578,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     TypeReference type = TypeReference.findOrCreate(getClassLoader().getReference(), T);
     FieldReference fr = FieldReference.findOrCreate(getReference(), name, type);
-    FieldImpl f = new FieldImpl(this, fr, accessFlags, annotations, sig);
+    FieldImpl f = new FieldImpl(this, fr, accessFlags, annotations, typeAnnotations, sig);
     L.add(f);
   }
 

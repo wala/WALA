@@ -29,9 +29,11 @@ import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourcePositionTableReader;
 import com.ibm.wala.shrikeCT.SourcePositionTableReader.Position;
+import com.ibm.wala.shrikeCT.TypeAnnotationsReader;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.types.annotations.TypeAnnotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -392,6 +394,22 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 
     return AnnotationsReader.getReaderForAnnotation(type, iter);
   }
+  
+  private TypeAnnotationsReader getTypeAnnotationsReaderAtMethodInfo(TypeAnnotationsReader.AnnotationType type) {
+    ClassReader.AttrIterator iter = new AttrIterator();
+    getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
+
+    return TypeAnnotationsReader.getReaderForAnnotationAtMethodInfo(type, iter, getExceptionReader(), getSignatureReader());
+  }
+  
+  private TypeAnnotationsReader getTypeAnnotationsReaderAtCode(TypeAnnotationsReader.AnnotationType type) {
+    final CodeReader codeReader = getCodeReader();
+    if (codeReader == null) return null;
+    
+    ClassReader.AttrIterator iter = new ClassReader.AttrIterator();
+    codeReader.initAttributeIterator(iter);
+    return TypeAnnotationsReader.getReaderForAnnotationAtCode(type, iter, getCodeReader());
+  }
 
   private String computeGenericsSignature() throws InvalidClassFileException {
     SignatureReader reader = getSignatureReader();
@@ -451,6 +469,32 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     AnnotationsReader r = getAnnotationsReader(runtimeInvisible ? AnnotationType.RuntimeInvisibleAnnotations
         : AnnotationType.RuntimeVisibleAnnotations);
     return Annotation.getAnnotationsFromReader(r, getDeclaringClass().getClassLoader().getReference());
+  }
+  
+  public Collection<TypeAnnotation> getTypeAnnotationsAtMethodInfo(boolean runtimeInvisible) throws InvalidClassFileException {
+    TypeAnnotationsReader r = getTypeAnnotationsReaderAtMethodInfo(
+        runtimeInvisible ? TypeAnnotationsReader.AnnotationType.RuntimeInvisibleTypeAnnotations
+                         : TypeAnnotationsReader.AnnotationType.RuntimeVisibleTypeAnnotations
+    );
+    final ClassLoaderReference clRef = getDeclaringClass().getClassLoader().getReference();
+    return TypeAnnotation.getTypeAnnotationsFromReader(
+        r,
+        TypeAnnotation.targetConverterAtMethodInfo(clRef, this),
+        clRef
+    );
+  }
+  
+  public Collection<TypeAnnotation> getTypeAnnotationsAtCode(boolean runtimeInvisible) throws InvalidClassFileException {
+    TypeAnnotationsReader r = getTypeAnnotationsReaderAtCode(
+        runtimeInvisible ? TypeAnnotationsReader.AnnotationType.RuntimeInvisibleTypeAnnotations
+                         : TypeAnnotationsReader.AnnotationType.RuntimeVisibleTypeAnnotations
+    );
+    final ClassLoaderReference clRef = getDeclaringClass().getClassLoader().getReference();
+    return TypeAnnotation.getTypeAnnotationsFromReader(
+        r,
+        TypeAnnotation.targetConverterAtCode(clRef, this),
+        clRef
+    );
   }
 
   @Override
