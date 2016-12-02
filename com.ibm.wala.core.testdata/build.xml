@@ -167,7 +167,7 @@
 		  <param name="destdir" value="${temp.folder}/dalvik/@dot"/>
 		  <param name="jsv" value="1.6"/>
 		  <param name="jtv" value="1.6"/>
-		  <param name="excludes" value="**/bak/,**/SortingExample.java,defaultMethods/*.java"/>
+		  <param name="excludes" value="**/bak/,**/SortingExample.java,defaultMethods/*.java,annotations/TypeAnnotatedClass*.java, annotations/TypeAnnotationTypeUse.java"/>
 		</antcall>
 	</target>
 
