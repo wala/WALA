@@ -77,7 +77,7 @@ public class Logs {
     return -1;
   }
 
-  /** Binary log: finds the smallest power k such that 2^k>=n */
+  /** Binary log: finds the smallest power k such that 2^k &gt;= n */
   public static int binaryLogUp(int n) {
     int k = 0;
     while ((1 << k) < n) {
@@ -86,7 +86,7 @@ public class Logs {
     return k;
   }
 
-  /** Binary log: finds the smallest power k such that 2^k>=n */
+  /** Binary log: finds the smallest power k such that 2^k &gt;= n */
   public static int binaryLogUp(long n) {
     int k = 0;
     while ((1 << k) < n) {

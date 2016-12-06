@@ -40,7 +40,7 @@ public interface PointerAnalysis<T extends InstanceKey> {
   HeapGraph<T> getHeapGraph();
   
   /**
-   * @return the bijection between InstanceKey <=> Integer that defines the
+   * @return the bijection between InstanceKey &lt;=&gt; Integer that defines the
    * interpretation of points-to-sets.
    */
   OrdinalSetMapping<T> getInstanceKeyMapping();

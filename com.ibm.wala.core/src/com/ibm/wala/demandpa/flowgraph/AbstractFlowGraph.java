@@ -118,8 +118,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   protected final Map<PointerKey, SSAAbstractInvokeInstruction> callDefs = HashMapFactory.make();
 
   /**
-   * Map: {@link LocalPointerKey} -> Set<{@link SSAInvokeInstruction}>. If we have (x, foo()), that means x was passed as a
-   * parameter to the call to foo(). The parameter position is not represented and must be recovered.
+   * Map: {@link LocalPointerKey} -&gt; {@link Set}&lt;{@link SSAInvokeInstruction}&gt;.
+   * If we have (x, foo()), that means x was passed as a parameter to the call to foo().
+   * The parameter position is not represented and must be recovered.
    */
   protected final Map<PointerKey, Set<SSAAbstractInvokeInstruction>> callParams = HashMapFactory.make();
 
@@ -130,7 +131,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   protected final Map<PointerKey, CGNode> params = HashMapFactory.make();
 
   /**
-   * Map: {@link LocalPointerKey} -> {@link CGNode}. If we have (x, foo), then x is a return value of method foo. Must re-discover
+   * Map: {@link LocalPointerKey} -&gt; {@link CGNode}. If we have (x, foo), then x is a return value of method foo. Must re-discover
    * if x is normal or exceptional return value.
    */
   protected final Map<PointerKey, CGNode> returns = HashMapFactory.make();

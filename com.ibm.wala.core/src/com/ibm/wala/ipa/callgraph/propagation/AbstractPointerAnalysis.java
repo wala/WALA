@@ -34,7 +34,7 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis<Instanc
   private final CallGraph cg;
 
   /**
-   * bijection from InstanceKey <=>Integer
+   * bijection from InstanceKey &lt;=&gt; Integer
    */
   protected final MutableMapping<InstanceKey> instanceKeys;
   

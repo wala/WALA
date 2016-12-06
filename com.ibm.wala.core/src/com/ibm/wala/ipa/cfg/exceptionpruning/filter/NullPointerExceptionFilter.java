@@ -16,7 +16,7 @@ import com.ibm.wala.types.TypeReference;
  * Adapter for {@link IntraproceduralNullPointerAnalysis}. This filter is filtering
  * NullPointerException, which can not occur.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class NullPointerExceptionFilter implements

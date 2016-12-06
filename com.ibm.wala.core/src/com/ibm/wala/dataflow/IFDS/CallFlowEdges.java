@@ -78,7 +78,7 @@ public class CallFlowEdges {
   /**
    * @param c
    * @param d2
-   * @return set of d1 s.t. <c, d1> -> <s_p, d2> was recorded as call flow, or null if none found.
+   * @return set of d1 s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow, or null if none found.
    */
   public IntSet getCallFlowSources(int c, int d2) {
     if (c < 0) {
@@ -119,7 +119,7 @@ public class CallFlowEdges {
   /**
    * 
    * @param d2
-   * @return set of c s.t. <c, d1> -> <s_p, d2> was recorded as call flow (for some d1), or null if none found.
+   * @return set of c s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow (for some d1), or null if none found.
    */
   public IntSet getCallFlowSourceNodes(int d2) {
     IntSet s = identityEdges.get(d2);

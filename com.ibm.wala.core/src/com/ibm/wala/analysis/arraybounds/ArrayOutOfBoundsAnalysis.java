@@ -22,7 +22,7 @@ import com.ibm.wala.util.ssa.InstructionByIIndexMap;
  * "ABCD: eliminating array bounds checks on demand." ACM SIGPLAN Notices. Vol.
  * 35. No. 5. ACM, 2000.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ArrayOutOfBoundsAnalysis {

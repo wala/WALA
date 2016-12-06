@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
 <project name="com.ibm.wala.core.tests" default="build.jars" basedir=".">
 
 	<property name="basews" value="${ws}" />

@@ -18,7 +18,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 /**
  * Converter to use the results of the exception analysis with an edge filter.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> {

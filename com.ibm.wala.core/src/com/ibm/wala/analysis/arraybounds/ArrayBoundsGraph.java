@@ -53,7 +53,7 @@ import com.ibm.wala.util.collections.Pair;
  * "ABCD: eliminating array bounds checks on demand." ACM SIGPLAN Notices. Vol.
  * 35. No. 5. ACM, 2000.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	/**

@@ -55,7 +55,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * This is the heart of the CDG computation. Based on Cytron et al., this is the reverse dominance frontier based algorithm for
    * computing control dependence edges.
    * 
-   * @return Map: node n -> {x : n is control-dependent on x}
+   * @return Map: node n -&gt; {x : n is control-dependent on x}
    */
   private Map<T, Set<T>> buildControlDependence(boolean wantEdgeLabels) {
     Map<T, Set<T>> controlDependence = HashMapFactory.make(cfg.getNumberOfNodes());

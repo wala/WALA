@@ -212,7 +212,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   }
 
   /**
-   * @return Method summaries collected for methods. Mapping Object -> MethodSummary where Object is either a
+   * @return Method summaries collected for methods. Mapping Object -&gt; MethodSummary where Object is either a
    *         <ul>
    *         <li>MethodReference
    *         <li>TypeReference

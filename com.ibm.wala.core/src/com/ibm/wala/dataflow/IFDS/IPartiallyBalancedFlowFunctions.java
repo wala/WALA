@@ -21,7 +21,7 @@ public interface IPartiallyBalancedFlowFunctions<T> extends IFlowFunctionMap<T> 
    * 
    * @param src
    * @param dest
-   * @return the flow function for a "return" edge in the supergraph from src->dest
+   * @return the flow function for a "return" edge in the supergraph from src -&lt; dest
    */
   public IFlowFunction getUnbalancedReturnFlowFunction(T src, T dest);
 

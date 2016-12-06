@@ -184,7 +184,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 	}
 
 	/**
-	 * @return <code>true</code> iff other.size() = k, k <= this.size(), and the
+	 * @return <code>true</code> iff {@code other.size() = k}, {@code k <= this.size()}, and the
 	 *         top k elements of this equal other
 	 * @throws IllegalArgumentException
 	 *             if other == null

@@ -198,7 +198,7 @@ public class PointsToMap {
   }
 
   /**
-   * @return Iterator<PointerKey>
+   * @return {@link Iterator}&lt;{@link PointerKey}&gt;
    */
   public Iterator<PointerKey> getTransitiveRoots() {
     return new FilterIterator<PointerKey>(iterateKeys(), new Predicate() {

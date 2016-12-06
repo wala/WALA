@@ -52,7 +52,7 @@ import com.ibm.wala.util.graph.impl.InvertedGraph;
  * 
  * Notice: Only exceptions, which are part of the analysis scope are considered.
  * 
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ExceptionAnalysis {

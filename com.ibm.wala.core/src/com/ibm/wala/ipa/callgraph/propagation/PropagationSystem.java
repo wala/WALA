@@ -77,7 +77,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private final PropagationGraph flowGraph = new PropagationGraph();
 
   /**
-   * bijection from InstanceKey <=>Integer
+   * bijection from InstanceKey &lt;=&gt; Integer
    */
   protected final MutableMapping<InstanceKey> instanceKeys = MutableMapping.make();
 

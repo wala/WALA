@@ -7,7 +7,7 @@ import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
  * ConditionNormalizer normalizes a branch condition. See Constructor for more
  * information.
  *
- * @author Stephan Gocht <stephan@gobro.de>
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  */
 public class ConditionNormalizer {

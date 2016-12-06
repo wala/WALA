@@ -344,7 +344,7 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /**
-   * @return min j >= n s.t get(j)
+   * @return min j &gt;= n s.t get(j)
    */
   public int nextSetBit(int n) {
     return bitVector.nextSetBit(n);
