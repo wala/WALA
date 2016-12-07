@@ -81,9 +81,22 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
           if (instr instanceof SSANewInstruction) {
             SSANewInstruction newInstr = (SSANewInstruction) instr;
             if (newInstr.getConcreteType().isArrayType()) {
-              int vLength = newInstr.getUse(0);
-              if (isNonNegativeConstant(vLength) || isDefdByArrayLength(vLength, du)) {
-                newInstrs[i] = new SSANewInstruction(newInstr.iindex, newInstr.getDef(), newInstr.getNewSite(), new int[] { vLength }) {
+              boolean isSafe = true;
+              final int[] params = new int[newInstr.getNumberOfUses()];
+              for (int u = 0; u < newInstr.getNumberOfUses(); u++) {
+                int vLength = newInstr.getUse(u);
+                params[u] = vLength;
+                isSafe &= (isNonNegativeConstant(vLength) || isDefdByArrayLength(vLength, du));
+              }
+              if (isSafe) {
+                // newInstr is either obtained from
+                //   JavaLanguage.JavaInstructionFactory#NewInstruction(int iindex, int result, NewSiteReference site, int[] params)
+                // or
+                //   JavaLanguage.JavaInstructionFactory#NewInstruction(int iindex, int result, NewSiteReference site)
+                // , both provide anonymous subclasses of SSANewInstruction which differ
+                // from SSANewInstruction only in the implementation of getExceptionTypes().
+                // Hence, it is OK to just defining a new anonymous subclasses of SSANewInstruction, overriding getExceptionTypes().
+                newInstrs[i] = new SSANewInstruction(newInstr.iindex, newInstr.getDef(), newInstr.getNewSite(), params) {
                   @Override
                   public Collection<TypeReference> getExceptionTypes() {
                     return JavaLanguage.getNewSafeArrayExceptions();
