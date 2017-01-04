@@ -439,7 +439,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
-    Iterator<PointsToSetVariable> order = Topological.makeTopologicalIter(graph);
+    Iterator<PointsToSetVariable> order = Topological.makeTopologicalIter(graph).iterator();
 
     int number = 0;
     while (order.hasNext()) {
