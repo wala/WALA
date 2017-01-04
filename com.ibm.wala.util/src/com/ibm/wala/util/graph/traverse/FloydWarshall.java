@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph.traverse;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -100,7 +101,7 @@ public class FloydWarshall<T> {
   public static <T> GetPath<T> allPairsShortestPath(final NumberedGraph<T> G) {
      return new FloydWarshall<T>(G) {
        int[][] next = new int[G.getNumberOfNodes()][G.getNumberOfNodes()];
-
+       
        @Override
        protected void pathCallback(int i, int j, int k) {
          next[i][j] = k;
@@ -115,6 +116,22 @@ public class FloydWarshall<T> {
          
          final int[][] paths = allPairsShortestPaths();
          return new GetPath<T>() {
+
+           @Override
+          public String toString() {
+             String s = "";
+             for(int i = 0; i <= G.getMaxNumber(); i++) {
+               for(int j = 0; j <= G.getMaxNumber(); j++) {
+                 try {
+                   s += getPath(G.getNode(i), G.getNode(j));
+                 } catch (UnsupportedOperationException e) {
+                   
+                 }
+               }
+             }
+             return s;
+           }
+
           @Override
           public List<T> getPath(T from, T to) {
             int fn = G.getNumber(from);
@@ -154,7 +171,23 @@ public class FloydWarshall<T> {
       private GetPaths<T> doit() {        
         final int[][] paths = allPairsShortestPaths();
         return new GetPaths<T>() {
-         @Override
+          
+          @Override
+         public String toString() {
+            List<Set<List<T>>> x = new ArrayList<Set<List<T>>>();
+            for(int i = 0; i <= G.getMaxNumber(); i++) {
+              for(int j = 0; j <= G.getMaxNumber(); j++) {
+                try {
+                  x.add(getPaths(G.getNode(i), G.getNode(j)));
+                } catch (UnsupportedOperationException e) {
+                  
+                }
+              }
+            }
+            return x.toString();
+          }
+
+          @Override
         public Set<List<T>> getPaths(final T from, final T to) {
            int fn = G.getNumber(from);
            int tn = G.getNumber(to);

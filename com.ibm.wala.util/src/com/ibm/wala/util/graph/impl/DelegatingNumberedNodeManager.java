@@ -69,31 +69,31 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   public Iterator<T> iterator() {
     final INodeWithNumber[] arr = nodes;
     return new Iterator<T>() {
-      int next = -1;
+      int nextCounter = -1;
       {
         advance();
       }
 
       void advance() {
-        for (int i = next + 1; i < arr.length; i++) {
+        for (int i = nextCounter + 1; i < arr.length; i++) {
           if (arr[i] != null) {
-            next = i;
+            nextCounter = i;
             return;
           }
         }
-        next = -1;
+        nextCounter = -1;
       }
 
       @Override
       public boolean hasNext() {
-        return next != -1;
+        return nextCounter != -1;
       }
 
       @Override
       @SuppressWarnings("unchecked")
       public T next() {
         if (hasNext()) {
-          int r = next;
+          int r = nextCounter;
           advance();
           return (T) arr[r];
         } else {

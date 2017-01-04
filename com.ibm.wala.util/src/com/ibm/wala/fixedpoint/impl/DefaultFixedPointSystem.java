@@ -208,7 +208,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
       checkGraph();
     }
 
-    Iterator<INodeWithNumber> order = Topological.makeTopologicalIter(graph);
+    Iterator<INodeWithNumber> order = Topological.makeTopologicalIter(graph).iterator();
     int number = 0;
     while (order.hasNext()) {
       Object elt = order.next();

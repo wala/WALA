@@ -13,6 +13,7 @@ package com.ibm.wala.core.tests.util;
 import java.io.IOException;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
 
@@ -83,4 +84,7 @@ public abstract class WalaTestCase {
     JUnitCore.runClasses(testClass);
   }
 
+  protected <T> void assertEquals(T x, T y) {
+    Assert.assertEquals("Expecting " + x + ", but got " + y, x, y);
+  }
 }
