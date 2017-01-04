@@ -338,6 +338,7 @@ public abstract class AstMethod implements IMethod {
     return debugInfo.getCodeBodyPosition();
   }
 
+  @Override
   public Position getSourcePosition(int instructionIndex) {
     return debugInfo.getInstructionPosition(instructionIndex);
   }
