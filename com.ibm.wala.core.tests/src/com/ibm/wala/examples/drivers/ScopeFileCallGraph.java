@@ -63,6 +63,7 @@ public class ScopeFileCallGraph {
     String scopeFile = p.getProperty("scopeFile");
     String entryClass = p.getProperty("entryClass");
     String mainClass = p.getProperty("mainClass");
+    String dump = p.getProperty("dump");
     if (mainClass != null && entryClass != null) {
       throw new IllegalArgumentException("only specify one of mainClass or entryClass");
     }
@@ -87,6 +88,9 @@ public class ScopeFileCallGraph {
     CallGraph cg = builder.makeCallGraph(options, null);
     long end = System.currentTimeMillis();
     System.out.println("done");
+    if (dump != null) {
+      System.err.println(cg);
+    }
     System.out.println("took " + (end-start) + "ms");
     System.out.println(CallGraphStats.getStats(cg));
   }
