@@ -122,7 +122,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection getSupertypes() {
+    public Collection<CAstType> getSupertypes() {
       if (fEltJdtType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fAst.resolveWellKnownType("java.lang.Object")));
       // TODO: there is no '.isReference()' as in Polyglot: is this right? enum? I think if it's another array it will

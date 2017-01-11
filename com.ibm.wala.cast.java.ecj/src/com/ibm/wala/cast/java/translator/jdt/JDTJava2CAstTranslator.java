@@ -1066,7 +1066,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
          * NOT INCLUDING first parameter 'this' (for non-static methods)
          */
         @Override
-        public List getArgumentTypes() {
+        public List<CAstType> getArgumentTypes() {
           return fParameterTypes;
         }
 
@@ -1085,13 +1085,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         }
 
         @Override
-        public Collection getSupertypes() {
+        public Collection<CAstType> getSupertypes() {
           Assertions.UNREACHABLE("CAstType.FunctionImpl#getSupertypes() called???");
           return null;
         }
 
         @Override
-        public Collection/* <CAstType> */getExceptionTypes() {
+        public Collection<CAstType>/* <CAstType> */getExceptionTypes() {
           if (fExceptionTypes == null) {
             fExceptionTypes = new LinkedHashSet<CAstType>();
             if (fDecl != null)

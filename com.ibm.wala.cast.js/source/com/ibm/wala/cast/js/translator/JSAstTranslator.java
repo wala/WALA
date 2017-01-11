@@ -470,7 +470,7 @@ public class JSAstTranslator extends AstTranslator {
     }
 
     @Override
-    public Collection getSupertypes() {
+    public Collection<CAstType> getSupertypes() {
       return Collections.EMPTY_SET;
     }
   };

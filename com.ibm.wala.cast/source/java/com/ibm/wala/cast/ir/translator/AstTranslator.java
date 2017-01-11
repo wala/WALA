@@ -1822,10 +1822,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 if (yuck == 0) {
                   return ((CAstType.Method)f.getType()).getDeclaringType();
                 } else {
-                  return (CAstType) ((CAstType.Method)f.getType()).getArgumentTypes().get(yuck-1);
+                  return ((CAstType.Method)f.getType()).getArgumentTypes().get(yuck-1);
                 }
               } else if (f.getType() instanceof CAstType.Function) {
-                return (CAstType) ((CAstType.Function)f.getType()).getArgumentTypes().get(yuck);
+                return ((CAstType.Function)f.getType()).getArgumentTypes().get(yuck);
               } else {
                 return topType();
               }
@@ -3109,7 +3109,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return ConditionalBranchInstruction.Operator.NE;
 
     else {
-      Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
+      assert false : "cannot translate " + CAstPrinter.print(op);
       return null;
     }
   }

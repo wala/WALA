@@ -415,7 +415,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     return new CAstType.Class() {
       
       @Override
-      public Collection getSupertypes() {
+      public Collection<CAstType> getSupertypes() {
         return Collections.emptySet();
       }
       
