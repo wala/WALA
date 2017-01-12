@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -76,7 +75,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * {@link ConcurrentModificationException}. But with a {@link ConcurrentHashMap}, at least the code merrily chugs along,
    * tolerating the race.
    */
-  final private Map<TypeReference, Node> map = new ConcurrentHashMap<TypeReference, Node>();
+  final private Map<TypeReference, Node> map = new HashMap<TypeReference, Node>();
 
   /**
    * {@link TypeReference} for the root type

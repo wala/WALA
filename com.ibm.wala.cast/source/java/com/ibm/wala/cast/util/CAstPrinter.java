@@ -118,15 +118,30 @@ public class CAstPrinter {
   public String doPrint(CAstNode top) {
     return print(top, null);
   }
-
   public static String print(CAstNode top, CAstSourcePositionMap pos) {
       return instance.doPrint(top, pos);
   }
 
   public String doPrint(CAstNode top, CAstSourcePositionMap pos) {
-    StringWriter writer = new StringWriter();
+    final StringBuffer sb = new StringBuffer();
+    Writer writer = new Writer() {      
+      @Override
+      public void write(char[] cbuf, int off, int len) throws IOException {
+        sb.append(new String(cbuf, off, len));
+      }
+
+      @Override
+      public void flush() throws IOException {
+        // do nothing 
+      }
+
+      @Override
+      public void close() throws IOException {
+        // do nothing
+      }
+    };
     printTo(top, pos, writer);
-    return writer.toString();
+    return sb.toString();
   }
 
   public String doPrint(CAstEntity ce) {

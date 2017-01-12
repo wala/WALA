@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import java.util.EmptyStackException;
-
 /**
  * A stack of integer primitives.  This should be more efficient than a java.util.Stack
  */
@@ -42,10 +40,7 @@ public class IntStack {
   /**
    * @return the int at the top of the stack
    */
-  public int peek() throws EmptyStackException {
-    if (isEmpty()) {
-      throw new EmptyStackException();
-    }
+  public int peek()  {
     return state[top];
   }
 
@@ -53,10 +48,7 @@ public class IntStack {
    * pop the stack
    * @return the int at the top of the stack
    */
-  public int pop() throws EmptyStackException{
-    if (isEmpty()) {
-      throw new EmptyStackException();
-    }
+  public int pop() {
     return state[top--];
   }
 

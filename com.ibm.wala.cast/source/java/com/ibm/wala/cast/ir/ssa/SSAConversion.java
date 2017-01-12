@@ -10,19 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.analysis.LiveAnalysis;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.cast.tree.CAstType.Array;
 import com.ibm.wala.ssa.IR.SSA2LocalMap;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -31,7 +30,6 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -75,7 +73,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private final Map<Object, CopyPropagationRecord> copyPropagationMap;
 
-  private final Stack<CopyPropagationRecord> R[];
+  private final ArrayList<CopyPropagationRecord> R[];
 
   private static class UseRecord {
     final int instructionIndex;
@@ -328,13 +326,21 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private CopyPropagationRecord topR(int v) {
     if (R[v] != null && !R[v].isEmpty()) {
-      CopyPropagationRecord rec = R[v].peek();
+      CopyPropagationRecord rec = peek(R[v]);
       if (top(v) == rec.rhs) {
         return rec;
       }
     }
 
     return null;
+  }
+
+  private <T> void push(ArrayList<T> stack, T elt) {
+    stack.add(elt);
+  }
+  
+  private <T> T peek(ArrayList<T> stack) {
+    return stack.get(stack.size()-1); 
   }
 
   //
@@ -440,7 +446,7 @@ public class SSAConversion extends AbstractSSAConversion {
     assignments.put(rhs, lhs);
     
     CopyPropagationRecord rec = new CopyPropagationRecord(index, lhs, newRhs);
-    R[lhs].push(rec);
+    push(R[lhs], rec);
     if (topR(rhs) != null) {
       topR(rhs).addChild(rec);
     }
@@ -526,7 +532,7 @@ public class SSAConversion extends AbstractSSAConversion {
     this.debugInfo = M.debugInfo();
     this.lexicalInfo = ir.lexicalInfo();
     this.symtab = ir.getSymbolTable();
-    this.R = new Stack[ir.getSymbolTable().getMaxValueNumber() + 1];
+    this.R = new ArrayList[ir.getSymbolTable().getMaxValueNumber() + 1];
 
     for (int i = 0; i < CFG.getNumberOfNodes(); i++) {
       SSACFG.BasicBlock bb = CFG.getNode(i);
@@ -569,7 +575,7 @@ public class SSAConversion extends AbstractSSAConversion {
   protected void initializeVariables() {
     for (int V = 1; V <= getMaxValueNumber(); V++) {
       if (!skip(V)) {
-        R[V] = new Stack<CopyPropagationRecord>();
+        R[V] = new ArrayList<CopyPropagationRecord>();
       }
     }
 
