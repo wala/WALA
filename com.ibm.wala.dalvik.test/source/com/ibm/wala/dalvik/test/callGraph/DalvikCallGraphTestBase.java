@@ -39,8 +39,8 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -127,7 +127,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(URI[] androidLibs, File androidAPIJar, String apkFileName, IProgressMonitor monitor, ReflectionOptions policy) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, apkFileName);
 
-		final IClassHierarchy cha = ClassHierarchy.make(scope);
+		final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
 		AnalysisCache cache = new AnalysisCache(new DexIRFactory());
 
@@ -161,7 +161,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(URI[] androidLibs, File androidAPIJar, String mainClassName, String dexFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, dexFileName);
 		
-		final IClassHierarchy cha = ClassHierarchy.make(scope);
+		final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
 		TypeReference mainClassRef = TypeReference.findOrCreate(ClassLoaderReference.Application, mainClassName);
 		IClass mainClass = cha.lookupClass(mainClassRef);

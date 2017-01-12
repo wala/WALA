@@ -29,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
@@ -95,7 +96,7 @@ public class SWTCallGraph {
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, exclusionFile != null ? new File(exclusionFile)
           : (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
-      ClassHierarchy cha = ClassHierarchy.make(scope);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
       Iterable<Entrypoint> entrypoints = null;
       JarFile jar = new JarFile(appJar);

@@ -42,8 +42,8 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
@@ -72,7 +72,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   @Override
   public IClassHierarchy buildClassHierarchy() {
     try {
-      return ClassHierarchy.make(getScope(), loaderFactory, JavaScriptLoader.JS);
+      return ClassHierarchyFactory.make(getScope(), loaderFactory, JavaScriptLoader.JS);
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE(e.toString());
       return null;

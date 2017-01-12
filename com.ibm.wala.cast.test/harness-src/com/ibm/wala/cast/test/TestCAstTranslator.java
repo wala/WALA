@@ -32,6 +32,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -131,7 +132,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
 
     AnalysisScope scope = CAstCallGraphUtil.makeScope(fileNames, loaders, getLanguage());
 
-    ClassHierarchy cha = ClassHierarchy.make(scope, loaders, getLanguage());
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, getLanguage());
 
     return cha;
   }

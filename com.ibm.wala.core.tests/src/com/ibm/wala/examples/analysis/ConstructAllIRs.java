@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.perf.Stopwatch;
 import com.ibm.wala.util.ref.ReferenceCleanser;
@@ -61,7 +62,7 @@ public class ConstructAllIRs {
 
     // build a type hierarchy
     System.out.print("building class hierarchy...");
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     System.out.println("done");
 
     // register class hierarchy and AnalysisCache with the reference cleanser, so that their soft references are appropriately wiped

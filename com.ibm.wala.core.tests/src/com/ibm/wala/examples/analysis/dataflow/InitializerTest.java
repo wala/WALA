@@ -30,8 +30,8 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Pair;
@@ -59,7 +59,7 @@ public class InitializerTest {
     IClassHierarchy cha = null;
     
     try {
-      cha = ClassHierarchy.make(scope);
+      cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
     }

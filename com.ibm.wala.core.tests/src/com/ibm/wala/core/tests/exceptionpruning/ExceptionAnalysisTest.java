@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.CombinedInterproced
 import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.IgnoreExceptionsInterFilter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
@@ -66,7 +67,7 @@ public class ExceptionAnalysisTest {
     AnalysisScope scope;
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
-    cha = ClassHierarchy.make(scope);
+    cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
     options = new AnalysisOptions(scope, entrypoints);

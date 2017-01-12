@@ -29,8 +29,8 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
@@ -133,7 +133,7 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
     ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions());
 
     try {
-      cha = ClassHierarchy.make(getScope(), factory);
+      cha = ClassHierarchyFactory.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
       System.err.println(e.toString());

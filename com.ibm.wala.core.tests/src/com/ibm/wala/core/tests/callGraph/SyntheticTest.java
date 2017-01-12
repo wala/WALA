@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SubtypesEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
@@ -42,7 +43,7 @@ public class SyntheticTest extends WalaTestCase {
   @Test public void testMultiSubtypes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo");
     MethodReference mref = MethodReference.findOrCreate(t, "foo", "(LmultiTypes/Foo$A;)V");
     IMethod m = cha.resolveMethod(mref);

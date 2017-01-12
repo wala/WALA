@@ -72,6 +72,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.CancelException;
 
@@ -104,7 +105,7 @@ public class TestAgainstSimpleDriver {
     // build a type hierarchy
     ClassHierarchy cha = null;
     try {
-      cha = ClassHierarchy.make(scope);
+      cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

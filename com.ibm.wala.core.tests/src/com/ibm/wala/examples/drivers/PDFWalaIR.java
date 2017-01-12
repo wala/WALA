@@ -22,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
@@ -77,7 +78,7 @@ public class PDFWalaIR {
 
       // Build a class hierarchy representing all classes to analyze.  This step will read the class
       // files and organize them into a tree.
-      ClassHierarchy cha = ClassHierarchy.make(scope);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
       // Create a name representing the method whose IR we will visualize
       MethodReference mr = StringStuff.makeMethodReference(methodSig);

@@ -15,8 +15,8 @@ import java.io.IOException;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 
@@ -41,7 +41,7 @@ public class CountParameters {
     
     // build a class hierarchy
     System.err.print("Build class hierarchy...");
-    IClassHierarchy cha = ClassHierarchy.make(scope);
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     System.err.println("Done");
     
     int nClasses = 0;

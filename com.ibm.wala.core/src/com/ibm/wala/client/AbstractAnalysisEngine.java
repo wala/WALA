@@ -30,8 +30,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ssa.DefaultIRFactory;
@@ -181,7 +181,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     IClassHierarchy cha = null;
     ClassLoaderFactory factory = makeClassLoaderFactory(getScope().getExclusions());
     try {
-      cha = ClassHierarchy.make(getScope(), factory);
+      cha = ClassHierarchyFactory.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
       System.err.println(e.toString());

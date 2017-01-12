@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.filter.CombinedExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.filter.NullPointerExceptionFilter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
@@ -92,7 +93,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
   @BeforeClass
   public static void init() throws IOException, ClassHierarchyException {
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, CLASS_LOADER);
-    cha = ClassHierarchy.make(scope);
+    cha = ClassHierarchyFactory.make(scope);
 
     irFactory = new DefaultIRFactory();
     options = new AnalysisOptions();

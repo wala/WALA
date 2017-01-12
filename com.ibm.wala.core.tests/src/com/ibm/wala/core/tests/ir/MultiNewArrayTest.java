@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -42,7 +43,7 @@ public class MultiNewArrayTest extends WalaTestCase {
   @Test public void testMultiNewArray1() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
     Assert.assertTrue(klass != null);
     IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));

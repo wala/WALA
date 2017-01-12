@@ -29,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
@@ -71,7 +72,7 @@ public class TypeInferenceTest extends WalaTestCase {
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
-      cha = ClassHierarchy.make(scope, factory);
+      cha = ClassHierarchyFactory.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }

@@ -22,8 +22,8 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -268,7 +268,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
       Language L = (Language) ls.next();
       Set<Language> ll = HashSetFactory.make(L.getDerivedLanguages());
       ll.add(L);
-      hierarchies.put(L.getName(), ClassHierarchy.make(scope, factory, ll));
+      hierarchies.put(L.getName(), ClassHierarchyFactory.make(scope, factory, ll));
     }
 
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);
