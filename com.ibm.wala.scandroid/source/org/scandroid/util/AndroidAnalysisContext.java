@@ -79,6 +79,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
@@ -129,7 +130,7 @@ public class AndroidAnalysisContext {
 		this.options = options;
 		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getClasspath(), exclusions, getClass().getClassLoader(), options.getAndroidLibrary());
 		
-		cha = ClassHierarchy.make(scope);
+		cha = ClassHierarchyFactory.make(scope);
 
 		if (options.classHierarchyWarnings()) {
 			// log ClassHierarchy warnings
