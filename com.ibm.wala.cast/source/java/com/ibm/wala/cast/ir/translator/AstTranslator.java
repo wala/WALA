@@ -3809,7 +3809,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   @Override
-  protected boolean visitLabelStmt(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
+  protected boolean visitLabelStmt(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {    
     WalkContext context = c;
     if (!context.getControlFlow().getSourceNodes(n).isEmpty()) {
       context.cfg().newBlock(true);
@@ -3849,6 +3849,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       falseB = context.cfg().getCurrentBlock();
       CAstNode f = n.getChild(2);
+      context.cfg().deadBlocks.remove(falseB);
       visitor.visit(f, context, visitor);
       if (isExpr)
         context.cfg().addInstruction(new AssignInstruction(context.cfg().currentInstruction, c.getValue(n), c.getValue(f)));
