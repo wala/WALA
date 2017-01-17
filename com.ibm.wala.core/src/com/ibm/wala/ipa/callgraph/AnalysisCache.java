@@ -30,13 +30,20 @@ public class AnalysisCache {
 
   private final SSACache ssaCache;
 
-  public AnalysisCache(IRFactory<IMethod> irFactory) {
+  private final SSAOptions ssaOptions;
+  
+  public AnalysisCache(IRFactory<IMethod> irFactory, SSAOptions ssaOptions) {
     super();
+    this.ssaOptions = ssaOptions;
     this.irFactory = irFactory;
     this.ssaCache = new SSACache(irFactory);
     ReferenceCleanser.registerCache(this);
   }
 
+  public AnalysisCache(IRFactory<IMethod> irFactory) {
+    this(irFactory, new AnalysisOptions().getSSAOptions());
+  }
+  
   public AnalysisCache() {
     this(new DefaultIRFactory());
   }
@@ -47,6 +54,10 @@ public class AnalysisCache {
 
   public SSACache getSSACache() {
     return ssaCache;
+  }
+
+  public SSAOptions getSSAOptions() {
+    return ssaOptions;
   }
 
   public IRFactory<IMethod> getIRFactory() {
@@ -60,7 +71,7 @@ public class AnalysisCache {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    return ssaCache.findOrCreateIR(method, Everywhere.EVERYWHERE, new AnalysisOptions().getSSAOptions());
+    return ssaCache.findOrCreateIR(method, Everywhere.EVERYWHERE, ssaOptions);
   }
 
 

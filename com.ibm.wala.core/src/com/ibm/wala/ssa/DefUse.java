@@ -82,7 +82,7 @@ public class DefUse {
             uses[use].add(i);
           }
         } catch (ArrayIndexOutOfBoundsException e) {
-          throw new InternalError("unexpected value number " + use);
+          assert false : "unexpected value number " + use;
         }
       }
     }

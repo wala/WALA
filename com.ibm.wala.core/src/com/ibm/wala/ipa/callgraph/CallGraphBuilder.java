@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
@@ -40,4 +41,6 @@ public interface CallGraphBuilder<I extends InstanceKey> {
    */
   public AnalysisCache getAnalysisCache();
 
+  public IClassHierarchy getClassHierarchy();
+  
 }

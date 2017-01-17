@@ -140,7 +140,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
 
 
   @Override
-  protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, final AnalysisCache cache) {
+  protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(final IClassHierarchy cha, AnalysisOptions options, final AnalysisCache cache) {
     Set<Entrypoint> roots = HashSetFactory.make();
     for(Entrypoint e : options.getEntrypoints()) {
       roots.add(e);
@@ -178,6 +178,11 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
       @Override
       public AnalysisCache getAnalysisCache() {
         return cache;
+      }
+
+      @Override
+      public IClassHierarchy getClassHierarchy() {
+        return cha;
       }
        
      };
