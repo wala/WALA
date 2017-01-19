@@ -11,11 +11,8 @@
 package com.ibm.wala.classLoader;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 
-import com.ibm.wala.classLoader.ShrikeClass.GetReader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.IndirectionData;
@@ -30,7 +27,6 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
-import com.ibm.wala.shrikeCT.SourceFileReader;
 import com.ibm.wala.shrikeCT.SourcePositionTableReader;
 import com.ibm.wala.shrikeCT.SourcePositionTableReader.Position;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -153,18 +149,17 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 /** BEGIN Custom change: precise positions */
   
   private static final class SPos implements SourcePosition {
-    String fileName;
+
     final int firstLine;
     final int lastLine;
     final int firstCol;
     final int lastCol;
     
-    private SPos(String fileName, int firstLine, int lastLine, int firstCol, int lastCol) {
+    private SPos(int firstLine, int lastLine, int firstCol, int lastCol) {
       this.firstLine = firstLine;
       this.lastLine = lastLine;
       this.firstCol = firstCol;
       this.lastCol = lastCol;
-      this.fileName = fileName;
     }
 
 
@@ -220,8 +215,9 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     
     @Override
     public String toString() {
-      return fileName + "(" + firstLine + "," + firstCol + "-" + lastLine + "," + lastCol + ")";
+      return "(" + firstLine + "," + firstCol + "-" + lastLine + "," + lastCol + ")";
     }
+    
   }
 /** END Custom change: precise positions */
   
@@ -241,8 +237,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     
     bcInfo.paramPositionMap = new SPos[getNumberOfParameters()];
     if (param != null) {
-      String fileName = ((ShrikeClass)getDeclaringClass()).getSourceFileReader().getSourceFile();
-      SPos paramPos = new SPos(fileName, param.firstLine, param.lastLine, param.firstCol, param.lastCol);
+      SPos paramPos = new SPos(param.firstLine, param.lastLine, param.firstCol, param.lastCol);
       for (int i = 0; i < getNumberOfParameters(); i++) {
         bcInfo.paramPositionMap[i] = paramPos;
       }
@@ -260,15 +255,10 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
     
     if (pos != null) {
-      String sourceFile = null;
-      SourceFileReader reader = ((ShrikeClass)getDeclaringClass()).getSourceFileReader();
-      if (reader != null) {
-        sourceFile = reader.getSourceFile();
-      }
       bcInfo.positionMap = new SPos[pos.length];
       for (int i = 0; i < pos.length; i++) {
         Position p = pos[i];
-        bcInfo.positionMap[i] = new SPos(sourceFile, p.firstLine, p.lastLine, p.firstCol, p.lastCol);
+        bcInfo.positionMap[i] = new SPos(p.firstLine, p.lastLine, p.firstCol, p.lastCol);
       }
     }
 /** END Custom change: : precise bytecode positions */
@@ -339,38 +329,61 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return ((ShrikeClass) getDeclaringClass()).getReader();
   }
 
-  private <T> T getReader(String attrName, GetReader<T> reader) {
+  private CodeReader getCodeReader() {
     ClassReader.AttrIterator iter = new AttrIterator();
     getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
 
-    return ((ShrikeClass)getDeclaringClass()).getReader(iter, attrName, reader);    
+    // search for the code attribute
+    CodeReader code = null;
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().equals("Code")) {
+          code = new CodeReader(iter);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return code;
   }
 
-  private CodeReader getCodeReader() {
-    return getReader("Code", new GetReader<CodeReader>() {
-      @Override
-      public CodeReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new CodeReader(iter);
-      }
-    });
-  }
- 
   private ExceptionsReader getExceptionReader() {
-    return getReader("Exceptions", new GetReader<ExceptionsReader>() {
-      @Override
-      public ExceptionsReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new ExceptionsReader(iter);
+    ClassReader.AttrIterator iter = new AttrIterator();
+    getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
+
+    // search for the desired attribute
+    ExceptionsReader result = null;
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().equals("Exceptions")) {
+          result = new ExceptionsReader(iter);
+          break;
+        }
       }
-    });
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
   }
- 
+
   private SignatureReader getSignatureReader() {
-    return getReader("Signature", new GetReader<SignatureReader>() {
-      @Override
-      public SignatureReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new SignatureReader(iter);
+    ClassReader.AttrIterator iter = new AttrIterator();
+    getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
+
+    // search for the desired attribute
+    SignatureReader result = null;
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().equals("Signature")) {
+          result = new SignatureReader(iter);
+          break;
+        }
       }
-    });
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
   }
 
   private AnnotationsReader getAnnotationsReader(AnnotationType type) {

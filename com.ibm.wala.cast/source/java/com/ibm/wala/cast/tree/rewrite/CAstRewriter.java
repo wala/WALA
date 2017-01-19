@@ -372,7 +372,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       @Override
       public CAstSourcePositionMap newPos() {
-        if (theSource == null && pos != null)
+        if (theSource == null)
           theSource = copySource(nodes, pos);
         return theSource;
       }

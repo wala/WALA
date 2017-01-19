@@ -29,8 +29,4 @@ public final class SourceFileReader extends AttributeReader {
   public int getSourceFileCPIndex() {
     return cr.getUShort(attr + 6);
   }
-  
-  public String getSourceFile() throws IllegalArgumentException, InvalidClassFileException {
-    return cr.getCP().getCPUtf8(getSourceFileCPIndex());
-  }
 }
