@@ -108,6 +108,9 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.impl.RangePosition;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.classLoader.SourceModule;
@@ -117,7 +120,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
 
-public class RhinoToAstTranslator {
+public class RhinoToAstTranslator implements TranslatorToCAst {
 
   /**
    * a dummy name to use for standard function calls, only used to distinguish
@@ -2437,6 +2440,11 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
     this.sourceModule = M;
     this.sourceReader = sourceModule.getInputReader();
     this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, Ast);
+  }
+
+  @Override
+  public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend) {
+    assert false;
   }
 
 }

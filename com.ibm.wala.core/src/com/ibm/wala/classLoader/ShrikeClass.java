@@ -25,6 +25,7 @@ import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.InnerClassesReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.SignatureReader;
+import com.ibm.wala.shrikeCT.SourceFileReader;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -269,6 +270,24 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         : AnnotationType.RuntimeVisibleAnnotations, attrs);
   }
 
+  interface GetReader<T> {
+    T getReader(ClassReader.AttrIterator iter) throws InvalidClassFileException;
+  }
+  
+  <T> T getReader(ClassReader.AttrIterator iter, String attrName, GetReader<T> reader) {
+    // search for the attribute
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().equals(attrName)) {
+          return reader.getReader(iter);
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return null;
+  }
+
   private InnerClassesReader getInnerClassesReader() throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
@@ -287,6 +306,18 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       Assertions.UNREACHABLE();
     }
     return result;
+  }
+
+  SourceFileReader getSourceFileReader() {
+    ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
+    getReader().initClassAttributeIterator(attrs);
+
+    return getReader(attrs, "SourceFile", new GetReader<SourceFileReader>() {
+      @Override
+      public SourceFileReader getReader(AttrIterator iter) throws InvalidClassFileException {
+        return new SourceFileReader(iter);
+      }
+    });
   }
 
   private AnnotationsReader getFieldAnnotationsReader(boolean runtimeInvisible, int fieldIndex) throws InvalidClassFileException {
