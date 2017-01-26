@@ -53,7 +53,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -63,9 +62,7 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.collections.HashCodeComparator;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
@@ -139,10 +136,8 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     }
     
     private Set<ModuleEntry> getDexFiles(Module M) throws IOException {
-    	TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
-    	sortedEntries.addAll(Iterator2Collection.toSet(M.getEntries()));
     	HashSet<ModuleEntry> result = HashSetFactory.make();
-    	for (Iterator<ModuleEntry> it = sortedEntries.iterator(); it.hasNext();) {
+    	for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
     		ModuleEntry entry = (ModuleEntry) it.next();
     		if (entry instanceof DexModuleEntry) {    		
     			result.add(entry);
