@@ -39,11 +39,13 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
@@ -70,17 +72,17 @@ public abstract class FieldBasedCallGraphBuilder {
 	
 	// standard call graph machinery
 	protected final AnalysisOptions options;
-	protected final AnalysisCache cache;
+	protected final IAnalysisCacheView cache;
 	protected final JavaScriptConstructorFunctions constructors;
-	protected final MethodTargetSelector targetSelector;
+	public final MethodTargetSelector targetSelector;
 	protected final boolean supportFullPointerAnalysis;
 	
 	private static final boolean LOG_TIMINGS = true;
 	
-	public FieldBasedCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
+	public FieldBasedCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView iAnalysisCacheView, boolean supportFullPointerAnalysis) {
 		this.cha = cha;
 		this.options = options;
-		this.cache = cache;
+		this.cache = iAnalysisCacheView;
 		this.constructors = new JavaScriptConstructorFunctions(cha);
 		this.targetSelector = setupMethodTargetSelector(cha, constructors, options);
 		this.supportFullPointerAnalysis = supportFullPointerAnalysis;
@@ -89,7 +91,7 @@ public abstract class FieldBasedCallGraphBuilder {
   private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
     MethodTargetSelector result = new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
     if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
-      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result));
+      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result, cache));
     }
     return result;
   }
@@ -137,14 +139,19 @@ public abstract class FieldBasedCallGraphBuilder {
 	/**
 	 * Extract a call graph from a given flow graph.
 	 */
-	@SuppressWarnings("deprecation")
-	protected JSCallGraph extract(FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
+  @SuppressWarnings("deprecation")
+  public JSCallGraph extract(FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
+    DelegatingSSAContextInterpreter interpreter = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, cache), new DefaultSSAInterpreter(options, cache));
+    return extract(interpreter, flowgraph, eps, monitor);
+  }
+  
+  @SuppressWarnings("deprecation")
+	public JSCallGraph extract(SSAContextInterpreter interpreter, FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
 	  // set up call graph
 		final JSCallGraph cg = new JSCallGraph(cha, options, cache);
 		cg.init();
 		
 		// setup context interpreters
-		DelegatingSSAContextInterpreter interpreter = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, cache), new DefaultSSAInterpreter(options, cache));
     if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
       interpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache), interpreter);
     }
@@ -206,7 +213,7 @@ public abstract class FieldBasedCallGraphBuilder {
 		return cg;
 	}
 
-  private boolean handleFunctionCallOrApplyInvocation(FlowGraph flowgraph, IProgressMonitor monitor, final JSCallGraph cg,
+  public boolean handleFunctionCallOrApplyInvocation(FlowGraph flowgraph, IProgressMonitor monitor, final JSCallGraph cg,
       CallVertex callVertex, CGNode caller, CallSiteReference site,
       IMethod target) throws CancelException {
     // use to get 1-level of call string for Function.prototype.call, to
@@ -220,6 +227,7 @@ public abstract class FieldBasedCallGraphBuilder {
     OrdinalSet<FuncVertex> reflectiveTargets = getReflectiveTargets(flowgraph, callVertex, monitor);
     System.err.println("adding callees " + reflectiveTargets + " for " + caller);
     // there should only be one call site in the synthetic method
+//    CallSiteReference reflectiveCallSite = cache.getIRFactory().makeIR(functionPrototypeCallNode.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions()).iterateCallSites().next();
     CallSiteReference reflectiveCallSite = functionPrototypeCallNode.getIR().iterateCallSites().next();
     for (FuncVertex f : reflectiveTargets) {
       IMethod reflectiveTgtMethod = targetSelector.getCalleeTarget(functionPrototypeCallNode, reflectiveCallSite, f.getConcreteType());
@@ -228,7 +236,7 @@ public abstract class FieldBasedCallGraphBuilder {
     return ret;
   }
 
-  private boolean addEdgeToJSCallGraph(final JSCallGraph cg, CallSiteReference site, IMethod target, CGNode caller)
+  public boolean addEdgeToJSCallGraph(final JSCallGraph cg, CallSiteReference site, IMethod target, CGNode caller)
       throws CancelException {
     return addCGEdgeWithContext(cg, site, target, caller, Everywhere.EVERYWHERE);
   }
@@ -276,7 +284,7 @@ public abstract class FieldBasedCallGraphBuilder {
   /**
 	 * Extract call edges from the flow graph into high-level representation.
 	 */
-	protected Set<Pair<CallVertex, FuncVertex>> extractCallGraphEdges(FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
+	public Set<Pair<CallVertex, FuncVertex>> extractCallGraphEdges(FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
 		VertexFactory factory = flowgraph.getVertexFactory();
 		final Set<Pair<CallVertex, FuncVertex>> result = HashSetFactory.make();
 		

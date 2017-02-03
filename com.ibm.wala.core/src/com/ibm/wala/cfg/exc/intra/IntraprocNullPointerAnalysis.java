@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.dataflow.graph.DataflowSolver;
 import com.ibm.wala.ipa.cfg.PrunedCFG;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;

@@ -19,6 +19,7 @@ import java.util.Properties;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -79,7 +80,7 @@ public class ScopeFileCallGraph {
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
 //    options.setReflectionOptions(ReflectionOptions.NONE);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = new AnalysisCacheImpl();
     // other builders can be constructed with different Util methods
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
 //    CallGraphBuilder builder = Util.makeNCFABuilder(2, options, cache, cha, scope);

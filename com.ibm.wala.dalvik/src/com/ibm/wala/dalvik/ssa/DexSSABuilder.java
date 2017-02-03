@@ -13,7 +13,6 @@ package com.ibm.wala.dalvik.ssa;
 
 import java.nio.ByteBuffer;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction.ArrayElement;
 

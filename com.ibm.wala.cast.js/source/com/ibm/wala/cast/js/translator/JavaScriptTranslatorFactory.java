@@ -12,7 +12,7 @@ package com.ibm.wala.cast.js.translator;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.classLoader.SourceModule;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 /**
  * Factory interface for creating translators that generate the CAst for some
@@ -21,6 +21,6 @@ import com.ibm.wala.classLoader.SourceModule;
  */
 public interface JavaScriptTranslatorFactory {
 
-  TranslatorToCAst make(CAst ast, SourceModule M);
+  TranslatorToCAst make(CAst ast, ModuleEntry M);
 
 }

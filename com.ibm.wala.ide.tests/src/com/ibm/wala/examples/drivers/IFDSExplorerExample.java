@@ -19,6 +19,7 @@ import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.examples.analysis.dataflow.ContextSensitiveReachingDefs;
 import com.ibm.wala.ide.ui.IFDSExplorer;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -58,7 +59,7 @@ public class IFDSExplorerExample {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = new AnalysisCacheImpl();
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
     System.out.println("building CG");
     CallGraph cg = builder.makeCallGraph(options, null);

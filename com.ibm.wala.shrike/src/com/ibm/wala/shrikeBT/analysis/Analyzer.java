@@ -13,7 +13,6 @@ package com.ibm.wala.shrikeBT.analysis;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 

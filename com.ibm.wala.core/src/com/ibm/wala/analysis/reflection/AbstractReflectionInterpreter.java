@@ -29,6 +29,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -65,7 +66,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   /**
    * cache of analysis information
    */
-  protected AnalysisCache cache;
+  protected IAnalysisCacheView cache;
 
 
   protected int getLocalForType(TypeReference T) {

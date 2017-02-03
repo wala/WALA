@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACache;
@@ -25,29 +24,25 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * 
  * Someday this should maybe go away?
  */
-public class AnalysisCache {
+public class AnalysisCache implements IAnalysisCacheView {
   private final IRFactory<IMethod> irFactory;
 
   private final SSACache ssaCache;
 
   private final SSAOptions ssaOptions;
   
-  public AnalysisCache(IRFactory<IMethod> irFactory, SSAOptions ssaOptions) {
+  public AnalysisCache(IRFactory<IMethod> irFactory, SSAOptions ssaOptions, SSACache cache) {
     super();
     this.ssaOptions = ssaOptions;
     this.irFactory = irFactory;
-    this.ssaCache = new SSACache(irFactory);
+    this.ssaCache = cache;
     ReferenceCleanser.registerCache(this);
   }
 
-  public AnalysisCache(IRFactory<IMethod> irFactory) {
-    this(irFactory, new AnalysisOptions().getSSAOptions());
-  }
-  
-  public AnalysisCache() {
-    this(new DefaultIRFactory());
-  }
-
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#invalidate(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context)
+   */
+  @Override
   public void invalidate(IMethod method, Context C) {
     ssaCache.invalidate(method, C);
   }
@@ -60,24 +55,34 @@ public class AnalysisCache {
     return ssaOptions;
   }
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIRFactory()
+   */
+  @Override
   public IRFactory<IMethod> getIRFactory() {
     return irFactory;
   }
 
-  /**
-   * Find or create an IR for the method using the {@link Everywhere} context and default {@link SSAOptions}
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIR(com.ibm.wala.classLoader.IMethod)
    */
-  public IR getIR(IMethod method) {
+  @Override
+  public IR getIR(IMethod method, Context context) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    return ssaCache.findOrCreateIR(method, Everywhere.EVERYWHERE, ssaOptions);
+    return ssaCache.findOrCreateIR(method, context, ssaOptions);
   }
 
-
-  /**
-   * Find or create a DefUse for the IR using the {@link Everywhere} context 
+  @Override
+  public IR getIR(IMethod m) {
+    return getIR(m, Everywhere.EVERYWHERE);
+  }
+  
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getDefUse(com.ibm.wala.ssa.IR)
    */
+  @Override
   public DefUse getDefUse(IR ir) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");

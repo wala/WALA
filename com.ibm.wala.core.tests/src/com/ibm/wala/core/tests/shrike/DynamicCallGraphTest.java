@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -47,7 +47,7 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
 
   @Test

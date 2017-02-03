@@ -31,9 +31,11 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.util.Util;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -74,7 +76,7 @@ public class FieldBasedCGUtil {
   
 	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildScriptCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
-    SourceModule[] scripts = new SourceModule[]{
+    Module[] scripts = new Module[]{
         new SourceURLModule(url),
         JSCallGraphBuilderUtil.getPrologueFile("prologue.js")
     };
@@ -83,7 +85,7 @@ public class FieldBasedCGUtil {
 
 	 public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildTestCG(String dir, String name, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
 	    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
-	    SourceModule[] scripts = JSCallGraphBuilderUtil.makeSourceModules(dir, name);
+	    Module[] scripts = JSCallGraphBuilderUtil.makeSourceModules(dir, name);
 	    return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	  }
 
@@ -93,14 +95,14 @@ public class FieldBasedCGUtil {
 	  return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	}
 
-	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(JavaScriptLoaderFactory loaders, SourceModule[] scripts, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
+	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(JavaScriptLoaderFactory loaders, Module[] scripts, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
 		CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
 		IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
 		Util.checkForFrontEndErrors(cha);
 		Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
 		FieldBasedCallGraphBuilder builder = null;
 		
-		AnalysisCache cache = new AnalysisCache(AstIRFactory.makeDefaultFactory());
+		AnalysisCache cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
 		switch(builderType) {
 		case PESSIMISTIC:
 			builder = new PessimisticCallGraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);

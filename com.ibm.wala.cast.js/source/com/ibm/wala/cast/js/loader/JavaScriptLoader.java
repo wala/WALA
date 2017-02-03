@@ -1015,7 +1015,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   @SuppressWarnings("unchecked")
   @Override
   protected TranslatorToCAst getTranslatorToCAst(final CAst ast, ModuleEntry module) {
-    TranslatorToCAst translator = translatorFactory.make(ast, (SourceModule)module);
+    TranslatorToCAst translator = translatorFactory.make(ast, module);
     if(preprocessor != null)
       translator.addRewriter(preprocessor, true);
     return translator;

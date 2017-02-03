@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.util;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,6 +20,29 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 
 public class CAstPrinter {
+  private static final class StringWriter extends Writer {
+    private final StringBuffer sb;
+
+    private StringWriter(StringBuffer sb) {
+      this.sb = sb;
+    }
+
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+      sb.append(new String(cbuf, off, len));
+    }
+
+    @Override
+    public void flush() throws IOException {
+      // do nothing 
+    }
+
+    @Override
+    public void close() throws IOException {
+      // do nothing
+    }
+  }
+
   private static CAstPrinter instance= new CAstPrinter();
 
   public static void setPrinter(CAstPrinter printer) {
@@ -124,30 +146,16 @@ public class CAstPrinter {
 
   public String doPrint(CAstNode top, CAstSourcePositionMap pos) {
     final StringBuffer sb = new StringBuffer();
-    Writer writer = new Writer() {      
-      @Override
-      public void write(char[] cbuf, int off, int len) throws IOException {
-        sb.append(new String(cbuf, off, len));
-      }
-
-      @Override
-      public void flush() throws IOException {
-        // do nothing 
-      }
-
-      @Override
-      public void close() throws IOException {
-        // do nothing
-      }
-    };
+    Writer writer = new StringWriter(sb);
     printTo(top, pos, writer);
     return sb.toString();
   }
 
   public String doPrint(CAstEntity ce) {
-    StringWriter writer = new StringWriter();
+    final StringBuffer sb = new StringBuffer();
+    StringWriter writer = new StringWriter(sb);
     printTo(ce, writer);
-    return writer.toString();
+    return sb.toString();
   }
 
   public static String print(CAstEntity ce) {

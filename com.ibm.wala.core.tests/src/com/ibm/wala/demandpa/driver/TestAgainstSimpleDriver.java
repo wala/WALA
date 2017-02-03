@@ -58,7 +58,7 @@ import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -117,7 +117,7 @@ public class TestAgainstSimpleDriver {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // build an RTA call graph
-    CallGraphBuilder rtaBuilder = Util.makeRTABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder rtaBuilder = Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -164,7 +164,7 @@ public class TestAgainstSimpleDriver {
 
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       CallGraph cg, MemoryAccessMap fam) {
-    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, fam, cha, options, new DummyStateMachine.Factory<IFlowLabel>());
     // fullDemandPointsTo.setCGRefinePolicy(new AlwaysRefineCGPolicy());

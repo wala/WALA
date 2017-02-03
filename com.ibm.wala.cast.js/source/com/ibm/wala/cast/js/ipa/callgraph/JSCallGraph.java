@@ -22,9 +22,9 @@ import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -37,7 +37,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 public class JSCallGraph extends AstCallGraph {
 
-  public JSCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public JSCallGraph(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(cha, options, cache);
   }
 
@@ -46,7 +46,7 @@ public class JSCallGraph extends AstCallGraph {
 
   public static class JSFakeRoot extends ScriptFakeRoot {
 
-    public JSFakeRoot(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    public JSFakeRoot(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options, cache);
     }
 

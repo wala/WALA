@@ -48,6 +48,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
@@ -79,7 +80,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil;
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -150,7 +150,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     this.scriptBaseURL = url;
   }
 
-  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
     globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Root));
@@ -555,12 +555,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     private Position getInstructionPosition(SSAInstruction instruction) {
       IMethod method = node.getMethod();
       if (method instanceof AstMethod) {
-        SSAInstruction[] instructions = ir.getInstructions();
-        for (int ind = basicBlock.getFirstInstructionIndex(); ind <= basicBlock.getLastInstructionIndex(); ind++) {
-          if (instruction.equals(instructions[ind])) {
-            return ((AstMethod) method).getSourcePosition(ind);
-          }
-        }
+        return ((AstMethod) method).getSourcePosition(instruction.iindex);
       }
       return null;
     }
@@ -1027,6 +1022,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   public static void processCallingConstraintsInternal(AstSSAPropagationCallGraphBuilder builder, CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
+        
     IR sourceIR = builder.getCFAContextInterpreter().getIR(caller);
     SymbolTable sourceST = sourceIR.getSymbolTable();
 

@@ -3,8 +3,6 @@ package com.ibm.wala.analysis.arraybounds.hypergraph;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperEdge;
-import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperGraph;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
 
 /**

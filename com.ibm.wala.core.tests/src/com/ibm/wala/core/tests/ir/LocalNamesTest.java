@@ -22,6 +22,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -72,7 +73,7 @@ public class LocalNamesTest extends WalaTestCase {
         (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
-    cache = new AnalysisCache();
+    cache = new AnalysisCacheImpl();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {

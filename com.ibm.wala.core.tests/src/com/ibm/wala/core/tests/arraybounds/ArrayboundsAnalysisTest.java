@@ -1,5 +1,8 @@
 package com.ibm.wala.core.tests.arraybounds;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+
 import java.io.IOException;
 
 import org.hamcrest.Matcher;
@@ -8,8 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
-
-import static org.hamcrest.CoreMatchers.*;
 
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis;
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis.UnnecessaryCheck;

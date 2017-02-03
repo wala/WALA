@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -64,7 +64,7 @@ public class JavaViewerDriver {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();

@@ -19,16 +19,16 @@ import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ClosureExtractor;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
-import com.ibm.wala.ipa.callgraph.propagation.SelectiveCPAContext;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.SelectiveCPAContext;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.ReflectiveMemberAccess;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -107,7 +107,7 @@ public class PropertyNameContextSelector implements ContextSelector {
     }    
   }
   
-  private final AnalysisCache cache;
+  private final IAnalysisCacheView cache;
   private final ContextSelector base;
   private final int index;
   
@@ -143,11 +143,11 @@ public class PropertyNameContextSelector implements ContextSelector {
     return dependentParameters;
   }
   
-  public PropertyNameContextSelector(AnalysisCache cache, ContextSelector base) {
+  public PropertyNameContextSelector(IAnalysisCacheView cache, ContextSelector base) {
     this(cache, 2, base);
   }
   
-  public PropertyNameContextSelector(AnalysisCache cache, int index, ContextSelector base) {
+  public PropertyNameContextSelector(IAnalysisCacheView cache, int index, ContextSelector base) {
     this.cache = cache;
     this.index = index;
     this.base = base;

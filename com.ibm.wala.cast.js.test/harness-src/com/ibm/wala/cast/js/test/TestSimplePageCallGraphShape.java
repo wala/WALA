@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
+import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -36,12 +37,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   @Override
   @Before
   public void setUp() {
-    WebUtil.setFactory(new IHtmlParserFactory() {
-      @Override
-      public IHtmlParser getParser() {
-        return getParser();
-      }
-    });
+    JSSourceExtractor.USE_TEMP_NAME = false;
   }
   
   private static final Object[][] assertionsForPage1 = new Object[][] {

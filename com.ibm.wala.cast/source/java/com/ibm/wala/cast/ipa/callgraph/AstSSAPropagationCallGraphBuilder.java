@@ -42,6 +42,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -115,7 +116,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   
   public abstract GlobalObjectKey getGlobalObject(Atom language);
 
-  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
   }
@@ -379,7 +380,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             int lvn = ((LocalPointerKey) lexicalKey).getValueNumber();
             IR lir = getBuilder().getCFAContextInterpreter().getIR(lnode);
             SymbolTable lsymtab = lir.getSymbolTable();
-            DefUse ldu = getAnalysisCache().getSSACache().findOrCreateDU(lir, lnode.getContext());
+            DefUse ldu = getAnalysisCache().getDefUse(lir);
             if (contentsAreInvariant(lsymtab, ldu, lvn)) {
               InstanceKey[] ik = getInvariantContents(lsymtab, ldu, lnode, lvn);
               system.recordImplicitPointsToSet(lexicalKey);

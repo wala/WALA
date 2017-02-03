@@ -43,7 +43,6 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;

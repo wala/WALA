@@ -43,7 +43,6 @@ package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -58,11 +57,11 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.UnknownTargetModel;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -98,9 +97,9 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
     private final IntentStarters intentStarters;
     private final IClassHierarchy cha;
     private final AnalysisOptions options;
-    private final AnalysisCache cache;
+    private final IAnalysisCacheView cache;
 
-    public IntentContextInterpreter(IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache) {
+    public IntentContextInterpreter(IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache) {
         this.cha = cha;
         this.options = options;
         this.cache = cache;

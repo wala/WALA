@@ -20,10 +20,10 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
@@ -32,8 +32,8 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IntMapIterator;
@@ -58,7 +58,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
   protected final AnalysisOptions options;
 
-  private final AnalysisCache cache;
+  private final IAnalysisCacheView cache;
 
   private final long maxNumberOfNodes;
 
@@ -67,7 +67,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
    */
   private final ExplicitEdgeManager edgeManager = makeEdgeManger();
 
-  public ExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public ExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super();
     if (options == null) {
       throw new IllegalArgumentException("null options");
@@ -515,7 +515,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
     return n.getPossibleTargetNumbers(site);
   }
 
-  public AnalysisCache getAnalysisCache() {
+  public IAnalysisCacheView getAnalysisCache() {
     return cache;
   }
 }

@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -49,7 +49,7 @@ public class LambdaTest extends WalaTestCase {
         "Llambda/SortingExample");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
     
     // Find compareTo
     TypeReference str = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/String");

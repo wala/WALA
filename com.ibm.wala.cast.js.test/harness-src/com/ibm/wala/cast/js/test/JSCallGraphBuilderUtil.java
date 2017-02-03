@@ -33,10 +33,10 @@ import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
-import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -123,13 +123,13 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return makeScope(makeSourceModules(dir, name, JSCallGraphBuilderUtil.class.getClassLoader()), loaders, JavaScriptLoader.JS);    
   }
 
-  public static SourceModule[] makeSourceModules(String dir, String name) throws IOException {
+  public static Module[] makeSourceModules(String dir, String name) throws IOException {
     return makeSourceModules(dir, name, JSCallGraphBuilderUtil.class.getClassLoader());
   }
   
-  public static SourceModule[] makeSourceModules(String dir, String name, ClassLoader loader) throws IOException {
+  public static Module[] makeSourceModules(String dir, String name, ClassLoader loader) throws IOException {
     URL script = getURLforFile(dir, name, loader);
-    SourceModule[] modules = new SourceModule[] { 
+    Module[] modules = new Module[] { 
         (script.openConnection() instanceof JarURLConnection)? new SourceURLModule(script): makeSourceModule(script, dir, name), 
         getPrologueFile("prologue.js")
     };
@@ -187,7 +187,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   public static SourceModule[] makeHtmlScope(URL url, JavaScriptLoaderFactory loaders, Function<Void,JSSourceExtractor> fExtractor) {
-    Set<SourceModule> scripts = HashSetFactory.make();
+    Set<Module> scripts = HashSetFactory.make();
     
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     scripts.add(getPrologueFile("prologue.js"));

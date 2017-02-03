@@ -18,8 +18,9 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -46,7 +47,7 @@ public class CodeDeletedTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application, "LCodeDeleted");
     IClass klass = cha.lookupClass(ref);
-    AnalysisCache cache = new AnalysisCache();
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
     for (IMethod m : klass.getDeclaredMethods()) {
       if (m.toString().contains("foo")) {
         // should throw WalaRuntimeException

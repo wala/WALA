@@ -11,8 +11,6 @@
 package com.ibm.wala.classLoader;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 
 import com.ibm.wala.classLoader.ShrikeClass.GetReader;

@@ -19,7 +19,7 @@ import org.junit.Test;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -47,7 +47,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // RTA yields a TypeBasedPointerAnalysis
-    CallGraphBuilder builder = Util.makeRTABuilder(options, new AnalysisCache(),cha, scope);
+    CallGraphBuilder builder = Util.makeRTABuilder(options, new AnalysisCacheImpl(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     

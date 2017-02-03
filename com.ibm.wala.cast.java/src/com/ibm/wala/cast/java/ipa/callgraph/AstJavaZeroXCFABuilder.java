@@ -14,6 +14,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -25,7 +26,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
-  public AstJavaZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  public AstJavaZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
     super(cha, options, cache);
 

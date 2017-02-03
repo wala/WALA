@@ -11,11 +11,14 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,12 +44,16 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.impl.ClassHierarchyClassTargetSelector;
+import com.ibm.wala.ipa.callgraph.impl.ClassHierarchyMethodTargetSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -54,6 +61,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil {
 
@@ -84,7 +92,9 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
                                                                 * (keepIRs),
                                                                 */roots);
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
+    options.setSelector(new ClassHierarchyMethodTargetSelector(cha));
+    options.setSelector(new ClassHierarchyClassTargetSelector(cha));
+
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
     options.setUseConstantSpecificKeys(true);
@@ -175,7 +185,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return loadAdditionalFile(cha, cl, new SourceURLModule(url));
   }
   
-  public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, SourceModule M)
+  public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, ModuleEntry M)
       throws IOException {
     try {
       TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
@@ -244,13 +254,76 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     }
   }
 
-  public static SourceModule getPrologueFile(final String name) {
-    return new SourceURLModule(JSCallGraphUtil.class.getClassLoader().getResource(name)) {
-      @Override
-      public String getName() {
-        return name;
-      }      
-    };
+  public static class Bootstrap implements SourceModule, Module, ModuleEntry {
+    private String name;
+    private InputStream stream;
+    private final URL url;
+    
+    public Bootstrap(String name, InputStream stream, URL url) {
+       this.name = name;
+       this.stream = stream;
+       this.url = url;
+    }
+
+    @Override
+    public Iterator<? extends ModuleEntry> getEntries() {
+      return new NonNullSingletonIterator<Bootstrap>(this);
+    }
+
+    @Override
+    public boolean isClassFile() {
+      return false;
+    }
+
+    @Override
+    public boolean isSourceFile() {
+      return true;
+    }
+
+    @Override
+    public InputStream getInputStream() {
+      return stream;
+    }
+
+    @Override
+    public boolean isModuleFile() {
+      return false;
+    }
+
+    @Override
+    public Module asModule() {
+      return this;
+    }
+
+    @Override
+    public String getClassName() {
+      return getName();
+    }
+
+    @Override
+    public Module getContainer() {
+      return null;
+    }
+
+    @Override
+    public String getName() {
+      return name;
+    }
+
+    @Override
+    public Reader getInputReader() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public URL getURL() {
+      return url;
+    }      
+  };
+  
+  public static Module getPrologueFile(final String name) {
+    return new Bootstrap(name, JSCallGraphUtil.class.getClassLoader().getResourceAsStream(name), JSCallGraphUtil.class.getClassLoader().getResource(name));
   }
 
 }

@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
 

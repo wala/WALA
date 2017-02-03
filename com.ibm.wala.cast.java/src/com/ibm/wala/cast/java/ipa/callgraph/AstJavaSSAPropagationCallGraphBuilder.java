@@ -25,6 +25,7 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
@@ -42,7 +43,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
-  protected AstJavaSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected AstJavaSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
   }

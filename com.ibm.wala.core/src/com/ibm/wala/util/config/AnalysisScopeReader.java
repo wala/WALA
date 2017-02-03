@@ -16,9 +16,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
-import java.net.URI;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.Module;

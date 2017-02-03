@@ -10,10 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.OneLevelForLexicalAccessFunctions;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
@@ -32,13 +32,13 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
   private static final boolean USE_OBJECT_SENSITIVITY = false;
   
 
-  public JSZeroOrOneXCFABuilder(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
+  public JSZeroOrOneXCFABuilder(IClassHierarchy cha, JSAnalysisOptions options, IAnalysisCacheView cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
 
-    setupMethodTargetSelector(cha, options);
+    setupMethodTargetSelector(cha, options, cache);
 
     setupContextSelector(options, appContextSelector, doOneCFA);
 
@@ -71,11 +71,11 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
   }
 
   
-  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
+  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options, IAnalysisCacheView cache) {
     MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector());
     if (options.handleCallApply()) {
-      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector));
+      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector, cache));
     }
     if (options.useLoadFileTargetSelector()) {
       targetSelector = new LoadFileTargetSelector(targetSelector, this);
@@ -83,7 +83,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     options.setSelector(targetSelector);
   }
 
-  private SSAContextInterpreter setupSSAContextInterpreter(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
+  private SSAContextInterpreter setupSSAContextInterpreter(IClassHierarchy cha, JSAnalysisOptions options, IAnalysisCacheView cache,
       SSAContextInterpreter appContextInterpreter) {
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
     if (options.handleCallApply()) {

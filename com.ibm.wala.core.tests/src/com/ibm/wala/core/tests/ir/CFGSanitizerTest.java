@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.ibm.wala.cfg.CFGSanitizer;
@@ -38,6 +36,8 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.FileProvider;
+
+import junit.framework.Assert;
 
 /**
  * Test integrity of CFGs

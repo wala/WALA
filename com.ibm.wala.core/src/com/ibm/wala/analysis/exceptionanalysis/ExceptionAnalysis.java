@@ -31,8 +31,8 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.InterproceduralExce
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction.Visitor;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;

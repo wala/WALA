@@ -11,6 +11,7 @@ import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.ecj.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -67,7 +68,7 @@ public class SourceDirCallGraph {
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
 //    options.setReflectionOptions(ReflectionOptions.NONE);
-    AnalysisCache cache = new AnalysisCache(AstIRFactory.makeDefaultFactory());
+    AnalysisCache cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
     //CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
     CallGraphBuilder builder = new ZeroOneContainerCFABuilderFactory().make(options, cache, cha, scope, false);
     System.out.println("building call graph...");

@@ -40,11 +40,9 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
-import java.util.logging.Logger;
-
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.util.CancelException;
@@ -70,7 +68,7 @@ public class MicroModel extends AndroidModel {
         return ep.isMemberOf(this.target);
     }
 
-    public MicroModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache, Atom target) {
+    public MicroModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache, Atom target) {
         super(cha, options, cache);
 
         this.target = target;

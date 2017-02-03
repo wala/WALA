@@ -23,10 +23,12 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -148,8 +150,8 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
   }
 
   @Override
-  public AnalysisCache makeDefaultCache() {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
+  public IAnalysisCacheView makeDefaultCache() {
+    return new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
   }
 
   @Override
@@ -170,7 +172,7 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
   }
 
   @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
   }
 }

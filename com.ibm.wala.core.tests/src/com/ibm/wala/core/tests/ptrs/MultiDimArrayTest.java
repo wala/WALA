@@ -19,7 +19,7 @@ import org.junit.Test;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -64,7 +64,7 @@ public class MultiDimArrayTest extends WalaTestCase {
         .makeMainEntrypoints(scope, cha, TestConstants.MULTI_DIM_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     

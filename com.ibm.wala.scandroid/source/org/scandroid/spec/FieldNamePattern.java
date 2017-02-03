@@ -49,9 +49,10 @@ package org.scandroid.spec;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import com.ibm.wala.classLoader.IField;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.strings.Atom;
 

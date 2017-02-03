@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
@@ -158,7 +159,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   public IProgressMonitor monitor;
 
-  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
     // this.usePreTransitiveSolver = options.usePreTransitiveSolver();
@@ -644,7 +645,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return builder.options;
     }
 
-    protected AnalysisCache getAnalysisCache() {
+    protected IAnalysisCacheView getAnalysisCache() {
       return builder.getAnalysisCache();
     }
 
@@ -1728,9 +1729,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         previousPtrs[i] = IntSetUtil.getDefaultIntSetFactory().make();
       }
     }
-
+    
     private byte cpa(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
-      final MutableBoolean changed = new MutableBoolean();
+     final MutableBoolean changed = new MutableBoolean();
       for(int rhsIndex = 0; rhsIndex < rhs.length; rhsIndex++) { 
         final int y = rhsIndex;
         IntSet currentObjs = rhs[rhsIndex].getValue();
@@ -1748,7 +1749,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                         recv = v[0].getConcreteType();
                       }
                       CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
-                      if (target != null) {
+                      if (target != null) {                        
                         changed.b = true;
                         processResolvedCall(node, call, target, constParams, uniqueCatch);
                         if (!haveAlreadyVisited(target)) {

@@ -24,21 +24,17 @@ package com.ibm.wala.dataflow.IFDS;
 import java.util.Iterator;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.ExplodedInterproceduralCFG;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -54,16 +50,16 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> {
 
-  private final AnalysisCache analysisCache;
+  private final IAnalysisCacheView analysisCache;
   
   private final ExplodedInterproceduralCFG icfg;
 
-  protected ICFGSupergraph(ExplodedInterproceduralCFG icfg, AnalysisCache cache) {
+  protected ICFGSupergraph(ExplodedInterproceduralCFG icfg, IAnalysisCacheView cache) {
     this.icfg = icfg;
     this.analysisCache = cache;
   }
 
-  public static ICFGSupergraph make(CallGraph cg, AnalysisCache cache) {
+  public static ICFGSupergraph make(CallGraph cg, IAnalysisCacheView cache) {
     ICFGSupergraph w = new ICFGSupergraph(ExplodedInterproceduralCFG.make(cg), cache);
     return w;
   }

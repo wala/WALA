@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
 public enum CAstBinaryOp implements IBinaryOpInstruction.IOperator {
     CONCAT, EQ, NE, LT, GE, GT, LE, STRICT_EQ, STRICT_NE;

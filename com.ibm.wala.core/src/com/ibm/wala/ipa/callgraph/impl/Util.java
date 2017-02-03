@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
@@ -331,7 +332,7 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
    */
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache,
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope) {
     return makeZeroCFABuilder(options, cache, cha, scope, null, null);
   }
@@ -345,7 +346,7 @@ public class Util {
    * @return a 0-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache,
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {

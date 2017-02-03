@@ -1,7 +1,7 @@
 package com.ibm.wala.core.tests.exceptionpruning;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 
 import java.io.File;
@@ -19,6 +19,7 @@ import com.ibm.wala.analysis.exceptionanalysis.IntraproceduralExceptionAnalysis;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -74,7 +75,7 @@ public class ExceptionAnalysisTest {
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
     ReferenceCleanser.registerClassHierarchy(cha);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
     CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
     cg = builder.makeCallGraph(options, null);

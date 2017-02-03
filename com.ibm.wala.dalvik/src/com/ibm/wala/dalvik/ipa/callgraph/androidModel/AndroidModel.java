@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -68,10 +67,10 @@ import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterF
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ipa.summaries.MethodSummary;
@@ -130,7 +129,7 @@ public class AndroidModel /* makes SummarizedMethod */
 
     protected IClassHierarchy cha;
     protected AnalysisOptions options;
-    protected AnalysisCache cache;
+    protected IAnalysisCacheView cache;
     private AbstractAndroidModel labelSpecial;
     private IInstantiationBehavior instanceBehavior;
     private SSAValueManager paramManager;
@@ -153,7 +152,7 @@ public class AndroidModel /* makes SummarizedMethod */
     protected boolean built;
     protected SummarizedMethod model;
 
-    public AndroidModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache) {
+    public AndroidModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache) {
         this.options = options;
         this.cha = cha;
         this.cache = cache;

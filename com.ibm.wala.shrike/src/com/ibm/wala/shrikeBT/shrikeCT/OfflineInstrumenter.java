@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.ibm.wala.shrikeBT.Util;
-import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeBT.tools.OfflineInstrumenterBase;
 import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;

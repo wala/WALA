@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntSet;

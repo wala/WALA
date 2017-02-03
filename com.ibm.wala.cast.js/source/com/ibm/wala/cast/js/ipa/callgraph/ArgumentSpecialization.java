@@ -64,7 +64,7 @@ public class ArgumentSpecialization {
     @Override
     public IR getIR(CGNode node) {
       if (node.getMethod() instanceof Retranslatable) {
-        return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), node.getContext(), options.getSSAOptions());
+        return getAnalysisCache().getIR(node.getMethod(), node.getContext());
       } else {
         return super.getIR(node);
       }
@@ -73,7 +73,7 @@ public class ArgumentSpecialization {
     @Override
     public DefUse getDU(CGNode node) {
       if (node.getMethod() instanceof Retranslatable) {
-        return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), node.getContext(), options.getSSAOptions());
+        return getAnalysisCache().getDefUse(getIR(node));
       } else {
         return super.getDU(node);
       }

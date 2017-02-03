@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -47,7 +47,7 @@ public class CloneTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, new AnalysisCache(),cha, scope);
+    CallGraph cg = CallGraphTestUtil.buildRTA(options, new AnalysisCacheImpl(),cha, scope);
 
     // Find node corresponding to java.text.MessageFormat.clone()
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/text/MessageFormat");

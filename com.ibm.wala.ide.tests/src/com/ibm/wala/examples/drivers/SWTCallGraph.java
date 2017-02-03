@@ -20,7 +20,7 @@ import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
 import com.ibm.wala.ide.ui.ViewIRAction;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -116,7 +116,7 @@ public class SWTCallGraph {
       // //
       // build the call graph
       // //
-      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope, null,
+      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope, null,
           null);
       CallGraph cg = builder.makeCallGraph(options,null);
 

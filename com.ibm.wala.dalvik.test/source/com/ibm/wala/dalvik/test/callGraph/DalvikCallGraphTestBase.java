@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.test.callGraph;
 
+import static com.ibm.wala.dalvik.test.util.Util.makeDalvikScope;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,12 +29,14 @@ import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -58,8 +62,6 @@ import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.TemporaryFile;
-
-import static com.ibm.wala.dalvik.test.util.Util.makeDalvikScope;
 
 public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	
@@ -99,7 +101,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
 
 	@SuppressWarnings("unused")
-  private static SSAContextInterpreter makeDefaultInterpreter(AnalysisOptions options, AnalysisCache cache) {
+  private static SSAContextInterpreter makeDefaultInterpreter(AnalysisOptions options, IAnalysisCacheView cache) {
 		return new DefaultSSAInterpreter(options, cache) {
 			@Override
 			public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -129,7 +131,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
 		final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
-		AnalysisCache cache = new AnalysisCache(new DexIRFactory());
+		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		List<? extends Entrypoint> es = getEntrypoints(cha);
 
@@ -171,7 +173,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		
 		Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, mainClassName);
 		
-		AnalysisCache cache = new AnalysisCache(new DexIRFactory());
+		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 

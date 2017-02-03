@@ -18,7 +18,7 @@ import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -32,8 +32,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
@@ -156,7 +156,7 @@ public class PDFCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     System.err.println(CallGraphStats.getStats(cg));

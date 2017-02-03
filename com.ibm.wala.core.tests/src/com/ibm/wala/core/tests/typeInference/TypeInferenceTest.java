@@ -23,9 +23,10 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -56,7 +57,7 @@ public class TypeInferenceTest extends WalaTestCase {
 
   private static AnalysisOptions options;
 
-  private static AnalysisCache cache;
+  private static IAnalysisCacheView cache;
 
   public static void main(String[] args) {
     justThisTest(TypeInferenceTest.class);
@@ -68,7 +69,7 @@ public class TypeInferenceTest extends WalaTestCase {
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
-    cache = new AnalysisCache();
+    cache = new AnalysisCacheImpl();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {

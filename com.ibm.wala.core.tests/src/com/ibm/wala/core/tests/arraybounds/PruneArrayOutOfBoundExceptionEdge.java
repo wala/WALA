@@ -1,6 +1,9 @@
 package com.ibm.wala.core.tests.arraybounds;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.CoreMatchers.hasItem;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;

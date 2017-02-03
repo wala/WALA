@@ -1,6 +1,10 @@
 package com.ibm.wala.shrikeCT;
 
-import static com.ibm.wala.shrikeBT.Constants.*;
+import static com.ibm.wala.shrikeBT.Constants.TYPE_double;
+import static com.ibm.wala.shrikeBT.Constants.TYPE_float;
+import static com.ibm.wala.shrikeBT.Constants.TYPE_int;
+import static com.ibm.wala.shrikeBT.Constants.TYPE_long;
+import static com.ibm.wala.shrikeBT.Constants.TYPE_null;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

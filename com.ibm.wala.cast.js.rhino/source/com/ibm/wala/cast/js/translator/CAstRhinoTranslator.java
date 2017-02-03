@@ -13,19 +13,10 @@ package com.ibm.wala.cast.js.translator;
 import com.ibm.wala.cast.ir.translator.RewritingTranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.classLoader.SourceModule;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 public class CAstRhinoTranslator extends RewritingTranslatorToCAst implements TranslatorToCAst {    
-  private static String getName(SourceModule M) {
-    if (M instanceof SourceFileModule) {
-      return ((SourceFileModule) M).getClassName();
-    } else {
-      return M.getName();
-    }
-  }
-  
-  public CAstRhinoTranslator(SourceModule M, boolean replicateForDoLoops) {
-    super(M, new RhinoToAstTranslator(new CAstImpl(), M, getName(M), replicateForDoLoops));
+  public CAstRhinoTranslator(ModuleEntry m, boolean replicateForDoLoops) {
+    super(m, new RhinoToAstTranslator(new CAstImpl(), m, m.getName(), replicateForDoLoops));
    }
 }

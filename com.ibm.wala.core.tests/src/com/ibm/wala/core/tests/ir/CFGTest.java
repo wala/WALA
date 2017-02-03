@@ -21,6 +21,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -127,7 +128,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync1()V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = makeAnalysisCache();
+    IAnalysisCacheView cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
@@ -139,7 +140,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync2()V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = makeAnalysisCache();
+    IAnalysisCacheView cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
@@ -154,7 +155,7 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync3()V");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = makeAnalysisCache();
+    IAnalysisCacheView cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
     Assert.assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)));

@@ -16,6 +16,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
@@ -26,7 +27,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ZeroCFABuilderFactory  {
 
-  public CallGraphBuilder make(JSAnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
+  public CallGraphBuilder make(JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
       boolean keepPointsTo) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));

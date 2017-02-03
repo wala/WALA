@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -95,7 +96,7 @@ public class PDFWalaIR {
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
       
       // Create an object which caches IRs and related information, reconstructing them lazily on demand.
-      AnalysisCache cache = new AnalysisCache();
+      AnalysisCache cache = new AnalysisCacheImpl();
       
       // Build the IR and cache it.
       IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());

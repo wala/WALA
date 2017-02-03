@@ -24,9 +24,10 @@ import org.apache.commons.io.input.BOMInputStream;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -83,14 +84,14 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  public static AnalysisScope makeScope(SourceModule[] files, SingleClassLoaderFactory loaders, Language language)
+  public static AnalysisScope makeScope(Module[] files, SingleClassLoaderFactory loaders, Language language)
       throws IOException {
     CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
   public static AnalysisCache makeCache(IRFactory<IMethod> factory) {
-    return new AnalysisCache(factory);
+    return new AnalysisCacheImpl(factory);
   }
 
   public static String getShortName(CGNode nd) {

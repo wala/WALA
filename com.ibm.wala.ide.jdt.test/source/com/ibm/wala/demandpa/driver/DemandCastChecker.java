@@ -62,6 +62,7 @@ import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -185,7 +186,7 @@ public class DemandCastChecker {
       throws IllegalArgumentException, CancelException {
     CallGraph retCG = null;
     PointerAnalysis retPA = null;
-    final AnalysisCache cache = new AnalysisCache();
+    final AnalysisCache cache = new AnalysisCacheImpl();
     CallGraphBuilder builder;
     if (CHEAP_CG) {
       builder = Util.makeZeroCFABuilder(options, cache, cha, scope);

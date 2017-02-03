@@ -20,6 +20,7 @@ import org.junit.runner.JUnitCore;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.ir.AnnotationTest;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -67,7 +68,7 @@ public abstract class WalaTestCase {
   }
 
   protected AnalysisCache makeAnalysisCache() {
-    return new AnalysisCache();
+    return new AnalysisCacheImpl();
   }
 
   public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {

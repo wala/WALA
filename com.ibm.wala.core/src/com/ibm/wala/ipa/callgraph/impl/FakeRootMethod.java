@@ -12,8 +12,8 @@ package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
@@ -33,7 +33,7 @@ public class FakeRootMethod extends AbstractRootMethod {
 
   public static final MethodReference rootMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, descr);
 
-  public FakeRootMethod(final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public FakeRootMethod(final IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(rootMethod, cha, options, cache);
   }
 

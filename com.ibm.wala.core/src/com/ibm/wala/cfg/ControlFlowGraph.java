@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.cfg;
 
-import java.util.Collection;
-import java.util.List;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.intset.BitVector;

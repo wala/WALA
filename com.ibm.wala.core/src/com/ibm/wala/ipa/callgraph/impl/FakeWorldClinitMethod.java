@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -29,7 +29,7 @@ public class FakeWorldClinitMethod extends AbstractRootMethod {
   private static final MethodReference worldClinitMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, Descriptor
       .findOrCreate(new TypeName[0], TypeReference.VoidName));
   
-  public FakeWorldClinitMethod(final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public FakeWorldClinitMethod(final IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(worldClinitMethod, cha, options, cache);
   }
 }

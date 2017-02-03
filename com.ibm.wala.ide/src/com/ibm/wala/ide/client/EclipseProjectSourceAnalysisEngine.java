@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.CoreException;
 
 import com.ibm.wala.ide.plugin.CorePlugin;
 import com.ibm.wala.ide.util.EclipseFileProvider;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
@@ -63,7 +63,7 @@ abstract public class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
    * introducing a dependence on com.ibm.wala.cast from this project
    */
   @Override
-  public abstract AnalysisCache makeDefaultCache();
+  public abstract IAnalysisCacheView makeDefaultCache();
   
   protected abstract ClassLoaderReference getSourceLoader();
 
