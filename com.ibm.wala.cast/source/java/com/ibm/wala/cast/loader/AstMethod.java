@@ -24,6 +24,7 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -108,13 +109,13 @@ public abstract class AstMethod implements IMethod {
   private final MethodReference ref;
   private final boolean hasCatchBlock;
   private final boolean hasMonitorOp;
-  private final Map<IBasicBlock, TypeReference[]> catchTypes;
+  private final Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes;
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
   private final Collection<Annotation> annotations;
 
   protected AstMethod(IClass cls, Collection qualifiers, AbstractCFG cfg, SymbolTable symtab, MethodReference ref,
-      boolean hasCatchBlock, Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      boolean hasCatchBlock, Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo, Collection<Annotation> annotations) {
     this.cls = cls;
     this.cfg = cfg;
@@ -158,7 +159,7 @@ public abstract class AstMethod implements IMethod {
     return symtab;
   }
 
-  public Map<IBasicBlock, TypeReference[]> catchTypes() {
+  public Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes() {
     return catchTypes;
   }
 
