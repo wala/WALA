@@ -2444,7 +2444,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
     CAstNode loopBody = visitNode(n.getBody(), loopContext);
 
-    return doLoopTranslator.translateDoLoop(loopTest, loopBody, continueNode, breakNode, context);  
+    CAstNode madeNode = doLoopTranslator.translateDoLoop(loopTest, loopBody, continueNode, breakNode, context);
+    context.pos().setPosition(madeNode, makePosition(n));
+    return madeNode;
   }
 
   /**
