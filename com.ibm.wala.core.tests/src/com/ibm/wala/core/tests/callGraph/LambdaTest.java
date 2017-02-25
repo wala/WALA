@@ -41,6 +41,26 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class LambdaTest extends WalaTestCase {
 
+  @Test public void testStreamExample_137() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        "Lspecial/A");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+ 
+    TypeReference A = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lspecial/A");
+
+    MethodReference ct = MethodReference.findOrCreate(A, Atom.findOrCreateUnicodeAtom("<init>"), Descriptor.findOrCreateUTF8("()V"));
+    Set<CGNode> ctnodes = cg.getNodes(ct);    
+    Assert.assertEquals(1, ctnodes.size());
+
+    MethodReference ts = MethodReference.findOrCreate(A, Atom.findOrCreateUnicodeAtom("toString"), Descriptor.findOrCreateUTF8("()Ljava/lang/String;"));
+    Set<CGNode> tsnodes = cg.getNodes(ts);    
+    Assert.assertEquals(1, tsnodes.size());
+}
+  
   @Test public void testSortingExample() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
