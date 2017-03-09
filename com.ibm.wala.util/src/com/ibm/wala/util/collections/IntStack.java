@@ -59,4 +59,21 @@ public class IntStack {
       return top == -1;
   }
 
+  /**
+   * @return the number of elements in the stack.
+   */
+  public int size() {
+    return top + 1;
+  }
+
+  /**
+   * @return the ith int from the bottom of the stack
+   */
+  public int get(int i) {
+    if (i < 0 || i > top) {
+      throw new IndexOutOfBoundsException();
+    }
+    return state[i];
+  }
+
 }
