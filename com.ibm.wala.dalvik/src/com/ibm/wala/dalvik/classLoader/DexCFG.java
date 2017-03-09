@@ -297,6 +297,10 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
                                 e.printStackTrace();
                                 Assertions.UNREACHABLE();
                             }
+                            IMethod mTarget = cha.resolveMethod(target);
+                            if (mTarget == null) {
+                              goToAllHandlers = true;
+                            }
                         }
                     }
                 }

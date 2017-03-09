@@ -41,7 +41,7 @@ public class JarStreamModule extends JarInputStream implements Module {
    */
   private HashMap<String, byte[]> cache = null;
 
-  public JarStreamModule(JarInputStream stream) throws IOException {
+  public JarStreamModule(InputStream stream) throws IOException {
     super(stream);
   }
 

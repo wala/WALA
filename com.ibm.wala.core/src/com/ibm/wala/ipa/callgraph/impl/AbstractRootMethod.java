@@ -258,7 +258,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  protected int getValueNumberForIntConstant(int c) {
+  public int getValueNumberForIntConstant(int c) {
     ConstantValue v = new ConstantValue(c);
     Integer result = constant2ValueNumber.get(v);
     if (result == null) {
@@ -268,7 +268,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  protected int getValueNumberForByteConstant(byte c) {
+  public int getValueNumberForByteConstant(byte c) {
     // treat it like an int constant for now.
     ConstantValue v = new ConstantValue(c);
     Integer result = constant2ValueNumber.get(v);
@@ -279,7 +279,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  protected int getValueNumberForCharConstant(char c) {
+  public int getValueNumberForCharConstant(char c) {
     // treat it like an int constant for now.
     ConstantValue v = new ConstantValue(c);
     Integer result = constant2ValueNumber.get(v);
