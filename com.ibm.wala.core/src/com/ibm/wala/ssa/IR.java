@@ -42,7 +42,7 @@ import com.ibm.wala.util.strings.StringStuff;
  * 
  * See http://wala.sourceforge.net/wiki/index.php/UserGuide:IR for more details on the IR API.
  */
-public abstract class IR {
+public abstract class IR implements IRView {
 
   /**
    * The method that defined this IR's bytecodes
@@ -264,6 +264,11 @@ public abstract class IR {
    */
   public SSACFG getControlFlowGraph() {
     return cfg;
+  }
+
+  @Override
+  public Iterator<ISSABasicBlock> getBlocks() {
+    return getControlFlowGraph().iterator();
   }
 
   /**
