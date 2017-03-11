@@ -252,7 +252,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return prev;
     }
 
-    private Class abstractAndroidModel = LoopAndroidModel.class;
+    private Class<? extends AbstractAndroidModel> abstractAndroidModel = LoopAndroidModel.class;
     /**
      *  What special handling to insert into the model.
      *
@@ -271,13 +271,13 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             return new LoopAndroidModel(body, insts, paramManager, entryPoints);
         } else {
             try {
-                final Constructor<AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
+                final Constructor<? extends AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
                     VolatileMethodSummary.class, TypeSafeInstructionFactory.class, SSAValueManager.class,
                     Iterable.class);
                 if (ctor == null) {
                     throw new IllegalStateException("Canot find the constructor of " + this.abstractAndroidModel);
                 }
-                return (AbstractAndroidModel) ctor.newInstance(body, insts, paramManager, entryPoints);
+                return ctor.newInstance(body, insts, paramManager, entryPoints);
             } catch (java.lang.InstantiationException e) {
                 throw new IllegalStateException(e);
             } catch (java.lang.IllegalAccessException e) {
@@ -300,23 +300,19 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  @return null or the class set using setModelBehavior
      */
-    public Class getModelBehavior() {
+    public Class<? extends AbstractAndroidModel> getModelBehavior() {
         return this.abstractAndroidModel;
     }
 
     /**
      *  Set the class instantiated by makeModelBehavior.
      *
-     *  @throws IllgealArgumentException if the abstractAndroidModel does not subclass AbstractAndroidModel
+     *  @throws IllegalArgumentException if the abstractAndroidModel is null
      */
-    public void setModelBehavior(Class abstractAndroidModel) {
+    public void setModelBehavior(Class<? extends AbstractAndroidModel> abstractAndroidModel) {
         if (abstractAndroidModel == null) {
             throw new IllegalArgumentException("abstractAndroidModel may not be null. Use SequentialAndroidModel " +
                     "if no special handling shall be inserted.");
-        }
-        if (! AbstractAndroidModel.class.isAssignableFrom(abstractAndroidModel)) {
-            throw new IllegalArgumentException("The given argument abstractAndroidModel does not subclass " +
-                    "AbtractAndroidModel");
         }
         this.abstractAndroidModel = abstractAndroidModel;
     }
