@@ -27,7 +27,7 @@ import com.ibm.wala.fixpoint.AbstractVariable;
 public class ParameterState extends AbstractVariable<ParameterState> {
   /*
    * Inital state is UNKNOWN.
-   * Lattice: UNKNOWN < { NULL, NOT_NULL } < BOTH
+   * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN 
    * 
    * public enum State { UNKNOWN, BOTH, NULL, NOT_NULL }; as defined in NullPointerState
    * 
@@ -60,7 +60,7 @@ public class ParameterState extends AbstractVariable<ParameterState> {
    */
   public ParameterState(NullPointerState state, int[] parameterNumbers) {
     //by convention the first ssa vars are the parameters
-    for (int i=1; i < parameterNumbers.length; i++){
+    for (int i=0; i < parameterNumbers.length; i++){
       params.put(i, state.getState(parameterNumbers[i]));
     }
   }
@@ -69,8 +69,8 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     State prev = params.get(varNum);
     if (prev != null) {
       switch (prev) {
-      case BOTH:
-        if (state != State.BOTH) {
+      case UNKNOWN:
+        if (state != State.UNKNOWN) {
           throw new IllegalArgumentException("Try to set " + prev + " to " + state);
         }
         break;
@@ -101,7 +101,10 @@ public class ParameterState extends AbstractVariable<ParameterState> {
    */
   public State getState(int varNum) {
     State state = params.get(varNum);
-    return (state == null ? State.UNKNOWN : state);
+    if (state == null) {
+      throw new IllegalArgumentException("No mapping for variable " + varNum + "in ParameterState " + this.toString());
+    }
+    return state;
   }
 
   @Override

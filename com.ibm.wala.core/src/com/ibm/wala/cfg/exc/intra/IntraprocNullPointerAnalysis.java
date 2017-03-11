@@ -137,7 +137,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         final NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
         final int[] paramValNum = ir.getParameterValueNumbers();
       
-        solver = new NullPointerSolver<T>(problem, maxVarNum, paramValNum, initialState, ir);
+        solver = new NullPointerSolver<T>(problem, maxVarNum, paramValNum, cfg.entry(), ir, initialState);
         
         solver.solve(progress);
         
@@ -194,7 +194,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       // empty IR ... so states have not changed and we can return the initial state as a save approximation 
       return new NullPointerState(maxVarNum, ir.getSymbolTable(), initialState);
     } else {
-      return solver.getIn(block);
+      return solver.getOut(block);
     }
   }
   
@@ -224,7 +224,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       SSAInstruction instr = NullPointerTransferFunctionProvider.getRelevantInstruction(bb);
       
       if (instr != null) {
-        currentState = solver.getIn(bb);
+        currentState = getState(bb);
         currentBlock = bb;
         instr.visit(this);
         currentState = null;
@@ -259,6 +259,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       assert instr.isPEI();
       
       if (instr instanceof SSAAbstractInvokeInstruction) {
+        assert ((SSAAbstractInvokeInstruction) instr).isStatic();
         return mState != null && !mState.throwsException((SSAAbstractInvokeInstruction) instr); 
       } else {
         Collection<TypeReference> exc = instr.getExceptionTypes();
