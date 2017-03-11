@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
@@ -78,7 +81,9 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-22
  */
 public class AndroidStartComponentTool {
-    
+
+	private static final Logger logger = LoggerFactory.getLogger(AndroidStartComponentTool.class);
+
     private final IClassHierarchy cha;
 //    private final MethodReference asMethod;
     private final Set<StarterFlags> flags;
@@ -307,7 +312,8 @@ public class AndroidStartComponentTool {
             
             return androidContext;
         } else {
-            throw new UnsupportedOperationException("Can not handle the callers android-context of " + caller);
+            logger.debug("Can not handle the callers android-context of " + caller);
+            return null;
         }
     }
 

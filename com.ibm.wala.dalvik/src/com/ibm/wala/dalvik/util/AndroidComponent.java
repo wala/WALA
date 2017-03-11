@@ -239,6 +239,7 @@ public enum AndroidComponent {
      *  @return the corresponding Enum-Element or AndroidComponent.UNKNOWN
      */
     public static AndroidComponent from(final IMethod method, final IClassHierarchy cha) {
+        if (method == null) return AndroidComponent.UNKNOWN;
         IClass type = method.getDeclaringClass();
 
         if (type == null) {

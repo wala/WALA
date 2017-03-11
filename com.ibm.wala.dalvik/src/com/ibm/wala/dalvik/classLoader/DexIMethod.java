@@ -651,6 +651,12 @@ public class DexIMethod implements IBytecodeMethod {
 				endInst = getInstructionIndex(endAddress) - 1;
 			}
 
+			for (int i = startInst; i <= endInst; i++) {
+				//add the rest of the handlers
+				for (EncodedTypeAddrPair etaps: tryItem.encodedCatchHandler.handlers) {
+					temp_array.get(i).add(new ExceptionHandler( getInstructionIndex(etaps.getHandlerAddress()), etaps.exceptionType.getTypeDescriptor() ));
+				}
+			}
 			//add the catch all handler if it exists
 			int catchAllAddress = tryItem.encodedCatchHandler.getCatchAllHandlerAddress();
 			if (catchAllAddress != -1) {
@@ -663,13 +669,6 @@ public class DexIMethod implements IBytecodeMethod {
 					temp_array.get(i).add(new ExceptionHandler(getInstructionIndex(catchAllAddress), null));
 				}
 				//throw new UnimplementedError("DexIMethod->handlers: getCatchAllHandlerAddress() not yet implemented");
-			}
-
-			for (int i = startInst; i <= endInst; i++) {
-				//add the rest of the handlers
-				for (EncodedTypeAddrPair etaps: tryItem.encodedCatchHandler.handlers) {
-					temp_array.get(i).add(new ExceptionHandler( getInstructionIndex(etaps.getHandlerAddress()), etaps.exceptionType.getTypeDescriptor() ));
-				}
 			}
 		}
 
