@@ -423,6 +423,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   private static final Collection<TypeReference> newArrayExceptions = Collections.unmodifiableCollection(Arrays
       .asList(new TypeReference[] { TypeReference.JavaLangOutOfMemoryError, TypeReference.JavaLangNegativeArraySizeException }));
 
+  private static final Collection<TypeReference> newSafeArrayExceptions = Collections.unmodifiableCollection(Arrays
+      .asList(new TypeReference[] { TypeReference.JavaLangOutOfMemoryError}));
+
   private static final Collection<TypeReference> exceptionInInitializerError = Collections
       .singleton(TypeReference.JavaLangExceptionInInitializerError);
 
@@ -464,7 +467,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public static Collection<TypeReference> getNewArrayExceptions() {
     return newArrayExceptions;
   }
-
+  public static Collection<TypeReference> getNewSafeArrayExceptions() {
+    return newSafeArrayExceptions;
+  }
   public static Collection<TypeReference> getNewScalarExceptions() {
     return newScalarExceptions;
   }
