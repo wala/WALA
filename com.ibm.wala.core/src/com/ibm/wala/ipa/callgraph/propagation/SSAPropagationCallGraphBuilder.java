@@ -46,6 +46,7 @@ import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
@@ -214,7 +215,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     if (DEBUG) {
       System.err.println("\n\nAdd constraints from node " + node);
     }
-    IR ir = getCFAContextInterpreter().getIR(node);
+    IRView ir = getCFAContextInterpreter().getIRView(node);
     if (DEBUG) {
       if (ir == null) {
         System.err.println("\n   No statements\n");
@@ -256,11 +257,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     this.monitor = monitor;
     ConstraintVisitor v = makeVisitor(node);
 
-    IR ir = v.ir;
-    ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
-    for (Iterator<ISSABasicBlock> x = cfg.iterator(); x.hasNext();) {
+    IRView ir = v.ir;
+    for (Iterator<ISSABasicBlock> x = ir.getBlocks(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
-      addBlockInstructionConstraints(node, cfg, b, v, monitor);
+      addBlockInstructionConstraints(node, ir, b, v, monitor);
       if (wasChanged(node)) {
         return;
       }
@@ -279,7 +279,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Add constraints for a particular basic block.
    * @throws CancelException 
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, BasicBlock b,
+  protected void addBlockInstructionConstraints(CGNode node, IRView ir, BasicBlock b,
       ConstraintVisitor v, IProgressMonitor monitor) throws CancelException {
     this.monitor = monitor;
     v.setBasicBlock(b);
@@ -296,24 +296,24 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    addPhiConstraints(node, cfg, b, v);
+    addPhiConstraints(node, ir.getControlFlowGraph(), b, v);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, BasicBlock b,
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph, BasicBlock b,
       ConstraintVisitor v) {
     // visit each phi instruction in each successor block
-    for (Iterator sbs = cfg.getSuccNodes(b); sbs.hasNext();) {
+    for (Iterator sbs = controlFlowGraph.getSuccNodes(b); sbs.hasNext();) {
       BasicBlock sb = (BasicBlock) sbs.next();
       if (!sb.hasPhi()) {
         continue;
       }
       int n = 0;
-      for (Iterator<? extends IBasicBlock> back = cfg.getPredNodes(sb); back.hasNext(); n++) {
+      for (Iterator<? extends IBasicBlock> back = controlFlowGraph.getPredNodes(sb); back.hasNext(); n++) {
         if (back.next() == b) {
           break;
         }
       }
-      assert n < cfg.getPredNodeCount(sb);
+      assert n < controlFlowGraph.getPredNodeCount(sb);
       for (Iterator<? extends SSAInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
         SSAPhiInstruction phi = (SSAPhiInstruction) phis.next();
         if (phi == null) {
@@ -348,7 +348,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param node
    * @param ir
    */
-  protected void addNodePassthruExceptionConstraints(CGNode node, IR ir, DefUse du) {
+  protected void addNodePassthruExceptionConstraints(CGNode node, IRView ir, DefUse du) {
     // add constraints relating to thrown exceptions that reach the exit block.
     List<ProgramCounter> peis = getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = getPointerKeyForExceptionalReturnValue(node);
@@ -366,7 +366,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param exceptionVar PointerKey representing a pointer to an exception value
    * @param catchClasses the types "caught" by the exceptionVar
    */
-  private void addExceptionDefConstraints(IR ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
+  private void addExceptionDefConstraints(IRView ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
       Set<IClass> catchClasses) {
     if (DEBUG) {
       System.err.println("Add exception def constraints for node " + node);
@@ -434,7 +434,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * @return true iff there's a unique catch block which catches all exceptions thrown by a certain call site.
    */
-  protected static boolean hasUniqueCatchBlock(SSAAbstractInvokeInstruction call, IR ir) {
+  protected static boolean hasUniqueCatchBlock(SSAAbstractInvokeInstruction call, IRView ir) {
     ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     if (bb.length == 1) {
       Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getExceptionalSuccessors(bb[0]).iterator();
@@ -454,7 +454,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @throws IllegalArgumentException if ir == null
    * @throws IllegalArgumentException if call == null
    */
-  public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IR ir, CGNode node) throws IllegalArgumentException,
+  public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IRView ir, CGNode node) throws IllegalArgumentException,
       IllegalArgumentException {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
@@ -478,7 +478,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @return a List of Instructions that may transfer control to bb via an exceptional edge
    * @throws IllegalArgumentException if ir is null
    */
-  public static List<ProgramCounter> getIncomingPEIs(IR ir, ISSABasicBlock bb) {
+  public static List<ProgramCounter> getIncomingPEIs(IRView ir, ISSABasicBlock bb) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
@@ -574,7 +574,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return s;
     }
   }
-
+  
   /**
    * A visitor that generates constraints based on statements in SSA form.
    */
@@ -599,7 +599,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /**
      * The governing IR
      */
-    protected final IR ir;
+    protected final IRView ir;
 
     /**
      * The governing propagation system, into which constraints are added
@@ -629,10 +629,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
       this.system = builder.getPropagationSystem();
 
-      this.ir = builder.getCFAContextInterpreter().getIR(node);
+      SSAContextInterpreter interp = builder.getCFAContextInterpreter();
+      this.ir = interp.getIRView(node);
       this.symbolTable = this.ir.getSymbolTable();
 
-      this.du = builder.getCFAContextInterpreter().getDU(node);
+      this.du = interp.getDU(node);
 
       assert symbolTable != null;
     }
@@ -2405,7 +2406,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return system.iteratePointerKeys();
   }
 
-  public static Set<IClass> getCaughtExceptionTypes(SSAGetCaughtExceptionInstruction instruction, IR ir) {
+  public static Set<IClass> getCaughtExceptionTypes(SSAGetCaughtExceptionInstruction instruction, IRView ir) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }

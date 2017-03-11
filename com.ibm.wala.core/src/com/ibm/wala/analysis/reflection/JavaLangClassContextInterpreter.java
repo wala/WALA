@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -120,6 +121,11 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     }
     
     return result;
+  }
+
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
   }
 
   private IR makeIR(IMethod method, JavaTypeContext context) {

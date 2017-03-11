@@ -69,6 +69,7 @@ import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.SSAAbstractBinaryInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
@@ -1023,10 +1024,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   public static void processCallingConstraintsInternal(AstSSAPropagationCallGraphBuilder builder, CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
         
-    IR sourceIR = builder.getCFAContextInterpreter().getIR(caller);
+    IRView sourceIR = builder.getCFAContextInterpreter().getIRView(caller);
     SymbolTable sourceST = sourceIR.getSymbolTable();
 
-    IR targetIR = builder.getCFAContextInterpreter().getIR(target);
+    IRView targetIR = builder.getCFAContextInterpreter().getIRView(target);
     SymbolTable targetST = targetIR.getSymbolTable();
 
     JSConstraintVisitor targetVisitor = null;

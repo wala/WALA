@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
@@ -92,6 +93,11 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     }
     Assertions.UNREACHABLE("Unexpected method " + node);
     return null;
+  }
+
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
   }
 
   /**

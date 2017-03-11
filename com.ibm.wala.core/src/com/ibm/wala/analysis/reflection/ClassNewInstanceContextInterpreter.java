@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
@@ -93,6 +94,11 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     
 /** END Custom change: caching */
     return result;
+  }
+
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
   }
 
   @Override

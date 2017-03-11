@@ -58,7 +58,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     CallGraph CG = builder.makeCallGraph(options);
 
 //    CAstCallGraphUtil.AVOID_DUMP = false;
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
     
     verifyGraphAssertions(CG, assertionsForArgs);
   }

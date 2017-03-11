@@ -44,6 +44,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -206,9 +207,9 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   public static CallGraph makeHTMLCG(URL url, Function<Void, JSSourceExtractor> fExtractor) throws IOException, IllegalArgumentException, CancelException, WalaException {
-    PropagationCallGraphBuilder b = makeHTMLCGBuilder(url, fExtractor);
+    SSAPropagationCallGraphBuilder b = makeHTMLCGBuilder(url, fExtractor);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b.getPointerAnalysis(), CG);
+    dumpCG(b.getCFAContextInterpreter(), b.getPointerAnalysis(), CG);
     return CG;
   }
 

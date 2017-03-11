@@ -34,8 +34,10 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCallGraphUtil {
@@ -120,7 +122,7 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  public static void dumpCG(PointerAnalysis<InstanceKey> PA, CallGraph CG) {
+  public static void dumpCG(SSAContextInterpreter interp, PointerAnalysis<InstanceKey> PA, CallGraph CG) {
     if (AVOID_DUMP)
       return;
     for (Iterator x = CG.iterator(); x.hasNext();) {
@@ -136,7 +138,7 @@ public class CAstCallGraphUtil {
       }
       System.err.println("]");
       System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());
-      IR ir = N.getIR();
+      IRView ir = interp.getIRView(N);
       if (ir != null) {
         System.err.println(ir);
       } else {

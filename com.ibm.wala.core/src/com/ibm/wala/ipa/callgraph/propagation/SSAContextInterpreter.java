@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
@@ -27,6 +28,8 @@ public interface SSAContextInterpreter extends RTAContextInterpreter {
    * @return the IR that models the method context, or null if it's an unmodelled native method
    */
   public IR getIR(CGNode node);
+
+  public IRView getIRView(CGNode node);
 
   /**
    * @return DefUse for the IR that models the method context, or null if it's an unmodelled native method

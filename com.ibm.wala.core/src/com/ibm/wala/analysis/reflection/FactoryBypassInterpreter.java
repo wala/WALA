@@ -45,6 +45,7 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
@@ -93,6 +94,11 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return cache.getIR(m, node.getContext());
+  }
+
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
   }
 
   private Set<TypeReference> getTypesForContext(Context context) {

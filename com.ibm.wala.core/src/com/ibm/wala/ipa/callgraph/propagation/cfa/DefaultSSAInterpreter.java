@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DefaultRTAInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
@@ -55,6 +56,12 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
   @Override
   public IR getIR(CGNode node) {
     return getCFAInterpreter(node).getIR(node);
+  }
+
+  
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
   }
 
   @Override
