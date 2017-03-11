@@ -3164,6 +3164,7 @@ public class DexIMethod implements IBytecodeMethod {
 		return instructions().getPcFromIndex(index);
 	}
 
+	@Override
 	public int getInstructionIndex(int bytecodeindex) {
 		return instructions().getIndexFromPc(bytecodeindex);
 	}

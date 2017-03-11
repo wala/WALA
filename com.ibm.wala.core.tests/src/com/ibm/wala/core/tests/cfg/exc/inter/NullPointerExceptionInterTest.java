@@ -27,6 +27,7 @@ import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -36,6 +37,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
@@ -65,12 +67,12 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
   @BeforeClass
   public static void beforeClass() throws Exception {
-    cache = new AnalysisCache();
+    cache = new AnalysisCacheImpl();
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
         (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), NullPointerExceptionInterTest.class.getClassLoader());
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
     try {
-      cha = ClassHierarchy.make(scope, factory);
+      cha = ClassHierarchyFactory.make(scope, factory);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lcfg/exc/inter/CallFieldAccess");
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
       

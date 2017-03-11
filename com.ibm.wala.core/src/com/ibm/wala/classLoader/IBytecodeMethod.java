@@ -29,6 +29,11 @@ public interface IBytecodeMethod extends IMethod {
   int getBytecodeIndex(int i) throws InvalidClassFileException;
 
   /**
+   * @return the instuction index i in the getInstructions() array corresponding to the bytecode index bcIndex
+   */
+  int getInstructionIndex(int bcIndex) throws InvalidClassFileException;
+
+  /**
    * @return the Shrike representation of the exception handlers
    */
   ExceptionHandler[][] getHandlers() throws InvalidClassFileException;

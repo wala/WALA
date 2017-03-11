@@ -31,10 +31,11 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
@@ -68,7 +69,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
-      cha = ClassHierarchy.make(scope, factory);
+      cha = ClassHierarchyFactory.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }
@@ -90,7 +91,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -124,7 +125,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -158,7 +159,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -191,7 +192,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testDynamicParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -226,7 +227,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -260,7 +261,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -294,7 +295,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -330,7 +331,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -367,7 +368,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -403,7 +404,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -439,7 +440,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -476,7 +477,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -513,7 +514,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -549,7 +550,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -585,7 +586,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -619,7 +620,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -653,7 +654,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);
@@ -689,7 +690,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
     IR ir = cache.getIR(m);
     final ISSABasicBlock returnNode = returnNode(ir.getControlFlowGraph());
     final int returnVal = returnVal(returnNode);

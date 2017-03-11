@@ -26,9 +26,12 @@ import com.ibm.wala.shrikeCT.InnerClassesReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
+import com.ibm.wala.shrikeCT.TypeAnnotationsReader;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.types.annotations.TypeAnnotation;
 import com.ibm.wala.types.generics.ClassSignature;
 import com.ibm.wala.types.generics.TypeSignature;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -90,6 +93,11 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         annotations.addAll(getRuntimeVisibleAnnotations(i));
         annotations = annotations.isEmpty() ? null : annotations;
         
+        Collection<TypeAnnotation> typeAnnotations = HashSetFactory.make();
+        typeAnnotations.addAll(getRuntimeInvisibleTypeAnnotations(i));
+        typeAnnotations.addAll(getRuntimeVisibleTypeAnnotations(i));
+        typeAnnotations = typeAnnotations.isEmpty() ? null : typeAnnotations;
+        
         TypeSignature sig = null;
         SignatureReader signatureReader = getSignatureReader(i);
         if (signatureReader != null) {
@@ -100,9 +108,9 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         }
         
         if ((accessFlags & ClassConstants.ACC_STATIC) == 0) {
-          addFieldToList(instanceList, name, b, accessFlags, annotations, sig);
+          addFieldToList(instanceList, name, b, accessFlags, annotations, typeAnnotations, sig);
         } else {
-          addFieldToList(staticList, name, b, accessFlags, annotations, sig);
+          addFieldToList(staticList, name, b, accessFlags, annotations, typeAnnotations, sig);
         }
       }
       instanceFields = new IField[instanceList.size()];
@@ -269,6 +277,29 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return AnnotationsReader.getReaderForAnnotation(runtimeInvisable ? AnnotationType.RuntimeInvisibleAnnotations
         : AnnotationType.RuntimeVisibleAnnotations, attrs);
   }
+  
+  public Collection<TypeAnnotation> getTypeAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
+    TypeAnnotationsReader r = getTypeAnnotationsReader(runtimeInvisible);
+    final ClassLoaderReference clRef = getClassLoader().getReference();
+    return TypeAnnotation.getTypeAnnotationsFromReader(
+        r,
+        TypeAnnotation.targetConverterAtClassFile(clRef),
+        clRef
+    );
+  }
+
+  private TypeAnnotationsReader getTypeAnnotationsReader(boolean runtimeInvisible) throws InvalidClassFileException {
+    ClassReader r = reader.get();
+    ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
+    r.initClassAttributeIterator(attrs);
+    
+    return TypeAnnotationsReader.getReaderForAnnotationAtClassfile(
+        runtimeInvisible ? TypeAnnotationsReader.AnnotationType.RuntimeInvisibleTypeAnnotations
+                         : TypeAnnotationsReader.AnnotationType.RuntimeVisibleTypeAnnotations,
+        attrs,
+        getSignatureReader(-1)
+    );
+  }
 
   interface GetReader<T> {
     T getReader(ClassReader.AttrIterator iter) throws InvalidClassFileException;
@@ -345,6 +376,43 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   protected Collection<Annotation> getFieldAnnotations(int fieldIndex, boolean runtimeInvisible) throws InvalidClassFileException {
     AnnotationsReader r = getFieldAnnotationsReader(runtimeInvisible, fieldIndex);
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
+  }
+  
+  
+  
+  private TypeAnnotationsReader getFieldTypeAnnotationsReader(boolean runtimeInvisible, int fieldIndex) throws InvalidClassFileException {
+    ClassReader.AttrIterator iter = new AttrIterator();
+    reader.get().initFieldAttributeIterator(fieldIndex, iter);
+
+    return TypeAnnotationsReader.getReaderForAnnotationAtFieldInfo(
+        runtimeInvisible ? TypeAnnotationsReader.AnnotationType.RuntimeInvisibleTypeAnnotations
+                         : TypeAnnotationsReader.AnnotationType.RuntimeVisibleTypeAnnotations,
+        iter
+    );
+    
+  }
+  /**
+   * read the runtime-invisible type annotations from the class file
+   */
+  public Collection<TypeAnnotation> getRuntimeInvisibleTypeAnnotations(int fieldIndex) throws InvalidClassFileException {
+    return getFieldTypeAnnotations(fieldIndex, true);
+  }
+
+  /**
+   * read the runtime-visible type annotations from the class file
+   */
+  public Collection<TypeAnnotation> getRuntimeVisibleTypeAnnotations(int fieldIndex) throws InvalidClassFileException {
+    return getFieldTypeAnnotations(fieldIndex, false);
+  }
+  
+  protected Collection<TypeAnnotation> getFieldTypeAnnotations(int fieldIndex, boolean runtimeInvisible) throws InvalidClassFileException {
+    TypeAnnotationsReader r = getFieldTypeAnnotationsReader(runtimeInvisible, fieldIndex);
+    final ClassLoaderReference clRef = getClassLoader().getReference();
+    return TypeAnnotation.getTypeAnnotationsFromReader(
+        r,
+        TypeAnnotation.targetConverterAtFieldInfo(clRef),
+        clRef
+    );
   }
 
   private SignatureReader getSignatureReader(int index) throws InvalidClassFileException {
