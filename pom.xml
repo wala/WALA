@@ -47,7 +47,10 @@
     <module>com.ibm.wala.cast.js.test.data</module>
     <module>com.ibm.wala.cast.js.rhino</module>
     <module>com.ibm.wala.cast.js.rhino.test</module>
-    
+
+    <module>com.ibm.wala.cast.js.nodejs</module>
+    <module>com.ibm.wala.cast.js.nodejs.test</module>
+
     <module>com.ibm.wala.ide.jsdt</module>
     <module>com.ibm.wala.ide.jsdt.tests</module>
     

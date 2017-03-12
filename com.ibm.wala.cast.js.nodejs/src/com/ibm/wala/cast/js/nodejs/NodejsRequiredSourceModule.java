@@ -13,8 +13,9 @@ package com.ibm.wala.cast.js.nodejs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +27,7 @@ import org.apache.commons.io.IOUtils;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.Streams;
 
 /**
  * This class is intended to be used whenever a JavaScript module is dynamically
@@ -109,17 +111,20 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	public String getClassName() {
 		return className;
 	}
-	
+
+	 @Override
+	  public String getName() {
+	    return className;
+	  }
+
 	private void loadWrapperSources() throws IOException {
 		MODULE_WRAPPER_SOURCE = loadWrapperSource(MODULE_WRAPPER_FILENAME);
 		JSON_WRAPPER_SOURCE = loadWrapperSource(JSON_WRAPPER_FILENAME);
 	}
 	
 	private String loadWrapperSource(String filename) throws IOException {
-		URL url = NodejsRequiredSourceModule.class.getClassLoader().getResource(filename);
-		Path wrapperPath = Paths.get(url.getPath());
-		byte[] wrapperSourceBin = Files.readAllBytes(wrapperPath);
-		return new String(wrapperSourceBin, Charset.defaultCharset());
+		InputStream url = NodejsRequiredSourceModule.class.getClassLoader().getResourceAsStream(filename);
+	  return new String(Streams.inputStream2ByteArray(url));
 	}
 
 	/**

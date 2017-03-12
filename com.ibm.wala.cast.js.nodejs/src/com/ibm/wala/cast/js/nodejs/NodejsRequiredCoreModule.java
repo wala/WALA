@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.nodejs;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.io.TemporaryFile;
 
 /**
  * @author Brian Pfretzschner <brian.pfretzschner@gmail.com>
@@ -41,14 +43,17 @@ public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
 			"_http_server", "_linklist", "_stream_duplex", "_stream_passthrough", "_stream_readable",
 			"_stream_transform", "_stream_writable", "_tls_common", "_tls_legacy", "_tls_wrap"));
 	
-	private final static File CORE_MODULES_FOLDER = new File(NodejsRequiredCoreModule.class.getClassLoader().getResource("core-modules").getPath());
-
 	protected NodejsRequiredCoreModule(File f, SourceFileModule clonedFrom) throws IOException {
 		super(FilenameUtils.getBaseName(f.getName()), f, clonedFrom);
 	}
 
+	private static InputStream getModule(String name) {
+	  return NodejsRequiredCoreModule.class.getClassLoader().getResourceAsStream("core-modules/" + name + ".js");
+
+	}
 	public static NodejsRequiredCoreModule make(String name) throws IOException {
-		File file = new File(CORE_MODULES_FOLDER, name+".js");
+		File file = new File(System.getProperty("java.io.tmpdir"), name+".js");
+		TemporaryFile.streamToFile(file, getModule(name));
 		SourceFileModule sourceFileModule = CAstCallGraphUtil.makeSourceModule(file.toURI().toURL(), file.getName());
 		return new NodejsRequiredCoreModule(file, sourceFileModule);
 	}
