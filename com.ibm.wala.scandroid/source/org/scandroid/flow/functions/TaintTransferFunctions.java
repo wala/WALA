@@ -136,8 +136,8 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			PointerAnalysis<InstanceKey> pa, boolean taintStaticFields) {
 		this.domain = domain;
 		this.pa = pa;
-		this.globalId = new GlobalIdentityFunction<E>(domain);
-		this.callToReturn = new CallToReturnFunction<E>(domain);
+		this.globalId = new GlobalIdentityFunction<>(domain);
+		this.callToReturn = new CallToReturnFunction<>(domain);
 		this.callFlowFunctions = CacheBuilder.newBuilder().maximumSize(10000)
 				.expireAfterWrite(10, TimeUnit.MINUTES)
 				.build(new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
@@ -163,7 +163,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	public IUnaryFlowFunction getCallFlowFunction(BasicBlockInContext<E> src,
 			BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
 		try {
-			return callFlowFunctions.get(new BlockPair<E>(src, dest));
+			return callFlowFunctions.get(new BlockPair<>(src, dest));
 		} catch (ExecutionException e) {
 			
 			throw new RuntimeException(e);
@@ -184,7 +184,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			// function
 			final int numParams = ((SSAInvokeInstruction) srcInst)
 					.getNumberOfParameters();
-			List<CodeElement> actualParams = new ArrayList<CodeElement>(numParams);
+			List<CodeElement> actualParams = new ArrayList<>(numParams);
 			for (int i = 0; i < numParams; i++) {
 				actualParams.add(i, new LocalElement(srcInst.getUse(i)));
 			}
@@ -193,7 +193,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			// GlobalIdentityFunction<E>(domain),
 			// new CallFlowFunction<E>(domain, actualParams)));
 			return union(globalId,
-					new CallFlowFunction<E>(domain, actualParams));
+					new CallFlowFunction<>(domain, actualParams));
 		} else {
 			throw new RuntimeException("src block not an invoke instruction");
 		}
@@ -228,7 +228,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	public IUnaryFlowFunction getNormalFlowFunction(BasicBlockInContext<E> src,
 			BasicBlockInContext<E> dest) {
 		try {
-			return normalFlowFunctions.get(new BlockPair<E>(src, dest));
+			return normalFlowFunctions.get(new BlockPair<>(src, dest));
 		} catch (ExecutionException e) {
 			
 			throw new RuntimeException(e);
@@ -237,7 +237,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 
 	private IUnaryFlowFunction makeNormalFlowFunction(
 			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		List<UseDefPair> pairs = new ArrayList<UseDefPair>();
+		List<UseDefPair> pairs = new ArrayList<>();
 
 		// we first try to process the destination instruction
 		SSAInstruction inst = dest.getLastInstruction();
@@ -268,7 +268,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 
 		// globals may be redefined here, so we can't union with the globals ID
 		// flow function, as we often do elsewhere.
-		final PairBasedFlowFunction<E> flowFunction = new PairBasedFlowFunction<E>(
+		final PairBasedFlowFunction<E> flowFunction = new PairBasedFlowFunction<>(
 				domain, pairs);
 
 		// special case for static field gets so we can introduce new taints for
@@ -292,11 +292,11 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			if (field.isFinal()) {
 				continue;
 			}
-			final StaticFieldFlow<E> taintSource = new StaticFieldFlow<E>(dest,
+			final StaticFieldFlow<E> taintSource = new StaticFieldFlow<>(dest,
 					field, true);
 			elts.add(new DomainElement(ce, taintSource));
 		}
-		IUnaryFlowFunction newTaints = new ConstantFlowFunction<E>(domain, elts);
+		IUnaryFlowFunction newTaints = new ConstantFlowFunction<>(domain, elts);
 		return compose(flowFunction, newTaints);
 	}
 
@@ -351,7 +351,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		// we have a return value, so we need to map any return elements onto
 		// the local element corresponding to the invoke's def
 		final IUnaryFlowFunction flowToDest = union(globalId,
-				new ReturnFlowFunction<E>(domain, invoke.getDef()));
+				new ReturnFlowFunction<>(domain, invoke.getDef()));
 
 		// return new TracingFlowFunction<E>(domain, compose(flowFromDest,
 		// flowToDest));

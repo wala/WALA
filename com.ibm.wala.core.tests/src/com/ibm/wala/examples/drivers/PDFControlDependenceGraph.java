@@ -109,7 +109,7 @@ public class PDFControlDependenceGraph {
       }
 
       System.err.println(ir.toString());
-      ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(ir.getControlFlowGraph());
+      ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<>(ir.getControlFlowGraph());
 
       Properties wp = null;
       try {

@@ -151,7 +151,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
     private final CAstSourcePositionRecorder pos = new CAstSourcePositionRecorder();
     private final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder(pos);
     private final Map<CAstNode, Collection<CAstEntity>> scopedEntities = HashMapFactory.make();
-    private final Vector<CAstNode> initializers = new Vector<CAstNode>();
+    private final Vector<CAstNode> initializers = new Vector<>();
 
     protected FunctionContext(C parent, T s) {
       super(parent);
@@ -262,7 +262,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
      * helps to handle cases like x.y.f(), where we would like to store x.y in
      * baseVar, but not x when we recurse.
      */
-    private final Set<T> baseFor = new HashSet<T>();
+    private final Set<T> baseFor = new HashSet<>();
 
     private int operationIndex;
     

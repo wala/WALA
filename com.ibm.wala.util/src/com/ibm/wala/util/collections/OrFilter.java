@@ -21,7 +21,7 @@ public class OrFilter<T> extends Predicate<T> {
     if (a == null || b == null) {
       throw new IllegalArgumentException("cannot compose null filter");
     }
-    return new OrFilter<T>(a, b);
+    return new OrFilter<>(a, b);
   }
 
   private final Predicate<T> a;

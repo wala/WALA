@@ -69,7 +69,7 @@ public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
   @Override
   protected Set<V> createSet() {
-    return new ArraySet<V>();
+    return new ArraySet<>();
   }
 
   @Override
@@ -83,6 +83,6 @@ public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
   }
   
   public static <K,V> ArraySetMultiMap<K, V> make() {
-    return new ArraySetMultiMap<K,V>();
+    return new ArraySetMultiMap<>();
   }
 }

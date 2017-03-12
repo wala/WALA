@@ -27,12 +27,12 @@ public abstract class DefaultFixedPointSolver<T extends IVariable<?>> extends Ab
    */
   public DefaultFixedPointSolver(int expectedOut) {
     super();
-    graph = new DefaultFixedPointSystem<T>(expectedOut);
+    graph = new DefaultFixedPointSystem<>(expectedOut);
   }
   
   public DefaultFixedPointSolver() {
     super();
-    graph = new DefaultFixedPointSystem<T>();
+    graph = new DefaultFixedPointSystem<>();
   }
   
   @Override

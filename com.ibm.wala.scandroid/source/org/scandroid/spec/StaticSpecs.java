@@ -103,7 +103,7 @@ public class StaticSpecs implements ISpecs {
 	 * @return
 	 */
 	private List<IField> collectFields() {
-		List<IField> fields = new ArrayList<IField>();
+		List<IField> fields = new ArrayList<>();
 		Iterator<IClass> itr = cha.iterator();
 		while (itr.hasNext()) {
 			IClass cls = itr.next();
@@ -121,7 +121,7 @@ public class StaticSpecs implements ISpecs {
 	 */
 	@Override
 	public SinkSpec[] getSinkSpecs() {		
-		List<SinkSpec> specs = new ArrayList<SinkSpec>();
+		List<SinkSpec> specs = new ArrayList<>();
 		Collection<IMethod> methods = cha.getPossibleTargets(StringStuff.makeMethodReference(methodSignature));
 		for (IField field : fields) {
 			if (!field.isFinal()) {

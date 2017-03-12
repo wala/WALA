@@ -43,7 +43,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     if (!G.containsNode(N)) {
       throw new IllegalArgumentException("source node not in graph: " + N);
     }
-    init(G, new NonNullSingletonIterator<T>(N));
+    init(G, new NonNullSingletonIterator<>(N));
   }
 
   /**

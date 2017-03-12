@@ -128,7 +128,7 @@ public abstract class Predicate<T> {
     if (src == null) {
       throw new IllegalArgumentException("src == null");
     }
-    ArrayList<T> result = new ArrayList<T>();
+    ArrayList<T> result = new ArrayList<>();
     for (; src.hasNext();) {
       T curElem = src.next();
       if (pred.test(curElem))

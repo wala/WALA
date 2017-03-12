@@ -61,12 +61,12 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 
 public class IFDSTaintDomain <E extends ISSABasicBlock>
   implements TabulationDomain<DomainElement, BasicBlockInContext<E>> {
-    private Map<DomainElement, Integer> table = new HashMap<DomainElement, Integer>();
-    private ArrayList<DomainElement> objects = new ArrayList<DomainElement>();
+    private Map<DomainElement, Integer> table = new HashMap<>();
+    private ArrayList<DomainElement> objects = new ArrayList<>();
 
-    private Map<CodeElement, Set<DomainElement>> elementIndex = new HashMap<CodeElement, Set<DomainElement>>();
+    private Map<CodeElement, Set<DomainElement>> elementIndex = new HashMap<>();
 
-    Set<DomainElement> emptySet = new HashSet<DomainElement>();
+    Set<DomainElement> emptySet = new HashSet<>();
     public Set<DomainElement> getPossibleElements(CodeElement codeElement)
     {
         Set<DomainElement> elts = elementIndex.get(codeElement);
@@ -80,7 +80,7 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
         Set<DomainElement> elements = elementIndex.get(e.codeElement);
         if(elements == null)
         {
-            elements = new HashSet<DomainElement>();
+            elements = new HashSet<>();
             elementIndex.put(e.codeElement, elements);
         }
         elements.add(e);

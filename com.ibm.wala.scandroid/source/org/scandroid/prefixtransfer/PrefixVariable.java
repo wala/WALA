@@ -57,8 +57,8 @@ import com.ibm.wala.fixpoint.AbstractVariable;
 public class PrefixVariable extends AbstractVariable<PrefixVariable>{
 
     // map instance keys to their prefixes
-    public HashMap<Integer, String> knownPrefixes = new HashMap<Integer,String>();
-    public HashSet<Integer> fullPrefixKnown = new HashSet<Integer>();
+    public HashMap<Integer, String> knownPrefixes = new HashMap<>();
+    public HashSet<Integer> fullPrefixKnown = new HashSet<>();
 
     // TODO: keep track of completely known strings (not just known by prefix)
     //  HashMap<Integer, String> knownStrings = new HashMap<Integer,String>();

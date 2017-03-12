@@ -114,7 +114,7 @@ public class ReuseParameters {
      */
     public void collectParameters(final Iterable<? extends Entrypoint> entrypoints) {
 //        int paramsToModel = firstParamSSA();
-        this.reuseParameters = new ArrayList<TypeName>();
+        this.reuseParameters = new ArrayList<>();
 
         for (final Entrypoint ep : entrypoints) {
             final int paramCount = ep.getNumberOfParameters();

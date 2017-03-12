@@ -136,7 +136,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
       check_target: for (int j = 0; j < ((String[]) assertionData[i][1]).length; j++) {
         Iterator srcs = (assertionData[i][0] instanceof String) ? getNodes(CG, (String) assertionData[i][0]).iterator()
-            : new NonNullSingletonIterator<CGNode>(CG.getFakeRootNode());
+            : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
         Assert.assertTrue("cannot find " + assertionData[i][0], srcs.hasNext());
 

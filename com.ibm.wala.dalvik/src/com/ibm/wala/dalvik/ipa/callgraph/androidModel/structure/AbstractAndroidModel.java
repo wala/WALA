@@ -99,7 +99,7 @@ public abstract class AbstractAndroidModel  {
         assert (start != null) : "The argument start was null";
         assert (end != null) : "The argument end was null";
 
-        List<TypeReference> returnTypes = new ArrayList<TypeReference>();
+        List<TypeReference> returnTypes = new ArrayList<>();
         for (Entrypoint ep : this.entryPoints) {
             if (ep instanceof AndroidEntryPoint) {
                 AndroidEntryPoint aep = (AndroidEntryPoint)ep;

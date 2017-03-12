@@ -38,7 +38,7 @@ public class InterfaceAnalyzer {
     int lastMUID;
   }
 
-  final static HashMap<String, TypeStats> typeStats = new HashMap<String, TypeStats>();
+  final static HashMap<String, TypeStats> typeStats = new HashMap<>();
 
   public static void main(String[] args) throws Exception {
     OfflineInstrumenter instrumenter = new OfflineInstrumenter(true);

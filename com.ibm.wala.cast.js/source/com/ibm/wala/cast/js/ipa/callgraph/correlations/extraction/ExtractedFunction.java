@@ -96,7 +96,7 @@ class ExtractedFunction implements CAstEntity {
 	
 	private void computeParms() {
 		if(this.parms == null) {
-		  ArrayList<String> parms = new ArrayList<String>();
+		  ArrayList<String> parms = new ArrayList<>();
 		  parms.add(name);
 		  parms.add("this");
 		  parms.addAll(pos.getParameters());

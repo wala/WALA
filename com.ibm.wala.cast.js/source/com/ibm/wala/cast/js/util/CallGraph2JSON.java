@@ -160,7 +160,7 @@ public class CallGraph2JSON {
 	
 	private static String joinWith(Iterable<String> lst, String sep) {
 	  StringBuffer res = new StringBuffer();
-	  ArrayList<String> strings = new ArrayList<String>();
+	  ArrayList<String> strings = new ArrayList<>();
 	  for(String s : lst)
 	    if(s != null)
 	      strings.add(s);

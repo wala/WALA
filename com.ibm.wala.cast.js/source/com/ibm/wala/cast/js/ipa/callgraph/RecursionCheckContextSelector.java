@@ -65,7 +65,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
     if (!recursionPossible(callee)) {
       return false;
     }
-    LinkedList<Pair<Context,Collection<IMethod>>> worklist = new LinkedList<Pair<Context,Collection<IMethod>>>();
+    LinkedList<Pair<Context,Collection<IMethod>>> worklist = new LinkedList<>();
     worklist.push(Pair.make(baseContext, (Collection<IMethod>)Collections.singleton(callee)));
     while (!worklist.isEmpty()) {
       Pair<Context, Collection<IMethod>> p = worklist.removeFirst();
@@ -115,7 +115,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
       System.err.println("context " + baseContext);
       return false;
     }    
-    Collection<IMethod> newEncountered = new ArrayList<IMethod>(curEncountered);
+    Collection<IMethod> newEncountered = new ArrayList<>(curEncountered);
     newEncountered.add(method);
     worklist.add(Pair.make(callerNode.getContext(),newEncountered));
     return true;

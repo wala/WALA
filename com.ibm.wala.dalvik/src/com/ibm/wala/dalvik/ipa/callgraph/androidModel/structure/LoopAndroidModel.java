@@ -112,7 +112,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
         paramManager.scopeDown(true);
 
         // Top-Half of Phi-Handling
-        outerStartingPhis = new HashMap<TypeReference, SSAValue>();
+        outerStartingPhis = new HashMap<>();
         List<TypeReference> outerPhisNeeded = returnTypesBetween(ExecutionOrder.START_OF_LOOP,
                 ExecutionOrder.AFTER_LOOP);
         
@@ -147,7 +147,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
         logger.info("Setting block-inner Phis");
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final SSAValue oldPhi = outerStartingPhis.get(phiType);
-            final List<SSAValue> forPhi = new ArrayList<SSAValue>(2);
+            final List<SSAValue> forPhi = new ArrayList<>(2);
             forPhi.add(paramManager.getSuper(oldPhi.key));
             forPhi.add(paramManager.getCurrent(oldPhi.key));
             

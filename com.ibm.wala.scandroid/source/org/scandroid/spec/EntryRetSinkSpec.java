@@ -67,9 +67,9 @@ public class EntryRetSinkSpec extends SinkSpec {
 	@Override
 	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 			BasicBlockInContext<E> block) {
-		HashSet<FlowType<E>> flowSet = new HashSet<FlowType<E>>();
+		HashSet<FlowType<E>> flowSet = new HashSet<>();
 		flowSet.clear();
-		flowSet.add(new ReturnFlow<E>(block, false));
+		flowSet.add(new ReturnFlow<>(block, false));
 		return flowSet;
 	}
 

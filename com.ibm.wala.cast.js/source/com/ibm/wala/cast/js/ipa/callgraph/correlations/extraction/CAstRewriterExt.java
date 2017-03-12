@@ -102,7 +102,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
 		}
 	}
 	private final HashSet<Entity> entities_to_add = HashSetFactory.make();
-	private final Stack<CAstEntity> entities = new Stack<CAstEntity>();
+	private final Stack<CAstEntity> entities = new Stack<>();
 	
 	public CAstNode addNode(CAstNode node, CAstControlFlowMap flow) {
 	  Set<CAstNode> nodes = extra_nodes.get(flow);

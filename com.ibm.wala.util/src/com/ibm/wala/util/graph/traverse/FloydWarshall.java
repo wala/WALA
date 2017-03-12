@@ -95,7 +95,7 @@ public class FloydWarshall<T> {
   }
   
   public static <T> int[][] shortestPathLengths(NumberedGraph<T> G) {
-    return new FloydWarshall<T>(G).allPairsShortestPaths();
+    return new FloydWarshall<>(G).allPairsShortestPaths();
   }
   
   public static <T> GetPath<T> allPairsShortestPath(final NumberedGraph<T> G) {
@@ -144,7 +144,7 @@ public class FloydWarshall<T> {
                 return Collections.emptyList();
               } else {
                 T in = G.getNode(intermediate);
-                List<T> result = new LinkedList<T>(getPath(from, in));
+                List<T> result = new LinkedList<>(getPath(from, in));
                 result.add(in);
                 result.addAll(getPath(in, to));
                 return result;
@@ -174,7 +174,7 @@ public class FloydWarshall<T> {
           
           @Override
          public String toString() {
-            List<Set<List<T>>> x = new ArrayList<Set<List<T>>>();
+            List<Set<List<T>>> x = new ArrayList<>();
             for(int i = 0; i <= G.getMaxNumber(); i++) {
               for(int j = 0; j <= G.getMaxNumber(); j++) {
                 try {
@@ -199,7 +199,7 @@ public class FloydWarshall<T> {
                List<T> none = Collections.emptyList();
                return Collections.singleton(none);
              } else {
-               final Set<List<T>> result = new HashSet<List<T>>();
+               final Set<List<T>> result = new HashSet<>();
               
                intermediate.foreach(new IntSetAction() {
                 @Override
@@ -207,7 +207,7 @@ public class FloydWarshall<T> {
                   T in = G.getNode(x);
                   for(List<T> pre : getPaths(from, in)) {
                     for(List<T> post : getPaths(in, to)) {
-                      List<T> path = new LinkedList<T>(pre);
+                      List<T> path = new LinkedList<>(pre);
                       path.add(in);
                       path.addAll(post);
                       result.add(path);

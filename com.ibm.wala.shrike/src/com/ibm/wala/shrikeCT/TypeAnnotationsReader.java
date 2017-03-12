@@ -191,7 +191,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     final int path_length = cr.getUnsignedByte(type_path_offset);
     checkSize(type_path_offset + 1, 2 * path_length);
     
-    ArrayList<Pair<TypePathKind, Integer>> type_path = new ArrayList<Pair<TypePathKind, Integer>>(path_length);
+    ArrayList<Pair<TypePathKind, Integer>> type_path = new ArrayList<>(path_length);
     int current_path_element = type_path_offset + 1;
     for (int i = 0; i < path_length; i++) {
       TypePathKind type_path_kind = TypePathKind.fromValue(cr.getUnsignedByte(current_path_element));

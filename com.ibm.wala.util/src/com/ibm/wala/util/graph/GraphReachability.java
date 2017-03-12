@@ -63,8 +63,8 @@ public class GraphReachability<T, S> {
       throw new IllegalArgumentException("g is null");
     }
     this.g = g;
-    Iterator<S> i = new FilterIterator<S>(g.iterator(), filter);
-    domain = new MutableMapping<S>((Iterator2Collection.toSet(i)).toArray());
+    Iterator<S> i = new FilterIterator<>(g.iterator(), filter);
+    domain = new MutableMapping<>((Iterator2Collection.toSet(i)).toArray());
   }
 
   /**
@@ -80,7 +80,7 @@ public class GraphReachability<T, S> {
     if (v.getValue() == null) {
       return OrdinalSet.empty();
     } else {
-      return new OrdinalSet<S>(v.getValue(), domain);
+      return new OrdinalSet<>(v.getValue(), domain);
     }
   }
 
@@ -138,8 +138,8 @@ public class GraphReachability<T, S> {
       }
     };
 
-    BitVectorFramework<T, S> f = new BitVectorFramework<T, S>(GraphInverter.invert(g), functions, domain);
-    solver = new BitVectorSolver<T>(f);
+    BitVectorFramework<T, S> f = new BitVectorFramework<>(GraphInverter.invert(g), functions, domain);
+    solver = new BitVectorSolver<>(f);
     return solver.solve(monitor);
   }
 

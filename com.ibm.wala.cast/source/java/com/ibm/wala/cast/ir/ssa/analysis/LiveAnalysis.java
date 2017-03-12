@@ -209,7 +209,7 @@ public class LiveAnalysis {
     /**
      * Create the solver
      */
-    final BitVectorSolver<ISSABasicBlock> S = new BitVectorSolver<ISSABasicBlock>(new IKilldallFramework<ISSABasicBlock, BitVectorVariable>() {
+    final BitVectorSolver<ISSABasicBlock> S = new BitVectorSolver<>(new IKilldallFramework<ISSABasicBlock, BitVectorVariable>() {
       private final Graph<ISSABasicBlock> G = GraphInverter.invert(cfg);
 
       @Override

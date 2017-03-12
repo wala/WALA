@@ -90,7 +90,7 @@ public class EntryPoints {
     private LinkedList<Entrypoint> entries;
 
     public void listenerEntryPoints(ClassHierarchy cha, AndroidAnalysisContext loader) {
-        ArrayList<MethodReference> entryPointMRs = new ArrayList<MethodReference>();
+        ArrayList<MethodReference> entryPointMRs = new ArrayList<>();
 
         // onLocation
         entryPointMRs.add(StringStuff.makeMethodReference("android.location.LocationListener.onLocationChanged(Landroid/location/Location;)V"));
@@ -109,7 +109,7 @@ public class EntryPoints {
     }
 
     public static List<Entrypoint> defaultEntryPoints(ClassHierarchy cha) {
-    	List<Entrypoint> entries = new ArrayList<Entrypoint>();
+    	List<Entrypoint> entries = new ArrayList<>();
     	for (MethodNamePattern mnp:new AndroidSpecs().getEntrypointSpecs()) {
     		for (IMethod im: mnp.getPossibleTargets(cha)) {
     			

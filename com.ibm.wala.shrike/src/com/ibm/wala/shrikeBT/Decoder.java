@@ -949,7 +949,7 @@ public abstract class Decoder implements Constants {
   final public void decode() throws InvalidBytecodeException {
     byte[] stackWords = new byte[code.length * 2];
 
-    decoded = new ArrayList<Instruction>();
+    decoded = new ArrayList<>();
     decodedOffset = new int[code.length];
     for (int i = 0; i < decodedOffset.length; i++) {
       decodedOffset[i] = UNSEEN;

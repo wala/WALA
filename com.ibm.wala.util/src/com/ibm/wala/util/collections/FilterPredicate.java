@@ -19,7 +19,7 @@ import com.ibm.wala.util.Predicate;
 public class FilterPredicate<T> extends Predicate<T> {
   
   public static <T> FilterPredicate<T> toPredicate(Predicate<T> f) {
-    return new FilterPredicate<T>(f);
+    return new FilterPredicate<>(f);
   }
   
   private final Predicate<T> f;

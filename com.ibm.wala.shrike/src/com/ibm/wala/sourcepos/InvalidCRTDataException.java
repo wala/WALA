@@ -64,7 +64,7 @@ class InvalidCRTDataException extends Exception {
    */
   InvalidCRTDataException(String msg, Object... data) {
     super(msg);
-    this.data = new LinkedList<Object>();
+    this.data = new LinkedList<>();
     for (Object o : data)
       this.data.add(o);
   }

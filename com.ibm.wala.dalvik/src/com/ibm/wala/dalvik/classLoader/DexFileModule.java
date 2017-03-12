@@ -107,7 +107,7 @@ public class DexFileModule implements Module {
         }
 
         // create ModuleEntries from ClassDefItem
-        entries = new HashSet<ModuleEntry>();
+        entries = new HashSet<>();
 
         Section<ClassDefItem> cldeff = dexfile.ClassDefsSection;
         for (ClassDefItem cdefitems : cldeff.getItems()) {

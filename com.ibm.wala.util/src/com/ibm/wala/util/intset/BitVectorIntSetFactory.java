@@ -30,7 +30,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
       return new BitVectorIntSet();
     } else {
       // XXX not very efficient.
-      TreeSet<Integer> T = new TreeSet<Integer>();
+      TreeSet<Integer> T = new TreeSet<>();
       for (int i = 0; i < set.length; i++) {
         T.add(new Integer(set[i]));
       }

@@ -39,7 +39,7 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
     }
   }
 
-  final private HashMap<String, ClassInfo> contents = new HashMap<String, ClassInfo>();
+  final private HashMap<String, ClassInfo> contents = new HashMap<>();
 
   /**
    * Create an empty store.

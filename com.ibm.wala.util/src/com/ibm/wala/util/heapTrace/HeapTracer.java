@@ -51,12 +51,12 @@ public class HeapTracer {
     /**
      * Stack of instance objects discovered but not yet traced.
      */
-    private final Stack<Object> scalarWorkList = new Stack<Object>();
+    private final Stack<Object> scalarWorkList = new Stack<>();
 
     /**
      * Stack of array objects discovered but not yet traced.
      */
-    private final Stack<Object> arrayWorkList = new Stack<Object>();
+    private final Stack<Object> arrayWorkList = new Stack<>();
 
     /**
      * How many bytes do we assume the JVM wastes on each instance?
@@ -224,7 +224,7 @@ public class HeapTracer {
     public Result perform() throws ClassNotFoundException,
 	    IllegalArgumentException, IllegalAccessException {
 	Result result = new Result();
-	IdentityHashMap<Object, Object> objectsVisited = new IdentityHashMap<Object, Object>();
+	IdentityHashMap<Object, Object> objectsVisited = new IdentityHashMap<>();
 	if (traceStatics) {
 	    for (int i = 0; i < rootClasses.length; i++) {
 		Class<?> c = Class.forName(rootClasses[i]);
@@ -674,7 +674,7 @@ public class HeapTracer {
 	public String toString() {
 	    StringBuffer result = new StringBuffer();
 	    result.append("Totals: " + totalInstances + " " + totalSize + "\n");
-	    TreeSet<Object> sorted = new TreeSet<Object>(new SizeComparator());
+	    TreeSet<Object> sorted = new TreeSet<>(new SizeComparator());
 	    sorted.addAll(instanceCount.keySet());
 	    for (Iterator<Object> it = sorted.iterator(); it.hasNext();) {
 		Object key = it.next();
@@ -781,7 +781,7 @@ public class HeapTracer {
 	    result.append("Total instances: " + totalInstances + "\n");
 	    result.append("Total size(bytes): " + totalSize + "\n");
 
-	    TreeSet<Field> sortedDemo = new TreeSet<Field>(new SizeComparator());
+	    TreeSet<Field> sortedDemo = new TreeSet<>(new SizeComparator());
 	    sortedDemo.addAll(roots.keySet());
 	    for (Iterator<Field> it = sortedDemo.iterator(); it.hasNext();) {
 		Object root = it.next();

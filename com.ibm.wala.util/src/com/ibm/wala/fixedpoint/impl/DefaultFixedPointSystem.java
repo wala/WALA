@@ -61,7 +61,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
    */
   public DefaultFixedPointSystem(int expectedOut) {
     super();
-    graph = new SparseNumberedGraph<INodeWithNumber>(expectedOut);
+    graph = new SparseNumberedGraph<>(expectedOut);
   }
   
   /**
@@ -259,7 +259,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
 
   @Override
   public Iterator<T> getVariables() {
-    return new FilterIterator<T>(graph.iterator(), new Predicate<T>() {
+    return new FilterIterator<>(graph.iterator(), new Predicate<T>() {
       @Override public boolean test(T x) {
         return x instanceof IVariable;
       }

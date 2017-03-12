@@ -105,13 +105,13 @@ public class AppModelMethod {
 
     
 	//Maps a Type to variable name
-	private Map<TypeReference, Integer> typeToID = new HashMap<TypeReference, Integer> ();    
+	private Map<TypeReference, Integer> typeToID = new HashMap<> ();    
 	//innerclass dependencies
-	private Map<TypeReference, LinkedList<TypeReference>> icDependencies = new HashMap<TypeReference, LinkedList<TypeReference>> ();
+	private Map<TypeReference, LinkedList<TypeReference>> icDependencies = new HashMap<> ();
     //all callbacks to consider
-	private List<MethodParams> callBacks = new ArrayList<MethodParams>();
+	private List<MethodParams> callBacks = new ArrayList<>();
 	
-	private Map<TypeReference, TypeReference> aClassToTR = new HashMap<TypeReference, TypeReference> ();
+	private Map<TypeReference, TypeReference> aClassToTR = new HashMap<> ();
 	
 	private class MethodParams{
 		public IMethod im;
@@ -234,7 +234,7 @@ public class AppModelMethod {
 		String packageName = "L"+tr.getName().getPackage().toString()+"/";
 		String outerClassName;		
 		String innerClassName = tr.getName().getClassName().toString();
-		LinkedList<TypeReference> trLL = new LinkedList<TypeReference> ();
+		LinkedList<TypeReference> trLL = new LinkedList<> ();
 		trLL.push(tr);
 		int index = innerClassName.lastIndexOf("$");
 		while (index != -1) {
@@ -254,7 +254,7 @@ public class AppModelMethod {
 
         
     private void processTypeMap() {
-    	Set<Integer> createdIDs = new HashSet<Integer> ();    	
+    	Set<Integer> createdIDs = new HashSet<> ();    	
     	for (Entry<TypeReference, Integer> eSet:typeToID.entrySet()) {    		
     		Integer i = eSet.getValue();
     		if (createdIDs.contains(i))

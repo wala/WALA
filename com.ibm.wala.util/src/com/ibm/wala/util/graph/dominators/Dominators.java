@@ -79,9 +79,9 @@ public abstract class Dominators<T> {
 
   public static <T> Dominators<T> make(Graph<T> G, T root) {
     if (G instanceof NumberedGraph) {
-      return new NumberedDominators<T>((NumberedGraph<T>) G, root);
+      return new NumberedDominators<>((NumberedGraph<T>) G, root);
     } else {
-      return new GenericDominators<T>(G, root);
+      return new GenericDominators<>(G, root);
     }
   }
 
@@ -173,7 +173,7 @@ public abstract class Dominators<T> {
           if (N == root)
             return EmptyIterator.instance();
           else
-            return new NonNullSingletonIterator<T>(getIdom(N));
+            return new NonNullSingletonIterator<>(getIdom(N));
         }
 
         @Override

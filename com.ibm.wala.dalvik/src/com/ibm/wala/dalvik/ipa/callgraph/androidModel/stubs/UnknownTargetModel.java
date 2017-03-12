@@ -171,10 +171,10 @@ public class UnknownTargetModel  extends AndroidModel {
                 final TypeName[] othersA = miniModel.getDescriptor().getParameters();
                 final Set<TypeName> others;
                 if (othersA != null) {
-                    others = new HashSet<TypeName>(Arrays.asList(othersA));
+                    others = new HashSet<>(Arrays.asList(othersA));
                 } else {
                     
-                    others = new HashSet<TypeName>();
+                    others = new HashSet<>();
                 }
                 doMini = others.size() > 0;
                 others.addAll(Arrays.asList(externalModel.getDescriptor().getParameters()));

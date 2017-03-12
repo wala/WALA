@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
  */
 public class ReverseIterator<T> implements Iterator<T> {
 
-  final ArrayList<T> list = new ArrayList<T>();
+  final ArrayList<T> list = new ArrayList<>();
 
   int nextIndex;
 
@@ -57,7 +57,7 @@ public class ReverseIterator<T> implements Iterator<T> {
   }
 
   public static <T> Iterator<T> reverse(Iterator<T> it) {
-    return new ReverseIterator<T>(it);
+    return new ReverseIterator<>(it);
   }
 
 }

@@ -161,7 +161,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
   }
   
 	public static Collection<Object[]> generateData(String droidBenchRoot, final URI[] androidLibs, final File androidJavaJar, final String filter) {
-	  final List<Object[]> files = new LinkedList<Object[]>();
+	  final List<Object[]> files = new LinkedList<>();
 	  FileUtil.recurseFiles(new VoidFunction<File>() {
 	    @Override
 	    public void apply(File f) {

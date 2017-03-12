@@ -80,7 +80,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
       int hc = arg0.hashCode();
       Set<T> s = hcFreq.get(new Integer(hc));
       if (s == null) {
-        HashSet<T> h = new LinkedHashSet<T>(1);
+        HashSet<T> h = new LinkedHashSet<>(1);
         h.add(arg0);
         hcFreq.put(new Integer(hc), h);
       } else {

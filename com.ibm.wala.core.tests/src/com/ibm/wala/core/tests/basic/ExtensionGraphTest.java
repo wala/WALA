@@ -69,24 +69,24 @@ public class ExtensionGraphTest {
   @Test
   public void testAugment() {
     NumberedGraph<String> base = makeBaseGraph();
-    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<String>(base)));
+    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<>(base)));
 
-    NumberedGraph<String> x = new ExtensionGraph<String>(base);
+    NumberedGraph<String> x = new ExtensionGraph<>(base);
     augmentA(x);
-    Assert.assertEquals("base+A has 5 SCCs", 5, IteratorUtil.count(new SCCIterator<String>(x)));
-    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<String>(base)));
+    Assert.assertEquals("base+A has 5 SCCs", 5, IteratorUtil.count(new SCCIterator<>(x)));
+    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<>(base)));
 
-    NumberedGraph<String> y = new ExtensionGraph<String>(x);
+    NumberedGraph<String> y = new ExtensionGraph<>(x);
     augmentB(y);
-    Assert.assertEquals("base+A+B has 7 SCCs", 7, IteratorUtil.count(new SCCIterator<String>(y)));
-    Assert.assertEquals("base+A has 5 SCCs", 5, IteratorUtil.count(new SCCIterator<String>(x)));
-    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<String>(base)));
+    Assert.assertEquals("base+A+B has 7 SCCs", 7, IteratorUtil.count(new SCCIterator<>(y)));
+    Assert.assertEquals("base+A has 5 SCCs", 5, IteratorUtil.count(new SCCIterator<>(x)));
+    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<>(base)));
 
-    NumberedGraph<String> z = new ExtensionGraph<String>(y);
+    NumberedGraph<String> z = new ExtensionGraph<>(y);
     augmentC(z);
-    Assert.assertEquals("base+A+B+C has 3 SCCs", 3, IteratorUtil.count(new SCCIterator<String>(z)));
-    Assert.assertEquals("base+A+B has 7 SCCs", 7, IteratorUtil.count(new SCCIterator<String>(y)));
-    Assert.assertEquals("base+A has 5 SCCs", 5, IteratorUtil.count(new SCCIterator<String>(x)));
-    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<String>(base)));
+    Assert.assertEquals("base+A+B+C has 3 SCCs", 3, IteratorUtil.count(new SCCIterator<>(z)));
+    Assert.assertEquals("base+A+B has 7 SCCs", 7, IteratorUtil.count(new SCCIterator<>(y)));
+    Assert.assertEquals("base+A has 5 SCCs", 5, IteratorUtil.count(new SCCIterator<>(x)));
+    Assert.assertEquals("base has 8 SCCs", 8, IteratorUtil.count(new SCCIterator<>(base)));
   }
 }

@@ -78,14 +78,14 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    */
   private final Map<U, SparseNumberedEdgeManager<T>> edgeLabelToManager = HashMapFactory.make();
 
-  private final ArraySetMultiMap<T, U> nodeToPredLabels = new ArraySetMultiMap<T, U>();
+  private final ArraySetMultiMap<T, U> nodeToPredLabels = new ArraySetMultiMap<>();
 
-  private final ArraySetMultiMap<T, U> nodeToSuccLabels = new ArraySetMultiMap<T, U>();
+  private final ArraySetMultiMap<T, U> nodeToSuccLabels = new ArraySetMultiMap<>();
 
   private SparseNumberedEdgeManager<T> getManagerForLabel(U label) {
     SparseNumberedEdgeManager<T> ret = edgeLabelToManager.get(label);
     if (ret == null) {
-      ret = new SparseNumberedEdgeManager<T>(nodeManager);
+      ret = new SparseNumberedEdgeManager<>(nodeManager);
       edgeLabelToManager.put(label, ret);
     }
     return ret;

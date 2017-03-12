@@ -69,7 +69,7 @@ public class DominanceFrontiers<T> {
   private void analyze() {
     Graph<T> DT = dom.dominatorTree();
 
-    Iterator<T> XS = DFS.iterateFinishTime(DT, new NonNullSingletonIterator<T>(root));
+    Iterator<T> XS = DFS.iterateFinishTime(DT, new NonNullSingletonIterator<>(root));
     while (XS.hasNext()) {
       T X = XS.next();
       Set<T> DF_X = HashSetFactory.make();

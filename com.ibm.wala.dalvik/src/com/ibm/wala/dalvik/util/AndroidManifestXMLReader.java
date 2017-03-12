@@ -213,7 +213,7 @@ public class AndroidManifestXMLReader {
         private final ISubTags allowedSubTagsHolder;
         private final ParserItem item;
         private Set<Tag> allowedSubTags;    // Delay init
-        private static final Map<String, Tag> reverseMap = new HashMap<String, Tag>();// HashMapFactory.make(9);
+        private static final Map<String, Tag> reverseMap = new HashMap<>();// HashMapFactory.make(9);
         
         Tag (String tagName, ISubTags allowedSubTags, Set<Attr> relevant, Class<? extends ParserItem> item) {
             this.tagName = tagName;
@@ -361,21 +361,21 @@ public class AndroidManifestXMLReader {
      *  That is on the closing Tag or on the closing Tag of a parent: A Item does not remove its 
      *  own Tag from the Stack.
      */
-    private static final Stack<Tag> parserStack = new Stack<Tag>();
+    private static final Stack<Tag> parserStack = new Stack<>();
     
     /**
      *  Contains either Attributes of a child or the evaluation-result of a child-Tag.
      *
      *  The Item that consumes an Attribute has to pop it.
      */
-    private static final Map<HistoryKey, Stack<Object>> attributesHistory = new HashMap<HistoryKey, Stack<Object>>();  // No EnumMap possible :(
+    private static final Map<HistoryKey, Stack<Object>> attributesHistory = new HashMap<>();  // No EnumMap possible :(
 
     static {
         for (Attr attr : Attr.values()) {
-            attributesHistory.put(attr, new Stack<Object>());
+            attributesHistory.put(attr, new Stack<>());
         }
         for (Tag tag : Tag.values()) {
-            attributesHistory.put(tag, new Stack<Object>());
+            attributesHistory.put(tag, new Stack<>());
         }
     }
     
@@ -538,8 +538,8 @@ public class AndroidManifestXMLReader {
         @Override
         public void leave() {
             Set<Tag> allowedTags = EnumSet.copyOf(self.getAllowedSubTags());
-            Set<String> urls = new HashSet<String>();
-            Set<String> names = new HashSet<String>();
+            Set<String> urls = new HashSet<>();
+            Set<String> names = new HashSet<>();
             while (parserStack.peek() != self) {
                 Tag current = parserStack.pop();
                 if (allowedTags.contains(current)) {
@@ -610,7 +610,7 @@ public class AndroidManifestXMLReader {
         @Override
          public void leave() {
             final Set<Tag> allowedTags = self.getAllowedSubTags();
-            final Set<Intent> overrideTargets = new HashSet<Intent>(); 
+            final Set<Intent> overrideTargets = new HashSet<>(); 
 
             while (parserStack.peek() != self) {
                 Tag current = parserStack.pop();

@@ -82,7 +82,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
 
     public static AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
-    public static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
+    public static List<AndroidEntryPoint> ENTRIES = new ArrayList<>();
     /**
      * This is TRANSIENT!
      */
@@ -106,7 +106,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     private AndroidEntryPointManager() {}
 
     public static void reset() {
-        ENTRIES = new ArrayList<AndroidEntryPoint>();
+        ENTRIES = new ArrayList<>();
         MANAGER = new AndroidEntryPointManager();
     }
 
@@ -115,7 +115,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             throw new IllegalStateException("No entrypoints loaded yet.");
         }
         
-        final Set<TypeReference> ret = new HashSet<TypeReference>();
+        final Set<TypeReference> ret = new HashSet<>();
         for (final AndroidEntryPoint ep : ENTRIES) {
             final TypeReference epClass = ep.getMethod().getDeclaringClass().getReference();
             if (AndroidComponent.isAndroidComponent(epClass , ep.getClassHierarchy())) {
@@ -532,7 +532,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         }
     }
 
-    public static final Map<Intent, Intent> DEFAULT_INTENT_OVERRIDES = new HashMap<Intent, Intent>();
+    public static final Map<Intent, Intent> DEFAULT_INTENT_OVERRIDES = new HashMap<>();
     static {
         DEFAULT_INTENT_OVERRIDES.put(
                 new AndroidSettingFactory.ExternalIntent("Landroid/intent/action/DIAL"),

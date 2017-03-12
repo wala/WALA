@@ -22,10 +22,10 @@ import com.ibm.wala.util.intset.BitVector;
 public class Table<T> {
 
   // table is implemented as an ArrayList of rows. Each row is a SimpleVector<T>.
-  protected final ArrayList<SimpleVector<T>> rows = new ArrayList<SimpleVector<T>>();
+  protected final ArrayList<SimpleVector<T>> rows = new ArrayList<>();
 
   // SimpleVector<String> ... headings of columns
-  protected final SimpleVector<String> columnHeadings = new SimpleVector<String>();
+  protected final SimpleVector<String> columnHeadings = new SimpleVector<>();
 
   /**
    * create an empty table
@@ -136,7 +136,7 @@ public class Table<T> {
     if (p == null) {
       throw new IllegalArgumentException("null p " + p);
     }
-    SimpleVector<T> r = new SimpleVector<T>();
+    SimpleVector<T> r = new SimpleVector<>();
     rows.add(r);
     for (int i = 0; i < getNumberOfColumns(); i++) {
       r.set(i, p.get(getColumnHeading(i)));

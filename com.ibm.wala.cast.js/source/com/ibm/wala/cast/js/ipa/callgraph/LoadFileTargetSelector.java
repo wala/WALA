@@ -53,7 +53,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
     IMethod target = base.getCalleeTarget(caller, site, receiver);
     if (target != null && target.getReference().equals(loadFileFunRef)) {
 
-      Set<String> names = new HashSet<String>();
+      Set<String> names = new HashSet<>();
       SSAInstruction call = caller.getIR().getInstructions()[caller.getIR().getCallInstructionIndices(site).intIterator().next()];
       if (call.getNumberOfUses() > 1) {
         LocalPointerKey fileNameV = new LocalPointerKey(caller, call.getUse(1));

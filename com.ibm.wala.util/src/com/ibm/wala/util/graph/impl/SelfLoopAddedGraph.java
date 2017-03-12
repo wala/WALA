@@ -23,7 +23,7 @@ public class SelfLoopAddedGraph <T> extends AbstractGraph<T> {
 
   public SelfLoopAddedGraph(Graph<T> G) {
     nodes = G;
-    edges = new SelfLoopAddedEdgeManager<T>(G);
+    edges = new SelfLoopAddedEdgeManager<>(G);
   }
 
 }

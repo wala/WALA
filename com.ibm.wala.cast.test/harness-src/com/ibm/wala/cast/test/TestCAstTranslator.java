@@ -41,13 +41,13 @@ import junit.framework.Assert;
 public abstract class TestCAstTranslator extends WalaTestCase {
 
   protected static class TranslatorAssertions {
-    private final Set<String> classes = new HashSet<String>();
+    private final Set<String> classes = new HashSet<>();
 
-    private final Map<String, String> supers = new HashMap<String, String>();
+    private final Map<String, String> supers = new HashMap<>();
 
-    private final Set<Pair<String, String>> instanceFields = new HashSet<Pair<String, String>>();
+    private final Set<Pair<String, String>> instanceFields = new HashSet<>();
 
-    private final Set<Pair<String, String>> staticFields = new HashSet<Pair<String, String>>();
+    private final Set<Pair<String, String>> staticFields = new HashSet<>();
 
     private final Map<Pair<String, Object>, Object> instanceMethods = HashMapFactory.make();
 

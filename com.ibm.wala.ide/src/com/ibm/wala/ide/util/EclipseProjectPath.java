@@ -106,7 +106,7 @@ public abstract class EclipseProjectPath<E, P> {
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
-  protected final Map<ILoader, List<Module>> modules = new HashMap<ILoader, List<Module>>();
+  protected final Map<ILoader, List<Module>> modules = new HashMap<>();
 
   /**
    * Classpath entries that have already been resolved and added to the scope.
@@ -241,7 +241,7 @@ public abstract class EclipseProjectPath<E, P> {
     bundlesProcessed.add(bd.getName());
 
     // handle the classpath entries for bd
-    ArrayList<IClasspathEntry> l = new ArrayList<IClasspathEntry>();
+    ArrayList<IClasspathEntry> l = new ArrayList<>();
     ClasspathUtilCore.addLibraries(findModel(bd), l);
     resolveClasspathEntries(project, l, loader, includeSource, false);
 

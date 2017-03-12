@@ -224,7 +224,7 @@ public class DemandCastChecker {
 
   private static List<Pair<CGNode, SSACheckCastInstruction>> findFailingCasts(CallGraph cg, DemandRefinementPointsTo dmp) {
     final IClassHierarchy cha = dmp.getClassHierarchy();
-    List<Pair<CGNode, SSACheckCastInstruction>> failing = new ArrayList<Pair<CGNode, SSACheckCastInstruction>>();
+    List<Pair<CGNode, SSACheckCastInstruction>> failing = new ArrayList<>();
 
     int numSafe = 0, numMightFail = 0;
     outer: for (Iterator<? extends CGNode> nodeIter = cg.iterator(); nodeIter.hasNext();) {

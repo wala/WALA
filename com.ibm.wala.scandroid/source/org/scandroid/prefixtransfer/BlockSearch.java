@@ -57,7 +57,7 @@ import com.ibm.wala.ssa.SSACFG;
 
 public class BlockSearch {
 
-    private ArrayList<ISSABasicBlock> blockQueue = new ArrayList<ISSABasicBlock>();
+    private ArrayList<ISSABasicBlock> blockQueue = new ArrayList<>();
     private int location = 0;
 
     private final SSACFG cfg;

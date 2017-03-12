@@ -92,7 +92,7 @@ public class CAstDumper {
 	}
 	
 	private Collection<CAstEntity> dumpScopedEntities(CAstEntity entity, int indent, StringBuilder buf) {
-		ArrayList<CAstEntity> scopedEntities = new ArrayList<CAstEntity>();
+		ArrayList<CAstEntity> scopedEntities = new ArrayList<>();
 		Map<CAstEntity, CAstNode> m = HashMapFactory.make();
 		for(Entry<CAstNode, Collection<CAstEntity>> e : entity.getAllScopedEntities().entrySet())
 			for(CAstEntity scopedEntity : e.getValue()) {

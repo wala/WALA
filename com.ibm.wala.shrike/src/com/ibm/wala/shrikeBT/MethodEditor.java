@@ -201,9 +201,9 @@ public final class MethodEditor {
    * Output is the interface that patches use to emit their code into a method body.
    */
   public final static class Output {
-    final ArrayList<IInstruction> newInstructions = new ArrayList<IInstruction>();
+    final ArrayList<IInstruction> newInstructions = new ArrayList<>();
 
-    final ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<ExceptionHandler[]>();
+    final ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<>();
 
     int[] instructionsToBytecodes = new int[10];
 
@@ -640,7 +640,7 @@ public final class MethodEditor {
       ExceptionHandler[] hs = handlers[i];
       if (hs.length > 0 && (i == 0 || hs != handlers[i - 1])) {
         if (adjustedHandlers == null) {
-          adjustedHandlers = new IdentityHashMap<ExceptionHandler, Object>();
+          adjustedHandlers = new IdentityHashMap<>();
         }
 
         for (int j = 0; j < hs.length; j++) {

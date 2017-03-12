@@ -96,10 +96,10 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     }
     switch (vectorImpl) {
     case SIMPLE:
-      delegateStore = new SimpleVector<IntSet>();
+      delegateStore = new SimpleVector<>();
       break;
     case TWO_LEVEL:
-      delegateStore = new TwoLevelVector<IntSet>();
+      delegateStore = new TwoLevelVector<>();
       break;
     default:
       throw new IllegalArgumentException("unsupported implementation " + vectorImpl);

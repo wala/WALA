@@ -26,17 +26,17 @@ public class ClassWriter implements ClassConstants {
 
   private ConstantPoolParser rawCP;
 
-  private HashMap<Object, Integer> cachedCPEntries = new HashMap<Object, Integer>(1);
+  private HashMap<Object, Integer> cachedCPEntries = new HashMap<>(1);
 
-  final private ArrayList<Object> newCPEntries = new ArrayList<Object>(1);
+  final private ArrayList<Object> newCPEntries = new ArrayList<>(1);
 
   private int nextCPIndex = 1;
 
-  final private ArrayList<Element> fields = new ArrayList<Element>(1);
+  final private ArrayList<Element> fields = new ArrayList<>(1);
 
-  final private ArrayList<Element> methods = new ArrayList<Element>(1);
+  final private ArrayList<Element> methods = new ArrayList<>(1);
 
-  final private ArrayList<Element> classAttributes = new ArrayList<Element>(1);
+  final private ArrayList<Element> classAttributes = new ArrayList<>(1);
 
   private int thisClass;
 

@@ -47,7 +47,7 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
     }
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
-    init(G, new NonNullSingletonIterator<T>(N));
+    init(G, new NonNullSingletonIterator<>(N));
   }
 
   /**

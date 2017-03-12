@@ -298,7 +298,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 	}
 
       List<AnnotationItem> getAnnotations(MethodIdItem m, Set<AnnotationVisibility> types) {
-    	  List<AnnotationItem> result = new ArrayList<AnnotationItem>();
+    	  List<AnnotationItem> result = new ArrayList<>();
     	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
     	  if (d != null && d.getMethodAnnotations(m) !=  null) {
     		  for(AnnotationItem a : d.getMethodAnnotations(m).getAnnotations()) {
@@ -311,7 +311,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
       }
 
       List<AnnotationItem> getAnnotations(FieldIdItem m) {
-    	  List<AnnotationItem> result = new ArrayList<AnnotationItem>();
+    	  List<AnnotationItem> result = new ArrayList<>();
     	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
     	  if (d != null) {
     		  for(AnnotationItem a : d.getFieldAnnotations(m).getAnnotations()) {
@@ -345,7 +345,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
      */
     @Override
     protected IMethod[] computeDeclaredMethods() throws InvalidClassFileException {
-    	ArrayList<IMethod> methodsAL = new ArrayList<IMethod>();
+    	ArrayList<IMethod> methodsAL = new ArrayList<>();
     	    	
         if (methods == null && classDef.getClassData() == null)
             methods = new IMethod[0];

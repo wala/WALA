@@ -81,7 +81,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
-    final Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
+    final Collection<EclipseProjectPath> projectPaths = new LinkedList<>();
     Job job = new Job("Compute project paths") {
 
       @SuppressWarnings("unchecked")

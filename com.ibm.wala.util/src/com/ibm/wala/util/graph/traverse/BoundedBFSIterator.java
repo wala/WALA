@@ -31,7 +31,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   /**
    * List of nodes as discovered
    */
-  final ArrayList<T> Q = new ArrayList<T>();
+  final ArrayList<T> Q = new ArrayList<>();
 
   /**
    * Set of nodes that have been visited
@@ -78,7 +78,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     }
     this.k = k;
     boundary = new int[k];
-    init(G, new NonNullSingletonIterator<T>(N));
+    init(G, new NonNullSingletonIterator<>(N));
   }
 
   /**

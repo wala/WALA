@@ -30,7 +30,7 @@ public class BFSIterator<T> implements Iterator<T> {
   /**
    * List of nodes as discovered
    */
-  final ArrayList<T> Q = new ArrayList<T>();
+  final ArrayList<T> Q = new ArrayList<>();
 
   /**
    * Set of nodes that have been visited
@@ -57,7 +57,7 @@ public class BFSIterator<T> implements Iterator<T> {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    init(G, new NonNullSingletonIterator<T>(N));
+    init(G, new NonNullSingletonIterator<>(N));
   }
 
   /**

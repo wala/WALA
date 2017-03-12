@@ -36,7 +36,7 @@ public class InvertedGraph<T> extends AbstractGraph<T> {
 
   public InvertedGraph(Graph<T> G) {
     nodes = G;
-    edges = new InvertingEdgeManager<T>(G);
+    edges = new InvertingEdgeManager<>(G);
   }
 
 }

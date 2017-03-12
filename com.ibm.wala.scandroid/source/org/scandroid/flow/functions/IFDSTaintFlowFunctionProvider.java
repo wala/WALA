@@ -144,7 +144,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 	private class DefUse implements IUnaryFlowFunction {
 	
-		private final List<UseDefSetPair> useToDefList = new ArrayList<UseDefSetPair>();
+		private final List<UseDefSetPair> useToDefList = new ArrayList<>();
 
 		private final BasicBlockInContext<E> bb;
 
@@ -517,7 +517,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 	public class ReturnDefUse extends DefUse
 	{
 		CodeElement callSet;
-		Set<CodeElement> receivers = new HashSet<CodeElement>();
+		Set<CodeElement> receivers = new HashSet<>();
 
 		public ReturnDefUse(BasicBlockInContext<E> dest,
 				BasicBlockInContext<E> call) {

@@ -30,9 +30,9 @@ public class HashSetFactory {
    */
   public static <T> HashSet<T> make(int size) {
     if (DEBUG) {
-      return new ParanoidHashSet<T>(size);
+      return new ParanoidHashSet<>(size);
     } else {
-      return new LinkedHashSet<T>(size);
+      return new LinkedHashSet<>(size);
     }
   }
 
@@ -41,9 +41,9 @@ public class HashSetFactory {
    */
   public static <T> HashSet<T> make() {
     if (DEBUG) {
-      return new ParanoidHashSet<T>();
+      return new ParanoidHashSet<>();
     } else {
-      return new LinkedHashSet<T>();
+      return new LinkedHashSet<>();
     }
   }
 
@@ -55,9 +55,9 @@ public class HashSetFactory {
       throw new IllegalArgumentException("null s");
     }
     if (DEBUG) {
-      return new ParanoidHashSet<T>(s);
+      return new ParanoidHashSet<>(s);
     } else {
-      return new LinkedHashSet<T>(s);
+      return new LinkedHashSet<>(s);
     }
   }
 }

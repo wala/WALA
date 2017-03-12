@@ -60,7 +60,7 @@ public abstract class CodeElement {
      * associated local variable and any instances it may refer to). */
     public static Set<CodeElement> valueElements(PointerAnalysis<InstanceKey> pa, CGNode node, int valueNumber) {
     	//System.out.println("ValueNumber: " + valueNumber + ", Node: " + node.getMethod().getSignature());
-        Set<CodeElement> elements = new HashSet<CodeElement>();
+        Set<CodeElement> elements = new HashSet<>();
         elements.add(new LocalElement(valueNumber));
 //        PointerKey pk = new LocalPointerKey(node, valueNumber);
 //        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);

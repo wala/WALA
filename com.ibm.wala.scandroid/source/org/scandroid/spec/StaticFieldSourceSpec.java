@@ -108,7 +108,7 @@ public class StaticFieldSourceSpec extends SourceSpec {
 
 		Set<CodeElement> valueElements = HashSetFactory.make();
 		valueElements.add(new StaticFieldElement(field.getReference()));
-		FlowType<E> flow = new StaticFieldFlow<E>(block, field, true);
+		FlowType<E> flow = new StaticFieldFlow<>(block, field, true);
 		
 		TypeReference typeRef = field.getFieldTypeReference();
 		

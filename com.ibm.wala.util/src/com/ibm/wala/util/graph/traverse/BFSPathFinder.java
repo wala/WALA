@@ -64,7 +64,7 @@ public class BFSPathFinder<T> {
       throw new IllegalArgumentException("null f");
     }
     this.G = G;
-    this.roots = new NonNullSingletonIterator<T>(N);
+    this.roots = new NonNullSingletonIterator<>(N);
     this.filter = f;
   }
 
@@ -79,7 +79,7 @@ public class BFSPathFinder<T> {
       throw new IllegalArgumentException("G is null");
     }
     this.G = G;
-    this.roots = new NonNullSingletonIterator<T>(src);
+    this.roots = new NonNullSingletonIterator<>(src);
     if (!G.containsNode(src)) {
       throw new IllegalArgumentException("src is not in graph " + src);
     }
@@ -105,7 +105,7 @@ public class BFSPathFinder<T> {
     }
 
     this.G = G;
-    this.roots = new NonNullSingletonIterator<T>(src);
+    this.roots = new NonNullSingletonIterator<>(src);
 
     this.filter = new Predicate<T>() {
       @Override public boolean test(T o) {
@@ -159,7 +159,7 @@ public class BFSPathFinder<T> {
    */
   public List<T> find() {
 
-    LinkedList<T> Q = new LinkedList<T>();
+    LinkedList<T> Q = new LinkedList<>();
     HashMap<Object, T> history = HashMapFactory.make();
     while (roots.hasNext()) {
       T next = roots.next();
@@ -191,7 +191,7 @@ public class BFSPathFinder<T> {
    * @return a List which represents a path in the breadth-first search to Q[i]. Q holds the nodes visited during the BFS, in order.
    */
   private List<T> makePath(T node, Map<Object, T> history) {
-    ArrayList<T> result = new ArrayList<T>();
+    ArrayList<T> result = new ArrayList<>();
     T n = node;
     result.add(n);
     while (true) {

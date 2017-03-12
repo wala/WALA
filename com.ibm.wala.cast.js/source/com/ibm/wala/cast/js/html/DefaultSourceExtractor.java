@@ -38,10 +38,10 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
     private final HashMap<String, String> constructors = HashMapFactory.make();
  
-    private final Stack<String> stack = new Stack<String>();
+    private final Stack<String> stack = new Stack<>();
 
-    private final Stack<ITag> forms = new Stack<ITag>();
-    private final Set<Pair<ITag,String>> sets = new HashSet<Pair<ITag,String>>();
+    private final Stack<ITag> forms = new Stack<>();
+    private final Set<Pair<ITag,String>> sets = new HashSet<>();
 
     public HtmlCallBack(URL entrypointUrl, IUrlResolver urlResolver) {
       super(entrypointUrl, urlResolver);

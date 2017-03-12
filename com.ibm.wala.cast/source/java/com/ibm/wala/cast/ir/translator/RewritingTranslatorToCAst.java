@@ -12,7 +12,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.ModuleEntry;
 
 public class RewritingTranslatorToCAst implements TranslatorToCAst {
-  private final List<CAstRewriterFactory> rewriters = new LinkedList<CAstRewriterFactory>();
+  private final List<CAstRewriterFactory> rewriters = new LinkedList<>();
  protected final ModuleEntry M;
 private final TranslatorToCAst base;
 

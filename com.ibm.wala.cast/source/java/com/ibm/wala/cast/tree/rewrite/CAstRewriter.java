@@ -309,7 +309,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   protected Map<CAstNode, Collection<CAstEntity>> copyChildren(CAstNode root, Map<Pair<CAstNode, K>, CAstNode> nodeMap,
       Map<CAstNode, Collection<CAstEntity>> children) {
-    final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
+    final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
 
     for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
       Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
@@ -319,7 +319,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       CAstNode newNode = entry.getValue();
 
       if (children.containsKey(oldNode)) {
-        Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
+        Set<CAstEntity> newEntities = new LinkedHashSet<>();
         newChildren.put(newNode, newEntities);
         for (Iterator oldEntities = ((Collection) children.get(oldNode)).iterator(); oldEntities.hasNext();) {
           newEntities.add(rewrite((CAstEntity) oldEntities.next()));
@@ -331,7 +331,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
       CAstNode key = entry.getKey();
       if (key == null) {
-        Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
+        Set<CAstEntity> newEntities = new LinkedHashSet<>();
         newChildren.put(key, newEntities);
         for (Iterator oldEntities = ((Collection) entry.getValue()).iterator(); oldEntities.hasNext();) {
           newEntities.add(rewrite((CAstEntity) oldEntities.next()));
@@ -448,11 +448,11 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     } else if (recursive) {
 
       Map<CAstNode, Collection<CAstEntity>> children = root.getAllScopedEntities();
-      final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
+      final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
       for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys = children.entrySet().iterator(); keys.hasNext();) {
         Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
         CAstNode key = entry.getKey();
-        Set<CAstEntity> newValues = new LinkedHashSet<CAstEntity>();
+        Set<CAstEntity> newValues = new LinkedHashSet<>();
         newChildren.put(key, newValues);
         for (Iterator es = entry.getValue().iterator(); es.hasNext();) {
           newValues.add(rewrite((CAstEntity) es.next()));

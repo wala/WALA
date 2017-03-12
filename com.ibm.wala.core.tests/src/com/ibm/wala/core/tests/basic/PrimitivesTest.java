@@ -600,7 +600,7 @@ public class PrimitivesTest extends WalaTestCase {
   }
 
   @Test public void testSmallMap() {
-    SmallMap<Integer, Integer> M = new SmallMap<Integer, Integer>();
+    SmallMap<Integer, Integer> M = new SmallMap<>();
     Integer I1 = new Integer(1);
     Integer I2 = new Integer(2);
     Integer I3 = new Integer(3);
@@ -622,7 +622,7 @@ public class PrimitivesTest extends WalaTestCase {
   }
 
   @Test public void testBimodalMap() {
-    Map<Integer, Integer> M = new BimodalMap<Integer, Integer>(3);
+    Map<Integer, Integer> M = new BimodalMap<>(3);
     Integer I1 = new Integer(1);
     Integer I2 = new Integer(2);
     Integer I3 = new Integer(3);
@@ -665,7 +665,7 @@ public class PrimitivesTest extends WalaTestCase {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
     // path from 0 to 8
-    BFSPathFinder<Integer> pf = new BFSPathFinder<Integer>(G, G.getNode(0), G.getNode(8));
+    BFSPathFinder<Integer> pf = new BFSPathFinder<>(G, G.getNode(0), G.getNode(8));
     List<Integer> p = pf.find();
 
     // path should be 8, 6, 4, 2, 0
@@ -678,31 +678,31 @@ public class PrimitivesTest extends WalaTestCase {
   @Test public void testBoundedBFS() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
-    BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 0);
+    BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<>(G, G.getNode(0), 0);
     Collection<Integer> c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 1);
 
-    bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 1);
+    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 1);
     c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 3);
 
-    bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 2);
+    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 2);
     c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 5);
 
-    bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 3);
+    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 3);
     c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 7);
 
-    bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 4);
+    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 4);
     c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 9);
 
-    bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 5);
+    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 5);
     c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 10);
 
-    bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 500);
+    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 500);
     c = Iterator2Collection.toSet(bfs);
     Assert.assertTrue(c.size() == 10);
   }

@@ -59,10 +59,10 @@ public class WelshPowellTest {
   }
     
   private <T> NumberedGraph<TypedNode<T>> buildGraph(T[][] data) {
-    DelegatingNumberedGraph<TypedNode<T>> G = new DelegatingNumberedGraph<TypedNode<T>>();
+    DelegatingNumberedGraph<TypedNode<T>> G = new DelegatingNumberedGraph<>();
     Map<T,TypedNode<T>> nodes = HashMapFactory.make();
     for(int i = 0; i < data.length; i++) {
-      TypedNode<T> n = new TypedNode<T>(data[i][0]);
+      TypedNode<T> n = new TypedNode<>(data[i][0]);
       nodes.put(data[i][0], n);
       G.addNode(n);
     }

@@ -30,7 +30,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
    * Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ...
    * data[(i+1)*PAGESIZE - 1]
    */
-  final private Vector<SparseVector<T>> data = new Vector<SparseVector<T>>(0);
+  final private Vector<SparseVector<T>> data = new Vector<>(0);
 
   private int maxPage = -1;
 
@@ -84,7 +84,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
   private IVector<T> findOrCreatePage(int page) {
     if (page >= data.size()) {
-      SparseVector<T> v = new SparseVector<T>();
+      SparseVector<T> v = new SparseVector<>();
       data.setSize(page + 1);
       data.add(page, v);
       maxPage = Math.max(page, maxPage);
@@ -92,7 +92,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     } else {
       SparseVector<T> v = data.get(page);
       if (v == null) {
-        v = new SparseVector<T>();
+        v = new SparseVector<>();
         data.set(page, v);
         maxPage = Math.max(page, maxPage);
       }

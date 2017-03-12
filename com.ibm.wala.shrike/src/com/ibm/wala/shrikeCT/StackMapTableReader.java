@@ -30,7 +30,7 @@ public class StackMapTableReader extends AttributeReader {
   
   public StackMapTableReader(AttrIterator iter) throws InvalidClassFileException {
     super(iter, "StackMapTable");
-    frames = new ArrayList<StackMapFrame>();
+    frames = new ArrayList<>();
     int entries = cr.getUShort(attr+6);
     int ptr = attr + 8;
     for(int i = 0; i < entries; i++) {

@@ -317,7 +317,7 @@ public class SparseLongSet implements LongSet {
     StringTokenizer tok = new StringTokenizer(str, " ,");
 
     // XXX not very efficient:
-    TreeSet<Long> set = new TreeSet<Long>();
+    TreeSet<Long> set = new TreeSet<>();
     while (tok.hasMoreTokens()) {
       set.add(Long.decode(tok.nextToken()));
     }

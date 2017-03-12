@@ -249,14 +249,14 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   public static <T> ArraySet<T> make() {
-    return new ArraySet<T>();
+    return new ArraySet<>();
   }
 
   public static <T> ArraySet<T> make(Collection<T> other) throws IllegalArgumentException {
     if (other == null) {
       throw new IllegalArgumentException("other == null");
     }
-    return new ArraySet<T>(other);
+    return new ArraySet<>(other);
   }
 
 }

@@ -103,7 +103,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
    */
   @Override
   public Iterator<T> iterateNodes(IntSet s) {
-    return new NumberedNodeIterator<T>(s, this);
+    return new NumberedNodeIterator<>(s, this);
   }
 
 }

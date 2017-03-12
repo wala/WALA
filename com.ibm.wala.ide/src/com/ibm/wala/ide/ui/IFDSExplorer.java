@@ -98,8 +98,8 @@ public class IFDSExplorer {
     v.setGraphInput(g);
     v.setBlockInput(true);
     v.setRootsInput(roots);
-    ViewIFDSLocalAction<T, P, F> action = (labels == null ? new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe,
-        viewerExe) : new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, viewerExe, labels));
+    ViewIFDSLocalAction<T, P, F> action = (labels == null ? new ViewIFDSLocalAction<>(v, r, outputFile, dotFile, dotExe,
+        viewerExe) : new ViewIFDSLocalAction<>(v, r, outputFile, dotFile, dotExe, viewerExe, labels));
     v.getPopUpActions().add(action);
     v.run();
 

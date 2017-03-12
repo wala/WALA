@@ -91,7 +91,7 @@ public class CopyWriter {
       System.exit(1);
     }
 
-    final ArrayList<ZipEntry> entries = new ArrayList<ZipEntry>();
+    final ArrayList<ZipEntry> entries = new ArrayList<>();
 
     instrumenter = new OfflineInstrumenter(true);
     instrumenter.setManifestBuilder(new OfflineInstrumenter.ManifestBuilder() {

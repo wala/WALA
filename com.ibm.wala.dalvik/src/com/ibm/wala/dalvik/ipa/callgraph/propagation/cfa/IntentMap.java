@@ -57,8 +57,8 @@ import com.ibm.wala.util.strings.StringStuff;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 /*package*/ class IntentMap {
-    private final Map<InstanceKey, Intent> seen = new HashMap<InstanceKey, Intent>();
-    private final Map<Intent, Intent> immutables = new HashMap<Intent, Intent>();
+    private final Map<InstanceKey, Intent> seen = new HashMap<>();
+    private final Map<Intent, Intent> immutables = new HashMap<>();
 
     public Intent findOrCreateImmutable(final Intent intent) {
         if (immutables.containsKey(intent)) {

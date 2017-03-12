@@ -31,7 +31,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
       return new MutableSparseLongSet();
     } else {
       // XXX not very efficient.
-      TreeSet<Long> T = new TreeSet<Long>();
+      TreeSet<Long> T = new TreeSet<>();
       for (int i = 0; i < set.length; i++) {
         T.add(Long.valueOf(set[i]));
       }

@@ -220,7 +220,7 @@ public class ExternalModel extends AndroidModel {
             final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
             final SSAValue exception = new SSAValue(nextLocal++, TypeReference.JavaLangException, this.mRef, "exception");
             outBundle = new SSAValue(nextLocal++, inBundle);
-            final List<SSAValue> params = new ArrayList<SSAValue>(1);
+            final List<SSAValue> params = new ArrayList<>(1);
             params.add(inIntent);
             final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, outBundle, 
                     params, exception, site);
@@ -276,7 +276,7 @@ public class ExternalModel extends AndroidModel {
             final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
             final SSAValue exception = new SSAValue(nextLocal++, TypeReference.JavaLangException, this.mRef, "exception");
             outIntent = new SSAValue(nextLocal++, inIntent);
-            final List<SSAValue> params = new ArrayList<SSAValue>(3);
+            final List<SSAValue> params = new ArrayList<>(3);
             params.add(inIntent);
             params.add(outName);
             params.add(outValue);

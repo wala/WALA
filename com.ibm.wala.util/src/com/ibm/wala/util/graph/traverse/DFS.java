@@ -49,7 +49,7 @@ public class DFS {
 
       @Override
       protected Iterator<T> getConnected(T n) {
-        return new FilterIterator<T>(G.getSuccNodes(n), filter);
+        return new FilterIterator<>(G.getSuccNodes(n), filter);
       }
     };
     return Iterator2Collection.toSet(dfs);
@@ -104,9 +104,9 @@ public class DFS {
    */
   public static <T> SortedSet<T> sortByDepthFirstOrder(Graph<T> G, T n) {
     Map<T, Integer> order = HashMapFactory.make();
-    TreeSet<T> result = new TreeSet<T>(new DFSComparator<T>(order));
+    TreeSet<T> result = new TreeSet<>(new DFSComparator<>(order));
 
-    Iterator<T> dfs = iterateFinishTime(G, new NonNullSingletonIterator<T>(n));
+    Iterator<T> dfs = iterateFinishTime(G, new NonNullSingletonIterator<>(n));
     int i = 0;
     while (dfs.hasNext()) {
       T nxt = dfs.next();
@@ -145,9 +145,9 @@ public class DFS {
    */
   public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G) {
     if (G instanceof NumberedGraph) {
-      return new NumberedDFSDiscoverTimeIterator<T>((NumberedGraph<T>) G);
+      return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G);
     } else {
-      return new SlowDFSDiscoverTimeIterator<T>(G);
+      return new SlowDFSDiscoverTimeIterator<>(G);
     }
   }
 
@@ -161,9 +161,9 @@ public class DFS {
       throw new IllegalArgumentException("roots == null");
     }
     if (G instanceof NumberedGraph) {
-      return new NumberedDFSDiscoverTimeIterator<T>((NumberedGraph<T>) G, roots);
+      return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G, roots);
     } else {
-      return new SlowDFSDiscoverTimeIterator<T>(G, roots);
+      return new SlowDFSDiscoverTimeIterator<>(G, roots);
     }
   }
 
@@ -176,9 +176,9 @@ public class DFS {
       throw new IllegalArgumentException("G == null");
     }
     if (G instanceof NumberedGraph) {
-      return new NumberedDFSDiscoverTimeIterator<T>((NumberedGraph<T>) G, N);
+      return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G, N);
     } else {
-      return new SlowDFSDiscoverTimeIterator<T>(G, N);
+      return new SlowDFSDiscoverTimeIterator<>(G, N);
     }
   }
 
@@ -192,9 +192,9 @@ public class DFS {
       throw new IllegalArgumentException("G == null");
     }
     if (G instanceof NumberedGraph) {
-      return new NumberedDFSFinishTimeIterator<T>((NumberedGraph<T>) G);
+      return new NumberedDFSFinishTimeIterator<>((NumberedGraph<T>) G);
     } else {
-      return new SlowDFSFinishTimeIterator<T>(G);
+      return new SlowDFSFinishTimeIterator<>(G);
     }
   }
 
@@ -208,9 +208,9 @@ public class DFS {
       throw new IllegalArgumentException("null ie");
     }
     if (G instanceof NumberedGraph) {
-      return new NumberedDFSFinishTimeIterator<T>((NumberedGraph<T>) G, ie);
+      return new NumberedDFSFinishTimeIterator<>((NumberedGraph<T>) G, ie);
     } else {
-      return new SlowDFSFinishTimeIterator<T>(G, ie);
+      return new SlowDFSFinishTimeIterator<>(G, ie);
     }
   }
 }

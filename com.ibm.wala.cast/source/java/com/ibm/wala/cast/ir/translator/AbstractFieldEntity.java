@@ -34,7 +34,7 @@ class AbstractFieldEntity extends AbstractDataEntity {
     this.name = name;
     this.declaringClass = declaringClass;
 
-    this.modifiers = new HashSet<CAstQualifier>();
+    this.modifiers = new HashSet<>();
     if (modifiers != null) {
       this.modifiers.addAll(modifiers);
     }

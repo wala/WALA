@@ -119,7 +119,7 @@ public class FlowAnalysis {
 	          IProgressMonitor progressMonitor
 	        ) {
 				return analyze(graph, cg, pa, initialTaints, d,
-						progressMonitor, new TaintTransferFunctions<E>(d, graph, pa));
+						progressMonitor, new TaintTransferFunctions<>(d, graph, pa));
 
 //    			return analyze(graph, cg, pa, initialTaints, d,
 //    					progressMonitor, new IDTransferFunctions<E>(d, graph, pa));
@@ -144,7 +144,7 @@ public class FlowAnalysis {
         final IFDSTaintDomain<E> domain = d;
 
         final List<PathEdge<BasicBlockInContext<E>>>
-           initialEdges = new ArrayList<PathEdge<BasicBlockInContext<E>>>();
+           initialEdges = new ArrayList<>();
 
         //Add PathEdges to the taints
         //Places that initial taints occur, and where they initially flow into

@@ -479,7 +479,7 @@ public abstract class Compiler implements Constants {
     instructionsToOffsets = new int[instructions.length];
     code = makeCodeBuf();
 
-    ArrayList<Patch> patches = new ArrayList<Patch>();
+    ArrayList<Patch> patches = new ArrayList<>();
 
     int curOffset = startOffset;
     final int[] curOffsetRef = new int[1];
@@ -1119,7 +1119,7 @@ public abstract class Compiler implements Constants {
     if (maxCount == 0) {
       return noRawHandlers;
     } else {
-      ArrayList<int[]> rawHandlerList = new ArrayList<int[]>();
+      ArrayList<int[]> rawHandlerList = new ArrayList<>();
 
       for (int i = maxCount; i > 0; i--) {
         for (int j = start; j < end; j++) {
@@ -1311,7 +1311,7 @@ public abstract class Compiler implements Constants {
   private HelperPatch makeHelperPatch(int start, int len, int retVar, int unreadStack, int untouchedStack) {
     String retType = retVar >= 0 ? getAndCheckLocalType(start + len, retVar) : "V";
 
-    ArrayList<Instruction> callWrapper = new ArrayList<Instruction>();
+    ArrayList<Instruction> callWrapper = new ArrayList<>();
     int curStackLen = stackTypes[start].length;
 
     StringBuffer sigBuf = new StringBuffer();
@@ -1404,7 +1404,7 @@ public abstract class Compiler implements Constants {
     callWrapper.toArray(patch);
 
     ExceptionHandler[] startHS = handlers[start];
-    ArrayList<ExceptionHandler> newHS = new ArrayList<ExceptionHandler>();
+    ArrayList<ExceptionHandler> newHS = new ArrayList<>();
     for (int i = 0; i < startHS.length; i++) {
       int t = startHS[i].handler;
       if (t < start || t >= start + len) {
@@ -1663,7 +1663,7 @@ public abstract class Compiler implements Constants {
 
   private void makeHelpers() {
     int offset = 0;
-    ArrayList<HelperPatch> patches = new ArrayList<HelperPatch>();
+    ArrayList<HelperPatch> patches = new ArrayList<>();
 
     while (offset + 5000 < instructions.length) {
       HelperPatch p = findBlock(offset, 5000);
@@ -1722,7 +1722,7 @@ public abstract class Compiler implements Constants {
       allocatedLocals = maxLocals;
       makeLiveLocals();
       makeTypes();
-      auxMethods = new ArrayList<Output>();
+      auxMethods = new ArrayList<>();
       makeHelpers();
 
       computeStackWords();

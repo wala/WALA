@@ -82,7 +82,7 @@ public class MethodNamePattern {
 	}
 
 	private Collection<IMethod> lookupMethods(IClass c) {
-		Collection<IMethod> matching = new LinkedList<IMethod>();
+		Collection<IMethod> matching = new LinkedList<>();
 		Atom atom = Atom.findOrCreateUnicodeAtom(memberName);
 		Descriptor desc = descriptor == null ? null : Descriptor.findOrCreateUTF8(descriptor);
 		Collection<IMethod> allMethods = c.getAllMethods();
@@ -101,7 +101,7 @@ public class MethodNamePattern {
 	 * @return
 	 */
 	public Collection<IMethod> getPossibleTargets(IClassHierarchy cha) {
-		Collection<IMethod> matching = new LinkedList<IMethod>();
+		Collection<IMethod> matching = new LinkedList<>();
 		IClass c;
 		c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, className));
 		if (c != null)

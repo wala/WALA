@@ -26,8 +26,8 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
   private final SparseNumberedEdgeManager<T> edgeManager;
 
   public SparseNumberedGraph() {
-    nodeManager = new DelegatingNumberedNodeManager<T>();
-    edgeManager = new SparseNumberedEdgeManager<T>(nodeManager);
+    nodeManager = new DelegatingNumberedNodeManager<>();
+    edgeManager = new SparseNumberedEdgeManager<>(nodeManager);
   }
 
   /**
@@ -37,8 +37,8 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
    * @param normalCase what is the "normal" number of out edges for a node?
    */
   public SparseNumberedGraph(int normalCase) {
-    nodeManager = new DelegatingNumberedNodeManager<T>();
-    edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalCase, BasicNaturalRelation.TWO_LEVEL);
+    nodeManager = new DelegatingNumberedNodeManager<>();
+    edgeManager = new SparseNumberedEdgeManager<>(nodeManager, normalCase, BasicNaturalRelation.TWO_LEVEL);
   }
 
   public SparseNumberedGraph(DelegatingNumberedNodeManager<T> nodeManager, SparseNumberedEdgeManager<T> edgeManager) {

@@ -32,7 +32,7 @@ public abstract class Correlation {
   
   protected Correlation(String indexName, Set<String> flownThroughLocals) {
     this.indexName = indexName;
-    this.flownThroughLocals = new HashSet<String>(flownThroughLocals);
+    this.flownThroughLocals = new HashSet<>(flownThroughLocals);
   }
   
   public String getIndexName() {

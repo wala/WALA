@@ -62,7 +62,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
    * @return a graph with the same nodes and edges as g
    */
   public static <T,U> SlowSparseNumberedLabeledGraph<T,U> duplicate(LabeledGraph<T,U> g) {
-    SlowSparseNumberedLabeledGraph<T,U> result = new SlowSparseNumberedLabeledGraph<T,U>(g.getDefaultLabel());
+    SlowSparseNumberedLabeledGraph<T,U> result = new SlowSparseNumberedLabeledGraph<>(g.getDefaultLabel());
     copyInto(g, result);
     return result;
   }
@@ -93,8 +93,8 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
     if (defaultLabel == null) {
       throw new IllegalArgumentException("null default label");
     }
-    nodeManager = new SlowNumberedNodeManager<T>();
-    edgeManager = new SparseNumberedLabeledEdgeManager<T, U>(nodeManager, defaultLabel);
+    nodeManager = new SlowNumberedNodeManager<>();
+    edgeManager = new SparseNumberedLabeledEdgeManager<>(nodeManager, defaultLabel);
   }
 
   @Override

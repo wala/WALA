@@ -129,7 +129,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
       // just ignore it
       // TEST DOUBLE ARRAYS! and maybe ask someone?
       assert fEltJdtType.isArray() || fEltJdtType.isClass() : "Non-primitive, non-reference array element type!";
-      Collection<CAstType> supers = new ArrayList<CAstType>();
+      Collection<CAstType> supers = new ArrayList<>();
       for (ITypeBinding type : fEltJdtType.getInterfaces()) {
         supers.add(getCAstTypeFor(type));
       }
@@ -175,7 +175,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
           .getSuperclass();
       int N = fType.getInterfaces().length + 1;
 
-      fSuperTypes = new ArrayList<CAstType>(N);
+      fSuperTypes = new ArrayList<>(N);
       // Following assumes that noone can call getSupertypes() before we have
       // created CAstType's for every type in the program being analyzed.
       fSuperTypes.add(getCAstTypeFor(superType));

@@ -79,7 +79,7 @@ public class ContextInsensitiveReachingDefs {
    */
   @SuppressWarnings("unchecked")
   private OrdinalSetMapping<Pair<CGNode, Integer>> numberPutStatics() {
-    ArrayList<Pair<CGNode, Integer>> putInstrs = new ArrayList<Pair<CGNode, Integer>>();
+    ArrayList<Pair<CGNode, Integer>> putInstrs = new ArrayList<>();
     for (CGNode node : icfg.getCallGraph()) {
       IR ir = node.getIR();
       if (ir == null) {
@@ -181,9 +181,9 @@ public class ContextInsensitiveReachingDefs {
    */
   public BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> analyze() {
     // the framework describes the dataflow problem, in particular the underlying graph and the transfer functions
-    BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>> framework = new BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>>(
+    BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>> framework = new BitVectorFramework<>(
         icfg, new TransferFunctions(), putInstrNumbering);
-    BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = new BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>>(
+    BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = new BitVectorSolver<>(
         framework);
     try {
       solver.solve(null);

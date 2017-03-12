@@ -102,7 +102,7 @@ public class CAstPattern {
           ((List<CAstNode>) o).add(result);
         } else {
           assert o instanceof CAstNode;
-          List<Object> x = new ArrayList<Object>();
+          List<Object> x = new ArrayList<>();
           x.add(o);
           x.add(result);
           put(name, x);
@@ -472,7 +472,7 @@ public class CAstPattern {
         result = new CAstPattern(name, CHILD_KIND, null);
 
       } else if (patternString.startsWith("|(", start)) {
-        List<CAstPattern> alternatives = new ArrayList<CAstPattern>();
+        List<CAstPattern> alternatives = new ArrayList<>();
         start += 2;
         do {
           alternatives.add(parse());
@@ -517,7 +517,7 @@ public class CAstPattern {
           result = new CAstPattern(name, kind, null);
 
         } else {
-          List<CAstPattern> children = new ArrayList<CAstPattern>();
+          List<CAstPattern> children = new ArrayList<>();
           start = patternString.indexOf('(', start) + 1;
           do {
             children.add(parse());
