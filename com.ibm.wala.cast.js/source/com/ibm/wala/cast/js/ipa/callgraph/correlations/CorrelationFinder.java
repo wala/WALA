@@ -45,8 +45,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
@@ -287,7 +287,7 @@ public class CorrelationFinder {
     JSCallGraphUtil.setTranslatorFactory(translatorFactory);
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts_array, loaders, Collections.singleton(JavaScriptLoader.JS));
-    IClassHierarchy cha = ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
     try {
       Util.checkForFrontEndErrors(cha);
     } catch (WalaException e) {

@@ -44,7 +44,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -53,11 +52,10 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
@@ -85,9 +83,9 @@ public class Overrides {
     private final AndroidModel caller;
     private final IClassHierarchy cha;
     private final AnalysisOptions options;
-    private final AnalysisCache cache;
+    private final IAnalysisCacheView cache;
 
-    public Overrides(AndroidModel caller, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    public Overrides(AndroidModel caller, IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
         this.caller = caller;
         this.cha = cha;
         this.options = options;

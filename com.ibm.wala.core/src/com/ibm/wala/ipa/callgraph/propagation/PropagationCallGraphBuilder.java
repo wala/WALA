@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
@@ -99,7 +100,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Cache of IRs and things
    */
-  private final AnalysisCache analysisCache;
+  private final IAnalysisCacheView analysisCache;
 
   /**
    * Set of nodes that have already been traversed for constraints
@@ -175,7 +176,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param options governing call graph construction options
    * @param pointerKeyFactory factory which embodies pointer abstraction policy
    */
-  protected PropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected PropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
@@ -1486,7 +1487,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   @Override
-  public AnalysisCache getAnalysisCache() {
+  public IAnalysisCacheView getAnalysisCache() {
     return analysisCache;
   };
 

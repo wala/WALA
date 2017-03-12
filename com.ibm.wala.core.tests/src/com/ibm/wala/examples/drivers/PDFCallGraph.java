@@ -18,7 +18,7 @@ import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -28,11 +28,12 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
@@ -147,7 +148,7 @@ public class PDFCallGraph {
     AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, exclusionFile != null ? exclusionFile : new File(
         CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
@@ -155,7 +156,7 @@ public class PDFCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     System.err.println(CallGraphStats.getStats(cg));

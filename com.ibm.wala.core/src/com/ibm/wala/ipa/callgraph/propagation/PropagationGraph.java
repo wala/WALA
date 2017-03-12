@@ -25,9 +25,9 @@ import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.SmallMap;
@@ -439,7 +439,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
-    Iterator<PointsToSetVariable> order = Topological.makeTopologicalIter(graph);
+    Iterator<PointsToSetVariable> order = Topological.makeTopologicalIter(graph).iterator();
 
     int number = 0;
     while (order.hasNext()) {
@@ -506,8 +506,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     public boolean containsNode(PointsToSetVariable N) {
-      Assertions.UNREACHABLE();
-      return false;
+      return delegateGraph.containsNode(N);
     }
 
     /*

@@ -42,6 +42,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -64,6 +65,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.modref.ArrayLengthKey;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -115,7 +117,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   
   public abstract GlobalObjectKey getGlobalObject(Atom language);
 
-  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
   }
@@ -377,9 +379,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           if (lexicalKey instanceof LocalPointerKey) {
             CGNode lnode = ((LocalPointerKey) lexicalKey).getNode();
             int lvn = ((LocalPointerKey) lexicalKey).getValueNumber();
-            IR lir = getBuilder().getCFAContextInterpreter().getIR(lnode);
+            IRView lir = getBuilder().getCFAContextInterpreter().getIRView(lnode);
             SymbolTable lsymtab = lir.getSymbolTable();
-            DefUse ldu = getAnalysisCache().getSSACache().findOrCreateDU(lir, lnode.getContext());
+            DefUse ldu = getBuilder().getCFAContextInterpreter().getDU(lnode);
+            // DefUse ldu = getAnalysisCache().getDefUse(lir);
             if (contentsAreInvariant(lsymtab, ldu, lvn)) {
               InstanceKey[] ik = getInvariantContents(lsymtab, ldu, lnode, lvn);
               system.recordImplicitPointsToSet(lexicalKey);
@@ -700,7 +703,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         final Set<CGNode> result = HashSetFactory.make();
         PointerKey F = getBuilder().getPointerKeyForLocal(opNode, 1);
 
-        IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
+        IRView ir = getBuilder().getCFAContextInterpreter().getIRView(opNode);
         SymbolTable symtab = ir.getSymbolTable();
         DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
         if (contentsAreInvariant(symtab, du, 1)) {
@@ -761,7 +764,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
           int vn = LI.getExitExposedUses()[i];
           if (vn > 0) {
-            IR ir = getBuilder().getCFAContextInterpreter().getIR(definingNode);
+            IRView ir = getBuilder().getCFAContextInterpreter().getIRView(definingNode);
             DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode);
             SymbolTable st = ir.getSymbolTable();
 
@@ -851,7 +854,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     private void newFieldOperation(CGNode opNode, final int objVn, final int fieldsVn, final boolean isLoadOperation,
         final ReflectedFieldAction action) {
-      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
+      IRView ir = getBuilder().getCFAContextInterpreter().getIRView(opNode);
       SymbolTable symtab = ir.getSymbolTable();
       DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
       PointerKey objKey = getBuilder().getPointerKeyForLocal(opNode, objVn);
@@ -935,7 +938,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     protected void newFieldOperationFieldConstant(CGNode opNode, final boolean isLoadOperation, final ReflectedFieldAction action,
         final int objVn, final InstanceKey[] fieldsKeys) {
-      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
+      IRView ir = getBuilder().getCFAContextInterpreter().getIRView(opNode);
       SymbolTable symtab = ir.getSymbolTable();
       DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
       PointerKey objKey = getBuilder().getPointerKeyForLocal(opNode, objVn);
@@ -1151,7 +1154,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, int rhsVn) {
-      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
+      IRView ir = getBuilder().getCFAContextInterpreter().getIRView(opNode);
       SymbolTable symtab = ir.getSymbolTable();
       DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
       PointerKey rhsKey = getBuilder().getPointerKeyForLocal(opNode, rhsVn);

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -28,7 +27,7 @@ import com.ibm.wala.util.graph.Graph;
  * This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by overriding the
  * getConnected method.
  */
-public class DFSPathFinder<T> extends Stack<T> {
+public class DFSPathFinder<T> extends ArrayList<T> {
   public static final long serialVersionUID = 9939900773328288L;
 
   /**
@@ -208,4 +207,23 @@ public class DFSPathFinder<T> extends Stack<T> {
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);
   }
+  
+  private boolean empty() {
+    return size() == 0;
+  }
+
+  private void push(T elt) {
+    add(elt);
+  }
+  
+  private T peek() {
+    return get(size()-1); 
+  }
+  
+  private T pop() {
+    T e = get(size()-1);
+    remove(size()-1);
+    return e;
+  }
+
 }

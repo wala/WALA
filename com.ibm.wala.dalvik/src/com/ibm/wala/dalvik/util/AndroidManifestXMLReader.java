@@ -167,7 +167,7 @@ public class AndroidManifestXMLReader {
                 new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.TARGET, Attr.NAME),
-                null),
+                ComponentItem.class),
         SERVICE("service", 
                 new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
@@ -591,9 +591,14 @@ public class AndroidManifestXMLReader {
                     }
             }
             } else {
-                throw new IllegalStateException("Error in parser implementation! The required attribute 'name' which should have been " +
-                        "defined in ACTION could not be retrieved. This should have been thrown before as it is a required attribute for " +
-                        "ACTION");
+            /**
+             *  Previously, an exception was thrown but in fact there is no need to crash here.
+             *  Actions are required, but if there is no action in a particular intent-filter,
+             *  then no intent will pass the intent filter.
+             *  See also http://developer.android.com/guide/topics/manifest/action-element.html
+             *  So we'll just issue a warning and continue happily with our work...
+             */
+            logger.warn("specified intent without action - this means that no intents will pass the filter...");
             }
         }
     }
@@ -611,6 +616,8 @@ public class AndroidManifestXMLReader {
                 Tag current = parserStack.pop();
                 if (allowedTags.contains(current)) {
                     if (current == Tag.INTENT) {
+                    // do not expect item at top of stack if no intent was produced
+                    if (attributesHistory.get(Tag.INTENT).isEmpty()) continue;
                         Object oIntent = attributesHistory.get(Tag.INTENT).peek();
                         if (oIntent == null) {
                              throw new IllegalStateException("The currently parsed Intent did not push a Valid intent to the " +
@@ -638,14 +645,24 @@ public class AndroidManifestXMLReader {
                 logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
-            final String name = (String) attributesHistory.get(Attr.NAME).peek(); // TODO: Verify type!
+
+            final String name;
+            if (self == Tag.ALIAS) {
+                name =  (String) attributesHistory.get(Attr.TARGET).peek(); // TODO: Verify type!
+            } else {
+                name = (String) attributesHistory.get(Attr.NAME).peek(); // TODO: Verify type!
+            }
             final Intent intent = AndroidSettingFactory.intent(pack, name, null);
 
             logger.info("\tRegister: {}", intent);
             AndroidEntryPointManager.MANAGER.registerIntent(intent);
             for (Intent ovr: overrideTargets) {
                 logger.info("\tOverride: {} --> {}", ovr, intent);
-                AndroidEntryPointManager.MANAGER.setOverride(ovr, intent);
+                if (ovr.equals(intent)) {
+                    AndroidEntryPointManager.MANAGER.registerIntent(intent);
+                } else {
+                    AndroidEntryPointManager.MANAGER.setOverride(ovr, intent);
+                }
             }
         }
     }

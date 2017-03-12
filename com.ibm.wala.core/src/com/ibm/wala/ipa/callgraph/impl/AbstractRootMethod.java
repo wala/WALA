@@ -22,10 +22,10 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
@@ -68,12 +68,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   private final AnalysisOptions options;
 
-  protected final AnalysisCache cache;
+  protected final IAnalysisCacheView cache;
 
   protected final SSAInstructionFactory insts;
 
   public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options,
-      AnalysisCache cache) {
+      IAnalysisCacheView cache) {
     super(method, declaringClass, true, false);
     this.cha = cha;
     this.options = options;
@@ -89,7 +89,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
   }
 
-  public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     this(method, new FakeRootClass(cha), cha, options, cache);
   }
 
@@ -258,7 +258,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  protected int getValueNumberForIntConstant(int c) {
+  public int getValueNumberForIntConstant(int c) {
     ConstantValue v = new ConstantValue(c);
     Integer result = constant2ValueNumber.get(v);
     if (result == null) {
@@ -268,7 +268,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  protected int getValueNumberForByteConstant(byte c) {
+  public int getValueNumberForByteConstant(byte c) {
     // treat it like an int constant for now.
     ConstantValue v = new ConstantValue(c);
     Integer result = constant2ValueNumber.get(v);
@@ -279,7 +279,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  protected int getValueNumberForCharConstant(char c) {
+  public int getValueNumberForCharConstant(char c) {
     // treat it like an int constant for now.
     ConstantValue v = new ConstantValue(c);
     Integer result = constant2ValueNumber.get(v);

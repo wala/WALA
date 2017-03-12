@@ -12,7 +12,6 @@
 package com.ibm.wala.dalvik.ssa;
 
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.classLoader.DexCFG;
 import com.ibm.wala.dalvik.classLoader.DexCFG.BasicBlock;

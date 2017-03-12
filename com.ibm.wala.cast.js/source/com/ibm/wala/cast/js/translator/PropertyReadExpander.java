@@ -18,7 +18,6 @@ import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -29,7 +28,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, PropertyReadExpander.ExpanderKey> {
 
-  static enum ExpanderKey implements CopyKey<ExpanderKey> {
+  static enum ExpanderKey implements com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey<ExpanderKey> {
     EVERYWHERE, EXTRA {
       @Override
       public ExpanderKey parent() { return EVERYWHERE; }

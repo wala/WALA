@@ -20,12 +20,13 @@ import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.CollectionFilter;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -74,7 +75,7 @@ public class PDFTypeHierarchy {
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
-      ClassHierarchy cha = ClassHierarchy.make(scope);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
       Graph<IClass> g = typeHierarchy2Graph(cha);
 

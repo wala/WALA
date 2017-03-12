@@ -69,6 +69,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -802,7 +803,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     private CAstEntity entity;
 
     JavaScriptMethodObject(IClass cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
           hasMonitorOp, lexicalInfo, debugInfo, null);
 
@@ -916,14 +917,14 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     assert C != null : clsName;
     return C.setCodeBody(makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, C));
   }
 
   public JavaScriptMethodObject makeCodeBodyCode(AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
+      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
       IClass C) {
     return new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
         debugInfo);
@@ -1013,7 +1014,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   @SuppressWarnings("unchecked")
   @Override
-  protected TranslatorToCAst getTranslatorToCAst(final CAst ast, SourceModule module) {
+  protected TranslatorToCAst getTranslatorToCAst(final CAst ast, ModuleEntry module) {
     TranslatorToCAst translator = translatorFactory.make(ast, module);
     if(preprocessor != null)
       translator.addRewriter(preprocessor, true);

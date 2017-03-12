@@ -291,6 +291,10 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
                 e.printStackTrace();
                 Assertions.UNREACHABLE();
               }
+              IMethod mTarget = cha.resolveMethod(target);
+              if (mTarget == null) {
+                goToAllHandlers = true;
+              }
             }
           }
         }

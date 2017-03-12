@@ -8,7 +8,6 @@ import com.ibm.wala.analysis.nullpointer.IntraproceduralNullPointerAnalysis;
 import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
-import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 

@@ -30,7 +30,7 @@ import com.ibm.wala.util.ref.CacheReference;
  * 
  * This doesn't work very well ... GCs don't do such a great job with SoftReferences ... revamp it.
  */
-class AuxiliaryCache {
+public class AuxiliaryCache implements IAuxiliaryCache {
 
   /**
    * A mapping from IMethod -> SSAOptions -> SoftReference -> IR
@@ -47,9 +47,10 @@ class AuxiliaryCache {
    */
   private int nItems = 0;
 
-  /**
-   * The existence of this is unfortunate.
+  /* 
+   * @see com.ibm.wala.ssa.IAuxiliaryCache#wipe()
    */
+  @Override
   public synchronized void wipe() {
     dictionary = HashMapFactory.make();
     nItems = 0;
@@ -85,11 +86,10 @@ class AuxiliaryCache {
     }
   }
 
-  /**
-   * @param m a method
-   * @param options options governing ssa construction
-   * @return the object cached for m, or null if none found
+  /* 
+   * @see com.ibm.wala.ssa.IAuxiliaryCache#find(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ssa.SSAOptions)
    */
+  @Override
   public synchronized Object find(IMethod m, Context c, SSAOptions options) {
     // methodMap: SSAOptions -> SoftReference
     Pair<IMethod, Context> p = Pair.make(m, c);
@@ -102,12 +102,10 @@ class AuxiliaryCache {
     }
   }
 
-  /**
-   * cache new auxiliary information for an <m,options> pair
-   * 
-   * @param m a method
-   * @param options options governing ssa construction
+  /* 
+   * @see com.ibm.wala.ssa.IAuxiliaryCache#cache(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ssa.SSAOptions, java.lang.Object)
    */
+  @Override
   public synchronized void cache(IMethod m, Context c, SSAOptions options, Object aux) {
     nItems++;
 
@@ -121,9 +119,10 @@ class AuxiliaryCache {
     methodMap.put(options, ref);
   }
 
-  /**
-   * invalidate all cached information about a method
+  /* 
+   * @see com.ibm.wala.ssa.IAuxiliaryCache#invalidate(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context)
    */
+  @Override
   public void invalidate(IMethod method, Context c) {
     dictionary.remove(Pair.make(method, c));
   }

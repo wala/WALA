@@ -46,6 +46,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
@@ -64,7 +65,7 @@ public class ArgumentSpecialization {
     @Override
     public IR getIR(CGNode node) {
       if (node.getMethod() instanceof Retranslatable) {
-        return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), node.getContext(), options.getSSAOptions());
+        return getAnalysisCache().getIR(node.getMethod(), node.getContext());
       } else {
         return super.getIR(node);
       }
@@ -73,7 +74,7 @@ public class ArgumentSpecialization {
     @Override
     public DefUse getDU(CGNode node) {
       if (node.getMethod() instanceof Retranslatable) {
-        return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), node.getContext(), options.getSSAOptions());
+        return getAnalysisCache().getDefUse(getIR(node));
       } else {
         return super.getDU(node);
       }
@@ -309,8 +310,8 @@ public class ArgumentSpecialization {
             }
 
             @Override
-            protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-                boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+            protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg, SymbolTable symtab,
+                boolean hasCatchBlock, Map<IBasicBlock<SSAInstruction>,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
                 DebuggingInformation debugInfo) {
               if (N == codeBodyEntity) {
                 specializedCode = myloader.makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo, method.getDeclaringClass());

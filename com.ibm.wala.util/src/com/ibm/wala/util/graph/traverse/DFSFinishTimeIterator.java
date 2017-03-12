@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph.traverse;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -23,7 +23,7 @@ import com.ibm.wala.util.graph.Graph;
  * finishing time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by
  * overriding the getConnected method.
  */
-public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Iterator<T> {
+public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
 
   /**
    * the current next element in finishing time order
@@ -53,6 +53,10 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
       theNextElement = roots.next();
   }
 
+  private boolean empty() {
+    return size() == 0;
+  }
+  
   /**
    * Return whether there are any more nodes left to enumerate.
    * 
@@ -67,6 +71,20 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
 
   abstract void setPendingChildren(T v, Iterator<T> iterator);
 
+  private void push(T elt) {
+    add(elt);
+  }
+  
+  private T peek() {
+    return get(size()-1); 
+  }
+  
+  private T pop() {
+    T e = get(size()-1);
+    remove(size()-1);
+    return e;
+  }
+  
   /**
    * Find the next graph node in finishing time order.
    * 

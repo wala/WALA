@@ -21,6 +21,7 @@ import org.junit.Test;
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -30,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -51,10 +53,10 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     scope.addToScope(ClassLoaderReference.Application, new JarFile(F, false));
     
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lpack/ocamljavaMain");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = new AnalysisCacheImpl();
     
     SSAPropagationCallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     

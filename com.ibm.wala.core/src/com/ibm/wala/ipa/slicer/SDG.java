@@ -556,11 +556,15 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       case PARAM_CALLER: {
         ParamCaller pac = (ParamCaller) N;
         SSAAbstractInvokeInstruction call = pac.getInstruction();
+        int numParamsPassed = call.getNumberOfUses();
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
           for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-            for (int i = 0; i < t.getMethod().getNumberOfParameters(); i++) {
+            // in some languages (*cough* JavaScript *cough*) you can pass
+            // fewer parameters than the number of formals.  So, only loop
+            // over the parameters actually being passed here
+            for (int i = 0; i < t.getMethod().getNumberOfParameters() && i < numParamsPassed; i++) {
               if (dOptions.isTerminateAtCast() && call.isDispatch() && pac.getValueNumber() == call.getReceiver()) {
                 // a virtual dispatch is just like a cast.
                 continue;
@@ -791,10 +795,10 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   }
 
   @Override
-  public PDG getPDG(CGNode node) {
+  public PDG<T> getPDG(CGNode node) {
     PDG result = pdgMap.get(node);
     if (result == null) {
-      result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
+      result = new PDG<T>(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
       pdgMap.put(node, result);
       // Let's not eagerly add nodes, shall we?
       // for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
@@ -822,7 +826,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     return cg.getClassHierarchy();
   }
 
-  public PointerAnalysis<? extends InstanceKey> getPointerAnalysis() {
+  public PointerAnalysis<T> getPointerAnalysis() {
     return pa;
   }
 

@@ -23,6 +23,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -50,7 +51,7 @@ public class InterfaceTest extends WalaTestCase {
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
-      cha = ClassHierarchy.make(scope, factory);
+      cha = ClassHierarchyFactory.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }

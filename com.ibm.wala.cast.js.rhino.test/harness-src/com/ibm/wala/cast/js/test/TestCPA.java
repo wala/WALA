@@ -37,7 +37,7 @@ public class TestCPA {
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     JSCallGraphUtil.AVOID_DUMP = false;
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 
 }

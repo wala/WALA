@@ -38,7 +38,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     URL url = getClass().getClassLoader().getResource("pages/page3.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 
   @Test public void testPage3WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
@@ -46,7 +46,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 
   @Ignore("This test now blows up due to proper handling of the || construct, used in extend().  Should handle this eventually.")
@@ -55,7 +55,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 
   /*
@@ -70,88 +70,88 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   
   private static final Object[][] assertionsForBadForin = new Object[][] { 
     new Object[] { ROOT, 
-      new String[] { "tests/badforin.js" } },
-    new Object[] { "tests/badforin.js", 
-      new String[] { "tests/badforin.js/testForIn", "tests/badforin.js/_check_obj_foo", "tests/badforin.js/_check_obj_bar", "tests/badforin.js/_check_copy_foo", "tests/badforin.js/_check_copy_bar"} },
-    new Object[] { "tests/badforin.js/testForIn",
-      new String[] { "tests/badforin.js/testForIn1", "tests/badforin.js/testForIn2" } },
-    new Object[] { "tests/badforin.js/_check_obj_foo",
-      new String[] { "tests/badforin.js/testForIn1" } },
-    new Object[] { "tests/badforin.js/_check_copy_foo",
-      new String[] { "tests/badforin.js/testForIn1" } },
-    new Object[] { "tests/badforin.js/_check_obj_bar",
-      new String[] { "tests/badforin.js/testForIn2" } },
-    new Object[] { "tests/badforin.js/_check_copy_bar",
-      new String[] { "tests/badforin.js/testForIn2" } }
+      new String[] { "badforin.js" } },
+    new Object[] { "badforin.js", 
+      new String[] { "badforin.js/testForIn", "badforin.js/_check_obj_foo", "badforin.js/_check_obj_bar", "badforin.js/_check_copy_foo", "badforin.js/_check_copy_bar"} },
+    new Object[] { "badforin.js/testForIn",
+      new String[] { "badforin.js/testForIn1", "badforin.js/testForIn2" } },
+    new Object[] { "badforin.js/_check_obj_foo",
+      new String[] { "badforin.js/testForIn1" } },
+    new Object[] { "badforin.js/_check_copy_foo",
+      new String[] { "badforin.js/testForIn1" } },
+    new Object[] { "badforin.js/_check_obj_bar",
+      new String[] { "badforin.js/testForIn2" } },
+    new Object[] { "badforin.js/_check_copy_bar",
+      new String[] { "badforin.js/testForIn2" } }
   };
 
   @Test public void testBadForInWithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForBadForin);
   }
 
   private static final Object[][] assertionsForBadForinHackPrecision = new Object[][] { 
-    new Object[] { "tests/badforin.js/_check_obj_foo",
-      new String[] { "!tests/badforin.js/testForIn2" } },
-    new Object[] { "tests/badforin.js/_check_copy_foo",
-      new String[] { "!tests/badforin.js/testForIn2" } },
-    new Object[] { "tests/badforin.js/_check_obj_bar",
-      new String[] { "!tests/badforin.js/testForIn1" } },
-    new Object[] { "tests/badforin.js/_check_copy_bar",
-      new String[] { "!tests/badforin.js/testForIn1" } }
+    new Object[] { "badforin.js/_check_obj_foo",
+      new String[] { "!badforin.js/testForIn2" } },
+    new Object[] { "badforin.js/_check_copy_foo",
+      new String[] { "!badforin.js/testForIn2" } },
+    new Object[] { "badforin.js/_check_obj_bar",
+      new String[] { "!badforin.js/testForIn1" } },
+    new Object[] { "badforin.js/_check_copy_bar",
+      new String[] { "!badforin.js/testForIn1" } }
   };
 
   @Test public void testBadForInWithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForBadForin);
     verifyGraphAssertions(CG, assertionsForBadForinHackPrecision);
   }
 
   private static final Object[][] assertionsForbadforin2 = new Object[][] { 
     new Object[] { ROOT, 
-      new String[] { "tests/badforin2.js" } },
-    new Object[] { "tests/badforin2.js", 
-      new String[] { "tests/badforin2.js/testForIn", "tests/badforin2.js/_check_obj_foo", "tests/badforin2.js/_check_obj_bar", "tests/badforin2.js/_check_copy_foo", "tests/badforin2.js/_check_copy_bar"} },
-    new Object[] { "tests/badforin2.js/testForIn",
-      new String[] { "tests/badforin2.js/testForIn1", "tests/badforin2.js/testForIn2" } },
-    new Object[] { "tests/badforin2.js/_check_obj_foo",
-      new String[] { "tests/badforin2.js/testForIn1" } },
-    new Object[] { "tests/badforin2.js/_check_copy_foo",
-      new String[] { "tests/badforin2.js/testForIn1" } },
-    new Object[] { "tests/badforin2.js/_check_obj_bar",
-      new String[] { "tests/badforin2.js/testForIn2" } },
-    new Object[] { "tests/badforin2.js/_check_copy_bar",
-      new String[] { "tests/badforin2.js/testForIn2" } }
+      new String[] { "badforin2.js" } },
+    new Object[] { "badforin2.js", 
+      new String[] { "badforin2.js/testForIn", "badforin2.js/_check_obj_foo", "badforin2.js/_check_obj_bar", "badforin2.js/_check_copy_foo", "badforin2.js/_check_copy_bar"} },
+    new Object[] { "badforin2.js/testForIn",
+      new String[] { "badforin2.js/testForIn1", "badforin2.js/testForIn2" } },
+    new Object[] { "badforin2.js/_check_obj_foo",
+      new String[] { "badforin2.js/testForIn1" } },
+    new Object[] { "badforin2.js/_check_copy_foo",
+      new String[] { "badforin2.js/testForIn1" } },
+    new Object[] { "badforin2.js/_check_obj_bar",
+      new String[] { "badforin2.js/testForIn2" } },
+    new Object[] { "badforin2.js/_check_copy_bar",
+      new String[] { "badforin2.js/testForIn2" } }
   };
 
   @Test public void testbadforin2WithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin2.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForbadforin2);
   }
 
   private static final Object[][] assertionsForbadforin2HackPrecision = new Object[][] { 
-    new Object[] { "tests/badforin2.js/_check_obj_foo",
-      new String[] { "!tests/badforin2.js/testForIn2" } },
-    new Object[] { "tests/badforin2.js/_check_copy_foo",
-      new String[] { "!tests/badforin2.js/testForIn2" } },
-    new Object[] { "tests/badforin2.js/_check_obj_bar",
-      new String[] { "!tests/badforin2.js/testForIn1" } },
-    new Object[] { "tests/badforin2.js/_check_copy_bar",
-      new String[] { "!tests/badforin2.js/testForIn1" } }
+    new Object[] { "badforin2.js/_check_obj_foo",
+      new String[] { "!badforin2.js/testForIn2" } },
+    new Object[] { "badforin2.js/_check_copy_foo",
+      new String[] { "!badforin2.js/testForIn2" } },
+    new Object[] { "badforin2.js/_check_obj_bar",
+      new String[] { "!badforin2.js/testForIn1" } },
+    new Object[] { "badforin2.js/_check_copy_bar",
+      new String[] { "!badforin2.js/testForIn1" } }
   };
 
   @Test public void testbadforin2WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin2.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForbadforin2);
     verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
   }
@@ -160,7 +160,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin3.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
   }
 
 

@@ -41,6 +41,6 @@ public class TestJQueryExamples extends TestJSCallGraphShape {
     URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 }

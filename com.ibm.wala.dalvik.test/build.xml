@@ -64,6 +64,7 @@
 
    <target name="copyDxJar" depends="dxJarPresent" unless="dx.jar.present">
 	<fail unless="env.ANDROID_HOME" message="ANDROID_HOME is not set! Set the environment variable or copy dx.jar manually." />
+	<mkdir dir="${basedir}/lib/"/>
 	<copy tofile="${basedir}/lib/dx.jar">
 		<first>
 			<fileset dir="${env.ANDROID_HOME}" includes="build-tools/*/lib/dx.jar"/>

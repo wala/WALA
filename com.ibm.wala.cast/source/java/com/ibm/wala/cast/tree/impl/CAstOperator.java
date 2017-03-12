@@ -71,6 +71,7 @@ public class CAstOperator implements CAstNode {
   public final static CAstOperator OP_LSH = new CAstOperator("<<");
   public final static CAstOperator OP_MOD = new CAstOperator("%");
   public final static CAstOperator OP_MUL = new CAstOperator("*");
+  public final static CAstOperator OP_POW = new CAstOperator("^^^");
   public final static CAstOperator OP_RSH = new CAstOperator(">>");
   public final static CAstOperator OP_URSH = new CAstOperator(">>>");
   public final static CAstOperator OP_SUB = new CAstOperator("-");

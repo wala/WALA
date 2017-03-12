@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.jar.JarFile;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -23,14 +22,10 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.launching.JREContainer;
-import org.eclipse.jdt.launching.JavaRuntime;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
-import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;

@@ -50,7 +50,6 @@ package org.scandroid.util;
 
 import java.util.List;
 
-
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 
 public interface IEntryPointSpecifier {

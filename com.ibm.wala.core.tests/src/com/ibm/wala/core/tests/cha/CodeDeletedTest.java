@@ -18,10 +18,12 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.WalaRuntimeException;
@@ -42,10 +44,10 @@ public class CodeDeletedTest extends WalaTestCase {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
         (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application, "LCodeDeleted");
     IClass klass = cha.lookupClass(ref);
-    AnalysisCache cache = new AnalysisCache();
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
     for (IMethod m : klass.getDeclaredMethods()) {
       if (m.toString().contains("foo")) {
         // should throw WalaRuntimeException

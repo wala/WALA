@@ -23,9 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import nu.validator.htmlparser.common.XmlViolationPolicy;
-import nu.validator.htmlparser.sax.HtmlParser;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -38,6 +35,9 @@ import com.ibm.wala.cast.js.html.ITag;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.LineNumberPosition;
 import com.ibm.wala.util.collections.Pair;
+
+import nu.validator.htmlparser.common.XmlViolationPolicy;
+import nu.validator.htmlparser.sax.HtmlParser;
 
 public class NuValidatorHtmlParser implements IHtmlParser {
 

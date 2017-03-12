@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -257,27 +258,39 @@ public class LambdaSummaryClass extends SyntheticClass {
       MethodReference callee = MethodReference.findOrCreate(ClassLoaderReference.Application, getLambdaCalleeClass(), getLambdaCalleeName(), getLambdaCalleeSignature());
 
       Dispatch code;
+      boolean isNew = false;
+      int new_v = -1;
       int kind = getLambdaCalleeKind();
       switch (kind) {
       case 5: code = Dispatch.VIRTUAL; break;
       case 6: code = Dispatch.STATIC; break;
       case 7: code = Dispatch.SPECIAL; break;
+      case 8: code = Dispatch.SPECIAL; isNew = true; break;
       case 9: code = Dispatch.INTERFACE; break;
       default:
         throw new Error("unexpected dynamic invoke type " + kind);
       }
-     
+           
       int numParams = getClassHierarchy().resolveMethod(callee).getNumberOfParameters();
       int params[] = new int[ numParams ];
-      for(int i = 0; i < invoke.getNumberOfParameters(); i++) {
+      for(int i = isNew? 1: 0; i < invoke.getNumberOfParameters(); i++) {
         params[i] = args + i + 1;
       }
       for(int n = 2, i = invoke.getNumberOfParameters(); i < numParams; i++) {
         params[i] = n++;
       }
-      
+     
+      if (isNew) {
+        v++;
+        summary.addStatement(insts.NewInstruction(inst++, new_v=v++, NewSiteReference.make(inst, callee.getDeclaringClass())));
+        params[0] = new_v;
+      }
+
       if (callee.getReturnType().equals(TypeReference.Void)) {
         summary.addStatement(insts.InvokeInstruction(inst++, params, v++, CallSiteReference.make(inst, callee, code), null));
+        if (isNew) {
+          summary.addStatement(insts.ReturnInstruction(inst++, new_v, false));          
+        } 
       } else {
         int ret = v++;
         summary.addStatement(insts.InvokeInstruction(inst++, ret, params, v++, CallSiteReference.make(inst, callee, code), null));

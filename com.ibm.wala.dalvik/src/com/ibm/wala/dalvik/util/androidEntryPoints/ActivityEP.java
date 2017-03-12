@@ -175,7 +175,7 @@ public final class ActivityEP {
 	public static final AndroidPossibleEntryPoint onStop = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
             "onStop",
             ExecutionOrder.after(
-    			ExecutionOrder.AFTER_LOOP
+            ExecutionOrder.END_OF_LOOP
             ));
 
     /**

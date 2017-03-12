@@ -40,8 +40,6 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import java.util.logging.Logger;
-
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.ipa.callgraph.ContextItem;

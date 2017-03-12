@@ -19,14 +19,15 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.WalaException;
@@ -89,7 +90,7 @@ public class PDFControlDependenceGraph {
       }
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
-      ClassHierarchy cha = ClassHierarchy.make(scope);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
       MethodReference mr = StringStuff.makeMethodReference(methodSig);
 
@@ -100,7 +101,7 @@ public class PDFControlDependenceGraph {
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
-      AnalysisCache cache = new AnalysisCache();
+      AnalysisCache cache = new AnalysisCacheImpl();
       IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions() );
 
       if (ir == null) {

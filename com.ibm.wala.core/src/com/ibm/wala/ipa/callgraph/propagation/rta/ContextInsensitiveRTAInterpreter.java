@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.cha.ContextInsensitiveCHAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -29,13 +30,13 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiveCHAContextInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
 
-  private final AnalysisCache analysisCache;
+  private final IAnalysisCacheView analysisCache;
 
-  public ContextInsensitiveRTAInterpreter(AnalysisCache cache) {
+  public ContextInsensitiveRTAInterpreter(IAnalysisCacheView cache) {
     this.analysisCache = cache;
   }
 
-  public AnalysisCache getAnalysisCache() {
+  public IAnalysisCacheView getAnalysisCache() {
     return analysisCache;
   }
 

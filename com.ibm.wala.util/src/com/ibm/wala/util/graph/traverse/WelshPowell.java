@@ -17,10 +17,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.NumberedGraph;
 
-public class WelshPowell<T extends INodeWithNumber> {
+public class WelshPowell<T> {
 
   public static class ColoredVertices<T> {
     private final boolean fullColoring;
@@ -59,6 +58,10 @@ public class WelshPowell<T extends INodeWithNumber> {
       this.numColors = numColors;
     }
 
+    @Override
+    public String toString() {
+      return colors.toString();
+    }
   }
 
   public static <T> Comparator<T> defaultComparator(final NumberedGraph<T> G) {
@@ -101,29 +104,29 @@ public class WelshPowell<T extends INodeWithNumber> {
     int colored = 0;
 
     for(T n : vertices) {
-      int id = n.getGraphNodeId();
+      int id = G.getNumber(n);
       if (colors[id] == -1) {
         colors[id] = currentColor;
         colored++;
 
         for(T m : vertices) {
-          if (colors[m.getGraphNodeId()] == -1) {
+          if (colors[G.getNumber(m)] == -1) {
             color_me: {
               for(Iterator<T> ps = G.getPredNodes(m); ps.hasNext(); ) {
                 T p = ps.next();
-                if (colors[ p.getGraphNodeId() ] == currentColor) {
+                if (colors[ G.getNumber(p) ] == currentColor) {
                   break color_me;
                 }
               }
   
               for(Iterator<T> ss = G.getSuccNodes(m); ss.hasNext(); ) {
                 T s = ss.next();
-                if (colors[s.getGraphNodeId()] == currentColor) {
+                if (colors[G.getNumber(s)] == currentColor) {
                   break color_me;
                 }
               }
   
-              colors[m.getGraphNodeId()] = currentColor;
+              colors[G.getNumber(m)] = currentColor;
               colored++;
               
               if (currentColor == maxColors - 1) {

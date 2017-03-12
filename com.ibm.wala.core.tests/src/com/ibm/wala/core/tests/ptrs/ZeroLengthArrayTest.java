@@ -12,13 +12,11 @@ package com.ibm.wala.core.tests.ptrs;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -32,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
@@ -39,18 +38,20 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.OrdinalSet;
 
+import junit.framework.Assert;
+
 public class ZeroLengthArrayTest {
 
   @Test
   public void testZeroLengthArray() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.ZERO_LENGTH_ARRAY_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 //    System.err.println(pa);

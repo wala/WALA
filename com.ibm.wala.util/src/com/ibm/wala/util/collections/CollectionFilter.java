@@ -12,6 +12,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Collection;
+
 import com.ibm.wala.util.Predicate;
 
 /**

@@ -160,6 +160,41 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /**
+   * Return the Shrike instruction index for a particular valid program counter (bytecode index), or -1 if 
+   * the Shrike instriction index could not be determined. 
+   * 
+   * This ShrikeBTMethod must not be native.
+   * 
+   * @throws InvalidClassFileException, {@link UnsupportedOperationException}
+   */
+  public int getInstructionIndex(int bcIndex) throws InvalidClassFileException {
+    if (isNative()) {
+      throw new UnsupportedOperationException("getInstructionIndex(int bcIndex) is only supported for non-native bytecode");
+    }
+
+    final BytecodeInfo info = getBCInfo();
+    if (info.decoder.containsSubroutines()) return -1;
+
+    final int[] pcMap = info.pcMap;
+    assert isSorted(pcMap);
+
+    int iindex = Arrays.binarySearch(pcMap, bcIndex);
+    if (iindex < 0) return -1;
+
+    // Unfortunately, pcMap is not always *strictly* sorted: given bcIndex, there may be multiple adjacent indices
+    // i,j such that pcMap[i] == bcIndex == pcMap[j]. We pick the least such index.
+    while (iindex > 0 && pcMap[iindex - 1] == bcIndex) iindex--;
+    return iindex;
+  }
+
+  private static boolean isSorted(int[] a) {
+    for (int i = 0; i < a.length - 1; i++) {
+      if (a[i+1] < a[i]) return false;
+    }
+    return true;
+  }
+
+  /**
    * Return the number of Shrike instructions for this method.
    * 
    * @throws InvalidClassFileException

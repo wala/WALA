@@ -24,17 +24,20 @@ import org.apache.commons.io.input.BOMInputStream;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCallGraphUtil {
@@ -83,14 +86,14 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  public static AnalysisScope makeScope(SourceModule[] files, SingleClassLoaderFactory loaders, Language language)
+  public static AnalysisScope makeScope(Module[] files, SingleClassLoaderFactory loaders, Language language)
       throws IOException {
     CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
   public static AnalysisCache makeCache(IRFactory<IMethod> factory) {
-    return new AnalysisCache(factory);
+    return new AnalysisCacheImpl(factory);
   }
 
   public static String getShortName(CGNode nd) {
@@ -119,7 +122,7 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  public static void dumpCG(PointerAnalysis<InstanceKey> PA, CallGraph CG) {
+  public static void dumpCG(SSAContextInterpreter interp, PointerAnalysis<InstanceKey> PA, CallGraph CG) {
     if (AVOID_DUMP)
       return;
     for (Iterator x = CG.iterator(); x.hasNext();) {
@@ -135,7 +138,7 @@ public class CAstCallGraphUtil {
       }
       System.err.println("]");
       System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());
-      IR ir = N.getIR();
+      IRView ir = interp.getIRView(N);
       if (ir != null) {
         System.err.println(ir);
       } else {

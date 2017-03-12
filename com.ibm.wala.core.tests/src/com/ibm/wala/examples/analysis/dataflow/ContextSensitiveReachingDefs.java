@@ -27,9 +27,9 @@ import com.ibm.wala.dataflow.IFDS.PathEdge;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.dataflow.IFDS.TabulationSolver;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -63,7 +63,7 @@ public class ContextSensitiveReachingDefs {
    */
   private final ReachingDefsDomain domain = new ReachingDefsDomain();
 
-  public ContextSensitiveReachingDefs(CallGraph cg, AnalysisCache cache) {
+  public ContextSensitiveReachingDefs(CallGraph cg, IAnalysisCacheView cache) {
     this.cha = cg.getClassHierarchy();
     // we use an ICFGSupergraph, which basically adapts ExplodedInterproceduralCFG to the ISupergraph interface
     this.supergraph = ICFGSupergraph.make(cg, cache);

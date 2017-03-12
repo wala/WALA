@@ -71,7 +71,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.TemporaryFile;
 
 /**

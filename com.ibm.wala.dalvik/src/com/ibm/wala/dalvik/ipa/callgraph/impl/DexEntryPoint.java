@@ -46,8 +46,6 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.impl;
 
-import java.util.logging.Logger;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;

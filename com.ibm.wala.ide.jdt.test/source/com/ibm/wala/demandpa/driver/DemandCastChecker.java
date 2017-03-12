@@ -62,6 +62,7 @@ import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -77,6 +78,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
@@ -143,7 +145,7 @@ public class DemandCastChecker {
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, getExclusions(benchName));
     // build a type hierarchy
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
@@ -184,7 +186,7 @@ public class DemandCastChecker {
       throws IllegalArgumentException, CancelException {
     CallGraph retCG = null;
     PointerAnalysis retPA = null;
-    final AnalysisCache cache = new AnalysisCache();
+    final AnalysisCache cache = new AnalysisCacheImpl();
     CallGraphBuilder builder;
     if (CHEAP_CG) {
       builder = Util.makeZeroCFABuilder(options, cache, cha, scope);

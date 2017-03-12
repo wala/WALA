@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperEdge;
-import com.ibm.wala.analysis.arraybounds.hypergraph.HyperNode;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
 
 /**

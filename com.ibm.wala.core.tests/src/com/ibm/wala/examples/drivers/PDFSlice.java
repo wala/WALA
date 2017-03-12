@@ -18,7 +18,7 @@ import java.util.Properties;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.slicer.HeapStatement;
 import com.ibm.wala.ipa.slicer.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.NormalStatement;
@@ -44,8 +45,8 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -149,10 +150,10 @@ public class PDFSlice {
           .getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // build a class hierarchy, call graph, and system dependence graph
-      ClassHierarchy cha = ClassHierarchy.make(scope);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-      CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+      CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);

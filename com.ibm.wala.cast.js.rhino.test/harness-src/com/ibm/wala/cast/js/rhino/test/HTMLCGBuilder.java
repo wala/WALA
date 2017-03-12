@@ -17,8 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -39,6 +37,8 @@ import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
+
+import junit.framework.Assert;
 
 /**
  * Utility class for building call graphs of HTML pages.

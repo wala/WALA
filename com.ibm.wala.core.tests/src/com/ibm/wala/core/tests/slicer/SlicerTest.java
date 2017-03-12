@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.examples.drivers.PDFSlice;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -40,8 +40,8 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFABuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.MethodEntryStatement;
 import com.ibm.wala.ipa.slicer.NormalStatement;
@@ -85,7 +85,7 @@ public class SlicerTest {
 
   private static IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
     if (cachedCHA == null) {
-      cachedCHA = ClassHierarchy.make(scope);
+      cachedCHA = ClassHierarchyFactory.make(scope);
     }
     return cachedCHA;
   }
@@ -104,7 +104,7 @@ public class SlicerTest {
         TestConstants.SLICE1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -134,7 +134,7 @@ public class SlicerTest {
         TestConstants.SLICE2_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMethod(cg, "baz");
@@ -158,7 +158,7 @@ public class SlicerTest {
         TestConstants.SLICE3_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMethod(cg, "main");
@@ -181,7 +181,7 @@ public class SlicerTest {
         TestConstants.SLICE4_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -204,7 +204,7 @@ public class SlicerTest {
         TestConstants.SLICE5_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode n = findMethod(cg, "baz");
@@ -234,7 +234,7 @@ public class SlicerTest {
         TestConstants.SLICE7_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -262,7 +262,7 @@ public class SlicerTest {
         TestConstants.SLICE8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode process = findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
@@ -288,7 +288,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTCD1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -311,7 +311,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTCD2);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -334,7 +334,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTCD3);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -357,7 +357,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTCD4);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -387,7 +387,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTCD5);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -411,7 +411,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTCD6);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -435,7 +435,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTID);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -458,7 +458,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTARRAYS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -482,7 +482,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTFIELDS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -506,7 +506,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTTHIN1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -540,7 +540,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTGLOBAL);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -565,7 +565,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTMULTITARGET);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -588,7 +588,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTRECURSION);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -613,7 +613,7 @@ public class SlicerTest {
         TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode test = findMethod(cg, "test");
@@ -648,7 +648,7 @@ public class SlicerTest {
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder builder = new nCFABuilder(1, cha, options, new AnalysisCache(), appSelector, appInterpreter);
+    SSAPropagationCallGraphBuilder builder = new nCFABuilder(1, cha, options, new AnalysisCacheImpl(), appSelector, appInterpreter);
     // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
     // NOTE: we disable ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS for this test, since IntWrapper
     // is a primitive holder
@@ -680,7 +680,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTTHROWCATCH);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -705,7 +705,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTMESSAGEFORMAT);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -731,7 +731,7 @@ public class SlicerTest {
         TestConstants.SLICE_TESTINETADDR);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     SDG sdg = new SDG(cg, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
     GraphIntegrity.check(sdg);
@@ -746,7 +746,7 @@ public class SlicerTest {
         TestConstants.SLICE_JUSTTHROW);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);

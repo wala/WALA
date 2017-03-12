@@ -42,9 +42,9 @@
  */
 package com.ibm.wala.util.ssa;
 
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 
 /**
  *  A number representating an SSA-Value and its type.

@@ -42,19 +42,19 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import com.ibm.wala.ipa.summaries.MethodSummary;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.TypeReference;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import com.ibm.wala.util.strings.Atom;
 
 /**

@@ -1,8 +1,6 @@
 package com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights;
 
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
-import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.AdditiveEdgeWeight;
-import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeight;
 
 /**
  * EdgeWeight that adds a specific value.

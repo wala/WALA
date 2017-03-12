@@ -10,11 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.EmptyStackException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.Stack;
 
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -286,25 +285,39 @@ public abstract class AbstractSSAConversion {
     //     SEARCH(Y)
     //   SearchPostRec(X)
     
-    Stack<Frame> stack = new Stack<Frame>();
+    ArrayList<Frame> stack = new ArrayList<Frame>();
     
     SearchPreRec(X);
-    stack.push(new Frame(X, dominatorTree.getSuccNodes(X)));
+    push(stack, new Frame(X, dominatorTree.getSuccNodes(X)));
     
     // invariant: pre-rec phase was performed for elements in the queue. 
     while (!stack.isEmpty()){
-      Frame f = stack.peek();
+      Frame f = peek(stack);
       if (f.i.hasNext()){
         // iterate next child
         BasicBlock next = (BasicBlock) f.i.next();
         SearchPreRec(next);
-        stack.push(new Frame(next, dominatorTree.getSuccNodes(next)));
+        push(stack, new Frame(next, dominatorTree.getSuccNodes(next)));
       } else {
         // finished iterating children, time to "return"
         SearchPostRec(f.X);
-        stack.pop();
+        pop(stack);
       }
     }
+  }
+
+   private <T> void push(ArrayList<T> stack, T elt) {
+    stack.add(elt);
+  }
+  
+  private <T> T peek(ArrayList<T> stack) {
+    return stack.get(stack.size()-1); 
+  }
+  
+  private <T> T pop(ArrayList<T> stack) {
+    T e = stack.get(stack.size()-1);
+    stack.remove(stack.size()-1);
+    return e;
   }
 
   private void SearchPreRec(SSACFG.BasicBlock X) {
@@ -448,11 +461,8 @@ public abstract class AbstractSSAConversion {
       }
     }
 
-    try {
-      return (isConstant(v)) ? v : S[v].peek();
-    } catch (EmptyStackException e) {
-      throw new RuntimeException("while looking at " + v, e);
-    }
+   
+    return (isConstant(v)) ? v : S[v].peek();
   }
 
 }

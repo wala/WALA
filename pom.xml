@@ -57,8 +57,8 @@
     <module>com.ibm.wala.scandroid</module>
     
     <module>com.ibm.wala-repository</module>
-    
-  </modules>
+
+    </modules>
 
   <profiles>
    <profile>

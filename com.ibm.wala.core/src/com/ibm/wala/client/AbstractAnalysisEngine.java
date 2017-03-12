@@ -22,18 +22,22 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
+import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
+import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
@@ -42,8 +46,6 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
-
-import static com.ibm.wala.ipa.slicer.Slicer.*;
 
 /**
  * Abstract base class for analysis engine implementations
@@ -92,7 +94,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
   /**
    * A cache of IRs and stuff
    */
-  private AnalysisCache cache = makeDefaultCache();
+  private IAnalysisCacheView cache = makeDefaultCache();
 
   /**
    * The standard J2SE libraries to analyze
@@ -131,7 +133,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     }
   };
 
-  protected abstract CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache);
+  protected abstract CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 
   protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
       IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
@@ -181,7 +183,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     IClassHierarchy cha = null;
     ClassLoaderFactory factory = makeClassLoaderFactory(getScope().getExclusions());
     try {
-      cha = ClassHierarchy.make(getScope(), factory);
+      cha = ClassHierarchyFactory.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
       System.err.println(e.toString());
@@ -198,8 +200,8 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     return cha;
   }
 
-  protected void setClassHierarchy(IClassHierarchy cha) {
-    this.cha = cha;
+  protected IClassHierarchy setClassHierarchy(IClassHierarchy cha) {
+    return this.cha = cha;
   }
 
   /**
@@ -287,8 +289,8 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     return new AnalysisOptions(getScope(), entrypoints);
   }
 
-  public AnalysisCache makeDefaultCache() {
-    return new AnalysisCache(new DefaultIRFactory());
+  public IAnalysisCacheView makeDefaultCache() {
+    return new AnalysisCacheImpl(new DefaultIRFactory());
   }
 
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
@@ -320,7 +322,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     return defaultCallGraphBuilder().makeCallGraph(options, null);
   }
 
-  public AnalysisCache getCache() {
+  public IAnalysisCacheView getCache() {
     return cache;
   }
 

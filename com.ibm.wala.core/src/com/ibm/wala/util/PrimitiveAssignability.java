@@ -42,12 +42,12 @@
  */
 package com.ibm.wala.util;
 
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
-
-import java.util.Map;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Map;
+
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 
 /**
  *  Offers checks like ClassHierarchy.isAssignable but for primitives.

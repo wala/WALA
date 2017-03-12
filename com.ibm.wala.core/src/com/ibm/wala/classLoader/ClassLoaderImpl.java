@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -35,10 +34,8 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.collections.HashCodeComparator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.io.FileProvider;
@@ -125,11 +122,8 @@ public class ClassLoaderImpl implements IClassLoader {
     if (DEBUG_LEVEL > 0) {
       System.err.println("Get source files for " + M);
     }
-    TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
-    sortedEntries.addAll(Iterator2Collection.toSet(M.getEntries()));
-
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Iterator it = sortedEntries.iterator(); it.hasNext();) {
+    for (Iterator it = M.getEntries(); it.hasNext();) {
       ModuleEntry entry = (ModuleEntry) it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("consider entry for source information: " + entry);
@@ -157,10 +151,8 @@ public class ClassLoaderImpl implements IClassLoader {
     if (DEBUG_LEVEL > 0) {
       System.err.println("Get class files for " + M);
     }
-    TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
-    sortedEntries.addAll(Iterator2Collection.toSet(M.getEntries()));
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Iterator it = sortedEntries.iterator(); it.hasNext();) {
+    for (Iterator it = M.getEntries(); it.hasNext();) {
       ModuleEntry entry = (ModuleEntry) it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("ClassLoaderImpl.getClassFiles:Got entry: " + entry);

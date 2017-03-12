@@ -38,7 +38,7 @@ import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
@@ -60,10 +60,10 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class FlowGraphBuilder {
 	private final IClassHierarchy cha;
-	private final AnalysisCache cache;
+	private final IAnalysisCacheView cache;
 	private final boolean supportFullPointerAnalysis;
 	
-	public FlowGraphBuilder(IClassHierarchy cha, AnalysisCache cache, boolean supportPointerAnalysis) {
+	public FlowGraphBuilder(IClassHierarchy cha, IAnalysisCacheView cache, boolean supportPointerAnalysis) {
 		this.cha = cha;
 		this.cache = cache;
 		this.supportFullPointerAnalysis = supportPointerAnalysis;
@@ -104,9 +104,6 @@ public class FlowGraphBuilder {
 
   public void visitFunction(FlowGraph flowgraph, IMethod method) {
     {
-      if (method.toString().contains("ctor") && method.toString().contains("dollar_init")) {
-        System.err.println("found it");
-      }
     	IR ir = cache.getIR(method);
     	FlowGraphSSAVisitor visitor = new FlowGraphSSAVisitor(ir, flowgraph);
 

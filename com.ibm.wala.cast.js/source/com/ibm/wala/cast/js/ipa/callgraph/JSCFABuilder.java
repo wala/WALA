@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -33,7 +34,7 @@ import com.ibm.wala.util.strings.Atom;
  */
 public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
-  public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(cha, options, cache, new AstCFAPointerKeys() {
 
       private boolean isBogusKey(InstanceKey K) {

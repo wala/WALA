@@ -1,6 +1,7 @@
 package com.ibm.wala.core.tests.exceptionpruning;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis2EdgeFilter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -34,6 +36,7 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.CombinedInterproced
 import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.IgnoreExceptionsInterFilter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
@@ -71,14 +74,14 @@ public class ExceptionAnalysis2EdgeFilterTest {
     AnalysisScope scope;
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
-    cha = ClassHierarchy.make(scope);
+    cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
     options = new AnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
     ReferenceCleanser.registerClassHierarchy(cha);
-    AnalysisCache cache = new AnalysisCache();
+    AnalysisCache cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
     CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
     cg = builder.makeCallGraph(options, null);

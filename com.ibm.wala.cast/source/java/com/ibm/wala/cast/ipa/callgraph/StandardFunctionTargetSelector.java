@@ -27,6 +27,7 @@ public class StandardFunctionTargetSelector implements MethodTargetSelector {
   private final MethodTargetSelector base;
 
   public StandardFunctionTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
+    assert cha != null;
     this.cha = cha;
     this.base = base;
   }

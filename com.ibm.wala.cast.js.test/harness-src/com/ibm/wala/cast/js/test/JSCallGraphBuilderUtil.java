@@ -33,10 +33,10 @@ import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
-import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -44,6 +44,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -123,13 +124,13 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return makeScope(makeSourceModules(dir, name, JSCallGraphBuilderUtil.class.getClassLoader()), loaders, JavaScriptLoader.JS);    
   }
 
-  public static SourceModule[] makeSourceModules(String dir, String name) throws IOException {
+  public static Module[] makeSourceModules(String dir, String name) throws IOException {
     return makeSourceModules(dir, name, JSCallGraphBuilderUtil.class.getClassLoader());
   }
   
-  public static SourceModule[] makeSourceModules(String dir, String name, ClassLoader loader) throws IOException {
+  public static Module[] makeSourceModules(String dir, String name, ClassLoader loader) throws IOException {
     URL script = getURLforFile(dir, name, loader);
-    SourceModule[] modules = new SourceModule[] { 
+    Module[] modules = new Module[] { 
         (script.openConnection() instanceof JarURLConnection)? new SourceURLModule(script): makeSourceModule(script, dir, name), 
         getPrologueFile("prologue.js")
     };
@@ -187,7 +188,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   public static SourceModule[] makeHtmlScope(URL url, JavaScriptLoaderFactory loaders, Function<Void,JSSourceExtractor> fExtractor) {
-    Set<SourceModule> scripts = HashSetFactory.make();
+    Set<Module> scripts = HashSetFactory.make();
     
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     scripts.add(getPrologueFile("prologue.js"));
@@ -206,9 +207,9 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   public static CallGraph makeHTMLCG(URL url, Function<Void, JSSourceExtractor> fExtractor) throws IOException, IllegalArgumentException, CancelException, WalaException {
-    PropagationCallGraphBuilder b = makeHTMLCGBuilder(url, fExtractor);
+    SSAPropagationCallGraphBuilder b = makeHTMLCGBuilder(url, fExtractor);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b.getPointerAnalysis(), CG);
+    dumpCG(b.getCFAContextInterpreter(), b.getPointerAnalysis(), CG);
     return CG;
   }
 

@@ -145,11 +145,11 @@ public final class BitSet<T> {
    */
   public Iterator<T> iterator() {
     return new Iterator<T>() {
-      private int next = -1;
+      private int nextCounter = -1;
       {
         for (int i = 0; i < vector.length(); i++) {
           if (vector.get(i)) {
-            next = i;
+            nextCounter = i;
             break;
           }
         }
@@ -157,17 +157,17 @@ public final class BitSet<T> {
 
       @Override
       public boolean hasNext() {
-        return (next != -1);
+        return (nextCounter != -1);
       }
 
       @Override
       public T next() {
-        T result = map.getMappedObject(next);
-        int start = next + 1;
-        next = -1;
+        T result = map.getMappedObject(nextCounter);
+        int start = nextCounter + 1;
+        nextCounter = -1;
         for (int i = start; i < vector.length(); i++) {
           if (vector.get(i)) {
-            next = i;
+            nextCounter = i;
             break;
           }
         }

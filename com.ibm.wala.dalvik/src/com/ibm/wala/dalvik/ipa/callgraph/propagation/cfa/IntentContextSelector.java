@@ -40,53 +40,28 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.ipa.callgraph.ContextSelector;
-
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentMap;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContext;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.AndroidContext;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter;
-
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.ipa.callgraph.propagation.NormalAllocationInNode;
-import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.util.intset.EmptyIntSet;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.BimodalMutableIntSet;
-import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.collections.HashMapFactory;
-
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
-
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-
-import com.ibm.wala.util.strings.StringStuff;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
-import com.ibm.wala.util.collections.Pair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  *  Adds Intents to the Context of functions that start Android-Components.

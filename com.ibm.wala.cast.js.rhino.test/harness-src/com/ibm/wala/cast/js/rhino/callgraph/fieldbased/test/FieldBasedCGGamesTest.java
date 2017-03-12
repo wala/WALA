@@ -18,10 +18,12 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     runTestExceptOnTravis(new URL("http://www.themaninblue.com/experiment/BunnyHunt/"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
+  /*
   @Test
   public void testBomberman() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://www.e-forum.ro/bomberman/dynagame.html"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);
   }
+  */
   
   @Test
   public void testBeslimed() throws IOException, WalaException, Error, CancelException {
@@ -34,11 +36,13 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     runTestExceptOnTravis(new URL("http://www.pixastic.com/labs/digg_attack/"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
+  @Ignore
   @Test
   public void testRiverRaider() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://playstar.mobi/games/riverraider/index.html?playerId=&gameId=8&highscore=102425"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);
   }
  
+  @Ignore
   @Test
   public void testSolitaire() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://www.inmensia.com/files/solitaire1.0.html"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);
@@ -53,6 +57,7 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     }
   }
 
+  @Ignore
   @Test
   public void testMinesweeper() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://www.inmensia.com/files/minesweeper1.0.html"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);

@@ -39,9 +39,9 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
@@ -180,7 +180,7 @@ public class FlowGraph implements Iterable<Vertex> {
     return graph.iterator();
   }
   
-  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final AnalysisCache cache, final IProgressMonitor monitor) throws CancelException {
+  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final IAnalysisCacheView cache, final IProgressMonitor monitor) throws CancelException {
     return new PointerAnalysis<ObjectVertex>() {
       
       private final Map<Pair<PrototypeField,ObjectVertex>,PrototypeFieldVertex> proto = HashMapFactory.make();
@@ -189,7 +189,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
       private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<Vertex>(graph);
 
-      protected IR getIR(final AnalysisCache cache, FuncVertex func) {
+      protected IR getIR(final IAnalysisCacheView cache, FuncVertex func) {
         return cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector));
       }
 

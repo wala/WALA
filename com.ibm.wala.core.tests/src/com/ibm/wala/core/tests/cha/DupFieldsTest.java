@@ -22,6 +22,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
@@ -34,7 +35,7 @@ public class DupFieldsTest extends WalaTestCase {
   @Test public void testDupFieldNames() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application, "LDupFieldName");
     IClass klass = cha.lookupClass(ref);
     boolean threwException = false;

@@ -325,6 +325,13 @@ public final class ClassReader implements ClassConstants {
   public byte getByte(int i) {
     return bytes[i];
   }
+  
+  /**
+   * @return the unsigned 8-bit value at offset i in the class data
+   */
+  public int getUnsignedByte(int i) {
+    return ((int) bytes[i]) & 0xff;
+  }
 
   /**
    * @return the number of fields in the class

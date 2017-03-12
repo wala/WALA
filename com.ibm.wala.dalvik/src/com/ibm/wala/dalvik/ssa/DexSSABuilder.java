@@ -13,7 +13,6 @@ package com.ibm.wala.dalvik.ssa;
 
 import java.nio.ByteBuffer;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction.ArrayElement;
 
@@ -351,7 +350,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSA2LocalMap localMap,
                 SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
             super(dexCFG);
-            this.piNodePolicy = null;// piNodePolicy;
+            this.piNodePolicy = piNodePolicy;
             this.cfg = cfg;
             this.creators = new SSAInstruction[0];
             this.dexCFG = dexCFG;

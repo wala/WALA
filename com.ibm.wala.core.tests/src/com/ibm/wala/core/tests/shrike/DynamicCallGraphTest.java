@@ -18,13 +18,14 @@ import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
@@ -43,10 +44,10 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
   
   private CallGraph staticCG(String mainClass, String exclusionsFile) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, exclusionsFile != null? exclusionsFile: CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
 
   @Test

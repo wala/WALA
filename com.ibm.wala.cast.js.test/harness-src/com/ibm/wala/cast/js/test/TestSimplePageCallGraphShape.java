@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
+import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -36,12 +37,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   @Override
   @Before
   public void setUp() {
-    WebUtil.setFactory(new IHtmlParserFactory() {
-      @Override
-      public IHtmlParser getParser() {
-        return getParser();
-      }
-    });
+    JSSourceExtractor.USE_TEMP_NAME = false;
   }
   
   private static final Object[][] assertionsForPage1 = new Object[][] {
@@ -270,7 +266,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
 //    JSCallGraphBuilderUtil.AVOID_DUMP = false;
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
   }
 
@@ -292,7 +288,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/windowx.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowx);
   }
 
@@ -306,7 +302,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/windowonload.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowOnload);
   }
 

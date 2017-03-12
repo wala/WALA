@@ -34,17 +34,19 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.cha.SeqClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -72,7 +74,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   @Override
   public IClassHierarchy buildClassHierarchy() {
     try {
-      return ClassHierarchy.make(getScope(), loaderFactory, JavaScriptLoader.JS);
+      return setClassHierarchy(SeqClassHierarchyFactory.make(getScope(), loaderFactory, JavaScriptLoader.JS));
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE(e.toString());
       return null;
@@ -99,8 +101,8 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   }
 
   @Override
-  public AnalysisCache makeDefaultCache() {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
+  public IAnalysisCacheView makeDefaultCache() {
+    return new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
   }
 
   @Override
@@ -140,7 +142,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
 
 
   @Override
-  protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, final AnalysisCache cache) {
+  protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(final IClassHierarchy cha, AnalysisOptions options, final IAnalysisCacheView cache) {
     Set<Entrypoint> roots = HashSetFactory.make();
     for(Entrypoint e : options.getEntrypoints()) {
       roots.add(e);
@@ -176,8 +178,13 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
       }
 
       @Override
-      public AnalysisCache getAnalysisCache() {
+      public IAnalysisCacheView getAnalysisCache() {
         return cache;
+      }
+
+      @Override
+      public IClassHierarchy getClassHierarchy() {
+        return cha;
       }
        
      };
@@ -187,7 +194,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   public static class PropagationJavaScriptAnalysisEngine extends JavaScriptAnalysisEngine<InstanceKey> {
   
     @Override
-    protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha, scope, false);
     }
   }

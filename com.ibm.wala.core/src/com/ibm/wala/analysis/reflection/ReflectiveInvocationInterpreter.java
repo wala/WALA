@@ -29,6 +29,7 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -84,6 +85,11 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     
 /** END Custom change: caching */
     return result;
+  }
+
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
   }
 
   /*

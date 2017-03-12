@@ -19,8 +19,8 @@ import com.ibm.wala.classLoader.NestedJarFileModule;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -132,7 +132,7 @@ public class Util {
     TemporaryFile.urlToFile(F, (new FileProvider()).getResource("com.ibm.wala.core.testdata_1.0.0a.jar"));
     File androidDex = convertJarToDex(F.getAbsolutePath());
     AnalysisScope dalvikScope = makeDalvikScope(null, null, androidDex.getAbsolutePath());
-    return ClassHierarchy.make(dalvikScope);    
+    return ClassHierarchyFactory.make(dalvikScope);    
   }
 
 }

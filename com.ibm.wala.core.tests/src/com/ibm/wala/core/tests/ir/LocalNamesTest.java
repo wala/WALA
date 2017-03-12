@@ -22,11 +22,13 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -71,11 +73,11 @@ public class LocalNamesTest extends WalaTestCase {
         (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
-    cache = new AnalysisCache();
+    cache = new AnalysisCacheImpl();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
-      cha = ClassHierarchy.make(scope, factory);
+      cha = ClassHierarchyFactory.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }
@@ -102,7 +104,7 @@ public class LocalNamesTest extends WalaTestCase {
     try {
       AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider())
           .getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
-      ClassHierarchy cha = ClassHierarchy.make(scope);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
       TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "AliasNames");
       IClass klass = cha.lookupClass(t);
       Assert.assertTrue(klass != null);

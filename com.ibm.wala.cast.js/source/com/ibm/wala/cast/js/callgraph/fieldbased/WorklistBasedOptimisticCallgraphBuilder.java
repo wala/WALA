@@ -21,15 +21,12 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
-import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.types.AstMethodReference;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
@@ -69,7 +66,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	}
 
 	@Override
-  protected Set<Pair<CallVertex,FuncVertex>> extractCallGraphEdges(FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
+  public Set<Pair<CallVertex,FuncVertex>> extractCallGraphEdges(FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
 	  VertexFactory factory = flowgraph.getVertexFactory();
 	  Set<Vertex> worklist = HashSetFactory.make();
 	  Map<Vertex, Set<FuncVertex>> reachingFunctions = HashMapFactory.make();

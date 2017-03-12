@@ -23,7 +23,7 @@ public interface CAstType {
      */
     String getName();
 
-    Collection/*<CAstType>*/ getSupertypes();
+    Collection<CAstType> getSupertypes();
 
     public interface Primitive extends CAstType {
 	// Need anything else? The name pretty much says it all...
@@ -46,8 +46,8 @@ public interface CAstType {
     public interface Function extends Reference {
 	CAstType getReturnType();
 
-	List/*<CAstType>*/ getArgumentTypes();
-	Collection/*<CAstType>*/ getExceptionTypes();
+	List<CAstType> getArgumentTypes();
+	Collection<CAstType> getExceptionTypes();
 
 	int getArgumentCount();
     }
@@ -70,7 +70,7 @@ public interface CAstType {
       }
 
       @Override
-      public Collection/*<CAstType>*/ getSupertypes() {
+      public Collection<CAstType>/*<CAstType>*/ getSupertypes() {
 	return Collections.EMPTY_SET;
       }
  

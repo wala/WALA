@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -28,6 +28,8 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
+import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPiNodePolicy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -74,14 +76,14 @@ public class PiNodeCallGraphTest extends WalaTestCase {
 
   private CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.PI_TEST_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     SSAPiNodePolicy policy = usePiNodes ? SSAOptions.getAllBuiltInPiNodes() : null;
     options.getSSAOptions().setPiNodePolicy(policy);
 
-    return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
+    return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(new DefaultIRFactory(), options.getSSAOptions()), cha, scope, false);
   }
 
   private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls, int numLocalCastCallees) {

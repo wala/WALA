@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.util.collections.Pair;
 
 /**

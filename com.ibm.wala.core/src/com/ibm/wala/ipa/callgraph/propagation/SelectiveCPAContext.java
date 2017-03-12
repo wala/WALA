@@ -11,7 +11,6 @@
 
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.ipa.callgraph.Context;

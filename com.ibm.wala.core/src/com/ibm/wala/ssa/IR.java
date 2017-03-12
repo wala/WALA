@@ -42,7 +42,7 @@ import com.ibm.wala.util.strings.StringStuff;
  * 
  * See http://wala.sourceforge.net/wiki/index.php/UserGuide:IR for more details on the IR API.
  */
-public abstract class IR {
+public abstract class IR implements IRView {
 
   /**
    * The method that defined this IR's bytecodes
@@ -154,7 +154,17 @@ public abstract class IR {
       int end = bb.getLastInstructionIndex();
       result.append("BB").append(bb.getNumber());
       if (bb instanceof ExceptionHandlerBasicBlock) {
-        result.append("<Handler>");
+
+        result.append("<Handler> (");
+        Iterator<TypeReference> catchIter = ((ExceptionHandlerBasicBlock) bb).getCaughtExceptionTypes();
+        while (catchIter.hasNext()) {
+          TypeReference next = catchIter.next();
+          result.append(next);
+          if (catchIter.hasNext()) {
+            result.append(",");
+          }
+        }
+        result.append(")");
       }
       result.append("\n");
       for (Iterator it = bb.iteratePhis(); it.hasNext();) {
@@ -264,6 +274,11 @@ public abstract class IR {
    */
   public SSACFG getControlFlowGraph() {
     return cfg;
+  }
+
+  @Override
+  public Iterator<ISSABasicBlock> getBlocks() {
+    return getControlFlowGraph().iterator();
   }
 
   /**

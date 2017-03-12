@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.ibm.wala.cfg.CFGSanitizer;
@@ -26,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
@@ -37,6 +36,8 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.FileProvider;
+
+import junit.framework.Assert;
 
 /**
  * Test integrity of CFGs
@@ -55,7 +56,7 @@ public class CFGSanitizerTest extends WalaTestCase {
   public void testSyntheticEdgeToExit() throws IOException, IllegalArgumentException, WalaException {
     AnalysisScope scope = AnalysisScopeReader.makePrimordialScope((new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     ClassLoader cl = CFGSanitizerTest.class.getClassLoader();
     InputStream s = cl.getResourceAsStream("natives.xml");
     XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);

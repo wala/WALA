@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -57,8 +56,8 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
@@ -109,7 +108,7 @@ public class UnknownTargetModel  extends AndroidModel {
     /**
      *  @param  target  Component Type, may be null: No restrictions are imposed on AndroidModel then
      */
-    public UnknownTargetModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache, 
+    public UnknownTargetModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache, 
             AndroidComponent target) throws CancelException {
         super(cha, options, cache);
         

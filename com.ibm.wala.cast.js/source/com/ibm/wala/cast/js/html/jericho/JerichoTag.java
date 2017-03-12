@@ -17,15 +17,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import net.htmlparser.jericho.Attribute;
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.Segment;
-
 import com.ibm.wala.cast.js.html.ITag;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
+
+import net.htmlparser.jericho.Attribute;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Segment;
 
 /**
  * ITag impel for Jericho generated tags

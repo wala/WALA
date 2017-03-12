@@ -22,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.graph.labeled.LabeledGraph;
 
 public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {

@@ -21,6 +21,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -33,7 +34,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
  */
 public class AstContextInsensitiveSSAContextInterpreter extends ContextInsensitiveSSAInterpreter {
 
-  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, AnalysisCache cache) {
+  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, IAnalysisCacheView cache) {
     super(options, cache);
   }
 

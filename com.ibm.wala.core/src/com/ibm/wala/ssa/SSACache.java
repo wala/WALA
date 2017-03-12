@@ -34,18 +34,20 @@ public class SSACache {
   /**
    * A cache of SSA IRs
    */
-  final private AuxiliaryCache irCache = new AuxiliaryCache();
+  final private IAuxiliaryCache irCache;
 
   /**
    * A cache of DefUse information
    */
-  final private AuxiliaryCache duCache = new AuxiliaryCache();
+  final private IAuxiliaryCache duCache;
 
   /**
    * @param factory a factory for creating IRs
    */
-  public SSACache(IRFactory<IMethod> factory) {
+  public SSACache(IRFactory<IMethod> factory, IAuxiliaryCache irCache, IAuxiliaryCache duCache) {
     this.factory = factory;
+    this.irCache = irCache;
+    this.duCache = duCache;
   }
 
   /**

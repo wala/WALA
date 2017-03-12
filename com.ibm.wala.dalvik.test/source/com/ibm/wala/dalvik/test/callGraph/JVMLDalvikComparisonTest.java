@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -38,6 +38,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -49,10 +50,10 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 
 	private static Pair<CallGraph,PointerAnalysis<InstanceKey>> makeJavaBuilder(String scopeFile, String mainClass) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-		ClassHierarchy cha = ClassHierarchy.make(scope);
+		ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 		Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
 		AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-		SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
+		SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
 		CallGraph CG = builder.makeCallGraph(options);
 		return Pair.make(CG, builder.getPointerAnalysis());
 	}

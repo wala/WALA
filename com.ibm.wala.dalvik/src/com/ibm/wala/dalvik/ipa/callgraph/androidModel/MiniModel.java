@@ -40,12 +40,10 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
-import java.util.logging.Logger;
-
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.types.Descriptor;
@@ -93,7 +91,7 @@ public class MiniModel extends AndroidModel {
         return descr;
     }
 
-    public MiniModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache, 
+    public MiniModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache, 
             final AndroidComponent forCompo) throws CancelException {
         super(cha, options, cache);
     

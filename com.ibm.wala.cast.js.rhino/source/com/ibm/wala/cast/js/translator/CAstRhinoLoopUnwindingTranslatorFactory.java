@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.translator;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
-import com.ibm.wala.cast.js.translator.JavaScriptLoopUnwindingTranslatorFactory;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.classLoader.SourceModule;
 

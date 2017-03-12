@@ -15,11 +15,13 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.ContextInsensitiveRTAInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
@@ -30,7 +32,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
 
   protected final AnalysisOptions options;
 
-  public ContextInsensitiveSSAInterpreter(AnalysisOptions options, AnalysisCache cache) {
+  public ContextInsensitiveSSAInterpreter(AnalysisOptions options, IAnalysisCacheView cache) {
     super(cache);
     this.options = options;
   }
@@ -42,8 +44,14 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
+    return getAnalysisCache().getIR(node.getMethod(), Everywhere.EVERYWHERE);
   }
+  
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
+  }
+
 
   @Override
   public int getNumberOfStatements(CGNode node) {
@@ -73,6 +81,6 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
+    return getAnalysisCache().getDefUse(getAnalysisCache().getIR(node.getMethod(), Everywhere.EVERYWHERE));
   }
 }

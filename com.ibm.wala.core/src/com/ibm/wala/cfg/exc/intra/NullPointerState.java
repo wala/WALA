@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
+import java.util.Collection;
+
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.fixpoint.AbstractVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -27,7 +29,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   
   /*
    * Inital state is UNKNOWN.
-   * Lattice: UNKNOWN < { NULL, NOT_NULL } < BOTH
+   * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN
    */
   public enum State { UNKNOWN, BOTH, NULL, NOT_NULL };
   
@@ -35,6 +37,10 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   private final State[] vars;
   
   NullPointerState(int maxVarNum, SymbolTable symbolTable, ParameterState parameterState) {
+    this(maxVarNum, symbolTable, parameterState, State.UNKNOWN);
+  }
+
+  NullPointerState(int maxVarNum, SymbolTable symbolTable, ParameterState parameterState, State defaultState) {
     this.vars = new State[maxVarNum + 1];
     
     // Initialize the states
@@ -46,7 +52,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
           vars[i] = State.NOT_NULL;
         }
       } else {
-        vars[i] = State.UNKNOWN;
+        vars[i] = defaultState;
       }
     }
     
@@ -95,6 +101,10 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     return IndentityFunction.INSTANCE;
   }
   
+  static UnaryOperator<NullPointerState> phisFunction(Collection<UnaryOperator<NullPointerState>> phiFunctions) {
+    return new OperatorUtil.UnaryOperatorSequence<>(phiFunctions);
+  }
+
   boolean isNeverNull(int varNum) {
     assert varNum > 0 && varNum < vars.length;
     
@@ -167,42 +177,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     return changed;
   }
   
-  /**
-   * This is a intersect operator for the NullPointerState variables. It is used by the
-   * phi values.
-   * <pre>
-   * ? == unknown, 1 == not null, 0 == null, * == both
-   * 
-   * meet | ? | 0 | 1 | * |  <- rhs
-   * -----|---|---|---|---|
-   *    ? | ? | ? | ? | * |
-   * -----|---|---|---|---|
-   *    0 | ? | 0 | * | * |
-   * -----|---|---|---|---|
-   *    1 | ? | * | 1 | * |
-   * -----|---|---|---|---|
-   *    * | * | * | * | * |
-   * ----------------------
-   *    ^
-   *    |
-   *   lhs
-   * </pre> 
-   */
-  boolean intersect(final int varNum, final State state) {
-    final State lhs = vars[varNum];
-    
-    if (lhs != State.BOTH && state != lhs) {
-      if (state != State.BOTH && (lhs == State.UNKNOWN || state == State.UNKNOWN)){
-        vars[varNum] = State.UNKNOWN;
-        return true;
-      } else {
-        vars[varNum] = State.BOTH;
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
 
   boolean nullify(int varNum) {
     if (vars[varNum] != State.NULL) {
@@ -336,15 +310,17 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
-      byte state = FixedPointConstants.NOT_CHANGED;
-      
-      for (int from : fromVars) {
-        if (lhs.intersect(varNum, rhs.vars[from])) {
-          state = FixedPointConstants.CHANGED;
-        }
+      boolean changed = false;
+      if (!lhs.equals(rhs)) {
+        lhs.copyState(rhs);
+        changed = true;
       }
-        
-      return state;
+      lhs.vars[varNum] = State.UNKNOWN;
+      for (int from : fromVars) {
+          changed |= lhs.meet(varNum, rhs.vars[from]);
+      }
+      
+      return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
     }
 
     /* (non-Javadoc)
@@ -385,7 +361,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public String toString() {
-      StringBuffer str = new StringBuffer("Meet(" + varNum + ", [");
+      StringBuffer str = new StringBuffer("PhiValueMeet(" + varNum + ", [");
       
       for (int i = 0; i < fromVars.length; i++) {
         str.append(fromVars[i]);
@@ -398,6 +374,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     }
 
   }
+  
   
   private static class NullifyFunction extends UnaryOperator<NullPointerState> {
 
@@ -549,7 +526,5 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     public String toString() {
       return "Id";
     }
-    
   }
-
 }

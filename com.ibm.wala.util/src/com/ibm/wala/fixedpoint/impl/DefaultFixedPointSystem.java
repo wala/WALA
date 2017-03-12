@@ -18,8 +18,8 @@ import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryStatement;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -208,7 +208,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
       checkGraph();
     }
 
-    Iterator<INodeWithNumber> order = Topological.makeTopologicalIter(graph);
+    Iterator<INodeWithNumber> order = Topological.makeTopologicalIter(graph).iterator();
     int number = 0;
     while (order.hasNext()) {
       Object elt = order.next();

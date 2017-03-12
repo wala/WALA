@@ -19,11 +19,12 @@ import java.util.Stack;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.BasicCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
@@ -52,7 +53,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
 public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
   private final AnalysisOptions options;
-  private final AnalysisCache cache;
+  private final IAnalysisCacheView cache;
   
   private boolean isInitialized = false;
   
@@ -105,7 +106,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   public CHACallGraph(IClassHierarchy cha) {
     this.cha = cha;
     this.options = new AnalysisOptions();
-    this.cache = new AnalysisCache();
+    this.cache = new AnalysisCacheImpl();
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
   }
 

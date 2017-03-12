@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.js.translator;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -90,7 +91,6 @@ import org.mozilla.javascript.ast.XmlString;
 import org.mozilla.javascript.ast.Yield;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -108,8 +108,12 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.impl.RangePosition;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.util.CAstPattern;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -117,7 +121,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
 
-public class RhinoToAstTranslator {
+public class RhinoToAstTranslator implements TranslatorToCAst {
 
   /**
    * a dummy name to use for standard function calls, only used to distinguish
@@ -536,7 +540,7 @@ public class RhinoToAstTranslator {
   }
     
   private Position makePosition(AstNode n) {
-    URL url = sourceModule.getURL();
+    URL url = ((SourceModule)sourceModule).getURL();
     int line = n.getLineno(); 
     Position pos = new RangePosition(url, line, n.getAbsolutePosition(), n.getAbsolutePosition()+n.getLength());
 
@@ -2423,7 +2427,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
 
   private final String scriptName;
 
-  private final SourceModule sourceModule;
+  private final ModuleEntry sourceModule;
 
   final private Reader sourceReader;
 
@@ -2431,12 +2435,17 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
 
   private final DoLoopTranslator doLoopTranslator;
   
-  public RhinoToAstTranslator(CAst Ast, SourceModule M, String scriptName, boolean replicateForDoLoops) {
+  public RhinoToAstTranslator(CAst Ast, ModuleEntry m, String scriptName, boolean replicateForDoLoops) {
     this.Ast = Ast;
     this.scriptName = scriptName;
-    this.sourceModule = M;
-    this.sourceReader = sourceModule.getInputReader();
+    this.sourceModule = m;
+    this.sourceReader = new InputStreamReader(sourceModule.getInputStream());
     this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, Ast);
+  }
+
+  @Override
+  public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend) {
+    assert false;
   }
 
 }

@@ -43,7 +43,6 @@ package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -58,17 +57,18 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.UnknownTargetModel;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.FieldReference;
@@ -98,9 +98,9 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
     private final IntentStarters intentStarters;
     private final IClassHierarchy cha;
     private final AnalysisOptions options;
-    private final AnalysisCache cache;
+    private final IAnalysisCacheView cache;
 
-    public IntentContextInterpreter(IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache) {
+    public IntentContextInterpreter(IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache) {
         this.cha = cha;
         this.options = options;
         this.cache = cache;
@@ -117,7 +117,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             return intent.getComponent();
         } else if (intent.getType() == Intent.IntentType.SYSTEM_SERVICE) {
             
-            return null;
+            return AndroidComponent.UNKNOWN;
         } else {
             final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
             if (possibleTargets.size() == 1) {
@@ -246,6 +246,11 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         }
     }
 
+    @Override
+    public IRView getIRView(CGNode node) {
+      return getIR(node);
+    }
+
     /**
      *  If the function associated with the node is handled by this class.
      *
@@ -257,13 +262,6 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             throw new IllegalArgumentException("node is null");
         }
         final MethodReference target = node.getMethod().getReference();
-
-        { // DEBUG
-            if (target.toString().contains("getSystemService")) {
-                return true;
-            }
-        }
-
         return (
                 intentStarters.isStarter(target) 
         );

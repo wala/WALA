@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.runtime.CoreException;
 
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
@@ -29,6 +27,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.io.TemporaryFile;
+
+import junit.framework.Assert;
 
 public abstract class JDTJavaTest extends IRTests {
 

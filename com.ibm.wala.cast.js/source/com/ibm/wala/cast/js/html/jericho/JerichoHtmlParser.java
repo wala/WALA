@@ -17,17 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.htmlparser.jericho.Config;
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.Logger;
-import net.htmlparser.jericho.LoggerProvider;
-import net.htmlparser.jericho.Source;
-
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.warnings.Warning;
+
+import net.htmlparser.jericho.Config;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Logger;
+import net.htmlparser.jericho.LoggerProvider;
+import net.htmlparser.jericho.Source;
 
 
 /**

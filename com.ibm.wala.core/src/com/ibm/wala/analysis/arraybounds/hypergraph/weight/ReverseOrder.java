@@ -2,8 +2,6 @@ package com.ibm.wala.analysis.arraybounds.hypergraph.weight;
 
 import java.util.Comparator;
 
-import com.ibm.wala.analysis.arraybounds.hypergraph.weight.NormalOrder;
-import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 
 /**

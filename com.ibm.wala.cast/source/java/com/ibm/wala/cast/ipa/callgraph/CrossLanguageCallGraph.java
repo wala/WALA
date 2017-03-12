@@ -19,9 +19,9 @@ import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
@@ -50,7 +50,7 @@ import com.ibm.wala.util.strings.Atom;
 public class CrossLanguageCallGraph extends AstCallGraph {
 
   public CrossLanguageCallGraph(TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots, IClassHierarchy cha,
-      AnalysisOptions options, AnalysisCache cache) {
+      AnalysisOptions options, IAnalysisCacheView cache) {
     super(cha, options, cache);
     this.roots = roots;
   }
@@ -93,11 +93,11 @@ public class CrossLanguageCallGraph extends AstCallGraph {
 
   public class CrossLanguageFakeRoot extends ScriptFakeRoot {
 
-    public CrossLanguageFakeRoot(IClass declaringClass, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    public CrossLanguageFakeRoot(IClass declaringClass, IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       super(FakeRootMethod.rootMethod, declaringClass, cha, options, cache);
     }
 
-    public CrossLanguageFakeRoot(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    public CrossLanguageFakeRoot(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       super(FakeRootMethod.rootMethod, cha, options, cache);
     }
 

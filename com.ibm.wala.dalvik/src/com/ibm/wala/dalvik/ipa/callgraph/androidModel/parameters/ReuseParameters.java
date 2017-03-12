@@ -42,7 +42,6 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;

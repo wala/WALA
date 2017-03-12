@@ -15,7 +15,6 @@ import java.util.Iterator;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
-import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod;
@@ -24,7 +23,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -42,8 +41,8 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
  *
  */
 public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
-	public PessimisticCallGraphBuilder(IClassHierarchy cha,	AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
-		super(cha, options, cache, supportFullPointerAnalysis);
+	public PessimisticCallGraphBuilder(IClassHierarchy cha,	AnalysisOptions options, IAnalysisCacheView iAnalysisCacheView, boolean supportFullPointerAnalysis) {
+		super(cha, options, iAnalysisCacheView, supportFullPointerAnalysis);
 	}
 
 	@Override

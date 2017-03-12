@@ -23,6 +23,7 @@ import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.cfg.MinimalCFG;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -55,7 +56,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * As the current implementation stands, the delegate graph stores the graph structure, and this class additionally stores
  * {@link BasicBlock}s and the {@link SSAInstruction} array.
  */
-public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> {
+public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>, MinimalCFG<ISSABasicBlock> {
 
   private static final boolean DEBUG = false;
 

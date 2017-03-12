@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -87,8 +88,8 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
         }
     }
 
-    private void setupCatchTypes(SSACFG cfg, Map<IBasicBlock, TypeReference[]> map) {
-      for(Map.Entry<IBasicBlock,TypeReference[]> e : map.entrySet()) {
+    private void setupCatchTypes(SSACFG cfg, Map<IBasicBlock<SSAInstruction>, TypeReference[]> map) {
+      for(Entry<IBasicBlock<SSAInstruction>, TypeReference[]> e : map.entrySet()) {
         if (e.getKey().getNumber() != -1) {
           ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(e.getKey().getNumber());
           for (int j = 0; j < e.getValue().length; j++) {

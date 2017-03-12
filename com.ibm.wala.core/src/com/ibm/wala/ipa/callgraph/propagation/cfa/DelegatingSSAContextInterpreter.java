@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingRTAContextInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
@@ -53,6 +54,17 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     }
     assert B.understands(node);
     return B.getIR(node);
+  }
+
+  @Override
+  public IRView getIRView(CGNode node) {
+    if (A != null) {
+      if (A.understands(node)) {
+        return A.getIRView(node);
+      }
+    }
+    assert B.understands(node);
+    return B.getIRView(node);
   }
 
   @Override

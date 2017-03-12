@@ -47,21 +47,21 @@ public class Pair<T,U> implements Serializable {
 
   public Iterator<Object> iterator() {
     return new Iterator<Object>() {
-      byte next = 1;
+      byte nextFlag = 1;
 
       @Override
       public boolean hasNext() {
-        return next > 0;
+        return nextFlag > 0;
       }
 
       @Override
       public Object next() {
-        switch (next) {
+        switch (nextFlag) {
           case 1 :
-            next++;
+            nextFlag++;
             return fst;
           case 2 :
-            next = 0;
+            nextFlag = 0;
             return snd;
           default :
             throw new NoSuchElementException();

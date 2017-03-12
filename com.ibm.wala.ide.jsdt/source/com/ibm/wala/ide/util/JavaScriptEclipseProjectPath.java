@@ -24,9 +24,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ide.jsdt.Activator;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -73,12 +73,7 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
     for(Pair<String,Plugin> model : models) {
       URL modelFile = JsdtUtil.getPrologueFile(model.fst, model.snd);
       assert modelFile != null : "cannot find file for " + model;
-      s.add(new SourceURLModule(modelFile) {
-        @Override
-        public String getName() {
-          return super.getName().substring(1);
-        }
-      });
+      s.add(new JSCallGraphUtil.Bootstrap(model.fst, modelFile.openStream(), modelFile));
     }
 
     return path;

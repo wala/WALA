@@ -34,12 +34,12 @@ import com.ibm.wala.util.WalaException;
 public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
 
   protected static final Object[][] assertionsForArgs = new Object[][] {
-    new Object[] { ROOT, new String[] { "tests/args.js" } },
+    new Object[] { ROOT, new String[] { "args.js" } },
     new Object[] {
-        "tests/args.js",
-        new String[] { "tests/args.js/a" } },
-    new Object[] { "tests/args.js/a", new String[] { "tests/args.js/x"} },
-    new Object[] { "tests/args.js/a", new String[] { "tests/args.js/y", "tests/args.js/z", "!tests/args.js/wrong" } } };
+        "args.js",
+        new String[] { "args.js/a" } },
+    new Object[] { "args.js/a", new String[] { "args.js/x"} },
+    new Object[] { "args.js/a", new String[] { "args.js/y", "args.js/z", "!args.js/wrong" } } };
 
   @Test public void testArgs() throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException, WalaException {
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
@@ -58,7 +58,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     CallGraph CG = builder.makeCallGraph(options);
 
 //    CAstCallGraphUtil.AVOID_DUMP = false;
-    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
     
     verifyGraphAssertions(CG, assertionsForArgs);
   }

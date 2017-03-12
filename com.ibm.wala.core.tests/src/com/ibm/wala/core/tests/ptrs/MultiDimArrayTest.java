@@ -19,7 +19,7 @@ import org.junit.Test;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
@@ -58,12 +59,12 @@ public class MultiDimArrayTest extends WalaTestCase {
 
   @Test public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
         .makeMainEntrypoints(scope, cha, TestConstants.MULTI_DIM_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     

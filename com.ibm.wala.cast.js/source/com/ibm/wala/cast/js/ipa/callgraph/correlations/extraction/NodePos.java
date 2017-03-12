@@ -13,8 +13,8 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 
 /**
  * Representation of a node's position in a CAst entity's syntax tree. The position is stored as a zipper

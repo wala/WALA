@@ -7,6 +7,7 @@ import com.ibm.wala.cfg.exc.intra.NullPointerState;
 import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
@@ -35,10 +36,11 @@ public class IntraproceduralNullPointerAnalysis {
 
 		final int maxVarNum = ir.getSymbolTable().getMaxValueNumber();
 		final int[] paramValNum = ir.getParameterValueNumbers();
+		SSACFG cfg = ir.getControlFlowGraph();
 		final NullPointerFrameWork<ISSABasicBlock> problem = new NullPointerFrameWork<ISSABasicBlock>(
-				ir.getControlFlowGraph(), ir);
+				cfg, ir);
 		this.solver = new NullPointerSolver<ISSABasicBlock>(problem, maxVarNum,
-				paramValNum, ir);
+				paramValNum, ir, cfg.entry());
 		try {
 			this.solver.solve(NO_PROGRESS_MONITOR);
 		} catch (final CancelException e) {
