@@ -41,14 +41,14 @@ public class EclipseTestUtil {
     public final String projectName;
     public final String zipFileName;
  
-    public ZippedProjectData(Plugin sourcePlugin, String projectName, String zipFileName) {
+    public ZippedProjectData(Plugin sourcePlugin, String projectName, String zipFileName) throws IOException {
       this.sourcePlugin = sourcePlugin;
       this.projectName = projectName;
       this.zipFileName = zipFileName;
       open();
     }
     
-    private void open() {
+    private void open() throws IOException {
       importZippedProject(sourcePlugin, projectName, zipFileName, new NullProgressMonitor());
     }
     
@@ -57,10 +57,11 @@ public class EclipseTestUtil {
     }
   }
   
-  public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) {
-    ZipFile zipFile = getZipFile(plugin, zipFileName);
-    createOpenProject(projectName);
-    importZipfile(projectName, zipFile, monitor);
+  public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) throws IOException {
+    try (final ZipFile zipFile = getZipFile(plugin, zipFileName)) {
+      createOpenProject(projectName);
+      importZipfile(projectName, zipFile, monitor);
+    }
   }
 
   public static void createOpenProject(String projectName) {

@@ -44,16 +44,16 @@ public class AddBytecodeDebug {
     for (int i = 0; i < 1; i++) {
       instrumenter = new OfflineInstrumenter(true);
 
-      Writer w = new BufferedWriter(new FileWriter("report", false));
-
-      args = instrumenter.parseStandardArgs(args);
-      instrumenter.setPassUnmodifiedClasses(true);
-      instrumenter.beginTraversal();
-      ClassInstrumenter ci;
-      while ((ci = instrumenter.nextClass()) != null) {
-        doClass(ci, w);
+      try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
+        args = instrumenter.parseStandardArgs(args);
+        instrumenter.setPassUnmodifiedClasses(true);
+        instrumenter.beginTraversal();
+        ClassInstrumenter ci;
+        while ((ci = instrumenter.nextClass()) != null) {
+          doClass(ci, w);
+        }
+        instrumenter.close();
       }
-      instrumenter.close();
     }
   }
 

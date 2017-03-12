@@ -127,6 +127,7 @@ public abstract class OfflineInstrumenterBase {
     }
 
     @Override
+    @SuppressWarnings("resource")
     public InputStream open() throws IOException {
       JarFile cachedJar = openCachedJar(file);
       return cachedJar.getInputStream(cachedJar.getEntry(name));
@@ -150,6 +151,7 @@ public abstract class OfflineInstrumenterBase {
     /**
      * Get the underlying ZipEntry corresponding to this resource.
      */
+    @SuppressWarnings("resource")
     public ZipEntry getEntry() throws IOException {
       JarFile cachedJar = openCachedJar(file);
       return cachedJar.getEntry(name);
@@ -454,7 +456,9 @@ public abstract class OfflineInstrumenterBase {
         throw new IllegalStateException("Output file was not set");
       }
 
-      outputJar = new JarOutputStream(new FileOutputStream(outputFile));
+      @SuppressWarnings("resource")
+      final FileOutputStream out = new FileOutputStream(outputFile);
+      outputJar = new JarOutputStream(out);
     }
   }
 

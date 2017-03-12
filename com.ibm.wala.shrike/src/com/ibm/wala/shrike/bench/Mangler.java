@@ -59,25 +59,25 @@ public class Mangler {
     for (int i = 0; i < 1; i++) {
       instrumenter = new OfflineInstrumenter(true);
 
-      Writer w = new BufferedWriter(new FileWriter("report", false));
+      try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
 
-      args = instrumenter.parseStandardArgs(args);
-      int seed;
-      try {
-        seed = Integer.parseInt(args[0]);
-      } catch (NumberFormatException ex) {
-        System.err.println("Invalid number: " + args[0]);
-        w.close();
-        return;
-      }
+        args = instrumenter.parseStandardArgs(args);
+        int seed;
+        try {
+          seed = Integer.parseInt(args[0]);
+        } catch (NumberFormatException ex) {
+          System.err.println("Invalid number: " + args[0]);
+          return;
+        }
 
-      Random r = new Random(seed);
-      instrumenter.setPassUnmodifiedClasses(true);
-      instrumenter.beginTraversal();
-      instrumenter.setOutputJar(new File("output.jar"));
-      ClassInstrumenter ci;
-      while ((ci = instrumenter.nextClass()) != null) {
-        doClass(ci, w, r);
+        Random r = new Random(seed);
+        instrumenter.setPassUnmodifiedClasses(true);
+        instrumenter.beginTraversal();
+        instrumenter.setOutputJar(new File("output.jar"));
+        ClassInstrumenter ci;
+        while ((ci = instrumenter.nextClass()) != null) {
+          doClass(ci, w, r);
+        }
       }
       instrumenter.close();
     }

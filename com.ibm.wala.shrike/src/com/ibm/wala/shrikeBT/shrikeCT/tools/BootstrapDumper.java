@@ -55,17 +55,17 @@ public class BootstrapDumper {
       assert f.exists();
       urls[i-1] = f.toURI().toURL(); 
     }
-    URLClassLoader image = URLClassLoader.newInstance(urls, BootstrapDumper.class.getClassLoader().getParent());
-    
-    System.err.println(image);
-    
-    ClassInstrumenter ci;
-    oi.beginTraversal();
-    while ((ci = oi.nextClass()) != null) {
-      try {
-        p.doClass(image, ci.getReader());
-      } finally {
-        w.flush();
+    try (final URLClassLoader image = URLClassLoader.newInstance(urls, BootstrapDumper.class.getClassLoader().getParent())) {
+      System.err.println(image);
+
+      ClassInstrumenter ci;
+      oi.beginTraversal();
+      while ((ci = oi.nextClass()) != null) {
+        try {
+          p.doClass(image, ci.getReader());
+        } finally {
+          w.flush();
+        }
       }
     }
 

@@ -251,16 +251,15 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
     private void getScriptFromUrl(String urlAsString, ITag scriptTag) throws IOException, MalformedURLException {
       URL scriptSrc = new URL(entrypointUrl, urlAsString);
-      Reader scriptInputStream;
+      BOMInputStream bs;
       try {
-        BOMInputStream bs = new BOMInputStream(scriptSrc.openConnection().getInputStream(), false, 
+        bs = new BOMInputStream(scriptSrc.openConnection().getInputStream(), false,
             ByteOrderMark.UTF_8, 
             ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE,
             ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
         if (bs.hasBOM()) {
           System.err.println("removing BOM " + bs.getBOM());
         }
-        scriptInputStream = new InputStreamReader(bs);
       } catch (Exception e) {
         //it looks like this happens when we can't resolve the url?
         if (DEBUG) {
@@ -270,22 +269,17 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         }
         return;
       }
-      
-      BufferedReader scriptReader = null;
-      try {
+      try (
+        final Reader scriptInputStream = new InputStreamReader(bs);
+        final BufferedReader scriptReader = new BufferedReader(scriptInputStream);
+        ) {
         String line;
-        scriptReader = new BufferedReader(scriptInputStream);
         StringBuffer x = new StringBuffer();
         while ((line = scriptReader.readLine()) != null) {
           x.append(line).append("\n");
         }
 
         scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc, false);
-
-      } finally {
-        if (scriptReader != null) {
-          scriptReader.close();
-        }
       }
     }
 
@@ -329,9 +323,11 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
   throws IOException, Error {
 
-    Reader inputStreamReader = WebUtil.getStream(entrypointUrl);
-    IGeneratorCallback htmlCallback = createHtmlCallback(entrypointUrl, urlResolver); 
-    htmlParser.parse(entrypointUrl, inputStreamReader, htmlCallback, entrypointUrl.getFile());
+    IGeneratorCallback htmlCallback;
+    try (Reader inputStreamReader = WebUtil.getStream(entrypointUrl)) {
+      htmlCallback = createHtmlCallback(entrypointUrl, urlResolver);
+      htmlParser.parse(entrypointUrl, inputStreamReader, htmlCallback, entrypointUrl.getFile());
+    }
 
     SourceRegion finalRegion = new SourceRegion();
     htmlCallback.writeToFinalRegion(finalRegion);
@@ -339,7 +335,10 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     // writing the final region into one SourceFileModule.
     File outputFile = createOutputFile(entrypointUrl, DELETE_UPON_EXIT, USE_TEMP_NAME);
     tempFile = outputFile;
-    FileMapping fileMapping = finalRegion.writeToFile(new PrintWriter(new FileWriter(outputFile)));
+    FileMapping fileMapping;
+    try (final PrintWriter printer = new PrintWriter(new FileWriter(outputFile))) {
+      fileMapping = finalRegion.writeToFile(printer);
+    }
     if (fileMapping == null) {
       fileMapping = new EmptyFileMapping();
     }

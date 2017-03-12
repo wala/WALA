@@ -191,8 +191,8 @@ public class AddSerialVersion {
       if (args[i] == null) {
         throw new IllegalArgumentException("args[" + i + "] is null");
       }
-      try {
-        byte[] data = Util.readFully(new FileInputStream(args[i]));
+      try (final FileInputStream in = new FileInputStream(args[i])) {
+        byte[] data = Util.readFully(in);
         ClassReader r = new ClassReader(data);
         System.out.println(Util.makeClass(r.getName()) + ": serialVersionUID = " + computeSerialVersionUID(r));
       } catch (FileNotFoundException e) {

@@ -105,7 +105,9 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
         collectJars(files[i], result);
       }
     } else if (f.getAbsolutePath().endsWith(".jar")) {
-      result.add(new JarFile(f, false));
+      try (final JarFile jar = new JarFile(f, false)) {
+        result.add(jar);
+      }
     }
   }
 

@@ -312,26 +312,15 @@ public class AndroidAnalysisContext {
 	private static XMLMethodSummaryReader loadMethodSummaries(
 			AnalysisScope scope, InputStream xmlIStream)
 			throws FileNotFoundException {
-		InputStream s = xmlIStream;
-		XMLMethodSummaryReader summary = null;
-
-		try {
-			if (null == s) {
-				s = AndroidAnalysisContext.class.getClassLoader()
-						.getResourceAsStream(
-								pathToSpec + File.separator + methodSpec);
-			}
-			summary = new XMLMethodSummaryReader(s, scope);
-		} finally {
-			try {
-				if (null != s) {
-					s.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try (InputStream s = xmlIStream != null ? xmlIStream :
+			AndroidAnalysisContext.class.getClassLoader()
+				.getResourceAsStream(
+					pathToSpec + File.separator + methodSpec)) {
+			return new XMLMethodSummaryReader(s, scope);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return summary;
+		return null;
 	}
 	
 	/**

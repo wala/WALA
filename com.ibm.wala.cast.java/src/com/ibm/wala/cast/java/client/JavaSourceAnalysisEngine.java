@@ -111,8 +111,9 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
-      InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile());
-      scope.setExclusions(new FileOfClasses(is));
+      try (final InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile())) {
+        scope.setExclusions(new FileOfClasses(is));
+      }
     }
 
     for (Module M : this.systemEntries) {

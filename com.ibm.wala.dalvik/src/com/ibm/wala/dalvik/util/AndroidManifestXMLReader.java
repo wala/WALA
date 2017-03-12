@@ -101,8 +101,8 @@ public class AndroidManifestXMLReader {
         if (xmlFile == null) {
             throw new IllegalArgumentException("xmlFile may not be null");
         }
-        try {
-            readXML(new FileInputStream(xmlFile));
+        try (final FileInputStream in = new FileInputStream(xmlFile)) {
+            readXML(in);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("Exception was thrown");
