@@ -38,27 +38,26 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
     if (input == null) {
       throw new IllegalArgumentException("null input");
     }
-    BufferedReader is = new BufferedReader(new InputStreamReader(input));
-
-    StringBuffer regex = null;
-    String line;
-    while ((line = is.readLine()) != null) {
-
-      if (line.startsWith("#")) continue;
-
-      if (regex == null) {
-        regex = new StringBuffer("(" + line + ")");
-      } else {
-        regex.append("|(" + line + ")");
+    try (final BufferedReader is = new BufferedReader(new InputStreamReader(input))) {
+  
+      StringBuffer regex = null;
+      String line;
+      while ((line = is.readLine()) != null) {
+  
+        if (line.startsWith("#")) continue;
+  
+        if (regex == null) {
+          regex = new StringBuffer("(" + line + ")");
+        } else {
+          regex.append("|(" + line + ")");
+        }
+      }
+  
+      if (regex != null) {
+        this.regex = regex.toString();
+        needsCompile = true;
       }
     }
-
-    if (regex != null) {
-      this.regex = regex.toString();
-      needsCompile = true;
-    }
-
-    is.close();
   }
 
   private void compile() {

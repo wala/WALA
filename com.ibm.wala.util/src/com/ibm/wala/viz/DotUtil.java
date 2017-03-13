@@ -168,9 +168,9 @@ public class DotUtil {
     }
     try {
       File f = new File(dotfile);
-      FileWriter fw = new FileWriter(f);
-      fw.write(dotStringBuffer.toString());
-      fw.close();
+      try (FileWriter fw = new FileWriter(f)) {
+        fw.write(dotStringBuffer.toString());
+      }
       return f;
 
     } catch (Exception e) {

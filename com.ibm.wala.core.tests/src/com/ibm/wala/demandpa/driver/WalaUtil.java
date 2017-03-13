@@ -67,8 +67,7 @@ public class WalaUtil {
     }
     System.err.print("dumping ir...");
     String irFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + benchName + "-ir.txt";
-    try {
-      PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(irFile)));
+    try (final PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(irFile)))) {
       for (Iterator<? extends CGNode> iter = cg.iterator(); iter.hasNext();) {
         CGNode node = iter.next();
         IR ir = node.getIR();
@@ -79,7 +78,6 @@ public class WalaUtil {
         writer.println(ir);
         writer.println("");
       }
-      writer.close();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

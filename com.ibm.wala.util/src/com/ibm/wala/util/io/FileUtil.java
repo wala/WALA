@@ -84,27 +84,15 @@ public class FileUtil {
     if (destFileName == null) {
       throw new IllegalArgumentException("destFileName is null");
     }
-    FileChannel src = null;
-    FileChannel dest = null;
-    try {
-      src = new FileInputStream(srcFileName).getChannel();
-      dest = new FileOutputStream(destFileName).getChannel();
+    try (
+      final FileInputStream srcStream = new FileInputStream(srcFileName);
+      final FileOutputStream dstStream = new FileOutputStream(destFileName);
+      final FileChannel src = srcStream.getChannel();
+      final FileChannel dest = dstStream.getChannel();
+    ) {
       long n = src.size();
       MappedByteBuffer buf = src.map(FileChannel.MapMode.READ_ONLY, 0, n);
       dest.write(buf);
-    } finally {
-      if (dest != null) {
-        try {
-          dest.close();
-        } catch (IOException e1) {
-        }
-      }
-      if (src != null) {
-        try {
-          src.close();
-        } catch (IOException e1) {
-        }
-      }
     }
   }
 
@@ -175,16 +163,16 @@ public class FileUtil {
     if (s == null) {
       throw new IllegalArgumentException("null s");
     }
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    byte[] b = new byte[1024];
-    int n = s.read(b);
-    while (n != -1) {
-      out.write(b, 0, n);
-      n = s.read(b);
+    try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      byte[] b = new byte[1024];
+      int n = s.read(b);
+      while (n != -1) {
+        out.write(b, 0, n);
+        n = s.read(b);
+      }
+      byte[] bb = out.toByteArray();
+      return bb;
     }
-    byte[] bb = out.toByteArray();
-    out.close();
-    return bb;
   }
 
   /**
@@ -195,9 +183,9 @@ public class FileUtil {
    * @throws IOException
    */
   public static void writeFile(File f, String content) throws IOException {
-    final FileWriter fw = new FileWriter(f);
-    fw.append(content);
-    fw.close();
+    try (final FileWriter fw = new FileWriter(f)) {
+      fw.append(content);
+    }
   }
 
   public static void recurseFiles(VoidFunction<File> action, final Predicate<File> filter, File top) {

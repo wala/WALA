@@ -162,9 +162,9 @@ public class DexDotUtil extends DotUtil {
         }
         try {
           File f = new File(dotfile);
-          FileWriter fw = new FileWriter(f);
-          fw.write(dotStringBuffer.toString());
-          fw.close();
+          try (final FileWriter fw = new FileWriter(f)) {
+        	fw.write(dotStringBuffer.toString());
+          }
           return f;
 
         } catch (Exception e) {

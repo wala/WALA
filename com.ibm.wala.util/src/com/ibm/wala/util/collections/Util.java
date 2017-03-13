@@ -71,9 +71,9 @@ public class Util {
     }
     // create a memory buffer to which to dump the trace
     ByteArrayOutputStream traceDump = new ByteArrayOutputStream();
-    PrintWriter w = new PrintWriter(traceDump);
-    thrown.printStackTrace(w);
-    w.close();
+    try (final PrintWriter w = new PrintWriter(traceDump)) {
+      thrown.printStackTrace(w);
+    }
     return traceDump.toString();
   }
   

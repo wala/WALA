@@ -41,29 +41,28 @@ public class TemporaryFile {
   }
   
   public static File streamToFile(File F, InputStream... inputs) throws IOException {
-    FileOutputStream output = new FileOutputStream(F);
-    
-    int read;
-    byte[] buffer = new byte[ 1024 ];
-    for(InputStream input : inputs) {
-      while ( (read = input.read(buffer)) != -1 ) {
-        output.write(buffer, 0, read);
+    try (final FileOutputStream output = new FileOutputStream(F)) {
+      
+      int read;
+      byte[] buffer = new byte[ 1024 ];
+      for(InputStream input : inputs) {
+        while ( (read = input.read(buffer)) != -1 ) {
+          output.write(buffer, 0, read);
+        }
+        input.close();
       }
-      input.close();
     }
-    
-    output.close();
     return F;
   }
   
   public static File stringToFile(File F, String... inputs) throws IOException {
-    FileOutputStream output = new FileOutputStream(F);
-    
-    for(String input : inputs) {
-      output.write(input.getBytes());
+    try (final FileOutputStream output = new FileOutputStream(F)) {
+
+      for(String input : inputs) {
+        output.write(input.getBytes());
+      }
     }
-    
-    output.close();
+
     return F;
   }
 }
