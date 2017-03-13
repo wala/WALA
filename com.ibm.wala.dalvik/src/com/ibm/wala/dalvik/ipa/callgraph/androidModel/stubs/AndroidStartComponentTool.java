@@ -209,7 +209,7 @@ public class AndroidStartComponentTool {
                 AndroidTypes.ConfigurationName }, TypeReference.VoidName);
         final Selector mSel = new Selector(Atom.findOrCreateAsciiAtom("attach"), desc);
         final MethodReference mRef = MethodReference.findOrCreate(AndroidTypes.Activity, mSel);
-        final List<SSAValue> params = new ArrayList<SSAValue>(13);
+        final List<SSAValue> params = new ArrayList<>(13);
         params.add(null);   // activity
         params.add(context);
         params.add(thread);
@@ -349,7 +349,7 @@ public class AndroidStartComponentTool {
                 final MethodReference mRef = MethodReference.findOrCreate(AndroidTypes.IntentSender, mSel);
                 final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
                 final SSAValue exception = pm.getException();
-                final List<SSAValue> params = new ArrayList<SSAValue>(1);
+                final List<SSAValue> params = new ArrayList<>(1);
                 params.add(intentSender);
                 final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, iIntentSender, params, exception, site);
                 redirect.addStatement(invokation);
@@ -361,7 +361,7 @@ public class AndroidStartComponentTool {
                 final MethodReference mRef = MethodReference.findOrCreate(AndroidTypes.IntentSender, mSel);
                 final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
                 final SSAValue exception = pm.getException();
-                final List<SSAValue> params = new ArrayList<SSAValue>(1);
+                final List<SSAValue> params = new ArrayList<>(1);
                 params.add(iIntentSender);
                 final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, iBinder, params, exception, site);
                 redirect.addStatement(invokation);
@@ -396,7 +396,7 @@ public class AndroidStartComponentTool {
                 final MethodReference mRef = MethodReference.findOrCreate(AndroidTypes.ActivityThread, mSel);
                 final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
                 final SSAValue exception = pm.getException();
-                final List<SSAValue> params = new ArrayList<SSAValue>(1);
+                final List<SSAValue> params = new ArrayList<>(1);
                 params.add(mMainThread);
                 final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, iBinder,  params, exception, site);
                 redirect.addStatement(invokation);
@@ -469,7 +469,7 @@ public class AndroidStartComponentTool {
             final MethodReference mRef = MethodReference.findOrCreate(AndroidTypes.Activity, mSel);
             final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
             final SSAValue exception = pm.getException();
-            final List<SSAValue> params = new ArrayList<SSAValue>(1);
+            final List<SSAValue> params = new ArrayList<>(1);
             params.add(activity);
             params.add(intent);
             final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, params, exception, site);

@@ -114,11 +114,11 @@ public class PruneArrayOutOfBoundExceptionEdge {
     ArrayOutOfBoundsAnalysis arrayBoundsAnalysis = new ArrayOutOfBoundsAnalysis(ir);
     IntraproceduralNullPointerAnalysis nullPointerAnalysis = new IntraproceduralNullPointerAnalysis(ir);
 
-    CombinedExceptionFilter<SSAInstruction> filter = new CombinedExceptionFilter<SSAInstruction>();
+    CombinedExceptionFilter<SSAInstruction> filter = new CombinedExceptionFilter<>();
     filter.add(new ArrayOutOfBoundFilter(arrayBoundsAnalysis));
     filter.add(new NullPointerExceptionFilter(nullPointerAnalysis));
 
-    ExceptionFilter2EdgeFilter<ISSABasicBlock> edgeFilter = new ExceptionFilter2EdgeFilter<ISSABasicBlock>(filter, cha, cfg);
+    ExceptionFilter2EdgeFilter<ISSABasicBlock> edgeFilter = new ExceptionFilter2EdgeFilter<>(filter, cha, cfg);
     PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg = PrunedCFG.make(cfg, edgeFilter);
 
     return Pair.make(cfg, prunedCfg);
@@ -195,8 +195,8 @@ public class PruneArrayOutOfBoundExceptionEdge {
   private boolean checkExceptionalSuccessors(ISSABasicBlock block, SSACFG cfg, PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg,
       IMethod method, String identifyer) {
     boolean isEdgeRemoved = false;
-    LinkedHashSet<ISSABasicBlock> exceptionalSuccessorCfg = new LinkedHashSet<ISSABasicBlock>(cfg.getExceptionalSuccessors(block));
-    LinkedHashSet<ISSABasicBlock> exceptionalSuccessorPruned = new LinkedHashSet<ISSABasicBlock>(
+    LinkedHashSet<ISSABasicBlock> exceptionalSuccessorCfg = new LinkedHashSet<>(cfg.getExceptionalSuccessors(block));
+    LinkedHashSet<ISSABasicBlock> exceptionalSuccessorPruned = new LinkedHashSet<>(
         prunedCfg.getExceptionalSuccessors(block));
 
     if (!exceptionalSuccessorCfg.equals(exceptionalSuccessorPruned)) {
@@ -229,8 +229,8 @@ public class PruneArrayOutOfBoundExceptionEdge {
   }
 
   private void checkNormalSuccessors(SSACFG cfg, PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg, ISSABasicBlock block) {
-    LinkedHashSet<ISSABasicBlock> normalSuccessorCfg = new LinkedHashSet<ISSABasicBlock>(cfg.getNormalSuccessors(block));
-    LinkedHashSet<ISSABasicBlock> normalSuccessorPruned = new LinkedHashSet<ISSABasicBlock>(prunedCfg.getNormalSuccessors(block));
+    LinkedHashSet<ISSABasicBlock> normalSuccessorCfg = new LinkedHashSet<>(cfg.getNormalSuccessors(block));
+    LinkedHashSet<ISSABasicBlock> normalSuccessorPruned = new LinkedHashSet<>(prunedCfg.getNormalSuccessors(block));
     collector.checkThat("", normalSuccessorPruned, equalTo(normalSuccessorCfg));
   }
 

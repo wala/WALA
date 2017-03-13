@@ -30,7 +30,7 @@ public class SourceBuffer {
     BufferedReader reader = new BufferedReader(p.getReader());
     
     String currentLine = null;
-    List<String> lines = new ArrayList<String>();
+    List<String> lines = new ArrayList<>();
     int offset = 0, line = 0;
     do { 
       currentLine = reader.readLine();

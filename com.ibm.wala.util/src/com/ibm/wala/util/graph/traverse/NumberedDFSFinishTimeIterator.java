@@ -42,7 +42,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, T N) {
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
-    init(G, new NonNullSingletonIterator<T>(N));
+    init(G, new NonNullSingletonIterator<>(N));
   }
 
   /**

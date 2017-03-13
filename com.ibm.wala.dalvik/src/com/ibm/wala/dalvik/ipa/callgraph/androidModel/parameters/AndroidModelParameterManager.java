@@ -107,7 +107,7 @@ public class AndroidModelParameterManager {
     }
 
     /** The main data-structure of the management  */
-    private Map<TypeReference, List<ManagedParameter>> seenTypes = new HashMap<TypeReference, List<ManagedParameter>>();
+    private Map<TypeReference, List<ManagedParameter>> seenTypes = new HashMap<>();
 
     /**
      *  Setting the behaviour may be handy in the later model.
@@ -204,7 +204,7 @@ public class AndroidModelParameterManager {
             }
             param.setInScope = currentScope;
 
-            List<ManagedParameter> aParam = new ArrayList<ManagedParameter>();
+            List<ManagedParameter> aParam = new ArrayList<>();
             aParam.add(param);
 
             
@@ -296,7 +296,7 @@ public class AndroidModelParameterManager {
             }
 
             
-            List<ManagedParameter> aParam = new ArrayList<ManagedParameter>();
+            List<ManagedParameter> aParam = new ArrayList<>();
             aParam.add(param);
 
             seenTypes.put(type, aParam);
@@ -330,7 +330,7 @@ public class AndroidModelParameterManager {
         if (seenTypes.containsKey(type)) {
             seenTypes.get(type).add(param);
         } else {
-            List<ManagedParameter> aParam = new ArrayList<ManagedParameter>();
+            List<ManagedParameter> aParam = new ArrayList<>();
             aParam.add(param);
 
             seenTypes.put(type, aParam);
@@ -372,7 +372,7 @@ public class AndroidModelParameterManager {
         if (seenTypes.containsKey(type)) {
             seenTypes.get(type).add(param);
         } else {
-            List<ManagedParameter> aParam = new ArrayList<ManagedParameter>();
+            List<ManagedParameter> aParam = new ArrayList<>();
             aParam.add(param);
 
             seenTypes.put(type, aParam);
@@ -475,7 +475,7 @@ public class AndroidModelParameterManager {
             throw new IllegalArgumentException("The argument type may not be null");
         }
 
-        List<Integer> ret = new ArrayList<Integer>();
+        List<Integer> ret = new ArrayList<>();
 
         if (seenTypes.containsKey(type)) {
             for (ManagedParameter param : seenTypes.get(type)) {

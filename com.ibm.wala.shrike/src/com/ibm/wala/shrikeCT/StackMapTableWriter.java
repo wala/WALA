@@ -87,7 +87,7 @@ public class StackMapTableWriter extends Element {
     }
     
     // frames with new offsets
-    List<StackMapFrame> newFrames = new ArrayList<StackMapFrame>(sm.size());
+    List<StackMapFrame> newFrames = new ArrayList<>(sm.size());
     for(i = 0; i < sm.size(); i++) {
       newFrames.add(new StackMapFrame(sm.get(i), positions[i]));
     }
@@ -200,7 +200,7 @@ public class StackMapTableWriter extends Element {
   public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException, IOException {
     int idx = 0;
     
-    List<StackMapFrame> frames = new ArrayList<StackMapFrame>();
+    List<StackMapFrame> frames = new ArrayList<>();
     
     int[] instructionToBytecode = output.getInstructionOffsets();
     IInstruction[] insts = method.getInstructions();

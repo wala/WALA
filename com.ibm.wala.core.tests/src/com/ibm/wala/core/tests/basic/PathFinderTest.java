@@ -41,7 +41,7 @@ public class PathFinderTest {
   }
 
   private static DFSAllPathsFinder<String> makeFinder(Graph<String> g, String start, final String end) {
-    return new DFSAllPathsFinder<String>(g, start, new Predicate<String>() {
+    return new DFSAllPathsFinder<>(g, start, new Predicate<String>() {
       @Override public boolean test(String o) {
         return end.equals(o);
       }

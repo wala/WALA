@@ -31,7 +31,7 @@ public abstract class UnaryOperator<T extends IVariable> extends AbstractOperato
    * efficiency.
    */
   public UnaryStatement<T> makeEquation(T lhs, T rhs) {
-    return new BasicUnaryStatement<T>(lhs, this, rhs);
+    return new BasicUnaryStatement<>(lhs, this, rhs);
   }
 
   public boolean isIdentity() {

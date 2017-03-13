@@ -53,7 +53,7 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
   }
 
   public static <T> NonNullSingletonIterator<T> make(T item) {
-    return new NonNullSingletonIterator<T>(item);
+    return new NonNullSingletonIterator<>(item);
   }
 
 }

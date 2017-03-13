@@ -128,7 +128,7 @@ public class OutflowAnalysis {
 			FlowType<IExplodedBasicBlock> dest) {
 		Set<FlowType<IExplodedBasicBlock>> dests = graph.get(source);
 		if (dests == null) {
-			dests = new HashSet<FlowType<IExplodedBasicBlock>>();
+			dests = new HashSet<>();
 			graph.put(source, dests);
 		}
 		dests.add(dest);
@@ -526,7 +526,7 @@ public class OutflowAnalysis {
 						.getICFG().getExit(node);
 				for (int argNum : sinkSpec.getArgNums()) {
 					final int ssaVal = node.getIR().getParameter(argNum);
-					final ParameterFlow<IExplodedBasicBlock> sinkFlow = new ParameterFlow<IExplodedBasicBlock>(
+					final ParameterFlow<IExplodedBasicBlock> sinkFlow = new ParameterFlow<>(
 							entryBlock, argNum, false);
 					final LocalSinkPoint sinkPoint = new LocalSinkPoint(
 							exitBlock, ssaVal, sinkFlow);
@@ -588,13 +588,13 @@ public class OutflowAnalysis {
 							final IExplodedBasicBlock block = graph.getICFG()
 									.getCFG(caller)
 									.getBlockForInstruction(invokeIndex);
-							BasicBlockInContext<IExplodedBasicBlock> callBlock = new BasicBlockInContext<IExplodedBasicBlock>(
+							BasicBlockInContext<IExplodedBasicBlock> callBlock = new BasicBlockInContext<>(
 									caller, block);
 
 							for (int argNum : sinkSpec.getArgNums()) {
 								// and add a sink point for each arg num
 								final int ssaVal = invokeInst.getUse(argNum);
-								final ParameterFlow<IExplodedBasicBlock> sinkFlow = new ParameterFlow<IExplodedBasicBlock>(
+								final ParameterFlow<IExplodedBasicBlock> sinkFlow = new ParameterFlow<>(
 										callBlock, argNum, false);
 								final LocalSinkPoint sinkPoint = new LocalSinkPoint(
 										callBlock, ssaVal, sinkFlow);
@@ -639,7 +639,7 @@ public class OutflowAnalysis {
 						SSAReturnInstruction returnInst = (SSAReturnInstruction) inst;
 						if (!returnInst.returnsVoid()) {
 							final int ssaVal = returnInst.getResult();
-							final ReturnFlow<IExplodedBasicBlock> sinkFlow = new ReturnFlow<IExplodedBasicBlock>(
+							final ReturnFlow<IExplodedBasicBlock> sinkFlow = new ReturnFlow<>(
 									exitBlock, false);
 							final LocalSinkPoint sinkPoint = new LocalSinkPoint(
 									exitBlock, ssaVal, sinkFlow);

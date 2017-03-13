@@ -20,7 +20,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     if (it == null) {
       throw new IllegalArgumentException("null it");
     }
-    return new IteratorPlusOne<T>(it, xtra);
+    return new IteratorPlusOne<>(it, xtra);
   }
 
   private final Iterator<? extends T> it;

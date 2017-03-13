@@ -77,11 +77,11 @@ public class BitVectorRepository {
     // didn't find one. create one.
     LinkedList<WeakReference<BitVectorIntSet>> m = buckets.get(size);
     if (m == null) {
-      m = new LinkedList<WeakReference<BitVectorIntSet>>();
+      m = new LinkedList<>();
       buckets.put(size, m);
     }
     BitVectorIntSet bv = new BitVectorIntSet(value);
-    m.add(new WeakReference<BitVectorIntSet>(bv));
+    m.add(new WeakReference<>(bv));
     return bv;
   }
 

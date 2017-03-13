@@ -99,7 +99,7 @@ public class FloydWarshallTest extends WalaTestCase {
   }
   
   public static NumberedGraph<Node> makeGraph() {
-    NumberedGraph<Node> G = new DelegatingNumberedGraph<Node>();
+    NumberedGraph<Node> G = new DelegatingNumberedGraph<>();
   
     for(int i = 0; i <= 8; i++) {
       G.addNode(new Node(i));
@@ -169,9 +169,9 @@ public class FloydWarshallTest extends WalaTestCase {
   }
 
   public static Set<List<Node>> expectedPaths(NumberedGraph<Node> G) {
-    Set<List<Node>> paths = new HashSet<List<Node>>();
-    paths.add(new LinkedList<Node>(Arrays.asList(G.getNode(2),G.getNode(3),G.getNode(4),G.getNode(6))));
-    paths.add(new LinkedList<Node>(Arrays.asList(G.getNode(2),G.getNode(3),G.getNode(5),G.getNode(7))));
+    Set<List<Node>> paths = new HashSet<>();
+    paths.add(new LinkedList<>(Arrays.asList(G.getNode(2),G.getNode(3),G.getNode(4),G.getNode(6))));
+    paths.add(new LinkedList<>(Arrays.asList(G.getNode(2),G.getNode(3),G.getNode(5),G.getNode(7))));
     return paths;
   }
 }

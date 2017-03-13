@@ -168,8 +168,8 @@ public final class Util {
   }
 
   static {
-    typeAliases = new HashMap<String, String>();
-    classAliases = new HashMap<String, String>();
+    typeAliases = new HashMap<>();
+    classAliases = new HashMap<>();
     addAlias("void", "V");
     addAlias("int", "I");
     addAlias("long", "J");

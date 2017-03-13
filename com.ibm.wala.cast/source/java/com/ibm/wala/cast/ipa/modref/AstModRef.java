@@ -91,7 +91,7 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
 
   @Override
   protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
-    return new AstRefVisitor<T>(n, result, pa, (AstHeapModel)h);
+    return new AstRefVisitor<>(n, result, pa, (AstHeapModel)h);
   }
 
   protected static class AstModVisitor<T extends InstanceKey> 

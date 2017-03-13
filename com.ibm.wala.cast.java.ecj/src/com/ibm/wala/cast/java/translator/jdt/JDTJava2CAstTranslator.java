@@ -253,7 +253,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   public CAstEntity translateToCAst() {
 
-    List<CAstEntity> declEntities = new ArrayList<CAstEntity>();
+    List<CAstEntity> declEntities = new ArrayList<>();
 
     for (Iterator<CAstEntity> iter = cu.types().iterator(); iter.hasNext();) {
       AbstractTypeDeclaration decl = (AbstractTypeDeclaration) iter.next();
@@ -422,13 +422,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstEntity createClassDeclaration(ASTNode n, List/* <BodyDeclaration> */bodyDecls,
       List/* EnumConstantDeclaration */enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
       boolean isInterface, boolean isAnnotation, WalkContext context) {
-    final List<CAstEntity> memberEntities = new ArrayList<CAstEntity>();
+    final List<CAstEntity> memberEntities = new ArrayList<>();
 
     // find and collect all initializers (type Initializer) and field initializers (type VariableDeclarationFragment).
     // instance initializer code will be inserted into each constructors.
     // all static initializer code will be grouped together in its own entity.
-    ArrayList<ASTNode> inits = new ArrayList<ASTNode>();
-    ArrayList<ASTNode> staticInits = new ArrayList<ASTNode>();
+    ArrayList<ASTNode> inits = new ArrayList<>();
+    ArrayList<ASTNode> staticInits = new ArrayList<>();
 
     if (enumConstants != null) {
       for (Object decl : enumConstants) {
@@ -582,7 +582,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     assert superCtor != null : "couldn't find constructor for anonymous class";
 
     // PART II: make ctor with simply "super(a,b,c...)"
-    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
+    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
     MethodDeclaration fakeCtor = ast.newMethodDeclaration();
     fakeCtor.setConstructor(true);
@@ -592,7 +592,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // PART IIa: make a fake JDT constructor method with the proper number of args
     // Make fake args that will be passed
     String[] fakeArguments = new String[superCtor.getParameterTypes().length + 1];
-    ArrayList<CAstType> paramTypes = new ArrayList<CAstType>(superCtor.getParameterTypes().length);
+    ArrayList<CAstType> paramTypes = new ArrayList<>(superCtor.getParameterTypes().length);
     for (int i = 0; i < fakeArguments.length; i++)
       fakeArguments[i] = (i == 0) ? "this" : ("argument" + i); // TODO: change to invalid name and don't use
                                                                // singlevariabledeclaration below
@@ -744,7 +744,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     //
     // add a method exactly like overridden that calls overriding
 
-    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
+    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
 
     CAstNode calltarget;
@@ -755,7 +755,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     ITypeBinding paramTypes[] = overridden.getParameterTypes();
 
-    ArrayList<CAstNode> arguments = new ArrayList<CAstNode>();
+    ArrayList<CAstNode> arguments = new ArrayList<>();
     int i = 0;
     for (Object o : overriding.parameters()) {
       SingleVariableDeclaration svd = (SingleVariableDeclaration) o;
@@ -775,7 +775,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // make parameters to new synthetic method
     // use RETURN TYPE of overridden, everything else from overriding (including parameter names)
-    ArrayList<CAstType> paramCAstTypes = new ArrayList<CAstType>(overridden.getParameterTypes().length);
+    ArrayList<CAstType> paramCAstTypes = new ArrayList<>(overridden.getParameterTypes().length);
     for (ITypeBinding paramType : overridden.getParameterTypes())
       paramCAstTypes.add(fTypeDict.getCAstTypeFor(paramType));
     return new ProcedureEntity(mdast, overriding, overridingBinding.getDeclaringClass(), memberEntities, context, paramCAstTypes,
@@ -789,7 +789,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstEntity visit(MethodDeclaration n, ITypeBinding classBinding, WalkContext oldContext, ArrayList<ASTNode> inits) {
 
     // pass in memberEntities to the context, later visit(New) etc. may add classes
-    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
+    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<>();
     final MethodContext context = new MethodContext(oldContext, memberEntities); // LEFTOUT: in polyglot there is a
     // class context in between method and
     // root
@@ -929,7 +929,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       this.annotations = annotations;
 
       // from CodeBodyEntity
-      fEntities = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
+      fEntities = new LinkedHashMap<>();
       for (Iterator keys = entities.keySet().iterator(); keys.hasNext();) {
         CAstNode key = (CAstNode) keys.next();
         fEntities.put(key, Collections.singleton(entities.get(key)));
@@ -947,7 +947,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         }
 
         if (parameterTypes == null) {
-          fParameterTypes = new ArrayList<CAstType>(fDecl.parameters().size());
+          fParameterTypes = new ArrayList<>(fDecl.parameters().size());
           for (Object p : fDecl.parameters()) {
             fParameterNames[i++] = ((SingleVariableDeclaration) p).getName().getIdentifier();
             fParameterTypes.add(fTypeDict.getCAstTypeFor(((SingleVariableDeclaration) p).resolveBinding().getType()));
@@ -962,7 +962,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         }
       } else {
         fParameterNames = new String[0];
-        fParameterTypes = new ArrayList<CAstType>(0); // static initializer
+        fParameterTypes = new ArrayList<>(0); // static initializer
       }
     }
 
@@ -1093,7 +1093,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         @Override
         public Collection<CAstType>/* <CAstType> */getExceptionTypes() {
           if (fExceptionTypes == null) {
-            fExceptionTypes = new LinkedHashSet<CAstType>();
+            fExceptionTypes = new LinkedHashSet<>();
             if (fDecl != null)
               for (Object exception : fDecl.thrownExceptionTypes())
                 
@@ -1270,7 +1270,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * (VariableDeclarationStatements) may expand to more than one CAstNode.
    */
   private ArrayList<CAstNode> createBlock(Block n, WalkContext context) {
-    ArrayList<CAstNode> stmtNodes = new ArrayList<CAstNode>();
+    ArrayList<CAstNode> stmtNodes = new ArrayList<>();
     for (Object s : n.statements())
       visitNodeOrNodes((ASTNode) s, context, stmtNodes);
     return stmtNodes;
@@ -1316,7 +1316,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * One VariableDeclarationStatement represents more than one CAstNode statement.
    */
   private ArrayList<CAstNode> visit(VariableDeclarationStatement n, WalkContext context) {
-    ArrayList<CAstNode> result = new ArrayList<CAstNode>();
+    ArrayList<CAstNode> result = new ArrayList<>();
 
     for (Object o : n.fragments())
       result.add(visit((VariableDeclarationFragment) o, context));

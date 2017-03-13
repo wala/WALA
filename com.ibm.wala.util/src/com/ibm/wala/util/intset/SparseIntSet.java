@@ -317,7 +317,7 @@ public class SparseIntSet implements IntSet, Serializable {
     StringTokenizer tok = new StringTokenizer(str, " ,");
 
     // XXX not very efficient:
-    TreeSet<Integer> set = new TreeSet<Integer>();
+    TreeSet<Integer> set = new TreeSet<>();
     while (tok.hasMoreTokens()) {
       set.add(Integer.decode(tok.nextToken()));
     }

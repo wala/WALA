@@ -80,7 +80,7 @@ public class CAstFunctions {
   }
 
   public static Iterator<CAstNode> findAll(CAstNode tree, Predicate<?> f) {
-    return new FilterIterator<CAstNode>(iterateNodes(tree), f);
+    return new FilterIterator<>(iterateNodes(tree), f);
   }
 
 }

@@ -47,7 +47,7 @@ public final class BitSet<T> {
     if (B == null) {
       throw new IllegalArgumentException("null B");
     }
-    return new BitSet<T>(B);
+    return new BitSet<>(B);
   }
 
   private BitSet(BitSet<T> B) {

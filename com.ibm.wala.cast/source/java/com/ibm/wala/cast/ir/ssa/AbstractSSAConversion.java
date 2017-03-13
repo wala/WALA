@@ -116,7 +116,7 @@ public abstract class AbstractSSAConversion {
 
   protected AbstractSSAConversion(IR ir, SSAOptions options) {
     this.CFG = ir.getControlFlowGraph();
-    this.DF = new DominanceFrontiers<ISSABasicBlock>(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
+    this.DF = new DominanceFrontiers<>(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
     this.dominatorTree = DF.dominatorTree();
     this.flags = new int[2 * ir.getControlFlowGraph().getNumberOfNodes()];
     this.instructions = getInstructions(ir);
@@ -142,7 +142,7 @@ public abstract class AbstractSSAConversion {
   }
 
   protected final Iterator<SSAInstruction> iterateInstructions(IR ir) {
-    return new ArrayIterator<SSAInstruction>(getInstructions(ir));
+    return new ArrayIterator<>(getInstructions(ir));
   }
   
   protected void init() {
@@ -173,7 +173,7 @@ public abstract class AbstractSSAConversion {
   private void addDefiningBlock(Set<SSACFG.BasicBlock>[] A, SSACFG.BasicBlock BB, int i) {
     if (!skip(i)) {
       if (A[i] == null) {
-        A[i] = new LinkedHashSet<SSACFG.BasicBlock>(2);
+        A[i] = new LinkedHashSet<>(2);
       }
       A[i].add(BB);
     }
@@ -191,7 +191,7 @@ public abstract class AbstractSSAConversion {
       setWork(X, 0);
     }
 
-    Set<BasicBlock> W = new LinkedHashSet<BasicBlock>();
+    Set<BasicBlock> W = new LinkedHashSet<>();
     for (int V = 0; V < assignmentMap.length; V++) {
 
       // some things (e.g. constants) have no defs at all
@@ -285,7 +285,7 @@ public abstract class AbstractSSAConversion {
     //     SEARCH(Y)
     //   SearchPostRec(X)
     
-    ArrayList<Frame> stack = new ArrayList<Frame>();
+    ArrayList<Frame> stack = new ArrayList<>();
     
     SearchPreRec(X);
     push(stack, new Frame(X, dominatorTree.getSuccNodes(X)));

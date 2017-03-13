@@ -90,7 +90,7 @@ public class MapUtil {
     }
     List<T> result = M.get(key);
     if (result == null) {
-      result = new ArrayList<T>();
+      result = new ArrayList<>();
       M.put(key, result);
     }
     return result;
@@ -146,7 +146,7 @@ public class MapUtil {
     }
     WeakHashMap<K, V> result = M.get(key);
     if (result == null) {
-      result = new WeakHashMap<K, V>(2);
+      result = new WeakHashMap<>(2);
       M.put(key, result);
     }
     return result;

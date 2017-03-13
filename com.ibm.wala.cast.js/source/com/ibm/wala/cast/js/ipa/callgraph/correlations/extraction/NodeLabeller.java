@@ -22,7 +22,7 @@ import com.ibm.wala.cast.tree.CAstNode;
  *
  */
 public class NodeLabeller {
-	private ArrayList<CAstNode> nodes = new ArrayList<CAstNode>();
+	private ArrayList<CAstNode> nodes = new ArrayList<>();
 	
 	/**
 	 * Adds a node to the mapping if it is not present yet.

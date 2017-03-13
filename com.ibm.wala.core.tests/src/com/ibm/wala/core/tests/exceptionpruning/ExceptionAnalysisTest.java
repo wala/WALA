@@ -85,15 +85,15 @@ public class ExceptionAnalysisTest {
      * We will ignore some exceptions to focus on the exceptions we want to
      * raise (OwnException, ArrayIndexOutOfBoundException)
      */
-    filter = new CombinedInterproceduralExceptionFilter<SSAInstruction>();
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter = new CombinedInterproceduralExceptionFilter<>();
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangNullPointerException)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangExceptionInInitializerError)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangExceptionInInitializerError)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangNegativeArraySizeException)));
   }
 

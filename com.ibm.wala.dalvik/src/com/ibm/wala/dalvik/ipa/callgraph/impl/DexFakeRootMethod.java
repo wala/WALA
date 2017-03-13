@@ -87,7 +87,7 @@ public class DexFakeRootMethod extends AbstractRootMethod {
 
 	public static final MethodReference rootMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, descr);
 	
-	public static Map<TypeReference, Integer> referenceTypeMap = new HashMap<TypeReference, Integer>();
+	public static Map<TypeReference, Integer> referenceTypeMap = new HashMap<>();
 	
 //	public static Set<TypeReference> referenceTypeSet = new HashSet<TypeReference>();
 	

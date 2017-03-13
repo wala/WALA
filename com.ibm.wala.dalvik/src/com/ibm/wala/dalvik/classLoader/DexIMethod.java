@@ -219,7 +219,7 @@ public class DexIMethod implements IBytecodeMethod {
         if (myClass.getClassDefItem().getAnnotations() == null) {
             return null;
         }
-        ArrayList<String> strings = new ArrayList<String>();
+        ArrayList<String> strings = new ArrayList<>();
         AnnotationSetItem annotationSet = myClass.getClassDefItem().getAnnotations().getMethodAnnotations(eMethod.method);
 /** END Custom change: Variable Names in synth. methods */
 
@@ -619,7 +619,7 @@ public class DexIMethod implements IBytecodeMethod {
 			return handlers;
 		}
 
-		ArrayList<ArrayList<ExceptionHandler>> temp_array = new ArrayList<ArrayList<ExceptionHandler>>();
+		ArrayList<ArrayList<ExceptionHandler>> temp_array = new ArrayList<>();
 		for (int i = 0; i < instructions().size(); i++) {
 			temp_array.add(new ArrayList<ExceptionHandler>());
 		}
@@ -3228,7 +3228,7 @@ public class DexIMethod implements IBytecodeMethod {
 
         // assert(false) : "Please review getCallSites-Implementation before use!";        // TODO
 
-        ArrayList<CallSiteReference> csites = new ArrayList<CallSiteReference>();
+        ArrayList<CallSiteReference> csites = new ArrayList<>();
         // XXX The call Sites in this method or to this method?!!!
         for (Instruction inst: instructions()) {
             if (inst instanceof Invoke) {

@@ -29,7 +29,7 @@ public class TwoLevelIntVector implements IntVector, Serializable {
   /**
    * Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1]
    */
-  final private Vector<SparseIntVector> data = new Vector<SparseIntVector>();
+  final private Vector<SparseIntVector> data = new Vector<>();
 
   private final int defaultValue;
 

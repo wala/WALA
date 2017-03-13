@@ -28,7 +28,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
   
   public static <T> MutableMapping<T> make() {
-    return new MutableMapping<T>();
+    return new MutableMapping<>();
   }
 
   private Object[] array;
@@ -130,7 +130,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
    */
   public OrdinalSet<T> makeSingleton(int i) {
-    return new OrdinalSet<T>(SparseIntSet.singleton(i), this);
+    return new OrdinalSet<>(SparseIntSet.singleton(i), this);
   }
 
   /**

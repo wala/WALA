@@ -81,7 +81,7 @@ public class StaticFieldSinkPoint implements ISinkPoint {
 			BasicBlockInContext<IExplodedBasicBlock> block) {
 		this.field = spec.getField();
 		this.block = block;
-		this.flow = new StaticFieldFlow<IExplodedBasicBlock>(block, field, false);
+		this.flow = new StaticFieldFlow<>(block, field, false);
 	}
 
 	/*

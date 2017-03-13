@@ -91,19 +91,19 @@ public class ExceptionAnalysis2EdgeFilterTest {
      * We will ignore some exceptions to focus on the exceptions we want to
      * raise (OwnException, ArrayIndexOutOfBoundException)
      */
-    filter = new CombinedInterproceduralExceptionFilter<SSAInstruction>();
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter = new CombinedInterproceduralExceptionFilter<>();
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangNullPointerException)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangExceptionInInitializerError)));
-    filter.add(new IgnoreExceptionsInterFilter<SSAInstruction>(new IgnoreExceptionsFilter(
+    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
         TypeReference.JavaLangNegativeArraySizeException)));
   }
 
   @Test
   public void test() {
-    HashMap<String, Integer> deletedExceptional = new HashMap<String, Integer>();
+    HashMap<String, Integer> deletedExceptional = new HashMap<>();
     int deletedNormal = 0;
 
     ExceptionAnalysis analysis = new ExceptionAnalysis(cg, pointerAnalysis, cha, filter);
@@ -114,7 +114,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
         EdgeFilter<ISSABasicBlock> exceptionAnalysedEdgeFilter = new ExceptionAnalysis2EdgeFilter(analysis, node);
 
         SSACFG cfg_orig = node.getIR().getControlFlowGraph();
-        ExceptionFilter2EdgeFilter<ISSABasicBlock> filterOnlyEdgeFilter = new ExceptionFilter2EdgeFilter<ISSABasicBlock>(
+        ExceptionFilter2EdgeFilter<ISSABasicBlock> filterOnlyEdgeFilter = new ExceptionFilter2EdgeFilter<>(
             filter.getFilter(node), cha, cfg_orig);
         ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = PrunedCFG.make(cfg_orig, filterOnlyEdgeFilter);
         ControlFlowGraph<SSAInstruction, ISSABasicBlock> exceptionPruned = PrunedCFG.make(cfg_orig, exceptionAnalysedEdgeFilter);

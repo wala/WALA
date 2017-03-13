@@ -28,7 +28,7 @@ public class ASTNodeFinder {
 	public ASTNode getASTNode(JdtPosition pos) {
 		IFile sourceFile = pos.getEclipseFile();
 		if (!fileASTs.containsKey(sourceFile) || fileASTs.get(sourceFile).get() == null) {
-			fileASTs.put(sourceFile, new SoftReference<ASTNode>(getAST(sourceFile)));
+			fileASTs.put(sourceFile, new SoftReference<>(getAST(sourceFile)));
 		}
 		
 		return getOriginalNode(fileASTs.get(sourceFile).get(), pos);

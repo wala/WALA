@@ -164,7 +164,7 @@ public class Util {
     if (srcList == null) {
       throw new IllegalArgumentException("srcList == null");
     }
-    ArrayList<U> result = new ArrayList<U>();
+    ArrayList<U> result = new ArrayList<>();
     for (Iterator<T> srcIter = srcList.iterator(); srcIter.hasNext();) {
       result.add(f.apply(srcIter.next()));
     }

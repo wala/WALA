@@ -62,7 +62,7 @@ public class PlatformUtil {
       throw new IllegalStateException("could not find boot classpath");
     }
     String[] jars = classpath.split(File.pathSeparator);
-    ArrayList<String> result = new ArrayList<String>();
+    ArrayList<String> result = new ArrayList<>();
     for (String jar : jars) {
       if (jar.endsWith(".jar") && (new File(jar)).exists()) {
         result.add(jar);

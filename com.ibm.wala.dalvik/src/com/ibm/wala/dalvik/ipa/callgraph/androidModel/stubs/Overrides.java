@@ -199,7 +199,7 @@ public class Overrides {
      */
     public MethodTargetSelector overrideAll() throws CancelException {
         final HashMap<MethodReference, SummarizedMethod> overrides = HashMapFactory.make();
-        final Map<AndroidComponent, AndroidModel> callTo = new EnumMap<AndroidComponent, AndroidModel>(AndroidComponent.class);
+        final Map<AndroidComponent, AndroidModel> callTo = new EnumMap<>(AndroidComponent.class);
         final IProgressMonitor monitor = AndroidEntryPointManager.MANAGER.getProgressMonitor();
         int monitorCounter = 0;
 

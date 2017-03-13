@@ -89,11 +89,11 @@ public class CorrelationFinder {
   public static CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
     AstMethod astMethod = (AstMethod)method;
     DefUse du = new DefUse(ir);
-    OrdinalSetMapping<SSAInstruction> instrIndices = new ObjectArrayMapping<SSAInstruction>(ir.getInstructions());
+    OrdinalSetMapping<SSAInstruction> instrIndices = new ObjectArrayMapping<>(ir.getInstructions());
     CorrelationSummary summary = new CorrelationSummary(method, instrIndices);
 
     // collect all dynamic property writes in the method
-    LinkedList<AbstractReflectivePut> puts = new LinkedList<AbstractReflectivePut>();
+    LinkedList<AbstractReflectivePut> puts = new LinkedList<>();
     for(SSAInstruction inst : Iterator2Iterable.make(ir.iterateNormalInstructions()))
       if(inst instanceof AbstractReflectivePut)
         puts.addFirst((AbstractReflectivePut)inst);
@@ -133,7 +133,7 @@ public class CorrelationFinder {
         MutableIntSet reached = new BitVectorIntSet();
         reached.add(get.getDef());
         // saturate reached by following def-use chains through phi instructions and across function calls
-        LinkedList<Integer> worklist = new LinkedList<Integer>();
+        LinkedList<Integer> worklist = new LinkedList<>();
         MutableIntSet done = new BitVectorIntSet();
         worklist.add(get.getDef());
         while(!worklist.isEmpty()) {
@@ -192,7 +192,7 @@ public class CorrelationFinder {
   }
   
   private static Set<String> getSourceLevelNames(IR ir, int index, IntSet vs) {
-    Set<String> res = new HashSet<String>();
+    Set<String> res = new HashSet<>();
     for(IntIterator iter=vs.intIterator();iter.hasNext();) {
       String name = getSourceLevelName(ir, index, iter.next());
       if(name != null)
@@ -203,7 +203,7 @@ public class CorrelationFinder {
 
   // checks whether the given SSA variable must always be assigned a numeric value
   private static boolean mustBeNumeric(IR ir, DefUse du, int v) {
-    LinkedList<Integer> worklist = new LinkedList<Integer>();
+    LinkedList<Integer> worklist = new LinkedList<>();
     MutableIntSet done = new BitVectorIntSet();
     worklist.add(v);
     while(!worklist.isEmpty()) {
@@ -244,7 +244,7 @@ public class CorrelationFinder {
   }
 
   private void printCorrelatedAccesses(Map<IMethod, CorrelationSummary> summaries) {
-    List<Pair<Position, String>> correlations = new ArrayList<Pair<Position,String>>();
+    List<Pair<Position, String>> correlations = new ArrayList<>();
     for(CorrelationSummary summary : summaries.values())
       correlations.addAll(summary.pp());
 

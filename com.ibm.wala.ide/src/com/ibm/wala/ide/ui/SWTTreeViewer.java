@@ -46,7 +46,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
 
   protected NodeDecorator nodeDecoratorInput = null;
 
-  final protected List<IAction> popUpActions = new LinkedList<IAction>();
+  final protected List<IAction> popUpActions = new LinkedList<>();
 
   public SWTTreeViewer() {
     super();

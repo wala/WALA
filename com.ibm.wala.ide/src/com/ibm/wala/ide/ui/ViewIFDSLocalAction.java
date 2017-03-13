@@ -97,7 +97,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     this.dotFile = dotFile;
     this.dotExe = dotExe;
     this.pdfViewExe = gvExe;
-    this.labels = new Labels<T, P, F>(result);
+    this.labels = new Labels<>(result);
     setText("View Local Supergraph");
   }
 

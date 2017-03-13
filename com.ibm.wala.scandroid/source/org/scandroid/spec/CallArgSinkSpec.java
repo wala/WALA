@@ -69,7 +69,7 @@ public class CallArgSinkSpec extends SinkSpec {
 	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 			BasicBlockInContext<E> block) {
 
-		HashSet<FlowType<E>> flowSet = new HashSet<FlowType<E>>();
+		HashSet<FlowType<E>> flowSet = new HashSet<>();
 		if (argNums == null) {
 			SSAInvokeInstruction i = (SSAInvokeInstruction) block
 					.getLastInstruction();
@@ -78,7 +78,7 @@ public class CallArgSinkSpec extends SinkSpec {
 				argNums[p] = p;
 		}
 		for (int arg : argNums) {
-			flowSet.add(new ParameterFlow<E>(block, arg, false));
+			flowSet.add(new ParameterFlow<>(block, arg, false));
 		}
 		return flowSet;
 	}

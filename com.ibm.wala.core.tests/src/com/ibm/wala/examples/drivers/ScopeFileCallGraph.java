@@ -97,7 +97,7 @@ public class ScopeFileCallGraph {
   }
 
   private static Iterable<Entrypoint> makePublicEntrypoints(AnalysisScope scope, IClassHierarchy cha, String entryClass) {
-    Collection<Entrypoint> result = new ArrayList<Entrypoint>();
+    Collection<Entrypoint> result = new ArrayList<>();
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application,
         StringStuff.deployment2CanonicalTypeString(entryClass)));
     for (IMethod m : klass.getDeclaredMethods()) {

@@ -35,7 +35,7 @@ public class InvertedNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
   InvertedNumberedGraph(NumberedGraph<T> G) {
     nodes = G;
-    edges = new InvertingNumberedEdgeManager<T>(G);
+    edges = new InvertingNumberedEdgeManager<>(G);
   }
 
 }

@@ -191,7 +191,7 @@ public class GraphSlicer {
 
       @Override
       public Iterator<E> iterator() {
-        return new FilterIterator<E>(G.iterator(), fmember);
+        return new FilterIterator<>(G.iterator(), fmember);
       }
 
       @Override
@@ -202,16 +202,16 @@ public class GraphSlicer {
 
     final EdgeManager<E> edgeManager = new EdgeManager<E>() {
 
-      private Map<E, Collection<E>> succs = new HashMap<E, Collection<E>>();
+      private Map<E, Collection<E>> succs = new HashMap<>();
 
-      private Map<E, Collection<E>> preds = new HashMap<E, Collection<E>>();
+      private Map<E, Collection<E>> preds = new HashMap<>();
 
       private Set<E> getConnected(E inst, Function<E, Iterator<? extends E>> fconnected) {
-        Set<E> result = new LinkedHashSet<E>();
-        Set<E> seenInsts = new HashSet<E>();
+        Set<E> result = new LinkedHashSet<>();
+        Set<E> seenInsts = new HashSet<>();
         Set<E> newInsts = Iterator2Collection.toSet(fconnected.apply(inst));
         while (!newInsts.isEmpty()) {
-          Set<E> nextInsts = new HashSet<E>();
+          Set<E> nextInsts = new HashSet<>();
           for (E s : newInsts) {
             if (!seenInsts.contains(s)) {
               seenInsts.add(s);

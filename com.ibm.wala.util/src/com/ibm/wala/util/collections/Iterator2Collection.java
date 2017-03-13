@@ -33,7 +33,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
     if (i == null) {
       throw new IllegalArgumentException("i == null");
     }
-    return new Iterator2Set<T>(i, new LinkedHashSet<T>(5));
+    return new Iterator2Set<>(i, new LinkedHashSet<T>(5));
   }
 
   /**
@@ -43,7 +43,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
     if (i == null) {
       throw new IllegalArgumentException("i == null");
     }
-    return new Iterator2List<T>(i, new ArrayList<T>(5));
+    return new Iterator2List<>(i, new ArrayList<T>(5));
   }
 
   @Override

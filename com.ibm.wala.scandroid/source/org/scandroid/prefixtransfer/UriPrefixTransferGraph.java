@@ -86,19 +86,19 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 	
-    public final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<InstanceKey, InstanceKeySite>();
+    public final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<>();
     public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap =
-    	new HashMap<InstanceKey, StringBuilderUseAnalysis>();
+    	new HashMap<>();
 
-    private final List<InstanceKeySite> nodes = new ArrayList<InstanceKeySite>();
+    private final List<InstanceKeySite> nodes = new ArrayList<>();
     private final Map<InstanceKeySite,Set<InstanceKeySite>> successors =
-    	new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
+    	new HashMap<>();
     private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors =
-    	new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
+    	new HashMap<>();
 
     public UriPrefixTransferGraph(final PointerAnalysis<InstanceKey> pa) {
         final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies =
-        	new HashMap<InstanceKeySite, Set<InstanceKey>>();
+        	new HashMap<>();
         final OrdinalSetMapping<InstanceKey> mapping = pa.getInstanceKeyMapping();
         final Collection<InstanceKey> instanceKeys = pa.getInstanceKeys();
         
@@ -193,7 +193,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                         
                         final StringBuilderToStringInstanceKeySite s2si =
                         		(StringBuilderToStringInstanceKeySite) node;
-                        final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                        final HashSet<InstanceKey> iks = new HashSet<>();
                         
                         for (final Integer i: s2si.concatenatedInstanceKeys) {
                             iks.add(mapping.getMappedObject(i));
@@ -244,7 +244,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 						if (!nodeMap.containsKey(returnIK)) {
 							addNode(node);
 							nodeMap.put(returnIK, node);
-							final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+							final HashSet<InstanceKey> iks = new HashSet<>();
 							iks.add(uriKey);
 							iks.add(stringKey);
 							unresolvedDependencies.put(node, iks);
@@ -284,7 +284,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                     
                     addNode(node);
                     nodeMap.put(ik, node);
-                    final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                    final HashSet<InstanceKey> iks = new HashSet<>();
                     iks.add(uriKey);
                     iks.add(stringKey);
                     unresolvedDependencies.put(node, iks);
@@ -317,7 +317,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                 
                 addNode(node);
                 nodeMap.put(ik, node);
-                final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                final HashSet<InstanceKey> iks = new HashSet<>();
                 iks.add(stringKey);
                 unresolvedDependencies.put(node, iks);
             }
@@ -353,14 +353,14 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
     public void addEdge(final InstanceKeySite src, final InstanceKeySite dst) {
         Set<InstanceKeySite> predSet = predecessors.get(dst);
         if (predSet == null) {
-            predSet = new HashSet<InstanceKeySite>();
+            predSet = new HashSet<>();
             predecessors.put(dst, predSet);
         }
         predSet.add(src);
 
         Set<InstanceKeySite> succSet = successors.get(src);
         if (succSet == null) {
-            succSet = new HashSet<InstanceKeySite>();
+            succSet = new HashSet<>();
             successors.put(src, succSet);
         }
         succSet.add(dst);

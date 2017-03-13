@@ -67,7 +67,7 @@ public class FieldNamePattern {
     }
 
     Collection<IField> lookupFields(IClassLoader cl) {
-        Collection<IField> matching = new LinkedList<IField>();
+        Collection<IField> matching = new LinkedList<>();
         IClass c = cl.lookupClass(TypeName.findOrCreate(className));
         if(c == null) return matching;
         Atom atom = Atom.findOrCreateUnicodeAtom(memberName);

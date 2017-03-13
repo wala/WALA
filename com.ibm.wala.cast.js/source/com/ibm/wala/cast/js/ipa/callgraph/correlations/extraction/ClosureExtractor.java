@@ -179,7 +179,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  *
  */
 public class ClosureExtractor extends CAstRewriterExt {
-  private LinkedList<ExtractionPolicy> policies = new LinkedList<ExtractionPolicy>();
+  private LinkedList<ExtractionPolicy> policies = new LinkedList<>();
   private final ExtractionPolicyFactory policyFactory;
   
   private static final boolean LOCALISE = true;
@@ -237,7 +237,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     if(regions == null || usesArguments(root)) {
       return copyNode(root, cfg, context, nodeMap);
     } else {
-      ArrayList<CAstNode> copied_children = new ArrayList<CAstNode>();
+      ArrayList<CAstNode> copied_children = new ArrayList<>();
       int next_child = 0;
       // code in between regions is handled by invoking copyNodes, the regions themselves by extractRegion
       for(ExtractionRegion region : regions) {
@@ -445,8 +445,8 @@ public class ClosureExtractor extends CAstRewriterExt {
      * 
      * The whole thing is then wrapped into a block.
      */
-    ArrayList<CAstNode> prologue = new ArrayList<CAstNode>();
-    ArrayList<CAstNode> fun_body_stmts = new ArrayList<CAstNode>();
+    ArrayList<CAstNode> prologue = new ArrayList<>();
+    ArrayList<CAstNode> fun_body_stmts = new ArrayList<>();
 
     // if we are extracting a block, unwrap it
     if(extractingBlock) {
@@ -588,7 +588,7 @@ public class ClosureExtractor extends CAstRewriterExt {
      * a null pointer exception on the call; these are infeasible, but we add them anyway to get the same AST 
      * as with a manual extraction.
      */
-    List<CAstNode> args = new ArrayList<CAstNode>();
+    List<CAstNode> args = new ArrayList<>();
     CAstNode funExpr = Ast.makeNode(FUNCTION_EXPR, Ast.makeConstant(new_entity));
     args.add(funExpr);
     context.setCallSite(funExpr);
@@ -609,7 +609,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     addExnFlow(call, null, entity, context);
 
     // if the extracted code contains jumps, we need to insert some fix-up code
-    List<CAstNode> stmts = new ArrayList<CAstNode>(prologue);
+    List<CAstNode> stmts = new ArrayList<>(prologue);
     if(context.containsJump()) {
       CAstNode decl = Ast.makeNode(ASSIGN,
           addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),

@@ -153,7 +153,7 @@ public class StringTable extends Table<String> implements Cloneable {
     int nColumns = st.countTokens();
     Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
         + " row " + row + " " + line.length() + " " + line);
-    SimpleVector<String> r = new SimpleVector<String>();
+    SimpleVector<String> r = new SimpleVector<>();
     rows.add(row, r);
     for (int i = 0; i < nColumns; i++) {
       r.set(i, (String) st.nextElement());

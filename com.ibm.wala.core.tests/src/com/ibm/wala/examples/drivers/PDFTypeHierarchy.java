@@ -96,7 +96,7 @@ public class PDFTypeHierarchy {
 
   public static <T> Graph<T> pruneGraph(Graph<T> g, Predicate<T> f) throws WalaException {
     Collection<T> slice = GraphSlicer.slice(g, f);
-    return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
+    return GraphSlicer.prune(g, new CollectionFilter<>(slice));
   }
   
   /**

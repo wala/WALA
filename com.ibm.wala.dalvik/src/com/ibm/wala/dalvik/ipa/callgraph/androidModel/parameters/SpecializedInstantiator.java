@@ -105,7 +105,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     /* package private */ SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen, int currentDepth) {
         if (seen == null) {
             
-            seen = new HashSet<SSAValue>();
+            seen = new HashSet<>();
         }
        
         if (currentDepth > this.maxDepth) {
@@ -143,7 +143,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
 
 
 
-    private static final Set<TypeReference> understandTypes = new HashSet<TypeReference>();
+    private static final Set<TypeReference> understandTypes = new HashSet<>();
     static {
         understandTypes.add(AndroidTypes.Context);
         understandTypes.add(AndroidTypes.ContextWrapper);
@@ -159,7 +159,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
      *  Creates a new instance of android/content/Context.
      */
     public SSAValue createContext(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
-        final List<SSAValue> appComponents = new ArrayList<SSAValue>();
+        final List<SSAValue> appComponents = new ArrayList<>();
         {
             // TODO: Can we create a tighter conterxt?
             // TODO: Force an Application-Context?
@@ -248,7 +248,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
             // call: ContextWrapper(Context base)
             final MethodReference ctor = MethodReference.findOrCreate(T, MethodReference.initAtom, 
                     Descriptor.findOrCreate(new TypeName[] { AndroidTypes.ContextName }, TypeReference.VoidName));
-            final List<SSAValue> params = new ArrayList<SSAValue>();
+            final List<SSAValue> params = new ArrayList<>();
             params.add(context);
             addCallCtor(instance, ctor, params);
         }

@@ -97,13 +97,13 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
             Set<CodeElement> newElements) {
         Map<FlowType<E>,Set<CodeElement>> blockMap = taintMap.get(block);
         if(blockMap == null) {
-            blockMap = new HashMap<FlowType<E>,Set<CodeElement>>();
+            blockMap = new HashMap<>();
             taintMap.put(block, blockMap);
         }
         
         Set<CodeElement> elements = blockMap.get(taintType);
         if(elements == null) {
-            elements = new HashSet<CodeElement>();
+            elements = new HashSet<>();
             blockMap.put(taintType, elements);
         }
         elements.addAll(newElements);
@@ -116,7 +116,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
             FlowType taintType,
             CodeElement element) {
         
-        Set<CodeElement> elements = new HashSet<CodeElement>();
+        Set<CodeElement> elements = new HashSet<>();
         elements.add(element);
         addDomainElements(taintMap, block, taintType, elements);
     }
@@ -174,8 +174,8 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
                               ArrayList<SourceSpec> ssAL, ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
                               PointerAnalysis<InstanceKey> pa, 
                               ClassHierarchy cha, CallGraph cg) {
-    	Collection<IMethod> targets = new HashSet<IMethod>();
-    	ArrayList<Collection<IMethod>> targetList = new ArrayList<Collection<IMethod>>();
+    	Collection<IMethod> targets = new HashSet<>();
+    	ArrayList<Collection<IMethod>> targetList = new ArrayList<>();
     	
     	for (int i = 0; i < ssAL.size(); i++) {
     		Collection<IMethod> tempList = ssAL.get(i).getNamePattern().getPossibleTargets(cha);
@@ -235,7 +235,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
 
         SourceSpec[] ss = s.getSourceSpecs();
         
-        ArrayList<SourceSpec> ssAL = new ArrayList<SourceSpec>();
+        ArrayList<SourceSpec> ssAL = new ArrayList<>();
         for (int i = 0; i < ss.length; i++) {
         	if (ss[i] instanceof EntryArgSourceSpec)
         		processInputSource(ctx, taintMap, ss[i], cg, graph, cha, pa);

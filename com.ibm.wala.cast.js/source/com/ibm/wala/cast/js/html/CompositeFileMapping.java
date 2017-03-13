@@ -16,7 +16,7 @@ import java.util.List;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public class CompositeFileMapping implements FileMapping {
-  private final List<FileMapping> mappings = new ArrayList<FileMapping>(2);
+  private final List<FileMapping> mappings = new ArrayList<>(2);
     
   public CompositeFileMapping(FileMapping a, FileMapping b) {
     addMapping(a);

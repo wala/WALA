@@ -192,7 +192,7 @@ public class TypeAnnotationTest extends WalaTestCase {
         )
     );
     
-    final List<Pair<TypePathKind, Integer>> path = new LinkedList<Pair<TypePathKind,Integer>>();
+    final List<Pair<TypePathKind, Integer>> path = new LinkedList<>();
     path.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
     path.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
     
@@ -223,27 +223,27 @@ public class TypeAnnotationTest extends WalaTestCase {
 
     Collection<TypeAnnotation> expectedAnnotations = HashSetFactory.make();
     {
-      final List<Pair<TypePathKind, Integer>> pathA = new LinkedList<Pair<TypePathKind,Integer>>();
+      final List<Pair<TypePathKind, Integer>> pathA = new LinkedList<>();
       expectedAnnotations.add(makeForAnnotations6("A", pathA));
     }
     {  
-      final List<Pair<TypePathKind, Integer>> pathB = new LinkedList<Pair<TypePathKind,Integer>>();
+      final List<Pair<TypePathKind, Integer>> pathB = new LinkedList<>();
       pathB.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
       expectedAnnotations.add(makeForAnnotations6("B", pathB));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathC = new LinkedList<Pair<TypePathKind,Integer>>();
+      final List<Pair<TypePathKind, Integer>> pathC = new LinkedList<>();
       pathC.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
       pathC.add(Pair.make(TypeAnnotationsReader.TypePathKind.WILDCARD_BOUND, 0));
       expectedAnnotations.add(makeForAnnotations6("C", pathC));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathD = new LinkedList<Pair<TypePathKind,Integer>>();
+      final List<Pair<TypePathKind, Integer>> pathD = new LinkedList<>();
       pathD.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 1));
       expectedAnnotations.add(makeForAnnotations6("D", pathD));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathE = new LinkedList<Pair<TypePathKind,Integer>>();
+      final List<Pair<TypePathKind, Integer>> pathE = new LinkedList<>();
       pathE.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 1));
       pathE.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
       expectedAnnotations.add(makeForAnnotations6("E", pathE));

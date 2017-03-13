@@ -76,16 +76,16 @@ import com.ibm.wala.util.graph.Graph;
 
 public class PrefixTransferGraph implements Graph<InstanceKeySite> {
 
-    private final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<InstanceKey, InstanceKeySite>();
-    private final List<InstanceKeySite> nodes = new ArrayList<InstanceKeySite>();
-    private final Map<InstanceKeySite,Set<InstanceKeySite>> successors = new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
-    private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors = new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
-    public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap = new HashMap<InstanceKey, StringBuilderUseAnalysis>();
+    private final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<>();
+    private final List<InstanceKeySite> nodes = new ArrayList<>();
+    private final Map<InstanceKeySite,Set<InstanceKeySite>> successors = new HashMap<>();
+    private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors = new HashMap<>();
+    public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap = new HashMap<>();
 
     public PrefixTransferGraph(PointerAnalysis<InstanceKey> pa)
     {
-        Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies = new HashMap<InstanceKeySite, Set<InstanceKey>>();
-        ArrayList<InstanceKey> instanceKeys = new ArrayList<InstanceKey>();
+        Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies = new HashMap<>();
+        ArrayList<InstanceKey> instanceKeys = new ArrayList<>();
         instanceKeys.addAll(pa.getInstanceKeys());
         for(InstanceKey k:instanceKeys)
         {
@@ -144,7 +144,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
                             }
                             addNode(node);
                             nodeMap.put(k, node);
-                            HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                            HashSet<InstanceKey> iks = new HashSet<>();
                             for (Integer i: ((StringBuilderToStringInstanceKeySite) node).concatenatedInstanceKeys) {
                                 iks.add(pa.getInstanceKeyMapping().getMappedObject(i));
                             }
@@ -231,14 +231,14 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
         Set<InstanceKeySite> predSet = predecessors.get(dst);
         if(predSet == null)
         {
-            predSet = new HashSet<InstanceKeySite>();
+            predSet = new HashSet<>();
             predecessors.put(dst,predSet);
         }
         predSet.add(src);
         Set<InstanceKeySite> succSet = successors.get(src);
         if(succSet == null)
         {
-            succSet = new HashSet<InstanceKeySite>();
+            succSet = new HashSet<>();
             successors.put(src,succSet);
         }
         succSet.add(dst);

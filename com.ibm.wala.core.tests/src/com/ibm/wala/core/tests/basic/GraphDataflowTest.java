@@ -127,7 +127,7 @@ public class GraphDataflowTest extends WalaTestCase {
    * @throws CancelException 
    */
   public static String solveNodeOnly(Graph<String> G) throws CancelException {
-    final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
+    final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
       
       @Override
@@ -158,14 +158,14 @@ public class GraphDataflowTest extends WalaTestCase {
 
     };
 
-    BitVectorFramework<String,String> F = new BitVectorFramework<String,String>(G, functions, values);
-    BitVectorSolver<String> s = new BitVectorSolver<String>(F);
+    BitVectorFramework<String,String> F = new BitVectorFramework<>(G, functions, values);
+    BitVectorSolver<String> s = new BitVectorSolver<>(F);
     s.solve(null);
     return result2String(s);
   }
 
   public static String solveNodeEdge(Graph<String> G) throws CancelException {
-    final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
+    final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
       @Override
@@ -201,8 +201,8 @@ public class GraphDataflowTest extends WalaTestCase {
 
     };
 
-    BitVectorFramework<String,String> F = new BitVectorFramework<String,String>(G, functions, values);
-    BitVectorSolver<String> s = new BitVectorSolver<String>(F);
+    BitVectorFramework<String,String> F = new BitVectorFramework<>(G, functions, values);
+    BitVectorSolver<String> s = new BitVectorSolver<>(F);
     s.solve(null);
     return result2String(s);
   }

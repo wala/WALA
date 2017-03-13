@@ -273,7 +273,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
     }
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
-    final NullaryStatement<T> s = new BasicNullaryStatement<T>(lhs, operator);
+    final NullaryStatement<T> s = new BasicNullaryStatement<>(lhs, operator);
     if (getFixedPointSystem().containsStatement(s)) {
       return false;
     }
@@ -505,7 +505,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
    */
   private void reorder() {
     // drain the worklist
-    LinkedList<AbstractStatement> temp = new LinkedList<AbstractStatement>();
+    LinkedList<AbstractStatement> temp = new LinkedList<>();
     while (!workList.isEmpty()) {
       AbstractStatement eq = workList.takeStatement();
       temp.add(eq);

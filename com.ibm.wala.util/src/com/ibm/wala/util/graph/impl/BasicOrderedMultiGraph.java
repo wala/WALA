@@ -45,7 +45,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
     if (s == null) {
-      s = new SimpleVector<T>();
+      s = new SimpleVector<>();
       successorEdges.put(src, s);
     }
     s.set(s.getMaxIndex() + 1, dst);
@@ -56,7 +56,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
     if (s == null) {
-      s = new SimpleVector<T>();
+      s = new SimpleVector<>();
       successorEdges.put(src, s);
     }
     s.set(i, dst);

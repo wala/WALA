@@ -126,7 +126,7 @@ public abstract class IRTests {
   protected static class EdgeAssertions implements IRAssertion {
     public final String srcDescriptor;
 
-    public final List/* <String> */<String> tgtDescriptors = new ArrayList<String>();
+    public final List/* <String> */<String> tgtDescriptors = new ArrayList<>();
 
     public EdgeAssertions(String srcDescriptor) {
       this.srcDescriptor = srcDescriptor;

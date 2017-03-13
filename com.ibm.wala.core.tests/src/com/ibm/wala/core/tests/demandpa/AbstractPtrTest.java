@@ -284,7 +284,7 @@ public abstract class AbstractPtrTest {
   }
 
   protected StateMachineFactory<IFlowLabel> getStateMachineFactory() {
-    return new DummyStateMachine.Factory<IFlowLabel>();
+    return new DummyStateMachine.Factory<>();
   }
 
 }

@@ -92,7 +92,7 @@ public class FlowGraph implements Iterable<Vertex> {
 	private GraphReachability<Vertex,FuncVertex> optimistic_closure;
 	
 	public FlowGraph() {
-		this.graph = new SlowSparseNumberedGraph<Vertex>(1);
+		this.graph = new SlowSparseNumberedGraph<>(1);
 		this.factory = new VertexFactory();
 	}
 	
@@ -125,8 +125,8 @@ public class FlowGraph implements Iterable<Vertex> {
 		
 		// compute transitive closure
 		GraphReachability<Vertex, T> optimistic_closure = 
-		    new GraphReachability<Vertex,T>(
-		      new InvertedGraph<Vertex>(pruned_flowgraph),
+		    new GraphReachability<>(
+		      new InvertedGraph<>(pruned_flowgraph),
 		      new Predicate<Vertex>() {
 		        @Override public boolean test(Vertex o) {
 		          return type.isInstance(o);
@@ -187,7 +187,7 @@ public class FlowGraph implements Iterable<Vertex> {
       
       private GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
 
-      private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<Vertex>(graph);
+      private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<>(graph);
 
       protected IR getIR(final IAnalysisCacheView cache, FuncVertex func) {
         return cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector));
@@ -288,8 +288,8 @@ public class FlowGraph implements Iterable<Vertex> {
         return new Iterable<PointerKey> () {
           @Override
           public Iterator<PointerKey> iterator() {
-            return new CompoundIterator<PointerKey>(factory.getArgVertices().iterator(),
-                new CompoundIterator<PointerKey>(factory.getRetVertices().iterator(), 
+            return new CompoundIterator<>(factory.getArgVertices().iterator(),
+                new CompoundIterator<>(factory.getRetVertices().iterator(), 
                     new CompoundIterator<PointerKey>(factory.getVarVertices().iterator(),
                         factory.getPropVertices().iterator())));
           }

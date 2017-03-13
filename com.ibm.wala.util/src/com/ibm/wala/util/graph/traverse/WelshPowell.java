@@ -94,7 +94,7 @@ public class WelshPowell<T> {
       colors[i] = -1;
     }
     
-    SortedSet<T> vertices = new TreeSet<T>(order);
+    SortedSet<T> vertices = new TreeSet<>(order);
 
     for (T n : G) {
       vertices.add(n);
@@ -130,7 +130,7 @@ public class WelshPowell<T> {
               colored++;
               
               if (currentColor == maxColors - 1) {
-                return new ColoredVertices<T>(false, G, colors, currentColor);
+                return new ColoredVertices<>(false, G, colors, currentColor);
               }
 
             }
@@ -141,14 +141,14 @@ public class WelshPowell<T> {
         currentColor++;
 
         if (currentColor == maxColors - 1) {
-          return new ColoredVertices<T>(false, G, colors, currentColor);
+          return new ColoredVertices<>(false, G, colors, currentColor);
         }
       }
     }
     
     assert colored == G.getNumberOfNodes();
 
-    return new ColoredVertices<T>(true, G, colors, currentColor);
+    return new ColoredVertices<>(true, G, colors, currentColor);
   }
 
 }

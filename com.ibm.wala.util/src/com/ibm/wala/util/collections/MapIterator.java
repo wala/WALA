@@ -53,10 +53,10 @@ public class MapIterator<X, Y> implements Iterator<Y> {
   }
 
   public static <X,Y> Iterator<Y> map(Function<X, Y> f, Iterator<X> i) {
-    return new MapIterator<X,Y>(i, f);
+    return new MapIterator<>(i, f);
   }
 
   public static <X,Y> Set<Y> map(Function<X, Y> f, Collection<X> i) {
-    return Iterator2Collection.toSet(new MapIterator<X,Y>(i.iterator(), f));
+    return Iterator2Collection.toSet(new MapIterator<>(i.iterator(), f));
   }
 }

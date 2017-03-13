@@ -59,7 +59,7 @@ public class Runtime {
 
     @Override
     protected Stack<String> initialValue() {
-      Stack<String> callStack = new Stack<String>();
+      Stack<String> callStack = new Stack<>();
       callStack.push("root");
       return callStack;
     }

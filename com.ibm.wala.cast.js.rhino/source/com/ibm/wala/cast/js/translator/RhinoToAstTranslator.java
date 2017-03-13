@@ -658,7 +658,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 	@Override
 	public CAstNode visitArrayLiteral(ArrayLiteral node, WalkContext arg) {
 		int index = 0;
-		List<CAstNode> eltNodes = new ArrayList<CAstNode>(2 * node.getElements().size());
+		List<CAstNode> eltNodes = new ArrayList<>(2 * node.getElements().size());
     	eltNodes.add(((isPrologueScript(arg)) ? makeBuiltinNew("Array") : handleNew(arg, "Array", null)));
 		for(AstNode elt : node.getElements()) {
 			if (elt instanceof EmptyExpression) {
@@ -695,7 +695,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
 	@Override
 	public CAstNode visitBlock(Block node, WalkContext arg) {
-		List<CAstNode> nodes = new ArrayList<CAstNode>();
+		List<CAstNode> nodes = new ArrayList<>();
 		for(Node child : node) {
 			nodes.add(visit((AstNode)child, arg));
 		}
@@ -995,7 +995,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 	@Override
 	public CAstNode visitFunctionNode(FunctionNode fn, WalkContext context) {
 		WalkContext child = new FunctionContext(context, fn);
-	    List<CAstNode> body = new ArrayList<CAstNode>();
+	    List<CAstNode> body = new ArrayList<>();
 	    body.add(visit(fn.getBody(), child));
 
 	    String name;
@@ -1238,7 +1238,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
 	@Override
 	public CAstNode visitScope(Scope node, WalkContext arg) {
-		List<CAstNode> nodes = new ArrayList<CAstNode>();
+		List<CAstNode> nodes = new ArrayList<>();
 		for(Node child : node) {
 			nodes.add(visit((AstNode)child, arg));
 		}
@@ -2415,7 +2415,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
     
     final FunctionContext child = new ScriptContext(new RootContext(), top, top.getSourceName());
     TranslatingVisitor tv = new TranslatingVisitor();
-    List<CAstNode> body = new ArrayList<CAstNode>();
+    List<CAstNode> body = new ArrayList<>();
     for(Node bn : top) {
     	body.add(tv.visit((AstNode)bn, child));
     }

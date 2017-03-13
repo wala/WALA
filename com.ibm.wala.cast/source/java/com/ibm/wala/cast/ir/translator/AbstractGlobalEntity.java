@@ -31,7 +31,7 @@ public class AbstractGlobalEntity extends AbstractDataEntity {
   public AbstractGlobalEntity(String name, CAstType type, Set<CAstQualifier> modifiers) {
     this.name = name;
     this.type = type;
-    this.modifiers = new HashSet<CAstQualifier>();
+    this.modifiers = new HashSet<>();
     if (modifiers != null) {
       this.modifiers.addAll(modifiers);
     }

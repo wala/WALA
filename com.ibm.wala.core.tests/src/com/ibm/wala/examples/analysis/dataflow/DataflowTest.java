@@ -162,7 +162,7 @@ public class DataflowTest extends WalaTestCase {
         if (delegate.getNumber() == 4) {
           IntSet solution = solver.getOut(bb).getValue();
           IntIterator intIterator = solution.intIterator();
-          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<Pair<CGNode,Integer>>();
+          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
           while (intIterator.hasNext()) {
             int next = intIterator.next();
             final Pair<CGNode, Integer> def = reachingDefs.getNodeAndInstrForNumber(next);
@@ -195,7 +195,7 @@ public class DataflowTest extends WalaTestCase {
         if (delegate.getNumber() == 4) {
           IntSet solution = result.getResult(bb);
           IntIterator intIterator = solution.intIterator();
-          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<Pair<CGNode,Integer>>();
+          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
           while (intIterator.hasNext()) {
             int next = intIterator.next();
             final Pair<CGNode, Integer> def = reachingDefs.getDomain().getMappedObject(next);

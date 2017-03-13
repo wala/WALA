@@ -227,7 +227,7 @@ public class ArgumentSpecialization {
 
               } else if ((s = CAstPattern.match(destructuredCallPattern, root)) != null) {
                 if (argRefs.containsKey(s.getSingle("name").getValue().toString())) {
-                 List<CAstNode> x = new ArrayList<CAstNode>();
+                 List<CAstNode> x = new ArrayList<>();
                  CAstNode ref = handleArgumentRef(argRefs.get(s.getSingle("name").getValue().toString()));
                  if (ref != null) {
                    x.add(ref);

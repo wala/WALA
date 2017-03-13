@@ -100,9 +100,9 @@ public class CallRetSourceSpec extends SourceSpec {
 	        SSAInvokeInstruction invInst,
 			CGNode node, IMethod im, PointerAnalysis<InstanceKey> pa) {
 
-		HashSet<FlowType<E>> flowSet = new HashSet<FlowType<E>>();
+		HashSet<FlowType<E>> flowSet = new HashSet<>();
 		flowSet.clear();
-		flowSet.add(new ReturnFlow<E>(block, true));
+		flowSet.add(new ReturnFlow<>(block, true));
 		return flowSet;
 	}
 

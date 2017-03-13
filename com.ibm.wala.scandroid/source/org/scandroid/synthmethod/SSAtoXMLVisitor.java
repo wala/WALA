@@ -104,7 +104,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     /**
      * XML elements that represent the ssa instructions
      */
-    private final List<Element> summary = new ArrayList<Element>();
+    private final List<Element> summary = new ArrayList<>();
 
     public SSAtoXMLVisitor(Document doc, int argCount) {
         this.doc = doc;

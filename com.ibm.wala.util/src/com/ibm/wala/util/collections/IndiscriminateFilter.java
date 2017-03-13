@@ -18,7 +18,7 @@ import com.ibm.wala.util.Predicate;
 public class IndiscriminateFilter<T> extends Predicate<T> {
 
   public static <T> IndiscriminateFilter<T> singleton() {
-    return new IndiscriminateFilter<T>();
+    return new IndiscriminateFilter<>();
   }
 
   /*

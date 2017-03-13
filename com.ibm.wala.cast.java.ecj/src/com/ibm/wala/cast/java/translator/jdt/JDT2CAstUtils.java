@@ -61,7 +61,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class JDT2CAstUtils {
   public static Collection<CAstQualifier> mapModifiersToQualifiers(int modifiers, boolean isInterface, boolean isAnnotation) {
-    Set<CAstQualifier> quals = new LinkedHashSet<CAstQualifier>();
+    Set<CAstQualifier> quals = new LinkedHashSet<>();
 
     if (isInterface)
       quals.add(CAstQualifier.INTERFACE);
@@ -299,7 +299,7 @@ public class JDT2CAstUtils {
   }
 
   public static Collection<IMethodBinding> getOverriddenMethod(IMethodBinding met) {
-    HashMap<ITypeBinding, IMethodBinding> overridden = new HashMap<ITypeBinding, IMethodBinding>();
+    HashMap<ITypeBinding, IMethodBinding> overridden = new HashMap<>();
     if (met == null)
       return null;
     getMethodInClassOrSuperclass(met, met.getDeclaringClass(), true, overridden);

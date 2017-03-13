@@ -29,7 +29,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
 
 public class ExtensionGraph<T> implements NumberedGraph<T> {
   private final NumberedGraph<T> original;
-  private final NumberedNodeManager<T> additionalNodes = new SlowNumberedNodeManager<T>();
+  private final NumberedNodeManager<T> additionalNodes = new SlowNumberedNodeManager<>();
   private final NumberedEdgeManager<T> edgeManager = new NumberedEdgeManager<T>() {
     private final Map<T, MutableIntSet> inEdges = HashMapFactory.make();
     private final Map<T, MutableIntSet> outEdges = HashMapFactory.make();
@@ -61,7 +61,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
     @Override
     public Iterator<T> getPredNodes(T n) {
       Iterator<T> orig = (original.containsNode(n)? original.getPredNodes(n): EmptyIterator.<T>instance());
-      return new CompoundIterator<T>(orig, nodes(n, inEdges));
+      return new CompoundIterator<>(orig, nodes(n, inEdges));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
     @Override
     public Iterator<T> getSuccNodes(T n) {
       Iterator<T> orig = (original.containsNode(n)? original.getSuccNodes(n): EmptyIterator.<T>instance());
-      return new CompoundIterator<T>(orig, nodes(n, outEdges));
+      return new CompoundIterator<>(orig, nodes(n, outEdges));
     }
 
     @Override
@@ -173,7 +173,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
 
   @Override
   public Iterator<T> iterator() {
-    return new CompoundIterator<T>(original.iterator(), additionalNodes.iterator());
+    return new CompoundIterator<>(original.iterator(), additionalNodes.iterator());
   }
 
   @Override
@@ -239,7 +239,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
       }      
     });
-    return new CompoundIterator<T>(original.iterateNodes(os), additionalNodes.iterateNodes(es));
+    return new CompoundIterator<>(original.iterateNodes(os), additionalNodes.iterateNodes(es));
   }
 
   @Override

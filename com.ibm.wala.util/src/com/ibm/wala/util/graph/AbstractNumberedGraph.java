@@ -64,7 +64,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
    */
   @Override
   public Iterator<T> iterateNodes(final IntSet s) {
-    return new NumberedNodeIterator<T>(s, this);
+    return new NumberedNodeIterator<>(s, this);
   }
 
   /* 

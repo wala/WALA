@@ -35,7 +35,7 @@ public class JsPaPanel extends PaPanel {
 	private static final long serialVersionUID = 1L;
 
 	private MutableMapping<List<ObjectPropertyCatalogKey>> instanceKeyIdToObjectPropertyCatalogKey = MutableMapping.<List<ObjectPropertyCatalogKey>> make();
-	private List<AstGlobalPointerKey> globalsPointerKeys = new ArrayList<AstGlobalPointerKey>();
+	private List<AstGlobalPointerKey> globalsPointerKeys = new ArrayList<>();
 
 	public JsPaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
 		super(cg, pa);
@@ -65,7 +65,7 @@ public class JsPaPanel extends PaPanel {
 
 	@Override
   protected List<PointerKey> getPointerKeysUnderInstanceKey(InstanceKey ik) {
-		List<PointerKey> ret = new ArrayList<PointerKey>();
+		List<PointerKey> ret = new ArrayList<>();
 		ret.addAll(super.getPointerKeysUnderInstanceKey(ik));
 		int ikIndex = pa.getInstanceKeyMapping().getMappedIndex(ik);
 		ret.addAll(nonNullList(instanceKeyIdToObjectPropertyCatalogKey.getMappedObject(ikIndex)));
@@ -77,7 +77,7 @@ public class JsPaPanel extends PaPanel {
 	
 	@Override
 	protected List<Object> getRootNodes() {
-		List<Object> ret = new ArrayList<Object>(2);
+		List<Object> ret = new ArrayList<>(2);
 		ret.add(cgNodesRoot);
 		ret.add(globalsRoot);
 		return ret;
@@ -85,7 +85,7 @@ public class JsPaPanel extends PaPanel {
 
 	@Override
 	protected List<Object> getChildrenFor(Object node) {
-		List<Object> ret = new ArrayList<Object>();
+		List<Object> ret = new ArrayList<>();
 		if (node == cgNodesRoot){
 	    for (int nodeId = 0 ; nodeId < cg.getNumberOfNodes(); nodeId++){
 	      CGNode cgNode = cg.getNode(nodeId);

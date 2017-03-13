@@ -129,8 +129,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   private Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
-    List<String> sources = new LinkedList<String>();
-    List<String> libs = new LinkedList<String>();
+    List<String> sources = new LinkedList<>();
+    List<String> libs = new LinkedList<>();
     for (ClassLoaderReference cl : scope.getLoaders()) {
 
     while (cl != null) {
@@ -174,7 +174,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   @SuppressWarnings("unchecked")
   @Override
   public void loadAllSources(Set<ModuleEntry> modules) {
-    List<String> sources = new LinkedList<String>();
+    List<String> sources = new LinkedList<>();
     Map<String, ModuleEntry> sourceMap = HashMapFactory.make();
     for(ModuleEntry m : modules) {
       if (m.isSourceFile()) {

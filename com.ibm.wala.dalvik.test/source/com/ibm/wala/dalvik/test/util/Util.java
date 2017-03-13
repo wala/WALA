@@ -75,7 +75,7 @@ public class Util {
   }
   
   public static URI[] androidLibs() {
-    List<URI> libs = new ArrayList<URI>();
+    List<URI> libs = new ArrayList<>();
     if (walaProperties != null && walaProperties.getProperty(ANDROID_RT_DEX_DIR) != null) {
       for(File lib : new File(walaProperties.getProperty(ANDROID_RT_DEX_DIR)).listFiles(new FilenameFilter() {
         @Override

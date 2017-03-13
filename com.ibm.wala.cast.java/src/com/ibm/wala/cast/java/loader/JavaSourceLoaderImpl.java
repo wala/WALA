@@ -155,7 +155,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public Collection<IClass> getDirectInterfaces() {
-      List<IClass> result = new ArrayList<IClass>();
+      List<IClass> result = new ArrayList<>();
       for (Iterator iter = superTypeNames.iterator(); iter.hasNext();) {
         TypeName name = (TypeName) iter.next();
         IClass domoType = lookupClass(name);
@@ -540,7 +540,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
   
   public IClass defineType(CAstEntity type, String typeName, CAstEntity owner) {
-    Collection<TypeName> superTypeNames = new ArrayList<TypeName>();
+    Collection<TypeName> superTypeNames = new ArrayList<>();
     for (Iterator superTypes = type.getType().getSupertypes().iterator(); superTypes.hasNext();) {
       superTypeNames.add(toWALATypeName(((CAstType) superTypes.next())));
     }

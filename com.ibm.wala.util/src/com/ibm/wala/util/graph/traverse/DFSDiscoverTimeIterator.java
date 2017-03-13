@@ -48,7 +48,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
    * subclass constructors must call this!
    */
   protected void init(T N) {
-    init(new NonNullSingletonIterator<T>(N));
+    init(new NonNullSingletonIterator<>(N));
   }
 
   /**

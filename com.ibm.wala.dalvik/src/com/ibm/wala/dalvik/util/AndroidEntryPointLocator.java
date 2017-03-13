@@ -118,7 +118,7 @@ public final class AndroidEntryPointLocator {
         WITH_ANDROID
     }
 
-    private final static List<AndroidPossibleEntryPoint> possibleEntryPoints = new ArrayList<AndroidPossibleEntryPoint>();
+    private final static List<AndroidPossibleEntryPoint> possibleEntryPoints = new ArrayList<>();
     protected final Set<LocatorFlags> flags;
 
     public AndroidEntryPointLocator(final Set<LocatorFlags> flags) {
@@ -146,7 +146,7 @@ public final class AndroidEntryPointLocator {
             throw new IllegalArgumentException("I need a ClassHierarchy to search");
         }
 
-        Set<AndroidEntryPoint> entryPoints = new HashSet<AndroidEntryPoint>();
+        Set<AndroidEntryPoint> entryPoints = new HashSet<>();
 
         mon.beginTask("Locating Entrypoints", IProgressMonitor.UNKNOWN);
         int dummy = 0;  // for the progress monitor
@@ -183,7 +183,7 @@ nextMethod:
         } // for IClass : cha
 
         if (this.flags.contains(LocatorFlags.EP_HEURISTIC) || this.flags.contains(LocatorFlags.CB_HEURISTIC)) {
-            final Set<TypeReference> bases = new HashSet<TypeReference>();
+            final Set<TypeReference> bases = new HashSet<>();
 
             if (this.flags.contains(LocatorFlags.EP_HEURISTIC)) {
                 // Add bases for EP-Heuristic
@@ -216,7 +216,7 @@ nextMethod:
         }
 
 
-        List<AndroidEntryPoint> ret = new ArrayList<AndroidEntryPoint>(entryPoints);
+        List<AndroidEntryPoint> ret = new ArrayList<>(entryPoints);
         Collections.sort(ret, new AndroidEntryPoint.ExecutionOrderComperator());
         mon.done();
         return ret;

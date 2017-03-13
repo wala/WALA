@@ -19,7 +19,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
 public class GraphInverter {
 
   public static <T> NumberedGraph<T> invert(final NumberedGraph<T> G) {
-    return new InvertedNumberedGraph<T>(G);
+    return new InvertedNumberedGraph<>(G);
   }
   
       /**
@@ -28,9 +28,9 @@ public class GraphInverter {
    */
   public static <T> Graph<T> invert(final Graph<T> G) {
     if (G instanceof NumberedGraph) {
-      return new InvertedNumberedGraph<T>((NumberedGraph<T>) G);
+      return new InvertedNumberedGraph<>((NumberedGraph<T>) G);
     } else {
-      return new InvertedGraph<T>(G);
+      return new InvertedGraph<>(G);
     }
   }
 

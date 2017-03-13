@@ -26,9 +26,9 @@ public class HashMapFactory {
    */
   public static <K,V> HashMap<K,V> make(int size) {
     if (HashSetFactory.DEBUG) {
-      return new ParanoidHashMap<K,V>(size);
+      return new ParanoidHashMap<>(size);
     } else {
-      return new LinkedHashMap<K,V>(size);
+      return new LinkedHashMap<>(size);
     }
   }
 
@@ -37,9 +37,9 @@ public class HashMapFactory {
    */
   public static <K,V> HashMap<K,V> make() {
     if (HashSetFactory.DEBUG) {
-      return new ParanoidHashMap<K,V>();
+      return new ParanoidHashMap<>();
     } else {
-      return new LinkedHashMap<K,V>();
+      return new LinkedHashMap<>();
     }
   }
 
@@ -53,9 +53,9 @@ public class HashMapFactory {
       throw new IllegalArgumentException("null t");
     }
     if (HashSetFactory.DEBUG) {
-      return new ParanoidHashMap<K,V>(t);
+      return new ParanoidHashMap<>(t);
     } else {
-      return new LinkedHashMap<K,V>(t);
+      return new LinkedHashMap<>(t);
     }
   }
 }

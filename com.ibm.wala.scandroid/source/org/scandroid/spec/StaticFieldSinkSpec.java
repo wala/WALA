@@ -84,7 +84,7 @@ public class StaticFieldSinkSpec extends SinkSpec {
 	@Override
 	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 			BasicBlockInContext<E> block) {
-		Collection<FlowType<E>> flow = HashSetFactory.make(Collections.singleton((FlowType<E>) new StaticFieldFlow<E>(block, field, false)));
+		Collection<FlowType<E>> flow = HashSetFactory.make(Collections.singleton((FlowType<E>) new StaticFieldFlow<>(block, field, false)));
 		return flow;
 	}
 

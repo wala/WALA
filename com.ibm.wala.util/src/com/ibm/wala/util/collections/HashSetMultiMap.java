@@ -56,7 +56,7 @@ public class HashSetMultiMap<K, V> extends AbstractMultiMap<K, V> {
   }
 
   public static <K, V> HashSetMultiMap<K, V> make() {
-    return new HashSetMultiMap<K, V>();
+    return new HashSetMultiMap<>();
   }
 
 }

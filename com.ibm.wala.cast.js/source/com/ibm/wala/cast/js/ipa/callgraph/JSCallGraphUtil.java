@@ -145,7 +145,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     boolean suffix = funName.startsWith("suffix:");
     
     if (suffix) {
-      Set<CGNode> nodes = new HashSet<CGNode>();
+      Set<CGNode> nodes = new HashSet<>();
       String tail = funName.substring(7);
       for (CGNode n : CG) {
         if (n.getMethod().getReference().getDeclaringClass().getName().toString().endsWith(tail)) {
@@ -190,7 +190,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       throws IOException {
     try {
       TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
-      final Set<String> names = new HashSet<String>();
+      final Set<String> names = new HashSet<>();
       JSAstTranslator toIR = new JSAstTranslator(cl) {
         @Override
         protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg, SymbolTable symtab,
@@ -268,7 +268,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
 
     @Override
     public Iterator<? extends ModuleEntry> getEntries() {
-      return new NonNullSingletonIterator<Bootstrap>(this);
+      return new NonNullSingletonIterator<>(this);
     }
 
     @Override

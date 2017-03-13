@@ -379,7 +379,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
             S.addAll(set);
           }
         }
-        pointsToSet = new OrdinalSet<InstanceKey>(S, analysis.getInstanceKeyMapping());
+        pointsToSet = new OrdinalSet<>(S, analysis.getInstanceKeyMapping());
       }
 
       @Override

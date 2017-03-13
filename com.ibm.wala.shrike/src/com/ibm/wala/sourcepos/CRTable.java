@@ -72,7 +72,7 @@ public final class CRTable extends PositionsAttribute {
       } catch (InvalidCRTDataException e) {
         LinkedList<Object> l = e.getData();
         if (l == null)
-          l = new LinkedList<Object>();
+          l = new LinkedList<>();
         l.addFirst(i);
         Debug.warn(e.getMessage(), l.toArray());
       }

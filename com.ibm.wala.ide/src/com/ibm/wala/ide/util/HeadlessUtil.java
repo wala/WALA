@@ -87,7 +87,7 @@ public class HeadlessUtil {
     
   public static <Unit, CompiledUnit> void parseModules(Set<ModuleEntry> modules, EclipseCompiler<Unit, CompiledUnit> compiler) {
     // sort files into projects
-    Map<IProject, Map<Unit,EclipseSourceFileModule>> projectsFiles = new HashMap<IProject, Map<Unit,EclipseSourceFileModule>>();
+    Map<IProject, Map<Unit,EclipseSourceFileModule>> projectsFiles = new HashMap<>();
     for (ModuleEntry m : modules) {
       if (m instanceof EclipseSourceFileModule) {
         EclipseSourceFileModule entry = (EclipseSourceFileModule) m;

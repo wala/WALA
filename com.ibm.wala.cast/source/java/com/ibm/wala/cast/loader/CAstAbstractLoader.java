@@ -54,7 +54,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   /**
    * warnings generated while loading each module
    */
-  private final Map<ModuleEntry, Set<Warning>> errors = new HashMap<ModuleEntry, Set<Warning>>();
+  private final Map<ModuleEntry, Set<Warning>> errors = new HashMap<>();
   
   public CAstAbstractLoader(IClassHierarchy cha, IClassLoader parent) {
     this.cha = cha;
@@ -82,7 +82,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   private Iterator<ModuleEntry> getMessages(final byte severity) {
-    return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Predicate<Map.Entry<ModuleEntry,Set<Warning>>>()  {
+    return new MapIterator<>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Predicate<Map.Entry<ModuleEntry,Set<Warning>>>()  {
       @Override public boolean test(Entry<ModuleEntry, Set<Warning>> o) {
          for(Warning w : o.getValue()) {
            if (w.getLevel() == severity) {

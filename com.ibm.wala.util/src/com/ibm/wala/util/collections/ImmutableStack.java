@@ -50,7 +50,7 @@ import java.util.Iterator;
  */
 public class ImmutableStack<T> implements Iterable<T> {
 
-	private static final ImmutableStack<Object> EMPTY = new ImmutableStack<Object>(
+	private static final ImmutableStack<Object> EMPTY = new ImmutableStack<>(
 			new Object[0]);
 
 	private static final int MAX_SIZE = Integer.MAX_VALUE;
@@ -120,7 +120,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 	}
 
 	protected ImmutableStack<T> makeStack(T[] tmpEntries) {
-		return new ImmutableStack<T>(tmpEntries);
+		return new ImmutableStack<>(tmpEntries);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 		for (int i = entries.length - 1, j = 0; i >= 0; i--, j++) {
 			tmpEntries[j] = entries[i];
 		}
-		return new ImmutableStack<T>(tmpEntries);
+		return new ImmutableStack<>(tmpEntries);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -221,7 +221,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 		int size = entries.length - other.entries.length;
 		T[] tmpEntries = (T[]) new Object[size];
 		System.arraycopy(entries, 0, tmpEntries, 0, size);
-		return new ImmutableStack<T>(tmpEntries);
+		return new ImmutableStack<>(tmpEntries);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -247,7 +247,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 			System.arraycopy(other.entries, 0, tmpEntries, numFromThis,
 					other.entries.length);
 		}
-		return new ImmutableStack<T>(tmpEntries);
+		return new ImmutableStack<>(tmpEntries);
 	}
 
 	@Override
@@ -255,7 +255,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 		if (entries.length == 0) {
 			return EmptyIterator.instance();
 		}
-		return new ArrayIterator<T>(entries);
+		return new ArrayIterator<>(entries);
 	}
 
 	/**

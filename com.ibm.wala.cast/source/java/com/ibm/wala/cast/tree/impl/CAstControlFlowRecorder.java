@@ -40,15 +40,15 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 public class CAstControlFlowRecorder implements CAstControlFlowMap {
   private final CAstSourcePositionMap src;
 
-  private final Map<CAstNode, Object> CAstToNode = new LinkedHashMap<CAstNode, Object>();
+  private final Map<CAstNode, Object> CAstToNode = new LinkedHashMap<>();
 
-  private final Map<Object, CAstNode> nodeToCAst = new LinkedHashMap<Object, CAstNode>();
+  private final Map<Object, CAstNode> nodeToCAst = new LinkedHashMap<>();
 
-  private final Map<Key, Object> table = new LinkedHashMap<Key, Object>();
+  private final Map<Key, Object> table = new LinkedHashMap<>();
 
-  private final Map<Object, Set<Object>> labelMap = new LinkedHashMap<Object, Set<Object>>();
+  private final Map<Object, Set<Object>> labelMap = new LinkedHashMap<>();
 
-  private final Map<Object, Set<Object>> sourceMap = new LinkedHashMap<Object, Set<Object>>();
+  private final Map<Object, Set<Object>> sourceMap = new LinkedHashMap<>();
 
   /**
    * for optimizing {@link #getMappedNodes()}; methods that change the set of
@@ -126,7 +126,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   public Collection<CAstNode> getMappedNodes() {
     Collection<CAstNode> nodes = cachedMappedNodes;
     if (nodes == null) {
-      nodes = new LinkedHashSet<CAstNode>();
+      nodes = new LinkedHashSet<>();
       for (Iterator<Key> keys = table.keySet().iterator(); keys.hasNext();) {
         Key key = keys.next();
         nodes.add(nodeToCAst.get(key.from));
@@ -159,12 +159,12 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
     Set<Object> ls = labelMap.get(from);
     if (ls == null)
-      labelMap.put(from, ls = new LinkedHashSet<Object>(2));
+      labelMap.put(from, ls = new LinkedHashSet<>(2));
     ls.add(label);
 
     Set<Object> ss = sourceMap.get(to);
     if (ss == null)
-      sourceMap.put(to, ss = new LinkedHashSet<Object>(2));
+      sourceMap.put(to, ss = new LinkedHashSet<>(2));
     ss.add(from);
   }
 

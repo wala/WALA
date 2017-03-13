@@ -89,15 +89,15 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
         }
 
         public static BehaviorKey<TypeName> mk(TypeName base) {
-            return new BehaviorKey<TypeName>(base);
+            return new BehaviorKey<>(base);
         }
 
         public static BehaviorKey<Atom> mk(Atom base) {
-            return new BehaviorKey<Atom>(base);
+            return new BehaviorKey<>(base);
         }
 
         public static BehaviorKey<Atom> mkPackage(String pack) {
-            return new BehaviorKey<Atom>(Atom.findOrCreateAsciiAtom(pack));
+            return new BehaviorKey<>(Atom.findOrCreateAsciiAtom(pack));
         }
 
         @Override
@@ -122,7 +122,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
     }
 
 
-    private final Map<BehaviorKey, BehviourValue> behaviours = new HashMap<BehaviorKey, BehviourValue>();
+    private final Map<BehaviorKey, BehviourValue> behaviours = new HashMap<>();
     private final transient IClassHierarchy cha;
 
     public DefaultInstantiationBehavior(final IClassHierarchy cha) {
@@ -350,7 +350,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
         if (this.serializationIncludesCache) {
             stream.writeObject(this.behaviours);
         } else {
-            final Map<BehaviorKey, BehviourValue> strippedBehaviours = new HashMap<BehaviorKey, BehviourValue>();
+            final Map<BehaviorKey, BehviourValue> strippedBehaviours = new HashMap<>();
             for (final BehaviorKey key : this.behaviours.keySet()) {
                 final BehviourValue val = this.behaviours.get(key);
                 if (! val.isCached() ) {

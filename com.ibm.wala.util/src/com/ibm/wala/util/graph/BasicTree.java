@@ -18,7 +18,7 @@ import com.ibm.wala.util.collections.SimpleVector;
 public class BasicTree<T> {
 
   private final T value;
-  final private SimpleVector<BasicTree<T>> children = new SimpleVector<BasicTree<T>>();
+  final private SimpleVector<BasicTree<T>> children = new SimpleVector<>();
 
   protected BasicTree(T value) {
     this.value = value;
@@ -28,7 +28,7 @@ public class BasicTree<T> {
     if (value == null) {
       throw new IllegalArgumentException("null value");
     }
-    return new BasicTree<T>(value);
+    return new BasicTree<>(value);
   }
   
   public T getRootValue() {

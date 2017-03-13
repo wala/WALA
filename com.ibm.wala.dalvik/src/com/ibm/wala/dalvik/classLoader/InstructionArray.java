@@ -68,9 +68,9 @@ public class InstructionArray implements Collection<Instruction> {
     List<Integer> index2pc;
 
     public InstructionArray() {
-        instructions = new ArrayList<Instruction>();
-        pc2index = new HashMap<Integer, Integer>();
-        index2pc = new ArrayList<Integer>();
+        instructions = new ArrayList<>();
+        pc2index = new HashMap<>();
+        index2pc = new ArrayList<>();
     }
 
     public boolean add(Instruction e) {

@@ -37,9 +37,9 @@ import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 public abstract class OfflineInstrumenterBase {
   private int inputIndex;
 
-  final private HashSet<String> entryNames = new HashSet<String>();
+  final private HashSet<String> entryNames = new HashSet<>();
 
-  final private ArrayList<Input> inputs = new ArrayList<Input>();
+  final private ArrayList<Input> inputs = new ArrayList<>();
 
   final private BitSet ignoringInputs = new BitSet();
 
@@ -328,7 +328,7 @@ public abstract class OfflineInstrumenterBase {
     if (args == null) {
       throw new IllegalArgumentException("args == null");
     }
-    ArrayList<String> leftover = new ArrayList<String>();
+    ArrayList<String> leftover = new ArrayList<>();
 
     for (int i = 0; i < args.length; i++) {
       String a = args[i];

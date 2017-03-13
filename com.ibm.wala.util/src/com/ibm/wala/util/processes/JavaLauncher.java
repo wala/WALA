@@ -84,7 +84,7 @@ public class JavaLauncher extends Launcher {
   /**
    * Paths that will be added to the default classpath
    */
-  private final List<String> xtraClasspath = new ArrayList<String>();
+  private final List<String> xtraClasspath = new ArrayList<>();
 
   /**
    * A {@link Thread} which spins and drains stdout of the running process.
@@ -104,7 +104,7 @@ public class JavaLauncher extends Launcher {
   /**
    * Extra args to pass to the JVM
    */
-  private List<String> vmArgs = new ArrayList<String>();
+  private List<String> vmArgs = new ArrayList<>();
 
   /**
    * The last process returned by a call to start() on this object.
@@ -180,7 +180,7 @@ public class JavaLauncher extends Launcher {
     // Java process
     String signalParam = PlatformUtil.onMacOSX() ? "-Xrs" : null;
 
-    List<String> cmd = new ArrayList<String>();
+    List<String> cmd = new ArrayList<>();
 
     cmd.add(javaExe);
     cmd.add(heap);

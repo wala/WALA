@@ -42,7 +42,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @param G the graph whose nodes to enumerate
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G, T N) {
-    init(G, new NonNullSingletonIterator<T>(N));
+    init(G, new NonNullSingletonIterator<>(N));
   }
 
   /**

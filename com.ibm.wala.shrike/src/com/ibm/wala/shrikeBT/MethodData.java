@@ -23,7 +23,7 @@ import java.util.Iterator;
  * for caching analysis results for a method.
  */
 public final class MethodData {
-  final private HashMap<Object, Results> map = new HashMap<Object, Results>();
+  final private HashMap<Object, Results> map = new HashMap<>();
 
   final private int access;
 

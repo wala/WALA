@@ -41,12 +41,12 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
     if (delegate == null) {
       throw new IllegalArgumentException("null delegate");
     }
-    return new OffsetOrdinalSetMapping<T>(delegate, offset);
+    return new OffsetOrdinalSetMapping<>(delegate, offset);
   }
 
   public static <T> OffsetOrdinalSetMapping<T> make(int offset) {
     MutableMapping<T> m = MutableMapping.make();
-    return new OffsetOrdinalSetMapping<T>(m, offset);
+    return new OffsetOrdinalSetMapping<>(m, offset);
   }
 
   @Override

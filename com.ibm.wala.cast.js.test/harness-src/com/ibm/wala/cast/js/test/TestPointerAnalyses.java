@@ -340,7 +340,7 @@ public abstract class TestPointerAnalyses {
         PrototypeFieldVertex proto = new PrototypeFieldVertex(PrototypeField.__proto__, o);
         if (hg.containsNode(proto)) {
         return 
-            new MapIterator<Object,ObjectVertex>(hg.getSuccNodes(proto),
+            new MapIterator<>(hg.getSuccNodes(proto),
                 new Function<Object,ObjectVertex>() {
                   @Override
                   public ObjectVertex apply(Object object) {

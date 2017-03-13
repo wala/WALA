@@ -24,7 +24,7 @@ public class FifoQueue<T> {
   /**
    * The work queue. Items are references to Object instances.
    */
-  final List<T> qItems = new LinkedList<T>();
+  final List<T> qItems = new LinkedList<>();
 
   /**
    * Set representing items currently enqueue. This is used to keep an item from

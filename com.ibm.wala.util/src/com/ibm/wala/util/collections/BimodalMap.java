@@ -87,7 +87,7 @@ public class BimodalMap<K, V> implements Map<K, V> {
   @Override
   public V put(K key, V value) {
     if (backingStore == null) {
-      backingStore = new SmallMap<K, V>();
+      backingStore = new SmallMap<>();
       backingStore.put(key, value);
       return null;
     } else {
@@ -139,7 +139,7 @@ public class BimodalMap<K, V> implements Map<K, V> {
       if (size > cutOff) {
         backingStore = HashMapFactory.make();
       } else {
-        backingStore = new SmallMap<K, V>();
+        backingStore = new SmallMap<>();
       }
       backingStore.putAll(t);
       return;

@@ -81,6 +81,6 @@ public class Pair<T,U> implements Serializable {
   }
 
   public static <T,U> Pair<T, U> make(T x, U y) {
-    return new Pair<T, U>(x,y);
+    return new Pair<>(x,y);
   }
 }

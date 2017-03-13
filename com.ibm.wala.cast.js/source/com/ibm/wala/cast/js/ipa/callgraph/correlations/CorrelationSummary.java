@@ -42,7 +42,7 @@ public final class CorrelationSummary {
   }
 
   public List<Pair<Position, String>> pp() {
-    List<Pair<Position, String>> res = new ArrayList<Pair<Position, String>>();
+    List<Pair<Position, String>> res = new ArrayList<>();
     for(Correlation correlation : correlations) {
       res.add(Pair.make(correlation.getStartPosition(positions), correlation.pp(positions)));
     }

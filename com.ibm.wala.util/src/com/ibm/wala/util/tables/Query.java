@@ -30,7 +30,7 @@ public class Query {
     if (t == null) {
       throw new IllegalArgumentException("t == null");
     }
-    Collection<Map<String,T>> result = new ArrayList<Map<String,T>>();
+    Collection<Map<String,T>> result = new ArrayList<>();
     for (int i = 0 ; i < t.getNumberOfRows(); i++) {
       Map<String,T> p = t.row2Map(i);
       if (p.get(column).equals(value)) {
@@ -59,7 +59,7 @@ public class Query {
     if (t == null) {
       throw new IllegalArgumentException("t == null");
     }
-    Collection<Map<String,T>> c = new ArrayList<Map<String,T>>();
+    Collection<Map<String,T>> c = new ArrayList<>();
     for (int i = 0 ; i < t.getNumberOfRows(); i++) {
       Map<String,T> p = t.row2Map(i);
       T s = p.get(column);
@@ -73,7 +73,7 @@ public class Query {
 
   public static <T> Table<T> viewWhereEquals(Table<T> t, String column, T value) {
     Collection<Map<String,T>> c = selectStarWhereEquals(t, column, value);
-    Table<T> result = new Table<T>(t);
+    Table<T> result = new Table<>(t);
     for (Map<String,T> p : c) {
       result.addRow(p);
     }
