@@ -931,8 +931,9 @@ public class SlicerTest {
   public static void dumpSliceToFile(Collection<Statement> slice, String fileName) throws FileNotFoundException {
     File f = new File(fileName);
     FileOutputStream fo = new FileOutputStream(f);
-    PrintWriter w = new PrintWriter(fo);
-    dumpSlice(slice, w);
+    try (final PrintWriter w = new PrintWriter(fo)) {
+      dumpSlice(slice, w);
+    }
   }
 
   public static CGNode findMainMethod(CallGraph cg) {

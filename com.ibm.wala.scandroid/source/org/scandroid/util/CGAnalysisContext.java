@@ -150,7 +150,9 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		SSAPropagationCallGraphBuilder cgb;
 
 		if (null != options.getSummariesURI()) {
-			extraSummaries.add(new FileInputStream(new File(options.getSummariesURI())));
+			try (final FileInputStream in = new FileInputStream(new File(options.getSummariesURI()))) {
+				extraSummaries.add(in);
+			}
 		}
 
 		cgb = AndroidAnalysisContext.makeZeroCFABuilder(analysisOptions, cache,	cha, scope,

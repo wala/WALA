@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,8 +51,14 @@ public class JDTJavaIRTests extends JavaIRTests {
  
   public static final String PROJECT_ZIP = "test_project.zip";
   
-  public static final ZippedProjectData PROJECT = new ZippedProjectData(Activator.getDefault(), PROJECT_NAME, PROJECT_ZIP);
-  
+  public static final ZippedProjectData PROJECT;
+  static {
+    try {
+      PROJECT = new ZippedProjectData(Activator.getDefault(), PROJECT_NAME, PROJECT_ZIP);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
   private final ZippedProjectData project;
 
   public JDTJavaIRTests() {

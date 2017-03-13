@@ -62,23 +62,24 @@ public class Bench {
   public static void main(String[] args) throws Exception {
     for (int i = 0; i < 1; i++) {
 
-      Writer w = new BufferedWriter(new FileWriter("report", false));
+      try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
 
-      args = instrumenter.parseStandardArgs(args);
-      if (args.length > 0) {
-        if (args[0].equals("-doexit")) {
-          doExit = true;
-        } else if (args[0].equals("-doexception")) {
-          doExit = true;
-          doException = true;
+        args = instrumenter.parseStandardArgs(args);
+        if (args.length > 0) {
+          if (args[0].equals("-doexit")) {
+            doExit = true;
+          } else if (args[0].equals("-doexception")) {
+            doExit = true;
+            doException = true;
+          }
         }
-      }
-      instrumenter = new OfflineInstrumenter(!doException);
-      instrumenter.setPassUnmodifiedClasses(true);
-      instrumenter.beginTraversal();
-      ClassInstrumenter ci;
-      while ((ci = instrumenter.nextClass()) != null) {
-        doClass(ci, w);
+        instrumenter = new OfflineInstrumenter(!doException);
+        instrumenter.setPassUnmodifiedClasses(true);
+        instrumenter.beginTraversal();
+        ClassInstrumenter ci;
+        while ((ci = instrumenter.nextClass()) != null) {
+          doClass(ci, w);
+        }
       }
       instrumenter.close();
     }

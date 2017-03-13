@@ -49,11 +49,9 @@ public class BasicLauncher extends Launcher {
     Thread d1 = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
     if (getInput() != null) {
-      final BufferedOutputStream input = new BufferedOutputStream(p.getOutputStream());
-      try {
+      try (final BufferedOutputStream input = new BufferedOutputStream(p.getOutputStream())) {
         input.write(getInput(), 0, getInput().length);
         input.flush();
-        input.close();
       } catch (IOException e) {
         e.printStackTrace();
         throw new IOException("error priming stdin", e);

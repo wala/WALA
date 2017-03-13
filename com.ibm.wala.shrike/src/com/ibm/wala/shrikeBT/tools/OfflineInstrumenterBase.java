@@ -127,6 +127,7 @@ public abstract class OfflineInstrumenterBase {
     }
 
     @Override
+    @SuppressWarnings("resource")
     public InputStream open() throws IOException {
       JarFile cachedJar = openCachedJar(file);
       return cachedJar.getInputStream(cachedJar.getEntry(name));
@@ -150,6 +151,7 @@ public abstract class OfflineInstrumenterBase {
     /**
      * Get the underlying ZipEntry corresponding to this resource.
      */
+    @SuppressWarnings("resource")
     public ZipEntry getEntry() throws IOException {
       JarFile cachedJar = openCachedJar(file);
       return cachedJar.getEntry(name);
@@ -229,13 +231,13 @@ public abstract class OfflineInstrumenterBase {
    * Add a JAR file containing source classes to instrument.
    */
   final public void addInputJar(File f) throws IOException {
-    JarFile jf = new JarFile(f, false);
-    for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements();) {
-      JarEntry entry = e.nextElement();
-      String name = entry.getName();
-      inputs.add(new JarInput(f, name));
+    try (final JarFile jf = new JarFile(f, false)) {
+      for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements();) {
+        JarEntry entry = e.nextElement();
+        String name = entry.getName();
+        inputs.add(new JarInput(f, name));
+      }
     }
-    jf.close();
   }
 
   /**
@@ -387,14 +389,11 @@ public abstract class OfflineInstrumenterBase {
         if (ignoringInputs.get(inputIndex - 1) || !in.isClass()) {
           continue;
         }
-        BufferedInputStream s = new BufferedInputStream(in.open());
-        try {
+        try (final BufferedInputStream s = new BufferedInputStream(in.open())) {
           Object r = makeClassFromStream(in.getInputName(), s);
           String name = getClassName(r);
           in.setClassName(name);
           return r;
-        } finally {
-          s.close();
         }
       }
     }
@@ -454,7 +453,9 @@ public abstract class OfflineInstrumenterBase {
         throw new IllegalStateException("Output file was not set");
       }
 
-      outputJar = new JarOutputStream(new FileOutputStream(outputFile));
+      @SuppressWarnings("resource")
+      final FileOutputStream out = new FileOutputStream(outputFile);
+      outputJar = new JarOutputStream(out);
     }
   }
 
@@ -539,8 +540,7 @@ public abstract class OfflineInstrumenterBase {
         if (in instanceof JarInput) {
           JarInput jin = (JarInput) in;
           ZipEntry entry = jin.getEntry();
-          InputStream s = jin.open();
-          try {
+          try (final InputStream s = jin.open()) {
             ZipEntry newEntry = new ZipEntry(entry.getName());
             newEntry.setComment(entry.getComment());
             newEntry.setExtra(entry.getExtra());
@@ -548,8 +548,6 @@ public abstract class OfflineInstrumenterBase {
             putNextEntry(newEntry);
             copyStream(s, outputJar);
             outputJar.closeEntry();
-          } finally {
-            s.close();
           }
         } else {
           throw new Error("Unknown non-class input: " + in);
@@ -557,8 +555,7 @@ public abstract class OfflineInstrumenterBase {
       } else {
         String name = in.getClassName();
         if (name == null) {
-          BufferedInputStream s = new BufferedInputStream(in.open(), 65536);
-          try {
+          try (final BufferedInputStream s = new BufferedInputStream(in.open(), 65536)) {
             Object cl = makeClassFromStream(in.getInputName(), s);
             String entryName = toEntryName(getClassName(cl));
             if (!entryNames.contains(entryName)) {
@@ -568,21 +565,16 @@ public abstract class OfflineInstrumenterBase {
               clOut.flush();
               outputJar.closeEntry();
             }
-          } finally {
-            s.close();
           }
         } else {
           String entryName = toEntryName(name);
           if (!entryNames.contains(entryName)) {
-            BufferedInputStream s = new BufferedInputStream(in.open());
-            try {
+            try (final BufferedInputStream s = new BufferedInputStream(in.open())) {
               putNextEntry(new ZipEntry(entryName));
               BufferedOutputStream clOut = new BufferedOutputStream(outputJar);
               copyStream(s, clOut);
               clOut.flush();
               outputJar.closeEntry();
-            } finally {
-              s.close();
             }
           }
         }

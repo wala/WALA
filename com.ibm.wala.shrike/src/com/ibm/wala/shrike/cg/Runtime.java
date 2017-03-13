@@ -67,8 +67,8 @@ public class Runtime {
   };
   
   private Runtime(String fileName, String filterFileName, String policyClassName) {
-    try {
-      filter = new FileOfClasses(new FileInputStream(filterFileName));
+    try (final FileInputStream in = new FileInputStream(filterFileName)) {
+      filter = new FileOfClasses(in);
     } catch (Exception e) {
       filter = null;
     }

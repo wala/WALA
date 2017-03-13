@@ -28,17 +28,17 @@ public class CAstPrinter {
     }
 
     @Override
-    public void write(char[] cbuf, int off, int len) throws IOException {
+    public void write(char[] cbuf, int off, int len) {
       sb.append(new String(cbuf, off, len));
     }
 
     @Override
-    public void flush() throws IOException {
+    public void flush() {
       // do nothing 
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       // do nothing
     }
   }
@@ -146,15 +146,17 @@ public class CAstPrinter {
 
   public String doPrint(CAstNode top, CAstSourcePositionMap pos) {
     final StringBuffer sb = new StringBuffer();
-    Writer writer = new StringWriter(sb);
-    printTo(top, pos, writer);
+    try (final StringWriter writer = new StringWriter(sb)) {
+      printTo(top, pos, writer);
+    }
     return sb.toString();
   }
 
   public String doPrint(CAstEntity ce) {
     final StringBuffer sb = new StringBuffer();
-    StringWriter writer = new StringWriter(sb);
-    printTo(ce, writer);
+    try (final StringWriter writer = new StringWriter(sb)) {
+      printTo(ce, writer);
+    }
     return sb.toString();
   }
 

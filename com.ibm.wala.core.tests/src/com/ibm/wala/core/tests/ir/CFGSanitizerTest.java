@@ -58,8 +58,10 @@ public class CFGSanitizerTest extends WalaTestCase {
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     ClassLoader cl = CFGSanitizerTest.class.getClassLoader();
-    InputStream s = cl.getResourceAsStream("natives.xml");
-    XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
+    XMLMethodSummaryReader summary;
+    try (final InputStream s = cl.getResourceAsStream("natives.xml")) {
+      summary = new XMLMethodSummaryReader(s, scope);
+    }
     AnalysisOptions options = new AnalysisOptions(scope, null);
     Map<MethodReference, MethodSummary> summaries = summary.getSummaries();
     for (MethodReference mr : summaries.keySet()) {

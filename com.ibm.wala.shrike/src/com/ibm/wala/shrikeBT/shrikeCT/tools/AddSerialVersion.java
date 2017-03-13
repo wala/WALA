@@ -89,96 +89,94 @@ public class AddSerialVersion {
     } catch (NoSuchAlgorithmException e) {
       throw new Error("SHA algorithm not supported: " + e.getMessage());
     }
-    SinkOutputStream sink = new SinkOutputStream();
-    DataOutputStream out = new DataOutputStream(new DigestOutputStream(sink, digest));
-
-    try {
-      // step 1
-      out.writeUTF(r.getName());
-      // step 2
-      out.writeInt(r.getAccessFlags());
-
-      // step 3
-      String[] interfaces = r.getInterfaceNames();
-      Arrays.sort(interfaces);
-      for (int i = 0; i < interfaces.length; i++) {
-        out.writeUTF(interfaces[i]);
-      }
-
-      // step 4
-      Integer[] fields = new Integer[r.getFieldCount()];
-      final String[] fieldNames = new String[fields.length];
-      int fieldCount = 0;
-      for (int f = 0; f < fields.length; f++) {
-        int flags = r.getFieldAccessFlags(f);
-        if ((flags & ClassReader.ACC_PRIVATE) == 0 || (flags & (ClassReader.ACC_STATIC | ClassReader.ACC_TRANSIENT)) == 0) {
-          fields[fieldCount] = new Integer(f);
-          fieldNames[f] = r.getFieldName(f);
-          fieldCount++;
-        }
-      }
-      Arrays.sort(fields, 0, fieldCount, new Comparator<Integer>() {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-          String name1 = fieldNames[o1.intValue()];
-          String name2 = fieldNames[o2.intValue()];
-          return name1.compareTo(name2);
-        }
-      });
-      for (int i = 0; i < fieldCount; i++) {
-        int f = fields[i].intValue();
-        out.writeUTF(fieldNames[f]);
-        out.writeInt(r.getFieldAccessFlags(f));
-        out.writeUTF(r.getFieldType(f));
-      }
-
-      // steps 5, 6 and 7
-      Integer[] methods = new Integer[r.getMethodCount()];
-      final int[] methodKinds = new int[methods.length];
-      final String[] methodSigs = new String[methods.length];
-      int methodCount = 0;
-      for (int m = 0; m < methodSigs.length; m++) {
-        String name = r.getMethodName(m);
-        int flags = r.getMethodAccessFlags(m);
-        if (name.equals("<clinit>") || (flags & ClassReader.ACC_PRIVATE) == 0) {
-          methods[methodCount] = new Integer(m);
-          methodSigs[m] = name + r.getMethodType(m);
-          if (name.equals("<clinit>")) {
-            methodKinds[m] = 0;
-          } else if (name.equals("<init>")) {
-            methodKinds[m] = 1;
-          } else {
-            methodKinds[m] = 2;
-          }
-          methodCount++;
-        }
-      }
-      Arrays.sort(methods, 0, methodCount, new Comparator<Integer>() {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-          int m1 = o1.intValue();
-          int m2 = o2.intValue();
-          if (methodKinds[m1] != methodKinds[m2]) {
-            return methodKinds[m1] - methodKinds[m2];
-          }
-          String name1 = methodSigs[m1];
-          String name2 = methodSigs[m2];
-          return name1.compareTo(name2);
-        }
-      });
-      for (int i = 0; i < methodCount; i++) {
-        int m = methods[i].intValue();
-        out.writeUTF(r.getMethodName(m));
-        out.writeInt(r.getMethodAccessFlags(m));
-        out.writeUTF(r.getMethodType(m));
-      }
-    } catch (IOException e1) {
-      throw new Error("Unexpected IOException: " + e1.getMessage());
-    } finally {
+    try (
+      SinkOutputStream sink = new SinkOutputStream();
+      DataOutputStream out = new DataOutputStream(new DigestOutputStream(sink, digest));
+    ) {
       try {
-        out.close();
-      } catch (IOException e2) {
+        // step 1
+        out.writeUTF(r.getName());
+        // step 2
+        out.writeInt(r.getAccessFlags());
+  
+        // step 3
+        String[] interfaces = r.getInterfaceNames();
+        Arrays.sort(interfaces);
+        for (int i = 0; i < interfaces.length; i++) {
+          out.writeUTF(interfaces[i]);
+        }
+  
+        // step 4
+        Integer[] fields = new Integer[r.getFieldCount()];
+        final String[] fieldNames = new String[fields.length];
+        int fieldCount = 0;
+        for (int f = 0; f < fields.length; f++) {
+          int flags = r.getFieldAccessFlags(f);
+          if ((flags & ClassReader.ACC_PRIVATE) == 0 || (flags & (ClassReader.ACC_STATIC | ClassReader.ACC_TRANSIENT)) == 0) {
+            fields[fieldCount] = new Integer(f);
+            fieldNames[f] = r.getFieldName(f);
+            fieldCount++;
+          }
+        }
+        Arrays.sort(fields, 0, fieldCount, new Comparator<Integer>() {
+          @Override
+          public int compare(Integer o1, Integer o2) {
+            String name1 = fieldNames[o1.intValue()];
+            String name2 = fieldNames[o2.intValue()];
+            return name1.compareTo(name2);
+          }
+        });
+        for (int i = 0; i < fieldCount; i++) {
+          int f = fields[i].intValue();
+          out.writeUTF(fieldNames[f]);
+          out.writeInt(r.getFieldAccessFlags(f));
+          out.writeUTF(r.getFieldType(f));
+        }
+  
+        // steps 5, 6 and 7
+        Integer[] methods = new Integer[r.getMethodCount()];
+        final int[] methodKinds = new int[methods.length];
+        final String[] methodSigs = new String[methods.length];
+        int methodCount = 0;
+        for (int m = 0; m < methodSigs.length; m++) {
+          String name = r.getMethodName(m);
+          int flags = r.getMethodAccessFlags(m);
+          if (name.equals("<clinit>") || (flags & ClassReader.ACC_PRIVATE) == 0) {
+            methods[methodCount] = new Integer(m);
+            methodSigs[m] = name + r.getMethodType(m);
+            if (name.equals("<clinit>")) {
+              methodKinds[m] = 0;
+            } else if (name.equals("<init>")) {
+              methodKinds[m] = 1;
+            } else {
+              methodKinds[m] = 2;
+            }
+            methodCount++;
+          }
+        }
+        Arrays.sort(methods, 0, methodCount, new Comparator<Integer>() {
+          @Override
+          public int compare(Integer o1, Integer o2) {
+            int m1 = o1.intValue();
+            int m2 = o2.intValue();
+            if (methodKinds[m1] != methodKinds[m2]) {
+              return methodKinds[m1] - methodKinds[m2];
+            }
+            String name1 = methodSigs[m1];
+            String name2 = methodSigs[m2];
+            return name1.compareTo(name2);
+          }
+        });
+        for (int i = 0; i < methodCount; i++) {
+          int m = methods[i].intValue();
+          out.writeUTF(r.getMethodName(m));
+          out.writeInt(r.getMethodAccessFlags(m));
+          out.writeUTF(r.getMethodType(m));
+        }
+      } catch (IOException e1) {
+        throw new Error("Unexpected IOException: " + e1.getMessage());
       }
+    } catch (IOException e2) {
     }
 
     byte[] hash = digest.digest();
@@ -191,8 +189,8 @@ public class AddSerialVersion {
       if (args[i] == null) {
         throw new IllegalArgumentException("args[" + i + "] is null");
       }
-      try {
-        byte[] data = Util.readFully(new FileInputStream(args[i]));
+      try (final FileInputStream in = new FileInputStream(args[i])) {
+        byte[] data = Util.readFully(in);
         ClassReader r = new ClassReader(data);
         System.out.println(Util.makeClass(r.getName()) + ": serialVersionUID = " + computeSerialVersionUID(r));
       } catch (FileNotFoundException e) {

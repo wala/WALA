@@ -83,7 +83,9 @@ public class StringTable extends Table<String> implements Cloneable {
     if (f == null) {
       throw new IllegalArgumentException("null f");
     }
-    return readFromStream(new FileInputStream(f), comment);
+    try (final FileInputStream in = new FileInputStream(f)) {
+      return readFromStream(in, comment);
+    }
   }
 
   /**

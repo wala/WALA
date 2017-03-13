@@ -60,8 +60,9 @@ abstract public class EclipseProjectAnalysisEngine<P, I extends InstanceKey> ext
       ePath = createProjectPath(project);
       super.scope = ePath.toAnalysisScope(makeAnalysisScope());
       if (getExclusionsFile() != null) {
-        InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile());
-        scope.setExclusions(new FileOfClasses(is));
+        try (final InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile())) {
+          scope.setExclusions(new FileOfClasses(is));
+        }
       }
     } catch (CoreException e) {
       assert false : e.getMessage();

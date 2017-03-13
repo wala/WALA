@@ -73,47 +73,48 @@ public class OfflineDynamicCallGraph {
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
 	  OfflineInstrumenter instrumenter;
 	  ClassInstrumenter ci;
-	  Writer w = new BufferedWriter(new FileWriter("report", false));
+	  try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
 
-	   for(int i = 0; i < args.length - 1; i++) {
+	    for(int i = 0; i < args.length - 1; i++) {
 	      if ("--runtime".equals(args[i])) {
-	        runtime = Class.forName(args[i+1]);
+		runtime = Class.forName(args[i+1]);
 	      } else if ("--exclusions".equals(args[i])) {
-	        filter = new FileOfClasses(new FileInputStream(args[i+1]));
+		filter = new FileOfClasses(new FileInputStream(args[i+1]));
 	      } else if ("--dont-patch-exits".equals(args[i])) {
-	        patchExits = false;
+		patchExits = false;
 	      } else if ("--patch-calls".equals(args[i])) {
-          patchCalls = true;
-        } else if ("--rt-jar".equals(args[i])) {
-	        System.err.println("using " + args[i+1] + " as stdlib");
-	        OfflineInstrumenter libReader = new OfflineInstrumenter(true);
-	        libReader.addInputJar(new File(args[i+1]));
-	        while ((ci = libReader.nextClass()) != null) {
-	          CTUtils.addClassToHierarchy(cha, ci.getReader());
-	        }
+		patchCalls = true;
+	      } else if ("--rt-jar".equals(args[i])) {
+		System.err.println("using " + args[i+1] + " as stdlib");
+		OfflineInstrumenter libReader = new OfflineInstrumenter(true);
+		libReader.addInputJar(new File(args[i+1]));
+		while ((ci = libReader.nextClass()) != null) {
+		  CTUtils.addClassToHierarchy(cha, ci.getReader());
+		}
 	      }
 	    }
 
-	  instrumenter = new OfflineInstrumenter(true);
-	  args = instrumenter.parseStandardArgs(args);
-				  
-	  instrumenter.setPassUnmodifiedClasses(true);
+	    instrumenter = new OfflineInstrumenter(true);
+	    args = instrumenter.parseStandardArgs(args);
 
-	  instrumenter.beginTraversal();
-	  while ((ci = instrumenter.nextClass()) != null) {
-	    CTUtils.addClassToHierarchy(cha, ci.getReader());
-	  }
+	    instrumenter.setPassUnmodifiedClasses(true);
 
-	  instrumenter.setClassHierarchyProvider(cha);
-	  
-	  instrumenter.beginTraversal();
-	  while ((ci = instrumenter.nextClass()) != null) {
-	    ClassWriter cw = doClass(ci, w);
-	    if (cw != null) {
-	      instrumenter.outputModifiedClass(ci, cw);
+	    instrumenter.beginTraversal();
+	    while ((ci = instrumenter.nextClass()) != null) {
+	      CTUtils.addClassToHierarchy(cha, ci.getReader());
+	    }
+
+	    instrumenter.setClassHierarchyProvider(cha);
+
+	    instrumenter.beginTraversal();
+	    while ((ci = instrumenter.nextClass()) != null) {
+	      ClassWriter cw = doClass(ci, w);
+	      if (cw != null) {
+		instrumenter.outputModifiedClass(ci, cw);
+	      }
 	    }
 	  }
-	  
+
 	  instrumenter.close();
 	}
 
