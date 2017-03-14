@@ -276,13 +276,14 @@ public class LambdaSummaryClass extends SyntheticClass {
       for(int i = isNew? 1: 0; i < invoke.getNumberOfParameters(); i++) {
         params[i] = args + i + 1;
       }
-      for(int n = 2, i = invoke.getNumberOfParameters(); i < numParams; i++) {
+      int n = 2;
+      for(int i = invoke.getNumberOfParameters(); i < numParams; i++) {
         params[i] = n++;
       }
      
       if (isNew) {
-        v++;
-        summary.addStatement(insts.NewInstruction(inst++, new_v=v++, NewSiteReference.make(inst, callee.getDeclaringClass())));
+        //v++;
+        summary.addStatement(insts.NewInstruction(inst++, new_v=n++, NewSiteReference.make(inst, callee.getDeclaringClass())));
         params[0] = new_v;
       }
 
