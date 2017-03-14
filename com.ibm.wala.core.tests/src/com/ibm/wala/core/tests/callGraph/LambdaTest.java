@@ -41,7 +41,17 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class LambdaTest extends WalaTestCase {
 
-  @Test public void testStreamExample_137() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+  @Test public void testBug144() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        "Lbug144/A");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+  }
+  
+  @Test public void testBug137() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
