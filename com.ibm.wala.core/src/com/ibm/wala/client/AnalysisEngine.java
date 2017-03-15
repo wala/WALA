@@ -26,7 +26,7 @@ public interface AnalysisEngine {
    * 
    * @param moduleFiles A non-null Collection of module files: (EARFile, WARFile, ApplicationClientFile, EJBJarFile).
    */
-  void setModuleFiles(Collection moduleFiles);
+  void setModuleFiles(Collection<? extends Module> moduleFiles);
 
   /**
    * Specify the jar files that represent the standard J2SE libraries

@@ -44,8 +44,8 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class ModRef<T extends InstanceKey> {
 
-  public static ModRef make() {
-    return new ModRef();
+  public static <U extends InstanceKey> ModRef<U> make(Class<U> klass) {
+    return new ModRef<U>();
   }
 
   protected ModRef() {
@@ -344,7 +344,7 @@ public class ModRef<T extends InstanceKey> {
 
   protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h,
       boolean ignoreAllocHeapDefs) {
-    return new ModVisitor(n, result, h, pa, ignoreAllocHeapDefs);
+    return new ModVisitor<T, ExtendedHeapModel>(n, result, h, pa, ignoreAllocHeapDefs);
   }
 
   /**

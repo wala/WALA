@@ -98,6 +98,6 @@ public class SWTPointsTo {
     
     System.err.println(pointerAnalysis);
     
-    return new BasicHeapGraph(pointerAnalysis, cg);
+    return new BasicHeapGraph<>(pointerAnalysis, cg);
   }
 }

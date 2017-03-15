@@ -15,7 +15,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class ECJJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine<InstanceKey> {
+public class ECJJavaSourceAnalysisEngine<I extends InstanceKey> extends JavaSourceAnalysisEngine<I> {
 
   @Override
   protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions) {

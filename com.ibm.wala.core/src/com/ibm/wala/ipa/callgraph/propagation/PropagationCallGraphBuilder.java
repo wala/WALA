@@ -58,7 +58,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * TODO: This implementation currently keeps all points to sets live ... even those for local variables that do not span
  * interprocedural boundaries. This may be too space-inefficient .. we can consider recomputing local sets on demand.
  */
-public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
+public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<InstanceKey> {
   private final static boolean DEBUG_ALL = false;
 
   final static boolean DEBUG_ASSIGN = DEBUG_ALL | false;

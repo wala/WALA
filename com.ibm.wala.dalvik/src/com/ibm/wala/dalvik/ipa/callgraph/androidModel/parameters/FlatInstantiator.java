@@ -683,7 +683,7 @@ public class FlatInstantiator implements IInstantiator {
             }
         }
         if (instantiatorArgs[2] != null) {
-            final Set seen = (Set) instantiatorArgs[2];
+            final Set<?> seen = (Set<?>) instantiatorArgs[2];
             if (! seen.isEmpty()) {
                 final Object o = seen.iterator().next();
                 if (! (o instanceof SSAValue)) {

@@ -169,7 +169,7 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent;
             { // Extract target-Service as intent
                 if (param instanceof ConstantKey) {
-                    final String target = (String) ((ConstantKey)param).getValue();
+					final String target = (String) ((ConstantKey<?>)param).getValue();
                     intent = new Intent(target) {
                         @Override
                         public Intent.IntentType getType() {

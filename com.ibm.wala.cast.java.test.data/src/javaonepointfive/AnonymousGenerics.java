@@ -85,7 +85,7 @@ public class AnonymousGenerics {
 		globalEconomy = ops.nullary();
 		System.out.println(globalEconomy);
 		
-		Ops hack = ops;
+		Ops<String> hack = ops;
 		hack.unary("whatever");
 		hack.nullary();
 		hack = strQuadrupler;
