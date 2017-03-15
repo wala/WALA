@@ -22,13 +22,14 @@ import com.ibm.wala.ide.util.EclipseWebProjectPath;
 import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
+public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine<InstanceKey> {
 
   private final Set<Pair<String, Plugin>> models = HashSetFactory.make();
   

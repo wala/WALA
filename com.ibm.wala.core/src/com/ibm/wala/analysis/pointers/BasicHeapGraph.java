@@ -99,12 +99,12 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       @Override
       public int getNumber(Object N) {
         if (N instanceof PointerKey) {
-          return pointerKeys.getMappedIndex((PointerKey) N);
+          return pointerKeys.getMappedIndex(N);
         } else {
           if (!(N instanceof InstanceKey)) {
             Assertions.UNREACHABLE(N.getClass().toString());
           }
-          int inumber = P.getInstanceKeyMapping().getMappedIndex((InstanceKey) N);
+          int inumber = P.getInstanceKeyMapping().getMappedIndex(N);
           return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex() + 1;
         }
       }

@@ -109,7 +109,7 @@ public class APKCallGraphDriver {
 	        CG = DalvikCallGraphTestBase.makeAPKCallGraph(libs(), null, apk.getAbsolutePath(), pm, ReflectionOptions.NONE);
 	        System.err.println("Analyzed " + apk + " in " + (System.currentTimeMillis() - time));
 
-	        System.err.println(new SDG(CG.fst, CG.snd, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
+	        System.err.println(new SDG<>(CG.fst, CG.snd, InstanceKey.class, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
 	        
 	        if (dumpIR) {
 	          for(CGNode n : CG.fst) {

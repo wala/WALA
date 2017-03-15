@@ -114,7 +114,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   }
 
   @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha,
+  protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
 		AnalysisOptions options, IAnalysisCacheView cache) {
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }

@@ -26,6 +26,8 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.slicer.HeapStatement;
@@ -157,7 +159,7 @@ public class PDFSlice {
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);
-      SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
+      SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), InstanceKey.class, dOptions, cOptions);
 
       // find the call statement of interest
       CGNode callerNode = SlicerTest.findMethod(cg, srcCaller);
@@ -167,12 +169,14 @@ public class PDFSlice {
       // compute the slice as a collection of statements
       Collection<Statement> slice = null;
       if (goBackward) {
-        slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), dOptions, cOptions);
+        final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+        slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
       } else {
         // for forward slices ... we actually slice from the return value of
         // calls.
         s = getReturnStatementForCall(s);
-        slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), dOptions, cOptions);
+        final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+        slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
       }
       SlicerTest.dumpSlice(slice);
 
@@ -244,7 +248,7 @@ public class PDFSlice {
   /**
    * return a view of the sdg restricted to the statements in the slice
    */
-  public static Graph<Statement> pruneSDG(SDG sdg, final Collection<Statement> slice) {
+  public static Graph<Statement> pruneSDG(SDG<InstanceKey> sdg, final Collection<Statement> slice) {
     Predicate<Statement> f = new Predicate<Statement>() {
       @Override public boolean test(Statement o) {
         return slice.contains(o);

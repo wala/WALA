@@ -839,7 +839,7 @@ public class ParameterAccessor {
         }
 
         final List<Parameter> all = all();
-        final List<Parameter> allExctends = new ArrayList();
+        final List<Parameter> allExctends = new ArrayList<>();
         IClass searchType = null;
         final IClassLoader[] allLoaders = cha.getLoaders();
 
@@ -908,7 +908,7 @@ public class ParameterAccessor {
 
         final IClass searchType = cha.lookupClass(tRef);
         final List<Parameter> all = all();
-        final List<Parameter> allExctends = new ArrayList();
+        final List<Parameter> allExctends = new ArrayList<>();
             
         if (searchType == null) {
             throw new IllegalStateException("Could not find the IClass of " + tRef);

@@ -348,7 +348,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("Non-AST-bearing entity (ClassEntity) asked for scoped entities related to a given AST node");
       return null;
     }
@@ -387,7 +387,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return fQuals;
     }
 
@@ -419,8 +419,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param context
    * @return
    */
-  private CAstEntity createClassDeclaration(ASTNode n, List/* <BodyDeclaration> */bodyDecls,
-      List/* EnumConstantDeclaration */enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
+  private CAstEntity createClassDeclaration(ASTNode n, List<BodyDeclaration> bodyDecls,
+      List<EnumConstantDeclaration> enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
       boolean isInterface, boolean isAnnotation, WalkContext context) {
     final List<CAstEntity> memberEntities = new ArrayList<>();
 
@@ -863,7 +863,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
         return (fEntities.get(construct)).iterator();
       } else {
@@ -930,8 +930,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       // from CodeBodyEntity
       fEntities = new LinkedHashMap<>();
-      for (Iterator keys = entities.keySet().iterator(); keys.hasNext();) {
-        CAstNode key = (CAstNode) keys.next();
+      for (CAstNode key : entities.keySet()) {
         fEntities.put(key, Collections.singleton(entities.get(key)));
       }
 
@@ -1038,7 +1037,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       if (fDecl == null)
         return JDT2CAstUtils.mapModifiersToQualifiers(Modifier.STATIC, false, false); // static init
       else
@@ -1208,7 +1207,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       return EmptyIterator.instance();
     }
 
@@ -1251,7 +1250,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return quals;
     }
 
@@ -1332,7 +1331,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     eltNodes[idx++] = makeNode(context, fFactory, n, CAstNode.NEW, fFactory.makeConstant(newTypeRef), fFactory.makeConstant(n
         .expressions().size()));
-    for (Iterator iter = n.expressions().iterator(); iter.hasNext(); idx++) {
+    for (Iterator<CAstEntity> iter = n.expressions().iterator(); iter.hasNext(); idx++) {
       Expression element = (Expression) iter.next();
       eltNodes[idx] = visitNode(element, context);
       if (eltNodes[idx] == null)
@@ -1347,7 +1346,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         .getAnonymousClassDeclaration(), context);
   }
 
-  private CAstNode createClassInstanceCreation(ASTNode nn, List/* Expression or CAstNode */arguments, IMethodBinding ctorBinding,
+  private CAstNode createClassInstanceCreation(ASTNode nn, List<?> arguments, IMethodBinding ctorBinding,
       Expression qual, AnonymousClassDeclaration anonDecl, WalkContext context) {
     // a new instruction is actually two things: a NEW object and a CALL to a constructor
     CAstNode newNode;
@@ -1419,7 +1418,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     argNodes[idx++] = fFactory.makeConstant(callSiteRef);
 
     // rest of args
-    for (Iterator iter = arguments.iterator(); iter.hasNext();) {
+    for (Iterator<?> iter = arguments.iterator(); iter.hasNext();) {
       Object arg = iter.next();
       argNodes[idx++] = (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context);
     }
@@ -1533,7 +1532,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private CAstNode createMethodInvocation(ASTNode pos, IMethodBinding methodBinding, CAstNode target,
-      List/* Expression or CAstNode */arguments, WalkContext context) {
+      List<?> arguments, WalkContext context) {
     // MethodMethodInstance methodInstance = n.methodInstance();
     boolean isStatic = (methodBinding.getModifiers() & Modifier.STATIC) != 0;
     ITypeBinding methodOwner = methodBinding.getDeclaringClass();
@@ -1592,7 +1591,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param arguments
    * @param context
    */
-  private void populateArguments(CAstNode[] children, IMethodBinding methodBinding, List/* CAstNode or Expression */arguments,
+  private void populateArguments(CAstNode[] children, IMethodBinding methodBinding, List<?/* CAstNode or Expression */> arguments,
       WalkContext context) {
     int nFormals = methodBinding.getParameterTypes().length;
     assert children.length == nFormals + 2;
