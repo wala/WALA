@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -29,7 +29,7 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
    * @param appContextInterpreter application-specific logic to interpret a method in context
    * @throws IllegalArgumentException if options is null
    */
-  public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
 
     super(cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
