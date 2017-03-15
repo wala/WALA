@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -41,7 +42,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
  */
 public class BasicRTABuilder extends AbstractRTABuilder {
 
-  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector contextSelector,
+  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache, ContextSelector contextSelector,
       SSAContextInterpreter contextInterpreter) {
     super(cha, options, cache, contextSelector, contextInterpreter);
   }

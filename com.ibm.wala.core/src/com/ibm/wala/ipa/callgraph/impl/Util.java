@@ -317,7 +317,7 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
-  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
       AnalysisScope scope) {
 
     addDefaultSelectors(options, cha);
@@ -432,7 +432,7 @@ public class Util {
    * @return a 0-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,
+  public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope) {
 
     if (options == null) {
@@ -453,12 +453,12 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,
+  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope) {
     return makeZeroOneContainerCFABuilder(options, cache, cha, scope, null, null);
   }
    
-  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,
+  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector appSelector, SSAContextInterpreter appInterpreter) {
 
     if (options == null) {
