@@ -315,6 +315,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readObject(java.io.ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
 

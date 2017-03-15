@@ -260,6 +260,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     /**
      *  Satisfy the interface.
      */
+    @SuppressWarnings("unchecked")
     public int createInstance(TypeReference type, Object... instantiatorArgs) {
         // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<SSAValue> seen) {
         if (! (instantiatorArgs[0] instanceof Boolean)) {

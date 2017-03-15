@@ -205,6 +205,7 @@ public class PropertyNameContextSelector implements ContextSelector {
     if (PROPNAME_MARKER.equals(caller.getContext().get(PROPNAME_KEY))) {
       if (!identifyDependentParameters(caller, site).isEmpty()) {
         // use a MarkerForInContext to clone based on the InstanceKey used in the caller context
+        @SuppressWarnings("unchecked")
         InstanceKey callerIk = ((ContextItem.Value<InstanceKey>)caller.getContext().get(INSTANCE_KEY_KEY)).getValue();
         return new MarkerForInContext(baseContext, callerIk);
       } else {

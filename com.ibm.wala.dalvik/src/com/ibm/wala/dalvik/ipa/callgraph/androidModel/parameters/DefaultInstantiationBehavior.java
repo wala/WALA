@@ -368,6 +368,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
      *  hard-coded behaviors don't get mixed with loaded ones. It may be deserialized but using a
      *  LoadedInstantiationBehavior instead may be a better way (as it starts in an empty state)
      */
+	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream stream) 
         throws IOException, ClassNotFoundException {
 
