@@ -12,6 +12,7 @@ com.ibm.wala.cast.java.polyglot/lib/
 com.ibm.wala.cast.java.test.data/src/JLex/
 com.ibm.wala.cast.java.test/testdata/
 com.ibm.wala.cast.js.html.nu_validator/lib/
+com.ibm.wala.cast.js.nodejs/lib/
 com.ibm.wala.cast.js.rhino.test/*.dump
 com.ibm.wala.cast.js.rhino.test/*.html*
 com.ibm.wala.cast.js.rhino.test/2009_swine_flu_outbreak

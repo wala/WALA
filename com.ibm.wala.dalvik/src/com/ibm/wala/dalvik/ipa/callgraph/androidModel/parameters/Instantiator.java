@@ -663,6 +663,7 @@ public class Instantiator implements IInstantiator {
     /**
      *  Satisfy the interface.
      */
+    @SuppressWarnings("unchecked")
     public int createInstance(TypeReference type, Object... instantiatorArgs) {
         // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<SSAValue> seen) {
         if (! (instantiatorArgs[0] instanceof Boolean)) {
@@ -676,7 +677,7 @@ public class Instantiator implements IInstantiator {
                     "got: " + instantiatorArgs[2].getClass()); 
         }
         if (instantiatorArgs[2] != null) {
-            final Set seen = (Set) instantiatorArgs[2];
+            final Set<?> seen = (Set<?>) instantiatorArgs[2];
             if (! seen.isEmpty()) {
                 final Object o = seen.iterator().next();
                 if (! (o instanceof SSAValue)) {

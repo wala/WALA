@@ -161,7 +161,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection getSupertypes() {
+    public Collection<CAstType> getSupertypes() {
       if (fSuperTypes == null) {
         buildSuperTypes();
       }

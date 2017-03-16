@@ -31,10 +31,10 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 public class ThinSlicer extends CISlicer {
 
   public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    this(cg, pa, ModRef.make());
+    this(cg, pa, ModRef.make(InstanceKey.class));
   }
 
-  public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
+  public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef) {
     super(cg, pa, modRef, DataDependenceOptions.NO_HEAP, ControlDependenceOptions.NONE);
   }
 }

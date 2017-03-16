@@ -75,7 +75,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * 
  * @author Julian Dolby
  */
-public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
+public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceKey> {
 
   private final Set<JarFile> applicationJarFiles;
 
@@ -90,7 +90,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   }
 
   @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return Util.makeZeroCFABuilder(options, cache, cha, scope);
   }
 

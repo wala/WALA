@@ -121,7 +121,7 @@ public class TypeSafeInstructionFactory {
             throw new IllegalArgumentException("The parameter exception may not be null");
         }
         if (params == null) {
-            params = Collections.EMPTY_LIST;
+            params = Collections.emptyList();
         }
         if (site == null) {
             throw new IllegalArgumentException("The CallSite may not be null");
@@ -230,7 +230,7 @@ public class TypeSafeInstructionFactory {
             throw new IllegalArgumentException("The parameter exception may not be null");
         }
         if (params == null) {
-            params = Collections.EMPTY_LIST;
+            params = Collections.emptyList();
         }
         if (site == null) {
             throw new IllegalArgumentException("The CallSite may not be null");

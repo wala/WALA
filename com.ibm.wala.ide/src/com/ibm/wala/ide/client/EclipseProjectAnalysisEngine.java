@@ -49,7 +49,7 @@ abstract public class EclipseProjectAnalysisEngine<P, I extends InstanceKey> ext
   abstract protected EclipseProjectPath<?,P> createProjectPath(P project) throws IOException, CoreException;
 
   @Override
-  abstract protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache);
+  abstract protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache);
 
   abstract protected AnalysisScope makeAnalysisScope();
   

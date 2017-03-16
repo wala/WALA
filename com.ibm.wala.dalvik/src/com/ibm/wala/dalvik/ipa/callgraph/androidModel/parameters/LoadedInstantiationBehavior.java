@@ -105,7 +105,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
         @Override
         public boolean equals(Object o) {
             if (o instanceof BehaviorKey) {
-                BehaviorKey other = (BehaviorKey) o;
+                BehaviorKey<?> other = (BehaviorKey<?>) o;
                 return base.equals(other.base);
             } else {
                 return false;
@@ -124,7 +124,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
     }
 
     private InstanceBehavior defaultBehavior = null;
-    private final Map<BehaviorKey, BehviourValue> behaviours = new HashMap<>();
+    private final Map<BehaviorKey<?>, BehviourValue> behaviours = new HashMap<>();
     private final IClassHierarchy cha;
 
     public LoadedInstantiationBehavior(IClassHierarchy cha) {
@@ -304,8 +304,8 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
         if (this.serializationIncludesCache) {
             stream.writeObject(this.behaviours);
         } else {
-            final Map<BehaviorKey, BehviourValue> strippedBehaviours = new HashMap<>();
-            for (final BehaviorKey key : this.behaviours.keySet()) {
+            final Map<BehaviorKey<?>, BehviourValue> strippedBehaviours = new HashMap<>();
+            for (final BehaviorKey<?> key : this.behaviours.keySet()) {
                 final BehviourValue val = this.behaviours.get(key);
                 if (! val.isCached() ) {
                     strippedBehaviours.put(key, val);
@@ -315,11 +315,12 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readObject(java.io.ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
 
         this.behaviours.clear();
-        this.behaviours.putAll( (Map<BehaviorKey, BehviourValue>) stream.readObject());
+        this.behaviours.putAll((Map<BehaviorKey<?>, BehviourValue>) stream.readObject());
     }
 
 

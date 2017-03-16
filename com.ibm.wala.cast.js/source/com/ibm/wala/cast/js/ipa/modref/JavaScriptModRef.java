@@ -100,7 +100,7 @@ public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
 
   @Override
   protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
-    return new JavaScriptRefVisitor(n, result, pa, h);
+    return new JavaScriptRefVisitor<>(n, result, pa, h);
   }
 
   protected static class JavaScriptModVisitor<T extends InstanceKey> extends AstModVisitor<T> implements JSInstructionVisitor {

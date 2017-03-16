@@ -103,7 +103,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
         @Override
         public boolean equals(Object o) {
             if (o instanceof BehaviorKey) {
-                BehaviorKey other = (BehaviorKey) o;
+                BehaviorKey<?> other = (BehaviorKey<?>) o;
                 return base.equals(other.base);
             } else {
                 return false;
@@ -122,7 +122,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
     }
 
 
-    private final Map<BehaviorKey, BehviourValue> behaviours = new HashMap<>();
+    private final Map<BehaviorKey<?>, BehviourValue> behaviours = new HashMap<>();
     private final transient IClassHierarchy cha;
 
     public DefaultInstantiationBehavior(final IClassHierarchy cha) {
@@ -350,8 +350,8 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
         if (this.serializationIncludesCache) {
             stream.writeObject(this.behaviours);
         } else {
-            final Map<BehaviorKey, BehviourValue> strippedBehaviours = new HashMap<>();
-            for (final BehaviorKey key : this.behaviours.keySet()) {
+            final Map<BehaviorKey<?>, BehviourValue> strippedBehaviours = new HashMap<>();
+            for (final BehaviorKey<?> key : this.behaviours.keySet()) {
                 final BehviourValue val = this.behaviours.get(key);
                 if (! val.isCached() ) {
                     strippedBehaviours.put(key, val);
@@ -368,11 +368,12 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
      *  hard-coded behaviors don't get mixed with loaded ones. It may be deserialized but using a
      *  LoadedInstantiationBehavior instead may be a better way (as it starts in an empty state)
      */
-    private void readObject(java.io.ObjectInputStream stream) 
+	@SuppressWarnings("unchecked")
+	private void readObject(java.io.ObjectInputStream stream) 
         throws IOException, ClassNotFoundException {
 
         DefaultInstantiationBehavior.this.behaviours.clear();
-        this.behaviours.putAll((Map<BehaviorKey, BehviourValue>) stream.readObject());
+        this.behaviours.putAll((Map<BehaviorKey<?>, BehviourValue>) stream.readObject());
     }
 
 }

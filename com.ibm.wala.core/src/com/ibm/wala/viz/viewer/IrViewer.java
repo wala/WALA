@@ -33,8 +33,8 @@ import com.ibm.wala.util.collections.HashMapFactory;
 
 public class IrViewer extends JPanel{
   private JTextField methodName;
-  private DefaultListModel irLineList = new DefaultListModel();
-  private JList irLines;
+  private DefaultListModel<String> irLineList = new DefaultListModel<>();
+  private JList<String> irLines;
 
   // mapping from ir viewer list line to source code line number.
   private Map<Integer, Integer> lineToPosition = null;
@@ -50,7 +50,7 @@ public class IrViewer extends JPanel{
   
   public IrViewer() {
     super(new BorderLayout());
-    irLines = new JList(irLineList);
+    irLines = new JList<String>(irLineList);
     methodName = new JTextField("IR");
     this.add(methodName, BorderLayout.PAGE_START);
     this.add(new JScrollPane(irLines, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,

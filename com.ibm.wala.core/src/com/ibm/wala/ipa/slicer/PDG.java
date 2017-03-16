@@ -117,7 +117,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   private final CallGraph cg;
 
-  private final ModRef modRef;
+  private final ModRef<T> modRef;
 
   private final Map<CGNode, OrdinalSet<PointerKey>> ref;
 
@@ -133,7 +133,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    */
   public PDG(final CGNode node, PointerAnalysis<T> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
-      HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
+      HeapExclusions exclusions, CallGraph cg, ModRef<T> modRef) {
     this(node, pa, mod, ref, dOptions, cOptions, exclusions, cg, modRef, false);
   }
 
@@ -145,7 +145,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    */
   public PDG(final CGNode node, PointerAnalysis<T> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
-      HeapExclusions exclusions, CallGraph cg, ModRef modRef, boolean ignoreAllocHeapDefs) {
+      HeapExclusions exclusions, CallGraph cg, ModRef<T> modRef, boolean ignoreAllocHeapDefs) {
 
     super();
     if (node == null) {

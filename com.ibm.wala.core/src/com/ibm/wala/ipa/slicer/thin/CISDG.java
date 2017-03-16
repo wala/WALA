@@ -123,7 +123,7 @@ public class CISDG implements ISDG {
   }
 
   @Override
-  public PDG getPDG(CGNode node) {
+  public PDG<InstanceKey> getPDG(CGNode node) {
     Assertions.UNREACHABLE();
     return noHeap.getPDG(node);
   }
