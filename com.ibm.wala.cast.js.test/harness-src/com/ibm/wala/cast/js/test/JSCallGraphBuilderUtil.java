@@ -39,10 +39,10 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
@@ -232,7 +232,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       JSAnalysisOptions options = makeOptions(scope, cha, roots);
       options.setHandleCallApply(builderType.handleCallApply());
-      AnalysisCache cache = makeCache(irFactory);
+      IAnalysisCacheView cache = makeCache(irFactory);
       JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS,
           builderType.useOneCFA());
       if(builderType.extractCorrelatedPairs())

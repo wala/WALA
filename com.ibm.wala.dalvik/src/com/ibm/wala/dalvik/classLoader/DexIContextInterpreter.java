@@ -54,27 +54,24 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.FieldReference;
 
 public class DexIContextInterpreter implements SSAContextInterpreter {
 
-    public DexIContextInterpreter(SSAOptions options, AnalysisCache cache)
+    public DexIContextInterpreter(IAnalysisCacheView cache)
     {
-        this.options = options;
         this.cache = cache;
     }
 
-    private final SSAOptions options;
-    private final AnalysisCache cache;
+    private final IAnalysisCacheView cache;
 
 
     public boolean understands(CGNode node) {
@@ -116,7 +113,7 @@ public class DexIContextInterpreter implements SSAContextInterpreter {
 
     public IR getIR(CGNode node) {
 //      new Exception("getting IR for method "+node.getMethod().getReference().toString()).printStackTrace();
-        return cache.getSSACache().findOrCreateIR(node.getMethod(), node.getContext(), options);
+        return cache.getIR(node.getMethod(), node.getContext());
     }
 
     @Override
@@ -125,7 +122,7 @@ public class DexIContextInterpreter implements SSAContextInterpreter {
     }
 
     public DefUse getDU(CGNode node) {
-        return cache.getSSACache().findOrCreateDU(getIR(node), node.getContext());
+        return cache.getDefUse(getIR(node));
 //      return new DefUse(getIR(node));
     }
 

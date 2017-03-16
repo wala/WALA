@@ -23,6 +23,10 @@ public class AnalysisCacheImpl extends AnalysisCache {
     super(irFactory, ssaOptions, new SSACache(irFactory, new AuxiliaryCache(), new AuxiliaryCache()));
   }
   
+  public AnalysisCacheImpl(SSAOptions ssaOptions) {
+    this(new DefaultIRFactory(), ssaOptions);
+  }
+
   public AnalysisCacheImpl(IRFactory<IMethod> irFactory) {
     this(irFactory, new AnalysisOptions().getSSAOptions());
   }

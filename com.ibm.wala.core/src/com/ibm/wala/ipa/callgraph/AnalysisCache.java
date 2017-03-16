@@ -24,7 +24,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * 
  * Someday this should maybe go away?
  */
-public class AnalysisCache implements IAnalysisCacheView {
+class AnalysisCache implements IAnalysisCacheView {
   private final IRFactory<IMethod> irFactory;
 
   private final SSACache ssaCache;
@@ -88,5 +88,10 @@ public class AnalysisCache implements IAnalysisCacheView {
       throw new IllegalArgumentException("ir is null");
     }
     return ssaCache.findOrCreateDU(ir, Everywhere.EVERYWHERE);
+  }
+
+  @Override
+  public void clear() {
+    ssaCache.wipe();   
   }
 }

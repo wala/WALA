@@ -28,7 +28,6 @@ import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -134,7 +133,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
 		final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
-		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
+		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		List<? extends Entrypoint> es = getEntrypoints(cha);
 
@@ -176,7 +175,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		
 		Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, mainClassName);
 		
-		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
+		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 

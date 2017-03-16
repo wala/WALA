@@ -17,11 +17,11 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ComposedEntrypoints;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -35,7 +35,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class Driver {
 
-  public static void addDefaultDispatchLogic(AnalysisOptions options, AnalysisScope scope, IClassHierarchy cha, AnalysisCache cache) {
+  public static void addDefaultDispatchLogic(AnalysisOptions options, AnalysisScope scope, IClassHierarchy cha, IAnalysisCacheView cache) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
 
     Map<Atom,MethodTargetSelector> methodTargetSelectors = HashMapFactory.make();
@@ -80,7 +80,7 @@ public class Driver {
     
     IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
 
-    AnalysisCache cache = new AnalysisCacheImpl(factory);
+    IAnalysisCacheView cache = new AnalysisCacheImpl(factory);
 
     addDefaultDispatchLogic(options, scope, cha, cache);
 

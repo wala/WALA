@@ -23,7 +23,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.demandpa.AbstractPtrTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -32,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -270,7 +270,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Ldemandpa/TestArraysCopyOf");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    AnalysisCache cache = new AnalysisCacheImpl();
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
@@ -302,7 +302,7 @@ public class CallGraphTest extends WalaTestCase {
     };
   }
 
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope)
+  public static void doCallGraphs(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
       throws IllegalArgumentException, CancelException {
     doCallGraphs(options, cache, cha, scope, false);
   }
@@ -313,7 +313,7 @@ public class CallGraphTest extends WalaTestCase {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
+  public static void doCallGraphs(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAToString) throws IllegalArgumentException, CancelException {
 
     // ///////////////

@@ -18,9 +18,7 @@ import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
-import com.ibm.wala.cast.js.html.IHtmlParserFactory;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
-import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;

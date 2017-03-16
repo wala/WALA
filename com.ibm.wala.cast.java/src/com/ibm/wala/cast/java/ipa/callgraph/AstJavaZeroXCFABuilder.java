@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -50,7 +49,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
    * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static AstJavaCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
+  public static AstJavaCFABuilder make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, String[] xmlFiles, byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);

@@ -17,7 +17,6 @@ import com.ibm.wala.cast.ipa.callgraph.ReflectedFieldPointerKey;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;

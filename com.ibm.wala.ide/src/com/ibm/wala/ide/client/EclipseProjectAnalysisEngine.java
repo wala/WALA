@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IPath;
 
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ide.util.EclipseProjectPath;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;

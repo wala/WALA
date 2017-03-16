@@ -24,8 +24,8 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.types.AstMethodReference;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
@@ -54,7 +54,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	
 	private FlowGraphBuilder builder;
 	
-	public WorklistBasedOptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
+	public WorklistBasedOptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache, boolean supportFullPointerAnalysis) {
 		super(cha, options, cache, supportFullPointerAnalysis);
 		handleCallApply = options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply();
 	}
