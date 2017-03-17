@@ -19,4 +19,3 @@ cache:
   directories:
     - $HOME/.m2
     - $TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib
-    
