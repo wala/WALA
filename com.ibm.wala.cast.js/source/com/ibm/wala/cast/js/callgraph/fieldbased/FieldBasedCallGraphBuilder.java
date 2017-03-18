@@ -274,13 +274,6 @@ public abstract class FieldBasedCallGraphBuilder {
 	  return flowGraph.getReachingSet(functionParam, monitor);
   }
 
-  private OrdinalSet<FuncVertex> getConstructorTargets(FlowGraph flowGraph, CallVertex callVertex, IProgressMonitor monitor) throws CancelException {
-    SSAAbstractInvokeInstruction invoke = callVertex.getInstruction();
-    assert invoke.getDeclaredTarget().getName().equals(JavaScriptMethods.ctorAtom);
-    VarVertex objectParam = flowGraph.getVertexFactory().makeVarVertex(callVertex.getCaller(), invoke.getUse(0));
-    return flowGraph.getReachingSet(objectParam, monitor);
-  }
-	
   /**
 	 * Extract call edges from the flow graph into high-level representation.
 	 */

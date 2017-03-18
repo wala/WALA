@@ -742,13 +742,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    private boolean isEqual(Object a, Object b) {
-      if (a == null)
-        return b == null;
-      else
-        return a.equals(b);
-    }
-
     private Set<PointerKey> discoveredUpwardFunargs = HashSetFactory.make();
 
     /**

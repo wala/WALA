@@ -529,27 +529,7 @@ public class Instantiator implements IInstantiator {
         return ret;
     }
 
-    /**
-     *  Path back to Object (including T itself).
-     */
-    private List<TypeReference> getAllSuper(final TypeReference T) {
-        if (T.isPrimitiveType()) {
-            throw new IllegalArgumentException("Not you that call primitive type on :P");
-        }
-        final List<TypeReference> ret = new ArrayList<>();
-
-        IClass cls = this.cha.lookupClass(T);
-        if (cls == null) {
-            throw new IllegalArgumentException("The type " + T + " is not in the ClassHierarchy");
-        }
-
-        while (cls != null) {
-            ret.add(cls.getReference());
-            cls = cls.getSuperclass();
-        }
-
-        return ret;
-    }
+    
 
     /**
      *  The Constructor starts with 'this()' or 'super()'.

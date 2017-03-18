@@ -239,10 +239,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       this.node = node;
     }
 
-    protected int getInstructionIndex() {
-      return instructionIndex;
-    }
-
     protected void setInstructionIndex(int instructionIndex) {
       this.instructionIndex = instructionIndex;
     }
