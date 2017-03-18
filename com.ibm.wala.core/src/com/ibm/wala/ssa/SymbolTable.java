@@ -95,7 +95,7 @@ public class SymbolTable implements Cloneable {
       assert vn < nextFreeValueNumber;
       values[vn] = val;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid vn: " + vn);
+      throw new IllegalArgumentException("invalid vn: " + vn, e);
     }
   }
 
@@ -167,7 +167,7 @@ public class SymbolTable implements Cloneable {
     try {
       return parameters[i];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i: " + i);
+      throw new IllegalArgumentException("invalid i: " + i, e);
     }
   }
 
@@ -204,7 +204,7 @@ public class SymbolTable implements Cloneable {
         }
       }
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i: " + i);
+      throw new IllegalArgumentException("invalid i: " + i, e);
     }
 
   }
@@ -222,7 +222,7 @@ public class SymbolTable implements Cloneable {
     try {
       return v < values.length && values[v] instanceof ConstantValue;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -230,7 +230,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isZeroConstant();
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -238,7 +238,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isOneConstant();
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -246,7 +246,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isTrueConstant();
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -262,7 +262,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isFalseConstant();
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -274,7 +274,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Boolean;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -282,7 +282,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Integer);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -290,7 +290,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Long);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -298,7 +298,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Float;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -306,7 +306,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Double;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -314,7 +314,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Number;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -322,7 +322,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof String;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -330,7 +330,7 @@ public class SymbolTable implements Cloneable {
     try {
       return (values.length > v) && (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() == null);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid v: " + v);
+      throw new IllegalArgumentException("invalid v: " + v, e);
     }
   }
 
@@ -355,9 +355,9 @@ public class SymbolTable implements Cloneable {
     try {
       return (PhiValue) values[valueNumber];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber);
+      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber, e);
     } catch (ClassCastException e) {
-      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber);
+      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber, e);
     }
   }
 

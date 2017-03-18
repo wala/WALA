@@ -168,7 +168,7 @@ public class DexDotUtil extends DotUtil {
           return f;
 
         } catch (Exception e) {
-          throw new WalaException("Error writing dot file " + dotfile);
+          throw new WalaException("Error writing dot file " + dotfile, e);
         }
       }
 

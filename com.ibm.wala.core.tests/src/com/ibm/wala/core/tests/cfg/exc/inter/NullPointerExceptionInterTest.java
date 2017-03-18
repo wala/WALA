@@ -79,7 +79,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
       CallGraphBuilder builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
       cg = builder.makeCallGraph(options, null);
     } catch (ClassHierarchyException e) {
-      throw new Exception();
+      throw new Exception(e);
     }
   }
 

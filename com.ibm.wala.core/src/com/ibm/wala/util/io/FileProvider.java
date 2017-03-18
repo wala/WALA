@@ -159,7 +159,7 @@ public class FileProvider {
       try {
         return new JarFileModule(new JarFile(fileName, false));
       } catch (ZipException e) {
-        throw new IOException("Could not find file: " + fileName);
+        throw new IOException("Could not find file: " + fileName, e);
       }
     }
     if (url.getProtocol().equals("jar")) {

@@ -377,7 +377,7 @@ public class JSAstTranslator extends AstTranslator {
             resultVal, context.currentScope().getConstantValue( null )));
       }
     } catch (ClassCastException e) {
-      throw new RuntimeException("Cannot translate primitive " + primitiveCall.getChild(0).getValue());
+      throw new RuntimeException("Cannot translate primitive " + primitiveCall.getChild(0).getValue(), e);
     }
   }
 

@@ -340,7 +340,7 @@ public class StringStuff {
       }
       return new ImmutableByteArray(name.b, start + 1 + dim, lastSlash - start - 1 - dim);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid name " + name + " start: " + start + " length: " + length);
+      throw new IllegalArgumentException("invalid name " + name + " start: " + start + " length: " + length, e);
     }
   }
 
@@ -394,7 +394,7 @@ public class StringStuff {
         return new ImmutableByteArray(name.b, lastSlash + 1, L);
       }
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Malformed name: " + name + " " + start + " " + length);
+      throw new IllegalArgumentException("Malformed name: " + name + " " + start + " " + length, e);
     }
   }
 
@@ -443,7 +443,7 @@ public class StringStuff {
       }
       return code;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("ill-formed array descriptor " + b);
+      throw new IllegalArgumentException("ill-formed array descriptor " + b, e);
     }
   }
 
@@ -468,7 +468,7 @@ public class StringStuff {
       }
       return new ImmutableByteArray(b.b, i, length - (i - start));
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid element desciptor: " + b);
+      throw new IllegalArgumentException("invalid element desciptor: " + b, e);
     }
   }
 
@@ -506,7 +506,7 @@ public class StringStuff {
 
       return name.b[start] != 'L';
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException(name.toString());
+      throw new IllegalArgumentException(name.toString(), e);
     }
   }
 

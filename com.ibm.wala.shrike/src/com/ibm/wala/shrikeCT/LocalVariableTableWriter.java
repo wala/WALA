@@ -151,7 +151,7 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
         return r;
       }
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("malformed varMap");
+      throw new IllegalArgumentException("malformed varMap", e);
     }
   }
 }

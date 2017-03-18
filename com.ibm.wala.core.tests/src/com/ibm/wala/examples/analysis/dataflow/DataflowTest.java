@@ -90,7 +90,7 @@ public class DataflowTest extends WalaTestCase {
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
-      throw new Exception();
+      throw new Exception(e);
     }
   }
 

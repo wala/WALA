@@ -100,7 +100,7 @@ public class AndroidAnalysisScope {
 							scope.addClassFileToScope(loader, f);
 						} catch (InvalidClassFileException e) {
 							throw new IllegalArgumentException(
-									"Invalid class file");
+									"Invalid class file", e);
 						}
 					}
 				}
