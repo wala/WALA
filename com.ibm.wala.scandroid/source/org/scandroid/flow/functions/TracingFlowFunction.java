@@ -56,11 +56,9 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 
 public class TracingFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowFunction {	
-	private final IFDSTaintDomain<E> domain;
 	private final IUnaryFlowFunction function;
 	
 	public TracingFlowFunction(IFDSTaintDomain<E> domain, IUnaryFlowFunction function) {
-		this.domain = domain;
 		this.function = function;
 	}
 	

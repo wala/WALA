@@ -135,8 +135,6 @@ public class SSAConversion extends AbstractSSAConversion {
   private class CopyPropagationRecord {
     final int rhs;
 
-    final int lhs;
-    
     final int instructionIndex;
 
     final Set<Object> renamedUses = HashSetFactory.make(2);
@@ -167,7 +165,6 @@ public class SSAConversion extends AbstractSSAConversion {
       if (DEBUG_UNDO)
         System.err.println(("new copy record for instruction #" + instructionIndex + ", rhs value is " + rhs));
       this.rhs = rhs;
-      this.lhs = lhs;
       this.instructionIndex = instructionIndex;
     }
 

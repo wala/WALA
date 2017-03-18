@@ -287,8 +287,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     private final T fSourcePosition;
 
-    private final Set<CAstAnnotation> annotations;
-    
     public ClassEntity(ITypeBinding jdtType, String name, Collection<CAstQualifier> quals, Collection<CAstEntity> entities,
         T pos, Set<CAstAnnotation> annotations) {
       fName = name;
@@ -296,7 +294,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       fEntities = entities;
       fJdtType = jdtType;
       fSourcePosition = pos;
-      this.annotations = annotations;
     }
 
     @Override

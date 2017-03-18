@@ -201,10 +201,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
   private class NegativeCFGBuilderVisitor implements IVisitor {
 
     private final Graph<T> deleted;
-    private final NullPointerSolver<T> solver;
-    
     private NegativeCFGBuilderVisitor(NullPointerSolver<T> solver) {
-      this.solver = solver;
       this.deleted = new SparseNumberedGraph<T>(2);
       for (T bb : cfg) {
         deleted.addNode(bb);

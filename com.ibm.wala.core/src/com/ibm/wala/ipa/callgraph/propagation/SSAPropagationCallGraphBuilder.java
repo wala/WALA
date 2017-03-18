@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ArrayClass;
@@ -72,7 +71,6 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
@@ -140,16 +138,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Doesn't play well with pre-transitive solver; turning off for now.
    */
   protected final static boolean SHORT_CIRCUIT_SINGLE_USES = false;
-
-  /**
-   * Should we change calls to clone() to assignments?
-   */
-  private final boolean clone2Assign = false;
-
-  /**
-   * Cache for efficiency
-   */
-  private final static Selector cloneSelector = CloneInterpreter.CLONE.getSelector();
 
   /**
    * set of class whose clinits have already been processed

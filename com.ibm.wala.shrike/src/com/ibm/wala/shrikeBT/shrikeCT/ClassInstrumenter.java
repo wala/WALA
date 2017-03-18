@@ -63,8 +63,6 @@ final public class ClassInstrumenter {
   
   private final ClassHierarchyProvider cha;
   
-  private final boolean reuseStackMaps;
-  
   /**
    * Create a class instrumenter from raw bytes.
    */
@@ -99,7 +97,6 @@ final public class ClassInstrumenter {
     }
     this.cr = cr;
     this.cha = cha;
-    this.reuseStackMaps = reuseStackMaps;
     methods = new MethodData[cr.getMethodCount()];
     oldCode = new CodeReader[methods.length];
     cpr = CTDecoder.makeConstantPoolReader(cr);
