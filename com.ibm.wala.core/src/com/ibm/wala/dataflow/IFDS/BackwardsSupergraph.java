@@ -92,6 +92,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
    */
+  @SuppressWarnings("unused")
   @Override
   public Iterator<T> getCalledNodes(T ret) {
     if (DEBUG_LEVEL > 1) {

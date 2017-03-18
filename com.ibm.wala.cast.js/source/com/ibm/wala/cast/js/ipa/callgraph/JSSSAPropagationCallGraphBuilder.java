@@ -1021,6 +1021,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     processCallingConstraintsInternal(this, caller, instruction, target, constParams, uniqueCatchKey);
   }
 
+  @SuppressWarnings("unused")
   public static void processCallingConstraintsInternal(AstSSAPropagationCallGraphBuilder builder, CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
         
