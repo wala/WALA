@@ -249,8 +249,7 @@ public class JDT2CAstUtils {
     assert returnType.isTypeVariable() || returnType.isCapture();
     if (returnType.getTypeBounds().length > 0)
       return returnType.getTypeBounds()[0]; // TODO: why is there more than one bound?
-    else
-      return ast.resolveWellKnownType("java.lang.Object");
+	return ast.resolveWellKnownType("java.lang.Object");
   }
 
   public static InfixExpression.Operator mapAssignOperatorToInfixOperator(Assignment.Operator op) {

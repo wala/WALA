@@ -137,10 +137,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
                         MachineState newExit = flow.flow(entry, node);
                         if (newExit.stateEquals(exit)) {
                             return NOT_CHANGED;
-                        } else {
-                            exit.copyState(newExit);
-                            return CHANGED;
                         }
+						exit.copyState(newExit);
+						return CHANGED;
                     }
 
                     @Override
@@ -171,10 +170,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
                         MachineState newExit = flow.flow(entry, from, to);
                         if (newExit.stateEquals(exit)) {
                             return NOT_CHANGED;
-                        } else {
-                            exit.copyState(newExit);
-                            return CHANGED;
                         }
+						exit.copyState(newExit);
+						return CHANGED;
                     }
 
                     @Override
@@ -296,9 +294,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             
              if (!bb.isCatchBlock()) {
                 return meet(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
-            } else {            	
-                return meetForCatchBlock(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
             }
+			return meetForCatchBlock(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
         }
 
         @Override
@@ -311,9 +308,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             if (o instanceof MeetOperator) {
                 MeetOperator other = (MeetOperator) o;
                 return meeter.equals(other.meeter);
-            } else {
-                return false;
             }
+			return false;
         }
 
         @Override
@@ -625,9 +621,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             if (locals == null) {
                 if (OPTIMISTIC && (j == TOP)) {
                     return;
-                } else {
-                    allocateLocals();
                 }
+				allocateLocals();
             }
             locals[i] = j;
         }
@@ -640,12 +635,10 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             if (locals == null) {
                 if (OPTIMISTIC) {
                     return TOP;
-                } else {
-                    return BOTTOM;
                 }
-            } else {
-                return locals[i];
+				return BOTTOM;
             }
+			return locals[i];
         }
 
         public void replaceValue(int from, int to) {

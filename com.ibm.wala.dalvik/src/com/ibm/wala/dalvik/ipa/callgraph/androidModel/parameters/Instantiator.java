@@ -110,9 +110,8 @@ public class Instantiator implements IInstantiator {
         if (this.analysisScope.getExclusions() != null && this.analysisScope.getExclusions().contains(cls.getName().toString())) {   // XXX FUUUUU
             logger.info("Hit exclusions with {}", cls);
             return true;
-        } else {
-            return false;
         }
+		return false;
     }
 
     /**
@@ -179,9 +178,8 @@ public class Instantiator implements IInstantiator {
                         this.body.addStatement(getInst);
                         pm.setAllocation(instance, getInst);
                         return instance;
-                    } else {
-                        logger.info("NEW Component {} \n\tbreadCrumb: {}", instance, pm.breadCrumb);
                     }
+					logger.info("NEW Component {} \n\tbreadCrumb: {}", instance, pm.breadCrumb);
                 } else {
                     logger.info("NEW Component {} \n\tbreadCrumb: {}", instance, pm.breadCrumb);
                 }
@@ -474,34 +472,32 @@ public class Instantiator implements IInstantiator {
                     logger.debug("The interface {} has no known implementors - skipping over it", T);
                 }
                 return ret; // XXX: This is a bad idea?
-            } else {
-                // ADD all
-                for (IClass impl: impls) {
-                    if (impl.isAbstract()) {
-                        ret.addAll(getTypes(impl.getReference(), ret));  // impl added through recursion
-                    } else {
-                        ret.add(impl.getReference());
-                    }
-                }
             }
+			// ADD all
+			for (IClass impl: impls) {
+			    if (impl.isAbstract()) {
+			        ret.addAll(getTypes(impl.getReference(), ret));  // impl added through recursion
+			    } else {
+			        ret.add(impl.getReference());
+			    }
+			}
         } else if (cls.isAbstract()) {
             final Collection<IClass> subs = cha.computeSubClasses(T);
             if (subs.isEmpty()) {
                 throw new IllegalStateException("The class " + T + " is abstract but has no subclasses known to the ClassHierarchy");
-            } else {
-                for (final IClass sub: subs) {
-                    if (seen.contains(sub.getReference())) {
-                        logger.debug("Seen: {}", sub);
-                        continue;
-                    }
-                    if (sub.isAbstract()) {
-                        // Recurse on abstract classes
-                        ret.addAll(getTypes(sub.getReference(), ret));  // sub added through recursion
-                    } else {
-                        ret.add(sub.getReference());
-                    }
-                }
             }
+			for (final IClass sub: subs) {
+			    if (seen.contains(sub.getReference())) {
+			        logger.debug("Seen: {}", sub);
+			        continue;
+			    }
+			    if (sub.isAbstract()) {
+			        // Recurse on abstract classes
+			        ret.addAll(getTypes(sub.getReference(), ret));  // sub added through recursion
+			    } else {
+			        ret.add(sub.getReference());
+			    }
+			}
         } else if (cls.isArrayClass()) {
             final ArrayClass aCls = (ArrayClass) cls;
             final int dim = aCls.getDimensionality();
@@ -655,9 +651,8 @@ public class Instantiator implements IInstantiator {
         if (ctor == null) {
             logger.warn("Still found no CTor for {}", T);
             return cha.resolveMethod(klass, MethodReference.initSelector);
-        } else {
-            return ctor;
         }
+		return ctor;
     }
 
     /**

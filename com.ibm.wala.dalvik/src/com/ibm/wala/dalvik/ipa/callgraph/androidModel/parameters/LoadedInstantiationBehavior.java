@@ -107,9 +107,8 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
             if (o instanceof BehaviorKey) {
                 BehaviorKey<?> other = (BehaviorKey<?>) o;
                 return base.equals(other.base);
-            } else {
-                return false;
             }
+			return false;
         }
 
         @Override
@@ -253,9 +252,8 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
     public InstanceBehavior getDafultBehavior() {
         if (this.defaultBehavior == null) {
             return InstanceBehavior.REUSE;
-        } else {
-            return this.defaultBehavior;
         }
+		return this.defaultBehavior;
     }
 
     public void setBehavior(final TypeName type, final TypeName asParameterTo, final MethodReference inCall, 

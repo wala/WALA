@@ -442,9 +442,8 @@ public class AndroidEntryPoint extends DexEntryPoint {
         if (o instanceof AndroidEntryPoint) {
             AndroidEntryPoint other = (AndroidEntryPoint) o;
             return this.getMethod().equals(other.getMethod());
-        } else {
-            return false;
         }
+		return false;
     }
 
     @Override

@@ -87,8 +87,7 @@ public class GlobalIdentityFunction <E extends ISSABasicBlock>
 			// if the query domain element is a local, then it is /not/ passed through.
 			
 			return TaintTransferFunctions.EMPTY_SET;
-		} else {
-			return SparseIntSet.singleton(d1);
 		}
+		return SparseIntSet.singleton(d1);
 	}
 }

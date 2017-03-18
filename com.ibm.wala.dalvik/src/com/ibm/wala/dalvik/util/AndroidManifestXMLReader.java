@@ -307,9 +307,8 @@ public class AndroidManifestXMLReader {
             
             if (reverseMap.containsKey(tag)) {
                 return reverseMap.get(tag);
-            } else {
-                return Tag.UNIMPORTANT;
             }
+			return Tag.UNIMPORTANT;
         }
 
         /**

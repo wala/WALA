@@ -524,12 +524,11 @@ public class AndroidStartComponentTool {
     public SSAValue addPhi(List<? extends SSAValue> from) {
         if (from.size() == 1) {
             return from.get(0);
-        } else {
-            final SSAValue retVal = this.pm.getUnmanaged(from.get(0).getType(), "forPhi");
-            final int phiPC = redirect.getNextProgramCounter();
-            final SSAInstruction phi = instructionFactory.PhiInstruction(phiPC, retVal, from);
-            this.redirect.addStatement(phi);
-            return retVal;
         }
+		final SSAValue retVal = this.pm.getUnmanaged(from.get(0).getType(), "forPhi");
+		final int phiPC = redirect.getNextProgramCounter();
+		final SSAInstruction phi = instructionFactory.PhiInstruction(phiPC, retVal, from);
+		this.redirect.addStatement(phi);
+		return retVal;
     }
 }

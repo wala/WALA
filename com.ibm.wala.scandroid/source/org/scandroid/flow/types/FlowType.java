@@ -81,10 +81,7 @@ public abstract class FlowType<E extends ISSABasicBlock> {
     }
     
     public String descString() {
-        if(source)
-            return "I";
-        else
-            return "O";
+        return source ? "I" : "O";
     }
 
     @Override

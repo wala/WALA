@@ -273,18 +273,16 @@ public class AndroidModel /* makes SummarizedMethod */
                 if (tRef.isClassType()) {
                     if (cha.lookupClass(tRef) != null) {
                         return tRef;
-                    } else {
-                        for (IClass c : cha) {
-                            if (c.getName().toString().equals(tRef.getName().toString())) {
-                                return c.getReference();
-                            }
-                        }
                     }
+					for (IClass c : cha) {
+					    if (c.getName().toString().equals(tRef.getName().toString())) {
+					        return c.getReference();
+					    }
+					}
                     return tRef;
                     //throw new IllegalStateException("Error looking up " + tRef);
-                } else {
-                    return tRef;
                 }
+				return tRef;
             }
         };
     

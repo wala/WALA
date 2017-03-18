@@ -162,18 +162,16 @@ public class SystemServiceModel extends AndroidModel {
                 if (tRef.isClassType()) {
                     if (cha.lookupClass(tRef) != null) {
                         return tRef;
-                    } else {
-                        for (IClass c : cha) {
-                            if (c.getName().toString().equals(tRef.getName().toString())) {
-                                return c.getReference();
-                            }
-                        }
                     }
+					for (IClass c : cha) {
+					    if (c.getName().toString().equals(tRef.getName().toString())) {
+					        return c.getReference();
+					    }
+					}
             
                     throw new IllegalStateException("Error looking up " + tRef);
-                } else {
-                    return tRef;
                 }
+				return tRef;
             }
             };
 

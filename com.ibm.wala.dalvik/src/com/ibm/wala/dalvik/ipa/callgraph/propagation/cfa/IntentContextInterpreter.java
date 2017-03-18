@@ -123,12 +123,11 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             if (possibleTargets.size() == 1) {
                 final Iterator<AndroidComponent> it = possibleTargets.iterator();
                 return it.next();
-            } else {
-                // TODO: Go interactive and ask user?
-                final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                final AndroidComponent targetComponent = it.next();
-                return targetComponent;
             }
+			// TODO: Go interactive and ask user?
+			final Iterator<AndroidComponent> it = possibleTargets.iterator();
+			final AndroidComponent targetComponent = it.next();
+			return targetComponent;
         }
     } 
 
@@ -226,23 +225,22 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                 } catch (CancelException e) {
                     throw new IllegalStateException("The operation was canceled.", e);
                 }
-            } else {
-                // This should _not_ happen: IntentContextSelector should always create an IntentContext.
-                //
-                final IMethod method = node.getMethod();
-                final IntentStarters.StartInfo info = intentStarters.getInfo(method.getReference());
-                assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo... - Method " + method.getReference();
-                final Intent intent = new Intent(Intent.UNBOUND);
-                final AndroidComponent targetComponent = fetchTargetComponent(intent, method);
-
-                try {
-                    final UnknownTargetModel model = new UnknownTargetModel(this.cha, this.options, this.cache, targetComponent);
-                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
-                    return override.makeIR(ctx, this.options.getSSAOptions());
-                } catch (CancelException e) {
-                    throw new IllegalStateException("The operation was canceled.", e);
-                }
             }
+			// This should _not_ happen: IntentContextSelector should always create an IntentContext.
+			//
+			final IMethod method = node.getMethod();
+			final IntentStarters.StartInfo info = intentStarters.getInfo(method.getReference());
+			assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo... - Method " + method.getReference();
+			final Intent intent = new Intent(Intent.UNBOUND);
+			final AndroidComponent targetComponent = fetchTargetComponent(intent, method);
+
+			try {
+			    final UnknownTargetModel model = new UnknownTargetModel(this.cha, this.options, this.cache, targetComponent);
+			    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
+			    return override.makeIR(ctx, this.options.getSSAOptions());
+			} catch (CancelException e) {
+			    throw new IllegalStateException("The operation was canceled.", e);
+			}
         }
     }
 

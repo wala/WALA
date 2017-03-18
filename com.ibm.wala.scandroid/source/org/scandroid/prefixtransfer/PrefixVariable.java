@@ -117,14 +117,11 @@ public class PrefixVariable extends AbstractVariable<PrefixVariable>{
             knownPrefixes.put(instance, prefix);
             return true;
         }
-        else
-        {
-            String newPrefix = intersect(prevPrefix,prefix);
-            if(newPrefix.equals(prevPrefix))
-                return false;
-            knownPrefixes.put(instance, newPrefix);
-            return true;
-        }
+		String newPrefix = intersect(prevPrefix,prefix);
+		if(newPrefix.equals(prevPrefix))
+		    return false;
+		knownPrefixes.put(instance, newPrefix);
+		return true;
     }
 
     public String toString() {

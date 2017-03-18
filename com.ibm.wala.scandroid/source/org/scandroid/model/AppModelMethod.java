@@ -311,10 +311,8 @@ public class AppModelMethod {
     private int makeArgument(TypeReference tr) {
     	if (tr.isPrimitiveType())
     		return addLocal();
-    	else {
-    		SSANewInstruction n = processAllocation(tr, nextLocal++, false);
-    		return (n == null) ? -1 : n.getDef();
-    	}
+		SSANewInstruction n = processAllocation(tr, nextLocal++, false);
+		return (n == null) ? -1 : n.getDef();
     }   
     
     private int addLocal() {

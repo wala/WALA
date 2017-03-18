@@ -866,9 +866,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
         return (fEntities.get(construct)).iterator();
-      } else {
-        return EmptyIterator.instance();
       }
+	return EmptyIterator.instance();
     }
 
     @Override
@@ -1040,8 +1039,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     public Collection<CAstQualifier> getQualifiers() {
       if (fDecl == null)
         return JDT2CAstUtils.mapModifiersToQualifiers(Modifier.STATIC, false, false); // static init
-      else
-        return JDT2CAstUtils.mapModifiersToQualifiers(fModifiers, false, false);
+	return JDT2CAstUtils.mapModifiersToQualifiers(fModifiers, false, false);
     }
 
     @Override
@@ -1057,8 +1055,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
           Type type = fDecl == null ? null : (ast.apiLevel() == 2 ? fDecl.getReturnType() : fDecl.getReturnType2());
           if (type == null)
             return fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("void"));
-          else
-            return fTypeDict.getCAstTypeFor(type.resolveBinding());
+		return fTypeDict.getCAstTypeFor(type.resolveBinding());
         }
 
         /**
@@ -1487,13 +1484,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       target = visitNode(n.getExpression(), context);
       if (target.getKind() == CAstNode.EMPTY || target.getKind() == CAstNode.THIS)
         return createMethodInvocation(n, binding, makeNode(context, fFactory, null, CAstNode.VOID), n.arguments(), context);
-      else
-        return makeNode(context, fFactory, n, CAstNode.BLOCK_EXPR, target, createMethodInvocation(n, binding, makeNode(context,
-            fFactory, null, CAstNode.VOID), n.arguments(), context));
-      // target is evaluated but thrown away, and only result of method invocation is kept
+	return makeNode(context, fFactory, n, CAstNode.BLOCK_EXPR, target, createMethodInvocation(n, binding, makeNode(context,
+	    fFactory, null, CAstNode.VOID), n.arguments(), context));
+     // target is evaluated but thrown away, and only result of method invocation is kept
 
-    } else {
-      CAstNode target;
+    }
+	CAstNode target;
       if (n.getExpression() != null) {
         target = visitNode(n.getExpression(), context);
       } else {
@@ -1528,7 +1524,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
           return createCast(n, node, fromtype, realtype, context);
       }
       return node;
-    }
   }
 
   private CAstNode createMethodInvocation(ASTNode pos, IMethodBinding methodBinding, CAstNode target,
@@ -1636,16 +1631,14 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     Expression retExpr = r.getExpression();
     if (retExpr == null)
       return makeNode(context, fFactory, r, CAstNode.RETURN);
-    else
-      return makeNode(context, fFactory, r, CAstNode.RETURN, visitNode(retExpr, context));
+	return makeNode(context, fFactory, r, CAstNode.RETURN, visitNode(retExpr, context));
   }
 
   private CAstNode visit(Assignment n, WalkContext context) {
     if (n.getOperator() == Assignment.Operator.ASSIGN)
       return makeNode(context, fFactory, n, CAstNode.ASSIGN, visitNode(n.getLeftHandSide(), new AssignmentContext(context)),
           visitNode(n.getRightHandSide(), context));
-    else {
-      CAstNode left = visitNode(n.getLeftHandSide(), context);
+	CAstNode left = visitNode(n.getLeftHandSide(), context);
       // GENERICs lvalue for pre op hack
       if (left.getKind() == CAstNode.CAST) {
         return doFunkyGenericAssignPreOpHack(n, context);
@@ -1668,7 +1661,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       }
 
       return result;
-    }
   }
 
   /**
@@ -1820,11 +1812,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       }
       return createFieldAccess(targetNode, n.getIdentifier(), binding, n, context);
 
-    } else {
-      // local
+    }
+	// local
       CAstType t = fTypeDict.getCAstTypeFor(((IVariableBinding)n.resolveBinding()).getType());
       return makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(n.getIdentifier()), fFactory.makeConstant(t));
-    }
 
   }
 

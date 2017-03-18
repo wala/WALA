@@ -27,9 +27,8 @@ public class ECJClassLoaderFactory extends ClassLoaderFactoryImpl {
       ClassLoaderImpl cl = makeSourceLoader(classLoaderReference, cha, parent);
       cl.init(scope.getModules(classLoaderReference));
       return cl;
-    } else {
-      return super.makeNewClassLoader(classLoaderReference, cha, parent, scope);
     }
+	return super.makeNewClassLoader(classLoaderReference, cha, parent, scope);
   }
   
   protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
