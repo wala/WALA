@@ -52,7 +52,7 @@ public class APKCallGraphDriver {
 	  try {
 		  timeout = Integer.parseInt(args[1]);
 		  System.err.println("timeout is " + timeout);
-	  } catch (Throwable e) {
+	  } catch (@SuppressWarnings("unused") Throwable e) {
 		  // no timeout specified
 	  }
 	  FileUtil.recurseFiles(new VoidFunction<File>() {

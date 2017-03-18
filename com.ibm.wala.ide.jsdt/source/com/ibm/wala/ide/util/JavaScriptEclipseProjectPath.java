@@ -87,7 +87,7 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 			} else {
 				return null;
 			}
-		} catch (CoreException e) {
+		} catch (@SuppressWarnings("unused") CoreException e) {
 			return null;
 		}
 	}

@@ -129,7 +129,7 @@ public class DotUtil {
           // if we get here, the process has terminated
           repeat = false;
           System.out.println("process terminated with exit code " + p.exitValue());
-        } catch (IllegalThreadStateException e) {
+        } catch (@SuppressWarnings("unused") IllegalThreadStateException e) {
           // this means the process has not yet terminated.
           repeat = true;
         }

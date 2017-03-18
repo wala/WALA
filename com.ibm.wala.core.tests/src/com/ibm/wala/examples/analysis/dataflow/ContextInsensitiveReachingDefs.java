@@ -187,7 +187,7 @@ public class ContextInsensitiveReachingDefs {
         framework);
     try {
       solver.solve(null);
-    } catch (CancelException e) {
+    } catch (@SuppressWarnings("unused") CancelException e) {
       // this shouldn't happen
       assert false;
     }

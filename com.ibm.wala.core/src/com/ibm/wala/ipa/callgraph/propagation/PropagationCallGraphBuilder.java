@@ -727,7 +727,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     }
     try {
       return getCallGraph().findOrCreateNode(targetMethod, targetContext);
-    } catch (CancelException e) {
+    } catch (@SuppressWarnings("unused") CancelException e) {
       return null;
     }
   }

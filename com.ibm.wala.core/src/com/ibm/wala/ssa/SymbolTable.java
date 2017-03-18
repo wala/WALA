@@ -451,7 +451,7 @@ public class SymbolTable implements Cloneable {
       nt.constants = HashMapFactory.make(this.constants);
       nt.copy = true;
       return nt;
-    } catch (CloneNotSupportedException e) {
+    } catch (@SuppressWarnings("unused") CloneNotSupportedException e) {
       Assertions.UNREACHABLE();
       return null;
     }

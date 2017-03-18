@@ -262,7 +262,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             byte[] utf8 = field.getBytes("UTF-8");
             return PutInstruction(iindex, ref, value, 
                 FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root));
-          } catch (UnsupportedEncodingException e) {
+          } catch (@SuppressWarnings("unused") UnsupportedEncodingException e) {
             Assertions.UNREACHABLE();
             return null;
           }

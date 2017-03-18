@@ -105,12 +105,12 @@ public final class MethodPositions extends PositionsAttribute {
     Position end = null;
     try {
       start = readPosition(in, startVarName);
-    } catch (InvalidPositionException e) {
+    } catch (@SuppressWarnings("unused") InvalidPositionException e) {
       valid = false;
     }
     try {
       end = readPosition(in, endVarName);
-    } catch (InvalidPositionException e) {
+    } catch (@SuppressWarnings("unused") InvalidPositionException e) {
       valid = false;
     }
     if (valid) {

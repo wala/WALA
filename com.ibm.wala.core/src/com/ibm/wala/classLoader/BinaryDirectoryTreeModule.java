@@ -34,7 +34,7 @@ public class BinaryDirectoryTreeModule extends DirectoryTreeModule {
   protected FileModule makeFile(final File file) {
     try {
       return new ClassFileModule(file, this);
-    } catch (InvalidClassFileException e) {
+    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
       Warnings.add(new Warning(Warning.MODERATE) {
         
         @Override

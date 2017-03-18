@@ -124,7 +124,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
           } else {
             return "(line " + lineNumber + ")";
           }
-        } catch (InvalidClassFileException e) {
+        } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
           return "";
         }
       }

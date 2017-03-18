@@ -83,7 +83,7 @@ public class JdtUtil {
         String packageName = pkgDecl[0].getElementName();
         return packageName;
       }
-    } catch (JavaModelException e) {
+    } catch (@SuppressWarnings("unused") JavaModelException e) {
 
     }
     return "";
@@ -137,7 +137,7 @@ public class JdtUtil {
     }
     try {
       return cu.getAllTypes();
-    } catch (JavaModelException e) {
+    } catch (@SuppressWarnings("unused") JavaModelException e) {
     }
     return null;
   }
@@ -200,7 +200,7 @@ public class JdtUtil {
             result.add(jp);
           }
         }
-      } catch (CoreException e) {
+      } catch (@SuppressWarnings("unused") CoreException e) {
         // do nothing
       }
     }
@@ -293,7 +293,7 @@ public class JdtUtil {
     IType type = null;
     try {
       type = findJavaClassInProjects(klass, projects);
-    } catch (Throwable t) {
+    } catch (@SuppressWarnings("unused") Throwable t) {
       return null;
     }
     if (type == null) {

@@ -408,7 +408,7 @@ public class AnalysisScope {
         Assertions.UNREACHABLE("Manifest for " + rtJar.getName() + " has no value for Specification-Version");
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (@SuppressWarnings("unused") java.io.IOException e) {
       Assertions.UNREACHABLE("error getting rt.jar manifest!");
       return null;
     }

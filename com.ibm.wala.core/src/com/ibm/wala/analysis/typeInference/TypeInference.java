@@ -213,7 +213,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           } catch (InvalidClassFileException e) {
             e.printStackTrace();
             Assertions.UNREACHABLE();
-          } catch (UnsupportedOperationException e) {
+          } catch (@SuppressWarnings("unused") UnsupportedOperationException e) {
             x = new TypeReference[]{ language.getThrowableType() };
           }
           if (x != null) {

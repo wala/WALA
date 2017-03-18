@@ -119,7 +119,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
     int n = subscript(bit);
     try {
       return ((bits[n] & (1 << shiftBits)) != 0);
-    } catch (ArrayIndexOutOfBoundsException e) {
+    } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
       return false;
     }
   }
@@ -324,7 +324,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
     FixedSizeBitVector result = null;
     try {
       result = (FixedSizeBitVector) super.clone();
-    } catch (CloneNotSupportedException e) {
+    } catch (@SuppressWarnings("unused") CloneNotSupportedException e) {
       // this shouldn't happen, since we are Cloneable
       throw new InternalError();
     }

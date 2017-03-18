@@ -611,7 +611,7 @@ public class ParameterAccessor {
                         throw new IllegalArgumentException("Class " + asType + " is not a super-class of " +
                                 this.method.getParameterType(self));
                     }
-                } catch (ClassLookupException e) {
+                } catch (@SuppressWarnings("unused") ClassLookupException e) {
                     // Cant't test assume all fitts
                 }
 
@@ -1344,7 +1344,7 @@ public class ParameterAccessor {
                                 continue forEachParameter;
                             }
                         }
-                    } catch (ClassLookupException e) {
+                    } catch (@SuppressWarnings("unused") ClassLookupException e) {
                     }
                 }
 
@@ -1356,7 +1356,7 @@ public class ParameterAccessor {
                                 debug("\t\tAsigning: {} from the callrs params (ass)", cand);
                                 continue forEachParameter;
                             }
-                        } catch (ClassLookupException e) {
+                        } catch (@SuppressWarnings("unused") ClassLookupException e) {
                         }
                     }
                 }

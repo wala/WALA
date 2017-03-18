@@ -41,7 +41,7 @@ public class DupFieldsTest extends WalaTestCase {
     boolean threwException = false;
     try {
       klass.getField(Atom.findOrCreateUnicodeAtom("a"));
-    } catch (IllegalStateException e) {
+    } catch (@SuppressWarnings("unused") IllegalStateException e) {
       threwException = true;
     }
     Assert.assertTrue(threwException);    

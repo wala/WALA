@@ -162,7 +162,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                     final StringBuilderUseAnalysis sbua;
                     try {
                         sbua = new StringBuilderUseAnalysis(ik, pa);
-                    } catch(Exception e) {
+                    } catch(@SuppressWarnings("unused") Exception e) {
                         
                         return;
                     }

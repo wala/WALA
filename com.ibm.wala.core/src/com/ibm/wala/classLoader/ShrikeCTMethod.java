@@ -106,7 +106,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     final Decoder d = new CTDecoder(reader);
     try {
       d.decode();
-    } catch (Decoder.InvalidBytecodeException ex) {
+    } catch (@SuppressWarnings("unused") Decoder.InvalidBytecodeException ex) {
       Assertions.UNREACHABLE();
     }
     return d;
@@ -279,7 +279,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     int[][] map = null;
     try {
       map = getBCInfo().localVariableMap;
-    } catch (InvalidClassFileException e1) {
+    } catch (@SuppressWarnings("unused") InvalidClassFileException e1) {
       return null;
     }
 
@@ -488,7 +488,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     try {
       result.addAll(getAnnotations(true));
       result.addAll(getAnnotations(false));
-    } catch (InvalidClassFileException e) {
+    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
       
     }
     return result;

@@ -383,7 +383,7 @@ public class AnnotationsReader extends AttributeReader {
           return new AnnotationsReader(iter, attrName);
         }
       }
-    } catch (InvalidClassFileException e) {
+    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
     return null;

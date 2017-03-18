@@ -48,11 +48,11 @@ abstract public class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
     try {
       setExclusionsFile((new EclipseFileProvider()).getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
           .getAbsolutePath());
-    } catch (IOException e) {
+    } catch (@SuppressWarnings("unused") IOException e) {
       try {
         setExclusionsFile((new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt", getClass().getClassLoader())
           .getAbsolutePath());
-      } catch (IOException f) {
+      } catch (@SuppressWarnings("unused") IOException f) {
         Assertions.UNREACHABLE("Cannot find exclusions file");
       }
     }

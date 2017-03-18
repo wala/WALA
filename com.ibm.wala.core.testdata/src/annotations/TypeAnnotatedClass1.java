@@ -33,7 +33,7 @@ public class TypeAnnotatedClass1 extends @TypeAnnotationTypeUse Object {
     
     try {
       throw new NullPointerException();
-    } catch (@TypeAnnotationTypeUse RuntimeException e) {
+    } catch (@SuppressWarnings("unused") @TypeAnnotationTypeUse RuntimeException e) {
       x = 911;
     }
     

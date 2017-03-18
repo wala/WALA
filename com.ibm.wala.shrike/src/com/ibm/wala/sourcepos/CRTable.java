@@ -105,7 +105,7 @@ public final class CRTable extends PositionsAttribute {
       try {
         short short_pc = (short) (pc & 0xFFFF);
         sourceInfo = new CRTData(short_pc, short_pc, 0, 0, CRTFlags.CRT_SOURCE_INFO);
-      } catch (InvalidCRTDataException e) {
+      } catch (@SuppressWarnings("unused") InvalidCRTDataException e) {
         assert false;
       }
     }

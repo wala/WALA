@@ -107,7 +107,7 @@ public class ProgressMaster implements IProgressMonitor {
       currentNanny.interrupt();
       try {
         currentNanny.join();
-      } catch (InterruptedException e) {
+      } catch (@SuppressWarnings("unused") InterruptedException e) {
       }
       currentNanny = null;
     }
@@ -203,7 +203,7 @@ public class ProgressMaster implements IProgressMonitor {
         }
         
         timedOut = true;
-      } catch (InterruptedException e) {
+      } catch (@SuppressWarnings("unused") InterruptedException e) {
         return;
       }
     }

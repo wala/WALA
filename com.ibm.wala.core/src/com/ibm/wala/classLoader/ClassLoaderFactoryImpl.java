@@ -98,7 +98,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
         Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
             SetOfClasses.class, IClassHierarchy.class });
         cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha });
-      } catch (Exception e) {
+      } catch (@SuppressWarnings("unused") Exception e) {
         try {
           Class<?> impl = Class.forName(implClass);
           Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, ArrayClassLoader.class,

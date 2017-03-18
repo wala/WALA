@@ -29,7 +29,7 @@ public class CorePlugin extends Plugin {
     {
       result = Platform.isRunning();
     }
-    catch (Throwable exception)
+    catch (@SuppressWarnings("unused") Throwable exception)
     {
       // Assume that we aren't running.
     }
@@ -47,7 +47,7 @@ public class CorePlugin extends Plugin {
         Bundle resourcesBundle = Platform.getBundle("org.eclipse.core.resources");
         result = resourcesBundle != null && (resourcesBundle.getState() & (Bundle.ACTIVE | Bundle.STARTING | Bundle.RESOLVED)) != 0;
       }
-      catch (Throwable exception)
+      catch (@SuppressWarnings("unused") Throwable exception)
       {
         // Assume that it's not available.
       }

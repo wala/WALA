@@ -45,7 +45,7 @@ public class EclipseWebProjectPath extends JavaScriptEclipseProjectPath {
         try {
           scripts = WebUtil.extractScriptFromHTML(new URL(urlString), DefaultSourceExtractor.factory ).fst;
           s.addAll(scripts);
-        } catch (MalformedURLException e1) {
+        } catch (@SuppressWarnings("unused") MalformedURLException e1) {
           assert false : "internal error constructing URL " + urlString;
         } catch (Error e1) {
           System.err.print("skipping " + htmlPage.getAbsolutePath() + ": " + e1.warning);

@@ -185,7 +185,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             CallSiteReference site = iterator.next();
             try {
               caller.getIR().getCalls(site);
-            } catch (IllegalArgumentException e) {
+            } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
               System.err.println(caller + " is pred of " + callee);
               System.err.println("no calls at site " + site);
               System.err.println(caller.getIR());
@@ -338,13 +338,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             }
             completedPassInBudget = true;
             break;
-          } catch (StatesMergedException e) {
+          } catch (@SuppressWarnings("unused") StatesMergedException e) {
             if (DEBUG) {
               System.err.println("restarting...");
             }
           }
         }
-      } catch (BudgetExceededException e) {
+      } catch (@SuppressWarnings("unused") BudgetExceededException e) {
 
       }
       if (curP2Set != null) {
@@ -446,7 +446,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             completedPassInBudget = true;
             completedSomePass = true;
             break;
-          } catch (StatesMergedException e) {
+          } catch (@SuppressWarnings("unused") StatesMergedException e) {
             if (DEBUG) {
               System.err.println("restarting...");
             }
@@ -466,7 +466,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
           }
         }
-      } catch (BudgetExceededException e) {
+      } catch (@SuppressWarnings("unused") BudgetExceededException e) {
 
       }
       if (completedPassInBudget) {
@@ -585,13 +585,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               System.err.println("FLOWS-TO SET " + curFlowsToSet);
             }
             break;
-          } catch (StatesMergedException e) {
+          } catch (@SuppressWarnings("unused") StatesMergedException e) {
             if (DEBUG) {
               System.err.println("restarting...");
             }
           }
         }
-      } catch (BudgetExceededException e) {
+      } catch (@SuppressWarnings("unused") BudgetExceededException e) {
 
       }
       if (curFlowsToSet != null) {

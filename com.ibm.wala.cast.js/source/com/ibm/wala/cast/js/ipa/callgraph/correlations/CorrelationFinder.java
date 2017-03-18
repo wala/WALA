@@ -291,7 +291,7 @@ public class CorrelationFinder {
     IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
     try {
       Util.checkForFrontEndErrors(cha);
-    } catch (WalaException e) {
+    } catch (@SuppressWarnings("unused") WalaException e) {
       return Collections.emptyMap();
     }
     IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();

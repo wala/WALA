@@ -132,11 +132,11 @@ public class JsdtUtil {
                           info.cg.addEdge(call.getMember(), (IFunction)elt);
                         }
                       }
-                    } catch (Throwable e) {
+                    } catch (@SuppressWarnings("unused") Throwable e) {
                       // Eclipse does whatever it wants, and we ignore stuff :)
                     }
                   }
-                } catch (RuntimeException e) {
+                } catch (@SuppressWarnings("unused") RuntimeException e) {
                   
                 }
                 // TODO Auto-generated method stub

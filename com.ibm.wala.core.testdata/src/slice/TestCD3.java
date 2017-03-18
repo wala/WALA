@@ -29,7 +29,7 @@ public class TestCD3 {
           System.out.println("Y");
         }
       }
-    } catch (Throwable e) {
+    } catch (@SuppressWarnings("unused") Throwable e) {
     }
     doNothing(I);
   }

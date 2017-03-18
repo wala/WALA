@@ -785,7 +785,7 @@ public class TypeAnnotation {
         try {
           final int catchIIndex = method.getInstructionIndex(target.getCatchPC());
           return new CatchTarget(catchIIndex, catchType);
-        } catch (InvalidClassFileException e) {
+        } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
           return new CatchTarget(TypeAnnotationTarget.INSTRUCTION_INDEX_UNAVAILABLE, catchType);
         }
         
@@ -797,7 +797,7 @@ public class TypeAnnotation {
         try {
           final int iindex = method.getInstructionIndex(target.getOffset());
           return new OffsetTarget(iindex);
-        } catch (InvalidClassFileException e) {
+        } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
           return new OffsetTarget(TypeAnnotationTarget.INSTRUCTION_INDEX_UNAVAILABLE);
         }
       }
@@ -808,7 +808,7 @@ public class TypeAnnotation {
         try {
           final int iindex = method.getInstructionIndex(target.getOffset());
           return new TypeArgumentTarget(iindex, target.getTypeArgumentIndex());
-        } catch (InvalidClassFileException e) {
+        } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
           return new TypeArgumentTarget(TypeAnnotationTarget.INSTRUCTION_INDEX_UNAVAILABLE, target.getTypeArgumentIndex());
         }
       }

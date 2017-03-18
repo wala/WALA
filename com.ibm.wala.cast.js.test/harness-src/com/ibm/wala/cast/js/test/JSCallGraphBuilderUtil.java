@@ -108,7 +108,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     FileProvider provider = new FileProvider();
     try {
       f = provider.getFile(dir + File.separator + name, loader);
-    } catch (FileNotFoundException e) {
+    } catch (@SuppressWarnings("unused") FileNotFoundException e) {
       // I guess we need to do this on Windows sometimes?  --MS
       // if this fails, we won't catch the exception
       f = provider.getFile(dir + "/" + name, JSCallGraphBuilderUtil.class.getClassLoader());
@@ -239,7 +239,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
         builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), 2, builder.getContextSelector()));
 
       return builder;
-    } catch (ClassHierarchyException e) {
+    } catch (@SuppressWarnings("unused") ClassHierarchyException e) {
       Assert.assertTrue("internal error building class hierarchy", false);
       return null;
     }

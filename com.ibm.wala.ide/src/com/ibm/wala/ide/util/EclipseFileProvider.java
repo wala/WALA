@@ -79,7 +79,7 @@ public class EclipseFileProvider extends FileProvider {
             return new JarFileModule(jar);
           }
         }
-      } catch (Exception e) {
+      } catch (@SuppressWarnings("unused") Exception e) {
       }
       return null;
     }
@@ -205,7 +205,7 @@ public class EclipseFileProvider extends FileProvider {
     } else {
         try {
           return getFileFromPlugin(p, fileName);
-        } catch (IOException e) {
+        } catch (@SuppressWarnings("unused") IOException e) {
           return getFileFromClassLoader(fileName, loader); 
         }
     }

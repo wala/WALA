@@ -521,7 +521,7 @@ public class JavaScriptConstructorFunctions {
           public URL getURL() {
             try {
               return new URL("file://" + fileName);
-            } catch (MalformedURLException e) {
+            } catch (@SuppressWarnings("unused") MalformedURLException e) {
               assert false;
               return null;
             }
@@ -542,7 +542,7 @@ public class JavaScriptConstructorFunctions {
         if (fcls != null)
           return makeFunctionConstructor(cls, fcls);
 
-      } catch (IOException e) {
+      } catch (@SuppressWarnings("unused") IOException e) {
 
       }
 

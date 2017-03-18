@@ -34,7 +34,7 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
       THE_LOADER = makeTheLoader(cha);
       try {
         THE_LOADER.init(scope.getModules(getTheReference()));
-      } catch (java.io.IOException e) {
+      } catch (@SuppressWarnings("unused") java.io.IOException e) {
         Assertions.UNREACHABLE();
       }
     }

@@ -43,7 +43,7 @@ public class IntraproceduralNullPointerAnalysis {
 				paramValNum, ir, cfg.entry());
 		try {
 			this.solver.solve(NO_PROGRESS_MONITOR);
-		} catch (final CancelException e) {
+		} catch (@SuppressWarnings("unused") final CancelException e) {
 			// can't happen as we have no monitor
 		}
 	}

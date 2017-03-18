@@ -99,7 +99,7 @@ public class AstCallGraph extends ExplicitCallGraph {
             for (Iterator<Function<Object, Object>> x = callbacks.iterator(); x.hasNext();) {
               x.next().apply(null);
             }
-          } catch (ConcurrentModificationException e) {
+          } catch (@SuppressWarnings("unused") ConcurrentModificationException e) {
             done = false;
             continue;
           }

@@ -30,7 +30,7 @@ public class JavaScriptHeadlessUtil extends HeadlessUtil {
 		              return jp;
 		            }
 		          }
-		        } catch (CoreException e) {
+		        } catch (@SuppressWarnings("unused") CoreException e) {
 		        }
 		        // failed to match
 		        return null;

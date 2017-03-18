@@ -62,7 +62,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         if (v != null && v.startsWith("javascript:")) {
           try {
             writeEntrypoint("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a), true);
-          } catch (MalformedURLException ex) {
+          } catch (@SuppressWarnings("unused") MalformedURLException ex) {
             writeEntrypoint(v.substring(11), e.getValue().snd, entrypointUrl, false);
           }
         }

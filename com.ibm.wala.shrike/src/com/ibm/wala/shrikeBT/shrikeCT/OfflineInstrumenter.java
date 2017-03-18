@@ -47,7 +47,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
   protected String getClassName(Object cl) {
     try {
       return ((ClassInstrumenter) cl).getReader().getName().replace('/', '.');
-    } catch (InvalidClassFileException e) {
+    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
       return null;
     }
   }
