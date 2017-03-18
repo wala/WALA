@@ -134,7 +134,7 @@ public class AndroidManifestXMLReader {
         public Set<Tag> getSubTags();
     }
 
-    private interface HistoryKey {} ;
+    private interface HistoryKey {}
     /**
      *  Only includes relevant tags.
      */
