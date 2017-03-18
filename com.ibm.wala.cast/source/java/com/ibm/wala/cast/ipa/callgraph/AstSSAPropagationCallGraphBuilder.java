@@ -38,7 +38,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -64,7 +63,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterprete
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.modref.ArrayLengthKey;
 import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
