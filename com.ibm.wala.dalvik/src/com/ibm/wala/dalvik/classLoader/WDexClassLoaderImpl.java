@@ -147,7 +147,8 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     }
     
     
-    private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
+    @SuppressWarnings("unused")
+	private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
     	
     	for (Iterator<ModuleEntry> it = moduleEntries.iterator(); it.hasNext();) {
     		ModuleEntry entry = it.next();
