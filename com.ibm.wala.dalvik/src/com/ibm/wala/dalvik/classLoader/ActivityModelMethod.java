@@ -85,7 +85,6 @@ public class ActivityModelMethod extends DexIMethod {
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			}
-			@SuppressWarnings("unchecked")
 			Section<ClassDefItem> cldeff = activityModelDF.getSectionForType(TYPE_CLASS_DEF_ITEM);
 			for (ClassDefItem cdefitems : cldeff.getItems()) {
 				if (cdefitems.getClassType().getTypeDescriptor()

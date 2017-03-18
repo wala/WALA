@@ -77,7 +77,6 @@ public class ContextInsensitiveReachingDefs {
   /**
    * generate a numbering of the putstatic instructions
    */
-  @SuppressWarnings("unchecked")
   private OrdinalSetMapping<Pair<CGNode, Integer>> numberPutStatics() {
     ArrayList<Pair<CGNode, Integer>> putInstrs = new ArrayList<>();
     for (CGNode node : icfg.getCallGraph()) {

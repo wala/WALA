@@ -138,7 +138,6 @@ public class AndroidManifestXMLReader {
     /**
      *  Only includes relevant tags.
      */
-    @SuppressWarnings("unchecked")
     private enum Tag implements HistoryKey {
         /**
          *  This tag is nat an actual part of the document.

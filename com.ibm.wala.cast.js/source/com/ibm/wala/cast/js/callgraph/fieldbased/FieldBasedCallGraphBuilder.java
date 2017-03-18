@@ -138,7 +138,6 @@ public abstract class FieldBasedCallGraphBuilder {
 	/**
 	 * Extract a call graph from a given flow graph.
 	 */
-  @SuppressWarnings("deprecation")
   public JSCallGraph extract(FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
     DelegatingSSAContextInterpreter interpreter = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, cache), new DefaultSSAInterpreter(options, cache));
     return extract(interpreter, flowgraph, eps, monitor);

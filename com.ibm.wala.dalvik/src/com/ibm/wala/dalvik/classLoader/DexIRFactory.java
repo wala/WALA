@@ -29,7 +29,6 @@ import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
 public class DexIRFactory extends DefaultIRFactory {
     public final static boolean buildLocalMap = false;
 
-    @SuppressWarnings("rawtypes")
 	@Override
     public ControlFlowGraph makeCFG(IMethod method, Context C) throws IllegalArgumentException {
     	if (method == null) {
