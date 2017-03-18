@@ -110,6 +110,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
   }
 
+  @SuppressWarnings("deprecation")
   public void init(Iterable<Entrypoint> entrypoints) throws CancelException {
     super.init();
 
@@ -213,6 +214,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private int clinitPC = 0;
   
   @Override
+  @SuppressWarnings("deprecation")
   public CGNode findOrCreateNode(IMethod method, Context C) throws CancelException {
     assert C.equals(Everywhere.EVERYWHERE);
     assert !method.isAbstract();
