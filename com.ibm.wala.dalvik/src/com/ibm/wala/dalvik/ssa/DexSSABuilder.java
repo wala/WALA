@@ -486,7 +486,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 int i = 0;
                 while (iae.hasNext())
                 {
-                    ArrayElement ae = (ArrayElement)iae.next();
+                    ArrayElement ae = iae.next();
                     int ElementWidth = ae.elementWidth;
 
                     int index = symbolTable.getConstant(i);
@@ -508,9 +508,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     if (t.equals(TypeReference.Char))
                         value = symbolTable.getConstant(Character.toString(byte_buffer.getChar()));
                     else if (t.equals(TypeReference.Byte))
-                        value = symbolTable.getConstant((int)byte_buffer.get());
+                        value = symbolTable.getConstant(byte_buffer.get());
                     else if (t.equals(TypeReference.Short))
-                        value = symbolTable.getConstant((int)byte_buffer.getShort());
+                        value = symbolTable.getConstant(byte_buffer.getShort());
                     else if (t.equals(TypeReference.Int))
                         value = symbolTable.getConstant(byte_buffer.getInt());
                     else if (t.equals(TypeReference.Long))

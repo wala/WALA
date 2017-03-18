@@ -548,7 +548,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // TODO 1.6: enums of course...
     AbstractTypeDeclaration decl = n.getDeclaration();
     assert decl instanceof TypeDeclaration : "Local enum declaration not yet supported";
-    CAstEntity classEntity = visitTypeDecl((TypeDeclaration) decl, context);
+    CAstEntity classEntity = visitTypeDecl(decl, context);
 
     // these statements doin't actually do anything, just define a type
     final CAstNode lcdNode = makeNode(context, fFactory, n, CAstNode.EMPTY);

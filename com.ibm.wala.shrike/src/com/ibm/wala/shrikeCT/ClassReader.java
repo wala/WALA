@@ -330,7 +330,7 @@ public final class ClassReader implements ClassConstants {
    * @return the unsigned 8-bit value at offset i in the class data
    */
   public int getUnsignedByte(int i) {
-    return ((int) bytes[i]) & 0xff;
+    return bytes[i] & 0xff;
   }
 
   /**
