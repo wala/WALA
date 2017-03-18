@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.junit.Assert;
 
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -28,8 +29,6 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.io.TemporaryFile;
-
-import junit.framework.Assert;
 
 public abstract class JDTJavaTest extends IRTests {
 

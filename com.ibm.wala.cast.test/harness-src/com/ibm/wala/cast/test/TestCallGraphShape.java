@@ -13,6 +13,8 @@ package com.ibm.wala.cast.test;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.junit.Assert;
+
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -23,8 +25,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-
-import junit.framework.Assert;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
 

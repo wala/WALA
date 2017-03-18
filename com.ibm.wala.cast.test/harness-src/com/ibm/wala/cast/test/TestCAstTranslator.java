@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Assert;
+
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
@@ -35,8 +37,6 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-
-import junit.framework.Assert;
 
 public abstract class TestCAstTranslator extends WalaTestCase {
 
