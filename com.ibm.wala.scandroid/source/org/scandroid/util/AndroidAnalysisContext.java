@@ -50,7 +50,6 @@
 package org.scandroid.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -147,7 +146,7 @@ public class AndroidAnalysisContext {
 	// ContextSelector, entry points, reflection options, IR Factory, call graph
 	// type, include library
 	public void buildGraphs(List<Entrypoint> localEntries,
-			InputStream summariesStream) throws CancelException {
+			InputStream summariesStream) {
 
 		
 
@@ -303,8 +302,7 @@ public class AndroidAnalysisContext {
 	}
 
 	private static XMLMethodSummaryReader loadMethodSummaries(
-			AnalysisScope scope, InputStream xmlIStream)
-			throws FileNotFoundException {
+			AnalysisScope scope, InputStream xmlIStream) {
 		try (InputStream s = xmlIStream != null ? xmlIStream :
 			AndroidAnalysisContext.class.getClassLoader()
 				.getResourceAsStream(

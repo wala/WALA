@@ -97,7 +97,7 @@ public class AndroidManifestXMLReader {
      */
     private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
 
-    public AndroidManifestXMLReader(File xmlFile) throws IOException {
+    public AndroidManifestXMLReader(File xmlFile) {
         if (xmlFile == null) {
             throw new IllegalArgumentException("xmlFile may not be null");
         }

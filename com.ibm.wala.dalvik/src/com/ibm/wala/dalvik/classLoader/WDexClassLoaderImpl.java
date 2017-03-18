@@ -135,7 +135,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     	s.removeAll(toRemove);
     }
     
-    private Set<ModuleEntry> getDexFiles(Module M) throws IOException {
+    private Set<ModuleEntry> getDexFiles(Module M) {
     	HashSet<ModuleEntry> result = HashSetFactory.make();
     	for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
     		ModuleEntry entry = (ModuleEntry) it.next();
