@@ -20,8 +20,6 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.WalaException;
 
-import junit.framework.AssertionFailedError;
-
 public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
   protected FieldBasedCGUtil util;
@@ -48,8 +46,8 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
         cg = util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory).fst;
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
-      } catch(AssertionFailedError afe) {
-        throw new AssertionFailedError(builderType + ": " + afe.getMessage());
+      } catch(AssertionError afe) {
+        throw new AssertionError(builderType + ": " + afe.getMessage());
       } 
     }
     return cg;

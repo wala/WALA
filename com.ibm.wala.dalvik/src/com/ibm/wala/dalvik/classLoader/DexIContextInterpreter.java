@@ -130,4 +130,4 @@ public class DexIContextInterpreter implements SSAContextInterpreter {
         IR ir = getIR(n);
         return ir.getControlFlowGraph();
     }    
-};
+}

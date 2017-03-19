@@ -364,6 +364,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param exceptionVar PointerKey representing a pointer to an exception value
    * @param catchClasses the types "caught" by the exceptionVar
    */
+  @SuppressWarnings("unused")
   private void addExceptionDefConstraints(IRView ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
       Set<IClass> catchClasses) {
     if (DEBUG) {
@@ -1599,6 +1600,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     processCallingConstraints(caller, instruction, target, constParams, uniqueCatchKey);
   }
   
+  @SuppressWarnings("unused")
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
     // TODO: i'd like to enable this optimization, but it's a little tricky

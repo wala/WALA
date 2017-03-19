@@ -90,7 +90,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
         BROADCAST,          
         /** Do not handle intent */
         IGNORE
-    };
+    }
 
     private enum Explicit {
         UNSET,

@@ -205,7 +205,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterAT_FIRST(int PC) { return PC; };
+    protected int enterAT_FIRST(int PC) { return PC; }
 
      /**
      *  Gets called when Label ExecutionOrder.BEFORE_LOOP got stepped over.
@@ -219,7 +219,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterBEFORE_LOOP (int PC) { return PC; };
+    protected int enterBEFORE_LOOP (int PC) { return PC; }
 
     /**
      *  Gets called when Label ExecutionOrder.START_OF_LOOP got stepped over.
@@ -233,7 +233,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterSTART_OF_LOOP (int PC) { return PC; };
+    protected int enterSTART_OF_LOOP (int PC) { return PC; }
 
     /**
      *  Gets called when Label ExecutionOrder.MIDDLE_OF_LOOP got stepped over.
@@ -247,7 +247,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterMIDDLE_OF_LOOP (int PC) { return PC; };
+    protected int enterMIDDLE_OF_LOOP (int PC) { return PC; }
     
     /**
      *  Gets called when Label ExecutionOrder.MULTIPLE_TIMES_IN_LOOP got stepped over.
@@ -261,7 +261,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) { return PC; };
+    protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) { return PC; }
 
     /**
      *  Gets called when Label ExecutionOrder.END_OF_LOOP got stepped over.
@@ -275,7 +275,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterEND_OF_LOOP (int PC) { return PC; };
+    protected int enterEND_OF_LOOP (int PC) { return PC; }
 
     /**
      *  Gets called when Label ExecutionOrder.AFTER_LOOP got stepped over.
@@ -289,7 +289,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterAFTER_LOOP (int PC) { return PC; };
+    protected int enterAFTER_LOOP (int PC) { return PC; }
 
     /**
      *  Gets called when Label ExecutionOrder.AT_LAST got stepped over.
@@ -303,7 +303,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterAT_LAST (int PC) { return PC; };
+    protected int enterAT_LAST (int PC) { return PC; }
 
     /**
      *  Gets called when the model gets finished.
@@ -317,7 +317,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int leaveAT_LAST (int PC) { return PC; };
+    protected int leaveAT_LAST (int PC) { return PC; }
 
     /**
      *  Dispatches to the enterLABEL-functions. Does also call functions to any labels that
