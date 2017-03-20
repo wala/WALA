@@ -68,7 +68,7 @@ public abstract class Branch extends Instruction {
 
     public static class UnaryBranch extends Branch
     {
-        public enum CompareOp {EQZ,NEZ,LTZ,LEZ,GTZ,GEZ};
+        public enum CompareOp {EQZ,NEZ,LTZ,LEZ,GTZ,GEZ}
         public final int oper1;
         public final CompareOp op;
 
@@ -103,7 +103,7 @@ public abstract class Branch extends Instruction {
 
     public static class BinaryBranch extends Branch
     {
-        public enum CompareOp {EQ,NE,LT,LE,GT,GE};
+        public enum CompareOp {EQ,NE,LT,LE,GT,GE}
         public final int oper1;
         public final int oper2;
         public final CompareOp op;

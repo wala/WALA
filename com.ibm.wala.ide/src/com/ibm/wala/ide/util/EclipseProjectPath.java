@@ -126,7 +126,6 @@ public abstract class EclipseProjectPath<E, P> {
   }
     
   public EclipseProjectPath create(IProject project) throws CoreException, IOException {
-    assert project != null;
     if (project == null) {
       throw new IllegalArgumentException("null project");
     }

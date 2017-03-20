@@ -395,7 +395,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
 	 */
 	public boolean hasExceptionHandler() {
-		TryItem[] tries = eMethod.codeItem.getTries();;
+		TryItem[] tries = eMethod.codeItem.getTries();
 		return tries==null?false:tries.length > 0;
 	}
 

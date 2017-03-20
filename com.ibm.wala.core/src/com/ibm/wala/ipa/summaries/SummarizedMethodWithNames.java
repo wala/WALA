@@ -83,6 +83,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         if (DEBUG) { System.err.println("From old MSUM"); }
     }
     
+    @SuppressWarnings("unused")
     public SummarizedMethodWithNames(MethodReference ref, VolatileMethodSummary summary, IClass declaringClass) 
                 throws NullPointerException {
         super(ref, summary.getMethodSummary(), declaringClass);
