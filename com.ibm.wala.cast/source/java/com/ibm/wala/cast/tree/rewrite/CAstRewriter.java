@@ -47,7 +47,7 @@ import com.ibm.wala.util.collections.Pair;
  *          a key used to ease cloning of partial ASTs. When rewriting an AST,
  *          sub-classes maintain a mapping from (original node, key) pairs
  *          (where key is of type K) to new nodes; see
- *          {@link #copyNodes(CAstNode, RewriteContext, Map)}
+ *          {@link #copyNodes}
  */
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 

@@ -662,7 +662,7 @@ public class AndroidModelParameterManager {
      *  Handed through to an IInstantiationBehavior if set in the constructor.
      *
      *  @return true if Type is a REUSE type
-     *  @throws IllegalStateExcpetion if AndroidModelParameterManager was constructed without an IInstanciationBehavior
+     *  @throws IllegalStateException if AndroidModelParameterManager was constructed without an IInstanciationBehavior
      */
     public boolean isReuse(TypeReference type) {
         if (this.behaviour == null) {
@@ -677,7 +677,7 @@ public class AndroidModelParameterManager {
      *  Shorthand for not({@link #isReuse(TypeReference)}.
      *
      *  @return true if type is a CREATE-Type
-     *  @throws IllegalStateExcpetion if AndroidModelParameterManager was constructed without an IInstanciationBehavior
+     *  @throws IllegalStateException if AndroidModelParameterManager was constructed without an IInstanciationBehavior
      */
     public boolean isCreate(TypeReference type) {
         return (! isReuse(type));

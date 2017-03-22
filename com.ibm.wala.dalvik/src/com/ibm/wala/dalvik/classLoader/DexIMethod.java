@@ -259,7 +259,7 @@ public class DexIMethod implements IBytecodeMethod {
 	/**
 	 * XXX not fully about the + 2.
 	 * @return the RegisterCount + 2 to make some room for the return and exception register
-	 * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
+	 * @see com.ibm.wala.classLoader.ShrikeCTMethod#getMaxLocals()
 	 */
 	public int getMaxLocals() {
 		return eMethod.codeItem.getRegisterCount() + 2;

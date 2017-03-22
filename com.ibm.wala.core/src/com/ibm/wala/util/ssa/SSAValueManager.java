@@ -195,7 +195,7 @@ public class SSAValueManager {
      *  @param  ssaValue the number the SSA-Instruction assigns to
      *  @param  setBy   the Phi-Instruction itself - may be null
      *  @throws IllegalArgumentException if you assign to a number requested using
-     *      {@link #getFree(TypeReference)} but types mismatch.
+     *      {@link #getFree} but types mismatch.
      *  @throws IllegalStateException if you forgot to close some Phis
      */
     public void setPhi(final SSAValue value, SSAInstruction setBy) {
