@@ -175,7 +175,6 @@ public class XMLSummaryWriter {
      * No guarantees as to the state of the Document if an exception is thrown.
      * 
      * @param summary
-     * @return
      * @throws DOMException
      * @throws UTFDataFormatException
      * @throws SSASerializationException

@@ -344,9 +344,6 @@ public class Instantiator implements IInstantiator {
         return instance; 
     }
 
-    /**
-     *  @return an unallocated SSAVariable
-     */
     private void createPrimitive(SSAValue instance) {
         // XXX; something else?
         instance.setAssigned();

@@ -1722,7 +1722,6 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * Visit an InstanceOf node.
    * @param n the node to process
    * @param c a visitor-specific context
-   * @return true if no further processing is needed
    */
   protected void leaveAssert(CAstNode n, C c, CAstVisitor<C> visitor) { visitor.leaveNode(n, c, visitor); }
   protected boolean visitAssert(CAstNode n, C c, CAstVisitor<C> visitor) { return visitor.visitNode(n, c, visitor); }
