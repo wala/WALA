@@ -393,7 +393,7 @@ public class ParameterAccessor {
      *
      *  Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
      *
-     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy}.
+     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy)}.
      *
      *  @param  mRef    The method to read the parameters from.
      */
