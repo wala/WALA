@@ -35,7 +35,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
 
     private final Context base;
 
-    private CallStringContextPair(CallString cs, Context base) {
+    public CallStringContextPair(CallString cs, Context base) {
       this.cs = cs;
       this.base = base;
     }
@@ -74,7 +74,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
     }
   };
 
-  private final ContextSelector base;
+  protected final ContextSelector base;
 
   public CallStringContextSelector(ContextSelector base) {
     this.base = base;
@@ -82,7 +82,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
 
   protected abstract int getLength(CGNode caller, CallSiteReference site, IMethod target);
 
-  private CallString getCallString(CGNode caller, CallSiteReference site, IMethod target) {
+  protected CallString getCallString(CGNode caller, CallSiteReference site, IMethod target) {
     int length = getLength(caller, site, target);
     if (length > 0) {
       if (caller.getContext().get(CALL_STRING) != null) {

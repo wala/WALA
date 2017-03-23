@@ -27,7 +27,7 @@ public class CallString implements ContextItem {
     this.methods = new IMethod[] { method };
   }
 
-  CallString(CallSiteReference site, IMethod method, int length, CallString base) {
+  protected CallString(CallSiteReference site, IMethod method, int length, CallString base) {
     int sitesLength = Math.min(length, base.sites.length + 1);
     int methodsLength = Math.min(length, base.methods.length + 1);
     sites = new CallSiteReference[sitesLength];
