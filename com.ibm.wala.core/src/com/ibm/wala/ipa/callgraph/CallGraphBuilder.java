@@ -25,7 +25,6 @@ public interface CallGraphBuilder<I extends InstanceKey> {
    * 
    * @param options an object representing controlling options that the call graph building algorithm needs to know.
    * @return the built call graph
-   * @throws  
    */
   public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException,
       CallGraphBuilderCancelException;

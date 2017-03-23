@@ -1681,9 +1681,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * where field 'y' is parameterized to type string. then += is not defined for type 'object'. This function is a hack that expands
    * the code into an assignment and binary operation.
    * 
-   * @param leftCast this is the left cast in the original expression. We throw most of it away, although we use the "Cast from" and
-   *          "cast to"
-   * @param left
    * @param context
    * @return
    */
@@ -1837,7 +1834,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * owningTypeRef or the subtype that the field is accessed thru, for expanding "f = 5" into "TheClass.this.f = 5".
    * 
    * @param typeOfThis
-   * @param owningTypeRef
    * @param isPrivate
    * @return
    */
@@ -1899,10 +1895,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * exception. maybe handle this in here as a special case? i don't know... or check if targetNode is THIS, that should even work
    * for this.x = 5 and (this).x = 5
    * 
-   * @param target Used to evaluate the field access. In the case of static field accesses, this is included in the first part of a
+   * @param targetNode Used to evaluate the field access. In the case of static field accesses, this is included in the first part of a
    *          block -- thus it is evaluated for any side effects but thrown away.
    * @param fieldName Name of the field.
-   * @param fieldBinding This is used to determine the field's class.
    * @param positioningNode Used only for making a JdtPosition.
    * @param context
    * @return
@@ -2839,7 +2834,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * Giant switch statement, part deux
    * 
-   * @param body
    * @param context
    * @return
    */

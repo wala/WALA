@@ -45,7 +45,7 @@
  *
  *  All Classes in this package extend AbstractAndroidModel.
  *
- *  @see    com.com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
+ *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
  *
  *  @since  2013-10-25
  *  @author Tobias Blaschke <code@tobiasblaschke.de>

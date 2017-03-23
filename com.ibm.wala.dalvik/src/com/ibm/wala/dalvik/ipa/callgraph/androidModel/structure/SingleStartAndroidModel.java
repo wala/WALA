@@ -71,8 +71,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  The incorporated loop is wrapped around user-interaction methods. These are in the section
  *  MULTIPLE_TIMES_IN_LOOP.
  *
- *  {@inheritDoc}
- *
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopKillAndroidModel
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>

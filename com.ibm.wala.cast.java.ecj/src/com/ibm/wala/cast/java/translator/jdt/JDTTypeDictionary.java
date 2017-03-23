@@ -62,7 +62,6 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
   /**
    * 
    * @param ast Needed to get root type "java.lang.Object"
-   * @param translator
    */
   public JDTTypeDictionary(AST ast, JDTIdentityMapper identityMapper) {
     fAst = ast;

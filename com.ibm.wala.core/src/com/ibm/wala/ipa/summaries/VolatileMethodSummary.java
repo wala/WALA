@@ -82,6 +82,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  *  @since      2013-09-08
  */
+@SuppressWarnings("javadoc")
 public class VolatileMethodSummary {
 
     private static final boolean DEBUG = false;
