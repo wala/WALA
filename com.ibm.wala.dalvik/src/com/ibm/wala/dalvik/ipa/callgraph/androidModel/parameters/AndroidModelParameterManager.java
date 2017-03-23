@@ -61,7 +61,6 @@ import com.ibm.wala.util.ssa.SSAValue;
  *  However it does no allocations or Phi-Statements on its own. It just juggles with the numbers.
  *
  *  @see com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
- *  @see com.ibm.wala.dalvik.ipa.callgraph.impl.DexFakeRootMethod
  *
  *  @author  Tobias Blaschke <code@toiasblaschke.de>
  *  @since   2013-09-19

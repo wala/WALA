@@ -69,7 +69,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  which aids in keeping track of SSA-Variables and adding Phi-Functions.
  *
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder
- *  @see        com.ibm.wala.dalvik.ipa.callgraph.impl.DexFakeRootMethod
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.AndroidModelParameterManager
  *
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
