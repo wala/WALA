@@ -173,7 +173,6 @@ public class AndroidEntryPoint extends DexEntryPoint {
         return ExecutionOrder.AT_LAST;
     }
 
-    /** {@inheritDoc} */
     public int getOrderValue() { return order.getOrderValue(); }
     public int compareTo(AndroidEntryPoint.IExecutionOrder o) {
         return this.order.compareTo(o);
