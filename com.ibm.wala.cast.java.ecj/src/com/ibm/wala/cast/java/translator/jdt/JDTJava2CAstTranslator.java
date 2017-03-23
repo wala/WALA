@@ -1899,7 +1899,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * exception. maybe handle this in here as a special case? i don't know... or check if targetNode is THIS, that should even work
    * for this.x = 5 and (this).x = 5
    * 
-   * @param target Used to evaluate the field access. In the case of static field accesses, this is included in the first part of a
+   * @param targetNode Used to evaluate the field access. In the case of static field accesses, this is included in the first part of a
    *          block -- thus it is evaluated for any side effects but thrown away.
    * @param fieldName Name of the field.
    * @param fieldBinding This is used to determine the field's class.
