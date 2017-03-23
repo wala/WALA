@@ -123,7 +123,6 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * Visit scoped entities of an entity using a given iterator.
    * Prerequisite (unchecked): i iterates over entities scoped in n.
    * @param n the parent entity of the entities to process
-   * @param i the iterator over some scoped entities of n
    * @param context a visitor-specific context
    */
   public final void visitScopedEntities(CAstEntity n, Map allScopedEntities, C context, CAstVisitor<C> visitor) {

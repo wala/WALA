@@ -391,7 +391,6 @@ public class TypeSafeInstructionFactory {
      *
      *  @param  iindex      Zero or a positive number unique to any instruction of the same method
      *  @param  targetValue the result of the GetInstruction is placed there
-     *  @param  containingInstance The Object instance to read the field from
      *  @param  field       The description of the field
      */
     public SSAGetInstruction GetInstruction(final int iindex, final SSAValue targetValue, FieldReference field) {
@@ -471,7 +470,6 @@ public class TypeSafeInstructionFactory {
      *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#PutInstruction(int, int, int, FieldReference)
      *
      *  @param  iindex      Zero or a psitive number unique to any instruction of the same method
-     *  @param  targetInstance the instance of the object to write a field of
      *  @param  newValue    The value to write to the field
      *  @param  field       The description of the target
      */

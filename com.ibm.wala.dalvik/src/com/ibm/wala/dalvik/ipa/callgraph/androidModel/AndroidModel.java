@@ -575,7 +575,6 @@ public class AndroidModel /* makes SummarizedMethod */
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
      *
      *  @param  asMethod    The signature to generate
-     *  @param  flags       Control the behavior of the wrapper, may be null
      *  @param  caller      The class of the caller; only needed depending on the flags
      *  @param  info        The IntentSterter used
      *  @param  callerNd    CGNoodle of the caller - may be null

@@ -115,8 +115,6 @@ public class AndroidAnalysisContext {
 
 	/**
 	 * @param exclusions
-	 * @param classpath
-	 * @param packagename
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 * @throws CancelException

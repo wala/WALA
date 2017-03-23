@@ -191,7 +191,6 @@ public class SSAValueManager {
     /**
      *  Register a Phi-Instruction _after_ added to the model.
      *
-     *  @param  type    the type the Phi-Instruction sets
      *  @param  value   the number the SSA-Instruction assigns to
      *  @param  setBy   the Phi-Instruction itself - may be null
      *  @throws IllegalArgumentException if you assign to a number requested using
