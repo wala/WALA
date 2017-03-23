@@ -97,7 +97,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
       } else {
         return new IllegalArgumentExceptionContext();
       }
-    } catch (@SuppressWarnings("unused") IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       return new ReceiverInstanceContext(receiver[0]);
     }
   }

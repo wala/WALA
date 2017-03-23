@@ -160,7 +160,7 @@ public class IntraprocReachingDefs {
     BitVectorSolver<IExplodedBasicBlock> solver = new BitVectorSolver<>(framework);
     try {
       solver.solve(null);
-    } catch (@SuppressWarnings("unused") CancelException e) {
+    } catch (CancelException e) {
       // this shouldn't happen
       assert false;
     }

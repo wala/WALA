@@ -81,7 +81,7 @@ public class DefUse {
             }
             uses[use].add(i);
           }
-        } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
           assert false : "unexpected value number " + use;
         }
       }

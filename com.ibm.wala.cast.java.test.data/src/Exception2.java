@@ -28,7 +28,7 @@ public final class Exception2 {
       while ( (data = fis.read()) != -1 ) {
 	fos.write(data);
       }
-    } catch (@SuppressWarnings("unused") FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       System.err.println( "File not found" ); 
       // whatever
     } catch (IOException e) {
@@ -38,14 +38,14 @@ public final class Exception2 {
       if (fis != null) {
 	try {
 	  fis.close();
-	} catch (@SuppressWarnings("unused") IOException e) {
+	} catch (IOException e) {
 	  System.exit(-1);
 	}
       }
       if (fos != null) {
 	try {
 	  fos.close();
-	} catch (@SuppressWarnings("unused") IOException e) {
+	} catch (IOException e) {
 	  System.exit(-1);
 	}
       }

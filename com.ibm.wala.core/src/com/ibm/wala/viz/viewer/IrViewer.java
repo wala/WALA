@@ -107,7 +107,7 @@ public class IrViewer extends JPanel{
         }
         lineNum++;
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       // ???
       assert false;
     }
@@ -127,7 +127,7 @@ public class IrViewer extends JPanel{
       String pcString = line.substring(0, firstSpace);
       try {
         return Integer.parseInt(pcString);
-      } catch (@SuppressWarnings("unused") NumberFormatException e) {
+      } catch (NumberFormatException e) {
         return NA;
       }
     } else {

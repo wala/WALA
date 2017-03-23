@@ -81,11 +81,11 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
               IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
               return script.getMethod(JavaScriptMethods.fnSelector);
             }
-          } catch (@SuppressWarnings("unused") MalformedURLException e1) {
+          } catch (MalformedURLException e1) {
             // do nothing, fall through and return 'target'
-          } catch (@SuppressWarnings("unused") IOException e) {
+          } catch (IOException e) {
             // do nothing, fall through and return 'target'
-          } catch (@SuppressWarnings("unused") RuntimeException e) {
+          } catch (RuntimeException e) {
             // do nothing, fall through and return 'target'
           }
         }

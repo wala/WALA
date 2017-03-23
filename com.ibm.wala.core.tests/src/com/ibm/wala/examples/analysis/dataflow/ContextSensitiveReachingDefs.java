@@ -289,7 +289,7 @@ public class ContextSensitiveReachingDefs {
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = null;
     try {
       result = solver.solve();
-    } catch (@SuppressWarnings("unused") CancelException e) {
+    } catch (CancelException e) {
       // this shouldn't happen 
       assert false;
     }

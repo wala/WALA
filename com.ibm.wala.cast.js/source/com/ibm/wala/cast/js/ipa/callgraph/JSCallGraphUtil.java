@@ -226,10 +226,10 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
           cha.addClass(fcls);
         }
         return names;
-      } catch (@SuppressWarnings("unused") Error e) {
+      } catch (Error e) {
         return Collections.emptySet();
       }
-     } catch (@SuppressWarnings("unused") RuntimeException e) {
+     } catch (RuntimeException e) {
       return Collections.emptySet();
     }
   }

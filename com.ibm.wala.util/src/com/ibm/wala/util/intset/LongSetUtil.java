@@ -29,7 +29,7 @@ public class LongSetUtil {
         Class<?> intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
         MutableLongSetFactory intSetFactory = (MutableLongSetFactory) intSetFactoryClass.newInstance();
         setDefaultLongSetFactory(intSetFactory);
-      } catch (@SuppressWarnings("unused") Exception e) {
+      } catch (Exception e) {
         System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
         setDefaultLongSetFactory(defaultFactory);
       }

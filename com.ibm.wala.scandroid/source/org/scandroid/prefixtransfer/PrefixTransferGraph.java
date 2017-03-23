@@ -101,7 +101,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
                         {
                             sbua = new StringBuilderUseAnalysis(k,pa);
                         }
-                        catch(@SuppressWarnings("unused") Exception e)
+                        catch(Exception e)
                         {
                             
                             continue;

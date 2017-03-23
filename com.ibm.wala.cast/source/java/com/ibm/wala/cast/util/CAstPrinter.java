@@ -259,7 +259,7 @@ public class CAstPrinter {
 	  w.write("</" + kindAsString(top.getKind()) + ">\n");
 	}
       }
-    } catch (@SuppressWarnings("unused") java.io.IOException e) {
+    } catch (java.io.IOException e) {
 	
     }
   }

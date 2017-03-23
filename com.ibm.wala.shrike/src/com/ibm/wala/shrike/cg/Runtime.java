@@ -69,19 +69,19 @@ public class Runtime {
   private Runtime(String fileName, String filterFileName, String policyClassName) {
     try (final FileInputStream in = new FileInputStream(filterFileName)) {
       filter = new FileOfClasses(in);
-    } catch (@SuppressWarnings("unused") Exception e) {
+    } catch (Exception e) {
       filter = null;
     }
 
     try {
       output = new PrintWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(fileName)), "UTF-8"));
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       output = new PrintWriter(System.err);
     }
     
     try {
       handleCallback = (Policy) Class.forName(policyClassName).newInstance();
-    } catch (@SuppressWarnings("unused") InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
       handleCallback = new DefaultCallbackPolicy();
     }
     

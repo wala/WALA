@@ -444,7 +444,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       String fieldName = null;
       try {
         fieldName = inst.getDeclaredField().getName().toUnicodeString();
-      } catch (@SuppressWarnings("unused") UTFDataFormatException e) {
+      } catch (UTFDataFormatException e) {
         Assertions.UNREACHABLE();
       }
 

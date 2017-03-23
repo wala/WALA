@@ -146,10 +146,10 @@ public abstract class EclipseProjectPath<E, P> {
     JarFile j;
     try {
       j = new JarFile(file);
-    } catch (@SuppressWarnings("unused") ZipException z) {
+    } catch (ZipException z) {
       // a corrupted file. ignore it.
       return;
-    } catch (@SuppressWarnings("unused") IOException z) {
+    } catch (IOException z) {
       // should ignore directories as well..
       return;
     }
@@ -216,7 +216,7 @@ public abstract class EclipseProjectPath<E, P> {
       // This is horrible. We can't figure out the race condition yet which causes this to happen.
       try {
         Thread.sleep(5000);
-      } catch (@SuppressWarnings("unused") InterruptedException e) {
+      } catch (InterruptedException e) {
         // whatever.
       }
       bd = findModel(p).getBundleDescription();

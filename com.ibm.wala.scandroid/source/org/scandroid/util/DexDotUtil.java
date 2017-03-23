@@ -123,7 +123,7 @@ public class DexDotUtil extends DotUtil {
               // if we get here, the process has terminated
               repeat = false;
               
-            } catch (@SuppressWarnings("unused") IllegalThreadStateException e) {
+            } catch (IllegalThreadStateException e) {
               // this means the process has not yet terminated.
               repeat = true;
             }

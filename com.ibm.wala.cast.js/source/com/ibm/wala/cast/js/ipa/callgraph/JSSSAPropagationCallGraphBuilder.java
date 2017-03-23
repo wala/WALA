@@ -203,7 +203,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     try {
       byte[] utf8 = "__proto__".getBytes("UTF-8");
       x = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
-    } catch (@SuppressWarnings("unused") UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException e) {
       assert false;
     }
     prototypeRef = x;

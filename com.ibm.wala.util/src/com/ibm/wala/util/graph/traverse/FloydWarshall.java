@@ -124,7 +124,7 @@ public class FloydWarshall<T> {
                for(int j = 0; j <= G.getMaxNumber(); j++) {
                  try {
                    s += getPath(G.getNode(i), G.getNode(j));
-                 } catch (@SuppressWarnings("unused") UnsupportedOperationException e) {
+                 } catch (UnsupportedOperationException e) {
                    
                  }
                }
@@ -179,7 +179,7 @@ public class FloydWarshall<T> {
               for(int j = 0; j <= G.getMaxNumber(); j++) {
                 try {
                   x.add(getPaths(G.getNode(i), G.getNode(j)));
-                } catch (@SuppressWarnings("unused") UnsupportedOperationException e) {
+                } catch (UnsupportedOperationException e) {
                   
                 }
               }

@@ -363,7 +363,7 @@ public class StaticInitializer {
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, IClass> result = null;
     try {
       result = solver.solve();
-    } catch (@SuppressWarnings("unused") CancelException e) {
+    } catch (CancelException e) {
       // this shouldn't happen 
       assert false;
     }

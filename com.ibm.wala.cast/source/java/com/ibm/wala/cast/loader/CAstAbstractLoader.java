@@ -177,7 +177,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   public Reader getSource(IClass klass) {
     try {
       return ((AstClass)klass).getSourcePosition().getReader();
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       return null;
     }
   }
@@ -186,7 +186,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   public Reader getSource(IMethod method, int bcOffset) {
     try {
       return ((AstMethod)method).getSourcePosition(bcOffset).getReader();
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       return null;
     }
   }

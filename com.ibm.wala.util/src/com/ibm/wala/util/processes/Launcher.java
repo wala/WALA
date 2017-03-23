@@ -238,7 +238,7 @@ public abstract class Launcher {
         while (repeat) {
           try {
             Thread.sleep(SLEEP_MS);
-          } catch (@SuppressWarnings("unused") InterruptedException e1) {
+          } catch (InterruptedException e1) {
             // e1.printStackTrace();
             // just ignore and continue
           }
@@ -251,7 +251,7 @@ public abstract class Launcher {
             if (logger != null) {
               logger.fine("process terminated with exit code " + p.exitValue());
             }
-          } catch (@SuppressWarnings("unused") IllegalThreadStateException e) {
+          } catch (IllegalThreadStateException e) {
             // this means the process has not yet terminated.
             repeat = true;
           }
@@ -280,7 +280,7 @@ public abstract class Launcher {
         s.read(data);
         p.print(new String(data));
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)
       // so, just exit
     }
@@ -298,7 +298,7 @@ public abstract class Launcher {
         b.write(next);
         next = s.read();
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)
       // so, just print the data and then leave
     }
@@ -317,7 +317,7 @@ public abstract class Launcher {
         int nRead = s.read(data);
         b.write(data, 0, nRead);
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)
       // so, just exit
     }
@@ -333,7 +333,7 @@ public abstract class Launcher {
         b.write(next);
         next = s.read();
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)
       // so, just exit
     }

@@ -74,7 +74,7 @@ public class JarStreamModule extends JarInputStream implements Module {
           cache.put(name, bb);
         }
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       // just go with what we have
       Warnings.add(new Warning() {
 

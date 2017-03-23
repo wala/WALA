@@ -35,7 +35,7 @@ public class Util {
   static {
     try {
       walaProperties = WalaProperties.loadProperties();
-    } catch (@SuppressWarnings("unused") WalaException e) {
+    } catch (WalaException e) {
       walaProperties = null;
     }
   }

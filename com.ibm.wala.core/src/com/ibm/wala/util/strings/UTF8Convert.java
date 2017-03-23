@@ -99,7 +99,7 @@ public abstract class UTF8Convert {
                   + (i - 3));
           }
         }
-      } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+      } catch (ArrayIndexOutOfBoundsException e) {
         throw new UTFDataFormatException("unexpected end at location " + i);
       }
     }
@@ -202,7 +202,7 @@ public abstract class UTF8Convert {
           if (c < '\u0800')
             return false;
         }
-      } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+      } catch (ArrayIndexOutOfBoundsException e) {
         return false;
       }
     }

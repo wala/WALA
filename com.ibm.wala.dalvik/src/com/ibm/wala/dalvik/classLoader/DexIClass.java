@@ -400,7 +400,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         if (methods == null){
             try {
                 computeDeclaredMethods();
-            } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+            } catch (InvalidClassFileException e) {
             }
         }
 //      return construcorId!=-1?methods[construcorId]:null;

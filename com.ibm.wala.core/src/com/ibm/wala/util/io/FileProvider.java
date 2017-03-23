@@ -95,7 +95,7 @@ public class FileProvider {
     URL url = null;
     try {
       url = loader.getResource(fileName);
-    } catch (@SuppressWarnings("unused") Exception e) {
+    } catch (Exception e) {
     }    
     if (DEBUG_LEVEL > 0) {
       System.err.println(("FileProvider got url: " + url + " for " + fileName));
@@ -206,7 +206,7 @@ public class FileProvider {
     try {
       URI uri = new File(URLDecoder.decode(url.getPath(), "UTF-8")).toURI();
       return uri.getPath();
-    } catch (@SuppressWarnings("unused") UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException e) {
       // this really shouldn't happen
       Assertions.UNREACHABLE();
       return null;

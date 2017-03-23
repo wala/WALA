@@ -296,7 +296,7 @@ public class ClassLoaderImpl implements IClassLoader {
             Warnings.add(InvalidClassFile.create(className));
           }
         }
-      } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+      } catch (InvalidClassFileException e) {
         if (DEBUG_LEVEL > 0) {
           System.err.println("Ignoring class " + className + " due to InvalidClassFileException");
         }
@@ -568,13 +568,13 @@ public class ClassLoaderImpl implements IClassLoader {
       while (n != -1) {
         n = s.read(b);
       }
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
     } finally {
       try {
         if (s != null) {
           s.close();
         }
-      } catch (@SuppressWarnings("unused") IOException e) {
+      } catch (IOException e) {
       }
     }
   }

@@ -105,7 +105,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     BitVectorBase<T> result = null;
     try {
       result = (BitVectorBase<T>) super.clone();
-    } catch (@SuppressWarnings("unused") CloneNotSupportedException e) {
+    } catch (CloneNotSupportedException e) {
       // this shouldn't happen, since we are Cloneable
       throw new InternalError();
     }

@@ -75,7 +75,7 @@ public class SourceViewer extends JPanel{
           }
           br.close();
           return true;
-        } catch (@SuppressWarnings("unused") IOException e) {
+        } catch (IOException e) {
           System.err.println("Could not load source at " + url);
           return false;
         }

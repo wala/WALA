@@ -233,7 +233,7 @@ public class AnalysisScopeReader {
                 }
               }
             }
-          } catch (@SuppressWarnings("unused") RuntimeException e) {
+          } catch (RuntimeException e) {
             System.err.println("warning: trouble processing class path of " + path);
           }
         } else {

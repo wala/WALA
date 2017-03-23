@@ -193,7 +193,7 @@ public class ReuseParameters {
             final int localNumber = ssaFor(inCallTo, firstOf(param, inCallTo));
             try {
                 withName = inCallTo.getLocalVariableName (bcIndex, localNumber);
-            } catch (@SuppressWarnings("unused") UnsupportedOperationException e) {
+            } catch (UnsupportedOperationException e) {
                 // DexIMethod doesn't implement this :(
                 
                 withName = null;

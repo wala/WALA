@@ -54,7 +54,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
         if (method.getDeclaringClass() == Object.class) {
           assert false : o.getClass().toString();
         }
-      } catch (@SuppressWarnings("unused") Exception e) {
+      } catch (Exception e) {
         assert false : "Could not find hashCode method";
       }
     }

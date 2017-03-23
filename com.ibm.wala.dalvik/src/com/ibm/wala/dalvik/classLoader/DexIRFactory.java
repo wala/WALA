@@ -92,7 +92,7 @@ public class DexIRFactory extends DefaultIRFactory {
                 } else {
                     return "(line " + lineNumber + ")";
                 }
-                            } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+                            } catch (InvalidClassFileException e) {
                               return "";
                             }
             }

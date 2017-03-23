@@ -60,7 +60,7 @@ public final class WalaProperties {
     Properties p = null;
     try {
       p = WalaProperties.loadProperties();
-    } catch (@SuppressWarnings("unused") WalaException e) {
+    } catch (WalaException e) {
       return PlatformUtil.getBootClassPathJars();
     }
 

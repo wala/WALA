@@ -176,7 +176,7 @@ public class AddSerialVersion {
       } catch (IOException e1) {
         throw new Error("Unexpected IOException: " + e1.getMessage());
       }
-    } catch (@SuppressWarnings("unused") IOException e2) {
+    } catch (IOException e2) {
     }
 
     byte[] hash = digest.digest();
@@ -193,11 +193,11 @@ public class AddSerialVersion {
         byte[] data = Util.readFully(in);
         ClassReader r = new ClassReader(data);
         System.out.println(Util.makeClass(r.getName()) + ": serialVersionUID = " + computeSerialVersionUID(r));
-      } catch (@SuppressWarnings("unused") FileNotFoundException e) {
+      } catch (FileNotFoundException e) {
         System.err.println("File not found: " + args[i]);
-      } catch (@SuppressWarnings("unused") IOException e) {
+      } catch (IOException e) {
         System.err.println("Error reading file: " + args[i]);
-      } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+      } catch (InvalidClassFileException e) {
         System.err.println("Invalid class file: " + args[i]);
       }
     }

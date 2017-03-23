@@ -73,7 +73,7 @@ public class CAstCallGraphUtil {
             System.err.println("removing BOM " + bs.getBOM());
           }
           return bs;
-        } catch (@SuppressWarnings("unused") IOException e) {
+        } catch (IOException e) {
           return super.getInputStream();
         }
       }
@@ -150,7 +150,7 @@ public class CAstCallGraphUtil {
       PointerKey n = (PointerKey) x.next();
       try {
         System.err.println((n + " --> " + PA.getPointsToSet(n)));
-      } catch (@SuppressWarnings("unused") Throwable e) {
+      } catch (Throwable e) {
         System.err.println(("error computing set for " + n));
       }
     }

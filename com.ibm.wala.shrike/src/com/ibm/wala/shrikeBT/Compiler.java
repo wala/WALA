@@ -1653,7 +1653,7 @@ public abstract class Compiler implements Constants {
         } else {
           return p;
         }
-      } catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
+      } catch (IllegalArgumentException ex) {
         return null;
       }
     }

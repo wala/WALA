@@ -197,7 +197,7 @@ public final class ClassReader implements ClassConstants {
     } else {
       try {
         return cpParser.getCPClass(c);
-      } catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
+      } catch (IllegalArgumentException ex) {
         throw new InvalidClassFileException(addr, "Invalid class constant pool index: " + c);
       }
     }
@@ -361,7 +361,7 @@ public final class ClassReader implements ClassConstants {
     } else {
       try {
         return cpParser.getCPUtf8(s);
-      } catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
+      } catch (IllegalArgumentException ex) {
         throw new InvalidClassFileException(addr, "Invalid Utf8 constant pool index: " + s);
       }
     }

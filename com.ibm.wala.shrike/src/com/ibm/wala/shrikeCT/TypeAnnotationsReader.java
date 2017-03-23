@@ -801,7 +801,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
       for (; iter.isValid(); iter.advance()) {
         if (iter.getName().equals(attrName)) return newReader.apply();
       }
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
     return null;

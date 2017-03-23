@@ -143,7 +143,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       if (s != null) {
         superName = ImmutableByteArray.make("L" + s);
       }
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
   }
@@ -161,7 +161,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       for (int i = 0; i < interfaceNames.length; i++) {
         interfaceNames[i] = ImmutableByteArray.make("L" + s[i]);
       }
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
   }
@@ -257,7 +257,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     try {
       result.addAll(getAnnotations(true));
       result.addAll(getAnnotations(false));
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
 
     }
     return result;
@@ -313,7 +313,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
           return reader.getReader(iter);
         }
       }
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
     return null;
@@ -333,7 +333,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
           break;
         }
       }
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
     return result;
@@ -432,7 +432,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
           break;
         }
       }
-    } catch (@SuppressWarnings("unused") InvalidClassFileException e) {
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }
     return result;

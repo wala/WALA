@@ -121,7 +121,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
     try {
       Properties p = WalaProperties.loadProperties();
       javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
-    } catch (@SuppressWarnings("unused") WalaException e) {
+    } catch (WalaException e) {
       // no luck.
     }
 

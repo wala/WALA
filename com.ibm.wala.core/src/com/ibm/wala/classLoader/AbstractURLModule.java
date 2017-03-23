@@ -43,7 +43,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
         return ((JarURLConnection) con).getEntryName();
       else
         return (new FileProvider()).filePathFromURL(url);
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       Assertions.UNREACHABLE();
       return null;
     }
@@ -53,7 +53,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
   public InputStream getInputStream() {
     try {
       return url.openConnection().getInputStream();
-    } catch (@SuppressWarnings("unused") IOException e) {
+    } catch (IOException e) {
       Assertions.UNREACHABLE();
       return null;
     }

@@ -205,7 +205,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
           try {
             target = callGraph.findOrCreateNode(targetMethod, Everywhere.EVERYWHERE);
             processResolvedCall(callGraph.getFakeWorldClinitNode(), s.getCallSite(), target);
-          } catch (@SuppressWarnings("unused") CancelException e) {
+          } catch (CancelException e) {
             if (DEBUG) {
               System.err.println("Could not add node for class initializer: " + targetMethod.getSignature()
                   + " due to constraints on the maximum number of nodes in the call graph.");

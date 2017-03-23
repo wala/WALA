@@ -29,7 +29,7 @@ public class MainClass {
   private String toStringImpl() {
     try {
       return "mc:" + x.toString();
-    } catch (@SuppressWarnings("unused") NullPointerException e) {
+    } catch (NullPointerException e) {
       return callSomething(x);
     }
   }

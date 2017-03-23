@@ -81,7 +81,7 @@ public class JerichoTag implements ITag {
 	      public URL getURL() {
 	        try {
 	          return new URL("file://" + sourceFile);
-	        } catch (@SuppressWarnings("unused") MalformedURLException e) {
+	        } catch (MalformedURLException e) {
 	          return null;
 	        }
 	      }

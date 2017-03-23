@@ -60,7 +60,7 @@ public class CAstImpl implements CAst {
     public CAstNode getChild(int n) {
       try {
         return cs[n];
-      } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+      } catch (ArrayIndexOutOfBoundsException e) {
         throw new NoSuchElementException(n + " of " + CAstPrinter.print(this));
       }
     }

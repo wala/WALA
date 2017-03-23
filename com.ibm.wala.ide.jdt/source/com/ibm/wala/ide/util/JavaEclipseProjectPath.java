@@ -64,7 +64,7 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
       if (p.hasNature(JavaCore.NATURE_ID)) {
         return JavaCore.create(p);
       }
-    } catch (@SuppressWarnings("unused") CoreException e) {
+    } catch (CoreException e) {
       // not a Java project
     } 
     return null;

@@ -19,7 +19,7 @@ public class TestPruning {
         invokeSingleRecursive2(i);
         break;
       }
-    } catch (@SuppressWarnings("unused") OwnException e) {
+    } catch (OwnException e) {
 
     }
   }
@@ -37,7 +37,7 @@ public class TestPruning {
       case 4:       
         res = a[5];
       }
-    } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+    } catch (ArrayIndexOutOfBoundsException e) {
 
     }
     
@@ -56,7 +56,7 @@ public class TestPruning {
         invokeAllPassThrough();
         break;
       }
-    } catch (@SuppressWarnings("unused") RuntimeException e) {
+    } catch (RuntimeException e) {
 
     }
   }
@@ -86,9 +86,9 @@ public class TestPruning {
         invokeAllPassThrough();
         break;
       }
-    } catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+    } catch (ArrayIndexOutOfBoundsException e) {
 
-    } catch (@SuppressWarnings("unused") OwnException e) {
+    } catch (OwnException e) {
 
     }    
     return res;
