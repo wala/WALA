@@ -39,7 +39,6 @@ import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.traverse.DFS;
 
-@SuppressWarnings("deprecation")
 public class AstJavaSlicer extends Slicer {
 
   /*

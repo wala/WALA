@@ -674,7 +674,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 
 		for (int i = 0; i < instructions().size(); i++) {
-			handlers[i] = (ExceptionHandler[])temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
+			handlers[i] = temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
 		
 			/*
 			System.out.println("i: " + i);
@@ -3148,7 +3148,7 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 	public Instruction[] getDexInstructions() {
-		return (Instruction[]) instructions().toArray(new Instruction[instructions().size()]);
+		return instructions().toArray(new Instruction[instructions().size()]);
 	}
 
 

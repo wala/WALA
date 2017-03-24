@@ -120,7 +120,6 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<CAstType> getSupertypes() {
       if (fEltJdtType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fAst.resolveWellKnownType("java.lang.Object")));
@@ -159,7 +158,6 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<CAstType> getSupertypes() {
       if (fSuperTypes == null) {
         buildSuperTypes();

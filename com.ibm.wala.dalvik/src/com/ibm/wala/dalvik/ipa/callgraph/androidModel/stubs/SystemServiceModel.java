@@ -65,7 +65,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 import com.ibm.wala.util.ssa.SSAValue;
 import com.ibm.wala.util.ssa.SSAValueManager;
 import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;

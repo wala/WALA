@@ -11,12 +11,11 @@
 package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.fixpoint.FixedPointConstants;
 
 /**
  * Operator U(n) = U(n) U U(j)
  */
-public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> implements FixedPointConstants {
+public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
 
   private final static BitVectorUnion SINGLETON = new BitVectorUnion();
 
