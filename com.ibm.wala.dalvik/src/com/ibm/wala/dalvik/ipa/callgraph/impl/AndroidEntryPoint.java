@@ -188,7 +188,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
      * Before building the model a list of AdroidEntryPoints is to be sorted by that criterion. 
      * You can use AndroidEntryPoint.ExecutionOrderComperator for that task.
      */
-    public static class ExecutionOrder implements Comparable<IExecutionOrder>, IExecutionOrder {
+    public static class ExecutionOrder implements IExecutionOrder {
         // This is an Enum-Style class
         /** Visit the EntryPoint once at the beginning of the model use that for initialization stuff  */
         public final static ExecutionOrder AT_FIRST = new ExecutionOrder(0);

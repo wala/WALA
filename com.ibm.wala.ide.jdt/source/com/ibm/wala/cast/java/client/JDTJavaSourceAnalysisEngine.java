@@ -53,7 +53,6 @@ import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType;
 import com.ibm.wala.ide.util.JavaEclipseProjectPath;
 import com.ibm.wala.ide.util.JdtUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;

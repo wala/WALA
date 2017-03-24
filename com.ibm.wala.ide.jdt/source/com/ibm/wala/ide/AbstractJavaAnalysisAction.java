@@ -84,7 +84,6 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     final Collection<EclipseProjectPath> projectPaths = new LinkedList<>();
     Job job = new Job("Compute project paths") {
 
-      @SuppressWarnings("unchecked")
       @Override
       protected IStatus run(IProgressMonitor monitor) {
         for (Iterator it = selection.iterator(); it.hasNext();) {
@@ -134,7 +133,6 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /**
    * compute the java projects represented by the current selection
    */
-  @SuppressWarnings("unchecked")
   protected Collection<IJavaProject> computeJavaProjects() {
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<IJavaProject> projects = HashSetFactory.make();

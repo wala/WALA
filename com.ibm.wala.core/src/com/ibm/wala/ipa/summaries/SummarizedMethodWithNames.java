@@ -88,7 +88,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
                 throws NullPointerException {
         super(ref, summary.getMethodSummary(), declaringClass);
         this.summary = summary.getMethodSummary();
-        this.localNames = ((VolatileMethodSummary)summary).getLocalNames();
+        this.localNames = summary.getLocalNames();
         if (DEBUG && this.localNames.isEmpty()) {
           System.err.println("Local names are empty for " + ref);
         }

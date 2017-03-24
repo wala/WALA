@@ -242,11 +242,11 @@ public class DexDotUtil extends DotUtil {
       /**
        * Compute the nodes to visualize
        */
-      private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
+      private static <T> Collection<T> computeDotNodes(Graph<T> g) {
         return Iterator2Collection.toSet(g.iterator());
       }
 
-      private static String getRankDir() throws WalaException {
+      private static String getRankDir() {
         return null;
       }
 
@@ -254,7 +254,7 @@ public class DexDotUtil extends DotUtil {
        * @param n node to decorate
        * @param d decorating master
        */
-      private static <T> String decorateNode(T n, NodeDecorator<T> d) throws WalaException {
+      private static <T> String decorateNode(T n, NodeDecorator<T> d) {
         StringBuffer result = new StringBuffer();
         result.append(" [ ]\n");
         return result.toString();

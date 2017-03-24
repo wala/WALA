@@ -240,7 +240,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       return (String)v;
     } else if (v instanceof Double) {
       String result = v.toString();
-      if (((double) Math.round((Double)v)) == ((Double)v).doubleValue()) {
+      if ((Math.round((Double)v)) == ((Double)v).doubleValue()) {
         result = Long.toString(Math.round((Double)v));
       }
       return result;
@@ -255,7 +255,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     }
   }
 
-  public static class Bootstrap implements SourceModule, Module, ModuleEntry {
+  public static class Bootstrap implements SourceModule {
     private String name;
     private InputStream stream;
     private final URL url;

@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * An operator of the form lhs = op (rhs)
  */
 @SuppressWarnings("rawtypes")
-public abstract class UnaryOperator<T extends IVariable> extends AbstractOperator<T> implements FixedPointConstants {
+public abstract class UnaryOperator<T extends IVariable> extends AbstractOperator<T> {
 
   /**
    * Evaluate this equation, setting a new value for the left-hand side.

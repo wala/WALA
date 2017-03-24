@@ -22,7 +22,6 @@ public final class EmptyIterator<T> implements Iterator<T> {
   @SuppressWarnings("rawtypes")
   private static final EmptyIterator EMPTY = new EmptyIterator();
 
-  @SuppressWarnings("unchecked")
   public static <T> EmptyIterator<T> instance() {
     return EMPTY;
   }
