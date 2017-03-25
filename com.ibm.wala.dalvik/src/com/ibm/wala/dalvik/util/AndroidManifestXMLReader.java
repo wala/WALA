@@ -281,6 +281,21 @@ public class AndroidManifestXMLReader {
         }
 
         /**
+         *  The given Attr is in {@link #getRelevantAttributes()}.
+         */
+        public boolean isRelevant(Attr attr) {
+            return relevantAttributes.contains(attr);
+        }
+
+        /**
+         *  All Tags in this Enum but UNIMPORTANT are relevant.
+         */
+        @SuppressWarnings("unused")
+        public boolean isRelevant() {
+            return (this != Tag.UNIMPORTANT);
+        }
+
+        /**
          *  Match the Tag-Name in the XML-File against the one associated to the Enums Tag.
          *
          *  If no Tag in this Enum matches Tag.UNIMPORTANT is returned and the parser will ignore the
@@ -296,6 +311,14 @@ public class AndroidManifestXMLReader {
             } else {
                 return Tag.UNIMPORTANT;
             }
+        }
+
+        /**
+         *  The Tag appears in the XML File using this name.
+         */
+        @SuppressWarnings("unused")
+        public String getName() {
+            return this.tagName;
         }
     }
 
@@ -322,6 +345,11 @@ public class AndroidManifestXMLReader {
         private final String attrName;
         Attr(String attrName) {
             this.attrName = attrName;
+        }
+
+        @SuppressWarnings("unused")
+        public boolean isRelevantIn(Tag tag) {
+            return tag.isRelevant(this);
         }
 
         public String getName() {

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ArrayClass;
@@ -71,6 +72,7 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
@@ -138,6 +140,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Doesn't play well with pre-transitive solver; turning off for now.
    */
   protected final static boolean SHORT_CIRCUIT_SINGLE_USES = false;
+
+  /**
+   * Should we change calls to clone() to assignments?
+   */
+  private final boolean clone2Assign = false;
+
+  /**
+   * Cache for efficiency
+   */
+  private final static Selector cloneSelector = CloneInterpreter.CLONE.getSelector();
 
   /**
    * set of class whose clinits have already been processed
@@ -1879,6 +1891,74 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return (byte) (NOT_CHANGED | sideEffectMask);
       */
     }
+
+    @SuppressWarnings("unused")
+    private void handleAllReceivers(MutableIntSet receiverVals, InstanceKey[] keys, MutableBoolean sideEffect) {
+      assert keys[0] == null;
+      IntIterator receiverIter = receiverVals.intIterator();
+      while (receiverIter.hasNext()) {
+        final int rcvr = receiverIter.next();
+        keys[0] = system.getInstanceKey(rcvr);
+        if (clone2Assign) {
+          // for efficiency: assume that only call sites that reference
+          // clone() might dispatch to clone methods
+          if (call.getCallSite().getDeclaredTarget().getSelector().equals(cloneSelector)) {
+            IClass recv = (keys[0] != null) ? keys[0].getConcreteType() : null;
+            IMethod targetMethod = getOptions().getMethodTargetSelector().getCalleeTarget(node, call.getCallSite(), recv);
+            if (targetMethod != null && targetMethod.getReference().equals(CloneInterpreter.CLONE)) {
+              // treat this call to clone as an assignment
+              PointerKey result = getPointerKeyForLocal(node, call.getDef());
+              PointerKey receiver = getPointerKeyForLocal(node, call.getReceiver());
+              system.newConstraint(result, assignOperator, receiver);
+              return;
+            }
+          }
+        }
+        CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].getConcreteType(), keys);
+        if (target == null) {
+          // This indicates an error; I sure hope getTargetForCall
+          // raised a warning about this!
+          if (DEBUG) {
+            System.err.println("Warning: null target for call " + call);
+          }
+        } else {
+          IntSet targets = getCallGraph().getPossibleTargetNumbers(node, call.getCallSite());
+          // even if we've seen this target before, if we have constant
+          // parameters, we may need to re-process the call, as the constraints
+          // for the first time we reached this target may not have been fully
+          // general. TODO a more refined check?
+          if (targets != null && targets.contains(target.getGraphNodeId()) && noConstParams()) {
+            // do nothing; we've previously discovered and handled this
+            // receiver for this call site.
+          } else {
+            // process the newly discovered target for this call
+            sideEffect.b = true;
+            processResolvedCall(node, call, target, constParams, uniqueCatch);
+            if (!haveAlreadyVisited(target)) {
+              markDiscovered(target);
+            }
+          }
+        }
+      }
+      keys[0] = null;
+    }
+
+    private boolean noConstParams() {
+      if (constParams != null) {
+        for (int i = 0; i < constParams.length; i++) {
+          if (constParams[i] != null) {
+            for (int j = 0; j < constParams[i].length; i++) {
+              if (constParams[i][j] != null) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+      return true;
+    }
+
+
 
     @Override
     public String toString() {
