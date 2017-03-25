@@ -153,8 +153,9 @@ public class ReuseParameters {
 
         if (inCallTo.isStatic()) {
             return paramNo + 1;
+        } else {
+            return paramNo + 1; // TODO 2 or 1?
         }
-		return paramNo + 1; // TODO 2 or 1?
     }
 
     /**

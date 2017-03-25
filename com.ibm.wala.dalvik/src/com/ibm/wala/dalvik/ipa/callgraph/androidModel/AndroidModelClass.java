@@ -243,8 +243,9 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     public IField getField(Atom name) {
         if (fields.containsKey(name)) {
             return fields.get(name);
+        } else {
+            return null;
         }
-		return null;
     }
 
     public void putField(Atom name, TypeReference type) {

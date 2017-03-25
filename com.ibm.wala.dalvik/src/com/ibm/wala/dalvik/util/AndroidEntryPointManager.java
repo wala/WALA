@@ -204,8 +204,9 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     public IProgressMonitor getProgressMonitor() {
         if (this.progressMonitor == null) {
             return new NullProgressMonitor();
+        } else {
+            return this.progressMonitor;
         }
-		return this.progressMonitor;
     }
 
     /**
@@ -268,24 +269,25 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             SSAValueManager paramManager, Iterable<? extends Entrypoint> entryPoints) {
         if (abstractAndroidModel == null) {
             return new LoopAndroidModel(body, insts, paramManager, entryPoints);
+        } else {
+            try {
+                final Constructor<? extends AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
+                    VolatileMethodSummary.class, TypeSafeInstructionFactory.class, SSAValueManager.class,
+                    Iterable.class);
+                if (ctor == null) {
+                    throw new IllegalStateException("Canot find the constructor of " + this.abstractAndroidModel);
+                }
+                return ctor.newInstance(body, insts, paramManager, entryPoints);
+            } catch (java.lang.InstantiationException e) {
+                throw new IllegalStateException(e);
+            } catch (java.lang.IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                throw new IllegalStateException(e);
+            } catch (java.lang.NoSuchMethodException e) {
+                throw new IllegalStateException(e);
+            }
         }
-		try {
-		    final Constructor<? extends AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
-		        VolatileMethodSummary.class, TypeSafeInstructionFactory.class, SSAValueManager.class,
-		        Iterable.class);
-		    if (ctor == null) {
-		        throw new IllegalStateException("Canot find the constructor of " + this.abstractAndroidModel);
-		    }
-		    return ctor.newInstance(body, insts, paramManager, entryPoints);
-		} catch (java.lang.InstantiationException e) {
-		    throw new IllegalStateException(e);
-		} catch (java.lang.IllegalAccessException e) {
-		    throw new IllegalStateException(e);
-		} catch (java.lang.reflect.InvocationTargetException e) {
-		    throw new IllegalStateException(e);
-		} catch (java.lang.NoSuchMethodException e) {
-		    throw new IllegalStateException(e);
-		}
     }
 
     /**
@@ -366,8 +368,9 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         if (this.pack == null) {
             logger.warn("Returning null as package");
             return null;
+        } else {
+            return this.pack;
         }
-		return this.pack;
     }
 
     /**
@@ -382,14 +385,15 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     public String guessPackage() {
         if (this.pack != null) {
             return this.pack;
+        } else {
+            if (ENTRIES.isEmpty()) {
+                logger.error("guessPackage() called when no entrypoints had been set");
+                return null;
+            }
+            final String first = ENTRIES.get(0).getMethod().getReference().getDeclaringClass().getName().getPackage().toString();
+            // TODO: Iterate all?
+            return first;
         }
-		if (ENTRIES.isEmpty()) {
-		    logger.error("guessPackage() called when no entrypoints had been set");
-		    return null;
-		}
-		final String first = ENTRIES.get(0).getMethod().getReference().getDeclaringClass().getName().getPackage().toString();
-		// TODO: Iterate all?
-		return first;
     }
   
     //
@@ -589,26 +593,28 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
                 if (!overrideIntents.containsKey(intent)) {
                     logger.info("Resolved {} to {}", intent, ret);
                     return ret;
-                }
-				logger.debug("Resolving {} hop over {}", intent, ret);
-				final Intent old = ret;
-				ret = overrideIntents.get(ret);
+                } else {
+                    logger.debug("Resolving {} hop over {}", intent, ret);
+                    final Intent old = ret;
+                    ret = overrideIntents.get(ret);
 
-				if (ret == old) { // Yes, ==
-				    // This is an evil hack(tm). I should fix the Intent-Table!
-				    logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
-				    return ret;
-				}
+                    if (ret == old) { // Yes, ==
+                        // This is an evil hack(tm). I should fix the Intent-Table!
+                        logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
+                        return ret;
+                    }
+                }
             }
             ret = overrideIntents.get(ret); // Once again to get Info set in register
             logger.info("Resolved {} to {}", intent, ret);
             return ret;
+        } else {
+            logger.info("No information on {} hash: {}", intent, intent.hashCode());
+            for (Intent known : overrideIntents.keySet()) {
+                logger.debug("Known Intents: {} hash: {}", known, known.hashCode());
+            }
+            return intent;
         }
-		logger.info("No information on {} hash: {}", intent, intent.hashCode());
-		for (Intent known : overrideIntents.keySet()) {
-		    logger.debug("Known Intents: {} hash: {}", known, known.hashCode());
-		}
-		return intent;
     }
 
     /**

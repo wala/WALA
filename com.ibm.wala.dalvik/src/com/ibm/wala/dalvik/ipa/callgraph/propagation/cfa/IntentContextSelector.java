@@ -135,9 +135,10 @@ public class IntentContextSelector implements ContextSelector {
                             logger.error("Unable to resolve Intent called from {}", caller.getMethod());
                             logger.error("Search Key: {} hash: {}", param, param.hashCode());
                             break;
+                        } else {
+                            intent = intents.find(param);
+                            break;
                         }
-						intent = intents.find(param);
-						break;
                     }
                 }
             }
@@ -148,13 +149,14 @@ public class IntentContextSelector implements ContextSelector {
                 final Intent iintent = intents.findOrCreateImmutable(intent);
                 return new IntentContext(ctx, iintent);
                 //return new IntentContext(iintent);
+            } else {
+                logger.warn("Encountered unresolvable Intent");
+                intent = new Intent("Unresolvable");
+                intent.setImmutable();
+                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent);
+                return new IntentContext(ctx, intent);
+                //return new IntentContext(intent);
             }
-			logger.warn("Encountered unresolvable Intent");
-			intent = new Intent("Unresolvable");
-			intent.setImmutable();
-			AndroidEntryPointManager.MANAGER.addCallSeen(site, intent);
-			return new IntentContext(ctx, intent);
-			//return new IntentContext(intent);
         } else if (callee.getReference().toString().contains("getSystemService")) {
             assert(actualParameters.length == 2) : "PARAMS LENGTH IS" + actualParameters.length;
             final InstanceKey param = actualParameters[1];
@@ -419,10 +421,11 @@ public class IntentContextSelector implements ContextSelector {
             if (target.getNumberOfParameters() == 0) {
             	// public IntentSender()
             	return IntSetUtil.make(new int[] { 0 });
+            } else {
+            	// public IntentSender(IIntentSender target)
+                // public IntentSender(IBinder target)
+            	return IntSetUtil.make(new int[] { 0, 1 });
             }
-			// public IntentSender(IIntentSender target)
-			// public IntentSender(IBinder target)
-			return IntSetUtil.make(new int[] { 0, 1 });
         } /*else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
             logger.debug("Fetched ContextWrapper ctor");

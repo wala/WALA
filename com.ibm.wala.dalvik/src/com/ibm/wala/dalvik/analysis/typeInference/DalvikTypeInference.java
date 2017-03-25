@@ -37,15 +37,16 @@ public class DalvikTypeInference extends TypeInference {
 			SymbolTable st = ir.getSymbolTable();
 			if (st.isIntegerConstant(valueNumber) && st.isZero(valueNumber)) {
 				return new DalvikTypeVariable(language.getPrimitive(language.getConstantType(Integer.valueOf(0))), true);
-			}
-			if (doPrimitives) {
-				if (st.isConstant(valueNumber)) {
-					if (st.isBooleanConstant(valueNumber)) {
-						return new DalvikTypeVariable(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
+			} else {
+				if (doPrimitives) {
+					if (st.isConstant(valueNumber)) {
+						if (st.isBooleanConstant(valueNumber)) {
+							return new DalvikTypeVariable(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
+						}
 					}
 				}
+				return new DalvikTypeVariable(TypeAbstraction.TOP);
 			}
-			return new DalvikTypeVariable(TypeAbstraction.TOP);
 		}
 	}
 
@@ -87,9 +88,10 @@ public class DalvikTypeInference extends TypeInference {
 			}
 			if (lhsType.equals(meet)) {
 				return NOT_CHANGED;
+			} else {
+				lhs.setType(meet);
+				return CHANGED;
 			}
-			lhs.setType(meet);
-			return CHANGED;
 		}
 
 		private boolean containsNonPrimitiveAndZero(DalvikTypeVariable[] types) {

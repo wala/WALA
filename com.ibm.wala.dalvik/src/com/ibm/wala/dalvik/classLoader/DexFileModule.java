@@ -76,8 +76,9 @@ public class DexFileModule implements Module {
     		try (final JarFile jar = new JarFile(f)) {
     			return new DexFileModule(jar);
     		}
+    	} else {
+    		return new DexFileModule(f);
     	}
-		return new DexFileModule(f);
     }
     
     private static File tf(JarFile f) {

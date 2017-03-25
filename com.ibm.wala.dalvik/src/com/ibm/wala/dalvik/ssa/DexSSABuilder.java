@@ -206,28 +206,29 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 }
                 // didn't find anything but TOP
                 return TOP;
+            } else {
+                SSACFG.BasicBlock newBB = cfg.getNode(dexCFG.getNumber(bb));
+                if (bb.isExitBlock()) {
+                    // no phis in exit block please
+                    return TOP;
+                }
+                // if we already have a phi for this local
+                SSAPhiInstruction phi = newBB.getPhiForLocal(n);
+                int result;
+                if (phi == null) {
+                    // no phi already exists. create one.
+                    result = symbolTable.newPhi(rhs);
+                    PhiValue v = symbolTable.getPhiValue(result);
+                    phi = v.getPhiInstruction();
+                    newBB.addPhiForLocal(n, phi);
+                } else {
+                    // already created a phi. update it to account for the
+                    // new merge.
+                    result = phi.getDef();
+                    phi.setValues(rhs.clone());
+                }
+                return result;
             }
-			SSACFG.BasicBlock newBB = cfg.getNode(dexCFG.getNumber(bb));
-			if (bb.isExitBlock()) {
-			    // no phis in exit block please
-			    return TOP;
-			}
-			// if we already have a phi for this local
-			SSAPhiInstruction phi = newBB.getPhiForLocal(n);
-			int result;
-			if (phi == null) {
-			    // no phi already exists. create one.
-			    result = symbolTable.newPhi(rhs);
-			    PhiValue v = symbolTable.getPhiValue(result);
-			    phi = v.getPhiInstruction();
-			    newBB.addPhiForLocal(n, phi);
-			} else {
-			    // already created a phi. update it to account for the
-			    // new merge.
-			    result = phi.getDef();
-			    phi.setValues(rhs.clone());
-			}
-			return result;
         }
 
         /**
@@ -391,8 +392,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         private int reuseOrCreateDef() {
             if (getCurrentInstruction() == null || !getCurrentInstruction().hasDef()) {
                 return symbolTable.newSymbol();
+            } else {
+                return getCurrentInstruction().getDef();
             }
-			return getCurrentInstruction().getDef();
         }
 
         /**
@@ -406,9 +408,10 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
             if (getCurrentInstruction() == null) {
                 return symbolTable.newSymbol();
+            } else {
+                SSAInvokeInstruction s = (SSAInvokeInstruction) getCurrentInstruction();
+                return s.getException();
             }
-			SSAInvokeInstruction s = (SSAInvokeInstruction) getCurrentInstruction();
-			return s.getException();
         }
 
 

@@ -227,18 +227,19 @@ public class Intent implements ContextItem, Comparable<Intent> {
     public IntentType getType() {
         if (this.type != null) {
             return this.type;
+        } else {
+            if (isSystemService(this)) {
+                this.type = IntentType.SYSTEM_SERVICE;
+            } else if (isStandardAction(this)) {
+                this.type = IntentType.STANDARD_ACTION;
+            } else if (isInternal(this)) {
+                this.type = IntentType.INTERNAL_TARGET;
+            } else if (isExternal(this)) {
+                this.type = IntentType.EXTERNAL_TARGET;
+            } else {
+                this.type = IntentType.UNKNOWN_TARGET;
+            }
         }
-		if (isSystemService(this)) {
-		    this.type = IntentType.SYSTEM_SERVICE;
-		} else if (isStandardAction(this)) {
-		    this.type = IntentType.STANDARD_ACTION;
-		} else if (isInternal(this)) {
-		    this.type = IntentType.INTERNAL_TARGET;
-		} else if (isExternal(this)) {
-		    this.type = IntentType.EXTERNAL_TARGET;
-		} else {
-		    this.type = IntentType.UNKNOWN_TARGET;
-		}
         return this.type;
     }
 
@@ -406,8 +407,9 @@ public class Intent implements ContextItem, Comparable<Intent> {
         // DO NOT USE TYPE!
         if (this.uri != null) {
             return getAction().hashCode() * this.uri.hashCode();
+        } else {
+            return getAction().hashCode();
         }
-		return getAction().hashCode();
     }
 
     /**
@@ -432,11 +434,13 @@ public class Intent implements ContextItem, Comparable<Intent> {
             // DO NOT USE TYPE!
             if (this.uri != null) {
                 return ( (this.uri.equals(other.uri)) && equalAction(other) ); // && (this.explicit == other.explicit));
+            } else {
+                return ( (other.uri == null) && equalAction(other) ); // && (this.explicit == other.explicit)) ;
             }
-			return ( (other.uri == null) && equalAction(other) ); // && (this.explicit == other.explicit)) ;
+        } else {
+            System.err.println("WARNING: Can't compare Intent to " + o.getClass());
+            return false;
         }
-		System.err.println("WARNING: Can't compare Intent to " + o.getClass());
-		return false;
     }
 
     public Intent resolve() {

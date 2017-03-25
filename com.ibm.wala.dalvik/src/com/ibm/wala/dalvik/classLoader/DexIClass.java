@@ -255,8 +255,9 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         // if (this.getClass().equals(obj.getClass())) {
         if (obj instanceof DexIClass) {
           return getReference().equals(((DexIClass) obj).getReference());
+        } else {
+          return false;
         }
-		return false;
       }
       
       @Override

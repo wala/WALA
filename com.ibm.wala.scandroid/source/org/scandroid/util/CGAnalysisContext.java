@@ -178,8 +178,9 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			graphBuilt = false;
 			if (!options.testCGBuilder()) {
 				throw new RuntimeException(e);
+			} else {
+				e.printStackTrace();
 			}
-			e.printStackTrace();
 		}
 
 		if (options.testCGBuilder()) {
@@ -221,22 +222,23 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				// Node in APK
 				if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
 					return true;
+				} else {
+					Iterator<CGNode> n = cg.getPredNodes(node);
+					while (n.hasNext()) {
+						// Primordial node has a successor in APK
+						if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
+							return true;
+					}
+					n = cg.getSuccNodes(node);
+					while (n.hasNext()) {
+						// Primordial node has a predecessor in APK
+						if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
+							return true;
+					}
+					// Primordial node with no direct successors or predecessors
+					// to APK code
+					return false;
 				}
-				Iterator<CGNode> n = cg.getPredNodes(node);
-				while (n.hasNext()) {
-					// Primordial node has a successor in APK
-					if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
-						return true;
-				}
-				n = cg.getSuccNodes(node);
-				while (n.hasNext()) {
-					// Primordial node has a predecessor in APK
-					if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
-						return true;
-				}
-				// Primordial node with no direct successors or predecessors
-				// to APK code
-				return false;
 			}
 		});
 

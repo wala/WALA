@@ -590,9 +590,10 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             if (getNumber() == (getMaxNumber() - 1)) {
                 // this is the last non-exit block
                 return getInstructions().length - 1;
+            } else {
+                BasicBlock next = getNode(getNumber() + 1);
+                return next.getFirstInstructionIndex() - 1;
             }
-			BasicBlock next = getNode(getNumber() + 1);
-			return next.getFirstInstructionIndex() - 1;
         }
 
         public int getFirstInstructionIndex() {

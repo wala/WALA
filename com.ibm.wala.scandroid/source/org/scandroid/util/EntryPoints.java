@@ -366,13 +366,13 @@ public class EntryPoints {
                 intent.contentEquals("android.media.action.VIDEO_CAMERA"))
             return "onCreate(Landroid/os/Bundle;)V";
 
-//      if (intent.contentEquals("android.intent.action.BOOT_COMPLETED") ||
+//      else if (intent.contentEquals("android.intent.action.BOOT_COMPLETED") ||
 //              intent.contentEquals("android.appwidget.action.APPWIDGET_UPDATE") ||
 //              intent.contentEquals("android.provider.Telephony.SECRET_CODE") )
 //          return "onReceive(Landroid/content/Context;Landroid/content/Intent;)V";
 
 
-        return null;
+        else return null;
     }
 
     private ArrayList<String[]> chooseIntentList(String name) {

@@ -179,8 +179,9 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 	private URI processURIArg(String arg) {
 		if (arg == null) {
 			return null;
+		} else {
+			return new File(arg).toURI();
 		}
-		return new File(arg).toURI();
 	}
 
 	private URI processClasspath(boolean reqArgs) {
@@ -204,8 +205,9 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 		final String reflection = getOption(REFLECTION);
 		if (reflection == null) {
 			return ReflectionOptions.NONE;
+		} else {
+			return ReflectionOptions.valueOf(reflection);
 		}
-		return ReflectionOptions.valueOf(reflection);
 	}
 
 	private boolean hasOption(String s) {

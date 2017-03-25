@@ -101,16 +101,20 @@ public class AndroidContext implements Context {
             if (this.aCtxT.equals(other.aCtxT)) {
                 if (this.parent != null) {
                     return this.parent.equals(other.parent);
+                } else {
+                    return other.parent == null;
                 }
-				return other.parent == null;
+            } else {
+                return false;
             }
-			return false;
+        } else {
+            if (this.parent != null) {
+                // TODO: do we really want this?
+                return this.parent.equals(obj);
+            } else {
+                return false;
+            }
         }
-		if (this.parent != null) {
-		    // TODO: do we really want this?
-		    return this.parent.equals(obj);
-		}
-		return false;
     }
 
   @Override
@@ -123,7 +127,8 @@ public class AndroidContext implements Context {
   public String toString() {
       if (this.parent == null) {
         return "AndroidContext: " + this.aCtxT;
+      } else {
+        return "AndroidContext: " + this.aCtxT + ", parent: " + this.parent;
       }
-	return "AndroidContext: " + this.aCtxT + ", parent: " + this.parent;
   }
 }

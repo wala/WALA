@@ -415,17 +415,19 @@ nextMethod:
                 return true;
             }
             return false;
+        } else {
+            return true;
         }
-		return true;
     }
 
     private boolean isExcluded(final IClass cls) {
     	final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
     	if (set == null) {
     		return false; // exclusions null ==> no exclusions ==> no class is excluded
+    	} else {
+    		final String clsName = cls.getReference().getName().toString().substring(1);
+    		return set.contains(clsName);
     	}
-		final String clsName = cls.getReference().getName().toString().substring(1);
-		return set.contains(clsName);
     }
 
     /**

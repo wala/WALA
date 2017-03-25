@@ -204,11 +204,13 @@ public class AndroidSettingFactory {
             String pack = AndroidEntryPointManager.MANAGER.getPackage();
             if (pack != null) {
                 return intent(pack, fullyQualifiedAction, uri);
-            }
-			throw new IllegalArgumentException("The action " + fullyQualifiedAction + " is not fully qualified and the application package is unknown! Use " +
+            } else {
+            throw new IllegalArgumentException("The action " + fullyQualifiedAction + " is not fully qualified and the application package is unknown! Use " +
                     " intent(String pack, String name, String uri) to build the intent!");
+            }
+        } else {
+            return intent(null, fullyQualifiedAction, uri);
         }
-		return intent(null, fullyQualifiedAction, uri);
     }
 
     public static Intent intent(String fullyQualifiedAction) {

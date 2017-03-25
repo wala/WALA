@@ -105,8 +105,9 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
             if (o instanceof BehaviorKey) {
                 BehaviorKey<?> other = (BehaviorKey<?>) o;
                 return base.equals(other.base);
+            } else {
+                return false;
             }
-			return false;
         }
 
         @Override

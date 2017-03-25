@@ -194,8 +194,9 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			// new CallFlowFunction<E>(domain, actualParams)));
 			return union(globalId,
 					new CallFlowFunction<>(domain, actualParams));
+		} else {
+			throw new RuntimeException("src block not an invoke instruction");
 		}
-		throw new RuntimeException("src block not an invoke instruction");
 	}
 
 	@Override

@@ -95,11 +95,14 @@ public class BlockSearch {
                 }
                 continue;
             }
-			Iterator<ISSABasicBlock> predNodes = cfg.getPredNodes(current);
-			while(predNodes.hasNext())
-			{
-			    blockQueue.add(predNodes.next());
-			}
+            else
+            {
+                Iterator<ISSABasicBlock> predNodes = cfg.getPredNodes(current);
+                while(predNodes.hasNext())
+                {
+                    blockQueue.add(predNodes.next());
+                }
+            }
         }
         return candidate;
     }

@@ -189,26 +189,28 @@ public class AndroidModelParameterManager {
 //                    param.setBy = setBy;
                     
                     return;
+                } else {
+                    continue;
                 }
-				continue;
             }
             throw new IllegalStateException("The parameter " + type.getName() + " has already been allocated!");
+        } else {
+            ManagedParameter param = new ManagedParameter();
+            param.status = ValueStatus.ALLOCATED;
+            param.type = type;
+            param.ssa = ssaValue;
+            if ((ssaValue + 1) > nextLocal) {
+                nextLocal = ssaValue + 1;
+            }
+            param.setInScope = currentScope;
+
+            List<ManagedParameter> aParam = new ArrayList<>();
+            aParam.add(param);
+
+            
+            seenTypes.put(type, aParam);
+            return;
         }
-		ManagedParameter param = new ManagedParameter();
-		param.status = ValueStatus.ALLOCATED;
-		param.type = type;
-		param.ssa = ssaValue;
-		if ((ssaValue + 1) > nextLocal) {
-		    nextLocal = ssaValue + 1;
-		}
-		param.setInScope = currentScope;
-
-		List<ManagedParameter> aParam = new ArrayList<>();
-		aParam.add(param);
-
-		
-		seenTypes.put(type, aParam);
-		return;
     }
 
     public void setAllocation(TypeReference type, int ssaValue) {
@@ -283,22 +285,23 @@ public class AndroidModelParameterManager {
             }
             assert (didPhi);
             return;
+        } else {
+            ManagedParameter param = new ManagedParameter();
+            param.status = ValueStatus.ALLOCATED;
+            param.type = type;
+            param.setInScope = currentScope;
+            param.ssa = ssaValue;
+            if ((ssaValue + 1) > nextLocal) {
+                nextLocal = ssaValue + 1;
+            }
+
+            
+            List<ManagedParameter> aParam = new ArrayList<>();
+            aParam.add(param);
+
+            seenTypes.put(type, aParam);
+            return;
         }
-		ManagedParameter param = new ManagedParameter();
-		param.status = ValueStatus.ALLOCATED;
-		param.type = type;
-		param.setInScope = currentScope;
-		param.ssa = ssaValue;
-		if ((ssaValue + 1) > nextLocal) {
-		    nextLocal = ssaValue + 1;
-		}
-
-		
-		List<ManagedParameter> aParam = new ArrayList<>();
-		aParam.add(param);
-
-		seenTypes.put(type, aParam);
-		return;
     }
 
     /**
@@ -436,8 +439,9 @@ public class AndroidModelParameterManager {
         if (candidateSSA < 0 ) {
             
             return candidateSSA;
+        } else {
+            throw new IllegalStateException("No suitable candidate has been found for " + type.getName());
         }
-		throw new IllegalStateException("No suitable candidate has been found for " + type.getName());
     }
 
     /**
@@ -508,13 +512,15 @@ public class AndroidModelParameterManager {
 
         if (withSuper) {
             return seenTypes.containsKey(type);
+        } else {
+            if (seenTypes.containsKey(type)) {
+                if (seenTypes.get(type).get(0).type.equals(type)) {
+                    return true;
+                }
+            }
+        return false;
+
         }
-		if (seenTypes.containsKey(type)) {
-		    if (seenTypes.get(type).get(0).type.equals(type)) {
-		        return true;
-		    }
-		}
-      return false;
     }
 
     public boolean isSeen(TypeReference type) {
@@ -537,10 +543,12 @@ public class AndroidModelParameterManager {
         if (seenTypes.containsKey(type)) {
             if (seenTypes.get(type).size() > 1) {   // TODO INCORRECT may all be UNALLOCATED
                 return false;
+            } else {
+                return (seenTypes.get(type).get(0).status == ValueStatus.UNALLOCATED);
             }
-			return (seenTypes.get(type).get(0).status == ValueStatus.UNALLOCATED);
+        } else {
+            return true;
         }
-		return true;
     }
 
     /**
@@ -568,8 +576,9 @@ public class AndroidModelParameterManager {
                 if (param.status == ValueStatus.ALLOCATED) {
                     if (seenLive) {
                         return true;
+                    } else {
+                        seenLive = true;
                     }
-					seenLive = true;
                 }
             }
         } else {

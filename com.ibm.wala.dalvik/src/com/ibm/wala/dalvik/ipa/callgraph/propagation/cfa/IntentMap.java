@@ -65,12 +65,13 @@ import com.ibm.wala.util.strings.StringStuff;
             final Intent immutable = immutables.get(intent);
             assert (immutable.getAction().equals(intent.getAction()));
             return immutable;
+        } else {
+            final Intent immutable = intent.clone();
+            immutable.setImmutable();
+            immutables.put(intent, immutable);
+            
+            return immutable;
         }
-		final Intent immutable = intent.clone();
-		immutable.setImmutable();
-		immutables.put(intent, immutable);
-		
-		return immutable;
     }
 
     public Intent find(final InstanceKey key) throws IndexOutOfBoundsException {
@@ -122,8 +123,9 @@ import com.ibm.wala.util.strings.StringStuff;
     public Intent findOrCreate(final InstanceKey key) {
         if (seen.containsKey(key)) {
             return find(key);
+        } else {
+            return create(key);
         }
-		return create(key);
     }
 
     public void put(final InstanceKey key, final Intent intent) {
@@ -159,11 +161,12 @@ import com.ibm.wala.util.strings.StringStuff;
             final Intent intent = find(key);
             intent.setExplicit();
             return intent;
+        } else {
+            throw new IllegalArgumentException("setAction: No Intent found for key " + key);
+            //final Intent intent = create(key);
+            //intent.setExplicit();
+            //return intent;
         }
-		throw new IllegalArgumentException("setAction: No Intent found for key " + key);
-		//final Intent intent = create(key);
-		//intent.setExplicit();
-		//return intent;
     }
 
     public Intent setAction(final InstanceKey key, final Atom action, boolean isExplicit) {
@@ -175,9 +178,11 @@ import com.ibm.wala.util.strings.StringStuff;
                 intent.setAction(action);
             }
             return intent;
+        } else {
+            
+            final Intent intent = create(key, action);
+            return intent;
         }
-		final Intent intent = create(key, action);
-		return intent;
     }
 
     public Intent setAction(final Intent intent, final String action, boolean isExplicit) {

@@ -329,10 +329,12 @@ public class DexIMethod implements IBytecodeMethod {
 		if (!isStatic()) {
 			if (index == 0) {
 				return myClass.getReference();
+			} else {
+				return getReference().getParameterType(index - 1);
 			}
-			return getReference().getParameterType(index - 1);
+		} else {
+			return getReference().getParameterType(index);
 		}
-		return getReference().getParameterType(index);
 	}
 
 	/*
@@ -557,8 +559,9 @@ public class DexIMethod implements IBytecodeMethod {
 		if (obj instanceof DexIMethod) {
 			DexIMethod that = (DexIMethod) obj;
 			return (getDeclaringClass().equals(that.getDeclaringClass()) && getReference().equals(that.getReference()));
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	/**
