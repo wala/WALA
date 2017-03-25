@@ -22,7 +22,9 @@ projects = [
     "cast.java",
     "cast.java.ecj",
     "cast.js",
-    "cast.js.rhino"
+    "cast.js.rhino",
+    "dalvik",
+    "scandroid"
     ]
 
 for proj in projects:
