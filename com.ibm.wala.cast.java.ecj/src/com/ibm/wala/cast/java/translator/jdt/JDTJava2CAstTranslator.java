@@ -288,7 +288,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     private final T fSourcePosition;
 
     public ClassEntity(ITypeBinding jdtType, String name, Collection<CAstQualifier> quals, Collection<CAstEntity> entities,
-        T pos, Set<CAstAnnotation> annotations) {
+        T pos) {
       fName = name;
       fQuals = quals;
       fEntities = entities;
@@ -531,9 +531,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(modifiers, isInterface, isAnnotation);
 
-    Set<CAstAnnotation> annotations = handleAnnotations(typeBinding);
-
-    return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n), annotations);
+    return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n));
   }
 
   private CAstEntity visit(AnonymousClassDeclaration n, WalkContext context) {

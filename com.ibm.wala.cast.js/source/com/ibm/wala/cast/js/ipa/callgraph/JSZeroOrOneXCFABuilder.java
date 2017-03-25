@@ -38,7 +38,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
     SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
 
-    setupMethodTargetSelector(cha, options, cache);
+    setupMethodTargetSelector(cha, options);
 
     setupContextSelector(options, appContextSelector, doOneCFA);
 
@@ -71,11 +71,11 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
   }
 
   
-  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options, IAnalysisCacheView cache) {
+  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
     MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector());
     if (options.handleCallApply()) {
-      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector, cache));
+      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector));
     }
     if (options.useLoadFileTargetSelector()) {
       targetSelector = new LoadFileTargetSelector(targetSelector, this);

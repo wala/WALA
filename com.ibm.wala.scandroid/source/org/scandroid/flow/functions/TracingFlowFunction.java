@@ -48,8 +48,6 @@
  */
 package org.scandroid.flow.functions;
 
-import org.scandroid.domain.IFDSTaintDomain;
-
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.intset.IntSet;
@@ -58,7 +56,7 @@ import com.ibm.wala.util.intset.IntSetAction;
 public class TracingFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowFunction {	
 	private final IUnaryFlowFunction function;
 	
-	public TracingFlowFunction(IFDSTaintDomain<E> domain, IUnaryFlowFunction function) {
+	public TracingFlowFunction(IUnaryFlowFunction function) {
 		this.function = function;
 	}
 	

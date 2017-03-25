@@ -65,7 +65,7 @@ public class IFDSExplorerExample {
     CallGraph cg = builder.makeCallGraph(options, null);
     System.out.println("done with CG");
     System.out.println("computing reaching defs");
-    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg, cache);
+    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = reachingDefs.analyze();
     System.out.println("done with reaching defs");
     IFDSExplorer.setDotExe(p.getProperty("dotExe"));

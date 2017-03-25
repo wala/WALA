@@ -62,7 +62,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
   private final MethodTargetSelector base;
 
-  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base, IAnalysisCacheView cache2) {
+  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {
     this.base = base;
   }
 
