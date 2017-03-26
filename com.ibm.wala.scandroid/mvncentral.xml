@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.wala</groupId>
-  <artifactId>com.ibm.wala.cast.js</artifactId>
-  <version>1.4.2-SNAPSHOT</version>  
+  <artifactId>com.ibm.wala.scandroid</artifactId>
+  <version>1.4.2-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>WALA CAst JS</name>
-  <description>WALA JS frontend</description>
+  <name>WALA Scandroid</name>
+  <description>WALA Scandroid taint analysis</description>
   <url>http://wala.sourceforge.net</url>
   <licenses>
     <license>
@@ -54,19 +54,9 @@
     </dependency>
     <dependency>
       <groupId>com.ibm.wala</groupId>
-      <artifactId>com.ibm.wala.cast</artifactId>
+      <artifactId>com.ibm.wala.dalvik</artifactId>
       <version>1.4.2-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>net.htmlparser.jericho</groupId>
-      <artifactId>jericho-html</artifactId>
-      <version>3.2</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>    
   </dependencies>
 
   <repositories>
@@ -74,7 +64,11 @@
       <id>sonatype-snapshots</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
-  </repositories>  
+    <repository>
+        <id>maven-jars-mvn-repo</id>
+        <url>https://raw.github.com/msridhar/maven-jars/mvn-repo/</url>
+    </repository>
+  </repositories>
 
   <profiles>
     <profile>
@@ -96,7 +90,7 @@
       </properties>
     </profile>
   </profiles>
-  
+
   <build>
     <sourceDirectory>${src.dir}</sourceDirectory>
     <plugins>
@@ -140,7 +134,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <additionalparam>${javadoc.options}</additionalparam>
-        </configuration>        
+        </configuration>
         <version>2.9.1</version>
         <executions>
           <execution>
@@ -166,7 +160,7 @@
         </execution>
       </executions>
     </plugin>
-    
+
     </plugins>
-  </build>  
+  </build>
 </project>

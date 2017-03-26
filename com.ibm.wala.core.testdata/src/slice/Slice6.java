@@ -20,7 +20,7 @@ public class Slice6 {
     messages = new Vector<Integer>();
     messages.add(5);
 
-    int message = (Integer) messages.elementAt(0);
+    int message = messages.elementAt(0);
 
     sendMessage(message);
   }

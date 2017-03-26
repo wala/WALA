@@ -71,7 +71,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
@@ -654,7 +653,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return JavaScriptTypes.String;
     }
 
-    @SuppressWarnings("static-access")
     @Override
     public PrimitiveType getPrimitive(TypeReference reference) {
       return PrimitiveType.getPrimitive(reference);

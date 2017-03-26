@@ -167,7 +167,7 @@ public class AndroidModel /* makes SummarizedMethod */
      *  Generates the model on a sub-set of Entrypoints. 
      *
      *  Asks {@link #selectEntryPoint(AndroidEntryPoint)} for each EntryPoint known to the AndroidEntryPointManager,
-     *  if the EntryPoint should be included in the model. Then calls {@link #build(Atom, Iterable<? extends Entrypoint>)}
+     *  if the EntryPoint should be included in the model. Then calls {@link #build(Atom, Collection)}
      *  on these.
      *
      *  @param  name    The name the generated method will be known as
@@ -334,7 +334,7 @@ public class AndroidModel /* makes SummarizedMethod */
     /**
      *  Add Instructions to the model.
      *
-     *  {@link #build(Iterable<?extends Entrypoint>)} prepares the MethodSummary, then calls populate() to
+     *  {@link #build(Atom, Collection)} prepares the MethodSummary, then calls populate() to
      *  add the instructions, then finishes the model. Populate is only an extra function to shorten build(),
      *  calling it doesn't make sense in an other context.
      */
@@ -575,7 +575,6 @@ public class AndroidModel /* makes SummarizedMethod */
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
      *
      *  @param  asMethod    The signature to generate
-     *  @param  flags       Control the behavior of the wrapper, may be null
      *  @param  caller      The class of the caller; only needed depending on the flags
      *  @param  info        The IntentSterter used
      *  @param  callerNd    CGNoodle of the caller - may be null

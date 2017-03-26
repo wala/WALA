@@ -92,7 +92,7 @@ public class MiniModel extends AndroidModel {
     }
 
     public MiniModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache, 
-            final AndroidComponent forCompo) throws CancelException {
+            final AndroidComponent forCompo) {
         super(cha, options, cache);
     
         this.forCompo = forCompo;

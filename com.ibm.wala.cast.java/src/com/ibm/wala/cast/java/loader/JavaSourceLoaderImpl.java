@@ -288,15 +288,15 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       if (isStatic()) {
         types = new TypeReference[argCount];
         for (int i = 0; i < argCount; i++) {
-          types[i] = TypeReference.findOrCreate(JavaSourceLoaderImpl.this.getReference(), ((CAstType) type.getArgumentTypes()
-              .get(i)).getName());
+          types[i] = TypeReference.findOrCreate(JavaSourceLoaderImpl.this.getReference(), type.getArgumentTypes()
+              .get(i).getName());
         }
       } else {
         types = new TypeReference[argCount + 1];
         types[0] = cls.getReference();
         for (int i = 0; i < argCount; i++) {
-          types[i + 1] = TypeReference.findOrCreate(JavaSourceLoaderImpl.this.getReference(), ((CAstType) type.getArgumentTypes()
-              .get(i)).getName());
+          types[i + 1] = TypeReference.findOrCreate(JavaSourceLoaderImpl.this.getReference(), type.getArgumentTypes()
+              .get(i).getName());
         }
       }
 

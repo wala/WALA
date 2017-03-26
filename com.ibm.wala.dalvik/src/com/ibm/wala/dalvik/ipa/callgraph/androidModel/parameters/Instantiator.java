@@ -344,9 +344,6 @@ public class Instantiator implements IInstantiator {
         return instance; 
     }
 
-    /**
-     *  @return an unallocated SSAVariable
-     */
     private void createPrimitive(SSAValue instance) {
         // XXX; something else?
         instance.setAssigned();
@@ -386,7 +383,7 @@ public class Instantiator implements IInstantiator {
      *
      *  @param  self the "this" to call the constructor on
      *  @param  ctor the constructor to call
-     *  @param  params parameters to the ctor _without_ implicit this
+     *  @param  ctorParams parameters to the ctor _without_ implicit this
      */
     private void addCallCtor(SSAValue self, MethodReference ctor, List<SSAValue> ctorParams) {
         final int pc = this.body.getNextProgramCounter();
