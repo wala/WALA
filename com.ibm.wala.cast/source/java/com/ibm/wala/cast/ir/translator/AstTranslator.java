@@ -699,7 +699,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * holds the control-flow graph as it is being constructed. When construction
    * is complete, information is stored in an {@link AstCFG}
    */
-  @SuppressWarnings("javadoc")
   public final class IncipientCFG extends SparseNumberedGraph<PreBasicBlock> {
 
     protected class Unwind {
