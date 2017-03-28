@@ -60,7 +60,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @since  2013-10-25
  */
-public class DefaultInstantiationBehavior extends IInstantiationBehavior implements Serializable {
+public class DefaultInstantiationBehavior extends IInstantiationBehavior {
 
     /* package-private */ static final class BehviourValue implements Serializable {
 		public final InstanceBehavior behaviour;

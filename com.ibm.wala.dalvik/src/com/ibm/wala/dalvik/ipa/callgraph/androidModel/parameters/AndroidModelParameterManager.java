@@ -61,7 +61,6 @@ import com.ibm.wala.util.ssa.SSAValue;
  *  However it does no allocations or Phi-Statements on its own. It just juggles with the numbers.
  *
  *  @see com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
- *  @see com.ibm.wala.dalvik.ipa.callgraph.impl.DexFakeRootMethod
  *
  *  @author  Tobias Blaschke <code@toiasblaschke.de>
  *  @since   2013-09-19
@@ -662,7 +661,7 @@ public class AndroidModelParameterManager {
      *  Handed through to an IInstantiationBehavior if set in the constructor.
      *
      *  @return true if Type is a REUSE type
-     *  @throws IllegalStateExcpetion if AndroidModelParameterManager was constructed without an IInstanciationBehavior
+     *  @throws IllegalStateException if AndroidModelParameterManager was constructed without an IInstanciationBehavior
      */
     public boolean isReuse(TypeReference type) {
         if (this.behaviour == null) {
@@ -677,7 +676,7 @@ public class AndroidModelParameterManager {
      *  Shorthand for not({@link #isReuse(TypeReference)}.
      *
      *  @return true if type is a CREATE-Type
-     *  @throws IllegalStateExcpetion if AndroidModelParameterManager was constructed without an IInstanciationBehavior
+     *  @throws IllegalStateException if AndroidModelParameterManager was constructed without an IInstanciationBehavior
      */
     public boolean isCreate(TypeReference type) {
         return (! isReuse(type));

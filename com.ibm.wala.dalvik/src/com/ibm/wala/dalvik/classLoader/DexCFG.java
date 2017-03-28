@@ -101,7 +101,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     }
 
     public Instruction[] getInstructions() {
-        return (Instruction[])dexMethod.getDexInstructions();
+        return dexMethod.getDexInstructions();
 
     }
 
@@ -417,7 +417,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             if (pei == null) {
                 throw new IllegalArgumentException("pei is null");
             }
-            switch (((Instruction) pei).getOpcode()) {
+            switch (pei.getOpcode()) {
             //TODO: Make sure all the important cases and exceptions are covered.
             case AGET:
             case AGET_WIDE:

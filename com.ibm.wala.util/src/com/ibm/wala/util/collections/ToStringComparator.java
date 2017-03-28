@@ -36,7 +36,6 @@ public class ToStringComparator<T> implements Comparator<T> {
     return o1.toString().compareTo(o2.toString());
   }
   
-  @SuppressWarnings("unchecked")
   public static <T> ToStringComparator<T> instance() {
     return INSTANCE;
   }

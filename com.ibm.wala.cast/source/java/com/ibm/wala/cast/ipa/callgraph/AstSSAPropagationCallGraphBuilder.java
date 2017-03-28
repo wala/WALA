@@ -613,7 +613,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * perform the necessary {@link #action(PointerKey, int)}s for the
        * accesses. For each access, we determine the possible {@link CGNode}s
        * corresponding to its definer (see
-       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)). Handle
+       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)}). Handle
        * using
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .

@@ -73,7 +73,6 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
      */
     private final ContextItem.Value<Boolean> isNonNullArray;
 
-    @SuppressWarnings("unchecked")
     ApplyContext(Context delegate, boolean isNonNullArray) {
       this.delegate = delegate;
       this.isNonNullArray = ContextItem.Value.make(isNonNullArray);

@@ -84,7 +84,7 @@ import com.ibm.wala.util.strings.Atom;
  *  
  *  In the generated code this class may be found as "Lcom/ibm/wala/AndroidModelClass"
  *
- *  @see    com.ibm.wala.dalvik.ipa.callgraph.impl.FakeRootClass
+ *  @see    com.ibm.wala.ipa.callgraph.impl.FakeRootClass
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @todo   Move this class into an other loader? Currently: Primordial

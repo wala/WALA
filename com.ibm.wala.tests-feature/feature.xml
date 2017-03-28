@@ -2,7 +2,7 @@
 <feature
       id="com.ibm.wala.tests-feature"
       label="%featureName"
-      version="1.4.1.qualifier"
+      version="1.4.1"
       provider-name="%providerName">
 
    <plugin

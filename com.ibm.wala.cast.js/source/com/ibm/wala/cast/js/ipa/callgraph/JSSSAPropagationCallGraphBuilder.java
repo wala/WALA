@@ -107,6 +107,7 @@ import com.ibm.wala.util.strings.Atom;
  * reference to a global named {@link #GLOBAL_OBJ_VAR_NAME}, which is handled
  * specially in {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)}.
  */
+@SuppressWarnings("javadoc")
 public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
   public static final boolean DEBUG_LEXICAL = false;

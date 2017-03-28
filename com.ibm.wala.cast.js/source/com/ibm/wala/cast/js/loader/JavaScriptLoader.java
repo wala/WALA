@@ -653,7 +653,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return JavaScriptTypes.String;
     }
 
-    @SuppressWarnings("static-access")
     @Override
     public PrimitiveType getPrimitive(TypeReference reference) {
       return PrimitiveType.getPrimitive(reference);

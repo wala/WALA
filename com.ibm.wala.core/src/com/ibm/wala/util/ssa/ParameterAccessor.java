@@ -294,7 +294,7 @@ public class ParameterAccessor {
      *
      *  Using this Constructor influences the SSA-Values returned later. The cha is needed to
      *  determine whether mRef is static. If this is already known one should prefer the faster
-     *  {@link #ParameterAccessor(ParameterAccessor, boolean)}.
+     *  {@link #ParameterAccessor(MethodReference, boolean)}.
      *
      *  @param  mRef    The method to read the parameters from.
      */
@@ -393,7 +393,7 @@ public class ParameterAccessor {
      *
      *  Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
      *
-     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy}.
+     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy)}.
      *
      *  @param  mRef    The method to read the parameters from.
      */
@@ -457,7 +457,7 @@ public class ParameterAccessor {
      *
      *  @param  no  the number in the Selector
      *  @return new Parameter-Object for no
-     *  @throws IllegalArgumentExceptions if the parameter is zero
+     *  @throws IllegalArgumentException if the parameter is zero
      *  @throws ArrayIndexOutOfBoundsException if no is not within bounds [1 to numberOfParameters]
      */
     public Parameter getParameter(final int no) {

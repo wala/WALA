@@ -259,7 +259,7 @@ public class DexIMethod implements IBytecodeMethod {
 	/**
 	 * XXX not fully about the + 2.
 	 * @return the RegisterCount + 2 to make some room for the return and exception register
-	 * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
+	 * @see com.ibm.wala.classLoader.ShrikeCTMethod#getMaxLocals()
 	 */
 	public int getMaxLocals() {
 		return eMethod.codeItem.getRegisterCount() + 2;
@@ -674,7 +674,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 
 		for (int i = 0; i < instructions().size(); i++) {
-			handlers[i] = (ExceptionHandler[])temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
+			handlers[i] = temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
 		
 			/*
 			System.out.println("i: " + i);
@@ -3148,7 +3148,7 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 	public Instruction[] getDexInstructions() {
-		return (Instruction[]) instructions().toArray(new Instruction[instructions().size()]);
+		return instructions().toArray(new Instruction[instructions().size()]);
 	}
 
 
