@@ -74,7 +74,6 @@ public class StringBuilderUseAnalysis {
 
 	public final Map<ISSABasicBlock, ISSABasicBlock> blockOrdering;
 	
-	private final InstanceKey sbik;
 	private final CGNode node;
 	private final PointerAnalysis<InstanceKey> pa;
 	private final Set<LocalPointerKey> localPointerKeys = new HashSet<>();
@@ -83,7 +82,6 @@ public class StringBuilderUseAnalysis {
 	public StringBuilderUseAnalysis(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) throws Exception {
 		assert(ik.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder"));
 	
-		this.sbik = ik;
 		this.pa = pa;
 		this.node = findCGNode(ik, pa);
 		this.instructions = findInstructions();

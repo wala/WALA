@@ -57,7 +57,7 @@ public class SmallMap<K, V> implements Map<K, V> {
     try {
       return (K) keysAndValues[i];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i: " + i);
+      throw new IllegalArgumentException("invalid i: " + i, e);
     }
   }
 
@@ -73,7 +73,7 @@ public class SmallMap<K, V> implements Map<K, V> {
     try {
       return keysAndValues[size() + i];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("illegal i: " + i);
+      throw new IllegalArgumentException("illegal i: " + i, e);
     }
   }
 

@@ -86,7 +86,7 @@ public class OfflineDynamicCallGraph {
 		patchCalls = true;
 	      } else if ("--rt-jar".equals(args[i])) {
 		System.err.println("using " + args[i+1] + " as stdlib");
-		OfflineInstrumenter libReader = new OfflineInstrumenter(true);
+		OfflineInstrumenter libReader = new OfflineInstrumenter();
 		libReader.addInputJar(new File(args[i+1]));
 		while ((ci = libReader.nextClass()) != null) {
 		  CTUtils.addClassToHierarchy(cha, ci.getReader());
@@ -94,7 +94,7 @@ public class OfflineDynamicCallGraph {
 	      }
 	    }
 
-	    instrumenter = new OfflineInstrumenter(true);
+	    instrumenter = new OfflineInstrumenter();
 	    args = instrumenter.parseStandardArgs(args);
 
 	    instrumenter.setPassUnmodifiedClasses(true);

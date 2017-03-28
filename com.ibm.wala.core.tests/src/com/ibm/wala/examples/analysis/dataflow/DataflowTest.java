@@ -90,7 +90,7 @@ public class DataflowTest extends WalaTestCase {
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
-      throw new Exception();
+      throw new Exception(e);
     }
   }
 
@@ -184,8 +184,7 @@ public class DataflowTest extends WalaTestCase {
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    IAnalysisCacheView cache = new AnalysisCacheImpl();
-    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg, cache);
+    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = reachingDefs.analyze();
     ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph = reachingDefs.getSupergraph();
     for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {

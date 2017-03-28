@@ -37,7 +37,7 @@ public final class Selector {
       String desc = selectorStr.substring(selectorStr.indexOf('('));
       return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(l, desc));
     } catch (StringIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid selectorStr: " + selectorStr);
+      throw new IllegalArgumentException("invalid selectorStr: " + selectorStr, e);
     }
   }
 

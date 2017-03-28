@@ -57,7 +57,7 @@ public class BootstrapInstrumentor {
   }
 
   public void doit(String[] args) throws Exception {
-    OfflineInstrumenter oi = new OfflineInstrumenter(true);
+    OfflineInstrumenter oi = new OfflineInstrumenter();
     oi.parseStandardArgs(args);
    
     oi.setPassUnmodifiedClasses(true);

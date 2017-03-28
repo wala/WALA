@@ -36,7 +36,7 @@ public class ClassSearcher {
   private static int scanned = 0;
 
   public static void main(String[] args) throws Exception {
-    instrumenter = new OfflineInstrumenter(true);
+    instrumenter = new OfflineInstrumenter();
 
     try (final Writer w = new BufferedWriter(new FileWriter("report", true))) {
 

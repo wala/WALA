@@ -184,7 +184,7 @@ public class ProgressMaster implements IProgressMonitor {
           try {
             ManagementFactory.getPlatformMBeanServer().addNotificationListener(gcbean.getObjectName(), listener, null, null);
           } catch (InstanceNotFoundException e) {
-            throw new Error("cannot find existing bean");
+            throw new Error("cannot find existing bean", e);
           }
         }
 
@@ -194,7 +194,7 @@ public class ProgressMaster implements IProgressMonitor {
           try {
           ManagementFactory.getPlatformMBeanServer().removeNotificationListener(gcbean.getObjectName(), listener);
           } catch (InstanceNotFoundException | ListenerNotFoundException e) {
-            throw new Error("cannot find existing bean");
+            throw new Error("cannot find existing bean", e);
           }
         }
         

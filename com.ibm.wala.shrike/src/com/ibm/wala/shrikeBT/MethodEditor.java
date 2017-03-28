@@ -415,7 +415,7 @@ public final class MethodEditor {
       }
       patchCount++;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i");
+      throw new IllegalArgumentException("invalid i", e);
     }
   }
 
@@ -454,7 +454,7 @@ public final class MethodEditor {
       instructionHandlerPatches[i] = new HandlerPatch(instructionHandlerPatches[i], catchClass, allocateLabel(), p);
       patchCount++;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i: " + i);
+      throw new IllegalArgumentException("invalid i: " + i, e);
     }
   }
 

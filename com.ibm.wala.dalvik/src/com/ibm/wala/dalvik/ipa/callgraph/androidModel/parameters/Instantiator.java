@@ -533,6 +533,7 @@ public class Instantiator implements IInstantiator {
     /**
      *  Path back to Object (including T itself).
      */
+    @SuppressWarnings("unused")
     private List<TypeReference> getAllSuper(final TypeReference T) {
         if (T.isPrimitiveType()) {
             throw new IllegalArgumentException("Not you that call primitive type on :P");

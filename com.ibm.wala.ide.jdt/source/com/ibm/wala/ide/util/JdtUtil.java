@@ -370,7 +370,7 @@ public class JdtUtil {
         return result;
       }
     } catch (StringIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid selector: " + selector);
+      throw new IllegalArgumentException("invalid selector: " + selector, e);
     }
   }
 
@@ -455,7 +455,7 @@ public class JdtUtil {
         }
       }
     } catch (StringIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("error parsing selector " + selector);
+      throw new IllegalArgumentException("error parsing selector " + selector, e);
     }
   }
 

@@ -204,7 +204,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 		});
 		if (options.includeLibrary()) {
-			graph = (ISupergraph) ICFGSupergraph.make(cg, cache);
+			graph = (ISupergraph) ICFGSupergraph.make(cg);
 		} else {
 
 			Collection<CGNode> nodes = HashSetFactory.make();
@@ -212,7 +212,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				nodes.add(nIter.next());
 			}
 			CallGraph pcg = PartialCallGraph.make(cg, cg.getEntrypointNodes(), nodes);
-			graph = (ISupergraph) ICFGSupergraph.make(pcg, cache);
+			graph = (ISupergraph) ICFGSupergraph.make(pcg);
 		}
 
 		oneLevelGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
