@@ -2316,7 +2316,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
     CAstNode continueNode = visitNode(continueTarget, context);
 
-    String loopLabel = (String) context.getLabelMap().get(n);
+    String loopLabel = context.getLabelMap().get(n);
     LoopContext lc = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
     /*
@@ -2366,7 +2366,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstNode visit(SwitchStatement n, WalkContext context) {
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     CAstNode breakAst = visitNode(breakTarget, context);
-    String loopLabel = (String) context.getLabelMap().get(n); // set by labeled statement (if there is one before this
+    String loopLabel = context.getLabelMap().get(n); // set by labeled statement (if there is one before this
     // switch statement)
     WalkContext childContext = new BreakContext(context, loopLabel, breakTarget);
     Expression cond = n.getExpression();
@@ -2616,7 +2616,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
-    String loopLabel = (String) context.getLabelMap().get(n);
+    String loopLabel = context.getLabelMap().get(n);
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
     return makeNode(context, fFactory, n, CAstNode.LOCAL_SCOPE,
@@ -2632,7 +2632,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstNode visit(ForStatement n, WalkContext context) {
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
-    String loopLabel = (String) context.getLabelMap().get(n);
+    String loopLabel = context.getLabelMap().get(n);
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
     ArrayList<CAstNode> inits = new ArrayList<>();
@@ -3149,9 +3149,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // if subtype match, then matches here and parent matches
       Collection<Pair<ITypeBinding, Object>> catchNodes = new ArrayList<>();
 
-      for (Iterator<Pair<ITypeBinding, Object>> iter = fCatchNodes.iterator(); iter.hasNext();) {
-        Pair<ITypeBinding, Object> p = (Pair<ITypeBinding, Object>) iter.next();
-        ITypeBinding catchType = (ITypeBinding) p.fst;
+      for (Pair<ITypeBinding, Object> p : fCatchNodes) {
+        ITypeBinding catchType = p.fst;
 
         // catchType here should NEVER be FakeExceptionTypeBinary, because these can only be thrown (not caught) by
         // "1/0", implicit null pointer exceptions, etc.
