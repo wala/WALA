@@ -1939,12 +1939,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       if (targetNode.getKind() != CAstNode.THIS) { // this.x will never throw a null pointer exception, because this
         // can never be null
-        Collection excTargets = context.getCatchTargets(fNullPointerExcType);
+        Collection<Pair<ITypeBinding, Object>> excTargets = context.getCatchTargets(fNullPointerExcType);
         if (!excTargets.isEmpty()) {
           // connect NPE exception edge to relevant catch targets
           // (presumably only one)
-          for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
-            Pair catchPair = (Pair) iterator.next();
+          for (Pair<ITypeBinding, Object> catchPair : excTargets) {
             context.cfg().add(refNode, catchPair.snd, fNullPointerExcType);
           }
         } else {
@@ -2076,10 +2075,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         if (JDT2CAstUtils.isLongOrLess(leftType)
             && JDT2CAstUtils.isLongOrLess(rightType)
             && (JDT2CAstUtils.mapBinaryOpcode(op) == CAstOperator.OP_DIV || JDT2CAstUtils.mapBinaryOpcode(op) == CAstOperator.OP_MOD)) {
-          Collection excTargets = context.getCatchTargets(fDivByZeroExcType);
+          Collection<Pair<ITypeBinding, Object>> excTargets = context.getCatchTargets(fDivByZeroExcType);
           if (!excTargets.isEmpty()) {
-            for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
-              Pair catchPair = (Pair) iterator.next();
+            for (Pair<ITypeBinding, Object> catchPair : excTargets) {
               context.cfg().add(op, catchPair.snd, fDivByZeroExcType);
             }
           } else {
@@ -2122,7 +2120,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * callerNode: used for positioning and also in CFG (handleThrowsFrom Call)
    */
-  private CAstNode createConstructorInvocation(IMethodBinding ctorBinding, List/* <Expression> */arguments, ASTNode callerNode,
+  private CAstNode createConstructorInvocation(IMethodBinding ctorBinding, List<Expression> arguments, ASTNode callerNode,
       WalkContext context, boolean isSuper) {
     ITypeBinding ctorType = ctorBinding.getDeclaringClass();
     assert ctorType.isClass();
@@ -2178,12 +2176,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstNode ast = makeNode(context, fFactory, pos, CAstNode.CAST, fFactory.makeConstant(fTypeDict.getCAstTypeFor(castedTo)),
         argNode, fFactory.makeConstant(fTypeDict.getCAstTypeFor(castedFrom)));
 
-    Collection excTargets = context.getCatchTargets(fClassCastExcType);
+    Collection<Pair<ITypeBinding, Object>> excTargets = context.getCatchTargets(fClassCastExcType);
     if (!excTargets.isEmpty()) {
       // connect ClassCastException exception edge to relevant catch targets
       // (presumably only one)
-      for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
-        Pair catchPair = (Pair) iterator.next();
+      for (Pair<ITypeBinding, Object> catchPair : excTargets) {
         context.cfg().add(cfgMapDummy, catchPair.snd, fClassCastExcType);
       }
     } else {
@@ -2370,7 +2367,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // switch statement)
     WalkContext childContext = new BreakContext(context, loopLabel, breakTarget);
     Expression cond = n.getExpression();
-    List/* <Statement> */cases = n.statements();
+    List<Statement> cases = n.statements();
 
     // First compute the control flow edges for the various case labels
     for (int i = 0; i < cases.size(); i++) {
@@ -2661,7 +2658,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private CAstNode visit(TryStatement n, WalkContext context) {
-    List/* <CatchClause> */catchBlocks = n.catchClauses();
+    List<CatchClause> catchBlocks = n.catchClauses();
     Block finallyBlock = n.getFinally();
     Block tryBlock = n.getBody();
 
@@ -2674,8 +2671,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       TryCatchContext tc = new TryCatchContext(context, n);
 
       CAstNode tryNode = visitNode(tryBlock, tc);
-      for (Iterator iter = catchBlocks.iterator(); iter.hasNext();) {
-        tryNode = makeNode(context, fFactory, n, CAstNode.TRY, tryNode, visitNode((CatchClause) iter.next(), context));
+      for (CatchClause catchClause : catchBlocks) {
+        tryNode = makeNode(context, fFactory, n, CAstNode.TRY, tryNode, visitNode(catchClause, context));
       }
 
       // try/catch
@@ -2709,11 +2706,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     context.cfg().map(n, result);
 
-    Collection/* <Pair<Type,Node>> */catchNodes = context.getCatchTargets(label);
+    Collection<Pair<ITypeBinding, Object>> catchNodes = context.getCatchTargets(label);
 
-    for (Iterator iter = catchNodes.iterator(); iter.hasNext();) {
-      Pair/* <Type,Node> */catchNode = (Pair/* <Type,Node> */) iter.next();
-
+    for (Pair<ITypeBinding, Object> catchNode : catchNodes) {
       context.cfg().add(n, catchNode.snd, catchNode.fst);
     }
 
@@ -2721,12 +2716,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private void hookUpNPETargets(ASTNode n, WalkContext wc) {
-    Collection excTargets = wc.getCatchTargets(fNullPointerExcType);
+    Collection<Pair<ITypeBinding, Object>> excTargets = wc.getCatchTargets(fNullPointerExcType);
     if (!excTargets.isEmpty()) {
       // connect NPE exception edge to relevant catch targets
       // (presumably only one)
-      for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
-        Pair catchPair = (Pair) iterator.next();
+      for (Pair<ITypeBinding, Object> catchPair : excTargets) {
         wc.cfg().add(n, catchPair.snd, fNullPointerExcType);
       }
     } else {
@@ -2763,13 +2757,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else {
       TypeReference arrayTypeRef = fIdentityMapper.getTypeRef(newType);
 
-      List/* <Expression> */dims = n.dimensions();
+      List<Expression> dims = n.dimensions();
       CAstNode[] args = new CAstNode[dims.size() + 1];
 
       int idx = 0;
       args[idx++] = fFactory.makeConstant(arrayTypeRef);
-      for (Iterator iter = dims.iterator(); iter.hasNext();) {
-        Expression dimExpr = (Expression) iter.next();
+      for (Expression dimExpr : dims) {
         args[idx++] = visitNode(dimExpr, context);
       }
       return makeNode(context, fFactory, n, CAstNode.NEW, args);
@@ -3004,7 +2997,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("CompilationUnitEntity asked for AST-related entities, but it has no AST.");
       return null;
     }
@@ -3038,8 +3031,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection getQualifiers() {
-      return Collections.EMPTY_LIST;
+    public Collection<CAstQualifier> getQualifiers() {
+      return Collections.emptyList();
     }
 
     @Override
@@ -3134,8 +3127,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     TryCatchContext(WalkContext parent, TryStatement tryNode) {
       super(parent);
 
-      for (Iterator catchIter = tryNode.catchClauses().iterator(); catchIter.hasNext();) {
-        CatchClause c = (CatchClause) catchIter.next();
+      for (Iterator<CatchClause> catchIter = tryNode.catchClauses().iterator(); catchIter.hasNext();) {
+        CatchClause c = catchIter.next();
         Pair<ITypeBinding, Object> p = Pair.make(c.getException().resolveBinding().getType(), (Object) c);
 
         fCatchNodes.add(p);
