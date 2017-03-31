@@ -289,6 +289,7 @@ public class AndroidManifestXMLReader {
         /**
          *  All Tags in this Enum but UNIMPORTANT are relevant.
          */
+        @SuppressWarnings("unused")
         public boolean isRelevant() {
             return (this != Tag.UNIMPORTANT);
         }
@@ -314,6 +315,7 @@ public class AndroidManifestXMLReader {
         /**
          *  The Tag appears in the XML File using this name.
          */
+        @SuppressWarnings("unused")
         public String getName() {
             return this.tagName;
         }
@@ -344,6 +346,7 @@ public class AndroidManifestXMLReader {
             this.attrName = attrName;
         }
 
+        @SuppressWarnings("unused")
         public boolean isRelevantIn(Tag tag) {
             return tag.isRelevant(this);
         }

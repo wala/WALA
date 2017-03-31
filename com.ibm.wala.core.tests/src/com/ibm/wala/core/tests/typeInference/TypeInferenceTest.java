@@ -75,7 +75,7 @@ public class TypeInferenceTest extends WalaTestCase {
     try {
       cha = ClassHierarchyFactory.make(scope, factory);
     } catch (ClassHierarchyException e) {
-      throw new Exception();
+      throw new Exception(e);
     }
   }
 

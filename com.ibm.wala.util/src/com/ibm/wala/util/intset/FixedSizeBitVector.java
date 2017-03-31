@@ -79,7 +79,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
       int shiftBits = bit & LOW_MASK;
       bits[subscript(bit)] |= (1 << shiftBits);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid bit " + bit);
+      throw new IllegalArgumentException("invalid bit " + bit, e);
     }
   }
 
@@ -102,7 +102,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
       int shiftBits = bit & LOW_MASK;
       bits[subscript(bit)] &= ~(1 << shiftBits);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid bit: " + bit);
+      throw new IllegalArgumentException("invalid bit: " + bit, e);
     }
   }
 

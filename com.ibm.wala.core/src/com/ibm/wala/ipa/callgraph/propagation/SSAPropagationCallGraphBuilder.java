@@ -1890,6 +1890,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       */
     }
 
+    @SuppressWarnings("unused")
     private void handleAllReceivers(MutableIntSet receiverVals, InstanceKey[] keys, MutableBoolean sideEffect) {
       assert keys[0] == null;
       IntIterator receiverIter = receiverVals.intIterator();

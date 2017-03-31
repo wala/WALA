@@ -91,7 +91,7 @@ public class Table<T> {
       SimpleVector<T> r = rows.get(row);
       return r.get(column);
     } catch (IndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("row: " + row + " column: " + column);
+      throw new IllegalArgumentException("row: " + row + " column: " + column, e);
     }
   }
 

@@ -148,7 +148,7 @@ public class EclipseFileProvider extends FileProvider {
       url = fixupFileURLSpaces(url);
       return url;
     } catch (ExceptionInInitializerError e) {
-      throw new IOException("failure to get file URL for " + fileName);
+      throw new IOException("failure to get file URL for " + fileName, e);
     }
   }
 

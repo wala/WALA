@@ -68,9 +68,9 @@ public class StaticInitializer {
     return initialized;
   }
 
-  public StaticInitializer(CallGraph cg, IAnalysisCacheView cache) {
+  public StaticInitializer(CallGraph cg) {
     cha = cg.getClassHierarchy();
-    supergraph = ICFGSupergraph.make(cg, cache);
+    supergraph = ICFGSupergraph.make(cg);
   }
   
   /**

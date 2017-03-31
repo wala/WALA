@@ -261,7 +261,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
   public Iterator<T> getVariables() {
     return new FilterIterator<>(graph.iterator(), new Predicate<T>() {
       @Override public boolean test(T x) {
-        return x instanceof IVariable;
+        return x != null;
       }
     });
   }

@@ -83,8 +83,7 @@ public class InitializerTest {
     
     System.out.println("Start");
     
-    IAnalysisCacheView cache = new AnalysisCacheImpl();
-    StaticInitializer reachingDefs = new StaticInitializer(cg, cache);
+    StaticInitializer reachingDefs = new StaticInitializer(cg);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, IClass> result = reachingDefs.analyze();
     ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph = reachingDefs.getSupergraph();
     for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {

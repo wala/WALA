@@ -90,7 +90,7 @@ public abstract class FieldBasedCallGraphBuilder {
   private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
     MethodTargetSelector result = new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
     if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
-      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result, cache));
+      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result));
     }
     return result;
   }
@@ -272,6 +272,7 @@ public abstract class FieldBasedCallGraphBuilder {
 	  return flowGraph.getReachingSet(functionParam, monitor);
   }
 
+  @SuppressWarnings("unused")
   private OrdinalSet<FuncVertex> getConstructorTargets(FlowGraph flowGraph, CallVertex callVertex, IProgressMonitor monitor) throws CancelException {
     SSAAbstractInvokeInstruction invoke = callVertex.getInstruction();
     assert invoke.getDeclaredTarget().getName().equals(JavaScriptMethods.ctorAtom);

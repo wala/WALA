@@ -73,7 +73,7 @@ public class Bench {
             doException = true;
           }
         }
-        instrumenter = new OfflineInstrumenter(!doException);
+        instrumenter = new OfflineInstrumenter();
         instrumenter.setPassUnmodifiedClasses(true);
         instrumenter.beginTraversal();
         ClassInstrumenter ci;

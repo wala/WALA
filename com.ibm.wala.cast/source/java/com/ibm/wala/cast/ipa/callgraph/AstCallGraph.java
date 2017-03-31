@@ -83,10 +83,6 @@ public class AstCallGraph extends ExplicitCallGraph {
   public class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
-    private IR cachedIR;
-    
-    private DefUse cachedDU;
-    
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
     }

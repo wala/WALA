@@ -146,8 +146,6 @@ public class ParameterAccessor {
      *  @since  2013-10-19
      */
     public static class Parameter extends SSAValue {
-        /** Is Accessor constructed with IMethod or MethodReference */
-        private final BasedOn basedOn;      
         /** Implicit this or regular parameter? */
         private final ParamerterDisposition disp;   
         /** Add to number to get position in descriptor */
@@ -205,7 +203,6 @@ public class ParameterAccessor {
             }
 
             this.disp = disp;
-            this.basedOn = basedOn;
             this.descriptorOffset = descriptorOffset;
             super.isAssigned();
         }
