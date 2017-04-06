@@ -542,7 +542,7 @@ public class TabulationSolver<T, P, F> {
   /**
    * Handle lines [14 - 19] of the algorithm, propagating information into and across a call site.
    */
-  @SuppressWarnings({ "unused", "unused" })
+  @SuppressWarnings("unused")
   protected void processCall(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process call: " + edge);

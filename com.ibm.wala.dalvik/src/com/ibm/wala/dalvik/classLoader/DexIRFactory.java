@@ -16,7 +16,6 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ssa.DexSSABuilder;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
@@ -83,7 +82,6 @@ public class DexIRFactory extends DefaultIRFactory {
 
             @Override
             protected String instructionPosition(int instructionIndex) {
-                            try {
                 int bcIndex = method.getBytecodeIndex(instructionIndex);
                 int lineNumber = method.getLineNumber(bcIndex);
 
@@ -92,9 +90,6 @@ public class DexIRFactory extends DefaultIRFactory {
                 } else {
                     return "(line " + lineNumber + ")";
                 }
-                            } catch (InvalidClassFileException e) {
-                              return "";
-                            }
             }
 
             @Override

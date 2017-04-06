@@ -39,6 +39,7 @@ package foo.bar.hello.world;
 
 public class Misc {
 
+	@SuppressWarnings({ "cast", "unused" })
 	public static void main(String args[]) {
 		if ( "hello" instanceof Object ) {
 			System.out.println("strings are objects in java");

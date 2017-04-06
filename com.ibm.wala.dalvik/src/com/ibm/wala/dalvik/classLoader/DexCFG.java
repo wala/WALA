@@ -138,13 +138,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     private void makeBasicBlocks() {
         ExceptionHandler[][] handlers;
-        try {
-            handlers = dexMethod.getHandlers();
-        } catch (InvalidClassFileException e) {
-            e.printStackTrace();
-            Assertions.UNREACHABLE();
-            handlers = null;
-        }
+        handlers = dexMethod.getHandlers();
         boolean[] r = new boolean[getInstructions().length];
         boolean[] catchers = new boolean[getInstructions().length];
         // we initially start with both the entry and exit block.
@@ -561,13 +555,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
         private ExceptionHandler[] getExceptionHandlers() {
             ExceptionHandler[][] handlers;
-            try {
-                handlers = dexMethod.getHandlers();
-            } catch (InvalidClassFileException e) {
-                e.printStackTrace();
-                Assertions.UNREACHABLE();
-                handlers = null;
-            }
+            handlers = dexMethod.getHandlers();
             ExceptionHandler[] hs = handlers[getLastInstructionIndex()];
             return hs;
         }
