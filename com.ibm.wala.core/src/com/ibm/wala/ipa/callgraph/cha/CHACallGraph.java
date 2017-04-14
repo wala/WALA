@@ -65,20 +65,17 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
     @Override
     public IR getIR() {
-      assert false;
-      return null;
+      return cache.getIR(method);
     }
 
     @Override
     public DefUse getDU() {
-      assert false;
-      return null;
+      return cache.getDefUse(cache.getIR(method));
     }
 
     @Override
     public Iterator<NewSiteReference> iterateNewSites() {
-      assert false;
-      return null;
+      return getInterpreter(this).iterateNewSites(this);
     }
 
     @Override
