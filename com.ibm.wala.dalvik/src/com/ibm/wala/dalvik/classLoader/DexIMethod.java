@@ -140,7 +140,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -213,7 +212,7 @@ public class DexIMethod implements IBytecodeMethod {
 	//-------------------------------------------
 
 	public TypeReference[] getDeclaredExceptions()
-			throws InvalidClassFileException, UnsupportedOperationException {
+			throws UnsupportedOperationException {
 /** BEGIN Custom change: Variable Names in synth. methods */
 		assert (eMethod.method != null);
         if (myClass.getClassDefItem().getAnnotations() == null) {
@@ -580,7 +579,7 @@ public class DexIMethod implements IBytecodeMethod {
 	//-------------------------------------------
 
 
-	public int getBytecodeIndex(int i) throws InvalidClassFileException {
+	public int getBytecodeIndex(int i) {
 		// TODO Auto-generated method stub
 		//      System.out.println("DexIMethod: getBytecodeIndex() possibly not implemented correctly");
 		//      Integer.valueOf(eMethod.codeItem.getInstructions()[i].opcode.value);
@@ -590,7 +589,7 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 
-	public ExceptionHandler[][] getHandlers() throws InvalidClassFileException {
+	public ExceptionHandler[][] getHandlers() {
 
 		if (handlers != null)
 			return handlers;
@@ -3213,14 +3212,12 @@ public class DexIMethod implements IBytecodeMethod {
 
     /**
      *
-     * @throws InvalidClassFileException
      * @throws UnsupportedOperationException
      *
      * @todo    Review this implementation - it may be horribly wrong!
      */
 	@Override
-	public Collection<CallSiteReference> getCallSites()
-			throws InvalidClassFileException {
+	public Collection<CallSiteReference> getCallSites() {
         Collection<CallSiteReference> empty = Collections.emptySet();
         if (isNative()) {
             return empty;
@@ -3251,12 +3248,12 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 	@Override
-	public SourcePosition getSourcePosition(int instructionIndex) throws InvalidClassFileException {
+	public SourcePosition getSourcePosition(int instructionIndex) {
 		return null;
 	}
 
 	@Override
-	public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
+	public SourcePosition getParameterSourcePosition(int paramNum) {
 		return null;
 	}
 

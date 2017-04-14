@@ -53,7 +53,6 @@ import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;

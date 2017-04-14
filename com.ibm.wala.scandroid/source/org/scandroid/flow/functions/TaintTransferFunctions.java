@@ -142,8 +142,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 				.expireAfterWrite(10, TimeUnit.MINUTES)
 				.build(new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
 					@Override
-					public IUnaryFlowFunction load(BlockPair<E> key)
-							throws Exception {
+					public IUnaryFlowFunction load(BlockPair<E> key) {
 						return makeCallFlowFunction(key.fst, key.snd, null);
 					}
 				});
@@ -151,8 +150,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 				.expireAfterWrite(10, TimeUnit.MINUTES)
 				.build(new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
 					@Override
-					public IUnaryFlowFunction load(BlockPair<E> key)
-							throws Exception {
+					public IUnaryFlowFunction load(BlockPair<E> key) {
 						return makeNormalFlowFunction(key.fst, key.snd);
 					}
 				});
