@@ -24,6 +24,5 @@ Export-Package: com.ibm.wala.dataflow.graph,
  com.ibm.wala.util.processes,
  com.ibm.wala.util.tables,
  com.ibm.wala.viz
-Bundle-ClassPath: walaUtil.jar
 Bundle-Vendor: IBM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
