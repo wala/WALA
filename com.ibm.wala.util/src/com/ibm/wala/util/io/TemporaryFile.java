@@ -31,6 +31,9 @@ public class TemporaryFile {
   }
 
   public static File urlToFile(String fileName, URL input) throws IOException {
+    if (input == null) {
+      throw new NullPointerException("input == null");
+    }
     Path filePath = outputDir.resolve(fileName);
     return urlToFile(filePath.toFile(), input);
   }
