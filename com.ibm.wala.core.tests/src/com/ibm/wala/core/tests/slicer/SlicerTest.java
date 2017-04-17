@@ -308,7 +308,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
-
+    Assert.assertEquals(slice.toString(), 5, countApplicationNormals(slice));
   }
 
   @Test
@@ -873,6 +873,18 @@ public class SlicerTest {
     return count;
   }
 
+  public static int countApplicationNormals(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
+        if (scope.isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
   public static int countConditionals(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
