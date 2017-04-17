@@ -42,3 +42,4 @@ com.ibm.wala.dalvik.test/data/sample.cup
 com.ibm.wala.dalvik.test/parser.java
 com.ibm.wala.dalvik.test/report
 com.ibm.wala.dalvik.test/sym.java
+results
