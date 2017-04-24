@@ -758,7 +758,7 @@ public class SlicerTest {
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    SDG<?> sdg = new SDG<>(cg, builder.getPointerAnalysis(), InstanceKey.class, DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
+    SDG<?> sdg = new SDG<>(cg, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
     GraphIntegrity.check(sdg);
   }
 
