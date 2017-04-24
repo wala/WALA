@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.slicer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -66,6 +67,8 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
@@ -76,9 +79,27 @@ public class SlicerTest {
 
   private static AnalysisScope cachedScope;
 
+  // more aggressive exclusions to avoid library blowup
+  // in interprocedural tests
+  private static final String EXCLUSIONS = "java\\/awt\\/.*\n" + 
+      "javax\\/swing\\/.*\n" + 
+      "sun\\/awt\\/.*\n" + 
+      "sun\\/swing\\/.*\n" + 
+      "com\\/sun\\/.*\n" + 
+      "sun\\/.*\n" + 
+      "org\\/netbeans\\/.*\n" + 
+      "org\\/openide\\/.*\n" + 
+      "com\\/ibm\\/crypto\\/.*\n" + 
+      "com\\/ibm\\/security\\/.*\n" + 
+      "org\\/apache\\/xerces\\/.*\n" + 
+      "java\\/security\\/.*\n" + 
+      "";
+  
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
-      cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+      cachedScope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
+      cachedScope.setExclusions(new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
+
     }
     return cachedScope;
   }
@@ -270,7 +291,7 @@ public class SlicerTest {
         TestConstants.SLICE8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode process = findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
@@ -286,6 +307,29 @@ public class SlicerTest {
     slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     Assert.assertEquals(slice.toString(), 4, slice.size());
+  }
+  
+  @Test
+  public void testSlice9() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE9_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = findMainMethod(cg);
+    Statement s = findCallToDoNothing(main);
+    System.err.println("Statement: " + s);
+    // compute a backward slice, with data dependence and no exceptional control dependence
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    //dumpSlice(slice);
+    Assert.assertEquals(/*slice.toString(), */5, countApplicationNormals(slice));
   }
 
   @Test
@@ -850,6 +894,18 @@ public class SlicerTest {
     return count;
   }
 
+  public static int countApplicationNormals(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
+        if (scope.isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
   public static int countConditionals(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
