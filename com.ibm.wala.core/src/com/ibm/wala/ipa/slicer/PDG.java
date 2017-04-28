@@ -22,6 +22,7 @@ import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -76,12 +77,12 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
-/** BEGIN Custom change: control deps */                
+/** BEGIN Custom change: control deps */
   public enum Dependency {CONTROL_DEP, DATA_AND_CONTROL_DEP};
-  
+
   private final SlowSparseNumberedLabeledGraph<Statement, Dependency> delegate =
     new SlowSparseNumberedLabeledGraph<Statement, Dependency>(Dependency.DATA_AND_CONTROL_DEP);
-/** END Custom change: control deps */                
+/** END Custom change: control deps */
 
   private final static boolean VERBOSE = false;
 
@@ -235,12 +236,12 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph = ir.getControlFlowGraph();
     if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
       PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCFG = ExceptionPrunedCFG.make(controlFlowGraph);
-      // In case the CFG has only the entry and exit nodes left 
+      // In case the CFG has only the entry and exit nodes left
       // and no edges because the only control dependencies
       // were exceptional, simply return because at this point there are no nodes.
       // Otherwise, later this may raise an Exception.
-      if (prunedCFG.getNumberOfNodes() == 2 
-          && prunedCFG.containsNode(controlFlowGraph.entry()) 
+      if (prunedCFG.getNumberOfNodes() == 2
+          && prunedCFG.containsNode(controlFlowGraph.entry())
           && prunedCFG.containsNode(controlFlowGraph.exit())
           && GraphUtil.countEdges(prunedCFG) == 0) {
         return;
@@ -299,9 +300,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
               delegate.addEdge(src, dest);
-/** BEGIN Custom change: control deps */                
+/** BEGIN Custom change: control deps */
               delegate.addEdge(src, dest, Dependency.CONTROL_DEP);
-/** END Custom change: control deps */                
+/** END Custom change: control deps */
             }
           }
         }
@@ -318,9 +319,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       for (SSAInstruction st : exitDom) {
         Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
         delegate.addEdge(methodEntry, dest);
-/** BEGIN Custom change: control deps */                
+/** BEGIN Custom change: control deps */
         delegate.addEdge(methodEntry, dest, Dependency.CONTROL_DEP);
-/** END Custom change: control deps */                
+/** END Custom change: control deps */
       }
     }
     // add CD from method entry to all callee parameter assignments
@@ -360,24 +361,24 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
               assert pss != null;
               Statement pst = ssaInstruction2Statement(pss, ir, instructionIndices);
               delegate.addEdge(pst, phiSt);
-/** BEGIN Custom change: control deps */                
+/** BEGIN Custom change: control deps */
               delegate.addEdge(pst, phiSt, Dependency.CONTROL_DEP);
-/** END Custom change: control deps */                
+/** END Custom change: control deps */
             } else {
               for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); cdps.hasNext();) {
                 ISSABasicBlock cpb = cdps.next();
-/** BEGIN Custom change: control deps */                
+/** BEGIN Custom change: control deps */
                 if (cpb.getLastInstructionIndex() < 0) {
                   continue;
                 }
-/** END Custom change: control deps */                
+/** END Custom change: control deps */
                 SSAInstruction cps = ir.getInstructions()[cpb.getLastInstructionIndex()];
                 assert cps != null : "unexpected null final instruction for CDG predecessor " + cpb + " in node " + node;
                 Statement cpst = ssaInstruction2Statement(cps, ir, instructionIndices);
                 delegate.addEdge(cpst, phiSt);
-/** BEGIN Custom change: control deps */                
+/** BEGIN Custom change: control deps */
                 delegate.addEdge(cpst, phiSt, Dependency.CONTROL_DEP);
-/** END Custom change: control deps */                
+/** END Custom change: control deps */
               }
             }
             phiUseIndex++;
@@ -389,11 +390,11 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * Create all data dependence edges in this PDG.
-   * 
+   *
    * Scalar dependences are taken from SSA def-use information.
-   * 
+   *
    * Heap dependences are computed by a reaching defs analysis.
-   * 
+   *
    * @param pa
    * @param mod
    */
@@ -896,7 +897,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * create nodes representing defs of the return values
-   * 
+   *
    * @param mod the set of heap locations which may be written (transitively) by this node. These are logically parameters in the
    *          SDG.
    * @param dOptions
@@ -926,24 +927,29 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * create nodes representing defs of formal parameters
-   * 
+   *
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    */
   private void createCalleeParams() {
     if (paramCalleeStatements == null) {
       ArrayList<Statement> list = new ArrayList<Statement>();
-      int paramCount = node.getMethod().getNumberOfParameters();
-      
-      for (Iterator<CGNode> callers = cg.getPredNodes(node); callers.hasNext(); ) {
-        CGNode caller = callers.next();
-        IR callerIR = caller.getIR();
-        for (Iterator<CallSiteReference> sites = cg.getPossibleSites(caller, node); sites.hasNext(); ) {
-          for (SSAAbstractInvokeInstruction inst : callerIR.getCalls(sites.next())) {
-           paramCount = Math.max(paramCount, inst.getNumberOfParameters()-1);
+      IMethod method = node.getMethod();
+      int paramCount = method.getNumberOfParameters();
+
+      // some languages let us pass more parameters at a call site than are declared
+      // in such cases, iterate over all call sites to find the right param count (gag)
+      if (method.getDeclaringClass().getClassLoader().getLanguage().canPassMismatchedNumberOfParameters()) {
+        for (Iterator<CGNode> callers = cg.getPredNodes(node); callers.hasNext(); ) {
+          CGNode caller = callers.next();
+          IR callerIR = caller.getIR();
+          for (Iterator<CallSiteReference> sites = cg.getPossibleSites(caller, node); sites.hasNext(); ) {
+            for (SSAAbstractInvokeInstruction inst : callerIR.getCalls(sites.next())) {
+             paramCount = Math.max(paramCount, inst.getNumberOfParameters()-1);
+            }
           }
         }
       }
-      
+
       for (int i = 1; i <= paramCount; i++) {
         ParamCallee s = new ParamCallee(node, i);
         delegate.addNode(s);

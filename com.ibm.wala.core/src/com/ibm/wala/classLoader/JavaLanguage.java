@@ -764,4 +764,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public boolean methodsHaveDeclaredParameterTypes() {
     return true;
   }
+
+  @Override
+  public boolean canPassMismatchedNumberOfParameters() {
+    return false;
+  }
 }

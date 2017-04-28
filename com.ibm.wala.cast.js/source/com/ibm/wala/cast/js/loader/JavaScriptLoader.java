@@ -668,6 +668,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return false;
     }
 
+    @Override
+    public boolean canPassMismatchedNumberOfParameters() {
+      return true;
+    }
+
   };
 
   private static final Map<Selector, IMethod> emptyMap1 = Collections.emptyMap();
