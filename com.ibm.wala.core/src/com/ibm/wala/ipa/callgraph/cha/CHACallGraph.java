@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.cha;
 
 import java.lang.ref.SoftReference;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -138,17 +139,24 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return cha;
   }
 
+  private final Map<CallSiteReference, Set<IMethod>> targetCache = HashMapFactory.make();
+  
   private Iterator<IMethod> getPossibleTargets(CallSiteReference site) {
-    if (site.isDispatch()) {
-      return cha.getPossibleTargets(site.getDeclaredTarget()).iterator();
-    } else {
-      IMethod m = cha.resolveMethod(site.getDeclaredTarget());
-      if (m != null) {
-        return new NonNullSingletonIterator<IMethod>(m);
+    Set<IMethod> result = targetCache.get(site);
+    if (result == null) {
+      if (site.isDispatch()) {
+        result = cha.getPossibleTargets(site.getDeclaredTarget());
       } else {
-        return EmptyIterator.instance();
+        IMethod m = cha.resolveMethod(site.getDeclaredTarget());
+        if (m != null) {
+          result = Collections.singleton(m);
+        } else {
+          result = Collections.emptySet();
+        }
       }
+      targetCache.put(site, result);
     }
+    return result.iterator();
   }
 
   @Override
