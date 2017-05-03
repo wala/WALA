@@ -53,7 +53,7 @@ public class CISlicer {
   private final Graph<Statement> depGraph;
 
   public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, ModRef.make(InstanceKey.class), dOptions, cOptions);
+    this(cg, pa, ModRef.make(), dOptions, cOptions);
   }
 
   public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions)
@@ -95,7 +95,7 @@ public class CISlicer {
    * Compute the set of pointer keys each statement mods
    */
   public static Map<Statement, Set<PointerKey>> scanForMod(SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa) {
-    return scanForMod(sdg, pa, false, ModRef.make(InstanceKey.class));
+    return scanForMod(sdg, pa, false, ModRef.make());
   }
 
   /**
@@ -105,7 +105,7 @@ public class CISlicer {
     if (sdg == null) {
       throw new IllegalArgumentException("null sdg");
     }
-    return scanForRef(sdg, pa, ModRef.make(InstanceKey.class));
+    return scanForRef(sdg, pa, ModRef.make());
   }
 
   /**
