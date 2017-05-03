@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.tree.CAstNode;
@@ -24,8 +25,6 @@ import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-
-import junit.framework.Assert;
 
 public class TestCAstPattern extends WalaTestCase {
 

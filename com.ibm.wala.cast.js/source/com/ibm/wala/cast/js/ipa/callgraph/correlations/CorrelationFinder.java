@@ -86,6 +86,7 @@ public class CorrelationFinder {
     this.translatorFactory = translatorFactory;
   }
 
+  @SuppressWarnings("unused")
   public static CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
     AstMethod astMethod = (AstMethod)method;
     DefUse du = new DefUse(ir);

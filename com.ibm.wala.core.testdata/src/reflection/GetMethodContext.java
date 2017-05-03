@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
  * A test targeting the {@link com.ibm.wala.analysis.reflection.GetMethodContext}.
  * @author Michael Heilmann
  */
+@SuppressWarnings("javadoc")
 public class GetMethodContext {
 
   public static class A {

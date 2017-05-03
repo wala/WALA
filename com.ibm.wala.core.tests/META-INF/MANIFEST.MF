@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
-Bundle-Version: 1.3.10.qualifier
+Bundle-Version: 1.4.3.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,

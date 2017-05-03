@@ -213,6 +213,7 @@ public class AnalysisScope {
   /**
    * Add a jar file to the scope for a loader
    */
+  @SuppressWarnings("unused")
   public void addToScope(ClassLoaderReference loader, JarFile file) {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
@@ -224,6 +225,7 @@ public class AnalysisScope {
   /**
    * Add a module to the scope for a loader
    */
+  @SuppressWarnings("unused")
   public void addToScope(ClassLoaderReference loader, Module m) {
     if (m == null) {
       throw new IllegalArgumentException("null m");
@@ -252,6 +254,7 @@ public class AnalysisScope {
   /**
    * Add a module file to the scope for a loader. The classes in the added jar file will override classes added to the scope so far.
    */
+  @SuppressWarnings("unused")
   public void addToScopeHead(ClassLoaderReference loader, Module m) {
     if (m == null) {
       throw new IllegalArgumentException("null m");

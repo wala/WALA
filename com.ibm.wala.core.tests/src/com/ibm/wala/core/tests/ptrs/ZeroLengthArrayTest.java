@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.ptrs;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -37,8 +38,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.OrdinalSet;
-
-import junit.framework.Assert;
 
 public class ZeroLengthArrayTest {
 

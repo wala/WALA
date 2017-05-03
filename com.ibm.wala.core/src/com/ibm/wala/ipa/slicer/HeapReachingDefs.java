@@ -71,11 +71,11 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
   private static final boolean VERBOSE = false;
 
-  private final ModRef modRef;
+  private final ModRef<T> modRef;
 
   private final ExtendedHeapModel heapModel;
   
-  public HeapReachingDefs(ModRef modRef, ExtendedHeapModel heapModel) {
+  public HeapReachingDefs(ModRef<T> modRef, ExtendedHeapModel heapModel) {
     this.modRef = modRef;
     this.heapModel = heapModel;
   }
@@ -180,7 +180,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
      * For each pointerKey, which statements may def it
      */
     private Map<PointerKey, MutableIntSet> initPointerKeyMod(OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
-        PointerAnalysis<? extends InstanceKey> pa) {
+        PointerAnalysis<T> pa) {
       Map<PointerKey, MutableIntSet> pointerKeyMod = HashMapFactory.make();
       for (Statement s : domain) {
         switch (s.getKind()) {
@@ -419,7 +419,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
     return true;
   }
 
-  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis<? extends InstanceKey> pa, HeapExclusions exclusions) {
+  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis<T> pa, HeapExclusions exclusions) {
     switch (s.getKind()) {
     case NORMAL:
       NormalStatement ns = (NormalStatement) s;
@@ -480,7 +480,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     private final OrdinalSetMapping<Statement> domain;
 
-    private final PointerAnalysis<? extends InstanceKey> pa;
+    private final PointerAnalysis<T> pa;
 
     private final Map<Integer, NormalStatement> ssaInstructionIndex2Statement;
 
@@ -492,7 +492,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
      */
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
-    public RD(CGNode node, ExplodedControlFlowGraph cfg, PointerAnalysis<? extends InstanceKey> pa2, OrdinalSetMapping<Statement> domain,
+    public RD(CGNode node, ExplodedControlFlowGraph cfg, PointerAnalysis<T> pa2, OrdinalSetMapping<Statement> domain,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
       this.node = node;
       this.cfg = cfg;

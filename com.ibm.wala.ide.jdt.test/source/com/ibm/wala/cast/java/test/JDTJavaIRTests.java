@@ -44,6 +44,7 @@ import java.util.List;
 import com.ibm.wala.cast.java.jdt.test.Activator;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil.ZippedProjectData;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 public class JDTJavaIRTests extends JavaIRTests {
   
@@ -72,7 +73,7 @@ public class JDTJavaIRTests extends JavaIRTests {
   }
 
   @Override
-  protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+  protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     return JDTJavaTest.makeAnalysisEngine(mainClassDescriptors, sources, libs, project);
   }
 }

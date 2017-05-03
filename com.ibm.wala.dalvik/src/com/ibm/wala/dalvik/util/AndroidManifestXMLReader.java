@@ -97,7 +97,7 @@ public class AndroidManifestXMLReader {
      */
     private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
 
-    public AndroidManifestXMLReader(File xmlFile) throws IOException {
+    public AndroidManifestXMLReader(File xmlFile) {
         if (xmlFile == null) {
             throw new IllegalArgumentException("xmlFile may not be null");
         }
@@ -134,11 +134,10 @@ public class AndroidManifestXMLReader {
         public Set<Tag> getSubTags();
     }
 
-    private interface HistoryKey {} ;
+    private interface HistoryKey {}
     /**
      *  Only includes relevant tags.
      */
-    @SuppressWarnings("unchecked")
     private enum Tag implements HistoryKey {
         /**
          *  This tag is nat an actual part of the document.
@@ -290,6 +289,7 @@ public class AndroidManifestXMLReader {
         /**
          *  All Tags in this Enum but UNIMPORTANT are relevant.
          */
+        @SuppressWarnings("unused")
         public boolean isRelevant() {
             return (this != Tag.UNIMPORTANT);
         }
@@ -315,6 +315,7 @@ public class AndroidManifestXMLReader {
         /**
          *  The Tag appears in the XML File using this name.
          */
+        @SuppressWarnings("unused")
         public String getName() {
             return this.tagName;
         }
@@ -345,6 +346,7 @@ public class AndroidManifestXMLReader {
             this.attrName = attrName;
         }
 
+        @SuppressWarnings("unused")
         public boolean isRelevantIn(Tag tag) {
             return tag.isRelevant(this);
         }
@@ -483,9 +485,6 @@ public class AndroidManifestXMLReader {
      *  Attributes.
      */
     private static class FinalItem extends ParserItem {
-        public FinalItem() {
-            super();
-        }
         @Override
         public void leave() {
             final Set<Tag> subs = self.getAllowedSubTags();
@@ -507,18 +506,12 @@ public class AndroidManifestXMLReader {
      *  It's like FinalItem but may contain sub-tags.
      */
     private static class NoOpItem extends ParserItem {
-        public NoOpItem() {
-            super();
-        }
     }
 
     /**
      *  The root-element of an AndroidManifest contains the package.
      */
     private static class ManifestItem extends ParserItem {
-        public ManifestItem() {
-            super();
-        }
         @Override
         public void enter(Attributes saxAttrs) {
             super.enter(saxAttrs);
@@ -532,9 +525,6 @@ public class AndroidManifestXMLReader {
      *  @todo   Handle the URI
      */
     private static class IntentItem extends ParserItem {
-        public IntentItem() {
-            super();
-        }
         @Override
         public void leave() {
             Set<Tag> allowedTags = EnumSet.copyOf(self.getAllowedSubTags());
@@ -604,9 +594,6 @@ public class AndroidManifestXMLReader {
     }
 
     private static class ComponentItem extends ParserItem {
-        public ComponentItem() {
-            super();
-        }
         @Override
          public void leave() {
             final Set<Tag> allowedTags = self.getAllowedSubTags();

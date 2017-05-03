@@ -77,7 +77,6 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -282,7 +281,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     	  return getAnnotations((Set<AnnotationVisibility>)null);
       }
 
-      public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
+      public Collection<Annotation> getAnnotations(boolean runtimeInvisible) {
   		return getAnnotations(getTypes(runtimeInvisible));
       }
 
@@ -344,7 +343,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
      * @see com.ibm.wala.classLoader.BytecodeClass#computeDeclaredMethods()
      */
     @Override
-    protected IMethod[] computeDeclaredMethods() throws InvalidClassFileException {
+    protected IMethod[] computeDeclaredMethods() {
     	ArrayList<IMethod> methodsAL = new ArrayList<>();
     	    	
         if (methods == null && classDef.getClassData() == null)
@@ -398,10 +397,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
      */
     public IMethod getClassInitializer() {
         if (methods == null){
-            try {
-                computeDeclaredMethods();
-            } catch (InvalidClassFileException e) {
-            }
+            computeDeclaredMethods();
         }
 //      return construcorId!=-1?methods[construcorId]:null;
         return clinitId!=-1?methods[clinitId]:null;

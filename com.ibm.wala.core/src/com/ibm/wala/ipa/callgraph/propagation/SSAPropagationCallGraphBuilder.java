@@ -30,7 +30,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.fixpoint.AbstractOperator;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -45,7 +44,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -366,6 +364,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param exceptionVar PointerKey representing a pointer to an exception value
    * @param catchClasses the types "caught" by the exceptionVar
    */
+  @SuppressWarnings("unused")
   private void addExceptionDefConstraints(IRView ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
       Set<IClass> catchClasses) {
     if (DEBUG) {
@@ -1601,6 +1600,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     processCallingConstraints(caller, instruction, target, constParams, uniqueCatchKey);
   }
   
+  @SuppressWarnings("unused")
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
     // TODO: i'd like to enable this optimization, but it's a little tricky
@@ -1890,6 +1890,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       */
     }
 
+    @SuppressWarnings("unused")
     private void handleAllReceivers(MutableIntSet receiverVals, InstanceKey[] keys, MutableBoolean sideEffect) {
       assert keys[0] == null;
       IntIterator receiverIter = receiverVals.intIterator();

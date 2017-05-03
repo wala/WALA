@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jsdt
 Bundle-SymbolicName: com.ibm.wala.ide.jsdt
-Bundle-Version: 1.3.10.qualifier
+Bundle-Version: 1.4.3.qualifier
 Bundle-Activator: com.ibm.wala.ide.jsdt.Activator
 Bundle-Vendor: IBM
 Require-Bundle: org.eclipse.core.runtime,

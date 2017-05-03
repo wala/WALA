@@ -62,21 +62,16 @@
      <available file="${plugin.destination}/data/android.jar" property="android.jar.present"/>
    </target>
 
-   <target name="copyDxJar" depends="dxJarPresent" unless="dx.jar.present">
-	<fail unless="env.ANDROID_HOME" message="ANDROID_HOME is not set! Set the environment variable or copy dx.jar manually." />
-	<mkdir dir="${basedir}/lib/"/>
-	<copy tofile="${basedir}/lib/dx.jar">
-		<first>
-			<fileset dir="${env.ANDROID_HOME}" includes="build-tools/*/lib/dx.jar"/>
-		</first>
-	</copy>
-   </target>
+	<target name="fetchDxJar" depends="dxJarPresent" unless="dx.jar.present">
+		<mkdir dir="${basedir}/lib/"/>
+		<get src="http://central.maven.org/maven2/com/google/android/tools/dx/1.7/dx-1.7.jar" dest="${basedir}/lib/dx.jar" />
+	</target>
 
    <target name="dxJarPresent" depends="init">
 	<available file="${basedir}/lib/dx.jar" property="dx.jar.present"/>
    </target>
 
-   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchAndroidJar,copyDxJar" />
+	<target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchAndroidJar,fetchDxJar" />
 
 	<target name="init" depends="properties">
 		<condition property="pluginTemp" value="${buildTempFolder}/plugins">

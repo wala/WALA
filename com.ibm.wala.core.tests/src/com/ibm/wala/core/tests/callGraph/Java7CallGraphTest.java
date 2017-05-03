@@ -43,7 +43,9 @@ import com.ibm.wala.util.io.TemporaryFile;
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
   @Test public void testOcamlHelloHash() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
-    testOCamlJar("hello_hash.jar");
+    if (!"True".equals(System.getenv("APPVEYOR"))) {
+      testOCamlJar("hello_hash.jar");
+    }
   }
 
   private void testOCamlJar(String jarFile, String... args) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {   

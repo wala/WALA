@@ -56,7 +56,7 @@ public class PDFCallGraph {
     Collection<String> result = HashSetFactory.make();
     for (int i = 0; i < directories.length; i++) {
       for (Iterator<File> it = FileUtil.listFiles(directories[i], ".*\\.jar", true).iterator(); it.hasNext();) {
-        File f = (File) it.next();
+        File f = it.next();
         result.add(f.getAbsolutePath());
       }
     }
@@ -198,15 +198,9 @@ public class PDFCallGraph {
   private static class ApplicationLoaderFilter extends Predicate<CGNode> {
 
     @Override public boolean test(CGNode o) {
-      if (o instanceof CGNode) {
-        CGNode n = (CGNode) o;
-        return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
-      } else if (o instanceof LocalPointerKey) {
-        LocalPointerKey l = (LocalPointerKey) o;
-        return test(l.getNode());
-      } else {
+      if (o == null)
         return false;
-      }
+      return o.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
     }
   }
 }

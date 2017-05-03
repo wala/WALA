@@ -53,8 +53,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  This model should not be particular useful in practice. However it might come in
  *  handy for debugging purposes or as a skeleton for an other Model.
  *
- *  {@inheritDoc}
- *
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  *  @since      2013-09-18
  */

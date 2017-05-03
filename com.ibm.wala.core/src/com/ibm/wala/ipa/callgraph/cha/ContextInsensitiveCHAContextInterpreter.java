@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.debug.Assertions;
@@ -36,6 +37,18 @@ public class ContextInsensitiveCHAContextInterpreter implements CHAContextInterp
       e.printStackTrace();
       Assertions.UNREACHABLE();
       return null;
+    }
+  }
+
+  @Override
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    try {
+      return CodeScanner.getNewSites(node.getMethod()).iterator();
+    } catch (InvalidClassFileException e) {
+      throw new RuntimeException(e);
     }
   }
 

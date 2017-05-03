@@ -19,12 +19,12 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 public interface MemoryAccessMap {
 
   /**
-   * @return {@link Collection}&lt;{@link FieldAccess}&gt;
+   * @return {@link Collection}&lt;{@link MemoryAccess}&gt;
    */
   public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
 
   /**
-   * @return {@link Collection}&lt;{@link FieldAccess}&gt;
+   * @return {@link Collection}&lt;{@link MemoryAccess}&gt;
    */
   public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
   

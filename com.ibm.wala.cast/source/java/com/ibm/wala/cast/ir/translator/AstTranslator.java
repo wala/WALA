@@ -84,7 +84,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntSet;
@@ -545,7 +544,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * basic block implementation used in the CFGs constructed during the
    * IR-generating AST traversal
    */
-  protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock<SSAInstruction> {
+  protected final static class PreBasicBlock implements IBasicBlock<SSAInstruction> {
     private static final int NORMAL = 0;
 
     private static final int HANDLER = 1;
@@ -700,7 +699,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * holds the control-flow graph as it is being constructed. When construction
    * is complete, information is stored in an {@link AstCFG}
    */
-  @SuppressWarnings("javadoc")
   public final class IncipientCFG extends SparseNumberedGraph<PreBasicBlock> {
 
     protected class Unwind {
@@ -2831,7 +2829,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
     }
 
-    @SuppressWarnings("unchecked")
     AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs,
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet, Set<Access> accesses) {

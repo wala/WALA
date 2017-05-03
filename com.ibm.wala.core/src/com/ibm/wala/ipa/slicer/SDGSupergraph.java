@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.Predicate;
@@ -26,7 +27,7 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * A wrapper around an SDG to make it look like a supergraph for tabulation.
  */
-class SDGSupergraph implements ISupergraph<Statement, PDG> {
+class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>> {
 
   private final ISDG sdg;
 
@@ -41,7 +42,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   @Override
-  public Graph<PDG> getProcedureGraph() {
+  public Graph<PDG<InstanceKey>> getProcedureGraph() {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -64,24 +65,24 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
   @Override
-  public Iterator<? extends Statement> getCallSites(Statement r, PDG callee) {
+  public Iterator<? extends Statement> getCallSites(Statement r, PDG<? extends InstanceKey> callee) {
     switch (r.getKind()) {
     case EXC_RET_CALLER: {
       ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getInstruction();
-      PDG pdg = getProcOf(r);
+      PDG<?> pdg = getProcOf(r);
       return pdg.getCallStatements(call).iterator();
     }
     case NORMAL_RET_CALLER: {
       NormalReturnCaller n = (NormalReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getInstruction();
-      PDG pdg = getProcOf(r);
+      PDG<?> pdg = getProcOf(r);
       return pdg.getCallStatements(call).iterator();
     }
     case HEAP_RET_CALLER: {
       HeapStatement.HeapReturnCaller n = (HeapStatement.HeapReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getCall();
-      PDG pdg = getProcOf(r);
+      PDG<?> pdg = getProcOf(r);
       return pdg.getCallStatements(call).iterator();
     }
     default:
@@ -97,7 +98,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
     switch (call.getKind()) {
     case NORMAL:
-      Predicate f = new Predicate() {
+      Predicate<?> f = new Predicate() {
         @Override public boolean test(Object o) {
           Statement s = (Statement) o;
           return isEntry(s);
@@ -117,7 +118,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
   @Override
-  public Statement[] getEntriesForProcedure(PDG procedure) {
+  public Statement[] getEntriesForProcedure(PDG<? extends InstanceKey> procedure) {
     Statement[] normal = procedure.getParamCalleeStatements();
     Statement[] result = new Statement[normal.length + 1];
     result[0] = new MethodEntryStatement(procedure.getCallGraphNode());
@@ -129,7 +130,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getExitsForProcedure(java.lang.Object)
    */
   @Override
-  public Statement[] getExitsForProcedure(PDG procedure) {
+  public Statement[] getExitsForProcedure(PDG<? extends InstanceKey> procedure) {
     Statement[] normal = procedure.getReturnStatements();
     Statement[] result = new Statement[normal.length + 1];
     result[0] = new MethodExitStatement(procedure.getCallGraphNode());
@@ -141,7 +142,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
    */
   @Override
-  public Statement getLocalBlock(PDG procedure, int i) {
+  public Statement getLocalBlock(PDG<? extends InstanceKey> procedure, int i) {
     return procedure.getNode(i);
   }
 
@@ -150,7 +151,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    */
   @Override
   public int getLocalBlockNumber(Statement n) {
-    PDG pdg = getProcOf(n);
+    PDG<?> pdg = getProcOf(n);
     return pdg.getNumber(n);
   }
 
@@ -171,7 +172,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
   @Override
-  public int getNumberOfBlocks(PDG procedure) {
+  public int getNumberOfBlocks(PDG<? extends InstanceKey> procedure) {
     Assertions.UNREACHABLE();
     return 0;
   }
@@ -180,9 +181,9 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcOf(java.lang.Object)
    */
   @Override
-  public PDG getProcOf(Statement n) {
+  public PDG<? extends InstanceKey> getProcOf(Statement n) {
     CGNode node = n.getNode();
-    PDG result = sdg.getPDG(node);
+    PDG<? extends InstanceKey> result = sdg.getPDG(node);
     if (result == null) {
       Assertions.UNREACHABLE("panic: " + n + " " + node);
     }
@@ -193,24 +194,24 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
   @Override
-  public Iterator<? extends Statement> getReturnSites(Statement call, PDG callee) {
+  public Iterator<? extends Statement> getReturnSites(Statement call, PDG<? extends InstanceKey> callee) {
     switch (call.getKind()) {
     case PARAM_CALLER: {
       ParamCaller n = (ParamCaller) call;
       SSAAbstractInvokeInstruction st = n.getInstruction();
-      PDG pdg = getProcOf(call);
+      PDG<?> pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
     case HEAP_PARAM_CALLER: {
       HeapStatement.HeapParamCaller n = (HeapStatement.HeapParamCaller) call;
       SSAAbstractInvokeInstruction st = n.getCall();
-      PDG pdg = getProcOf(call);
+      PDG<?> pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
     case NORMAL: {
       NormalStatement n = (NormalStatement) call;
       SSAAbstractInvokeInstruction st = (SSAAbstractInvokeInstruction) n.getInstruction();
-      PDG pdg = getProcOf(call);
+      PDG<?> pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
     default:

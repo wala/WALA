@@ -23,7 +23,7 @@ public class OnlineDynamicCallGraph implements ClassFileTransformer {
   private Writer out = new PrintWriter(System.err);
   
   public OnlineDynamicCallGraph() throws IllegalArgumentException, IOException, InvalidClassFileException {
-    OfflineInstrumenter libReader = new OfflineInstrumenter(true);
+    OfflineInstrumenter libReader = new OfflineInstrumenter();
     for (String cps : new String[]{ System.getProperty("java.class.path"), System.getProperty("sun.boot.class.path") }) {
       for (String cp : cps.split(File.pathSeparator)) {
         File x = new File(cp);
@@ -50,7 +50,7 @@ public class OnlineDynamicCallGraph implements ClassFileTransformer {
       if (className.contains("com/ibm/wala") || className.contains("java/lang") || (className.contains("java/") && !className.matches("java/util/[A-Z]")) || className.contains("sun/")) {
         return classfileBuffer;
       } else {
-        ClassInstrumenter ci = new ClassInstrumenter(className, classfileBuffer, cha, false);
+        ClassInstrumenter ci = new ClassInstrumenter(className, classfileBuffer, cha);
         return OfflineDynamicCallGraph.doClass(ci, out).makeBytes();
       }
     } catch (InvalidClassFileException | IOException | FailureException e) {

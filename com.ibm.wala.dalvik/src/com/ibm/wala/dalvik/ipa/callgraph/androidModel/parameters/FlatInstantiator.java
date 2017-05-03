@@ -343,9 +343,6 @@ public class FlatInstantiator implements IInstantiator {
         return instance; 
     }
 
-    /**
-     *  @return an unallocated SSAVariable
-     */
     private void createPrimitive(SSAValue instance) {
         // XXX; something else?
         instance.setAssigned();
@@ -385,7 +382,7 @@ public class FlatInstantiator implements IInstantiator {
      *
      *  @param  self the "this" to call the constructor on
      *  @param  ctor the constructor to call
-     *  @param  params parameters to the ctor _without_ implicit this
+     *  @param  ctorParams parameters to the ctor _without_ implicit this
      */
     protected void addCallCtor(SSAValue self, MethodReference ctor, List<SSAValue> ctorParams) {
         final int pc = this.body.getNextProgramCounter();
@@ -662,6 +659,7 @@ public class FlatInstantiator implements IInstantiator {
     /**
      *  Satisfy the interface.
      */
+    @SuppressWarnings("unchecked")
     public int createInstance(TypeReference type, Object... instantiatorArgs) {
         // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<SSAValue> seen) {
         if (! (instantiatorArgs[0] instanceof Boolean)) {
@@ -683,7 +681,7 @@ public class FlatInstantiator implements IInstantiator {
             }
         }
         if (instantiatorArgs[2] != null) {
-            final Set seen = (Set) instantiatorArgs[2];
+            final Set<?> seen = (Set<?>) instantiatorArgs[2];
             if (! seen.isEmpty()) {
                 final Object o = seen.iterator().next();
                 if (! (o instanceof SSAValue)) {

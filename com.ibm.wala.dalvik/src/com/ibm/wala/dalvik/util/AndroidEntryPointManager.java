@@ -222,7 +222,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  Whether to generate a global android environment.
      *
-     *  See the {@link #setDoBootSequence()} documentation.
+     *  See the {@link #setDoBootSequence} documentation.
      *
      *  @return the setting, defaults to true
      */
@@ -293,7 +293,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  The behavior set using setModelBehavior(Class).
      *
-     *  Use {@link makeModelBehavior(VolatileMethodSummary, JavaInstructionFactory, AndroidModelParameterManager, Iterable<? extends Entrypoint>} 
+     *  Use {@link #makeModelBehavior}
      *  to retrieve an instance of this class.
      *
      *  If no class was set it returns null, makeModelBehavior will generate a LoopAndroidModel by default.
@@ -362,7 +362,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  See: {@link #setPackage(String)}
      *
      *  @return The package or null if it was indeterminable.
-     *  @see    guessPacakge()
+     *  @see    #guessPackage()
      */
     public String getPackage() {
         if (this.pack == null) {
@@ -380,7 +380,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  the package based on the first entrypoint.
      *
      *  @return The package or null if it was indeterminable.
-     *  @see    getPackage()
+     *  @see    #getPackage()
      */
     public String guessPackage() {
         if (this.pack != null) {
@@ -418,7 +418,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  @param  intent  An Intent with more or the same information as known to the system before.
      *  @throws IllegalArgumentException if you lower the information on an already registered Intent or the 
      *      information is incompatible.
-     *  @see    registerIntentForce()
+     *  @see    #registerIntentForce
      */
     public void registerIntent(Intent intent) {
         if (overrideIntents.containsKey(intent)) {
@@ -476,7 +476,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  @param  from    the Intent to override
      *  @param  to      the new Intent to resolve once 'from' is seen
-     *  @see    setOverrideForce()
+     *  @see    #setOverrideForce
      *  @throws IllegalArgumentException if you override an Intent with itself
      */
     public void setOverride(Intent from, Intent to) {

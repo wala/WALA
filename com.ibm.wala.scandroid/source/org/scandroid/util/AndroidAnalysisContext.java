@@ -50,10 +50,8 @@
 package org.scandroid.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
@@ -87,7 +85,6 @@ import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.io.FileProvider;
@@ -109,23 +106,18 @@ public class AndroidAnalysisContext {
 
 	public AndroidAnalysisContext(ISCanDroidOptions options)
 			throws IllegalArgumentException, ClassHierarchyException,
-			IOException, CancelException, URISyntaxException {
+			IOException {
 		this(options, "Java60RegressionExclusions.txt");
 	}
 
 	/**
 	 * @param exclusions
-	 * @param classpath
-	 * @param packagename
 	 * @throws IOException
 	 * @throws IllegalArgumentException
-	 * @throws CancelException
 	 * @throws ClassHierarchyException
-	 * @throws URISyntaxException
 	 */
 	public AndroidAnalysisContext(ISCanDroidOptions options, String exclusions)
-			throws IOException, IllegalArgumentException, CancelException,
-			       ClassHierarchyException, URISyntaxException {
+			throws IOException, IllegalArgumentException, ClassHierarchyException {
 		
 		this.options = options;
 		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getClasspath(), exclusions, getClass().getClassLoader(), options.getAndroidLibrary());
@@ -147,7 +139,7 @@ public class AndroidAnalysisContext {
 	// ContextSelector, entry points, reflection options, IR Factory, call graph
 	// type, include library
 	public void buildGraphs(List<Entrypoint> localEntries,
-			InputStream summariesStream) throws CancelException {
+			InputStream summariesStream) {
 
 		
 
@@ -303,8 +295,7 @@ public class AndroidAnalysisContext {
 	}
 
 	private static XMLMethodSummaryReader loadMethodSummaries(
-			AnalysisScope scope, InputStream xmlIStream)
-			throws FileNotFoundException {
+			AnalysisScope scope, InputStream xmlIStream) {
 		try (InputStream s = xmlIStream != null ? xmlIStream :
 			AndroidAnalysisContext.class.getClassLoader()
 				.getResourceAsStream(

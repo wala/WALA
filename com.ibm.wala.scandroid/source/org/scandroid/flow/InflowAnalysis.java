@@ -86,7 +86,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 @SuppressWarnings("rawtypes")
-public class InflowAnalysis <E extends ISSABasicBlock> {
+public class InflowAnalysis {
 
     @SuppressWarnings("unchecked")
 	public static <E extends ISSABasicBlock>

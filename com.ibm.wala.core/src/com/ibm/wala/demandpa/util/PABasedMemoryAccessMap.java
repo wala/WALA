@@ -52,11 +52,11 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   private final Map<PointerKey, Set<Statement>> invRef;
 
   public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    this(cg, pa, new SDG(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
+    this(cg, pa, new SDG<InstanceKey>(cg, pa, InstanceKey.class, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
   }
 
-  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, SDG sdg) {
-    this(cg, pa, CISlicer.scanForMod(sdg, pa, true, ModRef.make()), CISlicer.scanForRef(sdg, pa));
+  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, SDG<InstanceKey> sdg) {
+    this(cg, pa, CISlicer.scanForMod(sdg, pa, true, ModRef.make(InstanceKey.class)), CISlicer.scanForRef(sdg, pa));
   }
   
   public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, Map<Statement, Set<PointerKey>> mod,

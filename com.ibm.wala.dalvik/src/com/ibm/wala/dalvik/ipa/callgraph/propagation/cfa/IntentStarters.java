@@ -146,7 +146,7 @@ public class IntentStarters {
         /**
          *  These influence how the model is built.
          *
-         *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarerFlags
+         *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags
          */
         public Set<StarterFlags> getFlags() {
             return this.flags;

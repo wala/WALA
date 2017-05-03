@@ -11,8 +11,6 @@ import com.ibm.wala.cast.js.test.TestSimplePageCallGraphShape;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 
-import junit.framework.AssertionFailedError;
-
 public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
   private void test(String file, Object[][] assertions, BuilderType builderType) throws IOException, WalaException, Error, CancelException {
@@ -25,7 +23,7 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
     }
   }
 
-  @Test(expected = AssertionFailedError.class)
+  @Test(expected = AssertionError.class)
   public void testSkeletonPessimistic() throws IOException, WalaException, Error, CancelException {
     test("pages/skeleton.html", TestSimplePageCallGraphShape.assertionsForSkeleton, BuilderType.PESSIMISTIC);
   }
@@ -40,7 +38,7 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
     test("pages/skeleton.html", TestSimplePageCallGraphShape.assertionsForSkeleton, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
-  @Test(expected = AssertionFailedError.class)
+  @Test(expected = AssertionError.class)
   public void testSkeleton2Pessimistic() throws IOException, WalaException, Error, CancelException {
     test("pages/skeleton2.html", TestSimplePageCallGraphShape.assertionsForSkeleton2, BuilderType.PESSIMISTIC);
   }

@@ -54,9 +54,16 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
   private final AnalysisOptions options;
   private final IAnalysisCacheView cache;
-  
+
+  /**
+   * if set to true, do not include call graph edges in classes outside
+   * the application class loader.  This means callbacks from library
+   * to application will be ignored.
+   */
+  private final boolean applicationOnly;
+
   private boolean isInitialized = false;
-  
+
   private class CHANode extends NodeImpl {
 
     protected CHANode(IMethod method, Context C) {
@@ -65,20 +72,17 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
     @Override
     public IR getIR() {
-      assert false;
-      return null;
+      return cache.getIR(method);
     }
 
     @Override
     public DefUse getDU() {
-      assert false;
-      return null;
+      return cache.getDefUse(cache.getIR(method));
     }
 
     @Override
     public Iterator<NewSiteReference> iterateNewSites() {
-      assert false;
-      return null;
+      return getInterpreter(this).iterateNewSites(this);
     }
 
     @Override
@@ -100,16 +104,22 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     public boolean addTarget(CallSiteReference reference, CGNode target) {
       return false;
     }
-    
+
   }
-  
+
   public CHACallGraph(IClassHierarchy cha) {
+    this(cha, false);
+  }
+
+  public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
     this.cha = cha;
     this.options = new AnalysisOptions();
     this.cache = new AnalysisCacheImpl();
+    this.applicationOnly = applicationOnly;
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
   }
 
+  @SuppressWarnings("deprecation")
   public void init(Iterable<Entrypoint> entrypoints) throws CancelException {
     super.init();
 
@@ -122,7 +132,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     closure();
     isInitialized = true;
   }
-  
+
   @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
@@ -140,7 +150,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       }
     }
   }
-  
+
   @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
@@ -149,7 +159,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
               getPossibleTargets(site),
               new Predicate<IMethod>() {
                 @Override public boolean test(IMethod o) {
-                  return !o.isAbstract();
+                  return isRelevantMethod(o);
                 }
               }
           ),
@@ -163,7 +173,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
               return null;
             }
           }
-        }));        
+        }));
   }
 
   @Override
@@ -173,7 +183,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   @Override
   public Iterator<CallSiteReference> getPossibleSites(final CGNode src, final CGNode target) {
-    return 
+    return
       new FilterIterator<CallSiteReference>(getInterpreter(src).iterateCallSites(src),
         new Predicate<CallSiteReference>() {
           @Override public boolean test(CallSiteReference o) {
@@ -181,10 +191,10 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
           }
         });
   }
-  
+
   private class CHARootNode extends CHANode {
     private final Set<CallSiteReference> calls = HashSetFactory.make();
-    
+
     protected CHARootNode(IMethod method, Context C) {
       super(method, C);
     }
@@ -199,7 +209,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       return calls.add(reference);
     }
   }
-  
+
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return new CHARootNode(new FakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
@@ -209,22 +219,23 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return new CHARootNode(new FakeWorldClinitMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
-  
+
   private int clinitPC = 0;
-  
+
   @Override
+  @SuppressWarnings("deprecation")
   public CGNode findOrCreateNode(IMethod method, Context C) throws CancelException {
     assert C.equals(Everywhere.EVERYWHERE);
     assert !method.isAbstract();
-    
+
     CGNode n = getNode(method, C);
     if (n == null) {
       assert !isInitialized;
       n = makeNewNode(method, C);
-      
+
       IMethod clinit = method.getDeclaringClass().getClassInitializer();
       if (clinit != null && getNode(clinit, Everywhere.EVERYWHERE) == null) {
-        CGNode cln = makeNewNode(clinit, Everywhere.EVERYWHERE);        
+        CGNode cln = makeNewNode(clinit, Everywhere.EVERYWHERE);
         CGNode clinits = getFakeWorldClinitNode();
         clinits.addTarget(CallSiteReference.make(clinitPC++, clinit.getReference(), IInvokeInstruction.Dispatch.STATIC), cln);
       }
@@ -233,7 +244,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   }
 
   private Stack<CGNode> newNodes = new Stack<CGNode>();
-  
+
   private void closure() throws CancelException {
     while (! newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
@@ -241,7 +252,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         Iterator<IMethod> methods = getPossibleTargets(sites.next());
         while (methods.hasNext()) {
           IMethod target = methods.next();
-          if (!target.isAbstract()) {
+          if (isRelevantMethod(target)) {
             CGNode callee = getNode(target, Everywhere.EVERYWHERE);
             if (callee == null) {
               callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
@@ -253,6 +264,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         }
       }
     }
+  }
+
+  private boolean isRelevantMethod(IMethod target) {
+    return !target.isAbstract()
+        && (!applicationOnly 
+            || cha.getScope().isApplicationLoader(target.getDeclaringClass().getClassLoader()));
   }
 
   private CGNode makeNewNode(IMethod method, Context C) throws CancelException {
@@ -268,7 +285,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   protected NumberedEdgeManager<CGNode> getEdgeManager() {
     return new NumberedEdgeManager<CGNode>() {
       private final Map<CGNode, SoftReference<Set<CGNode>>> predecessors = HashMapFactory.make();
-      
+
       private Set<CGNode> getPreds(CGNode n) {
         if (predecessors.containsKey(n) && predecessors.get(n).get() != null) {
           return predecessors.get(n).get();
@@ -283,7 +300,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
           return preds;
         }
       }
-      
+
       @Override
       public Iterator<CGNode> getPredNodes(CGNode n) {
         return getPreds(n).iterator();
@@ -367,7 +384,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         }
         return result;
       }
-      
+
     };
   }
 

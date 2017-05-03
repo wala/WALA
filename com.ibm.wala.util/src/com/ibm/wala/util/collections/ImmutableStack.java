@@ -161,7 +161,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 		try {
 			return entries[i];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new IllegalArgumentException("invalid i: " + i);
+			throw new IllegalArgumentException("invalid i: " + i, e);
 		}
 	}
 

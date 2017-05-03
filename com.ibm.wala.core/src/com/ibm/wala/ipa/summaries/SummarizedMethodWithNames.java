@@ -83,11 +83,12 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         if (DEBUG) { System.err.println("From old MSUM"); }
     }
     
+    @SuppressWarnings("unused")
     public SummarizedMethodWithNames(MethodReference ref, VolatileMethodSummary summary, IClass declaringClass) 
                 throws NullPointerException {
         super(ref, summary.getMethodSummary(), declaringClass);
         this.summary = summary.getMethodSummary();
-        this.localNames = ((VolatileMethodSummary)summary).getLocalNames();
+        this.localNames = summary.getLocalNames();
         if (DEBUG && this.localNames.isEmpty()) {
           System.err.println("Local names are empty for " + ref);
         }

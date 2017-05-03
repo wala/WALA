@@ -34,7 +34,6 @@ import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -91,7 +90,7 @@ public abstract class FieldBasedCallGraphBuilder {
   private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
     MethodTargetSelector result = new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
     if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
-      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result, cache));
+      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result));
     }
     return result;
   }
@@ -139,7 +138,6 @@ public abstract class FieldBasedCallGraphBuilder {
 	/**
 	 * Extract a call graph from a given flow graph.
 	 */
-  @SuppressWarnings("deprecation")
   public JSCallGraph extract(FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
     DelegatingSSAContextInterpreter interpreter = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, cache), new DefaultSSAInterpreter(options, cache));
     return extract(interpreter, flowgraph, eps, monitor);
@@ -274,6 +272,7 @@ public abstract class FieldBasedCallGraphBuilder {
 	  return flowGraph.getReachingSet(functionParam, monitor);
   }
 
+  @SuppressWarnings("unused")
   private OrdinalSet<FuncVertex> getConstructorTargets(FlowGraph flowGraph, CallVertex callVertex, IProgressMonitor monitor) throws CancelException {
     SSAAbstractInvokeInstruction invoke = callVertex.getInstruction();
     assert invoke.getDeclaredTarget().getName().equals(JavaScriptMethods.ctorAtom);

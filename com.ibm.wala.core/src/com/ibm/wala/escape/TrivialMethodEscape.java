@@ -40,7 +40,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   /**
    * Heap graph representation of pointer analysis
    */
-  private final HeapGraph hg;
+  private final HeapGraph<InstanceKey> hg;
 
   /**
    * Governing call graph
@@ -51,7 +51,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @param hg Heap graph representation of pointer analysis
    * @param cg governing call graph
    */
-  public TrivialMethodEscape(CallGraph cg, HeapGraph hg) {
+  public TrivialMethodEscape(CallGraph cg, HeapGraph<InstanceKey> hg) {
     this.hg = hg;
     this.cg = cg;
   }

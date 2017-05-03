@@ -29,7 +29,6 @@ public class OrdinalSet<T> implements Iterable<T> {
   @SuppressWarnings("rawtypes")
   private final static OrdinalSet EMPTY = new OrdinalSet();
 
-  @SuppressWarnings("unchecked")
   public static <T> OrdinalSet<T> empty() {
     return EMPTY;
   }
