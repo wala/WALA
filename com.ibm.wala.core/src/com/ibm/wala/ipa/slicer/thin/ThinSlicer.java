@@ -31,7 +31,7 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 public class ThinSlicer extends CISlicer {
 
   public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    this(cg, pa, ModRef.make(InstanceKey.class));
+    this(cg, pa, ModRef.make());
   }
 
   public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef) {
