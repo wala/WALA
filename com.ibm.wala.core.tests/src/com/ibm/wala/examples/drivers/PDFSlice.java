@@ -159,7 +159,7 @@ public class PDFSlice {
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);
-      SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), InstanceKey.class, dOptions, cOptions);
+      SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
       // find the call statement of interest
       CGNode callerNode = SlicerTest.findMethod(cg, srcCaller);
@@ -170,13 +170,13 @@ public class PDFSlice {
       Collection<Statement> slice = null;
       if (goBackward) {
         final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-        slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
+        slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
       } else {
         // for forward slices ... we actually slice from the return value of
         // calls.
         s = getReturnStatementForCall(s);
         final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-        slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
+        slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
       }
       SlicerTest.dumpSlice(slice);
 

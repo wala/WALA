@@ -131,8 +131,8 @@ public class Slicer {
    * @throws CancelException
    */
   public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<U> pa,
-      Class<U> instanceKeyClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<U>(cg, pa, ModRef.make(instanceKeyClass), dOptions, cOptions), Collections.singleton(s), true);
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
+    return computeSlice(new SDG<U>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
   }
 
   /**
@@ -141,9 +141,9 @@ public class Slicer {
    * @throws CancelException
    */
   public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(Statement s, CallGraph cg,
-      PointerAnalysis<U> pa, Class<U> instanceKeyClass,
+      PointerAnalysis<U> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<U>(cg, pa, ModRef.make(instanceKeyClass), dOptions, cOptions), Collections.singleton(s), false);
+    return computeSlice(new SDG<U>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
   }
 
   /**
@@ -229,7 +229,7 @@ public class Slicer {
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis)
       throws IllegalArgumentException, CancelException {
-    return computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
   }
 
   /**
