@@ -143,58 +143,58 @@ public class AndroidManifestXMLReader {
          *  This tag is nat an actual part of the document.
          */
         ROOT("ROOT",
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.MANIFEST); }},
                 null,
                 NoOpItem.class),
         MANIFEST("manifest",
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.APPLICATION); }},
                 EnumSet.of(Attr.PACKAGE),
                 ManifestItem.class),
         APPLICATION("application", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.ACTIVITY, Tag.SERVICE, Tag.RECEIVER, Tag.PROVIDER, Tag.ALIAS); }},    // Allowed children..
                 Collections.EMPTY_SET,              // Interesting Attributes
                 NoOpItem.class),                    // Handler
         ACTIVITY("activity", 
-                new ISubTags() { public Set<Tag> getSubTags() { 
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.NAME, Attr.ENABLED, Attr.PROCESS),
                 ComponentItem.class),
         ALIAS("activity-alias", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.TARGET, Attr.NAME),
                 ComponentItem.class),
         SERVICE("service", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.NAME, Attr.PROCESS),
                 ComponentItem.class),
         RECEIVER("receiver", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                       return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.NAME, Attr.PROCESS),
                 ComponentItem.class),
         PROVIDER("provider", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.ORDER, Attr.NAME, Attr.PROCESS),
                 ComponentItem.class),
         INTENT("intent-filter",
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.ACTION, Tag.DATA); }},
                 Collections.EMPTY_SET,
                 IntentItem.class),
         ACTION("action", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return Collections.EMPTY_SET; }},
                 EnumSet.of(Attr.NAME),
                 FinalItem.class), //(new ITagDweller() {
                     //public Tag getTag() { return Tag.ACTION; }})),
         DATA("data", 
-                new ISubTags() { public Set<Tag> getSubTags() {
+                new ISubTags() { @Override public Set<Tag> getSubTags() {
                     return Collections.EMPTY_SET; }},
                 EnumSet.of(Attr.SCHEME, Attr.HOST, Attr.PATH, Attr.MIME),
                 FinalItem.class), //(new ITagDweller() {

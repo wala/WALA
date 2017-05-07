@@ -79,6 +79,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
      */
+    @Override
     public Module asModule() {
         throw new UnsupportedOperationException();
     }
@@ -87,6 +88,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
      */
+    @Override
     public String getClassName() {
         return className;
     }
@@ -95,6 +97,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
+    @Override
     public InputStream getInputStream() {
         throw new UnsupportedOperationException();
     }
@@ -103,6 +106,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getName()
      */
+    @Override
     public String getName() {
         return className;
     }
@@ -111,6 +115,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
      */
+    @Override
     public boolean isClassFile() {
         return false;
     }
@@ -119,6 +124,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
+    @Override
     public boolean isModuleFile() {
         return false;
     }
@@ -127,6 +133,7 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
      */
+    @Override
     public boolean isSourceFile() {
         return false;
     }

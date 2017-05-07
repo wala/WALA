@@ -64,11 +64,13 @@ public class PackedSwitchPad implements SwitchPad {
         this.defaultOffset = defaultOffset;
     }
 
+    @Override
     public int[] getOffsets()
     {
         return offsets;
     }
 
+    @Override
     public int[] getValues()
     {
         if (values != null)
@@ -83,11 +85,13 @@ public class PackedSwitchPad implements SwitchPad {
 
 
 
+    @Override
     public int getDefaultOffset() {
         //return Integer.MIN_VALUE;
         return defaultOffset;
     }
 
+    @Override
     public int[] getLabelsAndOffsets() {
         if(labelsAndOffsets != null)
             return labelsAndOffsets;

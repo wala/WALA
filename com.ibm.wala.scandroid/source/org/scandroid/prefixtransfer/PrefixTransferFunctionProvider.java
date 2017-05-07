@@ -56,11 +56,13 @@ public class PrefixTransferFunctionProvider implements ITransferFunctionProvider
     public PrefixTransferFunctionProvider()
     {}
 
+    @Override
     public UnaryOperator<PrefixVariable> getEdgeTransferFunction(
             InstanceKeySite src, InstanceKeySite dst) {
         return null;
     }
 
+    @Override
     public AbstractMeetOperator<PrefixVariable> getMeetOperator() {
         return new AbstractMeetOperator<PrefixVariable>()
         {
@@ -95,14 +97,17 @@ public class PrefixTransferFunctionProvider implements ITransferFunctionProvider
         };
     }
 
+    @Override
     public UnaryOperator<PrefixVariable> getNodeTransferFunction(InstanceKeySite node) {
         return new PrefixTransferFunction(node);
     }
 
+    @Override
     public boolean hasEdgeTransferFunctions() {
         return false;
     }
 
+    @Override
     public boolean hasNodeTransferFunctions() {
         return true;
     }

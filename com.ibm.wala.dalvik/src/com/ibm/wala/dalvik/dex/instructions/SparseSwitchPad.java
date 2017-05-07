@@ -64,22 +64,26 @@ public class SparseSwitchPad implements SwitchPad {
         this.defaultOffset = defaultOffset;
     }
 
+    @Override
     public int [] getOffsets()
     {
         return offsets;
     }
 
+    @Override
     public int [] getValues()
     {
         return values;
     }
 
 
+    @Override
     public int getDefaultOffset() {
         //return Integer.MIN_VALUE;
         return defaultOffset;
     }
 
+    @Override
     public int[] getLabelsAndOffsets() {
 //      return values;
 

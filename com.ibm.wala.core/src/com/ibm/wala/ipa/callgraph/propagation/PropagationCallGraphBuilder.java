@@ -656,6 +656,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }

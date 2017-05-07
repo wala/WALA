@@ -2369,6 +2369,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
    * to CAst
    * @throws com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error 
    */
+  @Override
   public CAstEntity translateToCAst() throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
     class CAstErrorReporter implements ErrorReporter {
       private Set<Warning> w = HashSetFactory.make();

@@ -298,6 +298,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   }
 
   // add @Override here once Eclipse Mars is no longer supported
+  @Override
   public boolean isIntersectionType() {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
     return false;
@@ -447,18 +448,21 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   }
 
   // do not put @Override here, to avoid breaking compilation on Juno
+  @Override
   public IMethodBinding getFunctionalInterfaceMethod() {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
     return null;
   }
 
   // do not put @Override here, to avoid breaking compilation on Juno
+  @Override
   public IAnnotationBinding[] getTypeAnnotations() {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
     return null;
   }
 
   // do not put @Override here, to avoid breaking compilation on older Eclipse versions
+  @Override
   public IBinding getDeclaringMember() {
     // TODO Auto-generated method stub
     return null;

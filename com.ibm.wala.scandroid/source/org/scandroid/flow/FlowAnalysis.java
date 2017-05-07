@@ -175,22 +175,27 @@ public class FlowAnalysis {
           problem =
             new TabulationProblem<BasicBlockInContext<E>, CGNode, DomainElement>() {
 
+            @Override
             public TabulationDomain<DomainElement, BasicBlockInContext<E>> getDomain() {
                 return domain;
             }
 
+            @Override
             public IFlowFunctionMap<BasicBlockInContext<E>> getFunctionMap() {
                 return flowFunctionMap;
             }
 
+            @Override
             public IMergeFunction getMergeFunction() {
                 return null;
             }
 
+            @Override
             public ISupergraph<BasicBlockInContext<E>, CGNode> getSupergraph() {
                 return graph;
             }
 
+            @Override
             public Collection<PathEdge<BasicBlockInContext<E>>> initialSeeds() {
                 return initialEdges;
 //              CGNode entryProc = cfg.getCallGraph().getEntrypointNodes()

@@ -86,6 +86,7 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
         elements.add(e);
     }
 
+    @Override
     public int add(DomainElement o) {
         Integer i = table.get(o);
         if(i == null)
@@ -101,6 +102,7 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
     }
 
 
+    @Override
     public synchronized int getMappedIndex(final Object o) {
     	if (!(o instanceof DomainElement)) {
     		throw new IllegalArgumentException(o.getClass().getCanonicalName());
@@ -112,30 +114,36 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
         return (i == null ? add(de) : i);
     }
 
+    @Override
     public boolean hasPriorityOver(
             PathEdge<BasicBlockInContext<E>> p1,
             PathEdge<BasicBlockInContext<E>> p2) {
         return false;
     }
 
+    @Override
     public DomainElement getMappedObject(int n) {
         if(n > 0 && n <= objects.size())
             return objects.get(n - 1);
         return null;
     }
 
+    @Override
     public int getMaximumIndex() {
         return objects.size();
     }
 
+    @Override
     public int getSize() {
         return objects.size()+1;
     }
 
+    @Override
     public boolean hasMappedIndex(DomainElement o) {
         return table.keySet().contains(o);
     }
 
+    @Override
     public Iterator<DomainElement> iterator() {
         return table.keySet().iterator();
     }

@@ -77,12 +77,14 @@ public class DexIContextInterpreter implements SSAContextInterpreter {
     private final AnalysisCache cache;
 
 
+    @Override
     public boolean understands(CGNode node) {
         if(node.getMethod() instanceof DexIMethod)
             return true;
         return false;
     }
 
+    @Override
     public boolean recordFactoryType(CGNode node, IClass klass) {
         // TODO what the heck does this mean?
         //com.ibm.wala.core/src/com/ibm/wala/analysis/reflection/JavaLangClassContextInterpreter.java has this set to false
@@ -90,30 +92,36 @@ public class DexIContextInterpreter implements SSAContextInterpreter {
 //      throw new RuntimeException("not yet implemented");
     }
 
+    @Override
     public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
         return getIR(node).iterateNewSites();
     }
 
+    @Override
     public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
         // TODO implement this!
         throw new RuntimeException("not yet implemented");
     }
 
+    @Override
     public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
         // TODO implement this!
         throw new RuntimeException("not yet implemented");
     }
 
+    @Override
     public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
         return getIR(node).iterateCallSites();
     }
 
+    @Override
     public int getNumberOfStatements(CGNode node) {
         // TODO verify this is correct
         assert understands(node);
         return getIR(node).getInstructions().length;
     }
 
+    @Override
     public IR getIR(CGNode node) {
 //      new Exception("getting IR for method "+node.getMethod().getReference().toString()).printStackTrace();
         return cache.getSSACache().findOrCreateIR(node.getMethod(), node.getContext(), options);
@@ -124,11 +132,13 @@ public class DexIContextInterpreter implements SSAContextInterpreter {
       return getIR(node);
     }
 
+    @Override
     public DefUse getDU(CGNode node) {
         return cache.getSSACache().findOrCreateDU(getIR(node), node.getContext());
 //      return new DefUse(getIR(node));
     }
 
+    @Override
     public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) {
         IR ir = getIR(n);
         return ir.getControlFlowGraph();
