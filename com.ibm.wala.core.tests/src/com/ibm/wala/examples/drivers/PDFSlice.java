@@ -159,7 +159,7 @@ public class PDFSlice {
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);
-      SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), InstanceKey.class, dOptions, cOptions);
+      SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
       // find the call statement of interest
       CGNode callerNode = SlicerTest.findMethod(cg, srcCaller);

@@ -272,7 +272,11 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
   }
 
   public SDG<I> getSDG(Class<I> instanceKeyClass, DataDependenceOptions data, ControlDependenceOptions ctrl) {
-    return new SDG<I>(getCallGraph(), getPointerAnalysis(), instanceKeyClass, data, ctrl);
+    return new SDG<I>(getCallGraph(), getPointerAnalysis(), data, ctrl);
+  }
+
+  public SDG<I> getSDG(DataDependenceOptions data, ControlDependenceOptions ctrl) {
+    return new SDG<I>(getCallGraph(), getPointerAnalysis(), data, ctrl);
   }
   
   public String getExclusionsFile() {

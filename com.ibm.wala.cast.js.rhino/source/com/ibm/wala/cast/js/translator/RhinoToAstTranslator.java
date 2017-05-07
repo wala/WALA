@@ -891,7 +891,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     CAstNode garbageLabel = visit(garbageStmt, arg);
 		WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
 		CAstNode body = Ast.makeNode(CAstNode.BLOCK_STMT,
-				initNode,
+				//initNode,
 				visit(node.getBody(), loopContext),
 				garbageLabel);
 		
@@ -904,9 +904,13 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 								Ast.makeNode(CAstNode.BINARY_EXPR,
 								    CAstOperator.OP_NE,
 										Ast.makeConstant(null),
-				            Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
-			                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-			                  readName(arg, null, name))),
+										Ast.makeNode(CAstNode.BLOCK_EXPR,
+							          Ast.makeNode(CAstNode.ASSIGN, 
+							              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+							              Ast.makeNode(CAstNode.EACH_ELEMENT_GET,   
+							                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+							                  readName(arg, null, name))),
+							          readName(arg, null, name))),
 								body),
 						breakLabel));
 		arg.cfg().map(node, loop);

@@ -126,6 +126,10 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     this(cg, pa, ModRef.make(instanceKeyClass), dOptions, cOptions, null);
   }
 
+  public SDG(final CallGraph cg, PointerAnalysis<T> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+    this(cg, pa, new ModRef<T>(), dOptions, cOptions, null);
+  }
+
   public SDG(final CallGraph cg, PointerAnalysis<T> pa, ModRef<T> modRef, DataDependenceOptions dOptions,
       ControlDependenceOptions cOptions) {
     this(cg, pa, modRef, dOptions, cOptions, null);

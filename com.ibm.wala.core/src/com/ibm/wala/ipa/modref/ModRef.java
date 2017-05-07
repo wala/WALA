@@ -48,7 +48,7 @@ public class ModRef<T extends InstanceKey> {
     return new ModRef<U>();
   }
 
-  protected ModRef() {
+  public ModRef() {
   }
 
   /**

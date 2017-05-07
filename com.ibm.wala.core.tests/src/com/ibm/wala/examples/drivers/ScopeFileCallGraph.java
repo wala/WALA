@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -79,7 +80,7 @@ public class ScopeFileCallGraph {
     Iterable<Entrypoint> entrypoints = entryClass != null ? makePublicEntrypoints(scope, cha, entryClass) : Util.makeMainEntrypoints(scope, cha, mainClass);
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
-//    options.setReflectionOptions(ReflectionOptions.NONE);
+    options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     // other builders can be constructed with different Util methods
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
