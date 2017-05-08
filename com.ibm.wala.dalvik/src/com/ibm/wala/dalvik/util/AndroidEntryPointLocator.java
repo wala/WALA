@@ -466,9 +466,10 @@ nextMethod:
             order = o.order; 
         }
        
-        public int getOrderValue() { return order.getOrderValue(); }
-        public int compareTo(AndroidEntryPoint.IExecutionOrder o) { return order.compareTo(o); }
-        public AndroidEntryPoint.ExecutionOrder getSection() { return order.getSection(); }
+        @Override public int getOrderValue() { return order.getOrderValue(); }
+        @Override public int compareTo(AndroidEntryPoint.IExecutionOrder o) { return order.compareTo(o); }
+        @Override public AndroidEntryPoint.ExecutionOrder getSection() { return order.getSection(); }
+
         public static class ExecutionOrderComperator implements Comparator<AndroidPossibleEntryPoint> {
             @Override public int compare(AndroidPossibleEntryPoint a, AndroidPossibleEntryPoint b) {
                 return a.order.compareTo(b.order);

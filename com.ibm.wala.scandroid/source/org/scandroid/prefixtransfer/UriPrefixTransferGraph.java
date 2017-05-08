@@ -324,32 +324,39 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
     	}
     }
 
+    @Override
     public void removeNodeAndEdges(InstanceKeySite n) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addNode(final InstanceKeySite n) {
         predecessors.put(n, new HashSet<InstanceKeySite>());
         successors.put(n, new HashSet<InstanceKeySite>());
         nodes.add(n);
     }
 
+    @Override
     public boolean containsNode(final InstanceKeySite n) {
         return nodes.contains(n);
     }
 
+    @Override
     public int getNumberOfNodes() {
         return nodes.size();
     }
 
+    @Override
     public Iterator<InstanceKeySite> iterator() {
         return nodes.iterator();
     }
 
+    @Override
     public void removeNode(final InstanceKeySite n) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addEdge(final InstanceKeySite src, final InstanceKeySite dst) {
         Set<InstanceKeySite> predSet = predecessors.get(dst);
         if (predSet == null) {
@@ -366,41 +373,50 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         succSet.add(dst);
     }
 
+    @Override
     public int getPredNodeCount(final InstanceKeySite n) {
         return predecessors.get(n).size();
     }
 
+    @Override
     public Iterator<InstanceKeySite> getPredNodes(InstanceKeySite n) {
         return predecessors.get(n).iterator();
     }
 
+    @Override
     public int getSuccNodeCount(InstanceKeySite N) {
         return successors.get(N).size();
     }
 
+    @Override
     public Iterator<InstanceKeySite> getSuccNodes(InstanceKeySite n) {
         return successors.get(n).iterator();
     }
 
+    @Override
     public boolean hasEdge(InstanceKeySite src, InstanceKeySite dst) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeAllIncidentEdges(InstanceKeySite node)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeEdge(InstanceKeySite src, InstanceKeySite dst)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeIncomingEdges(InstanceKeySite node)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeOutgoingEdges(InstanceKeySite node)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();

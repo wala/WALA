@@ -499,6 +499,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
    * element gives the annotations on the corresponding parameter. Note that the
    * 'this' parameter for an instance method cannot have annotations.
    */
+  @Override
   public Collection<Annotation>[] getParameterAnnotations() {
     int numAnnotatedParams = isStatic() ? getNumberOfParameters() : getNumberOfParameters() - 1;
     @SuppressWarnings("unchecked")

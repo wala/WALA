@@ -145,6 +145,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     return fakeRoot;
   }
 
+  @Override
   public CGNode getFakeWorldClinitNode() {
     return fakeWorldClinit;
   }

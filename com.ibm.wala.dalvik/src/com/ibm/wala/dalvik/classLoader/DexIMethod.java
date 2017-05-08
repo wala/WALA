@@ -211,6 +211,7 @@ public class DexIMethod implements IBytecodeMethod {
 	// IMethod methods
 	//-------------------------------------------
 
+	@Override
 	public TypeReference[] getDeclaredExceptions()
 			throws UnsupportedOperationException {
 /** BEGIN Custom change: Variable Names in synth. methods */
@@ -251,6 +252,7 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 
+	@Override
 	public String getLocalVariableName(int bcIndex, int localNumber) {
 		throw new UnsupportedOperationException("getLocalVariableName not implemented");
 	}
@@ -284,6 +286,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#getDescriptor()
 	 */
+	@Override
 	public Descriptor getDescriptor() {
 		return getReference().getDescriptor();
 	}
@@ -292,6 +295,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
 	 */
+	@Override
 	public int getNumberOfParameters() {
 		final int number;
 
@@ -324,6 +328,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
 	 */
+	@Override
 	public TypeReference getParameterType(int index) {
 		if (!isStatic()) {
 			if (index == 0) {
@@ -340,6 +345,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#getReference()
 	 */
+	@Override
 	public MethodReference getReference() {
 		//Compute the method reference from the MethodIdItem
 		if (methodReference == null) {
@@ -363,6 +369,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#getReturnType()
 	 */
+	@Override
 	public TypeReference getReturnType() {
 		//compute the typeReference from the MethodIdItem
 		if (typeReference == null) {
@@ -376,6 +383,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#getSelector()
 	 */
+	@Override
 	public Selector getSelector() {
 		return getReference().getSelector();
 	}
@@ -385,6 +393,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 *
 	 * @see com.ibm.wala.classLoader.IMethod#getSignature()
 	 */
+	@Override
 	public String getSignature() {
 		return getReference().getSignature();
 	}
@@ -393,6 +402,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
 	 */
+	@Override
 	public boolean hasExceptionHandler() {
 		TryItem[] tries = eMethod.codeItem.getTries();
 		return tries==null?false:tries.length > 0;
@@ -402,6 +412,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
 	 */
+	@Override
 	public boolean hasLocalVariableTable() {
 		throw new UnsupportedOperationException("DexIMethod: hasLocalVariableTable() not yet implemented");
 		//TODO Compute the local variable name from the DebugInfo Item
@@ -413,6 +424,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isAbstract()
 	 */
+	@Override
 	public boolean isAbstract() {
 		return (eMethod.accessFlags & ABSTRACT.getValue()) != 0;
 	}
@@ -421,6 +433,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isClinit()
 	 */
+	@Override
 	public boolean isClinit() {
 		return eMethod.method.getMethodName().getStringValue().equals(MethodReference.clinitName.toString());
 	}
@@ -429,6 +442,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isFinal()
 	 */
+	@Override
 	public boolean isFinal() {
 		return (eMethod.accessFlags & FINAL.getValue()) != 0;
 	}
@@ -437,6 +451,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isInit()
 	 */
+	@Override
 	public boolean isInit() {
 		return eMethod.method.getMethodName().getStringValue().equals(MethodReference.initAtom.toString());
 	}
@@ -445,6 +460,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isNative()
 	 */
+	@Override
 	public boolean isNative() {
 		return (eMethod.accessFlags & NATIVE.getValue()) != 0;
 	}
@@ -453,6 +469,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isBridge()
 	 */
+	@Override
 	public boolean isBridge() {
 		return (eMethod.accessFlags & BRIDGE.getValue()) != 0;
 	}
@@ -461,6 +478,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isPrivate()
 	 */
+	@Override
 	public boolean isPrivate() {
 		return (eMethod.accessFlags & PRIVATE.getValue()) != 0;
 	}
@@ -469,6 +487,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isProtected()
 	 */
+	@Override
 	public boolean isProtected() {
 		return (eMethod.accessFlags & PROTECTED.getValue()) != 0;
 	}
@@ -478,6 +497,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 *
 	 * @see com.ibm.wala.classLoader.IMethod#isPublic()
 	 */
+	@Override
 	public boolean isPublic() {
 		return (eMethod.accessFlags & PUBLIC.getValue()) != 0;
 	}
@@ -486,6 +506,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isSynchronized()
 	 */
+	@Override
 	public boolean isSynchronized() {
 		return (eMethod.accessFlags & DECLARED_SYNCHRONIZED.getValue()) != 0;
 	}
@@ -494,6 +515,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
 	 */
+	@Override
 	public boolean isSynthetic() {
 		return false;
 	}
@@ -502,6 +524,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMember#isStatic()
 	 */
+	@Override
 	public boolean isStatic() {
 		return (eMethod.accessFlags & STATIC.getValue()) != 0;
 	}
@@ -518,6 +541,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * (non-Javadoc)
 	 * @see com.ibm.wala.classLoader.IMember#getDeclaringClass()
 	 */
+	@Override
 	public IClass getDeclaringClass() {
 		return myClass;
 	}
@@ -527,14 +551,17 @@ public class DexIMethod implements IBytecodeMethod {
 	 *
 	 * @see com.ibm.wala.ipa.cha.IClassHierarchyDweller#getClassHierarchy()
 	 */
+	@Override
 	public IClassHierarchy getClassHierarchy() {
 		return myClass.getClassHierarchy();
 	}
 
+	@Override
 	public Atom getName() {
 		return getReference().getName();
 	}
 
+	@Override
 	public int getLineNumber(int bcIndex) {
 		return getInstructionIndex(bcIndex);
 	}
@@ -579,6 +606,7 @@ public class DexIMethod implements IBytecodeMethod {
 	//-------------------------------------------
 
 
+	@Override
 	public int getBytecodeIndex(int i) {
 		// TODO Auto-generated method stub
 		//      System.out.println("DexIMethod: getBytecodeIndex() possibly not implemented correctly");
@@ -589,6 +617,7 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 
+	@Override
 	public ExceptionHandler[][] getHandlers() {
 
 		if (handlers != null)
@@ -690,6 +719,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 
 
+	@Override
 	public IInstruction[] getInstructions() {
 		if (instructions == null)
 			parseBytecode();
@@ -3175,10 +3205,12 @@ public class DexIMethod implements IBytecodeMethod {
 
 		private final int[] NOTHING = new int[0];
 
+		@Override
 		public int[] indirectlyReadLocals(int instructionIndex) {
 			return NOTHING;
 		}
 
+		@Override
 		public int[] indirectlyWrittenLocals(int instructionIndex) {
 			return NOTHING;
 		}
@@ -3186,6 +3218,7 @@ public class DexIMethod implements IBytecodeMethod {
 	};
 
 
+	@Override
 	public IndirectionData getIndirectionData() {
 		return NO_INDIRECTIONS;
 	}

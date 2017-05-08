@@ -195,6 +195,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //          }
 //      }
 
+        @Override
         public int meetLocal(int n, int[] rhs, DexCFG.BasicBlock bb) {
             if (allTheSame(rhs)) {
                 for (int i = 0; i < rhs.length; i++) {
