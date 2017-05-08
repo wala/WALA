@@ -320,6 +320,7 @@ public abstract class AstMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
    */
+  @Override
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }

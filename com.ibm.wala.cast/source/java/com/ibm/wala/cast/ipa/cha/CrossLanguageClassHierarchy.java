@@ -275,6 +275,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   }
 
 /** BEGIN Custom change: unresolved classes */
+  @Override
   public Set<TypeReference> getUnresolvedClasses() {
     return HashSetFactory.make();
   }

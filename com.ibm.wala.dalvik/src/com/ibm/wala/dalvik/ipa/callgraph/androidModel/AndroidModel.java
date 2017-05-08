@@ -934,6 +934,7 @@ public class AndroidModel /* makes SummarizedMethod */
         return method;
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
         return this.cha;
     }

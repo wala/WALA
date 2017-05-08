@@ -814,6 +814,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
    */
+  @Override
   public SourcePosition getSourcePosition(int bcIndex) throws InvalidClassFileException {
     return (getBCInfo().positionMap == null) ? null : getBCInfo().positionMap[bcIndex];
   }
@@ -821,6 +822,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
    */
+  @Override
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return (getBCInfo().paramPositionMap == null) ? null : getBCInfo().paramPositionMap[paramNum];
   }

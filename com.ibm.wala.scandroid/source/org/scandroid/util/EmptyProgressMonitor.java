@@ -49,10 +49,10 @@ package org.scandroid.util;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 public final class EmptyProgressMonitor implements IProgressMonitor {
-    public void beginTask(String task, int totalWork) { }
-    public boolean isCanceled() { return false; }
-    public void done() { }
-    public void worked(int units) { }
+    @Override public void beginTask(String task, int totalWork) { }
+    @Override public boolean isCanceled() { return false; }
+    @Override public void done() { }
+    @Override public void worked(int units) { }
     
 	@Override
 	public void subTask(String subTask) {

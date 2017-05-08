@@ -73,6 +73,7 @@ public class InstructionArray implements Collection<Instruction> {
         index2pc = new ArrayList<>();
     }
 
+    @Override
     public boolean add(Instruction e) {
         boolean ret = instructions.add(e);
 
@@ -84,6 +85,7 @@ public class InstructionArray implements Collection<Instruction> {
         return ret;
     }
 
+    @Override
     public boolean addAll(Collection<? extends Instruction> c) {
         boolean ret = false;
 
@@ -94,10 +96,12 @@ public class InstructionArray implements Collection<Instruction> {
         return ret;
     }
 
+    @Override
     public boolean contains(Object o) {
         return instructions.contains(o);
     }
 
+    @Override
     public boolean containsAll(Collection<?> c) {
         return instructions.containsAll(c);
     }
@@ -114,38 +118,47 @@ public class InstructionArray implements Collection<Instruction> {
         return instructions.indexOf(o);
     }
 
+    @Override
     public boolean isEmpty() {
         return instructions.isEmpty();
     }
 
+    @Override
     public Iterator<Instruction> iterator() {
         return instructions.iterator();
     }
 
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public int size() {
         return instructions.size();
     }
 
+    @Override
     public Object[] toArray() {
         return instructions.toArray();
     }
 
+    @Override
     public <T> T[] toArray(T[] a) {
         return instructions.toArray(a);
     }

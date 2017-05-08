@@ -110,6 +110,7 @@ public class DexIField implements IField {
         myFieldRef = FieldReference.findOrCreate(myClass.getReference(), name, type);
     }
 
+	@Override
 	public TypeReference getFieldTypeReference() {
 
         //compute the typeReference from the EncodedField
@@ -122,6 +123,7 @@ public class DexIField implements IField {
 
     }
 
+    @Override
     public FieldReference getReference() {
 
         if (fieldReference == null) {
@@ -135,38 +137,47 @@ public class DexIField implements IField {
 
     }
 
+    @Override
     public Atom getName() {
         return name;
     }
 
+    @Override
     public boolean isFinal() {
         return (eField.accessFlags & FINAL.getValue()) != 0;
     }
 
+    @Override
     public boolean isPrivate() {
         return (eField.accessFlags & PRIVATE.getValue()) != 0;
     }
 
+    @Override
     public boolean isProtected() {
         return (eField.accessFlags & PROTECTED.getValue()) != 0;
     }
 
+    @Override
     public boolean isPublic() {
         return (eField.accessFlags & PUBLIC.getValue()) != 0;
     }
 
+    @Override
     public boolean isStatic() {
         return (eField.accessFlags & STATIC.getValue()) != 0;
     }
 
+    @Override
     public IClass getDeclaringClass() {
         return myClass;
     }
 
+    @Override
     public boolean isVolatile() {
         return (eField.accessFlags & VOLATILE.getValue()) != 0;
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
         return myClass.getClassHierarchy();
     }

@@ -78,6 +78,7 @@ public class StaticInitializer {
   private class InitializerDomain extends MutableMapping<IClass> implements
       TabulationDomain<IClass, BasicBlockInContext<IExplodedBasicBlock>> {
 
+    @Override
     public boolean hasPriorityOver(PathEdge<BasicBlockInContext<IExplodedBasicBlock>> p1,
         PathEdge<BasicBlockInContext<IExplodedBasicBlock>> p2) {
       // don't worry about worklist priorities
@@ -99,6 +100,7 @@ public class StaticInitializer {
      * 
      * @see ReachingDefsProblem
      */
+    @Override
     public IFlowFunction getUnbalancedReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       return IdentityFlowFunction.identity();
@@ -107,6 +109,7 @@ public class StaticInitializer {
     /**
      * flow function from caller to callee; just the identity function
      */
+    @Override
     public IUnaryFlowFunction getCallFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest, BasicBlockInContext<IExplodedBasicBlock> ret) {
       return IdentityFlowFunction.identity();
@@ -115,6 +118,7 @@ public class StaticInitializer {
     /**
      * flow function from call node to return node when there are no targets for the call site; not a case we are expecting
      */
+    @Override
     public IUnaryFlowFunction getCallNoneToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       // if we're missing callees, just keep what information we have
@@ -125,6 +129,7 @@ public class StaticInitializer {
      * flow function from call node to return node at a call site when callees exist. We kill everything; surviving facts should
      * flow out of the callee
      */
+    @Override
     public IUnaryFlowFunction getCallToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       return KillEverything.singleton();
@@ -133,6 +138,7 @@ public class StaticInitializer {
     /**
      * flow function for normal intraprocedural edges
      */
+    @Override
     public IUnaryFlowFunction getNormalFlowFunction(final BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       final IExplodedBasicBlock ebb = src.getDelegate();
@@ -142,6 +148,7 @@ public class StaticInitializer {
         if (putInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
+            @Override
             public IntSet getTargets(int d1) {
               System.out.println(ebb.toString());
               System.out.println(d1);
@@ -168,6 +175,7 @@ public class StaticInitializer {
         if (getInstr.isStatic()) { //Auf konstante �berpr�fen
           return new IUnaryFlowFunction() {
 
+            @Override
             public IntSet getTargets(int d1) {
               // first, gen this statement
               int factNum = domain.getMappedIndex(cha.lookupClass(getInstr.getDeclaredField().getDeclaringClass()));
@@ -190,6 +198,7 @@ public class StaticInitializer {
         final SSANewInstruction newInstr = (SSANewInstruction) instruction;
         return new IUnaryFlowFunction() {
 
+          @Override
           public IntSet getTargets(int d1) {
             // first, gen this statement
             int factNum = domain.getMappedIndex(cha.lookupClass(newInstr.getConcreteType()));
@@ -213,6 +222,7 @@ public class StaticInitializer {
         if (invInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
+            @Override
             public IntSet getTargets(int d1) {
               System.out.println("Invoke!");
               // first, gen this statement
@@ -241,6 +251,7 @@ public class StaticInitializer {
     /**
      * standard flow function from callee to caller; just identity
      */
+    @Override
     public IFlowFunction getReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> call,
         BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dest) {
       return IdentityFlowFunction.identity();
@@ -261,6 +272,7 @@ public class StaticInitializer {
     /**
      * we use the entry block of the CGNode as the fake entry when propagating from callee to caller with unbalanced parens
      */
+    @Override
     public BasicBlockInContext<IExplodedBasicBlock> getFakeEntry(BasicBlockInContext<IExplodedBasicBlock> node) {
       final CGNode cgNode = node.getNode();
       return getFakeEntry(cgNode);
@@ -328,10 +340,12 @@ public class StaticInitializer {
       return result;
     }
     
+    @Override
     public IPartiallyBalancedFlowFunctions<BasicBlockInContext<IExplodedBasicBlock>> getFunctionMap() {
       return flowFunctions;
     }
     
+    @Override
     public TabulationDomain<IClass, BasicBlockInContext<IExplodedBasicBlock>> getDomain() {
       return domain;
     }
@@ -339,14 +353,17 @@ public class StaticInitializer {
     /**
      * we don't need a merge function; the default unioning of tabulation works fine
      */
+    @Override
     public IMergeFunction getMergeFunction() {
       return null;
     }
     
+    @Override
     public ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> getSupergraph() {
       return supergraph;
     }
     
+    @Override
     public Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds() {
       return initialSeeds;
     }
