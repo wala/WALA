@@ -47,7 +47,7 @@ public class AstJavaModRef<T extends InstanceKey> extends AstModRef<T> {
   }
 
   @Override
-  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
+  protected RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
     return new AstJavaRefVisitor<>(n, result, pa, h);
   }
 
@@ -73,7 +73,7 @@ public class AstJavaModRef<T extends InstanceKey> extends AstModRef<T> {
   }
  
   @Override
-  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+  protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
     return new AstJavaModVisitor<>(n, result, h, pa);
   }
 

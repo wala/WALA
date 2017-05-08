@@ -271,10 +271,6 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     return heapGraph;
   }
 
-  public SDG<I> getSDG(Class<I> instanceKeyClass, DataDependenceOptions data, ControlDependenceOptions ctrl) {
-    return new SDG<I>(getCallGraph(), getPointerAnalysis(), data, ctrl);
-  }
-
   public SDG<I> getSDG(DataDependenceOptions data, ControlDependenceOptions ctrl) {
     return new SDG<I>(getCallGraph(), getPointerAnalysis(), data, ctrl);
   }

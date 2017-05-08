@@ -170,13 +170,13 @@ public class PDFSlice {
       Collection<Statement> slice = null;
       if (goBackward) {
         final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-        slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
+        slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
       } else {
         // for forward slices ... we actually slice from the return value of
         // calls.
         s = getReturnStatementForCall(s);
         final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-        slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
+        slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
       }
       SlicerTest.dumpSlice(slice);
 
