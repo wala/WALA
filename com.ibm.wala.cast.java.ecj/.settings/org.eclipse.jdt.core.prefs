@@ -10,5 +10,6 @@ org.eclipse.jdt.core.compiler.problem.missingJavadocCommentsVisibility=public
 org.eclipse.jdt.core.compiler.problem.missingJavadocTagDescription=no_tag
 org.eclipse.jdt.core.compiler.problem.missingJavadocTags=ignore
 org.eclipse.jdt.core.compiler.problem.missingOverrideAnnotation=ignore
+org.eclipse.jdt.core.compiler.problem.syntheticAccessEmulation=ignore
 org.eclipse.jdt.core.compiler.problem.unnecessaryElse=ignore
 org.eclipse.jdt.core.compiler.source=1.7
