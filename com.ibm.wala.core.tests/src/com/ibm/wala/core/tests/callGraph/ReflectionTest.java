@@ -316,7 +316,7 @@ public class ReflectionTest extends WalaTestCase {
     Assert.assertTrue(filePermToStringNode != null);
   }
 
-  private Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
+  private static Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : nodes) {
       Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);

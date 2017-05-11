@@ -306,15 +306,15 @@ public abstract class AbstractSSAConversion {
     }
   }
 
-   private <T> void push(ArrayList<T> stack, T elt) {
+   private static <T> void push(ArrayList<T> stack, T elt) {
     stack.add(elt);
   }
   
-  private <T> T peek(ArrayList<T> stack) {
+  private static <T> T peek(ArrayList<T> stack) {
     return stack.get(stack.size()-1); 
   }
   
-  private <T> T pop(ArrayList<T> stack) {
+  private static <T> T pop(ArrayList<T> stack) {
     T e = stack.get(stack.size()-1);
     stack.remove(stack.size()-1);
     return e;

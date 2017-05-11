@@ -461,7 +461,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		return elts;
 	}
 
-	private Set<CodeElement> getStaticFieldAccessCodeElts(SSAFieldAccessInstruction inst) {
+	private static Set<CodeElement> getStaticFieldAccessCodeElts(SSAFieldAccessInstruction inst) {
 		Set<CodeElement> elts = HashSetFactory.make();
 		final FieldReference fieldRef = inst.getDeclaredField();
 		elts.add(new StaticFieldElement(fieldRef));
@@ -490,7 +490,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		return elts;
 	}
 
-	private IUnaryFlowFunction union(final IUnaryFlowFunction g,
+	private static IUnaryFlowFunction union(final IUnaryFlowFunction g,
 			final IUnaryFlowFunction h) {
 		return new IUnaryFlowFunction() {
 			@Override
@@ -507,7 +507,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	 * @param g
 	 * @return { (x, z) | (x, y) \in g, (y, z) \in f }
 	 */
-	private IUnaryFlowFunction compose(final IUnaryFlowFunction f,
+	private static IUnaryFlowFunction compose(final IUnaryFlowFunction f,
 			final IUnaryFlowFunction g) {
 		return new IUnaryFlowFunction() {
 

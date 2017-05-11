@@ -164,7 +164,7 @@ public class SynchronizedBlockDuplicator extends
     return oldTarget;
   }
 
-  private boolean contains(RewriteContext<UnwindKey> c, CAstNode n) {
+  private static boolean contains(RewriteContext<UnwindKey> c, CAstNode n) {
     if (c instanceof SyncContext) {
       return ((SyncContext) c).containsNode(n);
     } else {
@@ -176,7 +176,7 @@ public class SynchronizedBlockDuplicator extends
    * does root represent a synchronized block? if so, return the variable whose
    * lock is acquired. otherwise, return <code>null</code>
    */
-  private String isSynchronizedOnVar(CAstNode root) {
+  private static String isSynchronizedOnVar(CAstNode root) {
     if (root.getKind() == CAstNode.UNWIND) {
       CAstNode unwindBody = root.getChild(0);
       if (unwindBody.getKind() == CAstNode.BLOCK_STMT) {

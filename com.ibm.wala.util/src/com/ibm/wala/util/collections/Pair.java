@@ -26,7 +26,7 @@ public class Pair<T,U> implements Serializable {
     this.snd = snd;
   }
 
-  private boolean check(Object x, Object y) {
+  private static boolean check(Object x, Object y) {
     return (x == null) ? (y == null) : x.equals(y);
   }
 
@@ -36,7 +36,7 @@ public class Pair<T,U> implements Serializable {
     return (o instanceof Pair) && check(fst, ((Pair) o).fst) && check(snd, ((Pair) o).snd);
   }
 
-  private int hc(Object o) {
+  private static int hc(Object o) {
     return (o == null) ? 0 : o.hashCode();
   }
 

@@ -95,8 +95,8 @@ public class CallRetSourceSpec extends SourceSpec {
 		}
 	}
 
-	private<E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
-	        BasicBlockInContext<E> block) {
+	private static <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
+																				  BasicBlockInContext<E> block) {
 
 		HashSet<FlowType<E>> flowSet = new HashSet<>();
 		flowSet.clear();

@@ -266,7 +266,7 @@ public abstract class EclipseProjectPath<E, P> {
   /**
    * Is javaProject a plugin project?
    */
-  private boolean isPluginProject(IProject project) {
+  private static boolean isPluginProject(IProject project) {
     IPluginModelBase model = findModel(project);
     if (model == null) {
       return false;
@@ -349,13 +349,13 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  private IPluginModelBase findModel(IProject p) {
+  private static IPluginModelBase findModel(IProject p) {
     // PluginRegistry is specific to Eclipse 3.3+. Use PDECore for compatibility with 3.2
     // return PluginRegistry.findModel(p);
     return PDECore.getDefault().getModelManager().findModel(p);
   }
 
-  private IPluginModelBase findModel(BundleDescription bd) {
+  private static IPluginModelBase findModel(BundleDescription bd) {
     // PluginRegistry is specific to Eclipse 3.3+. Use PDECore for compatibility with 3.2
     // return PluginRegistry.findModel(bd);
     return PDECore.getDefault().getModelManager().findModel(bd);

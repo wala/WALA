@@ -486,7 +486,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     @SuppressWarnings("unused")
-	private String typeRefToStr(TypeReference fieldType)
+	private static String typeRefToStr(TypeReference fieldType)
             throws UTFDataFormatException {
         Atom className = fieldType.getName().getClassName();
         Atom pkgName = fieldType.getName().getPackage();

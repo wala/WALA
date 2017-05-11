@@ -172,7 +172,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   }
   */
   
-  private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
+  private static void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
     builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), orig));
   }
