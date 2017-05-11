@@ -147,7 +147,7 @@ public class ReuseParameters {
      *
      *  @see    com.ibm.wala.util.ssa.ParameterAccessor
      */
-    private int ssaFor(IMethod inCallTo, int paramNo) {
+    private static int ssaFor(IMethod inCallTo, int paramNo) {
         assert (paramNo >= 0);
         assert (paramNo < inCallTo.getNumberOfParameters());
 
@@ -163,7 +163,7 @@ public class ReuseParameters {
      *
      *  @see    com.ibm.wala.util.ssa.ParameterAccessor
      */
-    private int firstOf(TypeName type, IMethod inCallTo) {
+    private static int firstOf(TypeName type, IMethod inCallTo) {
         for (int i = 0; i < inCallTo.getNumberOfParameters(); ++i) {
             if (inCallTo.getParameterType(i).getName().equals(type)) {
                 return i;

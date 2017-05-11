@@ -178,7 +178,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
   }
 
-  private void checkRemovingNormalOk(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock block,
+  private static void checkRemovingNormalOk(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock block,
       ISSABasicBlock normalSucc) {
     if (!block.getLastInstruction().isPEI() || !filter.getFilter(node).alwaysThrowsException(block.getLastInstruction())) {
       specialCaseThrowFiltered(cfg, normalSucc);
@@ -198,7 +198,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
    * @param cfg
    * @param normalSucc
    */
-  private void specialCaseThrowFiltered(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
+  private static void specialCaseThrowFiltered(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
     ISSABasicBlock next = normalSucc;
     while (!(next.getLastInstruction() instanceof SSAThrowInstruction)) {
       assertTrue(cfg.getNormalSuccessors(next).iterator().hasNext());
@@ -206,7 +206,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
   }
 
-  private void checkNoNewEdges(ControlFlowGraph<SSAInstruction, ISSABasicBlock> original,
+  private static void checkNoNewEdges(ControlFlowGraph<SSAInstruction, ISSABasicBlock> original,
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> filtered) {
     for (ISSABasicBlock block : filtered) {
       for (ISSABasicBlock normalSucc : filtered.getNormalSuccessors(block)) {

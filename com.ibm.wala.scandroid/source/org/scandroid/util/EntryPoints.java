@@ -357,7 +357,7 @@ public class EntryPoints {
     }
 
     @SuppressWarnings("unused")
-	private String IntentToMethod(String intent) {
+	private static String IntentToMethod(String intent) {
         if (intent.contentEquals("android.intent.action.MAIN") ||
                 intent.contentEquals("android.media.action.IMAGE_CAPTURE") ||
                 intent.contentEquals("android.media.action.VIDEO_CAPTURE") ||

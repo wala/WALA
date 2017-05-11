@@ -61,7 +61,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
     return baseContext;
   }
 
-  private boolean recursiveContext(Context baseContext, IMethod callee) {
+  private static boolean recursiveContext(Context baseContext, IMethod callee) {
     if (!recursionPossible(callee)) {
       return false;
     }
@@ -100,7 +100,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
     return false;
   }
 
-  private boolean updateForNode(Context baseContext, Collection<IMethod> curEncountered, LinkedList<Pair<Context, Collection<IMethod>>> worklist, CGNode callerNode) {
+  private static boolean updateForNode(Context baseContext, Collection<IMethod> curEncountered, LinkedList<Pair<Context, Collection<IMethod>>> worklist, CGNode callerNode) {
     final IMethod method = callerNode.getMethod();
     if (!recursionPossible(method)) {
       assert !curEncountered.contains(method);
@@ -132,7 +132,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
    * @param m
    * @return
    */
-  private boolean recursionPossible(IMethod m) {
+  private static boolean recursionPossible(IMethod m) {
     // object or array constructors cannot be involved
     if (m.getReference().getName().equals(JavaScriptMethods.ctorAtom)) {
       TypeReference declaringClass = m.getReference().getDeclaringClass();

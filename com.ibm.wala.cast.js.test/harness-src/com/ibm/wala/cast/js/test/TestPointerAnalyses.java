@@ -93,7 +93,7 @@ public abstract class TestPointerAnalyses {
     JSCallGraphUtil.setTranslatorFactory(factory);
   }
 
-  private Pair<CGNode, NewSiteReference> map(CallGraph CG, Pair<CGNode, NewSiteReference> ptr) {
+  private static Pair<CGNode, NewSiteReference> map(CallGraph CG, Pair<CGNode, NewSiteReference> ptr) {
     CGNode n = ptr.fst;
     
     if (! (n.getMethod() instanceof JavaScriptConstructor)) {
@@ -116,7 +116,7 @@ public abstract class TestPointerAnalyses {
     return Pair.make(caller, new NewSiteReference(site.getProgramCounter(), ptr.snd.getDeclaredType()));
   }
   
-  private Set<Pair<CGNode, NewSiteReference>> map(CallGraph CG, Set<Pair<CGNode, NewSiteReference>> ptrs) {
+  private static Set<Pair<CGNode, NewSiteReference>> map(CallGraph CG, Set<Pair<CGNode, NewSiteReference>> ptrs) {
     Set<Pair<CGNode, NewSiteReference>> result = HashSetFactory.make();
     for(Pair<CGNode, NewSiteReference> ptr : ptrs) {
       result.add(map(CG, ptr));
@@ -124,7 +124,7 @@ public abstract class TestPointerAnalyses {
     return result;
   }
   
-  private Set<Pair<CGNode, NewSiteReference>> ptrs(Set<CGNode> functions, int local, CallGraph CG, PointerAnalysis<? extends InstanceKey> pa) {
+  private static Set<Pair<CGNode, NewSiteReference>> ptrs(Set<CGNode> functions, int local, CallGraph CG, PointerAnalysis<? extends InstanceKey> pa) {
     Set<Pair<CGNode, NewSiteReference>> result = HashSetFactory.make();
 
     for(CGNode n : functions) {
@@ -144,7 +144,7 @@ public abstract class TestPointerAnalyses {
     return result;
   }
   
-  private boolean isGlobal(Set<CGNode> functions, int local, PointerAnalysis<? extends InstanceKey> pa) {
+  private static boolean isGlobal(Set<CGNode> functions, int local, PointerAnalysis<? extends InstanceKey> pa) {
     for(CGNode n : functions) {
       PointerKey l = pa.getHeapModel().getPointerKeyForLocal(n, local);
       if (l != null) {

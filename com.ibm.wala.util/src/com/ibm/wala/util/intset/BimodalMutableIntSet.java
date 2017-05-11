@@ -47,7 +47,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /**
    * @return true iff we would like to use the same representation for V as we do for W
    */
-  private boolean sameRepresentation(IntSet V, IntSet W) {
+  private static boolean sameRepresentation(IntSet V, IntSet W) {
     // for now we assume that we always want to use the same representation for
     // V as
     // for W.

@@ -79,7 +79,7 @@ final public class CTDecoder extends Decoder {
       return cp.getItemType(index);
     }
 
-    private Error convertToError(InvalidClassFileException e) {
+    private static Error convertToError(InvalidClassFileException e) {
       e.printStackTrace();
       return new Error("Invalid class file: " + e.getMessage());
     }

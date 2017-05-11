@@ -42,7 +42,7 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
     this(getClasspathEntry("com.ibm.wala.core.testdata"));
   }
   
-  private CallGraph staticCG(String mainClass, String exclusionsFile) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+  private static CallGraph staticCG(String mainClass, String exclusionsFile) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, exclusionsFile != null? exclusionsFile: CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);

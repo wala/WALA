@@ -104,7 +104,7 @@ public class FlowGraph implements Iterable<Vertex> {
 		optimistic_closure = computeClosure(graph, monitor, FuncVertex.class);
 	}
 	
-	private <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
+	private static <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
 		// prune flowgraph by taking out 'unknown' vertex
 		Graph<Vertex> pruned_flowgraph = GraphSlicer.prune(graph, new Predicate<Vertex>() {
 			@Override

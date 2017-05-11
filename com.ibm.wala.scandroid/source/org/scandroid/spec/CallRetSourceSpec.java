@@ -95,7 +95,7 @@ public class CallRetSourceSpec extends SourceSpec {
 		}
 	}
 
-	private<E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
+	private static <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 	        BasicBlockInContext<E> block,
 	        SSAInvokeInstruction invInst,
 			CGNode node, IMethod im, PointerAnalysis<InstanceKey> pa) {

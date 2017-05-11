@@ -343,7 +343,7 @@ public class FlatInstantiator implements IInstantiator {
         return instance; 
     }
 
-    private void createPrimitive(SSAValue instance) {
+    private static void createPrimitive(SSAValue instance) {
         // XXX; something else?
         instance.setAssigned();
     }
