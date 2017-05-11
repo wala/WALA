@@ -3158,7 +3158,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     return map;
   }
 
-  protected final CAstType getTypeForNode(WalkContext context, CAstNode node) {
+  protected final static CAstType getTypeForNode(WalkContext context, CAstNode node) {
     if (context.top().getNodeTypeMap() != null) {
       return context.top().getNodeTypeMap().getNodeType(node);
     } else {
