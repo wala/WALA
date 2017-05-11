@@ -98,7 +98,7 @@ public final class MethodPositions extends PositionsAttribute {
    * @throws IOException
    *           if the input stream cannot be read
    */
-  private Range readRange(DataInputStream in, String startVarName, String endVarName, boolean undefinedAllowed) throws IOException {
+  private static Range readRange(DataInputStream in, String startVarName, String endVarName, boolean undefinedAllowed) throws IOException {
     boolean valid = true;
     Range range = null;
     Position start = null;
@@ -150,7 +150,7 @@ public final class MethodPositions extends PositionsAttribute {
    * @throws InvalidPositionException
    *           if the read position is invalid
    */
-  private Position readPosition(DataInputStream in, String varName) throws IOException, InvalidPositionException {
+  private static Position readPosition(DataInputStream in, String varName) throws IOException, InvalidPositionException {
     Position pos = null;
     try {
       pos = new Position(in.readInt());

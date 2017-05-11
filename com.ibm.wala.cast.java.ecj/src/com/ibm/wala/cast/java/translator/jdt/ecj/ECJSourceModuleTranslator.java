@@ -128,7 +128,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     libs = paths.snd;
   }
 
-  private Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
+  private static Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
     List<String> sources = new LinkedList<>();
     List<String> libs = new LinkedList<>();
     for (ClassLoaderReference cl : scope.getLoaders()) {

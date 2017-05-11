@@ -51,7 +51,7 @@ final class TypeInferenceAssertion implements IRAssertion {
 
   }
 
-  private IR getIR(CallGraph cg, String fullyQualifiedTypeName, String methodName, String methodParameter, String methodReturnType) {
+  private static IR getIR(CallGraph cg, String fullyQualifiedTypeName, String methodName, String methodParameter, String methodReturnType) {
     IClassHierarchy classHierarchy = cg.getClassHierarchy();
     MethodReference methodRef = IRTests
         .descriptorToMethodRef(

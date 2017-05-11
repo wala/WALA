@@ -236,7 +236,7 @@ public class CopyWriter {
     return elems;
   }
 
-  private int copyEntry(ConstantPoolParser cp, ClassWriter w, int i) throws InvalidClassFileException {
+  private static int copyEntry(ConstantPoolParser cp, ClassWriter w, int i) throws InvalidClassFileException {
     byte t = cp.getItemType(i);
     switch (t) {
     case ClassReader.CONSTANT_String:

@@ -100,7 +100,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       domRegion.println("");
     }
 
-    private String makeRef(String object, String property) {
+    private static String makeRef(String object, String property) {
       assert object != null && property != null;
       return object + "[\"" + property + "\"]";
     }

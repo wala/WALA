@@ -274,7 +274,7 @@ nextMethod:
 //        return test.getName().toString().contains("$"); // PRETTY!
 //    }
 
-    private AndroidEntryPoint makeEntryPointForHeuristic(final IMethod method, final IClassHierarchy cha) {
+    private static AndroidEntryPoint makeEntryPointForHeuristic(final IMethod method, final IClassHierarchy cha) {
         AndroidComponent compo;
         { // Guess component
             compo = AndroidComponent.from(method, cha);
@@ -404,11 +404,11 @@ nextMethod:
         }
     }
 
-    private boolean isAPIComponent(final IMethod method) {
+    private static boolean isAPIComponent(final IMethod method) {
         return isAPIComponent(method.getDeclaringClass());
     }
 
-    private boolean isAPIComponent(final IClass cls) {
+    private static boolean isAPIComponent(final IClass cls) {
         ClassLoaderReference clr = cls.getClassLoader().getReference();
 		if (! (clr.equals(ClassLoaderReference.Primordial) || clr.equals(ClassLoaderReference.Extension))) {
             if (cls.getName().toString().startsWith("Landroid/")) {
@@ -420,7 +420,7 @@ nextMethod:
         }
     }
 
-    private boolean isExcluded(final IClass cls) {
+    private static boolean isExcluded(final IClass cls) {
     	final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
     	if (set == null) {
     		return false; // exclusions null ==> no exclusions ==> no class is excluded
@@ -435,7 +435,7 @@ nextMethod:
      *
      *  Currently all methods are placed at ExecutionOrder.MULTIPLE_TIMES_IN_LOOP.
      */
-    private ExecutionOrder selectPositionForHeuristic() {
+    private static ExecutionOrder selectPositionForHeuristic() {
         return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
     }
 

@@ -123,7 +123,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     this.dump = dump;
   }
 
-  private void computeClassPath(AnalysisScope scope) {
+  private static void computeClassPath(AnalysisScope scope) {
     StringBuffer buf = new StringBuffer();
 
     ClassLoaderReference cl = scope.getApplicationLoader();

@@ -74,7 +74,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
   private static final MemberReference unary2Ref = MethodReference.findOrCreate(whateverRef,
       Atom.findOrCreateUnicodeAtom("unary2"), Descriptor.findOrCreateUTF8("()V"));
 
-  private CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  private static CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -86,7 +86,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(new DefaultIRFactory(), options.getSSAOptions()), cha, scope, false);
   }
 
-  private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls, int numLocalCastCallees) {
+  private static void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls, int numLocalCastCallees) {
   
     int numberOfCalls = 0;
     Set<CGNode> callerNodes = HashSetFactory.make();

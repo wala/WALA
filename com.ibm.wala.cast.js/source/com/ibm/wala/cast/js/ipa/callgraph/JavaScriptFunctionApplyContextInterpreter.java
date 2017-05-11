@@ -61,7 +61,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     }
   }
 
-  private IR makeIRForArgList(CGNode node) {
+  private static IR makeIRForArgList(CGNode node) {
     // we have: v1 is dummy apply method
     // v2 is function to be invoked
     // v3 is argument to be passed as 'this'
@@ -121,7 +121,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   }
 
   @SuppressWarnings("unused")
-  private int passArbitraryPropertyValAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
+  private static int passArbitraryPropertyValAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
     int curValNum = nargs + 2;
     int eachElementGetResult = curValNum++;
@@ -139,7 +139,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     return curValNum;
   }
   
-  private int passActualPropertyValsAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
+  private static int passActualPropertyValsAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
     int nullVn = nargs + 2;
     S.addConstant(nullVn, new ConstantValue(null));
@@ -165,7 +165,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     return curValNum;
   }
 
-  private IR makeIRForNoArgList(CGNode node) {
+  private static IR makeIRForNoArgList(CGNode node) {
     // kind of a hack; re-use the summarized function infrastructure
     MethodReference ref = node.getMethod().getReference();
     IClass declaringClass = node.getMethod().getDeclaringClass();

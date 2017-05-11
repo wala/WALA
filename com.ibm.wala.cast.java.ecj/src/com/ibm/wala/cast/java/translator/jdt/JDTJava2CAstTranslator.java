@@ -396,7 +396,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   }
 
-  private boolean isInterface(AbstractTypeDeclaration decl) {
+  private static boolean isInterface(AbstractTypeDeclaration decl) {
     return decl instanceof AnnotationTypeDeclaration ||
       (decl instanceof TypeDeclaration && ((TypeDeclaration)decl).isInterface());
   }
@@ -640,7 +640,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return visit(fakeCtor, classBinding, oldContext, inits);
   }
 
-  private IMethodBinding findDefaultCtor(ITypeBinding superClass) {
+  private static IMethodBinding findDefaultCtor(ITypeBinding superClass) {
     for (IMethodBinding met : superClass.getDeclaredMethods()) {
       if (met.isConstructor() && met.getParameterTypes().length == 0)
         return met;
@@ -1832,7 +1832,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param isPrivate
    * @return
    */
-  private ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
+  private static ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
     // GENERICS
 //    if (owningType.isParameterizedType())
 //      owningType = owningType.getTypeDeclaration();

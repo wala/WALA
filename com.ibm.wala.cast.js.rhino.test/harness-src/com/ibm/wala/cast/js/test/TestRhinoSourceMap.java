@@ -153,7 +153,7 @@ public class TestRhinoSourceMap {
 		  checkFunctionBodies("jquery_spec_test.js", jquery_spec_testSource);
 	  }
 
-	  private void checkFunctionBodies(String fileName, String[][] assertions) throws IOException, ClassHierarchyException {
+	  private static void checkFunctionBodies(String fileName, String[][] assertions) throws IOException, ClassHierarchyException {
 		  Map<String, String> sources = HashMapFactory.make();
 		  for(String[] assertion : assertions) {
 			  sources.put(assertion[0], assertion[1]);

@@ -54,11 +54,11 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     return v.get(localX);
   }
 
-  private int getFirstIndexOnPage(int page) {
+  private static int getFirstIndexOnPage(int page) {
     return page << LOG_PAGE_SIZE;
   }
 
-  private int getPageNumber(int x) {
+  private static int getPageNumber(int x) {
     return x >> LOG_PAGE_SIZE;
   }
 
@@ -78,7 +78,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     v.set(localX, value);
   }
 
-  private int toLocalIndex(int x, int page) {
+  private static int toLocalIndex(int x, int page) {
     return x - getFirstIndexOnPage(page);
   }
 

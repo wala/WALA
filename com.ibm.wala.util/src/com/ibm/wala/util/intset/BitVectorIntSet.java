@@ -310,7 +310,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  private void actOnWord(IntSetAction action, int startingIndex, int word) {
+  private static void actOnWord(IntSetAction action, int startingIndex, int word) {
     if (word != 0) {
       if ((word & 0x1) != 0) {
         action.act(startingIndex);

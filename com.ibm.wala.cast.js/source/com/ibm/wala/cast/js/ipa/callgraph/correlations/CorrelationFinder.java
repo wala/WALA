@@ -244,7 +244,7 @@ public class CorrelationFinder {
     printCorrelatedAccesses(findCorrelatedAccesses(url));
   }
 
-  private void printCorrelatedAccesses(Map<IMethod, CorrelationSummary> summaries) {
+  private static void printCorrelatedAccesses(Map<IMethod, CorrelationSummary> summaries) {
     List<Pair<Position, String>> correlations = new ArrayList<>();
     for(CorrelationSummary summary : summaries.values())
       correlations.addAll(summary.pp());

@@ -129,7 +129,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
     return getFieldBasedCallGraph(eps);
   }
   
-  private String getScriptName(AstMethod m) {
+  private static String getScriptName(AstMethod m) {
     
     // we want the original including file, since that will be the "script"
     Position p = m.getSourcePosition();
