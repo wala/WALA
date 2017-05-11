@@ -282,7 +282,7 @@ nextMethod:
 
             }
         }
-        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha, compo);
+        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
 
         return ep;
     }
@@ -364,7 +364,7 @@ nextMethod:
                         final IMethod method = appClass.getMethod(ifMethod.getSelector());
                         if (method != null && method.getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
                             // The function is overridden
-                            final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha);
+                            final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(), method, cha);
 
                             if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                             if (eps.add(ep)) {
@@ -435,7 +435,7 @@ nextMethod:
      *
      *  Currently all methods are placed at ExecutionOrder.MULTIPLE_TIMES_IN_LOOP.
      */
-    private ExecutionOrder selectPositionForHeuristic(IMethod method) {
+    private ExecutionOrder selectPositionForHeuristic() {
         return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
     }
 
@@ -454,13 +454,13 @@ nextMethod:
         private final String name;
         public final AndroidEntryPoint.ExecutionOrder order;
 
-        public AndroidPossibleEntryPoint(AndroidComponent c, String n, ExecutionOrder o) { 
+        public AndroidPossibleEntryPoint(String n, ExecutionOrder o) {
 //            cls = c; 
             name = n; 
             order = o; 
         }
  
-        public AndroidPossibleEntryPoint(AndroidComponent c, String n, AndroidPossibleEntryPoint o) { 
+        public AndroidPossibleEntryPoint(String n, AndroidPossibleEntryPoint o) {
 //            cls = c; 
             name = n; 
             order = o.order; 

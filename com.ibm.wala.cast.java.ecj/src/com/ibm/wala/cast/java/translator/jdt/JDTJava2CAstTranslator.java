@@ -509,12 +509,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         else if (met.getParameterTypes().length > 0)
           memberEntities.add(createDefaultConstructorWithParameters(met, n, context, inits));
         else
-          memberEntities.add(createDefaultConstructor(name, typeBinding, context, inits, n));
+          memberEntities.add(createDefaultConstructor(typeBinding, context, inits, n));
       }
     }
 
     if (typeBinding.isEnum() && !typeBinding.isAnonymous())
-      doEnumHiddenEntities(typeBinding, staticInits, memberEntities, context);
+      doEnumHiddenEntities(typeBinding, memberEntities, context);
 
     // collect static inits
     if (!staticInits.isEmpty()) {
@@ -629,8 +629,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   }
 
-  private CAstEntity createDefaultConstructor(String className, ITypeBinding classBinding, WalkContext oldContext,
-      ArrayList<ASTNode> inits, ASTNode positioningNode) {
+  private CAstEntity createDefaultConstructor(ITypeBinding classBinding, WalkContext oldContext, ArrayList<ASTNode> inits,
+      ASTNode positioningNode) {
     MethodDeclaration fakeCtor = ast.newMethodDeclaration();
     fakeCtor.setConstructor(true);
     // fakeCtor.setName(ast.newSimpleName(className)); will crash on anonymous types...
@@ -1733,19 +1733,19 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return visitNode(n.getExpression(), context);
   }
 
-  private CAstNode visit(BooleanLiteral n, WalkContext context) {
+  private CAstNode visit(BooleanLiteral n) {
     return fFactory.makeConstant(n.booleanValue());
   }
 
-  private CAstNode visit(CharacterLiteral n, WalkContext context) {
+  private CAstNode visit(CharacterLiteral n) {
     return fFactory.makeConstant(n.charValue());
   }
 
-  private CAstNode visit(NullLiteral n, WalkContext context) {
+  private CAstNode visit() {
     return fFactory.makeConstant(null);
   }
 
-  private CAstNode visit(StringLiteral n, WalkContext context) {
+  private CAstNode visit(StringLiteral n) {
     return fFactory.makeConstant(n.getLiteralValue());
   }
 
@@ -1754,7 +1754,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return makeNode(context, fFactory, n, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(typeName));
   }
 
-  private CAstNode visit(NumberLiteral n, WalkContext context) {
+  private CAstNode visit(NumberLiteral n) {
     return fFactory.makeConstant(n.resolveConstantExpressionValue());
   }
 
@@ -2842,7 +2842,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof Block) {
       return visit((Block) n, context);
     } else if (n instanceof BooleanLiteral) {
-      return visit((BooleanLiteral) n, context);
+      return visit((BooleanLiteral) n);
     } else if (n instanceof BreakStatement) {
       return visit((BreakStatement) n, context);
     } else if (n instanceof CastExpression) {
@@ -2850,7 +2850,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof CatchClause) {
       return visit((CatchClause) n, context);
     } else if (n instanceof CharacterLiteral) {
-      return visit((CharacterLiteral) n, context);
+      return visit((CharacterLiteral) n);
     } else if (n instanceof ClassInstanceCreation) {
       return visit((ClassInstanceCreation) n, context);
     } else if (n instanceof ConditionalExpression) {
@@ -2882,9 +2882,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof MethodInvocation) {
       return visit((MethodInvocation) n, context);
     } else if (n instanceof NumberLiteral) {
-      return visit((NumberLiteral) n, context);
+      return visit((NumberLiteral) n);
     } else if (n instanceof NullLiteral) {
-      return visit((NullLiteral) n, context);
+      return visit();
     } else if (n instanceof ParenthesizedExpression) {
       return visit((ParenthesizedExpression) n, context);
     } else if (n instanceof PostfixExpression) {
@@ -2898,7 +2898,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof SimpleName) {
       return visit((SimpleName) n, context);
     } else if (n instanceof StringLiteral) {
-      return visit((StringLiteral) n, context);
+      return visit((StringLiteral) n);
     } else if (n instanceof SuperConstructorInvocation) {
       return visit((SuperConstructorInvocation) n, context);
     } else if (n instanceof SuperFieldAccess) {
@@ -3450,8 +3450,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         .getModifiers(), handleAnnotations(enumType));
   }
 
-  private void doEnumHiddenEntities(ITypeBinding typeBinding, ArrayList<ASTNode> staticInits, List<CAstEntity> memberEntities,
-      WalkContext context) {
+  private void doEnumHiddenEntities(ITypeBinding typeBinding, List<CAstEntity> memberEntities, WalkContext context) {
     // PART I: create a $VALUES field
     // collect constants
     // ArrayList<String> constants = new ArrayList<String>();

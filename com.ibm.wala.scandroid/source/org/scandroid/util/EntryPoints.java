@@ -89,7 +89,7 @@ public class EntryPoints {
 
     private LinkedList<Entrypoint> entries;
 
-    public void listenerEntryPoints(ClassHierarchy cha, AndroidAnalysisContext loader) {
+    public void listenerEntryPoints(ClassHierarchy cha) {
         ArrayList<MethodReference> entryPointMRs = new ArrayList<>();
 
         // onLocation
@@ -124,7 +124,7 @@ public class EntryPoints {
     	return entries;
     }
     
-    public void activityModelEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
+    public void activityModelEntry(ClassHierarchy cha) {
         String[] methodReferences = {
             "android.app.Activity.ActivityModel()V",
             // find all onActivityResult functions and add them as entry points
@@ -184,7 +184,7 @@ public class EntryPoints {
     }
     
     
-    public void addTestEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
+    public void addTestEntry(ClassHierarchy cha) {
     	String[] methodReferences = {
 //    			"Test.Apps.Outer$PrivateInnerClass.printNum()V",
     			//"Test.Apps.Outer$PublicInnerClass.printNum()V"

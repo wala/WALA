@@ -47,17 +47,11 @@
 package org.scandroid.flow.functions;
 
 
-import org.scandroid.domain.IFDSTaintDomain;
-
 import com.ibm.wala.dataflow.IFDS.IFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IReversibleFlowFunction;
-import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IdentityFlowFunction;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.intset.IntSet;
@@ -71,11 +65,6 @@ public class IDTransferFunctions <E extends ISSABasicBlock> implements
 
     private static final IReversibleFlowFunction IDENTITY_FN = new IdentityFlowFunction();
     
-    public IDTransferFunctions(IFDSTaintDomain<E> domain,
-            ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
-            PointerAnalysis<InstanceKey> pa) {
-    }
-
 	@Override
 	public IUnaryFlowFunction getNormalFlowFunction(BasicBlockInContext<E> src,
 			BasicBlockInContext<E> dest) {

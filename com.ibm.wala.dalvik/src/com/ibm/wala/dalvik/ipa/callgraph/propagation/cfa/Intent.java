@@ -269,6 +269,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
      *
      *  Recomputes if the Intent is internal.
      *  TODO: 
+     *  @param intent 
      *  @todo   Implement it ;)
      *  @todo   What to return if it does not, but Summary-Information is available?
      *  @todo   We should read in the Manifest.xml rather than relying on the packet name!

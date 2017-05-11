@@ -136,8 +136,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
         super(scfg);
         localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), method.getMaxLocals()) : null;
-        init(new SymbolTableMeeter(cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions,
-                localMap, cfg, piNodePolicy));
+        init(new SymbolTableMeeter(cfg, scfg), new SymbolicPropagator(scfg, instructions,
+                cfg, piNodePolicy));
         this.method = method;
         this.symbolTable = symbolTable;
         this.insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
@@ -152,7 +152,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final DexCFG dexCFG;
 
-        SymbolTableMeeter(SSACFG cfg, SSAInstruction[] instructions, DexCFG dexCFG) {
+        SymbolTableMeeter(SSACFG cfg, DexCFG dexCFG) {
             this.cfg = cfg;
 //            this.instructions = instructions;
             this.dexCFG = dexCFG;
@@ -346,8 +346,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final SSAPiNodePolicy piNodePolicy;
 
-        public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSA2LocalMap localMap,
-                SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
+        public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSACFG cfg,
+                SSAPiNodePolicy piNodePolicy) {
             super(dexCFG);
             this.piNodePolicy = piNodePolicy;
             this.cfg = cfg;

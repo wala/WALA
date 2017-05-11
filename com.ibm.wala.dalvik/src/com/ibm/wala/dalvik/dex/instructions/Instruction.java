@@ -54,9 +54,10 @@ import com.ibm.wala.dalvik.classLoader.DexIMethod;
 
 public abstract class Instruction {
 
+    @SuppressWarnings("unused")
     public static class Visitor {
  
-        public void visitArrayLength(ArrayLength instruction) {
+		public void visitArrayLength(ArrayLength instruction) {
          }
 
         public void visitArrayGet(ArrayGet instruction) {
