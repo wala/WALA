@@ -171,6 +171,7 @@ public abstract class Instruction {
         return opcode;
     }
 
+    @SuppressWarnings("static-method")
     public int[] getBranchTargets() {
         return noInstructions;
     }

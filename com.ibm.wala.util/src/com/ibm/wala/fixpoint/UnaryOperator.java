@@ -34,6 +34,7 @@ public abstract class UnaryOperator<T extends IVariable> extends AbstractOperato
     return new BasicUnaryStatement<>(lhs, this, rhs);
   }
 
+  @SuppressWarnings("static-method")
   public boolean isIdentity() {
     return false;
   }

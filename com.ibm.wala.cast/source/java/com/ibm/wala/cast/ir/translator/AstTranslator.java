@@ -227,6 +227,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * to access a non-existent variable (believe it or not, JavaScript actually
    * does this!)
    */
+  @SuppressWarnings("static-method")
   protected boolean hasImplicitGlobals() {
     return false;
   }
@@ -333,6 +334,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * @param name A variable name
    * @return is this name safe to overwrite, i.e. it's synthetic from the translator?
    */
+  @SuppressWarnings("static-method")
   protected boolean ignoreName(String name) {
     return false;
   }
@@ -450,6 +452,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /**
    * generate instructions to check if ref has field, storing answer in result
    */
+  @SuppressWarnings("static-method")
   protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode field) {
     Assertions.UNREACHABLE();
   }
@@ -1785,10 +1788,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     };
   }
 
+  @SuppressWarnings("static-method")
   protected int getArgumentCount(CAstEntity f) {
     return f.getArgumentCount();
   }
   
+  @SuppressWarnings("static-method")
   protected String[] getArgumentNames(CAstEntity f) {
     return f.getArgumentNames();
   }

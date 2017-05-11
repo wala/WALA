@@ -283,6 +283,7 @@ public abstract class AbstractPtrTest {
     cachedCHA = null;
   }
 
+  @SuppressWarnings("static-method")
   protected StateMachineFactory<IFlowLabel> getStateMachineFactory() {
     return new DummyStateMachine.Factory<>();
   }

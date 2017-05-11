@@ -27,6 +27,7 @@ public class PutInstruction extends Instruction implements IPutInstruction {
     this.fieldName = fieldName;
   }
 
+  @SuppressWarnings("static-method")
   ConstantPoolReader getLazyConstantPool() {
     return null;
   }

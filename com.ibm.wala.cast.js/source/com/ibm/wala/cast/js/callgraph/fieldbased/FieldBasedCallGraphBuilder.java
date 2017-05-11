@@ -283,6 +283,7 @@ public abstract class FieldBasedCallGraphBuilder {
   /**
 	 * Extract call edges from the flow graph into high-level representation.
 	 */
+	@SuppressWarnings("static-method")
 	public Set<Pair<CallVertex, FuncVertex>> extractCallGraphEdges(FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
 		VertexFactory factory = flowgraph.getVertexFactory();
 		final Set<Pair<CallVertex, FuncVertex>> result = HashSetFactory.make();

@@ -107,10 +107,12 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
 	/**
    */
+	@SuppressWarnings("static-method")
 	public int getInitialNonEmptySize() {
 		return INITIAL_NONEMPTY_SIZE;
 	}
 
+	@SuppressWarnings("static-method")
 	public float getExpansionFactor() {
 		return EXPANSION_FACTOR;
 	}

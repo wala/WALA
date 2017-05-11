@@ -346,6 +346,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     return Collections.singleton(singleFileModule);
   }
 
+  @SuppressWarnings("static-method")
   protected IGeneratorCallback createHtmlCallback(URL entrypointUrl, IUrlResolver urlResolver) {
     return new HtmlCallback(entrypointUrl, urlResolver);
   }

@@ -204,6 +204,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterAT_FIRST(int PC) { return PC; }
 
      /**
@@ -218,6 +219,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterBEFORE_LOOP (int PC) { return PC; }
 
     /**
@@ -232,6 +234,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterSTART_OF_LOOP (int PC) { return PC; }
 
     /**
@@ -246,6 +249,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterMIDDLE_OF_LOOP (int PC) { return PC; }
     
     /**
@@ -260,6 +264,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) { return PC; }
 
     /**
@@ -274,6 +279,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterEND_OF_LOOP (int PC) { return PC; }
 
     /**
@@ -288,6 +294,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterAFTER_LOOP (int PC) { return PC; }
 
     /**
@@ -302,6 +309,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int enterAT_LAST (int PC) { return PC; }
 
     /**
@@ -316,6 +324,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
+    @SuppressWarnings("static-method")
     protected int leaveAT_LAST (int PC) { return PC; }
 
     /**

@@ -96,6 +96,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
    * @param F
    * @return
    */
+  @SuppressWarnings("static-method")
   protected IClass getFieldNameType(InstanceKey F) {
     return F.getConcreteType();
   }

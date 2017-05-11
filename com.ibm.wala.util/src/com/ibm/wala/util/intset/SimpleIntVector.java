@@ -45,10 +45,12 @@ public class SimpleIntVector implements IntVector, Serializable {
     store[0] = defaultValue;
   }
 
+  @SuppressWarnings("static-method")
   int getInitialSize() {
     return INITIAL_SIZE;
   }
 
+  @SuppressWarnings("static-method")
   float getGrowthFactor() {
     return GROWTH_FACTOR;
   }

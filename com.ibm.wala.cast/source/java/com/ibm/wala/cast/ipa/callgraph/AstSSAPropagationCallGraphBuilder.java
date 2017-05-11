@@ -102,6 +102,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
    * each language can specify whether a particular field name should be stored
    * in object catalogs or not. By default, always return false.
    */
+  @SuppressWarnings("static-method")
   protected boolean isUncataloguedField(IClass type, String fieldName) {
     return false;
   }

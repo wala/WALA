@@ -51,6 +51,7 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 		return flowgraph;
 	}
 
+	@SuppressWarnings("static-method")
 	protected boolean filterFunction(IMethod function) {
 	  return function.getDescriptor().equals(AstMethodReference.fnDesc);
 	}

@@ -584,6 +584,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
   /**
    * subclasses should override as desired.
    */
+  @SuppressWarnings("static-method")
   protected int getVerboseInterval() {
     return DEFAULT_VERBOSE_INTERVAL;
   }
@@ -591,6 +592,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
   /**
    * subclasses should override as desired.
    */
+  @SuppressWarnings("static-method")
   protected int getPeriodicMaintainInterval() {
     return DEFAULT_PERIODIC_MAINTENANCE_INTERVAL;
   }

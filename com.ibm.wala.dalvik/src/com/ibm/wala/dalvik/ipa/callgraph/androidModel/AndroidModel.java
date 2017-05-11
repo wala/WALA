@@ -327,6 +327,7 @@ public class AndroidModel /* makes SummarizedMethod */
      *  @param  ep  The EntryPoint in question
      *  @return if the given EntryPoint shall be part of the model
      */
+    @SuppressWarnings("static-method")
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
         return  true;
     }
