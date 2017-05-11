@@ -32,7 +32,7 @@ import com.ibm.wala.shrikeBT.analysis.Verifier;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
-import com.ibm.wala.shrikeCT.ClassReader;
+import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassWriter;
 
 /**
@@ -190,7 +190,7 @@ public class Bench {
 
     if (ci.isChanged()) {
       ClassWriter cw = ci.emitClass();
-      cw.addField(ClassReader.ACC_PUBLIC | ClassReader.ACC_STATIC, fieldName, Constants.TYPE_boolean, new ClassWriter.Element[0]);
+      cw.addField(ClassConstants.ACC_PUBLIC | ClassConstants.ACC_STATIC, fieldName, Constants.TYPE_boolean, new ClassWriter.Element[0]);
       instrumenter.outputModifiedClass(ci, cw);
     }
   }

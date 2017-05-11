@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -79,7 +78,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
               JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, url);
               loadedFiles.add(url);
               IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
-              return script.getMethod(JavaScriptMethods.fnSelector);
+              return script.getMethod(AstMethodReference.fnSelector);
             }
           } catch (MalformedURLException e1) {
             // do nothing, fall through and return 'target'
