@@ -44,7 +44,6 @@ import java.util.List;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 
 /**
@@ -68,8 +67,7 @@ public final class FragmentEP {
      *
      *  Called before onCreate
      */
-    public static final AndroidPossibleEntryPoint onAttach = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onAttach",
+    public static final AndroidPossibleEntryPoint onAttach = new AndroidPossibleEntryPoint("onAttach",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
@@ -90,8 +88,7 @@ public final class FragmentEP {
      *  Note that this can be called while the fragment's activity is still in the process of being created. 
      *  once the activity itself is created: onActivityCreated(Bundle).
      */
-    public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onCreate",
+    public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint("onCreate",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
@@ -109,8 +106,7 @@ public final class FragmentEP {
      *  This will be called between onCreate(Bundle) and onActivityCreated(Bundle).     XXX: CONTRADICTING DOCUMENTATION!
      *  his is optional, and non-graphical fragments can return null.
      */
-    public static final AndroidPossibleEntryPoint onCreateView = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onCreateView",
+    public static final AndroidPossibleEntryPoint onCreateView = new AndroidPossibleEntryPoint("onCreateView",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
@@ -129,8 +125,7 @@ public final class FragmentEP {
      *  This is called after onCreateView                                               XXX: CONTRADICTING DOCUMENTATION!
      *  and before onViewStateRestored(Bundle).
      */
-    public static final AndroidPossibleEntryPoint onActivityCreated = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onActivityCreated",
+    public static final AndroidPossibleEntryPoint onActivityCreated = new AndroidPossibleEntryPoint("onActivityCreated",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
@@ -149,8 +144,7 @@ public final class FragmentEP {
      *  Called when all saved state has been restored into the view hierarchy of the fragment.
      *  This is called after onActivityCreated(Bundle) and before onStart().
      */
-    public static final AndroidPossibleEntryPoint onViewStateRestored = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onViewStateRestored",
+    public static final AndroidPossibleEntryPoint onViewStateRestored = new AndroidPossibleEntryPoint("onViewStateRestored",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,    // TODO: Already Part of loop?
@@ -169,8 +163,7 @@ public final class FragmentEP {
      *  Called when the Fragment is visible to the user. 
      *  This is generally tied to Activity.onStart of the containing Activity's lifecycle. 
      */
-    public static final AndroidPossibleEntryPoint onStart = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onStart",
+    public static final AndroidPossibleEntryPoint onStart = new AndroidPossibleEntryPoint("onStart",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.START_OF_LOOP,
@@ -188,8 +181,7 @@ public final class FragmentEP {
      *   Called when the fragment is visible to the user and actively running. 
      *   This is generally tied to Activity.onResume of the containing Activity's lifecycle. 
      */
-    public static final AndroidPossibleEntryPoint onResume = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onResume",
+    public static final AndroidPossibleEntryPoint onResume = new AndroidPossibleEntryPoint("onResume",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.START_OF_LOOP,
@@ -215,8 +207,7 @@ public final class FragmentEP {
      *  Called when the Fragment is no longer resumed. 
      *  This is generally tied to Activity.onPause of the containing Activity's lifecycle. 
      */
-    public static final AndroidPossibleEntryPoint onPause = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onPause",
+    public static final AndroidPossibleEntryPoint onPause = new AndroidPossibleEntryPoint("onPause",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.END_OF_LOOP,
@@ -234,9 +225,8 @@ public final class FragmentEP {
      * Called when the Fragment is no longer started. 
      * This is generally tied to Activity.onStop of the containing Activity's lifecycle. 
      */
-    public static final AndroidPossibleEntryPoint onStop = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onStop",
-             ExecutionOrder.after(
+    public static final AndroidPossibleEntryPoint onStop = new AndroidPossibleEntryPoint("onStop",
+            ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onPause,
                     ActivityEP.onStop      // TODO: Rather after or before?
@@ -251,8 +241,7 @@ public final class FragmentEP {
      *
      *  Internally it is called after the view's state has been saved but before it has been removed from its parent. 
      */
-    public static final AndroidPossibleEntryPoint onDestroyView = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onDestroyView",
+    public static final AndroidPossibleEntryPoint onDestroyView = new AndroidPossibleEntryPoint("onDestroyView",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onStop,
@@ -265,8 +254,7 @@ public final class FragmentEP {
      *
      *  Called when the fragment is no longer in use. This is called after onStop() and before onDetach(). 
      */
-    public static final AndroidPossibleEntryPoint onDestroy = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onDestroy",
+    public static final AndroidPossibleEntryPoint onDestroy = new AndroidPossibleEntryPoint("onDestroy",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onDestroyView,
@@ -279,8 +267,7 @@ public final class FragmentEP {
      *
      *  Called when the fragment is no longer attached to its activity. This is called after onDestroy(). 
      */
-    public static final AndroidPossibleEntryPoint onDetach = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onDetach",
+    public static final AndroidPossibleEntryPoint onDetach = new AndroidPossibleEntryPoint("onDetach",
             ExecutionOrder.between( 
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_LAST, 
@@ -299,8 +286,7 @@ public final class FragmentEP {
     /**
      *  @see ActivityEP#onActivityResult
      */
-    public static final AndroidPossibleEntryPoint onActivityResult = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onActivityResult",
+    public static final AndroidPossibleEntryPoint onActivityResult = new AndroidPossibleEntryPoint("onActivityResult",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.MULTIPLE_TIMES_IN_LOOP,
@@ -315,24 +301,21 @@ public final class FragmentEP {
     /**
      *  Unlike activities, other components are never restarted.
      */
-    public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onConfigurationChanged",
+    public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint("onConfigurationChanged",
             ExecutionOrder.directlyAfter(ActivityEP.onConfigurationChanged)    // TODO: Verify
             );
 
     /**
      *  This hook is called whenever an item in a context menu is selected. 
      */
-    public static final AndroidPossibleEntryPoint onContextItemSelected = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onContextItemSelected",
+    public static final AndroidPossibleEntryPoint onContextItemSelected = new AndroidPossibleEntryPoint("onContextItemSelected",
             ExecutionOrder.directlyAfter(ActivityEP.onContextItemSelected) // TODO: Verify
             );
 
     /**
      *  Called when a fragment loads an animation. 
      */
-    public static final AndroidPossibleEntryPoint onCreateAnimator = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onCreateAnimator",
+    public static final AndroidPossibleEntryPoint onCreateAnimator = new AndroidPossibleEntryPoint("onCreateAnimator",
             ExecutionOrder.directlyAfter(onResume) // TODO: Here?
             );
 
@@ -341,16 +324,14 @@ public final class FragmentEP {
      *
      *  Unlike onCreateOptionsMenu, this will be called every time the context menu is about to be shown
      */
-    public static final AndroidPossibleEntryPoint onCreateContextMenu = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onCreateContextMenu",
+    public static final AndroidPossibleEntryPoint onCreateContextMenu = new AndroidPossibleEntryPoint("onCreateContextMenu",
             ExecutionOrder.directlyAfter(ActivityEP.onCreateContextMenu)
             );
 
     /**
      *  Initialize the contents of the Activity's standard options menu. 
      */
-    public static final AndroidPossibleEntryPoint onCreateOptionsMenu = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onCreateOptionsMenu",
+    public static final AndroidPossibleEntryPoint onCreateOptionsMenu = new AndroidPossibleEntryPoint("onCreateOptionsMenu",
             ExecutionOrder.directlyAfter(ActivityEP.onCreateOptionsMenu)
             );
 
@@ -359,8 +340,7 @@ public final class FragmentEP {
      *  Receiving this call means that the menu needed to be rebuilt, but this fragment's items were not included in the newly 
      *  built menu (its onCreateOptionsMenu was not called). 
      */
-    public static final AndroidPossibleEntryPoint onDestroyOptionsMenu = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onDestroyOptionsMenu",
+    public static final AndroidPossibleEntryPoint onDestroyOptionsMenu = new AndroidPossibleEntryPoint("onDestroyOptionsMenu",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.END_OF_LOOP, // TODO: Here?
@@ -372,9 +352,8 @@ public final class FragmentEP {
      *
      *  Fragments start out not hidden.
      */
-    public static final AndroidPossibleEntryPoint onHiddenChanged = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onHiddenChanged",
-             ExecutionOrder.after(
+    public static final AndroidPossibleEntryPoint onHiddenChanged = new AndroidPossibleEntryPoint("onHiddenChanged",
+            ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.MIDDLE_OF_LOOP, // TODO: Here?
                 }
@@ -387,9 +366,8 @@ public final class FragmentEP {
      *  This may be called immediately after the fragment is created from a tag in a layout file. 
      *  Note this is before the fragment's onAttach(Activity) has been called...
      */
-    public static final AndroidPossibleEntryPoint onInflate = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onInflate",
-             ExecutionOrder.between( 
+    public static final AndroidPossibleEntryPoint onInflate = new AndroidPossibleEntryPoint("onInflate",
+            ExecutionOrder.between( 
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST, 
                     ApplicationEP.onCreate,     // TODO: Here?
@@ -404,23 +382,20 @@ public final class FragmentEP {
      *  @see    ActivityEP#onLowMemory
      *  @see    ApplicationEP#onLowMemory
      */
-    public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onLowMemory",
+    public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint("onLowMemory",
             ExecutionOrder.directlyBefore(ActivityEP.onLowMemory)
             );
     /**
      *  @see    ActivityEP#onOptionsItemSelected
      */
-    public static final AndroidPossibleEntryPoint onOptionsItemSelected = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onOptionsItemSelected",
+    public static final AndroidPossibleEntryPoint onOptionsItemSelected = new AndroidPossibleEntryPoint("onOptionsItemSelected",
             ExecutionOrder.directlyAfter(ActivityEP.onOptionsItemSelected)  // TODO: After? Before?
             );
 
     /**
      *  @see    ActivityEP#onOptionsMenuClosed
      */
-    public static final AndroidPossibleEntryPoint onOptionsMenuClosed = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onOptionsMenuClosed",
+    public static final AndroidPossibleEntryPoint onOptionsMenuClosed = new AndroidPossibleEntryPoint("onOptionsMenuClosed",
             ExecutionOrder.directlyAfter(ActivityEP.onOptionsMenuClosed)  // TODO: After? Before?
             );
     
@@ -429,8 +404,7 @@ public final class FragmentEP {
      *
      *  @see    ActivityEP#onPrepareOptionsMenu
      */
-    public static final AndroidPossibleEntryPoint onPrepareOptionsMenu = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onPrepareOptionsMenu",
+    public static final AndroidPossibleEntryPoint onPrepareOptionsMenu = new AndroidPossibleEntryPoint("onPrepareOptionsMenu",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.START_OF_LOOP,
@@ -453,8 +427,7 @@ public final class FragmentEP {
      *  This method may be called at any time before onDestroy(). There are many situations where a fragment may be mostly torn down, 
      *  but its state will not be saved until its owning activity actually needs to save its state.
      */
-    public static final AndroidPossibleEntryPoint onSaveInstanceState = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onSaveInstanceState",
+    public static final AndroidPossibleEntryPoint onSaveInstanceState = new AndroidPossibleEntryPoint("onSaveInstanceState",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onStop,
@@ -469,16 +442,14 @@ public final class FragmentEP {
     /**
      *  @see ActivityEP#onTrimMemory
      */
-    public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onTrimMemory",
+    public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint("onTrimMemory",
             ExecutionOrder.directlyBefore(ActivityEP.onTrimMemory)
             );
 
     /**
      *  Called immediately after onCreateView has returned, but before any saved state has been restored in to the view. 
      */
-    public static final AndroidPossibleEntryPoint onViewCreated = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
-            "onViewCreated",
+    public static final AndroidPossibleEntryPoint onViewCreated = new AndroidPossibleEntryPoint("onViewCreated",
             ExecutionOrder.between(
                 onCreateView,
                 new AndroidEntryPoint.IExecutionOrder[] {

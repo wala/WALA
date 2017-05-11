@@ -43,7 +43,6 @@ package com.ibm.wala.dalvik.util.androidEntryPoints;
 import java.util.List;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 
 /**
@@ -56,23 +55,17 @@ import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoi
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public final class LocationEP {
-	public static final AndroidPossibleEntryPoint onLocationChanged = new AndroidPossibleEntryPoint(AndroidComponent.LOCATION_LISTENER, "onLocationChanged",
-			ExecutionOrder.MIDDLE_OF_LOOP);
+	public static final AndroidPossibleEntryPoint onLocationChanged = new AndroidPossibleEntryPoint("onLocationChanged", ExecutionOrder.MIDDLE_OF_LOOP);
 
-	public static final AndroidPossibleEntryPoint onProviderDisabled = new AndroidPossibleEntryPoint(AndroidComponent.LOCATION_LISTENER, "onProviderDisabled",
-			ExecutionOrder.MIDDLE_OF_LOOP);
+	public static final AndroidPossibleEntryPoint onProviderDisabled = new AndroidPossibleEntryPoint("onProviderDisabled", ExecutionOrder.MIDDLE_OF_LOOP);
 
-	public static final AndroidPossibleEntryPoint onProviderEnabled =  new AndroidPossibleEntryPoint(AndroidComponent.LOCATION_LISTENER, "onProviderEnabled",
-			ExecutionOrder.MIDDLE_OF_LOOP);
+	public static final AndroidPossibleEntryPoint onProviderEnabled =  new AndroidPossibleEntryPoint("onProviderEnabled", ExecutionOrder.MIDDLE_OF_LOOP);
 
-	public static final AndroidPossibleEntryPoint onStatusChanged =    new AndroidPossibleEntryPoint(AndroidComponent.LOCATION_LISTENER, "onStatusChanged",
-			ExecutionOrder.MIDDLE_OF_LOOP);
+	public static final AndroidPossibleEntryPoint onStatusChanged =    new AndroidPossibleEntryPoint("onStatusChanged", ExecutionOrder.MIDDLE_OF_LOOP);
 
-	public static final AndroidPossibleEntryPoint onGpsStatusChanged = new AndroidPossibleEntryPoint(AndroidComponent.GPS_LISTENER, "onGpsStatusChanged",
-			ExecutionOrder.MIDDLE_OF_LOOP);
+	public static final AndroidPossibleEntryPoint onGpsStatusChanged = new AndroidPossibleEntryPoint("onGpsStatusChanged", ExecutionOrder.MIDDLE_OF_LOOP);
 
-	public static final AndroidPossibleEntryPoint onNmeaReceived =    new AndroidPossibleEntryPoint(AndroidComponent.GPS_NMEA_LISTENER, "onNmeaReceived",
-			ExecutionOrder.MIDDLE_OF_LOOP);
+	public static final AndroidPossibleEntryPoint onNmeaReceived =    new AndroidPossibleEntryPoint("onNmeaReceived", ExecutionOrder.MIDDLE_OF_LOOP);
 
     /**
      *  Add the EntryPoint specifications defined in this file to the given list.

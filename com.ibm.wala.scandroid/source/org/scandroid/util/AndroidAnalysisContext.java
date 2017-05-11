@@ -55,7 +55,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,7 +67,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -135,15 +133,6 @@ public class AndroidAnalysisContext {
 	}
 	
 	
-
-	// ContextSelector, entry points, reflection options, IR Factory, call graph
-	// type, include library
-	public void buildGraphs(List<Entrypoint> localEntries,
-			InputStream summariesStream) {
-
-		
-
-	}
 
 	public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
 			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,

@@ -258,8 +258,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
         }
     }
 
-    public void setBehavior(final TypeName type, final TypeName asParameterTo, final MethodReference inCall, 
-            final String withName, final InstanceBehavior beh, final Exactness exactness) {
+    public void setBehavior(final TypeName type, final InstanceBehavior beh, final Exactness exactness) {
 
 
         final BehaviorKey<TypeName> typeK= BehaviorKey.mk(type);
@@ -268,8 +267,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
         behaviours.put(typeK, val);
     }
 
-    public void setBehavior(final Atom pack, final TypeName asParameterTo, final MethodReference inCall, 
-            final String withName, final InstanceBehavior beh, final Exactness exactness) {
+    public void setBehavior(final Atom pack, final InstanceBehavior beh, final Exactness exactness) {
 
 
         final BehaviorKey<Atom> typeK= BehaviorKey.mk(pack);

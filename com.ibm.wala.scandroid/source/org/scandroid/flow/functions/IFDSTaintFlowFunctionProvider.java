@@ -186,10 +186,10 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			else
 			{
 				for (int i = 0; i < instruction.getNumberOfUses(); i++) {
-					p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(i)));
+					p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
 				}
 				for (int j = 0; j < instruction.getNumberOfDefs(); j++) {
-					p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getDef(j)));
+					p.defs.addAll(CodeElement.valueElements(instruction.getDef(j)));
 				}
 			}
 			
@@ -206,7 +206,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 				{
 					//p.uses.add(new LocalElement(instruction.getUse(i)));
 					p.uses.addAll(
-						CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(i)));
+						CodeElement.valueElements(instruction.getUse(i)));
 					
 				}
 				p.defs.add(new ReturnElement());
@@ -222,12 +222,12 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 				//System.out.println("adding receiver flow in "+this+" for "+invInst);
 				//System.out.println("\tadding local element "+invInst.getReceiver());
 				//getReceiver() == getUse(0) == param[0] == this
-				p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), invInst.getReceiver()));
+				p.uses.addAll(CodeElement.valueElements(invInst.getReceiver()));
 				for(int i = 0; i < invInst.getNumberOfDefs(); i++)
 				{
 					//System.out.println("\tadding def local element "+invInst.getDef(i));
 					//return valuenumber of invoke instruction
-					p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(), invInst.getDef(i)));
+					p.defs.addAll(CodeElement.valueElements(invInst.getDef(i)));
 				}
 			}
 			thisToResult = true;
@@ -268,12 +268,12 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 					// These loops cause all parameters flow into the 
 					// 'this' param (due to instruction.getUse(0))
 					for (int i = 1; i < instruction.getNumberOfUses(); i++) {
-						p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(i)));
+						p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
 					}
 				
 
 					if (instruction.getNumberOfUses() > 0) {
-						p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(0)));
+						p.defs.addAll(CodeElement.valueElements(instruction.getUse(0)));
 					}
 				}
 			}
@@ -281,8 +281,8 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 		private void handleOutflowArrayStoreInstruction(
 				SSAInstruction instruction, UseDefSetPair p) {
-			p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(2)));
-			p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(0)));
+			p.uses.addAll(CodeElement.valueElements(instruction.getUse(2)));
+			p.defs.addAll(CodeElement.valueElements(instruction.getUse(0)));
 		}
 
 		private void handleOutflowPutInstruction(SSAInstruction instruction,
@@ -291,7 +291,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			PointerKey pk;
 			Set<CodeElement> elements = HashSetFactory.make();
 			if (pi.isStatic()) {
-			    p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(0)));
+			    p.uses.addAll(CodeElement.valueElements(instruction.getUse(0)));
 			    FieldReference declaredField = pi.getDeclaredField();
 			    IField staticField = getStaticIField(ch, declaredField);
 			    if (staticField == null) {
@@ -301,7 +301,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			    }
 			} else {
 			    p.uses.addAll(
-			    		CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(1)));
+			    		CodeElement.valueElements(instruction.getUse(1)));
 
 			    // this value number seems to be the object referenced in this instruction (?)
 				int valueNumber = instruction.getUse(0);
@@ -311,7 +311,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 				
 				// add the object that holds the field that was modified
 				// to the list of things tainted by this flow:
-				p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(), valueNumber));
+				p.defs.addAll(CodeElement.valueElements(valueNumber));
 			}	
 			// now add the field keys to the defs list so that they
 			// are also tainted:
@@ -329,8 +329,8 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 		private void handleInflowArrayLoadInstruction(
 				SSAInstruction instruction, UseDefSetPair p) {
-			p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(0)));
-			p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(),instruction.getDef()));
+			p.uses.addAll(CodeElement.valueElements(instruction.getUse(0)));
+			p.defs.addAll(CodeElement.valueElements(instruction.getDef()));
 		}
 
 		private void handleInflowGetInstruction(SSAInstruction instruction,
@@ -456,7 +456,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 		final Map<CodeElement,CodeElement> parameterMap = HashMapFactory.make();
 		for (int i = 0; i < instruction.getNumberOfParameters(); i++) {
-			Set<CodeElement> elements = CodeElement.valueElements(pa, src.getNode(), instruction.getUse(i));
+			Set<CodeElement> elements = CodeElement.valueElements(instruction.getUse(i));
 			for(CodeElement e: elements) {
 				parameterMap.put(e, new LocalElement(i+1));
 			}
@@ -541,7 +541,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 						if ( !invInst.isStatic() ) {
 							//used to be invInst.getReceiver(), but I believe that was incorrect.
-							receivers.addAll(CodeElement.valueElements(pa, call.getNode(), invInst.getReceiver()));
+							receivers.addAll(CodeElement.valueElements(invInst.getReceiver()));
 							//receivers.addAll(CodeElement.valueElements(pa, call.getNode(), invInst.getReturnValue(0)));
 						}
 					}

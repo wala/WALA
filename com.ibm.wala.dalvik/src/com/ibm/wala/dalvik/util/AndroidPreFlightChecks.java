@@ -46,7 +46,6 @@ import java.util.Set;
 
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
@@ -68,7 +67,7 @@ public class AndroidPreFlightChecks {
 //    private final AnalysisOptions options;
     private final IClassHierarchy cha;
 
-    public AndroidPreFlightChecks(AndroidEntryPointManager manager, AnalysisOptions options, IClassHierarchy cha) {
+    public AndroidPreFlightChecks(AndroidEntryPointManager manager, IClassHierarchy cha) {
         this.manager = manager;
 //        this.options = options;
         this.cha = cha;

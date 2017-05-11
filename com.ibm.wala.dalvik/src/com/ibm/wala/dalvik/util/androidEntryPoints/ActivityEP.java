@@ -44,7 +44,6 @@ import java.util.List;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 
 /**
@@ -71,9 +70,8 @@ public final class ActivityEP {
      *  This does not have to be called before Service.onCreate but the user assumably starts most 
      *  apps with an activity we place it slightly before the Services
      */
-    public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onCreate",
-			ExecutionOrder.after(
+    public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint("onCreate", 
+            ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
                     // ApplicationEP.onCreate,      // Uncommenting would create a ring-dependency
@@ -90,9 +88,8 @@ public final class ActivityEP {
      *  Called after onCreate(Bundle) — or after onRestart() when the activity had been stopped, but is now again 
      *  being displayed to the user. It will be followed by onResume(). 
      */
-	public static final AndroidPossibleEntryPoint onStart = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onStart",
-			ExecutionOrder.after(
+	public static final AndroidPossibleEntryPoint onStart = new AndroidPossibleEntryPoint("onStart", 
+            ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreate, 
                     ExecutionOrder.START_OF_LOOP
@@ -109,8 +106,7 @@ public final class ActivityEP {
      *
      *  This method is called between onStart() and onPostCreate(Bundle).
      */
-    public static final AndroidPossibleEntryPoint onRestoreInstanceState = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onRestoreInstanceState",
+    public static final AndroidPossibleEntryPoint onRestoreInstanceState = new AndroidPossibleEntryPoint("onRestoreInstanceState", 
             ExecutionOrder.after(onStart));
 
     /**
@@ -118,8 +114,7 @@ public final class ActivityEP {
      *
      *  Called after onStart() and onRestoreInstanceState(Bundle)
      */
-    public static final AndroidPossibleEntryPoint onPostCreate = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onPostCreate",
+    public static final AndroidPossibleEntryPoint onPostCreate = new AndroidPossibleEntryPoint("onPostCreate", 
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onRestoreInstanceState,
@@ -133,9 +128,8 @@ public final class ActivityEP {
      *  Called after onRestoreInstanceState(Bundle), onRestart(), or onPause()
      *  Use onWindowFocusChanged(boolean) to know for certain that your activity is visible to the user.
      */
-	public static final AndroidPossibleEntryPoint onResume = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onResume",
-			ExecutionOrder.after(
+	public static final AndroidPossibleEntryPoint onResume = new AndroidPossibleEntryPoint("onResume", 
+            ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
 				    onPostCreate,
                     onRestoreInstanceState,
@@ -147,8 +141,7 @@ public final class ActivityEP {
     /**
      *  Called when activity resume is complete.
      */
-    public static final AndroidPossibleEntryPoint onPostResume = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onPostResume",
+    public static final AndroidPossibleEntryPoint onPostResume = new AndroidPossibleEntryPoint("onPostResume", 
             ExecutionOrder.after(onResume));
 
     /**
@@ -157,8 +150,7 @@ public final class ActivityEP {
      *
      *  An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
      */
-    public static final AndroidPossibleEntryPoint onNewIntent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onNewIntent",
+    public static final AndroidPossibleEntryPoint onNewIntent = new AndroidPossibleEntryPoint("onNewIntent",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onPostCreate,
@@ -172,8 +164,7 @@ public final class ActivityEP {
      *
      *  Next call will be either onRestart(), onDestroy(), or nothing, depending on later user activity. 
      */
-	public static final AndroidPossibleEntryPoint onStop = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onStop",
+	public static final AndroidPossibleEntryPoint onStop = new AndroidPossibleEntryPoint("onStop", 
             ExecutionOrder.after(
             ExecutionOrder.END_OF_LOOP
             ));
@@ -183,9 +174,8 @@ public final class ActivityEP {
      *
      *  Called after onStop(), followed by onStart() and then onResume(). 
      */
-	public static final AndroidPossibleEntryPoint onRestart = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onRestart",
-			ExecutionOrder.after(onStop) );
+	public static final AndroidPossibleEntryPoint onRestart = new AndroidPossibleEntryPoint("onRestart", 
+            ExecutionOrder.after(onStop) );
 
 
     /**
@@ -196,9 +186,8 @@ public final class ActivityEP {
      *  If called, this method will occur before onStop(). There are no guarantees about whether it will 
      *  occur before or after onPause().
      */
-   public static final AndroidPossibleEntryPoint onSaveInstanceState = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-           "onSaveInstanceState",
-            ExecutionOrder.after(onPostResume));
+   public static final AndroidPossibleEntryPoint onSaveInstanceState = new AndroidPossibleEntryPoint("onSaveInstanceState", 
+           ExecutionOrder.after(onPostResume));
 
    /**
     *   Activity is going to the background.
@@ -212,9 +201,8 @@ public final class ActivityEP {
     *   After receiving this call you will usually receive a following call to onStop()
     *   however in some cases there will be a direct call back to onResume() without going through the stopped state.
     */
-	public static final AndroidPossibleEntryPoint onPause = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onPause",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+	public static final AndroidPossibleEntryPoint onPause = new AndroidPossibleEntryPoint("onPause", 
+            ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
 				onResume,
 				onSaveInstanceState,
 				ExecutionOrder.MIDDLE_OF_LOOP
@@ -225,8 +213,7 @@ public final class ActivityEP {
      *  Someone called finish() on the Activity, or the system is temporarily destroying this Activity to save space.
      *  There are situations where the system will simply kill the activity's hosting process without calling this method.
      */
-	public static final AndroidPossibleEntryPoint onDestroy = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onDestroy",
+	public static final AndroidPossibleEntryPoint onDestroy = new AndroidPossibleEntryPoint("onDestroy", 
             ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
                 onStop,
     			ExecutionOrder.AT_LAST
@@ -235,9 +222,8 @@ public final class ActivityEP {
     /**
      *  Called when an Activity started by this one returns its result.
      */
-	public static final AndroidPossibleEntryPoint onActivityResult = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY, 
-            "onActivityResult",
-			ExecutionOrder.after(
+	public static final AndroidPossibleEntryPoint onActivityResult = new AndroidPossibleEntryPoint("onActivityResult", 
+            ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.MULTIPLE_TIMES_IN_LOOP,
                     // If this Activity starts an notherone it most certainly goes into background so
@@ -254,8 +240,7 @@ public final class ActivityEP {
      *
      * TODO: Assert included everywhere
      */
-    public static final AndroidPossibleEntryPoint dispatchPopulateAccessibilityEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "dispatchPopulateAccessibilityEvent",
+    public static final AndroidPossibleEntryPoint dispatchPopulateAccessibilityEvent = new AndroidPossibleEntryPoint("dispatchPopulateAccessibilityEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
@@ -290,8 +275,7 @@ public final class ActivityEP {
      *
      *  This method was deprecated in API level 13.
      */
-    public static final AndroidPossibleEntryPoint onCreateDialog = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateDialog",
+    public static final AndroidPossibleEntryPoint onCreateDialog = new AndroidPossibleEntryPoint("onCreateDialog",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     getVisible,
@@ -305,8 +289,7 @@ public final class ActivityEP {
      *
      *  This method was deprecated in API level 13.
      */
-    public static final AndroidPossibleEntryPoint onPrepareDialog = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onPrepareDialog",
+    public static final AndroidPossibleEntryPoint onPrepareDialog = new AndroidPossibleEntryPoint("onPrepareDialog",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateDialog,
@@ -321,8 +304,7 @@ public final class ActivityEP {
      * TODO: More info 
      *  This implementation handles tags to embed fragments inside of the activity.
      */
-    public static final AndroidPossibleEntryPoint onCreateView = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateView",
+    public static final AndroidPossibleEntryPoint onCreateView = new AndroidPossibleEntryPoint("onCreateView",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     getVisible,
@@ -335,8 +317,7 @@ public final class ActivityEP {
      *  Called when a Fragment is being attached to this activity, immediately after the call to its 
      *  Fragment.onAttach() method and before Fragment.onCreate(). 
      */
-    public static final AndroidPossibleEntryPoint onAttachFragment = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onAttachFragment",
+    public static final AndroidPossibleEntryPoint onAttachFragment = new AndroidPossibleEntryPoint("onAttachFragment",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateView,
@@ -352,8 +333,7 @@ public final class ActivityEP {
      *  Note that this function is guaranteed to be called before View.onDraw
      *  including before or after onMeasure(int, int).
      */
-    public static final AndroidPossibleEntryPoint onAttachedToWindow = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onAttachedToWindow",
+    public static final AndroidPossibleEntryPoint onAttachedToWindow = new AndroidPossibleEntryPoint("onAttachedToWindow",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateView,
@@ -366,8 +346,7 @@ public final class ActivityEP {
      *  Called when the main window associated with the activity has been detached from the window manager. 
      *  See View.onDetachedFromWindow() for more information.   # TODO See
      */
-     public static final AndroidPossibleEntryPoint onDetachedFromWindow = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onDetachedFromWindow",
+     public static final AndroidPossibleEntryPoint onDetachedFromWindow = new AndroidPossibleEntryPoint("onDetachedFromWindow",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onAttachedToWindow,
@@ -386,8 +365,7 @@ public final class ActivityEP {
      *
      *  Due to a call to Window.setContentView or Window.addContentView
      */
-     public static final AndroidPossibleEntryPoint onContentChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onContentChanged",
+     public static final AndroidPossibleEntryPoint onContentChanged = new AndroidPossibleEntryPoint("onContentChanged",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateView,
@@ -406,8 +384,7 @@ public final class ActivityEP {
       *
       * TODO: Do we have to register an entrypoint for this?
       */
-     public static final AndroidPossibleEntryPoint onApplyThemeResource = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-             "onApplyThemeResource",
+     public static final AndroidPossibleEntryPoint onApplyThemeResource = new AndroidPossibleEntryPoint("onApplyThemeResource",
              ExecutionOrder.directlyAfter(onStart)   // Narf
              );
 
@@ -417,8 +394,7 @@ public final class ActivityEP {
      *
      *  This simply returns null so that all panel sub-windows will have the default menu behavior. 
      */
-    public static final AndroidPossibleEntryPoint onCreatePanelView = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreatePanelView",
+    public static final AndroidPossibleEntryPoint onCreatePanelView = new AndroidPossibleEntryPoint("onCreatePanelView",
             ExecutionOrder.between(
                 getVisible,
                 allInitialViewsSetUp
@@ -429,8 +405,7 @@ public final class ActivityEP {
      *
      *  This calls through to the new onCreateOptionsMenu(Menu) method for the FEATURE_OPTIONS_PANEL panel
      */
-    public static final AndroidPossibleEntryPoint onCreatePanelMenu = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreatePanelMenu",
+    public static final AndroidPossibleEntryPoint onCreatePanelMenu = new AndroidPossibleEntryPoint("onCreatePanelMenu",
             ExecutionOrder.between(
                 getVisible,
                 allInitialViewsSetUp
@@ -441,8 +416,7 @@ public final class ActivityEP {
      *
      *  This calls through to the new onPrepareOptionsMenu(Menu) method for the FEATURE_OPTIONS_PANEL 
      */
-    public static final AndroidPossibleEntryPoint onPreparePanel = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onPreparePanel",
+    public static final AndroidPossibleEntryPoint onPreparePanel = new AndroidPossibleEntryPoint("onPreparePanel",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     getVisible,
@@ -459,8 +433,7 @@ public final class ActivityEP {
      *  This calls through to onOptionsMenuClosed(Menu) method for the FEATURE_OPTIONS_PANEL.
      *  For context menus (FEATURE_CONTEXT_MENU), the onContextMenuClosed(Menu) will be called. 
      */
-    public static final AndroidPossibleEntryPoint onPanelClosed = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onPanelClosed",
+    public static final AndroidPossibleEntryPoint onPanelClosed = new AndroidPossibleEntryPoint("onPanelClosed",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreatePanelMenu,                  
@@ -480,8 +453,7 @@ public final class ActivityEP {
      *
      * Use onContextItemSelected(android.view.MenuItem) to know when an item has been selected. 
      */
-    public static final AndroidPossibleEntryPoint onCreateContextMenu = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateContextMenu",
+    public static final AndroidPossibleEntryPoint onCreateContextMenu = new AndroidPossibleEntryPoint("onCreateContextMenu",
             ExecutionOrder.between(
                 getVisible,
                 allInitialViewsSetUp
@@ -492,8 +464,7 @@ public final class ActivityEP {
      * 
      *  You can use this method for any items for which you would like to do processing without those other facilities. 
      */
-    public static final AndroidPossibleEntryPoint onContextItemSelected = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onContextItemSelected",
+    public static final AndroidPossibleEntryPoint onContextItemSelected = new AndroidPossibleEntryPoint("onContextItemSelected",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateContextMenu,
@@ -508,8 +479,7 @@ public final class ActivityEP {
      *
      * either by the user canceling the menu with the back/menu button, or when an item is selected.
      */
-    public static final AndroidPossibleEntryPoint onContextMenuClosed = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onContextMenuClosed",
+    public static final AndroidPossibleEntryPoint onContextMenuClosed = new AndroidPossibleEntryPoint("onContextMenuClosed",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateContextMenu,
@@ -519,17 +489,14 @@ public final class ActivityEP {
                 ExecutionOrder.AFTER_LOOP   // To much? XXX
             ));
  
-    public static final AndroidPossibleEntryPoint onCreateOptionsMenu = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateOptionsMenu",
+    public static final AndroidPossibleEntryPoint onCreateOptionsMenu = new AndroidPossibleEntryPoint("onCreateOptionsMenu",
             ExecutionOrder.directlyAfter(onCreateContextMenu)   // TODO: Well it behaves different! See onPrepareOptionsMenu, 
             );
-    public static final AndroidPossibleEntryPoint onOptionsItemSelected = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onOptionsItemSelected",
+    public static final AndroidPossibleEntryPoint onOptionsItemSelected = new AndroidPossibleEntryPoint("onOptionsItemSelected",
             ExecutionOrder.directlyAfter(onContextItemSelected)
             );
     
-    public static final AndroidPossibleEntryPoint onPrepareOptionsMenu = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onPrepareOptionsMenu",
+    public static final AndroidPossibleEntryPoint onPrepareOptionsMenu = new AndroidPossibleEntryPoint("onPrepareOptionsMenu",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateOptionsMenu,
@@ -541,15 +508,13 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint onOptionsMenuClosed = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onOptionsMenuClosed",
+    public static final AndroidPossibleEntryPoint onOptionsMenuClosed = new AndroidPossibleEntryPoint("onOptionsMenuClosed",
             ExecutionOrder.directlyAfter(onContextMenuClosed)
             );
 
     
     /** TODO: More Info */
-    public static final AndroidPossibleEntryPoint onMenuOpened = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onMenuOpened",
+    public static final AndroidPossibleEntryPoint onMenuOpened = new AndroidPossibleEntryPoint("onMenuOpened",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateOptionsMenu,
@@ -569,8 +534,7 @@ public final class ActivityEP {
      *
      * This calls through to the new onOptionsItemSelected(MenuItem) 
      */
-     public static final AndroidPossibleEntryPoint onMenuItemSelected = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onMenuItemSelected",
+     public static final AndroidPossibleEntryPoint onMenuItemSelected = new AndroidPossibleEntryPoint("onMenuItemSelected",
             ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateContextMenu,
@@ -586,13 +550,11 @@ public final class ActivityEP {
             ));
 
 
-    public static final AndroidPossibleEntryPoint onTitleChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onTitleChanged",
-           ExecutionOrder.directlyAfter(getVisible)  // TODO: What placement to choose?
+    public static final AndroidPossibleEntryPoint onTitleChanged = new AndroidPossibleEntryPoint("onTitleChanged",
+            ExecutionOrder.directlyAfter(getVisible)  // TODO: What placement to choose?
     );
-    public static final AndroidPossibleEntryPoint onChildTitleChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onChildTitleChanged",
-           ExecutionOrder.directlyAfter(onTitleChanged)
+    public static final AndroidPossibleEntryPoint onChildTitleChanged = new AndroidPossibleEntryPoint("onChildTitleChanged",
+            ExecutionOrder.directlyAfter(onTitleChanged)
     );
    
    
@@ -612,8 +574,7 @@ public final class ActivityEP {
      *  Note that this callback will be invoked for the touch down action that begins a touch gesture, but may not be invoked for 
      *  the touch-moved and touch-up actions that follow.
      */
-    public static final AndroidPossibleEntryPoint onUserInteraction = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onUserInteraction",
+    public static final AndroidPossibleEntryPoint onUserInteraction = new AndroidPossibleEntryPoint("onUserInteraction",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     getVisible,
@@ -623,8 +584,7 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint dispatchTouchEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "dispatchTouchEvent",
+    public static final AndroidPossibleEntryPoint dispatchTouchEvent = new AndroidPossibleEntryPoint("dispatchTouchEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     // TODO: Relation to onGenericMotionEvent
@@ -641,8 +601,7 @@ public final class ActivityEP {
      *
      *  This is most useful to process touch events that happen outside of your window bounds, where there is no view to receive it.
      */
-    public static final AndroidPossibleEntryPoint onTouchEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onTouchEvent",
+    public static final AndroidPossibleEntryPoint onTouchEvent = new AndroidPossibleEntryPoint("onTouchEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     // TODO: Relation to onGenericMotionEvent
@@ -657,8 +616,7 @@ public final class ActivityEP {
      *
      *  TODO: Verify before on... stuff
      */
-    public static final AndroidPossibleEntryPoint dispatchGenericMotionEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "dispatchGenericMotionEvent",
+    public static final AndroidPossibleEntryPoint dispatchGenericMotionEvent = new AndroidPossibleEntryPoint("dispatchGenericMotionEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onUserInteraction,  // TODO: Verify
@@ -676,15 +634,13 @@ public final class ActivityEP {
      *
      *  TODO: After onUserInteraction?
      */
-    public static final AndroidPossibleEntryPoint onGenericMotionEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onGenericMotionEvent",
+    public static final AndroidPossibleEntryPoint onGenericMotionEvent = new AndroidPossibleEntryPoint("onGenericMotionEvent",
             ExecutionOrder.after(
                 dispatchGenericMotionEvent
             ));
 
     
-    public static final AndroidPossibleEntryPoint dispatchTrackballEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "dispatchTrackballEvent",
+    public static final AndroidPossibleEntryPoint dispatchTrackballEvent = new AndroidPossibleEntryPoint("dispatchTrackballEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchPopulateAccessibilityEvent,
@@ -702,8 +658,7 @@ public final class ActivityEP {
      *  The call here happens before trackball movements are converted to DPAD key events, which then get sent 
      *  back to the view hierarchy, and will be processed at the point for things like focus navigation.
      */
-    public static final AndroidPossibleEntryPoint onTrackballEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onTrackballEvent",
+    public static final AndroidPossibleEntryPoint onTrackballEvent = new AndroidPossibleEntryPoint("onTrackballEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchTrackballEvent,
@@ -716,8 +671,7 @@ public final class ActivityEP {
      *  You can override this to intercept all key events before they are dispatched to the window.
      *  TODO: Verify before on... stuff
      */
-    public static final AndroidPossibleEntryPoint dispatchKeyEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "dispatchKeyEvent",
+    public static final AndroidPossibleEntryPoint dispatchKeyEvent = new AndroidPossibleEntryPoint("dispatchKeyEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onUserInteraction,  // TODO: Verify
@@ -729,8 +683,7 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint dispatchKeyShortcutEvent = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "dispatchKeyShortcutEvent",
+    public static final AndroidPossibleEntryPoint dispatchKeyShortcutEvent = new AndroidPossibleEntryPoint("dispatchKeyShortcutEvent",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchKeyEvent,
@@ -751,8 +704,7 @@ public final class ActivityEP {
      *
      * TODO: After onUserInteraction?
      */
-    public static final AndroidPossibleEntryPoint onKeyDown = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onKeyDown",
+    public static final AndroidPossibleEntryPoint onKeyDown = new AndroidPossibleEntryPoint("onKeyDown",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onUserInteraction,
@@ -761,8 +713,7 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint onKeyLongPress = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onKeyLongPress",
+    public static final AndroidPossibleEntryPoint onKeyLongPress = new AndroidPossibleEntryPoint("onKeyLongPress",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchKeyEvent,
@@ -770,8 +721,7 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint onKeyMultiple = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onKeyMultiple",
+    public static final AndroidPossibleEntryPoint onKeyMultiple = new AndroidPossibleEntryPoint("onKeyMultiple",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchKeyEvent,
@@ -779,8 +729,7 @@ public final class ActivityEP {
                 }
             ));
  
-    public static final AndroidPossibleEntryPoint onKeyShortcut = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onKeyShortcut",
+    public static final AndroidPossibleEntryPoint onKeyShortcut = new AndroidPossibleEntryPoint("onKeyShortcut",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchKeyEvent,
@@ -792,8 +741,7 @@ public final class ActivityEP {
     /**
      * The default implementation handles KEYCODE_BACK to stop the activity and go back.
      */
-    public static final AndroidPossibleEntryPoint onKeyUp = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onKeyUp",
+    public static final AndroidPossibleEntryPoint onKeyUp = new AndroidPossibleEntryPoint("onKeyUp",
             ExecutionOrder.after(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchKeyEvent,
@@ -804,8 +752,7 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint onBackPressed = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onBackPressed",
+    public static final AndroidPossibleEntryPoint onBackPressed = new AndroidPossibleEntryPoint("onBackPressed",
             ExecutionOrder.after(   // TODO Why is this so late?
                  new AndroidEntryPoint.IExecutionOrder[] {
                     dispatchKeyEvent,
@@ -818,8 +765,7 @@ public final class ActivityEP {
     /**
      *   This method will be invoked by the default implementation of onNavigateUp() 
      */
-    public static final AndroidPossibleEntryPoint onCreateNavigateUpTaskStack = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateNavigateUpTaskStack",
+    public static final AndroidPossibleEntryPoint onCreateNavigateUpTaskStack = new AndroidPossibleEntryPoint("onCreateNavigateUpTaskStack",
             ExecutionOrder.between(
                  new AndroidEntryPoint.IExecutionOrder[] {
                    ExecutionOrder.START_OF_LOOP 
@@ -835,8 +781,7 @@ public final class ActivityEP {
     /**
      * Prepare the synthetic task stack that will be generated during Up navigation from a different task. 
      */
-    public static final AndroidPossibleEntryPoint onPrepareNavigateUpTaskStack = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onPrepareNavigateUpTaskStack",
+    public static final AndroidPossibleEntryPoint onPrepareNavigateUpTaskStack = new AndroidPossibleEntryPoint("onPrepareNavigateUpTaskStack",
             ExecutionOrder.between(
                  new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateNavigateUpTaskStack,
@@ -853,9 +798,8 @@ public final class ActivityEP {
      *  This is called when a child activity of this one attempts to navigate up. 
      *  The default implementation simply calls onNavigateUp() on this activity (the parent).
      */
-    public static final AndroidPossibleEntryPoint onNavigateUpFromChild = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onNavigateUpFromChild",
-             ExecutionOrder.between(
+    public static final AndroidPossibleEntryPoint onNavigateUpFromChild = new AndroidPossibleEntryPoint("onNavigateUpFromChild",
+            ExecutionOrder.between(
                  new AndroidEntryPoint.IExecutionOrder[] {
                     onCreateNavigateUpTaskStack, //No
                      //onBackPressed,     // TODO: Verify
@@ -871,9 +815,8 @@ public final class ActivityEP {
     /**
      *  This method is called whenever the user chooses to navigate Up within your application's activity hierarchy from the action bar. 
      */
-    public static final AndroidPossibleEntryPoint onNavigateUp = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onNavigateUp",
-             ExecutionOrder.between(
+    public static final AndroidPossibleEntryPoint onNavigateUp = new AndroidPossibleEntryPoint("onNavigateUp",
+            ExecutionOrder.between(
                  new AndroidEntryPoint.IExecutionOrder[] {
                     //onBackPressed,     // TODO: Verify
                     onNavigateUpFromChild
@@ -891,8 +834,7 @@ public final class ActivityEP {
      *
      *  ..in response to a menu item, search button, or other widgets within your activity.
      */
-    public static final AndroidPossibleEntryPoint  onSearchRequested = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onSearchRequested",
+    public static final AndroidPossibleEntryPoint  onSearchRequested = new AndroidPossibleEntryPoint("onSearchRequested",
             ExecutionOrder.after(
                  new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.MULTIPLE_TIMES_IN_LOOP,
@@ -912,20 +854,17 @@ public final class ActivityEP {
     /**
      *  Menus may depend on it..
      */
-    public static final AndroidPossibleEntryPoint onActionModeStarted = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onActionModeStarted",
+    public static final AndroidPossibleEntryPoint onActionModeStarted = new AndroidPossibleEntryPoint("onActionModeStarted",
             ExecutionOrder.MULTIPLE_TIMES_IN_LOOP // TODO where to put??
         );
 
-    public static final AndroidPossibleEntryPoint onActionModeFinished = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onActionModeFinished",
+    public static final AndroidPossibleEntryPoint onActionModeFinished = new AndroidPossibleEntryPoint("onActionModeFinished",
             ExecutionOrder.after(onActionModeStarted)
             );
     /**
      * Give the Activity a chance to control the UI for an action mode requested by the system. 
      */
-    public static final AndroidPossibleEntryPoint onWindowStartingActionMode = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onWindowStartingActionMode",
+    public static final AndroidPossibleEntryPoint onWindowStartingActionMode = new AndroidPossibleEntryPoint("onWindowStartingActionMode",
             ExecutionOrder.between(
                 ExecutionOrder.MULTIPLE_TIMES_IN_LOOP, // TODO where to put??
                 onActionModeStarted
@@ -935,8 +874,7 @@ public final class ActivityEP {
      *  If any configuration change occurs that is not selected to be reported by that attribute, then instead of reporting it the system 
      *  will stop and restart the activity 
      */
-    public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onConfigurationChanged",
+    public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint("onConfigurationChanged",
             ExecutionOrder.between( // TODO: Find a nice position
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onStop
@@ -946,8 +884,7 @@ public final class ActivityEP {
                 }
             ));
 
-    public static final AndroidPossibleEntryPoint onSharedPreferenceChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onSharedPreferenceChanged",
+    public static final AndroidPossibleEntryPoint onSharedPreferenceChanged = new AndroidPossibleEntryPoint("onSharedPreferenceChanged",
             ExecutionOrder.between( // TODO: Find a nice position
                 new AndroidEntryPoint.IExecutionOrder[] {
                     onStop
@@ -960,17 +897,15 @@ public final class ActivityEP {
     /**
      * This method is called before pausing 
      */
-    public static final AndroidPossibleEntryPoint onCreateDescription = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateDescription",
-             ExecutionOrder.between(
+    public static final AndroidPossibleEntryPoint onCreateDescription = new AndroidPossibleEntryPoint("onCreateDescription",
+            ExecutionOrder.between(
                  onSaveInstanceState,
                  onPause
              ));
     /**
      * This method is called before pausing 
      */
-    public static final AndroidPossibleEntryPoint onCreateThumbnail = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onCreateThumbnail",
+    public static final AndroidPossibleEntryPoint onCreateThumbnail = new AndroidPossibleEntryPoint("onCreateThumbnail",
             ExecutionOrder.directlyBefore(onCreateDescription)
             );
     /**
@@ -979,8 +914,7 @@ public final class ActivityEP {
      *  Assit is requested by the user.
      *  TODO: WTF is this?
      */
-    public static final AndroidPossibleEntryPoint onProvideAssistData = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onProvideAssistData",
+    public static final AndroidPossibleEntryPoint onProvideAssistData = new AndroidPossibleEntryPoint("onProvideAssistData",
             ExecutionOrder.between(
                 allInitialViewsSetUp,
                 ExecutionOrder.MIDDLE_OF_LOOP
@@ -993,9 +927,8 @@ public final class ActivityEP {
      *  The function will be called between onStop() and onDestroy().
      *  A new instance of the activity will always be immediately created after this one's onDestroy() is called.
      */
-    public static final AndroidPossibleEntryPoint onRetainNonConfigurationInstance = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onRetainNonConfigurationInstance",
-             ExecutionOrder.between(
+    public static final AndroidPossibleEntryPoint onRetainNonConfigurationInstance = new AndroidPossibleEntryPoint("onRetainNonConfigurationInstance",
+            ExecutionOrder.between(
                     onStop,
                     onDestroy
              ));
@@ -1004,8 +937,7 @@ public final class ActivityEP {
      * While the exact point at which this will be called is not defined, generally it will happen when all background process have been killed. 
      * That is, before reaching the point of killing processes hosting service and foreground UI that we would like to avoid killing. 
      */
-    public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onLowMemory",
+    public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint("onLowMemory",
             ExecutionOrder.between( // TODO: find a nice position
                 ExecutionOrder.END_OF_LOOP,
                 new AndroidEntryPoint.IExecutionOrder[] {
@@ -1018,8 +950,7 @@ public final class ActivityEP {
      *  This will happen for example when it goes in the background and there is not enough memory to keep as many 
      *  background processes running as desired. 
      */
-    public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onTrimMemory", // TODO: find a nice position
+    public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint("onTrimMemory",
             ExecutionOrder.directlyBefore(onLowMemory)     // may potentially come before onLowMemory but they are near enough...
             );
     
@@ -1028,15 +959,13 @@ public final class ActivityEP {
      *
      * this method is called right before the activity's onPause() callback. 
      */
-    public static final AndroidPossibleEntryPoint onUserLeaveHint = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onUserLeaveHint",
+    public static final AndroidPossibleEntryPoint onUserLeaveHint = new AndroidPossibleEntryPoint("onUserLeaveHint",
             ExecutionOrder.directlyBefore(onPause)
             );
     /**
      * This is called whenever the current window attributes change. 
      */
-    public static final AndroidPossibleEntryPoint onWindowAttributesChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onWindowAttributesChanged",
+    public static final AndroidPossibleEntryPoint onWindowAttributesChanged = new AndroidPossibleEntryPoint("onWindowAttributesChanged",
             ExecutionOrder.between( 
                 new AndroidEntryPoint.IExecutionOrder[] {   
                     ExecutionOrder.MULTIPLE_TIMES_IN_LOOP
@@ -1053,8 +982,7 @@ public final class ActivityEP {
      *  As such, while focus changes will generally have some relation to lifecycle changes, you should not rely on any particular 
      *  order between the callbacks here and those in the other lifecycle methods such as onResume(). 
      */
-    public static final AndroidPossibleEntryPoint onWindowFocusChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
-            "onWindowFocusChanged",
+    public static final AndroidPossibleEntryPoint onWindowFocusChanged = new AndroidPossibleEntryPoint("onWindowFocusChanged",
             ExecutionOrder.directlyAfter(onResume)    // TODO see above...
             );
 

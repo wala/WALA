@@ -409,17 +409,13 @@ public class OutflowAnalysis {
 	public Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> analyze(
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain) {
-		return analyze(ctx.cg, ctx.getClassHierarchy(), ctx.graph, ctx.pa,
-				flowResult, domain, specs);
+		return analyze(flowResult, domain, specs);
 	}
 
 	public Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> analyze(
-			CallGraph cg,
-			ClassHierarchy cha,
-			ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> graph,
-			PointerAnalysis<InstanceKey> pa,
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
-			IFDSTaintDomain<IExplodedBasicBlock> domain, ISpecs s) {
+			IFDSTaintDomain<IExplodedBasicBlock> domain,
+			ISpecs s) {
 
 		
 		
