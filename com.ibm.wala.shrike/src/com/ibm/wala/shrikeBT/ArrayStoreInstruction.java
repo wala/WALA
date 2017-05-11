@@ -59,7 +59,7 @@ final public class ArrayStoreInstruction extends Instruction implements IArraySt
 
   @Override
   public String getType() {
-    return Decoder.indexedTypes[opcode - OP_iastore];
+    return Constants.indexedTypes[opcode - OP_iastore];
   }
 
   @Override

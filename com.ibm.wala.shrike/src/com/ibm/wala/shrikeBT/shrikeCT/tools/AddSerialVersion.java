@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import com.ibm.wala.shrikeBT.Util;
+import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.ConstantValueWriter;
@@ -52,7 +53,7 @@ public class AddSerialVersion {
     }
 
     long UID = computeSerialVersionUID(r);
-    w.addField(ClassReader.ACC_PUBLIC | ClassReader.ACC_STATIC | ClassReader.ACC_FINAL, "serialVersionUID", "J",
+    w.addField(ClassConstants.ACC_PUBLIC | ClassConstants.ACC_STATIC | ClassConstants.ACC_FINAL, "serialVersionUID", "J",
         new ClassWriter.Element[] { new ConstantValueWriter(w, UID) });
   }
 
@@ -112,7 +113,7 @@ public class AddSerialVersion {
         int fieldCount = 0;
         for (int f = 0; f < fields.length; f++) {
           int flags = r.getFieldAccessFlags(f);
-          if ((flags & ClassReader.ACC_PRIVATE) == 0 || (flags & (ClassReader.ACC_STATIC | ClassReader.ACC_TRANSIENT)) == 0) {
+          if ((flags & ClassConstants.ACC_PRIVATE) == 0 || (flags & (ClassConstants.ACC_STATIC | ClassConstants.ACC_TRANSIENT)) == 0) {
             fields[fieldCount] = new Integer(f);
             fieldNames[f] = r.getFieldName(f);
             fieldCount++;
@@ -141,7 +142,7 @@ public class AddSerialVersion {
         for (int m = 0; m < methodSigs.length; m++) {
           String name = r.getMethodName(m);
           int flags = r.getMethodAccessFlags(m);
-          if (name.equals("<clinit>") || (flags & ClassReader.ACC_PRIVATE) == 0) {
+          if (name.equals("<clinit>") || (flags & ClassConstants.ACC_PRIVATE) == 0) {
             methods[methodCount] = new Integer(m);
             methodSigs[m] = name + r.getMethodType(m);
             if (name.equals("<clinit>")) {

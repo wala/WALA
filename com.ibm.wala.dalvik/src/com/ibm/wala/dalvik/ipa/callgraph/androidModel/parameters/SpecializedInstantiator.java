@@ -197,7 +197,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
                     appComponents.add(instance);
                 }
             } else {
-                for (TypeReference component : AndroidEntryPointManager.MANAGER.getComponents()) {
+                for (TypeReference component : AndroidEntryPointManager.getComponents()) {
                     final VariableKey iKey = new SSAValue.TypeKey(component.getName());
 
                     if (this.pm.isSeen(iKey)) {
