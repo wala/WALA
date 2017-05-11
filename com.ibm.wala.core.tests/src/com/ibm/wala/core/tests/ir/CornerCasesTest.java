@@ -52,6 +52,7 @@ public class CornerCasesTest extends WalaTestCase {
    * @throws ClassHierarchyException
    * @throws IOException 
    */
+  @SuppressWarnings("static-method")
   @Test public void testBug38484() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
@@ -70,6 +71,7 @@ public class CornerCasesTest extends WalaTestCase {
    * @throws ClassHierarchyException
    * @throws IOException 
    */
+  @SuppressWarnings("static-method")
   @Test public void testBug38540() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);

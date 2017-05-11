@@ -316,6 +316,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the MutableSharedBitVectorIntSet implementation
    */
+  @SuppressWarnings("static-method")
   @Test public void testMutableSharedBitVectorIntSet() {
     doMutableIntSet(new MutableSharedBitVectorIntSetFactory());
   }
@@ -323,6 +324,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the MutableSparseIntSet implementation
    */
+  @SuppressWarnings("static-method")
   @Test public void testMutableSparseIntSet() {
     doMutableIntSet(new MutableSparseIntSetFactory());
   }
@@ -330,6 +332,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the BimodalMutableSparseIntSet implementation
    */
+  @SuppressWarnings("static-method")
   @Test public void testBimodalMutableSparseIntSet() {
     doMutableIntSet(new BimodalMutableIntSetFactory());
   }
@@ -337,6 +340,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the BitVectorIntSet implementation
    */
+  @SuppressWarnings("static-method")
   @Test public void testBitVectorIntSet() {
     doMutableIntSet(new BitVectorIntSetFactory());
   }
@@ -344,6 +348,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the SemiSparseMutableIntSet implementation
    */
+  @SuppressWarnings("static-method")
   @Test public void testSemiSparseMutableIntSet() {
     doMutableIntSet(new SemiSparseMutableIntSetFactory());
   }
@@ -595,10 +600,12 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the MutableSparseLongSet implementation
    */
+  @SuppressWarnings("static-method")
   @Test public void testMutableSparseLongSet() {
     doMutableLongSet(new MutableSparseLongSetFactory());
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testSmallMap() {
     SmallMap<Integer, Integer> M = new SmallMap<>();
     Integer I1 = new Integer(1);
@@ -621,6 +628,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(I.equals(I3));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBimodalMap() {
     Map<Integer, Integer> M = new BimodalMap<>(3);
     Integer I1 = new Integer(1);
@@ -661,6 +669,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(I.equals(I6));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBFSPathFinder() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
@@ -675,6 +684,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBoundedBFS() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
@@ -731,6 +741,7 @@ public class PrimitivesTest extends WalaTestCase {
     return G;
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testDominatorsA() {
     // test graph
     Graph<Object> G = SlowSparseNumberedGraph.make();
@@ -781,6 +792,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(D.dominatorTree().getSuccNodeCount(nodes[10]) == 5);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBinaryIntegerRelation() {
     byte[] impl = new byte[] { BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL, BasicNaturalRelation.SIMPLE };
     IBinaryNaturalRelation R = new BasicNaturalRelation(impl, BasicNaturalRelation.TWO_LEVEL);
@@ -827,6 +839,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(R.getRelated(1).size() == 99);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testUnionFind() {
     int SIZE = 10000;
     IntegerUnionFind uf = new IntegerUnionFind(SIZE);
@@ -867,26 +880,32 @@ public class PrimitivesTest extends WalaTestCase {
     return s.size();
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBitVector() {
     testSingleBitVector(new BitVector());
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVector0_10() {
     testSingleBitVector(new OffsetBitVector(0, 10));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVector10_10() {
     testSingleBitVector(new OffsetBitVector(10, 10));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVector50_10() {
     testSingleBitVector(new OffsetBitVector(50, 10));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVector50_50() {
     testSingleBitVector(new OffsetBitVector(50, 50));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVector100_10() {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
@@ -939,22 +958,27 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(bv);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBitVectors() {
     testBitVectors(new BitVector(), new BitVector());
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVectors150_10() {
     testBitVectors(new OffsetBitVector(150, 10), new OffsetBitVector(150, 10));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVectors100_200_10() {
     testBitVectors(new OffsetBitVector(100, 10), new OffsetBitVector(200, 10));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVectors100_25_10() {
     testBitVectors(new OffsetBitVector(100, 10), new OffsetBitVector(25, 10));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testOffsetBitVectors35_25_20_10() {
     testBitVectors(new OffsetBitVector(35, 20), new OffsetBitVector(25, 10));
   }
@@ -1283,6 +1307,7 @@ public class PrimitivesTest extends WalaTestCase {
     return v1;
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testSpecificBugsInOffsetBitVectors() {
     OffsetBitVector v1 = makeBigTestOffsetVector();
     System.err.println(v1);
@@ -1310,6 +1335,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(v2.isSubset(v1));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testSpecificBugsInSemiSparseMutableIntSets() {
     SemiSparseMutableIntSet v1 = new SemiSparseMutableIntSet();
     v1.add(54);

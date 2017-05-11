@@ -88,6 +88,7 @@ public class TypeInferenceTest extends WalaTestCase {
     cache = null;
   }
 
+  @SuppressWarnings("static-method")
   @Test public void test1() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("foo"),
         new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
@@ -103,6 +104,7 @@ public class TypeInferenceTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test public void test2() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("bar"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
@@ -116,6 +118,7 @@ public class TypeInferenceTest extends WalaTestCase {
     Assert.assertNotNull("null type abstraction for parameter", ti.getType(2));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void test3() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("inferInt"),
         new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
@@ -131,6 +134,7 @@ public class TypeInferenceTest extends WalaTestCase {
     Assert.assertTrue("inferred wrong type", type.toString().equals("int"));
   }
 
+  @SuppressWarnings("static-method")
   @Test public void test4() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("useCast"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));

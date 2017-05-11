@@ -148,6 +148,7 @@ public class TestRhinoSourceMap {
 "        }"}
 	  };
 	  
+	  @SuppressWarnings("static-method")
 	  @Test
 	  public void testJquerySpecTestSourceMappings() throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
 		  checkFunctionBodies("jquery_spec_test.js", jquery_spec_testSource);

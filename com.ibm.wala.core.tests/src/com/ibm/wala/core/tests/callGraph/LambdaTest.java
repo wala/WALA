@@ -41,6 +41,7 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class LambdaTest extends WalaTestCase {
 
+  @SuppressWarnings("static-method")
   @Test public void testBug144() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -51,6 +52,7 @@ public class LambdaTest extends WalaTestCase {
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
   
+  @SuppressWarnings("static-method")
   @Test public void testBug137() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

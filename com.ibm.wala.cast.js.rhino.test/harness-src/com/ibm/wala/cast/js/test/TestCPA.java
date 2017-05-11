@@ -31,7 +31,7 @@ public class TestCPA {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }
 
-  @SuppressWarnings("static-access")
+  @SuppressWarnings({ "static-access", "static-method" })
   @Test public void testCPA() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "cpa.js");
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));

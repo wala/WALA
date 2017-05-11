@@ -105,6 +105,7 @@ public class DataflowTest extends WalaTestCase {
     cha = null;
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testIntraproc1() {
     IAnalysisCacheView cache = new AnalysisCacheImpl();
@@ -124,6 +125,7 @@ public class DataflowTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testIntraproc2() {
     IAnalysisCacheView cache = new AnalysisCacheImpl();
@@ -144,6 +146,7 @@ public class DataflowTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testContextInsensitive() throws IllegalArgumentException, CallGraphBuilderCancelException {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -176,6 +179,7 @@ public class DataflowTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testContextSensitive() throws IllegalArgumentException, CancelException {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,

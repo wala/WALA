@@ -25,6 +25,7 @@ import com.ibm.wala.util.strings.StringStuff;
 
 public class ExclusionsTest {
 
+  @SuppressWarnings("static-method")
   @Test
   public void testExclusions() throws IOException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("GUIExclusions.txt"),

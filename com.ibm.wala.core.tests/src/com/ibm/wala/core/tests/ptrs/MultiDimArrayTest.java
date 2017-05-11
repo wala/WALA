@@ -57,6 +57,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

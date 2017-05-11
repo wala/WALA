@@ -112,10 +112,12 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     Assert.assertEquals(numLocalCastCallees, actualLocalCastCallees);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(false), 2, 2, 2);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(true), 1, 2, 1);
   } 

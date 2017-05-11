@@ -101,6 +101,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
         TypeReference.JavaLangNegativeArraySizeException)));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void test() {
     HashMap<String, Integer> deletedExceptional = new HashMap<>();

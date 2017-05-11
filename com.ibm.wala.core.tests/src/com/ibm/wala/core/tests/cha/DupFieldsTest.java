@@ -32,6 +32,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class DupFieldsTest extends WalaTestCase {
 
+  @SuppressWarnings("static-method")
   @Test public void testDupFieldNames() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());

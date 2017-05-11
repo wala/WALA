@@ -156,6 +156,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testForInRecursion() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin3.js");
     addHackedForInLoopSensitivity(B);

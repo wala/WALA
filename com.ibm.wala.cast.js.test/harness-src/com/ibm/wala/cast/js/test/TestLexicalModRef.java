@@ -27,6 +27,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 public abstract class TestLexicalModRef {
 
+  @SuppressWarnings("static-method")
   @Test
   public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "simple-lexical.js");

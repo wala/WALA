@@ -75,6 +75,7 @@ public class GetTargetsTest extends WalaTestCase {
   /**
    * Test for bug 1714480, reported OOM on {@link ClassHierarchy} getPossibleTargets()
    */
+  @SuppressWarnings("static-method")
   @Test public void testCell() {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lcell/Cell");
     MethodReference m = MethodReference.findOrCreate(t, "<init>", "(Ljava/lang/Object;)V");
@@ -88,6 +89,7 @@ public class GetTargetsTest extends WalaTestCase {
   /**
    * test that calls to <init> methods are treated specially 
    */
+  @SuppressWarnings("static-method")
   @Test public void testObjInit() {
     MethodReference m = MethodReference.findOrCreate(TypeReference.JavaLangObject, MethodReference.initSelector);
     Collection<IMethod> c = cha.getPossibleTargets(m);

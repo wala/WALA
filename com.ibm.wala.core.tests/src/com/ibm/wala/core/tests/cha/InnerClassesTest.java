@@ -67,6 +67,7 @@ public class InnerClassesTest extends WalaTestCase {
     cha = null;
   }
 
+  @SuppressWarnings("static-method")
   @Test public void test1() throws InvalidClassFileException {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName
         .string2TypeName("Linner/TestStaticInner"));
@@ -76,6 +77,7 @@ public class InnerClassesTest extends WalaTestCase {
     Assert.assertFalse(s.isInnerClass());
   }
   
+  @SuppressWarnings("static-method")
   @Test public void test2() throws InvalidClassFileException {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName
         .string2TypeName("Linner/TestStaticInner$A"));
@@ -86,6 +88,7 @@ public class InnerClassesTest extends WalaTestCase {
     Assert.assertTrue(s.isStaticInnerClass());
   }
   
+  @SuppressWarnings("static-method")
   @Test public void test3() throws InvalidClassFileException {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName
         .string2TypeName("Linner/TestInner$A"));

@@ -41,6 +41,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 public class ZeroLengthArrayTest {
 
+  @SuppressWarnings("static-method")
   @Test
   public void testZeroLengthArray() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,

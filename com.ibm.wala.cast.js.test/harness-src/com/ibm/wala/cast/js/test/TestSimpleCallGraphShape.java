@@ -188,6 +188,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForSimpleLexical);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testRecursiveLexical() throws IOException, IllegalArgumentException, CancelException, WalaException {
     // just checking that we have a sufficient bailout to ensure termination
@@ -346,12 +347,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyNoEdges(CG, "suffix:test2", "suffix:foo_of_A");
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testStackOverflowOnSsaConversionBug() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
     // all we need is for it to finish building CG successfully.
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testExtJSSwitch() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "extjs_switch.js");
@@ -359,6 +362,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
 
 
+  @SuppressWarnings("static-method")
   @Test
   public void testFunctionDotCall() throws IOException, IllegalArgumentException, CancelException, WalaException {
     CallGraph cg = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_call.js");
@@ -537,6 +541,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForLexicalBroken);
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDeadPhi() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_phi.js");
@@ -695,16 +700,19 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       verifyGraphAssertions(cg, assertionsForExtend);
     }
 
+    @SuppressWarnings("static-method")
     @Test
     public void testDeadCatch() throws IllegalArgumentException, IOException, CancelException, WalaException {
       JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_catch.js");
     }
 
+    @SuppressWarnings("static-method")
     @Test
     public void testUglyLoopCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {
       JSCallGraphBuilderUtil.makeScriptCG("tests", "ssa-crash.js");
     }
 
+    @SuppressWarnings("static-method")
     @Test
     public void testTryFinallyCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {      
       JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "try-finally-crash.js");
@@ -716,6 +724,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     }
 
 
+    @SuppressWarnings("static-method")
     @Test(expected = CallGraphBuilderCancelException.class)
     public void testManyStrings() throws IllegalArgumentException, IOException, CancelException, WalaException {
       SSAPropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
@@ -727,6 +736,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTutorialExample() throws IllegalArgumentException, IOException, CancelException, WalaException {
     SSAPropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "tutorial-example.js");

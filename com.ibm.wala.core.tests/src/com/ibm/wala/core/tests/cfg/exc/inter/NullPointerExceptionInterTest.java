@@ -96,6 +96,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     justThisTest(NullPointerExceptionInterTest.class);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testIfException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIfException()Lcfg/exc/intra/B");
@@ -113,6 +114,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     Assert.assertTrue(intraExplodedCFG.hasExceptions());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIfException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIfException()Lcfg/exc/intra/B");
@@ -133,6 +135,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   }
 
   
+  @SuppressWarnings("static-method")
   @Test
   public void testIfNoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIfNoException()Lcfg/exc/intra/B");
@@ -149,6 +152,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     Assert.assertFalse(intraExplodedCFG.hasExceptions());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIfNoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIfNoException()Lcfg/exc/intra/B");
@@ -165,6 +169,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     Assert.assertFalse(intraExplodedCFG.hasExceptions());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testIf2Exception() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIf2Exception()Lcfg/exc/intra/B");
@@ -182,6 +187,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     Assert.assertTrue(intraExplodedCFG.hasExceptions());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIf2Exception() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIf2Exception()Lcfg/exc/intra/B");
@@ -202,6 +208,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   }
 
   
+  @SuppressWarnings("static-method")
   @Test
   public void testIf2NoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIf2NoException()Lcfg/exc/intra/B");
@@ -218,6 +225,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     Assert.assertFalse(intraExplodedCFG.hasExceptions());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIf2NoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIf2NoException()Lcfg/exc/intra/B");
@@ -235,6 +243,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   }
   
 
+  @SuppressWarnings("static-method")
   @Test
   public void testGetException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callGetException()Lcfg/exc/intra/B");
@@ -252,6 +261,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     Assert.assertTrue(intraExplodedCFG.hasExceptions());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicGetException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicGetException()Lcfg/exc/intra/B");
