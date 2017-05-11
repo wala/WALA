@@ -204,7 +204,7 @@ public class Overrides {
 
         { // Make Mini-Models to override to
             for (final AndroidComponent target: AndroidComponent.values()) {
-                if (AndroidEntryPointManager.MANAGER.EPContainAny(target)) {
+                if (AndroidEntryPointManager.EPContainAny(target)) {
                     final AndroidModel targetModel = new UnknownTargetModel(this.cha, this.options, this.cache, target);
                     callTo.put(target, targetModel); 
                 } else {
