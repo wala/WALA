@@ -16,6 +16,7 @@ import java.io.IOException;
 public final class Exception2 {
 
   public static void main(String[] args) {
+    @SuppressWarnings("unused")
     Exception2 e2= new Exception2();
     FileInputStream fis = null;
     FileOutputStream fos = null;

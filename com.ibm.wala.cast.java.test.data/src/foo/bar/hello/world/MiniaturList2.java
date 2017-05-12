@@ -40,6 +40,7 @@ package foo.bar.hello.world;
 public class MiniaturList2 {
 
         public static void main(String[] args) {
+        	@SuppressWarnings("unused")
         	int a;
             for ( ;; ) {
                             break;

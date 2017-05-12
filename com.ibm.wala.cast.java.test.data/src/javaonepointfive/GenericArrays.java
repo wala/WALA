@@ -52,6 +52,7 @@ public class GenericArrays {
 		List<Integer> li = new ArrayList<Integer>();
 		li.add(new Integer(3));
 		oa[1] = li; // correct
+		@SuppressWarnings("unused")
 		String s = (String) lsa[1].get(0); // run time error, but cast is explicit
 
 	}

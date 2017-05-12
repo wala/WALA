@@ -399,6 +399,7 @@ public class CallGraphTest extends WalaTestCase {
     }
 
     // perform a little icfg exercise
+    @SuppressWarnings("unused")
     int count = 0;
     for (Iterator<BasicBlockInContext<ISSABasicBlock>> it = icfg.iterator(); it.hasNext();) {
       BasicBlockInContext<ISSABasicBlock> bb = it.next();

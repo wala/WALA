@@ -10,6 +10,7 @@
  *****************************************************************************/
 public class Finally1 {
     public static void main(String[] args) throws BadLanguageExceptionF1 {
+	@SuppressWarnings("unused")
 	Finally1 f1= new Finally1();
 	try {
 	    FooF1 f = new FooF1();
