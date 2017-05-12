@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
 public class StaticNesting {
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
 	StaticNesting sn= new StaticNesting();
 	WhatsIt w= new WhatsIt();

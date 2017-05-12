@@ -10,8 +10,10 @@
  *****************************************************************************/
 public class InterfaceTest1 {
     public static void main(String[] args) {
+	@SuppressWarnings("unused")
 	InterfaceTest1 it= new InterfaceTest1();
 	IFoo foo = new FooIT1('a');
+	@SuppressWarnings("unused")
 	char ch2 = foo.getValue();
     }
 }

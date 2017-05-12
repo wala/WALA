@@ -20,6 +20,7 @@ public class Array1 {
 	    ary[i]= i;
 	}
 
+	@SuppressWarnings("unused")
 	int sum = 0;
 
 	for(int j= 0; j < ary.length; j++) {

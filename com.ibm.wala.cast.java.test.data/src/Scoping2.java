@@ -10,6 +10,7 @@
  *****************************************************************************/
 public class Scoping2 {
   public static void main(String[] args) {
+    @SuppressWarnings("unused")
     Scoping2 s2 = new Scoping2();
     {
       final int x = 5;

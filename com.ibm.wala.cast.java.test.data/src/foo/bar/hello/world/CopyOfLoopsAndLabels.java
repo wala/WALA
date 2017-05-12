@@ -40,6 +40,7 @@ package foo.bar.hello.world;
 public class CopyOfLoopsAndLabels {
 	static int X=5;
 	public static void main(String args[]) {
+		@SuppressWarnings("unused")
 		int k=X;
 		for (; ; k++)
 			break;

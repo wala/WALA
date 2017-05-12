@@ -52,6 +52,7 @@ public class InnerClassA {
 			AB ab = new AB();
 			AB.ABSubA absuba = ab.new ABSubA();
 			absuba.aba_x = 7;
+			@SuppressWarnings("unused")
 			AB.ABA.ABAA abaa2 = ab.new ABA().new ABAA(); // just used to add ABA instance key in ABAA.getABA_X()
 			
 			AB.ABA aba = ab.new ABA();

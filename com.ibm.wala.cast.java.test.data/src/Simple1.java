@@ -19,6 +19,7 @@ public class Simple1 {
 	this(0);
     }
     public static void doStuff(int N) {
+	@SuppressWarnings("unused")
 	int prod = 1;
 	for(int j=0; j < N; j++)
 	    prod *= j;
