@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -87,7 +86,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 public class AndroidAnalysisContext {
@@ -122,6 +120,7 @@ public class AndroidAnalysisContext {
 		
 		cha = ClassHierarchyFactory.make(scope);
 
+		/*
 		if (options.classHierarchyWarnings()) {
 			// log ClassHierarchy warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
@@ -129,6 +128,7 @@ public class AndroidAnalysisContext {
 				
 			}
 		}
+		*/
 		Warnings.clear();
 	}
 	

@@ -88,9 +88,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSACFG;
-import com.ibm.wala.ssa.SSACFG.BasicBlock;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Predicate;
@@ -98,7 +95,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -139,9 +135,11 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
 		entrypoints = specifier.specify(analysisContext);
 		AnalysisOptions analysisOptions = new AnalysisOptions(scope, entrypoints);
+		/*
 		for (Entrypoint e : entrypoints) {
 			
 		}
+		*/
 		analysisOptions.setReflectionOptions(options.getReflectionOptions());
 
 		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
@@ -157,6 +155,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		cgb = AndroidAnalysisContext.makeZeroCFABuilder(analysisOptions, cache,	cha, scope,
 				new DefaultContextSelector(analysisOptions, cha), null, extraSummaries, null);
 
+		/*
 		if (analysisContext.getOptions().cgBuilderWarnings()) {
 			// CallGraphBuilder construction warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
@@ -164,6 +163,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				
 			}
 		}
+		*/
 		Warnings.clear();
 
 		
@@ -188,11 +188,13 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			System.exit(status);
 		}
 
+		/*
 		// makeCallGraph warnings
 		for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
 			Warning w = wi.next();
 			
 		}
+		*/
 		Warnings.clear();
 
 		pa = cgb.getPointerAnalysis();
@@ -276,6 +278,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 		});
 
+		/*
 		if (options.stdoutCG()) {
 			for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
 				CGNode node = nodeI.next();
@@ -298,6 +301,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				}
 			}
 		}
+		*/
 	}
 
 	/**
