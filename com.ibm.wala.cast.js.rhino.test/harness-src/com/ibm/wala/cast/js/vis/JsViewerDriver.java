@@ -60,7 +60,8 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());
 		PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
-		new JsViewer(cg, pa);
+		@SuppressWarnings("unused")
+		JsViewer jsViewer = new JsViewer(cg, pa);
 	}
 
 	private static SourceModule[] getSources(boolean domless, URL url)
