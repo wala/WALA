@@ -54,6 +54,7 @@ org.eclipse.jdt.core.compiler.problem.possibleAccidentalBooleanAssignment=warnin
 org.eclipse.jdt.core.compiler.problem.potentialNullReference=ignore
 org.eclipse.jdt.core.compiler.problem.rawTypeReference=ignore
 org.eclipse.jdt.core.compiler.problem.redundantNullCheck=ignore
+org.eclipse.jdt.core.compiler.problem.reportMethodCanBePotentiallyStatic=ignore
 org.eclipse.jdt.core.compiler.problem.specialParameterHidingField=disabled
 org.eclipse.jdt.core.compiler.problem.staticAccessReceiver=warning
 org.eclipse.jdt.core.compiler.problem.suppressWarnings=enabled
