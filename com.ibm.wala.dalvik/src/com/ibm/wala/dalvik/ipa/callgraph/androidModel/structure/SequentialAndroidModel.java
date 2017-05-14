@@ -78,6 +78,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
       *
       * {@inheritDoc}
       */
+    @Override
     protected int enterAT_FIRST(int PC) { 
         return PC;
     }
@@ -87,6 +88,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
       *
       * {@inheritDoc}
       */
+    @Override
     protected int enterBEFORE_LOOP (int PC) {
         return PC;
     }
@@ -96,6 +98,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterSTART_OF_LOOP (int PC) {
         return PC;
     }
@@ -105,6 +108,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterMIDDLE_OF_LOOP (int PC) {
         return PC;
     }
@@ -114,6 +118,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) {
         return PC;
     }
@@ -123,6 +128,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterEND_OF_LOOP (int PC) {
         return PC;
     }
@@ -132,6 +138,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterAFTER_LOOP (int PC) {
         return PC;
     }
@@ -141,6 +148,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterAT_LAST (int PC) {
         return PC;
     }
@@ -150,6 +158,7 @@ public final class SequentialAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int leaveAT_LAST (int PC) {
         return PC;
     }
