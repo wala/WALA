@@ -6,6 +6,7 @@ Bundle-Version: 1.4.3.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,
+ com.ibm.wala.ide.jdt;bundle-version="1.4.3",
  org.eclipse.core.runtime,
  com.ibm.wala.core.testdata,
  org.junit;bundle-version="4.0.0",

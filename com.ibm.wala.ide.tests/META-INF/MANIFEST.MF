@@ -7,6 +7,7 @@ Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,
  com.ibm.wala.ide,
+ com.ibm.wala.ide.jdt;bundle-version="1.4.3",
  com.ibm.wala.core.tests,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
