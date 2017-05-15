@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Nu_validator
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.html.nu_validator
 Bundle-Version: 1.4.3.qualifier
 Export-Package: com.ibm.wala.cast.js.html.nu_validator
