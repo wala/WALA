@@ -28,3 +28,6 @@ Require-Bundle: com.ibm.wala.cast.java.test;bundle-version="1.0.0",
  com.ibm.wala.cast.java.ecj
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: com.ibm.wala.cast.java.jdt.test,
+ com.ibm.wala.cast.java.test,
+ com.ibm.wala.demandpa.driver
