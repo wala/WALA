@@ -21,6 +21,7 @@ public class DalvikTypeInference extends TypeInference {
 		super(ir, doPrimitives);
 	}
 
+	@Override
 	protected void initialize() {
 		init(ir, this.new DalvikTypeVarFactory(), this.new TypeOperatorFactory());
 	}

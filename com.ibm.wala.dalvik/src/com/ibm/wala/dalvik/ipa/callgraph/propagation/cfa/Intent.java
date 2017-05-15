@@ -151,6 +151,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
         this.immutable = true;
     }
 
+    @Override
     public Intent clone() {
         final Intent clone = new Intent();
         clone.action = this.action; // OK here?

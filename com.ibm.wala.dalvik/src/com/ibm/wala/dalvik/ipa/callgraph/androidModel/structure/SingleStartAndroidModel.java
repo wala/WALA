@@ -102,6 +102,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
+    @Override
     protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) {
         logger.info("PC {} is the jump target of START_OF_LOOP", PC);
         this.outerLoopPC = PC;
@@ -135,6 +136,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
      *
      *  {@inheritDoc}
      */
+    @Override
     protected int enterEND_OF_LOOP (int PC) {
         assert(outerLoopPC > 0) : "Somehow you managed to get the loop-target negative. This is wierd!";
 

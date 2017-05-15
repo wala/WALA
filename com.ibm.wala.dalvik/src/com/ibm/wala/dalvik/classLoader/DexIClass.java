@@ -287,6 +287,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     	  return getAnnotations((Set<AnnotationVisibility>)null);
       }
 
+      @Override
       public Collection<Annotation> getAnnotations(boolean runtimeInvisible) {
   		return getAnnotations(getTypes(runtimeInvisible));
       }

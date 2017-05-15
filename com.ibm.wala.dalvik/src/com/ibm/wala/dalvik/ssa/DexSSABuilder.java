@@ -1454,6 +1454,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * @param index - index into IR instruction array
          * @param vn - value number
          */
+        @Override
         public String[] getLocalNames(int index, int vn) {
             try {
                 if (!dexCFG.getMethod().hasLocalVariableTable()) {

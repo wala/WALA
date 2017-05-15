@@ -106,10 +106,12 @@ public class InstructionArray implements Collection<Instruction> {
         return instructions.containsAll(c);
     }
 
+    @Override
     public boolean equals(Object o) {
         return instructions.equals(o);
     }
 
+    @Override
     public int hashCode() {
         return instructions.hashCode();
     }
