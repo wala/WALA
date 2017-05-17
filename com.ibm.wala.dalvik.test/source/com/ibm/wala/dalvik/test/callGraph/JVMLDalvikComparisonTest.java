@@ -125,16 +125,19 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		Assert.assertTrue(!fail);		
 	}
 	
+	@SuppressWarnings("static-method")
 	@Test
 	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		test(TestConstants.JLEX_MAIN, TestConstants.JLEX);
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		test(TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP);
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void testBCEL() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		test(TestConstants.BCEL_VERIFIER_MAIN, TestConstants.BCEL);

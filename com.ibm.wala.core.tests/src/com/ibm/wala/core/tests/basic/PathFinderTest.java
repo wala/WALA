@@ -60,6 +60,7 @@ public class PathFinderTest {
   
   private static final String edges1 = "ABBCBDCECFDGDHEIFIGJHJJKIKKL";
 
+  @SuppressWarnings("static-method")
   @Test
   public void testPaths1() {
     Graph<String> g = createGraph(edges1);
@@ -69,6 +70,7 @@ public class PathFinderTest {
 
   private static final String edges2 = "ABBCBDCECFDGDHEIFIGJHJJKIKKCKL";
 
+  @SuppressWarnings("static-method")
   @Test
   public void testPaths2() {
     Graph<String> g = createGraph(edges2);
@@ -78,6 +80,7 @@ public class PathFinderTest {
 
   private static final String edges3 = "ABBHBCBDCECFDGDHEIFIGJHJJKIKKCKL";
 
+  @SuppressWarnings("static-method")
   @Test
   public void testPaths3() {
     Graph<String> g = createGraph(edges3);
@@ -87,6 +90,7 @@ public class PathFinderTest {
 
   private static final String edges4 = "ABACADAEBABCBDBECACBCDCEDADBDCDEEAEBECED";
 
+  @SuppressWarnings("static-method")
   @Test
   public void testPaths4() {
     Graph<String> g = createGraph(edges4);

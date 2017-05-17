@@ -56,6 +56,7 @@ public class GraphDataflowTest extends WalaTestCase {
    * A simple test of the GraphBitVectorDataflow system
    * @throws CancelException 
    */
+  @SuppressWarnings("static-method")
   @Test public void testSolverNodeEdge() throws CancelException {
     Graph<String> G = buildGraph();
     String result = solveNodeEdge(G);
@@ -67,6 +68,7 @@ public class GraphDataflowTest extends WalaTestCase {
     Assert.assertEquals(expectedStringNodeEdge(), result);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testSolverNodeOnly() throws CancelException {
     Graph<String> G = buildGraph();
     String result = solveNodeOnly(G);

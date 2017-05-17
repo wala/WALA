@@ -34,6 +34,7 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void test214631() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "214631.js");
@@ -42,42 +43,50 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
     // just make sure this does not crash
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testRewriterDoesNotChangeLabelsBug() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
     // all we need is for it to finish building CG successfully.
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testRepr() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "repr.js");
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTranslateToCAstCrash1() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash1.js");
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testTranslateToCAstCrash2() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash2.js");
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTranslateToCAstCrash3() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash3.js");
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testNonLoopBreakLabel() throws IllegalArgumentException, IOException, CancelException, WalaException {
 	  JSCallGraphBuilderUtil.makeScriptCG("tests", "non_loop_break.js");
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testForInName() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "for_in_name.js");
   }
 
+  @SuppressWarnings("static-method")
   @Test(expected = WalaException.class)
   public void testParseError() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");

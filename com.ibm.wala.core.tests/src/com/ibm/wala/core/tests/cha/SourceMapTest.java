@@ -35,6 +35,7 @@ public class SourceMapTest extends WalaTestCase {
 
   private final static String CLASS_IN_PRIMORDIAL_JAR = "Lcom/ibm/wala/model/SyntheticFactory";
 
+  @SuppressWarnings("static-method")
   @Test public void testHello() throws ClassHierarchyException, IOException {
     if (analyzingJar()) return;
     AnalysisScope scope = null;
@@ -50,6 +51,7 @@ public class SourceMapTest extends WalaTestCase {
     Assert.assertTrue(sourceFile != null);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testFromJar() throws ClassHierarchyException, IOException {
     if (analyzingJar()) return;
     AnalysisScope scope = null;

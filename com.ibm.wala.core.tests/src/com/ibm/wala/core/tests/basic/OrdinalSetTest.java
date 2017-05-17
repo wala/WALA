@@ -20,6 +20,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class OrdinalSetTest extends WalaTestCase {
 
+  @SuppressWarnings("static-method")
   @Test public void test1() {
     OrdinalSet.unify(OrdinalSet.empty(), OrdinalSet.empty());
   }

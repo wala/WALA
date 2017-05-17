@@ -27,6 +27,7 @@ public class GetInstruction extends Instruction implements IGetInstruction {
     this.fieldName = fieldName;
   }
 
+  @SuppressWarnings("static-method")
   ConstantPoolReader getLazyConstantPool() {
     return null;
   }

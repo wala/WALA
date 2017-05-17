@@ -99,6 +99,7 @@ public class LocalNamesTest extends WalaTestCase {
   /**
    * Build an IR, then check getLocalNames
    */
+  @SuppressWarnings("static-method")
   @Test
   public void testAliasNames() {
     try {
@@ -132,6 +133,7 @@ public class LocalNamesTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testLocalNamesWithoutPiNodes() {
     SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
@@ -161,6 +163,7 @@ public class LocalNamesTest extends WalaTestCase {
     Assert.assertTrue("incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testLocalNamesWithPiNodes() {
     SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();

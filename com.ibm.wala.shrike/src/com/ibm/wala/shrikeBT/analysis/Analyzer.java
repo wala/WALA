@@ -197,7 +197,7 @@ public class Analyzer {
     return ClassHierarchy.isSubtypeOf(hierarchy, patchType(t1), patchType(t2)) != ClassHierarchy.NO;
   }
 
-  private boolean isPrimitive(String type) {
+  private static boolean isPrimitive(String type) {
     return type != null && (!type.startsWith("L") && !type.startsWith("["));
   }
   
@@ -515,7 +515,7 @@ public class Analyzer {
     }
   }
 
-  private String[] cutArray(String[] a, int len) {
+  private static String[] cutArray(String[] a, int len) {
     if (len == 0) {
       return noStrings;
     } else {
@@ -532,7 +532,7 @@ public class Analyzer {
     return a||b;
   }
   
-  private boolean longType(String type) {
+  private static boolean longType(String type) {
     return Constants.TYPE_long.equals(type) || Constants.TYPE_double.equals(type);
   }
   

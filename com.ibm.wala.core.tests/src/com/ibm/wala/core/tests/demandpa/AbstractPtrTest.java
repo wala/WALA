@@ -258,7 +258,7 @@ public abstract class AbstractPtrTest {
    * @return
    * @throws ClassHierarchyException
    */
-  private IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
+  private static IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
     if (cachedCHA == null) {
       cachedCHA = ClassHierarchyFactory.make(scope);
     }
@@ -283,6 +283,7 @@ public abstract class AbstractPtrTest {
     cachedCHA = null;
   }
 
+  @SuppressWarnings("static-method")
   protected StateMachineFactory<IFlowLabel> getStateMachineFactory() {
     return new DummyStateMachine.Factory<>();
   }

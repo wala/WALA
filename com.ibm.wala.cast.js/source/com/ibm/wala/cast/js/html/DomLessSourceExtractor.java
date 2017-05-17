@@ -140,7 +140,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       handleDOM(tag);
     }
 
-    private boolean isUsableIdentifier(String x) {
+    private static boolean isUsableIdentifier(String x) {
       return x != null &&
           LEGAL_JS_IDENTIFIER_REGEXP.matcher(x).matches() &&
           !LEGAL_JS_KEYWORD_REGEXP.matcher(x).matches();
@@ -217,7 +217,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       return Pair.make(value, quote);
     }
     
-    private String extructJS(String attValue) {
+    private static String extructJS(String attValue) {
       if (attValue == null){
         return "";
       }
@@ -346,11 +346,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     return Collections.singleton(singleFileModule);
   }
 
+  @SuppressWarnings("static-method")
   protected IGeneratorCallback createHtmlCallback(URL entrypointUrl, IUrlResolver urlResolver) {
     return new HtmlCallback(entrypointUrl, urlResolver);
   }
 
-  private File createOutputFile(URL url, boolean delete, boolean useTempName) throws IOException {
+  private static File createOutputFile(URL url, boolean delete, boolean useTempName) throws IOException {
     File outputFile;
     String fileName = new File(url.getFile()).getName();
     if (fileName.length() < 5) {

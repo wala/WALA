@@ -82,6 +82,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     justThisTest(NullPointerExceptionIntraTest.class);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testParam() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -116,6 +117,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicParam() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -150,6 +152,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testParam2() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -184,6 +187,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   public void testDynamicParam2() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testDynamicParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
@@ -218,6 +222,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   }
   
   
+  @SuppressWarnings("static-method")
   @Test
   public void testIf() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -252,6 +257,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIf() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -286,6 +292,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testIf2() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -322,6 +329,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIf2() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -359,6 +367,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   }
 
   
+  @SuppressWarnings("static-method")
   @Test
   public void testIfContinued() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -395,6 +404,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIfContinued() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -431,6 +441,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testIf3() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -468,6 +479,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   }
 
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicIf3() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -505,6 +517,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   }
   
   
+  @SuppressWarnings("static-method")
   @Test
   public void testWhile() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -541,6 +554,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testWhileDynamic() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -577,6 +591,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testWhile2() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -611,6 +626,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicWhile2() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -645,6 +661,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testGet() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
@@ -681,6 +698,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }    
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testDynamicGet() throws UnsoundGraphException, CancelException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");

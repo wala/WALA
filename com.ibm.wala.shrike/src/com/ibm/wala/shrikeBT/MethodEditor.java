@@ -145,7 +145,7 @@ public final class MethodEditor {
     }
   }
 
-  private String getStateMessage(int state) {
+  private static String getStateMessage(int state) {
     switch (state) {
     case BEFORE_PASS:
       return "This operation can only be performed before or after an editing pass";

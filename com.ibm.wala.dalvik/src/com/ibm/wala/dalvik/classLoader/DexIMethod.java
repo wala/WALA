@@ -3136,7 +3136,7 @@ public class DexIMethod implements IBytecodeMethod {
 		//      //comment out stop
 	}
 
-	private TypeReference findOutArrayElementType(
+	private static TypeReference findOutArrayElementType(
 			org.jf.dexlib.Code.Instruction[] instrucs, Instruction[] walaInstructions, int instCounter) {
 		if (instCounter < 0 || instrucs[instCounter].opcode != Opcode.FILL_ARRAY_DATA) {
 			throw new IllegalArgumentException();

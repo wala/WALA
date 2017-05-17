@@ -119,6 +119,7 @@ public class SlicerTest {
     cachedScope = null;
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -150,6 +151,7 @@ public class SlicerTest {
     Assert.assertEquals(16, i);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -175,6 +177,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 9, countNormals(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -198,6 +201,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -222,6 +226,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 4, slice.size());
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -253,6 +258,7 @@ public class SlicerTest {
    * @throws IllegalArgumentException
    * @throws IOException
    */
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -282,6 +288,7 @@ public class SlicerTest {
    * @throws IllegalArgumentException
    * @throws IOException
    */
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice8() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -309,6 +316,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 4, slice.size());
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testSlice9() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -332,6 +340,7 @@ public class SlicerTest {
     Assert.assertEquals(/*slice.toString(), */5, countApplicationNormals(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestCD1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -356,6 +365,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 2, countConditionals(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestCD2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -380,6 +390,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestCD3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -404,6 +415,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 0, countConditionals(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestCD4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -435,6 +447,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testTestCD5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -460,6 +473,7 @@ public class SlicerTest {
     Assert.assertTrue(slice.toString(), slice.size() > 1);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestCD6() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -485,6 +499,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 2, countInvokes(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -509,6 +524,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -534,6 +550,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countAloads(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -559,6 +576,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testThin1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -594,6 +612,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -620,6 +639,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 2, countGetstatics(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestMultiTarget() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -644,6 +664,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -670,6 +691,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 2, countPutfields(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testPrimGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -703,6 +725,7 @@ public class SlicerTest {
    * to a getter method. Also tests disabling SMUSH_PRIMITIVE_HOLDERS to ensure
    * we get distinct abstract objects for two different primitive holders.
    */
+  @SuppressWarnings("static-method")
   @Test
   public void testPrimGetterSetter2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -739,6 +762,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
+  @SuppressWarnings("static-method")
   @Test
   public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -765,6 +789,7 @@ public class SlicerTest {
     Assert.assertEquals(slice.toString(), 1, countGetfields(slice));
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -791,6 +816,7 @@ public class SlicerTest {
   /**
    * test for bug reported on mailing list by Joshua Garcia, 5/16/2010
    */
+  @SuppressWarnings("static-method")
   @Test
   public void testTestInetAddr() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -806,6 +832,7 @@ public class SlicerTest {
     GraphIntegrity.check(sdg);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testJustThrow() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
     AnalysisScope scope = findOrCreateAnalysisScope();

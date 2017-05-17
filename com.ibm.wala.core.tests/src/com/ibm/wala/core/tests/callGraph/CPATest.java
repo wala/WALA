@@ -50,7 +50,7 @@ public class CPATest extends WalaTestCase {
     doCPATest("Lcpa/CPATest2", "(Lcpa/CPATest2$N;I)Lcpa/CPATest2$N;");
   }
 
-  private void doCPATest(String testClass, String testIdSignature) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  private static void doCPATest(String testClass, String testIdSignature) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

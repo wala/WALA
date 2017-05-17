@@ -32,6 +32,7 @@ public class LibraryVersionTest extends WalaTestCase {
   
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
+  @SuppressWarnings("static-method")
   @Test public void testLibraryVersion() throws IOException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());

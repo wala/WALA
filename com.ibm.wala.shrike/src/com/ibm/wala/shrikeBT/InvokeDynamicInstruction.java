@@ -33,6 +33,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     this.methodType = methodType;
   }
 
+  @SuppressWarnings("static-method")
   ConstantPoolReader getLazyConstantPool() {
     return null;
   }

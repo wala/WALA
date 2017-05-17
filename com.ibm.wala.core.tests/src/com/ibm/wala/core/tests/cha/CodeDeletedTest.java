@@ -39,6 +39,7 @@ public class CodeDeletedTest extends WalaTestCase {
    * @throws IOException
    * @throws ClassHierarchyException
    */
+  @SuppressWarnings("static-method")
   @Test(expected = WalaRuntimeException.class)
   public void testDeletedCode() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;

@@ -1515,7 +1515,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         /**
          * @return the indices i s.t. x[i] == y, or null if none found.
          */
-        private int[] extractIndices(int[] x, int y) {
+        private static int[] extractIndices(int[] x, int y) {
             int count = 0;
             for (int i = 0; i < x.length; i++) {
                 if (x[i] == y) {

@@ -41,6 +41,7 @@ public class MultiNewArrayTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = MultiNewArrayTest.class.getClassLoader();
   
+  @SuppressWarnings("static-method")
   @Test public void testMultiNewArray1() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);

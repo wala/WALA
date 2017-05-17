@@ -67,6 +67,7 @@ public class InterfaceTest extends WalaTestCase {
   /**
    * Test for subtype tests with interfaces; bug reported by Bruno Dufour
    */
+  @SuppressWarnings("static-method")
   @Test public void test1() {
     TypeReference prep_stmt_type = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
         .string2TypeName("Ljava/sql/PreparedStatement"));
@@ -87,6 +88,7 @@ public class InterfaceTest extends WalaTestCase {
   /**
    * check that arrays implement Cloneable and Serializable
    */
+  @SuppressWarnings("static-method")
   @Test public void test2() {
     IClass objArrayClass = cha.lookupClass(TypeReference.JavaLangObject.getArrayTypeForElementType());
     IClass stringArrayClass = cha.lookupClass(TypeReference.JavaLangString.getArrayTypeForElementType());

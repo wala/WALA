@@ -119,7 +119,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     /**
      * Remove from s any class file module entries which already are in t
      */
-    private void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
+    private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     	Set<String> old = HashSetFactory.make();
     	for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
     		ModuleEntry m = it.next();
@@ -135,7 +135,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     	s.removeAll(toRemove);
     }
     
-    private Set<ModuleEntry> getDexFiles(Module M) {
+    private static Set<ModuleEntry> getDexFiles(Module M) {
     	HashSet<ModuleEntry> result = HashSetFactory.make();
     	for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
     		ModuleEntry entry = it.next();

@@ -666,7 +666,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     return stmts;
   }
   
-  private CAstNode addSpuriousExnFlow(CAstNode node, CAstControlFlowMap cfg) {
+  private static CAstNode addSpuriousExnFlow(CAstNode node, CAstControlFlowMap cfg) {
     CAstControlFlowRecorder flow = (CAstControlFlowRecorder)cfg;
     if(node.getKind() == ASSIGN) {
       if(node.getChild(0).getKind() == VAR) {

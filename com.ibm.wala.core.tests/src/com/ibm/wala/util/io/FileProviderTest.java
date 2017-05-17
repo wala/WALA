@@ -21,6 +21,7 @@ import com.ibm.wala.util.PlatformUtil;
 
 public class FileProviderTest {
 
+  @SuppressWarnings("static-method")
   @Test
   public void testValidFile() throws MalformedURLException {
     // setup:
@@ -33,6 +34,7 @@ public class FileProviderTest {
   }
   
   
+  @SuppressWarnings("static-method")
   @Test
   public void testURLWithInvalidURIChars() throws MalformedURLException {
     // setup:
@@ -44,6 +46,7 @@ public class FileProviderTest {
     assertEquals(expected, actual);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testURLWithSpace() throws MalformedURLException {
     URL url = new URL("file:///With%20Space/File.jar");

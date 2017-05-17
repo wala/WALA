@@ -70,6 +70,7 @@ public class CallGraphTest extends WalaTestCase {
   }
 
 
+  @SuppressWarnings("static-method")
   @Test public void testJava_cup() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -80,6 +81,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope, useShortProfile());
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testBcelVerifier() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -90,6 +92,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testJLex() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -100,6 +103,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testCornerCases() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -119,6 +123,7 @@ public class CallGraphTest extends WalaTestCase {
     Assert.assertTrue("reported a warning about Abstract2", ws.indexOf("cornerCases/Abstract2") == -1);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testHello() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     if (analyzingJar()) return;
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -130,6 +135,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testStaticInit() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -153,6 +159,7 @@ public class CallGraphTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testJava8Smoke() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -170,6 +177,7 @@ public class CallGraphTest extends WalaTestCase {
     Assert.assertTrue("expected for sortForward", foundSortForward);
   }
   
+  @SuppressWarnings("static-method")
   @Test public void testSystemProperties() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -194,6 +202,7 @@ public class CallGraphTest extends WalaTestCase {
     }
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -205,6 +214,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testHelloAllEntrypoints() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     if (analyzingJar()) return;    
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -215,6 +225,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
   }
 
+  @SuppressWarnings("static-method")
   @Test public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -245,6 +256,7 @@ public class CallGraphTest extends WalaTestCase {
     };
   }
   
+  @SuppressWarnings("static-method")
   @Test public void testPrimordial() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     if (useShortProfile()) {
       return;
@@ -263,6 +275,7 @@ public class CallGraphTest extends WalaTestCase {
     CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
 
+  @SuppressWarnings("static-method")
   @Test
   public void testZeroOneContainerCopyOf() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,

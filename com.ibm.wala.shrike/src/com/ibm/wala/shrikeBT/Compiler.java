@@ -448,7 +448,7 @@ public abstract class Compiler implements Constants {
     }
   }
 
-  private boolean applyPatches(ArrayList<Patch> patches) {
+  private static boolean applyPatches(ArrayList<Patch> patches) {
     for (Iterator<Patch> i = patches.iterator(); i.hasNext();) {
       Patch p = i.next();
       if (!p.apply()) {

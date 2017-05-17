@@ -66,6 +66,7 @@ public class ExtensionGraphTest {
     base.addEdge("H", "A");
   }
   
+  @SuppressWarnings("static-method")
   @Test
   public void testAugment() {
     NumberedGraph<String> base = makeBaseGraph();

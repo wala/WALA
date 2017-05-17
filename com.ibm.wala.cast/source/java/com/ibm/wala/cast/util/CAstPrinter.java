@@ -192,7 +192,7 @@ public class CAstPrinter {
       instance.doXmlTo(top, pos, w);
   }
 
-  private void doXmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
+  private static void doXmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
     printTo(top, pos, w, 0, true);
   }
 

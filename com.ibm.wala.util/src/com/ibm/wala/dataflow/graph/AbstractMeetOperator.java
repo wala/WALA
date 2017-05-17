@@ -23,6 +23,7 @@ public abstract class AbstractMeetOperator<T extends IVariable> extends Abstract
    * subclasses can override if needed
    * @return true iff this meet is a noop when applied to one argument
    */
+  @SuppressWarnings("static-method")
   public boolean isUnaryNoOp() {
     return true;
   }

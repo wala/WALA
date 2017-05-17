@@ -39,6 +39,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 public class TypeBasedArrayAliasTest extends WalaTestCase {
 
+  @SuppressWarnings("static-method")
   @Test public void testTypeBasedArrayAlias() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

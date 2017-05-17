@@ -60,6 +60,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return new InvokeInstruction(opcode, type, className, methodName);
   }
 
+  @SuppressWarnings("static-method")
   ConstantPoolReader getLazyConstantPool() {
     return null;
   }

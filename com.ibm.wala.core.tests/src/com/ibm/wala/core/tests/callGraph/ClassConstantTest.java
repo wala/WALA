@@ -38,6 +38,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class ClassConstantTest extends WalaTestCase {
 
+  @SuppressWarnings("static-method")
   @Test public void testClassConstants() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,

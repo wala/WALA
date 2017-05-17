@@ -114,7 +114,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 		return makeStack(tmpEntries);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "static-method", "unchecked" })
 	protected T[] makeInternalArray(int size) {
 		return (T[]) new Object[size];
 	}

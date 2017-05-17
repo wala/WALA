@@ -28,6 +28,7 @@ import com.ibm.wala.util.functions.Function;
 
 public class CHACallGraphTest {
   
+  @SuppressWarnings("static-method")
   @Test public void testJava_cup() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     testCHA(TestConstants.JAVA_CUP, TestConstants.JAVA_CUP_MAIN, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
   }

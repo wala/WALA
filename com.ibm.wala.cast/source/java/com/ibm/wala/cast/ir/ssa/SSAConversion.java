@@ -332,11 +332,11 @@ public class SSAConversion extends AbstractSSAConversion {
     return null;
   }
 
-  private <T> void push(ArrayList<T> stack, T elt) {
+  private static <T> void push(ArrayList<T> stack, T elt) {
     stack.add(elt);
   }
   
-  private <T> T peek(ArrayList<T> stack) {
+  private static <T> T peek(ArrayList<T> stack) {
     return stack.get(stack.size()-1); 
   }
 

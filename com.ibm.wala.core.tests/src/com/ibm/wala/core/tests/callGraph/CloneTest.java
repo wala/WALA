@@ -40,6 +40,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class CloneTest extends WalaTestCase {
 
+  @SuppressWarnings("static-method")
   @Test public void testClone() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);

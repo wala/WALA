@@ -111,10 +111,12 @@ public abstract class ConstantInstruction extends Instruction {
     super(opcode);
   }
 
+  @SuppressWarnings("static-method")
   ConstantPoolReader getLazyConstantPool() {
     return null;
   }
 
+  @SuppressWarnings("static-method")
   int getCPIndex() {
     return 0;
   }
