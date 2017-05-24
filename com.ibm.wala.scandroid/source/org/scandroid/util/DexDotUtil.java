@@ -176,7 +176,7 @@ public class DexDotUtil extends DotUtil {
        * @return StringBuffer holding dot output representing G
        * @throws WalaException
        */
-      private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
+      public static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
         StringBuffer result = new StringBuffer("digraph \"DirectedGraph\" {\n");
 
         if (title != null) {
