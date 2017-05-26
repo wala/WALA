@@ -98,6 +98,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
      *
      *  @todo   Do we want to mix in REUSE-Parameters?
      */
+    @Override
     public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
         return createInstance(T, asManaged, key, seen, 0);
     }
@@ -260,6 +261,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     /**
      *  Satisfy the interface.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public int createInstance(TypeReference type, Object... instantiatorArgs) {
         // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<SSAValue> seen) {

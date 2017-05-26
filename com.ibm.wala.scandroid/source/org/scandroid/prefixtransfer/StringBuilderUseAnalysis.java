@@ -204,6 +204,7 @@ public class StringBuilderUseAnalysis {
 			return retVal;
 		}
 
+		@Override
 		public String toString() {
 			return ("StringBuilderToString(instanceID = " + instanceID + "; concatenatedInstanceKeys = " + concatenatedInstanceKeys + ")");
 		}

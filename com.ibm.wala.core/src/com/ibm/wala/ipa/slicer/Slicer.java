@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -195,6 +196,21 @@ public class Slicer {
    * @throws CancelException
    */
   public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward) throws CancelException {
+    return slice(sdg, roots, backward, null);
+  }
+
+  /**
+   * Main driver logic.
+   *
+   * @param sdg governing system dependence graph
+   * @param roots set of roots to slice from
+   * @param backward do a backwards slice?
+   * @param monitor to cancel analysis if needed
+   * @return the {@link Statement}s found by the slicer
+   * @throws CancelException
+   */
+  public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
+      throws CancelException {
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
     }
@@ -202,7 +218,7 @@ public class Slicer {
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
 
     PartiallyBalancedTabulationSolver<Statement, PDG<?>, Object> solver = PartiallyBalancedTabulationSolver
-        .createPartiallyBalancedTabulationSolver(p, null);
+        .createPartiallyBalancedTabulationSolver(p, monitor);
     TabulationResult<Statement, PDG<?>, Object> tr = solver.solve();
 
     Collection<Statement> slice = tr.getSupergraphNodesReached();

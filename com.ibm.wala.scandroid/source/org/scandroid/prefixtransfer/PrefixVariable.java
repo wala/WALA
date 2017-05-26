@@ -128,6 +128,7 @@ public class PrefixVariable extends AbstractVariable<PrefixVariable>{
         }
     }
 
+    @Override
     public String toString() {
         return knownPrefixes.toString();
     }
