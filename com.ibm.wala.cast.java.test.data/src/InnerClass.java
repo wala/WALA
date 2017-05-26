@@ -22,6 +22,7 @@ public class InnerClass {
     }
 
     public void method() {
+	@SuppressWarnings("unused")
 	WhatsIt w= new WhatsIt();
     }
 

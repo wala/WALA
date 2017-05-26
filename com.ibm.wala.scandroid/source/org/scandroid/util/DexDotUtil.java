@@ -110,12 +110,12 @@ public class DexDotUtil extends DotUtil {
             }
             if (output.available() > 0) {
               byte[] data = new byte[output.available()];
-              int nRead = output.read(data);
+              output.read(data);
               
             }
             if (error.available() > 0) {
               byte[] data = new byte[error.available()];
-              int nRead = error.read(data);
+              error.read(data);
               
             }
             try {

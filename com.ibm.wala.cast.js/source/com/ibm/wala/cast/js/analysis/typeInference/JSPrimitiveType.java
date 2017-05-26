@@ -16,6 +16,7 @@ import com.ibm.wala.types.TypeReference;
 
 public class JSPrimitiveType extends PrimitiveType {
 
+  @SuppressWarnings("unused")
   public static void init() {
     new JSPrimitiveType(JavaScriptTypes.Undefined, -1);
 

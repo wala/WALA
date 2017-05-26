@@ -43,7 +43,6 @@ package com.ibm.wala.dalvik.util.androidEntryPoints;
 import java.util.List;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 
 /**
@@ -60,20 +59,17 @@ public final class LoaderCB {
     /**
      * Instantiate and return a new Loader for the given ID.
      */
-    public static final AndroidPossibleEntryPoint onCreateLoader = new AndroidPossibleEntryPoint(AndroidComponent.LOADER_CB, "onCreateLoader",
-        ExecutionOrder.AT_FIRST); // TODO: Baaad position
+    public static final AndroidPossibleEntryPoint onCreateLoader = new AndroidPossibleEntryPoint("onCreateLoader", ExecutionOrder.AT_FIRST); // TODO: Baaad position
 
     /**
      *  Called when a previously created loader has finished its load.
      */
-    public static final AndroidPossibleEntryPoint onLoadFinished = new AndroidPossibleEntryPoint(AndroidComponent.LOADER_CB, "onLoadFinished",
-            ExecutionOrder.after(onCreateLoader)); // TODO: Baaad position
+    public static final AndroidPossibleEntryPoint onLoadFinished = new AndroidPossibleEntryPoint("onLoadFinished", ExecutionOrder.after(onCreateLoader)); // TODO: Baaad position
 
     /**
      *  Called when a previously created loader is being reset, and thus making its data unavailable.
      */
-    public static final AndroidPossibleEntryPoint onLoaderReset = new AndroidPossibleEntryPoint(AndroidComponent.LOADER_CB, "onLoaderReset",
-            ExecutionOrder.after(onCreateLoader)); // TODO: Baaad position
+    public static final AndroidPossibleEntryPoint onLoaderReset = new AndroidPossibleEntryPoint("onLoaderReset", ExecutionOrder.after(onCreateLoader)); // TODO: Baaad position
 
     /**
      *  Add the EntryPoint specifications defined in this file to the given list.

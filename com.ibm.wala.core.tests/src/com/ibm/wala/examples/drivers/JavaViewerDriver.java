@@ -68,7 +68,8 @@ public class JavaViewerDriver {
     CallGraph cg = builder.makeCallGraph(options, null);
 
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
-    new WalaViewer(cg, pa);
+    @SuppressWarnings("unused")
+    WalaViewer walaViewer = new WalaViewer(cg, pa);
     
   }
 }

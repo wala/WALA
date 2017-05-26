@@ -80,7 +80,6 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 
 public class FlowAnalysis {
@@ -90,10 +89,9 @@ public class FlowAnalysis {
     analyze(final CGAnalysisContext<E> analysisContext,
           Map<BasicBlockInContext<E>,
           Map<FlowType<E>,Set<CodeElement>>> initialTaints,
-          IFDSTaintDomain<E> d,
-          IProgressMonitor progressMonitor
+          IFDSTaintDomain<E> d
           ) throws CancelRuntimeException {
-        return analyze(analysisContext.graph, analysisContext.cg, analysisContext.pa, initialTaints, d, progressMonitor);
+        return analyze(analysisContext.graph, analysisContext.cg, analysisContext.pa, initialTaints, d);
     }
     
     public static <E extends ISSABasicBlock>
@@ -102,10 +100,9 @@ public class FlowAnalysis {
           Map<BasicBlockInContext<E>,
           Map<FlowType<E>,Set<CodeElement>>> initialTaints,
           IFDSTaintDomain<E> d,
-          IProgressMonitor progressMonitor,
           IFlowFunctionMap<BasicBlockInContext<E>> flowFunctionMap
           ) throws CancelRuntimeException {
-        return analyze(analysisContext.graph, analysisContext.cg, analysisContext.pa, initialTaints, d, progressMonitor, flowFunctionMap);
+        return analyze(analysisContext.graph, analysisContext.cg, initialTaints, d, flowFunctionMap);
     }
     
     public static <E extends ISSABasicBlock>
@@ -115,11 +112,9 @@ public class FlowAnalysis {
 	          CallGraph cg,
 	          PointerAnalysis<InstanceKey> pa,
 	          Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> initialTaints,
-	          IFDSTaintDomain<E> d,
-	          IProgressMonitor progressMonitor
+	          IFDSTaintDomain<E> d
 	        ) {
-				return analyze(graph, cg, pa, initialTaints, d,
-						progressMonitor, new TaintTransferFunctions<>(d, graph, pa));
+				return analyze(graph, cg, initialTaints, d, new TaintTransferFunctions<>(d, pa));
 
 //    			return analyze(graph, cg, pa, initialTaints, d,
 //    					progressMonitor, new IDTransferFunctions<E>(d, graph, pa));
@@ -134,10 +129,8 @@ public class FlowAnalysis {
       analyze(final ISupergraph<BasicBlockInContext<E>, 
     		  CGNode> graph,
               CallGraph cg,
-              PointerAnalysis<InstanceKey> pa,
               Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> initialTaints,
               IFDSTaintDomain<E> d,
-              IProgressMonitor progressMonitor, 
               final IFlowFunctionMap<BasicBlockInContext<E>> flowFunctionMap
             ) {
 

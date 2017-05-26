@@ -44,7 +44,6 @@ import java.util.List;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 
 /**
@@ -61,9 +60,8 @@ public final class ApplicationEP {
     /**
      * Called when the application is starting, before any activity, service, or receiver objects (excluding content providers) have been created.
      */
-	public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint(AndroidComponent.APPLICATION, 
-            "onCreate",
-			ExecutionOrder.between(
+	public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint("onCreate", 
+            ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.AT_FIRST,
                     ProviderEP.onCreate     /* Yes, ContentProviders come before App! */
@@ -80,9 +78,8 @@ public final class ApplicationEP {
      *  Note that, unlike activities, other components are never restarted when a configuration changes: they must always deal with the 
      *  results of the change, such as by re-retrieving resources. 
      */
-	public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint(AndroidComponent.APPLICATION, 
-            "onConfigurationChanged",   // TODO: Position
-			ExecutionOrder.between(
+	public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint("onConfigurationChanged", 
+            ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ActivityEP.onConfigurationChanged,
                     ExecutionOrder.END_OF_LOOP
@@ -97,9 +94,8 @@ public final class ApplicationEP {
      *  While the exact point at which this will be called is not defined, generally it will happen when all background process have been killed.
      *  That is, before reaching the point of killing processes hosting service and foreground UI that we would like to avoid killing. 
      */
-	public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint(AndroidComponent.APPLICATION, 
-            "onLowMemory",  // TODO: Position
-			ExecutionOrder.between(
+	public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint("onLowMemory", 
+            ExecutionOrder.between(
                 new AndroidEntryPoint.IExecutionOrder[] {
                     ExecutionOrder.END_OF_LOOP,
                     ActivityEP.onLowMemory
@@ -123,8 +119,7 @@ public final class ApplicationEP {
     /**
      *  Called when the operating system has determined that it is a good time for a process to trim unneeded memory from its process.
      */
-	public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint(AndroidComponent.APPLICATION, 
-            "onTrimMemory",
+	public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint("onTrimMemory", 
             ExecutionOrder.directlyBefore(onLowMemory)     // may potentially come before onLowMemory 
             );
 

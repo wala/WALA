@@ -47,6 +47,7 @@ public class InnerClassLexicalReads {
 	 * 4   invokevirtual < Source, Ljava/io/PrintStream, println(I)V > v7,v8 @4 exception:v10[18:2] -> [18:38]
 	 */
 	public static void main(String args[]) {
+		@SuppressWarnings("unused")
 		InnerClassLexicalReads ignored = new InnerClassLexicalReads(); // call this just to make <init> reachable (test checks for unreachable methods)
 		int foo = 5;
 		int haha = foo * foo;

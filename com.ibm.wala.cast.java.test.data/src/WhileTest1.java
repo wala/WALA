@@ -10,6 +10,7 @@
  *****************************************************************************/
 public class WhileTest1 {
     public static void main(String[] args) {
+	@SuppressWarnings("unused")
 	WhileTest1 wt1= new WhileTest1();
 	int x= 235834;
 	boolean stop= false;

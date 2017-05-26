@@ -382,8 +382,8 @@ public class AndroidModel /* makes SummarizedMethod */
 
             
             {
-                final AndroidBoot boot = new AndroidBoot(null); 
-                boot.addBootCode(tsif, null, paramManager, this.body);
+                final AndroidBoot boot = new AndroidBoot(); 
+                boot.addBootCode(tsif, paramManager, this.body);
                 //tool.attachActivities(allActivities, application, boot.getMainThread(), /* Should be application context TODO */
                 //        boot.getPackageContext(), nullBinder, nullIntent); 
             }
@@ -699,7 +699,7 @@ public class AndroidModel /* makes SummarizedMethod */
         final SSAValue intent = acc.firstExtends(AndroidTypes.Intent, cha);
 
         final AndroidStartComponentTool tool = new AndroidStartComponentTool(getClassHierarchy(), asMethod, flags, caller, instructionFactory,
-                acc, pm, redirect, self, info, callerNd);
+                acc, pm, redirect, self, info);
 
         final AndroidTypes.AndroidContextType contextType;
         final SSAValue androidContext;  // of AndroidTypes.Context: The callers android-context

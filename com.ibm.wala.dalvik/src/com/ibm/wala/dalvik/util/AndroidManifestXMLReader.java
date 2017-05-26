@@ -562,6 +562,7 @@ public class AndroidManifestXMLReader {
                 }
             }
 
+            /*
             // Pushing intent...
             final String pack;
             if ((attributesHistory.get(Attr.PACKAGE) != null ) && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
@@ -570,6 +571,7 @@ public class AndroidManifestXMLReader {
                 logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
+            */
 
             if (!names.isEmpty()) {
                 for (String name : names) {

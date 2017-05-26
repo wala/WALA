@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,9 +66,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
-
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -90,7 +87,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 public class AndroidAnalysisContext {
@@ -125,6 +121,7 @@ public class AndroidAnalysisContext {
 		
 		cha = ClassHierarchyFactory.make(scope);
 
+		/*
 		if (options.classHierarchyWarnings()) {
 			// log ClassHierarchy warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
@@ -132,19 +129,11 @@ public class AndroidAnalysisContext {
 				
 			}
 		}
+		*/
 		Warnings.clear();
 	}
 	
 	
-
-	// ContextSelector, entry points, reflection options, IR Factory, call graph
-	// type, include library
-	public void buildGraphs(List<Entrypoint> localEntries,
-			InputStream summariesStream) {
-
-		
-
-	}
 
 	public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
 			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,

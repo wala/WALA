@@ -89,16 +89,14 @@ public class CallRetSourceSpec extends SourceSpec {
 			BasicBlockInContext<E> block, SSAInvokeInstruction invInst, int[] newArgNums,
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis<InstanceKey> pa, CallGraph cg) {
 
-		for (FlowType<E> ft:getFlowType(block, invInst,block.getNode(), im, pa)) {
+		for (FlowType<E> ft:getFlowType(block)) {
 			InflowAnalysis.addDomainElements(taintMap, block, ft, 
-			        CodeElement.valueElements(pa, block.getNode(), invInst.getDef(0)));
+			        CodeElement.valueElements(invInst.getDef(0)));
 		}
 	}
 
 	private<E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
-	        BasicBlockInContext<E> block,
-	        SSAInvokeInstruction invInst,
-			CGNode node, IMethod im, PointerAnalysis<InstanceKey> pa) {
+	        BasicBlockInContext<E> block) {
 
 		HashSet<FlowType<E>> flowSet = new HashSet<>();
 		flowSet.clear();

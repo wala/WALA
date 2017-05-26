@@ -11,6 +11,7 @@
 
 public class Exception1 {
     public static void main(String[] args) {
+	@SuppressWarnings("unused")
 	Exception1 e1= new Exception1();
 	try {
 	    FooEx1 f = new FooEx1();
