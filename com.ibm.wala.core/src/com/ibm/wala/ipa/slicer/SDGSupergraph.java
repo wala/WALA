@@ -244,7 +244,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     case PARAM_CALLER:
       return true;
     case NORMAL:
-      if (sdg.getCOptions().equals(ControlDependenceOptions.NONE)) {
+      if (sdg.getCOptions().isIgnoreInterproc()) {
         return false;
       } else {
         NormalStatement s = (NormalStatement) n;
