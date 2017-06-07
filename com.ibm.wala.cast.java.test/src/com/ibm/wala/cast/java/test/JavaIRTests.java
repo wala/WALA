@@ -630,5 +630,9 @@ public abstract class JavaIRTests extends IRTests {
     Assert.assertEquals(2, SlicerTest.countAllocations(slice));
     Assert.assertEquals(2, SlicerTest.countPutfields(slice));
   }
+  
+  @Test public void testDoWhileInCase() throws IllegalArgumentException, CancelException, IOException {
+    runTest(singleTestSrc("bugfixes"), rtJar, simplePkgTestEntryPoint("bugfixes"), emptyList, true); 
+  }
 
 }
