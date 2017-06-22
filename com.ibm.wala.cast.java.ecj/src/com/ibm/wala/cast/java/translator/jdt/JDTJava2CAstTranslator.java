@@ -180,7 +180,6 @@ import com.ibm.wala.util.debug.Assertions;
 // * boxing (YUCK). see resolveBoxing()
 // * enums (probably in simplename or something. but using resolveConstantExpressionValue() possible)
 
-@SuppressWarnings("unchecked")
 public abstract class JDTJava2CAstTranslator<T extends Position> {
   protected boolean dump = false;
   
@@ -2371,7 +2370,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // First compute the control flow edges for the various case labels
     for (int i = 0; i < cases.size(); i++) {
-      Statement se = (Statement) cases.get(i);
+      Statement se = cases.get(i);
       if (se instanceof SwitchCase) {
         SwitchCase c = (SwitchCase) se;
 
