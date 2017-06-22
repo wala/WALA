@@ -7,6 +7,7 @@ Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,
  com.ibm.wala.ide,
+ com.ibm.wala.ide.jdt;bundle-version="1.4.3",
  com.ibm.wala.core.tests,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -20,5 +21,7 @@ Require-Bundle: com.ibm.wala.shrike,
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.ide.tests.util
+Export-Package: com.ibm.wala.examples.drivers,
+ com.ibm.wala.ide.test,
+ com.ibm.wala.ide.tests.util
 Bundle-Activator: com.ibm.wala.ide.test.Activator

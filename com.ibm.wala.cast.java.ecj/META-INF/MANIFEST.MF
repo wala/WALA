@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WALA CAst Java ECJ frontend
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java.ecj
 Bundle-Version: 1.4.3.qualifier
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.core,
@@ -12,5 +12,6 @@ Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.cast,
  com.ibm.wala.shrike
 Export-Package: com.ibm.wala.cast.java.client,
+ com.ibm.wala.cast.java.ecj.util,
  com.ibm.wala.cast.java.translator.jdt,
  com.ibm.wala.cast.java.translator.jdt.ecj

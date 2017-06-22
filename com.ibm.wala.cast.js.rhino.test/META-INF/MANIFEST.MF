@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.rhino.test
 Bundle-Version: 1.4.3.qualifier
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.cast.js.rhino;bundle-version="1.0.0",
  com.ibm.wala.cast.js;bundle-version="1.0.0",
  com.ibm.wala.cast;bundle-version="1.0.0",
@@ -16,6 +16,8 @@ Require-Bundle: com.ibm.wala.cast.js.rhino;bundle-version="1.0.0",
  org.junit;bundle-version="4.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test,
+Export-Package: com.ibm.wala.cast.js.examples.hybrid,
+ com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test,
  com.ibm.wala.cast.js.rhino.test,
- com.ibm.wala.cast.js.test
+ com.ibm.wala.cast.js.test,
+ com.ibm.wala.cast.js.vis

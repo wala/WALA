@@ -9,12 +9,14 @@ Bundle-Localization: plugin
 Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.shrike.cg,
  com.ibm.wala.shrike.copywriter,
+ com.ibm.wala.shrike.instrumentation,
  com.ibm.wala.shrikeBT,
  com.ibm.wala.shrikeBT.analysis,
  com.ibm.wala.shrikeBT.info,
  com.ibm.wala.shrikeBT.shrikeCT,
  com.ibm.wala.shrikeBT.shrikeCT.tools,
  com.ibm.wala.shrikeBT.tools,
- com.ibm.wala.shrikeCT
+ com.ibm.wala.shrikeCT,
+ com.ibm.wala.sourcepos
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.ibm.wala.util

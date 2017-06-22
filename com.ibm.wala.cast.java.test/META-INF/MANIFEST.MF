@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java AST WALA Test Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java.test
 Bundle-Version: 1.4.3.qualifier
 Bundle-Activator: com.ibm.wala.cast.java.test.TestPlugin
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.core.tests,
  com.ibm.wala.cast.java,
  com.ibm.wala.cast,

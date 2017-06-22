@@ -11,6 +11,10 @@ Require-Bundle: com.ibm.wala.shrike,
 Bundle-ActivationPolicy: lazy
 Export-Package: .,
  com.ibm.wala.analysis.arraybounds,
+ com.ibm.wala.analysis.arraybounds.hypergraph,
+ com.ibm.wala.analysis.arraybounds.hypergraph.algorithms,
+ com.ibm.wala.analysis.arraybounds.hypergraph.weight,
+ com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights,
  com.ibm.wala.analysis.exceptionanalysis,
  com.ibm.wala.analysis.nullpointer,
  com.ibm.wala.analysis.pointers,
@@ -70,7 +74,8 @@ Export-Package: .,
  com.ibm.wala.util.strings,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz,
- com.ibm.wala.viz.viewer
+ com.ibm.wala.viz.viewer,
+ com.ibm.wala.viz.viewer.images
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-BuddyPolicy: registered
 Bundle-ClassPath: .

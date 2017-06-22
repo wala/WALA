@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CAst Test Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.test
 Bundle-Version: 1.4.3.qualifier
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: 
  org.junit;bundle-version="4.0.0",
  com.ibm.wala.core.tests,

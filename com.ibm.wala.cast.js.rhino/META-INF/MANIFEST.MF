@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Rhino Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.rhino
 Bundle-Version: 1.4.3.qualifier
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.cast;bundle-version="1.0.0",
  com.ibm.wala.cast.js;bundle-version="1.0.0",
  com.ibm.wala.core;bundle-version="1.1.3"

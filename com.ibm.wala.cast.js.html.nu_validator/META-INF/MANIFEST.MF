@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Nu_validator
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.html.nu_validator
 Bundle-Version: 1.4.3.qualifier
-Export-Package: com.ibm.wala.cast.js.html.nu_validator
+Export-Package: com.ibm.wala.cast.js.html.nu_validator,
+ com.ibm.wala.cast.js.test
 Require-Bundle: com.ibm.wala.cast.js;bundle-version="1.0.0",
  com.ibm.wala.cast.js.rhino.test;bundle-version="1.0.0",
  com.ibm.wala.cast.js.test;bundle-version="1.0.0",

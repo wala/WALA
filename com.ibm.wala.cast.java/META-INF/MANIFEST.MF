@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java Source WALA Front End
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java
 Bundle-Version: 1.4.3.qualifier
-Bundle-Vendor: rfuhrer@watson.ibm.com
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.shrike

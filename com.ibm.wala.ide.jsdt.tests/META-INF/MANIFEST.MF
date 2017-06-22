@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JSDT Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.ide.jsdt.tests;singleton:=true
 Bundle-Version: 1.4.3.qualifier
 Require-Bundle: com.ibm.wala.core;bundle-version="1.1.3",

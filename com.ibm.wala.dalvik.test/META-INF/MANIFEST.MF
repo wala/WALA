@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WalaDalvikBytecodeTests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.dalvik.test
 Bundle-Version: 1.4.3.qualifier
 Bundle-Activator: com.ibm.wala.dalvik.test.Activator
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
  com.ibm.wala.core.testdata;bundle-version="1.3.4",
  com.ibm.wala.core.tests;bundle-version="1.3.4",
@@ -16,5 +16,9 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/dx.jar
-Export-Package: com.ibm.wala.dalvik.test.callGraph,
+Export-Package: com.ibm.wala.dalvik.drivers,
+ com.ibm.wala.dalvik.test,
+ com.ibm.wala.dalvik.test.callGraph,
+ com.ibm.wala.dalvik.test.callGraph.droidbench,
+ com.ibm.wala.dalvik.test.ir,
  com.ibm.wala.dalvik.test.util
