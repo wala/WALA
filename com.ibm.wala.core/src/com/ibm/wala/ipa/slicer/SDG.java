@@ -123,10 +123,6 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   private boolean eagerComputed = false;
 
   public SDG(final CallGraph cg, PointerAnalysis<T> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, ModRef.<T>make(), dOptions, cOptions, null);
-  }
-
-  public SDG(final CallGraph cg, PointerAnalysis<T> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     this(cg, pa, new ModRef<T>(), dOptions, cOptions, null);
   }
 
