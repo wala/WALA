@@ -37,6 +37,7 @@ public final class TwoLevelVectorTest extends WalaTestCase {
   
   // --- Test cases
   
+  @SuppressWarnings("static-method")
   @Test public void testCase1() {
     final TwoLevelVector<Integer> tlVector = new TwoLevelVector<>();
     tlVector.iterator();

@@ -94,7 +94,7 @@ public class DalvikTypeInference extends TypeInference {
 			}
 		}
 
-		private boolean containsNonPrimitiveAndZero(DalvikTypeVariable[] types) {
+		private static boolean containsNonPrimitiveAndZero(DalvikTypeVariable[] types) {
 			boolean containsNonPrimitive = false;
 			boolean containsZero = false;
 			for (int i = 0; i < types.length; i++) {

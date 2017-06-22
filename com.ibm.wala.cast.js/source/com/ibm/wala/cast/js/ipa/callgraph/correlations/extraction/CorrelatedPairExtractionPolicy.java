@@ -179,7 +179,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     return true;
   }
   
-  private void filterNames(Set<ChildPos> nodes, String indexName) {
+  private static void filterNames(Set<ChildPos> nodes, String indexName) {
     for(Iterator<ChildPos> iter=nodes.iterator();iter.hasNext();) {
       CAstNode node = iter.next().getChild();
       if(node.getKind() == CAstNode.OBJECT_REF) {
@@ -191,7 +191,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     }
   }
 
-  private Pair<CAstNode, ? extends ExtractionRegion> findClosestContainingBlock(CAstEntity entity, ChildPos startNode, ChildPos endNode, String parmName, List<String> locals) {
+  private static Pair<CAstNode, ? extends ExtractionRegion> findClosestContainingBlock(CAstEntity entity, ChildPos startNode, ChildPos endNode, String parmName, List<String> locals) {
     ChildPos pos = startNode;
     CAstNode block = null;
     int start = -1, end = 0;

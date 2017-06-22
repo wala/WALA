@@ -12,7 +12,6 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -57,7 +56,7 @@ public class Driver {
 
     scope.addToScope(
         scope.getJavaScriptLoader(),
-        JSCallGraphBuilderUtil.getPrologueFile("prologue.js"));
+        JSCallGraphUtil.getPrologueFile("prologue.js"));
     for(int i = 1; i < args.length; i++) {
       URL script = Driver.class.getClassLoader().getResource(args[i]);
       scope.addToScope(

@@ -60,7 +60,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   }
 
-  private void test(CAstPattern p, CAstNode n, Map names) {
+  private static void test(CAstPattern p, CAstNode n, Map names) {
     System.err.println(("testing pattern " + p));
     System.err.println(("testing with input " + CAstPrinter.print(n)));
 

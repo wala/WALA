@@ -38,7 +38,7 @@ public class StackMapTableWriter extends Element {
     this.data = serialize(writer, frames);
   }
   
-  private byte[] serialize(ClassWriter writer, List<StackMapFrame> frames) throws IOException {
+  private static byte[] serialize(ClassWriter writer, List<StackMapFrame> frames) throws IOException {
     ByteArrayOutputStream data = new ByteArrayOutputStream();
     
     for(StackMapFrame frame : frames) {

@@ -357,7 +357,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       return ((AstPointerKeyFactory) getBuilder().getPointerKeyFactory()).getPointerKeysForReflectedFieldWrite(I, F);
     }
 
-    private void visitLexical(AstLexicalAccess instruction, final LexicalOperator op) {
+    private static void visitLexical(AstLexicalAccess instruction, final LexicalOperator op) {
       op.doLexicalPointerKeys(false);
       // I have no idea what the code below does, but commenting it out doesn't
       // break any regression tests. --MS

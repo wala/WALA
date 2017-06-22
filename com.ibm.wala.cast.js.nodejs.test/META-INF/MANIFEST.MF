@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.nodejs.test
 Bundle-Version: 1.4.3.qualifier
 Export-Package: NodejsRequireJsonTest,
@@ -18,3 +18,4 @@ Require-Bundle: com.ibm.wala.cast.js.nodejs;bundle-version="1.3.10",
  com.ibm.wala.cast.js.rhino;bundle-version="1.3.10",
  com.ibm.wala.core;bundle-version="1.3.10",
  org.junit
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

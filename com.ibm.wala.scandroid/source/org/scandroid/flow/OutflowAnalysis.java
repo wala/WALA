@@ -121,7 +121,7 @@ public class OutflowAnalysis {
 		this.specs = specs;
 	}
 
-	private void addEdge(
+	private static void addEdge(
 			Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> graph,
 			FlowType<IExplodedBasicBlock> source,
 			FlowType<IExplodedBasicBlock> dest) {

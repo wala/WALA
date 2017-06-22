@@ -161,7 +161,7 @@ public class FlatInstantiator implements IInstantiator {
         { // Special type?
             final SpecializedInstantiator sInst = new SpecializedInstantiator(body, instructionFactory, pm,
                     cha, scope, analysisScope, this);
-            if (sInst.understands(T)) {
+            if (SpecializedInstantiator.understands(T)) {
                 return sInst.createInstance(T, asManaged, key, seen, currentDepth);
             }
         }
@@ -343,7 +343,7 @@ public class FlatInstantiator implements IInstantiator {
         return instance; 
     }
 
-    private void createPrimitive(SSAValue instance) {
+    private static void createPrimitive(SSAValue instance) {
         // XXX; something else?
         instance.setAssigned();
     }

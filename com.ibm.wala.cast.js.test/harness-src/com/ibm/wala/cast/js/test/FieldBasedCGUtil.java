@@ -78,7 +78,7 @@ public class FieldBasedCGUtil {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
     Module[] scripts = new Module[]{
         new SourceURLModule(url),
-        JSCallGraphBuilderUtil.getPrologueFile("prologue.js")
+        JSCallGraphUtil.getPrologueFile("prologue.js")
     };
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	}

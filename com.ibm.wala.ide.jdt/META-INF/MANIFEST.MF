@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WALA IDE JDT components
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.ide.jdt
 Bundle-Version: 1.4.3.qualifier
 Bundle-Activator: com.ibm.wala.ide.jdt.Activator
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.ibm.wala.cast,
@@ -24,5 +24,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.client,
  com.ibm.wala.cast.java.translator.jdt,
+ com.ibm.wala.eclipse.headless,
+ com.ibm.wala.ide,
  com.ibm.wala.ide.jdt,
  com.ibm.wala.ide.util

@@ -213,7 +213,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
   }
 
-  private String operationReceiverName(int operationIndex) {
+  private static String operationReceiverName(int operationIndex) {
     return "$$destructure$rcvr" + operationIndex;
   }
 
@@ -221,7 +221,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(operationReceiverName(operationIndex)));
   }
   
-  private String operationElementName(int operationIndex) {
+  private static String operationElementName(int operationIndex) {
     return "$$destructure$elt" + operationIndex;
   }
 
@@ -229,7 +229,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(operationElementName(operationIndex)));
   }
 
-  private CAstNode translateOpcode(int nodeType) {
+  private static CAstNode translateOpcode(int nodeType) {
     switch (nodeType) {
     case Token.POS:
     case Token.ADD:
@@ -311,26 +311,26 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     return makeCtorCall(value, arguments, context);
   }
 
-  private boolean isPrologueScript(WalkContext context) {
+  private static boolean isPrologueScript(WalkContext context) {
     return JavaScriptLoader.bootstrapFileNames.contains(context.script());
   }
 
-  private Node getCallTarget(FunctionCall n) {
+  private static Node getCallTarget(FunctionCall n) {
 	  return n.getTarget();
   }
   /**
    * is n a call to "primitive" within our synthetic modeling code?
    */
-  private boolean isPrimitiveCall(WalkContext context, FunctionCall n) {
+  private static boolean isPrimitiveCall(WalkContext context, FunctionCall n) {
     return isPrologueScript(context) && n.getType() == Token.CALL && getCallTarget(n).getType() == Token.NAME
         && getCallTarget(n).getString().equals("primitive");
   }
 
-  private Node getNewTarget(NewExpression n) {
+  private static Node getNewTarget(NewExpression n) {
 	  return n.getTarget();
   }
   
-  private boolean isPrimitiveCreation(WalkContext context, NewExpression n) {
+  private static boolean isPrimitiveCreation(WalkContext context, NewExpression n) {
 	  Node target = getNewTarget(n);
     return isPrologueScript(context) && n.getType() == Token.NEW && target.getType() == Token.NAME
         && target.getString().equals("Primitives");
@@ -585,14 +585,14 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     return cn;
   }
   
-  private List<Label> getLabels(AstNode node) {
+  private static List<Label> getLabels(AstNode node) {
 	  if (node instanceof LabeledStatement || ((node = node.getParent()) instanceof LabeledStatement)) {
 		  return ((LabeledStatement)node).getLabels();
 	  } else {
 		  return null;
 	  }
   }
-  private AstNode makeEmptyLabelStmt(String label) {
+  private static AstNode makeEmptyLabelStmt(String label) {
 	  Label l = new Label();
 	  l.setName(label);
 	  LabeledStatement st = new LabeledStatement();
@@ -603,7 +603,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 	  return st;
   }
   
-  private WalkContext makeLoopContext(AstNode node, WalkContext arg,
+  private static WalkContext makeLoopContext(AstNode node, WalkContext arg,
 			AstNode breakStmt, AstNode contStmt) {
 	  WalkContext loopContext = arg;
 	  List<Label> labels = getLabels(node);
@@ -617,7 +617,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 	  return loopContext;
   }
 
-  private WalkContext makeBreakContext(AstNode node, WalkContext arg,
+  private static WalkContext makeBreakContext(AstNode node, WalkContext arg,
       AstNode breakStmt) {
     WalkContext loopContext = arg;
     List<Label> labels = getLabels(node);

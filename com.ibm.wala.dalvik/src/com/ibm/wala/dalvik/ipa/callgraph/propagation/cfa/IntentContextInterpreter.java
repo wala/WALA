@@ -132,7 +132,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         }
     } 
 
-    private TypeReference getCaller(final Context ctx, final CGNode node) {
+    private static TypeReference getCaller(final Context ctx, final CGNode node) {
         if (ctx.get(ContextKey.CALLER) != null) {
             System.out.println("CALLER CONTEXT" + ctx.get(ContextKey.CALLER));
             return node.getMethod().getReference().getDeclaringClass();

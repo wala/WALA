@@ -596,7 +596,7 @@ public abstract class JavaIRTests extends IRTests {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  private MethodReference getSliceRootReference(String className, String methodName, String methodDescriptor) {
+  private static MethodReference getSliceRootReference(String className, String methodName, String methodDescriptor) {
     TypeName clsName = TypeName.string2TypeName("L" + className.replace('.', '/'));
     TypeReference clsRef = TypeReference.findOrCreate(JavaSourceAnalysisScope.SOURCE, clsName);
 
@@ -629,6 +629,10 @@ public abstract class JavaIRTests extends IRTests {
     // SlicerTest.dumpSlice(slice);
     Assert.assertEquals(2, SlicerTest.countAllocations(slice));
     Assert.assertEquals(2, SlicerTest.countPutfields(slice));
+  }
+  
+  @Test public void testDoWhileInCase() throws IllegalArgumentException, CancelException, IOException {
+    runTest(singleTestSrc("bugfixes"), rtJar, simplePkgTestEntryPoint("bugfixes"), emptyList, true); 
   }
 
 }

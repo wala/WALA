@@ -233,7 +233,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       return;
     }
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph = ir.getControlFlowGraph();
-    if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
+    if (cOptions.isIgnoreExceptions()) {
       PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCFG = ExceptionPrunedCFG.make(controlFlowGraph);
       // In case the CFG has only the entry and exit nodes left 
       // and no edges because the only control dependencies

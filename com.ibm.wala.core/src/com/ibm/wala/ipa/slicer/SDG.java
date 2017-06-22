@@ -425,7 +425,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       }
       case METHOD_ENTRY:
         Collection<Statement> result = HashSetFactory.make(5);
-        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+        if (!cOptions.isIgnoreInterproc()) {
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
@@ -461,7 +461,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
       case NORMAL:
-        if (cOptions.equals(ControlDependenceOptions.NONE)) {
+        if (cOptions.isIgnoreInterproc()) {
           return getPDG(N.getNode()).getSuccNodes(N);
         } else {
           NormalStatement ns = (NormalStatement) N;
@@ -626,7 +626,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {
       case NORMAL:
-        if (cOptions.equals(ControlDependenceOptions.NONE)) {
+        if (cOptions.isIgnoreInterproc()) {
           return getPDG(src.getNode()).hasEdge(src, dst);
         } else {
           NormalStatement ns = (NormalStatement) src;

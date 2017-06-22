@@ -535,7 +535,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     ((JavaClass) owner).addField(n);
   }
 
-  private TypeName toWALATypeName(CAstType type) {
+  private static TypeName toWALATypeName(CAstType type) {
     return TypeName.string2TypeName(type.getName());
   }
   

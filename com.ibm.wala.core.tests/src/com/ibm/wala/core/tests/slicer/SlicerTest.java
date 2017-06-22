@@ -64,6 +64,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
@@ -81,20 +82,20 @@ public class SlicerTest {
 
   // more aggressive exclusions to avoid library blowup
   // in interprocedural tests
-  private static final String EXCLUSIONS = "java\\/awt\\/.*\n" + 
-      "javax\\/swing\\/.*\n" + 
-      "sun\\/awt\\/.*\n" + 
-      "sun\\/swing\\/.*\n" + 
-      "com\\/sun\\/.*\n" + 
-      "sun\\/.*\n" + 
-      "org\\/netbeans\\/.*\n" + 
-      "org\\/openide\\/.*\n" + 
-      "com\\/ibm\\/crypto\\/.*\n" + 
-      "com\\/ibm\\/security\\/.*\n" + 
-      "org\\/apache\\/xerces\\/.*\n" + 
-      "java\\/security\\/.*\n" + 
+  private static final String EXCLUSIONS = "java\\/awt\\/.*\n" +
+      "javax\\/swing\\/.*\n" +
+      "sun\\/awt\\/.*\n" +
+      "sun\\/swing\\/.*\n" +
+      "com\\/sun\\/.*\n" +
+      "sun\\/.*\n" +
+      "org\\/netbeans\\/.*\n" +
+      "org\\/openide\\/.*\n" +
+      "com\\/ibm\\/crypto\\/.*\n" +
+      "com\\/ibm\\/security\\/.*\n" +
+      "org\\/apache\\/xerces\\/.*\n" +
+      "java\\/security\\/.*\n" +
       "";
-  
+
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
       cachedScope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
@@ -248,7 +249,7 @@ public class SlicerTest {
 
   /**
    * test unreproduced bug reported on mailing list by Sameer Madan, 7/3/2007
-   * 
+   *
    * @throws CancelException
    * @throws IllegalArgumentException
    * @throws IOException
@@ -277,7 +278,7 @@ public class SlicerTest {
 
   /**
    * test bug reported on mailing list by Ravi Chandhran, 4/16/2010
-   * 
+   *
    * @throws CancelException
    * @throws IllegalArgumentException
    * @throws IOException
@@ -308,7 +309,7 @@ public class SlicerTest {
         ControlDependenceOptions.NONE);
     Assert.assertEquals(slice.toString(), 4, slice.size());
   }
-  
+
   @Test
   public void testSlice9() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -434,7 +435,7 @@ public class SlicerTest {
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
-  
+
   @Test
   public void testTestCD5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -457,7 +458,34 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
         DataDependenceOptions.NONE, ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
-    Assert.assertTrue(slice.toString(), slice.size() > 1);
+    Assert.assertEquals(10, slice.size());
+    Assert.assertEquals(3, countReturns(slice));
+  }
+
+  @Test
+  public void testTestCD5NoInterproc() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TESTCD5);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = findMainMethod(cg);
+
+    Statement s = new MethodEntryStatement(main);
+    System.err.println("Statement: " + s);
+
+    // compute a no-data slice
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
+        DataDependenceOptions.NONE, ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
+    dumpSlice(slice);
+    Assert.assertEquals(8, slice.size());
+    Assert.assertEquals(2, countReturns(slice));
   }
 
   @Test
@@ -942,6 +970,19 @@ public class SlicerTest {
           if (!p.isStatic()) {
             count++;
           }
+        }
+      }
+    }
+    return count;
+  }
+
+  public static int countReturns(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s: slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        NormalStatement ns = (NormalStatement) s;
+        if (ns.getInstruction() instanceof SSAReturnInstruction) {
+          count++;
         }
       }
     }

@@ -51,6 +51,7 @@ public class MethodMadness {
 	public static void staticTest() {
 		System.out.println("staticTest");
 	}
+	@SuppressWarnings("static-access")
 	protected int protectedInteger() {
 		this.s = 5;
 		new MethodMadness("thrownaway").staticTest(); // MethodMadness object evaluated but thrown away
@@ -99,6 +100,7 @@ public class MethodMadness {
 			return 233 + x;
 		}
 		
+		@SuppressWarnings("static-access")
 		public void hello() {
 			System.out.println(privateInteger()); // inner function, inner this, 200013
 			System.out.println(MethodMadness.this.privateInteger()); // outer function, outer this, 100007 

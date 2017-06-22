@@ -167,7 +167,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     processExceptions(newNode, context);
   }
 
-  private void processExceptions(CAstNode n, WalkContext context) {
+  private static void processExceptions(CAstNode n, WalkContext context) {
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().newBlock(true);
 
@@ -412,7 +412,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
-  private CAstType getType(final String name) {
+  private static CAstType getType(final String name) {
     return new CAstType.Class() {
       
       @Override
