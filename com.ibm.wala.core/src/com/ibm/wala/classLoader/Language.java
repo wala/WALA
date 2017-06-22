@@ -106,7 +106,7 @@ public interface Language {
    * be the corresponding {@link TypeReference}. The returned object should be
    * appropriate for use as the token in an {@link SSALoadMetadataInstruction}
    * for the language
-   * 
+   *
    */
   Object getMetadataToken(Object value);
 
@@ -135,14 +135,21 @@ public interface Language {
 
   /**
    * get the abstraction of a primitive type to be used for type inference
-   * 
+   *
    * @see TypeInference
    */
   PrimitiveType getPrimitive(TypeReference reference);
-  
+
   /**
    * do MethodReference objects have declared parameter types?
    */
   boolean methodsHaveDeclaredParameterTypes();
-   
+
+  /**
+   * Given a function/method with k formal parameters, does
+   * the language allow for passing greater or fewer than k
+   * parameters at a call site?
+   */
+  boolean canPassMismatchedNumberOfParameters();
+
 }
