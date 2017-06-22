@@ -12,15 +12,6 @@
     <build>
       <plugins>
 	<plugin>
-	  <groupId>org.eclipse.tycho</groupId>
-	  <artifactId>tycho-compiler-plugin</artifactId>
-	  <version>${tycho-version}</version>
-	  <configuration>
-	    <source>1.8</source>
-	    <target>1.8</target>
-	  </configuration>
-	</plugin>
-	<plugin>
 	  <artifactId>maven-antrun-plugin</artifactId>
 	  <version>1.7</version>
 	  <executions>
