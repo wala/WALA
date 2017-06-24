@@ -24,7 +24,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * 
  * Someday this should maybe go away?
  */
-class AnalysisCache implements IAnalysisCacheView {
+public class AnalysisCache implements IAnalysisCacheView {
   private final IRFactory<IMethod> irFactory;
 
   private final SSACache ssaCache;
