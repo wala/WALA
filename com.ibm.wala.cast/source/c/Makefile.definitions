@@ -1,0 +1,63 @@
+#
+# in theory, these definitions should not need to be changed
+#
+
+ifeq (x$(PLATFORM),x)
+  PLATFORM=$(shell uname -s)
+endif
+
+C_GENERATED=$(DOMO_AST_BIN)libcast/
+
+JAVAH_GENERATED=$(C_GENERATED)
+ifeq ($(PLATFORM),windows)
+  CC=i686-mingw32-g++
+else
+  CC=g++
+endif
+
+vpath %.cpp	jni
+
+JAVA_INCLUDES = -I$(JAVA_SDK)include -I$(JAVA_SDK)include/$(JNI_MD_DIR) -DWALA_CLASSPATH="\"$(DOMO_AST_BIN)$(JAVAH_CLASS_PATH)\"" 
+
+CAPA_INCLUDE_DIR = ../../../com.ibm.wala.cast/source/c/include/
+CAPA_INCLUDES = -I$(CAPA_INCLUDE_DIR) -I$(C_GENERATED)
+
+CAPA_JNI_BRIDGE_HEADER = $(C_GENERATED)com_ibm_wala_cast_ir_translator_NativeBridge.h
+CAPA_JNI_XLATOR_HEADER = $(C_GENERATED)com_ibm_wala_cast_ir_translator_NativeTranslatorToCAst.h
+CAPA_JNI_HEADERS = $(CAPA_JNI_BRIDGE_HEADER) $(CAPA_JNI_XLATOR_HEADER)
+
+INCLUDES = $(CAPA_INCLUDES) $(JAVA_INCLUDES)
+
+CAPA_SOURCES = $(notdir $(wildcard jni/*.cpp))
+CAPA_OBJECTS = $(patsubst %.cpp,$(C_GENERATED)%.o,$(CAPA_SOURCES))
+
+ifeq ($(PLATFORM),windows)
+	ALL_FLAGS = -g $(TRACE) $(INCLUDES) -DBUILD_CAST_DLL
+	DLLEXT = dll
+else
+ifeq ($(PLATFORM),Darwin)
+	ALL_FLAGS = -g $(TRACE) $(INCLUDES) -fPIC
+	DLLEXT = jnilib
+else
+	ALL_FLAGS = -pthread -g $(TRACE) $(INCLUDES) -fPIC
+	DLLEXT = so
+endif
+endif
+
+ifeq ($(PLATFORM),windows)
+	CC_LDFLAGS = -shared -Wl,--add-stdcall-alias -Wl,-export-all-symbols
+	LIBPREFIX = 
+else
+ifeq ($(PLATFORM),Darwin)
+	CC_LDFLAGS = -dynamiclib -Wl,-flat_namespace
+	LIBPREFIX = lib
+else
+	CC_LDFLAGS = -pthread -shared
+	LIBPREFIX = lib
+endif
+endif
+
+CC_LDFLAGS += -L$(JAVA_SDK)jre/lib/server -ljvm
+
+ALL_FLAGS += -std=c++11
+
