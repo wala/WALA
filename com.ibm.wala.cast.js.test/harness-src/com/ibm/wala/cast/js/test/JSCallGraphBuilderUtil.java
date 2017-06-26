@@ -62,6 +62,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
   public static enum CGBuilderType {
     ZERO_ONE_CFA(false, true, true),
+    ZERO_ONE_CFA_WITHOUT_CORRELATION_TRACKING(false, true, false),
     ZERO_ONE_CFA_NO_CALL_APPLY(false, false, true),
     ONE_CFA(true, true, true);
     
@@ -150,6 +151,13 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   
   public static CallGraph makeScriptCG(String dir, String name, ClassLoader loader) throws IOException, IllegalArgumentException, CancelException, WalaException {
     return makeScriptCG(dir, name, CGBuilderType.ZERO_ONE_CFA, loader);
+  }
+  
+  public static JSCFABuilder makeScriptCGBuilderWithoutCorrelationTracking(String dir, String name, ClassLoader loader) throws IOException, WalaException {
+    return makeScriptCGBuilder(dir, name, CGBuilderType.ZERO_ONE_CFA_WITHOUT_CORRELATION_TRACKING, loader);
+  }
+  public static JSCFABuilder makeScriptCGBuilderWithoutCorrelationTracking(String dir, String name) throws IOException, WalaException {
+    return makeScriptCGBuilder(dir, name, CGBuilderType.ZERO_ONE_CFA_WITHOUT_CORRELATION_TRACKING, JSCallGraphBuilderUtil.class.getClassLoader());
   }
 
   public static CallGraph makeScriptCG(String dir, String name, CGBuilderType builderType, ClassLoader loader) throws IOException,
