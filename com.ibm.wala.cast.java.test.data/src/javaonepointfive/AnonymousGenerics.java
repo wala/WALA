@@ -49,10 +49,12 @@ public class AnonymousGenerics {
 		// get erasures for all of those types and make a new method
 		// that calls this one (with casts). no worries about return values.
 		
+    @Override
     public String unary(String x) {
 			return x + x + x;
 		}
 		
+    @Override
     public String nullary() {
 			String x = "talk about it ";
 			return x+x+x;
@@ -66,10 +68,12 @@ public class AnonymousGenerics {
 	private void doit() {
 		Ops<String> strQuadrupler = new Ops<String>() {
 			
+      @Override
       public String unary(String x) {
 				return x+x+x+x;
 			}
 			
+      @Override
       public String nullary() {
 				String x = "time to make a move to the global economy ";
 				return x+x+x+x;

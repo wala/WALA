@@ -40,12 +40,16 @@ package javaonepointfive;
 public class NotSoSimpleEnums {
 	public enum Direction {
 	    NORTH("nord") { 
+      @Override
       public Direction getOpposite() { return SOUTH; }},
 	    EAST("est") { 
+      @Override
       public Direction getOpposite() { return WEST; }},
 	    SOUTH("sud") { 
+      @Override
       public Direction getOpposite() { return NORTH; }},
 	    WEST("ouest") { 
+      @Override
       public Direction getOpposite() { return EAST; }};
 		
 	    public abstract Direction getOpposite();

@@ -32,10 +32,12 @@ class Base {
 }
 class Derived extends Base {
     
+    @Override
     public void foo() {
 	super.foo();
     }
     
+    @Override
     public String bar(int x) {
 	return Integer.toHexString(x);
     }
