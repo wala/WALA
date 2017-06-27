@@ -45,6 +45,7 @@ public class AnonGeneNullarySimple {
 
 	static class StrTripler implements Ops<String> {
 		
+    @Override
     public String nullary() {
 			String x = "talk about it ";
 			return x+x+x;
