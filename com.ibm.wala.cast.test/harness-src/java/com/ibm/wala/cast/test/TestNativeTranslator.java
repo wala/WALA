@@ -30,9 +30,6 @@ import com.ibm.wala.util.io.TemporaryFile;
 public class TestNativeTranslator {
   
   static {
-    if (! PlatformUtil.onMacOSX()) {
-      System.loadLibrary("cast");
-    }
     System.loadLibrary("xlator_test");
   }
 
