@@ -1,7 +1,8 @@
 #!/bin/bash
 
-C_DIR=`realpath $0`
-CAST_TEST_DIR=`realpath $C_DIR/../../..`
+SCRIPT_NAME=`realpath $0`
+C_DIR=`dirname $SCRIPT_NAME`
+CAST_TEST_DIR=`realpath $C_DIR/../..`
 
 pushd $CAST_TEST_DIR/harness-src/c
 

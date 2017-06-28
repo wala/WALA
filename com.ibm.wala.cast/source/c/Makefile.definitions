@@ -59,5 +59,3 @@ endif
 
 CC_LDFLAGS += -L$(JAVA_SDK)jre/lib/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/server -ljvm 
 
-ALL_FLAGS += -std=c++11
-
