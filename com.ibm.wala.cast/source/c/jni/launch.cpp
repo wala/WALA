@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <iostream>
 #include <string>
+#include <string.h>
 #include <strings.h>
 #include "Exceptions.h"
 #include "CAstWrapper.h"
