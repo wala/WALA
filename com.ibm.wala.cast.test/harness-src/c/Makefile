@@ -19,10 +19,13 @@ $(TEST_JNI_BRIDGE_HEADER):	$(CAST_TEST_BIN)com/ibm/wala/cast/test/TestNativeTran
 $(C_GENERATED)/smoke.o:	$(TEST_JNI_BRIDGE_HEADER) smoke.cpp
 	$(CC) $(ALL_FLAGS) -o $@ -c smoke.cpp
 
+$(C_GENERATED)/smoke_main.o:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
+	$(CC) $(ALL_FLAGS) -o $@ -c smoke_main.cpp
+
 $(CAST_TEST_BIN)$(LIBPREFIX)xlator_test.$(DLLEXT):	$(C_GENERATED)/smoke.o
 	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)$(LIBPREFIX)cast.$(DLLEXT) $^ -o $@
 
 main:	$(CAST_TEST_BIN)/smoke_main
 
-$(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
-	$(CC) $(ALL_FLAGS) $(CC_LD_PATHS) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o -o $@ smoke_main.cpp
+$(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o $(C_GENERATED)/smoke_main.o
+	$(CC) $(ALL_FLAGS) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o $(C_GENERATED)/smoke_main.o $(CC_LD_PATHS) -o $@ 
