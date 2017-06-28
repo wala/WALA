@@ -7,6 +7,8 @@ include ../../../com.ibm.wala.cast/source/c/Makefile.definitions
 
 TEST_JNI_BRIDGE_HEADER = $(C_GENERATED)com_ibm_wala_cast_test_TestNativeTranslator.h
 
+CAST_OBJS = $(wildcard $(C_GENERATED)/*.o)
+
 #
 # rules
 #
@@ -19,10 +21,14 @@ $(TEST_JNI_BRIDGE_HEADER):	$(CAST_TEST_BIN)com/ibm/wala/cast/test/TestNativeTran
 $(C_GENERATED)/smoke.o:	$(TEST_JNI_BRIDGE_HEADER) smoke.cpp
 	$(CC) $(ALL_FLAGS) -o $@ -c smoke.cpp
 
+$(C_GENERATED)/smoke_main.o:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
+	$(CC) $(ALL_FLAGS) -o $@ -c smoke_main.cpp
+
 $(CAST_TEST_BIN)$(LIBPREFIX)xlator_test.$(DLLEXT):	$(C_GENERATED)/smoke.o
-	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)/$(LIBPREFIX)cast.$(DLLEXT) $^ -o $@
+	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(CAST_OBJS) -o $@
 
 main:	$(CAST_TEST_BIN)/smoke_main
 
-$(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
-	$(CC) $(ALL_FLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)/$(LIBPREFIX)cast.$(DLLEXT) -o $@ smoke_main.cpp
+$(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o $(C_GENERATED)/smoke_main.o
+	$(CC) $(ALL_FLAGS) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o $(C_GENERATED)/smoke_main.o $(CC_LD_PATHS) -o $@ 
+

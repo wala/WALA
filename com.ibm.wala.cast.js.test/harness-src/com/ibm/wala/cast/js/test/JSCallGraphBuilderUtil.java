@@ -111,7 +111,6 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     } catch (FileNotFoundException e) {
       // I guess we need to do this on Windows sometimes?  --MS
       // if this fails, we won't catch the exception
-      f = provider.getFile(dir + "/" + name, JSCallGraphBuilderUtil.class.getClassLoader());
     }
     return f.toURI().toURL();
   }

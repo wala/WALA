@@ -1,6 +1,6 @@
 #include "launch.h"
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 
 int main(int argc, char **argv) {
   char buf[ strlen(argv[1]) + 1 ];

@@ -1,5 +1,9 @@
 language: android
 jdk: oraclejdk8
+addons:
+  apt:
+    packages:
+    - realpath
 before_install:
  - "git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench"
 install:

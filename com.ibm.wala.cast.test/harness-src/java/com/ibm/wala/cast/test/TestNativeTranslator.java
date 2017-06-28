@@ -24,15 +24,11 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
-import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public class TestNativeTranslator {
   
   static {
-    if (! PlatformUtil.onMacOSX()) {
-      System.loadLibrary("cast");
-    }
     System.loadLibrary("xlator_test");
   }
 

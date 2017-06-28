@@ -1,7 +1,8 @@
 #!/bin/bash
 
-C_DIR=`realpath $0`
-CAST_DIR=`realpath $C_DIR/../../..`
+SCRIPT=`realpath $0`
+C_DIR=`dirname $SCRIPT`
+CAST_DIR=`realpath $C_DIR/../..`
 
 pushd $CAST_DIR/source/c
 
