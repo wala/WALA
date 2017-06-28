@@ -21,7 +21,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -50,7 +50,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
     JSAnalysisOptions options = JSCallGraphUtil.makeOptions(scope, cha, roots);
 
-    AnalysisCache cache = CAstCallGraphUtil.makeCache(new ArgumentSpecialization.ArgumentCountIRFactory(options.getSSAOptions()));
+    IAnalysisCacheView cache = CAstCallGraphUtil.makeCache(new ArgumentSpecialization.ArgumentCountIRFactory(options.getSSAOptions()));
 
     JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);
     builder.setContextSelector(new ArgumentSpecialization.ArgumentCountContextSelector(builder.getContextSelector()));

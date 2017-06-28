@@ -34,7 +34,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -58,7 +58,7 @@ public class ArgumentSpecialization {
 
   public static class ArgumentSpecializationContextIntepreter extends AstContextInsensitiveSSAContextInterpreter {
 
-    public ArgumentSpecializationContextIntepreter(AnalysisOptions options, AnalysisCache cache) {
+    public ArgumentSpecializationContextIntepreter(AnalysisOptions options, IAnalysisCacheView cache) {
       super(options, cache);
     }
 

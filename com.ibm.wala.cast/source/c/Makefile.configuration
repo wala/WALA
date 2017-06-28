@@ -1,0 +1,5 @@
+JAVA_SDK = /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/
+DOMO_AST_BIN = /private/tmp/WALA/com.ibm.wala.cast/target/classes/
+JAVAH_CLASS_PATH = :/private/tmp/WALA/com.ibm.wala.cast/target/classes/
+TRACE =
+JNI_MD_DIR = darwin

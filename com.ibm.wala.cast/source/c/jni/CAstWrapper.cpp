@@ -74,11 +74,15 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
     env->FindClass("com/ibm/wala/cast/ir/translator/NativeBridge");
   this->NativeTranslatorToCAst =
     env->FindClass("com/ibm/wala/cast/ir/translator/NativeTranslatorToCAst");
+  THROW_ANY_EXCEPTION(java_ex);
 
   jfieldID castFieldID = env->GetFieldID(NativeBridge, "Ast", "Lcom/ibm/wala/cast/tree/CAst;");
+  THROW_ANY_EXCEPTION(java_ex);
   this->Ast = env->GetObjectField(xlator, castFieldID);
+  THROW_ANY_EXCEPTION(java_ex);
 
   jclass xlatorCls = env->FindClass( XlatorCls );
+  THROW_ANY_EXCEPTION(java_ex);
   this->_makeLocation = env->GetMethodID(xlatorCls, "makeLocation", "(IIII)Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;");
   THROW_ANY_EXCEPTION(java_ex);
 
@@ -206,21 +210,21 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
   THROW_ANY_EXCEPTION(java_ex);
   this->_getEntityName = env->GetMethodID(castEntity, "getName", "()Ljava/lang/String;");
 
+  CAstType = env->FindClass("com/ibm/wala/cast/tree/CAstType");
   CAstSymbol = env->FindClass("com/ibm/wala/cast/tree/impl/CAstSymbolImpl");
   THROW_ANY_EXCEPTION(java_ex);
   this->castSymbolInit1 = 
-    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;)V");
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;Lcom/ibm/wala/cast/tree/CAstType;)V");
   THROW_ANY_EXCEPTION(java_ex);
   this->castSymbolInit2 = 
-    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;Z)V");
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;Lcom/ibm/wala/cast/tree/CAstType;Z)V");
   THROW_ANY_EXCEPTION(java_ex);
   this->castSymbolInit3 = 
-    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;ZZ)V");
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;Lcom/ibm/wala/cast/tree/CAstType;ZZ)V");
   THROW_ANY_EXCEPTION(java_ex);
   this->castSymbolInit4 = 
-    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;ZZLjava/lang/Object;)V");
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;Lcom/ibm/wala/cast/tree/CAstType;ZZLjava/lang/Object;)V");
   THROW_ANY_EXCEPTION(java_ex);
-
 }
 
 #define _CPP_CONSTANTS 
