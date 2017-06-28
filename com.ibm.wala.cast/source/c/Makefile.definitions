@@ -57,5 +57,7 @@ else
 endif
 endif
 
-CC_LDFLAGS += -L$(JAVA_SDK)jre/lib/amd64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/amd64/server -L$(JAVA_SDK)jre/lib/x86_64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/x86_64/server -L$(JAVA_SDK)jre/lib/x64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/x64/server -L$(JAVA_SDK)jre/lib/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/server -L$(JAVA_SDK)jre/lib -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib -ljvm 
+CC_LD_PATHS = -L$(JAVA_SDK)jre/lib/amd64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/amd64/server -L$(JAVA_SDK)jre/lib/x86_64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/x86_64/server -L$(JAVA_SDK)jre/lib/x64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/x64/server -L$(JAVA_SDK)jre/lib/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/server -L$(JAVA_SDK)jre/lib -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib -ljvm
+
+CC_LDFLAGS += CC_LD_PATHS
 

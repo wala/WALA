@@ -5,7 +5,6 @@
 #include <strings.h>
 #include "Exceptions.h"
 #include "CAstWrapper.h"
-using namespace std;
 
 extern "C" {
   
