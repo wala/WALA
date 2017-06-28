@@ -7,6 +7,8 @@ include ../../../com.ibm.wala.cast/source/c/Makefile.definitions
 
 TEST_JNI_BRIDGE_HEADER = $(C_GENERATED)com_ibm_wala_cast_test_TestNativeTranslator.h
 
+CAST_OBJS = $(wildcard $(C_GENERATED)/*.o)
+
 #
 # rules
 #
@@ -23,7 +25,7 @@ $(C_GENERATED)/smoke_main.o:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
 	$(CC) $(ALL_FLAGS) -o $@ -c smoke_main.cpp
 
 $(CAST_TEST_BIN)$(LIBPREFIX)xlator_test.$(DLLEXT):	$(C_GENERATED)/smoke.o
-	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)$(LIBPREFIX)cast.a $^ -o $@
+	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(CAST_OBJS) -o $@
 
 main:	$(CAST_TEST_BIN)/smoke_main
 
