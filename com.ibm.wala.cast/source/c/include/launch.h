@@ -3,8 +3,7 @@
 
 #include "jni.h"
 
-JNIEnv *launch();
+JNIEnv *launch(char *);
 void kill();
-void run();
 
 #endif

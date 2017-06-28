@@ -34,6 +34,7 @@ public abstract class NativeBridge {
   static {
     isInitialized = false;
     try {
+      //System.loadLibrary("cast");
       initialize();
       isInitialized = true;
     } catch (Throwable e) {

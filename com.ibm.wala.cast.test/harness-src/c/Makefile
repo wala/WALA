@@ -20,5 +20,9 @@ $(C_GENERATED)/smoke.o:	$(TEST_JNI_BRIDGE_HEADER) smoke.cpp
 	$(CC) $(ALL_FLAGS) -o $@ -c smoke.cpp
 
 $(CAST_TEST_BIN)$(LIBPREFIX)xlator_test.$(DLLEXT):	$(C_GENERATED)/smoke.o
-	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)$(LIBPREFIX)cast.$(DLLEXT) $^ -o $@
+	$(CC) $(CC_LDFLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)/$(LIBPREFIX)cast.$(DLLEXT) $^ -o $@
 
+main:	$(CAST_TEST_BIN)/smoke_main
+
+$(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
+	$(CC) $(ALL_FLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)/$(LIBPREFIX)cast.$(DLLEXT) -o $@ smoke_main.cpp

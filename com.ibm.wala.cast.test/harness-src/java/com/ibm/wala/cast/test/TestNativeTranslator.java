@@ -24,19 +24,23 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public class TestNativeTranslator {
   
-  private static native CAstNode inventAst(SmokeXlator ast);
-
   static {
+    if (! PlatformUtil.onMacOSX()) {
+      System.loadLibrary("cast");
+    }
     System.loadLibrary("xlator_test");
   }
 
+  private static native CAstNode inventAst(SmokeXlator ast);
+
   private static class SmokeXlator extends NativeTranslatorToCAst {
 
-    protected SmokeXlator(CAst Ast, URL sourceURL) throws IOException {
+    private SmokeXlator(CAst Ast, URL sourceURL) throws IOException {
       super(Ast, sourceURL, TemporaryFile.urlToFile("temp", sourceURL).getAbsolutePath());
     }
 
@@ -144,14 +148,17 @@ public class TestNativeTranslator {
       };
     }
   }
-  
-  private static final CAst ast = new CAstImpl();
-  
+    
   @Test
   public void testNativeCAst() throws IOException {
-    SmokeXlator xlator = new SmokeXlator(ast, getClass().getClassLoader().getResource("smoke.cpp"));
-    CAstNode ast = xlator.translateToCAst().getAST();
-
+    CAst Ast = new CAstImpl();
+    
+    URL junk = TestNativeTranslator.class.getClassLoader().getResource("smoke_main");
+     
+    SmokeXlator xlator = new SmokeXlator(Ast, junk);
+    
+    CAstNode ast = xlator.translateToCAst().getAST();    
+  
     System.err.println(ast);
     
     assert ast.getChildCount() == 3;

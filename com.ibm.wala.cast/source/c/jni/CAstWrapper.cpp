@@ -74,11 +74,15 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
     env->FindClass("com/ibm/wala/cast/ir/translator/NativeBridge");
   this->NativeTranslatorToCAst =
     env->FindClass("com/ibm/wala/cast/ir/translator/NativeTranslatorToCAst");
+  THROW_ANY_EXCEPTION(java_ex);
 
   jfieldID castFieldID = env->GetFieldID(NativeBridge, "Ast", "Lcom/ibm/wala/cast/tree/CAst;");
+  THROW_ANY_EXCEPTION(java_ex);
   this->Ast = env->GetObjectField(xlator, castFieldID);
+  THROW_ANY_EXCEPTION(java_ex);
 
   jclass xlatorCls = env->FindClass( XlatorCls );
+  THROW_ANY_EXCEPTION(java_ex);
   this->_makeLocation = env->GetMethodID(xlatorCls, "makeLocation", "(IIII)Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;");
   THROW_ANY_EXCEPTION(java_ex);
 

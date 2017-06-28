@@ -31,8 +31,7 @@ public abstract class NativeTranslatorToCAst
     this.sourceFileName = sourceFileName;
   }
 
-  @SuppressWarnings("unused")
-  private String getLocalFile() {
+  protected String getLocalFile() {
     return sourceFileName;
   }
 
@@ -40,8 +39,7 @@ public abstract class NativeTranslatorToCAst
     return sourceURL.getFile();
   }
 
-  @SuppressWarnings("unused")
-  private Position makeLocation(final int fl, final int fc, final int ll, final int lc) {
+  protected Position makeLocation(final int fl, final int fc, final int ll, final int lc) {
     return new AbstractSourcePosition() {
       @Override
       public int getFirstLine() {

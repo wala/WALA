@@ -10,7 +10,26 @@
   <artifactId>com.ibm.wala.cast</artifactId>
   <packaging>eclipse-plugin</packaging>
 	<build>
-               <plugins>
+		<plugins>
+		  <plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>exec-maven-plugin</artifactId>
+		    <version>1.6.0</version>
+		    <executions>
+		      <execution>
+			<phase>compile</phase>
+			<configuration>
+			  <executable>bash</executable>
+			  <arguments>
+			    <argument>${basedir}/source/c/cbuild.sh</argument>
+			  </arguments>
+			</configuration>
+			<goals>
+			  <goal>exec</goal>
+			</goals>
+		      </execution>
+		    </executions>
+ 		  </plugin>
                     <plugin>
                         <artifactId>maven-dependency-plugin</artifactId>
                             <executions>
@@ -35,4 +54,11 @@
                     </plugin>
                 </plugins>
 	</build>
+	<dependencies>
+	  <dependency>
+	    <groupId>org.codehaus.mojo</groupId>
+	    <artifactId>exec-maven-plugin</artifactId>
+	    <version>1.6.0</version>
+	  </dependency>
+	</dependencies>
 </project>

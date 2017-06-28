@@ -1,19 +1,29 @@
 #include <jni.h>
 #include <iostream>
 #include <string>
+#include <strings.h>
 #include "Exceptions.h"
 #include "CAstWrapper.h"
 using namespace std;
 
 JavaVM *javaVM;
 
-JNIEnv *launch() {
-   JavaVMOption jvmopt[1];
-   jvmopt[0].optionString = "-Djava.class.path=" WALA_CLASSPATH ":.";
+JNIEnv *launch(char *classpath) {
+   JavaVMOption jvmopt[2];
+
+   const char *jcp = "-Djava.class.path=";
+   char buf_jcp[ strlen(jcp) + strlen(classpath) + 1 ];
+   sprintf(buf_jcp, "%s%s", jcp, classpath);
+   jvmopt[0].optionString = buf_jcp;
+
+   const char *jlp = "-Djava.library.path=";
+   char buf_jlp[ strlen(jlp) + strlen(classpath) + 1 ];
+   sprintf(buf_jlp, "%s%s", jlp, classpath);
+   jvmopt[1].optionString = buf_jlp;
 
    JavaVMInitArgs vmArgs;
-   vmArgs.version = JNI_VERSION_1_2;
-   vmArgs.nOptions = 1;
+   vmArgs.version = JNI_VERSION_1_8;
+   vmArgs.nOptions = 2;
    vmArgs.options = jvmopt;
    vmArgs.ignoreUnrecognized = JNI_TRUE;
 
@@ -33,12 +43,3 @@ void kill() {
    javaVM->DestroyJavaVM();
 }
 
-void run() {
-  JNIEnv *java_env = launch();
-  TRY(exp, java_env)
-  
-  CAstWrapper CAst(java_env, exp, NULL);
-  THROW_ANY_EXCEPTION(exp);
-
-  CATCH()
-}
