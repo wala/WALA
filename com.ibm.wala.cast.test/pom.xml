@@ -39,7 +39,7 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-              <argLine>-Djava.library.path=${project.build.outputDirectory} -ea</argLine>
+              <argLine>-Djava.library.path=${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
             </configuration>
             <goals>
