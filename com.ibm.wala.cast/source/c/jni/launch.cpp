@@ -1,13 +1,9 @@
 #include <jni.h>
-#include <iostream>
-#include <string>
 #include <string.h>
 #include <strings.h>
 #include "Exceptions.h"
 #include "CAstWrapper.h"
 
-extern "C" {
-  
 JavaVM *javaVM;
 
 JNIEnv *launch(char *classpath) {
@@ -34,7 +30,7 @@ JNIEnv *launch(char *classpath) {
    long flag = JNI_CreateJavaVM(&javaVM, (void**)
       &jniEnv, &vmArgs);
    if (flag == JNI_ERR) {
-      cout << "Error creating VM. Exiting...\n";
+     fprintf(stderr, "Error creating VM. Exiting...\n");
       return NULL;
    }
 
@@ -43,6 +39,4 @@ JNIEnv *launch(char *classpath) {
 
 void kill() {
    javaVM->DestroyJavaVM();
-}
-
 }
