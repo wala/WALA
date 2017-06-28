@@ -7,6 +7,8 @@
 #include "CAstWrapper.h"
 using namespace std;
 
+extern "C" {
+  
 JavaVM *javaVM;
 
 JNIEnv *launch(char *classpath) {
@@ -44,3 +46,4 @@ void kill() {
    javaVM->DestroyJavaVM();
 }
 
+}
