@@ -25,4 +25,4 @@ $(CAST_TEST_BIN)$(LIBPREFIX)xlator_test.$(DLLEXT):	$(C_GENERATED)/smoke.o
 main:	$(CAST_TEST_BIN)/smoke_main
 
 $(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) smoke_main.cpp
-	$(CC) $(ALL_FLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) $(DOMO_AST_BIN)/$(LIBPREFIX)cast.$(DLLEXT) -o $@ smoke_main.cpp
+	$(CC) $(ALL_FLAGS) -Wl,-rpath -Wl,$(DOMO_AST_BIN) -L$(DOMO_AST_BIN) -lcast -o $@ smoke_main.cpp
