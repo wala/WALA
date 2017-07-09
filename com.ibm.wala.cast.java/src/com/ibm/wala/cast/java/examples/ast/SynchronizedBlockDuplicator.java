@@ -158,7 +158,7 @@ public class SynchronizedBlockDuplicator extends
   }
 
   @Override
-  protected CAstNode flowOutTo(Map nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget, CAstControlFlowMap orig,
+  protected CAstNode flowOutTo(Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget, CAstControlFlowMap orig,
       CAstSourcePositionMap src) {
     assert oldTarget == CAstControlFlowMap.EXCEPTION_TO_EXIT;
     return oldTarget;

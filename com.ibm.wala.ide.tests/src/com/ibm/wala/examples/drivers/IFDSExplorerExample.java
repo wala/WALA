@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -60,7 +61,7 @@ public class IFDSExplorerExample {
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     AnalysisCache cache = new AnalysisCacheImpl();
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
     System.out.println("building CG");
     CallGraph cg = builder.makeCallGraph(options, null);
     System.out.println("done with CG");

@@ -98,7 +98,7 @@ public class AstLoopUnwinder
   }
 	  
   @Override
-  protected CAstNode flowOutTo(Map nodeMap, 
+  protected CAstNode flowOutTo(Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap,
 			       CAstNode oldSource,
 			       Object label,
 			       CAstNode oldTarget,

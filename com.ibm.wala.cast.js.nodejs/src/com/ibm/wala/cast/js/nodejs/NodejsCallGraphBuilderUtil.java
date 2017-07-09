@@ -64,7 +64,7 @@ public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 		Language language = JavaScriptLoader.JS;
 		Collection<Language> languages = Collections.singleton(language);
 
-		IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory();
+		IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory<>();
 		AnalysisCache cache = new AnalysisCacheImpl(irFactory);
 
 		JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory, null);

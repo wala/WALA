@@ -12,7 +12,6 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
@@ -42,8 +41,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
     if (isPossiblyLexicalClass(cls)) {
       Set<LexicalParent> result = HashSetFactory.make();
 
-      for (Iterator MS = cls.getAllMethods().iterator(); MS.hasNext();) {
-        IMethod m = (IMethod) MS.next();
+      for (IMethod m : cls.getAllMethods()) {
         if ((m instanceof AstMethod) && !m.isStatic()) {
           AstMethod M = (AstMethod) m;
           LexicalParent[] parents = M.getParents();

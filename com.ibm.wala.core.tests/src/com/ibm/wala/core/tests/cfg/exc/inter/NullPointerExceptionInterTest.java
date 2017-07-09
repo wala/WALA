@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -74,7 +75,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lcfg/exc/inter/CallFieldAccess");
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
       
-      CallGraphBuilder builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
+      CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
       cg = builder.makeCallGraph(options, null);
     } catch (ClassHierarchyException e) {
       throw new Exception(e);

@@ -13,7 +13,6 @@ package com.ibm.wala.cast.util;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -304,11 +303,9 @@ public class CAstPrinter {
 	    doPrintTo(e.getAST(), e.getSourceMap(), w);
 	    w.write('\n');
 	}
-	for(Iterator i= e.getAllScopedEntities().values().iterator();
-	    i.hasNext(); ) 
-	{
-	  for(Iterator j = ((Collection) i.next()).iterator(); j.hasNext(); ) {
-	    doPrintTo((CAstEntity) j.next(), w);
+	for (Collection<CAstEntity> collection : e.getAllScopedEntities().values()) {
+	  for (CAstEntity entity : collection) {
+	    doPrintTo(entity, w);
 	  }
 	}
 	w.flush();

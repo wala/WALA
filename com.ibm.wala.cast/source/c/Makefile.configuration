@@ -1,5 +1,5 @@
-JAVA_SDK = /usr/lib/jvm/jdk1.8.0_111/
-DOMO_AST_BIN = /home/vagrant/WALA/com.ibm.wala.cast/target/classes/
-JAVAH_CLASS_PATH = :/home/vagrant/WALA/com.ibm.wala.cast/target/classes/
+JAVA_SDK = /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.131-1.b12.fc25.x86_64/
+DOMO_AST_BIN = /home/liblit/Documents/research/joust/joust/WALA/com.ibm.wala.cast/target/classes/
+JAVAH_CLASS_PATH = :/home/liblit/Documents/research/joust/joust/WALA/com.ibm.wala.cast/target/classes/
 TRACE =
 JNI_MD_DIR = linux

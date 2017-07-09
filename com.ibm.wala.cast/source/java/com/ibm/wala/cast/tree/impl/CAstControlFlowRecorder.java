@@ -114,7 +114,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   }
 
   @Override
-  public Collection getSourceNodes(CAstNode to) {
+  public Set<Object> getSourceNodes(CAstNode to) {
     if (sourceMap.containsKey(CAstToNode.get(to))) {
       return sourceMap.get(CAstToNode.get(to));
     } else {
@@ -202,8 +202,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer("control flow map\n");
-    for (Iterator keys = table.keySet().iterator(); keys.hasNext();) {
-      Key key = (Key) keys.next();
+    for (Key key : table.keySet()) {
       sb.append(key.from);
       if (src != null && nodeToCAst.get(key.from) != null && src.getPosition(nodeToCAst.get(key.from)) != null) {
         sb.append(" (").append(src.getPosition(nodeToCAst.get(key.from))).append(") ");

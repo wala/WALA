@@ -77,7 +77,7 @@ public class ExceptionAnalysisTest {
     ReferenceCleanser.registerClassHierarchy(cha);
     AnalysisCache cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
-    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
     cg = builder.makeCallGraph(options, null);
     pointerAnalysis = builder.getPointerAnalysis();
 

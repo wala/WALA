@@ -20,7 +20,7 @@ import java.lang.reflect.Modifier;
 public class Reflect14 {
   public static void main(String[] args) throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
       IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
-    Class c = Class.forName("reflection.Helper");
+    Class<?> c = Class.forName("reflection.Helper");
     Method[] ms = c.getMethods();
     for (Method m : ms) {
       int mods = m.getModifiers();

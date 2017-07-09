@@ -125,15 +125,15 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param n the parent entity of the entities to process
    * @param context a visitor-specific context
    */
-  public final void visitScopedEntities(CAstEntity n, Map allScopedEntities, C context, CAstVisitor<C> visitor) {
-    for(Iterator i = allScopedEntities.values().iterator(); i.hasNext(); ) {
-      visitScopedEntities(n, ((Collection)i.next()).iterator(), context, visitor);
+  public final void visitScopedEntities(CAstEntity n, Map<CAstNode,Collection<CAstEntity>> allScopedEntities, C context, CAstVisitor<C> visitor) {
+    for (Collection<CAstEntity> collection : allScopedEntities.values()) {
+      visitScopedEntities(n, collection.iterator(), context, visitor);
     }
   }
 
-  public final void visitScopedEntities(CAstEntity n, Iterator i, C context, CAstVisitor<C> visitor) {
+  public final void visitScopedEntities(CAstEntity n, Iterator<CAstEntity> i, C context, CAstVisitor<C> visitor) {
     while (i.hasNext()) {
-      CAstEntity child = (CAstEntity) i.next();
+      CAstEntity child = i.next();
       setParent(child, n);
       visitor.visitEntities(child, context, visitor);
     }

@@ -378,8 +378,8 @@ public abstract class IRTests {
     Set<IMethod> unreachable = HashSetFactory.make();
     IClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE);
-    for (Iterator iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
-      IClass clazz = (IClass) iter.next();
+    for (Iterator<IClass> iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
+      IClass clazz = iter.next();
 
       System.err.println(clazz);
       if (clazz.isInterface())
@@ -389,7 +389,7 @@ public abstract class IRTests {
         if (m.isAbstract()) {
           System.err.println(m);
         } else {
-          Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
+          Iterator<CGNode> nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
             if (m instanceof AstMethod) {
               String fn = ((AstClass)m.getDeclaringClass()).getSourcePosition().getURL().getFile();
@@ -400,7 +400,7 @@ public abstract class IRTests {
             }
             continue;
           }
-          CGNode node = (CGNode) nodeIter.next();
+          CGNode node = nodeIter.next();
           System.err.println(node.getIR());
         }
       }
@@ -450,7 +450,7 @@ public abstract class IRTests {
     return null;
   }
 
-  public static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
+  public static void populateScope(JavaSourceAnalysisEngine<?> engine, Collection<String> sources, List<String> libs) {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);

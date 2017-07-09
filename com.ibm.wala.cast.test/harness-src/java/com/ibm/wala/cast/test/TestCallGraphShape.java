@@ -101,9 +101,9 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
   protected void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
     for (int i = 0; i < assertionData.length; i++) {
-      Iterator NS = getNodes(CG, (String) assertionData[i][0]).iterator();
+      Iterator<CGNode> NS = getNodes(CG, (String) assertionData[i][0]).iterator();
       while (NS.hasNext()) {
-        CGNode N = (CGNode) NS.next();
+        CGNode N = NS.next();
         IR ir = N.getIR();
         Name[] names = (Name[]) assertionData[i][1];
         for (int j = 0; j < names.length; j++) {
@@ -135,7 +135,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     for (int i = 0; i < assertionData.length; i++) {
 
       check_target: for (int j = 0; j < ((String[]) assertionData[i][1]).length; j++) {
-        Iterator srcs = (assertionData[i][0] instanceof String) ? getNodes(CG, (String) assertionData[i][0]).iterator()
+        Iterator<CGNode> srcs = (assertionData[i][0] instanceof String) ? getNodes(CG, (String) assertionData[i][0]).iterator()
             : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
         Assert.assertTrue("cannot find " + assertionData[i][0], srcs.hasNext());
@@ -148,18 +148,18 @@ public abstract class TestCallGraphShape extends WalaTestCase {
         }
 
         while (srcs.hasNext()) {
-          CGNode src = (CGNode) srcs.next();
-          for (Iterator sites = src.iterateCallSites(); sites.hasNext();) {
-            CallSiteReference sr = (CallSiteReference) sites.next();
+          CGNode src = srcs.next();
+          for (Iterator<CallSiteReference> sites = src.iterateCallSites(); sites.hasNext();) {
+            CallSiteReference sr = sites.next();
            
-            Iterator dsts = getNodes(CG, targetName).iterator();
+            Iterator<CGNode> dsts = getNodes(CG, targetName).iterator();
             if (! checkAbsence) {
               Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
             }
             
             while (dsts.hasNext()) {
-              CGNode dst = (CGNode) dsts.next();
-              for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {
+              CGNode dst = dsts.next();
+              for (Iterator<CGNode> tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {
                 if (tos.next().equals(dst)) {
                   if (checkAbsence) {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
@@ -190,8 +190,8 @@ public abstract class TestCallGraphShape extends WalaTestCase {
    * @param destDescription
    */
   protected void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
-    Collection sources = getNodes(CG, sourceDescription);
-    Collection dests = getNodes(CG, destDescription);
+    Collection<CGNode> sources = getNodes(CG, sourceDescription);
+    Collection<CGNode> dests = getNodes(CG, destDescription);
     for (Object source : sources) {
       for (Object dest : dests) {
         for (Iterator<CGNode> i = CG.getSuccNodes((CGNode) source); i.hasNext();) {

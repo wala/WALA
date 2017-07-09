@@ -55,7 +55,7 @@ public class ArraysAndSuch {
 
 		os1.clone();
 		if ( os1.equals(os2) ) {
-			Class x = os1.getClass();
+			Class<? extends Object[]> x = os1.getClass();
 			os1.notify();
 			os1.toString();
 			try {
