@@ -64,7 +64,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the MutableSparseIntSet implementation
    */
-  private static void doMutableIntSet(MutableIntSetFactory factory) {
+  private static void doMutableIntSet(MutableIntSetFactory<?> factory) {
     MutableIntSet v = factory.parse("{9,17}");
     MutableIntSet w = factory.make(new int[] {});
     MutableIntSet x = factory.make(new int[] { 7, 4, 2, 4, 2, 2 });
@@ -891,7 +891,7 @@ public class PrimitivesTest extends WalaTestCase {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
 
-  private static void testSingleBitVector(BitVectorBase bv) {
+  private static void testSingleBitVector(BitVectorBase<?> bv) {
     // does the following not automatically scale the bitvector to
     // a reasonable size?
     bv.set(55);
@@ -959,8 +959,7 @@ public class PrimitivesTest extends WalaTestCase {
     testBitVectors(new OffsetBitVector(35, 20), new OffsetBitVector(25, 10));
   }
 
-  @SuppressWarnings("unchecked")
-  private static <T extends BitVectorBase> void testBitVectors(T v1, T v2) {
+  private static <T extends BitVectorBase<T>> void testBitVectors(T v1, T v2) {
     v1.set(100);
     v1.set(101);
     v1.set(102);

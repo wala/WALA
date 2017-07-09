@@ -12,7 +12,6 @@ package com.ibm.wala.cast.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,24 +32,26 @@ public class TestCAstPattern extends WalaTestCase {
   private static final int NAME_ASSERTION_MULTI = 502;
 
   private static class TestingCAstImpl extends CAstImpl {
-    private final Map testNameMap = new HashMap();
+    private final Map<String, Object> testNameMap = new HashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")
     public CAstNode makeNode(int kind, CAstNode children[]) {
       if (kind == NAME_ASSERTION_SINGLE || kind == NAME_ASSERTION_MULTI) {
         assert children.length == 2;
-        assert children[0].getValue() instanceof String;
+        final Object child0Value = children[0].getValue();
+        assert child0Value instanceof String;
+        final String name = (String) child0Value;
         @SuppressWarnings("unused")
         CAstNode result = children[1];
         if (kind == NAME_ASSERTION_SINGLE) {
-          testNameMap.put(children[0].getValue(), children[1]);
+          testNameMap.put(name, children[1]);
         } else {
-          if (!testNameMap.containsKey(children[0].getValue())) {
-            testNameMap.put(children[0].getValue(), new ArrayList());
+          if (!testNameMap.containsKey(name)) {
+            testNameMap.put(name, new ArrayList<>());
           }
 
-          ((List) testNameMap.get(children[0].getValue())).add(children[1]);
+          ((List<CAstNode>) testNameMap.get(children[0].getValue())).add(children[1]);
         }
         return children[1];
       } else {
@@ -60,7 +61,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   }
 
-  private static void test(CAstPattern p, CAstNode n, Map names) {
+  private static void test(CAstPattern p, CAstNode n, Map<String, Object> names) {
     System.err.println(("testing pattern " + p));
     System.err.println(("testing with input " + CAstPrinter.print(n)));
 
@@ -69,16 +70,15 @@ public class TestCAstPattern extends WalaTestCase {
     } else {
       Segments s = CAstPattern.match(p, n);
       Assert.assertTrue(s != null);
-      for (Iterator ns = names.keySet().iterator(); ns.hasNext();) {
-        String nm = (String) ns.next();
+      for (String nm : names.keySet()) {
         Object o = names.get(nm);
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
           Assert.assertTrue("for name " + nm + ": expected " + names.get(nm) + " but got " + s.getSingle(nm), names.get(nm).equals(
               s.getSingle(nm)));
         } else {
-          for (Iterator cs = s.getMultiple(nm).iterator(); cs.hasNext();) {
-            System.err.println(("found " + CAstPrinter.print((CAstNode) cs.next()) + " for " + nm));
+          for (CAstNode node : s.getMultiple(nm)) {
+            System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
           Assert.assertTrue("for name " + nm + ": expected " + names.get(nm) + " but got " + s.getMultiple(nm), names.get(nm)
               .equals(s.getMultiple(nm)));
@@ -91,7 +91,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleNameAst;
 
-  private final Map simpleNameMap;
+  private final Map<String, Object> simpleNameMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -111,7 +111,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleStarNameAst;
 
-  private final Map simpleStarNameMap;
+  private final Map<String, Object> simpleStarNameMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -131,7 +131,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleRepeatedAstOne;
 
-  private final Map simpleRepeatedMapOne;
+  private final Map<String, Object> simpleRepeatedMapOne;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -149,7 +149,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleRepeatedAstTwo;
 
-  private final Map simpleRepeatedMapTwo;
+  private final Map<String, Object> simpleRepeatedMapTwo;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -168,7 +168,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleRepeatedAstThree;
 
-  private final Map simpleRepeatedMapThree;
+  private final Map<String, Object> simpleRepeatedMapThree;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -190,7 +190,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleDoubleStarAst;
 
-  private final Map simpleDoubleStarMap;
+  private final Map<String, Object> simpleDoubleStarMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -212,7 +212,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleAlternativeAst;
 
-  private final Map simpleAlternativeMap;
+  private final Map<String, Object> simpleAlternativeMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -233,7 +233,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleOptionalAstWith;
 
-  private final Map simpleOptionalMapWith;
+  private final Map<String, Object> simpleOptionalMapWith;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -251,7 +251,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode simpleOptionalAstNot;
 
-  private final Map simpleOptionalMapNot;
+  private final Map<String, Object> simpleOptionalMapNot;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -273,7 +273,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode recursiveTreeOneAst;
 
-  private final Map recursiveTreeOneMap;
+  private final Map<String, Object> recursiveTreeOneMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -291,7 +291,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode recursiveTreeTwoAst;
 
-  private final Map recursiveTreeTwoMap;
+  private final Map<String, Object> recursiveTreeTwoMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -311,7 +311,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode recursiveTreeFiveAst;
 
-  private final Map recursiveTreeFiveMap;
+  private final Map<String, Object> recursiveTreeFiveMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
@@ -367,7 +367,7 @@ public class TestCAstPattern extends WalaTestCase {
 
   private final CAstNode testedTreeOneAst;
 
-  private final Map testedTreeOneMap;
+  private final Map<String, Object> testedTreeOneMap;
 
   {
     TestingCAstImpl Ast = new TestingCAstImpl();

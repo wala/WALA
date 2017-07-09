@@ -41,8 +41,8 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
     graphTest = new CallGraphTest();
   }
 
-  private void runBitsetTest(MutableIntSetFactory p, MutableIntSetFactory s) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    MutableIntSetFactory save = IntSetUtil.getDefaultIntSetFactory();
+  private void runBitsetTest(MutableIntSetFactory<?> p, MutableIntSetFactory<?> s) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    MutableIntSetFactory<?> save = IntSetUtil.getDefaultIntSetFactory();
     try {
       IntSetUtil.setDefaultIntSetFactory(new DebuggingMutableIntSetFactory(p, s));
       graphTest.testJLex();

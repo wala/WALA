@@ -92,7 +92,7 @@ public interface CAstControlFlowMap {
    * Return a collection of control-flow ast nodes that have this one as a
    * possible target.
    */
-  Collection getSourceNodes(CAstNode to);
+  Collection<Object> getSourceNodes(CAstNode to);
 
   /**
    * Returns an iterator of all CAstNodes for which this map contains control

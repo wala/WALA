@@ -79,7 +79,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     List<PointerKey> result = new LinkedList<>();
 
     if (F instanceof ConstantKey) {
-      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey) F);
+      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey<?>) F);
       if (ifk != null) {
         result.add(ifk);
       }
@@ -105,7 +105,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
    * @param F
    * @return
    */
-  protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
+  protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
     Object v = F.getValue();
     // FIXME: current only constant string are handled
     if (v instanceof String) {
@@ -118,7 +118,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   @Override
   public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
     if (F instanceof ConstantKey) {
-      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey) F);
+      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey<?>) F);
       if (ifk != null) {
         return new NonNullSingletonIterator<>(ifk);
       }

@@ -29,7 +29,7 @@ public class Java2IRTranslator {
 
   protected final JavaSourceLoaderImpl fLoader;
 
-  CAstRewriterFactory castRewriterFactory = null;
+  CAstRewriterFactory<?, ?> castRewriterFactory = null;
 
   public Java2IRTranslator(JavaSourceLoaderImpl srcLoader) {
     this(srcLoader, false);
@@ -40,12 +40,12 @@ public class Java2IRTranslator {
   }
 
   public Java2IRTranslator(JavaSourceLoaderImpl srcLoader,
-      CAstRewriterFactory castRewriterFactory) {
+      CAstRewriterFactory<?, ?> castRewriterFactory) {
     this(srcLoader, castRewriterFactory, false);
   }
 
   public Java2IRTranslator(JavaSourceLoaderImpl srcLoader,
-      CAstRewriterFactory castRewriterFactory, boolean debug) {
+      CAstRewriterFactory<?, ?> castRewriterFactory, boolean debug) {
     DEBUG = debug;
     fLoader = srcLoader;
     this.castRewriterFactory = castRewriterFactory;
@@ -60,7 +60,7 @@ public class Java2IRTranslator {
 
     if (castRewriterFactory != null) {
       CAst cast = new CAstImpl();
-      CAstRewriter rw = castRewriterFactory.createCAstRewriter(cast);
+      CAstRewriter<?, ?> rw = castRewriterFactory.createCAstRewriter(cast);
       ce = rw.rewrite(ce);
       if (DEBUG) {
         PrintWriter printWriter = new PrintWriter(System.out);

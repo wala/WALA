@@ -20,7 +20,7 @@ public class Reflect19 {
   public static void main(String[] args) throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
       IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
-    Constructor m = c.getConstructor(new Class[] { Integer.class });
+    Constructor<?> m = c.getConstructor(new Class<?>[] { Integer.class });
     Integer i = Integer.valueOf(0);
     m.newInstance(new Object[] { i });
   }

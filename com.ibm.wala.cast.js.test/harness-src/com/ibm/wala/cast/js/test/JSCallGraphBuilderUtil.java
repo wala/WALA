@@ -95,7 +95,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
    */
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, CGBuilderType builderType, ClassLoader loader) throws IOException, WalaException {
     URL script = getURLforFile(dir, name, loader);
-    CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, script) : null;
+    CAstRewriterFactory<?, ?> preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, script) : null;
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(preprocessor);
 
     AnalysisScope scope = makeScriptScope(dir, name, loaders, loader);
@@ -163,7 +163,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
   public static CallGraph makeScriptCG(SourceModule[] scripts, CGBuilderType builderType, IRFactory<IMethod> irFactory) throws IOException, IllegalArgumentException,
       CancelException, WalaException {
-    CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, scripts) : null;
+    CAstRewriterFactory<?, ?> preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, scripts) : null;
     PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(preprocessor), scripts, builderType, irFactory);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     // dumpCG(b.getPointerAnalysis(), CG);
@@ -176,7 +176,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
   public static JSCFABuilder makeHTMLCGBuilder(URL url, CGBuilderType builderType, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException {
     IRFactory<IMethod> irFactory = AstIRFactory.makeDefaultFactory();
-    CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, url) : null;
+    CAstRewriterFactory<?, ?> preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, url) : null;
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
     SourceModule[] scriptsArray = makeHtmlScope(url, loaders, fExtractor);
     

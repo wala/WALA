@@ -22,9 +22,9 @@ public class Reflect21 {
       NoSuchMethodException, IllegalAccessException, InstantiationException,
       IllegalArgumentException, InvocationTargetException {
     Class<?> helperClass = Class.forName("reflection.Helper");
-    Class objectClass = Class.forName("java.lang.Object");
-    Class[] paramArrayTypes = new Class[]{objectClass, objectClass};
-    Constructor constr = helperClass.getDeclaredConstructor(paramArrayTypes);
+    Class<?> objectClass = Class.forName("java.lang.Object");
+    Class<?>[] paramArrayTypes = new Class[]{objectClass, objectClass};
+    Constructor<?> constr = helperClass.getDeclaredConstructor(paramArrayTypes);
     Object[] paramArrayObjects = new Object[]{new Object(), new Object()};
     constr.newInstance(paramArrayObjects);
   }

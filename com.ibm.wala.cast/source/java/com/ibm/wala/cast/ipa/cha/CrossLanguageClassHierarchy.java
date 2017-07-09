@@ -101,8 +101,8 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   @Override
   public IClassLoader[] getLoaders() {
     Set<IClassLoader> loaders = HashSetFactory.make();
-    for (Iterator ldrs = analysisScope.getLoaders().iterator(); ldrs.hasNext();) {
-      loaders.add(getLoader((ClassLoaderReference) ldrs.next()));
+    for (ClassLoaderReference loaderReference : analysisScope.getLoaders()) {
+      loaders.add(getLoader(loaderReference));
     }
 
     return loaders.toArray(new IClassLoader[loaders.size()]);
@@ -121,8 +121,8 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   @Override
   public int getNumberOfClasses() {
     int total = 0;
-    for (Iterator ldrs = analysisScope.getLoaders().iterator(); ldrs.hasNext();) {
-      total += getLoader((ClassLoaderReference) ldrs.next()).getNumberOfClasses();
+    for (ClassLoaderReference loaderReference : analysisScope.getLoaders()) {
+      total += getLoader(loaderReference).getNumberOfClasses();
     }
 
     return total;
@@ -264,8 +264,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
       throws ClassHierarchyException {
     Set<Language> languages = scope.getBaseLanguages();
     Map<Atom, IClassHierarchy> hierarchies = HashMapFactory.make();
-    for (Iterator ls = languages.iterator(); ls.hasNext();) {
-      Language L = (Language) ls.next();
+    for (Language L : languages) {
       Set<Language> ll = HashSetFactory.make(L.getDerivedLanguages());
       ll.add(L);
       hierarchies.put(L.getName(), ClassHierarchyFactory.make(scope, factory, ll));

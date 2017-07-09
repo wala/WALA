@@ -157,7 +157,7 @@ public class CompareToZeroOneCFADriver {
 
     // now, run our analysis
     // build an RTA call graph
-    CallGraphBuilder rtaBuilder = Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> rtaBuilder = Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 

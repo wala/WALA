@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
@@ -62,7 +63,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder builder = Util.makeRTABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeRTABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -101,7 +102,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -119,7 +120,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       builder.getPointerAnalysis().toString();
@@ -140,7 +141,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder builder = Util.makeZeroContainerCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -158,7 +159,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {

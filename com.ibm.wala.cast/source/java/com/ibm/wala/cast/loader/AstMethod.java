@@ -103,8 +103,8 @@ public abstract class AstMethod implements IMethod {
   }
 
   protected final IClass cls;
-  private final Collection qualifiers;
-  private final AbstractCFG cfg;
+  private final Collection<CAstQualifier> qualifiers;
+  private final AbstractCFG<?, ?> cfg;
   private final SymbolTable symtab;
   private final MethodReference ref;
   private final boolean hasCatchBlock;
@@ -114,7 +114,7 @@ public abstract class AstMethod implements IMethod {
   private final DebuggingInformation debugInfo;
   private final Collection<Annotation> annotations;
 
-  protected AstMethod(IClass cls, Collection qualifiers, AbstractCFG cfg, SymbolTable symtab, MethodReference ref,
+  protected AstMethod(IClass cls, Collection<CAstQualifier> qualifiers, AbstractCFG<?, ?> cfg, SymbolTable symtab, MethodReference ref,
       boolean hasCatchBlock, Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo, Collection<Annotation> annotations) {
     this.cls = cls;
@@ -130,7 +130,7 @@ public abstract class AstMethod implements IMethod {
     this.annotations = annotations;
   }
 
-  protected AstMethod(IClass cls, Collection qualifiers, MethodReference ref, Collection<Annotation> annotations) {
+  protected AstMethod(IClass cls, Collection<CAstQualifier> qualifiers, MethodReference ref, Collection<Annotation> annotations) {
     this.cls = cls;
     this.qualifiers = qualifiers;
     this.ref = ref;
@@ -147,7 +147,7 @@ public abstract class AstMethod implements IMethod {
     assert isAbstract();
   }
 
-  public AbstractCFG cfg() {
+  public AbstractCFG<?, ?> cfg() {
     return cfg;
   }
 
@@ -298,7 +298,7 @@ public abstract class AstMethod implements IMethod {
     return qualifiers.contains(CAstQualifier.VOLATILE);
   }
 
-  public ControlFlowGraph getControlFlowGraph() {
+  public ControlFlowGraph<?, ?> getControlFlowGraph() {
     return cfg;
   }
 

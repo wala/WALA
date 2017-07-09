@@ -33,7 +33,7 @@ import com.ibm.wala.ipa.modref.ModRef;
 public class AstModRef<T extends InstanceKey> extends ModRef<T> {
 
   @Override
-  public ExtendedHeapModel makeHeapModel(PointerAnalysis pa) {
+  public ExtendedHeapModel makeHeapModel(PointerAnalysis<T> pa) {
     return (AstHeapModel)pa.getHeapModel();
   }
 

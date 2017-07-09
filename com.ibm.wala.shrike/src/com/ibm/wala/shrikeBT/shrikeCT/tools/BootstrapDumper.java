@@ -72,7 +72,7 @@ public class BootstrapDumper {
     oi.close();
   }
 
-  private void dumpAttributes(Class cl, ClassReader cr, int i, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
+  private void dumpAttributes(Class<?> cl, ClassReader cr, int i, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
       InvalidBytecodeException, IOException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();

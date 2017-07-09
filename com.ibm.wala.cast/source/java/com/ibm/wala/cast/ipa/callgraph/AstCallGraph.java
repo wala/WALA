@@ -118,7 +118,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
         callbacks.add(callback);
 
-        for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
+        for (Iterator<CGNode> ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
           ((AstCGNode) ps.next()).addCallback(callback);
         }
       }
@@ -132,7 +132,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
         callbacks.addAll(callback);
 
-        for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
+        for (Iterator<CGNode> ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
           ((AstCGNode) ps.next()).addAllCallbacks(callback);
         }
       }

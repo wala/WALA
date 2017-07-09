@@ -156,7 +156,7 @@ public class ArgumentSpecialization {
 
   }
 
-  public static class ArgumentCountIRFactory extends AstIRFactory.AstDefaultIRFactory {
+  public static class ArgumentCountIRFactory extends AstIRFactory.AstDefaultIRFactory<IMethod> {
     private static final CAstPattern directAccessPattern = CAstPattern.parse("|(ARRAY_REF(VAR(\"arguments\"),<value>*)||OBJECT_REF(VAR(\"arguments\"),<value>*))|");
 
     private static final CAstPattern destructuredAccessPattern = CAstPattern.parse("BLOCK_EXPR(ASSIGN(VAR(/[$][$]destructure[$]rcvr[0-9]+/),VAR(\"arguments\")),ASSIGN(VAR(<name>/[$][$]destructure[$]elt[0-9]+/),<value>*))");
