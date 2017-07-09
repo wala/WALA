@@ -18,6 +18,7 @@ import java.util.Iterator;
  *
  * A simple exercise in recursive data structures.
  */
+@SuppressWarnings("rawtypes")
 public class NList implements Collection {
 
   final int value;
@@ -68,6 +69,7 @@ public class NList implements Collection {
    * @see java.util.Collection#iterator()
    */
   @Override
+  @SuppressWarnings("rawtypes")
   public Iterator iterator() {
     // TODO Auto-generated method stub
     return null;
