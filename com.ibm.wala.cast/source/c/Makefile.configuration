@@ -1,9 +1,5 @@
 JAVA_SDK = /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/
-
 DOMO_AST_BIN = /Users/dolby/git/WALA/com.ibm.wala.cast/target/classes/
-
 JAVAH_CLASS_PATH = :/Users/dolby/git/WALA/com.ibm.wala.cast/target/classes/
-
 TRACE =
-
 JNI_MD_DIR = darwin

@@ -28,7 +28,6 @@
 	      <goal>exec</goal>
 	    </goals>
 	  </execution>
-<<<<<<< HEAD
 	  <execution>
 	    <id>test-native</id>
 	    <phase>test</phase>
@@ -42,8 +41,6 @@
 	      <goal>exec</goal>
 	    </goals>
 	  </execution>
-=======
->>>>>>> f3a38f50d825bd4e2fa6a5fb230a9664fce831c5
 	</executions>
       </plugin>
       <plugin>
@@ -55,11 +52,7 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-<<<<<<< HEAD
               <argLine>-Djava.library.path=${project.build.outputDirectory} -ea</argLine>
-=======
-              <argLine>-Djava.library.path=${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes -ea</argLine>
->>>>>>> f3a38f50d825bd4e2fa6a5fb230a9664fce831c5
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
             </configuration>
             <goals>
