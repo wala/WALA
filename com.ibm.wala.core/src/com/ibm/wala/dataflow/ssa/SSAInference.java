@@ -31,7 +31,7 @@ import com.ibm.wala.ssa.SymbolTable;
  * 
  * @see TypeInference for the canonical client of this machinery.
  */
-public abstract class SSAInference<T extends IVariable<?>> extends DefaultFixedPointSolver<T> {
+public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedPointSolver<T> {
   static final boolean DEBUG = false;
 
   /**
@@ -49,7 +49,7 @@ public abstract class SSAInference<T extends IVariable<?>> extends DefaultFixedP
    */
   private IVariable[] vars;
 
-  public interface OperatorFactory<T extends IVariable> {
+  public interface OperatorFactory<T extends IVariable<T>> {
     /**
      * Get the dataflow operator induced by an instruction in SSA form.
      * 
