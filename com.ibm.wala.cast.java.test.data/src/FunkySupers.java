@@ -22,6 +22,7 @@ public class FunkySupers {
 
 class SubFunkySupers extends FunkySupers {
 	
+  @Override
   int funky(FunkySupers fs) {
 		SubFunkySupers.super.funky(fs);
 		SubFunkySupers.this.funky(fs);

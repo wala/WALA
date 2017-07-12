@@ -32,9 +32,16 @@
 	    <id>test-native</id>
 	    <phase>test</phase>
 	    <configuration>
+<<<<<<< HEAD
 	      <executable>${project.build.outputDirectory}/smoke_main</executable>
 	      <arguments>
 		<argument>${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes:${basedir}/../com.ibm.wala.core/target/classes:${basedir}/../com.ibm.wala.util/target/classes</argument>
+=======
+	      <workingDirectory>${basedir}</workingDirectory>
+	      <executable>${project.build.outputDirectory}/smoke_main</executable>
+	      <arguments>
+		<argument>target/classes:../com.ibm.wala.cast/target/classes:../com.ibm.wala.core/target/classes:../com.ibm.wala.util/target/classes</argument>
+>>>>>>> 0bbe9970c6c519c192926db909b562b2b9f4b53f
 	      </arguments>
 	    </configuration>
 	    <goals>

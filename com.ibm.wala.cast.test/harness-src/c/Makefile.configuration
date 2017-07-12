@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 CAST_TEST_BIN = /Users/dolby/git/WALA/com.ibm.wala.cast.test/target/classes/
+=======
+CAST_TEST_BIN = /home/vagrant/WALA/com.ibm.wala.cast.test/target/classes/
+>>>>>>> 0bbe9970c6c519c192926db909b562b2b9f4b53f

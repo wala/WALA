@@ -91,6 +91,11 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return false;
   }
 
+  @Override
+  public int hashCode() {
+	return exceptionBinaryName.hashCode();
+  }
+
   // --- rest not needed
 
   @Override

@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 JAVA_SDK = /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/
 DOMO_AST_BIN = /Users/dolby/git/WALA/com.ibm.wala.cast/target/classes/
 JAVAH_CLASS_PATH = :/Users/dolby/git/WALA/com.ibm.wala.cast/target/classes/
+=======
+JAVA_SDK = /usr/lib/jvm/jdk1.8.0_111/
+DOMO_AST_BIN = /home/vagrant/WALA/com.ibm.wala.cast/target/classes/
+JAVAH_CLASS_PATH = :/home/vagrant/WALA/com.ibm.wala.cast/target/classes/
+>>>>>>> 0bbe9970c6c519c192926db909b562b2b9f4b53f
 TRACE =
-JNI_MD_DIR = darwin
+JNI_MD_DIR = linux

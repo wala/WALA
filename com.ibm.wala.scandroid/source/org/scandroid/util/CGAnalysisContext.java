@@ -87,7 +87,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
@@ -143,7 +142,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		*/
 		analysisOptions.setReflectionOptions(options.getReflectionOptions());
 
-		IAnalysisCacheView cache = new AnalysisCacheImpl((IRFactory<IMethod>) new DexIRFactory());
+		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		SSAPropagationCallGraphBuilder cgb;
 

@@ -842,19 +842,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
 		};
 		
-		CAstNode initNode;
 		String name;
 		AstNode var = node.getIterator();
 		assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
 		if (var instanceof Name) {
-		  name = ((Name)var).getString();
-      initNode = 
-        Ast.makeNode(CAstNode.ASSIGN, 
-          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
-          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
-              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-              readName(arg, null, name)));
-		  
+		  name = ((Name)var).getString();		  
 		} else {
 		  VariableDeclaration decl;
 		  if (var instanceof LetNode) {
@@ -870,14 +862,6 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 	    arg.addNameDecl(
 	        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(name, JSAstTranslator.Any)),
 	            readName(arg, null, "$$undefined")));
-	    		  
-      initNode = 
-          Ast.makeNode(CAstNode.ASSIGN, 
-              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
-		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
-		              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-		              readName(arg, null, name)));
-
 		}
 		
 		// body
