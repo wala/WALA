@@ -153,7 +153,7 @@ public class PropertyNameContextSelector implements ContextSelector {
     this.base = base;
   }
   
-  private enum Frequency { NEVER, SOMETIMES, ALWAYS };
+  private enum Frequency { NEVER, SOMETIMES, ALWAYS }
   private final HashMap<MethodReference, Frequency> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
   
   /** Determine whether the method never/sometimes/always uses its first argument as a property name. */

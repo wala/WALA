@@ -67,7 +67,7 @@ public abstract class CAstBasicRewriter
     public NoKey parent() {
       return null;
     }
-  };
+  }
 
   protected CAstBasicRewriter(CAst Ast, boolean recursive) {
     super(Ast, recursive, new NonCopyingContext());

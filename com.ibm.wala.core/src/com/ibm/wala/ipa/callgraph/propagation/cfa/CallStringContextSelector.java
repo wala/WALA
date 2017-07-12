@@ -72,7 +72,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
     public CallString getCallString() {
       return cs;
     }
-  };
+  }
 
   protected final ContextSelector base;
 

@@ -73,7 +73,7 @@ public abstract class AstTypeInference extends TypeInference {
     public void visitEcho(AstEchoInstruction inst) {
 
     }
-  };
+  }
 
   public AstTypeInference(IR ir, IClassHierarchy cha, TypeAbstraction booleanType, boolean doPrimitives) {
     super(ir, doPrimitives);

@@ -95,7 +95,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       this.elementTemp = elementTemp;
     }
 
-  };
+  }
 
   private final static RewriteContext READ = new RewriteContext() {
     @Override

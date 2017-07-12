@@ -34,7 +34,7 @@ public class ExceptionPrunedCFG {
     public boolean hasExceptionalEdge(T src, T dst) {
       return false;
     }
-  };
+  }
 
   public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(ControlFlowGraph<I, T> cfg) {
     return PrunedCFG.make(cfg, new ExceptionEdgePruner<I, T>(cfg));

@@ -71,7 +71,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
      */
     Self parent();
 
-  };
+  }
 
   /**
    * interface to be implemented by contexts used while traversing the AST
@@ -83,7 +83,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
      */
     K key();
 
-  };
+  }
 
   /**
    * represents a rewritten CAst

@@ -72,7 +72,6 @@ public class TargetMethodContextSelector implements ContextSelector {
         return (o instanceof MethodDispatchContext) && ((MethodDispatchContext) o).getTargetMethod().equals(M);
       }
     }
-    ;
 
     return new MethodDispatchContext();
   }

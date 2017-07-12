@@ -61,7 +61,7 @@ import com.ibm.wala.util.functions.Function;
 
 public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject, I> {
 
-  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE };
+  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
   
   private final BuilderType builderType;
   

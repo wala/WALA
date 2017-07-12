@@ -45,7 +45,7 @@ public final class Debug {
     public boolean isHigherPriority(LogLevel l) {
       return priority > l.priority;
     }
-  };
+  }
 
   private static PrintStream OUT_STREAM = System.out;
 

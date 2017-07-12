@@ -125,7 +125,7 @@ public class RangeFileMapping implements FileMapping {
         public String toString() {
           return "[include:"+includePosition+"]"+super.toString();
         }
-      };
+      }
       
       return new Pos();
     } else {
