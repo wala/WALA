@@ -87,7 +87,7 @@ public class ShrikeClassReaderHandle {
    * Read is into bytes
    * @throws IOException
    */
-  private void readBytes(InputStream is, ByteArrayOutputStream bytes) throws IOException {
+  private static void readBytes(InputStream is, ByteArrayOutputStream bytes) throws IOException {
     int n = 0;
     byte[] buffer = new byte[1024];
     while (n > -1) {

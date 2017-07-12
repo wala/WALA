@@ -110,12 +110,12 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	    return className;
 	  }
 
-	private void loadWrapperSources() throws IOException {
+	private static void loadWrapperSources() throws IOException {
 		MODULE_WRAPPER_SOURCE = loadWrapperSource(MODULE_WRAPPER_FILENAME);
 		JSON_WRAPPER_SOURCE = loadWrapperSource(JSON_WRAPPER_FILENAME);
 	}
 	
-	private String loadWrapperSource(String filename) throws IOException {
+	private static String loadWrapperSource(String filename) throws IOException {
 		InputStream url = NodejsRequiredSourceModule.class.getClassLoader().getResourceAsStream(filename);
 	  return new String(Streams.inputStream2ByteArray(url));
 	}

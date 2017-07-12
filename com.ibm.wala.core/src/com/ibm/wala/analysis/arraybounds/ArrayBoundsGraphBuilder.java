@@ -66,11 +66,11 @@ public class ArrayBoundsGraphBuilder {
     this.lowerBoundGraph.updateNodeEdges();
     this.upperBoundGraph.updateNodeEdges();   		
 		
-		this.bundleDeadEnds(this.lowerBoundGraph);
-		this.bundleDeadEnds(this.upperBoundGraph);
+		bundleDeadEnds(this.lowerBoundGraph);
+		bundleDeadEnds(this.upperBoundGraph);
 
-		this.collapseNonPhiEdges(this.lowerBoundGraph);
-		this.collapseNonPhiEdges(this.upperBoundGraph);
+		collapseNonPhiEdges(this.lowerBoundGraph);
+		collapseNonPhiEdges(this.upperBoundGraph);
 
 		this.lowerBoundGraph.updateNodeEdges();
 		this.upperBoundGraph.updateNodeEdges();
@@ -185,7 +185,7 @@ public class ArrayBoundsGraphBuilder {
 	 *
 	 * @param graph
 	 */
-	private void bundleDeadEnds(ArrayBoundsGraph graph) {
+	private static void bundleDeadEnds(ArrayBoundsGraph graph) {
 		final Set<HyperNode<Integer>> nodes = new HashSet<>();
 		nodes.addAll(graph.getNodes().values());
 
@@ -207,7 +207,7 @@ public class ArrayBoundsGraphBuilder {
 	 *
 	 * @param graph
 	 */
-	private void collapseNonPhiEdges(ArrayBoundsGraph graph) {
+	private static void collapseNonPhiEdges(ArrayBoundsGraph graph) {
 		final Map<HyperNode<Integer>, DirectedHyperEdge<Integer>> inEdges = new HashMap<HyperNode<Integer>, DirectedHyperEdge<Integer>>();
 		final Set<DirectedHyperEdge<Integer>> edges = new HashSet<>();
 		edges.addAll(graph.getEdges());

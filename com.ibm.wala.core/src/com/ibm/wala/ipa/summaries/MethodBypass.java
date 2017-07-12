@@ -172,7 +172,7 @@ public class MethodBypass {
    * @param type
    * @return Atom that represents the package name, or null if this is the unnamed package.
    */
-  private Atom extractPackage(TypeReference type) {
+  private static Atom extractPackage(TypeReference type) {
     String s = type.getName().toString();
     int index = s.lastIndexOf('/');
     if (index == -1) {

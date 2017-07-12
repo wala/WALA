@@ -36,7 +36,6 @@ public final class SemiSparseMutableIntSetTest extends WalaTestCase {
   
   // --- Test cases
   
-  @SuppressWarnings("static-method")
   @Test public void testCase1() {
     final SemiSparseMutableIntSet ssmIntSet = new SemiSparseMutableIntSet();
     ssmIntSet.add(1);

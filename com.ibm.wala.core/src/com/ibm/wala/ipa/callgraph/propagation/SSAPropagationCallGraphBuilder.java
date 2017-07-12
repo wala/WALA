@@ -727,7 +727,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     protected boolean isRootType(IClass klass) {
-      return getBuilder().isRootType(klass);
+      return SSAPropagationCallGraphBuilder.isRootType(klass);
     }
 
     /*
@@ -2184,12 +2184,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return true;
   }
 
-  private boolean isRootType(IClass klass) {
+  private static boolean isRootType(IClass klass) {
     return klass.getClassHierarchy().isRootClass(klass);
   }
 
   @SuppressWarnings("unused")
-  private boolean isRootType(FilteredPointerKey.TypeFilter filter) {
+  private static boolean isRootType(FilteredPointerKey.TypeFilter filter) {
     if (filter instanceof FilteredPointerKey.SingleClassFilter) {
       return isRootType(((FilteredPointerKey.SingleClassFilter) filter).getConcreteType());
     } else {
