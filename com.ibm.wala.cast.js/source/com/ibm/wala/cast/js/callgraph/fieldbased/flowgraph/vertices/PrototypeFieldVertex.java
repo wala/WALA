@@ -4,7 +4,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 public class PrototypeFieldVertex extends Vertex implements PointerKey {
 
-  public enum PrototypeField { __proto__, prototype };
+  public enum PrototypeField { __proto__, prototype }
 
   private final PrototypeField field;
   private final ObjectVertex type;

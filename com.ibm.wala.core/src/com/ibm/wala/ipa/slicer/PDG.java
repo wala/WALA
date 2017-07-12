@@ -77,7 +77,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
 /** BEGIN Custom change: control deps */                
-  public enum Dependency {CONTROL_DEP, DATA_AND_CONTROL_DEP};
+  public enum Dependency {CONTROL_DEP, DATA_AND_CONTROL_DEP}
   
   private final SlowSparseNumberedLabeledGraph<Statement, Dependency> delegate =
     new SlowSparseNumberedLabeledGraph<Statement, Dependency>(Dependency.DATA_AND_CONTROL_DEP);

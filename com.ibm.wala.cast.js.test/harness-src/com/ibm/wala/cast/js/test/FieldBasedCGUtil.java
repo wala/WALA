@@ -54,7 +54,7 @@ import com.ibm.wala.util.functions.Function;
  *
  */
 public class FieldBasedCGUtil {
-	public static enum BuilderType { PESSIMISTIC, OPTIMISTIC, OPTIMISTIC_WORKLIST };
+	public static enum BuilderType { PESSIMISTIC, OPTIMISTIC, OPTIMISTIC_WORKLIST }
 
 	private final JavaScriptTranslatorFactory translatorFactory;
 

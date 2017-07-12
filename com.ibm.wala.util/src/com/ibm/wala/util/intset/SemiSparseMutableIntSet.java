@@ -339,7 +339,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         return next;
       }
     }
-    ;
 
     if (sparsePart.isEmpty()) {
       if (densePart == null || densePart.isZero()) {

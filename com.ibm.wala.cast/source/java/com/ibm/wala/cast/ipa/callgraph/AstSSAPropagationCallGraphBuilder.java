@@ -240,7 +240,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       }
     }
-  };
+  }
 
   // /////////////////////////////////////////////////////////////////////////
   //
@@ -1209,7 +1209,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           system.newConstraint(fieldKey, assignOperator, rhs);
         }
       }
-    };
+    }
 
     public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final PointerKey rhs) {
       newFieldOperation(opNode, objVn, fieldsVn, false, new NormalWriter(rhs));

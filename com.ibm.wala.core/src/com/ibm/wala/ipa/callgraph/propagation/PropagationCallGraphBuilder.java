@@ -1490,6 +1490,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   @Override
   public IAnalysisCacheView getAnalysisCache() {
     return analysisCache;
-  };
+  }
 
 }

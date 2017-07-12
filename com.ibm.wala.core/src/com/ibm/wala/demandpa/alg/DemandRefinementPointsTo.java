@@ -229,7 +229,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * The budget specified in the {@link RefinementPolicy} was exceeded on all refinement passes
      */
     BUDGETEXCEEDED
-  };
+  }
 
   /**
    * re-initialize state for a new query

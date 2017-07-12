@@ -747,5 +747,5 @@ public abstract class IR implements IRView {
    */
   public SSAOptions getOptions() {
     return options;
-  };
+  }
 }

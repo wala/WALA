@@ -73,7 +73,7 @@ public class JsdtUtil {
   public static class CGInfo {
     public final Graph<IMember> cg = SlowSparseNumberedGraph.make();
     public final Set<FunctionInvocation> calls = HashSetFactory.make();
-  };
+  }
 
   public static Set<ModuleEntry> getJavaScriptCodeFromProject(String project) throws IOException, CoreException {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project);

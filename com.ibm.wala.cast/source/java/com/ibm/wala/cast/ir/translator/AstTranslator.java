@@ -1385,7 +1385,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   public static enum ScopeType {
     LOCAL, GLOBAL, SCRIPT, FUNCTION, TYPE
-  };
+  }
 
   private static final boolean DEBUG = false;
 
@@ -1556,7 +1556,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public Scope getDefiningScope() {
       return definingScope;
     }
-  };
+  }
 
   public abstract class AbstractScope implements Scope {
     private final Scope parent;
@@ -1711,7 +1711,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public abstract CAstEntity getEntity();
-  };
+  }
 
   protected AbstractScope makeScriptScope(final CAstEntity s, Scope parent) {
     return new AbstractScope(parent) {
@@ -2982,7 +2982,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     
       return false;
     }
-  };
+  }
  
   /**
    * record that in entity e, the access is performed.
@@ -4784,7 +4784,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return globalScope;
     }
     
-  };
+  }
 
   /**
    * translate module, represented by {@link CAstEntity} N

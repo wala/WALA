@@ -2394,7 +2394,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
       public void warning(String arg0, String arg1, int arg2, String arg3, int arg4) {
         // ignore warnings
       } 
-    };
+    }
     
     CAstErrorReporter reporter = new CAstErrorReporter();
     CompilerEnvirons compilerEnv = new CompilerEnvirons();
