@@ -1049,7 +1049,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     /**
      * @return the indices i s.t. x[i] == y, or null if none found.
      */
-    private int[] extractIndices(int[] x, int y) {
+    private static int[] extractIndices(int[] x, int y) {
       assert x != null;
       int count = 0;
       for (int i = 0; i < x.length; i++) {

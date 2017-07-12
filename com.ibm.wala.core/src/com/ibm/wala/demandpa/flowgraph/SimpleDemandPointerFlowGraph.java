@@ -531,7 +531,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return new StatementVisitor(node, ir, du);
   }
 
-  private void debugPrintIR(IR ir) {
+  private static void debugPrintIR(IR ir) {
     if (DEBUG) {
       if (ir == null) {
         System.err.println("\n   No statements\n");

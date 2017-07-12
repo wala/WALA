@@ -738,7 +738,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     }
   }
 
-  private boolean hasBasePointer(SSAInstruction use) {
+  private static boolean hasBasePointer(SSAInstruction use) {
     if (use instanceof SSAFieldAccessInstruction) {
       SSAFieldAccessInstruction f = (SSAFieldAccessInstruction) use;
       return !f.isStatic();
@@ -751,7 +751,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     }
   }
 
-  private int getBasePointer(SSAInstruction use) {
+  private static int getBasePointer(SSAInstruction use) {
     if (use instanceof SSAFieldAccessInstruction) {
       SSAFieldAccessInstruction f = (SSAFieldAccessInstruction) use;
       return f.getRef();
@@ -788,7 +788,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   /**
    * @return {@link IntSet} representing instruction indices of each PEI in the ir
    */
-  private IntSet getPEIs(final IR ir) {
+  private static IntSet getPEIs(final IR ir) {
     BitVectorIntSet result = new BitVectorIntSet();
     for (int i = 0; i < ir.getInstructions().length; i++) {
       if (ir.getInstructions()[i] != null && ir.getInstructions()[i].isPEI()) {
@@ -852,7 +852,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   /**
    * Convert a NORMAL or PHI Statement to an SSAInstruction
    */
-  private SSAInstruction statement2SSAInstruction(SSAInstruction[] instructions, Statement s) {
+  private static SSAInstruction statement2SSAInstruction(SSAInstruction[] instructions, Statement s) {
     SSAInstruction statement = null;
     switch (s.getKind()) {
     case NORMAL:
@@ -1040,7 +1040,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   /**
    * @return the set of all locations read by any callee at a call site.
    */
-  private OrdinalSet<PointerKey> unionHeapLocations(CallGraph cg, CGNode n, SSAAbstractInvokeInstruction call,
+  private static OrdinalSet<PointerKey> unionHeapLocations(CallGraph cg, CGNode n, SSAAbstractInvokeInstruction call,
       Map<CGNode, OrdinalSet<PointerKey>> loc) {
     BitVectorIntSet bv = new BitVectorIntSet();
     for (CGNode t : cg.getPossibleTargets(n, call.getCallSite())) {

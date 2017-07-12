@@ -132,7 +132,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 		return calledMethod;
 	}
 
-	private JavaScriptInvoke getInvokeInstruction(CGNode caller, CallSiteReference site) {
+	private static JavaScriptInvoke getInvokeInstruction(CGNode caller, CallSiteReference site) {
 		IR callerIR = caller.getIR();
 		SSAAbstractInvokeInstruction callInstrs[] = callerIR.getCalls(site);
 		assert callInstrs.length == 1;

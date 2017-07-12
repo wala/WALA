@@ -31,7 +31,7 @@ public class InitializedBitVectorSolver extends BitVectorSolver<CGNode> {
     return newBV();
   }
 
-  private BitVectorVariable newBV() {
+  private static BitVectorVariable newBV() {
     /*
      * If we do not initialize BitVectorVariable, with a BitVector, it contains
      * null, which may crash in combination with {@link BitVectorMinusVector}

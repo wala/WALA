@@ -346,7 +346,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private boolean meet(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meet(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = meetStacks(lhs, rhs, bb, meeter);
 
@@ -362,7 +362,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private boolean meetForCatchBlock(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetForCatchBlock(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = meetStacksAtCatchBlock(lhs, bb, meeter);
     changed |= meetLocals(lhs, rhs, bb, meeter);
@@ -377,7 +377,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private boolean meetStacksAtCatchBlock(IVariable lhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetStacksAtCatchBlock(IVariable lhs, BasicBlock bb, Meeter meeter) {
     boolean changed = false;
     MachineState L = (MachineState) lhs;
 
@@ -412,7 +412,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private boolean meetStacks(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetStacks(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
     boolean changed = false;
     MachineState L = (MachineState) lhs;
 
@@ -465,7 +465,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private boolean meetLocals(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetLocals(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = false;
     MachineState L = (MachineState) lhs;

@@ -499,7 +499,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  private TypeReference makeArray(TypeReference element, int dim) {
+  private static TypeReference makeArray(TypeReference element, int dim) {
     TypeReference iArrayRef = element;
     for (int i = 0; i < dim; i++) {
       iArrayRef = TypeReference.findOrCreateArrayOf(iArrayRef);

@@ -181,7 +181,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Remove from s any class file module entries which already are in t
    */
-  private void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
+  private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     Set<String> old = HashSetFactory.make();
     for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
       ModuleEntry m = it.next();
@@ -345,7 +345,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  private byte[] getEntryBytes(JarEntry entry, Long size, InputStream is) throws IOException {
+  private static byte[] getEntryBytes(JarEntry entry, Long size, InputStream is) throws IOException {
     if (size == null) {
       return null;
     }
@@ -556,7 +556,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * get the contents of a jar file. if any IO exceptions occur, catch and return null.
    */
-  private void getJarFileContents(JarFileModule archive) {
+  private static void getJarFileContents(JarFileModule archive) {
     String jarFileName = archive.getJarFile().getName();
     InputStream s = null;
     try {
