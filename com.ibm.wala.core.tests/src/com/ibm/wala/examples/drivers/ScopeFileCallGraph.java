@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -83,7 +84,7 @@ public class ScopeFileCallGraph {
     options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     // other builders can be constructed with different Util methods
-    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
 //    CallGraphBuilder builder = Util.makeNCFABuilder(2, options, cache, cha, scope);
 //    CallGraphBuilder builder = Util.makeVanillaNCFABuilder(2, options, cache, cha, scope);
     System.out.println("building call graph...");

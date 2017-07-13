@@ -123,6 +123,8 @@ public:
 
   CAstWrapper(JNIEnv *env, Exceptions &ex, jobject Ast);
 
+  virtual ~CAstWrapper() { }
+  
   void assertIsCAstNode(jobject, int);
 
   jobject makeNode(int);

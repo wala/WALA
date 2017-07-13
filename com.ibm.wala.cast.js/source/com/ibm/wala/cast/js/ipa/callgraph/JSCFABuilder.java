@@ -87,7 +87,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
       }
 
       @Override
-      protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
+      protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
         Object v = F.getValue();
         String strVal = JSCallGraphUtil.simulateToStringForPropertyNames(v);
         // if we know the string representation of the constant, use it...

@@ -17,8 +17,7 @@ import com.ibm.wala.fixpoint.IVariable;
  * Represents a single step, restricted to a nullary
  * operator.
  */
-@SuppressWarnings("rawtypes")
-public abstract class NullaryStatement<T extends IVariable> extends AbstractStatement<T, NullaryOperator<T>> {
+public abstract class NullaryStatement<T extends IVariable<T>> extends AbstractStatement<T, NullaryOperator<T>> {
 
   /**
    * The operands
@@ -70,7 +69,7 @@ public abstract class NullaryStatement<T extends IVariable> extends AbstractStat
   @Override
   public boolean equals(Object o) {
     if (o instanceof NullaryStatement) {
-      NullaryStatement other = (NullaryStatement) o;
+      NullaryStatement<?> other = (NullaryStatement<?>) o;
 
       if (!getOperator().equals(other.getOperator())) {
         return false;

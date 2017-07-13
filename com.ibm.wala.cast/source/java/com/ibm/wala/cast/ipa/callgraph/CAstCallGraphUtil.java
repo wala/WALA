@@ -124,8 +124,7 @@ public class CAstCallGraphUtil {
   public static void dumpCG(SSAContextInterpreter interp, PointerAnalysis<InstanceKey> PA, CallGraph CG) {
     if (AVOID_DUMP)
       return;
-    for (Iterator x = CG.iterator(); x.hasNext();) {
-      CGNode N = (CGNode) x.next();
+    for (CGNode N : CG) {
       System.err.print("callees of node " + getShortName(N) + " : [");
       boolean fst = true;
       for (Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext();) {
@@ -146,8 +145,7 @@ public class CAstCallGraphUtil {
     }
 
     System.err.println("pointer analysis");
-    for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
-      PointerKey n = (PointerKey) x.next();
+    for (PointerKey n : PA.getPointerKeys()) {
       try {
         System.err.println((n + " --> " + PA.getPointsToSet(n)));
       } catch (Throwable e) {

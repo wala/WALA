@@ -59,7 +59,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
         OrdinalSet<InstanceKey> ptrs = builder.getPointerAnalysis().getPointsToSet(fileNameV);
         for(InstanceKey k : ptrs) {
           if (k instanceof ConstantKey) {
-            Object v = ((ConstantKey)k).getValue();
+            Object v = ((ConstantKey<?>)k).getValue();
             if (v instanceof String) {
               names.add((String)v);
             }

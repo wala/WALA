@@ -117,7 +117,7 @@ public class TestAgainstSimpleDriver {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // build an RTA call graph
-    CallGraphBuilder rtaBuilder = Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> rtaBuilder = Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 

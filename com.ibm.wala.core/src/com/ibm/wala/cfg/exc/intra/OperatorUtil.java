@@ -19,7 +19,7 @@ public class OperatorUtil {
    * 
    * @author Martin Hecker, martin.hecker@kit.edu 
    */
-  public static class UnaryOperatorSequence<T extends IVariable> extends UnaryOperator<T> {
+  public static class UnaryOperatorSequence<T extends IVariable<T>> extends UnaryOperator<T> {
     
     final UnaryOperator<T>[] operators;
     

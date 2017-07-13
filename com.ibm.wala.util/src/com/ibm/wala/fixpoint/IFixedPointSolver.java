@@ -18,7 +18,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 /**
  * Solves a set of constraints
  */
-public interface IFixedPointSolver<T extends IVariable>  {
+public interface IFixedPointSolver<T extends IVariable<T>>  {
 
   /**
    * @return the set of statements solved by this {@link IFixedPointSolver}

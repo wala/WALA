@@ -37,6 +37,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.ExplodedInterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -150,7 +151,7 @@ public class DataflowTest extends WalaTestCase {
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(cg);
     ContextInsensitiveReachingDefs reachingDefs = new ContextInsensitiveReachingDefs(icfg, cha);
@@ -182,7 +183,7 @@ public class DataflowTest extends WalaTestCase {
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = reachingDefs.analyze();

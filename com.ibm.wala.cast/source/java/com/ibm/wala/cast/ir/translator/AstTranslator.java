@@ -469,18 +469,18 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * for handling languages that let you include other source files named
    * statically (e.g., ABAP)
    */
-  protected final Map namedEntityResolver;
+  protected final Map<Object, CAstEntity> namedEntityResolver;
 
   protected final SSAInstructionFactory insts;
 
-  protected AstTranslator(IClassLoader loader, Map namedEntityResolver, ArrayOpHandler arrayOpHandler) {
+  protected AstTranslator(IClassLoader loader, Map<Object, CAstEntity> namedEntityResolver, ArrayOpHandler arrayOpHandler) {
     this.loader = loader;
     this.namedEntityResolver = namedEntityResolver;
     this.arrayOpHandler = arrayOpHandler!=null? arrayOpHandler: this;
     this.insts = loader.getInstructionFactory();
   }
 
-  protected AstTranslator(IClassLoader loader, Map namedEntityResolver) {
+  protected AstTranslator(IClassLoader loader, Map<Object, CAstEntity> namedEntityResolver) {
     this(loader, namedEntityResolver, null);
   }
   
@@ -1145,8 +1145,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                                       EdgeOperation normal,
                                       EdgeOperation except) {
       for (PreBasicBlock src : blocks) {
-        for (Iterator j = icfg.getSuccNodes(src); j.hasNext();) {
-          PreBasicBlock dst = (PreBasicBlock) j.next();
+        for (Iterator<PreBasicBlock> j = icfg.getSuccNodes(src); j.hasNext();) {
+          PreBasicBlock dst = j.next();
           if (isCatchBlock(dst.getNumber()) || (dst.isExitBlock() && icfg.exceptionalToExit.contains(src))) {
             except.act(src, dst);
           }
@@ -1370,7 +1370,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         PreBasicBlock bb = getNode(i);
         s.append(bb).append("\n");
 
-        for (Iterator ss = getSuccNodes(bb); ss.hasNext();)
+        for (Iterator<PreBasicBlock> ss = getSuccNodes(bb); ss.hasNext();)
           s.append("    -->" + ss.next() + "\n");
 
         for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++)
@@ -2326,7 +2326,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     UnwindState getUnwindState();
 
-    void setCatchType(IBasicBlock bb, TypeReference catchType);
+    void setCatchType(IBasicBlock<SSAInstruction> bb, TypeReference catchType);
 
     void setCatchType(CAstNode catchNode, TypeReference catchType);
 
@@ -2413,7 +2413,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     @Override
-    public void setCatchType(IBasicBlock bb, TypeReference catchType) {
+    public void setCatchType(IBasicBlock<SSAInstruction> bb, TypeReference catchType) {
       parent.setCatchType(bb, catchType);
     }
 
@@ -2615,7 +2615,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     @Override
-    public void setCatchType(IBasicBlock bb, TypeReference catchType) {
+    public void setCatchType(IBasicBlock<SSAInstruction> bb, TypeReference catchType) {
       if (! catchTypes.containsKey(bb)) {
         catchTypes.put(bb, new TypeReference[] { catchType });
       } else {
@@ -3627,14 +3627,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   private static boolean handleBinaryOpThrow(CAstNode n, CAstNode op, WalkContext context) {
     // currently, only integer / and % throw exceptions
     boolean mayBeInteger = false;
-    Collection labels = context.getControlFlow().getTargetLabels(n);
+    Collection<Object> labels = context.getControlFlow().getTargetLabels(n);
     if (!labels.isEmpty()) {
       context.cfg().addPreNode(n, context.getUnwindState());
 
       mayBeInteger = true;
       assert op == CAstOperator.OP_DIV || op == CAstOperator.OP_MOD : CAstPrinter.print(n);
-      for (Iterator iter = labels.iterator(); iter.hasNext();) {
-        Object label = iter.next();
+      for (Object label : labels) {
         CAstNode target = context.getControlFlow().getTarget(n, label);
         if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
           context.cfg().addPreEdgeToExit(n, true);
@@ -4177,10 +4176,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   private static boolean isSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     CAstControlFlowMap ctrl = context.getControlFlow();
-    Collection caseLabels = ctrl.getTargetLabels(n);
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
-      Object x = kases.next();
-
+    Collection<Object> caseLabels = ctrl.getTargetLabels(n);
+    for (Object x : caseLabels) {
       if (x == CAstControlFlowMap.SWITCH_DEFAULT)
         continue;
 
@@ -4216,7 +4213,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     boolean hasExplicitDefault = ctrl.getTarget(n, CAstControlFlowMap.SWITCH_DEFAULT) != null;
 
-    Collection caseLabels = ctrl.getTargetLabels(n);
+    Collection<Object> caseLabels = ctrl.getTargetLabels(n);
     int cases = caseLabels.size();
     if (hasExplicitDefault)
       cases--;
@@ -4242,8 +4239,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     int cn = 0;
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
-      Object x = kases.next();
+    for (Object x : caseLabels) {
       CAstNode target = ctrl.getTarget(n, x);
       if (x == CAstControlFlowMap.SWITCH_DEFAULT) {
         context.cfg().addEdge(defaultHackBlock, context.cfg().getBlock(target));
@@ -4268,8 +4264,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     Collection<Object> caseLabels = ctrl.getTargetLabels(n);
     Map<Object, PreBasicBlock> labelToBlock = new LinkedHashMap<>();
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
-      Object x = kases.next();
+    for (Object x : caseLabels) {
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         visitor.visit((CAstNode) x, context, visitor);
         context.cfg().addInstruction(
@@ -4287,8 +4282,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
 
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
-      Object x = kases.next();
+    for (Object x : caseLabels) {
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         CAstNode target = ctrl.getTarget(n, x);
         context.cfg().addEdge(labelToBlock.get(x), context.cfg().getBlock(target));
@@ -4336,9 +4330,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().newBlock(false);
 
-    Collection labels = context.getControlFlow().getTargetLabels(n);
-    for (Iterator iter = labels.iterator(); iter.hasNext();) {
-      Object label = iter.next();
+    Collection<Object> labels = context.getControlFlow().getTargetLabels(n);
+    for (Object label : labels) {
       CAstNode target = context.getControlFlow().getTarget(n, label);
       if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
         context.cfg().addPreEdgeToExit(n, true);
@@ -4587,7 +4580,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   public CAstEntity getIncludedEntity(CAstNode n) {
     if (n.getChild(0).getKind() == CAstNode.NAMED_ENTITY_REF) {
       assert namedEntityResolver != null;
-      return (CAstEntity) namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
+      return namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
     } else {
       return (CAstEntity) n.getChild(0).getValue();
     }
@@ -4729,7 +4722,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     @Override
-    public void setCatchType(IBasicBlock bb, TypeReference catchType) {
+    public void setCatchType(IBasicBlock<SSAInstruction> bb, TypeReference catchType) {
     }
 
     @Override

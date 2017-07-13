@@ -13,7 +13,7 @@ package reflection;
 public class Reflect1 {
 
   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-    Class c = Class.forName("java.lang.Integer");
+    Class<?> c = Class.forName("java.lang.Integer");
     Integer i = (Integer)c.newInstance();
     System.err.println(i);
   }

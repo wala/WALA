@@ -151,7 +151,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     }
   }
 
-  public CallSite bootstrap(Class cl) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+  public CallSite bootstrap(Class<?> cl) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     ClassLoader classLoader = cl.getClassLoader();
     ClassLoader bootstrapCL = classLoader;
 
@@ -180,9 +180,9 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
 
   public static MethodType makeMethodType(ClassLoader classLoader, String descriptor) throws ClassNotFoundException {
     String returnType = Util.makeClass(Util.getReturnType(descriptor));
-    Class returnClass = Class.forName(returnType, false, classLoader);
+    Class<?> returnClass = Class.forName(returnType, false, classLoader);
     String[] paramTypes = Util.getParamsTypes(null, descriptor);
-    Class[] paramClasses = new Class[ paramTypes.length ];
+    Class<?>[] paramClasses = new Class[ paramTypes.length ];
     for(int i = 0; i < paramTypes.length; i++) {
       paramClasses[i] = Class.forName(Util.makeClass(paramTypes[i]), false, classLoader);
     }

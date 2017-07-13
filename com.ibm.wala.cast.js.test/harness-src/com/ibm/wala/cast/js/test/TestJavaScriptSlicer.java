@@ -23,6 +23,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.slicer.NormalStatement;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
@@ -75,7 +76,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", file);
     CallGraph CG = B.makeCallGraph(B.getOptions());
  
-    SDG sdg = new SDG<>(CG, B.getPointerAnalysis(), new JavaScriptModRef<>(), data, ctrl);
+    SDG<InstanceKey> sdg = new SDG<>(CG, B.getPointerAnalysis(), new JavaScriptModRef<>(), data, ctrl);
 
     final Collection<Statement> ss = findTargetStatement(CG);
     Collection<Statement> result = Slicer.computeBackwardSlice(sdg, ss);

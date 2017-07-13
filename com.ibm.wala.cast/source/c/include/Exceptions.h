@@ -37,7 +37,14 @@ extern "C" {
 
 #define CATCH()			\
   }				\
-}				\
+}
+
+#define START_CATCH_BLOCK()	\
+  } else {
+
+#define END_CATCH_BLOCK()	\
+  }				\
+}
 
 #define THROW(CPP_EXP_NAME, MESSAGE)	\
 (CPP_EXP_NAME).throwException(__FILE__, __LINE__, MESSAGE)

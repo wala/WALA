@@ -87,7 +87,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 
       try {
-        JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, proj.getValue().get(source).getIFile(), source.getUnderlyingResource().getLocation().toOSString());
+        JDTJava2CAstTranslator<JdtPosition> jdt2cast = makeCAstTranslator(ast, proj.getValue().get(source).getIFile(), source.getUnderlyingResource().getLocation().toOSString());
         final Java2IRTranslator java2ir = makeIRTranslator();
         java2ir.translate(proj.getValue().get(source), jdt2cast.translateToCAst());
       } catch (JavaModelException e) {
@@ -188,7 +188,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     return new Java2IRTranslator(sourceLoader);
   }
 
-  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, final IFile sourceFile, String fullPath) {
+  protected JDTJava2CAstTranslator<JdtPosition> makeCAstTranslator(CompilationUnit cu, final IFile sourceFile, String fullPath) {
     return new JDTJava2CAstTranslator<JdtPosition>(sourceLoader, cu, fullPath, false, dump) {
       @Override
       public JdtPosition makePosition(int start, int end) {

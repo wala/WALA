@@ -34,7 +34,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
     super(factory);
   }
   
-  public WebPageLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory preprocessor) {
+  public WebPageLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
    super(factory, preprocessor); 
   }
 

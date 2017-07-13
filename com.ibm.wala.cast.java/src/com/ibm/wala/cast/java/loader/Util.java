@@ -11,8 +11,6 @@
 package com.ibm.wala.cast.java.loader;
 
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.types.Descriptor;
@@ -34,11 +32,9 @@ public class Util {
       new TypeName[signature.getArgumentCount()];
 
     int i= 0;
-    for(Iterator iter= signature.getArgumentTypes().iterator(); 
-	iter.hasNext(); i++)
-    {
-      CAstType argType= (CAstType) iter.next();
+    for (CAstType argType : signature.getArgumentTypes()) {
       argTypeNames[i]= TypeName.string2TypeName(argType.getName());
+      ++i;
     }
 
     Descriptor desc= Descriptor.findOrCreate(argTypeNames, retTypeName);

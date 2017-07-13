@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -82,8 +81,8 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
         IClass klass = cha.lookupClass(TypeReference.findOrCreate(new ClassLoaderReference(Atom.findOrCreateUnicodeAtom(descr[0]),
             ClassLoaderReference.Java, null), TypeName.string2TypeName(descr[1])));
 
-        for (Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext();) {
-          methodsToSpecialize.add(((IMethod) M.next()).getReference());
+        for (IMethod M : klass.getDeclaredMethods()) {
+          methodsToSpecialize.add(M.getReference());
         }
 
         break;
@@ -93,8 +92,8 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
       case 1: {
         IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])));
 
-        for (Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext();) {
-          methodsToSpecialize.add(((IMethod) M.next()).getReference());
+        for (IMethod M : klass.getDeclaredMethods()) {
+          methodsToSpecialize.add(M.getReference());
         }
 
         break;

@@ -153,7 +153,7 @@ public class DemandCastChecker {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    final Pair<CallGraph, PointerAnalysis> cgAndPA = buildCallGraph(scope, cha, options);
+    final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA = buildCallGraph(scope, cha, options);
     CallGraph cg = cgAndPA.fst;    
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
@@ -182,12 +182,12 @@ public class DemandCastChecker {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  private static Pair<CallGraph, PointerAnalysis> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
+  private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     CallGraph retCG = null;
-    PointerAnalysis retPA = null;
+    PointerAnalysis<InstanceKey> retPA = null;
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
-    CallGraphBuilder builder;
+    CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
       builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation

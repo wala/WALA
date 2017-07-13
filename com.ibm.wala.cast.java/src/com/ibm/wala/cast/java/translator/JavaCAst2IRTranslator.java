@@ -15,7 +15,6 @@ package com.ibm.wala.cast.java.translator;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
@@ -171,10 +170,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().newBlock(true);
 
-    Collection labels = context.getControlFlow().getTargetLabels(n);
+    Collection<Object> labels = context.getControlFlow().getTargetLabels(n);
 
-    for (Iterator iter = labels.iterator(); iter.hasNext();) {
-      Object label = iter.next();
+    for (Object label : labels) {
       CAstNode target = context.getControlFlow().getTarget(n, label);
       if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
         context.cfg().addPreEdgeToExit(n, true);

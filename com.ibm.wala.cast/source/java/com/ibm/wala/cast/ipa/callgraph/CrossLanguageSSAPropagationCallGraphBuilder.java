@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.AstImplicitPointsToSetVisitor;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -103,8 +101,8 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
 
   @Override
   protected void customInit() {
-    for (Iterator roots = ((CrossLanguageCallGraph) callGraph).getLanguageRoots(); roots.hasNext();) {
-      markDiscovered((CGNode) roots.next());
+    for (CGNode root : callGraph) {
+      markDiscovered(root);
     }
   }
 
