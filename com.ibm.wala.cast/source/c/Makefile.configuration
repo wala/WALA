@@ -1,3 +1,5 @@
+# -*- makefile -*-
+
 # configuration of installed Java SDK
 JRE_DIR := $(shell java -XshowSettings:properties -version 2>&1 | sed -n 's/^ *java\.home = \(.*\)/\1/p')/
 JAVA_SDK := $(realpath $(JRE_DIR)..)/
