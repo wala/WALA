@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -eu
 
 if (uname | grep -i "cygwin"); then
 	# This should be the default for most of cases;
