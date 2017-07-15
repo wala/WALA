@@ -108,7 +108,7 @@ public class ReflectionHandler {
    * 
    * @return set of nodes whose interpretation has changed.
    */
-  private Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
+  private static Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
       RTAContextInterpreter contextInterpreter, IClassHierarchy cha) {
     HashSet<CGNode> result = HashSetFactory.make();
 

@@ -496,7 +496,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     copyVisitorSetsToArrays(simpleVisitor, info);
   }
 
-  private void copyVisitorSetsToArrays(SimpleVisitor simpleVisitor, BytecodeInfo info) {
+  private static void copyVisitorSetsToArrays(SimpleVisitor simpleVisitor, BytecodeInfo info) {
     info.newSites = new NewSiteReference[simpleVisitor.newSites.size()];
     int i = 0;
     for (Iterator<NewSiteReference> it = simpleVisitor.newSites.iterator(); it.hasNext();) {

@@ -199,7 +199,7 @@ public abstract class AstMethod implements IMethod {
       return (o instanceof LexicalParent) && getName().equals(((LexicalParent) o).getName())
           && getMethod().equals(((LexicalParent) o).getMethod());
     }
-  };
+  }
 
   public abstract LexicalParent[] getParents();
 

@@ -390,13 +390,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       public void visitPrototypeLookup(PrototypeLookup instruction) {
       }
 
-    };
+    }
 
     @Override
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
       return new JSImplicitPointsToSetVisitor(this, lpk);
     }
-  };
+  }
 
   @Override
   protected PropagationSystem makeSystem(AnalysisOptions options) {
@@ -639,7 +639,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               public String toString() {
                 return "sub-dispatch for " + instruction + ": " + receiverType + ", " + fieldKey;
               } 
-            };
+            }
           
             system.newSideEffect(new FieldValueDispatch(), fieldKey);
         }

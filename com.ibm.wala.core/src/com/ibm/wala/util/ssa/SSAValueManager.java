@@ -416,7 +416,7 @@ public class SSAValueManager {
             throw new IllegalArgumentException("The argument key may not be null");
         }
 
-        final SSAValue cand;;
+        final SSAValue cand;
         currentScope--;
         assert(currentScope >= 0 );
         cand = getCurrent(key);

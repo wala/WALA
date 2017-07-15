@@ -74,7 +74,7 @@ public abstract class EclipseProjectPath<E, P> {
 
   public interface ILoader {
     ClassLoaderReference ref();
-  };
+  }
   
   /**
    * Eclipse projects are modeled with 3 loaders, as described above.
@@ -93,7 +93,7 @@ public abstract class EclipseProjectPath<E, P> {
     public ClassLoaderReference ref() {
       return ref;
     }
-  };
+  }
 
   public enum AnalysisScopeType {
     NO_SOURCE, SOURCE_FOR_PROJ, SOURCE_FOR_PROJ_AND_LINKED_PROJS

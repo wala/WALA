@@ -81,7 +81,6 @@ public class JSTypeInference extends AstTypeInference {
         result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
       }
     }
-    ;
 
     class JSTypeVarFactory extends TypeVarFactory {
 
@@ -104,7 +103,6 @@ public class JSTypeInference extends AstTypeInference {
         }
       }
     }
-    ;
 
     init(ir, new JSTypeVarFactory(), new JSTypeOperatorFactory());
   }

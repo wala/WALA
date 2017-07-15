@@ -57,7 +57,7 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
   /**
    * @return true iff klass is loaded by the application loader.
    */
-  private boolean isApplicationClass(AnalysisScope scope, IClass klass) {
+  private static boolean isApplicationClass(AnalysisScope scope, IClass klass) {
     return scope.getApplicationLoader().equals(klass.getClassLoader().getReference());
   }
 }

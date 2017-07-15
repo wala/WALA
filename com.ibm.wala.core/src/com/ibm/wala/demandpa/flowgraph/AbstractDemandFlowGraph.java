@@ -336,7 +336,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
   protected abstract FlowStatementVisitor makeVisitor(CGNode node);
 
-  private void debugPrintIR(IR ir) {
+  private static void debugPrintIR(IR ir) {
     if (DEBUG) {
       if (ir == null) {
         System.err.println("\n   No statements\n");

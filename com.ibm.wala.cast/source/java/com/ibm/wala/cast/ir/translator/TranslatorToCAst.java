@@ -215,6 +215,6 @@ public interface TranslatorToCAst {
             breakNode);
       }
     }
-    };
+    }
 
 }

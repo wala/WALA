@@ -133,7 +133,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     return result;
   }
 
-  private void convertStmtsToMemoryAccess(Collection<Statement> stmts, Collection<MemoryAccess> result) {
+  private static void convertStmtsToMemoryAccess(Collection<Statement> stmts, Collection<MemoryAccess> result) {
     if (stmts == null) {
       return;
     }

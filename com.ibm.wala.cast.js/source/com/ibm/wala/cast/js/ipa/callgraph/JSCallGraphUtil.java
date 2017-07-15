@@ -321,7 +321,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     public URL getURL() {
       return url;
     }      
-  };
+  }
   
   public static Module getPrologueFile(final String name) {
     return new Bootstrap(name, JSCallGraphUtil.class.getClassLoader().getResourceAsStream(name), JSCallGraphUtil.class.getClassLoader().getResource(name));

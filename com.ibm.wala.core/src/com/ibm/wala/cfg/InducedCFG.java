@@ -129,7 +129,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     clearPis(getInstructions());
   }
 
-  private void clearPis(SSAInstruction[] instructions) {
+  private static void clearPis(SSAInstruction[] instructions) {
     for (int i = 0; i < instructions.length; i++) {
       if (instructions[i] instanceof SSAPiInstruction) {
         instructions[i] = null;
@@ -216,7 +216,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
   /**
    * set to null any slots in the array with phi instructions
    */
-  private void clearPhis(SSAInstruction[] instructions) {
+  private static void clearPhis(SSAInstruction[] instructions) {
     for (int i = 0; i < instructions.length; i++) {
       if (instructions[i] instanceof SSAPhiInstruction) {
         instructions[i] = null;

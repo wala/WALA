@@ -116,7 +116,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   }
 
   public static class FieldBasedJavaScriptAnalysisEngine extends JavaScriptAnalysisEngine<ObjectVertex> {
-    public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE };
+    public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
     
     private BuilderType builderType = BuilderType.OPTIMISTIC;
     

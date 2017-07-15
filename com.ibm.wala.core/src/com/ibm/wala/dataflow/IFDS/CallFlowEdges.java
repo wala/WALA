@@ -148,7 +148,7 @@ public class CallFlowEdges {
   }
 
   // TODO optimize
-  private IntSet getDomain(IBinaryNaturalRelation r) {
+  private static IntSet getDomain(IBinaryNaturalRelation r) {
     MutableIntSet result = MutableSparseIntSet.makeEmpty();
     int maxKeyValue = r.maxKeyValue();
     for (int i = 0; i <= maxKeyValue; i++) {

@@ -595,7 +595,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param selector method selector
    * @return the method if found, else null
    */
-  private IMethod findMethod(IClass clazz, Selector selector) {
+  private static IMethod findMethod(IClass clazz, Selector selector) {
     return clazz.getMethod(selector);
   }
 
@@ -787,7 +787,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
-  private Set<IClass> getSuperclasses(IClass c) throws ClassHierarchyException {
+  private static Set<IClass> getSuperclasses(IClass c) throws ClassHierarchyException {
     HashSet<IClass> result = HashSetFactory.make(3);
     while (c.getSuperclass() != null) {
       result.add(c.getSuperclass());

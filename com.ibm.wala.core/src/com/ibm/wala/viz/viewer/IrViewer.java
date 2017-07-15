@@ -121,7 +121,7 @@ public class IrViewer extends JPanel{
 
   static final int NA = -1;
 
-  private int parseIrLine(String line) {
+  private static int parseIrLine(String line) {
     int firstSpace = line.indexOf(' ');
     if (firstSpace > 0) {
       String pcString = line.substring(0, firstSpace);
