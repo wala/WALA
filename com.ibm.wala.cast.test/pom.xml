@@ -19,10 +19,12 @@
 	  <execution>
 	    <phase>compile</phase>
 	    <configuration>
-	      <executable>bash</executable>
+	      <executable>make</executable>
 	      <arguments>
-		<argument>${basedir}/harness-src/c/cbuild.sh</argument>
+		<argument>default</argument>
+		<argument>main</argument>
 	      </arguments>
+	      <workingDirectory>${basedir}/harness-src/c</workingDirectory>
 	    </configuration>
 	    <goals>
 	      <goal>exec</goal>
