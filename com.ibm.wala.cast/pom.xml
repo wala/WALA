@@ -23,6 +23,7 @@
 			  <arguments>
 			    <argument>${basedir}/source/c/cbuild.sh</argument>
 			  </arguments>
+			  <workingDirectory>${basedir}/source/c</workingDirectory>
 			</configuration>
 			<goals>
 			  <goal>exec</goal>
