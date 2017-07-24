@@ -11,7 +11,6 @@
 package p;
 
 public class NonPrimaryTopLevel {
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
 	NonPrimaryTopLevel nptl= new NonPrimaryTopLevel();
 	Foo f = new Foo();

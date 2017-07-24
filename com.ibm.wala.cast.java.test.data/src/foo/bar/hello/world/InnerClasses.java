@@ -90,7 +90,6 @@ public class InnerClasses extends Temp {
 		se2.setSEVar();
 		System.out.println(sub2.hello()); //1001
 		
-		@SuppressWarnings("unused")
 		int foo = 12;
 		foo++;
 		--foo;

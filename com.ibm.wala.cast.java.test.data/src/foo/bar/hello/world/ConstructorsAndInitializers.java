@@ -102,7 +102,6 @@ public class ConstructorsAndInitializers extends Super {
 		class T{
 			
 		}
-		@SuppressWarnings("unused")
 		T t = new T();
 	}
 }
