@@ -5,15 +5,19 @@ addons:
     packages:
     - realpath
 before_install:
- - "git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench"
+- git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git
+  /tmp/DroidBench
 install:
- - mvn clean verify -DskipTests=true -B -q
+- mvn clean verify -DskipTests=true -B -q
 script:
- - xvfb-run mvn clean verify -B -q
- - jdk_switcher use oraclejdk7
- - ./build-maven-jars.py "install -Dgpg.skip"
+- xvfb-run mvn clean verify -B -q
+- bash ./dependent-projects-trigger.sh $AUTH_TOKEN
+- jdk_switcher use oraclejdk7
+- ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
 cache:
   directories:
-    - $HOME/.m2
-    - $TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib
+  - "$HOME/.m2"
+  - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
+env:
+  secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
