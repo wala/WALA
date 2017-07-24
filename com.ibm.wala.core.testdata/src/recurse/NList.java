@@ -69,7 +69,6 @@ public class NList implements Collection {
    * @see java.util.Collection#iterator()
    */
   @Override
-  @SuppressWarnings("rawtypes")
   public Iterator iterator() {
     // TODO Auto-generated method stub
     return null;

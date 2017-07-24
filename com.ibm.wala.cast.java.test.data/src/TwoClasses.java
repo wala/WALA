@@ -18,7 +18,6 @@ public class TwoClasses {
 	this(0);
     }
     public static void doStuff(int N) {
-	@SuppressWarnings("unused")
 	int prod= 1;
 	TwoClasses tc= new TwoClasses();
 	tc.instanceMethod1();
@@ -36,7 +35,6 @@ public class TwoClasses {
 	instanceMethod2();
     }
     public void instanceMethod2() {
-	@SuppressWarnings("unused")
 	Bar b= Bar.create('a');
     }
 }

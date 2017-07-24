@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
 public class ArrayLiteral2 {
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
 	ArrayLiteral2 al2= new ArrayLiteral2();
 	int[] x= {};

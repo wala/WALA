@@ -51,7 +51,6 @@ public class MethodMadness {
 	public static void staticTest() {
 		System.out.println("staticTest");
 	}
-	@SuppressWarnings("static-access")
 	protected int protectedInteger() {
 		this.s = 5;
 		new MethodMadness("thrownaway").staticTest(); // MethodMadness object evaluated but thrown away
