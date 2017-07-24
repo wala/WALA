@@ -163,7 +163,7 @@ public class DemandCastChecker {
     return fullDemandPointsTo;
   }
 
-  private static String getExclusions(String benchName) {
+  private static String getExclusions(@SuppressWarnings("unused") String benchName) {
     return CallGraphTestUtil.REGRESSION_EXCLUSIONS;
   }
 
