@@ -11,7 +11,6 @@
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -82,7 +81,7 @@ public class BootstrapInstrumentor {
   }
 
   private Set<MethodData> dumpAttributes(ClassInstrumenter ci, int i, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
-      InvalidBytecodeException, IOException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+      InvalidBytecodeException, SecurityException, IllegalArgumentException {
     Set<MethodData> result = HashSetFactory.make();
     ClassReader cr = ci.getReader();
     for (; attrs.isValid(); attrs.advance()) {
@@ -140,7 +139,7 @@ public class BootstrapInstrumentor {
    * @throws IllegalArgumentException if cr is null
    * @throws NoSuchFieldException 
    */
-  public Set<MethodData> doClass(final ClassInstrumenter ci) throws InvalidClassFileException, InvalidBytecodeException, IOException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+  public Set<MethodData> doClass(final ClassInstrumenter ci) throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     ClassReader cr = ci.getReader();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     cr.initClassAttributeIterator(attrs);

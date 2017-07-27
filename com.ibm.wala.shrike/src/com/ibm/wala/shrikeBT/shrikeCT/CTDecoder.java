@@ -86,38 +86,22 @@ final public class CTDecoder extends Decoder {
 
     @Override
     public int getConstantPoolInteger(int index) {
-      try {
-        return cp.getCPInt(index);
-      } catch (InvalidClassFileException e) {
-        throw convertToError(e);
-      }
+      return cp.getCPInt(index);
     }
 
     @Override
     public float getConstantPoolFloat(int index) {
-      try {
-        return cp.getCPFloat(index);
-      } catch (InvalidClassFileException e) {
-        throw convertToError(e);
-      }
+      return cp.getCPFloat(index);
     }
 
     @Override
     public long getConstantPoolLong(int index) {
-      try {
-        return cp.getCPLong(index);
-      } catch (InvalidClassFileException e) {
-        throw convertToError(e);
-      }
+      return cp.getCPLong(index);
     }
 
     @Override
     public double getConstantPoolDouble(int index) {
-      try {
-        return cp.getCPDouble(index);
-      } catch (InvalidClassFileException e) {
-        throw convertToError(e);
-      }
+      return cp.getCPDouble(index);
     }
 
     @Override

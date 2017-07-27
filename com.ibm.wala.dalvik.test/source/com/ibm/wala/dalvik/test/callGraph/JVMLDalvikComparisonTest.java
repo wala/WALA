@@ -81,7 +81,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		return result;
 	}
 	
-	private static void test(String mainClass, String javaScopeFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
+	private static void test(String mainClass, String javaScopeFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
 		Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
 
 		AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
@@ -126,17 +126,17 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 	}
 	
 	@Test
-	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
+	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
 		test(TestConstants.JLEX_MAIN, TestConstants.JLEX);
 	}
 
 	@Test
-	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
+	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
 		test(TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP);
 	}
 
 	@Test
-	public void testBCEL() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
+	public void testBCEL() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
 		test(TestConstants.BCEL_VERIFIER_MAIN, TestConstants.BCEL);
 	}
 }

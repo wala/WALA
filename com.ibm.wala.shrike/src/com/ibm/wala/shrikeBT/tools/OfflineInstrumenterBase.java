@@ -243,7 +243,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Add a JAR entry containing a source class to instrument.
    */
-  final public void addInputJarEntry(File f, String name) throws IOException {
+  final public void addInputJarEntry(File f, String name) {
     inputs.add(new JarInput(f, name));
   }
 

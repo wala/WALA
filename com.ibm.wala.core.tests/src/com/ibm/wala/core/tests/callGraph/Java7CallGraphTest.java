@@ -13,7 +13,6 @@ package com.ibm.wala.core.tests.callGraph;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.jar.JarFile;
 
 import org.junit.Test;
@@ -42,13 +41,13 @@ import com.ibm.wala.util.io.TemporaryFile;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
-  @Test public void testOcamlHelloHash() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
+  @Test public void testOcamlHelloHash() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, InterruptedException {
     if (!"True".equals(System.getenv("APPVEYOR"))) {
       testOCamlJar("hello_hash.jar");
     }
   }
 
-  private void testOCamlJar(String jarFile, String... args) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {   
+  private void testOCamlJar(String jarFile, String... args) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, InterruptedException {   
     File F = TemporaryFile.urlToFile(jarFile.replace('.',  '_') + ".jar", getClass().getClassLoader().getResource(jarFile));
     F.deleteOnExit();
 

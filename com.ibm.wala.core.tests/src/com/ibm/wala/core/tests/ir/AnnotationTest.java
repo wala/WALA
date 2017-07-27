@@ -89,8 +89,7 @@ public class AnnotationTest extends WalaTestCase {
   }
 
   private void testClassAnnotations(TypeReference typeUnderTest, Collection<Annotation> expectedRuntimeInvisibleAnnotations,
-      Collection<Annotation> expectedRuntimeVisibleAnnotations) throws IOException, ClassHierarchyException,
-      InvalidClassFileException {
+      Collection<Annotation> expectedRuntimeVisibleAnnotations) throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
     harness.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
     harness.assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof BytecodeClass);

@@ -185,7 +185,7 @@ public class EclipseFileProvider extends FileProvider {
   }
   
   @Override
-  public URL getResource(String fileName, ClassLoader loader) throws IOException {
+  public URL getResource(String fileName, ClassLoader loader) {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }

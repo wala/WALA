@@ -118,7 +118,7 @@ public abstract class EclipseProjectPath<E, P> {
    */
   private final AnalysisScopeType scopeType;
 
-  protected EclipseProjectPath(AnalysisScopeType scopeType) throws IOException, CoreException {
+  protected EclipseProjectPath(AnalysisScopeType scopeType) {
     this.scopeType = scopeType;
     for (ILoader loader : Loader.values()) {
       MapUtil.findOrCreateList(modules, loader);

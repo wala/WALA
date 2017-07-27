@@ -835,7 +835,7 @@ public class SlicerTest {
   }
 
   @Test
-  public void testJustThrow() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
+  public void testJustThrow() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
