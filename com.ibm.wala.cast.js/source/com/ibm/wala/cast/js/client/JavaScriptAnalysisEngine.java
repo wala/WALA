@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.client;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 import java.util.jar.JarFile;
@@ -59,15 +58,11 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
 
   @Override
   public void buildAnalysisScope() {
-    try {
-      loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
+    loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
-      SourceModule[] files = moduleFiles.toArray(new SourceModule[moduleFiles.size()]);
+    SourceModule[] files = moduleFiles.toArray(new SourceModule[moduleFiles.size()]);
 
-      scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
-    } catch (IOException e) {
-      Assertions.UNREACHABLE(e.toString());
-    }
+    scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
   }
 
   @Override

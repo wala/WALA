@@ -43,7 +43,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 
 /**
@@ -52,12 +51,12 @@ import com.ibm.wala.util.WalaException;
 public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 
 	public static PropagationCallGraphBuilder makeCGBuilder(File mainFile)
-			throws IOException, IllegalArgumentException, CancelException, WalaException {
+			throws IOException, IllegalArgumentException, WalaException {
 		return makeCGBuilder(mainFile.getParentFile(), mainFile);
 	}
 
 	public static PropagationCallGraphBuilder makeCGBuilder(File workingDir, File mainFile)
-			throws IOException, IllegalArgumentException, CancelException, WalaException {
+			throws IOException, IllegalArgumentException, WalaException {
 		JavaScriptTranslatorFactory translatorFactory = new CAstRhinoTranslatorFactory();
 		JSCallGraphUtil.setTranslatorFactory(translatorFactory);
 

@@ -507,8 +507,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return iArrayRef;
   }
 
-  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim)
-      throws ClassHierarchyException {
+  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim) {
     IClass T;
     // register the array with each supertype of the element class
     T = elementClass.getSuperclass();

@@ -248,11 +248,11 @@ public class DotUtil {
   /**
    * Compute the nodes to visualize
    */
-  private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
+  private static <T> Collection<T> computeDotNodes(Graph<T> g) {
     return Iterator2Collection.toSet(g.iterator());
   }
 
-  private static String getRankDir() throws WalaException {
+  private static String getRankDir() {
     return null;
   }
 

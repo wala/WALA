@@ -47,8 +47,7 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 		}
 	}
 	
-  protected JavaEclipseProjectPath(com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType scopeType)
-      throws IOException, CoreException {
+  protected JavaEclipseProjectPath(com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType scopeType) {
     super(scopeType);
   }
 

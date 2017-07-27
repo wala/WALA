@@ -80,13 +80,12 @@ public class CAstCallGraphUtil {
     };
   }
 
-  public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
+  public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) {
     CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
-  public static AnalysisScope makeScope(Module[] files, SingleClassLoaderFactory loaders, Language language)
-      throws IOException {
+  public static AnalysisScope makeScope(Module[] files, SingleClassLoaderFactory loaders, Language language) {
     CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }

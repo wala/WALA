@@ -197,7 +197,7 @@ public class StackMapTableWriter extends Element {
     return false;
   }
   
-  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException, IOException {
+  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException {
     int idx = 0;
     
     List<StackMapFrame> frames = new ArrayList<>();

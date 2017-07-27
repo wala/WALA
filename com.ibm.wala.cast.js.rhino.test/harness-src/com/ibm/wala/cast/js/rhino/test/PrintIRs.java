@@ -90,7 +90,7 @@ public class PrintIRs {
   }
 
   private static void printIRsForHTML(String filename) throws IllegalArgumentException, MalformedURLException, IOException,
-      CancelException, WalaException, Error {
+      WalaException, Error {
     // use Rhino to parse JavaScript
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     // add model for DOM APIs

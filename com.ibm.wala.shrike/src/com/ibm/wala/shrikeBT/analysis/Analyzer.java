@@ -562,7 +562,7 @@ public class Analyzer {
     return changed;
   }
 
-  private boolean mergeLocalTypes(int i, String[] curLocals, int curLocalsSize, List<PathElement> path) throws FailureException {
+  private boolean mergeLocalTypes(int i, String[] curLocals, int curLocalsSize, List<PathElement> path) {
     boolean changed = false;
 
     if (locals[i] == null) {

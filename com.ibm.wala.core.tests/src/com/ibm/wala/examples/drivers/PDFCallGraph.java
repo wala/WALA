@@ -53,7 +53,7 @@ public class PDFCallGraph {
     return (new File(appJar).isDirectory());
   }
 
-  public static String findJarFiles(String[] directories) throws WalaException {
+  public static String findJarFiles(String[] directories) {
     Collection<String> result = HashSetFactory.make();
     for (int i = 0; i < directories.length; i++) {
       for (Iterator<File> it = FileUtil.listFiles(directories[i], ".*\\.jar", true).iterator(); it.hasNext();) {
@@ -86,7 +86,7 @@ public class PDFCallGraph {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException {
     run(args);
   }
 
@@ -97,7 +97,7 @@ public class PDFCallGraph {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
+  public static Process run(String[] args) throws IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"), p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
@@ -167,7 +167,7 @@ public class PDFCallGraph {
     return g;
   }
 
-  public static Graph<CGNode> pruneForAppLoader(CallGraph g) throws WalaException {
+  public static Graph<CGNode> pruneForAppLoader(CallGraph g) {
     return PDFTypeHierarchy.pruneGraph(g, new ApplicationLoaderFilter());
   }
 

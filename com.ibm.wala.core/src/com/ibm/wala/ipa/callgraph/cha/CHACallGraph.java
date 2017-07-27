@@ -272,7 +272,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
             || cha.getScope().isApplicationLoader(target.getDeclaringClass().getClassLoader()));
   }
 
-  private CGNode makeNewNode(IMethod method, Context C) throws CancelException {
+  private CGNode makeNewNode(IMethod method, Context C) {
     CGNode n;
     Key k = new Key(method, C);
     n = new CHANode(method, C);

@@ -37,7 +37,6 @@ import com.ibm.wala.ide.util.JsdtUtil.CGInfo;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 
 public abstract class AbstractJSProjectScopeTest {
@@ -82,7 +81,7 @@ public abstract class AbstractJSProjectScopeTest {
   }
 
   @Test
-  public void testEngine() throws IOException, CoreException, IllegalArgumentException, CancelException {
+  public void testEngine() throws IOException, IllegalArgumentException {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     EclipseJavaScriptAnalysisEngine<InstanceKey> e = makeAnalysisEngine(p);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
@@ -92,7 +91,7 @@ public abstract class AbstractJSProjectScopeTest {
     Assert.assertTrue(cha != null);
   }
 
-  protected EclipseJavaScriptAnalysisEngine<InstanceKey> makeAnalysisEngine(IJavaScriptProject p) throws IOException, CoreException {
+  protected EclipseJavaScriptAnalysisEngine<InstanceKey> makeAnalysisEngine(IJavaScriptProject p) {
     return new EclipseJavaScriptAnalysisEngine<>(p, BuilderType.REFLECTIVE);
   }
 

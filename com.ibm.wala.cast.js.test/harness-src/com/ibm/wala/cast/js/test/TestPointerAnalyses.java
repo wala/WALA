@@ -162,7 +162,7 @@ public abstract class TestPointerAnalyses {
     return false;
   }
   
-  private void testPage(URL page, Predicate<MethodReference> filter, Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test) throws IOException, WalaException, CancelException {
+  private void testPage(URL page, Predicate<MethodReference> filter, Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test) throws WalaException, CancelException {
     boolean save = JSSourceExtractor.USE_TEMP_NAME;
     try {
       JSSourceExtractor.USE_TEMP_NAME = false;
@@ -366,7 +366,7 @@ public abstract class TestPointerAnalyses {
     }, node, vn);
   }
 
-  private void testPageUserCodeEquivalent(URL page) throws IOException, WalaException, CancelException {
+  private void testPageUserCodeEquivalent(URL page) throws WalaException, CancelException {
     final String name = page.getFile().substring(page.getFile().lastIndexOf('/')+1, page.getFile().lastIndexOf('.'));
     testPage(page, nameFilter(name), new CheckPointers());
   }
@@ -383,7 +383,7 @@ public abstract class TestPointerAnalyses {
   }
   
   @Test
-  public void testWindowOnload() throws IOException, WalaException, CancelException {
+  public void testWindowOnload() throws WalaException, CancelException {
     testPageUserCodeEquivalent(getClass().getClassLoader().getResource("pages/windowonload.html"));
   }
 

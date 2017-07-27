@@ -641,7 +641,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       instructionIndex = i;
     }
 
-    public int getProgramCounter() throws InvalidClassFileException {
+    public int getProgramCounter() {
       return info.pcMap[instructionIndex];
     }
 
@@ -654,12 +654,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     public void visitNew(NewInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-      try {
-        newSites.add(NewSiteReference.make(getProgramCounter(), t));
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+      newSites.add(NewSiteReference.make(getProgramCounter(), t));
     }
 
     @Override
@@ -684,12 +679,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       MethodReference m = MethodReference.findOrCreate(loader.getLanguage(), loader.getReference(), instruction.getClassType(),
           instruction.getMethodName(), instruction.getMethodSignature());
       int programCounter = 0;
-      try {
-        programCounter = getProgramCounter();
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+      programCounter = getProgramCounter();
       CallSiteReference site = null;
       site = CallSiteReference.make(programCounter, m, instruction.getInvocationCode());
       callSites.add(site);

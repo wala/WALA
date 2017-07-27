@@ -369,7 +369,7 @@ public abstract class IRTests {
         return Pair.make(callGraph, engine.getPointerAnalysis());
   }
 
-  protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) throws IOException {
+  protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) {
     Set<String> sourcePaths = HashSetFactory.make();
     for(String src : sources) {
       sourcePaths.add(src.substring(src.lastIndexOf(File.separator)+1));

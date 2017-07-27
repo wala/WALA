@@ -66,11 +66,11 @@ import com.ibm.wala.util.config.SetOfClasses;
 public class JDTJavaSourceAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaProject, I> {
   private boolean dump;
   
-  public JDTJavaSourceAnalysisEngine(IJavaProject project) throws IOException, CoreException {
+  public JDTJavaSourceAnalysisEngine(IJavaProject project) {
     super(project);
   }
 
-  public JDTJavaSourceAnalysisEngine(String projectName) throws IOException, CoreException {
+  public JDTJavaSourceAnalysisEngine(String projectName) {
     this(JdtUtil.getNamedProject(projectName));
   }
 

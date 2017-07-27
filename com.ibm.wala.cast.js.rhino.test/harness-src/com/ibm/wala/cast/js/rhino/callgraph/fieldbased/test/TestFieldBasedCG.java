@@ -10,8 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -28,17 +26,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testSimpleJSPessimistic() throws IOException, WalaException, Error, CancelException {
+	public void testSimpleJSPessimistic() throws WalaException, Error, CancelException {
 		runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC);
 	}
 
 	@Test
-	public void testSimpleJSOptimistic() throws IOException, WalaException, Error, CancelException {
+	public void testSimpleJSOptimistic() throws WalaException, Error, CancelException {
 	  runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC);
 	}
 	
 	@Test
-	public void testSimpleJSWorklist() throws IOException, WalaException, Error, CancelException {
+	public void testSimpleJSWorklist() throws WalaException, Error, CancelException {
 	  runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 
@@ -49,17 +47,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testOneshotPessimistic() throws IOException, WalaException, Error, CancelException {
+	public void testOneshotPessimistic() throws WalaException, Error, CancelException {
 		runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC);
 	}
 	
   @Test
-  public void testOneshotOptimistic() throws IOException, WalaException, Error, CancelException {
+  public void testOneshotOptimistic() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testOneshotWorklist() throws IOException, WalaException, Error, CancelException {
+  public void testOneshotWorklist() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -71,12 +69,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testCallbacksOptimistic() throws IOException, WalaException, Error, CancelException {
+	public void testCallbacksOptimistic() throws WalaException, Error, CancelException {
 		runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 	
   @Test
-  public void testCallbacksWorklist() throws IOException, WalaException, Error, CancelException {
+  public void testCallbacksWorklist() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -85,17 +83,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testLexicalPessimistic() throws IOException, WalaException, Error, CancelException {
+	public void testLexicalPessimistic() throws WalaException, Error, CancelException {
 		runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC);
 	}
 	
   @Test
-  public void testLexicalOptimistic() throws IOException, WalaException, Error, CancelException {
+  public void testLexicalOptimistic() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testLexicalWorklist() throws IOException, WalaException, Error, CancelException {
+  public void testLexicalWorklist() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -107,12 +105,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testReflectiveCallOptimistic() throws IOException, WalaException, Error, CancelException {
+	public void testReflectiveCallOptimistic() throws WalaException, Error, CancelException {
 		runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC);
 	}
 	
   @Test
-  public void testReflectiveCallWorklist() throws IOException, WalaException, Error, CancelException {
+  public void testReflectiveCallWorklist() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -122,12 +120,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testNewOptimistic() throws IOException, WalaException, Error, CancelException {
+	public void testNewOptimistic() throws WalaException, Error, CancelException {
 	  runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC);
 	}
   
   @Test
-  public void testNewWorklist() throws IOException, WalaException, Error, CancelException {
+  public void testNewWorklist() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -137,17 +135,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   };
   
   @Test
-  public void testCallbacks2Optimistic() throws IOException, WalaException, Error, CancelException {
+  public void testCallbacks2Optimistic() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testCallbacks2Worklist() throws IOException, WalaException, Error, CancelException {
+  public void testCallbacks2Worklist() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   // @Test
-  public void testBug2979() throws IOException, WalaException, Error, CancelException {
+  public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(runTest("pages/2979.html", new Object[][]{}, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST));
   }
 

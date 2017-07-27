@@ -100,7 +100,7 @@ public class PDFSlice {
    *      -dir argument tells whether to compute a forwards or backwards slice. </ul>
    * 
    */
-  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
@@ -111,7 +111,7 @@ public class PDFSlice {
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
+  public static Process run(String[] args) throws IllegalArgumentException, CancelException, IOException {
     // parse the command-line into a Properties object
     Properties p = CommandLine.parse(args);
     // validate that the command-line has the expected format
