@@ -62,11 +62,11 @@ public class FieldBasedCGUtil {
 		this.translatorFactory = translatorFactory;
 	}
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException, CancelException  {
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws WalaException, CancelException  {
     return buildCG(url, builderType, new NullProgressMonitor(), supportFullPointerAnalysis, fExtractor);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException, CancelException  {
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws WalaException, CancelException  {
     if (url.getFile().endsWith(".js")) {
       return buildScriptCG(url, builderType, monitor, supportFullPointerAnalysis);
     } else {
@@ -74,7 +74,7 @@ public class FieldBasedCGUtil {
     }
   }
   
-	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildScriptCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
+	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildScriptCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws WalaException, CancelException  {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
     Module[] scripts = new Module[]{
         new SourceURLModule(url),
@@ -89,13 +89,13 @@ public class FieldBasedCGUtil {
 	    return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	  }
 
-	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildPageCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws IOException, WalaException, CancelException  {
+	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildPageCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Function<Void, JSSourceExtractor> fExtractor) throws WalaException, CancelException  {
 	  JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory);
 	  SourceModule[] scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders, fExtractor);
 	  return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
 	}
 
-	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(JavaScriptLoaderFactory loaders, Module[] scripts, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
+	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(JavaScriptLoaderFactory loaders, Module[] scripts, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws WalaException, CancelException  {
 		CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
 		IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
 		Util.checkForFrontEndErrors(cha);

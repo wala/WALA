@@ -19,7 +19,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -98,35 +97,28 @@ public class JUnitEntryPoints {
 
     final Set<Entrypoint> entryPts = HashSetFactory.make();
 
-    // TODO: improve this so that we don't need to check all the
-    // classes and method to find a match
-    try {
-      for (IClass klass : cha) {
-        TypeName klassType = klass.getName();
-        if (klassType.equals(targetType) && isJUnitTestCase(klass)) {
-          if (DEBUG) {
-            System.err.println("found test class");
-          }
-          // add entry point corresponding to the target method
-          for (Iterator methodsIt = klass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
-            IMethod method = (IMethod) methodsIt.next();
-            Atom methodAtom = method.getName();
-            if (methodAtom.equals(targetMethodAtom)) {
-              entryPts.add(new DefaultEntrypoint(method, cha));
-              System.out.println("- adding entry point of the call graph: " + methodAtom.toString());
-            }
-          }
-
-          // add entry points of setUp/tearDown methods
-          Set<IMethod> setUpTearDowns = getSetUpTearDownMethods(klass);
-          for (IMethod m : setUpTearDowns) {
-            entryPts.add(new DefaultEntrypoint(m, cha));
+    for (IClass klass : cha) {
+      TypeName klassType = klass.getName();
+      if (klassType.equals(targetType) && isJUnitTestCase(klass)) {
+        if (DEBUG) {
+          System.err.println("found test class");
+        }
+        // add entry point corresponding to the target method
+        for (Iterator methodsIt = klass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
+          IMethod method = (IMethod) methodsIt.next();
+          Atom methodAtom = method.getName();
+          if (methodAtom.equals(targetMethodAtom)) {
+            entryPts.add(new DefaultEntrypoint(method, cha));
+            System.out.println("- adding entry point of the call graph: " + methodAtom.toString());
           }
         }
+
+        // add entry points of setUp/tearDown methods
+        Set<IMethod> setUpTearDowns = getSetUpTearDownMethods(klass);
+        for (IMethod m : setUpTearDowns) {
+          entryPts.add(new DefaultEntrypoint(m, cha));
+        }
       }
-    } catch (ClassHierarchyException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
     }
     return new Iterable<Entrypoint>() {
       @Override
@@ -184,7 +176,7 @@ public class JUnitEntryPoints {
   /**
    * Get the "setUp" and "tearDown" methods in the given class
    */
-  public static Set<IMethod> getSetUpTearDownMethods(IClass testClass) throws ClassHierarchyException {
+  public static Set<IMethod> getSetUpTearDownMethods(IClass testClass) {
     final Atom junitPackage = Atom.findOrCreateAsciiAtom("junit/framework");
     final Atom junitClass = Atom.findOrCreateAsciiAtom("TestCase");
     final Atom junitSuite = Atom.findOrCreateAsciiAtom("TestSuite");

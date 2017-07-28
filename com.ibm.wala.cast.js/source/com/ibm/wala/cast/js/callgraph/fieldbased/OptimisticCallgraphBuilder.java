@@ -93,7 +93,7 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	}
 
 	// add flow corresponding to a new call edge
-	private static void addEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee, IProgressMonitor monitor) throws CancelException {
+	private static void addEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee, IProgressMonitor monitor) {
 	  VertexFactory factory = flowgraph.getVertexFactory();
 	  JavaScriptInvoke invk = c.getInstruction();
 	  FuncVertex caller = c.getCaller();

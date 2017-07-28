@@ -133,7 +133,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	}
 
 	// add flow corresponding to a new call edge
-	private void addCallEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee, Set<Vertex> worklist) throws CancelException {
+	private void addCallEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee, Set<Vertex> worklist) {
 		VertexFactory factory = flowgraph.getVertexFactory();
 		FuncVertex caller = c.getCaller();
 		JavaScriptInvoke invk = c.getInstruction();
@@ -161,7 +161,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	
 	// add data flow corresponding to a reflective invocation via Function.prototype.call
 	// NB: for f.call(...), f will _not_ appear as a call target, but the appropriate argument and return data flow will be set up
-  private void addReflectiveCallEdge(FlowGraph flowgraph, VarVertex reflectiveCallee, JavaScriptInvoke invk, FuncVertex realCallee, Set<Vertex> worklist) throws CancelException {
+  private void addReflectiveCallEdge(FlowGraph flowgraph, VarVertex reflectiveCallee, JavaScriptInvoke invk, FuncVertex realCallee, Set<Vertex> worklist) {
     VertexFactory factory = flowgraph.getVertexFactory();
     FuncVertex caller = reflectiveCallee.getFunction();
 

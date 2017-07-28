@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Test;
@@ -27,13 +26,13 @@ import com.ibm.wala.util.WalaException;
 
 public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCallGraphShapeRhino {
 
-	@Test public void testCrawl() throws IOException, IllegalArgumentException, CancelException, WalaException {
+	@Test public void testCrawl() throws IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/crawl.html");
 		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, DefaultSourceExtractor.factory);
 		verifyGraphAssertions(CG, null);
 	}
 
-	@Test public void testParseError() throws IOException, IllegalArgumentException, CancelException, WalaException {
+	@Test public void testParseError() throws IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/garbage.html");
 		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
 		B.makeCallGraph(B.getOptions());

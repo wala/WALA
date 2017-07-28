@@ -283,7 +283,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
-    protected String getScriptName(URL url) throws MalformedURLException {
+    protected String getScriptName(URL url) {
       String file = url.getFile();
       int lastIdxOfSlash = file.lastIndexOf('/');
       file = (lastIdxOfSlash == (-1)) ? file : file.substring(lastIdxOfSlash + 1);

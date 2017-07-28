@@ -10,7 +10,6 @@
  *****************************************************************************/
 public class InheritedField {
     public static void main(String[] args) {
-	@SuppressWarnings("unused")
 	InheritedField if1= new InheritedField();
 	B b = new B();
 

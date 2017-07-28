@@ -11,7 +11,6 @@
 public class NullArrayInit {
   String[] x = {null};
 
-  @SuppressWarnings("unused")
   public static void main(String[] args) {
     new NullArrayInit();
     Object a[] = new Object[] {null,null};

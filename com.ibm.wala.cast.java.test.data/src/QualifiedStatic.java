@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
 public class QualifiedStatic {
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
 	QualifiedStatic qs= new QualifiedStatic();
 	FooQ fq= new FooQ();

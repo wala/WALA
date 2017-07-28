@@ -14,7 +14,6 @@ public class Casts {
     (new Casts()).test(args);
   }
 
-  @SuppressWarnings("unused")
   private void test(String[] args) {
     long l1 = Long.parseLong(args[0]);
     int i1 = Integer.parseInt(args[1]);

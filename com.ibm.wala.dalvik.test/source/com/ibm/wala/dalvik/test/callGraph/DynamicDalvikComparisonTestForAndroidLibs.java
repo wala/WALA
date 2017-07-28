@@ -4,7 +4,6 @@ import static com.ibm.wala.dalvik.test.util.Util.androidLibs;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.junit.Test;
@@ -22,13 +21,13 @@ public class DynamicDalvikComparisonTestForAndroidLibs extends DynamicDalvikComp
   }
   
   @Test
-  public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+  public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, InvalidClassFileException, FailureException {
     File inputFile = testFile("sample.lex");
     test(providedAndroidLibs(), TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
   }
 
   @Test
-  public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+  public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, InvalidClassFileException, FailureException {
     File inputFile = testFile("sample.cup");
     test(providedAndroidLibs(), TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
   }

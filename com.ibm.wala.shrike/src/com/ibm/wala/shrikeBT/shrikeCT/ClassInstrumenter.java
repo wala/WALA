@@ -91,7 +91,7 @@ final public class ClassInstrumenter {
    * 
    * @throws IllegalArgumentException if cr is null
    */
-  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha) throws InvalidClassFileException {
+  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha) {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }

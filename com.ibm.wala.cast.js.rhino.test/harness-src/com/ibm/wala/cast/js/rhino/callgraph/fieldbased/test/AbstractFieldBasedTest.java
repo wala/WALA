@@ -1,6 +1,5 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
@@ -34,11 +33,11 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   	util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
   }
 
-  protected JSCallGraph runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
+  protected JSCallGraph runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
      return runTest(TestFieldBasedCG.class.getClassLoader().getResource(script), assertions, builderTypes);
    }
 
-  protected JSCallGraph runTest(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
+  protected JSCallGraph runTest(URL url, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
     JSCallGraph cg = null;
     for(BuilderType builderType : builderTypes) {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
@@ -56,7 +55,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   /**
    * for long-running tests that tend to time out on Travis
    */
-  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
+  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
     if (System.getenv("TRAVIS") == null) {
       return runTest(url, assertions, builderTypes);
     } else {

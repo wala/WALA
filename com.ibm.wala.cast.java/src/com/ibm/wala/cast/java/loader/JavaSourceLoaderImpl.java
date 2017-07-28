@@ -483,12 +483,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
 /** BEGIN Custom change: Common superclass is optional */
   public JavaSourceLoaderImpl(boolean existsCommonSuperClass, ClassLoaderReference loaderRef, IClassLoader parent,
-      SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+      SetOfClasses exclusions, IClassHierarchy cha) {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha);
     this.existsCommonSuperclass = existsCommonSuperClass;
   }
   
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) {
     // standard case: we have a common super class
     this(true, loaderRef, parent, exclusions, cha);
   }

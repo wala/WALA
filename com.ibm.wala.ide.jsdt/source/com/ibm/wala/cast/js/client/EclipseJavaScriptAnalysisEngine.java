@@ -65,7 +65,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   
   private final BuilderType builderType;
   
-  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) throws IOException, CoreException {
+  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) {
     super(project, "js");
     this.builderType = builderType;
   }
