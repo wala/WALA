@@ -70,7 +70,7 @@ public class SourceDirCallGraph {
 //    options.setReflectionOptions(ReflectionOptions.NONE);
     AnalysisCache cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
     //CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
-    CallGraphBuilder<?> builder = new ZeroOneContainerCFABuilderFactory().make(options, cache, cha, scope, false);
+    CallGraphBuilder<?> builder = new ZeroOneContainerCFABuilderFactory().make(options, cache, cha, scope);
     System.out.println("building call graph...");
     CallGraph cg = builder.makeCallGraph(options, null);
     long end = System.currentTimeMillis();

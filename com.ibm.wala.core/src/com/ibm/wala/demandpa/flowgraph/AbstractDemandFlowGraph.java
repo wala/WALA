@@ -262,7 +262,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     }
 
     DefUse du = node.getDU();
-    addNodeInstructionConstraints(node, ir, du);
+    addNodeInstructionConstraints(node, ir);
     addNodePassthruExceptionConstraints(node, ir);
     addNodeConstantConstraints(node, ir);
   }
@@ -270,7 +270,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /**
    * Add pointer flow constraints based on instructions in a given node
    */
-  protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
+  protected void addNodeInstructionConstraints(CGNode node, IR ir) {
     FlowStatementVisitor v = makeVisitor(node);
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (ISSABasicBlock b : cfg) {

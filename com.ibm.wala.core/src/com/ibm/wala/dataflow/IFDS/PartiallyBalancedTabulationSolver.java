@@ -61,7 +61,7 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
               T fakeEntry = problem.getFakeEntry(retSite);
               PathEdge<T> seed = PathEdge.createPathEdge(fakeEntry, d3, retSite, d3);
               addSeed(seed);
-              newUnbalancedExplodedReturnEdge(s_p,  i, n, j, seed);
+              newUnbalancedExplodedReturnEdge(s_p,  i, n, j);
             }
           }
         } else {
@@ -95,7 +95,8 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
    * So, we added a new seed callerSeed (to some return site) in the caller.  To be overridden
    * in subclasses.
    */
-  protected void newUnbalancedExplodedReturnEdge(T s_p, int i, T n, int j, PathEdge<T> callerSeed) {
+  @SuppressWarnings("unused")
+  protected void newUnbalancedExplodedReturnEdge(T s_p, int i, T n, int j) {
 
   }
 }

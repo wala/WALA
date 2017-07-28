@@ -426,7 +426,7 @@ public abstract class AbstractSSAConversion {
     return newDefs;
   }
 
-  protected boolean skipRepair(SSAInstruction inst, int index) {
+  protected boolean skipRepair(SSAInstruction inst, @SuppressWarnings("unused") int index) {
     if (inst == null)
       return true;
     for (int i = 0; i < getNumberOfDefs(inst); i++)

@@ -156,11 +156,12 @@ public class Runtime {
     runtime.callStacks.get().push(bashToDescriptor(klass) + "\t" + method);
   }
   
+  @SuppressWarnings("unused")
   public static void termination(String klass, String method, Object receiver, boolean exception) {
     runtime.callStacks.get().pop();
   }
   
-  public static void pop(String klass, String method) {
+  public static void pop() {
     if (runtime.currentSite != null) {
       synchronized (runtime) {
         if (runtime.output != null) {

@@ -410,7 +410,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     final ClassLoaderReference clRef = getClassLoader().getReference();
     return TypeAnnotation.getTypeAnnotationsFromReader(
         r,
-        TypeAnnotation.targetConverterAtFieldInfo(clRef),
+        TypeAnnotation.targetConverterAtFieldInfo(),
         clRef
     );
   }

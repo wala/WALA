@@ -112,7 +112,7 @@ public class ContainerContextSelector implements ContextSelector {
     if (keys != null && keys.length > 0 && keys[0] != null) {
       receiver = keys[0];
     }
-    if (mayUnderstand(caller, site, callee, receiver)) {
+    if (mayUnderstand(site, callee, receiver)) {
       if (DEBUG) {
         System.err.println("May Understand: " + callee + " recv " + receiver);
       }
@@ -270,7 +270,7 @@ public class ContainerContextSelector implements ContextSelector {
     return (n == null) ? null : n.getContext();
   }
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey receiver) {
+  public boolean mayUnderstand(CallSiteReference site, IMethod targetMethod, InstanceKey receiver) {
     if (targetMethod == null) {
       throw new IllegalArgumentException("targetMethod is null");
     }

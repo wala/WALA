@@ -35,14 +35,14 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
    * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context,
    * com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(IMethod method, Context c) throws IllegalArgumentException {
+  public ControlFlowGraph makeCFG(IMethod method, @SuppressWarnings("unused") Context c) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeCFG((SyntheticMethod) method, c);
+      return syntheticFactory.makeCFG((SyntheticMethod) method);
     } else if (method instanceof IBytecodeMethod) {
-      return shrikeFactory.makeCFG((IBytecodeMethod) method, c);
+      return shrikeFactory.makeCFG((IBytecodeMethod) method);
     } else {
       Assertions.UNREACHABLE();
       return null;

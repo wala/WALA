@@ -41,7 +41,7 @@ public class CgPanel extends JSplitPane{
     this.setLeftComponent(new JScrollPane(tree));
 
     
-    final IrAndSourceViewer irViewer = new IrAndSourceViewer(cg);
+    final IrAndSourceViewer irViewer = new IrAndSourceViewer();
     this.setRightComponent(irViewer.getComponent());
 
     tree.addTreeSelectionListener(new TreeSelectionListener() {

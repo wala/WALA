@@ -77,7 +77,7 @@ public class ScopeFileCallGraph {
     System.out.println(Warnings.asString());
     Warnings.clear();
     AnalysisOptions options = new AnalysisOptions();
-    Iterable<Entrypoint> entrypoints = entryClass != null ? makePublicEntrypoints(scope, cha, entryClass) : Util.makeMainEntrypoints(scope, cha, mainClass);
+    Iterable<Entrypoint> entrypoints = entryClass != null ? makePublicEntrypoints(cha, entryClass) : Util.makeMainEntrypoints(scope, cha, mainClass);
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
 //    options.setReflectionOptions(ReflectionOptions.NONE);
@@ -97,7 +97,7 @@ public class ScopeFileCallGraph {
     System.out.println(CallGraphStats.getStats(cg));
   }
 
-  private static Iterable<Entrypoint> makePublicEntrypoints(AnalysisScope scope, IClassHierarchy cha, String entryClass) {
+  private static Iterable<Entrypoint> makePublicEntrypoints(IClassHierarchy cha, String entryClass) {
     Collection<Entrypoint> result = new ArrayList<>();
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application,
         StringStuff.deployment2CanonicalTypeString(entryClass)));

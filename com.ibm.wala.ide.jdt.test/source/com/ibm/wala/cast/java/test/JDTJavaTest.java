@@ -45,10 +45,10 @@ public abstract class JDTJavaTest extends IRTests {
 
   @Override
   protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    return makeAnalysisEngine(mainClassDescriptors, sources, libs, project);
+    return makeAnalysisEngine(mainClassDescriptors, project);
   }
   
-  static <I extends InstanceKey> AbstractAnalysisEngine<I> makeAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs, ZippedProjectData project) {
+  static <I extends InstanceKey> AbstractAnalysisEngine<I> makeAnalysisEngine(final String[] mainClassDescriptors, ZippedProjectData project) {
     AbstractAnalysisEngine<I> engine;
     engine = new JDTJavaSourceAnalysisEngine<I>(project.projectName) {
       {

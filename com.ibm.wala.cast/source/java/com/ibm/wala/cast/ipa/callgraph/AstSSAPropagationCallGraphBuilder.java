@@ -18,19 +18,8 @@ import java.util.Set;
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
-import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
-import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
-import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
-import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
-import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
-import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
-import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -102,6 +91,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
    * each language can specify whether a particular field name should be stored
    * in object catalogs or not. By default, always return false.
    */
+  @SuppressWarnings("unused")
   protected boolean isUncataloguedField(IClass type, String fieldName) {
     return false;
   }
@@ -357,8 +347,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       return ((AstPointerKeyFactory) getBuilder().getPointerKeyFactory()).getPointerKeysForReflectedFieldWrite(I, F);
     }
 
-    private static void visitLexical(AstLexicalAccess instruction, final LexicalOperator op) {
-      op.doLexicalPointerKeys(false);
+    private static void visitLexical(final LexicalOperator op) {
+      op.doLexicalPointerKeys();
       // I have no idea what the code below does, but commenting it out doesn't
       // break any regression tests. --MS
       // if (! checkLexicalInstruction(instruction)) {
@@ -370,7 +360,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     @Override
     public void visitAstLexicalRead(AstLexicalRead instruction) {
-      visitLexical(instruction, new LexicalOperator((AstCGNode) node, instruction.getAccesses(), true) {
+      visitLexical(new LexicalOperator((AstCGNode) node, instruction.getAccesses(), true) {
         @Override
         protected void action(PointerKey lexicalKey, int vn) {
           PointerKey lval = getPointerKeyForLocal(vn);
@@ -400,7 +390,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     @Override
     public void visitAstLexicalWrite(AstLexicalWrite instruction) {
-      visitLexical(instruction, new LexicalOperator((AstCGNode) node, instruction.getAccesses(), false) {
+      visitLexical(new LexicalOperator((AstCGNode) node, instruction.getAccesses(), false) {
         @Override
         protected void action(PointerKey lexicalKey, int vn) {
           PointerKey rval = getPointerKeyForLocal(vn);
@@ -618,7 +608,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .
        */
-      private void doLexicalPointerKeys(boolean funargsOnly) {
+      private void doLexicalPointerKeys() {
         for (int i = 0; i < accesses.length; i++) {
           final String name = accesses[i].variableName;
           final String definer = accesses[i].variableDefiner;
@@ -640,7 +630,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       @Override
       public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-        doLexicalPointerKeys(true);
+        doLexicalPointerKeys();
         return NOT_CHANGED;
       }
 

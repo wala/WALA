@@ -38,7 +38,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
     setContextSelector(contextSelector);
 
-    setInstanceKeys(new JavaScopeMappingInstanceKeys(cha, this, new ZeroXInstanceKeys(options, cha, contextInterpreter,
+    setInstanceKeys(new JavaScopeMappingInstanceKeys(this, new ZeroXInstanceKeys(options, cha, contextInterpreter,
         instancePolicy)));
   }
 

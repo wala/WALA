@@ -97,7 +97,7 @@ public class PaPanel extends JSplitPane {
     this.setRightComponent(rightPanel);
     fullName = new JTextField("");
     rightPanel.add(fullName, BorderLayout.PAGE_START);
-    irViewer = new IrAndSourceViewer(cg);
+    irViewer = new IrAndSourceViewer();
     rightPanel.add(irViewer.getComponent(), BorderLayout.CENTER);
 
     heapTree.addTreeExpansionListener(new TreeExpansionListener() {

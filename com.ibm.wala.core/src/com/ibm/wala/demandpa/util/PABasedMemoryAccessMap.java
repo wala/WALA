@@ -52,15 +52,14 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   private final Map<PointerKey, Set<Statement>> invRef;
 
   public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    this(cg, pa, new SDG<InstanceKey>(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
+    this(pa, new SDG<InstanceKey>(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
   }
 
-  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, SDG<InstanceKey> sdg) {
-    this(cg, pa, CISlicer.scanForMod(sdg, pa, true, ModRef.make()), CISlicer.scanForRef(sdg, pa));
+  public PABasedMemoryAccessMap(PointerAnalysis<InstanceKey> pa, SDG<InstanceKey> sdg) {
+    this(pa, CISlicer.scanForMod(sdg, pa, true, ModRef.make()), CISlicer.scanForRef(sdg, pa));
   }
   
-  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, Map<Statement, Set<PointerKey>> mod,
-      Map<Statement, Set<PointerKey>> ref) {
+  public PABasedMemoryAccessMap(PointerAnalysis<InstanceKey> pa, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }

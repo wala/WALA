@@ -464,7 +464,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     final ClassLoaderReference clRef = getDeclaringClass().getClassLoader().getReference();
     return TypeAnnotation.getTypeAnnotationsFromReader(
         r,
-        TypeAnnotation.targetConverterAtMethodInfo(clRef, this),
+        TypeAnnotation.targetConverterAtMethodInfo(clRef),
         clRef
     );
   }

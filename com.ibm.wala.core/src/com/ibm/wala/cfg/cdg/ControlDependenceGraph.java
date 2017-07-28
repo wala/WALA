@@ -82,7 +82,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
           for (Iterator<? extends T> ss = cfg.getSuccNodes(x); ss.hasNext();) {
             T s = ss.next();
             if (RDF.isDominatedBy(s, y)) {
-              labels.add(makeEdgeLabel(x, y, s));
+              labels.add(makeEdgeLabel(s));
             }
           }
         }
@@ -92,7 +92,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     return controlDependence;
   }
 
-  protected Object makeEdgeLabel(T x, T y, T s) {
+  protected Object makeEdgeLabel(T s) {
     return s;
   }  
 

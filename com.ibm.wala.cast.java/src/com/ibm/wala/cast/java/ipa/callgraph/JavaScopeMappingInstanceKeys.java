@@ -25,13 +25,12 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
-  public JavaScopeMappingInstanceKeys(IClassHierarchy cha, PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
+  public JavaScopeMappingInstanceKeys(PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
     super(builder, basic);
 
   }

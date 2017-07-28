@@ -80,7 +80,7 @@ public class ProgressMaster implements IProgressMonitor {
 
   public synchronized void reset() {
     killNanny();
-    setCanceled(false);
+    setCanceled();
     timedOut = false;
     tooMuchMemory = false;
   }
@@ -118,7 +118,7 @@ public class ProgressMaster implements IProgressMonitor {
     return delegate.isCanceled() || timedOut || tooMuchMemory;
   }
 
-  public void setCanceled(boolean value) {
+  public void setCanceled() {
     killNanny();
   }
 
@@ -131,7 +131,7 @@ public class ProgressMaster implements IProgressMonitor {
 
   @Override
   public void cancel() {
-    setCanceled(true);
+    setCanceled();
   }
 /** END Custom change: subtasks and canceling */
   @Override

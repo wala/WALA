@@ -71,7 +71,7 @@ public class BootstrapDumper {
     oi.close();
   }
 
-  private void dumpAttributes(Class<?> cl, ClassReader cr, int i, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
+  private void dumpAttributes(Class<?> cl, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
       InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();
@@ -124,7 +124,7 @@ public class BootstrapDumper {
     
     for (int i = 0; i < methodCount; i++) {
       cr.initMethodAttributeIterator(i, attrs);
-      dumpAttributes(Class.forName(cr.getName().replace('/', '.'), false, image), cr, i, attrs);
+      dumpAttributes(Class.forName(cr.getName().replace('/', '.'), false, image), attrs);
     }
   }
 }

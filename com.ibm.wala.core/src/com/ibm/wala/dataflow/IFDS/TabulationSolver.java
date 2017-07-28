@@ -1055,6 +1055,7 @@ public class TabulationSolver<T, P, F> {
    * @return set of d1 s.t. (n1,d1) -&gt; (n2,d2) is recorded as a summary edge, or null if none found
    * @throws UnsupportedOperationException unconditionally
    */
+  @SuppressWarnings("unused")
   public IntSet getSummarySources(T n2, int d2, T n1) throws UnsupportedOperationException {
     throw new UnsupportedOperationException("not currently supported.  be careful");
     // LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
@@ -1093,6 +1094,7 @@ public class TabulationSolver<T, P, F> {
    * this function to record call-to-return flow.
    *
    */
+  @SuppressWarnings("unused")
   protected void newNormalExplodedEdge(PathEdge<T> edge, T m, int d3) {
 
   }
@@ -1103,6 +1105,7 @@ public class TabulationSolver<T, P, F> {
    * <calleeEntry, d3> was created. To be overridden in subclasses.
    *
    */
+  @SuppressWarnings("unused")
   protected void newCallExplodedEdge(PathEdge<T> edge, T calleeEntry, int d3) {
 
   }
@@ -1114,6 +1117,7 @@ public class TabulationSolver<T, P, F> {
    * course, there is a call edge <c, d4> -> <s_p, d1>. Finally, we have a
    * return edge <e_p, d2> -> <returnSite, d5>.
    */
+  @SuppressWarnings("unused")
   protected void newSummaryEdge(PathEdge<T> edgeToCallSite, PathEdge<T> calleeSummaryEdge, T returnSite, int d5) {
 
   }
