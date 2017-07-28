@@ -223,13 +223,13 @@ public class CallGraphTest extends WalaTestCase {
   @Test public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
+    Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
 
-  public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
+  public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(ClassHierarchy cha, String pkg) {
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass clazz : cha) {
 
@@ -262,7 +262,7 @@ public class CallGraphTest extends WalaTestCase {
           "Java60RegressionExclusions.txt":
           "GUIExclusions.txt");
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
@@ -288,7 +288,7 @@ public class CallGraphTest extends WalaTestCase {
   /**
    * make main entrypoints, even in the primordial loader.
    */
-  public static Iterable<Entrypoint> makePrimordialMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makePrimordialMainEntrypoints(ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {

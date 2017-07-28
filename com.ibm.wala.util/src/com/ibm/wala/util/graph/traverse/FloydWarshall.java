@@ -46,10 +46,11 @@ public class FloydWarshall<T> {
     G = g;
   }
 
-  protected int edgeCost(int from, int to) {
+  protected int edgeCost() {
     return 1;
   }
   
+  @SuppressWarnings("unused")
   protected void pathCallback(int i, int j, int k) {
     
   }
@@ -69,7 +70,7 @@ public class FloydWarshall<T> {
       tos.foreach(new IntSetAction() {
         @Override
         public void act(int x) {
-          result[fn][x] = edgeCost(fn, x);
+          result[fn][x] = edgeCost();
         }
       });
     }

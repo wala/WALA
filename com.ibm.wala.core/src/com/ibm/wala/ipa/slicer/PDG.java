@@ -177,7 +177,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       isPopulated = true;
 
       Map<SSAInstruction, Integer> instructionIndices = computeInstructionIndices(ir);
-      createNodes(ref, cOptions, ir);
+      createNodes(ref, ir);
       createScalarEdges(cOptions, ir, instructionIndices);
     }
   }
@@ -880,7 +880,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   /**
    * Create all nodes in this PDG. Each node is a Statement.
    */
-  private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, ControlDependenceOptions cOptions, IR ir) {
+  private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, IR ir) {
 
     if (ir != null) {
       createNormalStatements(ir, ref);

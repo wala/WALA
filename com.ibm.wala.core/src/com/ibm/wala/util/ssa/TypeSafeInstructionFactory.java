@@ -609,6 +609,7 @@ public class TypeSafeInstructionFactory {
         return insts.PhiInstruction(iindex, result.getNumber(), aParams);
     }
 
+    @SuppressWarnings("unused")
     private static boolean isSuperclassOf(final TypeReference superClass, final TypeReference subClass) {
         return true; // TODO
     }

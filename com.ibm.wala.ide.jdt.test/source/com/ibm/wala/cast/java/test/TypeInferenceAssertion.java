@@ -33,7 +33,7 @@ final class TypeInferenceAssertion implements IRAssertion {
   @Override
   public void check(CallGraph cg) {
     IR ir = getIR(cg, typeName, "main", "[Ljava/lang/String;", "V");
-    AstJavaTypeInference inference = new AstJavaTypeInference(ir, cg.getClassHierarchy(), true);
+    AstJavaTypeInference inference = new AstJavaTypeInference(ir, true);
 
     for (SSAInstruction instr : Iterator2Iterable.make(ir.iterateAllInstructions())) {
       // Check defs

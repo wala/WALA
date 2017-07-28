@@ -23,7 +23,6 @@ import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
@@ -98,8 +97,8 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   }
 
-  public AstJavaTypeInference(IR ir, IClassHierarchy cha, boolean doPrimitives) {
-    super(ir, cha, JavaPrimitiveType.BOOLEAN, doPrimitives);
+  public AstJavaTypeInference(IR ir, boolean doPrimitives) {
+    super(ir, JavaPrimitiveType.BOOLEAN, doPrimitives);
   }
 
   IClass getStringClass() {

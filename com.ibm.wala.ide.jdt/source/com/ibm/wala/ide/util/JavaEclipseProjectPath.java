@@ -88,7 +88,7 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 		  break;
 	  }
 	  case IClasspathEntry.CPE_PROJECT: {
-		  resolveProjectPathEntry(loader, includeSource, entry.getPath());
+		  resolveProjectPathEntry(includeSource, entry.getPath());
 		  break;
 	  }
 	  case IClasspathEntry.CPE_CONTAINER: {

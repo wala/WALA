@@ -153,7 +153,7 @@ public abstract class EclipseProjectPath<E, P> {
       // should ignore directories as well..
       return;
     }
-    if (isPrimordialJarFile(j)) {
+    if (isPrimordialJarFile()) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
       s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
     }
@@ -170,7 +170,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveProjectPathEntry(ILoader loader, boolean includeSource, IPath p) {
+  protected void resolveProjectPathEntry(boolean includeSource, IPath p) {
     IPath projectPath = makeAbsolute(p);
     IWorkspace ws = ResourcesPlugin.getWorkspace();
     IWorkspaceRoot root = ws.getRoot();
@@ -281,7 +281,7 @@ public abstract class EclipseProjectPath<E, P> {
    * @return true if the given jar file should be handled by the Primordial loader. If false, other provisions should be made to add
    *         the jar file to the appropriate component of the AnalysisScope. Subclasses can override this method.
    */
-  protected boolean isPrimordialJarFile(JarFile j) {
+  protected boolean isPrimordialJarFile() {
     return true;
   }
 
@@ -335,7 +335,7 @@ public abstract class EclipseProjectPath<E, P> {
     return toAnalysisScope(getClass().getClassLoader(), null);
   }
 
-  public Collection<Module> getModules(ILoader loader, boolean binary) {
+  public Collection<Module> getModules(ILoader loader) {
     return Collections.unmodifiableCollection(modules.get(loader));
   }
 

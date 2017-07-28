@@ -25,9 +25,9 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
   public static AnalysisScope readJavaScopeFromPlugin(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
     return readJavaScopeFromPlugin(scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
   }
-  public static AnalysisScope readJavaScopeFromPlugin(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) throws IOException {
+  public static AnalysisScope readJavaScopeFromPlugin(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, @SuppressWarnings("unused") Plugin plugIn) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-    return read(scope, scopeFileName, exclusionsFile, javaLoader, new EclipseFileProvider(plugIn));
+    return read(scope, scopeFileName, exclusionsFile, javaLoader);
   }
 
   public static AnalysisScope makePrimordialScopeFromPlugin(File exclusionsFile) throws IOException {
@@ -38,9 +38,9 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
    * @throws IOException 
    * @throws IllegalStateException if there are problmes reading wala properties
    */
-  public static AnalysisScope makePrimordialScopeFromPlugin(File exclusionsFile, Plugin plugIn) throws IOException {
+  public static AnalysisScope makePrimordialScopeFromPlugin(File exclusionsFile, @SuppressWarnings("unused") Plugin plugIn) throws IOException {
     return read(AnalysisScope.createJavaAnalysisScope(), BASIC_FILE, exclusionsFile,
-        EclipseAnalysisScopeReader.class.getClassLoader(), new EclipseFileProvider(plugIn));
+        EclipseAnalysisScopeReader.class.getClassLoader());
   }
 
   public static AnalysisScope makeJavaBinaryAnalysisScopeFromPlugin(String classPath, File exclusionsFile) throws IOException {

@@ -154,8 +154,7 @@ public class EntryPoints {
         }
     }
     
-    @SuppressWarnings("unused")
-	private void systemEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
+	private void systemEntry(ClassHierarchy cha, @SuppressWarnings("unused") AndroidAnalysisContext loader) {
         String[] systemEntyPoints = { 
 //              "android.app.ActivityThread.main([Ljava/lang/String;)V"
 //              , "com.android.server.ServerThread.run()V"

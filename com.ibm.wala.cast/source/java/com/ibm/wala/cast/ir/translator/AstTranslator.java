@@ -245,8 +245,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * an object literal (e.g., PHP). This method should be overridden to handle
    * such cases.
    */
-  protected void handleUnspecifiedLiteralKey(WalkContext context, CAstNode objectLiteralNode, int unspecifiedLiteralIndex,
-      CAstVisitor<WalkContext> visitor) {
+  protected void handleUnspecifiedLiteralKey() {
     Assertions.UNREACHABLE();
   }
 
@@ -409,7 +408,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /**
    * generate instructions for a read of a global
    */
-  protected int doGlobalRead(CAstNode node, WalkContext context, String name, TypeReference type) {
+  protected int doGlobalRead(@SuppressWarnings("unused") CAstNode node, WalkContext context, String name, TypeReference type) {
     // Global variables can be treated as lexicals defined in the CG root, or
     if (treatGlobalsAsLexicallyScoped()) {
 
@@ -450,6 +449,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /**
    * generate instructions to check if ref has field, storing answer in result
    */
+  @SuppressWarnings("unused")
   protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode field) {
     Assertions.UNREACHABLE();
   }
@@ -1945,7 +1945,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     };
   }
 
-  private Scope makeLocalScope(CAstNode s, final Scope parent) {
+  private Scope makeLocalScope(final Scope parent) {
     return new AbstractScope(parent) {
       @Override
       public ScopeType type() {
@@ -3111,7 +3111,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  protected String[] makeNameMap(CAstEntity n, Set<Scope> scopes, SSAInstruction[] insts) {
+  protected String[] makeNameMap(CAstEntity n, Set<Scope> scopes, @SuppressWarnings("unused") SSAInstruction[] insts) {
     // all scopes share the same underlying symtab, which is what
     // size really refers to.
     String[] map = new String[scopes.iterator().next().size() + 1];
@@ -3252,7 +3252,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (n.getAST() == null) // presumably abstract
       declareFunction(n, context);
     else
-      initFunctionEntity(n, context, codeContext);
+      initFunctionEntity(codeContext);
     return false;
   }
 
@@ -3270,7 +3270,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   @Override
   protected boolean visitScriptEntity(CAstEntity n, WalkContext context, WalkContext codeContext, CAstVisitor<WalkContext> visitor) {
     declareFunction(n, codeContext);
-    initFunctionEntity(n, context, codeContext);
+    initFunctionEntity(codeContext);
     return false;
   }
 
@@ -3279,7 +3279,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     closeFunctionEntity(n, context, codeContext);
   }
 
-  public void initFunctionEntity(final CAstEntity n, WalkContext parentContext, WalkContext functionContext) {
+  public void initFunctionEntity(WalkContext functionContext) {
     // entry block
     functionContext.cfg().makeEntryBlock(functionContext.cfg().newBlock(false));
     // first real block
@@ -3323,7 +3323,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   @Override
   protected WalkContext makeLocalContext(WalkContext context, CAstNode n) {
-    return new LocalContext(context, makeLocalScope(n, context.currentScope()));
+    return new LocalContext(context, makeLocalScope(context.currentScope()));
   }
 
   
@@ -3935,7 +3935,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveObjectLiteralFieldInit(CAstNode n, int i, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
     if (n.getChild(i).getKind() == CAstNode.EMPTY) {
-      handleUnspecifiedLiteralKey(context, n, i, visitor);
+      handleUnspecifiedLiteralKey();
     }
     doFieldWrite(context, c.getValue(n.getChild(0)), n.getChild(i), n, c.getValue(n.getChild(i + 1)));
   }
@@ -4005,7 +4005,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   /* Prereq: a.getKind() == ASSIGN_PRE_OP || a.getKind() == ASSIGN_POST_OP */
-  protected int processAssignOp(CAstNode n, CAstNode v, CAstNode a, int temp, boolean post, WalkContext c) {
+  protected int processAssignOp(CAstNode v, CAstNode a, int temp, WalkContext c) {
     WalkContext context = c;
     int rval = c.getValue(v);
     CAstNode op = a.getChild(2);
@@ -4047,7 +4047,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int temp = context.currentScope().allocateTempValue();
     int[] dims = gatherArrayDims(c, n);
     arrayOpHandler.doArrayRead(context, temp, c.getValue(n.getChild(0)), n, dims);
-    int rval = processAssignOp(n, v, a, temp, !pre, c);
+    int rval = processAssignOp(v, a, temp, c);
     c.setValue(n, pre ? rval : temp);
     arrayOpHandler.doArrayWrite(context, c.getValue(n.getChild(0)), n, dims, rval);
   }
@@ -4065,9 +4065,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     doFieldWrite(context, c.getValue(n.getChild(0)), n.getChild(1), n, rval);
   }
 
-  protected void processObjectRefAssignOp(CAstNode n, CAstNode v, CAstNode a, WalkContext c) {
-  }
-
   @Override
   protected boolean visitObjectRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, WalkContext c, CAstVisitor<WalkContext> visitor) { /* empty */
     return false;
@@ -4078,7 +4075,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     WalkContext context = c;
     int temp = context.currentScope().allocateTempValue();
     doFieldRead(context, temp, c.getValue(n.getChild(0)), n.getChild(1), n);
-    int rval = processAssignOp(n, v, a, temp, !pre, c);
+    int rval = processAssignOp(v, a, temp, c);
     c.setValue(n, pre ? rval : temp);
     doFieldWrite(context, c.getValue(n.getChild(0)), n.getChild(1), n, rval);
   }
@@ -4159,7 +4156,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       c.setValue(n, ret);
     }
 
-    int rval = processAssignOp(n, v, a, temp, !pre, c);
+    int rval = processAssignOp(v, a, temp, c);
 
     if (pre) {
       c.setValue(n, rval);

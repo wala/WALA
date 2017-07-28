@@ -36,7 +36,7 @@ import com.ibm.wala.types.TypeReference;
 
 public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
-  public ControlFlowGraph<?, ?> makeCFG(final IMethod method, final Context context) {
+  public ControlFlowGraph<?, ?> makeCFG(final IMethod method) {
     return ((AstMethod) method).getControlFlowGraph();
   }
 
@@ -63,7 +63,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     @Override
     public ControlFlowGraph makeCFG(IMethod method, Context context) {
       if (method instanceof AstMethod) {
-        return astFactory.makeCFG(method, context);
+        return astFactory.makeCFG(method);
       } else {
         return super.makeCFG(method, context);
       }

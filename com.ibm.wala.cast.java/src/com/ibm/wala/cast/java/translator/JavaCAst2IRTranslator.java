@@ -202,10 +202,6 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     processExceptions(call, context);
   }
 
-  protected void doGlobalRead(WalkContext context, int result, String name) {
-    Assertions.UNREACHABLE("doGlobalRead() called for Java code???");
-  }
-
   @Override
   protected void doGlobalWrite(WalkContext context, String name, TypeReference type, int rval) {
     Assertions.UNREACHABLE("doGlobalWrite() called for Java code???");

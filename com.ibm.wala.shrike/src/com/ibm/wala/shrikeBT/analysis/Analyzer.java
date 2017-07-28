@@ -528,7 +528,7 @@ public class Analyzer {
   private boolean mergeTypes(int i, String[] curStack, int curStackSize, String[] curLocals, int curLocalsSize,
       List<PathElement> path) throws FailureException {
     boolean a = mergeStackTypes(i, curStack, curStackSize, path);
-    boolean b = mergeLocalTypes(i, curLocals, curLocalsSize, path);
+    boolean b = mergeLocalTypes(i, curLocals, curLocalsSize);
     return a||b;
   }
   
@@ -562,7 +562,7 @@ public class Analyzer {
     return changed;
   }
 
-  private boolean mergeLocalTypes(int i, String[] curLocals, int curLocalsSize, List<PathElement> path) {
+  private boolean mergeLocalTypes(int i, String[] curLocals, int curLocalsSize) {
     boolean changed = false;
 
     if (locals[i] == null) {

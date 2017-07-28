@@ -133,6 +133,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    * rewritten AST? By default, just uses the original target.
    * 
    */
+  @SuppressWarnings("unused")
   protected CAstNode flowOutTo(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
       CAstControlFlowMap orig, CAstSourcePositionMap src) {
     return oldTarget;
@@ -307,7 +308,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(CAstNode root, Map<Pair<CAstNode, K>, CAstNode> nodeMap,
+  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(@SuppressWarnings("unused") CAstNode root, Map<Pair<CAstNode, K>, CAstNode> nodeMap,
       Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
 

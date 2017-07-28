@@ -189,7 +189,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   
     @Override
     protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha, scope, false);
+      return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha);
     }
   }
   

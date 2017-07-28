@@ -108,7 +108,7 @@ public class JDTJavaSourceAnalysisEngine<I extends InstanceKey> extends EclipseP
   @Override
   protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
 		  AnalysisOptions options, IAnalysisCacheView cache) {
-	    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
+	    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
   }
 
 }

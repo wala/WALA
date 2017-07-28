@@ -66,7 +66,6 @@ import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
 import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -78,7 +77,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
@@ -483,14 +481,14 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
 /** BEGIN Custom change: Common superclass is optional */
   public JavaSourceLoaderImpl(boolean existsCommonSuperClass, ClassLoaderReference loaderRef, IClassLoader parent,
-      SetOfClasses exclusions, IClassHierarchy cha) {
+      IClassHierarchy cha) {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha);
     this.existsCommonSuperclass = existsCommonSuperClass;
   }
   
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) {
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha) {
     // standard case: we have a common super class
-    this(true, loaderRef, parent, exclusions, cha);
+    this(true, loaderRef, parent, cha);
   }
 /** END Custom change: Common superclass is optional */
 
@@ -661,10 +659,6 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs) {
        return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
     }
-
-    public SSAThrowInstruction NonExceptingThrowInstruction(int iindex, int exception) {
-      throw new UnsupportedOperationException();
-   }    
   }
   
   private static final InstructionFactory insts = new InstructionFactory();

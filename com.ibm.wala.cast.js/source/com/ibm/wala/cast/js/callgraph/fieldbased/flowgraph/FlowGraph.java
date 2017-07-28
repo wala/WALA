@@ -111,7 +111,7 @@ public class FlowGraph implements Iterable<Vertex> {
 			public boolean test(Vertex t) {
 				return t.accept(new AbstractVertexVisitor<Boolean>() {
 					@Override
-					public Boolean visitVertex(Vertex vertex) {
+					public Boolean visitVertex() {
 						return true;
 					}
 					

@@ -60,7 +60,7 @@ public class OnlineDynamicCallGraph implements ClassFileTransformer {
     }
   }
   
-  public static void premain(String agentArgs, Instrumentation inst) throws IllegalArgumentException, IOException, InvalidClassFileException {
+  public static void premain(Instrumentation inst) throws IllegalArgumentException, IOException, InvalidClassFileException {
     inst.addTransformer(new OnlineDynamicCallGraph());
   }
 

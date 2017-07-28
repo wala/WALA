@@ -248,7 +248,7 @@ public abstract class SSAInstruction {
   /**
    * @return value number representing the jth use in this instruction. -1 means TOP (i.e., the value doesn't matter)
    */
-  public int getUse(int j) throws UnsupportedOperationException {
+  public int getUse(@SuppressWarnings("unused") int j) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

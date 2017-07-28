@@ -74,6 +74,6 @@ public class JDTJavaIRTests extends JavaIRTests {
 
   @Override
   protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    return JDTJavaTest.makeAnalysisEngine(mainClassDescriptors, sources, libs, project);
+    return JDTJavaTest.makeAnalysisEngine(mainClassDescriptors, project);
   }
 }
