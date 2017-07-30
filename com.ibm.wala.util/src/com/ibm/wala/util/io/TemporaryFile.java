@@ -20,19 +20,14 @@ import java.nio.file.Path;
 
 public class TemporaryFile {
 
-  private final static Path outputDir;
-
-  static {
-    try {
-      outputDir = Files.createTempDirectory("wala");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
+  private static Path outputDir;
 
   public static File urlToFile(String fileName, URL input) throws IOException {
     if (input == null) {
       throw new NullPointerException("input == null");
+    }
+    if (outputDir == null) {
+      outputDir = Files.createTempDirectory("wala");      
     }
     Path filePath = outputDir.resolve(fileName);
     return urlToFile(filePath.toFile(), input);
