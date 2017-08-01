@@ -4,6 +4,7 @@ addons:
   apt:
     packages:
     - realpath
+    - xvfb
 before_install:
 - git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git
   /tmp/DroidBench
@@ -12,6 +13,7 @@ install:
 script:
 - xvfb-run mvn clean verify -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
+- mvn generate-sources
 - bash ./upload-javascript.sh $GH_TOKEN
 - jdk_switcher use oraclejdk7
 - ./build-maven-jars.py "install -Dgpg.skip"
