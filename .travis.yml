@@ -1,14 +1,11 @@
 language: android
-jdk:
-  - oraclejdk8
-  - oraclejdk7
+jdk: oraclejdk8
 addons:
   apt:
     packages:
     - realpath
     - xvfb
 before_install:
-- jdk_switcher use oraclejdk8
 - git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git
   /tmp/DroidBench
 install:
@@ -18,7 +15,6 @@ script:
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
 - mvn generate-sources
 - bash ./upload-javascript.sh $GH_TOKEN
-- jdk_switcher use oraclejdk7
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
 cache:
