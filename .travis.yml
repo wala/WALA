@@ -22,5 +22,5 @@ cache:
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
 env:
   - secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
-global:
-  - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=
+  global:
+    - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=
