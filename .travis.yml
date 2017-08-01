@@ -1,15 +1,18 @@
 language: android
-jdk: oraclejdk8
+jdk:
+  - oraclejdk8
+  - oraclejdk7
 addons:
   apt:
     packages:
     - realpath
     - xvfb
 before_install:
+- jdk_switcher use oraclejdk8
 - git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git
   /tmp/DroidBench
 install:
-- mvn clean verify -DskipTests=true -B -q
+- mvn clean install -DskipTests=true -B -q
 script:
 - xvfb-run mvn clean verify -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
