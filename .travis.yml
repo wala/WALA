@@ -11,8 +11,8 @@ install:
 - mvn clean verify -DskipTests=true -B -q
 script:
 - xvfb-run mvn clean verify -B -q
-- bash ./dependent-projects-trigger.sh $AUTH_TOKEN
 - bash ./upload-javascript.sh $GH_TOKEN
+- bash ./dependent-projects-trigger.sh $AUTH_TOKEN
 - jdk_switcher use oraclejdk7
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
