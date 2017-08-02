@@ -12,6 +12,6 @@
 	<packaging>pom</packaging>
 	<modules>
 		<!-- module>e42</module -->
-		<module>e44</module>
+		<module>e47</module>
 	</modules>
 </project>
