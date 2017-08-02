@@ -15,7 +15,7 @@ install:
 script:
 - xvfb-run mvn clean install -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
-- mvn generate-sources -B -q
+- mvn javadoc:aggregate -B -q
 - bash ./upload-javascript.sh $GH_TOKEN
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false

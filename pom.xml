@@ -245,7 +245,6 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.0.0-M1</version>
             <configuration>
-	      <aggregate>true</aggregate>
               <additionalparam>-Xdoclint:none</additionalparam>
             </configuration>
             <executions>
@@ -254,7 +253,7 @@
                     <goals>
                         <goal>javadoc</goal>
                     </goals>
-                    <phase>generate-sources</phase>
+                    <phase>generate-resources</phase>
                 </execution>
             </executions>
         </plugin>
