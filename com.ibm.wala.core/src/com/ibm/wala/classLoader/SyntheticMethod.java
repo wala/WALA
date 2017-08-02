@@ -271,7 +271,7 @@ public class SyntheticMethod implements IMethod {
    * @param options options governing SSA construction
    */
   @Deprecated
-  public SSAInstruction[] getStatements(SSAOptions options) {
+  public SSAInstruction[] getStatements(@SuppressWarnings("unused") SSAOptions options) {
     return NO_STATEMENTS;
   }
 

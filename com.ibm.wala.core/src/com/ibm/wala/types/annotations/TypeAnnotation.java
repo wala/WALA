@@ -816,7 +816,7 @@ public class TypeAnnotation {
   }
 
   // TODO: method is currently unused, but we may want to use it if we decide to resolve generic signature indices here
-  public static TypeAnnotationTargetConverter targetConverterAtMethodInfo(final ClassLoaderReference clRef, final IBytecodeMethod method) {
+  public static TypeAnnotationTargetConverter targetConverterAtMethodInfo(final ClassLoaderReference clRef) {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
@@ -944,7 +944,7 @@ public class TypeAnnotation {
     };
   }
   
-  public static TypeAnnotationTargetConverter targetConverterAtFieldInfo(final ClassLoaderReference clRef) {
+  public static TypeAnnotationTargetConverter targetConverterAtFieldInfo() {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {

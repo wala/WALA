@@ -115,7 +115,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   @Override
   protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
 		AnalysisOptions options, IAnalysisCacheView cache) {
-	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
+	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha);
   }
 
   public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph() throws CancelException {

@@ -33,7 +33,7 @@ public class ECJClassLoaderFactory extends ClassLoaderFactoryImpl {
   }
   
   protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent) {
-    return new ECJSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, false);
+    return new ECJSourceLoaderImpl(classLoaderReference, parent, cha, false);
   }
 
 }

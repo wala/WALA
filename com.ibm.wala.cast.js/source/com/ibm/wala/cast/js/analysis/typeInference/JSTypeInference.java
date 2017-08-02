@@ -34,7 +34,7 @@ import com.ibm.wala.types.TypeReference;
 public class JSTypeInference extends AstTypeInference {
 
   public JSTypeInference(IR ir, IClassHierarchy cha) {
-    super(ir, cha, new PointType(cha.lookupClass(JavaScriptTypes.Boolean)), true);
+    super(ir, new PointType(cha.lookupClass(JavaScriptTypes.Boolean)), true);
   }
 
   @Override

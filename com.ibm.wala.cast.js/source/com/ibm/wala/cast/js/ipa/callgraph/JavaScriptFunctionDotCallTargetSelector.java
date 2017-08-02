@@ -135,7 +135,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
       return callModels.get(key);
     }
     JSInstructionFactory insts = (JSInstructionFactory) receiver.getClassLoader().getInstructionFactory();
-    MethodReference ref = genSyntheticMethodRef(receiver, nargs, key);
+    MethodReference ref = genSyntheticMethodRef(receiver, key);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs);
     
     if(WARN_ABOUT_IMPRECISE_CALLGRAPH && caller.getMethod().getName().toString().contains(SYNTHETIC_CALL_METHOD_PREFIX))
@@ -175,7 +175,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
   public static final String SYNTHETIC_CALL_METHOD_PREFIX = "$$ call_";
 
-  private static MethodReference genSyntheticMethodRef(IClass receiver, int nargs, String key) {
+  private static MethodReference genSyntheticMethodRef(IClass receiver, String key) {
     Atom atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + key);
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
     MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);

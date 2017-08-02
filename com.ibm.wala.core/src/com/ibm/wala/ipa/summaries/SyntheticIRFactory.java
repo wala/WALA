@@ -19,7 +19,7 @@ import com.ibm.wala.ssa.SSAOptions;
 
 public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
 
-  public ControlFlowGraph makeCFG(SyntheticMethod method, Context C) {
+  public ControlFlowGraph makeCFG(SyntheticMethod method) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }

@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.client.impl;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -27,8 +26,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class OneCFABuilderFactory  {
 
-  public CallGraphBuilder<InstanceKey> make(JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
-      boolean keepPointsTo) {
+  public CallGraphBuilder<InstanceKey> make(JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 

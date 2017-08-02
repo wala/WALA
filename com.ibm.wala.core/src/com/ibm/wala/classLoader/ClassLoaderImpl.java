@@ -320,7 +320,7 @@ public class ClassLoaderImpl implements IClassLoader {
       JarInputStream s = new JarInputStream(new ByteArrayInputStream(jarFileContents), false);
       JarEntry entry = null;
       while ((entry = s.getNextJarEntry()) != null) {
-        byte[] entryBytes = getEntryBytes(entry, entrySizesForFile.get(entry.getName()), s);
+        byte[] entryBytes = getEntryBytes(entrySizesForFile.get(entry.getName()), s);
         if (entryBytes == null) {
           return null;
         }
@@ -345,7 +345,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  private static byte[] getEntryBytes(JarEntry entry, Long size, InputStream is) throws IOException {
+  private static byte[] getEntryBytes(Long size, InputStream is) throws IOException {
     if (size == null) {
       return null;
     }

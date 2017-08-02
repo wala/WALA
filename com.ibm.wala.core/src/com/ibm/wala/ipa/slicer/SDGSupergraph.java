@@ -46,7 +46,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return null;
   }
 
-  public Object[] getEntry(Statement n) {
+  public Object[] getEntry() {
     Assertions.UNREACHABLE();
     return null;
   }

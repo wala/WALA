@@ -40,7 +40,7 @@ public class IntraproceduralNullPointerAnalysis {
 		final NullPointerFrameWork<ISSABasicBlock> problem = new NullPointerFrameWork<ISSABasicBlock>(
 				cfg, ir);
 		this.solver = new NullPointerSolver<ISSABasicBlock>(problem, maxVarNum,
-				paramValNum, ir, cfg.entry());
+				ir, cfg.entry());
 		try {
 			this.solver.solve(NO_PROGRESS_MONITOR);
 		} catch (final CancelException e) {

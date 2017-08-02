@@ -245,7 +245,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   public Set getCaughtExceptions(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();
-    return CodeScanner.getCaughtExceptions(node.getMethod().getDeclaringClass().getClassLoader().getLanguage(), statements);
+    return CodeScanner.getCaughtExceptions(statements);
   }
 
   public boolean hasObjectArrayLoad(CGNode node) {

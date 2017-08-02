@@ -75,7 +75,7 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 				
 				if(newEdge) {
 					// handle it
-					addEdge(flowgraph, edge.fst, edge.snd, monitor);
+					addEdge(flowgraph, edge.fst, edge.snd);
 				
 					// special handling of invocations of Function.prototype.call
 					// TODO: since we've just added some edges to the flow graph, its transitive closure will be
@@ -93,7 +93,7 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	}
 
 	// add flow corresponding to a new call edge
-	private static void addEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee, IProgressMonitor monitor) {
+	private static void addEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee) {
 	  VertexFactory factory = flowgraph.getVertexFactory();
 	  JavaScriptInvoke invk = c.getInstruction();
 	  FuncVertex caller = c.getCaller();

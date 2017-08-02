@@ -88,11 +88,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       writeEntrypoint("window.onload();");
     }
 
-    protected Position makePos(int lineNumber, ITag governingTag) {
-      return makePos(entrypointUrl, lineNumber, governingTag);
-    }
-     
-    protected Position makePos(final URL url, final int lineNumber, ITag governingTag) {
+    protected Position makePos(ITag governingTag) {
       return governingTag.getElementPosition();
      }
     

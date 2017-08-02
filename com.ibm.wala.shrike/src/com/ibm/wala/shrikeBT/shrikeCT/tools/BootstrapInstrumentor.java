@@ -80,7 +80,7 @@ public class BootstrapInstrumentor {
     oi.close();
   }
 
-  private Set<MethodData> dumpAttributes(ClassInstrumenter ci, int i, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
+  private Set<MethodData> dumpAttributes(ClassInstrumenter ci, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
       InvalidBytecodeException, SecurityException, IllegalArgumentException {
     Set<MethodData> result = HashSetFactory.make();
     ClassReader cr = ci.getReader();
@@ -148,7 +148,7 @@ public class BootstrapInstrumentor {
     Set<MethodData> result = HashSetFactory.make();
     for (int i = 0; i < methodCount; i++) {
       cr.initMethodAttributeIterator(i, attrs);
-      result.addAll(dumpAttributes(ci, i, attrs));
+      result.addAll(dumpAttributes(ci, attrs));
     }
     
     return result;

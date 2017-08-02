@@ -39,7 +39,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
 
   public final static boolean buildLocalMap = true;
 
-  public ControlFlowGraph makeCFG(final IBytecodeMethod method, Context C) {
+  public ControlFlowGraph makeCFG(final IBytecodeMethod method) {
     return ShrikeCFG.make(method);
   }
 
@@ -55,7 +55,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
     } catch (InvalidClassFileException e) {
       throw new WalaRuntimeException("bad method bytecodes", e);
     }
-    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C);
+    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method);
 
     final SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
     final SSAInstruction[] newInstrs = new SSAInstruction[shrikeInstructions.length];

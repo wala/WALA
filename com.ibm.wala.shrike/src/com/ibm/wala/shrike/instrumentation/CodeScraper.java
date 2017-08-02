@@ -54,7 +54,7 @@ public class CodeScraper implements ClassFileTransformer {
     }
   }
 
-  public static void premain(String agentArgs, Instrumentation inst) {
+  public static void premain(Instrumentation inst) {
     inst.addTransformer(new CodeScraper());
   }
 }

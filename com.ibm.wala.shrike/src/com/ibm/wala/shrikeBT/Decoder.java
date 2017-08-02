@@ -90,7 +90,7 @@ public abstract class Decoder implements Constants {
           .make(indexedTypes[(i - OP_iadd) % 4], BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
     }
     for (int i = OP_ineg; i <= OP_dneg; i++) {
-      table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg], IUnaryOpInstruction.Operator.NEG);
+      table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg]);
     }
     for (int i = OP_ishl; i <= OP_lushr; i++) {
       table[i] = ShiftInstruction.make(indexedTypes[(i - OP_ishl) % 2], ShiftInstruction.Operator.values()[(i - OP_ishl) / 2]);

@@ -269,6 +269,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Hook for aubclasses to add pointer flow constraints based on values in a given node
    * @throws CancelException 
    */
+  @SuppressWarnings("unused")
   protected void addNodeValueConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
  
   }
@@ -566,7 +567,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    protected IntSet getParamObjects(int paramIndex, int rhsi) {
+    protected IntSet getParamObjects(int paramIndex, @SuppressWarnings("unused") int rhsi) {
       int paramVn = call.getUse(paramIndex);
       PointerKey var = getPointerKeyForLocal(caller, paramVn);
       IntSet s = system.findOrCreatePointsToSet(var).getValue();
@@ -1731,7 +1732,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
     
-    private byte cpa(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
+    private byte cpa(final PointsToSetVariable[] rhs) {
      final MutableBoolean changed = new MutableBoolean();
       for(int rhsIndex = 0; rhsIndex < rhs.length; rhsIndex++) { 
         final int y = rhsIndex;
@@ -1791,7 +1792,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;
       
-      return cpa(lhs, rhs);
+      return cpa(rhs);
       
       /*
       // did evaluating the dispatch operation add a new possible target
@@ -2007,8 +2008,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  protected void iterateCrossProduct(final CGNode caller, final SSAAbstractInvokeInstruction call, IntSet parameters,
-      final InstanceKey[][] invariants, final VoidFunction<InstanceKey[]> f) {
+  protected void iterateCrossProduct(final CGNode caller, final SSAAbstractInvokeInstruction call, final InstanceKey[][] invariants,
+      final VoidFunction<InstanceKey[]> f) {
     new CrossProductRec(invariants, call, caller, f).rec(0, 0);
   }
   
@@ -2035,7 +2036,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
     };
-    iterateCrossProduct(caller, instruction, params, invs, f);
+    iterateCrossProduct(caller, instruction, invs, f);
      return targets;
   }
 
@@ -2069,7 +2070,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return true;
   }
 
-  protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
+  protected InterestingVisitor makeInterestingVisitor(@SuppressWarnings("unused") CGNode node, int vn) {
     return new InterestingVisitor(vn);
   }
 

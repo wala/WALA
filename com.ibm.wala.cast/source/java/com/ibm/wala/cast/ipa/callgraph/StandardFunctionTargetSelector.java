@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 public class StandardFunctionTargetSelector implements MethodTargetSelector {  
@@ -67,11 +66,7 @@ public class StandardFunctionTargetSelector implements MethodTargetSelector {
     }
   }
 
-  public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
-    return true;
-  }
-
-  public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
+  public boolean mightReturnSyntheticMethod() {
     return true;
   }
 }

@@ -281,7 +281,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return callGraph;
   }
 
-  protected PropagationSystem makeSystem(AnalysisOptions options) {
+  protected PropagationSystem makeSystem(@SuppressWarnings("unused") AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory);
   }
 
@@ -859,7 +859,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
           if (DEBUG_ARRAY_LOAD) {
             System.err.println("ArrayLoad add assign: " + dVal + " " + p);
           }
-          sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
+          sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
         }
       };
       if (priorInstances != null) {
@@ -952,9 +952,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
         // note that the following is idempotent
         if (isJavaLangObject(contents)) {
-          sideEffect |= system.newFieldWrite(p, assignOperator, pVal, object);
+          sideEffect |= system.newFieldWrite(p, assignOperator, pVal);
         } else {
-          sideEffect |= system.newFieldWrite(p, filterOperator, pVal, object);
+          sideEffect |= system.newFieldWrite(p, filterOperator, pVal);
         }
       }
       byte sideEffectMask = sideEffect ? (byte) SIDE_EFFECT_MASK : 0;
@@ -1037,7 +1037,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 String S = "Getfield add constraint " + dVal + " " + p;
                 System.err.println(S);
               }
-              sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
+              sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
             }
           }
         }
@@ -1156,7 +1156,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 String S = "Putfield add constraint " + p + " " + pVal;
                 System.err.println(S);
               }
-              sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
+              sideEffect.b |= system.newFieldWrite(p, assign, pVal);
             }
           }
         }

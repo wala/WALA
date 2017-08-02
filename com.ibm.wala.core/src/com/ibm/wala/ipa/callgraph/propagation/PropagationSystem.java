@@ -390,14 +390,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
+  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
+  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
