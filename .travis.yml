@@ -9,11 +9,11 @@ before_install:
 - git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git
   /tmp/DroidBench
 install:
-- mvn clean verify -DskipTests=true -B
+- mvn clean verify -DskipTests=true -B -q
 script:
-- xvfb-run mvn clean install -B
+- xvfb-run mvn clean install -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
-- mvn generate-sources -B
+- mvn generate-sources -B -q
 - bash ./upload-javascript.sh $GH_TOKEN
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
