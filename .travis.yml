@@ -11,9 +11,9 @@ before_install:
 install:
 - mvn clean verify -DskipTests=true -B -q
 script:
-- xvfb-run mvn install verify -B -q
+- xvfb-run mvn clean install -B
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
-- mvn generate-sources
+- mvn generate-sources -B
 - bash ./upload-javascript.sh $GH_TOKEN
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
