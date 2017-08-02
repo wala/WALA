@@ -35,7 +35,6 @@ public class IntraproceduralNullPointerAnalysis {
 		this.ir = ir;
 
 		final int maxVarNum = ir.getSymbolTable().getMaxValueNumber();
-		final int[] paramValNum = ir.getParameterValueNumbers();
 		SSACFG cfg = ir.getControlFlowGraph();
 		final NullPointerFrameWork<ISSABasicBlock> problem = new NullPointerFrameWork<ISSABasicBlock>(
 				cfg, ir);

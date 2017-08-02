@@ -56,7 +56,6 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -261,7 +260,6 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       return;
     }
 
-    DefUse du = node.getDU();
     addNodeInstructionConstraints(node, ir);
     addNodePassthruExceptionConstraints(node, ir);
     addNodeConstantConstraints(node, ir);
