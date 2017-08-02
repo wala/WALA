@@ -12,6 +12,7 @@ install:
 script:
 - xvfb-run mvn clean verify -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
+- bash ./upload-javascript.sh $GH_TOKEN
 - jdk_switcher use oraclejdk7
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
@@ -20,4 +21,4 @@ cache:
   - "$HOME/.m2"
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
 env:
-  secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
+  secure: GTtE6dQXwex1+nZkA9fCrBl/nrl71nwSNrwH+KXEcTWRyLnxQPmGKeCey0kLX2bpVngGu7fi2CPZbGaOOm+0tm1kHZtNUUciVkt9qeA0cwdUHz7/EhfN6Xkj7wYZwQ4XUHMhxnHo9FtHK6IliArjUv84DNcDMHJbaiGcHPEmHGo=
