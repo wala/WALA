@@ -18,6 +18,8 @@ import java.io.Serializable;
 @SuppressWarnings("rawtypes")
 abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
 
+  private static final long serialVersionUID = 1151811022797406841L;
+
   protected final static boolean DEBUG = false;
 
   protected final static int LOG_BITS_PER_UNIT = 5;

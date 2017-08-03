@@ -25,6 +25,8 @@ import com.ibm.wala.util.graph.Graph;
  */
 public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
 
+  private static final long serialVersionUID = 8440061593631309429L;
+
   /**
    * the current next element in finishing time order
    */

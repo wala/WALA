@@ -17,6 +17,8 @@ import com.ibm.wala.util.intset.MutableMapping;
  */
 public class UnorderedDomain<T, U> extends MutableMapping<T> implements TabulationDomain<T, U> {
 
+  private static final long serialVersionUID = -988075488958891635L;
+
   /*
    * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
    */

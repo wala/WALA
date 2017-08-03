@@ -14,6 +14,7 @@ package com.ibm.wala.util.intset;
  */
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
+  private static final long serialVersionUID = -5846568678514886375L;
   int offset;
 
   private static int wordDiff(int offset1, int offset2) {

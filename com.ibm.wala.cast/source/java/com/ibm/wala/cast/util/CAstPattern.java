@@ -59,6 +59,8 @@ public class CAstPattern {
 
   public static class Segments extends TreeMap<String,Object> {
 
+    private static final long serialVersionUID = 4119719848336209576L;
+
     public CAstNode getSingle(String name) {
       assert containsKey(name) : name;
       return (CAstNode) get(name);

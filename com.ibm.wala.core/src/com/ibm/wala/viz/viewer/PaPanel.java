@@ -54,6 +54,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class PaPanel extends JSplitPane {
 
+  private static final long serialVersionUID = 8120735305334110889L;
   protected final PointerAnalysis<InstanceKey> pa;
   protected final CallGraph cg;
 

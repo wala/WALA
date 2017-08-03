@@ -21,6 +21,8 @@ import com.ibm.wala.util.debug.Assertions;
  */
 class DebuggingMutableIntSet implements MutableIntSet {
 
+  private static final long serialVersionUID = 6879912730471879687L;
+
   final MutableIntSet primaryImpl;
 
   final MutableIntSet secondaryImpl;

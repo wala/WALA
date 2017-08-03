@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
 
+  private static final long serialVersionUID = 6541081454519490199L;
   private final static boolean DEBUG = false;
 
   /**
