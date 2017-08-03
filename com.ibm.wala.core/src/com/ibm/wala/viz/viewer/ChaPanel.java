@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class ChaPanel extends JSplitPane {
 
+  private static final long serialVersionUID = -9058908127737757320L;
   private final IClassHierarchy cha;
 
   public ChaPanel(IClassHierarchy cha) {

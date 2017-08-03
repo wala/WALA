@@ -207,6 +207,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
 
   private class Nodes extends SlowNumberedNodeManager<Statement> {
 
+    private static final long serialVersionUID = -1450214776332091211L;
+
     @Override
     public boolean containsNode(Statement N) {
       if (super.containsNode(N)) {

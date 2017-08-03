@@ -20,6 +20,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
+  private static final long serialVersionUID = -6630888692508092370L;
+
   private final static boolean DEBUG = false;
 
   private final static boolean PARANOID = false;

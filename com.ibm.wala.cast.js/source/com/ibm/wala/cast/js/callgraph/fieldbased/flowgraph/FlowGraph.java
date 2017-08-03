@@ -433,6 +433,8 @@ public class FlowGraph implements Iterable<Vertex> {
           final PointerAnalysis<ObjectVertex> pa = this;
           class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object> implements HeapGraph<ObjectVertex> {
 
+            private static final long serialVersionUID = -3544629644808422215L;
+
             private <X> X ensureNode(X n) {
               if (!containsNode(n)) {
                 addNode(n);

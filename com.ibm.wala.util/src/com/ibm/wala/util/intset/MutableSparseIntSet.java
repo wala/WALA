@@ -23,6 +23,8 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
+	private static final long serialVersionUID = 1479453398189400698L;
+
 	/**
 	 * If forced to grow the backing array .. then by how much
 	 */

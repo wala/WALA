@@ -54,6 +54,8 @@ package com.ibm.wala.util.ssa;
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  */
 public class ClassLookupException extends RuntimeException {
+    private static final long serialVersionUID = 7551139209041666026L;
+
     public ClassLookupException(String message) {
         super(message);
     }

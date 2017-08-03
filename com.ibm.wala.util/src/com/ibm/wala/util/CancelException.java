@@ -17,6 +17,8 @@ package com.ibm.wala.util;
 @SuppressWarnings("javadoc")
 public class CancelException extends Exception {
 
+  private static final long serialVersionUID = 3728159810629412928L;
+
   protected CancelException(String msg) {
     super(msg);
   }

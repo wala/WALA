@@ -18,6 +18,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public class BimodalMutableIntSet implements MutableIntSet {
 
+  private static final long serialVersionUID = 7332332295529936562L;
   MutableIntSet impl;
 
   /*

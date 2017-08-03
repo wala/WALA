@@ -18,6 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class Pair<T,U> implements Serializable {
 
+  private static final long serialVersionUID = 1861211857872739247L;
   public final T fst;
   public final U snd;
 
