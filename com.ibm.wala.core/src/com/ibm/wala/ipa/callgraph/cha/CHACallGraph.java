@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.cha;
 
 import java.lang.ref.SoftReference;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -36,14 +37,12 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.ComposedIterator;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.collections.MapIterator;
-import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
@@ -138,17 +137,24 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return cha;
   }
 
+  private final Map<CallSiteReference, Set<IMethod>> targetCache = HashMapFactory.make();
+  
   private Iterator<IMethod> getPossibleTargets(CallSiteReference site) {
-    if (site.isDispatch()) {
-      return cha.getPossibleTargets(site.getDeclaredTarget()).iterator();
-    } else {
-      IMethod m = cha.resolveMethod(site.getDeclaredTarget());
-      if (m != null) {
-        return new NonNullSingletonIterator<IMethod>(m);
+    Set<IMethod> result = targetCache.get(site);
+    if (result == null) {
+      if (site.isDispatch()) {
+        result = cha.getPossibleTargets(site.getDeclaredTarget());
       } else {
-        return EmptyIterator.instance();
+        IMethod m = cha.resolveMethod(site.getDeclaredTarget());
+        if (m != null) {
+          result = Collections.singleton(m);
+        } else {
+          result = Collections.emptySet();
+        }
       }
+      targetCache.put(site, result);
     }
+    return result.iterator();
   }
 
   @Override
