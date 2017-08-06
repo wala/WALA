@@ -48,6 +48,7 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,7 +65,7 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  */
-public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEdgeManager<T, U> {
+public class SparseNumberedLabeledEdgeManager<T, U> implements Serializable, NumberedLabeledEdgeManager<T, U> {
 
   /**
    * the label to be attached to an edge when no label is specified

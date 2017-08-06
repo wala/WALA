@@ -4,21 +4,27 @@ addons:
   apt:
     packages:
     - realpath
+    - xvfb
 before_install:
-- git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git
-  /tmp/DroidBench
+- git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
+- export M2_HOME=$HOME/apache-maven-3.5.0
+- if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C $HOME; fi
+- export PATH=$M2_HOME/bin:$PATH
 install:
 - mvn clean verify -DskipTests=true -B -q
 script:
-- xvfb-run mvn clean verify -B -q
+- xvfb-run mvn clean install -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
+- mvn javadoc:aggregate -B -q
 - bash ./upload-javascript.sh $GH_TOKEN
-- jdk_switcher use oraclejdk7
 - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
 cache:
   directories:
   - "$HOME/.m2"
+  - "$HOME/apache-maven-3.5.0"
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
 env:
-  secure: GTtE6dQXwex1+nZkA9fCrBl/nrl71nwSNrwH+KXEcTWRyLnxQPmGKeCey0kLX2bpVngGu7fi2CPZbGaOOm+0tm1kHZtNUUciVkt9qeA0cwdUHz7/EhfN6Xkj7wYZwQ4XUHMhxnHo9FtHK6IliArjUv84DNcDMHJbaiGcHPEmHGo=
+  global:
+    - secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
+    - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=

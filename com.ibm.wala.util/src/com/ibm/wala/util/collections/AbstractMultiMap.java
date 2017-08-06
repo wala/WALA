@@ -37,13 +37,14 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 
-abstract class AbstractMultiMap<K, V> implements MultiMap<K, V> {
+abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   protected final Map<K, Set<V>> map = HashMapFactory.make();
 

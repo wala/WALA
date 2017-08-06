@@ -47,29 +47,20 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import static org.jf.dexlib.Util.AccessFlags.ABSTRACT;
-import static org.jf.dexlib.Util.AccessFlags.INTERFACE;
-import static org.jf.dexlib.Util.AccessFlags.PRIVATE;
-import static org.jf.dexlib.Util.AccessFlags.PUBLIC;
+import static org.jf.dexlib2.AccessFlags.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jf.dexlib.AnnotationDirectoryItem;
-import org.jf.dexlib.AnnotationItem;
-import org.jf.dexlib.AnnotationSetItem;
-import org.jf.dexlib.AnnotationVisibility;
-import org.jf.dexlib.ClassDataItem;
-import org.jf.dexlib.ClassDataItem.EncodedField;
-import org.jf.dexlib.ClassDataItem.EncodedMethod;
-import org.jf.dexlib.ClassDefItem;
-import org.jf.dexlib.FieldIdItem;
-import org.jf.dexlib.MethodIdItem;
-import org.jf.dexlib.TypeIdItem;
-import org.jf.dexlib.TypeListItem;
+import org.jf.dexlib2.AnnotationVisibility;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.Field;
+import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodParameter;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -89,7 +80,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
      * Item which contains the class definitions.
      * (compute by DexFile, from the dexLib)
      */
-    private final ClassDefItem classDef;
+    private final ClassDef classDef;
 
     /**
      * Bitfields of these flags are used to indicate the accessibility and overall properties of classes and class members.
@@ -126,31 +117,27 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 
         //computeSuperName()
         // Set Super Name;
-        String descriptor = classDef.getSuperclass() != null? classDef.getSuperclass().getTypeDescriptor(): null;
+        String descriptor = classDef.getSuperclass() != null? classDef.getSuperclass(): null;
         if (descriptor != null && descriptor.endsWith(";"))
             descriptor = descriptor.substring(0,descriptor.length()-1); //remove last ';'
         superName = descriptor != null? ImmutableByteArray.make(descriptor): null;
 
         //computeInterfaceNames()
         // Set interfaceNames
-        final TypeListItem intfList = classDef.getInterfaces();
-        int size = intfList == null ? 0 : intfList.getTypeCount();
+        final List<String> intfList = classDef.getInterfaces();
+        int size = intfList == null ? 0 : intfList.size();
         //if (size != 0)
         //  System.out.println(intfList.getTypes().get(0).getTypeDescriptor());
 
 
         interfaceNames = new ImmutableByteArray[size];
         for (int i = 0; i < size; i++) {
-            TypeIdItem itf = intfList.getTypeIdItem(i);
-            descriptor = itf.getTypeDescriptor();
+            descriptor = intfList.get(i);
             if (descriptor.endsWith(";"))
                 descriptor = descriptor.substring(0, descriptor.length()-1);
             interfaceNames[i] = ImmutableByteArray
                     .make(descriptor);
         }
-
-        //Load class data
-        final ClassDataItem classData = classDef.getClassData();
 
         // Set direct instance fields
 //      if (classData == null) {
@@ -178,28 +165,29 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 //      }
 
         //computeFields()
-        if (classData != null) {
             //final EncodedField[] encInstFields = classData.getInstanceFields();
 
-        	final List<EncodedField> encInstFields = classData.getInstanceFields();
-            instanceFields = new IField[encInstFields.size()];
-        	for (int i = 0; i < encInstFields.size(); i++) {
-        		instanceFields[i] = new DexIField(encInstFields.get(i),this);
+        	final Iterable<? extends Field> encInstFields = classDef.getInstanceFields();
+        	List<IField> ifs = new LinkedList<>();
+        	for (Field dexf : encInstFields) {
+        		ifs.add(new DexIField(dexf,this));
         	}
+        	instanceFields = ifs.toArray(new IField[ ifs.size() ]);
         	
             // Set direct static fields
-            final List<EncodedField> encStatFields = classData.getStaticFields();
-            staticFields = new IField[encStatFields.size()];
-            for (int i = 0; i < encStatFields.size(); i++) {
-                staticFields[i] = new DexIField(encStatFields.get(i),this);
+            final Iterable<? extends Field> encStatFields = classDef.getStaticFields();
+            List<IField> sfs = new LinkedList<>();
+            for (Field dexf : encStatFields) {
+                sfs.add(new DexIField(dexf,this));
             }
+            staticFields = sfs.toArray(new IField[ sfs.size() ]);
         }
-    }
+    
 
     /**
      * @return The classDef Item associated with this class.
      */
-    public ClassDefItem getClassDefItem(){
+    public ClassDef getClassDefItem(){
         return classDef;
     }
 
@@ -269,14 +257,11 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         return hashCode;
       }
 
-      Collection<Annotation> getAnnotations(Set<AnnotationVisibility> types) {
+      Collection<Annotation> getAnnotations(Set<String> types) {
     	  Set<Annotation> result = HashSetFactory.make();
-    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
-    	  if (d.getClassAnnotations() != null) {
-    		  for(AnnotationItem a : d.getClassAnnotations().getAnnotations()) {
-    			  if (types == null || types.contains(a.getVisibility())) {
-    				  result.add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
-    			  }
+    	  for(org.jf.dexlib2.iface.Annotation a : classDef.getAnnotations()) {
+    		  if (types == null || types.contains(AnnotationVisibility.getVisibility(a.getVisibility()))) {
+    			  result.add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
     		  }
     	  }
     	  return result;
@@ -284,7 +269,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
       
       @Override
       public Collection<Annotation> getAnnotations() {
-    	  return getAnnotations((Set<AnnotationVisibility>)null);
+    	  return getAnnotations((Set<String>)null);
       }
 
       @Override
@@ -292,55 +277,46 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
   		return getAnnotations(getTypes(runtimeInvisible));
       }
 
-	static Set<AnnotationVisibility> getTypes(boolean runtimeInvisible) {
-		Set<AnnotationVisibility> types = HashSetFactory.make();
-  		types.add(AnnotationVisibility.SYSTEM);
+	static Set<String> getTypes(boolean runtimeInvisible) {
+		Set<String> types = HashSetFactory.make();
+  		types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.SYSTEM));
   		if (runtimeInvisible) {
-  			types.add(AnnotationVisibility.BUILD);
+  			types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.BUILD));
   		} else {
-  			types.add(AnnotationVisibility.RUNTIME);
+  			types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.RUNTIME));
   		}
 		return types;
 	}
 
-      List<AnnotationItem> getAnnotations(MethodIdItem m, Set<AnnotationVisibility> types) {
-    	  List<AnnotationItem> result = new ArrayList<>();
-    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
-    	  if (d != null && d.getMethodAnnotations(m) !=  null) {
-    		  for(AnnotationItem a : d.getMethodAnnotations(m).getAnnotations()) {
-        		  if (types == null || types.contains(a.getVisibility())) {
-        			  result.add(a);
-        		  }
+      List<Annotation> getAnnotations(Method m, Set<String> set) {
+    	  List<Annotation> result = new ArrayList<>();
+    	  for(org.jf.dexlib2.iface.Annotation a : m.getAnnotations()) {
+    		  if (set == null || set.contains(AnnotationVisibility.getVisibility(a.getVisibility()))) {
+    			  result.add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
     		  }
     	  }
     	  return result;
       }
 
-      List<AnnotationItem> getAnnotations(FieldIdItem m) {
-    	  List<AnnotationItem> result = new ArrayList<>();
-    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
-    	  if (d != null) {
-    		  for(AnnotationItem a : d.getFieldAnnotations(m).getAnnotations()) {
-    			  result.add(a);
-    		  }
+      Collection<Annotation> getAnnotations(Field m) {
+    	  List<Annotation> result = new ArrayList<>();
+    	  for(org.jf.dexlib2.iface.Annotation a : m.getAnnotations()) {
+    		  result.add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
     	  }
     	  return result;
       }
 
-      Map<Integer,List<AnnotationItem>> getParameterAnnotations(MethodIdItem m) {
-    	  Map<Integer,List<AnnotationItem>> result = HashMapFactory.make();
-    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
-    	  if (d != null) {
-    		  int i = 0;
-    		  for(AnnotationSetItem as : d.getParameterAnnotations(m).getAnnotationSets()) {
-    			  for(AnnotationItem a : as.getAnnotations()) {
-    				  if (! result.containsKey(i)) {
-    					  result.put(i, new ArrayList<AnnotationItem>());
-    				  }
-    				  result.get(i).add(a);
-    			  }
-    			  i++;
+      Map<Integer,List<Annotation>> getParameterAnnotations(Method m) {
+    	  Map<Integer,List<Annotation>> result = HashMapFactory.make();
+    	  int i = 0;
+    	  for(MethodParameter as : m.getParameters()) {
+    		  for(org.jf.dexlib2.iface.Annotation a : as.getAnnotations()) {
+    			  if (! result.containsKey(i)) {
+    				  result.put(i, new ArrayList<Annotation>());
+    			  }	
+    			  result.get(i).add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
     		  }
+    		  i++;
     	  }
     	  return result;
       }
@@ -353,22 +329,20 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     protected IMethod[] computeDeclaredMethods() {
     	ArrayList<IMethod> methodsAL = new ArrayList<>();
     	    	
-        if (methods == null && classDef.getClassData() == null)
-            methods = new IMethod[0];
-
-        if (methods == null && classDef.getClassData() != null){
+        if (methods == null){
 //            final EncodedMethod[] directMethods = classDef.getClassData().getDirectMethods();
 //            final EncodedMethod[] virtualMethods = classDef.getClassData().getVirtualMethods();
-            final List<EncodedMethod> directMethods = classDef.getClassData().getDirectMethods();
-            final List<EncodedMethod> virtualMethods = classDef.getClassData().getVirtualMethods();
+            final Iterable<? extends Method> directMethods = classDef.getDirectMethods();
+            final Iterable<? extends Method> virtualMethods = classDef.getVirtualMethods();
 
             //methods = new IMethod[dSize+vSize];
 
             // Create Direct methods (static, private, constructor)
-            for (int i = 0; i < directMethods.size(); i++) {
-                EncodedMethod dMethod = directMethods.get(i);
+            int i = 0;
+            for (Method dMethod : directMethods) {
                 //methods[i] = new DexIMethod(dMethod,this);
-                methodsAL.add(new DexIMethod(dMethod,this));
+                DexIMethod method = new DexIMethod(dMethod,this);
+                methodsAL.add(method);
 
                 //Set construcorId
                 //if ( (dMethod.accessFlags & CONSTRUCTOR.getValue()) != 0){
@@ -376,15 +350,16 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
                 //}
                 //Set clinitId             
                 //if (methods[i].isClinit())
-                if (methodsAL.get(i).isClinit()) {
+                if (method.isClinit()) {
                     clinitId = i;
                 }
+                i++;
             }
 
             // Create virtual methods (other methods)
-            for (int i = 0; i < virtualMethods.size(); i++) {
+            for (Method dexm : virtualMethods) {
                 //methods[dSize+i] = new DexIMethod(virtualMethods[i],this);
-                methodsAL.add(new DexIMethod(virtualMethods.get(i),this));
+                methodsAL.add(new DexIMethod(dexm,this));
                 //is this enough to determine if the class is an activity?
                 //maybe check superclass?  -- but that may also not be enough
                 //may need to keep checking superclass of superclass, etc.

@@ -12,8 +12,38 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
-		<plugins>
-			<plugin>
+	  <plugins>
+	    <plugin>
+	      <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                    <artifactItems>
+                      <artifactItem>
+    			<groupId>org.smali</groupId>
+    			<artifactId>dexlib2</artifactId>
+    			<version>2.2.1</version>
+                        <type>jar</type>
+                        <overWrite>false</overWrite>
+                      </artifactItem>
+                      <artifactItem>
+    			<groupId>org.smali</groupId>
+    			<artifactId>util</artifactId>
+    			<version>2.2.1</version>
+                        <type>jar</type>
+                        <overWrite>false</overWrite>
+                      </artifactItem>
+                    </artifactItems>  
+                    <outputDirectory>${basedir}/lib</outputDirectory>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+	    
+	    <plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
 				<executions>
@@ -38,6 +68,7 @@
                   <scope>system</scope>
                   <systemPath>${java.home}/../lib/tools.jar</systemPath>
                 </dependency>
+                <!-- https://mvnrepository.com/artifact/org.smali/dexlib2 -->
               </dependencies>
 			</plugin>
 		</plugins>

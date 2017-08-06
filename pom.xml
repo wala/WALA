@@ -249,11 +249,11 @@
             </configuration>
             <executions>
                 <execution>
-                    <id>aggregate</id>
+                    <id>javadoc</id>
                     <goals>
-                        <goal>aggregate</goal>
+                        <goal>javadoc</goal>
                     </goals>
-                    <phase>generate-sources</phase>
+                    <phase>generate-resources</phase>
                 </execution>
             </executions>
         </plugin>
