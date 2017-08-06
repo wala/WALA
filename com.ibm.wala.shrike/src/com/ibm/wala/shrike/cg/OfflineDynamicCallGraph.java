@@ -299,12 +299,8 @@ public class OfflineDynamicCallGraph {
 		        case CONSTANT_Class:
               entries.put(new CWStringItem(p.getCPClass(i), CONSTANT_Class), i);
               break;
-		        case CONSTANT_MethodHandle:
-		        case CONSTANT_MethodType:
-		        case CONSTANT_InvokeDynamic:
-		          break;
             default:
-              throw new UnsupportedOperationException(String.format("unexpected constant-pool item type %s", itemType));
+							// do nothing
 		        }
 		      }
 		    }

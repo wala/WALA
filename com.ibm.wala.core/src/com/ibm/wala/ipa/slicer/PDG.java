@@ -1127,6 +1127,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     case HEAP_RET_CALLER:
       HeapStatement h = (HeapStatement) N;
       createHeapDataDependenceEdges(h.getLocation());
+      break;
+    default:
+      // do nothing
     }
   }
 
@@ -1147,6 +1150,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     case HEAP_RET_CALLER:
       HeapStatement h = (HeapStatement) N;
       createHeapDataDependenceEdges(h.getLocation());
+      break;
+    default:
+      // do nothing
     }
   }
 

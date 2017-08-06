@@ -1010,7 +1010,7 @@ public abstract class Compiler implements Constants {
           curOffset += 2;
           break;
         default:
-          throw new UnsupportedOperationException(String.format("unexpected instruction opcode %s", opcode));
+          // do nothing
         }
       } else {
         stackLenRef[0] = stackLen;

@@ -107,8 +107,8 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 		case IIncludePathEntry.CPE_SOURCE:
 			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, e.getExclusionPatterns(), "js");
 			break;
-    default:
-      throw new UnsupportedOperationException(String.format("unexpected classpath entry kind %s", entryKind));
+		default:
+			// do nothing
 		}
 	}
 
