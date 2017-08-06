@@ -78,9 +78,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     if (DEBUG) {
       System.err.println(("type: " + type));
     }
-    if (type == null) {
-      assert type != null : "null type for " + allocation;
-    }
+    assert type != null : "null type for " + allocation;
     int i = 0;
     while (i <= dim) {
       i++;

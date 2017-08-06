@@ -216,9 +216,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     // code bodies, so we may see other things than TYPE_ENTITY here.
     IClass owner = loader.lookupClass(makeType(topEntity.getType()).getName());
 
-    if (owner == null) {
-      assert owner != null : makeType(topEntity.getType()).getName() + " not found in " + loader;
-    }
+    assert owner != null : makeType(topEntity.getType()).getName() + " not found in " + loader;
 
     ((JavaSourceLoaderImpl) loader).defineField(n, owner);
   }
@@ -231,9 +229,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     CAstType owningType = methodType.getDeclaringType();
     IClass owner = loader.lookupClass(makeType(owningType).getName());
 
-    if (owner == null) {
-      assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
-    }
+    assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
 
     ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
   }
@@ -249,9 +245,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeName typeName = makeType(owningType).getName();
     IClass owner = loader.lookupClass(typeName);
 
-    if (owner == null) {
-      assert owner != null : typeName.toString() + " not found in " + loader;
-    }
+    assert owner != null : typeName.toString() + " not found in " + loader;
 
     symtab.getConstant(0);
     symtab.getNullConstant();
