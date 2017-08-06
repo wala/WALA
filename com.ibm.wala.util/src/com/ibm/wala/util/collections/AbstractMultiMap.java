@@ -46,6 +46,11 @@ import java.util.Set;
 
 abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 4064901973301954076L;
+
   protected final Map<K, Set<V>> map = HashMapFactory.make();
 
   protected final boolean create;

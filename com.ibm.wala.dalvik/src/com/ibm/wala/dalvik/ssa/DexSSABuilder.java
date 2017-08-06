@@ -477,7 +477,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
             @Override
             public void visitArrayFill(ArrayFill instruction) {
-                int ElementWidth = instruction.getTable().getElementWidth();
                 Iterator<Number> iae = instruction.getTable().getArrayElements().iterator();
                 int i = 0;
                 while (iae.hasNext())
