@@ -120,10 +120,13 @@ public final class MethodPositions extends PositionsAttribute {
         switch (e.getThisCause()) {
         case END_BEFORE_START:
           Debug.warn(ERR_END_BEFORE_START, startVarName, endVarName, start, end);
+          break;
         case START_UNDEFINED:
           Debug.warn(ERR_POSITION_UNDEFINED, startVarName);
+          break;
         case END_UNDEFINED:
           Debug.warn(ERR_POSITION_UNDEFINED, endVarName);
+          break;
         }
       }
     }
