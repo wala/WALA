@@ -21,6 +21,7 @@
 	    <configuration>
 	      <executable>make</executable>
 	      <arguments>
+		<argument>--quiet</argument>
 		<argument>default</argument>
 		<argument>main</argument>
 	      </arguments>
