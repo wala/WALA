@@ -177,7 +177,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
       Assert.assertTrue("found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
 
       if (cls.getSuperclass() == null) {
-        Assert.assertTrue(cls.getName() + " has no superclass", supers.get(cls.getName()) == null);
+        Assert.assertTrue(cls.getName() + " has no superclass", supers.get(cls.getName().toString()) == null);
       } else {
         Assert.assertTrue("super of " + cls.getName() + " is " + cls.getSuperclass().getName(), supers
             .get(cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));

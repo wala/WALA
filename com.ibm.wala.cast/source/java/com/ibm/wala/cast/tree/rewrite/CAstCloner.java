@@ -41,13 +41,14 @@ public class CAstCloner extends CAstBasicRewriter {
    * what is the hack here?  --MS
    */
   protected CAstNode copyNodesHackForEclipse(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
+    final Pair<CAstNode, NoKey> pairKey = Pair.make(root, c.key());
     if (root instanceof CAstOperator) {
-      nodeMap.put(Pair.make(root, c.key()), root);
+      nodeMap.put(pairKey, root);
       return root;
     } else if (root.getValue() != null) {
       CAstNode copy = Ast.makeConstant(root.getValue());
-      assert !nodeMap.containsKey(root);
-      nodeMap.put(Pair.make(root, c.key()), copy);
+      assert !nodeMap.containsKey(pairKey);
+      nodeMap.put(pairKey, copy);
       return copy;
     } else {
       CAstNode newChildren[] = new CAstNode[root.getChildCount()];
@@ -57,8 +58,8 @@ public class CAstCloner extends CAstBasicRewriter {
       }
 
       CAstNode copy = Ast.makeNode(root.getKind(), newChildren);
-      assert !nodeMap.containsKey(root);
-      nodeMap.put(Pair.make(root, c.key()), copy);
+      assert !nodeMap.containsKey(pairKey);
+      nodeMap.put(pairKey, copy);
       return copy;
     }
   }
