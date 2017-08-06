@@ -77,7 +77,8 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
   @Override
   protected void resolveClasspathEntry(IJavaProject project, IClasspathEntry entry, ILoader loader, boolean includeSource, boolean cpeFromMainProject) {
 	  entry = JavaCore.getResolvedClasspathEntry(entry);
-	  switch (entry.getEntryKind()) {
+	  final int entryKind = entry.getEntryKind();
+    switch (entryKind) {
 	  case IClasspathEntry.CPE_SOURCE: {
 		  resolveSourcePathEntry(includeSource? JavaSourceLoader.SOURCE: Loader.APPLICATION, includeSource, cpeFromMainProject, entry.getPath(), entry.getOutputLocation(), entry.getExclusionPatterns()
 , "java");
@@ -101,7 +102,10 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 			  System.err.println(e);
 			  Assertions.UNREACHABLE();
 		  }
+		  break;
 	  }
+    default:
+      throw new UnsupportedOperationException(String.format("unexpected classpath entry kind %s", entryKind));
 	  }
   }
 

@@ -293,7 +293,8 @@ public class CopyWriter {
     int CPCount = cp.getItemCount();
 
     if (1 < CPCount) {
-      switch (cp.getItemType(1)) {
+      final byte itemType = cp.getItemType(1);
+      switch (itemType) {
       case ClassConstants.CONSTANT_Long:
       case ClassConstants.CONSTANT_Double:
         // item 1 is a double-word item, so the next real item is at 3
@@ -303,6 +304,8 @@ public class CopyWriter {
         if (r != 2)
           throw new Error("Invalid constant pool index for dummy: " + r);
         break;
+      default:
+        throw new UnsupportedOperationException(String.format("unexpected constant-pool item type %s", itemType));
       }
     }
     for (int i = 2; i < CPCount; i++) {

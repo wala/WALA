@@ -138,8 +138,10 @@ public class Intent implements ContextItem, Comparable<Intent> {
                 explicit = Explicit.EXPLICIT;
                 break;
             case EXPLICIT:
-                
                 unbind();
+                break;
+            default:
+            	throw new UnsupportedOperationException(String.format("unexpected explicitness setting %s", explicit));
         }
     }
 
