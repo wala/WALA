@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -33,7 +32,16 @@ public class DotUtil {
    * 
    */
   public static enum DotOutputType {
-    PS, SVG, PDF, EPS
+    PS("ps"),
+    SVG("svg"),
+    PDF("pdf"),
+    EPS("eps");
+
+    public final String suffix;
+
+    DotOutputType(final String suffix) {
+      this.suffix = suffix;
+    }
   }
 
   private static DotOutputType outputType = DotOutputType.PDF;
@@ -51,19 +59,7 @@ public class DotUtil {
   }
 
   private static String outputTypeCmdLineParam() {
-    switch (outputType) {
-    case PS:
-      return "-Tps";
-    case EPS:
-      return "-Teps";
-    case SVG:
-      return "-Tsvg";
-    case PDF:
-      return "-Tpdf";
-    default:
-      Assertions.UNREACHABLE();
-      return null;
-    }
+    return "-T" + outputType.suffix;
   }
 
   /**
