@@ -1185,8 +1185,9 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     case Token.DEBUGGER: {
       return Ast.makeConstant(null);
     }
+    default:
+      throw new RuntimeException("unexpected keyword literal " + node + " (" + node.getType() +")");
 		}
-		throw new RuntimeException("unexpected keyword literal " + node + " (" + node.getType() +")");
 	}
 
 	@Override
