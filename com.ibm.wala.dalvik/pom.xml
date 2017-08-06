@@ -68,9 +68,18 @@
                   <scope>system</scope>
                   <systemPath>${java.home}/../lib/tools.jar</systemPath>
                 </dependency>
-                <!-- https://mvnrepository.com/artifact/org.smali/dexlib2 -->
+                <dependency>
+    		  <groupId>org.smali</groupId>
+    		  <artifactId>dexlib2</artifactId>
+    		  <version>2.2.1</version>
+                </dependency>
+                <dependency>
+    		  <groupId>org.smali</groupId>
+    		  <artifactId>util</artifactId>
+    		  <version>2.2.1</version>
+                </dependency>
               </dependencies>
-			</plugin>
-		</plugins>
+	    </plugin>
+	  </plugins>
 	</build>
 </project>
