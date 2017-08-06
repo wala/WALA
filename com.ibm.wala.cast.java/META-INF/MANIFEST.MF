@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java
-Bundle-Version: 1.4.3.qualifier
+Bundle-Version: 1.4.4.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
