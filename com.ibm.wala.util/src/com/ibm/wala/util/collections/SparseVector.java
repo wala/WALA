@@ -28,6 +28,8 @@ import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
  */
 public class SparseVector<T> implements IVector<T>, Serializable {
 
+  private static final long serialVersionUID = -6220164684358954867L;
+
   private final static int DEF_INITIAL_SIZE = 5;
 
   /**

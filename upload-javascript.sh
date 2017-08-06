@@ -10,7 +10,7 @@ if [ "$TRAVIS_REPO_SLUG" == "wala/WALA" ] &&
     git clone --quiet https://${GH_TOKEN}@github.com/wala/javadoc > /dev/null
 
     cd javadoc
-    git rm -rf *
+    git rm -rf --quiet *
     cp -Rf $HOME/build/wala/WALA/target/site/apidocs/* .
     git add -f .
     git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"

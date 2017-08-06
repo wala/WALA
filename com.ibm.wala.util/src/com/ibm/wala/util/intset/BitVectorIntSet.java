@@ -20,6 +20,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public final class BitVectorIntSet implements MutableIntSet {
 
+  private static final long serialVersionUID = 7477243071826223843L;
+
   // population count of -1 means needs to be computed again.
   private int populationCount = 0;
 

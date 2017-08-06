@@ -32,6 +32,7 @@ import com.ibm.wala.ssa.IR;
 
 public class CgPanel extends JSplitPane{
 
+  private static final long serialVersionUID = -4094408933344852549L;
   private final CallGraph cg;
 
   public CgPanel(CallGraph cg) {

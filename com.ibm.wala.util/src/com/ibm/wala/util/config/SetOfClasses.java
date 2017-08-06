@@ -20,6 +20,8 @@ import java.util.Set;
  */
 public abstract class SetOfClasses implements Serializable {
 
+  private static final long serialVersionUID = -3048222852073799533L;
+
   public abstract boolean contains(String klassName);
 
   public abstract void add(String klass);

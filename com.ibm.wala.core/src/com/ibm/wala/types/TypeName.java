@@ -236,6 +236,8 @@ public final class TypeName implements Serializable {
    * A key into the dictionary; this is just like a type name, but uses value equality instead of object equality.
    */
   private final static class TypeNameKey implements Serializable {
+    private static final long serialVersionUID = -8284030936836318929L;
+
     /**
      * The package, like "java/lang". null means the unnamed package.
      */
