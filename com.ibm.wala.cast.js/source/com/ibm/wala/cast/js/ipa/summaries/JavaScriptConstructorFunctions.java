@@ -539,8 +539,7 @@ public class JavaScriptConstructorFunctions {
 
         assert fcls != null : "cannot find class for " + fileName;
         
-        if (fcls != null)
-          return makeFunctionConstructor(cls, fcls);
+        return makeFunctionConstructor(cls, fcls);
 
       } catch (IOException e) {
 

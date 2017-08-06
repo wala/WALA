@@ -305,9 +305,8 @@ public class EntryPoints {
         for (String[] intent: ActivityIntentList) {
             //method = IntentToMethod(intent[0]);
             method = "onCreate(Landroid/os/Bundle;)V";
-            
-            if (method != null)
-                im = cha.resolveMethod(StringStuff.makeMethodReference(intent[1]+"."+method));
+
+            im = cha.resolveMethod(StringStuff.makeMethodReference(intent[1]+"."+method));
             if (im!=null)
                 entries.add(new DefaultEntrypoint(im,cha));
 
@@ -316,9 +315,8 @@ public class EntryPoints {
             //Seems that every broadcast receiver can be an entrypoints?
 //          method = IntentToMethod(intent[0]);
             method = "onReceive(Landroid/content/Context;Landroid/content/Intent;)V";
-            
-            if (method != null)
-                im = cha.resolveMethod(StringStuff.makeMethodReference(intent[1]+"."+method));
+
+            im = cha.resolveMethod(StringStuff.makeMethodReference(intent[1]+"."+method));
             if (im!=null)
                 entries.add(new DefaultEntrypoint(im,cha));
         }

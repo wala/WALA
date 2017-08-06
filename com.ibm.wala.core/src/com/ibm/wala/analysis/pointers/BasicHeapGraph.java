@@ -268,9 +268,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       InstanceKey I = (InstanceKey) N;
       TypeReference T = I.getConcreteType().getReference();
 
-      if (T == null) {
-        assert T != null : "null concrete type from " + I.getClass();
-      }
+      assert T != null : "null concrete type from " + I.getClass();
       if (T.isArrayType()) {
         PointerKey p = getHeapModel().getPointerKeyForArrayContents(I);
         if (p == null || !nodeManager.containsNode(p)) {
@@ -280,9 +278,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
         }
       } else {
         IClass klass = getHeapModel().getClassHierarchy().lookupClass(T);
-        if (klass == null) {
-          assert klass != null : "null klass for type " + T;
-        }
+        assert klass != null : "null klass for type " + T;
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
         for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {
           IField f = it.next();

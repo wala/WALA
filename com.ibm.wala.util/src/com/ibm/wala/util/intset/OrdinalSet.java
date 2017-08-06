@@ -109,8 +109,9 @@ public class OrdinalSet<T> implements Iterable<T> {
     if ((a == null && b == null) || a == b || (a.mapping == b.mapping && a.S == b.S)) {
       return true;
     }
-    
-    if (a != null && b != null && a.size() == b.size()) {
+
+    assert a != null && b != null;
+    if (a.size() == b.size()) {
       if (a.mapping == b.mapping || (a.mapping != null && b.mapping != null && a.mapping.equals(b.mapping))) {
         return a.S == b.S || (a.S != null && b.S != null && a.S.sameValue(b.S));
       }
