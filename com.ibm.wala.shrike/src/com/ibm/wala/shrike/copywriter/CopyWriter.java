@@ -262,8 +262,9 @@ public class CopyWriter {
       return w.addCPDouble(cp.getCPDouble(i));
     case ClassConstants.CONSTANT_Utf8:
       return w.addCPUtf8(cp.getCPUtf8(i));
+    default:
+      return -1;
     }
-    return -1;
   }
 
   private void doClass(final ClassInstrumenter ci) throws Exception {

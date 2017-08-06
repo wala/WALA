@@ -166,8 +166,9 @@ public class BinaryOperation extends Instruction {
             return IBinaryOpInstruction.Operator.DIV;
         case REM_DOUBLE:
             return IBinaryOpInstruction.Operator.REM;
+		default:
+	        return null;
         }
-        return null;
     }
     public boolean isFloat()
     {
