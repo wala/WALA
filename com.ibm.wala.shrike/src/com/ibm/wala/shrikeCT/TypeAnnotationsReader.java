@@ -122,7 +122,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * </pre>
    * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.20"> JLS (SE8), 4.7.20</a>
    */
-  @SuppressWarnings("javadoc")
   public TypeAnnotationAttribute[] getAllTypeAnnotations() throws InvalidClassFileException {
     TypeAnnotationAttribute[] result = new TypeAnnotationAttribute[getAnnotationCount()];
     int offset = beginOffset + 8; // skip attribute_name_index,
@@ -167,7 +166,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * </pre> 
    * 
    */
-  @SuppressWarnings("javadoc")
   private Pair<TypeAnnotationAttribute, Integer> getTypeAttributeAndSize(int begin) throws InvalidClassFileException {
     TargetType target_type = TargetType.fromValue(cr.getUnsignedByte(begin));
     
@@ -411,7 +409,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * </pre>
    * @author Martin Hecker martin.hecker@kit.edu  
    */
-  @SuppressWarnings("javadoc")
   public static abstract class TypeAnnotationTarget {
     private final TargetInfo targetInfo;
     protected TypeAnnotationTarget(TargetInfo targetInfo) {

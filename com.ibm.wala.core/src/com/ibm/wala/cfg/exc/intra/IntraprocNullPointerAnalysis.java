@@ -135,7 +135,6 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       } else {
         final List<T> catched = searchNodesWithPathToCatchAll(cfg);
         final NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
-        final int[] paramValNum = ir.getParameterValueNumbers();
       
         solver = new NullPointerSolver<T>(problem, maxVarNum, cfg.entry(), ir, initialState);
         

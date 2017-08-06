@@ -1010,7 +1010,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     bootstrapFileNames.add(prologueFileName);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected TranslatorToCAst getTranslatorToCAst(final CAst ast, ModuleEntry module) {
     TranslatorToCAst translator = translatorFactory.make(ast, module);

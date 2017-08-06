@@ -50,19 +50,19 @@ package com.ibm.wala.dalvik.classLoader;
 
 import java.io.InputStream;
 
-import org.jf.dexlib.ClassDefItem;
+import org.jf.dexlib2.iface.ClassDef;
 
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 
 public class DexModuleEntry implements ModuleEntry {
 
-    private final ClassDefItem classDefItem;
+    private final ClassDef classDefItem;
     private final String className;
 
-    public DexModuleEntry(ClassDefItem cdefitems) {
+    public DexModuleEntry(ClassDef cdefitems) {
         classDefItem = cdefitems;
-        String temp =cdefitems.getClassType().getTypeDescriptor();
+        String temp =cdefitems.getType();
 //      className = temp;
         if (temp.endsWith(";"))
             className = temp.substring(0,temp.length()-1); //remove last ';'
@@ -71,7 +71,7 @@ public class DexModuleEntry implements ModuleEntry {
 //      System.out.println(className);
     }
 
-    public ClassDefItem getClassDefItem(){
+    public ClassDef getClassDefItem(){
         return classDefItem;
     }
 

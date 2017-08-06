@@ -39,6 +39,7 @@ public class CAstFunctions {
   public static Iterator<CAstNode> iterateNodes(final CAstNode tree) {
     return new DFSDiscoverTimeIterator<CAstNode>() {
 
+      private static final long serialVersionUID = -627203481092871529L;
       private final Map<Object, Iterator<? extends CAstNode>> pendingChildren = HashMapFactory.make();
 
       @Override

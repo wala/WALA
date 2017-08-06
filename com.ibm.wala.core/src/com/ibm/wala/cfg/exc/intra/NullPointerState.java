@@ -261,7 +261,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable[])
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState[] rhs) {
       boolean changed = false;

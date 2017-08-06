@@ -26,6 +26,7 @@ import com.ibm.wala.core.tests.util.TestAssertions;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -96,9 +97,9 @@ public class AnnotationTest extends WalaTestCase {
     BytecodeClass<?> bcClassUnderTest = (BytecodeClass<?>) classUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
-    harness.assertEqualCollections(expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
-
     Collection<Annotation> runtimeVisibleAnnotations = bcClassUnderTest.getAnnotations(false);
+ 
+    harness.assertEqualCollections(expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
     harness.assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
   }
 
@@ -120,7 +121,7 @@ public class AnnotationTest extends WalaTestCase {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     harness.assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
     harness.assertTrue(methodUnderTest + " must be IBytecodeMethod", methodUnderTest instanceof IBytecodeMethod);
-    IBytecodeMethod bcMethodUnderTest = (IBytecodeMethod) methodUnderTest;
+    IBytecodeMethod<IInstruction> bcMethodUnderTest = (IBytecodeMethod<IInstruction>) methodUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcMethodUnderTest.getAnnotations(true);
     harness.assertEquals(1, runtimeInvisibleAnnotations.size());
@@ -182,7 +183,7 @@ public class AnnotationTest extends WalaTestCase {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     harness.assertTrue(methodRefUnderTest.toString() + " not found", methodUnderTest != null);
     harness.assertTrue(methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
-    IBytecodeMethod IBytecodeMethodUnderTest = (IBytecodeMethod) methodUnderTest;
+    IBytecodeMethod<IInstruction> IBytecodeMethodUnderTest = (IBytecodeMethod<IInstruction>) methodUnderTest;
 
     Collection<Annotation>[] parameterAnnotations = IBytecodeMethodUnderTest.getParameterAnnotations();
     harness.assertEquals(expected.length, parameterAnnotations.length);

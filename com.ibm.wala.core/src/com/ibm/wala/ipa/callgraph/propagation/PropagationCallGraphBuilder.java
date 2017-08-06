@@ -138,7 +138,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   /**
    * Singleton operator for assignments
    */
-  protected final static AssignOperator assignOperator = new AssignOperator();
+  public final static AssignOperator assignOperator = new AssignOperator();
 
   /**
    * singleton operator for filter
@@ -834,7 +834,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
@@ -922,7 +921,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       PointerKey pVal = val.getPointerKey();
@@ -1013,7 +1011,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = ref.getPointerKey();
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
 
@@ -1130,7 +1127,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       final PointerKey pVal = val.getPointerKey();

@@ -147,6 +147,8 @@ public class ProgressMaster implements IProgressMonitor {
 
   public static class TooMuchMemoryUsed extends Exception {
 
+    private static final long serialVersionUID = -7174940833610292692L;
+
   }
 
   private class Timeout extends Thread {

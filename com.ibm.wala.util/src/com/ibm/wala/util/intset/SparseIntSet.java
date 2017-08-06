@@ -23,6 +23,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public class SparseIntSet implements IntSet {
 
+  private static final long serialVersionUID = 2394141733718319022L;
+
   private final static int SINGLETON_CACHE_SIZE = 5000;
 
   private final static SparseIntSet[] singletonCache = new SparseIntSet[SINGLETON_CACHE_SIZE];

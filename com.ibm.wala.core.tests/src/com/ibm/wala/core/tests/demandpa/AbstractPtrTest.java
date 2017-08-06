@@ -56,7 +56,6 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.PABasedMemoryAccessMap;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -64,6 +63,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -235,7 +235,7 @@ public abstract class AbstractPtrTest {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    final AnalysisCache analysisCache = new AnalysisCacheImpl();
+    final IAnalysisCacheView analysisCache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> cgBuilder = Util.makeZeroCFABuilder(options, analysisCache, cha, scope);
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());

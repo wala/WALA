@@ -28,6 +28,8 @@ import com.ibm.wala.util.intset.IntSetAction;
  */
 public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T>, Serializable {
 
+  private static final long serialVersionUID = 6751048618312429623L;
+
   private final NumberedNodeManager<T> nodeManager;
 
   /**

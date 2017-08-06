@@ -19,6 +19,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class TabulationCancelException extends CancelException {
 
+  private static final long serialVersionUID = 4073189707860241945L;
   private final Result result;
 
   protected TabulationCancelException(Exception cause, Result r) {

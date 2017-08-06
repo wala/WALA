@@ -18,7 +18,6 @@ import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.examples.analysis.dataflow.ContextSensitiveReachingDefs;
 import com.ibm.wala.ide.ui.IFDSExplorer;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -27,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
@@ -60,7 +60,7 @@ public class IFDSExplorerExample {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    AnalysisCache cache = new AnalysisCacheImpl();
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
     System.out.println("building CG");
     CallGraph cg = builder.makeCallGraph(options, null);

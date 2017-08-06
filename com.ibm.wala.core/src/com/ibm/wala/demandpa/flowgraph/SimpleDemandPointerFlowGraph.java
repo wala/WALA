@@ -95,6 +95,8 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  */
 public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object> {
 
+  private static final long serialVersionUID = 5208052568163692029L;
+
   private final static boolean DEBUG = false;
 
   /**

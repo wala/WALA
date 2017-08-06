@@ -49,4 +49,6 @@ package com.ibm.wala.demandpa.alg.statemachine;
  */
 public class StatesMergedException extends RuntimeException {
 
+  private static final long serialVersionUID = 7769961571949421524L;
+
 }

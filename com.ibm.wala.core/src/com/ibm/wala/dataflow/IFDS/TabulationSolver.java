@@ -949,7 +949,6 @@ public class TabulationSolver<T, P, F> {
       TreeMap<Object, TreeSet<T>> map = new TreeMap<Object, TreeSet<T>>(ToStringComparator.instance());
 
       Comparator<Object> c = new Comparator<Object>() {
-        @SuppressWarnings("rawtypes")
         @Override
         public int compare(Object o1, Object o2) {
           if (!(o1 instanceof IBasicBlock)) {

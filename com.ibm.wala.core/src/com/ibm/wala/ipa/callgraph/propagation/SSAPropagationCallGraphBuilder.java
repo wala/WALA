@@ -2021,7 +2021,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
     final CallSiteReference site = instruction.getCallSite();
-    IntSet params = getRelevantParameters(caller, site);
     final Set<CGNode> targets = HashSetFactory.make();
     VoidFunction<InstanceKey[]> f = new VoidFunction<InstanceKey[]>() {
       @Override

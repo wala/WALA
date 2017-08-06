@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class SourceViewer extends JPanel{
+  private static final long serialVersionUID = -1688405955293925453L;
   private URL sourceURL;
   private JTextField sourceCodeLocation;
   private DefaultListModel<String> sourceCodeLinesList = new DefaultListModel<>();

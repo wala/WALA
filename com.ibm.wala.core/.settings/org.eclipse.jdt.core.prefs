@@ -70,7 +70,7 @@ org.eclipse.jdt.core.compiler.problem.missingJavadocTagsOverriding=disabled
 org.eclipse.jdt.core.compiler.problem.missingJavadocTagsVisibility=public
 org.eclipse.jdt.core.compiler.problem.missingOverrideAnnotation=error
 org.eclipse.jdt.core.compiler.problem.missingOverrideAnnotationForInterfaceMethodImplementation=enabled
-org.eclipse.jdt.core.compiler.problem.missingSerialVersion=ignore
+org.eclipse.jdt.core.compiler.problem.missingSerialVersion=error
 org.eclipse.jdt.core.compiler.problem.missingSynchronizedOnInheritedMethod=ignore
 org.eclipse.jdt.core.compiler.problem.noEffectAssignment=error
 org.eclipse.jdt.core.compiler.problem.noImplicitStringConversion=error
@@ -119,7 +119,7 @@ org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionWhenOverridin
 org.eclipse.jdt.core.compiler.problem.unusedExceptionParameter=ignore
 org.eclipse.jdt.core.compiler.problem.unusedImport=error
 org.eclipse.jdt.core.compiler.problem.unusedLabel=error
-org.eclipse.jdt.core.compiler.problem.unusedLocal=warning
+org.eclipse.jdt.core.compiler.problem.unusedLocal=error
 org.eclipse.jdt.core.compiler.problem.unusedObjectAllocation=ignore
 org.eclipse.jdt.core.compiler.problem.unusedParameter=error
 org.eclipse.jdt.core.compiler.problem.unusedParameterIncludeDocCommentReference=enabled

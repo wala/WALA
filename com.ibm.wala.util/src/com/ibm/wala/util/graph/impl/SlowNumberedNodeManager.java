@@ -22,6 +22,7 @@ import com.ibm.wala.util.intset.MutableMapping;
  */
 public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Serializable {
 
+  private static final long serialVersionUID = 8956107128389624337L;
   /**
    * A bijection between integer &lt;-&gt; node
    */

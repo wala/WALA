@@ -119,7 +119,7 @@ org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionWhenOverridin
 org.eclipse.jdt.core.compiler.problem.unusedExceptionParameter=ignore
 org.eclipse.jdt.core.compiler.problem.unusedImport=error
 org.eclipse.jdt.core.compiler.problem.unusedLabel=error
-org.eclipse.jdt.core.compiler.problem.unusedLocal=warning
+org.eclipse.jdt.core.compiler.problem.unusedLocal=error
 org.eclipse.jdt.core.compiler.problem.unusedObjectAllocation=error
 org.eclipse.jdt.core.compiler.problem.unusedParameter=error
 org.eclipse.jdt.core.compiler.problem.unusedParameterIncludeDocCommentReference=enabled

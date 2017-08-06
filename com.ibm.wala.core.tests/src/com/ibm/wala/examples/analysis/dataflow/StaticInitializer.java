@@ -78,6 +78,8 @@ public class StaticInitializer {
   private class InitializerDomain extends MutableMapping<IClass> implements
       TabulationDomain<IClass, BasicBlockInContext<IExplodedBasicBlock>> {
 
+    private static final long serialVersionUID = -1897766113586243833L;
+
     @Override
     public boolean hasPriorityOver(PathEdge<BasicBlockInContext<IExplodedBasicBlock>> p1,
         PathEdge<BasicBlockInContext<IExplodedBasicBlock>> p2) {

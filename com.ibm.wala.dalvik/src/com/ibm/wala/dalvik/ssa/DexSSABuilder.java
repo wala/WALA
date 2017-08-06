@@ -11,10 +11,7 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.ssa;
 
-import java.nio.ByteBuffer;
 import java.util.Iterator;
-
-import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction.ArrayElement;
 
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -480,46 +477,37 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
             @Override
             public void visitArrayFill(ArrayFill instruction) {
-
-                Iterator<ArrayElement> iae = instruction.getTable().getElements();
+                Iterator<Number> iae = instruction.getTable().getArrayElements().iterator();
                 int i = 0;
                 while (iae.hasNext())
                 {
-                    ArrayElement ae = iae.next();
-                    int ElementWidth = ae.elementWidth;
-
+                    Number ae = iae.next();                    
                     int index = symbolTable.getConstant(i);
                     int arrayRef = workingState.getLocal(instruction.array);
                     TypeReference t = instruction.getType();
 //                  System.out.println(t.getName().toString());
                     int value;
-
-                    //fetch the byte[] array for the element
-                    byte[] temp_byte = new byte[ElementWidth];
-                    for (int j = 0; j < ElementWidth; j++)
-                        temp_byte[j] = ae.buffer[ae.bufferIndex+(ElementWidth-1)-j];
-                    ByteBuffer byte_buffer = ByteBuffer.wrap(temp_byte);
 //
 //                      System.out.println("Index: " + ae.bufferIndex + ", Width: " + ae.elementWidth + ", Value: " +  byte_buffer.getSomethingDependingonType );
 
 
                     //okay to call the getConstant(String) for a char?
                     if (t.equals(TypeReference.Char))
-                        value = symbolTable.getConstant(Character.toString(byte_buffer.getChar()));
+                        value = symbolTable.getConstant((char) ae.intValue());
                     else if (t.equals(TypeReference.Byte))
-                        value = symbolTable.getConstant(byte_buffer.get());
+                        value = symbolTable.getConstant(ae.byteValue());
                     else if (t.equals(TypeReference.Short))
-                        value = symbolTable.getConstant(byte_buffer.getShort());
+                        value = symbolTable.getConstant(ae.shortValue());
                     else if (t.equals(TypeReference.Int))
-                        value = symbolTable.getConstant(byte_buffer.getInt());
+                        value = symbolTable.getConstant(ae.intValue());
                     else if (t.equals(TypeReference.Long))
-                        value = symbolTable.getConstant(byte_buffer.getLong());
+                        value = symbolTable.getConstant(ae.longValue());
                     else if (t.equals(TypeReference.Float))
-                        value = symbolTable.getConstant(byte_buffer.getFloat());
+                        value = symbolTable.getConstant(ae.floatValue());
                     else if (t.equals(TypeReference.Double))
-                        value = symbolTable.getConstant(byte_buffer.getDouble());
+                        value = symbolTable.getConstant(ae.doubleValue());
                     else if (t.equals(TypeReference.Boolean))
-                        value = symbolTable.getConstant((byte_buffer.get() == 1)?true:false);
+                        value = symbolTable.getConstant(ae.intValue() != 0);
                     else
                     {
                         

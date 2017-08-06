@@ -148,8 +148,8 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
         System.err.println(("Before evaluation " + s));
       }
       byte code = s.evaluate();
+      nEvaluated++;
       if (verbose) {
-        nEvaluated++;
         if (nEvaluated % getVerboseInterval() == 0) {
           performVerboseAction();
         }
