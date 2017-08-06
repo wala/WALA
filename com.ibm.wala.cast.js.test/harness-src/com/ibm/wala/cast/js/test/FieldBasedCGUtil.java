@@ -25,6 +25,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgrap
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
+import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -54,7 +55,34 @@ import com.ibm.wala.util.functions.Function;
  *
  */
 public class FieldBasedCGUtil {
-	public static enum BuilderType { PESSIMISTIC, OPTIMISTIC, OPTIMISTIC_WORKLIST }
+	public static enum BuilderType {
+	  PESSIMISTIC {
+	    @Override
+      protected FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(IClassHierarchy cha,
+          final JSAnalysisOptions makeOptions, IAnalysisCacheView cache, boolean supportFullPointerAnalysis) {
+	      return new PessimisticCallGraphBuilder(cha, makeOptions, cache, supportFullPointerAnalysis);
+	    }
+	  },
+
+	  OPTIMISTIC {
+      @Override
+      protected FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(IClassHierarchy cha,
+          JSAnalysisOptions makeOptions, IAnalysisCacheView cache, boolean supportFullPointerAnalysis) {
+        return new OptimisticCallgraphBuilder(cha, makeOptions, cache, supportFullPointerAnalysis);
+      }
+    },
+
+	  OPTIMISTIC_WORKLIST {
+      @Override
+      protected FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(IClassHierarchy cha,
+          JSAnalysisOptions makeOptions, IAnalysisCacheView cache, boolean supportFullPointerAnalysis) {
+        return new WorklistBasedOptimisticCallgraphBuilder(cha, makeOptions, cache, supportFullPointerAnalysis);
+      }
+    };
+
+    protected abstract FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(IClassHierarchy cha,
+        JSAnalysisOptions makeOptions, IAnalysisCacheView cache, boolean supportFullPointerAnalysis);
+	}
 
 	private final JavaScriptTranslatorFactory translatorFactory;
 
@@ -100,21 +128,9 @@ public class FieldBasedCGUtil {
 		IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
 		Util.checkForFrontEndErrors(cha);
 		Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
-		FieldBasedCallGraphBuilder builder = null;
-		
 		IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
-		switch(builderType) {
-		case PESSIMISTIC:
-			builder = new PessimisticCallGraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-			break;
-		case OPTIMISTIC:
-			builder = new OptimisticCallgraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-			break;
-		case OPTIMISTIC_WORKLIST:
-		  builder = new WorklistBasedOptimisticCallgraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-		  break;
-		}
-		
+		final FieldBasedCallGraphBuilder builder = builderType.fieldBasedCallGraphBuilderFactory(cha,
+        JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
 		return builder.buildCallGraph(roots, monitor);
 	}
 
