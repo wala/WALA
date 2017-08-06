@@ -84,6 +84,8 @@ public class ParameterState extends AbstractVariable<ParameterState> {
           throw new IllegalArgumentException("Try to set " + prev + " to " + state);
         }
         break;
+      default:
+        throw new UnsupportedOperationException(String.format("unexpected previous state %s", prev));
       }
     }
     params.put(varNum, state);

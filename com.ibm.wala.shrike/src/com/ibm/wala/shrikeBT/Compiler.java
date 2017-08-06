@@ -1009,6 +1009,8 @@ public abstract class Compiler implements Constants {
           writeShort(curOffset, allocateConstantPoolClassType(((InstanceofInstruction) instr).getType()));
           curOffset += 2;
           break;
+        default:
+          throw new UnsupportedOperationException(String.format("unexpected instruction opcode %s", opcode));
         }
       } else {
         stackLenRef[0] = stackLen;
