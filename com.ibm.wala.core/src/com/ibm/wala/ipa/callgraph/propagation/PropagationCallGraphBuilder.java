@@ -138,7 +138,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   /**
    * Singleton operator for assignments
    */
-  protected final static AssignOperator assignOperator = new AssignOperator();
+  public final static AssignOperator assignOperator = new AssignOperator();
 
   /**
    * singleton operator for filter

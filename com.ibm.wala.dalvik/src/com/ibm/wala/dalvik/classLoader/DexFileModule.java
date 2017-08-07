@@ -54,9 +54,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
-import org.jf.dexlib.ClassDefItem;
-import org.jf.dexlib.DexFile;
-import org.jf.dexlib.Section;
+import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
 
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -103,7 +104,7 @@ public class DexFileModule implements Module {
      */
     private DexFileModule(File f) throws IllegalArgumentException {    	
         try {
-            dexfile = new DexFile(f);
+            dexfile = DexFileFactory.loadDexFile(f, Opcodes.forApi(25));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -111,8 +112,7 @@ public class DexFileModule implements Module {
         // create ModuleEntries from ClassDefItem
         entries = new HashSet<>();
 
-        Section<ClassDefItem> cldeff = dexfile.ClassDefsSection;
-        for (ClassDefItem cdefitems : cldeff.getItems()) {
+        for (ClassDef cdefitems : dexfile.getClasses()) {
             entries.add(new DexModuleEntry(cdefitems));
         }
     }

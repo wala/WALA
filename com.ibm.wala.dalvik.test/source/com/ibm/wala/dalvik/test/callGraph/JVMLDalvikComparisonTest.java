@@ -39,6 +39,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -58,12 +59,16 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		return Pair.make(CG, builder.getPointerAnalysis());
 	}
 	
-	private static Set<Pair<CGNode,CGNode>> edgeDiff(CallGraph from, CallGraph to) {
+	private static Set<Pair<CGNode,CGNode>> edgeDiff(CallGraph from, CallGraph to, boolean userOnly) {
 		Set<Pair<CGNode,CGNode>> result = HashSetFactory.make();
 		for(CGNode f : from) {
 			if (! f.getMethod().isSynthetic()) {
 			outer: for(CGNode t : from) {
-				if (!t.getMethod().isSynthetic() && from.hasEdge(f, t)) {
+				if (!t.getMethod().isSynthetic() && 
+				    from.hasEdge(f, t) && 
+				    (!userOnly || 
+				     !t.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Primordial))) 
+				{
 					Set<CGNode> fts = to.getNodes(f.getMethod().getReference());
 					Set<CGNode> tts = to.getNodes(t.getMethod().getReference());
 					for(CGNode x : fts) {
@@ -91,10 +96,18 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 	
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);
 		Set<MethodReference> javaMethods = applicationMethods(java.fst);
+				
+    Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst, false).iterator();
+		Assert.assertFalse(checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges));
 		
-		Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst).iterator();
-		boolean fail = false;
-		if (javaExtraEdges.hasNext()) {
+		Iterator<Pair<CGNode, CGNode>> androidExtraEdges = edgeDiff(android.fst, java.fst, true).iterator();
+		Assert.assertFalse(checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges));
+	}
+
+  private static boolean checkEdgeDiff(Pair<CallGraph, PointerAnalysis<InstanceKey>> android, Set<MethodReference> androidMethods,
+      Set<MethodReference> javaMethods, Iterator<Pair<CGNode, CGNode>> javaExtraEdges) {
+    boolean fail = false;
+    if (javaExtraEdges.hasNext()) {
 			fail = true;
 			Set<MethodReference> javaExtraNodes = HashSetFactory.make(javaMethods);
 			javaExtraNodes.removeAll(androidMethods);		
@@ -121,9 +134,8 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 				}
 			}
 		}
-		
-		Assert.assertTrue(!fail);		
-	}
+    return fail;
+  }
 	
 	@Test
 	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {

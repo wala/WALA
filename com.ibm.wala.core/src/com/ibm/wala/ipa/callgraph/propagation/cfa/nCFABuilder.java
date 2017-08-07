@@ -12,9 +12,9 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
@@ -28,7 +28,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class nCFABuilder extends SSAPropagationCallGraphBuilder {
 
-  public nCFABuilder(int n, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
+  public nCFABuilder(int n, IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter) {
 
     super(cha, options, cache, new DefaultPointerKeyFactory());

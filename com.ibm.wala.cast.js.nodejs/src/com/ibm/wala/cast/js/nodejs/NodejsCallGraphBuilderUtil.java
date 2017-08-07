@@ -33,10 +33,10 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
@@ -64,7 +64,7 @@ public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 		Collection<Language> languages = Collections.singleton(language);
 
 		IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory<>();
-		AnalysisCache cache = new AnalysisCacheImpl(irFactory);
+		IAnalysisCacheView cache = new AnalysisCacheImpl(irFactory);
 
 		JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory, null);
 

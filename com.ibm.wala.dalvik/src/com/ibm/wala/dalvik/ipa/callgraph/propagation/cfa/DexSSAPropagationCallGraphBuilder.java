@@ -47,9 +47,9 @@
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.DexExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -67,7 +67,7 @@ public class DexSSAPropagationCallGraphBuilder extends
 
 	
 	public DexSSAPropagationCallGraphBuilder(IClassHierarchy cha,
-			AnalysisOptions options, AnalysisCache cache,
+			AnalysisOptions options, IAnalysisCacheView cache,
 			ContextSelector appContextSelector,
 			SSAContextInterpreter appContextInterpreter, InstanceKeyFactory instanceKeys) {
 	    super(cha, options, cache, new DefaultPointerKeyFactory());
