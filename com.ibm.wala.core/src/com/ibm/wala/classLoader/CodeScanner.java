@@ -191,7 +191,7 @@ public class CodeScanner {
     return false;
   }
 
-  private static Collection<CallSiteReference> getCallSitesFromShrikeBT(IBytecodeMethod M) throws InvalidClassFileException {
+  private static Collection<CallSiteReference> getCallSitesFromShrikeBT(IBytecodeMethod<?> M) throws InvalidClassFileException {
     return M.getCallSites();
   }
 
