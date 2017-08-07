@@ -39,7 +39,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
 
   public final static boolean buildLocalMap = true;
 
-  public ControlFlowGraph makeCFG(final IBytecodeMethod method) {
+  public ControlFlowGraph makeCFG(final IBytecodeMethod<IInstruction> method) {
     return ShrikeCFG.make(method);
   }
 
