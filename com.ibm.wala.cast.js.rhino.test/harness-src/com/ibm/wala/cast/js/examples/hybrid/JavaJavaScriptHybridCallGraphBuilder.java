@@ -22,10 +22,10 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
@@ -43,7 +43,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropagationCallGraphBuilder {
 
-  public JavaJavaScriptHybridCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public JavaJavaScriptHybridCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(cha, options, cache, new AstCFAPointerKeys());
     globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Root));
     

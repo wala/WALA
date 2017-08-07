@@ -15,6 +15,9 @@
 #define __CTN "com/ibm/wala/cast/tree/CAst"
 #define __CTS __SIG(  __CTN )
 
+#define __CTI "com/ibm/wala/cast/tree/impl/CAstImpl"
+#define __CII __SIG(  __CTI )
+
 #define __CEN "com/ibm/wala/cast/tree/CAstEntity"
 #define __CES __SIG(  __CEN )
 

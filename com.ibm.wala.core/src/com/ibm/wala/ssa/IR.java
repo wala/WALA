@@ -211,7 +211,11 @@ public abstract class IR implements IRView {
             addNames(j, valNames, valNum);
           }
           if (!valNames.isEmpty()) {
-            result.append(" ").append(valNames);
+            result.append(" [");
+            for(Map.Entry<Integer,Set<String>> e : valNames.entrySet()) {
+              result.append(e.getKey() + "=" + e.getValue());
+            }
+            result.append("]");
           }
  
           result.append("\n");

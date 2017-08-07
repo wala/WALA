@@ -6,6 +6,8 @@
  * 
  * This file is a derivative of code released under the terms listed below.  
  *
+ * dexlib2 update: Julian Dolby (dolby@us.ibm.com)
+ * 
  */
 /*
  *
@@ -47,63 +49,60 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import static org.jf.dexlib.Util.AccessFlags.ABSTRACT;
-import static org.jf.dexlib.Util.AccessFlags.BRIDGE;
-import static org.jf.dexlib.Util.AccessFlags.DECLARED_SYNCHRONIZED;
-import static org.jf.dexlib.Util.AccessFlags.FINAL;
-import static org.jf.dexlib.Util.AccessFlags.NATIVE;
-import static org.jf.dexlib.Util.AccessFlags.PRIVATE;
-import static org.jf.dexlib.Util.AccessFlags.PROTECTED;
-import static org.jf.dexlib.Util.AccessFlags.PUBLIC;
-import static org.jf.dexlib.Util.AccessFlags.STATIC;
-import static org.jf.dexlib.Util.AccessFlags.VOLATILE;
+import static org.jf.dexlib2.AccessFlags.ABSTRACT;
+import static org.jf.dexlib2.AccessFlags.BRIDGE;
+import static org.jf.dexlib2.AccessFlags.DECLARED_SYNCHRONIZED;
+import static org.jf.dexlib2.AccessFlags.FINAL;
+import static org.jf.dexlib2.AccessFlags.NATIVE;
+import static org.jf.dexlib2.AccessFlags.PRIVATE;
+import static org.jf.dexlib2.AccessFlags.PROTECTED;
+import static org.jf.dexlib2.AccessFlags.PUBLIC;
+import static org.jf.dexlib2.AccessFlags.STATIC;
+import static org.jf.dexlib2.AccessFlags.VOLATILE;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.jf.dexlib.AnnotationItem;
-import org.jf.dexlib.AnnotationSetItem;
-import org.jf.dexlib.ClassDataItem.EncodedMethod;
-import org.jf.dexlib.CodeItem.EncodedTypeAddrPair;
-import org.jf.dexlib.CodeItem.TryItem;
-import org.jf.dexlib.FieldIdItem;
-import org.jf.dexlib.MethodIdItem;
-import org.jf.dexlib.StringIdItem;
-import org.jf.dexlib.TypeIdItem;
-import org.jf.dexlib.Code.InstructionWithReference;
-import org.jf.dexlib.Code.Opcode;
-import org.jf.dexlib.Code.TwoRegisterInstruction;
-import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction;
-import org.jf.dexlib.Code.Format.Instruction10t;
-import org.jf.dexlib.Code.Format.Instruction11n;
-import org.jf.dexlib.Code.Format.Instruction11x;
-import org.jf.dexlib.Code.Format.Instruction12x;
-import org.jf.dexlib.Code.Format.Instruction20t;
-import org.jf.dexlib.Code.Format.Instruction21c;
-import org.jf.dexlib.Code.Format.Instruction21h;
-import org.jf.dexlib.Code.Format.Instruction21s;
-import org.jf.dexlib.Code.Format.Instruction21t;
-import org.jf.dexlib.Code.Format.Instruction22b;
-import org.jf.dexlib.Code.Format.Instruction22c;
-import org.jf.dexlib.Code.Format.Instruction22s;
-import org.jf.dexlib.Code.Format.Instruction22t;
-import org.jf.dexlib.Code.Format.Instruction22x;
-import org.jf.dexlib.Code.Format.Instruction23x;
-import org.jf.dexlib.Code.Format.Instruction30t;
-import org.jf.dexlib.Code.Format.Instruction31c;
-import org.jf.dexlib.Code.Format.Instruction31i;
-import org.jf.dexlib.Code.Format.Instruction31t;
-import org.jf.dexlib.Code.Format.Instruction32x;
-import org.jf.dexlib.Code.Format.Instruction35c;
-import org.jf.dexlib.Code.Format.Instruction3rc;
-import org.jf.dexlib.Code.Format.Instruction51l;
-import org.jf.dexlib.Code.Format.PackedSwitchDataPseudoInstruction;
-import org.jf.dexlib.Code.Format.SparseSwitchDataPseudoInstruction;
-import org.jf.dexlib.EncodedValue.ArrayEncodedValue;
-import org.jf.dexlib.EncodedValue.TypeEncodedValue;
+import org.jf.dexlib2.Opcode;
+import org.jf.dexlib2.iface.AnnotationElement;
+import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.TryBlock;
+import org.jf.dexlib2.iface.instruction.SwitchPayload;
+import org.jf.dexlib2.iface.instruction.TwoRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
+import org.jf.dexlib2.iface.instruction.formats.Instruction10t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction11n;
+import org.jf.dexlib2.iface.instruction.formats.Instruction11x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction12x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction20t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21ih;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21lh;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21s;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22b;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22s;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction23x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction30t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction31c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction31i;
+import org.jf.dexlib2.iface.instruction.formats.Instruction31t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction32x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rc;
+import org.jf.dexlib2.iface.instruction.formats.Instruction51l;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.value.ArrayEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.iface.value.TypeEncodedValue;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IBytecodeMethod;
@@ -138,7 +137,6 @@ import com.ibm.wala.dalvik.dex.instructions.UnaryOperation;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation.OpID;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -154,12 +152,12 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 /**
  * A wrapper around a EncodedMethod object (from dexlib) that represents a method.
  */
-public class DexIMethod implements IBytecodeMethod {
+public class DexIMethod implements IBytecodeMethod<Instruction> {
 
 	/**
 	 * The EncodedMethod object for which this DexIMethod is a wrapper.
 	 */
-	private final EncodedMethod eMethod;
+	private final Method eMethod;
 
 	/**
 	 * The declaring class for this method.
@@ -186,7 +184,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 	private static int totalInsts = 0;
 
-	public DexIMethod(EncodedMethod encodedMethod, DexIClass klass) {
+	public DexIMethod(Method encodedMethod, DexIClass klass) {
 		eMethod = encodedMethod;
 		myClass = klass;
 	}
@@ -202,7 +200,7 @@ public class DexIMethod implements IBytecodeMethod {
 	/**
 	 * @return the EncodedMethod object for which this DexIMethod is a wrapper.
 	 */
-	public EncodedMethod toEncodedMethod() {
+	public Method toEncodedMethod() {
 		return eMethod;
 	}
 
@@ -215,21 +213,20 @@ public class DexIMethod implements IBytecodeMethod {
 	public TypeReference[] getDeclaredExceptions()
 			throws UnsupportedOperationException {
 /** BEGIN Custom change: Variable Names in synth. methods */
-		assert (eMethod.method != null);
         if (myClass.getClassDefItem().getAnnotations() == null) {
             return null;
         }
         ArrayList<String> strings = new ArrayList<>();
-        AnnotationSetItem annotationSet = myClass.getClassDefItem().getAnnotations().getMethodAnnotations(eMethod.method);
+        Set<? extends org.jf.dexlib2.iface.Annotation> annotationSet = eMethod.getAnnotations();
 /** END Custom change: Variable Names in synth. methods */
 
-		if (annotationSet != null) {
-			for (AnnotationItem annotationItem: annotationSet.getAnnotations())
+        if (annotationSet != null) {
+			for (org.jf.dexlib2.iface.Annotation annotationItem: annotationSet)
 			{
-				if (annotationItem.getEncodedAnnotation().annotationType.getTypeDescriptor().contentEquals("Ldalvik/annotation/Throws;")) {
-					for (int i = 0; i < annotationItem.getEncodedAnnotation().values.length; i++) {
-						for (int j = 0; j < ((ArrayEncodedValue)annotationItem.getEncodedAnnotation().values[i]).values.length; j++) {
-							String tname = ((TypeEncodedValue)((ArrayEncodedValue)annotationItem.getEncodedAnnotation().values[i]).values[j]).value.getTypeDescriptor();
+				if (annotationItem.getType().contentEquals("Ldalvik/annotation/Throws;")) {
+					for (AnnotationElement e : annotationItem.getElements()) {
+						for (EncodedValue v : ((ArrayEncodedValue)e.getValue()).getValue()) {
+							String tname = ((TypeEncodedValue)v).getValue();
 							if (tname.endsWith(";"))
 								tname = tname.substring(0,tname.length()-1);
 							strings.add(tname);
@@ -263,15 +260,15 @@ public class DexIMethod implements IBytecodeMethod {
 	 * @see com.ibm.wala.classLoader.ShrikeCTMethod#getMaxLocals()
 	 */
 	public int getMaxLocals() {
-		return eMethod.codeItem.getRegisterCount() + 2;
+		return eMethod.getImplementation().getRegisterCount() + 2;
 	}
 
 	public int getReturnReg() {
-		return eMethod.codeItem.getRegisterCount();
+		return eMethod.getImplementation().getRegisterCount();
 	}
 
 	public int getExceptionReg() {
-		return eMethod.codeItem.getRegisterCount()+1;
+		return eMethod.getImplementation().getRegisterCount()+1;
 	}
 
 	/*
@@ -309,20 +306,16 @@ public class DexIMethod implements IBytecodeMethod {
 		return number;
 	}
 
-	//returns the number of registers it takes for the parameters + the "this" register.
 	public int getNumberOfParameterRegisters() {
-		final int number;
+		int number = isStatic() || isClinit() ? 0 : 1;
 
-
-		if (isStatic() || isClinit()) {
-			number = eMethod.method.getPrototype().getParameterRegisterCount();
-		} else {
-			number = eMethod.method.getPrototype().getParameterRegisterCount() + 1;
+		for(int i = 0; i < getReference().getNumberOfParameters(); i++) {
+			TypeReference ref = getReference().getParameterType(i);
+			number += ref.equals(TypeReference.Double) || ref.equals(TypeReference.Long) ? 2 : 1;
 		}
+		
 		return number;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)
@@ -350,14 +343,13 @@ public class DexIMethod implements IBytecodeMethod {
 		//Compute the method reference from the MethodIdItem
 		if (methodReference == null) {
 			// Set method name
-			Atom name = Atom.findOrCreateUnicodeAtom(eMethod.method.getMethodName().getStringValue());
+			Atom name = Atom.findOrCreateUnicodeAtom(eMethod.getName());
 
 			//            // Set the descriptor
 			//            Descriptor descriptor = Descriptor.findOrCreateUTF8(eMethod.method.getPrototype().getPrototypeString());
 			//            methodReference = MethodReference.findOrCreate(myClass.getReference(),name, descriptor);
 
-			ImmutableByteArray desc = ImmutableByteArray.make(eMethod.method.getPrototype().getPrototypeString());
-			Descriptor D = Descriptor.findOrCreate(myClass.getClassLoader().getLanguage(), desc);
+			Descriptor D = Descriptor.findOrCreate(myClass.getClassLoader().getLanguage(), ImmutableByteArray.make(DexUtil.getSignature(eMethod)));
 			methodReference = MethodReference.findOrCreate(myClass.getReference(), name, D);
 		}
 
@@ -404,8 +396,8 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean hasExceptionHandler() {
-		TryItem[] tries = eMethod.codeItem.getTries();
-		return tries==null?false:tries.length > 0;
+		List<? extends TryBlock<? extends org.jf.dexlib2.iface.ExceptionHandler>> tries = eMethod.getImplementation().getTryBlocks();
+		return tries==null?false:tries.size() > 0;
 	}
 
 	/*
@@ -426,7 +418,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isAbstract() {
-		return (eMethod.accessFlags & ABSTRACT.getValue()) != 0;
+		return (eMethod.getAccessFlags() & ABSTRACT.getValue()) != 0;
 	}
 
 	/*
@@ -435,7 +427,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isClinit() {
-		return eMethod.method.getMethodName().getStringValue().equals(MethodReference.clinitName.toString());
+		return eMethod.getName().equals(MethodReference.clinitName.toString());
 	}
 
 	/*
@@ -444,7 +436,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isFinal() {
-		return (eMethod.accessFlags & FINAL.getValue()) != 0;
+		return (eMethod.getAccessFlags() & FINAL.getValue()) != 0;
 	}
 
 	/*
@@ -453,7 +445,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isInit() {
-		return eMethod.method.getMethodName().getStringValue().equals(MethodReference.initAtom.toString());
+		return eMethod.getName().equals(MethodReference.initAtom.toString());
 	}
 
 	/*
@@ -462,7 +454,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isNative() {
-		return (eMethod.accessFlags & NATIVE.getValue()) != 0;
+		return (eMethod.getAccessFlags() & NATIVE.getValue()) != 0;
 	}
 
 	/*
@@ -471,7 +463,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isBridge() {
-		return (eMethod.accessFlags & BRIDGE.getValue()) != 0;
+		return (eMethod.getAccessFlags() & BRIDGE.getValue()) != 0;
 	}
 
 	/*
@@ -480,7 +472,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isPrivate() {
-		return (eMethod.accessFlags & PRIVATE.getValue()) != 0;
+		return (eMethod.getAccessFlags() & PRIVATE.getValue()) != 0;
 	}
 
 	/*
@@ -489,7 +481,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isProtected() {
-		return (eMethod.accessFlags & PROTECTED.getValue()) != 0;
+		return (eMethod.getAccessFlags() & PROTECTED.getValue()) != 0;
 	}
 
 	/*
@@ -499,7 +491,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isPublic() {
-		return (eMethod.accessFlags & PUBLIC.getValue()) != 0;
+		return (eMethod.getAccessFlags() & PUBLIC.getValue()) != 0;
 	}
 
 	/*
@@ -508,7 +500,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isSynchronized() {
-		return (eMethod.accessFlags & DECLARED_SYNCHRONIZED.getValue()) != 0;
+		return (eMethod.getAccessFlags() & DECLARED_SYNCHRONIZED.getValue()) != 0;
 	}
 
 	/*
@@ -526,7 +518,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 */
 	@Override
 	public boolean isStatic() {
-		return (eMethod.accessFlags & STATIC.getValue()) != 0;
+		return (eMethod.getAccessFlags() & STATIC.getValue()) != 0;
 	}
 
 	/*
@@ -534,7 +526,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * @see com.ibm.wala.classLoader.IMember#isVolatile()
 	 */
 	public boolean isVolatile() {
-		return (eMethod.accessFlags & VOLATILE.getValue()) != 0;
+		return (eMethod.getAccessFlags() & VOLATILE.getValue()) != 0;
 	}
 
 	/*
@@ -625,7 +617,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 		//ExceptionHandler[][] handlers = new ExceptionHandler[eMethod.codeItem.getInstructions().length][];
 
-		TryItem[] tries = eMethod.codeItem.getTries();
+		List<? extends TryBlock<? extends org.jf.dexlib2.iface.ExceptionHandler>> tryBlocks = eMethod.getImplementation().getTryBlocks();
 
 		//
 		//      if (tries == null){
@@ -642,7 +634,7 @@ public class DexIMethod implements IBytecodeMethod {
 		//      }
 
 		this.handlers = new ExceptionHandler[instructions().size()][];
-		if (tries == null){
+		if (tryBlocks == null){
 			//          return new ExceptionHandler[instructions.size()][];
 			return handlers;
 		}
@@ -652,9 +644,9 @@ public class DexIMethod implements IBytecodeMethod {
 			temp_array.add(new ArrayList<ExceptionHandler>());
 		}
 
-		for (TryItem tryItem: tries) {
+		for (TryBlock<? extends org.jf.dexlib2.iface.ExceptionHandler> tryItem: tryBlocks) {
 			int startAddress = tryItem.getStartCodeAddress();
-			int endAddress = tryItem.getStartCodeAddress() + tryItem.getTryLength();
+			int endAddress = tryItem.getStartCodeAddress() + tryItem.getCodeUnitCount();
 			/**
 			 * The end address points to the address immediately after the end of the last
 			 * instruction that the try block covers. We want the .catch directive and end_try
@@ -672,7 +664,11 @@ public class DexIMethod implements IBytecodeMethod {
 			 */
 			if (endAddress > getAddressFromIndex(instructions().size()-1)) {
 				endInst = instructions().size()-1;
-				if (endAddress != (getAddressFromIndex(endInst) + (eMethod.codeItem.getInstructions())[endInst].getSize(getAddressFromIndex(endInst))))
+				int endSize = 0;
+				for(org.jf.dexlib2.iface.instruction.Instruction inst : eMethod.getImplementation().getInstructions()) {
+					endSize = inst.getCodeUnits();
+				}
+				if (endAddress != (getAddressFromIndex(endInst) + endSize))
 					throw new RuntimeException("Invalid code offset " + endAddress + " for the try block end address");
 			}
 			else {
@@ -681,22 +677,9 @@ public class DexIMethod implements IBytecodeMethod {
 
 			for (int i = startInst; i <= endInst; i++) {
 				//add the rest of the handlers
-				for (EncodedTypeAddrPair etaps: tryItem.encodedCatchHandler.handlers) {
-					temp_array.get(i).add(new ExceptionHandler( getInstructionIndex(etaps.getHandlerAddress()), etaps.exceptionType.getTypeDescriptor() ));
+				for (org.jf.dexlib2.iface.ExceptionHandler etaps: tryItem.getExceptionHandlers()) {
+					temp_array.get(i).add(new ExceptionHandler( getInstructionIndex(etaps.getHandlerCodeAddress()), etaps.getExceptionType() ));
 				}
-			}
-			//add the catch all handler if it exists
-			int catchAllAddress = tryItem.encodedCatchHandler.getCatchAllHandlerAddress();
-			if (catchAllAddress != -1) {
-				//                CatchMethodItem catchAllMethodItem = new CatchMethodItem(labelCache, lastInstructionAddress, null,
-				//                        startAddress, endAddress, catchAllAddress);
-				//                methodItems.add(catchAllMethodItem);
-				//              System.out.println("Method: " + this.getSignature() + " - address: " + catchAllAddress);
-				//              System.out.println("Start: " + startInst + " End: " + endInst);
-				for (int i = startInst; i<=endInst; i++) {
-					temp_array.get(i).add(new ExceptionHandler(getInstructionIndex(catchAllAddress), null));
-				}
-				//throw new UnimplementedError("DexIMethod->handlers: getCatchAllHandlerAddress() not yet implemented");
 			}
 		}
 
@@ -720,18 +703,17 @@ public class DexIMethod implements IBytecodeMethod {
 
 
 	@Override
-	public IInstruction[] getInstructions() {
+	public Instruction[] getInstructions() {
 		if (instructions == null)
 			parseBytecode();
 
-		throw new UnsupportedOperationException(
-				"DexMethod doesn't use IInstruction - try getDexInstructions instead");
+		return instructions.toArray(new Instruction[ instructions.size() ]);
 	}
 
 
 
 	protected void parseBytecode() {
-		org.jf.dexlib.Code.Instruction[] instrucs = eMethod.codeItem.getInstructions();
+		Iterable<? extends org.jf.dexlib2.iface.instruction.Instruction> instrucs = eMethod.getImplementation().getInstructions();
 
 		//      for (org.jfmethod.getInstructionIndex(.dexlib.Code.Instruction inst: instrucs)
 		//      {
@@ -848,26 +830,29 @@ public class DexIMethod implements IBytecodeMethod {
 		int instCounter = -1;
 		//int pc = 0;
 		int currentCodeAddress = 0;
-		for (org.jf.dexlib.Code.Instruction inst: instrucs)
+		for (org.jf.dexlib2.iface.instruction.Instruction inst: instrucs)
 		{
 			totalInsts++;
 			instCounter++;
 			//          instLoc = pc - instCounter;
 			instLoc = currentCodeAddress;
 			//pc += inst.getFormat().size;
-			switch(inst.opcode)
+			switch(inst.getOpcode())
 			{
 			case NOP:
-				switch (inst.getFormat())
+			case ARRAY_PAYLOAD:
+			case PACKED_SWITCH_PAYLOAD:
+			case SPARSE_SWITCH_PAYLOAD:
+				switch (inst.getOpcode().format)
 				{
-				case ArrayData:
+				case ArrayPayload:
 				{
 					for (int i = 0; i < instructions.size(); i++)
 					{
 						if (instructions.getFromId(i) instanceof ArrayFill)
 							if (instLoc == (((ArrayFill)getInstructionFromIndex(i)).tableAddressOffset + getAddressFromIndex(i)))
 							{
-								((ArrayFill)getInstructionFromIndex(i)).setArrayDataTable((ArrayDataPseudoInstruction)inst);
+								((ArrayFill)getInstructionFromIndex(i)).setArrayDataTable((ArrayPayload)inst);
 
 
 
@@ -892,27 +877,31 @@ public class DexIMethod implements IBytecodeMethod {
 					}
 					break;
 				}
-				case PackedSwitchData:
+				case PackedSwitchPayload:
 					for (int i = 0; i < instructions.size(); i++)
 					{
 						if (instructions.getFromId(i) instanceof Switch)
 							if (instLoc == (((Switch)getInstructionFromIndex(i)).tableAddressOffset + getAddressFromIndex(i)))
 							{
-								((Switch)getInstructionFromIndex(i)).setSwitchPad(new PackedSwitchPad(((PackedSwitchDataPseudoInstruction)inst),
-										getAddressFromIndex(i+1) - getAddressFromIndex(i)));
+								((Switch)getInstructionFromIndex(i))
+								   .setSwitchPad(new PackedSwitchPad(
+										   (SwitchPayload)inst,
+										   getAddressFromIndex(i+1) - getAddressFromIndex(i)));
 								break;
 							}
 					}
 					break;
-				case SparseSwitchData:
+				case SparseSwitchPayload:
 				{
 					for (int i = 0; i < instructions.size(); i++)
 					{
 						if (instructions.getFromId(i) instanceof Switch)
 							if (instLoc == (((Switch)getInstructionFromIndex(i)).tableAddressOffset + getAddressFromIndex(i)))
 							{
-								((Switch)getInstructionFromIndex(i)).setSwitchPad(new SparseSwitchPad(((SparseSwitchDataPseudoInstruction)inst),
-										getAddressFromIndex(i+1) - getAddressFromIndex(i)));
+								((Switch)getInstructionFromIndex(i)).setSwitchPad(
+										new SparseSwitchPad(
+											(SwitchPayload)inst,
+											getAddressFromIndex(i+1) - getAddressFromIndex(i)));
 								break;
 							}
 					}
@@ -925,147 +914,150 @@ public class DexIMethod implements IBytecodeMethod {
 					//                  }
 					break;
 				}
-				case UnresolvedOdexInstruction:
-					throw new RuntimeException("UnresolvedOdexInstruction"
-							+ inst.opcode.toString() + inst.getFormat());
 				default:
-					instructions.add(new Instruction(currentCodeAddress, Opcode.NOP, this) {
+					class NOPInstruction extends Instruction {
+						private NOPInstruction(int pc, Opcode op, DexIMethod method) {
+							super(pc, op, method);
+						}
+
 						@Override
 						public void visit(Visitor visitor) {
 							// no op
 						} 
-					});
+					}
+					
+					instructions.add(new NOPInstruction(currentCodeAddress, Opcode.NOP, this));
 					break;
 				}
 				break;
 			case MOVE:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_FROM16:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction22x)inst).getRegisterA(),
-						((Instruction22x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_16:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction32x)inst).getRegisterA(),
-						((Instruction32x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction32x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_WIDE:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE_WIDE,
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_WIDE_FROM16:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE_WIDE,
-						((Instruction22x)inst).getRegisterA(), ((Instruction22x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22x)inst).getRegisterA(), ((Instruction22x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_WIDE_16:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE_WIDE,
-						((Instruction32x)inst).getRegisterA(), ((Instruction32x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction32x)inst).getRegisterA(), ((Instruction32x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_OBJECT:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_OBJECT_FROM16:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction22x)inst).getRegisterA(),
-						((Instruction22x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_OBJECT_16:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction32x)inst).getRegisterA(),
-						((Instruction32x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction32x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MOVE_RESULT:
 				//register b set as return register, -1;
 				instructions.add(new UnaryOperation(instLoc,
-						UnaryOperation.OpID.MOVE, ((Instruction11x)inst).getRegisterA(), getReturnReg(), inst.opcode, this));
+						UnaryOperation.OpID.MOVE, ((Instruction11x)inst).getRegisterA(), getReturnReg(), inst.getOpcode(), this));
 				break;
 			case MOVE_RESULT_WIDE:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE_WIDE,
-						((Instruction11x)inst).getRegisterA(), getReturnReg(), inst.opcode, this));
+						((Instruction11x)inst).getRegisterA(), getReturnReg(), inst.getOpcode(), this));
 				break;
 			case MOVE_RESULT_OBJECT:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE, ((Instruction11x)inst).getRegisterA(),
-						getReturnReg(), inst.opcode, this));
+						getReturnReg(), inst.getOpcode(), this));
 				break;
 			case MOVE_EXCEPTION:
 				instructions.add(new UnaryOperation(instLoc,
 						UnaryOperation.OpID.MOVE_EXCEPTION, ((Instruction11x)inst).getRegisterA(),
-						getExceptionReg(), inst.opcode, this));
+						getExceptionReg(), inst.getOpcode(), this));
 				break;
 			case RETURN_VOID:
-				instructions.add(new Return.ReturnVoid(instLoc, inst.opcode, this));
+				instructions.add(new Return.ReturnVoid(instLoc, inst.getOpcode(), this));
 				break;
 			case RETURN:
 				//I think only primitives call return, and objects call return-object
 				instructions.add(new Return.ReturnSingle(instLoc,
-						((Instruction11x)inst).getRegisterA(), true, inst.opcode, this));
+						((Instruction11x)inst).getRegisterA(), true, inst.getOpcode(), this));
 				break;
 			case RETURN_WIDE:
 				//+1 to second parameter okay?
 				instructions.add(new Return.ReturnDouble(instLoc,
-						((Instruction11x)inst).getRegisterA(), ((Instruction11x)inst).getRegisterA()+1, inst.opcode, this));
+						((Instruction11x)inst).getRegisterA(), ((Instruction11x)inst).getRegisterA()+1, inst.getOpcode(), this));
 				break;
 			case RETURN_OBJECT:
 				instructions.add(new Return.ReturnSingle(instLoc,
-						((Instruction11x)inst).getRegisterA(), false, inst.opcode, this));
+						((Instruction11x)inst).getRegisterA(), false, inst.getOpcode(), this));
 				break;
 			case CONST_4: {
 				instructions.add(new Constant.IntConstant(instLoc,
-						(int)((Instruction11n)inst).getLiteral(),((Instruction11n)inst).getRegisterA(), inst.opcode, this));
+						((Instruction11n)inst).getNarrowLiteral(),((Instruction11n)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			}
 			case CONST_16:
 				instructions.add(new Constant.IntConstant(instLoc,
-						(int)((Instruction21s)inst).getLiteral(), ((Instruction21s)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21s)inst).getNarrowLiteral(), ((Instruction21s)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST:
 				instructions.add(new Constant.IntConstant(instLoc,
-						(int)((Instruction31i)inst).getLiteral(), ((Instruction31i)inst).getRegisterA(), inst.opcode, this));
+						((Instruction31i)inst).getNarrowLiteral(), ((Instruction31i)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_HIGH16:
 				instructions.add(new Constant.IntConstant(instLoc,
-						(int)((Instruction21h)inst).getLiteral() << 16, ((Instruction21h)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21ih)inst).getHatLiteral() << 16, ((Instruction21ih)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_WIDE_16:
 				instructions.add(new Constant.LongConstant(instLoc,
-						((Instruction21s)inst).getLiteral(), ((Instruction21s)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21s)inst).getWideLiteral(), ((Instruction21s)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_WIDE_32:
 				instructions.add(new Constant.LongConstant(instLoc,
-						((Instruction31i)inst).getLiteral(), ((Instruction31i)inst).getRegisterA(), inst.opcode, this));
+						((Instruction31i)inst).getWideLiteral(), ((Instruction31i)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_WIDE:
 				instructions.add(new Constant.LongConstant(instLoc,
-						((Instruction51l)inst).getLiteral(), ((Instruction51l)inst).getRegisterA(), inst.opcode, this));
+						((Instruction51l)inst).getWideLiteral(), ((Instruction51l)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_WIDE_HIGH16:
 				instructions.add(new Constant.LongConstant(instLoc,
-						((Instruction21h)inst).getLiteral() << 16, ((Instruction21h)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21lh)inst).getWideLiteral() << 16, ((Instruction21lh)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_STRING:
 
 				instructions.add(new Constant.StringConstant(instLoc,
-						((StringIdItem)((Instruction21c)inst).getReferencedItem()).getStringValue(),
-						((Instruction21c)inst).getRegisterA(), inst.opcode, this));
+						((StringReference)((Instruction21c)inst).getReference()).getString(),
+						((Instruction21c)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_STRING_JUMBO:
 				instructions.add(new Constant.StringConstant(instLoc,
-						((StringIdItem)((Instruction31c)inst).getReferencedItem()).getStringValue(),
-						((Instruction31c)inst).getRegisterA(), inst.opcode, this));
+						((StringReference)((Instruction31c)inst).getReference()).getString(),
+						((Instruction31c)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CONST_CLASS: {
-				String cname = ((TypeIdItem)((Instruction21c)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction21c)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 				
@@ -1073,18 +1065,18 @@ public class DexIMethod implements IBytecodeMethod {
 				TypeReference typeRef = TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname);
 				
 				instructions.add(new Constant.ClassConstant(instLoc,
-						typeRef, ((Instruction21c)inst).getRegisterA(), inst.opcode, this));
+						typeRef, ((Instruction21c)inst).getRegisterA(), inst.getOpcode(), this));
 				//logger.debug("myClass found name: " + this.myClass.loader.lookupClass(TypeName.findOrCreate(cname)).toString());
 				break;
 			}
 			case MONITOR_ENTER:
-				instructions.add(new Monitor(instLoc, true, ((Instruction11x)inst).getRegisterA(), inst.opcode, this));
+				instructions.add(new Monitor(instLoc, true, ((Instruction11x)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case MONITOR_EXIT:
-				instructions.add(new Monitor(instLoc, false, ((Instruction11x)inst).getRegisterA(), inst.opcode, this));
+				instructions.add(new Monitor(instLoc, false, ((Instruction11x)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case CHECK_CAST: {
-				String cname = ((TypeIdItem)((Instruction21c)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction21c)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
@@ -1092,35 +1084,35 @@ public class DexIMethod implements IBytecodeMethod {
 				//retrieving type reference correctly?
 				instructions.add(new CheckCast(instLoc,
 						TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname),
-						((Instruction21c)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21c)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			}
 			case INSTANCE_OF: {
-				String cname = ((TypeIdItem)((Instruction22c)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction22c)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 				instructions.add(new InstanceOf(instLoc,
 						((Instruction22c)inst).getRegisterA(),
 						TypeReference.findOrCreate(myClass.getClassLoader().getReference(),
 								cname),
-								((Instruction22c)inst).getRegisterB(), inst.opcode, this));
+								((Instruction22c)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			}
 			case ARRAY_LENGTH:
 				instructions.add(new ArrayLength(instLoc,
 						((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case NEW_INSTANCE: {
 				//newsitereference use instLoc or pc?
-				String cname = ((TypeIdItem)((Instruction21c)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction21c)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 				instructions.add(new New(instLoc,
 						((Instruction21c)inst).getRegisterA(),
 						NewSiteReference.make(instLoc, TypeReference.findOrCreate(myClass.getClassLoader().getReference(),
-								cname)), inst.opcode, this));
+								cname)), inst.getOpcode(), this));
 				break;
 			}
 			case NEW_ARRAY:
@@ -1129,7 +1121,7 @@ public class DexIMethod implements IBytecodeMethod {
 				params[0] = ((Instruction22c)inst).getRegisterB();
 				//              MyLogger.log(LogLevel.INFO, "Type: " +((TypeIdItem)((Instruction22c)inst).getReferencedItem()).getTypeDescriptor());
 
-				String cname = ((TypeIdItem)((Instruction22c)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction22c)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
@@ -1137,12 +1129,12 @@ public class DexIMethod implements IBytecodeMethod {
 						((Instruction22c)inst).getRegisterA(),
 						NewSiteReference.make(instLoc, TypeReference.findOrCreate(myClass.getClassLoader().getReference(),
 								cname)),
-								params, inst.opcode, this));
+								params, inst.getOpcode(), this));
 				break;
 			}
 			//TODO: FILLED ARRAYS
 			case FILLED_NEW_ARRAY: {
-				int registerCount = ((Instruction35c)inst).getRegCount();
+				int registerCount = ((Instruction35c)inst).getRegisterCount();
 				int[] params = new int[1];
 				params[0] = registerCount;
 				int[] args = new int[registerCount];
@@ -1163,7 +1155,7 @@ public class DexIMethod implements IBytecodeMethod {
 						args[3] = ((Instruction35c)inst).getRegisterG();
 						break;
 					case 4:
-						args[4] = ((Instruction35c)inst).getRegisterA();
+						args[4] = ((Instruction35c)inst).getRegisterC();
 						break;
 					default:
 						throw new RuntimeException("Illegal instruction at "
@@ -1171,7 +1163,7 @@ public class DexIMethod implements IBytecodeMethod {
 					}
 				}
 
-				String cname = ((TypeIdItem)((Instruction35c)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction35c)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
@@ -1180,11 +1172,11 @@ public class DexIMethod implements IBytecodeMethod {
 				TypeReference myTypeRef = TypeReference.findOrCreate(myClass.getClassLoader().getReference(), newSiteRef.getDeclaredType().getArrayElementType().getName().toString());
 
 				instructions.add(new NewArrayFilled(instLoc, getReturnReg(),
-						newSiteRef, myTypeRef, params, args, inst.opcode, this));
+						newSiteRef, myTypeRef, params, args, inst.getOpcode(), this));
 				break;
 			}
 			case FILLED_NEW_ARRAY_RANGE: {
-				int registerCount = ((Instruction3rc)inst).getRegCount();
+				int registerCount = ((Instruction3rc)inst).getRegisterCount();
 				int[] params = new int[1];
 				params[0] = registerCount;
 				int[] args = new int[registerCount];
@@ -1192,7 +1184,7 @@ public class DexIMethod implements IBytecodeMethod {
 				for (int i = 0; i < registerCount; i++)
 					args[i] = ((Instruction3rc)inst).getStartRegister() + i;
 
-				String cname = ((TypeIdItem)((Instruction3rc)inst).getReferencedItem()).getTypeDescriptor();
+				String cname = ((org.jf.dexlib2.iface.reference.TypeReference)((Instruction3rc)inst).getReference()).getType();
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
@@ -1202,175 +1194,175 @@ public class DexIMethod implements IBytecodeMethod {
 				TypeReference myTypeRef = TypeReference.findOrCreate(myClass.getClassLoader().getReference(), newSiteRef.getDeclaredType().getArrayElementType().getName().toString());
 
 
-				instructions.add(new NewArrayFilled(instLoc, getReturnReg(), newSiteRef, myTypeRef, params, args, inst.opcode, this));
+				instructions.add(new NewArrayFilled(instLoc, getReturnReg(), newSiteRef, myTypeRef, params, args, inst.getOpcode(), this));
 				break;
 			}
 			case FILL_ARRAY_DATA:
-				//              System.out.println("Array Reference: " + ((Instruction31t)inst).getRegisterA());
-				//              System.out.println("Table Address Offset: " + ((Instruction31t)inst).getTargetAddressOffset());
+				System.out.println("Array Reference: " + ((Instruction31t)inst).getRegisterA());
+				System.out.println("Table Address Offset: " + ((Instruction31t)inst).getCodeOffset());
 
-				TypeReference arrayElementType = findOutArrayElementType(instrucs, instructions.toArray(new Instruction[0]), instCounter);
-				instructions.add(new ArrayFill(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getTargetAddressOffset(),
-						TypeReference.findOrCreate(myClass.getClassLoader().getReference(), arrayElementType.getName().toString()), inst.opcode, this));
+				TypeReference arrayElementType = findOutArrayElementType(inst, instructions.toArray(new Instruction[0]), instCounter);
+				instructions.add(new ArrayFill(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getCodeOffset(),
+						TypeReference.findOrCreate(myClass.getClassLoader().getReference(), arrayElementType.getName().toString()), inst.getOpcode(), this));
 				break;
 			case THROW:
-				instructions.add(new Throw(instLoc, ((Instruction11x)inst).getRegisterA(), inst.opcode, this));
+				instructions.add(new Throw(instLoc, ((Instruction11x)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case GOTO:
-				instructions.add(new Goto(instLoc, ((Instruction10t)inst).getTargetAddressOffset(), inst.opcode, this));
+				instructions.add(new Goto(instLoc, ((Instruction10t)inst).getCodeOffset(), inst.getOpcode(), this));
 				break;
 			case GOTO_16:
-				instructions.add(new Goto(instLoc, ((Instruction20t)inst).getTargetAddressOffset(), inst.opcode, this));
+				instructions.add(new Goto(instLoc, ((Instruction20t)inst).getCodeOffset(), inst.getOpcode(), this));
 				break;
 			case GOTO_32:
-				instructions.add(new Goto(instLoc, ((Instruction30t)inst).getTargetAddressOffset(), inst.opcode, this));
+				instructions.add(new Goto(instLoc, ((Instruction30t)inst).getCodeOffset(), inst.getOpcode(), this));
 				break;
 
 			case PACKED_SWITCH:
 			case SPARSE_SWITCH:
-				instructions.add(new Switch(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getTargetAddressOffset(), inst.opcode, this));
+				instructions.add(new Switch(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getCodeOffset(), inst.getOpcode(), this));
 				break;
 
 			case CMPL_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.CMPL_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case CMPG_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.CMPG_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case CMPL_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.CMPL_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case CMPG_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.CMPG_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case CMP_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.CMPL_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case IF_EQ:
-				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getTargetAddressOffset(),
+				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getCodeOffset(),
 						Branch.BinaryBranch.CompareOp.EQ, ((Instruction22t)inst).getRegisterA(),
-						((Instruction22t)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22t)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case IF_NE:
-				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getTargetAddressOffset(),
+				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getCodeOffset(),
 						Branch.BinaryBranch.CompareOp.NE, ((Instruction22t)inst).getRegisterA(),
-						((Instruction22t)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22t)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case IF_LT:
-				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getTargetAddressOffset(),
+				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getCodeOffset(),
 						Branch.BinaryBranch.CompareOp.LT, ((Instruction22t)inst).getRegisterA(),
-						((Instruction22t)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22t)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case IF_GE:
-				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getTargetAddressOffset(),
+				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getCodeOffset(),
 						Branch.BinaryBranch.CompareOp.GE, ((Instruction22t)inst).getRegisterA(),
-						((Instruction22t)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22t)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case IF_GT:
-				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getTargetAddressOffset(),
+				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getCodeOffset(),
 						Branch.BinaryBranch.CompareOp.GT, ((Instruction22t)inst).getRegisterA(),
-						((Instruction22t)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22t)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case IF_LE:
-				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getTargetAddressOffset(),
+				instructions.add(new Branch.BinaryBranch(instLoc, ((Instruction22t)inst).getCodeOffset(),
 						Branch.BinaryBranch.CompareOp.LE, ((Instruction22t)inst).getRegisterA(),
-						((Instruction22t)inst).getRegisterB(), inst.opcode, this));
+						((Instruction22t)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case IF_EQZ:
 				instructions.add(new Branch.UnaryBranch(instLoc,
-						((Instruction21t)inst).getTargetAddressOffset(), Branch.UnaryBranch.CompareOp.EQZ,
-						((Instruction21t)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21t)inst).getCodeOffset(), Branch.UnaryBranch.CompareOp.EQZ,
+						((Instruction21t)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case IF_NEZ:
 				instructions.add(new Branch.UnaryBranch(instLoc,
-						((Instruction21t)inst).getTargetAddressOffset(), Branch.UnaryBranch.CompareOp.NEZ,
-						((Instruction21t)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21t)inst).getCodeOffset(), Branch.UnaryBranch.CompareOp.NEZ,
+						((Instruction21t)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case IF_LTZ:
 				instructions.add(new Branch.UnaryBranch(instLoc,
-						((Instruction21t)inst).getTargetAddressOffset(), Branch.UnaryBranch.CompareOp.LTZ,
-						((Instruction21t)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21t)inst).getCodeOffset(), Branch.UnaryBranch.CompareOp.LTZ,
+						((Instruction21t)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case IF_GEZ:
 				instructions.add(new Branch.UnaryBranch(instLoc,
-						((Instruction21t)inst).getTargetAddressOffset(), Branch.UnaryBranch.CompareOp.GEZ,
-						((Instruction21t)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21t)inst).getCodeOffset(), Branch.UnaryBranch.CompareOp.GEZ,
+						((Instruction21t)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case IF_GTZ:
 				instructions.add(new Branch.UnaryBranch(instLoc,
-						((Instruction21t)inst).getTargetAddressOffset(), Branch.UnaryBranch.CompareOp.GTZ,
-						((Instruction21t)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21t)inst).getCodeOffset(), Branch.UnaryBranch.CompareOp.GTZ,
+						((Instruction21t)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case IF_LEZ:
 				instructions.add(new Branch.UnaryBranch(instLoc,
-						((Instruction21t)inst).getTargetAddressOffset(), Branch.UnaryBranch.CompareOp.LEZ,
-						((Instruction21t)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21t)inst).getCodeOffset(), Branch.UnaryBranch.CompareOp.LEZ,
+						((Instruction21t)inst).getRegisterA(), inst.getOpcode(), this));
 				break;
 			case AGET:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_int, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_int, inst.getOpcode(), this));
 				break;
 			case AGET_WIDE:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_wide, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_wide, inst.getOpcode(), this));
 				break;
 			case AGET_OBJECT:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_object, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_object, inst.getOpcode(), this));
 				break;
 			case AGET_BOOLEAN:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_boolean, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_boolean, inst.getOpcode(), this));
 				break;
 			case AGET_BYTE:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_byte, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_byte, inst.getOpcode(), this));
 				break;
 			case AGET_CHAR:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_char, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_char, inst.getOpcode(), this));
 				break;
 			case AGET_SHORT:
 				instructions.add(new ArrayGet(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_short, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_short, inst.getOpcode(), this));
 				break;
 			case APUT:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_int, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_int, inst.getOpcode(), this));
 				break;
 			case APUT_WIDE:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_wide, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_wide, inst.getOpcode(), this));
 				break;
 			case APUT_OBJECT:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_object, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_object, inst.getOpcode(), this));
 				break;
 			case APUT_BOOLEAN:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_boolean, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_boolean, inst.getOpcode(), this));
 				break;
 			case APUT_BYTE:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_byte, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_byte, inst.getOpcode(), this));
 				break;
 			case APUT_CHAR:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_char, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_char, inst.getOpcode(), this));
 				break;
 			case APUT_SHORT:
 				instructions.add(new ArrayPut(instLoc, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_short, inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(), ((Instruction23x)inst).getRegisterC(), Type.t_short, inst.getOpcode(), this));
 				break;
 			case IGET:
 			case IGET_WIDE:
@@ -1379,9 +1371,9 @@ public class DexIMethod implements IBytecodeMethod {
 			case IGET_BYTE:
 			case IGET_CHAR:
 			case IGET_SHORT: {
-				String cname = ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String fname = ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getFieldName().getStringValue();
-				String ftname = ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getFieldType().getTypeDescriptor();
+				String cname = ((FieldReference)((Instruction22c)inst).getReference()).getDefiningClass();
+				String fname = ((FieldReference)((Instruction22c)inst).getReference()).getName();
+				String ftname = ((FieldReference)((Instruction22c)inst).getReference()).getType();
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
@@ -1392,7 +1384,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 				instructions.add(new GetField.GetInstanceField(
 						instLoc, ((Instruction22c)inst).getRegisterA(), ((Instruction22c)inst).getRegisterB(),
-						cname, fname, ftname, inst.opcode, this));
+						cname, fname, ftname, inst.getOpcode(), this));
 				break;
 			}
 			case IPUT:
@@ -1402,9 +1394,9 @@ public class DexIMethod implements IBytecodeMethod {
 			case IPUT_BYTE:
 			case IPUT_CHAR:
 			case IPUT_SHORT: {
-				String cname = ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String fname = ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getFieldName().getStringValue();
-				String ftname = ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getFieldType().getTypeDescriptor();
+				String cname = ((FieldReference)((Instruction22c)inst).getReference()).getDefiningClass();
+				String fname = ((FieldReference)((Instruction22c)inst).getReference()).getName();
+				String ftname = ((FieldReference)((Instruction22c)inst).getReference()).getType();
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
@@ -1415,7 +1407,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 				instructions.add(new PutField.PutInstanceField(
 						instLoc, ((TwoRegisterInstruction)inst).getRegisterA(), ((TwoRegisterInstruction)inst).getRegisterB(),
-						cname, fname, ftname, inst.opcode, this));
+						cname, fname, ftname, inst.getOpcode(), this));
 				break;
 			}
 			case SGET:
@@ -1425,9 +1417,9 @@ public class DexIMethod implements IBytecodeMethod {
 			case SGET_BYTE:
 			case SGET_CHAR:
 			case SGET_SHORT: {
-				String cname = ((FieldIdItem)((Instruction21c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String fname = ((FieldIdItem)((Instruction21c)inst).getReferencedItem()).getFieldName().getStringValue();
-				String ftname = ((FieldIdItem)((Instruction21c)inst).getReferencedItem()).getFieldType().getTypeDescriptor();
+				String cname = ((FieldReference)((Instruction21c)inst).getReference()).getDefiningClass();
+				String fname = ((FieldReference)((Instruction21c)inst).getReference()).getName();
+				String ftname = ((FieldReference)((Instruction21c)inst).getReference()).getType();
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
@@ -1437,7 +1429,7 @@ public class DexIMethod implements IBytecodeMethod {
 					ftname = ftname.substring(0,ftname.length()-1);
 
 				instructions.add(new GetField.GetStaticField(instLoc,
-						((Instruction21c)inst).getRegisterA(), cname, fname, ftname, inst.opcode, this));
+						((Instruction21c)inst).getRegisterA(), cname, fname, ftname, inst.getOpcode(), this));
 				break;
 			}
 			case SPUT:
@@ -1447,9 +1439,9 @@ public class DexIMethod implements IBytecodeMethod {
 			case SPUT_BYTE:
 			case SPUT_CHAR:
 			case SPUT_SHORT: {
-				String cname = ((FieldIdItem)((Instruction21c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String fname = ((FieldIdItem)((Instruction21c)inst).getReferencedItem()).getFieldName().getStringValue();
-				String ftname = ((FieldIdItem)((Instruction21c)inst).getReferencedItem()).getFieldType().getTypeDescriptor();
+				String cname = ((FieldReference)((Instruction21c)inst).getReference()).getDefiningClass();
+				String fname = ((FieldReference)((Instruction21c)inst).getReference()).getName();
+				String ftname = ((FieldReference)((Instruction21c)inst).getReference()).getType();
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
@@ -1459,30 +1451,30 @@ public class DexIMethod implements IBytecodeMethod {
 					ftname = ftname.substring(0,ftname.length()-1);
 
 				instructions.add(new PutField.PutStaticField(instLoc,
-						((Instruction21c)inst).getRegisterA(), cname, fname, ftname, inst.opcode, this));
+						((Instruction21c)inst).getRegisterA(), cname, fname, ftname, inst.getOpcode(), this));
 				break;
 			}
 			case INVOKE_VIRTUAL: {
-				int registerCount = ((Instruction35c)inst).getRegCount();
+				int registerCount = ((Instruction35c)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 				{
 					switch(i) {
 					case 0:
-						args[0] = ((Instruction35c)inst).getRegisterD();
+						args[0] = ((Instruction35c)inst).getRegisterC();
 						break;
 					case 1:
-						args[1] = ((Instruction35c)inst).getRegisterE();
+						args[1] = ((Instruction35c)inst).getRegisterD();
 						break;
 					case 2:
-						args[2] = ((Instruction35c)inst).getRegisterF();
+						args[2] = ((Instruction35c)inst).getRegisterE();
 						break;
 					case 3:
-						args[3] = ((Instruction35c)inst).getRegisterG();
+						args[3] = ((Instruction35c)inst).getRegisterF();
 						break;
 					case 4:
-						args[4] = ((Instruction35c)inst).getRegisterA();
+						args[4] = ((Instruction35c)inst).getRegisterG();
 						break;
 					default:
 						throw new RuntimeException("Illegal instruction at "
@@ -1490,9 +1482,9 @@ public class DexIMethod implements IBytecodeMethod {
 					}
 				}
 
-				String cname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
@@ -1504,33 +1496,33 @@ public class DexIMethod implements IBytecodeMethod {
 				//              for (IMethod m: this.myClass.loader.lookupClass(TypeName.findOrCreate(cname)).getDeclaredMethods())
 				//                  System.out.println(m.getDescriptor().toString());
 
-				handleINVOKE_VIRTUAL(instLoc, cname, mname, pname, args, inst.opcode);
+				handleINVOKE_VIRTUAL(instLoc, cname, mname, pname, args, inst.getOpcode());
 				//instructions.add(new Invoke.InvokeVirtual(instLoc, cname, mname, pname, args, inst.opcode, this));
 				//logger.debug("\t" + inst.opcode.toString() + " class: "+ cname + ", method name: " + mname + ", prototype string: " + pname);
 
 				break;
 			}
 			case INVOKE_SUPER: {
-				int registerCount = ((Instruction35c)inst).getRegCount();
+				int registerCount = ((Instruction35c)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 				{
 					switch(i) {
 					case 0:
-						args[0] = ((Instruction35c)inst).getRegisterD();
+						args[0] = ((Instruction35c)inst).getRegisterC();
 						break;
 					case 1:
-						args[1] = ((Instruction35c)inst).getRegisterE();
+						args[1] = ((Instruction35c)inst).getRegisterD();
 						break;
 					case 2:
-						args[2] = ((Instruction35c)inst).getRegisterF();
+						args[2] = ((Instruction35c)inst).getRegisterE();
 						break;
 					case 3:
-						args[3] = ((Instruction35c)inst).getRegisterG();
+						args[3] = ((Instruction35c)inst).getRegisterF();
 						break;
 					case 4:
-						args[4] = ((Instruction35c)inst).getRegisterA();
+						args[4] = ((Instruction35c)inst).getRegisterG();
 						break;
 					default:
 						throw new RuntimeException("Illegal instruction at "
@@ -1538,39 +1530,39 @@ public class DexIMethod implements IBytecodeMethod {
 					}
 				}
 
-				String cname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 
 				instructions.add(new Invoke.InvokeSuper(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 				break;
 			}
 			case INVOKE_DIRECT: {
-				int registerCount = ((Instruction35c)inst).getRegCount();
+				int registerCount = ((Instruction35c)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 				{
 					switch(i) {
 					case 0:
-						args[0] = ((Instruction35c)inst).getRegisterD();
+						args[0] = ((Instruction35c)inst).getRegisterC();
 						break;
 					case 1:
-						args[1] = ((Instruction35c)inst).getRegisterE();
+						args[1] = ((Instruction35c)inst).getRegisterD();
 						break;
 					case 2:
-						args[2] = ((Instruction35c)inst).getRegisterF();
+						args[2] = ((Instruction35c)inst).getRegisterE();
 						break;
 					case 3:
-						args[3] = ((Instruction35c)inst).getRegisterG();
+						args[3] = ((Instruction35c)inst).getRegisterF();
 						break;
 					case 4:
-						args[4] = ((Instruction35c)inst).getRegisterA();
+						args[4] = ((Instruction35c)inst).getRegisterG();
 						break;
 					default:
 						throw new RuntimeException("Illegal instruction at "
@@ -1579,40 +1571,40 @@ public class DexIMethod implements IBytecodeMethod {
 				}
 
 				//              logger.debug(inst.opcode.toString() + " class: "+((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor() + ", method name: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue() + ", prototype string: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString());
-				String cname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 
 				instructions.add(new Invoke.InvokeDirect(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 
 				break;
 			}
 			case INVOKE_STATIC: {
-				int registerCount = ((Instruction35c)inst).getRegCount();
+				int registerCount = ((Instruction35c)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 				{
 					switch(i) {
 					case 0:
-						args[0] = ((Instruction35c)inst).getRegisterD();
+						args[0] = ((Instruction35c)inst).getRegisterC();
 						break;
 					case 1:
-						args[1] = ((Instruction35c)inst).getRegisterE();
+						args[1] = ((Instruction35c)inst).getRegisterD();
 						break;
 					case 2:
-						args[2] = ((Instruction35c)inst).getRegisterF();
+						args[2] = ((Instruction35c)inst).getRegisterE();
 						break;
 					case 3:
-						args[3] = ((Instruction35c)inst).getRegisterG();
+						args[3] = ((Instruction35c)inst).getRegisterF();
 						break;
 					case 4:
-						args[4] = ((Instruction35c)inst).getRegisterA();
+						args[4] = ((Instruction35c)inst).getRegisterG();
 						break;
 					default:
 						throw new RuntimeException("Illegal instruction at "
@@ -1621,40 +1613,40 @@ public class DexIMethod implements IBytecodeMethod {
 				}
 
 				//logger.debug(inst.opcode.toString() + " class: "+((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor() + ", method name: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue() + ", prototype string: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString());
-				String cname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 
 
-				instructions.add(new Invoke.InvokeStatic(instLoc, cname, mname, pname, args, inst.opcode, this));
+				instructions.add(new Invoke.InvokeStatic(instLoc, cname, mname, pname, args, inst.getOpcode(), this));
 
 				break;
 			}
 			case INVOKE_INTERFACE: {
-				int registerCount = ((Instruction35c)inst).getRegCount();
+				int registerCount = ((Instruction35c)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 				{
 					switch(i) {
 					case 0:
-						args[0] = ((Instruction35c)inst).getRegisterD();
+						args[0] = ((Instruction35c)inst).getRegisterC();
 						break;
 					case 1:
-						args[1] = ((Instruction35c)inst).getRegisterE();
+						args[1] = ((Instruction35c)inst).getRegisterD();
 						break;
 					case 2:
-						args[2] = ((Instruction35c)inst).getRegisterF();
+						args[2] = ((Instruction35c)inst).getRegisterE();
 						break;
 					case 3:
-						args[3] = ((Instruction35c)inst).getRegisterG();
+						args[3] = ((Instruction35c)inst).getRegisterF();
 						break;
 					case 4:
-						args[4] = ((Instruction35c)inst).getRegisterA();
+						args[4] = ((Instruction35c)inst).getRegisterG();
 						break;
 					default:
 						throw new RuntimeException("Illegal instruction at "
@@ -1662,634 +1654,634 @@ public class DexIMethod implements IBytecodeMethod {
 					}
 				}
 
-				String cname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction35c)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 
 				instructions.add(new Invoke.InvokeInterface(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 				break;
 			}
 			case INVOKE_VIRTUAL_RANGE: {
-				int registerCount = ((Instruction3rc)inst).getRegCount();
+				int registerCount = ((Instruction3rc)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 					args[i] = ((Instruction3rc)inst).getStartRegister() + i;
 
-				String cname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 
 				instructions.add(new Invoke.InvokeVirtual(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 				break;
 			}
 			case INVOKE_SUPER_RANGE: {
-				int registerCount = ((Instruction3rc)inst).getRegCount();
+				int registerCount = ((Instruction3rc)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 					args[i] = ((Instruction3rc)inst).getStartRegister() + i;
 
-				String cname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getName();
+				String pname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getReturnType();
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 				instructions.add(new Invoke.InvokeSuper(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 				break;
 			}
 			case INVOKE_DIRECT_RANGE: {
-				int registerCount = ((Instruction3rc)inst).getRegCount();
+				int registerCount = ((Instruction3rc)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 					args[i] = ((Instruction3rc)inst).getStartRegister() + i;
 
-				String cname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 				instructions.add(new Invoke.InvokeDirect(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 				break;
 			}
 			case INVOKE_STATIC_RANGE: {
-				int registerCount = ((Instruction3rc)inst).getRegCount();
+				int registerCount = ((Instruction3rc)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 					args[i] = ((Instruction3rc)inst).getStartRegister() + i;
 
-				String cname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 
-				instructions.add(new Invoke.InvokeStatic(instLoc, cname, mname, pname, args, inst.opcode, this));
+				instructions.add(new Invoke.InvokeStatic(instLoc, cname, mname, pname, args, inst.getOpcode(), this));
 
 				break;
 			}
 			case INVOKE_INTERFACE_RANGE: {
-				int registerCount = ((Instruction3rc)inst).getRegCount();
+				int registerCount = ((Instruction3rc)inst).getRegisterCount();
 				int[] args = new int[registerCount];
 
 				for (int i = 0; i < registerCount; i++)
 					args[i] = ((Instruction3rc)inst).getStartRegister() + i;
 
-				String cname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String mname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getMethodName().getStringValue();
-				String pname = ((MethodIdItem)((Instruction3rc)inst).getReferencedItem()).getPrototype().getPrototypeString();
+				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getDefiningClass();
+				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getName();
+				String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
 
 				instructions.add(new Invoke.InvokeInterface(instLoc,
-						cname, mname, pname, args, inst.opcode, this));
+						cname, mname, pname, args, inst.getOpcode(), this));
 				break;
 			}
 			case NEG_INT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.NEGINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.NEGINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case NOT_INT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.NOTINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.NOTINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case NEG_LONG:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.NEGLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.NEGLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case NOT_LONG:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.NOTLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.NOTLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case NEG_FLOAT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.NEGFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.NEGFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case NEG_DOUBLE:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.NEGDOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.NEGDOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case INT_TO_LONG:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.INTTOLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.INTTOLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case INT_TO_FLOAT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.INTTOFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.INTTOFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case INT_TO_DOUBLE:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.INTTODOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.INTTODOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case LONG_TO_INT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.LONGTOINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.LONGTOINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case LONG_TO_FLOAT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.LONGTOFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.LONGTOFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case LONG_TO_DOUBLE:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.LONGTODOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.LONGTODOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case FLOAT_TO_INT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.FLOATTOINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.FLOATTOINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case FLOAT_TO_LONG:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.FLOATTOLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.FLOATTOLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case FLOAT_TO_DOUBLE:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.FLOATTODOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.FLOATTODOUBLE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DOUBLE_TO_INT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.DOUBLETOINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.DOUBLETOINT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DOUBLE_TO_LONG:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.DOUBLETOLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.DOUBLETOLONG, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DOUBLE_TO_FLOAT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.DOUBLETOFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.DOUBLETOFLOAT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case INT_TO_BYTE:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.INTTOBYTE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.INTTOBYTE, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case INT_TO_CHAR:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.INTTOCHAR, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.INTTOCHAR, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case INT_TO_SHORT:
 				instructions.add(new UnaryOperation(instLoc,
-						OpID.INTTOSHORT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						OpID.INTTOSHORT, ((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case ADD_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SUB_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case MUL_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case DIV_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case REM_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case AND_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.AND_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case OR_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.OR_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case XOR_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.XOR_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SHL_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHL_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SHR_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHR_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case USHR_INT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.USHR_INT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case ADD_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SUB_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case MUL_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case DIV_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case REM_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case AND_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.AND_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case OR_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.OR_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case XOR_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.XOR_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SHL_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHL_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SHR_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHR_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case USHR_LONG:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.USHR_LONG, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case ADD_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SUB_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case MUL_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case DIV_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case REM_FLOAT:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_FLOAT, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case ADD_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case SUB_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case MUL_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case DIV_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case REM_DOUBLE:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_DOUBLE, ((Instruction23x)inst).getRegisterA(),
-						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.opcode, this));
+						((Instruction23x)inst).getRegisterB(),((Instruction23x)inst).getRegisterC(), inst.getOpcode(), this));
 				break;
 			case ADD_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SUB_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MUL_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DIV_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case REM_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case AND_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.AND_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case OR_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.OR_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case XOR_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.XOR_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SHL_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHL_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SHR_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHR_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case USHR_INT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.USHR_INT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case ADD_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SUB_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MUL_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DIV_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case REM_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case AND_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.AND_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case OR_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.OR_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case XOR_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.XOR_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SHL_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHL_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SHR_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SHR_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case USHR_LONG_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.USHR_LONG, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case ADD_FLOAT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_FLOAT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SUB_FLOAT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_FLOAT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MUL_FLOAT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_FLOAT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DIV_FLOAT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_FLOAT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case REM_FLOAT_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_FLOAT, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case ADD_DOUBLE_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.ADD_DOUBLE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case SUB_DOUBLE_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.SUB_DOUBLE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case MUL_DOUBLE_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.MUL_DOUBLE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case DIV_DOUBLE_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.DIV_DOUBLE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case REM_DOUBLE_2ADDR:
 				instructions.add(new BinaryOperation(instLoc,
 						BinaryOperation.OpID.REM_DOUBLE, ((Instruction12x)inst).getRegisterA(),
-						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.opcode, this));
+						((Instruction12x)inst).getRegisterA(), ((Instruction12x)inst).getRegisterB(), inst.getOpcode(), this));
 				break;
 			case ADD_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.ADD_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case RSUB_INT: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.RSUB_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case MUL_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.MUL_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case DIV_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.DIV_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case REM_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.REM_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case AND_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.AND_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case OR_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.OR_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case XOR_INT_LIT16: {
-				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22s)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.XOR_INT,
-						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22s)inst).getRegisterA(), ((Instruction22s)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case ADD_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.ADD_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case RSUB_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.RSUB_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case MUL_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.MUL_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case DIV_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.DIV_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case REM_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.REM_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case AND_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.AND_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case OR_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.OR_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case XOR_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.XOR_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case SHL_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.SHL_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case SHR_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.SHR_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			case USHR_INT_LIT8: {
-				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getLiteral());
+				Literal lit = new Literal.LongLiteral(((Instruction22b)inst).getWideLiteral());
 				instructions.add(new BinaryLiteralOperation(instLoc, BinaryLiteralOperation.OpID.USHR_INT,
-						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.opcode, this));
+						((Instruction22b)inst).getRegisterA(), ((Instruction22b)inst).getRegisterB(), lit, inst.getOpcode(), this));
 				break;
 			}
 			default:
 				throw new RuntimeException("not implemented instruction: 0x"
-						+ inst.opcode.toString());
+						+ inst.getOpcode().toString());
 
 			}
-			currentCodeAddress += inst.getSize(currentCodeAddress);
+			currentCodeAddress += inst.getCodeUnits();
 		}
 
 		//// comment out start
@@ -2343,7 +2335,7 @@ public class DexIMethod implements IBytecodeMethod {
 		//
 		//              Instruction10t dInst = (Instruction10t)instruction;
 		//
-		//              int offset = dInst.getTargetAddressOffset();
+		//              int offset = dInst.getCodeOffset();
 		//              instructions.add(new Goto(i,offset));
 		//
 		//              break;
@@ -2905,7 +2897,7 @@ public class DexIMethod implements IBytecodeMethod {
 		//
 		//              Instruction20t dInst = (Instruction20t)instruction;
 		//
-		//              int offset = dInst.getTargetAddressOffset();
+		//              int offset = dInst.getCodeOffset();
 		//              instructions.add(new Goto(i,offset));
 		//              break;
 		//          }
@@ -2914,7 +2906,7 @@ public class DexIMethod implements IBytecodeMethod {
 		//
 		//              Instruction30t dInst = (Instruction30t)instruction;
 		//
-		//              int offset = dInst.getTargetAddressOffset();
+		//              int offset = dInst.getCodeOffset();
 		//              instructions.add(new Goto(i,offset));
 		//              break;
 		//          }
@@ -3015,7 +3007,7 @@ public class DexIMethod implements IBytecodeMethod {
 		//              Instruction21t dInst = (Instruction21t)instruction;
 		//
 		//              Register oper1 = regBank.get(dInst.getRegisterA());
-		//              int offset = dInst.getTargetAddressOffset();
+		//              int offset = dInst.getCodeOffset();
 		//
 		//              switch(dInst.opcode) {
 		//              case IF_EQZ:
@@ -3137,27 +3129,27 @@ public class DexIMethod implements IBytecodeMethod {
 	}
 
 	private static TypeReference findOutArrayElementType(
-			org.jf.dexlib.Code.Instruction[] instrucs, Instruction[] walaInstructions, int instCounter) {
-		if (instCounter < 0 || instrucs[instCounter].opcode != Opcode.FILL_ARRAY_DATA) {
+			org.jf.dexlib2.iface.instruction.Instruction inst, Instruction[] walaInstructions, int instCounter) {
+		if (instCounter < 0) {
 			throw new IllegalArgumentException();
 		} else if (instCounter == 0) {
 			throw new UnsupportedOperationException("fill-array-data as first instruction is not supported!");
 		}
-		Instruction31t arrayFill = (Instruction31t)instrucs[instCounter];
+						
+		Instruction31t arrayFill = (Instruction31t)inst;
 		int interestingRegister = arrayFill.getRegisterA();
 		int curCounter = instCounter - 1;
 
 		while (curCounter >= 0) {
-			org.jf.dexlib.Code.Instruction curInst = instrucs[curCounter];
+			Instruction curInst = walaInstructions[curCounter];
 			// do we have a 'new-array'-instruction, where the destination register coincides with the current interesting register?
 			// then we return the element type of that array
-			if (curInst.opcode == Opcode.NEW_ARRAY) {
-				Instruction22c newArrayInst = (Instruction22c) curInst;
-				if (newArrayInst.getRegisterA() == interestingRegister) {
-					NewArray newArray = (NewArray) walaInstructions[curCounter];
+			if (curInst.getOpcode() == Opcode.NEW_ARRAY) {
+				NewArray newArray = (NewArray) walaInstructions[curCounter];
+				if (newArray.destination == interestingRegister) {
 					return newArray.newSiteRef.getDeclaredType().getArrayElementType();
 				}
-			} else if (curInst.opcode == Opcode.MOVE_OBJECT || curInst.opcode == Opcode.MOVE_OBJECT_16 || curInst.opcode == Opcode.MOVE_OBJECT_FROM16) {
+			} else if (curInst.getOpcode() == Opcode.MOVE_OBJECT || curInst.getOpcode() == Opcode.MOVE_OBJECT_16 || curInst.getOpcode() == Opcode.MOVE_OBJECT_FROM16) {
 				TwoRegisterInstruction tri = (TwoRegisterInstruction) curInst;
 				int regA = tri.getRegisterA();
 				int regB = tri.getRegisterB();
@@ -3292,21 +3284,21 @@ public class DexIMethod implements IBytecodeMethod {
 
 	@Override
 	public Collection<Annotation> getAnnotations() {
-		return DexUtil.getAnnotations(myClass.getAnnotations(eMethod.method, null), myClass.getClassLoader().getReference());
+		return myClass.getAnnotations(eMethod, null);
 	}
 
 	@Override
 	public Collection<Annotation> getAnnotations(boolean runtimeInvisible) {
-		return DexUtil.getAnnotations(myClass.getAnnotations(eMethod.method, DexIClass.getTypes(runtimeInvisible)), myClass.getClassLoader().getReference());
+		return myClass.getAnnotations(eMethod, DexIClass.getTypes(runtimeInvisible));
 	}
 
 	@Override
 	public Collection<Annotation>[] getParameterAnnotations() {
-		Map<Integer, List<AnnotationItem>> raw = myClass.getParameterAnnotations(eMethod.method);
+		Map<Integer, List<Annotation>> raw = myClass.getParameterAnnotations(eMethod);
 		@SuppressWarnings("unchecked")
 		Collection<Annotation>[] result = new Collection[ getReference().getNumberOfParameters() ];
-		for(Map.Entry<Integer, List<AnnotationItem>> x : raw.entrySet()) {
-			result[x.getKey()] = DexUtil.getAnnotations(x.getValue(), myClass.getClassLoader().getReference());
+		for(Map.Entry<Integer, List<Annotation>> x : raw.entrySet()) {
+			result[x.getKey()] = x.getValue();
 		}
 		return result;
 	}

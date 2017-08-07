@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ibm.wala</groupId>
         <artifactId>WALA</artifactId>
-        <version>1.4.3-SNAPSHOT</version>
+        <version>1.4.4-SNAPSHOT</version>
     </parent>
   <artifactId>com.ibm.wala.cast.test</artifactId>
   <packaging>eclipse-plugin</packaging>
@@ -34,10 +34,9 @@
 	    <id>test-native</id>
 	    <phase>test</phase>
 	    <configuration>
-	      <workingDirectory>${basedir}</workingDirectory>
 	      <executable>${project.build.outputDirectory}/smoke_main</executable>
 	      <arguments>
-		<argument>target/classes:../com.ibm.wala.cast/target/classes:../com.ibm.wala.core/target/classes:../com.ibm.wala.util/target/classes</argument>
+		<argument>${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes:${basedir}/../com.ibm.wala.core/target/classes:${basedir}/../com.ibm.wala.util/target/classes</argument>
 	      </arguments>
 	    </configuration>
 	    <goals>
@@ -55,7 +54,7 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-              <argLine>-Djava.library.path=${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes -ea</argLine>
+              <argLine>-Djava.library.path=${project.build.outputDirectory} -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
             </configuration>
             <goals>
