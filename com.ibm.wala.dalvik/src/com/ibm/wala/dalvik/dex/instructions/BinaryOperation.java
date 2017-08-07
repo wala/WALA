@@ -48,7 +48,7 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib.Code.Opcode;
+import org.jf.dexlib2.Opcode;
 
 import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
@@ -84,10 +84,8 @@ public class BinaryOperation extends Instruction {
         visitor.visitBinaryOperation(this);
     }
 
-    public IBinaryOpInstruction.IOperator getOperator()
-    {
-        switch(op)
-        {
+    public IBinaryOpInstruction.IOperator getOperator() {
+        switch(op) {
         case CMPL_FLOAT:
             return CAstBinaryOp.LT;
         case CMPG_FLOAT:
@@ -196,28 +194,20 @@ public class BinaryOperation extends Instruction {
     }
 
     public boolean isUnsigned() {
-    	
-    	/**
-    	 * At the moment, WALA asserts that false is returned here. Maybe WALA will support unsigned
-    	 * arithmetic in its IR some time in the future - then the commented code will make sense.
-    	 */
-    	return false;
-//        switch(op)
-//        {
-//        case AND_INT:
-//        case OR_INT:
-//        case XOR_INT:
-//        case SHL_INT:
-//        case USHR_INT:
-//        case AND_LONG:
-//        case OR_LONG:
-//        case XOR_LONG:
-//        case SHL_LONG:
-//        case USHR_LONG:
-//            return true;
-//        default:
-//            return false;
-//        }
+    	  switch(op)  {
+        case AND_INT:
+        case OR_INT:
+        case XOR_INT:
+        case SHL_INT:
+        case USHR_INT:
+        case AND_LONG:
+        case OR_LONG:
+        case XOR_LONG:
+        case SHL_LONG:
+        case USHR_LONG:
+            return true;
+        default:
+            return false;
+        }
     }
-
 }

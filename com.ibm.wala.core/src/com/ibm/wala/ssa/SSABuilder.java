@@ -550,6 +550,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           int ref = workingState.pop();
           emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, ref, f));
         }
+        assert result != -1;
         workingState.push(result);
       }
 

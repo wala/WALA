@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
-Bundle-Version: 1.4.3.qualifier
+Bundle-Version: 1.4.4.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,
- com.ibm.wala.ide.jdt;bundle-version="1.4.3",
+ com.ibm.wala.ide.jdt;bundle-version="1.4.4.qualifier",
  org.eclipse.core.runtime,
  com.ibm.wala.core.testdata,
  org.junit;bundle-version="4.0.0",

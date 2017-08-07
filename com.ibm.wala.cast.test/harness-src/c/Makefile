@@ -31,3 +31,4 @@ main:	$(CAST_TEST_BIN)/smoke_main
 
 $(CAST_TEST_BIN)/smoke_main:	$(TEST_JNI_BRIDGE_HEADER) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o $(C_GENERATED)/smoke_main.o
 	$(CC) $(ALL_FLAGS) $(DOMO_AST_BIN)/$(LIBPREFIX)cast/launch.o $(C_GENERATED)/smoke_main.o $(CC_LD_PATHS) -o $@ 
+

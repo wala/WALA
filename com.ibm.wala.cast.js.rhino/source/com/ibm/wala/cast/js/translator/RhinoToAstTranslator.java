@@ -831,86 +831,154 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 			WalkContext arg) {
 		return visit(node.getExpression(), arg);
 	}
-
+	
 	@Override
 	public CAstNode visitForInLoop(ForInLoop node, WalkContext arg) {		
-		// set up 		
-		CAstNode object = visit(node.getIteratedObject(), arg);
-    String tempName = "for in loop temp";   
-		CAstNode[] loopHeader = new CAstNode[]{
-		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)), readName(arg, null, "$$undefined")),
-        Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
-		};
-		
-		CAstNode initNode;
-		String name;
-		AstNode var = node.getIterator();
-		assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
-		if (var instanceof Name) {
-		  name = ((Name)var).getString();
-      initNode = 
-        Ast.makeNode(CAstNode.ASSIGN, 
-          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
-          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
-              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-              readName(arg, null, name)));
-		  
-		} else {
-		  VariableDeclaration decl;
-		  if (var instanceof LetNode) {
-		    decl = ((LetNode)var).getVariables();
-		  } else {
-		    decl = (VariableDeclaration)var;
-		  }
-		  assert decl.getVariables().size() == 1;
-		  VariableInitializer init = decl.getVariables().iterator().next();
+	  // TODO: fix the correlation-tracking rewriters, and kill the old for..in translation
+	  if (useNewForIn) {
+	    // set up 		
+	    CAstNode object = visit(node.getIteratedObject(), arg);
+	    String tempName = "for in loop temp";   
+	    CAstNode[] loopHeader = new CAstNode[]{
+	        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)), readName(arg, null, "$$undefined")),
+	        Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
+	    };
 
-      name = init.getTarget().getString();
+	    String name;
+	    AstNode var = node.getIterator();
+	    assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
+	    if (var instanceof Name) {
+	      name = ((Name)var).getString();		  
+	    } else {
+	      VariableDeclaration decl;
+	      if (var instanceof LetNode) {
+	        decl = ((LetNode)var).getVariables();
+	      } else {
+	        decl = (VariableDeclaration)var;
+	      }
+	      assert decl.getVariables().size() == 1;
+	      VariableInitializer init = decl.getVariables().iterator().next();
 
-	    arg.addNameDecl(
-	        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(name, JSAstTranslator.Any)),
-	            readName(arg, null, "$$undefined")));
-	    		  
-      initNode = 
-          Ast.makeNode(CAstNode.ASSIGN, 
-              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
-		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
-		              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-		              readName(arg, null, name)));
+	      name = init.getTarget().getString();
 
-		}
-		
-		// body
-		AstNode breakStmt = makeEmptyLabelStmt("breakLabel");
-		CAstNode breakLabel = visit(breakStmt, arg);
-		AstNode contStmt = makeEmptyLabelStmt("contLabel");
-		CAstNode contLabel = visit(contStmt, arg);
-		// TODO: Figure out why this is needed to make the correlation extraction tests pass
-		// TODO: remove this silly label
-    AstNode garbageStmt = makeEmptyLabelStmt("garbageLabel");
-    CAstNode garbageLabel = visit(garbageStmt, arg);
-		WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
-		CAstNode body = Ast.makeNode(CAstNode.BLOCK_STMT,
-				initNode,
-				visit(node.getBody(), loopContext),
-				garbageLabel);
-		
-		CAstNode loop = Ast.makeNode(CAstNode.LOCAL_SCOPE,
-				Ast.makeNode(CAstNode.BLOCK_STMT,
-						loopHeader[0],
-						loopHeader[1],
-						contLabel,
-						Ast.makeNode(CAstNode.LOOP,
-								Ast.makeNode(CAstNode.BINARY_EXPR,
-								    CAstOperator.OP_NE,
-										Ast.makeConstant(null),
-				            Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
-			                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-			                  readName(arg, null, name))),
-								body),
-						breakLabel));
-		arg.cfg().map(node, loop);
-		return loop;
+	      arg.addNameDecl(
+	          Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(name, JSAstTranslator.Any)),
+	              readName(arg, null, "$$undefined")));
+	    }
+
+	    // body
+	    AstNode breakStmt = makeEmptyLabelStmt("breakLabel");
+	    CAstNode breakLabel = visit(breakStmt, arg);
+	    AstNode contStmt = makeEmptyLabelStmt("contLabel");
+	    CAstNode contLabel = visit(contStmt, arg);
+	    // TODO: Figure out why this is needed to make the correlation extraction tests pass
+	    // TODO: remove this silly label
+	    AstNode garbageStmt = makeEmptyLabelStmt("garbageLabel");
+	    CAstNode garbageLabel = visit(garbageStmt, arg);
+	    WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
+	    CAstNode body = Ast.makeNode(CAstNode.BLOCK_STMT,
+	        //initNode,
+	        visit(node.getBody(), loopContext),
+	        garbageLabel);
+
+	    CAstNode loop = Ast.makeNode(CAstNode.LOCAL_SCOPE,
+	        Ast.makeNode(CAstNode.BLOCK_STMT,
+	            loopHeader[0],
+	            loopHeader[1],
+	            contLabel,
+	            Ast.makeNode(CAstNode.LOOP,
+	                Ast.makeNode(CAstNode.BINARY_EXPR,
+	                    CAstOperator.OP_NE,
+	                    Ast.makeConstant(null),
+	                    Ast.makeNode(CAstNode.BLOCK_EXPR,
+	                        Ast.makeNode(CAstNode.ASSIGN, 
+	                            Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+	                            Ast.makeNode(CAstNode.EACH_ELEMENT_GET,   
+	                                Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+	                                readName(arg, null, name))),
+	                        readName(arg, null, name))),
+	                body),
+	            breakLabel));
+	    arg.cfg().map(node, loop);
+	    return loop;
+	  } else {
+	    CAstNode object = visit(node.getIteratedObject(), arg);
+	    String tempName = "for in loop temp";   
+	    CAstNode[] loopHeader = new CAstNode[]{
+	        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)), readName(arg, null, "$$undefined")),
+	        Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
+	    };
+
+	    CAstNode initNode;
+	    String name;
+	    AstNode var = node.getIterator();
+	    assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
+	    if (var instanceof Name) {
+	      name = ((Name)var).getString();
+	      initNode = 
+	          Ast.makeNode(CAstNode.ASSIGN, 
+	              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+	              Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
+	                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+	                  readName(arg, null, name)));
+
+	    } else {
+	      VariableDeclaration decl;
+	      if (var instanceof LetNode) {
+	        decl = ((LetNode)var).getVariables();
+	      } else {
+	        decl = (VariableDeclaration)var;
+	      }
+	      assert decl.getVariables().size() == 1;
+	      VariableInitializer init = decl.getVariables().iterator().next();
+
+	      name = init.getTarget().getString();
+
+	      arg.addNameDecl(
+	          Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(name, JSAstTranslator.Any)),
+	              readName(arg, null, "$$undefined")));
+
+	      initNode = 
+	          Ast.makeNode(CAstNode.ASSIGN, 
+	              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+	              Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
+	                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+	                  readName(arg, null, name)));
+
+	    }
+
+	    // body
+	    AstNode breakStmt = makeEmptyLabelStmt("breakLabel");
+	    CAstNode breakLabel = visit(breakStmt, arg);
+	    AstNode contStmt = makeEmptyLabelStmt("contLabel");
+	    CAstNode contLabel = visit(contStmt, arg);
+	    // TODO: Figure out why this is needed to make the correlation extraction tests pass
+	    // TODO: remove this silly label
+	    AstNode garbageStmt = makeEmptyLabelStmt("garbageLabel");
+	    CAstNode garbageLabel = visit(garbageStmt, arg);
+	    WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
+	    CAstNode body = Ast.makeNode(CAstNode.BLOCK_STMT,
+	        initNode,
+	        visit(node.getBody(), loopContext),
+	        garbageLabel);
+
+	    CAstNode loop = Ast.makeNode(CAstNode.LOCAL_SCOPE,
+	        Ast.makeNode(CAstNode.BLOCK_STMT,
+	            loopHeader[0],
+	            loopHeader[1],
+	            contLabel,
+	            Ast.makeNode(CAstNode.LOOP,
+	                Ast.makeNode(CAstNode.BINARY_EXPR,
+	                    CAstOperator.OP_NE,
+	                    Ast.makeConstant(null),
+	                    Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
+	                        Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+	                        readName(arg, null, name))),
+	                body),
+	            breakLabel));
+	    arg.cfg().map(node, loop);
+	    return loop;
+	  }
 	}
 
 	@Override
@@ -2435,13 +2503,20 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
   private int tempVarNum = 0;
 
   private final DoLoopTranslator doLoopTranslator;
-  
+
+  private final boolean useNewForIn;
+
   public RhinoToAstTranslator(CAst Ast, ModuleEntry m, String scriptName, boolean replicateForDoLoops) {
+    this(Ast, m, scriptName, replicateForDoLoops, false);
+  }
+  
+  public RhinoToAstTranslator(CAst Ast, ModuleEntry m, String scriptName, boolean replicateForDoLoops, boolean useNewForIn) {
     this.Ast = Ast;
     this.scriptName = scriptName;
     this.sourceModule = m;
     this.sourceReader = new InputStreamReader(sourceModule.getInputStream());
     this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, Ast);
+    this.useNewForIn = useNewForIn;
   }
 
   @Override

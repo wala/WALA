@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,11 +62,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -135,7 +136,7 @@ public class AndroidAnalysisContext {
 	
 
 	public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
-			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
 			AnalysisScope scope, ContextSelector customSelector,
 			SSAContextInterpreter customInterpreter,
 			InputStream summariesStream, MethodSummary extraSummary) {
@@ -173,12 +174,12 @@ public class AndroidAnalysisContext {
 	 * TODO: move
 	 */
 	public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
 			AnalysisScope scope, ContextSelector customSelector,
 			SSAContextInterpreter customInterpreter,
-			InputStream summariesStream, MethodSummary extraSummary) {
+			List<InputStream> arrayList, MethodSummary extraSummary) {
 				return makeZeroCFABuilder(options, cache, cha, scope,
-						customSelector, customInterpreter, Lists.newArrayList(summariesStream),
+						customSelector, customInterpreter, Lists.newArrayList(arrayList),
 						extraSummary);
 			}
 
@@ -200,7 +201,7 @@ public class AndroidAnalysisContext {
      * TODO: move
 	 */
 	public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
 			AnalysisScope scope, ContextSelector customSelector,
 			SSAContextInterpreter customInterpreter,
 			Collection<InputStream> summariesStreams, MethodSummary extraSummary) {

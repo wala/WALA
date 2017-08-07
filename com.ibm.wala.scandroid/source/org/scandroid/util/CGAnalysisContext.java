@@ -70,13 +70,13 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dataflow.IFDS.ICFGSupergraph;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
@@ -142,7 +142,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		*/
 		analysisOptions.setReflectionOptions(options.getReflectionOptions());
 
-		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
+		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		SSAPropagationCallGraphBuilder cgb;
 

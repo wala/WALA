@@ -35,4 +35,6 @@ public interface IAnalysisCacheView {
 
   IR getIR(IMethod method, Context context);
 
+  void clear();
+
 }

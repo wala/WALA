@@ -12,12 +12,12 @@ package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
 
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
@@ -55,7 +55,7 @@ public class CallGraphTestUtil {
     return scope;
   }
 
-  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope)
+  public static CallGraph buildRTA(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -73,7 +73,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
+  public static CallGraph buildZeroCFA(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAtoString) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -94,7 +94,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -112,7 +112,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
+  public static CallGraph buildZeroOneCFA(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAtoString) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -133,7 +133,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroContainerCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static CallGraph buildZeroContainerCFA(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -151,7 +151,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
