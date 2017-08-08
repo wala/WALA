@@ -68,6 +68,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jf.dexlib2.Opcode;
+import org.jf.dexlib2.analysis.ClassPath;
+import org.jf.dexlib2.analysis.ClassPathResolver;
+import org.jf.dexlib2.analysis.MethodAnalyzer;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.TryBlock;
@@ -710,10 +713,42 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 		return instructions.toArray(new Instruction[ instructions.size() ]);
 	}
 
+	private boolean odexMethod() {
+		for(org.jf.dexlib2.iface.instruction.Instruction inst : eMethod.getImplementation().getInstructions()) {
+			if (inst.getOpcode().odexOnly()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
+	Iterable<? extends org.jf.dexlib2.iface.instruction.Instruction> deodex() {
+		try {
+			DexFileModule m = myClass.getContainer();
 
+			ClassPathResolver path = 
+					new ClassPathResolver(Collections.singletonList(m.getFile().getParent() + "/"),
+							Collections.<String>emptyList(),
+							m.getDexFile());
+
+			ClassPath cp = new ClassPath(path.getResolvedClassProviders(), false, 56);
+
+			MethodAnalyzer analyzer = new MethodAnalyzer(cp, eMethod, null, false);
+
+			return analyzer.getInstructions();
+		} catch (Exception e) {
+			assert false : e;
+		    return eMethod.getImplementation().getInstructions();
+		}
+	}
+	
 	protected void parseBytecode() {
-		Iterable<? extends org.jf.dexlib2.iface.instruction.Instruction> instrucs = eMethod.getImplementation().getInstructions();
+
+		Iterable<? extends org.jf.dexlib2.iface.instruction.Instruction> instrucs = 
+			odexMethod()?
+			    deodex():
+				eMethod.getImplementation().getInstructions();
 
 		//      for (org.jfmethod.getInstructionIndex(.dexlib.Code.Instruction inst: instrucs)
 		//      {
@@ -996,6 +1031,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 						getExceptionReg(), inst.getOpcode(), this));
 				break;
 			case RETURN_VOID:
+			case RETURN_VOID_NO_BARRIER:
 				instructions.add(new Return.ReturnVoid(instLoc, inst.getOpcode(), this));
 				break;
 			case RETURN:
@@ -1198,8 +1234,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 				break;
 			}
 			case FILL_ARRAY_DATA:
-				System.out.println("Array Reference: " + ((Instruction31t)inst).getRegisterA());
-				System.out.println("Table Address Offset: " + ((Instruction31t)inst).getCodeOffset());
+				// System.out.println("Array Reference: " + ((Instruction31t)inst).getRegisterA());
+				// System.out.println("Table Address Offset: " + ((Instruction31t)inst).getCodeOffset());
 
 				TypeReference arrayElementType = findOutArrayElementType(inst, instructions.toArray(new Instruction[0]), instCounter);
 				instructions.add(new ArrayFill(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getCodeOffset(),
@@ -2278,7 +2314,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 			}
 			default:
 				throw new RuntimeException("not implemented instruction: 0x"
-						+ inst.getOpcode().toString());
+						+ inst.getOpcode().toString() + " in " + eMethod.getDefiningClass() + ":" + eMethod.getName());
 
 			}
 			currentCodeAddress += inst.getCodeUnits();

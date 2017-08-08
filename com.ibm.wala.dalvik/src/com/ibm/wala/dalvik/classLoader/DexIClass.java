@@ -47,7 +47,10 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import static org.jf.dexlib2.AccessFlags.*;
+import static org.jf.dexlib2.AccessFlags.ABSTRACT;
+import static org.jf.dexlib2.AccessFlags.INTERFACE;
+import static org.jf.dexlib2.AccessFlags.PRIVATE;
+import static org.jf.dexlib2.AccessFlags.PUBLIC;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +69,6 @@ import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -387,7 +389,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     }
 
 	@Override
-	public Module getContainer() {
-		return dexModuleEntry.asModule();
+	public DexFileModule getContainer() {
+		return dexModuleEntry.getContainer();
 	}
 }
