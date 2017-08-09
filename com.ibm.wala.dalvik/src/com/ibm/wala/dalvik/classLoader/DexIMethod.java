@@ -732,7 +732,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 							Collections.<String>emptyList(),
 							m.getDexFile());
 
-			ClassPath cp = new ClassPath(path.getResolvedClassProviders(), false, 56);
+			ClassPath cp = new ClassPath(path.getResolvedClassProviders(), false, m.getDexFile().getOpcodes().artVersion);
 
 			MethodAnalyzer analyzer = new MethodAnalyzer(cp, eMethod, null, false);
 
