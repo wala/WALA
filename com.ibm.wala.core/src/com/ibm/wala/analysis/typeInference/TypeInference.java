@@ -752,8 +752,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     if (valueNumber < 0) {
       throw new IllegalArgumentException("bad value number " + valueNumber);
     }
-    assert getVariable(valueNumber) != null : "null variable for value number " + valueNumber;
-    return getVariable(valueNumber).getType();
+    TypeVariable variable = getVariable(valueNumber);
+    assert variable != null : "null variable for value number " + valueNumber;
+    return variable.getType();
   }
 
   public TypeAbstraction getConstantType(int valueNumber) {
