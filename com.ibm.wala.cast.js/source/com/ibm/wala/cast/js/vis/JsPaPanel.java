@@ -43,7 +43,7 @@ public class JsPaPanel extends PaPanel {
 	}
 
 	private void initDataStructures(PointerAnalysis<InstanceKey> pa) {
-		HeapGraph heapGraph = pa.getHeapGraph();
+		HeapGraph<InstanceKey> heapGraph = pa.getHeapGraph();
 		OrdinalSetMapping<InstanceKey> instanceKeyMapping = pa.getInstanceKeyMapping();
 		for (Object n : heapGraph){
 			if (heapGraph.getPredNodeCount(n) == 0){

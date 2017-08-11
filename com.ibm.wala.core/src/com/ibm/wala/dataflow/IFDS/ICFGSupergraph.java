@@ -26,7 +26,6 @@ import java.util.Iterator;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.ExplodedInterproceduralCFG;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -50,17 +49,14 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> {
 
-  private final IAnalysisCacheView analysisCache;
-  
   private final ExplodedInterproceduralCFG icfg;
 
-  protected ICFGSupergraph(ExplodedInterproceduralCFG icfg, IAnalysisCacheView cache) {
+  protected ICFGSupergraph(ExplodedInterproceduralCFG icfg) {
     this.icfg = icfg;
-    this.analysisCache = cache;
   }
 
-  public static ICFGSupergraph make(CallGraph cg, IAnalysisCacheView cache) {
-    ICFGSupergraph w = new ICFGSupergraph(ExplodedInterproceduralCFG.make(cg), cache);
+  public static ICFGSupergraph make(CallGraph cg) {
+    ICFGSupergraph w = new ICFGSupergraph(ExplodedInterproceduralCFG.make(cg));
     return w;
   }
 

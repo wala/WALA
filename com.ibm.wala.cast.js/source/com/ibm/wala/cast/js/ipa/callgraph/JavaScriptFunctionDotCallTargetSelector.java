@@ -25,7 +25,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -62,11 +61,8 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
   private final MethodTargetSelector base;
 
-  private IAnalysisCacheView cache;
-
-  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base, IAnalysisCacheView cache2) {
+  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {
     this.base = base;
-    this.cache = cache2;
   }
 
   /*

@@ -55,7 +55,7 @@ import com.ibm.wala.types.TypeReference;
 
 public class ArrayGet extends Instruction {
 
-    public enum Type{t_int,t_wide,t_boolean,t_byte,t_char, t_object, t_short};
+    public enum Type{t_int,t_wide,t_boolean,t_byte,t_char, t_object, t_short}
 
     public final int destination;
     public final int array;

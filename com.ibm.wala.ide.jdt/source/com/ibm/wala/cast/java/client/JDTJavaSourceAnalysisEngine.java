@@ -53,7 +53,6 @@ import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType;
 import com.ibm.wala.ide.util.JavaEclipseProjectPath;
 import com.ibm.wala.ide.util.JdtUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -107,7 +106,7 @@ public class JDTJavaSourceAnalysisEngine<I extends InstanceKey> extends EclipseP
   }
 
   @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha,
+  protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
 		  AnalysisOptions options, IAnalysisCacheView cache) {
 	    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
   }

@@ -59,6 +59,7 @@ import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
+@SuppressWarnings("restriction")
 public class JsdtUtil {
 
   public static URL getPrologueFile(String file, Plugin plugin) {
@@ -91,14 +92,14 @@ public class JsdtUtil {
 
   public static CGInfo buildJSDTCallGraph(Set<ModuleEntry> mes) {
     final CGInfo info = new CGInfo();
-    HeadlessUtil.parseModules(mes, new EclipseCompiler<IJavaScriptUnit, JavaScriptUnit>() {
+    HeadlessUtil.parseModules(mes, new EclipseCompiler<IJavaScriptUnit>() {
       @Override
       public IJavaScriptUnit getCompilationUnit(IFile file) {
         return JavaScriptCore.createCompilationUnitFrom(file);
       }
       @Override
-      public Parser<IJavaScriptUnit, JavaScriptUnit> getParser() {
-        return new Parser<IJavaScriptUnit, JavaScriptUnit>() {
+      public Parser<IJavaScriptUnit> getParser() {
+        return new Parser<IJavaScriptUnit>() {
           IJavaScriptProject project;
 
           @Override

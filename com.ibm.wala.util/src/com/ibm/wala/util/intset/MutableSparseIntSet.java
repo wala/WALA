@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.io.Serializable;
-
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -23,7 +21,7 @@ import com.ibm.wala.util.debug.Assertions;
  * TODO: even for small sets, we probably want to work on this to reduce the
  * allocation activity.
  */
-public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet, Serializable {
+public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
 	/**
 	 * If forced to grow the backing array .. then by how much

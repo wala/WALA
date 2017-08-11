@@ -202,7 +202,7 @@ public class ArraySet<T> extends AbstractSet<T> {
       _curIndex--;
       return true;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid ind: " + ind);
+      throw new IllegalArgumentException("invalid ind: " + ind, e);
     }
   }
 

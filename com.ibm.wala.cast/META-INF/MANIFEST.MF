@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WALA CAst core Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast
-Bundle-Version: 1.3.10.qualifier
+Bundle-Version: 1.4.3.qualifier
 Bundle-Vendor: IBM
 Require-Bundle: com.ibm.wala.core,
  com.ibm.wala.shrike

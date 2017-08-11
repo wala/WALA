@@ -278,7 +278,7 @@ public final class Atom implements Serializable {
         }
       }
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalStateException("not an array: " + this);
+      throw new IllegalStateException("not an array: " + this, e);
     }
 
   }
@@ -299,7 +299,7 @@ public final class Atom implements Serializable {
       }
       return findOrCreate(val, i, val.length - i);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalStateException("not an array: " + this);
+      throw new IllegalStateException("not an array: " + this, e);
     }
   }
 
@@ -403,7 +403,7 @@ public final class Atom implements Serializable {
     try {
       return val[i];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Illegal index: " + i + " length is " + val.length);
+      throw new IllegalArgumentException("Illegal index: " + i + " length is " + val.length, e);
     }
   }
 

@@ -73,7 +73,7 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
     try {
       return getFile().toURI().toURL();
     } catch (MalformedURLException e) {
-      throw new Error("error making URL for " + getFile());
+      throw new Error("error making URL for " + getFile(), e);
     }
   }
 }

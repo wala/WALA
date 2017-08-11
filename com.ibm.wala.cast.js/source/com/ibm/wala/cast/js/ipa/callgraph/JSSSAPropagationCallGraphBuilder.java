@@ -44,7 +44,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -108,6 +107,7 @@ import com.ibm.wala.util.strings.Atom;
  * reference to a global named {@link #GLOBAL_OBJ_VAR_NAME}, which is handled
  * specially in {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)}.
  */
+@SuppressWarnings("javadoc")
 public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
   public static final boolean DEBUG_LEXICAL = false;
@@ -1021,6 +1021,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     processCallingConstraintsInternal(this, caller, instruction, target, constParams, uniqueCatchKey);
   }
 
+  @SuppressWarnings("unused")
   public static void processCallingConstraintsInternal(AstSSAPropagationCallGraphBuilder builder, CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
         

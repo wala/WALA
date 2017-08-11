@@ -176,7 +176,7 @@ public class SSAValueManager {
             throw new IllegalStateException("The parameter " + value + " using Key " + value.key + " has already been allocated");
         } else {
             info("New variable in management: {}", value);
-            final Managed<SSAValue> param = new Managed(value, value.key);
+            final Managed<SSAValue> param = new Managed<>(value, value.key);
             param.status = ValueStatus.ALLOCATED;
             param.setInScope = currentScope;
             param.setBy = setBy;
@@ -191,11 +191,10 @@ public class SSAValueManager {
     /**
      *  Register a Phi-Instruction _after_ added to the model.
      *
-     *  @param  type    the type the Phi-Instruction sets
-     *  @param  ssaValue the number the SSA-Instruction assigns to
+     *  @param  value   the number the SSA-Instruction assigns to
      *  @param  setBy   the Phi-Instruction itself - may be null
      *  @throws IllegalArgumentException if you assign to a number requested using
-     *      {@link #getFree(TypeReference)} but types mismatch.
+     *      {@link #getFree} but types mismatch.
      *  @throws IllegalStateException if you forgot to close some Phis
      */
     public void setPhi(final SSAValue value, SSAInstruction setBy) {
@@ -276,7 +275,7 @@ public class SSAValueManager {
         }
 
         final SSAValue var = new SSAValue(nextLocal++, type, this.forMethod, key);
-        final Managed<SSAValue> param = new Managed(var, key);
+        final Managed<SSAValue> param = new Managed<>(var, key);
 
         param.status = ValueStatus.FREE;
         param.setInScope = currentScope;
@@ -321,7 +320,7 @@ public class SSAValueManager {
         }
 
         final SSAValue var = new SSAValue(nextLocal++, type, this.forMethod, key);
-        final Managed<SSAValue> param = new Managed(var, key);
+        final Managed<SSAValue> param = new Managed<>(var, key);
 
         param.status = ValueStatus.UNALLOCATED;
         param.setInScope = currentScope;

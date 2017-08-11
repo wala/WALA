@@ -53,10 +53,10 @@ public class CISlicer {
   private final Graph<Statement> depGraph;
 
   public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, ModRef.make(), dOptions, cOptions);
+    this(cg, pa, ModRef.make(InstanceKey.class), dOptions, cOptions);
   }
 
-  public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions)
+  public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions)
       throws IllegalArgumentException {
     if (dOptions == null) {
       throw new IllegalArgumentException("dOptions == null");
@@ -65,7 +65,7 @@ public class CISlicer {
       throw new IllegalArgumentException("Heap data dependences requested in CISlicer!");
     }
 
-    SDG sdg = new SDG(cg, pa, modRef, dOptions, cOptions, null);
+    SDG<InstanceKey> sdg = new SDG<>(cg, pa, modRef, dOptions, cOptions, null);
 
     Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa, modRef);
     Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa, modRef);
@@ -74,7 +74,7 @@ public class CISlicer {
 
   }
 
-  public CISlicer(final SDG sdg, final PointerAnalysis<InstanceKey> pa, final ModRef modRef) {
+  public CISlicer(final SDG<InstanceKey> sdg, final PointerAnalysis<InstanceKey> pa, final ModRef<InstanceKey> modRef) {
     Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa, modRef);
     Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa, modRef);
 
@@ -94,24 +94,24 @@ public class CISlicer {
   /**
    * Compute the set of pointer keys each statement mods
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis<InstanceKey> pa) {
-    return scanForMod(sdg, pa, false, ModRef.make());
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa) {
+    return scanForMod(sdg, pa, false, ModRef.make(InstanceKey.class));
   }
 
   /**
    * Compute the set of pointer keys each statement refs
    */
-  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis<InstanceKey> pa) {
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa) {
     if (sdg == null) {
       throw new IllegalArgumentException("null sdg");
     }
-    return scanForRef(sdg, pa, ModRef.make());
+    return scanForRef(sdg, pa, ModRef.make(InstanceKey.class));
   }
 
   /**
    * Compute the set of pointer keys each statement mods
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef) {
     return scanForMod(sdg, pa, false, modRef);
   }
 
@@ -119,7 +119,7 @@ public class CISlicer {
    * Compute the set of pointer keys each statement mods. Be careful to avoid eager PDG construction here! That means .. don't
    * iterate over SDG statements!
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis<InstanceKey> pa, boolean ignoreAllocHeapDefs, ModRef modRef) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa, boolean ignoreAllocHeapDefs, ModRef<InstanceKey> modRef) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }
@@ -147,7 +147,7 @@ public class CISlicer {
    * Compute the set of PointerKeys each statement refs.Be careful to avoid eager PDG construction here! That means .. don't iterate
    * over SDG statements!
    */
-  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }

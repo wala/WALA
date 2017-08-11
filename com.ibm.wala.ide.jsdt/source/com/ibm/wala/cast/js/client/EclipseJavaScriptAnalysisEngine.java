@@ -42,7 +42,6 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ide.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -114,7 +113,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   }
 
   @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha,
+  protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
 		AnalysisOptions options, IAnalysisCacheView cache) {
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }

@@ -43,7 +43,7 @@ import java.util.Iterator;
 public class BasicsGenerics {
 	
 	static ArrayList<String> strs = new ArrayList<String>();
-	static ArrayList ints = new ArrayList();
+	static ArrayList<Integer> ints = new ArrayList<>();
 	
 	public BasicsGenerics() {
 		strs.add("Coucou, monde!");

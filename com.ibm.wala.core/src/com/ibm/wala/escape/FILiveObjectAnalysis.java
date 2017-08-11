@@ -48,7 +48,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   /**
    * Graph view of pointer analysis results
    */
-  private final HeapGraph heapGraph;
+  private final HeapGraph<?> heapGraph;
 
   /**
    * Cached map from InstanceKey -> Set<CGNode>
@@ -68,7 +68,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   /**
    * 
    */
-  public FILiveObjectAnalysis(CallGraph callGraph, HeapGraph heapGraph, boolean expensiveIntraproceduralAnalysis) {
+  public FILiveObjectAnalysis(CallGraph callGraph, HeapGraph<?> heapGraph, boolean expensiveIntraproceduralAnalysis) {
     super();
     this.callGraph = callGraph;
     this.heapGraph = heapGraph;

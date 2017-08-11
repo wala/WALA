@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.junit.Assert;
 
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -25,10 +26,9 @@ import com.ibm.wala.ide.tests.util.EclipseTestUtil.ZippedProjectData;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.io.TemporaryFile;
-
-import junit.framework.Assert;
 
 public abstract class JDTJavaTest extends IRTests {
 
@@ -45,14 +45,14 @@ public abstract class JDTJavaTest extends IRTests {
    }
 
   @Override
-  protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+  protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     return makeAnalysisEngine(mainClassDescriptors, sources, libs, project);
   }
   
-  static AbstractAnalysisEngine makeAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs, ZippedProjectData project) {
-    AbstractAnalysisEngine engine;
+  static <I extends InstanceKey> AbstractAnalysisEngine<I> makeAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs, ZippedProjectData project) {
+    AbstractAnalysisEngine<I> engine;
     try {
-      engine = new JDTJavaSourceAnalysisEngine(project.projectName) {
+      engine = new JDTJavaSourceAnalysisEngine<I>(project.projectName) {
         {
           setDump(Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false")));
         }

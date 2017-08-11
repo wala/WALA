@@ -45,7 +45,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     try {
       return array[n];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid n: " + n);
+      throw new IllegalArgumentException("invalid n: " + n, e);
     }
   }
 

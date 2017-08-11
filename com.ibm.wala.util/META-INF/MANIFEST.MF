@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WALA Util
 Bundle-SymbolicName: com.ibm.wala.util
-Bundle-Version: 1.3.10.qualifier
+Bundle-Version: 1.4.3.qualifier
 Export-Package: com.ibm.wala.dataflow.graph,
  com.ibm.wala.fixedpoint.impl,
  com.ibm.wala.fixpoint,
@@ -24,6 +24,5 @@ Export-Package: com.ibm.wala.dataflow.graph,
  com.ibm.wala.util.processes,
  com.ibm.wala.util.tables,
  com.ibm.wala.viz
-Bundle-ClassPath: walaUtil.jar
 Bundle-Vendor: IBM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

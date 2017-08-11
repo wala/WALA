@@ -136,8 +136,8 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     return result;
   }
 
-  protected NodeImpl getNode(Key K) {
-    return (NodeImpl) nodes.get(K);
+  protected CGNode getNode(Key K) {
+    return nodes.get(K);
   }
 
   @Override

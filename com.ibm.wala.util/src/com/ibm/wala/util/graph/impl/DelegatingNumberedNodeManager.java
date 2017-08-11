@@ -50,7 +50,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     try {
       return (T) nodes[number];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Invalid number " + number);
+      throw new IllegalArgumentException("Invalid number " + number, e);
     }
   }
 

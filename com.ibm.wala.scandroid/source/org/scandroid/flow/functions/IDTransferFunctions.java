@@ -66,8 +66,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 
 public class IDTransferFunctions <E extends ISSABasicBlock> implements
         IFlowFunctionMap<BasicBlockInContext<E>> {
-	@SuppressWarnings("unused")
-	
 	public static final IntSet EMPTY_SET = new SparseIntSet();
 	public static final IntSet ZERO_SET = SparseIntSet.singleton(0);
 

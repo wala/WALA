@@ -23,7 +23,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -58,7 +57,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * TODO: This implementation currently keeps all points to sets live ... even those for local variables that do not span
  * interprocedural boundaries. This may be too space-inefficient .. we can consider recomputing local sets on demand.
  */
-public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
+public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<InstanceKey> {
   private final static boolean DEBUG_ALL = false;
 
   final static boolean DEBUG_ASSIGN = DEBUG_ALL | false;
@@ -1394,6 +1393,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param klass a class
    * @return an int set which represents the subset of S that correspond to subtypes of klass
    */
+  @SuppressWarnings("unused")
   protected IntSet filterForClass(IntSet S, IClass klass) {
     MutableIntSet filter = null;
     if (klass.getReference().equals(TypeReference.JavaLangObject)) {

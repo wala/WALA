@@ -67,7 +67,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     try {
       return (T) array[n];
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("n out of range " + n);
+      throw new IllegalArgumentException("n out of range " + n, e);
     }
   }
 

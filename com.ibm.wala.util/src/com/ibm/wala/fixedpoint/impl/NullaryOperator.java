@@ -12,14 +12,13 @@
 package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.AbstractOperator;
-import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * An operator of the form lhs = op
  */
 @SuppressWarnings("rawtypes")
-public abstract class NullaryOperator<T extends IVariable> extends AbstractOperator<T> implements FixedPointConstants {
+public abstract class NullaryOperator<T extends IVariable> extends AbstractOperator<T> {
 
   @Override
   public byte evaluate(T lhs, T[] rhs) throws UnsupportedOperationException {

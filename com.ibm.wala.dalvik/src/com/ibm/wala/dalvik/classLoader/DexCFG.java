@@ -101,7 +101,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     }
 
     public Instruction[] getInstructions() {
-        return (Instruction[])dexMethod.getDexInstructions();
+        return dexMethod.getDexInstructions();
 
     }
 
@@ -138,13 +138,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     private void makeBasicBlocks() {
         ExceptionHandler[][] handlers;
-        try {
-            handlers = dexMethod.getHandlers();
-        } catch (InvalidClassFileException e) {
-            e.printStackTrace();
-            Assertions.UNREACHABLE();
-            handlers = null;
-        }
+        handlers = dexMethod.getHandlers();
         boolean[] r = new boolean[getInstructions().length];
         boolean[] catchers = new boolean[getInstructions().length];
         // we initially start with both the entry and exit block.
@@ -417,7 +411,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             if (pei == null) {
                 throw new IllegalArgumentException("pei is null");
             }
-            switch (((Instruction) pei).getOpcode()) {
+            switch (pei.getOpcode()) {
             //TODO: Make sure all the important cases and exceptions are covered.
             case AGET:
             case AGET_WIDE:
@@ -561,13 +555,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
         private ExceptionHandler[] getExceptionHandlers() {
             ExceptionHandler[][] handlers;
-            try {
-                handlers = dexMethod.getHandlers();
-            } catch (InvalidClassFileException e) {
-                e.printStackTrace();
-                Assertions.UNREACHABLE();
-                handlers = null;
-            }
+            handlers = dexMethod.getHandlers();
             ExceptionHandler[] hs = handlers[getLastInstructionIndex()];
             return hs;
         }

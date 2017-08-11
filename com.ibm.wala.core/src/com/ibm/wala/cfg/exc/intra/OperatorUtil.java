@@ -29,6 +29,7 @@ public class OperatorUtil {
       this.operators = operators.toArray(new UnaryOperator[operators.size()]);
     }
     
+    @SafeVarargs
     public UnaryOperatorSequence(UnaryOperator<T>... operators) {
       if (operators.length == 0 ) throw new IllegalArgumentException("Empty Operator-Sequence");
       this.operators = Arrays.copyOf(operators, operators.length);

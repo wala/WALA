@@ -145,6 +145,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * 
    * @param n
    */
+  @SuppressWarnings("unused")
   private void addIntraproceduralNodesAndEdgesForCGNodeIfNeeded(CGNode n) {
     if (!cgNodesVisited.contains(cg.getNumber(n)) && relevant.test(n)) {
       if (DEBUG_LEVEL > 0) {
@@ -175,6 +176,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param instrs the instructions for node n
    * @param bb a basic block in the CFG
    */
+  @SuppressWarnings("unused")
   protected void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<?, T> cfg, SSAInstruction[] instrs, T bb) {
     if (DEBUG_LEVEL > 1) {
       System.err.println("addEdgesToNonEntryBlock: " + bb);
@@ -233,6 +235,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param returnBlock the return site for a call
    * @param targetCFG the called method
    */
+  @SuppressWarnings("unused")
   private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target,
       ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
     T texit = targetCFG.exit();
@@ -255,6 +258,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param callBlock the return site for a call
    * @param targetCFG the called method
    */
+  @SuppressWarnings("unused")
   private void addEdgesFromCallToEntry(CGNode caller, T callBlock, CGNode target,
       ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
     T tentry = targetCFG.entry();
@@ -277,6 +281,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param n a node in the call graph
    * @param bb the entry() block for n
    */
+  @SuppressWarnings("unused")
   private void addInterproceduralEdgesForEntryAndExitBlocks(CGNode n, ControlFlowGraph<SSAInstruction, ? extends T> cfg) {
 
     T entryBlock = cfg.entry();
@@ -296,6 +301,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     }
   }
 
+  @SuppressWarnings("unused")
   private void addEntryAndExitEdgesToCaller(CGNode n, T entryBlock, T exitBlock, CGNode caller) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("caller " + caller + "is relevant");
@@ -344,6 +350,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * 
    * @param cfg a control-flow graph
    */
+  @SuppressWarnings("unused")
   private void addNodeForEachBasicBlock(ControlFlowGraph<? extends SSAInstruction, ? extends T> cfg, CGNode N) {
     for (Iterator<? extends T> bbs = cfg.iterator(); bbs.hasNext();) {
       T bb = bbs.next();
@@ -481,6 +488,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * add edges to callee entry for call block, and edges from callee exit to corresponding return blocks
    */
+  @SuppressWarnings("unused")
   private void addCalleeEdgesForCall(CGNode n, BasicBlockInContext<T> callBlock) {
     int num = g.getNumber(callBlock);
     if (!handledCalls.contains(num)) {

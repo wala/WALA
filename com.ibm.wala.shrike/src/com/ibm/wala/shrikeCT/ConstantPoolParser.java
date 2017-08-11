@@ -119,7 +119,6 @@ public final class ConstantPoolParser implements ClassConstants {
    * @param bytes the raw class file data
    * @param offset the start of the constant pool data
    * @param itemCount the number of items in the pool
-   * @param classReader 
    */
   public ConstantPoolParser(byte[] bytes, int offset, int itemCount) throws InvalidClassFileException {
     this.bytes = bytes;

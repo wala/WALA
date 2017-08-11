@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.wala</groupId>
   <artifactId>com.ibm.wala.shrike</artifactId>
-  <version>1.3.10-SNAPSHOT</version>  
+  <version>1.4.3-SNAPSHOT</version>  
   <packaging>jar</packaging>
   <name>WALA Shrike</name>
   <description>WALA Shrike library for bytecode reading and instrumentation</description>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>com.ibm.wala</groupId>
       <artifactId>com.ibm.wala.util</artifactId>
-      <version>1.3.10-SNAPSHOT</version>
+      <version>1.4.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

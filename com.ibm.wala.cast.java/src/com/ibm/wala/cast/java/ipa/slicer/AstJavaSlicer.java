@@ -39,7 +39,6 @@ import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.traverse.DFS;
 
-@SuppressWarnings("deprecation")
 public class AstJavaSlicer extends Slicer {
 
   /*
@@ -108,10 +107,10 @@ public class AstJavaSlicer extends Slicer {
     });
   }
 
-  public static Pair<Collection<Statement>, SDG> computeAssertionSlice(CallGraph CG, PointerAnalysis<InstanceKey> pa,
+  public static Pair<Collection<Statement>, SDG<InstanceKey>> computeAssertionSlice(CallGraph CG, PointerAnalysis<InstanceKey> pa,
       Collection<CGNode> partialRoots, boolean multiThreadedCode) throws IllegalArgumentException, CancelException {
     CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<>(partialRoots));
-    SDG sdg = new SDG(pcg, pa, new AstJavaModRef(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    SDG<InstanceKey> sdg = new SDG<>(pcg, pa, new AstJavaModRef<>(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     //System.err.println(("SDG:\n" + sdg));
     Set<Statement> stmts = gatherAssertions(CG, partialRoots);
     if (multiThreadedCode) {

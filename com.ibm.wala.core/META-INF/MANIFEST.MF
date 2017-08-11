@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Eclipse-LazyStart: true
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.core
-Bundle-Version: 1.3.10.qualifier
+Bundle-Version: 1.4.3.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.shrike,

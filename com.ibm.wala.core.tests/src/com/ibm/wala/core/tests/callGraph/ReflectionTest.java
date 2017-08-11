@@ -585,7 +585,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect21, the call graph includes a node for the
-   * constructor of {@link Helper} that takes two {@link Object} parameters.
+   * constructor of {@code Helper} that takes two {@link Object} parameters.
    * This is to test the support for Class.getDeclaredConstructor.
    */
   @Test
@@ -604,7 +604,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect22, the call graph includes a node for the
-   * constructor of {@link Helper} that takes one {@link Integer} parameters.
+   * constructor of {@code Helper} that takes one {@link Integer} parameters.
    * This is to test the support for Class.getDeclaredConstructors.
    */
   @Test
@@ -623,7 +623,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect22, the call graph includes a node for the
-   * constructor of {@link Helper} that takes one {@link Integer} parameters.
+   * constructor of {@code Helper} that takes one {@link Integer} parameters.
    * This is to test the support for Class.getDeclaredConstructors.
    */
   @Test

@@ -10,11 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.io.Serializable;
-
 /**
  */
-public class BitVector extends BitVectorBase<BitVector> implements Serializable {
+public class BitVector extends BitVectorBase<BitVector> {
 
   private static final long serialVersionUID = 9087259335807761617L;
 

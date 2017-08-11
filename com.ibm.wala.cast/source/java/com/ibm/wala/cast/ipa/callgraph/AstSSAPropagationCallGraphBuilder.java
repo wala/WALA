@@ -38,7 +38,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -64,7 +63,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterprete
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.modref.ArrayLengthKey;
 import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -615,7 +613,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * perform the necessary {@link #action(PointerKey, int)}s for the
        * accesses. For each access, we determine the possible {@link CGNode}s
        * corresponding to its definer (see
-       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)). Handle
+       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)}). Handle
        * using
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .
@@ -740,13 +738,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
         return result;
       }
-    }
-
-    private boolean isEqual(Object a, Object b) {
-      if (a == null)
-        return b == null;
-      else
-        return a.equals(b);
     }
 
     private Set<PointerKey> discoveredUpwardFunargs = HashSetFactory.make();

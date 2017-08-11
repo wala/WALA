@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.slicer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,6 +37,8 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
@@ -64,6 +67,8 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
@@ -74,9 +79,27 @@ public class SlicerTest {
 
   private static AnalysisScope cachedScope;
 
+  // more aggressive exclusions to avoid library blowup
+  // in interprocedural tests
+  private static final String EXCLUSIONS = "java\\/awt\\/.*\n" + 
+      "javax\\/swing\\/.*\n" + 
+      "sun\\/awt\\/.*\n" + 
+      "sun\\/swing\\/.*\n" + 
+      "com\\/sun\\/.*\n" + 
+      "sun\\/.*\n" + 
+      "org\\/netbeans\\/.*\n" + 
+      "org\\/openide\\/.*\n" + 
+      "com\\/ibm\\/crypto\\/.*\n" + 
+      "com\\/ibm\\/security\\/.*\n" + 
+      "org\\/apache\\/xerces\\/.*\n" + 
+      "java\\/security\\/.*\n" + 
+      "";
+  
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
-      cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+      cachedScope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
+      cachedScope.setExclusions(new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
+
     }
     return cachedScope;
   }
@@ -112,8 +135,9 @@ public class SlicerTest {
     Statement s = findCallTo(main, "println");
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(),
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
+        InstanceKey.class, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
 
@@ -142,8 +166,9 @@ public class SlicerTest {
     Statement s = findCallTo(main, "println");
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(),
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
+        InstanceKey.class, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
 
@@ -166,7 +191,8 @@ public class SlicerTest {
     Statement s = findCallTo(main, "doNothing");
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
@@ -189,7 +215,8 @@ public class SlicerTest {
     s = PDFSlice.getReturnStatementForCall(s);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 4, slice.size());
@@ -212,8 +239,9 @@ public class SlicerTest {
     s = PDFSlice.getReturnStatementForCall(s);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 7, slice.size());
   }
@@ -241,8 +269,9 @@ public class SlicerTest {
     Statement s = findFirstAllocation(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
   }
 
@@ -262,21 +291,45 @@ public class SlicerTest {
         TestConstants.SLICE8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode process = findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
     Statement s = findCallToDoNothing(process);
     System.err.println("Statement: " + s);
     // compute a backward slice, with data dependence and no exceptional control dependence
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertEquals(4, countInvokes(slice));
     // should only get 4 statements total when ignoring control dependences completely
-    slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     Assert.assertEquals(slice.toString(), 4, slice.size());
+  }
+  
+  @Test
+  public void testSlice9() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE9_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = findMainMethod(cg);
+    Statement s = findCallToDoNothing(main);
+    System.err.println("Statement: " + s);
+    // compute a backward slice, with data dependence and no exceptional control dependence
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    //dumpSlice(slice);
+    Assert.assertEquals(/*slice.toString(), */5, countApplicationNormals(slice));
   }
 
   @Test
@@ -296,7 +349,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countConditionals(slice));
@@ -319,7 +373,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
@@ -342,7 +397,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 0, countConditionals(slice));
@@ -366,14 +422,15 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     // compute a no-data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(0, countConditionals(slice));
 
     // compute a full slice
-    slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
-        ControlDependenceOptions.FULL);
+    slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
@@ -396,8 +453,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     // compute a no-data slice
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
-        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.NONE, ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertTrue(slice.toString(), slice.size() > 1);
   }
@@ -420,8 +478,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     // compute a no-data slice
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
-        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.NONE, ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countInvokes(slice));
   }
@@ -443,7 +502,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
@@ -466,7 +526,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
@@ -490,7 +551,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
@@ -516,15 +578,16 @@ public class SlicerTest {
 
     // compute normal data slice
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(3, countAllocations(slice));
     Assert.assertEquals(2, countPutfields(slice));
 
     // compute thin slice .. ignore base pointers
-    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(),
-        DataDependenceOptions.NO_BASE_PTRS, ControlDependenceOptions.NONE);
+    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
+        InstanceKey.class, DataDependenceOptions.NO_BASE_PTRS, ControlDependenceOptions.NONE);
     slice = computeBackwardSlice;
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
@@ -548,7 +611,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
@@ -573,7 +637,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
@@ -597,7 +662,8 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 3, countAllocations(slice));
@@ -624,8 +690,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     // compute full slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
-        ControlDependenceOptions.FULL);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 0, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
@@ -665,8 +732,9 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(test);
     System.err.println("Statement: " + s);
 
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, pointerAnalysis, InstanceKey.class,
+        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
@@ -688,7 +756,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countApplicationAllocations(slice));
@@ -733,7 +802,7 @@ public class SlicerTest {
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    SDG sdg = new SDG(cg, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
+    SDG<?> sdg = new SDG<>(cg, builder.getPointerAnalysis(), InstanceKey.class, DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
     GraphIntegrity.check(sdg);
   }
 
@@ -754,7 +823,8 @@ public class SlicerTest {
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
 
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL,
         ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
   }
@@ -824,6 +894,18 @@ public class SlicerTest {
     return count;
   }
 
+  public static int countApplicationNormals(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
+        if (scope.isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
   public static int countConditionals(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {

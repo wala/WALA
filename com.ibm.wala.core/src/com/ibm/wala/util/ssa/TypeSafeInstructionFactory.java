@@ -52,6 +52,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
@@ -100,7 +101,7 @@ public class TypeSafeInstructionFactory {
      *
      *  Calls result.setAssigned()
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.InvokeInstruction(int, int, int[], int, CallSiteReference)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int, int[], int, CallSiteReference, BootstrapMethod)
      *
      *  @param  iindex  Zero or a positive number unique to any instruction of the same method
      *  @param  result  Where to place the return-value of the called method. Is SSAValue.setAssigned() automatically.
@@ -121,7 +122,7 @@ public class TypeSafeInstructionFactory {
             throw new IllegalArgumentException("The parameter exception may not be null");
         }
         if (params == null) {
-            params = Collections.EMPTY_LIST;
+            params = Collections.emptyList();
         }
         if (site == null) {
             throw new IllegalArgumentException("The CallSite may not be null");
@@ -213,7 +214,7 @@ public class TypeSafeInstructionFactory {
      *  All parameters (but exception) are typechecked first. If the check passes they get unpacked and handed over
      *  to the corresponding JavaInstructionFactory.InvokeInstruction.
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.InvokeInstruction(int, int[], int, CallSiteReference)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int[], int, CallSiteReference, BootstrapMethod)
      *
      *  @param  iindex  Zero or a positive number unique to any instruction of the same method
      *  @param  params  Parameters to the call starting with the implicit this-pointer if necessary 
@@ -230,7 +231,7 @@ public class TypeSafeInstructionFactory {
             throw new IllegalArgumentException("The parameter exception may not be null");
         }
         if (params == null) {
-            params = Collections.EMPTY_LIST;
+            params = Collections.emptyList();
         }
         if (site == null) {
             throw new IllegalArgumentException("The CallSite may not be null");
@@ -311,7 +312,7 @@ public class TypeSafeInstructionFactory {
      *
      *  If type check passes the corresponding ReturnInstruction of the JavaInstructionFactory is called.
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.ReturnInstruction(int, int, boolean)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#ReturnInstruction(int, int, boolean)
      *
      *  @param  iindex  Zero or a positive number unique to any instruction of the same method
      *  @param  result  SSAValue to return _with_ validIn _set_!
@@ -337,7 +338,7 @@ public class TypeSafeInstructionFactory {
      *  If type check passes the corresponding GetInstruction of the JavaInstructionFactory is called.
      *  Calls targetValue.setAssigned()
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.GetInstruction(int, int, int, FieldReference)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#GetInstruction(int, int, int, FieldReference)
      *
      *  @param  iindex      Zero or a positive number unique to any instruction of the same method
      *  @param  targetValue the result of the GetInstruction is placed there
@@ -386,11 +387,10 @@ public class TypeSafeInstructionFactory {
      *  If type check passes the corresponding GetInstruction of the JavaInstructionFactory is called.
      *  Calls targetValue.setAssigned()
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.GetInstruction(int, int, int, FieldReference)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#GetInstruction(int, int, int, FieldReference)
      *
      *  @param  iindex      Zero or a positive number unique to any instruction of the same method
      *  @param  targetValue the result of the GetInstruction is placed there
-     *  @param  containingInstance The Object instance to read the field from
      *  @param  field       The description of the field
      */
     public SSAGetInstruction GetInstruction(final int iindex, final SSAValue targetValue, FieldReference field) {
@@ -420,7 +420,7 @@ public class TypeSafeInstructionFactory {
      *
      *  If type check passes the corresponding PutInstruction of the JavaInstructionFactory is called.
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.PutInstruction(int, int, int, FieldReference)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#PutInstruction(int, int, int, FieldReference)
      *
      *  @param  iindex      Zero or a psitive number unique to any instruction of the same method
      *  @param  targetInstance the instance of the object to write a field of
@@ -467,10 +467,9 @@ public class TypeSafeInstructionFactory {
      *
      *  If type check passes the corresponding PutInstruction of the JavaInstructionFactory is called.
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.PutInstruction(int, int, int, FieldReference)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#PutInstruction(int, int, int, FieldReference)
      *
      *  @param  iindex      Zero or a psitive number unique to any instruction of the same method
-     *  @param  targetInstance the instance of the object to write a field of
      *  @param  newValue    The value to write to the field
      *  @param  field       The description of the target
      */
@@ -559,7 +558,7 @@ public class TypeSafeInstructionFactory {
      *  If type check passes the corresponding PhiInstruction of the JavaInstructionFactory is called.
      *  Calls result.setAssigned().
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.PhiInstruction(int, int, int[])
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#PhiInstruction(int, int, int[])
      *
      *  @param  iindex  Zero or a positive number unique to any instruction of the same method
      *  @param  result  Where to write result to

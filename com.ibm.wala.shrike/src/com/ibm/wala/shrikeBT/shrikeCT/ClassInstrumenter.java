@@ -63,13 +63,11 @@ final public class ClassInstrumenter {
   
   private final ClassHierarchyProvider cha;
   
-  private final boolean reuseStackMaps;
-  
   /**
    * Create a class instrumenter from raw bytes.
    */
-  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha, boolean reuseStackMaps) throws InvalidClassFileException {
-    this(inputName, new ClassReader(bytes), cha, reuseStackMaps);
+  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha) throws InvalidClassFileException {
+    this(inputName, new ClassReader(bytes), cha);
   }
 
   /**
@@ -93,13 +91,12 @@ final public class ClassInstrumenter {
    * 
    * @throws IllegalArgumentException if cr is null
    */
-  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha, boolean reuseStackMaps) throws InvalidClassFileException {
+  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha) throws InvalidClassFileException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
     this.cr = cr;
     this.cha = cha;
-    this.reuseStackMaps = reuseStackMaps;
     methods = new MethodData[cr.getMethodCount()];
     oldCode = new CodeReader[methods.length];
     cpr = CTDecoder.makeConstantPoolReader(cr);

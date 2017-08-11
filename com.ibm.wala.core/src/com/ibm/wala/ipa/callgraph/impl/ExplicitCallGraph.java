@@ -29,7 +29,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
@@ -121,7 +120,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
       throw new IllegalArgumentException("null context");
     }
     Key k = new Key(method, context);
-    NodeImpl result = getNode(k);
+    CGNode result = getNode(k);
     if (result == null) {
       if (maxNumberOfNodes == -1 || getNumberOfNodes() < maxNumberOfNodes) {
         result = makeNode(method, context);

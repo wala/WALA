@@ -203,7 +203,7 @@ import com.ibm.wala.util.strings.StringStuff;
         final String action;
         {
             if (actionKey instanceof ConstantKey) {
-                final Object actionO = ((ConstantKey)actionKey).getValue();
+                final Object actionO = ((ConstantKey<?>) actionKey).getValue();
                 if (actionO instanceof String) {
                     action = StringStuff.deployment2CanonicalTypeString((String) actionO);
                 } else if (actionO instanceof IClass) {

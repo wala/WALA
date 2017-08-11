@@ -179,7 +179,8 @@ public class AndroidBoot {
      *
      *  @see    android.app.ContextImpl.createPackageContextAsUser
      */
-    private SSAValue createSystemContext(SSAValue mainThread) {
+    @SuppressWarnings("javadoc")
+	private SSAValue createSystemContext(SSAValue mainThread) {
         final SSAValue systemContext = this.pm.getUnmanaged(AndroidTypes.ContextImpl, "systemContextImpl");
         { // Call ContextImpl.getSystemContext()
             final int pc = this.body.getNextProgramCounter();
@@ -211,7 +212,8 @@ public class AndroidBoot {
      *
      *  @see    android.app.ContextImpl.createPackageContextAsUser
      */
-    private SSAValue createPackageContext(final SSAValue mainThread, final SSAValue systemContext) {
+    @SuppressWarnings("javadoc")
+	private SSAValue createPackageContext(final SSAValue mainThread, final SSAValue systemContext) {
         final SSAValue packageContext = this.pm.getUnmanaged(AndroidTypes.ContextImpl, "packageContextImpl");
         { // New-Site
             final int pc = this.body.getNextProgramCounter();

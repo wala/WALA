@@ -297,7 +297,7 @@ public final class FragmentEP {
     //
 
     /**
-     *  @see ActivityEP.onActivityResult
+     *  @see ActivityEP#onActivityResult
      */
     public static final AndroidPossibleEntryPoint onActivityResult = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
             "onActivityResult",
@@ -401,15 +401,15 @@ public final class FragmentEP {
             ));
 
     /**
-     *  @see    ActivityEP.onLowMemory
-     *  @see    ApplicationEP.onLowMemory
+     *  @see    ActivityEP#onLowMemory
+     *  @see    ApplicationEP#onLowMemory
      */
     public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
             "onLowMemory",
             ExecutionOrder.directlyBefore(ActivityEP.onLowMemory)
             );
     /**
-     *  @see    ActivityEP.onOptionsItemSelected
+     *  @see    ActivityEP#onOptionsItemSelected
      */
     public static final AndroidPossibleEntryPoint onOptionsItemSelected = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
             "onOptionsItemSelected",
@@ -417,7 +417,7 @@ public final class FragmentEP {
             );
 
     /**
-     *  @see    ActivityEP.onOptionsMenuClosed
+     *  @see    ActivityEP#onOptionsMenuClosed
      */
     public static final AndroidPossibleEntryPoint onOptionsMenuClosed = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
             "onOptionsMenuClosed",
@@ -427,7 +427,7 @@ public final class FragmentEP {
     /**
      *  This is called right before the menu is shown, every time it is shown. 
      *
-     *  @see    ActivityEP.onPrepareOptionsMenu
+     *  @see    ActivityEP#onPrepareOptionsMenu
      */
     public static final AndroidPossibleEntryPoint onPrepareOptionsMenu = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
             "onPrepareOptionsMenu",
@@ -467,7 +467,7 @@ public final class FragmentEP {
             ));
 
     /**
-     *  @see ActtivityEP.onTrimMemory
+     *  @see ActivityEP#onTrimMemory
      */
     public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint(AndroidComponent.FRAGMENT,
             "onTrimMemory",

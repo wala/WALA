@@ -88,7 +88,7 @@ public class JDTIdentityMapper {
    * This method canonicalizes the TypeReferences
    */
   public TypeReference getTypeRef(ITypeBinding type) {
-    type = JDT2CAstUtils.getErasedType((ITypeBinding) type, fAst); // GENERICS: erasure...
+    type = JDT2CAstUtils.getErasedType(type, fAst); // GENERICS: erasure...
 
     if (!fTypeMap.containsKey(type.getKey())) {
       TypeName typeName = TypeName.string2TypeName(typeToTypeID(type));

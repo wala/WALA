@@ -146,8 +146,6 @@ public class ParameterAccessor {
      *  @since  2013-10-19
      */
     public static class Parameter extends SSAValue {
-        /** Is Accessor constructed with IMethod or MethodReference */
-        private final BasedOn basedOn;      
         /** Implicit this or regular parameter? */
         private final ParamerterDisposition disp;   
         /** Add to number to get position in descriptor */
@@ -205,7 +203,6 @@ public class ParameterAccessor {
             }
 
             this.disp = disp;
-            this.basedOn = basedOn;
             this.descriptorOffset = descriptorOffset;
             super.isAssigned();
         }
@@ -294,7 +291,7 @@ public class ParameterAccessor {
      *
      *  Using this Constructor influences the SSA-Values returned later. The cha is needed to
      *  determine whether mRef is static. If this is already known one should prefer the faster
-     *  {@link #ParameterAccessor(ParameterAccessor, boolean)}.
+     *  {@link #ParameterAccessor(MethodReference, boolean)}.
      *
      *  @param  mRef    The method to read the parameters from.
      */
@@ -393,7 +390,7 @@ public class ParameterAccessor {
      *
      *  Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
      *
-     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy}.
+     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy)}.
      *
      *  @param  mRef    The method to read the parameters from.
      */
@@ -457,7 +454,7 @@ public class ParameterAccessor {
      *
      *  @param  no  the number in the Selector
      *  @return new Parameter-Object for no
-     *  @throws IllegalArgumentExceptions if the parameter is zero
+     *  @throws IllegalArgumentException if the parameter is zero
      *  @throws ArrayIndexOutOfBoundsException if no is not within bounds [1 to numberOfParameters]
      */
     public Parameter getParameter(final int no) {
@@ -839,7 +836,7 @@ public class ParameterAccessor {
         }
 
         final List<Parameter> all = all();
-        final List<Parameter> allExctends = new ArrayList();
+        final List<Parameter> allExctends = new ArrayList<>();
         IClass searchType = null;
         final IClassLoader[] allLoaders = cha.getLoaders();
 
@@ -908,7 +905,7 @@ public class ParameterAccessor {
 
         final IClass searchType = cha.lookupClass(tRef);
         final List<Parameter> all = all();
-        final List<Parameter> allExctends = new ArrayList();
+        final List<Parameter> allExctends = new ArrayList<>();
             
         if (searchType == null) {
             throw new IllegalStateException("Could not find the IClass of " + tRef);

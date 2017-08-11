@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WALA IDE JDT components
 Bundle-SymbolicName: com.ibm.wala.ide.jdt
-Bundle-Version: 1.3.10.qualifier
+Bundle-Version: 1.4.3.qualifier
 Bundle-Activator: com.ibm.wala.ide.jdt.Activator
 Bundle-Vendor: IBM
 Require-Bundle: org.eclipse.ui,

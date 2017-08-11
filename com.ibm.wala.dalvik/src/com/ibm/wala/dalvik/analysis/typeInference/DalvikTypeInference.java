@@ -6,7 +6,6 @@ import com.ibm.wala.analysis.typeInference.TypeVariable;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.IVisitorWithAddresses;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 
@@ -50,7 +49,7 @@ public class DalvikTypeInference extends TypeInference {
 		}
 	}
 
-	protected class TypeOperatorFactory extends TypeInference.TypeOperatorFactory implements IVisitorWithAddresses, OperatorFactory<TypeVariable> {
+	protected class TypeOperatorFactory extends TypeInference.TypeOperatorFactory {
 
 		@Override
 		public void visitPhi(SSAPhiInstruction instruction) {

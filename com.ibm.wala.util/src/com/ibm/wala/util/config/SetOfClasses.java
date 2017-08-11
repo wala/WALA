@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * Logically, a set of {@link IClass}.
+ * Logically, a set of {@link Class}.
  * 
  * TODO: why does this not extend {@link Set}? Is there a good reason anymore?
  */

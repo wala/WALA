@@ -69,10 +69,10 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
    */
   private final String pdfViewExe;
 
-  private final NodeDecorator labels;
+  private final NodeDecorator<T> labels;
 
   public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String pdfFile, String dotFile, String dotExe,
-      String pdfViewExe, NodeDecorator labels) {
+      String pdfViewExe, NodeDecorator<T> labels) {
     if (result == null) {
       throw new IllegalArgumentException("null result");
     }
@@ -101,7 +101,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     setText("View Local Supergraph");
   }
 
-  private static class Labels<T, P, F> implements NodeDecorator {
+  private static class Labels<T, P, F> implements NodeDecorator<T> {
     private TabulationResult<T, P, F> result;
 
     Labels(TabulationResult<T, P, F> result) {

@@ -73,19 +73,19 @@ public class HeadlessUtil {
     return null;
   }
 
-  public interface EclipseCompiler<Unit,CompiledUnit> {
+  public interface EclipseCompiler<Unit> {
     Unit getCompilationUnit(IFile file);
     
-    Parser<Unit,CompiledUnit> getParser();
+    Parser<Unit> getParser();
   }
   
-  public interface Parser<Unit, CompiledUnit> {
+  public interface Parser<Unit> {
     void setProject(IProject project);
     
     void processASTs(Map<Unit,EclipseSourceFileModule> files, Function<Object[], Boolean> errors);
   }
     
-  public static <Unit, CompiledUnit> void parseModules(Set<ModuleEntry> modules, EclipseCompiler<Unit, CompiledUnit> compiler) {
+  public static <Unit> void parseModules(Set<ModuleEntry> modules, EclipseCompiler<Unit> compiler) {
     // sort files into projects
     Map<IProject, Map<Unit,EclipseSourceFileModule>> projectsFiles = new HashMap<>();
     for (ModuleEntry m : modules) {
@@ -99,7 +99,7 @@ public class HeadlessUtil {
       }
     }
 
-  final Parser<Unit,CompiledUnit> parser = compiler.getParser();
+  final Parser<Unit> parser = compiler.getParser();
 
   for (final Map.Entry<IProject,Map<Unit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
     parser.setProject(proj.getKey());

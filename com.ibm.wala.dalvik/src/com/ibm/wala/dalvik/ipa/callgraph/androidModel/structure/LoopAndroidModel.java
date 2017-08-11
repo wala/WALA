@@ -74,8 +74,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  restart of the Application (instance-state) or when the potential restart of the App
  *  shall be ignored.
  *
- *  {@inheritDoc}
- *
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  */
 public class LoopAndroidModel extends SingleStartAndroidModel {

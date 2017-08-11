@@ -127,12 +127,15 @@ public class Annotation {
     return sb.toString();
   }
 
+
+
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + Arrays.hashCode(unnamedArguments);
+    result = prime * result + ((namedArguments == null) ? 0 : namedArguments.hashCode());
     result = prime * result + ((type == null) ? 0 : type.hashCode());
+    result = prime * result + Arrays.hashCode(unnamedArguments);
     return result;
   }
 
@@ -145,12 +148,17 @@ public class Annotation {
     if (getClass() != obj.getClass())
       return false;
     Annotation other = (Annotation) obj;
-    if (!Arrays.equals(unnamedArguments, other.unnamedArguments))
+    if (namedArguments == null) {
+      if (other.namedArguments != null)
+        return false;
+    } else if (!namedArguments.equals(other.namedArguments))
       return false;
     if (type == null) {
       if (other.type != null)
         return false;
     } else if (!type.equals(other.type))
+      return false;
+    if (!Arrays.equals(unnamedArguments, other.unnamedArguments))
       return false;
     return true;
   }

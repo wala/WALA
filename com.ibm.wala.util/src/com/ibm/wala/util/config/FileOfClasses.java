@@ -14,14 +14,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * An object which represents a set of classes read from a text file.
  */
-public class FileOfClasses extends SetOfClasses implements Serializable {
+public class FileOfClasses extends SetOfClasses {
 
   /* Serial version */
   private static final long serialVersionUID = -3256390509887654322L;  

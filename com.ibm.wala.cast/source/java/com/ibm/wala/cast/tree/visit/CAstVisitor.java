@@ -123,7 +123,6 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * Visit scoped entities of an entity using a given iterator.
    * Prerequisite (unchecked): i iterates over entities scoped in n.
    * @param n the parent entity of the entities to process
-   * @param i the iterator over some scoped entities of n
    * @param context a visitor-specific context
    */
   public final void visitScopedEntities(CAstEntity n, Map allScopedEntities, C context, CAstVisitor<C> visitor) {
@@ -1723,7 +1722,6 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * Visit an InstanceOf node.
    * @param n the node to process
    * @param c a visitor-specific context
-   * @return true if no further processing is needed
    */
   protected void leaveAssert(CAstNode n, C c, CAstVisitor<C> visitor) { visitor.leaveNode(n, c, visitor); }
   protected boolean visitAssert(CAstNode n, C c, CAstVisitor<C> visitor) { return visitor.visitNode(n, c, visitor); }

@@ -219,7 +219,7 @@ public final class Util {
       }
       return count;
     } catch (StringIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid type: " + type);
+      throw new IllegalArgumentException("invalid type: " + type, e);
     }
   }
 
