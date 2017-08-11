@@ -63,6 +63,7 @@ public class PrefixVariable extends AbstractVariable<PrefixVariable>{
     // TODO: keep track of completely known strings (not just known by prefix)
     //  HashMap<Integer, String> knownStrings = new HashMap<Integer,String>();
 
+    @Override
     public void copyState(PrefixVariable v) {
         knownPrefixes.clear();
         knownPrefixes.putAll(v.knownPrefixes);
@@ -127,6 +128,7 @@ public class PrefixVariable extends AbstractVariable<PrefixVariable>{
         }
     }
 
+    @Override
     public String toString() {
         return knownPrefixes.toString();
     }

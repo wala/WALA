@@ -18,9 +18,9 @@ import org.junit.Test;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -61,12 +61,12 @@ public class DeterministicIRTest extends WalaTestCase {
    * @param method
    */
   private IR doMethod(MethodReference method) {
-    AnalysisCache cache = makeAnalysisCache();
+    IAnalysisCacheView cache = makeAnalysisCache();
     Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     Assert.assertNotNull("imethod not found", imethod);
     IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
-    cache.getSSACache().wipe();
+    cache.clear();
 
     checkNotAllNull(ir1.getInstructions());
     checkNoneNull(ir1.iterateAllInstructions());
@@ -79,7 +79,7 @@ public class DeterministicIRTest extends WalaTestCase {
     }
 
     IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
-    cache.getSSACache().wipe();
+    cache.clear();
 
     try {
       GraphIntegrity.check(ir2.getControlFlowGraph());
@@ -98,7 +98,7 @@ public class DeterministicIRTest extends WalaTestCase {
   /**
    * @param iterator
    */
-  private void checkNoneNull(Iterator<?> iterator) {
+  private static void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
       Assert.assertTrue(iterator.next() != null);
     }

@@ -33,17 +33,16 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 
 /**
@@ -52,20 +51,20 @@ import com.ibm.wala.util.WalaException;
 public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 
 	public static PropagationCallGraphBuilder makeCGBuilder(File mainFile)
-			throws IOException, IllegalArgumentException, CancelException, WalaException {
+			throws IOException, IllegalArgumentException, WalaException {
 		return makeCGBuilder(mainFile.getParentFile(), mainFile);
 	}
 
 	public static PropagationCallGraphBuilder makeCGBuilder(File workingDir, File mainFile)
-			throws IOException, IllegalArgumentException, CancelException, WalaException {
+			throws IOException, IllegalArgumentException, WalaException {
 		JavaScriptTranslatorFactory translatorFactory = new CAstRhinoTranslatorFactory();
 		JSCallGraphUtil.setTranslatorFactory(translatorFactory);
 
 		Language language = JavaScriptLoader.JS;
 		Collection<Language> languages = Collections.singleton(language);
 
-		IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory();
-		AnalysisCache cache = new AnalysisCacheImpl(irFactory);
+		IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory<>();
+		IAnalysisCacheView cache = new AnalysisCacheImpl(irFactory);
 
 		JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory, null);
 

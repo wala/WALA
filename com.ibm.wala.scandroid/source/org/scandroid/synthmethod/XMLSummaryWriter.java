@@ -269,7 +269,7 @@ public class XMLSummaryWriter {
      * @param summary
      * @return
      */
-    private String getMethodDescriptor(MethodSummary summary) {
+    private static String getMethodDescriptor(MethodSummary summary) {
         StringBuilder typeSigs = new StringBuilder("(");
         
         int i=0;

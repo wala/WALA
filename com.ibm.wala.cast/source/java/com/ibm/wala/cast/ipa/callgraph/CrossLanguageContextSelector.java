@@ -35,9 +35,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class CrossLanguageContextSelector implements ContextSelector {
 
-  private final Map languageSelectors;
+  private final Map<Atom, ContextSelector> languageSelectors;
 
-  public CrossLanguageContextSelector(Map languageSelectors) {
+  public CrossLanguageContextSelector(Map<Atom, ContextSelector> languageSelectors) {
     this.languageSelectors = languageSelectors;
   }
 
@@ -50,7 +50,7 @@ public class CrossLanguageContextSelector implements ContextSelector {
   }
 
   private ContextSelector getSelector(CallSiteReference site) {
-    return (ContextSelector)languageSelectors.get(getLanguage(site));
+    return languageSelectors.get(getLanguage(site));
   }
 
   @Override

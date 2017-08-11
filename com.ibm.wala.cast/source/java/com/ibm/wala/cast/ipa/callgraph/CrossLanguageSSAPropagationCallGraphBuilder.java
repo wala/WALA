@@ -10,14 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.AstImplicitPointsToSetVisitor;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -47,7 +45,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
 
   protected abstract TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> makeRootNodeSelector();
 
-  protected CrossLanguageSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  protected CrossLanguageSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
     visitors = makeMainVisitorSelector();
@@ -103,8 +101,8 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
 
   @Override
   protected void customInit() {
-    for (Iterator roots = ((CrossLanguageCallGraph) callGraph).getLanguageRoots(); roots.hasNext();) {
-      markDiscovered((CGNode) roots.next());
+    for (CGNode root : callGraph) {
+      markDiscovered(root);
     }
   }
 

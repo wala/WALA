@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Test;
@@ -30,7 +29,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  @Test public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testAjaxslt() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     // need to turn off call/apply handling for this to scale; alternatively use 1-CFA
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, CGBuilderType.ZERO_ONE_CFA_NO_CALL_APPLY);
@@ -42,7 +41,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  @Test public void testAjaxpath() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testAjaxpath() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);

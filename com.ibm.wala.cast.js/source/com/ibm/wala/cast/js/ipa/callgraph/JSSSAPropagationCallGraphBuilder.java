@@ -242,7 +242,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   }
 
   @Override
-  protected void addAssignmentsForCatchPointerKey(PointerKey exceptionVar, Set catchClasses, PointerKey e) {
+  protected void addAssignmentsForCatchPointerKey(PointerKey exceptionVar, Set<IClass> catchClasses, PointerKey e) {
     system.newConstraint(exceptionVar, assignOperator, e);
   }
 
@@ -373,7 +373,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         InstanceKey globalObj = ((AstSSAPropagationCallGraphBuilder) jsAnalysis.builder).getGlobalObject(JavaScriptTypes.jsName);
         PointerKey fkey = analysis.getHeapModel().getPointerKeyForInstanceField(globalObj, f);
         if (fkey != null) {
-          OrdinalSet pointees = analysis.getPointsToSet(fkey);
+          OrdinalSet<InstanceKey> pointees = analysis.getPointsToSet(fkey);
           IntSet set = pointees.getBackingSet();
           if (set != null) {
             S.addAll(set);
@@ -390,13 +390,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       public void visitPrototypeLookup(PrototypeLookup instruction) {
       }
 
-    };
+    }
 
     @Override
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
       return new JSImplicitPointsToSetVisitor(this, lpk);
     }
-  };
+  }
 
   @Override
   protected PropagationSystem makeSystem(AnalysisOptions options) {
@@ -639,7 +639,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               public String toString() {
                 return "sub-dispatch for " + instruction + ": " + receiverType + ", " + fieldKey;
               } 
-            };
+            }
           
             system.newSideEffect(new FieldValueDispatch(), fieldKey);
         }
@@ -819,8 +819,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
                     } catch (CancelException e) {
                       throw new CancelRuntimeException(e);
                     }
-                    String v1 = (String) ((ConstantKey) iks1[i]).getValue();
-                    String v2 = (String) ((ConstantKey) iks2[j]).getValue();
+                    String v1 = (String) ((ConstantKey<?>) iks1[i]).getValue();
+                    String v2 = (String) ((ConstantKey<?>) iks2[j]).getValue();
                     if (v1.indexOf(v2) == -1 && v2.indexOf(v1) == -1) {
                       InstanceKey lvalKey = getInstanceKeyForConstant(v1 + v2);
                       if (addKey(lvalKey)) {

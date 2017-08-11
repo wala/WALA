@@ -34,14 +34,14 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
 
-  @Test public void testPage3WithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testPage3WithoutHack() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page3.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 
-  @Test public void testPage3WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testPage3WithHack() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page3.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
@@ -50,7 +50,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   }
 
   @Ignore("This test now blows up due to proper handling of the || construct, used in extend().  Should handle this eventually.")
-  @Test public void testJQueryWithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testJQueryWithHack() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery_hacked.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
@@ -172,7 +172,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   }
   */
   
-  private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
+  private static void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
     builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), orig));
   }

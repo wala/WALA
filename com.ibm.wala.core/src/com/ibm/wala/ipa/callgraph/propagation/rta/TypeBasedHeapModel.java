@@ -206,7 +206,7 @@ public class TypeBasedHeapModel implements HeapModel {
     return iKeyFactory.getInstanceKeyForConstant(type, S);
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) throws UnimplementedError {
+  public String getStringConstantForInstanceKey() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

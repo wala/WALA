@@ -51,8 +51,8 @@
  */
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib.Code.Opcode;
-import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction;
+import org.jf.dexlib2.Opcode;
+import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.types.TypeReference;
@@ -63,7 +63,7 @@ public class ArrayFill extends Instruction {
     public final int array;
     public final int tableAddressOffset;
     public int registerIndex;
-    private ArrayDataPseudoInstruction table;
+    private ArrayPayload table;
     public final TypeReference type;
 
 
@@ -85,16 +85,16 @@ public class ArrayFill extends Instruction {
     }
 
 
-    public void setArrayDataTable(ArrayDataPseudoInstruction table) {
-        this.table = table;
+    public void setArrayDataTable(ArrayPayload inst) {
+        this.table = inst;
     }
 
-    public ArrayDataPseudoInstruction getTable() {
+    public ArrayPayload getTable() {
         return table;
     }
 
     public int getElementCount() {
-        return table.getElementCount();
+        return table.getArrayElements().size();
     }
 
     public TypeReference getType() {

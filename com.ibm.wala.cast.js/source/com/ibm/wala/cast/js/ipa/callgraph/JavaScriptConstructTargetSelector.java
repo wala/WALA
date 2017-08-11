@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.types.MethodReference;
 
 /**
  * generates instructions to simulate the semantics of JS constructor invocations
@@ -54,11 +53,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
-  public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
-    return true;
-  }
-
-  public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
+  public boolean mightReturnSyntheticMethod() {
     return true;
   }
 }

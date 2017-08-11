@@ -148,7 +148,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getCaughtExceptions(m.getDeclaringClass().getClassLoader().getLanguage(), sm.getStatements());
+      return getCaughtExceptions(sm.getStatements());
     } else {
       return getShrikeBTCaughtExceptions((ShrikeCTMethod) m);
     }
@@ -245,7 +245,7 @@ public class CodeScanner {
    * @return {@link Set}&lt;{@link TypeReference}&gt;
    * @throws IllegalArgumentException if statements == null
    */
-  public static Set<TypeReference> getCaughtExceptions(final Language l, SSAInstruction[] statements) throws IllegalArgumentException {
+  public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements) throws IllegalArgumentException {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }

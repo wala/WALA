@@ -19,7 +19,6 @@ import javax.swing.JSplitPane;
 
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.viz.viewer.IrViewer.SelectedPcListner;
 
@@ -30,9 +29,6 @@ public class IrAndSourceViewer {
   
   private IR ir;
   
-  public IrAndSourceViewer(CallGraph cg) {
-  }
-
   public Component getComponent() {
 
 

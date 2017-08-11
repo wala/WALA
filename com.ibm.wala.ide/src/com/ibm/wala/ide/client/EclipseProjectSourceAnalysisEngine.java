@@ -12,8 +12,6 @@ package com.ibm.wala.ide.client;
 
 import java.io.IOException;
 
-import org.eclipse.core.runtime.CoreException;
-
 import com.ibm.wala.ide.plugin.CorePlugin;
 import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -38,11 +36,11 @@ abstract public class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
    */
   final String fileExt;
 
-  public EclipseProjectSourceAnalysisEngine(P project) throws IOException, CoreException {
+  public EclipseProjectSourceAnalysisEngine(P project) {
     this(project, defaultFileExt);
   }
 
-  public EclipseProjectSourceAnalysisEngine(P project, String fileExt) throws IOException, CoreException {
+  public EclipseProjectSourceAnalysisEngine(P project, String fileExt) {
     super(project);
     this.fileExt = fileExt;
     try {

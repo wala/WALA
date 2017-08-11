@@ -211,7 +211,11 @@ public abstract class IR implements IRView {
             addNames(j, valNames, valNum);
           }
           if (!valNames.isEmpty()) {
-            result.append(" ").append(valNames);
+            result.append(" [");
+            for(Map.Entry<Integer,Set<String>> e : valNames.entrySet()) {
+              result.append(e.getKey() + "=" + e.getValue());
+            }
+            result.append("]");
           }
  
           result.append("\n");
@@ -258,6 +262,7 @@ public abstract class IR implements IRView {
    * 
    * This may go away someday.
    */
+  @Override
   public SSAInstruction[] getInstructions() {
     return instructions;
   }
@@ -265,6 +270,7 @@ public abstract class IR implements IRView {
   /**
    * @return the {@link SymbolTable} managing attributes for values in this method
    */
+  @Override
   public SymbolTable getSymbolTable() {
     return symbolTable;
   }
@@ -272,6 +278,7 @@ public abstract class IR implements IRView {
   /**
    * @return the underlying {@link ControlFlowGraph} which defines this IR.
    */
+  @Override
   public SSACFG getControlFlowGraph() {
     return cfg;
   }
@@ -393,6 +400,7 @@ public abstract class IR implements IRView {
   /**
    * @return the method this IR represents
    */
+  @Override
   public IMethod getMethod() {
     return method;
   }
@@ -525,6 +533,7 @@ public abstract class IR implements IRView {
   /**
    * @return the exit basic block
    */
+  @Override
   public BasicBlock getExitBlock() {
     return cfg.exit();
   }
@@ -585,6 +594,7 @@ public abstract class IR implements IRView {
    * @param pc a program counter
    * @return the instruction (a PEI) at this program counter
    */
+  @Override
   public SSAInstruction getPEI(ProgramCounter pc) {
     Integer i = peiMapping.get(pc);
     return instructions[i.intValue()];
@@ -593,6 +603,7 @@ public abstract class IR implements IRView {
   /**
    * @return an {@link Iterator} of all the allocation sites ( {@link NewSiteReference}s ) in this IR
    */
+  @Override
   public Iterator<NewSiteReference> iterateNewSites() {
     return newSiteMapping.keySet().iterator();
   }
@@ -600,6 +611,7 @@ public abstract class IR implements IRView {
   /**
    * @return an {@link Iterator} of all the call sites ( {@link CallSiteReference}s ) in this IR
    */
+  @Override
   public Iterator<CallSiteReference> iterateCallSites() {
     return new Iterator<CallSiteReference>() {
       private final int limit = callSiteMapping.maxKeyValue();
@@ -639,6 +651,7 @@ public abstract class IR implements IRView {
    * @return the basic block corresponding to this instruction
    * @throws IllegalArgumentException if site is null
    */
+  @Override
   public ISSABasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
     if (site == null) {
       throw new IllegalArgumentException("site is null");
@@ -699,6 +712,7 @@ public abstract class IR implements IRView {
    * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and local variable
    *         names are available, the name of the locals which v_vn represents. Otherwise, null.
    */
+  @Override
   public String[] getLocalNames(int index, int vn) {
     if (getLocalMap() == null) {
       return new String[0];
@@ -737,5 +751,5 @@ public abstract class IR implements IRView {
    */
   public SSAOptions getOptions() {
     return options;
-  };
+  }
 }

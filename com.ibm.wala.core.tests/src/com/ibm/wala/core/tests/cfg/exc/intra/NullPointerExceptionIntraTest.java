@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.cfg.exc.intra;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

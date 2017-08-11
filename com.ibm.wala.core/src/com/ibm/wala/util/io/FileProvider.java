@@ -54,14 +54,14 @@ public class FileProvider {
     return getJarFileFromClassLoader(fileName, loader);
   }
 
-  public URL getResource(String fileName) throws IOException {
+  public URL getResource(String fileName) {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }
     return getResource(fileName, FileProvider.class.getClassLoader());
   }
 
-  public URL getResource(String fileName, ClassLoader loader) throws IOException {
+  public URL getResource(String fileName, ClassLoader loader) {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }

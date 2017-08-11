@@ -54,6 +54,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class PaPanel extends JSplitPane {
 
+  private static final long serialVersionUID = 8120735305334110889L;
   protected final PointerAnalysis<InstanceKey> pa;
   protected final CallGraph cg;
 
@@ -97,7 +98,7 @@ public class PaPanel extends JSplitPane {
     this.setRightComponent(rightPanel);
     fullName = new JTextField("");
     rightPanel.add(fullName, BorderLayout.PAGE_START);
-    irViewer = new IrAndSourceViewer(cg);
+    irViewer = new IrAndSourceViewer();
     rightPanel.add(irViewer.getComponent(), BorderLayout.CENTER);
 
     heapTree.addTreeExpansionListener(new TreeExpansionListener() {

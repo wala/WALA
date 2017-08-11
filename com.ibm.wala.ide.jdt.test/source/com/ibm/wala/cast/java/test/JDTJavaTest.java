@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
@@ -46,39 +45,31 @@ public abstract class JDTJavaTest extends IRTests {
 
   @Override
   protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    return makeAnalysisEngine(mainClassDescriptors, sources, libs, project);
+    return makeAnalysisEngine(mainClassDescriptors, project);
   }
   
-  static <I extends InstanceKey> AbstractAnalysisEngine<I> makeAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs, ZippedProjectData project) {
+  static <I extends InstanceKey> AbstractAnalysisEngine<I> makeAnalysisEngine(final String[] mainClassDescriptors, ZippedProjectData project) {
     AbstractAnalysisEngine<I> engine;
-    try {
-      engine = new JDTJavaSourceAnalysisEngine<I>(project.projectName) {
-        {
-          setDump(Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false")));
-        }
-        
-        @Override
-        protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-          return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
-        }
-      };
-  
-      try {
-        File tf = TemporaryFile.urlToFile("exclusions.txt", CallGraphTestUtil.class.getClassLoader().getResource(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
-        engine.setExclusionsFile(tf.getAbsolutePath());
-        tf.deleteOnExit();
-      } catch (IOException e) {
-        Assert.assertFalse("Cannot find exclusions file: " + e.toString(), true);
+    engine = new JDTJavaSourceAnalysisEngine<I>(project.projectName) {
+      {
+        setDump(Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false")));
       }
-  
-      return engine;
-    } catch (IOException e1) {
-      Assert.fail(e1.getMessage());
-      return null;
-    } catch (CoreException e1) {
-      Assert.fail(e1.getMessage());
-      return null;
+      
+      @Override
+      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
+      }
+    };
+ 
+    try {
+      File tf = TemporaryFile.urlToFile("exclusions.txt", CallGraphTestUtil.class.getClassLoader().getResource(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      engine.setExclusionsFile(tf.getAbsolutePath());
+      tf.deleteOnExit();
+    } catch (IOException e) {
+      Assert.assertFalse("Cannot find exclusions file: " + e.toString(), true);
     }
+ 
+    return engine;
   }
 
 }

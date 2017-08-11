@@ -63,7 +63,7 @@ public class SourceMapTest extends WalaTestCase {
     String sourceFile = klass.getSourceFileName();
     Assert.assertTrue(sourceFile != null);
     System.err.println("Source file: " + sourceFile);
-    Module container = ((BytecodeClass)klass).getContainer();
+    Module container = ((BytecodeClass<?>)klass).getContainer();
     Assert.assertTrue(container != null);
     System.err.println("container: " + container);
   }

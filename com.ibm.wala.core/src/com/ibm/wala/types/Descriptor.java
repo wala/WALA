@@ -234,7 +234,7 @@ public final class Descriptor {
       return result.toString();
     }
 
-    private void appendSemicolonIfNeeded(StringBuffer result, TypeName p) {
+    private static void appendSemicolonIfNeeded(StringBuffer result, TypeName p) {
       if (p.isArrayType()) {
         TypeName e = p.getInnermostElementType();
         String x = e.toUnicodeString();

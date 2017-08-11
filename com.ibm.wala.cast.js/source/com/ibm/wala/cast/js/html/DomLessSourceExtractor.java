@@ -88,11 +88,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       writeEntrypoint("window.onload();");
     }
 
-    protected Position makePos(int lineNumber, ITag governingTag) {
-      return makePos(entrypointUrl, lineNumber, governingTag);
-    }
-     
-    protected Position makePos(final URL url, final int lineNumber, ITag governingTag) {
+    protected Position makePos(ITag governingTag) {
       return governingTag.getElementPosition();
      }
     
@@ -140,7 +136,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       handleDOM(tag);
     }
 
-    private boolean isUsableIdentifier(String x) {
+    private static boolean isUsableIdentifier(String x) {
       return x != null &&
           LEGAL_JS_IDENTIFIER_REGEXP.matcher(x).matches() &&
           !LEGAL_JS_KEYWORD_REGEXP.matcher(x).matches();
@@ -217,7 +213,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       return Pair.make(value, quote);
     }
     
-    private String extructJS(String attValue) {
+    private static String extructJS(String attValue) {
       if (attValue == null){
         return "";
       }
@@ -283,7 +279,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
-    protected String getScriptName(URL url) throws MalformedURLException {
+    protected String getScriptName(URL url) {
       String file = url.getFile();
       int lastIdxOfSlash = file.lastIndexOf('/');
       file = (lastIdxOfSlash == (-1)) ? file : file.substring(lastIdxOfSlash + 1);
@@ -350,7 +346,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     return new HtmlCallback(entrypointUrl, urlResolver);
   }
 
-  private File createOutputFile(URL url, boolean delete, boolean useTempName) throws IOException {
+  private static File createOutputFile(URL url, boolean delete, boolean useTempName) throws IOException {
     File outputFile;
     String fileName = new File(url.getFile()).getName();
     if (fileName.length() < 5) {

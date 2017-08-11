@@ -200,7 +200,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
   
   @Override
-  protected void leaveEntity(CAstEntity entity) {
+  protected void leaveEntity() {
     policies.pop();
   }
 
@@ -210,7 +210,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     case OPERATOR:
       return root;
     case CONSTANT:
-      return copyConstant(root, cfg, context, nodeMap);
+      return copyConstant(root, context, nodeMap);
     case BLOCK_STMT:
       return copyBlock(root, cfg, context, nodeMap);
     case RETURN: 
@@ -225,7 +225,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   /* Constants are not affected by the rewriting, they are just copied. */
-  private CAstNode copyConstant(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyConstant(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode newNode = Ast.makeConstant(root.getValue());
     nodeMap.put(Pair.make(root, context.key()), newNode);
     return newNode;
@@ -666,7 +666,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     return stmts;
   }
   
-  private CAstNode addSpuriousExnFlow(CAstNode node, CAstControlFlowMap cfg) {
+  private static CAstNode addSpuriousExnFlow(CAstNode node, CAstControlFlowMap cfg) {
     CAstControlFlowRecorder flow = (CAstControlFlowRecorder)cfg;
     if(node.getKind() == ASSIGN) {
       if(node.getChild(0).getKind() == VAR) {

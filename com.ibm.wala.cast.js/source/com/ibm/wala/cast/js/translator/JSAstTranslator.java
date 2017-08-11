@@ -54,7 +54,7 @@ public class JSAstTranslator extends AstTranslator {
     super(loader);
   }
 
-  private boolean isPrologueScript(WalkContext context) {
+  private static boolean isPrologueScript(WalkContext context) {
     return JavaScriptLoader.bootstrapFileNames.contains( context.getModule().getName() );
   }
 

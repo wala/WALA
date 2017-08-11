@@ -229,7 +229,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * The budget specified in the {@link RefinementPolicy} was exceeded on all refinement passes
      */
     BUDGETEXCEEDED
-  };
+  }
 
   /**
    * re-initialize state for a new query
@@ -501,7 +501,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   /**
    * do all instance keys in p2set pass ikeyPred?
    */
-  private boolean passesPred(Collection<InstanceKeyAndState> curP2Set, final Predicate<InstanceKey> ikeyPred) {
+  private static boolean passesPred(Collection<InstanceKeyAndState> curP2Set, final Predicate<InstanceKey> ikeyPred) {
     return Util.forAll(curP2Set, new Predicate<InstanceKeyAndState>() {
 
       @Override
@@ -2000,11 +2000,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
   }
 
-  private SSAAbstractInvokeInstruction[] getCallInstrs(CGNode node, CallSiteReference site) {
+  private static SSAAbstractInvokeInstruction[] getCallInstrs(CGNode node, CallSiteReference site) {
     return node.getIR().getCalls(site);
   }
 
-  private boolean hasNullIR(CGNode node) {
+  private static boolean hasNullIR(CGNode node) {
     boolean ret = node.getMethod().isNative();
     assert node.getIR() != null || ret;
     return ret;
@@ -2457,7 +2457,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return true;
   }
 
-  private boolean predHoldsForPk(PointerKey curPk, Predicate<InstanceKey> pred, PointerAnalysis<InstanceKey> pa) {
+  private static boolean predHoldsForPk(PointerKey curPk, Predicate<InstanceKey> pred, PointerAnalysis<InstanceKey> pa) {
     PointerKey curPkForPAHeapModel = convertToHeapModel(curPk, pa.getHeapModel());
     OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(curPkForPAHeapModel);
     for (InstanceKey ik : pointsToSet) {
@@ -2468,7 +2468,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return true;
   }
 
-  private PointerKey convertToHeapModel(PointerKey curPk, HeapModel heapModel) {
+  private static PointerKey convertToHeapModel(PointerKey curPk, HeapModel heapModel) {
     return AbstractFlowGraph.convertPointerKeyToHeapModel(curPk, heapModel);
   }
 

@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,7 +98,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     }
   }
   
-  protected void run(String mainClass, String exclusionsFile, String... args) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, InterruptedException {
+  protected void run(String mainClass, String exclusionsFile, String... args) throws IOException, SecurityException, IllegalArgumentException, InterruptedException {
     Project p = new Project();
     p.setBaseDir(new File(System.getProperty("java.io.tmpdir")));
     p.init();
@@ -143,7 +142,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     void edgesTest(CallGraph staticCG, CGNode caller, MethodReference callee);
   }
  
-  private MethodReference callee(String calleeClass, String calleeMethod) {
+  private static MethodReference callee(String calleeClass, String calleeMethod) {
       return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + calleeClass), Selector.make(calleeMethod));
   }
 

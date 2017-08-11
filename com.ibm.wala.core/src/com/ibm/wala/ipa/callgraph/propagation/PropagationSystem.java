@@ -390,14 +390,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
+  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
+  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
@@ -499,7 +499,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  private TypeReference makeArray(TypeReference element, int dim) {
+  private static TypeReference makeArray(TypeReference element, int dim) {
     TypeReference iArrayRef = element;
     for (int i = 0; i < dim; i++) {
       iArrayRef = TypeReference.findOrCreateArrayOf(iArrayRef);
@@ -507,8 +507,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return iArrayRef;
   }
 
-  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim)
-      throws ClassHierarchyException {
+  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim) {
     IClass T;
     // register the array with each supertype of the element class
     T = elementClass.getSuperclass();

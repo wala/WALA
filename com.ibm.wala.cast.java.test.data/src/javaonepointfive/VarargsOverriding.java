@@ -70,6 +70,7 @@ class VarityTestSuper {
 
 class VarityTestSub extends VarityTestSuper {
 	
+  @Override
   void bar(String... args) {}
 }
 

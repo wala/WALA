@@ -20,6 +20,8 @@ import com.ibm.wala.util.collections.Pair;
  */
 public final class CallSite extends Pair<CallSiteReference, CGNode> {
 
+  private static final long serialVersionUID = -5277592800329960642L;
+
   public CallSite(CallSiteReference site, CGNode node) {
     super(site, node);
     if (site == null) {

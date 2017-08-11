@@ -23,15 +23,16 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.demandpa.AbstractPtrTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -86,6 +87,8 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    // this speeds up the test
+    options.setReflectionOptions(ReflectionOptions.NONE);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
   }
@@ -106,6 +109,8 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    // this speeds up the test
+    options.setReflectionOptions(ReflectionOptions.NONE);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
 
@@ -218,13 +223,13 @@ public class CallGraphTest extends WalaTestCase {
   @Test public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
+    Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
 
-  public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
+  public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(ClassHierarchy cha, String pkg) {
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass clazz : cha) {
 
@@ -257,7 +262,7 @@ public class CallGraphTest extends WalaTestCase {
           "Java60RegressionExclusions.txt":
           "GUIExclusions.txt");
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
@@ -270,8 +275,8 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Ldemandpa/TestArraysCopyOf");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    AnalysisCache cache = new AnalysisCacheImpl();
-    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
@@ -283,7 +288,7 @@ public class CallGraphTest extends WalaTestCase {
   /**
    * make main entrypoints, even in the primordial loader.
    */
-  public static Iterable<Entrypoint> makePrimordialMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makePrimordialMainEntrypoints(ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
@@ -302,7 +307,7 @@ public class CallGraphTest extends WalaTestCase {
     };
   }
 
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope)
+  public static void doCallGraphs(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
       throws IllegalArgumentException, CancelException {
     doCallGraphs(options, cache, cha, scope, false);
   }
@@ -313,7 +318,7 @@ public class CallGraphTest extends WalaTestCase {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
+  public static void doCallGraphs(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAToString) throws IllegalArgumentException, CancelException {
 
     // ///////////////
@@ -399,6 +404,7 @@ public class CallGraphTest extends WalaTestCase {
     }
 
     // perform a little icfg exercise
+    @SuppressWarnings("unused")
     int count = 0;
     for (Iterator<BasicBlockInContext<ISSABasicBlock>> it = icfg.iterator(); it.hasNext();) {
       BasicBlockInContext<ISSABasicBlock> bb = it.next();

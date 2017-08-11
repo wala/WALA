@@ -29,8 +29,9 @@ public class IntSetUtil {
     MutableIntSetFactory<?> defaultFactory = new MutableSharedBitVectorIntSetFactory();
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
-        Class<?> intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-        MutableIntSetFactory<?> intSetFactory = (MutableIntSetFactory<?>) intSetFactoryClass.newInstance();
+        @SuppressWarnings("unchecked")
+        Class<? extends MutableIntSetFactory<?>> intSetFactoryClass = (Class<? extends MutableIntSetFactory<?>>) Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        MutableIntSetFactory<?> intSetFactory = intSetFactoryClass.newInstance();
         setDefaultIntSetFactory(intSetFactory);
       } catch (Exception e) {
         System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));

@@ -24,7 +24,7 @@ import com.ibm.wala.util.collections.Pair;
 
 public class EclipseWebProjectPath extends JavaScriptEclipseProjectPath {
   
-  public EclipseWebProjectPath(Set<Pair<String, Plugin>> models) throws IOException, CoreException {
+  public EclipseWebProjectPath(Set<Pair<String, Plugin>> models) {
     super(models);
   }
   

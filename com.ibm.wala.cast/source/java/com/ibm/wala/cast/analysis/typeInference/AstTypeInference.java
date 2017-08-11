@@ -23,7 +23,6 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 
 public abstract class AstTypeInference extends TypeInference {
@@ -73,9 +72,9 @@ public abstract class AstTypeInference extends TypeInference {
     public void visitEcho(AstEchoInstruction inst) {
 
     }
-  };
+  }
 
-  public AstTypeInference(IR ir, IClassHierarchy cha, TypeAbstraction booleanType, boolean doPrimitives) {
+  public AstTypeInference(IR ir, TypeAbstraction booleanType, boolean doPrimitives) {
     super(ir, doPrimitives);
     this.booleanType = booleanType;
   }

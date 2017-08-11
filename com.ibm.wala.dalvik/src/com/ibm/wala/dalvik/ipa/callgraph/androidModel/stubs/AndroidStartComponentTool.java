@@ -53,7 +53,6 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
 import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -100,7 +99,7 @@ public class AndroidStartComponentTool {
     public AndroidStartComponentTool(final IClassHierarchy cha, final MethodReference asMethod, final Set<StarterFlags> flags,
             final TypeReference caller, final TypeSafeInstructionFactory instructionFactory, final ParameterAccessor acc,
             final SSAValueManager pm, final VolatileMethodSummary redirect, final Parameter self,
-            final StartInfo info, final CGNode callerNd) {
+            final StartInfo info) {
         
         if (cha == null) {
             throw new IllegalArgumentException("cha may not be null");

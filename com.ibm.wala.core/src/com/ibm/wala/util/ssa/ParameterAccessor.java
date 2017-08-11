@@ -539,7 +539,7 @@ public class ParameterAccessor {
             switch (this.base) {
                 case IMETHOD:
                     {
-                        final int firstInSelector = firstInSelector();
+                        // final int firstInSelector = firstInSelector();
                         for (int i = ((hasImplicitThis())?1:0); i < this.method.getNumberOfParameters(); ++i) {   
                             debug("all() adding: Parameter({}, {}, {}, {}, {})", (i + 1), this.method.getParameterType(i),
                                     this.base,  this.method, this.descriptorOffset);
@@ -1671,6 +1671,7 @@ public class ParameterAccessor {
         return ret;
     }
 
+    @Override
     public String toString() {
         return "<ParamAccessor forMethod=" + this.forMethod() + " />";
     }

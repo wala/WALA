@@ -32,9 +32,9 @@ public abstract class CAstBasicRewriter
    * context indicating that no cloning is being performed
    */
   public static class NonCopyingContext implements CAstRewriter.RewriteContext<NoKey> {
-    private final Map nodeMap = new HashMap();
+    private final Map<Object, Object> nodeMap = new HashMap<>();
 
-    public Map nodeMap() {
+    public Map<Object, Object> nodeMap() {
       return nodeMap;
     }
 
@@ -67,7 +67,7 @@ public abstract class CAstBasicRewriter
     public NoKey parent() {
       return null;
     }
-  };
+  }
 
   protected CAstBasicRewriter(CAst Ast, boolean recursive) {
     super(Ast, recursive, new NonCopyingContext());

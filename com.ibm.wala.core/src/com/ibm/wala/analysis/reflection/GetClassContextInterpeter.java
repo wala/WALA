@@ -106,7 +106,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
-  private SSAInstruction[] makeStatements(JavaTypeContext context) {
+  private static SSAInstruction[] makeStatements(JavaTypeContext context) {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
     int nextLocal = 2;
     int retValue = nextLocal++;
@@ -126,7 +126,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     return result;
   }
 
-  private IR makeIR(IMethod method, JavaTypeContext context) {
+  private static IR makeIR(IMethod method, JavaTypeContext context) {
     SSAInstruction instrs[] = makeStatements(context);
     return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
   }

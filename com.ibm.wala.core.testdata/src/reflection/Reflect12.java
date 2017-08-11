@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 public class Reflect12 {
   public static void main(String[] args) throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
       IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
-    Class c = Class.forName("reflection.Helper");
+    Class<?> c = Class.forName("reflection.Helper");
     Method[] m = c.getMethods();
     m[0].invoke(new Helper(), new Object[3]);
   }

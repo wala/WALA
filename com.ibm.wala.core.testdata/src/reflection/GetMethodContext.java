@@ -28,7 +28,7 @@ public class GetMethodContext {
     }
     public void baz() {
     }
-  };
+  }
 
   public static class B extends A {
     @Override
@@ -40,7 +40,7 @@ public class GetMethodContext {
     @Override
     public void baz() {
     }
-  };
+  }
 
   public static class C extends B {
     @Override
@@ -49,7 +49,7 @@ public class GetMethodContext {
     @Override
     public void bar() {
     }
-  };
+  }
 
   public static void main(String[] args) throws IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
     Method m;

@@ -37,7 +37,7 @@ import com.ibm.wala.util.debug.VerboseAction;
  * Fixed-point iteration proceeds in a topological order according to these edges.
  */
 @SuppressWarnings("rawtypes")
-public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implements IFixedPointSolver<T>, FixedPointConstants,
+public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implements IFixedPointSolver<T>, FixedPointConstants,
     VerboseAction {
 
   static final boolean DEBUG = false;
@@ -148,8 +148,8 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
         System.err.println(("Before evaluation " + s));
       }
       byte code = s.evaluate();
+      nEvaluated++;
       if (verbose) {
-        nEvaluated++;
         if (nEvaluated % getVerboseInterval() == 0) {
           performVerboseAction();
         }

@@ -61,7 +61,6 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -71,6 +70,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -153,7 +153,7 @@ public class DemandCastChecker {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    final Pair<CallGraph, PointerAnalysis> cgAndPA = buildCallGraph(scope, cha, options);
+    final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA = buildCallGraph(scope, cha, options);
     CallGraph cg = cgAndPA.fst;    
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
@@ -163,7 +163,7 @@ public class DemandCastChecker {
     return fullDemandPointsTo;
   }
 
-  private static String getExclusions(String benchName) {
+  private static String getExclusions(@SuppressWarnings("unused") String benchName) {
     return CallGraphTestUtil.REGRESSION_EXCLUSIONS;
   }
 
@@ -182,12 +182,12 @@ public class DemandCastChecker {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  private static Pair<CallGraph, PointerAnalysis> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
+  private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     CallGraph retCG = null;
-    PointerAnalysis retPA = null;
-    final AnalysisCache cache = new AnalysisCacheImpl();
-    CallGraphBuilder builder;
+    PointerAnalysis<InstanceKey> retPA = null;
+    final IAnalysisCacheView cache = new AnalysisCacheImpl();
+    CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
       builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation

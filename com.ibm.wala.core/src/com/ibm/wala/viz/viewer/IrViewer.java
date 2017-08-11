@@ -32,6 +32,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 public class IrViewer extends JPanel{
+  private static final long serialVersionUID = -5668847442988389016L;
   private JTextField methodName;
   private DefaultListModel<String> irLineList = new DefaultListModel<>();
   private JList<String> irLines;
@@ -121,7 +122,7 @@ public class IrViewer extends JPanel{
 
   static final int NA = -1;
 
-  private int parseIrLine(String line) {
+  private static int parseIrLine(String line) {
     int firstSpace = line.indexOf(' ');
     if (firstSpace > 0) {
       String pcString = line.substring(0, firstSpace);

@@ -182,7 +182,7 @@ public class DotUtil {
    * @return StringBuffer holding dot output representing G
    * @throws WalaException
    */
-  private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
+  public static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
     StringBuffer result = new StringBuffer("digraph \"DirectedGraph\" {\n");
 
     if (title != null) {
@@ -248,11 +248,11 @@ public class DotUtil {
   /**
    * Compute the nodes to visualize
    */
-  private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
+  private static <T> Collection<T> computeDotNodes(Graph<T> g) {
     return Iterator2Collection.toSet(g.iterator());
   }
 
-  private static String getRankDir() throws WalaException {
+  private static String getRankDir() {
     return null;
   }
 

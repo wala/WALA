@@ -56,7 +56,6 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -261,8 +260,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       return;
     }
 
-    DefUse du = node.getDU();
-    addNodeInstructionConstraints(node, ir, du);
+    addNodeInstructionConstraints(node, ir);
     addNodePassthruExceptionConstraints(node, ir);
     addNodeConstantConstraints(node, ir);
   }
@@ -270,7 +268,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /**
    * Add pointer flow constraints based on instructions in a given node
    */
-  protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
+  protected void addNodeInstructionConstraints(CGNode node, IR ir) {
     FlowStatementVisitor v = makeVisitor(node);
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (ISSABasicBlock b : cfg) {
@@ -336,7 +334,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
   protected abstract FlowStatementVisitor makeVisitor(CGNode node);
 
-  private void debugPrintIR(IR ir) {
+  private static void debugPrintIR(IR ir) {
     if (DEBUG) {
       if (ir == null) {
         System.err.println("\n   No statements\n");

@@ -44,8 +44,18 @@ import java.util.Set;
  */
 public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -3475591699051060160L;
+  
   @SuppressWarnings("rawtypes")
   public static final ArraySetMultiMap EMPTY = new ArraySetMultiMap<Object, Object>() {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1839857029830528896L;
 
     @Override
     public boolean put(Object key, Object val) {

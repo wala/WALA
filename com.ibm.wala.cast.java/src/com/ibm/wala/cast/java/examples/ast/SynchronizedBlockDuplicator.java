@@ -158,13 +158,13 @@ public class SynchronizedBlockDuplicator extends
   }
 
   @Override
-  protected CAstNode flowOutTo(Map nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget, CAstControlFlowMap orig,
+  protected CAstNode flowOutTo(Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget, CAstControlFlowMap orig,
       CAstSourcePositionMap src) {
     assert oldTarget == CAstControlFlowMap.EXCEPTION_TO_EXIT;
     return oldTarget;
   }
 
-  private boolean contains(RewriteContext<UnwindKey> c, CAstNode n) {
+  private static boolean contains(RewriteContext<UnwindKey> c, CAstNode n) {
     if (c instanceof SyncContext) {
       return ((SyncContext) c).containsNode(n);
     } else {
@@ -176,7 +176,7 @@ public class SynchronizedBlockDuplicator extends
    * does root represent a synchronized block? if so, return the variable whose
    * lock is acquired. otherwise, return <code>null</code>
    */
-  private String isSynchronizedOnVar(CAstNode root) {
+  private static String isSynchronizedOnVar(CAstNode root) {
     if (root.getKind() == CAstNode.UNWIND) {
       CAstNode unwindBody = root.getChild(0);
       if (unwindBody.getKind() == CAstNode.BLOCK_STMT) {

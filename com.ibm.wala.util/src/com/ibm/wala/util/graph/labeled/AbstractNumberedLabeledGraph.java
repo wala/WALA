@@ -59,10 +59,12 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
     return getEdgeManager().getSuccNodes(N, label);
   }
 
+  @Override
   public IntSet getPredNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getEdgeManager().getPredNodeNumbers(node, label);
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodeNumbers(node, label);
   }

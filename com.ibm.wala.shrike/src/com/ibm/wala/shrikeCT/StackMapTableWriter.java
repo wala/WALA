@@ -38,7 +38,7 @@ public class StackMapTableWriter extends Element {
     this.data = serialize(writer, frames);
   }
   
-  private byte[] serialize(ClassWriter writer, List<StackMapFrame> frames) throws IOException {
+  private static byte[] serialize(ClassWriter writer, List<StackMapFrame> frames) throws IOException {
     ByteArrayOutputStream data = new ByteArrayOutputStream();
     
     for(StackMapFrame frame : frames) {
@@ -56,11 +56,11 @@ public class StackMapTableWriter extends Element {
   }
   
   public StackMapTableWriter(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars) throws FailureException, IOException {
-    this(writer, stackMapTable(writer, method, output, cha, vars, null));
+    this(writer, stackMapTable(method, output, cha, vars, null));
   }
 
   public StackMapTableWriter(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException, IOException {
-    this(writer, stackMapTable(writer, method, output, cha, vars, reuseFrames));
+    this(writer, stackMapTable(method, output, cha, vars, reuseFrames));
   }
 
   private static List<StackMapFrame> remapStackFrames(List<StackMapFrame> sm, int[] newBytecodesToOldBytecodes) {
@@ -197,7 +197,7 @@ public class StackMapTableWriter extends Element {
     return false;
   }
   
-  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException, IOException {
+  public static List<StackMapFrame> stackMapTable(MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException {
     int idx = 0;
     
     List<StackMapFrame> frames = new ArrayList<>();

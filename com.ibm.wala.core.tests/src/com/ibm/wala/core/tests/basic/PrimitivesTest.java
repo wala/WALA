@@ -64,7 +64,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the MutableSparseIntSet implementation
    */
-  private void doMutableIntSet(MutableIntSetFactory factory) {
+  private static void doMutableIntSet(MutableIntSetFactory<?> factory) {
     MutableIntSet v = factory.parse("{9,17}");
     MutableIntSet w = factory.make(new int[] {});
     MutableIntSet x = factory.make(new int[] { 7, 4, 2, 4, 2, 2 });
@@ -351,7 +351,7 @@ public class PrimitivesTest extends WalaTestCase {
   /**
    * Test the MutableSparseIntSet implementation
    */
-  private void doMutableLongSet(MutableLongSetFactory factory) {
+  private static void doMutableLongSet(MutableLongSetFactory factory) {
     MutableLongSet v = factory.parse("{9,17}");
     MutableLongSet w = factory.make(new long[] {});
     MutableLongSet x = factory.make(new long[] { 7, 4, 2, 4, 2, 2 });
@@ -707,7 +707,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(c.size() == 10);
   }
 
-  private NumberedGraph<Integer> makeBFSTestGraph() {
+  private static NumberedGraph<Integer> makeBFSTestGraph() {
     // test graph
     NumberedGraph<Integer> G = SlowSparseNumberedGraph.make();
 
@@ -859,7 +859,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue("Got count " + count, count == 2);
   }
 
-  private int countEquivalenceClasses(IntegerUnionFind uf) {
+  private static int countEquivalenceClasses(IntegerUnionFind uf) {
     HashSet<Integer> s = HashSetFactory.make();
     for (int i = 0; i < uf.size(); i++) {
       s.add(new Integer(uf.find(i)));
@@ -891,7 +891,7 @@ public class PrimitivesTest extends WalaTestCase {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
 
-  private void testSingleBitVector(BitVectorBase bv) {
+  private static void testSingleBitVector(BitVectorBase<?> bv) {
     // does the following not automatically scale the bitvector to
     // a reasonable size?
     bv.set(55);
@@ -959,8 +959,7 @@ public class PrimitivesTest extends WalaTestCase {
     testBitVectors(new OffsetBitVector(35, 20), new OffsetBitVector(25, 10));
   }
 
-  @SuppressWarnings("unchecked")
-  private <T extends BitVectorBase> void testBitVectors(T v1, T v2) {
+  private static <T extends BitVectorBase<T>> void testBitVectors(T v1, T v2) {
     v1.set(100);
     v1.set(101);
     v1.set(102);

@@ -50,15 +50,11 @@ package org.scandroid.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-
 public abstract class CodeElement {
     /* For a given value number, and enclosing call graph node, yield
      * the set of all CodeElements that that it may refer to (i.e., the
      * associated local variable and any instances it may refer to). */
-    public static Set<CodeElement> valueElements(PointerAnalysis<InstanceKey> pa, CGNode node, int valueNumber) {
+    public static Set<CodeElement> valueElements(int valueNumber) {
     	//System.out.println("ValueNumber: " + valueNumber + ", Node: " + node.getMethod().getSignature());
         Set<CodeElement> elements = new HashSet<>();
         elements.add(new LocalElement(valueNumber));

@@ -305,7 +305,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     T getReader(ClassReader.AttrIterator iter) throws InvalidClassFileException;
   }
   
-  <T> T getReader(ClassReader.AttrIterator iter, String attrName, GetReader<T> reader) {
+  static <T> T getReader(ClassReader.AttrIterator iter, String attrName, GetReader<T> reader) {
     // search for the attribute
     try {
       for (; iter.isValid(); iter.advance()) {
@@ -410,7 +410,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     final ClassLoaderReference clRef = getClassLoader().getReference();
     return TypeAnnotation.getTypeAnnotationsFromReader(
         r,
-        TypeAnnotation.targetConverterAtFieldInfo(clRef),
+        TypeAnnotation.targetConverterAtFieldInfo(),
         clRef
     );
   }

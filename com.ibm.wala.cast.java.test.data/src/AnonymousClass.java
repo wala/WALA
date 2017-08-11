@@ -20,8 +20,10 @@ public class AnonymousClass {
 	Foo f= new Foo() {
 	    int value = 3;
 	    
+      @Override
       public int getValue() { return value; }
 	    
+      @Override
       public int getValueBase() { return value - base.intValue(); }
 	};
 
@@ -38,6 +40,7 @@ public class AnonymousClass {
 	    int y;
 
 	    
+      @Override
       public abstract int getValue();
 
 	    FooImpl(int _y) {
@@ -45,6 +48,7 @@ public class AnonymousClass {
 	    }
 
 	    
+      @Override
       public int getValueBase() { 
 	      return y + getValue() - base.intValue(); 
 	    }
@@ -52,6 +56,7 @@ public class AnonymousClass {
 
 	Foo f= new FooImpl(-4) {
 	  
+    @Override
     public int getValue() { return 7; }
 	};
 

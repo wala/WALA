@@ -62,7 +62,7 @@ public class ReflectionHandler {
       if (VERBOSE) {
         System.err.println("Slice " + st);
       }
-      Collection<Statement> slice = Slicer.computeForwardSlice(st, builder.callGraph, null, null, DataDependenceOptions.REFLECTION, ControlDependenceOptions.NONE);
+      Collection<Statement> slice = Slicer.computeForwardSlice(st, builder.callGraph, null, DataDependenceOptions.REFLECTION, ControlDependenceOptions.NONE);
       if (VERBOSE) {
         for (Statement x : slice) {
           System.err.println(" " + x);
@@ -108,7 +108,7 @@ public class ReflectionHandler {
    * 
    * @return set of nodes whose interpretation has changed.
    */
-  private Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
+  private static Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
       RTAContextInterpreter contextInterpreter, IClassHierarchy cha) {
     HashSet<CGNode> result = HashSetFactory.make();
 

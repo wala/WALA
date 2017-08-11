@@ -89,12 +89,12 @@ public class CallGraph2JSON {
 	
   public static void serializeCallSite(AstMethod method, CallSiteReference callsite, Set<IMethod> targets,
       Map<String, Set<String>> edges) {
-    Set<String> targetNames = MapUtil.findOrCreateSet(edges, ppPos(method, method.getSourcePosition(callsite.getProgramCounter())));
+    Set<String> targetNames = MapUtil.findOrCreateSet(edges, ppPos(method.getSourcePosition(callsite.getProgramCounter())));
     for(IMethod target : targets) {
       target = getCallTargetMethod(target);
     	if(!isRealFunction(target))
     		continue;
-    	targetNames.add(ppPos((AstMethod)target, ((AstMethod)target).getSourcePosition()));
+    	targetNames.add(ppPos(((AstMethod)target).getSourcePosition()));
     }
   }
 	
@@ -126,7 +126,7 @@ public class CallGraph2JSON {
 		return false;
 	}
 	
-	private static String ppPos(AstMethod method, Position pos) {
+	private static String ppPos(Position pos) {
 		String file = pos.getURL().getFile();
 		file = file.substring(file.lastIndexOf('/')+1);
 		

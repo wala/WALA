@@ -437,7 +437,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Integer at constant pool item i
    */
-  public int getCPInt(int i) throws InvalidClassFileException, IllegalArgumentException {
+  public int getCPInt(int i) throws IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -451,7 +451,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Float at constant pool item i
    */
-  public float getCPFloat(int i) throws InvalidClassFileException, IllegalArgumentException {
+  public float getCPFloat(int i) throws IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -465,7 +465,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Long at constant pool item i
    */
-  public long getCPLong(int i) throws InvalidClassFileException, IllegalArgumentException {
+  public long getCPLong(int i) throws IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -479,7 +479,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Double at constant pool item i
    */
-  public double getCPDouble(int i) throws InvalidClassFileException, IllegalArgumentException {
+  public double getCPDouble(int i) throws IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }

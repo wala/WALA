@@ -12,7 +12,6 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
@@ -26,13 +25,12 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
-  public JavaScopeMappingInstanceKeys(IClassHierarchy cha, PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
+  public JavaScopeMappingInstanceKeys(PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
     super(builder, basic);
 
   }
@@ -42,8 +40,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
     if (isPossiblyLexicalClass(cls)) {
       Set<LexicalParent> result = HashSetFactory.make();
 
-      for (Iterator MS = cls.getAllMethods().iterator(); MS.hasNext();) {
-        IMethod m = (IMethod) MS.next();
+      for (IMethod m : cls.getAllMethods()) {
         if ((m instanceof AstMethod) && !m.isStatic()) {
           AstMethod M = (AstMethod) m;
           LexicalParent[] parents = M.getParents();

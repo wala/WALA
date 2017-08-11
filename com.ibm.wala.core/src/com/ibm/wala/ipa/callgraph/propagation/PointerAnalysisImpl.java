@@ -209,7 +209,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       pointsToSet = analysis.computeImplicitPointsToSetAtALoad(node, instruction);
     }
-  };
+  }
 
   protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
     return new ImplicitPointsToSetVisitor(this, lpk);

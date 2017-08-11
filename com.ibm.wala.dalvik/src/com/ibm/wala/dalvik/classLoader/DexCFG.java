@@ -100,6 +100,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     }
 
+    @Override
     public Instruction[] getInstructions() {
         return dexMethod.getDexInstructions();
 
@@ -211,6 +212,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     /**
      * Return an instruction's basic block in the CFG given the index of the instruction in the CFG's instruction array.
      */
+    @Override
     public BasicBlock getBlockForInstruction(int index) {
         return getNode(instruction2Block[index]);
     }
@@ -226,6 +228,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             this.startIndex = startIndex;
         }
 
+        @Override
         public boolean isCatchBlock() {
             return DexCFG.this.isCatchBlock(getNumber());
         }
@@ -570,6 +573,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             addExceptionalEdge(this, b);
         }
 
+        @Override
         public int getLastInstructionIndex() {
             if (this == entry() || this == exit()) {
                 // these are the special end blocks
@@ -584,6 +588,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             }
         }
 
+        @Override
         public int getFirstInstructionIndex() {
             return startIndex;
         }
@@ -596,6 +601,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         /*
          * @see com.ibm.wala.cfg.BasicBlock#isExitBlock()
          */
+        @Override
         public boolean isExitBlock() {
             return this == DexCFG.this.exit();
         }
@@ -603,6 +609,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         /*
          * @see com.ibm.wala.cfg.BasicBlock#isEntryBlock()
          */
+        @Override
         public boolean isEntryBlock() {
             return this == DexCFG.this.entry();
         }
@@ -610,6 +617,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         /*
          * @see com.ibm.wala.cfg.BasicBlock#getMethod()
          */
+        @Override
         public IMethod getMethod() {
             return DexCFG.this.getMethod();
         }
@@ -628,10 +636,12 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         /*
          * @see com.ibm.wala.cfg.BasicBlock#getNumber()
          */
+        @Override
         public int getNumber() {
             return getGraphNodeId();
         }
 
+        @Override
         public Iterator<Instruction> iterator() {
             return new ArrayIterator<>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
         }
@@ -668,6 +678,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         return dexMethod.getMaxLocals();
     }
 
+    @Override
     public Set<ExceptionHandler> getExceptionHandlers() {
         return exceptionHandlers;
     }
@@ -675,6 +686,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     /*
      * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
      */
+    @Override
     public int getProgramCounter(int index) {
         return dexMethod.getAddressFromIndex(index);
         //    return dexMethod.getInstructionFromIndex(index).pc;

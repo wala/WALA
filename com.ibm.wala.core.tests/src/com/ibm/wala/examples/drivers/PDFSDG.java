@@ -131,7 +131,7 @@ public class PDFSDG {
       CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options,null);
       final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-      SDG<?> sdg = new SDG<>(cg, pointerAnalysis, InstanceKey.class, dOptions, cOptions);
+      SDG<?> sdg = new SDG<>(cg, pointerAnalysis, dOptions, cOptions);
       try {
         GraphIntegrity.check(sdg);
       } catch (UnsoundGraphException e1) {

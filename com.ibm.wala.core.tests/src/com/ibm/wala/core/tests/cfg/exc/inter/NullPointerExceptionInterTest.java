@@ -22,11 +22,9 @@ import com.ibm.wala.cfg.exc.NullPointerAnalysis;
 import com.ibm.wala.cfg.exc.intra.IntraprocNullPointerAnalysis;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -34,11 +32,12 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.types.MethodReference;
@@ -63,7 +62,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   
   private static CallGraph cg;
   
-  private static AnalysisCache cache;
+  private static IAnalysisCacheView cache;
 
   @BeforeClass
   public static void beforeClass() throws Exception {
@@ -76,7 +75,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lcfg/exc/inter/CallFieldAccess");
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
       
-      CallGraphBuilder builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
+      CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
       cg = builder.makeCallGraph(options, null);
     } catch (ClassHierarchyException e) {
       throw new Exception(e);
@@ -100,8 +99,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testIfException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIfException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -117,12 +114,9 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testDynamicIfException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIfException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    
     Assert.assertEquals(1, cg.getNodes(mr).size());
     final CGNode callNode = cg.getNodes(mr).iterator().next();
 
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -137,8 +131,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testIfNoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIfNoException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -153,8 +145,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testDynamicIfNoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIfNoException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -169,8 +159,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testIf2Exception() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIf2Exception()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -186,12 +174,9 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testDynamicIf2Exception() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIf2Exception()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    
     Assert.assertEquals(1, cg.getNodes(mr).size());
     final CGNode callNode = cg.getNodes(mr).iterator().next();
 
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -206,8 +191,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testIf2NoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callIf2NoException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -222,8 +205,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testDynamicIf2NoException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicIf2NoException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -239,8 +220,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testGetException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callGetException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
@@ -256,12 +235,9 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public void testDynamicGetException() throws UnsoundGraphException, CancelException, WalaException {
     MethodReference mr = StringStuff.makeMethodReference("cfg.exc.inter.CallFieldAccess.callDynamicGetException()Lcfg/exc/intra/B");
 
-    IMethod m = cha.resolveMethod(mr);
-    
     Assert.assertEquals(1, cg.getNodes(mr).size());
     final CGNode callNode = cg.getNodes(mr).iterator().next();
 
-    IR ir = cache.getIR(m);
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG = 
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 

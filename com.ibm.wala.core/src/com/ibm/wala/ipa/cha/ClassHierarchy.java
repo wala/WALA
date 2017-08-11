@@ -595,7 +595,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param selector method selector
    * @return the method if found, else null
    */
-  private IMethod findMethod(IClass clazz, Selector selector) {
+  private static IMethod findMethod(IClass clazz, Selector selector) {
     return clazz.getMethod(selector);
   }
 
@@ -760,13 +760,7 @@ public class ClassHierarchy implements IClassHierarchy {
         assert n != null : "null n for " + b;
       }
       Set<IClass> superB;
-      try {
-        superB = getSuperclasses(b);
-      } catch (ClassHierarchyException e1) {
-        e1.printStackTrace();
-        Assertions.UNREACHABLE();
-        superB = null;
-      }
+      superB = getSuperclasses(b);
       IClass aa = a;
       while (aa != null) {
         if (b.equals(aa) || superB.contains(aa)) {
@@ -775,19 +769,13 @@ public class ClassHierarchy implements IClassHierarchy {
         aa = aa.getSuperclass();
       }
       Set<IClass> superA;
-      try {
-        superA = getSuperclasses(a);
-      } catch (ClassHierarchyException e1) {
-        e1.printStackTrace();
-        Assertions.UNREACHABLE();
-        superA = null;
-      }
+      superA = getSuperclasses(a);
       Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + b + ": " + superA + ", " + superB);
       return null;
     }
   }
 
-  private Set<IClass> getSuperclasses(IClass c) throws ClassHierarchyException {
+  private static Set<IClass> getSuperclasses(IClass c) {
     HashSet<IClass> result = HashSetFactory.make(3);
     while (c.getSuperclass() != null) {
       result.add(c.getSuperclass());

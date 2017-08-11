@@ -17,7 +17,7 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * Represents a single step in an iterative solver
  */
-public abstract class GeneralStatement<T extends IVariable<?>> extends AbstractStatement<T, AbstractOperator<T>> {
+public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractStatement<T, AbstractOperator<T>> {
 
   protected final T lhs;
 

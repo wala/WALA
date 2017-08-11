@@ -44,7 +44,6 @@ import java.util.List;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 
 /**
@@ -56,50 +55,43 @@ import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoi
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public final class ProviderEP {
-	public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "onCreate",
-			ExecutionOrder.AT_FIRST);
+	public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint("onCreate", ExecutionOrder.AT_FIRST);
 
-	public static final AndroidPossibleEntryPoint query = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "query",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
-				onCreate,
-				//ActivityEP.onResume,
-				ExecutionOrder.START_OF_LOOP
-				} ));
+	public static final AndroidPossibleEntryPoint query = new AndroidPossibleEntryPoint("query", ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+		onCreate,
+		//ActivityEP.onResume,
+		ExecutionOrder.START_OF_LOOP
+		} ));
 
-	public static final AndroidPossibleEntryPoint insert = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "insert",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
-				onCreate,
-				//ActivityEP.onResume,
-				ExecutionOrder.START_OF_LOOP
-				} ));
+	public static final AndroidPossibleEntryPoint insert = new AndroidPossibleEntryPoint("insert", ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+		onCreate,
+		//ActivityEP.onResume,
+		ExecutionOrder.START_OF_LOOP
+		} ));
 
-    public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "onConfigurationChanged",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
-				onCreate,
-				//ActivityEP.onResume,
-				ExecutionOrder.START_OF_LOOP
-				} ));
+    public static final AndroidPossibleEntryPoint onConfigurationChanged = new AndroidPossibleEntryPoint("onConfigurationChanged", ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+		onCreate,
+		//ActivityEP.onResume,
+		ExecutionOrder.START_OF_LOOP
+		} ));
 
-    public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "onLowMemory",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
-				onCreate,
-				//ActivityEP.onResume,
-				ExecutionOrder.START_OF_LOOP
-				} ));
+    public static final AndroidPossibleEntryPoint onLowMemory = new AndroidPossibleEntryPoint("onLowMemory", ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+		onCreate,
+		//ActivityEP.onResume,
+		ExecutionOrder.START_OF_LOOP
+		} ));
 
-	public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "onTrimMemory",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
-				onCreate,
-				//ActivityEP.onResume,
-				ExecutionOrder.START_OF_LOOP
-				} ));
+	public static final AndroidPossibleEntryPoint onTrimMemory = new AndroidPossibleEntryPoint("onTrimMemory", ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+		onCreate,
+		//ActivityEP.onResume,
+		ExecutionOrder.START_OF_LOOP
+		} ));
 
-	public static final AndroidPossibleEntryPoint update = new AndroidPossibleEntryPoint(AndroidComponent.PROVIDER, "update",
-			ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
-				onCreate,
-				//ActivityEP.onResume,
-				ExecutionOrder.START_OF_LOOP
-				} ));
+	public static final AndroidPossibleEntryPoint update = new AndroidPossibleEntryPoint("update", ExecutionOrder.after(new AndroidEntryPoint.IExecutionOrder[] {
+		onCreate,
+		//ActivityEP.onResume,
+		ExecutionOrder.START_OF_LOOP
+		} ));
     /**
      *  Add the EntryPoint specifications defined in this file to the given list.
      *

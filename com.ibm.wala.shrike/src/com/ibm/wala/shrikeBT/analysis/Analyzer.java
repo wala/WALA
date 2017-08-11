@@ -197,7 +197,7 @@ public class Analyzer {
     return ClassHierarchy.isSubtypeOf(hierarchy, patchType(t1), patchType(t2)) != ClassHierarchy.NO;
   }
 
-  private boolean isPrimitive(String type) {
+  private static boolean isPrimitive(String type) {
     return type != null && (!type.startsWith("L") && !type.startsWith("["));
   }
   
@@ -515,7 +515,7 @@ public class Analyzer {
     }
   }
 
-  private String[] cutArray(String[] a, int len) {
+  private static String[] cutArray(String[] a, int len) {
     if (len == 0) {
       return noStrings;
     } else {
@@ -528,11 +528,11 @@ public class Analyzer {
   private boolean mergeTypes(int i, String[] curStack, int curStackSize, String[] curLocals, int curLocalsSize,
       List<PathElement> path) throws FailureException {
     boolean a = mergeStackTypes(i, curStack, curStackSize, path);
-    boolean b = mergeLocalTypes(i, curLocals, curLocalsSize, path);
+    boolean b = mergeLocalTypes(i, curLocals, curLocalsSize);
     return a||b;
   }
   
-  private boolean longType(String type) {
+  private static boolean longType(String type) {
     return Constants.TYPE_long.equals(type) || Constants.TYPE_double.equals(type);
   }
   
@@ -562,7 +562,7 @@ public class Analyzer {
     return changed;
   }
 
-  private boolean mergeLocalTypes(int i, String[] curLocals, int curLocalsSize, List<PathElement> path) throws FailureException {
+  private boolean mergeLocalTypes(int i, String[] curLocals, int curLocalsSize) {
     boolean changed = false;
 
     if (locals[i] == null) {

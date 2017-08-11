@@ -61,11 +61,11 @@ import com.ibm.wala.util.functions.Function;
 
 public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject, I> {
 
-  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE };
+  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
   
   private final BuilderType builderType;
   
-  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) throws IOException, CoreException {
+  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) {
     super(project, "js");
     this.builderType = builderType;
   }
@@ -115,7 +115,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   @Override
   protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
 		AnalysisOptions options, IAnalysisCacheView cache) {
-	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
+	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha);
   }
 
   public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph() throws CancelException {
@@ -129,7 +129,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
     return getFieldBasedCallGraph(eps);
   }
   
-  private String getScriptName(AstMethod m) {
+  private static String getScriptName(AstMethod m) {
     
     // we want the original including file, since that will be the "script"
     Position p = m.getSourcePosition();

@@ -20,6 +20,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public final class BitVectorIntSet implements MutableIntSet {
 
+  private static final long serialVersionUID = 7477243071826223843L;
+
   // population count of -1 means needs to be computed again.
   private int populationCount = 0;
 
@@ -310,7 +312,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  private void actOnWord(IntSetAction action, int startingIndex, int word) {
+  private static void actOnWord(IntSetAction action, int startingIndex, int word) {
     if (word != 0) {
       if ((word & 0x1) != 0) {
         action.act(startingIndex);

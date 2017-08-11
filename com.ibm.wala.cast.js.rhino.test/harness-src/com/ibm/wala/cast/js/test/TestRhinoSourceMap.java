@@ -31,7 +31,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 public class TestRhinoSourceMap {
@@ -149,11 +148,11 @@ public class TestRhinoSourceMap {
 	  };
 	  
 	  @Test
-	  public void testJquerySpecTestSourceMappings() throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
+	  public void testJquerySpecTestSourceMappings() throws IllegalArgumentException, IOException, ClassHierarchyException {
 		  checkFunctionBodies("jquery_spec_test.js", jquery_spec_testSource);
 	  }
 
-	  private void checkFunctionBodies(String fileName, String[][] assertions) throws IOException, ClassHierarchyException {
+	  private static void checkFunctionBodies(String fileName, String[][] assertions) throws IOException, ClassHierarchyException {
 		  Map<String, String> sources = HashMapFactory.make();
 		  for(String[] assertion : assertions) {
 			  sources.put(assertion[0], assertion[1]);

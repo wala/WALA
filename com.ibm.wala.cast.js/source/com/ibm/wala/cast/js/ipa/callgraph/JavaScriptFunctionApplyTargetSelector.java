@@ -42,7 +42,7 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
     this.base = base;
   }
 
-  private IMethod createApplyDummyMethod(IClass declaringClass) {
+  private static IMethod createApplyDummyMethod(IClass declaringClass) {
     final MethodReference ref = genSyntheticMethodRef(declaringClass);
     // number of args doesn't matter
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
@@ -51,7 +51,7 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
 
   public static final String SYNTHETIC_APPLY_METHOD_PREFIX = "$$ apply_dummy";
 
-  private MethodReference genSyntheticMethodRef(IClass receiver) {
+  private static MethodReference genSyntheticMethodRef(IClass receiver) {
     Atom atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_APPLY_METHOD_PREFIX);
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
     MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);

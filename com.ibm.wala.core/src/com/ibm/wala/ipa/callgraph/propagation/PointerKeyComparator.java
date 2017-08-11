@@ -70,7 +70,7 @@ public class PointerKeyComparator implements Comparator {
     }
   }
     
-  private int compareLocalKey(LocalPointerKey key1, Object key2) {
+  private static int compareLocalKey(LocalPointerKey key1, Object key2) {
     if (key2 instanceof LocalPointerKey) {
       int l1 = key1.getValueNumber();
       int l2 = ((LocalPointerKey)key2).getValueNumber();
@@ -91,7 +91,7 @@ public class PointerKeyComparator implements Comparator {
     else return -1;
   }
 
-  private int compareReturnValueKey(ReturnValueKey key1, Object key2) {
+  private static int compareReturnValueKey(ReturnValueKey key1, Object key2) {
     if (key2 instanceof ReturnValueKey) {
       int n1 = key1.getNode().getGraphNodeId();
       int n2 = ((ReturnValueKey)key2).getNode().getGraphNodeId();
@@ -106,7 +106,7 @@ public class PointerKeyComparator implements Comparator {
     else return -1;
   }
 
-  private int compareExceptionKey(ExceptionReturnValueKey key1, Object key2) {
+  private static int compareExceptionKey(ExceptionReturnValueKey key1, Object key2) {
     if (key2 instanceof ExceptionReturnValueKey) {
       int n1 = key1.getNode().getGraphNodeId();
       int n2 = ((ExceptionReturnValueKey)key2).getNode().getGraphNodeId();

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -35,7 +35,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
    * @param appContextSelector application-specific logic to choose contexts
    * @param appContextInterpreter application-specific logic to interpret a method in context
    */
-  public AstJavaZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  public AstJavaZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter) {
     super(cha, options, cache);
 
@@ -46,7 +46,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
     setContextInterpreter(contextInterpreter);
 
     ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter);
-    setInstanceKeys(new JavaScopeMappingInstanceKeys(cha, this, zik));
+    setInstanceKeys(new JavaScopeMappingInstanceKeys(this, zik));
 
     ContextSelector CCS = makeContainerContextSelector(cha, zik);
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);

@@ -37,30 +37,21 @@
  */
 package com.ibm.wala.cast.java.translator.jdt.ecj;
 
-import java.io.IOException;
-
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
-import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.SetOfClasses;
 
 public class ECJSourceLoaderImpl extends JavaSourceLoaderImpl {
   private final boolean dump;
 
-  public ECJSourceLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
-      SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
-    this(loader, parent, exclusions, cha);
-  }
-
-  public ECJSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
-    this(loaderRef, parent, exclusions, cha, false);
+  public ECJSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha) {
+    this(loaderRef, parent, cha, false);
   }
   
-  public ECJSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha, boolean dump) throws IOException {
-    super(loaderRef, parent, exclusions, cha);
+  public ECJSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha, boolean dump) {
+    super(loaderRef, parent, cha);
     this.dump = dump;
   }
 

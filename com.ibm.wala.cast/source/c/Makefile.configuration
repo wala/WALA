@@ -1,0 +1,12 @@
+# -*- makefile -*-
+
+# configuration of installed Java SDK
+JRE_DIR := $(shell java -XshowSettings:properties -version 2>&1 | sed -n 's/^ *java\.home = \(.*\)/\1/p')/
+JAVA_SDK := $(realpath $(JRE_DIR)..)/
+JNI_MD_DIR := $(notdir $(patsubst %/,%,$(dir $(wildcard $(JAVA_SDK)include/*/jni_md.h))))
+
+# configuration of WALA build tree
+CAST_DIR := $(realpath $(dir $(lastword $(MAKEFILE_LIST)))../..)/
+DOMO_AST_BIN := $(CAST_DIR)target/classes/
+JAVAH_CLASS_PATH := :$(CAST_DIR)target/classes/
+TRACE :=

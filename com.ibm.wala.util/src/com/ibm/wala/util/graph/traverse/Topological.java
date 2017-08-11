@@ -52,7 +52,7 @@ public class Topological {
         finishTime = null;
         Graph<T> G_T = GraphInverter.invert(graph);
         return DFS.iterateFinishTime(G_T, rev);
-      };
+      }
     };
   }
 }

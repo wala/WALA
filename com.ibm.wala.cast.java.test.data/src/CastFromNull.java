@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
 public class CastFromNull {
-  @SuppressWarnings({ "cast", "unused" })
+  @SuppressWarnings({ "cast" })
   public static void main(String args[]) {
     new CastFromNull();
     Object x = (Object) null;

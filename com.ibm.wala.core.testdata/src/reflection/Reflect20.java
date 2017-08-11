@@ -22,8 +22,8 @@ public class Reflect20 {
       NoSuchMethodException, IllegalAccessException, InstantiationException,
       IllegalArgumentException, InvocationTargetException {
     Class<?> helperClass = Class.forName("reflection.Helper");
-    Class objectClass = Class.forName("java.lang.Object");
-    Class[] paramArrayTypes = new Class[]{objectClass, objectClass};
+    Class<?> objectClass = Class.forName("java.lang.Object");
+    Class<?>[] paramArrayTypes = new Class[]{objectClass, objectClass};
     Method m = helperClass.getMethod("o", paramArrayTypes);
     Object helperObject = helperClass.newInstance();
     Object[] paramArrayObjects = new Object[]{new Object(), new Object()};

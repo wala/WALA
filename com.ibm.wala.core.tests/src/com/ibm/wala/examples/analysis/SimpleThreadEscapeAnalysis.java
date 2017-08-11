@@ -35,7 +35,6 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.TypeReference;
@@ -161,7 +160,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public Set<IClass> gatherThreadEscapingClasses() throws IOException, ClassHierarchyException, IllegalArgumentException,
+  public Set<IClass> gatherThreadEscapingClasses() throws IOException, IllegalArgumentException,
       CancelException {
 
     //
@@ -327,7 +326,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void main(String[] args) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws IOException, IllegalArgumentException, CancelException {
     String mainClassName = args[0];
 
     Set<JarFile> jars = HashSetFactory.make();

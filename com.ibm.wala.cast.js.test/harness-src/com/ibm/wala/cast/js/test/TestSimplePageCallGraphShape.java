@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Before;
@@ -50,7 +49,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
 
-  @Test public void testPage1() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testPage1() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page1.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage1);
@@ -61,7 +60,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { "page2.html", new String[] { "page2.html/__WINDOW_MAIN__" } }
   };
   
-  @Test public void testPage2() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testPage2() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page2.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage2);
@@ -78,7 +77,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
 
-  @Test public void testCrawlPage11() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage11() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page11.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage11);
@@ -95,7 +94,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
   
-  @Test public void testCrawlPage11b() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage11b() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page11b.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage11b);
@@ -127,7 +126,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     },
   };
 
-  @Test public void testCrawlPage12() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage12() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page12.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage12);
@@ -160,7 +159,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
 
-  @Test public void testCrawlPage13() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage13() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page13.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);    
     verifyGraphAssertions(CG, assertionsForPage13);
@@ -178,7 +177,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
 
-  @Test public void testCrawlPage15() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage15() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page15.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage15);
@@ -196,7 +195,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
 
-  @Test public void testCrawlPage16() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage16() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page16.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage16);
@@ -219,7 +218,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     }
   };
     
-  @Test public void testCrawlPage17() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testCrawlPage17() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page17.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage17);
@@ -232,19 +231,19 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { "apollo-example.html/__WINDOW_MAIN__/signon", new String[] { "preamble.js/DOMWindow/window_open" } }
   };
   
-  @Test public void testApolloExample() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testApolloExample() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/apollo-example.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForApolloExample);
   }
 
-  @Test public void testNojs() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testNojs() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/nojs.html");
     // all we need is for it to finish building CG successfully.
     JSCallGraphBuilderUtil.makeHTMLCG(url);
   }
 
-  @Test public void testPage4() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testPage4() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page4.html");
     JSCallGraphBuilderUtil.makeHTMLCG(url);
   }
@@ -259,7 +258,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[]{ "suffix:forall_base", "pages/collection.js", 4, 4 }
   };
     
-  @Test public void testList() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testList() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/list.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
@@ -268,7 +267,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifySourceAssertions(CG, sourceAssertionsForList);
   }
 
-  @Test public void testIframeTest2() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testIframeTest2() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/iframeTest2.html");
     JSCallGraphBuilderUtil.makeHTMLCG(url);
   }
@@ -282,7 +281,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
 
   };
 
-  @Test public void testWindowx() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testWindowx() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/windowx.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
@@ -296,7 +295,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { "windowonload.html/__WINDOW_MAIN__", new String[] { "windowonload.html/__WINDOW_MAIN__/onload_handler" } },
   };
 
-  @Test public void testWindowOnload() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testWindowOnload() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/windowonload.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
@@ -312,7 +311,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { "skeleton.html/__WINDOW_MAIN__/bad_guy", new String[] { "skeleton.html/__WINDOW_MAIN__/dollar" } },
   };
 
-  @Test public void testSkeleton() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testSkeleton() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/skeleton.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForSkeleton);
@@ -328,7 +327,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { "skeleton2.html/__WINDOW_MAIN__/bad_guy", new String[] { "skeleton2.html/__WINDOW_MAIN__/dollar" } },
   };
 
-  @Test public void testSkeleton2() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testSkeleton2() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/skeleton2.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     System.err.println(CG);
@@ -336,7 +335,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   }
 
   /*
-  @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testJQuery() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");
     CallGraph CG = Util.makeHTMLCG(url);
   }

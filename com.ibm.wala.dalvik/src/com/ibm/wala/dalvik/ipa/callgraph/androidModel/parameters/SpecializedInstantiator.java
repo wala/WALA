@@ -98,6 +98,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
      *
      *  @todo   Do we want to mix in REUSE-Parameters?
      */
+    @Override
     public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
         return createInstance(T, asManaged, key, seen, 0);
     }
@@ -130,11 +131,11 @@ public class SpecializedInstantiator extends FlatInstantiator {
         assert(understands(T));
 
         if (T.equals(AndroidTypes.Context)) {
-            return createContext(T, asManaged, key, seen);
+            return createContext(T, key);
         }
 
         if (T.equals(AndroidTypes.ContextWrapper)) {
-            return createContextWrapper(T, asManaged, key, seen);
+            return createContextWrapper(T, key);
         }
 
         return null;
@@ -158,7 +159,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     /**
      *  Creates a new instance of android/content/Context.
      */
-    public SSAValue createContext(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
+    public SSAValue createContext(final TypeReference T, VariableKey key) {
         final List<SSAValue> appComponents = new ArrayList<>();
         {
             // TODO: Can we create a tighter conterxt?
@@ -196,7 +197,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
                     appComponents.add(instance);
                 }
             } else {
-                for (TypeReference component : AndroidEntryPointManager.MANAGER.getComponents()) {
+                for (TypeReference component : AndroidEntryPointManager.getComponents()) {
                     final VariableKey iKey = new SSAValue.TypeKey(component.getName());
 
                     if (this.pm.isSeen(iKey)) {
@@ -232,14 +233,14 @@ public class SpecializedInstantiator extends FlatInstantiator {
     }
 
 
-    public SSAValue createContextWrapper(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
+    public SSAValue createContextWrapper(final TypeReference T, VariableKey key) {
         final VariableKey contextKey = new SSAValue.TypeKey(AndroidTypes.ContextName);
         final SSAValue context;
         {
             if (this.pm.isSeen(contextKey)) {
                 context = this.pm.getCurrent(contextKey);
             } else {
-                context = createContext(AndroidTypes.Context, true, contextKey, seen);
+                context = createContext(AndroidTypes.Context, contextKey);
             }
         }
 
@@ -260,6 +261,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     /**
      *  Satisfy the interface.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public int createInstance(TypeReference type, Object... instantiatorArgs) {
         // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<SSAValue> seen) {

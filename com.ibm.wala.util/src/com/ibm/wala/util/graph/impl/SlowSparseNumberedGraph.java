@@ -24,6 +24,8 @@ import com.ibm.wala.util.intset.BasicNaturalRelation;
  */
 public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> implements Serializable {
 
+  private static final long serialVersionUID = 7014361126159594838L;
+
   private final SlowNumberedNodeManager<T> nodeManager = new SlowNumberedNodeManager<>();
 
   private final SparseNumberedEdgeManager<T> edgeManager;

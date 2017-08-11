@@ -12,16 +12,14 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ComposedEntrypoints;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -35,7 +33,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class Driver {
 
-  public static void addDefaultDispatchLogic(AnalysisOptions options, AnalysisScope scope, IClassHierarchy cha, AnalysisCache cache) {
+  public static void addDefaultDispatchLogic(AnalysisOptions options, IClassHierarchy cha) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
 
     Map<Atom,MethodTargetSelector> methodTargetSelectors = HashMapFactory.make();
@@ -53,11 +51,11 @@ public class Driver {
 
     HybridAnalysisScope scope = new HybridAnalysisScope();
     FileProvider files = new FileProvider();
-    AnalysisScopeReader.read(scope, args[0], files.getFile("Java60RegressionExclusions.txt"), Driver.class.getClassLoader(), files);
+    AnalysisScopeReader.read(scope, args[0], files.getFile("Java60RegressionExclusions.txt"), Driver.class.getClassLoader());
 
     scope.addToScope(
         scope.getJavaScriptLoader(),
-        JSCallGraphBuilderUtil.getPrologueFile("prologue.js"));
+        JSCallGraphUtil.getPrologueFile("prologue.js"));
     for(int i = 1; i < args.length; i++) {
       URL script = Driver.class.getClassLoader().getResource(args[i]);
       scope.addToScope(
@@ -80,9 +78,9 @@ public class Driver {
     
     IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
 
-    AnalysisCache cache = new AnalysisCacheImpl(factory);
+    IAnalysisCacheView cache = new AnalysisCacheImpl(factory);
 
-    addDefaultDispatchLogic(options, scope, cha, cache);
+    addDefaultDispatchLogic(options, cha);
 
     JavaJavaScriptHybridCallGraphBuilder b = new JavaJavaScriptHybridCallGraphBuilder(cha, options, cache);
     
