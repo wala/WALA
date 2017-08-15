@@ -342,7 +342,7 @@ public class ModRef<T extends InstanceKey> {
     return makeModVisitor(n, result, pa, h, false);
   }
 
-  protected ModVisitor<T,? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h,
+  protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h,
       boolean ignoreAllocHeapDefs) {
     return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
   }
