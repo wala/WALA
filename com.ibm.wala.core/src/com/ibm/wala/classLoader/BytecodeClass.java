@@ -21,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -400,10 +398,10 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       }
     } else {
       // for non-interfaces, add default methods inherited from interfaces #219.
-      Set<IMethod> directlyInheritedDefaultMethods = this.getAllImplementedInterfaces().parallelStream()
-          .flatMap(i -> i.getDeclaredMethods().parallelStream()).filter(m -> !m.isAbstract()).collect(Collectors.toSet());
-      Logger.getGlobal().finest("Adding default methods: " + directlyInheritedDefaultMethods);
-      result.addAll(directlyInheritedDefaultMethods);
+      for (IClass i : this.getAllImplementedInterfaces())
+          for (IMethod m : i.getDeclaredMethods())
+              if (!m.isAbstract())
+                  result.add(m);
     }
     IClass s = getSuperclass();
     while (s != null) {
