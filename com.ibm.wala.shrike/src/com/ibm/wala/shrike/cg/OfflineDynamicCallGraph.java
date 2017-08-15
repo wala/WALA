@@ -276,7 +276,8 @@ public class OfflineDynamicCallGraph {
 		    {
 		      ConstantPoolParser p = r.getCP();
 		      for(int i = 1; i < p.getItemCount(); i++) {
-		        switch (p.getItemType(i)) {
+		        final byte itemType = p.getItemType(i);
+            switch (itemType) {
 		        case CONSTANT_Integer:
 		          entries.put(new Integer(p.getCPInt(i)), i);
 		          break;
@@ -298,9 +299,8 @@ public class OfflineDynamicCallGraph {
 		        case CONSTANT_Class:
               entries.put(new CWStringItem(p.getCPClass(i), CONSTANT_Class), i);
               break;
-		        case CONSTANT_MethodHandle:
-		        case CONSTANT_MethodType:
-		        case CONSTANT_InvokeDynamic:
+            default:
+							// do nothing
 		        }
 		      }
 		    }

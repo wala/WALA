@@ -167,6 +167,8 @@ public class ArrayBoundsGraphBuilder {
 
 			this.upperBoundGraph.addEdge(piParent, piVar);
 			break;
+    default:
+      throw new UnsupportedOperationException(String.format("unexpected operator %s", op));
 		}
 
 	}

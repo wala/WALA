@@ -579,6 +579,7 @@ public abstract class Compiler implements Constants {
           if (!fallToConditional) {
             break;
           }
+          //$FALL-THROUGH$
         case OP_aconst_null:
           if (!fallToConditional && inBasicBlock(i, 2) && instructions[i + 1] instanceof ConditionalBranchInstruction) {
             ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
@@ -593,6 +594,7 @@ public abstract class Compiler implements Constants {
             break;
           }
           // by Xiangyu
+          //$FALL-THROUGH$
         case OP_ifeq:
         case OP_ifge:
         case OP_ifgt:
@@ -798,6 +800,7 @@ public abstract class Compiler implements Constants {
             break;
           }
         }
+          //$FALL-THROUGH$
         case OP_lload:
         case OP_fload:
         case OP_dload:
@@ -1009,6 +1012,8 @@ public abstract class Compiler implements Constants {
           writeShort(curOffset, allocateConstantPoolClassType(((InstanceofInstruction) instr).getType()));
           curOffset += 2;
           break;
+        default:
+          // do nothing
         }
       } else {
         stackLenRef[0] = stackLen;
