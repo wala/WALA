@@ -43,10 +43,12 @@ public class Cocovariant {
         }
         static class B extends A {
                 
+                @Override
                 B foo(String x) { return null; }
         }
         static class C extends B {
                 
+                @Override
                 C foo(String x) { return null; }
         }
         public static void main(String[] args) {

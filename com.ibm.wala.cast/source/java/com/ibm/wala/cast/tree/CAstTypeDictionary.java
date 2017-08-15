@@ -15,13 +15,13 @@ package com.ibm.wala.cast.tree;
 
 import java.util.Iterator;
 
-public interface CAstTypeDictionary/*<ASTType>*/ extends Iterable {
+public interface CAstTypeDictionary/*<ASTType>*/ extends Iterable<CAstType> {
 
   CAstType getCAstTypeFor(Object/*ASTType*/ type);
 
   CAstReference resolveReference(CAstReference ref);
 
   @Override
-  Iterator iterator();
+  Iterator<CAstType> iterator();
 
 }

@@ -95,6 +95,8 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  */
 public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object> {
 
+  private static final long serialVersionUID = 5208052568163692029L;
+
   private final static boolean DEBUG = false;
 
   /**
@@ -531,7 +533,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return new StatementVisitor(node, ir, du);
   }
 
-  private void debugPrintIR(IR ir) {
+  private static void debugPrintIR(IR ir) {
     if (DEBUG) {
       if (ir == null) {
         System.err.println("\n   No statements\n");

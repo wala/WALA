@@ -32,6 +32,7 @@ public class InnerClassLexicalReads {
 			 * 1   return v2:com.ibm.wala.ssa.SymbolTable$1@16b18b6[11:4] -> [11:13]
 			 */
 			
+      @Override
       public int getConstant() {
 				return y;
 			}

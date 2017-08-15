@@ -19,9 +19,9 @@ import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.TypeAnnotationsReader;
-import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
 import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TargetInfo;
 import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TargetType;
 import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeAnnotationAttribute;
@@ -816,7 +816,7 @@ public class TypeAnnotation {
   }
 
   // TODO: method is currently unused, but we may want to use it if we decide to resolve generic signature indices here
-  public static TypeAnnotationTargetConverter targetConverterAtMethodInfo(final ClassLoaderReference clRef, final IBytecodeMethod method) {
+  public static TypeAnnotationTargetConverter targetConverterAtMethodInfo(final ClassLoaderReference clRef) {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
@@ -944,7 +944,7 @@ public class TypeAnnotation {
     };
   }
   
-  public static TypeAnnotationTargetConverter targetConverterAtFieldInfo(final ClassLoaderReference clRef) {
+  public static TypeAnnotationTargetConverter targetConverterAtFieldInfo() {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {

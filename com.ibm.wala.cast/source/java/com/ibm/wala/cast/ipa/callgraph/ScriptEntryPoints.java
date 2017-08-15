@@ -81,7 +81,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
   protected abstract CallSiteReference makeScriptSite(IMethod m, int pc);
 
-  protected boolean keep(IMethod method) {
+  protected boolean keep() {
     return true;
   }
   
@@ -93,7 +93,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       IClass cls = classes.next();
       if (cha.isSubclassOf(cls, scriptType) && !cls.isAbstract()) {
         for (IMethod method : cls.getDeclaredMethods()) {
-          if (keep(method)) {
+          if (keep()) {
             ES.add(new ScriptEntryPoint(method));
           }
         }
@@ -107,7 +107,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     IClass cls = cha.lookupClass(TypeReference.findOrCreate(scriptType.getClassLoader().getReference(), scriptName));
     assert cls != null && cha.isSubclassOf(cls, scriptType) && !cls.isAbstract() : String.valueOf(cls) + " for " + scriptName;
     for (IMethod method : cls.getDeclaredMethods()) {
-      if (keep(method)) {
+      if (keep()) {
         return new ScriptEntryPoint(method);
       }
     }

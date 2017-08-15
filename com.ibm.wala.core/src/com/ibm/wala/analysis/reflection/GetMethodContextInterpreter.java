@@ -150,7 +150,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
    * @param cls the class
    * @param name the name
    */
-  private Collection<IMethod> getDeclaredNormalMethods(IClass cls,Atom name) {
+  private static Collection<IMethod> getDeclaredNormalMethods(IClass cls,Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
     for (IMethod m : cls.getDeclaredMethods()) {
       if (!m.isInit() && !m.isClinit() && m.getSelector().getName().equals(name)) {
@@ -166,7 +166,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
    * @param cls the class
    * @param name the name
    */
-  private Collection<IMethod> getAllNormalPublicMethods(IClass cls,Atom name) {
+  private static Collection<IMethod> getAllNormalPublicMethods(IClass cls,Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
     Collection<IMethod> allMethods = null;
     allMethods = cls.getAllMethods();
@@ -186,7 +186,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
    * @param returnValues the possible return values for this method
    * @return the statements
    */
-  private SSAInstruction[] getParticularMethodStatements
+  private static SSAInstruction[] getParticularMethodStatements
       (
         MethodReference ref,
         Collection<IMethod> returnValues,
@@ -217,7 +217,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     return result;
   }
 
-  private SSAInstruction[] makeGetMethodStatements
+  private static SSAInstruction[] makeGetMethodStatements
         (
           GetMethodContext context,
           Map<Integer,ConstantValue> constants,
@@ -234,7 +234,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   /**
    * Create statements for {@link Class#getDeclaredMethod(String, Class...)}.
    */
-  private SSAInstruction[] makeGetDeclaredMethodStatements(GetMethodContext context, Map<Integer, ConstantValue> constants,Atom name) {
+  private static SSAInstruction[] makeGetDeclaredMethodStatements(GetMethodContext context, Map<Integer, ConstantValue> constants,Atom name) {
     IClass cls = context.getType().getType();
     if (cls == null) {
       return getParticularMethodStatements(GET_DECLARED_METHOD, null, context, constants);

@@ -31,7 +31,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
    * Inital state is UNKNOWN.
    * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN
    */
-  public enum State { UNKNOWN, BOTH, NULL, NOT_NULL };
+  public enum State { UNKNOWN, BOTH, NULL, NOT_NULL }
   
   // maps ssa variable number -> State
   private final State[] vars;
@@ -261,7 +261,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable[])
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState[] rhs) {
       boolean changed = false;

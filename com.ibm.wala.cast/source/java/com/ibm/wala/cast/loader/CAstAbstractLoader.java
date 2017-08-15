@@ -144,13 +144,8 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   @Override
   public int getNumberOfMethods() {
     int i = 0;
-    for (Iterator cls = types.values().iterator(); cls.hasNext();) {
-      for (Iterator ms = ((IClass) cls.next()).getDeclaredMethods().iterator();
-	   ms.hasNext(); )
-      {
-        i++;
-        ms.next();
-      }
+    for (IClass cls : types.values()) {
+      i += cls.getDeclaredMethods().size();
     }
 
     return i;
@@ -208,8 +203,8 @@ public abstract class CAstAbstractLoader implements IClassLoader {
       }
     }
 
-    for (Iterator KK = keys.iterator(); KK.hasNext();) {
-      types.remove(KK.next());
+    for (TypeName key : keys) {
+      types.remove(key);
     }
   }
 

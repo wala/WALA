@@ -109,7 +109,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
    * @param preprocessor CAst rewriter to use for preprocessing JavaScript source files; may be null
    * @return
    */
-  public static JavaScriptLoaderFactory makeLoaders(CAstRewriterFactory preprocessor) {
+  public static JavaScriptLoaderFactory makeLoaders(CAstRewriterFactory<?, ?> preprocessor) {
     if (translatorFactory == null) {
       throw new IllegalStateException("com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
@@ -120,7 +120,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return makeLoaders(null);
   }
 
-  public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles) throws IOException, ClassHierarchyException {
+  public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles) throws ClassHierarchyException {
     JavaScriptLoaderFactory loaders = makeLoaders();
     AnalysisScope scope = CAstCallGraphUtil.makeScope(scriptFiles, loaders, JavaScriptLoader.JS);
     return makeHierarchy(scope, loaders);
@@ -321,7 +321,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     public URL getURL() {
       return url;
     }      
-  };
+  }
   
   public static Module getPrologueFile(final String name) {
     return new Bootstrap(name, JSCallGraphUtil.class.getClassLoader().getResourceAsStream(name), JSCallGraphUtil.class.getClassLoader().getResource(name));

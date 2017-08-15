@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>com.ibm.wala</groupId>
 		<artifactId>WALA</artifactId>
-		<version>1.4.3-SNAPSHOT</version>
+		<version>1.4.4-SNAPSHOT</version>
 	</parent>
 	<groupId>com.ibm.wala.target</groupId>
 	<artifactId>targets</artifactId>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- module>e42</module -->
-		<module>e44</module>
+		<module>e47</module>
 	</modules>
 </project>

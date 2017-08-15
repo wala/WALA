@@ -54,7 +54,6 @@ import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -159,7 +158,7 @@ public class Overrides {
             final MethodReference mRef = site.getDeclaredTarget();
             if (syntheticMethods.containsKey(mRef)) {
                 if (caller != null) {   // XXX: Debug remove
-                    Context ctx = caller.getContext();
+                    // Context ctx = caller.getContext();
 
                     
                     
@@ -205,7 +204,7 @@ public class Overrides {
 
         { // Make Mini-Models to override to
             for (final AndroidComponent target: AndroidComponent.values()) {
-                if (AndroidEntryPointManager.MANAGER.EPContainAny(target)) {
+                if (AndroidEntryPointManager.EPContainAny(target)) {
                     final AndroidModel targetModel = new UnknownTargetModel(this.cha, this.options, this.cache, target);
                     callTo.put(target, targetModel); 
                 } else {

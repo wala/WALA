@@ -5,12 +5,46 @@
     <parent>
         <groupId>com.ibm.wala</groupId>
         <artifactId>WALA</artifactId>
-        <version>1.4.3-SNAPSHOT</version>
+        <version>1.4.4-SNAPSHOT</version>
     </parent>
   <artifactId>com.ibm.wala.cast.test</artifactId>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>exec-maven-plugin</artifactId>
+	<version>1.6.0</version>
+	<executions>
+	  <execution>
+	    <phase>compile</phase>
+	    <configuration>
+	      <executable>make</executable>
+	      <arguments>
+		<argument>default</argument>
+		<argument>main</argument>
+	      </arguments>
+	      <workingDirectory>${basedir}/harness-src/c</workingDirectory>
+	    </configuration>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	  </execution>
+	  <execution>
+	    <id>test-native</id>
+	    <phase>test</phase>
+	    <configuration>
+	      <executable>${project.build.outputDirectory}/smoke_main</executable>
+	      <arguments>
+		<argument>${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes:${basedir}/../com.ibm.wala.core/target/classes:${basedir}/../com.ibm.wala.util/target/classes</argument>
+	      </arguments>
+	    </configuration>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	  </execution>
+	</executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -20,7 +54,7 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-              <argLine>-Xmx800M -ea</argLine>
+              <argLine>-Djava.library.path=${project.build.outputDirectory} -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
             </configuration>
             <goals>
@@ -37,6 +71,11 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>exec-maven-plugin</artifactId>
+      <version>1.6.0</version>
     </dependency>
   </dependencies> 
 </project>

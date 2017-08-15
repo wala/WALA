@@ -50,6 +50,7 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
     return new NumberedNodeIterator<Object>(s, this);
   }
 
+  @Override
   public Collection<Object> getReachableInstances(Set<Object> roots) {
     Predicate f = new Predicate() {
       @Override public boolean test(Object o) {
@@ -67,10 +68,12 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
   /**
    * @return the heap model used in this pointer analysis.
    */
+  @Override
   public HeapModel getHeapModel() {
     return pa.getHeapModel();
   }
 
+  @Override
   public PointerAnalysis<T> getPointerAnalysis() {
     return pa;
   }

@@ -122,8 +122,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
    */
   private boolean eagerComputed = false;
 
-  public SDG(final CallGraph cg, PointerAnalysis<T> pa, Class<T> instanceKeyClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, ModRef.make(instanceKeyClass), dOptions, cOptions, null);
+  public SDG(final CallGraph cg, PointerAnalysis<T> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+    this(cg, pa, new ModRef<T>(), dOptions, cOptions, null);
   }
 
   public SDG(final CallGraph cg, PointerAnalysis<T> pa, ModRef<T> modRef, DataDependenceOptions dOptions,
@@ -206,6 +206,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   }
 
   private class Nodes extends SlowNumberedNodeManager<Statement> {
+
+    private static final long serialVersionUID = -1450214776332091211L;
 
     @Override
     public boolean containsNode(Statement N) {
@@ -425,7 +427,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       }
       case METHOD_ENTRY:
         Collection<Statement> result = HashSetFactory.make(5);
-        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+        if (!cOptions.isIgnoreInterproc()) {
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
@@ -461,7 +463,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
       case NORMAL:
-        if (cOptions.equals(ControlDependenceOptions.NONE)) {
+        if (cOptions.isIgnoreInterproc()) {
           return getPDG(N.getNode()).getSuccNodes(N);
         } else {
           NormalStatement ns = (NormalStatement) N;
@@ -626,7 +628,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {
       case NORMAL:
-        if (cOptions.equals(ControlDependenceOptions.NONE)) {
+        if (cOptions.isIgnoreInterproc()) {
           return getPDG(src.getNode()).hasEdge(src, dst);
         } else {
           NormalStatement ns = (NormalStatement) src;

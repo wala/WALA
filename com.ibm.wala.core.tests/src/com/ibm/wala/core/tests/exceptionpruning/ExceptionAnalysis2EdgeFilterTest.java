@@ -16,7 +16,6 @@ import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis;
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis2EdgeFilter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -25,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -81,9 +81,9 @@ public class ExceptionAnalysis2EdgeFilterTest {
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
     ReferenceCleanser.registerClassHierarchy(cha);
-    AnalysisCache cache = new AnalysisCacheImpl();
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
-    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
     cg = builder.makeCallGraph(options, null);
     pointerAnalysis = builder.getPointerAnalysis();
 
@@ -177,7 +177,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
   }
 
-  private void checkRemovingNormalOk(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock block,
+  private static void checkRemovingNormalOk(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock block,
       ISSABasicBlock normalSucc) {
     if (!block.getLastInstruction().isPEI() || !filter.getFilter(node).alwaysThrowsException(block.getLastInstruction())) {
       specialCaseThrowFiltered(cfg, normalSucc);
@@ -197,7 +197,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
    * @param cfg
    * @param normalSucc
    */
-  private void specialCaseThrowFiltered(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
+  private static void specialCaseThrowFiltered(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
     ISSABasicBlock next = normalSucc;
     while (!(next.getLastInstruction() instanceof SSAThrowInstruction)) {
       assertTrue(cfg.getNormalSuccessors(next).iterator().hasNext());
@@ -205,7 +205,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
   }
 
-  private void checkNoNewEdges(ControlFlowGraph<SSAInstruction, ISSABasicBlock> original,
+  private static void checkNoNewEdges(ControlFlowGraph<SSAInstruction, ISSABasicBlock> original,
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> filtered) {
     for (ISSABasicBlock block : filtered) {
       for (ISSABasicBlock normalSucc : filtered.getNormalSuccessors(block)) {

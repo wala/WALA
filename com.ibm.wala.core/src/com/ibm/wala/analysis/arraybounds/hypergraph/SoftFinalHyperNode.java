@@ -23,5 +23,5 @@ public class SoftFinalHyperNode<T> extends HyperNode<T> {
     if (weight.equals(Weight.NOT_SET) || this.getWeight().equals(Weight.NOT_SET)) {
       super.setWeight(weight);
     }
-  };
+  }
 }

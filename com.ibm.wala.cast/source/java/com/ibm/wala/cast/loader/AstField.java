@@ -23,14 +23,14 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 public class AstField implements IField {
-  private final Collection qualifiers;
+  private final Collection<CAstQualifier> qualifiers;
   private final FieldReference ref;
   private final IClass declaringClass;
   private final IClassHierarchy cha;
   private final Collection<Annotation> annotations;
 
   public AstField(FieldReference ref,
-		  Collection qualifiers,
+		  Collection<CAstQualifier> qualifiers,
 		  IClass declaringClass,
 		  IClassHierarchy cha,
 		  Collection<Annotation> annotations)

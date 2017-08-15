@@ -50,13 +50,13 @@ class JavaLangClassContextSelector implements ContextSelector {
    */
   @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
-    if (receiver != null && receiver.length > 0 && mayUnderstand(caller, site, callee, receiver[0])) {
+    if (receiver != null && receiver.length > 0 && mayUnderstand(callee, receiver[0])) {
       return new JavaTypeContext(new PointType(getTypeConstant(receiver[0])));
     }
     return null;
   }
 
-  private IClass getTypeConstant(InstanceKey instance) {
+  private static IClass getTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       ConstantKey c = (ConstantKey) instance;
       if (c.getValue() instanceof IClass) {
@@ -82,7 +82,7 @@ class JavaLangClassContextSelector implements ContextSelector {
   /**
    * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
    */
-  private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
+  private static boolean mayUnderstand(IMethod targetMethod, InstanceKey instance) {
     return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference()) && getTypeConstant(instance) != null;
   }
 

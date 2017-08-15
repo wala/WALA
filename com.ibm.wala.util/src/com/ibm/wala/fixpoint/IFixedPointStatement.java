@@ -27,8 +27,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  * Intuitively, a statement definition corresponds to an "equation" in dataflow parlance, or
  * a "constraint" in constraint solvers.
  */
-@SuppressWarnings("rawtypes")
-public interface IFixedPointStatement<T extends IVariable> extends INodeWithNumber {
+public interface IFixedPointStatement<T extends IVariable<T>> extends INodeWithNumber {
   /**
    * @return the left-hand side of this statement.
    */

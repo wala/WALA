@@ -127,7 +127,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
         clinit.setStatic(true);
         final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(cha);
         
-        final Set<TypeReference> components = AndroidEntryPointManager.MANAGER.getComponents();
+        final Set<TypeReference> components = AndroidEntryPointManager.getComponents();
         int ssaNo = 1;
 
         if (AndroidEntryPointManager.MANAGER.doFlatComponents()) {

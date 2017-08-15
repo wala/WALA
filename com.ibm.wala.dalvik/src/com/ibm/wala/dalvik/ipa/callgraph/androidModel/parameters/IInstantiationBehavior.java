@@ -51,6 +51,8 @@ import com.ibm.wala.types.TypeName;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public abstract class IInstantiationBehavior implements Serializable {
+	private static final long serialVersionUID = -3698760758700891479L;
+
     /**
      *  The handling for a variable occurring in the AndroidModel.
      */

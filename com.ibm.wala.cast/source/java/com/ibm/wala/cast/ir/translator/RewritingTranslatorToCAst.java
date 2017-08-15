@@ -12,7 +12,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.ModuleEntry;
 
 public class RewritingTranslatorToCAst implements TranslatorToCAst {
-  private final List<CAstRewriterFactory> rewriters = new LinkedList<>();
+  private final List<CAstRewriterFactory<?, ?>> rewriters = new LinkedList<>();
  protected final ModuleEntry M;
 private final TranslatorToCAst base;
 
@@ -33,7 +33,7 @@ private final TranslatorToCAst base;
   public CAstEntity translateToCAst() throws IOException, Error {
     CAstImpl Ast = new CAstImpl();
     CAstEntity entity = base.translateToCAst();
-    for(CAstRewriterFactory rwf : rewriters)
+    for(CAstRewriterFactory<?, ?> rwf : rewriters)
       entity = rwf.createCAstRewriter(Ast).rewrite(entity);
     return entity;
   }

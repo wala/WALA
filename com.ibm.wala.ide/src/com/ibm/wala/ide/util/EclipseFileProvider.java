@@ -121,7 +121,7 @@ public class EclipseFileProvider extends FileProvider {
    * @return the URL, or <code>null</code> if the file is not found
    * @throws IOException
    */
-  private  URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
+  private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
     try {
       URL url = FileLocator.find(p.getBundle(), new Path(fileName), null);
       if (url == null) {
@@ -159,7 +159,7 @@ public class EclipseFileProvider extends FileProvider {
    * @param url
    * @return an escaped version of the URL
    */
-  private URL fixupFileURLSpaces(URL url) {
+  private static URL fixupFileURLSpaces(URL url) {
     String urlString = url.toExternalForm();
     StringBuffer fixedUpUrl = new StringBuffer();
     int lastIndex = 0;
@@ -185,7 +185,7 @@ public class EclipseFileProvider extends FileProvider {
   }
   
   @Override
-  public URL getResource(String fileName, ClassLoader loader) throws IOException {
+  public URL getResource(String fileName, ClassLoader loader) {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }

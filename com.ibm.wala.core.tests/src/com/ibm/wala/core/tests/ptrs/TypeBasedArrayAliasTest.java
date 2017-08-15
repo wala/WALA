@@ -47,7 +47,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // RTA yields a TypeBasedPointerAnalysis
-    CallGraphBuilder builder = Util.makeRTABuilder(options, new AnalysisCacheImpl(),cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeRTABuilder(options, new AnalysisCacheImpl(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     

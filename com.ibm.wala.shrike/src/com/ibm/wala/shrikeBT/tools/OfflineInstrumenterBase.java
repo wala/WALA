@@ -243,7 +243,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Add a JAR entry containing a source class to instrument.
    */
-  final public void addInputJarEntry(File f, String name) throws IOException {
+  final public void addInputJarEntry(File f, String name) {
     inputs.add(new JarInput(f, name));
   }
 
@@ -462,7 +462,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Skip the last class returned in every future traversal of the class list.
    */
-  final public void setIgnore(boolean ignore) throws IllegalArgumentException {
+  final public void setIgnore() throws IllegalArgumentException {
     if (inputIndex == 0) {
       throw new IllegalArgumentException("Must get a class before ignoring it");
     }

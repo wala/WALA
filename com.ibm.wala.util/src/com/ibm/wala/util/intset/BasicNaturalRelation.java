@@ -26,6 +26,8 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public final class BasicNaturalRelation implements IBinaryNaturalRelation, Serializable {
 
+  private static final long serialVersionUID = 4483720230344867621L;
+
   private final static boolean VERBOSE = false;
 
   private final static boolean DEBUG = false;

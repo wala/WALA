@@ -96,8 +96,8 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
   //
   // ///////////////////////////////////////////////////////////////////////////
 
-  protected TypeInference makeTypeInference(IR ir, IClassHierarchy cha) {
-    TypeInference ti = new AstJavaTypeInference(ir, cha, false);
+  protected TypeInference makeTypeInference(IR ir) {
+    TypeInference ti = new AstJavaTypeInference(ir, false);
 
     if (DEBUG_TYPE_INFERENCE) {
       System.err.println(("IR of " + ir.getMethod()));
@@ -182,7 +182,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
           @Override
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-            IntSetVariable tv = rhs;
+            IntSetVariable<?> tv = rhs;
             if (tv.getValue() != null) {
               tv.getValue().foreach(new IntSetAction() {
                 @Override

@@ -26,6 +26,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
  */
 public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
 
+  private static final long serialVersionUID = 4238700455408861924L;
   /**
    * an enumeration of all nodes to search from
    */

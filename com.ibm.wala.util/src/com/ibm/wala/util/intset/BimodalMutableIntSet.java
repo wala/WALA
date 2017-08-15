@@ -18,6 +18,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public class BimodalMutableIntSet implements MutableIntSet {
 
+  private static final long serialVersionUID = 7332332295529936562L;
   MutableIntSet impl;
 
   /*
@@ -47,7 +48,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /**
    * @return true iff we would like to use the same representation for V as we do for W
    */
-  private boolean sameRepresentation(IntSet V, IntSet W) {
+  private static boolean sameRepresentation(IntSet V, IntSet W) {
     // for now we assume that we always want to use the same representation for
     // V as
     // for W.

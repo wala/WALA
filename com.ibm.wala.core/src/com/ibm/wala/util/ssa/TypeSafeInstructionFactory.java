@@ -148,7 +148,7 @@ public class TypeSafeInstructionFactory {
             }
         }
 
-        final MethodReference mRef = site.getDeclaredTarget();
+        // final MethodReference mRef = site.getDeclaredTarget();
 
         // ***********
         // Params cosher, start typechecks
@@ -270,7 +270,7 @@ public class TypeSafeInstructionFactory {
 
         final int[] aParams = new int[params.size()];
         if (acc.hasImplicitThis()) { // Implicit This
-            final SSAValue targetThis = acc.getThis();
+            // final SSAValue targetThis = acc.getThis();
             final SSAValue givenThis = params.get(0);
 
             aParams[0] = givenThis.getNumber();
@@ -489,7 +489,7 @@ public class TypeSafeInstructionFactory {
             throw new IllegalArgumentException("The field " + field + " is not assignable from " + newValue);
         }
     
-        final MethodReference newValueValidIn = newValue.getValidIn();
+        // final MethodReference newValueValidIn = newValue.getValidIn();
 
         return insts.PutInstruction(iindex, newValue.getNumber(), field);
     }
@@ -609,7 +609,8 @@ public class TypeSafeInstructionFactory {
         return insts.PhiInstruction(iindex, result.getNumber(), aParams);
     }
 
-    private boolean isSuperclassOf(final TypeReference superClass, final TypeReference subClass) {
+    @SuppressWarnings("unused")
+    private static boolean isSuperclassOf(final TypeReference superClass, final TypeReference subClass) {
         return true; // TODO
     }
 

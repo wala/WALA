@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
 
+  private static final long serialVersionUID = 6541081454519490199L;
   private final static boolean DEBUG = false;
 
   /**
@@ -57,7 +58,7 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
   /**
    * @return true iff klass is loaded by the application loader.
    */
-  private boolean isApplicationClass(AnalysisScope scope, IClass klass) {
+  private static boolean isApplicationClass(AnalysisScope scope, IClass klass) {
     return scope.getApplicationLoader().equals(klass.getClassLoader().getReference());
   }
 }

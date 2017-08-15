@@ -37,13 +37,25 @@ extern "C" {
 
 #define CATCH()			\
   }				\
-}				\
+}
+
+#define START_CATCH_BLOCK()	\
+  } else {
+
+#define END_CATCH_BLOCK()	\
+  }				\
+}
 
 #define THROW(CPP_EXP_NAME, MESSAGE)	\
 (CPP_EXP_NAME).throwException(__FILE__, __LINE__, MESSAGE)
 
 #define THROW_ANY_EXCEPTION(CPP_EXP_NAME)	\
 (CPP_EXP_NAME).throwAnyException(__FILE__, __LINE__)
+
+#define NULL_CHECK(cpp_exp_name, c_expr) \
+  if ((c_expr) == NULL) {						\
+  (CPP_EXP_NAME).throwException(__FILE__, __LINE__, "unexpected null value"); \
+}
 
 #if __WIN32__
 #ifdef BUILD_CAST_DLL

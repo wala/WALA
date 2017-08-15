@@ -14,6 +14,7 @@ public class TestStaticInitOrder {
 
   private static class A {
 
+    @SuppressWarnings("unused")
     static int f;
     
     static {
@@ -26,6 +27,7 @@ public class TestStaticInitOrder {
   }
 
   private static class B {
+    @SuppressWarnings("unused")
     static int b;
     
     static {
@@ -39,6 +41,7 @@ public class TestStaticInitOrder {
   
   private static class C extends B {
     
+    @SuppressWarnings("unused")
     static int c = 5;
     
     public static void dostuff() {

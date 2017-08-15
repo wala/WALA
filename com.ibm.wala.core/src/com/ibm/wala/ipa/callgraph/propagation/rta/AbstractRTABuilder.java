@@ -158,18 +158,18 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   private void addFieldConstraints(CGNode node) {
     for (Iterator it = getRTAContextInterpreter().iterateFieldsRead(node); it.hasNext();) {
       FieldReference f = (FieldReference) it.next();
-      processFieldAccess(node, f);
+      processFieldAccess(f);
     }
     for (Iterator it = getRTAContextInterpreter().iterateFieldsWritten(node); it.hasNext();) {
       FieldReference f = (FieldReference) it.next();
-      processFieldAccess(node, f);
+      processFieldAccess(f);
     }
   }
 
   /**
    * Is s is a getstatic or putstatic, then potentially add the relevant <clinit>to the newMethod set.
    */
-  private void processFieldAccess(CGNode node, FieldReference f) {
+  private void processFieldAccess(FieldReference f) {
     if (DEBUG) {
       System.err.println(("processFieldAccess: " + f));
     }

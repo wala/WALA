@@ -28,13 +28,14 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * A demand-driven context-sensitive slicer.
- * 
+ *
  * This computes a context-sensitive slice, building an SDG and finding realizable paths to a statement using tabulation.
- * 
+ *
  * This implementation uses a preliminary pointer analysis to compute data dependence between heap locations in the SDG.
  */
 public class Slicer {
@@ -112,17 +113,63 @@ public class Slicer {
    * options to control control dependence edges in the sdg
    */
   public static enum ControlDependenceOptions {
-    FULL("full"), NONE("none"), NO_EXCEPTIONAL_EDGES("no_exceptional_edges");
+    /**
+     * track all control dependencies
+     */
+    FULL("full", false, false),
+
+    /**
+     * track no control dependencies
+     */
+    NONE("none", true, true),
+
+    /**
+     * don't track control dependence due to exceptional control flow
+     */
+    NO_EXCEPTIONAL_EDGES("no_exceptional_edges", true, false),
+
+    /**
+     * don't track control dependence from caller to callee
+     */
+    NO_INTERPROC_EDGES("no_interproc_edges", false, true),
+
+    /**
+     * don't track interprocedural or exceptional control dependence
+     */
+    NO_INTERPROC_NO_EXCEPTION("no_interproc_no_exception", true, true);
+
 
     private final String name;
 
-    ControlDependenceOptions(String name) {
+    /**
+     * ignore control dependence due to exceptional control flow?
+     */
+    private final boolean ignoreExceptionalEdges;
+
+    /**
+     * ignore interprocedural control dependence, i.e., from caller to callee or the reverse?
+     */
+    private final boolean ignoreInterprocEdges;
+
+
+    ControlDependenceOptions(String name, boolean ignoreExceptionalEdges, boolean ignoreInterprocEdges) {
       this.name = name;
+      this.ignoreExceptionalEdges = ignoreExceptionalEdges;
+      this.ignoreInterprocEdges = ignoreInterprocEdges;
     }
 
     public final String getName() {
       return name;
     }
+
+    public final boolean isIgnoreExceptions() {
+      return ignoreExceptionalEdges;
+    }
+
+    public final boolean isIgnoreInterproc() {
+      return ignoreInterprocEdges;
+    }
+
   }
 
   /**
@@ -131,8 +178,8 @@ public class Slicer {
    * @throws CancelException
    */
   public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<U> pa,
-      Class<U> instanceKeyClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<U>(cg, pa, ModRef.make(instanceKeyClass), dOptions, cOptions), Collections.singleton(s), true);
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
+    return computeSlice(new SDG<U>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
   }
 
   /**
@@ -141,14 +188,14 @@ public class Slicer {
    * @throws CancelException
    */
   public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(Statement s, CallGraph cg,
-      PointerAnalysis<U> pa, Class<U> instanceKeyClass,
+      PointerAnalysis<U> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<U>(cg, pa, ModRef.make(instanceKeyClass), dOptions, cOptions), Collections.singleton(s), false);
+    return computeSlice(new SDG<U>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
   }
 
   /**
    * Use the passed-in SDG
-   * 
+   *
    * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
@@ -157,7 +204,7 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   * 
+   *
    * @throws CancelException
    */
   public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
@@ -166,7 +213,7 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   * 
+   *
    * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss) throws IllegalArgumentException,
@@ -187,7 +234,7 @@ public class Slicer {
 
   /**
    * Main driver logic.
-   * 
+   *
    * @param sdg governing system dependence graph
    * @param roots set of roots to slice from
    * @param backward do a backwards slice?
@@ -195,6 +242,21 @@ public class Slicer {
    * @throws CancelException
    */
   public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward) throws CancelException {
+    return slice(sdg, roots, backward, null);
+  }
+
+  /**
+   * Main driver logic.
+   *
+   * @param sdg governing system dependence graph
+   * @param roots set of roots to slice from
+   * @param backward do a backwards slice?
+   * @param monitor to cancel analysis if needed
+   * @return the {@link Statement}s found by the slicer
+   * @throws CancelException
+   */
+  public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
+      throws CancelException {
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
     }
@@ -202,7 +264,7 @@ public class Slicer {
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
 
     PartiallyBalancedTabulationSolver<Statement, PDG<?>, Object> solver = PartiallyBalancedTabulationSolver
-        .createPartiallyBalancedTabulationSolver(p, null);
+        .createPartiallyBalancedTabulationSolver(p, monitor);
     TabulationResult<Statement, PDG<?>, Object> tr = solver.solve();
 
     Collection<Statement> slice = tr.getSupergraphNodesReached();
@@ -229,12 +291,12 @@ public class Slicer {
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis)
       throws IllegalArgumentException, CancelException {
-    return computeBackwardSlice(s, cg, pointerAnalysis, InstanceKey.class, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
   }
 
   /**
    * Tabulation problem representing slicing
-   * 
+   *
    */
   public static class SliceProblem implements PartiallyBalancedTabulationProblem<Statement, PDG<?>, Object> {
 

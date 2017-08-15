@@ -34,7 +34,6 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -42,6 +41,7 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextItem.Value;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -58,7 +58,7 @@ public class ArgumentSpecialization {
 
   public static class ArgumentSpecializationContextIntepreter extends AstContextInsensitiveSSAContextInterpreter {
 
-    public ArgumentSpecializationContextIntepreter(AnalysisOptions options, AnalysisCache cache) {
+    public ArgumentSpecializationContextIntepreter(AnalysisOptions options, IAnalysisCacheView cache) {
       super(options, cache);
     }
 
@@ -156,7 +156,7 @@ public class ArgumentSpecialization {
 
   }
 
-  public static class ArgumentCountIRFactory extends AstIRFactory.AstDefaultIRFactory {
+  public static class ArgumentCountIRFactory extends AstIRFactory.AstDefaultIRFactory<IMethod> {
     private static final CAstPattern directAccessPattern = CAstPattern.parse("|(ARRAY_REF(VAR(\"arguments\"),<value>*)||OBJECT_REF(VAR(\"arguments\"),<value>*))|");
 
     private static final CAstPattern destructuredAccessPattern = CAstPattern.parse("BLOCK_EXPR(ASSIGN(VAR(/[$][$]destructure[$]rcvr[0-9]+/),VAR(\"arguments\")),ASSIGN(VAR(<name>/[$][$]destructure[$]elt[0-9]+/),<value>*))");

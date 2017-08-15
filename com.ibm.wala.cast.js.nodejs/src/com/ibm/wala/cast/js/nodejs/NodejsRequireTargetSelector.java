@@ -24,8 +24,8 @@ import org.json.JSONObject;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
-import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -118,7 +118,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 					
 					System.err.println(builder.getClassHierarchy());
 					
-					IMethod method = script.getMethod(JavaScriptMethods.fnSelector);
+					IMethod method = script.getMethod(AstMethodReference.fnSelector);
 					previouslyRequired.put(sourceModule.getClassName(), method);
 					
 					return method;
@@ -132,7 +132,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 		return calledMethod;
 	}
 
-	private JavaScriptInvoke getInvokeInstruction(CGNode caller, CallSiteReference site) {
+	private static JavaScriptInvoke getInvokeInstruction(CGNode caller, CallSiteReference site) {
 		IR callerIR = caller.getIR();
 		SSAAbstractInvokeInstruction callInstrs[] = callerIR.getCalls(site);
 		assert callInstrs.length == 1;

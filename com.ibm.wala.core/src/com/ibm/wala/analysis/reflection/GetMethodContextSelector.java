@@ -66,7 +66,7 @@ public class GetMethodContextSelector implements ContextSelector {
    */
   @Override
   public Context getCalleeTarget(CGNode caller,CallSiteReference site,IMethod callee,InstanceKey[] receiver) {
-    if (receiver != null && receiver.length > 0 && mayUnderstand(caller, site, callee, receiver[0])) {
+    if (receiver != null && receiver.length > 0 && mayUnderstand(callee, receiver[0])) {
       if (DEBUG) {
         System.out.print("site := " + site + ", receiver := " + receiver[0]);
       }
@@ -114,7 +114,7 @@ public class GetMethodContextSelector implements ContextSelector {
    * If <tt>instance</tt> is a {@link ConstantKey} and its value is an instance of {@link IClass},
    * return that value. Otherwise, return <tt>null</tt>.
    */
-  private IClass getTypeConstant(InstanceKey instance) {
+  private static IClass getTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       ConstantKey c = (ConstantKey) instance;
       if (c.getValue() instanceof IClass) {
@@ -147,7 +147,7 @@ public class GetMethodContextSelector implements ContextSelector {
    * This object understands a dispatch to {@link java.lang.Class#getMethod(String, Class...)}
    * or {@link java.lang.Class#getDeclaredMethod} when the receiver is a type constant.
    */
-  private boolean mayUnderstand(CGNode caller,CallSiteReference site,IMethod targetMethod,InstanceKey instance) {
+  private static boolean mayUnderstand(IMethod targetMethod,InstanceKey instance) {
     return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference())
         && getTypeConstant(instance) != null;
   }

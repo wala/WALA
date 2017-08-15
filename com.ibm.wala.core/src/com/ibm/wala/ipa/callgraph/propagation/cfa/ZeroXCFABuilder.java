@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -67,7 +66,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
    * @throws IllegalArgumentException if options is null
    * @throws IllegalArgumentException if xmlFiles == null
    */
-  public static SSAPropagationCallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
       ClassLoader cl, AnalysisScope scope, String[] xmlFiles, byte instancePolicy) throws IllegalArgumentException {
 
     if (xmlFiles == null) {

@@ -16,67 +16,67 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
  * @author mschaefer
  */
 public class AbstractVertexVisitor<T> implements VertexVisitor<T> {
-	public T visitVertex(Vertex vertex) {
+	public T visitVertex() {
 		return null;
 	}
 	
 	@Override
   public T visitVarVertex(VarVertex varVertex) {
-		return visitVertex(varVertex);
+		return visitVertex();
 	}
 
 	@Override
   public T visitPropVertex(PropVertex propVertex) {
-		return visitVertex(propVertex);
+		return visitVertex();
 	}
 
 	@Override
   public T visitUnknownVertex(UnknownVertex unknownVertex) {
-		return visitVertex(unknownVertex);
+		return visitVertex();
 	}
 
 	@Override
   public T visitFuncVertex(FuncVertex funcVertex) {
-		return visitVertex(funcVertex);
+		return visitVertex();
 	}
 
 	 @Override
 	  public T visitCreationSiteVertex(CreationSiteVertex csVertex) {
-	    return visitVertex(csVertex);
+	    return visitVertex();
 	  }
 
 	@Override
   public T visitParamVertex(ParamVertex paramVertex) {
-		return visitVertex(paramVertex);
+		return visitVertex();
 	}
 
 	@Override
   public T visitRetVertex(RetVertex retVertex) {
-		return visitVertex(retVertex);
+		return visitVertex();
 	}
 
 	@Override
 	public T visitArgVertex(ArgVertex argVertex) {
-	  return visitVertex(argVertex);
+	  return visitVertex();
 	}
 
 	@Override
   public T visitCalleeVertex(CallVertex calleeVertex) {
-		return visitVertex(calleeVertex);
+		return visitVertex();
 	}
 
 	@Override
   public T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex) {
-		return visitVertex(lexicalAccessVertex);
+		return visitVertex();
 	}
 
 	 @Override
 	  public T visitGlobalVertex(GlobalVertex globalVertex) {
-	    return visitVertex(globalVertex);
+	    return visitVertex();
 	  }
 
 	 @Override
 	 public T visitPrototypeVertex(PrototypeFieldVertex protoVertex) {
-	   return visitVertex(protoVertex);
+	   return visitVertex();
 	 }
 }

@@ -17,6 +17,7 @@ import java.io.InputStream;
 
 public class TryFinally {
   
+  @SuppressWarnings("resource")
   public void test1(InputStream i1, InputStream i2) throws IOException {
     BufferedInputStream in = new BufferedInputStream(i1);
     try {

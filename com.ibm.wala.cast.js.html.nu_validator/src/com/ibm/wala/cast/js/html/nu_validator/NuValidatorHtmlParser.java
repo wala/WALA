@@ -55,7 +55,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
     parser.setXmlPolicy(XmlViolationPolicy.ALLOW);
     parser.setContentHandler(new ContentHandler() {
       private Locator locator;
-      private Stack<ITag> tags = new Stack<>();;
+      private Stack<ITag> tags = new Stack<>();
       
       private int countLines(char[] ch, int start, int length) {
         LineNumberReader r = new LineNumberReader(new StringReader (new String(ch, start, length)));  

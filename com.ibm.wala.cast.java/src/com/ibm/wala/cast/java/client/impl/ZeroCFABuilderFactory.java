@@ -26,7 +26,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ZeroCFABuilderFactory  {
 
-  public CallGraphBuilder make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo) {
+  public CallGraphBuilder make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.NONE);

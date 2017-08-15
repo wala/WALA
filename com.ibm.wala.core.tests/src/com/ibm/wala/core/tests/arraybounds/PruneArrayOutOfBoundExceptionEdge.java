@@ -130,7 +130,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
   }
 
   @Test
-  public void detectable() throws ClassNotFoundException {
+  public void detectable() {
     IClass iClass = getIClass(DETECTABLE_TESTDATA);
     checkRemovedEdges(iClass, DETECTABLE_EXPECTED_COUNT);
   }
@@ -235,7 +235,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
   }
 
   @AfterClass
-  public static void free() throws IOException, ClassHierarchyException {
+  public static void free() {
     scope = null;
     cha = null;
     irFactory = null;

@@ -22,6 +22,8 @@ import com.ibm.wala.util.math.Logs;
  */
 public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
+  private static final long serialVersionUID = -835376054736611070L;
+
   private static final int PAGE_SIZE = 4096;
 
   private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
@@ -54,11 +56,11 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     return v.get(localX);
   }
 
-  private int getFirstIndexOnPage(int page) {
+  private static int getFirstIndexOnPage(int page) {
     return page << LOG_PAGE_SIZE;
   }
 
-  private int getPageNumber(int x) {
+  private static int getPageNumber(int x) {
     return x >> LOG_PAGE_SIZE;
   }
 
@@ -78,7 +80,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     v.set(localX, value);
   }
 
-  private int toLocalIndex(int x, int page) {
+  private static int toLocalIndex(int x, int page) {
     return x - getFirstIndexOnPage(page);
   }
 

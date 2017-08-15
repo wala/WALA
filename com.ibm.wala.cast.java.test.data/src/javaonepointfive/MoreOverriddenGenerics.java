@@ -48,6 +48,7 @@ public class MoreOverriddenGenerics {
 
 	class Sub extends Super<Number> {
 		
+    @Override
     public Number get() {
 			return super.get();
 		} 
@@ -55,6 +56,7 @@ public class MoreOverriddenGenerics {
 	
 	class SubSub extends Sub {
 		
+    @Override
     public Long get() {
 			return new Long(6);
 		}

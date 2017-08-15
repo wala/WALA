@@ -20,6 +20,7 @@ public interface IInstruction {
   /**
    * This class is used by IInstruction.visit to dispatch based on the instruction type.
    */
+  @SuppressWarnings("unused")
   public static abstract class Visitor {
     public void visitConstant(ConstantInstruction instruction) {
     }

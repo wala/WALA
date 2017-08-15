@@ -138,7 +138,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   /**
    * Singleton operator for assignments
    */
-  protected final static AssignOperator assignOperator = new AssignOperator();
+  public final static AssignOperator assignOperator = new AssignOperator();
 
   /**
    * singleton operator for filter
@@ -281,7 +281,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return callGraph;
   }
 
-  protected PropagationSystem makeSystem(AnalysisOptions options) {
+  protected PropagationSystem makeSystem(@SuppressWarnings("unused") AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory);
   }
 
@@ -656,6 +656,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
@@ -833,7 +834,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
@@ -858,7 +858,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
           if (DEBUG_ARRAY_LOAD) {
             System.err.println("ArrayLoad add assign: " + dVal + " " + p);
           }
-          sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
+          sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
         }
       };
       if (priorInstances != null) {
@@ -921,7 +921,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       PointerKey pVal = val.getPointerKey();
@@ -951,9 +950,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
         // note that the following is idempotent
         if (isJavaLangObject(contents)) {
-          sideEffect |= system.newFieldWrite(p, assignOperator, pVal, object);
+          sideEffect |= system.newFieldWrite(p, assignOperator, pVal);
         } else {
-          sideEffect |= system.newFieldWrite(p, filterOperator, pVal, object);
+          sideEffect |= system.newFieldWrite(p, filterOperator, pVal);
         }
       }
       byte sideEffectMask = sideEffect ? (byte) SIDE_EFFECT_MASK : 0;
@@ -1012,7 +1011,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = ref.getPointerKey();
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
 
@@ -1036,7 +1034,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 String S = "Getfield add constraint " + dVal + " " + p;
                 System.err.println(S);
               }
-              sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
+              sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
             }
           }
         }
@@ -1129,7 +1127,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       final PointerKey pVal = val.getPointerKey();
@@ -1155,7 +1152,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 String S = "Putfield add constraint " + p + " " + pVal;
                 System.err.println(S);
               }
-              sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
+              sideEffect.b |= system.newFieldWrite(p, assign, pVal);
             }
           }
         }
@@ -1489,6 +1486,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   @Override
   public IAnalysisCacheView getAnalysisCache() {
     return analysisCache;
-  };
+  }
 
 }

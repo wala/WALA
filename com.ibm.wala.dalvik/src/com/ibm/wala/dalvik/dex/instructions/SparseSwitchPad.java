@@ -48,7 +48,8 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib.Code.Format.SparseSwitchDataPseudoInstruction;
+import org.jf.dexlib2.iface.instruction.SwitchElement;
+import org.jf.dexlib2.iface.instruction.SwitchPayload;
 
 public class SparseSwitchPad implements SwitchPad {
 
@@ -57,29 +58,38 @@ public class SparseSwitchPad implements SwitchPad {
     public final int defaultOffset;
     private int [] labelsAndOffsets;
 
-    public SparseSwitchPad(SparseSwitchDataPseudoInstruction s, int defaultOffset)
+    public SparseSwitchPad(SwitchPayload inst, int defaultOffset)
     {
-        this.values = s.getKeys();
-        this.offsets = s.getTargets();
+    	int i = 0;
+    	this.values = new int[ inst.getSwitchElements().size() ];
+    	this.offsets = new int[ inst.getSwitchElements().size() ];
+    	for(SwitchElement elt : inst.getSwitchElements()) {
+    		values[i] = elt.getKey();
+    		offsets[i++] = elt.getOffset();
+    	}
         this.defaultOffset = defaultOffset;
     }
 
+    @Override
     public int [] getOffsets()
     {
         return offsets;
     }
 
+    @Override
     public int [] getValues()
     {
         return values;
     }
 
 
+    @Override
     public int getDefaultOffset() {
         //return Integer.MIN_VALUE;
         return defaultOffset;
     }
 
+    @Override
     public int[] getLabelsAndOffsets() {
 //      return values;
 

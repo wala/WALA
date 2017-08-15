@@ -15,6 +15,6 @@ import java.util.Hashtable;
 public class Slice7 {
   public static void main(String args[]) {
     @SuppressWarnings("unused")
-    Hashtable abc = new Hashtable(3, 0.75f);
+    Hashtable<Object, Object> abc = new Hashtable<Object, Object>(3, 0.75f);
   }
 }

@@ -15,7 +15,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 /**
  * Represents a single step in an iterative solver
  */
-public abstract class AbstractStatement<T extends IVariable, O extends AbstractOperator<T>> extends NodeWithNumber implements IFixedPointStatement<T>{
+public abstract class AbstractStatement<T extends IVariable<T>, O extends AbstractOperator<T>> extends NodeWithNumber implements IFixedPointStatement<T>{
 
   public abstract O getOperator();
 
@@ -51,7 +51,7 @@ public abstract class AbstractStatement<T extends IVariable, O extends AbstractO
   }
   
   public final int getOrderNumber() {
-    IVariable lhs = getLHS();
+    T lhs = getLHS();
     return (lhs == null) ? 0 : lhs.getOrderNumber();
   }
 

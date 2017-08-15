@@ -28,6 +28,8 @@ import com.ibm.wala.util.graph.Graph;
  */
 public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
 
+  private static final long serialVersionUID = 5413569289853649240L;
+
   public DFSAllPathsFinder(Graph<T> G, Iterator<T> nodes, Predicate<T> f) {
     super(G, nodes, f);
   }

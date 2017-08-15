@@ -42,6 +42,7 @@ public class ArraysAndSuch {
 	public static void main(String args[]) {
 		ArraysAndSuch.main();
 	}
+	@SuppressWarnings("null")
 	public static void main() {
 		Object o1 = null;
 		Object[] os1 = new Object[] { null, o1, null };
@@ -54,7 +55,7 @@ public class ArraysAndSuch {
 
 		os1.clone();
 		if ( os1.equals(os2) ) {
-			Class x = os1.getClass();
+			Class<? extends Object[]> x = os1.getClass();
 			os1.notify();
 			os1.toString();
 			try {

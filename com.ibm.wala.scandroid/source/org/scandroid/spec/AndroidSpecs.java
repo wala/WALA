@@ -196,6 +196,7 @@ public class AndroidSpecs implements ISpecs {
 		glStatusChanged,
 		nlNmeaRecvd,
 	};
+	@Override
 	public MethodNamePattern[] getEntrypointSpecs() { return defaultCallbacks; }
 
 
@@ -254,6 +255,7 @@ public class AndroidSpecs implements ISpecs {
 		
 	};
 	
+	@Override
 	public SourceSpec[] getSourceSpecs() { return sourceSpecs; }
 
 	/**
@@ -293,6 +295,7 @@ public class AndroidSpecs implements ISpecs {
 		new CallArgSinkSpec(new MethodNamePattern(sms, "sendDataMessage"), null),
 	};
 
+	@Override
 	public SinkSpec[] getSinkSpecs() { return sinkSpecs; }
 
 	private static MethodNamePattern[] callBacks = new MethodNamePattern[]{};

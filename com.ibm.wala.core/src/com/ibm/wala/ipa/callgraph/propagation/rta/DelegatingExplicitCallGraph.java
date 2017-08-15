@@ -264,6 +264,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
   @Override
   protected ExplicitEdgeManager makeEdgeManger() {
     return new DelegatingEdgeManager();
-  };
+  }
 
 }

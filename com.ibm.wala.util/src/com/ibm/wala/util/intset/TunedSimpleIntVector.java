@@ -15,6 +15,8 @@ package com.ibm.wala.util.intset;
  */
 public class TunedSimpleIntVector extends SimpleIntVector {
 
+  private static final long serialVersionUID = -1380867351543398351L;
+
   private final int initialSize;
 
   private final float expansion;

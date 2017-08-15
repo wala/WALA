@@ -339,7 +339,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    // SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return cache.getDefUse(getIR(node));
   }
 

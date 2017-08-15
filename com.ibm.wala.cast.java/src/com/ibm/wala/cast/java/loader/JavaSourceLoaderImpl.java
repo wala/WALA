@@ -66,7 +66,6 @@ import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
 import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -78,7 +77,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
@@ -100,11 +98,11 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public class JavaClass extends AstClass {
     protected final IClass enclosingClass;
 
-    protected final Collection superTypeNames;
+    protected final Collection<TypeName> superTypeNames;
 
     private final Collection<Annotation> annotations;
     
-    public JavaClass(String typeName, Collection superTypeNames, CAstSourcePositionMap.Position position, Collection qualifiers,
+    public JavaClass(String typeName, Collection<TypeName> superTypeNames, CAstSourcePositionMap.Position position, Collection<CAstQualifier> qualifiers,
         JavaSourceLoaderImpl loader, IClass enclosingClass, Collection<Annotation> annotations) {
       super(position, TypeName.string2TypeName(typeName), loader, (short) mapToInt(qualifiers), new HashMap<Atom, IField>(), new HashMap<Selector, IMethod>());
       this.superTypeNames = superTypeNames;
@@ -125,8 +123,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     @Override
     public IClass getSuperclass() {
       boolean excludedSupertype=false;
-      for (Iterator iter = superTypeNames.iterator(); iter.hasNext();) {
-        TypeName name = (TypeName) iter.next();
+      for (Iterator<TypeName> iter = superTypeNames.iterator(); iter.hasNext();) {
+        TypeName name = iter.next();
         IClass domoType = lookupClass(name);
         if (domoType != null && !domoType.isInterface()) {
           return domoType;
@@ -156,8 +154,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     @Override
     public Collection<IClass> getDirectInterfaces() {
       List<IClass> result = new ArrayList<>();
-      for (Iterator iter = superTypeNames.iterator(); iter.hasNext();) {
-        TypeName name = (TypeName) iter.next();
+      for (TypeName name : superTypeNames) {
         IClass domoType = lookupClass(name);
         if (domoType != null && domoType.isInterface()) {
             result.add(domoType);
@@ -170,7 +167,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       return result;
     }
 
-    private void addMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+    private void addMethod(CAstEntity methodEntity, IClass owner, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
         Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       declaredMethods.put(Util.methodEntityToSelector(methodEntity), new ConcreteJavaMethod(methodEntity, owner, cfg, symtab,
           hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo));
@@ -251,7 +248,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     private final TypeReference[] exceptionTypes;
 
-    public JavaEntityMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+    public JavaEntityMethod(CAstEntity methodEntity, IClass owner, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
         Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(owner, methodEntity.getQualifiers(), cfg, symtab, MethodReference.findOrCreate(owner.getReference(), Util
           .methodEntityToSelector(methodEntity)), hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, JavaSourceLoaderImpl.this.getAnnotations(methodEntity));
@@ -310,13 +307,13 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     private TypeReference[] computeExceptionTypes(CAstEntity methodEntity) {
       CAstType.Function fType = (Function) methodEntity.getType();
-      Collection exceptionTypes = fType.getExceptionTypes();
+      Collection<CAstType> exceptionTypes = fType.getExceptionTypes();
 
       TypeReference[] result = new TypeReference[exceptionTypes.size()];
       int i = 0;
-      for (Iterator iter = exceptionTypes.iterator(); iter.hasNext(); i++) {
-        CAstType type = (CAstType) iter.next();
+      for (CAstType type : exceptionTypes) {
         result[i] = TypeReference.findOrCreate(JavaSourceLoaderImpl.this.getReference(), type.getName());
+        ++i;
       }
 
       return result;
@@ -369,7 +366,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
    * @author rfuhrer
    */
   public class ConcreteJavaMethod extends JavaEntityMethod {
-    public ConcreteJavaMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+    public ConcreteJavaMethod(CAstEntity methodEntity, IClass owner, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
         Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(methodEntity, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
     }
@@ -451,11 +448,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
   }
 
-  public static int mapToInt(Collection/* <CAstQualifier> */qualifiers) {
+  public static int mapToInt(Collection<CAstQualifier> qualifiers) {
     int result = 0;
-    for (Iterator iter = qualifiers.iterator(); iter.hasNext();) {
-      CAstQualifier q = (CAstQualifier) iter.next();
-
+    for (CAstQualifier q : qualifiers) {
       if (q == CAstQualifier.PUBLIC)
         result |= ClassConstants.ACC_PUBLIC;
       if (q == CAstQualifier.PROTECTED)
@@ -486,14 +481,14 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
 /** BEGIN Custom change: Common superclass is optional */
   public JavaSourceLoaderImpl(boolean existsCommonSuperClass, ClassLoaderReference loaderRef, IClassLoader parent,
-      SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+      IClassHierarchy cha) {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha);
     this.existsCommonSuperclass = existsCommonSuperClass;
   }
   
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha) {
     // standard case: we have a common super class
-    this(true, loaderRef, parent, exclusions, cha);
+    this(true, loaderRef, parent, cha);
   }
 /** END Custom change: Common superclass is optional */
 
@@ -522,7 +517,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 /** END Custom change: Optional deletion of fTypeMap */
   }
 
-  public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+  public void defineFunction(CAstEntity n, IClass owner, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
       Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
   }
@@ -535,14 +530,14 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     ((JavaClass) owner).addField(n);
   }
 
-  private TypeName toWALATypeName(CAstType type) {
+  private static TypeName toWALATypeName(CAstType type) {
     return TypeName.string2TypeName(type.getName());
   }
   
   public IClass defineType(CAstEntity type, String typeName, CAstEntity owner) {
     Collection<TypeName> superTypeNames = new ArrayList<>();
-    for (Iterator superTypes = type.getType().getSupertypes().iterator(); superTypes.hasNext();) {
-      superTypeNames.add(toWALATypeName(((CAstType) superTypes.next())));
+    for (CAstType superType : type.getType().getSupertypes()) {
+      superTypeNames.add(toWALATypeName(superType));
     }
 
     JavaClass javaClass = new JavaClass(typeName, superTypeNames, type.getPosition(), type.getQualifiers(), this,
@@ -664,10 +659,6 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs) {
        return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
     }
-
-    public SSAThrowInstruction NonExceptingThrowInstruction(int iindex, int exception) {
-      throw new UnsupportedOperationException();
-   }    
   }
   
   private static final InstructionFactory insts = new InstructionFactory();

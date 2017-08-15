@@ -23,13 +23,13 @@ import com.ibm.wala.types.ClassLoaderReference;
  */
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
   protected final JavaScriptTranslatorFactory translatorFactory;
-  protected final CAstRewriterFactory preprocessor;
+  protected final CAstRewriterFactory<?, ?> preprocessor;
   
   public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory) {
     this(factory, null);
   }
 
-  public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory preprocessor) {
+  public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
     this.translatorFactory = factory;
     this.preprocessor = preprocessor;
   }

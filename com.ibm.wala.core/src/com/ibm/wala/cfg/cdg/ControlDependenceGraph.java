@@ -92,7 +92,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     return controlDependence;
   }
 
-  protected Object makeEdgeLabel(T x, T y, T s) {
+  protected Object makeEdgeLabel(@SuppressWarnings("unused") T from, @SuppressWarnings("unused") T to, T s) {
     return s;
   }  
 

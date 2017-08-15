@@ -18,6 +18,7 @@ import java.util.Iterator;
  *
  * A simple exercise in recursive data structures.
  */
+@SuppressWarnings("rawtypes")
 public class NList implements Collection {
 
   final int value;

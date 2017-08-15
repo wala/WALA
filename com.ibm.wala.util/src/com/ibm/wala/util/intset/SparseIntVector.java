@@ -22,6 +22,7 @@ import java.io.Serializable;
  */
 public class SparseIntVector implements IntVector, Serializable {
 
+  private static final long serialVersionUID = -2428993854689991888L;
   private final static int INITIAL_SIZE = 5;
   private final double EXPANSION = 1.5;
   int maxIndex = -1;

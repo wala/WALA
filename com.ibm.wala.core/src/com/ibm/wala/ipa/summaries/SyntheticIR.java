@@ -56,7 +56,7 @@ public class SyntheticIR extends IR {
   /**
    * throw an assertion if the instruction array contains a phi instruction
    */
-  private void repOK(SSAInstruction[] instructions) {
+  private static void repOK(SSAInstruction[] instructions) {
     for (SSAInstruction s : instructions) {
       if (s instanceof SSAPhiInstruction) {
         Assertions.UNREACHABLE();

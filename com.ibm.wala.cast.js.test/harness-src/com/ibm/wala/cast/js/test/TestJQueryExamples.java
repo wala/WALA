@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Before;
@@ -37,7 +36,7 @@ public class TestJQueryExamples extends TestJSCallGraphShape {
   }
 
   @Ignore("This tries to analyze unmodified jquery, which we can't do yet")
-  @Test public void testEx1() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test public void testEx1() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());

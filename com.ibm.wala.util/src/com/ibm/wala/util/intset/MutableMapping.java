@@ -23,6 +23,8 @@ import com.ibm.wala.util.collections.HashMapFactory;
  */
 public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
+  private static final long serialVersionUID = 4011751404163534418L;
+
   private static final int INITIAL_CAPACITY = 20;
   
   private final static int MAX_SIZE = Integer.MAX_VALUE / 4;

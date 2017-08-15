@@ -176,7 +176,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 		}
 	}
 
-	private URI processURIArg(String arg) {
+	private static URI processURIArg(String arg) {
 		if (arg == null) {
 			return null;
 		} else {

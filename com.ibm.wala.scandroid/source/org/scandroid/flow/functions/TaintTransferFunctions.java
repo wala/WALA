@@ -71,7 +71,6 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.dataflow.IFDS.IFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IReversibleFlowFunction;
-import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IdentityFlowFunction;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -106,6 +105,8 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	// Java, you need type aliases.
 	private static class BlockPair<E extends ISSABasicBlock> extends
 			Pair<BasicBlockInContext<E>, BasicBlockInContext<E>> {
+		private static final long serialVersionUID = 6838579950051954781L;
+
 		protected BlockPair(BasicBlockInContext<E> fst,
 				BasicBlockInContext<E> snd) {
 			super(fst, snd);
@@ -126,14 +127,13 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	private static final IReversibleFlowFunction IDENTITY_FN = new IdentityFlowFunction();
 
 	public TaintTransferFunctions(IFDSTaintDomain<E> domain,
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
 			PointerAnalysis<InstanceKey> pa) {
-		this(domain, graph, pa, false);
+		this(domain, pa, false);
 	}
 
 	public TaintTransferFunctions(IFDSTaintDomain<E> domain,
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-			PointerAnalysis<InstanceKey> pa, boolean taintStaticFields) {
+			PointerAnalysis<InstanceKey> pa,
+			boolean taintStaticFields) {
 		this.domain = domain;
 		this.pa = pa;
 		this.globalId = new GlobalIdentityFunction<>(domain);
@@ -143,7 +143,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 				.build(new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
 					@Override
 					public IUnaryFlowFunction load(BlockPair<E> key) {
-						return makeCallFlowFunction(key.fst, key.snd, null);
+						return makeCallFlowFunction(key.fst);
 					}
 				});
 		this.normalFlowFunctions = CacheBuilder.newBuilder().maximumSize(10000)
@@ -151,7 +151,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 				.build(new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
 					@Override
 					public IUnaryFlowFunction load(BlockPair<E> key) {
-						return makeNormalFlowFunction(key.fst, key.snd);
+						return makeNormalFlowFunction(key.snd);
 					}
 				});
 		this.taintStaticFields = taintStaticFields;
@@ -168,8 +168,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		}
 	}
 
-	private IUnaryFlowFunction makeCallFlowFunction(BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
+	private IUnaryFlowFunction makeCallFlowFunction(BasicBlockInContext<E> src) {
 		
 		SSAInstruction srcInst = src.getLastInstruction();
 		if (null == srcInst) {
@@ -234,7 +233,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	}
 
 	private IUnaryFlowFunction makeNormalFlowFunction(
-			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+			BasicBlockInContext<E> dest) {
 		List<UseDefPair> pairs = new ArrayList<>();
 
 		// we first try to process the destination instruction
@@ -273,18 +272,16 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		// them
 		if (taintStaticFields && inst instanceof SSAGetInstruction
 				&& ((SSAGetInstruction) inst).isStatic()) {
-			return makeStaticFieldTaints(dest, inst, node, flowFunction);
+			return makeStaticFieldTaints(dest, inst, flowFunction);
 		}
 
 		return flowFunction;
 	}
 
 	public IUnaryFlowFunction makeStaticFieldTaints(
-			BasicBlockInContext<E> dest, SSAInstruction inst, CGNode node,
-			final PairBasedFlowFunction<E> flowFunction) {
+			BasicBlockInContext<E> dest, SSAInstruction inst, final PairBasedFlowFunction<E> flowFunction) {
 		final Set<DomainElement> elts = HashSetFactory.make();
-		for (CodeElement ce : getStaticFieldAccessCodeElts(node,
-				(SSAGetInstruction) inst)) {
+		for (CodeElement ce : getStaticFieldAccessCodeElts((SSAGetInstruction) inst)) {
 			StaticFieldElement sfe = (StaticFieldElement) ce;
 			IField field = pa.getClassHierarchy().resolveField(sfe.getRef());
 			if (field.isFinal()) {
@@ -381,7 +378,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		for (int i = 0; i < defNo; i++) {
 			int valNo = inst.getDef(i);
 
-			elts.addAll(CodeElement.valueElements(pa, node, valNo));
+			elts.addAll(CodeElement.valueElements(valNo));
 		}
 
 		return elts;
@@ -409,7 +406,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 				continue;
 			}
 			try {
-				elts.addAll(CodeElement.valueElements(pa, node, valNo));
+				elts.addAll(CodeElement.valueElements(valNo));
 			} catch (IllegalArgumentException e) {
 				
 				
@@ -443,7 +440,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	private Set<CodeElement> getFieldAccessCodeElts(CGNode node,
 			SSAFieldAccessInstruction inst) {
 		if (inst.isStatic()) {
-			return getStaticFieldAccessCodeElts(node, inst);
+			return getStaticFieldAccessCodeElts(inst);
 		}
 
 		Set<CodeElement> elts = HashSetFactory.make();
@@ -466,8 +463,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		return elts;
 	}
 
-	private Set<CodeElement> getStaticFieldAccessCodeElts(CGNode node,
-			SSAFieldAccessInstruction inst) {
+	private static Set<CodeElement> getStaticFieldAccessCodeElts(SSAFieldAccessInstruction inst) {
 		Set<CodeElement> elts = HashSetFactory.make();
 		final FieldReference fieldRef = inst.getDeclaredField();
 		elts.add(new StaticFieldElement(fieldRef));
@@ -496,7 +492,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		return elts;
 	}
 
-	private IUnaryFlowFunction union(final IUnaryFlowFunction g,
+	private static IUnaryFlowFunction union(final IUnaryFlowFunction g,
 			final IUnaryFlowFunction h) {
 		return new IUnaryFlowFunction() {
 			@Override
@@ -513,7 +509,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	 * @param g
 	 * @return { (x, z) | (x, y) \in g, (y, z) \in f }
 	 */
-	private IUnaryFlowFunction compose(final IUnaryFlowFunction f,
+	private static IUnaryFlowFunction compose(final IUnaryFlowFunction f,
 			final IUnaryFlowFunction g) {
 		return new IUnaryFlowFunction() {
 

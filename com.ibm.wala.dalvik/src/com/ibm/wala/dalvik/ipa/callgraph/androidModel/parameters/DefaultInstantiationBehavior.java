@@ -63,6 +63,7 @@ import com.ibm.wala.util.strings.Atom;
 public class DefaultInstantiationBehavior extends IInstantiationBehavior {
 
     /* package-private */ static final class BehviourValue implements Serializable {
+		private static final long serialVersionUID = 190943987799306506L;
 		public final InstanceBehavior behaviour;
         public final Exactness exactness;
         public final BehviourValue cacheFrom;
@@ -81,6 +82,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
     }
 
     /* package-private */ static final class BehaviorKey<T> implements Serializable {
+        private static final long serialVersionUID = -1932639921432060660L;
         // T is expected to be TypeName or Atom
         final T base;
 

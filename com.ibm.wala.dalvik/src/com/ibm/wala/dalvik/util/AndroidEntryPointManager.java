@@ -94,7 +94,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  Determines if any EntryPoint extends the specified component.
      */
-    public boolean EPContainAny(AndroidComponent compo) {
+    public static boolean EPContainAny(AndroidComponent compo) {
         for (AndroidEntryPoint ep: ENTRIES) {
             if (ep.belongsTo(compo)) {
                 return true;
@@ -110,7 +110,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         MANAGER = new AndroidEntryPointManager();
     }
 
-    public Set<TypeReference> getComponents() {
+    public static Set<TypeReference> getComponents() {
         if (ENTRIES.isEmpty()) {
             throw new IllegalStateException("No entrypoints loaded yet.");
         }

@@ -90,7 +90,7 @@ public abstract class Decoder implements Constants {
           .make(indexedTypes[(i - OP_iadd) % 4], BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
     }
     for (int i = OP_ineg; i <= OP_dneg; i++) {
-      table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg], IUnaryOpInstruction.Operator.NEG);
+      table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg]);
     }
     for (int i = OP_ishl; i <= OP_lushr; i++) {
       table[i] = ShiftInstruction.make(indexedTypes[(i - OP_ishl) % 2], ShiftInstruction.Operator.values()[(i - OP_ishl) / 2]);
@@ -214,7 +214,7 @@ public abstract class Decoder implements Constants {
     }
   }
 
-  private String getPrimitiveType(int t) throws InvalidBytecodeException {
+  private static String getPrimitiveType(int t) throws InvalidBytecodeException {
     switch (t) {
     case T_BOOLEAN:
       return TYPE_boolean;
@@ -698,7 +698,7 @@ public abstract class Decoder implements Constants {
     return index;
   }
 
-  private int applyInstructionToStack(Instruction i, int stackLen, byte[] stackWords) throws InvalidBytecodeException {
+  private static int applyInstructionToStack(Instruction i, int stackLen, byte[] stackWords) throws InvalidBytecodeException {
     stackLen -= i.getPoppedCount();
 
     if (stackLen < 0) {

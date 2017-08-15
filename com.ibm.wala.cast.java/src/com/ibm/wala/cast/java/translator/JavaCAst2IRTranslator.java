@@ -15,7 +15,6 @@ package com.ibm.wala.cast.java.translator;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
@@ -167,14 +166,13 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     processExceptions(newNode, context);
   }
 
-  private void processExceptions(CAstNode n, WalkContext context) {
+  private static void processExceptions(CAstNode n, WalkContext context) {
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().newBlock(true);
 
-    Collection labels = context.getControlFlow().getTargetLabels(n);
+    Collection<Object> labels = context.getControlFlow().getTargetLabels(n);
 
-    for (Iterator iter = labels.iterator(); iter.hasNext();) {
-      Object label = iter.next();
+    for (Object label : labels) {
       CAstNode target = context.getControlFlow().getTarget(n, label);
       if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
         context.cfg().addPreEdgeToExit(n, true);
@@ -202,10 +200,6 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     else
       context.cfg().addInstruction(new AstJavaInvokeInstruction(context.cfg().getCurrentInstruction(), result, realArgs, exception, realSiteRef));
     processExceptions(call, context);
-  }
-
-  protected void doGlobalRead(WalkContext context, int result, String name) {
-    Assertions.UNREACHABLE("doGlobalRead() called for Java code???");
   }
 
   @Override
@@ -412,7 +406,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
-  private CAstType getType(final String name) {
+  private static CAstType getType(final String name) {
     return new CAstType.Class() {
       
       @Override

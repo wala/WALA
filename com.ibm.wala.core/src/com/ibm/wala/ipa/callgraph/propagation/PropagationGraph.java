@@ -97,7 +97,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * @return a relation in map m corresponding to a key
    */
-  private IBinaryNaturalRelation findOrCreateRelation(Map<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> m,
+  private static IBinaryNaturalRelation findOrCreateRelation(Map<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> m,
       UnaryOperator<PointsToSetVariable> key) {
     IBinaryNaturalRelation result = m.get(key);
     if (result == null) {
@@ -110,7 +110,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * @return a Relation object to track implicit equations using the operator
    */
-  private IBinaryNaturalRelation makeRelation(AbstractOperator op) {
+  private static IBinaryNaturalRelation makeRelation(AbstractOperator op) {
     byte[] implementation = null;
     if (op instanceof AssignOperator) {
       // lots of assignments.
@@ -225,7 +225,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * @return true iff this equation should be represented implicitly in this data structure
    */
-  private boolean useImplicitRepresentation(IFixedPointStatement s) {
+  private static boolean useImplicitRepresentation(IFixedPointStatement s) {
     AbstractStatement eq = (AbstractStatement) s;
     AbstractOperator op = eq.getOperator();
     return (op instanceof AssignOperator || op instanceof PropagationCallGraphBuilder.FilterOperator);

@@ -18,17 +18,19 @@ import java.util.Properties;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -76,13 +78,13 @@ public class ScopeFileCallGraph {
     System.out.println(Warnings.asString());
     Warnings.clear();
     AnalysisOptions options = new AnalysisOptions();
-    Iterable<Entrypoint> entrypoints = entryClass != null ? makePublicEntrypoints(scope, cha, entryClass) : Util.makeMainEntrypoints(scope, cha, mainClass);
+    Iterable<Entrypoint> entrypoints = entryClass != null ? makePublicEntrypoints(cha, entryClass) : Util.makeMainEntrypoints(scope, cha, mainClass);
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
-//    options.setReflectionOptions(ReflectionOptions.NONE);
-    AnalysisCache cache = new AnalysisCacheImpl();
+    options.setReflectionOptions(ReflectionOptions.NONE);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
     // other builders can be constructed with different Util methods
-    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
 //    CallGraphBuilder builder = Util.makeNCFABuilder(2, options, cache, cha, scope);
 //    CallGraphBuilder builder = Util.makeVanillaNCFABuilder(2, options, cache, cha, scope);
     System.out.println("building call graph...");
@@ -96,7 +98,7 @@ public class ScopeFileCallGraph {
     System.out.println(CallGraphStats.getStats(cg));
   }
 
-  private static Iterable<Entrypoint> makePublicEntrypoints(AnalysisScope scope, IClassHierarchy cha, String entryClass) {
+  private static Iterable<Entrypoint> makePublicEntrypoints(IClassHierarchy cha, String entryClass) {
     Collection<Entrypoint> result = new ArrayList<>();
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application,
         StringStuff.deployment2CanonicalTypeString(entryClass)));

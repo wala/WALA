@@ -237,6 +237,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
             throw new IllegalArgumentException("ExecutionOrder was constructed from an illegal label: " + label);
         }
         /** {@inheritDoc} */
+        @Override
         public int getOrderValue() { return this.value; }
 
         /**
@@ -395,6 +396,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
         /**
          * {@inheritDoc}
          */
+        @Override
         public ExecutionOrder getSection() {
             if (this.compareTo(ExecutionOrder.BEFORE_LOOP) == -1) return ExecutionOrder.AT_FIRST;
             if (this.compareTo(ExecutionOrder.START_OF_LOOP) == -1) return ExecutionOrder.BEFORE_LOOP;

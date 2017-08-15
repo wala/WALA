@@ -274,7 +274,7 @@ nextMethod:
 //        return test.getName().toString().contains("$"); // PRETTY!
 //    }
 
-    private AndroidEntryPoint makeEntryPointForHeuristic(final IMethod method, final IClassHierarchy cha) {
+    private static AndroidEntryPoint makeEntryPointForHeuristic(final IMethod method, final IClassHierarchy cha) {
         AndroidComponent compo;
         { // Guess component
             compo = AndroidComponent.from(method, cha);
@@ -282,7 +282,7 @@ nextMethod:
 
             }
         }
-        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha, compo);
+        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
 
         return ep;
     }
@@ -364,7 +364,7 @@ nextMethod:
                         final IMethod method = appClass.getMethod(ifMethod.getSelector());
                         if (method != null && method.getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
                             // The function is overridden
-                            final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha);
+                            final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(), method, cha);
 
                             if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                             if (eps.add(ep)) {
@@ -404,11 +404,11 @@ nextMethod:
         }
     }
 
-    private boolean isAPIComponent(final IMethod method) {
+    private static boolean isAPIComponent(final IMethod method) {
         return isAPIComponent(method.getDeclaringClass());
     }
 
-    private boolean isAPIComponent(final IClass cls) {
+    private static boolean isAPIComponent(final IClass cls) {
         ClassLoaderReference clr = cls.getClassLoader().getReference();
 		if (! (clr.equals(ClassLoaderReference.Primordial) || clr.equals(ClassLoaderReference.Extension))) {
             if (cls.getName().toString().startsWith("Landroid/")) {
@@ -420,7 +420,7 @@ nextMethod:
         }
     }
 
-    private boolean isExcluded(final IClass cls) {
+    private static boolean isExcluded(final IClass cls) {
     	final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
     	if (set == null) {
     		return false; // exclusions null ==> no exclusions ==> no class is excluded
@@ -435,7 +435,7 @@ nextMethod:
      *
      *  Currently all methods are placed at ExecutionOrder.MULTIPLE_TIMES_IN_LOOP.
      */
-    private ExecutionOrder selectPositionForHeuristic(IMethod method) {
+    private static ExecutionOrder selectPositionForHeuristic() {
         return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
     }
 
@@ -454,21 +454,22 @@ nextMethod:
         private final String name;
         public final AndroidEntryPoint.ExecutionOrder order;
 
-        public AndroidPossibleEntryPoint(AndroidComponent c, String n, ExecutionOrder o) { 
+        public AndroidPossibleEntryPoint(String n, ExecutionOrder o) {
 //            cls = c; 
             name = n; 
             order = o; 
         }
  
-        public AndroidPossibleEntryPoint(AndroidComponent c, String n, AndroidPossibleEntryPoint o) { 
+        public AndroidPossibleEntryPoint(String n, AndroidPossibleEntryPoint o) {
 //            cls = c; 
             name = n; 
             order = o.order; 
         }
        
-        public int getOrderValue() { return order.getOrderValue(); }
-        public int compareTo(AndroidEntryPoint.IExecutionOrder o) { return order.compareTo(o); }
-        public AndroidEntryPoint.ExecutionOrder getSection() { return order.getSection(); }
+        @Override public int getOrderValue() { return order.getOrderValue(); }
+        @Override public int compareTo(AndroidEntryPoint.IExecutionOrder o) { return order.compareTo(o); }
+        @Override public AndroidEntryPoint.ExecutionOrder getSection() { return order.getSection(); }
+
         public static class ExecutionOrderComperator implements Comparator<AndroidPossibleEntryPoint> {
             @Override public int compare(AndroidPossibleEntryPoint a, AndroidPossibleEntryPoint b) {
                 return a.order.compareTo(b.order);

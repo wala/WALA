@@ -63,6 +63,7 @@ import com.ibm.wala.util.strings.Atom;
 public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
     private static final class BehviourValue implements Serializable {
+        private static final long serialVersionUID = -7558845015122601212L;
         public final InstanceBehavior behaviour;
         public final Exactness exactness;
         public final BehviourValue cacheFrom;
@@ -86,6 +87,8 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
 
     private static final class BehaviorKey<T> implements Serializable {
+        private static final long serialVersionUID = 73530;
+
         // T is expected to be TypeName or Atom
         final T base;
 
@@ -258,8 +261,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
         }
     }
 
-    public void setBehavior(final TypeName type, final TypeName asParameterTo, final MethodReference inCall, 
-            final String withName, final InstanceBehavior beh, final Exactness exactness) {
+    public void setBehavior(final TypeName type, final InstanceBehavior beh, final Exactness exactness) {
 
 
         final BehaviorKey<TypeName> typeK= BehaviorKey.mk(type);
@@ -268,8 +270,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
         behaviours.put(typeK, val);
     }
 
-    public void setBehavior(final Atom pack, final TypeName asParameterTo, final MethodReference inCall, 
-            final String withName, final InstanceBehavior beh, final Exactness exactness) {
+    public void setBehavior(final Atom pack, final InstanceBehavior beh, final Exactness exactness) {
 
 
         final BehaviorKey<Atom> typeK= BehaviorKey.mk(pack);

@@ -48,27 +48,36 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib.Code.Format.PackedSwitchDataPseudoInstruction;
+import org.jf.dexlib2.iface.instruction.SwitchElement;
+import org.jf.dexlib2.iface.instruction.SwitchPayload;
 
 public class PackedSwitchPad implements SwitchPad {
 
-    public final int firstValue;
+    public int firstValue;
     public final int[] offsets;
     public final int defaultOffset;
     private int [] labelsAndOffsets;
     private int[] values;
 
-    public PackedSwitchPad(PackedSwitchDataPseudoInstruction s, int defaultOffset) {
-        this.firstValue = s.getFirstKey();
-        this.offsets = s.getTargets();
+    public PackedSwitchPad(SwitchPayload inst, int defaultOffset) {
+    	int i = 0;
+    	this.offsets = new int[inst.getSwitchElements().size()];
+    	for(SwitchElement elt : inst.getSwitchElements()) {
+    		if (i == 0) {
+    			firstValue = elt.getKey();
+    		}
+    		offsets[i++] = elt.getOffset();
+    	}
         this.defaultOffset = defaultOffset;
     }
 
+    @Override
     public int[] getOffsets()
     {
         return offsets;
     }
 
+    @Override
     public int[] getValues()
     {
         if (values != null)
@@ -83,11 +92,13 @@ public class PackedSwitchPad implements SwitchPad {
 
 
 
+    @Override
     public int getDefaultOffset() {
         //return Integer.MIN_VALUE;
         return defaultOffset;
     }
 
+    @Override
     public int[] getLabelsAndOffsets() {
         if(labelsAndOffsets != null)
             return labelsAndOffsets;
