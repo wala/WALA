@@ -65,9 +65,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
 
     nExpected += site.getDeclaredTarget().getNumberOfParameters();
     if (nExpected > 0) {
-      if (params == null) {
-        assert params != null : "null params for " + site;
-      }
+      assert params != null : "null params for " + site;
       if (params.length != nExpected) {
         assert params.length == nExpected : "wrong number of params for " + site + " Expected " + nExpected + " got "
             + params.length;

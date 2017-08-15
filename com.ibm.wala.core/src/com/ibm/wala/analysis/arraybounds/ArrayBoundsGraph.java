@@ -118,7 +118,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 		  
 		  for (DirectedHyperEdge<Integer> edge:constantNode.getOutEdges()) {
 		    if (!edge.getDestination().contains(helper2)) {
-		      edge.getSource().remove(constant);
+		      edge.getSource().remove(constantNode);
 		      edge.getSource().add(helper1);
 		    }
 		  }

@@ -355,7 +355,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
                 if (!exceptionTypes.isEmpty()) {
                   addExceptionalEdgeTo(b);
                   exceptionTypes.clear();
-                  caughtException = null;
+                  assert caughtException == null;
                 }
               }
               if (caughtException != null) {
