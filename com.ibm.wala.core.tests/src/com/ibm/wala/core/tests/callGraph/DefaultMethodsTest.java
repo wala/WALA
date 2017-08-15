@@ -60,7 +60,7 @@ public class DefaultMethodsTest extends WalaTestCase {
     MethodReference t1m = MethodReference.findOrCreate(t1s, "silly", "()I");
     Assert.assertTrue("expect Interface1.silly node", cg.getNodes(t1m).iterator().hasNext());
     CGNode t1node = cg.getNodes(t1m).iterator().next();
-    
+
     // Check call from main to Interface1.silly
     Assert.assertTrue("should have call site from main to Interface1.silly", cg.getPossibleSites(mnode, t1node).hasNext());
 
