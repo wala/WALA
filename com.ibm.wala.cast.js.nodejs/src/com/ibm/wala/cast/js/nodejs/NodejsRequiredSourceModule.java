@@ -117,8 +117,9 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	}
 	
 	private static String loadWrapperSource(String filename) throws IOException {
-		InputStream url = NodejsRequiredSourceModule.class.getClassLoader().getResourceAsStream(filename);
-	  return new String(Streams.inputStream2ByteArray(url));
+		try (final InputStream url = NodejsRequiredSourceModule.class.getClassLoader().getResourceAsStream(filename)) {
+		  return new String(Streams.inputStream2ByteArray(url));
+		}
 	}
 
 	/**
