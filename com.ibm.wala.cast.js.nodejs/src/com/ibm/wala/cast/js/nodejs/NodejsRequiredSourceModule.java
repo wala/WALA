@@ -69,9 +69,8 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 
 	@Override
 	public InputStream getInputStream() {
-		InputStream inputStream = super.getInputStream();
 		String moduleSource = null;
-		try {
+		try (final InputStream inputStream = super.getInputStream()) {
 			moduleSource = IOUtils.toString(inputStream);
 		} catch (IOException e) {
 			Assertions.UNREACHABLE(e.getMessage());
