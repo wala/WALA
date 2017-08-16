@@ -100,11 +100,12 @@ public class SWTCallGraph {
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
       Iterable<Entrypoint> entrypoints = null;
-      JarFile jar = new JarFile(appJar);
-      if (jar.getManifest() != null) {
-        String mainClass = jar.getManifest().getMainAttributes().getValue("Main-Class");
-        if (mainClass != null) {
-          entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "L" + mainClass.replace('.', '/'));
+      try (final JarFile jar = new JarFile(appJar)) {
+        if (jar.getManifest() != null) {
+          String mainClass = jar.getManifest().getMainAttributes().getValue("Main-Class");
+          if (mainClass != null) {
+            entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "L" + mainClass.replace('.', '/'));
+          }
         }
       }
       if (entrypoints == null) {
