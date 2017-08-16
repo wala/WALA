@@ -57,8 +57,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
       return;
     }
     cache = HashMapFactory.make();
-     try {
-      final JarInputStream stream = new JarInputStream(getNestedContents(), false);
+     try (final JarInputStream stream = new JarInputStream(getNestedContents(), false)) {
       for (ZipEntry z = stream.getNextEntry(); z != null; z = stream.getNextEntry()) {
         final String name = z.getName();
         if (DEBUG) {
