@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.ibm.wala-feature"
+      id="com.ibm.wala.tests_feature"
       label="%featureName"
       version="1.4.4.qualifier"
       provider-name="%providerName">
 
    <plugin
-         id="com.ibm.wala.core"
+         id="com.ibm.wala.cast.java.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.ibm.wala.shrike"
+         id="com.ibm.wala.cast.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.ibm.wala.cast"
+         id="com.ibm.wala.core.testdata"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.ibm.wala.cast.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.ibm.wala.util"
+         id="com.ibm.wala.core.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
