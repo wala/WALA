@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph.impl;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -543,12 +544,14 @@ public class Util {
       addBypassLogic(options, scope, cl, nativeSpec, cha);
     } else {
       // try to load from filesystem
-      try {
-        BufferedInputStream bIn = new BufferedInputStream(new FileInputStream(nativeSpec));
+      try (final BufferedInputStream bIn = new BufferedInputStream(new FileInputStream(nativeSpec))) {
         XMLMethodSummaryReader reader = new XMLMethodSummaryReader(bIn, scope);
         addBypassLogic(options, scope, cl, reader, cha);
       } catch (FileNotFoundException e) {
         System.err.println("Could not load natives xml file from: " + nativeSpec);
+        e.printStackTrace();
+      } catch (IOException e) {
+        System.err.println("Could not close natives xml file " + nativeSpec);
         e.printStackTrace();
       }
     }
