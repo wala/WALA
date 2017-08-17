@@ -105,10 +105,13 @@ public class Util {
       throw new IllegalArgumentException("cha cannot be null");
     }
 
-    InputStream s = cl.getResourceAsStream(xmlFile);
-    XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
-
-    addBypassLogic(options, scope, cl, summary, cha);
+    try (final InputStream s = cl.getResourceAsStream(xmlFile)) {
+      XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
+      addBypassLogic(options, scope, cl, summary, cha);
+    } catch (IOException e) {
+      System.err.println("Could not close XML method summary reader: " + e.getLocalizedMessage());
+      e.printStackTrace();
+    }
   }
 
   public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, XMLMethodSummaryReader summary,
