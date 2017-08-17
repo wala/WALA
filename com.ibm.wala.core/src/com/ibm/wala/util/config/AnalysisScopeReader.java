@@ -81,8 +81,9 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        InputStream fs = exclusionsFile.exists()? new FileInputStream(exclusionsFile): FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName());
-        scope.setExclusions(new FileOfClasses(fs));
+        try (InputStream fs = exclusionsFile.exists()? new FileInputStream(exclusionsFile): FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName())) {
+          scope.setExclusions(new FileOfClasses(fs));
+        }
       }
 
     } finally {
