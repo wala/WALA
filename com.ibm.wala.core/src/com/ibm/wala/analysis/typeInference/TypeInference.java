@@ -727,8 +727,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     @Override
     public IVariable makeVariable(int valueNumber) {
-      SymbolTable st = ir.getSymbolTable();
       if (doPrimitives) {
+        SymbolTable st = ir.getSymbolTable();
         if (st.isConstant(valueNumber)) {
           if (st.isBooleanConstant(valueNumber)) {
             return new TypeVariable(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
