@@ -114,11 +114,11 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        final InputStream fs = exclusionsFile.exists()
+        try (final InputStream fs = exclusionsFile.exists()
             ? new FileInputStream(exclusionsFile)
-            : FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName());
-
-        scope.setExclusions(new FileOfClasses(fs));
+            : FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName())) {
+          scope.setExclusions(new FileOfClasses(fs));
+        }
       }
 
     } finally {
