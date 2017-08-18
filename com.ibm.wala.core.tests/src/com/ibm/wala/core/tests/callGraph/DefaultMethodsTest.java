@@ -11,10 +11,13 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -78,5 +81,13 @@ public class DefaultMethodsTest extends WalaTestCase {
 
     // Check call from main to Test3.silly
     Assert.assertTrue("should have call site from main to Test3.silly", cg.getPossibleSites(mnode, ttnode).hasNext());
+    
+    // Check that IClass.getAllMethods() returns default methods #219.
+    TypeReference test1Type = TypeReference.findOrCreate(ClassLoaderReference.Application, "LdefaultMethods/DefaultMethods$Test1");
+    IClass test1Class = cha.lookupClass(test1Type);
+
+    Collection<IMethod> allMethods = test1Class.getAllMethods();
+    IMethod defaultMethod = test1Class.getMethod(t1m.getSelector());
+    Assert.assertTrue("Expecting default methods to show up in IClass.allMethods()", allMethods.contains(defaultMethod));
   }
 }
