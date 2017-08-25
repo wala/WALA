@@ -123,6 +123,6 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
         return new NonNullSingletonIterator<>(ifk);
       }
     }
-    return new NonNullSingletonIterator<>(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(getFieldNameType(F)), I));
+    return new NonNullSingletonIterator<>((PointerKey)ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(getFieldNameType(F)), I));
   }
 }
