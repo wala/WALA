@@ -50,7 +50,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 
@@ -70,7 +70,6 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Collection<InstanceKey> getPointsTo(PointerKey pk) throws IllegalArgumentException, UnimplementedError {
 
     if (pk == null) {
@@ -93,15 +92,16 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
       System.err.println(g.toString());
     }
 
-    Predicate iKeyFilter = new Predicate() {
-      @Override
-      public boolean test(Object o) {
-        return o instanceof InstanceKey;
-      }
-    };
-
     SlowDFSDiscoverTimeIterator<Object> dfs = new SlowDFSDiscoverTimeIterator<Object>(g, pk);
-    return Predicate.filter(dfs, iKeyFilter);
+    Collection<InstanceKey> keys = HashSetFactory.make();
+    while (dfs.hasNext()) {
+      Object o = dfs.next();
+      if (o instanceof InstanceKey) {
+        keys.add((InstanceKey) o);
+      }
+    }
+    
+    return keys;
   }
 
 }

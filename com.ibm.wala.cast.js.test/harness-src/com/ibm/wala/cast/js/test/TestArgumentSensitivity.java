@@ -46,7 +46,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);
 
     IClassHierarchy cha = JSCallGraphUtil.makeHierarchy(scope, loaders);
-    com.ibm.wala.cast.js.util.Util.checkForFrontEndErrors(cha);
+    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
     Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
     JSAnalysisOptions options = JSCallGraphUtil.makeOptions(scope, cha, roots);
 

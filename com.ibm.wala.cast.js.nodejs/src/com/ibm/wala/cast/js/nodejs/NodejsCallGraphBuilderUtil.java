@@ -80,7 +80,7 @@ public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 		CAstAnalysisScope scope = new CAstAnalysisScope(files, loaders, languages);
 
 		IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, language, null);
-		com.ibm.wala.cast.js.util.Util.checkForFrontEndErrors(cha);
+		com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
 
 		// Make Script Roots
 		Iterable<Entrypoint> roots = new JavaScriptEntryPoints(cha, loaders.getTheLoader());

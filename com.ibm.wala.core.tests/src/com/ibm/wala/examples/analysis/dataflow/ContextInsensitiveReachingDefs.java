@@ -104,7 +104,7 @@ public class ContextInsensitiveReachingDefs {
         }
       }
     }
-    return new ObjectArrayMapping<Pair<CGNode, Integer>>(putInstrs.toArray(new Pair[putInstrs.size()]));
+    return new ObjectArrayMapping<>(putInstrs.toArray(new Pair[putInstrs.size()]));
   }
 
   private class TransferFunctions implements ITransferFunctionProvider<BasicBlockInContext<IExplodedBasicBlock>, BitVectorVariable> {

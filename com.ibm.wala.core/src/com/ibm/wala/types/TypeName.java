@@ -329,7 +329,7 @@ public final class TypeName implements Serializable {
             result.append("&");
             break;
           default:
-            throw new UnsupportedOperationException(String.format("unexpected masked type-name component %X", masked));
+            throw new UnsupportedOperationException("unexpected masked type-name component " + masked);
           }
         }
       }

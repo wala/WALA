@@ -20,4 +20,4 @@ Export-Package: com.ibm.wala.cast.java.analysis.typeInference,
  com.ibm.wala.cast.java.translator,
  com.ibm.wala.cast.java.types
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

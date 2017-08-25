@@ -35,7 +35,6 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
-import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -287,7 +286,7 @@ public class CorrelationFinder {
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts_array, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
     try {
-      Util.checkForFrontEndErrors(cha);
+      com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
     } catch (WalaException e) {
       return Collections.emptyMap();
     }

@@ -20,7 +20,7 @@ Require-Bundle: com.ibm.wala.core,
  org.eclipse.jdt.launching,
  org.eclipse.e4.ui.workbench;bundle-version="1.2.2";resolution:=optional
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.ide.client,
  com.ibm.wala.ide.plugin,

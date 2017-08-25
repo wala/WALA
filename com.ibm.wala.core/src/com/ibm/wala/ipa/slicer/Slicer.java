@@ -302,7 +302,7 @@ public class Slicer {
 
     private final Collection<Statement> roots;
 
-    private final ISupergraph<Statement, PDG<?>> supergraph;
+    private final ISupergraph<Statement, PDG<? extends InstanceKey>> supergraph;
 
     private final SliceFunctions f;
 

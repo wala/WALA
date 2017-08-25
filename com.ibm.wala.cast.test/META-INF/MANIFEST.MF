@@ -12,5 +12,5 @@ Require-Bundle:
  com.ibm.wala.shrike,
  org.eclipse.core.runtime
 Export-Package: com.ibm.wala.cast.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 

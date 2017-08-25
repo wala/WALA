@@ -19,7 +19,7 @@ Require-Bundle: com.ibm.wala.shrike,
  org.eclipse.e4.core.di;bundle-version="1.2.0";resolution:=optional,
  org.junit;bundle-version="4.0.0"
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.examples.drivers,
  com.ibm.wala.ide.test,

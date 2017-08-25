@@ -76,6 +76,6 @@ Export-Package: .,
  com.ibm.wala.viz,
  com.ibm.wala.viz.viewer,
  com.ibm.wala.viz.viewer.images
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-BuddyPolicy: registered
 Bundle-ClassPath: .

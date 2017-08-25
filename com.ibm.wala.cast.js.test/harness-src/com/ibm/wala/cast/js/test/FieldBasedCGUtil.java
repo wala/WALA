@@ -31,7 +31,6 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
-import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
@@ -126,7 +125,7 @@ public class FieldBasedCGUtil {
 	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(JavaScriptLoaderFactory loaders, Module[] scripts, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws WalaException, CancelException  {
 		CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
 		IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
-		Util.checkForFrontEndErrors(cha);
+		com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
 		Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
 		IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
 		final FieldBasedCallGraphBuilder builder = builderType.fieldBasedCallGraphBuilderFactory(cha,
