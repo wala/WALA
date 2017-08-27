@@ -11,6 +11,5 @@
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.9.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.9.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/jcommander-1.64.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
