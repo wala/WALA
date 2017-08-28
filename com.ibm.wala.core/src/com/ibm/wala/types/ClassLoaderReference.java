@@ -43,11 +43,6 @@ public class ClassLoaderReference implements Serializable {
   public final static ClassLoaderReference Application = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"), Java, Extension);
 
   /**
-   * Canonical reference to source class loader
-   */
-  public final static ClassLoaderReference Source = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Source"), Java, Extension);
-
-  /**
    * A String which identifies this loader
    */
   private final Atom name;
