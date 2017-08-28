@@ -93,12 +93,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private PointerAnalysis<InstanceKey> pointerAnalysis;
 
   /**
-   * Meta-data regarding how pointers are modelled.
+   * Meta-data regarding how pointers are modeled.
    */
   private final PointerKeyFactory pointerKeyFactory;
 
   /**
-   * Meta-data regarding how instances are modelled.
+   * Meta-data regarding how instances are modeled.
    */
   private final InstanceKeyFactory instanceKeyFactory;
 
