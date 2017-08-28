@@ -247,7 +247,6 @@ public class ReflectionTest extends WalaTestCase {
     Assert.assertTrue(succNodes.isEmpty());
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void testReflect7() throws Exception {
     AnalysisScope scope = findOrCreateAnalysisScope();
