@@ -36,6 +36,8 @@ public class JavaPrimitiveType extends PrimitiveType {
 
   public static final PrimitiveType DOUBLE = makePrimitive(TypeReference.Double, 64);
 
+  public static final PrimitiveType VOID = makePrimitive(TypeReference.Void, 0);
+
   public static void init() {
     
   }
