@@ -258,8 +258,8 @@
                 </execution>
             </executions>
         </plugin>
-</plugins>
-</build>
+    </plugins>
+  </build>
   <pluginRepositories>
   <pluginRepository>
     <id>sonatype-public-repository</id>
