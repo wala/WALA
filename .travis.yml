@@ -26,3 +26,5 @@ cache:
   - directories:
       - $HOME/.m2
       - $TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib
+notifications:
+    slack: cunyponder:A8GuEoj0voEn2H7MJDL1eNji
