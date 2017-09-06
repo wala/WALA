@@ -123,5 +123,10 @@ public final class JdtPosition implements Position {
 	public int hashCode() {
 		return firstOffset + 12432*lastOffset;
 	}
+
+  @Override
+  public String getFileName() {
+    return this.eclipseFile.getName();
+  }
     
   }

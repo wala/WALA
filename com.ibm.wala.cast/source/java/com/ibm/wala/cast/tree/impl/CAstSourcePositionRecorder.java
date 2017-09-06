@@ -84,6 +84,10 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
   public String toString() {
 	  return "["+fl+":"+fc+"]->["+ll+":"+lc+"]";
 	}
+  @Override
+  public String getFileName() {
+    return file.getFile();
+  }
       });
   }
     

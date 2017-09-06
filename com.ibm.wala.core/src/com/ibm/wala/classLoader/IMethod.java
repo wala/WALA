@@ -115,6 +115,7 @@ public interface IMethod extends IMember, ContextItem {
 /** BEGIN Custom change: precise positions */
   
   public interface SourcePosition extends Comparable {
+    String getFileName();
     int getFirstLine();
     int getLastLine();
     int getFirstCol();

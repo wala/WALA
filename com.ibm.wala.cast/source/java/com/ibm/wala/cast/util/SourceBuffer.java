@@ -144,6 +144,10 @@ public class SourceBuffer {
   public Reader getReader() throws IOException { 
 	  return hack.getReader();
 	}
+  @Override
+  public String getFileName() {
+    return hack.getFileName();
+  }
       };
     }
     

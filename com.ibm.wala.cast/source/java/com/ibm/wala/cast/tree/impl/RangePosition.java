@@ -86,4 +86,9 @@ public class RangePosition extends AbstractSourcePosition implements Position {
   public Reader getReader() throws IOException {
     return new InputStreamReader(url.openStream());
   }
+
+  @Override
+  public String getFileName() {
+    return this.url.getFile();
+  }
 }

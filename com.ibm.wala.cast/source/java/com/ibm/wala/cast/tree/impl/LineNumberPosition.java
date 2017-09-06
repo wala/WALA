@@ -58,4 +58,9 @@ public class LineNumberPosition extends AbstractSourcePosition {
     nm = nm.substring(nm.lastIndexOf('/') + 1);
     return "[" + nm + ":"+lineNumber+"]";
   }
+
+  @Override
+  public String getFileName() {
+    return this.localFile.getFile();
+  }
 }
