@@ -104,7 +104,6 @@ public class AnnotationTest extends WalaTestCase {
   }
 
 
-  @SuppressWarnings("unchecked")
   @Test
   public void testClassAnnotations3() throws Exception {
 

@@ -38,7 +38,7 @@
 package foo.bar.hello.world;
 
 public class LoopsAndLabels {
-	@SuppressWarnings({ "cast", "unused" })
+	@SuppressWarnings("unused")
 	public static void main(String args[]) {
 
 		aaa: do {
