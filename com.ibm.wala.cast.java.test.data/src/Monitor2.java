@@ -9,6 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
 public class Monitor2 {
+  private static boolean randomIsolate() {
+    return Math.random() > .5;
+  }
+  
   int i = 0;
 
   public Monitor2() { }

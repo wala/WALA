@@ -3,9 +3,9 @@
 #include <strings.h>
 #include "Exceptions.h"
 #include "CAstWrapper.h"
+#include "launch.h"
 
 JavaVM *javaVM;
-
 JNIEnv *launch(char *classpath) {
    JavaVMOption jvmopt[2];
 
