@@ -75,8 +75,7 @@ private:
   jclass _jre;
   jmethodID _ctr;
   jmethodID _wrapper_ctr;
-  jmethodID _message;
-  
+
 public:
   Exceptions(JNIEnv *java_env, jmp_buf& c_env);
 
