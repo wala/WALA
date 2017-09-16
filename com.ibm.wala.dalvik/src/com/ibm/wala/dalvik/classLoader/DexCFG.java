@@ -350,7 +350,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
                                 if (!exceptionTypes.isEmpty()) {
                                     addExceptionalEdgeTo(b);
                                     exceptionTypes.clear();
-                                    caughtException = null;
+                                    assert caughtException == null;
                                 }
                             }
                             if (caughtException != null) {

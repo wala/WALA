@@ -18,5 +18,5 @@ Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.shrikeBT.tools,
  com.ibm.wala.shrikeCT,
  com.ibm.wala.sourcepos
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.ibm.wala.util

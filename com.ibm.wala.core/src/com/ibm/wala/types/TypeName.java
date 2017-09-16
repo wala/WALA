@@ -317,7 +317,8 @@ public final class TypeName implements Serializable {
       boolean isPrimitive = (dim==-1) || (dim&ElementMask)==PrimitiveMask;
       if (dim != -1) {
         for (int d = (dim&ElementMask) == PrimitiveMask? dim>>ElementBits: dim; d != 0; d>>=ElementBits) {
-          switch (d&ElementMask) {
+          final int masked = d&ElementMask;
+          switch (masked) {
           case ArrayMask:
             result.append("[");
             break;
@@ -327,6 +328,8 @@ public final class TypeName implements Serializable {
           case ReferenceMask:
             result.append("&");
             break;
+          default:
+            throw new UnsupportedOperationException("unexpected masked type-name component " + masked);
           }
         }
       }

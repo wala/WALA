@@ -816,6 +816,8 @@ public class ClosureExtractor extends CAstRewriterExt {
     case CAstNode.CALL:
     case CAstNode.NEW:
       return false;
+    default:
+      // fall through to generic handlers below
     }
     for(int i=0;i<node.getChildCount();++i)
       if(!noJumpsAndNoCalls(node.getChild(i)))

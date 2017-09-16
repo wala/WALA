@@ -433,7 +433,7 @@ public class Instantiator implements IInstantiator {
         if (isExcluded(cls)) {
             return new HashSet<>();
         }
-        return getTypes(T, Collections.EMPTY_SET);
+        return getTypes(T, Collections.<TypeReference>emptySet());
     }
 
     /**
@@ -513,7 +513,7 @@ public class Instantiator implements IInstantiator {
                 }
 
                 if ((inner.isInterface()) || (inner.isAbstract())) {
-                    final Set<TypeReference> innerTypes = getTypes(inner.getReference(), Collections.EMPTY_SET);
+                    final Set<TypeReference> innerTypes = getTypes(inner.getReference(), Collections.<TypeReference>emptySet());
                     for (TypeReference iT : innerTypes) {
                         TypeReference aT = TypeReference.findOrCreateArrayOf(iT);
                         for (int i = 1; i < dim; ++i) {

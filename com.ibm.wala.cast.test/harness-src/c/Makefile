@@ -16,7 +16,7 @@ CAST_OBJS = $(wildcard $(C_GENERATED)/*.o)
 default:	$(CAST_TEST_BIN)$(LIBPREFIX)xlator_test.$(DLLEXT)
 
 $(TEST_JNI_BRIDGE_HEADER):	$(CAST_TEST_BIN)com/ibm/wala/cast/test/TestNativeTranslator.class
-	$(JAVA_SDK)bin/javah -classpath "$(CAST_TEST_BIN)$(JAVAH_CLASS_PATH)" -d "$(JAVAH_GENERATED)" com.ibm.wala.cast.test.TestNativeTranslator
+	$(JAVA_HOME)/bin/javah -classpath "$(CAST_TEST_BIN)$(JAVAH_CLASS_PATH)" -d "$(JAVAH_GENERATED)" com.ibm.wala.cast.test.TestNativeTranslator
 
 $(C_GENERATED)/smoke.o:	$(TEST_JNI_BRIDGE_HEADER) smoke.cpp
 	$(CC) $(ALL_FLAGS) -o $@ -c smoke.cpp

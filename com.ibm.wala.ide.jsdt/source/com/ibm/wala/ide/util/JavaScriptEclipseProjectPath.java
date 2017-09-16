@@ -102,9 +102,13 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 			ILoader loader,
 			boolean includeSource, boolean cpeFromMainProject) {
 		IIncludePathEntry e = JavaScriptCore.getResolvedIncludepathEntry(entry);
-		switch (e.getEntryKind()) {
+		final int entryKind = e.getEntryKind();
+    switch (entryKind) {
 		case IIncludePathEntry.CPE_SOURCE:
 			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, e.getExclusionPatterns(), "js");
+			break;
+		default:
+			// do nothing
 		}
 	}
 

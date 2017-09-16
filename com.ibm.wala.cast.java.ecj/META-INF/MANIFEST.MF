@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java.ecj
 Bundle-Version: 1.4.4.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.core,
  org.eclipse.core.runtime,

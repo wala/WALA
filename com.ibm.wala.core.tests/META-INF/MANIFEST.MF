@@ -35,7 +35,7 @@ Export-Package: com.ibm.wala.core.tests.arraybounds,
  com.ibm.wala.examples.drivers,
  com.ibm.wala.examples.properties,
  com.ibm.wala.util.io
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin
 Eclipse-RegisterBuddy: com.ibm.wala.core, com.ibm.wala.core.testdata

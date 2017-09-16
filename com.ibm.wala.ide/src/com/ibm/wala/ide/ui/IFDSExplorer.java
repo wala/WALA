@@ -77,19 +77,7 @@ public class IFDSExplorer {
       System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
     }
 
-    String irFileName = null;
-    switch (DotUtil.getOutputType()) {
-    case PDF:
-      irFileName = "ir.pdf";
-      break;
-    case PS:
-    case EPS:
-      irFileName = "ir.ps";
-      break;
-    case SVG:
-      irFileName = "ir.svg";
-      break;
-    }
+    String irFileName = "ir." + DotUtil.getOutputType().suffix;
     String outputFile = scratchDirectory + File.separatorChar + irFileName;
     String dotFile = scratchDirectory + File.separatorChar + "ir.dt";
 

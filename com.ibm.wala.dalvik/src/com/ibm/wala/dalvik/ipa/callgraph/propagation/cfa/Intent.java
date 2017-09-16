@@ -138,8 +138,10 @@ public class Intent implements ContextItem, Comparable<Intent> {
                 explicit = Explicit.EXPLICIT;
                 break;
             case EXPLICIT:
-                
                 unbind();
+                break;
+            default:
+            	throw new UnsupportedOperationException(String.format("unexpected explicitness setting %s", explicit));
         }
     }
 
@@ -259,7 +261,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
 
     private static boolean isSystemService(Intent intent) {  
         assert (intent.action != null);
-        return (intent != null && intent.action != null && (intent.action.getVal(0) != 'L') && (intent.action.rIndex((byte) '/') < 0) && (intent.action.rIndex((byte) '.') < 0));
+        return (intent.action.getVal(0) != 'L') && (intent.action.rIndex((byte) '/') < 0) && (intent.action.rIndex((byte) '.') < 0);
     }
 
     /**

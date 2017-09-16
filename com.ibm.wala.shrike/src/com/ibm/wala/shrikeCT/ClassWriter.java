@@ -262,6 +262,8 @@ public class ClassWriter implements ClassConstants {
         case CONSTANT_Utf8:
           cachedCPEntries.put(cp.getCPUtf8(i), new Integer(i));
           break;
+        default:
+          throw new UnsupportedOperationException(String.format("unexpected constant-pool item type %s", t));
         }
       }
     }
@@ -763,8 +765,9 @@ public class ClassWriter implements ClassConstants {
         case CONSTANT_MethodHandle: {
           offset = reserveBuf(4);
           CWHandle handle = (CWHandle) item;
-          setUByte(buf, offset + 1, handle.getKind());
-          switch (handle.getKind()) {
+          final byte kind = handle.getKind();
+          setUByte(buf, offset + 1, kind);
+          switch (kind) {
           case REF_getStatic:
           case REF_getField:
           case REF_putField:
@@ -790,6 +793,8 @@ public class ClassWriter implements ClassConstants {
             setUShort(buf, offset + 2, x);
             break;
           }
+          default:
+            throw new UnsupportedOperationException(String.format("unexpected ref kind %s", kind));
           }
          break; 
         }

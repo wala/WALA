@@ -756,9 +756,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return b;
     } else {
       Node n = map.get(b.getReference());
-      if (n == null) {
-        assert n != null : "null n for " + b;
-      }
+      assert n != null : "null n for " + b;
       Set<IClass> superB;
       superB = getSuperclasses(b);
       IClass aa = a;

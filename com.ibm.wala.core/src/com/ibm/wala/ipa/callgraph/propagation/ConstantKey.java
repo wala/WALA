@@ -30,6 +30,7 @@ public final class ConstantKey<T> implements InstanceKey {
   public ConstantKey(T value, IClass valueClass) {
     this.value = value;
     this.valueClass = valueClass;
+    assert valueClass != null;
   }
 
   @Override

@@ -129,13 +129,13 @@ public abstract class FlowType<E extends ISSABasicBlock> {
     @SuppressWarnings("unused")
 	private boolean compareBlocks(BasicBlockInContext<E> a,
             BasicBlockInContext<E> b) {
+        if (null == a || null == b) {
+            return false;
+        }
+
         // delegate to the defined implementation, but only if it's true.
         if (a.equals(b)) {
             return true;
-        }
-
-        if (null == a || null == b) {
-            return false;
         }
 
         if (a.getNumber() != b.getNumber()) {

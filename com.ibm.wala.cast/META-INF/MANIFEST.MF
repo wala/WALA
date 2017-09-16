@@ -28,5 +28,5 @@ Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.util,
  org.apache.commons.io,
  org.apache.commons.io.input
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 

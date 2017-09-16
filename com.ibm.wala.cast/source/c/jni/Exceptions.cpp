@@ -13,6 +13,7 @@ Exceptions::Exceptions(JNIEnv *java_env, jmp_buf& c_env) :
 {
   _jre = java_env->FindClass("java/lang/RuntimeException");
   _ctr = java_env->GetMethodID(_jre, "<init>", "(Ljava/lang/String;)V");
+  _message = java_env->GetMethodID(_jre, "getMessage", "()Ljava/lang/String;");
   _wrapper_ctr = 
     java_env->GetMethodID(_jre, 
 			  "<init>", 
@@ -27,9 +28,13 @@ void Exceptions::throwException(const char *file_name, int line_number) {
   jthrowable real_ex = _java_env->ExceptionOccurred();
   _java_env->ExceptionClear();
 
-  char msg[strlen(file_name) + 1024];
+  jstring message = (jstring)
+    _java_env->CallObjectMethod(real_ex, _message);
+  const char *m = _java_env->GetStringUTFChars(message, false);
+  
+  char msg[strlen(file_name) + strlen(m) + 1024];
   memset(msg, 0, strlen(file_name) + 1024);
-  sprintf(msg, "exception at %s:%d", file_name, line_number);
+  sprintf(msg, "exception at %s:%d: %s", file_name, line_number, m);
   jstring java_message = _java_env->NewStringUTF(msg);
 
   jthrowable ex = (jthrowable)

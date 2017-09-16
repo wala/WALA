@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="WALA Eclipse Luna Target Platform" sequenceNumber="130">
+<?pde version="3.8"?><target name="WALA Eclipse Oxygen Target Platform" sequenceNumber="130">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>

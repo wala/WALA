@@ -16,7 +16,6 @@ public class Reflect3 {
 
   public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
     Class<?> c = Class.forName("java.util.Properties");
-    @SuppressWarnings("unchecked")
     Hashtable<Object, Object> h = (Hashtable<Object, Object>) c.newInstance();
     System.out.println(h.toString());
   }

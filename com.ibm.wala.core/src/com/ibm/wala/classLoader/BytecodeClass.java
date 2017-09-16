@@ -396,6 +396,12 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       for (IClass i : getDirectInterfaces()) {
         result.addAll(i.getAllMethods());
       }
+    } else {
+      // for non-interfaces, add default methods inherited from interfaces #219.
+      for (IClass i : this.getAllImplementedInterfaces())
+          for (IMethod m : i.getDeclaredMethods())
+              if (!m.isAbstract())
+                  result.add(m);
     }
     IClass s = getSuperclass();
     while (s != null) {

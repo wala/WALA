@@ -22,7 +22,6 @@ import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
-import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -45,7 +44,7 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 		URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
 		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
 		B.makeCallGraph(B.getOptions());
-	    Util.checkForFrontEndErrors(B.getClassHierarchy());
+	    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
 	}
 
 	public static void main(String[] args) {

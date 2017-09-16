@@ -44,6 +44,11 @@
   <dependencies>
     <dependency>
       <groupId>com.ibm.wala</groupId>
+      <artifactId>com.ibm.wala.util</artifactId>
+      <version>1.4.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.wala</groupId>
       <artifactId>com.ibm.wala.core</artifactId>
       <version>1.4.4-SNAPSHOT</version>
     </dependency>

@@ -392,11 +392,10 @@ public class AnalysisScope {
   }
 
   public String getJavaLibraryVersion() throws IllegalStateException {
-    JarFile rtJar = getRtJar();
-    if (rtJar == null) {
-      throw new IllegalStateException("cannot find runtime libraries");
-    }
-    try {
+    try (final JarFile rtJar = getRtJar()) {
+      if (rtJar == null) {
+        throw new IllegalStateException("cannot find runtime libraries");
+      }
       Manifest man = rtJar.getManifest();
       assert man != null : "runtime library has no manifest!";
       String result = man.getMainAttributes().getValue("Specification-Version");

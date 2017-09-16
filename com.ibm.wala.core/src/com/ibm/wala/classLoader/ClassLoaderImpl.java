@@ -316,8 +316,7 @@ public class ClassLoaderImpl implements IClassLoader {
       return null;
     }
     Map<String, Object> result = HashMapFactory.make();
-    try {
-      JarInputStream s = new JarInputStream(new ByteArrayInputStream(jarFileContents), false);
+    try (final JarInputStream s = new JarInputStream(new ByteArrayInputStream(jarFileContents), false)) {
       JarEntry entry = null;
       while ((entry = s.getNextJarEntry()) != null) {
         byte[] entryBytes = getEntryBytes(entrySizesForFile.get(entry.getName()), s);

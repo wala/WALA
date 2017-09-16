@@ -38,7 +38,6 @@ public class Switch1 {
     }
   }
 
-  @SuppressWarnings("incomplete-switch")
   public void testThree(String[] args) {
     char ch = '?';
     switch(Integer.parseInt(args[0])) {

@@ -59,9 +59,11 @@ public class DexModuleEntry implements ModuleEntry {
 
     private final ClassDef classDefItem;
     private final String className;
-
-    public DexModuleEntry(ClassDef cdefitems) {
+    private final DexFileModule container;
+    
+    public DexModuleEntry(ClassDef cdefitems, DexFileModule container) {
         classDefItem = cdefitems;
+        this.container = container;
         String temp =cdefitems.getType();
 //      className = temp;
         if (temp.endsWith(";"))
@@ -139,8 +141,8 @@ public class DexModuleEntry implements ModuleEntry {
     }
 
 	@Override
-	public Module getContainer() {
-		return asModule();
+	public DexFileModule getContainer() {
+		return container;
 	}
 
     @Override

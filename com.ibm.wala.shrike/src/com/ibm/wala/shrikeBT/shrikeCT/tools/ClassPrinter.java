@@ -194,7 +194,7 @@ public class ClassPrinter {
             int count = 0;
             for (int j = 0; j < map.length; j++) {
               String line2 = "      " + j + ": " + map[j];
-              if (line == null || line2 == null || !line2.substring(line2.indexOf(':')).equals(line.substring(line.indexOf(':')))) {
+              if (line == null || !line2.substring(line2.indexOf(':')).equals(line.substring(line.indexOf(':')))) {
                 if (count > 1) {
                   w.write(" (" + count + " times)\n");
                 } else if (count > 0) {

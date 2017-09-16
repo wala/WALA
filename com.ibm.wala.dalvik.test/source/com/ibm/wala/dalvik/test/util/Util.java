@@ -76,11 +76,15 @@ public class Util {
   
   public static URI[] androidLibs() {
     List<URI> libs = new ArrayList<>();
-    if (walaProperties != null && walaProperties.getProperty(ANDROID_RT_DEX_DIR) != null) {
+    if (System.getenv("ANDROID_BOOT_OAT") != null) {
+      libs.add(new File(System.getenv("ANDROID_CORE_OAT")).toURI());
+      libs.add(new File(System.getenv("ANDROID_BOOT_OAT")).toURI());
+   
+    } else if (walaProperties != null && walaProperties.getProperty(ANDROID_RT_DEX_DIR) != null) {
       for(File lib : new File(walaProperties.getProperty(ANDROID_RT_DEX_DIR)).listFiles(new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
-          return name.endsWith("dex") || name.endsWith("jar") || name.endsWith("apk");
+          return name.startsWith("boot") && name.endsWith("oat");
         } 
       })) {
         libs.add(lib.toURI());

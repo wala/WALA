@@ -69,6 +69,7 @@ import com.ibm.wala.util.io.TemporaryFile;
  * @author barjo
  */
 public class DexFileModule implements Module {
+	private final File f;
     private final DexFile dexfile;
     private final Collection<ModuleEntry> entries;
 
@@ -104,7 +105,8 @@ public class DexFileModule implements Module {
      */
     private DexFileModule(File f) throws IllegalArgumentException {    	
         try {
-            dexfile = DexFileFactory.loadDexFile(f, Opcodes.forApi(25));
+        		this.f = f;
+            dexfile = DexFileFactory.loadDexFile(f, Opcodes.forApi(24));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -113,7 +115,7 @@ public class DexFileModule implements Module {
         entries = new HashSet<>();
 
         for (ClassDef cdefitems : dexfile.getClasses()) {
-            entries.add(new DexModuleEntry(cdefitems));
+            entries.add(new DexModuleEntry(cdefitems, this));
         }
     }
 
@@ -122,6 +124,13 @@ public class DexFileModule implements Module {
      */
     public DexFile getDexFile() {
         return dexfile;
+    }
+
+    /**
+     * @return The DexFile associated to this module.
+     */
+    public File getFile() {
+        return f;
     }
 
     /*

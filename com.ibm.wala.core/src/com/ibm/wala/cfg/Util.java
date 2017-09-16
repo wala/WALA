@@ -159,7 +159,8 @@ public class Util {
    */
   public static <I, T extends IBasicBlock<I>> T resolveBranch(ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
-    switch ((ConditionalBranchInstruction.Operator) c.getOperator()) {
+    final ConditionalBranchInstruction.Operator operator = (ConditionalBranchInstruction.Operator) c.getOperator();
+    switch (operator) {
     case EQ:
       if (c1 == c2)
         return getTakenSuccessor(G, bb);
@@ -190,10 +191,9 @@ public class Util {
         return getTakenSuccessor(G, bb);
       else
         return getNotTakenSuccessor(G, bb);
+    default:
+      throw new UnsupportedOperationException(String.format("unexpected operator %s", operator));
     }
-
-    Assertions.UNREACHABLE();
-    return null;
   }
 
   /**

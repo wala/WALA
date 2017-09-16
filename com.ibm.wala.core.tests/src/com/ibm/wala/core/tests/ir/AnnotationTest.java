@@ -104,7 +104,6 @@ public class AnnotationTest extends WalaTestCase {
   }
 
 
-  @SuppressWarnings("unchecked")
   @Test
   public void testClassAnnotations3() throws Exception {
 
@@ -183,7 +182,7 @@ public class AnnotationTest extends WalaTestCase {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     harness.assertTrue(methodRefUnderTest.toString() + " not found", methodUnderTest != null);
     harness.assertTrue(methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
-    IBytecodeMethod<IInstruction> IBytecodeMethodUnderTest = (IBytecodeMethod<IInstruction>) methodUnderTest;
+    IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
 
     Collection<Annotation>[] parameterAnnotations = IBytecodeMethodUnderTest.getParameterAnnotations();
     harness.assertEquals(expected.length, parameterAnnotations.length);
