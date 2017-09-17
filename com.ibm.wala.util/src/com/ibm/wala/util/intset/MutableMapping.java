@@ -100,7 +100,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     if (I != null) {
       return I.intValue();
     }
-    map.put(o, new Integer(nextIndex));
+    map.put(o, nextIndex);
     if (nextIndex >= array.length) {
       Object[] old = array;
       array = new Object[2 * array.length];
@@ -159,7 +159,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
       throw new IllegalArgumentException("first element does not exist in map");
     }
     map.remove(a);
-    map.put(b, new Integer(i));
+    map.put(b, i);
     array[i] = b;
   }
 

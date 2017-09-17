@@ -37,9 +37,12 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -71,7 +74,7 @@ public class Util {
     }
     // create a memory buffer to which to dump the trace
     ByteArrayOutputStream traceDump = new ByteArrayOutputStream();
-    try (final PrintWriter w = new PrintWriter(traceDump)) {
+    try (final PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(traceDump, StandardCharsets.UTF_8)))) {
       thrown.printStackTrace(w);
     }
     return traceDump.toString();

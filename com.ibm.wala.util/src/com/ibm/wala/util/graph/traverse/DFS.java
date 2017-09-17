@@ -110,7 +110,7 @@ public class DFS {
     int i = 0;
     while (dfs.hasNext()) {
       T nxt = dfs.next();
-      order.put(nxt, new Integer(i++));
+      order.put(nxt, Integer.valueOf(i++));
       result.add(nxt);
     }
     return result;

@@ -63,7 +63,7 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
     if (other == null) {
       throw new IllegalArgumentException("other is null");
     }
-    B = B | other.B;
+    B = B || other.B;
   }
 
   public void set(boolean b) {

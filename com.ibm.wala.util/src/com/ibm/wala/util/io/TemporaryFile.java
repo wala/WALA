@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -56,7 +57,7 @@ public class TemporaryFile {
     try (final FileOutputStream output = new FileOutputStream(F)) {
 
       for(String input : inputs) {
-        output.write(input.getBytes());
+        output.write(input.getBytes(StandardCharsets.UTF_8));
       }
     }
 

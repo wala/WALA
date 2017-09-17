@@ -12,8 +12,10 @@ package com.ibm.wala.viz;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -164,7 +166,7 @@ public class DotUtil {
     }
     try {
       File f = new File(dotfile);
-      try (FileWriter fw = new FileWriter(f)) {
+      try (Writer fw = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)) {
         fw.write(dotStringBuffer.toString());
       }
       return f;
