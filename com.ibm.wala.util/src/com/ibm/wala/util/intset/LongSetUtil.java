@@ -27,7 +27,7 @@ public class LongSetUtil {
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
         Class<?> intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-        MutableLongSetFactory intSetFactory = (MutableLongSetFactory) intSetFactoryClass.newInstance();
+        MutableLongSetFactory intSetFactory = (MutableLongSetFactory) intSetFactoryClass.getDeclaredConstructor().newInstance();
         setDefaultLongSetFactory(intSetFactory);
       } catch (Exception e) {
         System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));

@@ -283,7 +283,7 @@ public class HeapTracer {
 	} else {
 	    Integer S = sizeMap.get(c);
 	    if (S == null) {
-		S = new Integer(computeSizeOf(o));
+		S = Integer.valueOf(computeSizeOf(o));
 		sizeMap.put(c, S);
 	    }
 	    return S.intValue();
@@ -660,13 +660,13 @@ public class HeapTracer {
 	public void registerObject(Object key, Object o) {
 	    Integer I = instanceCount.get(key);
 	    int newCount = (I == null) ? 1 : I.intValue() + 1;
-	    instanceCount.put(key, new Integer(newCount));
+	    instanceCount.put(key, Integer.valueOf(newCount));
 	    totalInstances++;
 
 	    I = sizeCount.get(key);
 	    int s = sizeOf(o);
 	    int newSizeCount = (I == null) ? s : I.intValue() + s;
-	    sizeCount.put(key, new Integer(newSizeCount));
+	    sizeCount.put(key, Integer.valueOf(newSizeCount));
 	    totalSize += s;
 	}
 

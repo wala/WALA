@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +38,7 @@ public class FileOfClasses extends SetOfClasses {
     if (input == null) {
       throw new IllegalArgumentException("null input");
     }
-    try (final BufferedReader is = new BufferedReader(new InputStreamReader(input))) {
+    try (final BufferedReader is = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
   
       StringBuffer regex = null;
       String line;
