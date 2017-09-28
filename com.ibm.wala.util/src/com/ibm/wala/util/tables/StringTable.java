@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 import com.ibm.wala.util.collections.SimpleVector;
@@ -108,7 +109,7 @@ public class StringTable extends Table<String> implements Cloneable {
     }
     StringTable result = new StringTable();
 
-    LineNumberReader reader = new LineNumberReader(new InputStreamReader(s));
+    LineNumberReader reader = new LineNumberReader(new InputStreamReader(s, StandardCharsets.UTF_8));
 
     // LineNumberReader reader = new LineNumberReader(new
     // InputStreamReader(new FileInputStream(f)));

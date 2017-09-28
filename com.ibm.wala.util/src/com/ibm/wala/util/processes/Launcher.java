@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -278,7 +279,7 @@ public abstract class Launcher {
       while (s.available() > 0) {
         byte[] data = new byte[s.available()];
         s.read(data);
-        p.print(new String(data));
+        p.print(new String(data, StandardCharsets.UTF_8));
       }
     } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)

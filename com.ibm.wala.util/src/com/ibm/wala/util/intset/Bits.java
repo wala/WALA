@@ -65,7 +65,7 @@ public class Bits {
    * Does an int literal val fit in bits bits?
    */
   public static boolean fits(int val, int bits) {
-    val = val >> bits - 1;
+    val = val >> (bits - 1);
     return (val == 0 || val == -1);
   }
 

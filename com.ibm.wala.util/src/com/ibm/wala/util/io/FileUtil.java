@@ -14,11 +14,13 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -183,7 +185,7 @@ public class FileUtil {
    * @throws IOException
    */
   public static void writeFile(File f, String content) throws IOException {
-    try (final FileWriter fw = new FileWriter(f)) {
+    try (final Writer fw = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)) {
       fw.append(content);
     }
   }

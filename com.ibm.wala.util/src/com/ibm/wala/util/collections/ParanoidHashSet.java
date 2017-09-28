@@ -78,11 +78,11 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     if (result) {
       nAdded++;
       int hc = arg0.hashCode();
-      Set<T> s = hcFreq.get(new Integer(hc));
+      Set<T> s = hcFreq.get(hc);
       if (s == null) {
         HashSet<T> h = new LinkedHashSet<>(1);
         h.add(arg0);
-        hcFreq.put(new Integer(hc), h);
+        hcFreq.put(hc, h);
       } else {
         if (s.size() == BAD_HC) {
           for (Iterator<T> it = s.iterator(); it.hasNext();) {
