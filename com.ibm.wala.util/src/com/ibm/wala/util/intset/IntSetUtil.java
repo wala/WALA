@@ -31,7 +31,7 @@ public class IntSetUtil {
       try {
         @SuppressWarnings("unchecked")
         Class<? extends MutableIntSetFactory<?>> intSetFactoryClass = (Class<? extends MutableIntSetFactory<?>>) Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-        MutableIntSetFactory<?> intSetFactory = intSetFactoryClass.getDeclaredConstructor().newInstance();
+        MutableIntSetFactory<?> intSetFactory = intSetFactoryClass.newInstance();
         setDefaultIntSetFactory(intSetFactory);
       } catch (Exception e) {
         System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));

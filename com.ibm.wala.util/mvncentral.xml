@@ -90,6 +90,7 @@
             <arg>-Xep:IterableAndIterator:OFF</arg>
             <arg>-Xep:AmbiguousMethodReference:OFF</arg>
             <arg>-Xep:ReferenceEquality:OFF</arg>
+            <arg>-Xep:ClassNewInstance:OFF</arg>
           </compilerArgs>
         </configuration>
         <dependencies>
