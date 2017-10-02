@@ -19,7 +19,6 @@ $(CAPA_JNI_XLATOR_HEADER):	$(DOMO_AST_BIN)com/ibm/wala/cast/ir/translator/Native
 	$(JAVA_HOME)/bin/javah -classpath "$(DOMO_AST_BIN)$(JAVAH_CLASS_PATH)" -d "$(JAVAH_GENERATED)" com.ibm.wala.cast.ir.translator.NativeTranslatorToCAst
 
 $(CAPA_OBJECTS): $(C_GENERATED)%.o:	%.cpp $(CAPA_JNI_HEADERS) bindir
-	echo $(CAPA_OBJECTS)
 	$(CC) $(ALL_FLAGS) -o $@ -c $<
 
 $(DOMO_AST_BIN)$(LIBPREFIX)cast.$(DLLEXT):	$(CAPA_OBJECTS)
