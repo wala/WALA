@@ -7,6 +7,6 @@
     <groupId>com.ibm.wala</groupId>
     <version>1.4.4-SNAPSHOT</version>
   </parent>
-  <artifactId>com.ibm.wala-feature</artifactId>
+  <artifactId>com.ibm.wala.tests_feature</artifactId>
   <packaging>eclipse-feature</packaging>
 </project>

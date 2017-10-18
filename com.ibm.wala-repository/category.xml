@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-    <feature id="com.ibm.wala-feature">
+    <feature id="com.ibm.wala_feature">
         <category name="main"/>
     </feature>
-    <feature id="com.ibm.wala-feature.source">
+    <feature id="com.ibm.wala_feature.source">
         <category name="main"/>
     </feature>
-    <feature id="com.ibm.wala.ide-feature">
+    <feature id="com.ibm.wala.ide_feature">
         <category name="main"/>
     </feature>
-    <feature id="com.ibm.wala.ide-feature.source">
+    <feature id="com.ibm.wala.ide_feature.source">
         <category name="main"/>
     </feature>
    <category-def name="main" label="Wala"/>
