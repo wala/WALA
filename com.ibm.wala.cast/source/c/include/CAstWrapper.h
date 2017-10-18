@@ -105,6 +105,9 @@ private:
   jmethodID codeSetLabelledGotoTarget;
   jobject callReference;
 
+  static bool initialized;
+  static void initialize(JNIEnv *java_env);
+  
 public:
 
 #define _INCLUDE_CONSTANTS 

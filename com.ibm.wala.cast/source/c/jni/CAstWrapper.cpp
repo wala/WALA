@@ -69,6 +69,11 @@ static const char *GlobalCls = XLATOR_PKG "AbstractGlobalEntity";
 CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator) 
   : java_ex(ex), env(env), xlator(xlator)
 {
+  if (!initialized) {
+    initialized = true;
+    initialize(env);
+  }
+  
   this->CAstNode = env->FindClass( __CNN );
   this->CAstInterface = env->FindClass( __CTN );
   this->HashSet = env->FindClass("java/util/HashSet");
