@@ -20,25 +20,8 @@ public abstract class NativeBridge {
 
   protected final CAst Ast;
 
-  protected static boolean isInitialized;
-
   protected NativeBridge(CAst Ast) {
     this.Ast = Ast;
   }
 
-  /**
-   * initialize the CAst native library
-   */
-  protected static native void initialize();
-
-  static {
-    isInitialized = false;
-    try {
-      //System.loadLibrary("cast");
-      initialize();
-      isInitialized = true;
-    } catch (Throwable e) {
-      // leave isInitialized as false
-    }
-  }
 }
