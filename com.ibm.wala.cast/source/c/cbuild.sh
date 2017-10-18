@@ -8,7 +8,7 @@ if (uname | grep -i "cygwin"); then
 	
 	cmd.exe /c "call \"$MSVC\\vcvarsall.bat\" $ARCH && make"
 else
-	make
+	make --quiet
 fi
 
 # Local variables:

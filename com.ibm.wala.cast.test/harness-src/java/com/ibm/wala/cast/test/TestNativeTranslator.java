@@ -24,6 +24,7 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public class TestNativeTranslator {
@@ -149,7 +150,7 @@ public class TestNativeTranslator {
   public void testNativeCAst() throws IOException {
     CAst Ast = new CAstImpl();
     
-    URL junk = TestNativeTranslator.class.getClassLoader().getResource("smoke_main");
+    URL junk = IR.class.getClassLoader().getResource("primordial.txt");
      
     SmokeXlator xlator = new SmokeXlator(Ast, junk);
     

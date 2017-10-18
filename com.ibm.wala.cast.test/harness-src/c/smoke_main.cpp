@@ -33,28 +33,40 @@ int main(int argc, char **argv) {
   char *buf = (char *)malloc((strlen(argv[1]) + 100) * sizeof(char));
   strcpy(buf, argv[1]);
 
-  printf("%s\n", buf);
+  printf("1: %s\n", buf);
   
-  JNIEnv *java_env = launch(buf);
+  JNIEnv *java_env = launch_jvm(buf);
+  
+  printf("2: %s\n", buf);
   
   jclass NativeTranslatorTest =
     java_env->FindClass("com/ibm/wala/cast/test/TestNativeTranslator");
   if (java_env->ExceptionCheck()) { die(java_env); }
 
+  printf("3: %s\n", buf);
+  
   jmethodID testInit =
     java_env->GetMethodID(NativeTranslatorTest, "<init>", "()V");
   if (java_env->ExceptionCheck()) { die(java_env); }
 
+  printf("4: %s\n", buf);
+  
   jobject test =
     java_env->NewObject(NativeTranslatorTest, testInit);
   if (java_env->ExceptionCheck()) { die(java_env); }
 
+  printf("5: %s\n", buf);
+  
   jmethodID testAst =
     java_env->GetMethodID(NativeTranslatorTest, "testNativeCAst", "()V");
   if (java_env->ExceptionCheck()) { die(java_env); }
   
+  printf("6: %s\n", buf);
+  
   java_env->CallVoidMethod(test, testAst);
   if (java_env->ExceptionCheck()) { die(java_env); }
+
+  printf("6: %s\n", buf);
 
   exit(0);
 }
