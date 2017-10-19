@@ -168,7 +168,7 @@ public class OfflineDynamicCallGraph {
 
     final ClassReader r = ci.getReader();
 
-    Map<Pair<String,Pair<String,String>>,MethodData> methods = HashMapFactory.make();
+    final Map<Pair<String,Pair<String,String>>,MethodData> methods = HashMapFactory.make();
     
     for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
       final MethodData d = ci.visitMethod(m);
@@ -242,14 +242,14 @@ public class OfflineDynamicCallGraph {
           if (extractCalls) {
             me.visitInstructions(new AddTracingToInvokes() {
               @Override
-              public void visitInvoke(IInvokeInstruction inv) {
+              public void visitInvoke(final IInvokeInstruction inv) {
                 if (inv.getMethodName().equals("<init>") || (r.getAccessFlags()&Constants.ACC_INTERFACE) != 0) {
                   super.visitInvoke(inv);
                 } else {
                   this.replaceWith(new MethodEditor.Patch() {                    
                     @Override
-                    public void emitTo(Output w) {
-                      String methodSignature = inv.getInvocationCode().hasImplicitThis()?
+                    public void emitTo(final Output w) {
+                      final String methodSignature = inv.getInvocationCode().hasImplicitThis()?
                           "(" + inv.getClassType() + inv.getMethodSignature().substring(1):
                           inv.getMethodSignature();
                       Pair<String,Pair<String,String>> key = Pair.make(inv.getClassType(), Pair.make(inv.getMethodName(), methodSignature));
