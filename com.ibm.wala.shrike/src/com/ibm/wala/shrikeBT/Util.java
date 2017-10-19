@@ -205,7 +205,7 @@ public final class Util {
    * 
    * @throws IllegalArgumentException if type == null
    */
-  static int getParamsCount(String type) throws IllegalArgumentException {
+  public static int getParamsCount(String type) throws IllegalArgumentException {
     if (type == null || type.length() < 2) {
       throw new IllegalArgumentException("invalid type: " + type);
     }

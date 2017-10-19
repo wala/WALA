@@ -47,6 +47,10 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
   public ClassHierarchyStore() {
   }
 
+  public boolean containsClass(String cl) {
+    return contents.containsKey(cl);
+  }
+  
   /**
    * Append some class information to the store.
    * 

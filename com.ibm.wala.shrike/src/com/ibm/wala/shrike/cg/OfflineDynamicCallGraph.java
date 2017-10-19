@@ -16,12 +16,15 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Map;
 
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
@@ -40,6 +43,7 @@ import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.ConstantPoolParser;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.config.SetOfClasses;
 
@@ -58,261 +62,332 @@ import com.ibm.wala.util.config.SetOfClasses;
  * @since 10/18
  */
 public class OfflineDynamicCallGraph {
-	private final static boolean disasm = true;
-	private final static boolean verify = true;
+  private static class AddTracingToInvokes extends MethodEditor.Visitor {
+    @Override
+    public void visitInvoke(IInvokeInstruction inv) {
+      final String calleeClass = inv.getClassType();
+      final String calleeMethod = inv.getMethodName() + inv.getMethodSignature();
+      addInstructionExceptionHandler(/*"java.lang.Throwable"*/null, new MethodEditor.Patch() {
+        @Override
+        public void emitTo(MethodEditor.Output w) {
+          w.emit(Util.makeInvoke(runtime, "pop", new Class[] {}));
+          w.emit(ThrowInstruction.make(true));
+        }
+      });
+      insertBefore(new MethodEditor.Patch() {
+        @Override
+        public void emitTo(MethodEditor.Output w) {
+          w.emit(ConstantInstruction.makeString(calleeClass));
+          w.emit(ConstantInstruction.makeString(calleeMethod));
+          // target unknown
+          w.emit(Util.makeGet(runtime, "NULL_TAG"));
+          // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+          w.emit(Util.makeInvoke(runtime, "addToCallStack", new Class[] {String.class, String.class, Object.class}));
+        }
+      });
+      insertAfter(new MethodEditor.Patch() {
+        @Override
+        public void emitTo(MethodEditor.Output w) {
+          w.emit(Util.makeInvoke(runtime, "pop", new Class[] {}));
+        }
+      });
+    }
+  }
 
-	private static boolean patchExits = true;
-	private static boolean patchCalls = false;
-	
-	private static Class<?> runtime = Runtime.class;
-	
-	private static SetOfClasses filter;
-	
-	private static ClassHierarchyStore cha = new ClassHierarchyStore();
-	
-	public static void main(String[] args) throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
-	  OfflineInstrumenter instrumenter;
-	  ClassInstrumenter ci;
-	  try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
+  private final static boolean disasm = true;
+  private final static boolean verify = true;
 
-	    for(int i = 0; i < args.length - 1; i++) {
-	      if ("--runtime".equals(args[i])) {
-		runtime = Class.forName(args[i+1]);
-	      } else if ("--exclusions".equals(args[i])) {
-		filter = new FileOfClasses(new FileInputStream(args[i+1]));
-	      } else if ("--dont-patch-exits".equals(args[i])) {
-		patchExits = false;
-	      } else if ("--patch-calls".equals(args[i])) {
-		patchCalls = true;
-	      } else if ("--rt-jar".equals(args[i])) {
-		System.err.println("using " + args[i+1] + " as stdlib");
-		OfflineInstrumenter libReader = new OfflineInstrumenter();
-		libReader.addInputJar(new File(args[i+1]));
-		while ((ci = libReader.nextClass()) != null) {
-		  CTUtils.addClassToHierarchy(cha, ci.getReader());
-		}
-	      }
-	    }
+  private static boolean patchExits = true;
+  private static boolean patchCalls = false;
+  private static boolean extractCalls = true;
 
-	    instrumenter = new OfflineInstrumenter();
-	    args = instrumenter.parseStandardArgs(args);
+  private static Class<?> runtime = Runtime.class;
 
-	    instrumenter.setPassUnmodifiedClasses(true);
+  private static SetOfClasses filter;
 
-	    instrumenter.beginTraversal();
-	    while ((ci = instrumenter.nextClass()) != null) {
-	      CTUtils.addClassToHierarchy(cha, ci.getReader());
-	    }
+  private static ClassHierarchyStore cha = new ClassHierarchyStore();
 
-	    instrumenter.setClassHierarchyProvider(cha);
+  public static void main(String[] args) throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
+    OfflineInstrumenter instrumenter;
+    ClassInstrumenter ci;
+    try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
 
-	    instrumenter.beginTraversal();
-	    while ((ci = instrumenter.nextClass()) != null) {
-	      ClassWriter cw = doClass(ci, w);
-	      if (cw != null) {
-		instrumenter.outputModifiedClass(ci, cw);
-	      }
-	    }
-	  }
+      for(int i = 0; i < args.length; i++) {
+        if ("--runtime".equals(args[i])) {
+          runtime = Class.forName(args[i+1]);
+        } else if ("--exclusions".equals(args[i])) {
+          filter = new FileOfClasses(new FileInputStream(args[i+1]));
+        } else if ("--dont-patch-exits".equals(args[i])) {
+          patchExits = false;
+        } else if ("--patch-calls".equals(args[i])) {
+          patchCalls = true;
+        } else if ("--rt-jar".equals(args[i])) {
+          System.err.println("using " + args[i+1] + " as stdlib");
+          OfflineInstrumenter libReader = new OfflineInstrumenter();
+          libReader.addInputJar(new File(args[i+1]));
+          while ((ci = libReader.nextClass()) != null) {
+            CTUtils.addClassToHierarchy(cha, ci.getReader());
+          }
+        }
+      }
 
-	  instrumenter.close();
-	}
+      instrumenter = new OfflineInstrumenter();
+      args = instrumenter.parseStandardArgs(args);
 
-	static ClassWriter doClass(final ClassInstrumenter ci, Writer w) throws InvalidClassFileException, IOException, FailureException {
-		final String className = ci.getReader().getName();
+      instrumenter.setPassUnmodifiedClasses(true);
+
+      instrumenter.beginTraversal();
+      while ((ci = instrumenter.nextClass()) != null) {
+        CTUtils.addClassToHierarchy(cha, ci.getReader());
+      }
+
+      instrumenter.setClassHierarchyProvider(cha);
+
+      instrumenter.beginTraversal();
+      while ((ci = instrumenter.nextClass()) != null) {
+        ClassWriter cw = doClass(ci, w);
+        if (cw != null) {
+          instrumenter.outputModifiedClass(ci, cw);
+        }
+      }
+    }
+
+    instrumenter.close();
+  }
+
+  static ClassWriter doClass(final ClassInstrumenter ci, Writer w) throws InvalidClassFileException, IOException, FailureException {
+    final String className = ci.getReader().getName();
     if (filter != null && filter.contains(className)) {
       return null;
     }
-    
+
     if (disasm) {
       w.write("Class: " + className + "\n");
       w.flush();
     }
+
+    final ClassReader r = ci.getReader();
+
+    Map<Pair<String,Pair<String,String>>,MethodData> methods = HashMapFactory.make();
     
-		final ClassReader r = ci.getReader();
-		
-		for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
-			final MethodData d = ci.visitMethod(m);
+    for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
+      final MethodData d = ci.visitMethod(m);
 
-			// d could be null, e.g., if the method is abstract or native
-			if (d != null) {
-		    if (filter != null && filter.contains(className + "." + ci.getReader().getMethodName(m))) {
-		      return null;
-		    }
+      // d could be null, e.g., if the method is abstract or native
+      if (d != null) {
+        if (filter != null && filter.contains(className + "." + ci.getReader().getMethodName(m))) {
+          return null;
+        }
 
-				if (disasm) {
-	        w.write("Instrumenting " + ci.getReader().getMethodName(m) + " " + ci.getReader().getMethodType(m) + ":\n");
-					w.write("Initial ShrikeBT code:\n");
-					(new Disassembler(d)).disassembleTo(w);
-					w.flush();
-				}
+        if (disasm) {
+          w.write("Instrumenting " + ci.getReader().getMethodName(m) + " " + ci.getReader().getMethodType(m) + ":\n");
+          w.write("Initial ShrikeBT code:\n");
+          (new Disassembler(d)).disassembleTo(w);
+          w.flush();
+        }
 
-				if (verify) {
-					Verifier v = new Verifier(d);
-					// v.setClassHierarchy(cha);
-					v.verify();
-				}
+        if (verify) {
+          Verifier v = new Verifier(d);
+          // v.setClassHierarchy(cha);
+          v.verify();
+        }
 
-				final MethodEditor me = new MethodEditor(d);
-				me.beginPass();
-			
-				final String theClass = r.getName();
-				final String theMethod = r.getMethodName(m).concat(r.getMethodType(m));
-				final boolean isConstructor = theMethod.contains("<init>");
-				final boolean nonStatic = !java.lang.reflect.Modifier.isStatic(r.getMethodAccessFlags(m));
+        final MethodEditor me = new MethodEditor(d);
+        me.beginPass();
 
-				me.insertAtStart(new MethodEditor.Patch() {
-				  @Override
+        final String theClass = r.getName();
+        final String theMethod = r.getMethodName(m).concat(r.getMethodType(m));
+        final boolean isConstructor = theMethod.contains("<init>");
+        final boolean nonStatic = !java.lang.reflect.Modifier.isStatic(r.getMethodAccessFlags(m));
+
+        if (patchExits) {
+          me.addMethodExceptionHandler(null, new MethodEditor.Patch() { 
+            @Override
+            public void emitTo(Output w) {
+              w.emit(ConstantInstruction.makeString(theClass));
+              w.emit(ConstantInstruction.makeString(theMethod));
+              //if (nonStatic)
+              //  w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
+              //else
+              w.emit(Util.makeGet(runtime, "NULL_TAG"));
+              // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+              w.emit(ConstantInstruction.make(1)); // true
+              w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
+              w.emit(ThrowInstruction.make(false));
+            }
+          });
+
+          me.visitInstructions(new MethodEditor.Visitor() {
+            @Override
+            public void visitReturn(ReturnInstruction instruction) {
+              insertBefore(new MethodEditor.Patch() {
+                @Override
+                public void emitTo(MethodEditor.Output w) {
+                  w.emit(ConstantInstruction.makeString(theClass));
+                  w.emit(ConstantInstruction.makeString(theMethod));
+                  if (nonStatic)
+                    w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
+                  else
+                    w.emit(Util.makeGet(runtime, "NULL_TAG"));
+                  // w.emit(ConstantInstruction.make(Constants.TYPE, null));
+                  w.emit(ConstantInstruction.make(0)); // false
+                  w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
+                }
+              });
+            }
+          });
+        }
+
+        if (patchCalls) {
+          if (extractCalls) {
+            me.visitInstructions(new AddTracingToInvokes() {
+              @Override
+              public void visitInvoke(IInvokeInstruction inv) {
+                if (inv.getMethodName().equals("<init>") || (r.getAccessFlags()&Constants.ACC_INTERFACE) != 0) {
+                  super.visitInvoke(inv);
+                } else {
+                  this.replaceWith(new MethodEditor.Patch() {                    
+                    @Override
+                    public void emitTo(Output w) {
+                      String methodSignature = inv.getInvocationCode().hasImplicitThis()?
+                          "(" + inv.getClassType() + inv.getMethodSignature().substring(1):
+                          inv.getMethodSignature();
+                      Pair<String,Pair<String,String>> key = Pair.make(inv.getClassType(), Pair.make(inv.getMethodName(), methodSignature));
+                      if (! methods.containsKey(key)) {
+                        MethodData trampoline = ci.createEmptyMethodData("$shrike$trampoline$" + methods.size(), methodSignature, Constants.ACC_STATIC|Constants.ACC_PRIVATE);
+                        methods.put(key,  trampoline);
+                        MethodEditor me = new MethodEditor(trampoline);
+                        me.beginPass();
+                        me.insertAtStart(new MethodEditor.Patch() {
+                          @Override
+                          public void emitTo(MethodEditor.Output w) {
+                            String[] types = Util.getParamsTypes(null, methodSignature);
+                            for(int i = 0, local = 0; i < types.length; i++) {
+                              String type = types[i];
+                              if ("B".equals(type) || "C".equals(type) || "S".equals(type) || "Z".equals(type)) {
+                                type = "I";
+                              }
+                              w.emit(LoadInstruction.make(type, local));
+                              if ("J".equals(type) || "D".equals(type)) {
+                                local += 2;
+                              } else {
+                                local++;
+                              }
+                            }
+                            Dispatch mode = (Dispatch)inv.getInvocationCode();
+                            w.emit(InvokeInstruction.make(inv.getMethodSignature(), inv.getClassType(), inv.getMethodName(), mode));
+                          }
+                        });
+                        me.applyPatches();
+                        me.endPass();
+
+                        me.beginPass();
+                        me.visitInstructions(new AddTracingToInvokes());
+                        me.applyPatches();
+                        me.endPass();
+
+                        System.err.println(Arrays.toString(me.getInstructions()));
+
+                        if (verify) {
+                          Verifier v = new Verifier(trampoline);
+                          // v.setClassHierarchy(cha);
+                          try {
+                            v.verify();
+                          } catch (FailureException e) {
+                            throw new RuntimeException(e);
+                          }
+                        }
+                      }
+                      
+                      MethodData mt = methods.get(key);
+                      w.emit(InvokeInstruction.make(mt.getSignature(), mt.getClassType(), mt.getName(), Dispatch.STATIC));
+                    }
+                  });
+                }
+              }
+            });				    
+          } else {
+            me.visitInstructions(new AddTracingToInvokes());
+          }
+        }
+
+        me.insertAtStart(new MethodEditor.Patch() {
+          @Override
           public void emitTo(MethodEditor.Output w) {
             w.emit(ConstantInstruction.makeString(theClass));
-				    w.emit(ConstantInstruction.makeString(theMethod));
-				    if (nonStatic && !isConstructor)
-				      w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-				    else
+            w.emit(ConstantInstruction.makeString(theMethod));
+            if (nonStatic && !isConstructor)
+              w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
+            else
               w.emit(Util.makeGet(runtime, "NULL_TAG"));
-				      // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-				    w.emit(Util.makeInvoke(runtime, "execution", new Class[] {String.class, String.class, Object.class}));
-				  }
-				});
+            // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+            w.emit(Util.makeInvoke(runtime, "execution", new Class[] {String.class, String.class, Object.class}));
+          }
+        });
 
-				if (patchExits) {
-				  me.addMethodExceptionHandler(null, new MethodEditor.Patch() { 
-				    @Override
-				    public void emitTo(Output w) {
-				      w.emit(ConstantInstruction.makeString(theClass));
-				      w.emit(ConstantInstruction.makeString(theMethod));
-				      //if (nonStatic)
-				      //  w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-				      //else
-				      w.emit(Util.makeGet(runtime, "NULL_TAG"));
-				      // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-				      w.emit(ConstantInstruction.make(1)); // true
-				      w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
-				      w.emit(ThrowInstruction.make(false));
-				    }
-				  });
+        // this updates the data d
+        me.applyPatches();
 
-				  me.visitInstructions(new MethodEditor.Visitor() {
-				    @Override
-				    public void visitReturn(ReturnInstruction instruction) {
-				      insertBefore(new MethodEditor.Patch() {
-				        @Override
-				        public void emitTo(MethodEditor.Output w) {
-				          w.emit(ConstantInstruction.makeString(theClass));
-				          w.emit(ConstantInstruction.makeString(theMethod));
-				          if (nonStatic)
-				            w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-				          else
-				            w.emit(Util.makeGet(runtime, "NULL_TAG"));
-				          // w.emit(ConstantInstruction.make(Constants.TYPE, null));
-				          w.emit(ConstantInstruction.make(0)); // false
-				          w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
-				        }
-				      });
-				    }
-				  });
-				}
+        me.endPass();
 
-				if (patchCalls) {
-				  me.visitInstructions(new MethodEditor.Visitor() {
+        if (disasm) {
+          w.write("Final ShrikeBT code:\n");
+          (new Disassembler(d)).disassembleTo(w);
+          w.flush();
+        }
 
-				    @Override
-				    public void visitInvoke(IInvokeInstruction inv) {
-				      final String calleeClass = inv.getClassType();
-				      final String calleeMethod = inv.getMethodName() + inv.getMethodSignature();
-				      addInstructionExceptionHandler(/*"java.lang.Throwable"*/null, new MethodEditor.Patch() {
-				        @Override
-				        public void emitTo(MethodEditor.Output w) {
-				          w.emit(ConstantInstruction.makeString(calleeClass));
-				          w.emit(ConstantInstruction.makeString(calleeMethod));
-				          w.emit(Util.makeInvoke(runtime, "pop", new Class[] {String.class, String.class}));
-				          w.emit(ThrowInstruction.make(true));
-				        }
-				      });
-				      insertBefore(new MethodEditor.Patch() {
-				        @Override
-				        public void emitTo(MethodEditor.Output w) {
-				          w.emit(ConstantInstruction.makeString(calleeClass));
-				          w.emit(ConstantInstruction.makeString(calleeMethod));
-				          // target unknown
-				          w.emit(Util.makeGet(runtime, "NULL_TAG"));
-				          // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-				          w.emit(Util.makeInvoke(runtime, "addToCallStack", new Class[] {String.class, String.class, Object.class}));
-				        }
-				      });
-				      insertAfter(new MethodEditor.Patch() {
-				        @Override
-				        public void emitTo(MethodEditor.Output w) {
-				          w.emit(ConstantInstruction.makeString(calleeClass));
-				          w.emit(ConstantInstruction.makeString(calleeMethod));
-				          w.emit(Util.makeInvoke(runtime, "pop", new Class[] {String.class, String.class}));
-				        }
-				      });
-				    }
-				  });
-				}
-				
-				// this updates the data d
-				me.applyPatches();
-
-				if (disasm) {
-					w.write("Final ShrikeBT code:\n");
-					(new Disassembler(d)).disassembleTo(w);
-					w.flush();
-				}
-
-				if (verify) {
-					Verifier v = new Verifier(d);
+        if (verify) {
+          Verifier v = new Verifier(d);
           // v.setClassHierarchy(cha);
-					v.verify();
-				}
-			}
-		}
+          v.verify();
+        }
+      }
+    }
 
-		if (ci.isChanged()) {
-		  ClassWriter cw = new ClassWriter() {
-		    private final Map<Object, Integer> entries = HashMapFactory.make();
-		    
-		    {
-		      ConstantPoolParser p = r.getCP();
-		      for(int i = 1; i < p.getItemCount(); i++) {
-		        final byte itemType = p.getItemType(i);
+    if (ci.isChanged()) {
+      ClassWriter cw = new ClassWriter() {
+        private final Map<Object, Integer> entries = HashMapFactory.make();
+
+        {
+          ConstantPoolParser p = r.getCP();
+          for(int i = 1; i < p.getItemCount(); i++) {
+            final byte itemType = p.getItemType(i);
             switch (itemType) {
-		        case CONSTANT_Integer:
-		          entries.put(new Integer(p.getCPInt(i)), i);
-		          break;
-		        case CONSTANT_Long:
+            case CONSTANT_Integer:
+              entries.put(new Integer(p.getCPInt(i)), i);
+              break;
+            case CONSTANT_Long:
               entries.put(new Long(p.getCPLong(i)), i);
               break;
-		        case CONSTANT_Float:
+            case CONSTANT_Float:
               entries.put(new Float(p.getCPFloat(i)), i);
               break;
-		        case CONSTANT_Double:
+            case CONSTANT_Double:
               entries.put(new Double(p.getCPDouble(i)), i);
               break;
-		        case CONSTANT_Utf8:
-		          entries.put(p.getCPUtf8(i), i);
-		          break;
-		        case CONSTANT_String:
+            case CONSTANT_Utf8:
+              entries.put(p.getCPUtf8(i), i);
+              break;
+            case CONSTANT_String:
               entries.put(new CWStringItem(p.getCPString(i), CONSTANT_String), i);
               break;
-		        case CONSTANT_Class:
+            case CONSTANT_Class:
               entries.put(new CWStringItem(p.getCPClass(i), CONSTANT_Class), i);
               break;
             default:
-							// do nothing
-		        }
-		      }
-		    }
-		    
-		    private int findExistingEntry(Object o) {
-		      if (entries.containsKey(o)) {
-		        return entries.get(o);
-		      } else {
-		        return -1;
-		      }
-		    }
-		    
+              // do nothing
+            }
+          }
+        }
+
+        private int findExistingEntry(Object o) {
+          if (entries.containsKey(o)) {
+            return entries.get(o);
+          } else {
+            return -1;
+          }
+        }
+
         @Override
         protected int addCPEntry(Object o, int size) {
           int entry = findExistingEntry(o);
@@ -322,13 +397,21 @@ public class OfflineDynamicCallGraph {
             return super.addCPEntry(o, size);
           }
         }
-		  };
-			ci.emitClass(cw);
-			return cw;
-		
-		} else {
-		  return null;
-		}
-	}
+      };
+
+      ci.emitClass(cw);
+
+      if (patchCalls && extractCalls) {
+        for(MethodData trampoline : methods.values()) {
+          CTUtils.compileAndAddMethodToClassWriter(trampoline, cw, null);
+        }
+      }
+
+      return cw;
+
+    } else {
+      return null;
+    }
+  }
 
 }

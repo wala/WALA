@@ -134,10 +134,12 @@ public class Runtime {
             if (stack.length > 2) {
               // frames: Runtime.execution(0), callee(1), caller(2)
               StackTraceElement callerFrame = stack[2];
-              if (! caller.contains(callerFrame.getMethodName()) ||
-                  ! caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
-                runtime.handleCallback.callback(stack, klass, method, receiver);
-                break checkValid;
+              if (!callerFrame.getMethodName().startsWith("$")) {
+                if (! caller.contains(callerFrame.getMethodName())||
+                    ! caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
+                  runtime.handleCallback.callback(stack, klass, method, receiver);
+                  break checkValid;
+                }
               }
             }
           }

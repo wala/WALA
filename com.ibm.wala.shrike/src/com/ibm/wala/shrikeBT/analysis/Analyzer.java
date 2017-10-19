@@ -733,9 +733,6 @@ public class Analyzer {
         
         int[] targets = instr.getBranchTargets();
         for (int j = 0; j < targets.length; j++) {
-          if (targets[j] == 29 && classType.contains("MetaClassImpl;") && signature.contains("(Ljava/lang/String;Lorg/codehaus/groovy/reflection/CachedClass;)")) {
-              System.err.println("got here");
-          }
           if (mergeTypes(targets[j], curStack, curStackSize, curLocals, curLocalsSize[0], path)) {
             computeTypes(targets[j], visitor, makeTypesAt, path);
           }

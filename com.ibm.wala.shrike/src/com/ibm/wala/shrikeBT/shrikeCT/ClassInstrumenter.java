@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.ConstantPoolReader;
-import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.Instruction;
@@ -162,7 +161,11 @@ final public class ClassInstrumenter {
   public MethodData createEmptyMethodData(String name, String sig, int access) {
     // Instruction[] instructions=new Instruction[0];
     Instruction[] instructions = new Instruction[1];
-    instructions[0] = ReturnInstruction.make(Constants.TYPE_void);
+    String type = Util.getReturnType(sig);
+    if ("C".equals(type) || "B".equals(type) || "Z".equals(type) || "S".equals(type)) {
+      type = "I";
+    }
+    instructions[0] = ReturnInstruction.make(type);
     ExceptionHandler[][] handlers = new ExceptionHandler[instructions.length][];
     Arrays.fill(handlers, noHandlers);
     int[] i2b = new int[instructions.length];
