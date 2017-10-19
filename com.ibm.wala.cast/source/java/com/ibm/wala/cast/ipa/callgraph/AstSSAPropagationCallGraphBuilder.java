@@ -304,7 +304,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {
     if (node.getMethod() instanceof AstMethod) {
       // uses in nested functions are interesting
-      IntSet uses = ((AstIRFactory<?>.AstIR) node.getIR()).lexicalInfo().getAllExposedUses();
+      IntSet uses = ((AstIRFactory.AstIR) node.getIR()).lexicalInfo().getAllExposedUses();
       if (uses.contains(vn)) {
         return false;
       }
@@ -739,7 +739,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     private void addUpwardFunargConstraints(PointerKey lhs, String name, String definer, CGNode definingNode) {
       discoveredUpwardFunargs.add(lhs);
 
-      LexicalInformation LI = ((AstIRFactory<?>.AstIR) definingNode.getIR()).lexicalInfo();
+      LexicalInformation LI = ((AstIRFactory.AstIR) definingNode.getIR()).lexicalInfo();
       Pair<String, String>[] names = LI.getExposedNames();
       for (int i = 0; i < names.length; i++) {
         if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {

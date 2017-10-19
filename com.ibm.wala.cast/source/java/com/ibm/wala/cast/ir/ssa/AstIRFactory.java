@@ -70,7 +70,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     }
   }
 
-  public class AstIR extends IR {
+  public static class AstIR extends IR {
     private final LexicalInformation lexicalInfo;
     
     private final SSA2LocalMap localMap;
@@ -88,7 +88,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
         }
     }
 
-    private void setupCatchTypes(SSACFG cfg, Map<IBasicBlock<SSAInstruction>, TypeReference[]> map) {
+    private static void setupCatchTypes(SSACFG cfg, Map<IBasicBlock<SSAInstruction>, TypeReference[]> map) {
       for(Entry<IBasicBlock<SSAInstruction>, TypeReference[]> e : map.entrySet()) {
         if (e.getKey().getNumber() != -1) {
           ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(e.getKey().getNumber());
