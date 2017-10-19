@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Map;
 
 import com.ibm.wala.shrikeBT.ConstantInstruction;
@@ -285,8 +284,6 @@ public class OfflineDynamicCallGraph {
                         me.visitInstructions(new AddTracingToInvokes());
                         me.applyPatches();
                         me.endPass();
-
-                        System.err.println(Arrays.toString(me.getInstructions()));
 
                         if (verify) {
                           Verifier v = new Verifier(trampoline);
