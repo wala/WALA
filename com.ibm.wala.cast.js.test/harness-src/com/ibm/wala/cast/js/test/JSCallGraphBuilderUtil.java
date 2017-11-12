@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.junit.Assert;
 
@@ -52,7 +53,6 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.FileProvider;
 
 /**
@@ -169,11 +169,11 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return CG;
   }
 
-  public static JSCFABuilder makeHTMLCGBuilder(URL url, Function<Void, JSSourceExtractor> fExtractor) throws WalaException {
+  public static JSCFABuilder makeHTMLCGBuilder(URL url, Supplier<JSSourceExtractor> fExtractor) throws WalaException {
     return makeHTMLCGBuilder(url, CGBuilderType.ZERO_ONE_CFA, fExtractor);
   }
 
-  public static JSCFABuilder makeHTMLCGBuilder(URL url, CGBuilderType builderType, Function<Void, JSSourceExtractor> fExtractor) throws WalaException {
+  public static JSCFABuilder makeHTMLCGBuilder(URL url, CGBuilderType builderType, Supplier<JSSourceExtractor> fExtractor) throws WalaException {
     IRFactory<IMethod> irFactory = AstIRFactory.makeDefaultFactory();
     CAstRewriterFactory<?, ?> preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, url) : null;
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
@@ -186,7 +186,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return builder;
   }
 
-  public static SourceModule[] makeHtmlScope(URL url, JavaScriptLoaderFactory loaders, Function<Void,JSSourceExtractor> fExtractor) {
+  public static SourceModule[] makeHtmlScope(URL url, JavaScriptLoaderFactory loaders, Supplier<JSSourceExtractor> fExtractor) {
     Set<Module> scripts = HashSetFactory.make();
     
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
@@ -205,14 +205,14 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return scriptsArray;
   }
 
-  public static CallGraph makeHTMLCG(URL url, Function<Void, JSSourceExtractor> fExtractor) throws IllegalArgumentException, CancelException, WalaException {
+  public static CallGraph makeHTMLCG(URL url, Supplier<JSSourceExtractor> fExtractor) throws IllegalArgumentException, CancelException, WalaException {
     SSAPropagationCallGraphBuilder b = makeHTMLCGBuilder(url, fExtractor);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b.getCFAContextInterpreter(), b.getPointerAnalysis(), CG);
     return CG;
   }
 
-  public static CallGraph makeHTMLCG(URL url, CGBuilderType builderType, Function<Void, JSSourceExtractor> fExtractor) throws IllegalArgumentException,
+  public static CallGraph makeHTMLCG(URL url, CGBuilderType builderType, Supplier<JSSourceExtractor> fExtractor) throws IllegalArgumentException,
       CancelException, WalaException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url, builderType, fExtractor);
     CallGraph CG = b.makeCallGraph(b.getOptions());

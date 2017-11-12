@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
@@ -33,7 +34,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
@@ -196,7 +196,7 @@ public class PDFCallGraph {
    * <li> {@link LocalPointerKey}
    * </ul>
    */
-  private static class ApplicationLoaderFilter extends Predicate<CGNode> {
+  private static class ApplicationLoaderFilter implements Predicate<CGNode> {
 
     @Override public boolean test(CGNode o) {
       if (o == null)

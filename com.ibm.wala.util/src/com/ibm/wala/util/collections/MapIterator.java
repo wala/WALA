@@ -13,8 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-
-import com.ibm.wala.util.functions.Function;
+import java.util.function.Function;
 
 /**
  * An <code>MapIterator</code> maps an <code>Iterator</code> contents to produce a new Iterator

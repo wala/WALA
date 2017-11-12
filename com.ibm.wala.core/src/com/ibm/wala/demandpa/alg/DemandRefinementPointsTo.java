@@ -45,6 +45,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -113,7 +115,6 @@ import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.ArraySet;
 import com.ibm.wala.util.collections.ArraySetMultiMap;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -127,7 +128,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.collections.Util;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -517,7 +517,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    */
   @Override
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
-    return getPointsTo(pk, Predicate.<InstanceKey> falsePred()).snd;
+    return getPointsTo(pk, (InstanceKey k) -> { return false; }).snd;
   }
 
   /**
@@ -525,7 +525,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    *         <code>null</code> if the points-to set can't be computed in the allocated budget
    */
   public Collection<InstanceKeyAndState> getPointsToWithStates(PointerKey pk) {
-    return getPointsToWithStates(pk, Predicate.<InstanceKey> falsePred()).snd;
+    return getPointsToWithStates(pk, (InstanceKey k) -> { return false; }).snd;
   }
 
   /**

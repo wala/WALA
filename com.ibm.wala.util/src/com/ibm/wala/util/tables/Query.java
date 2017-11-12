@@ -13,8 +13,8 @@ package com.ibm.wala.util.tables;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**

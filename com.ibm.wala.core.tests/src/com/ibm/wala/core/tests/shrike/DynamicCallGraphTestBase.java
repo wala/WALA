@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.function.Predicate;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.Project;
@@ -39,7 +40,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
@@ -147,7 +147,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
 
   protected void checkEdges(CallGraph staticCG) throws IOException {
-    checkEdges(staticCG, Predicate.<MethodReference>truePred());
+    checkEdges(staticCG, (MethodReference x) -> { return true; });
   }
   
   protected void checkEdges(CallGraph staticCG, Predicate<MethodReference> filter) throws IOException {
@@ -170,7 +170,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
  
   protected void checkNodes(CallGraph staticCG) throws IOException {
-    checkNodes(staticCG, Predicate.<MethodReference>truePred());
+    checkNodes(staticCG, (MethodReference x) -> { return true; });
   }
 
   protected void checkNodes(CallGraph staticCG, Predicate<MethodReference> filter) throws IOException {

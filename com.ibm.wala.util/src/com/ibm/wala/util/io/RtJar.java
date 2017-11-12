@@ -3,14 +3,14 @@ package com.ibm.wala.util.io;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 
 import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.MapIterator;
-import com.ibm.wala.util.functions.Function;
 
 public class RtJar {
 

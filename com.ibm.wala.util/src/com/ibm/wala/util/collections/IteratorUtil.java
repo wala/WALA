@@ -11,9 +11,8 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
-
-import com.ibm.wala.util.Predicate;
-import com.ibm.wala.util.functions.Function;
+import java.util.function.Function;
+import java.util.function.Predicate;
 /**
  * utilities dealing with Iterators
  */

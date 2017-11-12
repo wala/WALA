@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ipa.callgraph;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
@@ -35,7 +36,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.functions.Function;
 
 public class AstCallGraph extends ExplicitCallGraph {
   public AstCallGraph(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {

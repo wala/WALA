@@ -12,13 +12,11 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Collection;
-
-import com.ibm.wala.util.Predicate;
-
+import java.util.function.Predicate;
 /**
  * A filter defined by set membership
  */
-public class CollectionFilter<T> extends Predicate<T> {
+public class CollectionFilter<T> implements Predicate<T> {
 
   private final Collection<? extends T> S;
 

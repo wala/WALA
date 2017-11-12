@@ -15,7 +15,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
-
+import java.util.function.Function;
+import java.util.function.Predicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,19 +54,17 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class TestPointerAnalyses {
 
-  private final class CheckPointers extends Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> {
+  private final class CheckPointers implements Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> {
     private Set<Pair<String,Integer>> map(Set<Pair<CGNode, NewSiteReference>> sites) {
       Set<Pair<String,Integer>> result = HashSetFactory.make();
       for(Pair<CGNode,NewSiteReference> s : sites) {

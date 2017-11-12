@@ -12,8 +12,8 @@ package com.ibm.wala.util.graph.traverse;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;

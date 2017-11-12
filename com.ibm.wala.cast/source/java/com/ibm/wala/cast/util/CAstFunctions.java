@@ -12,9 +12,9 @@ package com.ibm.wala.cast.util;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;

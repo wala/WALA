@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
@@ -26,7 +27,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Util;
-import com.ibm.wala.util.functions.Function;
 
 /**
  * Utility class to serialize call graphs as JSON objects.

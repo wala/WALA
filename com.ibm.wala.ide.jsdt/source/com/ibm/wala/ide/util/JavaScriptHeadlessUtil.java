@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.ide.util;
 
+import java.util.function.Function;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-
-import com.ibm.wala.util.functions.Function;
 
 public class JavaScriptHeadlessUtil extends HeadlessUtil {
 

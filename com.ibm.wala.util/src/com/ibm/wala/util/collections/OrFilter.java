@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.Predicate;
+import java.util.function.Predicate;
 
 /**
  * A filter "A or B"
  */
-public class OrFilter<T> extends Predicate<T> {
+public class OrFilter<T> implements Predicate<T> {
 
   public static <T> OrFilter<T> createOrFilter(Predicate<T> a, Predicate<T> b) {
     if (a == null || b == null) {

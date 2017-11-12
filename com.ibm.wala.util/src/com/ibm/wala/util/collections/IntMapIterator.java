@@ -11,8 +11,8 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.function.IntFunction;
 
-import com.ibm.wala.util.functions.IntFunction;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**

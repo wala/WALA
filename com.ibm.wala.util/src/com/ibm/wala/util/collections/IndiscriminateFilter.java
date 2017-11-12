@@ -10,12 +10,13 @@
  *******************************************************************************/
 
 package com.ibm.wala.util.collections;
-import com.ibm.wala.util.Predicate;
+
+import java.util.function.Predicate;
 
 /**
  * A filter that accepts everything.
  */
-public class IndiscriminateFilter<T> extends Predicate<T> {
+public class IndiscriminateFilter<T> implements Predicate<T> {
 
   public static <T> IndiscriminateFilter<T> singleton() {
     return new IndiscriminateFilter<>();

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import org.junit.Assert;
 
@@ -35,7 +36,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.ProgressMaster;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
@@ -80,7 +80,7 @@ public class HTMLCGBuilder {
 	 * @throws IOException 
 	 * @throws ClassHierarchyException 
 	 */
-	public static CGBuilderResult buildHTMLCG(String src, int timeout, CGBuilderType builderType, Function<Void, JSSourceExtractor> fExtractor) 
+	public static CGBuilderResult buildHTMLCG(String src, int timeout, CGBuilderType builderType, Supplier<JSSourceExtractor> fExtractor) 
 			throws ClassHierarchyException, IOException {
 		CGBuilderResult res = new CGBuilderResult();
 		URL url = null;

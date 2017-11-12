@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -78,7 +79,6 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -510,7 +510,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   private class CrossProductRec {
     private final InstanceKey[][] invariants;
-    private final VoidFunction<InstanceKey[]> f;
+    private final Consumer<InstanceKey[]> f;
     private final SSAAbstractInvokeInstruction call;
     private final CGNode caller;
     private final int[] params;
@@ -518,7 +518,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     private final InstanceKey[] keys;
 
     private CrossProductRec(InstanceKey[][] invariants, SSAAbstractInvokeInstruction call, CGNode caller,
-        VoidFunction<InstanceKey[]> f) {
+        Consumer<InstanceKey[]> f) {
       this.invariants = invariants;
       this.f = f;
       this.call = call;
@@ -530,7 +530,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     protected void rec(final int pi, final int rhsi) {
       if (pi == params.length) {
-        f.apply(keys);
+        f.accept(keys);
       } else {
         final int p = params[pi];
         InstanceKey[] ik = invariants != null ? invariants[p] : null;
@@ -1743,9 +1743,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             @Override
             public void act(final int x) {
               new CrossProductRec(constParams, call, node,
-                  new VoidFunction<InstanceKey[]>() {
+                  new Consumer<InstanceKey[]>() {
                     @Override
-                    public void apply(InstanceKey[] v) {
+                    public void accept(InstanceKey[] v) {
                       IClass recv = null;
                       if (call.getCallSite().isDispatch()) {
                         recv = v[0].getConcreteType();
@@ -2009,7 +2009,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   protected void iterateCrossProduct(final CGNode caller, final SSAAbstractInvokeInstruction call, final InstanceKey[][] invariants,
-      final VoidFunction<InstanceKey[]> f) {
+      final Consumer<InstanceKey[]> f) {
     new CrossProductRec(invariants, call, caller, f).rec(0, 0);
   }
   
@@ -2022,9 +2022,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // associated with the instruction
     final CallSiteReference site = instruction.getCallSite();
     final Set<CGNode> targets = HashSetFactory.make();
-    VoidFunction<InstanceKey[]> f = new VoidFunction<InstanceKey[]>() {
+    Consumer<InstanceKey[]> f = new Consumer<InstanceKey[]>() {
       @Override
-      public void apply(InstanceKey[] v) {
+      public void accept(InstanceKey[] v) {
         IClass recv = null;
         if (site.isDispatch()) {
           recv = v[0].getConcreteType();

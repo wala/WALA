@@ -11,10 +11,11 @@
 
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
+import java.util.function.Function;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.functions.Function;
 
 public class FilteredFlowGraphBuilder extends FlowGraphBuilder {
 

@@ -17,14 +17,14 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
 
@@ -70,7 +70,7 @@ public class GraphSlicer {
 
       @Override
       public Iterator<T> iterator() {
-        return Predicate.filter(g.iterator(), p).iterator();
+        return new FilterIterator<>(g.iterator(), p);
       }
 
       @Override
@@ -101,7 +101,7 @@ public class GraphSlicer {
 
       @Override
       public Iterator<T> getPredNodes(T n) {
-        return Predicate.filter(g.getPredNodes(n), p).iterator();
+        return new FilterIterator<>(g.getPredNodes(n), p);
       }
 
       @Override
@@ -111,7 +111,7 @@ public class GraphSlicer {
 
       @Override
       public Iterator<T> getSuccNodes(T n) {
-        return Predicate.filter(g.getSuccNodes(n), p).iterator();
+        return new FilterIterator<>(g.getSuccNodes(n), p);
       }
 
       @Override

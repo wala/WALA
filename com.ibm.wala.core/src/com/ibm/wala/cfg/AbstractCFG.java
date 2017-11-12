@@ -15,12 +15,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorPlusOne;
@@ -227,13 +228,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       throw new IllegalArgumentException("N is null");
     }
     if (N.equals(exit())) {
-      return Predicate.filter(iterator(), new Predicate<T>() {
+      return new FilterIterator<>(iterator(), new Predicate<T>() {
         @Override
         public boolean test(T o) {
           int i = getNumber(o);
           return normalToExit.get(i) || exceptionalToExit.get(i);
         }
-      }).iterator();
+      });
     } else {
       int number = getNumber(N);
       boolean normalIn = getNumberOfNormalIn(N) > 0;
@@ -340,13 +341,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   Iterator<T> iterateExceptionalPredecessors(T N) {
     if (N.equals(exit())) {
-      return Predicate.filter(iterator(), new Predicate<T>() {
+      return new FilterIterator<>(iterator(), new Predicate<T>() {
         @Override
         public boolean test(T o) {
           int i = getNumber(o);
           return exceptionalToExit.get(i);
         }
-      }).iterator();
+      });
     } else {
       return exceptionalEdgeManager.getPredNodes(N);
     }
@@ -354,13 +355,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   Iterator<T> iterateNormalPredecessors(T N) {
     if (N.equals(exit())) {
-      return Predicate.filter(iterator(), new Predicate<T>() {
+      return new FilterIterator<>(iterator(), new Predicate<T>() {
         @Override
         public boolean test(T o) {
           int i = getNumber(o);
           return normalToExit.get(i);
         }
-      }).iterator();
+      });
     } else {
       int number = getNumber(N);
       if (number > 0 && fallThru.get(number - 1)) {

@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.client;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
@@ -57,7 +58,6 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.SetOfClasses;
-import com.ibm.wala.util.functions.Function;
 
 public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject, I> {
 

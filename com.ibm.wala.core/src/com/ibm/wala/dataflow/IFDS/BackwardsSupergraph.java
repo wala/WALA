@@ -11,8 +11,8 @@
 package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
@@ -76,7 +76,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /**
    * a filter that accepts only exit nodes from the original graph.
    */
-  private class ExitFilter extends Predicate {
+  private class ExitFilter implements Predicate {
     /*
      * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
      */

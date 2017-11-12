@@ -12,8 +12,7 @@ package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
 import java.util.Map;
-
-import com.ibm.wala.util.functions.Function;
+import java.util.function.Function;
 
 public class GXL {
 

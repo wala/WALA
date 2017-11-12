@@ -24,11 +24,11 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.functions.VoidFunction;
 
 /**
  * Simple utilities for accessing files.
@@ -190,7 +190,7 @@ public class FileUtil {
     }
   }
 
-  public static void recurseFiles(VoidFunction<File> action, final Predicate<File> filter, File top) {
+  public static void recurseFiles(Consumer<File> action, final Predicate<File> filter, File top) {
   	if (top.isDirectory()) {
   		for(File f : top.listFiles(new FileFilter() {
   			@Override
@@ -201,7 +201,7 @@ public class FileUtil {
   			recurseFiles(action, filter, f);
   		}
   	} else {
-  		action.apply(top);
+  		action.accept(top);
   	}
   }
 }

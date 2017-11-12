@@ -11,8 +11,8 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.SimpleVector;

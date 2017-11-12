@@ -51,9 +51,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import com.ibm.wala.util.Predicate;
-import com.ibm.wala.util.functions.Function;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Miscellaneous utility functions.

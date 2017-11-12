@@ -12,6 +12,7 @@ package com.ibm.wala.cast.ipa.lexical;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
@@ -27,7 +28,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**

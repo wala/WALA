@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 import org.junit.Test;
 
@@ -24,7 +25,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.functions.Function;
 
 public class CHACallGraphTest {
   

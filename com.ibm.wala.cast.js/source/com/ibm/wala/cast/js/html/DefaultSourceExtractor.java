@@ -19,17 +19,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.functions.Function;
 
 public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
-  public static Function<Void,JSSourceExtractor> factory = new Function<Void,JSSourceExtractor>() {
+  public static Supplier<JSSourceExtractor> factory = new Supplier<JSSourceExtractor>() {
     @Override
-    public JSSourceExtractor apply(Void object) {
+    public JSSourceExtractor get() {
       return new DefaultSourceExtractor();
     }
   };

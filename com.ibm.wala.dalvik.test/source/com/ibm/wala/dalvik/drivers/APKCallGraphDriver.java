@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -18,10 +20,8 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.io.FileUtil;
 
 public class APKCallGraphDriver {
@@ -55,10 +55,10 @@ public class APKCallGraphDriver {
 	  } catch (Throwable e) {
 		  // no timeout specified
 	  }
-	  FileUtil.recurseFiles(new VoidFunction<File>() {
+	  FileUtil.recurseFiles(new Consumer<File>() {
 
 	    @Override
-	    public void apply(File apk) {
+	    public void accept(File apk) {
 	      System.gc();
 	      System.err.println("Analyzing " + apk + "...");
 	      try {

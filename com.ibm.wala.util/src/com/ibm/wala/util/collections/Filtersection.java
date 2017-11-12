@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.Predicate;
+import java.util.function.Predicate;
 
 /**
  * intersection of two filters
  */
-public class Filtersection<T> extends Predicate<T> {
+public class Filtersection<T> implements Predicate<T> {
 
   final private Predicate<T> a;
   final private Predicate<T> b;

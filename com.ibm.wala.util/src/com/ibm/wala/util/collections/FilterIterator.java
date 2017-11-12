@@ -12,8 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import com.ibm.wala.util.Predicate;
+import java.util.function.Predicate;
 
 /**
  * A <code>FilterIterator</code> filters an <code>Iterator</code> to generate a new one.

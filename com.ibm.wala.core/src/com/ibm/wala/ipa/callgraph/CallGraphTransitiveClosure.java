@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.fixpoint.BitVectorVariable;
@@ -20,7 +21,6 @@ import com.ibm.wala.ipa.modref.GenReach;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.intset.OrdinalSet;
 
