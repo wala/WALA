@@ -71,7 +71,8 @@ public class AnalysisOptions {
     NO_METHOD_INVOKE("no_method_invoke", Integer.MAX_VALUE, true, false, false), 
     NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke", 0, true, false, false), 
     ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE("one_flow_to_casts_no_method_invoke", 1, true, false, false), 
-    ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD("one_flow_to_casts_application_get_method", 1, false, false, true), 
+    ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD("one_flow_to_casts_application_get_method", 1, false, false, true),
+    MULTI_FLOW_TO_CASTS_APPLICATION_GET_METHOD("multi_flow_to_casts_application_get_method", 100, false, false, true),
     NO_STRING_CONSTANTS("no_string_constants", Integer.MAX_VALUE, false, true, false), 
     NONE("none", 0, true, true, true);
 
@@ -190,7 +191,12 @@ public class AnalysisOptions {
    * {@link ExplicitCallGraph}.
    */
   private long maxNumberOfNodes = -1;
-
+  
+  /**
+   * Should call graph construction handle arrays of zero-length differently?
+   */
+  private boolean handleZeroLengthArray = true;
+  
   // SJF: I'm not sure these factories and caches belong here.
   // TODO: figure out how to clean this up.
 
@@ -417,5 +423,19 @@ public class AnalysisOptions {
    */
   public void setHandleStaticInit(boolean handleStaticInit) {
     this.handleStaticInit = handleStaticInit;
+  }
+  
+  /**
+   * Should call graph construction handle arrays of zero-length differently?
+   */
+  public boolean getHandleZeroLengthArray() {
+    return handleZeroLengthArray;
+  }
+
+  /**
+   * Should call graph construction handle arrays of zero-length differently?
+   */
+  public void setHandleZeroLengthArray(boolean handleZeroLengthArray) {
+    this.handleZeroLengthArray = handleZeroLengthArray;
   }
 }
