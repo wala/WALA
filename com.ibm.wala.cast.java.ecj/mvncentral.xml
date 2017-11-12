@@ -88,15 +88,6 @@
 
   <profiles>
     <profile>
-      <id>jdk17</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <properties>
-        <javadoc.options></javadoc.options>
-      </properties>
-    </profile>
-    <profile>
       <id>jdk18</id>
       <activation>
         <jdk>1.8</jdk>

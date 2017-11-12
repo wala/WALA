@@ -63,15 +63,6 @@
 
   <profiles>
     <profile>
-      <id>jdk17</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <properties>
-        <javadoc.options></javadoc.options>
-      </properties>
-    </profile>
-    <profile>
       <id>jdk18</id>
       <activation>
         <jdk>1.8</jdk>
@@ -98,8 +89,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
 
