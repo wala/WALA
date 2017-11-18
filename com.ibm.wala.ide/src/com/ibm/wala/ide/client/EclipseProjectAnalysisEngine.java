@@ -39,7 +39,6 @@ abstract public class EclipseProjectAnalysisEngine<P, I extends InstanceKey> ext
   protected EclipseProjectPath<?,P> ePath;
 
   public EclipseProjectAnalysisEngine(P project) {
-    super();
     this.project = project;
     this.workspaceRootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     assert project != null;
