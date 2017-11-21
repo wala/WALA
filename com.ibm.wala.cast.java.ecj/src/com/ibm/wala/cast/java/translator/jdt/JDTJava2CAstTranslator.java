@@ -1044,7 +1044,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         private Collection<CAstType> fExceptionTypes = null;
 
         @Override
-        @SuppressWarnings("deprecation")
         public CAstType getReturnType() {
           if (fReturnType != null)
             return fTypeDict.getCAstTypeFor(fReturnType);
