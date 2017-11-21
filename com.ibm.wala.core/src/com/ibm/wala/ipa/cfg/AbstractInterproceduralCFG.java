@@ -842,9 +842,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
     // a successor node is a return site if it is in the same
     // procedure, and is not the entry() node.
-    Predicate isReturn = new Predicate() {
-      @Override public boolean test(Object o) {
-        BasicBlockInContext other = (BasicBlockInContext) o;
+    Predicate<BasicBlockInContext> isReturn = new Predicate<BasicBlockInContext>() {
+      @Override public boolean test(BasicBlockInContext other) {
         return !other.isEntryBlock() && node.equals(other.getNode());
       }
     };
@@ -863,7 +862,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate());
     final CGNode node = returnBlock.getNode();
 
-    Predicate<? extends T> dispatchFilter = new Predicate<T>() {
+    Predicate<T> dispatchFilter = new Predicate<T>() {
       @Override public boolean test(T callBlock) {
         BasicBlockInContext<T> bb = new BasicBlockInContext<T>(node, callBlock);
         if (!hasCall(bb, cfg)) {

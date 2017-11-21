@@ -26,11 +26,7 @@ import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
-import com.ibm.wala.util.collections.CompoundIterator;
-import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.SmallMap;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
@@ -274,14 +270,14 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
-    Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterator(), new Predicate() {
-      @Override public boolean test(Object x) {
+    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), new Predicate<INodeWithNumber>() {
+      @Override public boolean test(INodeWithNumber x) {
         return x instanceof AbstractStatement;
       }
     });
-    return new CompoundIterator<AbstractStatement>(it, new GlobalImplicitIterator());
+    Iterator<AbstractStatement> converted = new MapIterator<>(it, AbstractStatement.class::cast);
+    return new CompoundIterator<AbstractStatement>(converted, new GlobalImplicitIterator());
   }
 
   /**
@@ -765,14 +761,14 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Iterator<PointsToSetVariable> getVariables() {
-    Iterator<PointsToSetVariable> it = new FilterIterator(delegateGraph.iterator(), new Predicate() {
-      @Override public boolean test(Object x) {
+    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), new Predicate<INodeWithNumber>() {
+      @Override public boolean test(INodeWithNumber x) {
         return x instanceof IVariable;
       }
     });
-    return it;
+    Iterator<PointsToSetVariable> converted = new MapIterator<INodeWithNumber, PointsToSetVariable>(it, PointsToSetVariable.class::cast);
+    return converted;
   }
 
   /*

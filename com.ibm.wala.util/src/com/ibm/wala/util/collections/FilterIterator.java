@@ -18,10 +18,9 @@ import java.util.function.Predicate;
  * A <code>FilterIterator</code> filters an <code>Iterator</code> to generate a new one.
  */
 public class FilterIterator<T> implements java.util.Iterator<T> {
-  final Iterator<?> i;
+  final Iterator<? extends T> i;
 
-  @SuppressWarnings("rawtypes")
-  final Predicate f;
+  final Predicate<? super T> f;
 
   private T next = null;
 
@@ -31,8 +30,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
    * @param i the original iterator
    * @param f a filter which defines which elements belong to the generated iterator
    */
-  @SuppressWarnings("rawtypes")
-  public FilterIterator(Iterator<?> i, Predicate f) {
+  public FilterIterator(Iterator<? extends T> i, Predicate<? super T> f) {
     if (i == null) {
       throw new IllegalArgumentException("null i");
     }
@@ -47,12 +45,11 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
   /**
    * update the internal state to prepare for the next access to this iterator
    */
-  @SuppressWarnings("unchecked")
   private void advance() {
     while (i.hasNext()) {
-      Object o = i.next();
+      T o = i.next();
       if (f.test(o)) {
-        next = (T) o;
+        next = o;
         return;
       }
     }

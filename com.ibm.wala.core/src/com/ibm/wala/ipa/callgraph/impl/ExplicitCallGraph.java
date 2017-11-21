@@ -187,9 +187,9 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
      */
     protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
-      return new FilterIterator<CallSiteReference>(iterateCallSites(), new Predicate() {
-        @Override public boolean test(Object o) {
-          IntSet s = getPossibleTargetNumbers((CallSiteReference) o);
+      return new FilterIterator<CallSiteReference>(iterateCallSites(), new Predicate<CallSiteReference>() {
+        @Override public boolean test(CallSiteReference o) {
+          IntSet s = getPossibleTargetNumbers(o);
           return s == null ? false : s.contains(n);
         }
       });

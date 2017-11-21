@@ -35,7 +35,7 @@ public class RtJar {
   public static void main(String[] args) {
     @SuppressWarnings("resource")
     JarFile rt = getRtJar(new MapIterator<>(
-        new FilterIterator<String>(
+        new FilterIterator<>(
             new ArrayIterator<>(System.getProperty("sun.boot.class.path").split(File.pathSeparator)),
             new Predicate<String>() {
               @Override

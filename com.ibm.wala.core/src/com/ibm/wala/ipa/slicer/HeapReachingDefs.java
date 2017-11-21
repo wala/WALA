@@ -644,8 +644,8 @@ public class HeapReachingDefs<T extends InstanceKey> {
           return null;
         } else {
           // only static fields are actually killed
-          Predicate staticFilter = new Predicate() {
-            @Override public boolean test(Object o) {
+          Predicate<PointerKey> staticFilter = new Predicate<PointerKey>() {
+            @Override public boolean test(PointerKey o) {
               return o instanceof StaticFieldKey;
             }
           };
@@ -654,10 +654,9 @@ public class HeapReachingDefs<T extends InstanceKey> {
           if (kill.isEmpty()) {
             return null;
           } else {
-            Predicate f = new Predicate() {
+            Predicate<Statement> f = new Predicate<Statement>() {
               // accept any statement which writes a killed location.
-              @Override public boolean test(Object o) {
-                Statement s = (Statement) o;
+              @Override public boolean test(Statement s) {
                 Collection m = getMod(s, node, heapModel, pa, exclusions);
                 for (PointerKey k : kill) {
                   if (m.contains(k)) {

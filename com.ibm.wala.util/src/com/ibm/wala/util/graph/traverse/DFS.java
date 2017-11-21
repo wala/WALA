@@ -41,7 +41,7 @@ public class DFS {
    * @throws IllegalArgumentException if C is null
    */
   @SuppressWarnings("serial")
-  public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, @SuppressWarnings("rawtypes") final Predicate filter) {
+  public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, final Predicate<? super T> filter) {
     if (C == null) {
       throw new IllegalArgumentException("C is null");
     }

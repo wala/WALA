@@ -76,14 +76,13 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /**
    * a filter that accepts only exit nodes from the original graph.
    */
-  private class ExitFilter implements Predicate {
+  private class ExitFilter implements Predicate<T> {
     /*
      * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public boolean test(Object o) {
-      return delegate.isExit((T) o);
+    public boolean test(T o) {
+      return delegate.isExit(o);
     }
   }
 
@@ -98,7 +97,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     if (DEBUG_LEVEL > 1) {
       System.err.println(getClass() + " getCalledNodes " + ret);
       System.err.println("called nodes: "
-          + Iterator2Collection.toSet(new FilterIterator<Object>(getSuccNodes(ret), exitFilter)));
+          + Iterator2Collection.toSet(new FilterIterator<>(getSuccNodes(ret), exitFilter)));
     }
     return new FilterIterator<T>(getSuccNodes(ret), exitFilter);
   }
@@ -110,15 +109,15 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    */
   @Override
   public Iterator<T> getNormalSuccessors(final T ret) {
-    Iterator<? extends Object> allPreds = delegate.getPredNodes(ret);
-    Predicate sameProc = new Predicate<T>() {
+    Iterator<T> allPreds = delegate.getPredNodes(ret);
+    Predicate<T> sameProc = new Predicate<T>() {
       @Override public boolean test(T o) {
         // throw out the exit node, which can be a predecessor due to tail recursion.
         return getProcOf(ret).equals(getProcOf(o)) && !delegate.isExit(o);
       }
     };
-    Iterator<Object> sameProcPreds = new FilterIterator<Object>(allPreds, sameProc);
-    Predicate notCall = new Predicate<T>() {
+    Iterator<T> sameProcPreds = new FilterIterator<>(allPreds, sameProc);
+    Predicate<T> notCall = new Predicate<T>() {
       @Override public boolean test(T o) {
         return !delegate.isCall(o);
       }

@@ -258,9 +258,9 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   @Override
-  public Iterator<T> getVariables() {
-    return new FilterIterator<>(graph.iterator(), new Predicate<T>() {
-      @Override public boolean test(T x) {
+  public Iterator<INodeWithNumber> getVariables() {
+    return new FilterIterator<>(graph.iterator(), new Predicate<Object>() {
+      @Override public boolean test(Object x) {
         return x != null;
       }
     });

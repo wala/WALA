@@ -82,7 +82,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   private Iterator<ModuleEntry> getMessages(final byte severity) {
-    return new MapIterator<>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Predicate<Map.Entry<ModuleEntry,Set<Warning>>>()  {
+    return new MapIterator<>(new FilterIterator<>(errors.entrySet().iterator(), new Predicate<Map.Entry<ModuleEntry,Set<Warning>>>()  {
       @Override public boolean test(Entry<ModuleEntry, Set<Warning>> o) {
          for(Warning w : o.getValue()) {
            if (w.getLevel() == severity) {

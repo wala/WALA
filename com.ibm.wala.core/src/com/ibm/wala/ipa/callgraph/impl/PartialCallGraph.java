@@ -122,9 +122,9 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
 
   @Override
   public Iterator<CGNode> iterateNodes(IntSet nodes) {
-    return new FilterIterator<CGNode>(cg.iterateNodes(nodes), new Predicate() {
-      @Override public boolean test(Object o) {
-        return containsNode((CGNode) o);
+    return new FilterIterator<CGNode>(cg.iterateNodes(nodes), new Predicate<CGNode>() {
+      @Override public boolean test(CGNode o) {
+        return containsNode(o);
       }
     });
   }

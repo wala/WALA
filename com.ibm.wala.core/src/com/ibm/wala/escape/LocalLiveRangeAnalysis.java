@@ -57,7 +57,7 @@ public class LocalLiveRangeAnalysis {
     final Collection<BasicBlock> uses = findBlocks(ir, du.getUses(v));
 
     // a filter which accepts everything but the block which defs v
-    Predicate notDef = new Predicate() {
+    Predicate<Object> notDef = new Predicate<Object>() {
       @Override public boolean test(Object o) {
         return (defBlock == null || !defBlock.equals(o));
       }

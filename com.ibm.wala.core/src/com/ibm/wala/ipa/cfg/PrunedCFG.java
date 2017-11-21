@@ -225,9 +225,9 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
       return max;
     }
 
-    private Iterator<T> filterNodes(Iterator nodeIterator) {
-      return new FilterIterator<T>(nodeIterator, new Predicate() {
-        @Override public boolean test(Object o) {
+    private Iterator<T> filterNodes(Iterator<T> nodeIterator) {
+      return new FilterIterator<T>(nodeIterator, new Predicate<T>() {
+        @Override public boolean test(T o) {
           return subset.contains(o);
         }
       });
