@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.slicer;
 
 import java.util.Iterator;
-import java.util.function.Predicate;
 
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;

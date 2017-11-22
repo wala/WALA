@@ -13,7 +13,6 @@ package com.ibm.wala.analysis.pointers;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
