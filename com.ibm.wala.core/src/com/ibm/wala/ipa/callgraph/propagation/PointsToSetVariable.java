@@ -154,7 +154,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
    * 
    * @param pointerKey The pointerKey to set.
    */
-  void setPointerKey(PointerKey pointerKey) {
+  public void setPointerKey(PointerKey pointerKey) {
     // check that we haven't modified the hash code!!! this is crucial
     assert this.pointerKey.hashCode() == pointerKey.hashCode();
     this.pointerKey = pointerKey;

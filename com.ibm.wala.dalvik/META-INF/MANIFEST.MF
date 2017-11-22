@@ -86,7 +86,7 @@ Export-Package: com.google.common.annotations,
  org.jf.util,
  org.jf.util.jcommander
 Bundle-ClassPath: .,
- lib/commons-cli-1.2.jar,
+ lib/commons-cli-1.4.jar,
  lib/commons-io-2.4.jar,
  lib/dexlib2-2.2.1.jar,
  lib/util-2.2.1.jar,

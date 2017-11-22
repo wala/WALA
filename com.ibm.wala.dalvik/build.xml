@@ -37,12 +37,12 @@
   </target>
   
   <target name="CommonsCliPresent" depends="init">
-    <available file="${plugin.destination}/lib/commons-cli-1.2.jar" property="commons.cli.present"/>
+    <available file="${plugin.destination}/lib/commons-cli-1.4.jar" property="commons.cli.present"/>
   </target>
 
   <target name="fetchCommonsCli" depends="CommonsCliPresent" unless="commons.cli.present">
     <mkdir dir="${plugin.destination}/lib"/>    
-    <get src="http://central.maven.org/maven2/commons-cli/commons-cli/1.2/commons-cli-1.2.jar" dest="${plugin.destination}/lib/commons-cli-1.2.jar" />
+    <get src="http://central.maven.org/maven2/commons-cli/commons-cli/1.4/commons-cli-1.4.jar" dest="${plugin.destination}/lib/commons-cli-1.4.jar" />
   </target>
   
   <target name="DexlibPresent" depends="init">

@@ -53,15 +53,14 @@ import java.net.URI;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 
-@SuppressWarnings("static-access")
 public class CLISCanDroidOptions implements ISCanDroidOptions {
 	private static final String VERBOSE = "verbose";
 	private static final String REFLECTION = "reflection";
@@ -81,7 +80,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 	private static final String PARTIAL_CALL_GRAPH = "partial-call-graph";
 	private static final String CALL_GRAPH = "call-graph";
 
-	private CommandLineParser parser = new PosixParser();
+	private CommandLineParser parser = new DefaultParser();
 	private CommandLine line;
 	private URI classpath;
 	private String filename;
@@ -93,11 +92,11 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 	private final Options options = new Options();
 	{
 		options.addOption("h", "help", false, "print this message");
-		options.addOption(OptionBuilder
-				.withLongOpt(VERBOSE)
-				.withDescription(
+		options.addOption(Option.builder()
+				.longOpt(VERBOSE)
+				.desc(
 						"logging level (default INFO) [OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL]")
-				.hasArg().withArgName("level").create());
+				.hasArg().argName("level").build());
 		options.addOption("c", CALL_GRAPH, false, "create full call graph pdf");
 		options.addOption("p", PARTIAL_CALL_GRAPH, false,
 				"create partial call graph pdf (Application only)");
@@ -121,22 +120,22 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 				"run string prefix analysis");
 		options.addOption("f", SUMMARIES_FILE, true,
 				"Use the specified summaries xml file");
-		options.addOption(OptionBuilder
-				.withLongOpt(TEST_CGB)
-				.withDescription(
+		options.addOption(Option.builder()
+				.longOpt(TEST_CGB)
+				.desc(
 						"Only load the call graph, exit status indicates success")
-				.create());
+				.build());
 		options.addOption("y", CHECK_POLICY, false,
 				"Check conformance with built-in policy");
 
-		options.addOption(OptionBuilder.withLongOpt(ANDROID_LIB)
-				.withDescription("include ALIB in scope of analysis").hasArg()
-				.withArgName("ALIB").create());
-		options.addOption(OptionBuilder
-				.withLongOpt(REFLECTION)
-				.withDescription(
+		options.addOption(Option.builder().longOpt(ANDROID_LIB)
+				.desc("include ALIB in scope of analysis").hasArg()
+				.argName("ALIB").build());
+		options.addOption(Option.builder()
+				.longOpt(REFLECTION)
+				.desc(
 						"FULL, NO_FLOW_TO_CASTS, NO_METHOD_INVOKE, NO_FLOW_TO_CASTS_NO_METHOD_INVOKE, ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE, NO_STRING_CONSTANTS, NONE (Default)")
-				.hasArg().withArgName("option").create());
+				.hasArg().argName("option").build());
 	}
 
 	public CLISCanDroidOptions(String[] args, boolean reqArgs) {
