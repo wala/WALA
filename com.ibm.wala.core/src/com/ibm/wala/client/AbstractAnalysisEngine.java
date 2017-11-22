@@ -125,7 +125,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
    */
   private HeapGraph heapGraph;
 
-  private EntrypointBuilder entrypointBuilder = (scope, cha) -> makeDefaultEntrypoints(scope, cha);
+  private EntrypointBuilder entrypointBuilder = this::makeDefaultEntrypoints;
 
   protected abstract CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 

@@ -76,11 +76,11 @@ public class AstJavaSlicer extends Slicer {
   }
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, o -> o instanceof AstAssertInstruction);
+    return gatherStatements(CG, partialRoots, AstAssertInstruction.class::isInstance);
   }
 
   public static Set<Statement> gatherMonitors(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, o -> o instanceof SSAMonitorInstruction);
+    return gatherStatements(CG, partialRoots, SSAMonitorInstruction.class::isInstance);
   }
 
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {

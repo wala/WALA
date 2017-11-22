@@ -377,7 +377,7 @@ public class AnalysisScope {
   private JarFile getRtJar() {
     return RtJar.getRtJar(
         new MapIterator<Module,JarFile>(
-            new FilterIterator<Module>(getModules(getPrimordialLoader()).iterator(), M -> M instanceof JarFileModule), M -> ((JarFileModule) M).getJarFile()));
+            new FilterIterator<Module>(getModules(getPrimordialLoader()).iterator(), JarFileModule.class::isInstance), M -> ((JarFileModule) M).getJarFile()));
   }
 
   public String getJavaLibraryVersion() throws IllegalStateException {

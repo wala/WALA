@@ -347,15 +347,15 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   }
 
   private CodeReader getCodeReader() {
-    return getReader("Code", iter -> new CodeReader(iter));
+    return getReader("Code", CodeReader::new);
   }
  
   private ExceptionsReader getExceptionReader() {
-    return getReader("Exceptions", iter -> new ExceptionsReader(iter));
+    return getReader("Exceptions", ExceptionsReader::new);
   }
  
   private SignatureReader getSignatureReader() {
-    return getReader("Signature", iter -> new SignatureReader(iter));
+    return getReader("Signature", SignatureReader::new);
   }
 
   private AnnotationsReader getAnnotationsReader(AnnotationType type) {

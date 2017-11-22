@@ -162,7 +162,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       new MapIterator<IMethod,CGNode>(
           new FilterIterator<IMethod>(
               getPossibleTargets(site),
-              o -> isRelevantMethod(o)
+              this::isRelevantMethod
           ),
         object -> {
           try {

@@ -338,7 +338,7 @@ public abstract class TestPointerAnalyses {
       if (hg.containsNode(proto)) {
       return 
           new MapIterator<>(hg.getSuccNodes(proto),
-              object -> (ObjectVertex)object);
+              ObjectVertex.class::cast);
       } else {
         return EmptyIterator.instance();
       }

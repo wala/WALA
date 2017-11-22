@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
@@ -158,7 +159,7 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
     AnalysisOptions options = new AnalysisOptions(getScope(), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
-    ssaOptions.setDefaultValues((symtab, valueNumber) -> symtab.getDefaultValue(valueNumber));
+    ssaOptions.setDefaultValues(SymbolTable::getDefaultValue);
 
     options.setSSAOptions(ssaOptions);
 

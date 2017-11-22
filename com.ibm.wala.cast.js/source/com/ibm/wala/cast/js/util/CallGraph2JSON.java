@@ -74,7 +74,7 @@ public class CallGraph2JSON {
 
 			for(Iterator<CallSiteReference> iter = nd.iterateCallSites(); iter.hasNext();) {
 				CallSiteReference callsite = iter.next();
-        Set<IMethod> targets = Util.mapToSet(cg.getPossibleTargets(nd, callsite), nd1 -> nd1.getMethod());
+        Set<IMethod> targets = Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
 				serializeCallSite(method, callsite, targets, edges);
 			}
 		}

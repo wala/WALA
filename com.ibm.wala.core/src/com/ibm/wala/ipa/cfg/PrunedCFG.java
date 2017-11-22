@@ -201,7 +201,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     }
 
     private Iterator<T> filterNodes(Iterator<T> nodeIterator) {
-      return new FilterIterator<T>(nodeIterator, o -> subset.contains(o));
+      return new FilterIterator<T>(nodeIterator, subset::contains);
     }
 
     @Override

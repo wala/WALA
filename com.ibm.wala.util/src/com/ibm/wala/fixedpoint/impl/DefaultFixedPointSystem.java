@@ -94,7 +94,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   @Override
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Iterator<AbstractStatement> getStatements() {
-    return new FilterIterator(graph.iterator(), x -> x instanceof AbstractStatement);
+    return new FilterIterator(graph.iterator(), AbstractStatement.class::isInstance);
   }
 
   @Override

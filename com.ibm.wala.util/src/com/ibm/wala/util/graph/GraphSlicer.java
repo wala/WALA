@@ -234,11 +234,11 @@ public class GraphSlicer {
       }
 
       private void setPredNodes(E N) {
-        preds.put(N, getConnected(N, object -> G.getPredNodes(object)));
+        preds.put(N, getConnected(N, G::getPredNodes));
       }
 
       private void setSuccNodes(E N) {
-        succs.put(N, getConnected(N, object -> G.getSuccNodes(object)));
+        succs.put(N, getConnected(N, G::getSuccNodes));
       }
 
       @Override

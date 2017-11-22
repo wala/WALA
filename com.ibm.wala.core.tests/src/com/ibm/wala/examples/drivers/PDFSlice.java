@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.function.Predicate;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
@@ -249,8 +248,7 @@ public class PDFSlice {
    * return a view of the sdg restricted to the statements in the slice
    */
   public static Graph<Statement> pruneSDG(SDG<InstanceKey> sdg, final Collection<Statement> slice) {
-    Predicate<Statement> f = o -> slice.contains(o);
-    return GraphSlicer.prune(sdg, f);
+    return GraphSlicer.prune(sdg, slice::contains);
   }
 
   /**

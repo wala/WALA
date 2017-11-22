@@ -167,7 +167,7 @@ public class Util {
         }
       }
     }
-    return () -> result.iterator();
+    return result::iterator;
   }
 
   /**

@@ -879,7 +879,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return new FilterIterator<BasicBlockInContext<T>>(m, isCall);
   }
 
-  private final Predicate<BasicBlockInContext<T>> isCall = o -> hasCall(o);
+  private final Predicate<BasicBlockInContext<T>> isCall = this::hasCall;
 
   public boolean isReturn(BasicBlockInContext<T> bb) throws IllegalArgumentException {
     if (bb == null) {

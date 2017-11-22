@@ -100,7 +100,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 					new MapIterator<SSAInstruction,NewSiteReference>(
 						new FilterIterator<SSAInstruction>(
 								node.getIR().iterateAllInstructions(), 
-								t -> t instanceof SSANewInstruction), 
+								SSANewInstruction.class::isInstance), 
 						object -> ((SSANewInstruction)object).getNewSite()
 					);
 			}

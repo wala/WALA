@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
@@ -69,7 +70,7 @@ abstract public class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
     AnalysisOptions options = new AnalysisOptions(getScope(), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
-    ssaOptions.setDefaultValues((symtab, valueNumber) -> symtab.getDefaultValue(valueNumber));
+    ssaOptions.setDefaultValues(SymbolTable::getDefaultValue);
 
     options.setSSAOptions(ssaOptions);
 

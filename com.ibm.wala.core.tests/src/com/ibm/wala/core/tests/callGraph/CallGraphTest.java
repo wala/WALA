@@ -242,7 +242,7 @@ public class CallGraphTest extends WalaTestCase {
         }
       }
     }
-    return () -> result.iterator();
+    return result::iterator;
   }
   
   @Test public void testPrimordial() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -294,7 +294,7 @@ public class CallGraphTest extends WalaTestCase {
         result.add(new DefaultEntrypoint(m, cha));
       }
     }
-    return () -> result.iterator();
+    return result::iterator;
   }
 
   public static void doCallGraphs(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)

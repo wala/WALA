@@ -216,12 +216,12 @@ public class MethodHandles {
     
     @Override
     public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-      return iterateFields(node, o -> o instanceof SSAGetInstruction);
+      return iterateFields(node, SSAGetInstruction.class::isInstance);
     }
     
     @Override
     public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-      return iterateFields(node, o -> o instanceof SSAPutInstruction);
+      return iterateFields(node, SSAPutInstruction.class::isInstance);
     }
 
     @Override

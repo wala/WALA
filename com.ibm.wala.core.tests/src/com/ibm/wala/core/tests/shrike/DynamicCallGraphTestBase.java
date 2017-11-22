@@ -147,7 +147,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
 
   protected void checkEdges(CallGraph staticCG) throws IOException {
-    checkEdges(staticCG, (x) -> true );
+    checkEdges(staticCG, x -> true);
   }
   
   protected void checkEdges(CallGraph staticCG, Predicate<MethodReference> filter) throws IOException {
@@ -167,7 +167,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
  
   protected void checkNodes(CallGraph staticCG) throws IOException {
-    checkNodes(staticCG, (x) -> true);
+    checkNodes(staticCG, x -> true);
   }
 
   protected void checkNodes(CallGraph staticCG, Predicate<MethodReference> filter) throws IOException {

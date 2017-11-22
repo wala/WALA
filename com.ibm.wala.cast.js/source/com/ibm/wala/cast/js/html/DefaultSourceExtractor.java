@@ -27,7 +27,7 @@ import com.ibm.wala.util.collections.Pair;
 
 public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
-  public static Supplier<JSSourceExtractor> factory = () -> new DefaultSourceExtractor();
+  public static Supplier<JSSourceExtractor> factory = DefaultSourceExtractor::new;
   
   protected static class HtmlCallBack extends DomLessSourceExtractor.HtmlCallback{
 

@@ -285,7 +285,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       throw new IllegalArgumentException("p2SetWithStates == null");
     }
     Collection<T> finalP2Set = Iterator2Collection.toSet(new MapIterator<WithState<T>, T>(p2SetWithStates.iterator(),
-        object -> object.getWrapped()));
+        WithState::getWrapped));
     return finalP2Set;
   }
 
@@ -504,7 +504,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    */
   @Override
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
-    return getPointsTo(pk, (InstanceKey k) -> { return false; }).snd;
+    return getPointsTo(pk, k -> { return false; }).snd;
   }
 
   /**
@@ -512,7 +512,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    *         <code>null</code> if the points-to set can't be computed in the allocated budget
    */
   public Collection<InstanceKeyAndState> getPointsToWithStates(PointerKey pk) {
-    return getPointsToWithStates(pk, (InstanceKey k) -> { return false; }).snd;
+    return getPointsToWithStates(pk, k -> { return false; }).snd;
   }
 
   /**

@@ -83,7 +83,7 @@ public class BFSPathFinder<T> {
     if (!G.containsNode(src)) {
       throw new IllegalArgumentException("src is not in graph " + src);
     }
-    this.filter = o -> target.equals(o);
+    this.filter = target::equals;
   }
 
   /**
@@ -103,7 +103,7 @@ public class BFSPathFinder<T> {
     this.G = G;
     this.roots = new NonNullSingletonIterator<>(src);
 
-    this.filter = o -> ts.contains(o);
+    this.filter = ts::contains;
   }
 
   /**
@@ -120,7 +120,7 @@ public class BFSPathFinder<T> {
     }
     this.G = G;
     this.roots = sources;
-    this.filter = o -> target.equals(o);
+    this.filter = target::equals;
   }
 
   /**

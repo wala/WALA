@@ -644,7 +644,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
           return null;
         } else {
           // only static fields are actually killed
-          Predicate<PointerKey> staticFilter = o -> o instanceof StaticFieldKey;
+          Predicate<PointerKey> staticFilter = StaticFieldKey.class::isInstance;
           final Collection<PointerKey> kill = Iterator2Collection
               .toSet(new FilterIterator<PointerKey>(mod.iterator(), staticFilter));
           if (kill.isEmpty()) {

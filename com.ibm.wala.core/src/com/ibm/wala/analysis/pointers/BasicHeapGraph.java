@@ -135,7 +135,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     };
 
     final IBinaryNaturalRelation pred = computePredecessors(nodeMgr);
-    final IntFunction<Object> toNode = i -> nodeMgr.getNode(i);
+    final IntFunction<Object> toNode = nodeMgr::getNode;
 
     this.G = new AbstractNumberedGraph<Object>() {
       private final NumberedEdgeManager<Object> edgeMgr = new NumberedEdgeManager<Object>() {

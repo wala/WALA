@@ -67,7 +67,7 @@ public class JUnitEntryPoints {
         }
       }
     }
-    return () -> result.iterator();
+    return result::iterator;
   }
 
   /**
@@ -115,7 +115,7 @@ public class JUnitEntryPoints {
         }
       }
     }
-    return () -> entryPts.iterator();
+    return entryPts::iterator;
   }
 
   /**

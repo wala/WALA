@@ -86,7 +86,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
          }
        }
        return false;
-    }), object -> object.getKey());
+    }), Map.Entry::getKey);
   }
   
   public Iterator<ModuleEntry> getModulesWithParseErrors() {

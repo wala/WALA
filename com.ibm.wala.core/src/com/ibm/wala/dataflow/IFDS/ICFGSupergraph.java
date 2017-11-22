@@ -95,7 +95,7 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
 
   @Override
   public Iterator<? extends BasicBlockInContext<IExplodedBasicBlock>> getCalledNodes(BasicBlockInContext<IExplodedBasicBlock> call) {
-    final Predicate<BasicBlockInContext<IExplodedBasicBlock>> isEntryFilter = o -> o.isEntryBlock();
+    final Predicate<BasicBlockInContext<IExplodedBasicBlock>> isEntryFilter = BasicBlockInContext::isEntryBlock;
     return new FilterIterator<BasicBlockInContext<IExplodedBasicBlock>>(getSuccNodes(call), isEntryFilter);
   }
 

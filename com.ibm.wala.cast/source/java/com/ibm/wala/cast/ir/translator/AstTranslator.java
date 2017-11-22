@@ -1262,7 +1262,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
         }
       } else {
-        transferEdges(liveBlocks, icfg, (src, dst) -> addNormalEdge(src, dst), (src, dst) -> addExceptionalEdge(src, dst));
+        transferEdges(liveBlocks, icfg, this::addNormalEdge, this::addExceptionalEdge);
       }
       
       int x = 0;

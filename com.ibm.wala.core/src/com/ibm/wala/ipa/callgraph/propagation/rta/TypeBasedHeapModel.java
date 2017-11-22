@@ -175,7 +175,7 @@ public class TypeBasedHeapModel implements HeapModel {
   @Override
   public Iterator<PointerKey> iteratePointerKeys() {
     initAllPKeys();
-    Iterator<Object> filtered = new FilterIterator<Object>(pKeys.values().iterator(), o -> o instanceof PointerKey);
+    Iterator<Object> filtered = new FilterIterator<Object>(pKeys.values().iterator(), PointerKey.class::isInstance);
     return new MapIterator<Object, PointerKey>(filtered, PointerKey.class::cast);
   }
 

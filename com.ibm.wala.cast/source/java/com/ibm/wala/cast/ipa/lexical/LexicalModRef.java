@@ -55,7 +55,7 @@ public class LexicalModRef {
    */
   public Map<CGNode, OrdinalSet<Pair<CGNode, String>>> computeLexicalRef() {
     Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg,
-        n -> scanNodeForLexReads(n));
+        this::scanNodeForLexReads);
     return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 
@@ -66,7 +66,7 @@ public class LexicalModRef {
    */
   public Map<CGNode, OrdinalSet<Pair<CGNode, String>>> computeLexicalMod() {
     Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg,
-        n -> scanNodeForLexWrites(n));
+        this::scanNodeForLexWrites);
     return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 

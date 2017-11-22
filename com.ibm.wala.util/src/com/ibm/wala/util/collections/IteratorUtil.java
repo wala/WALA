@@ -46,7 +46,7 @@ public class IteratorUtil {
 
   public static <T, S extends T> Iterator<S> filter(Iterator<T> iterator, final Class<S> cls) {
     return new MapIterator<>(
-        new FilterIterator<>(iterator, o -> cls.isInstance(o)), 
+        new FilterIterator<>(iterator, cls::isInstance), 
         new Function<T,S>() {
           @SuppressWarnings("unchecked")
           @Override

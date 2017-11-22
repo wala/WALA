@@ -200,7 +200,7 @@ public class PointsToMap {
    * @return {@link Iterator}&lt;{@link PointerKey}&gt;
    */
   public Iterator<PointerKey> getTransitiveRoots() {
-    return new FilterIterator<PointerKey>(iterateKeys(), o -> isTransitiveRoot(o));
+    return new FilterIterator<PointerKey>(iterateKeys(), this::isTransitiveRoot);
   }
 
   /**

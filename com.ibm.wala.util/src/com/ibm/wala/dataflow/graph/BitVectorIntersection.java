@@ -58,7 +58,7 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
       return NOT_CHANGED;
     } else {
       final BitVectorVariable bvv = new BitVectorVariable();
-      intersect.foreach(x -> bvv.set(x));
+      intersect.foreach(bvv::set);
       lhs.copyState(bvv);
 
       return CHANGED;

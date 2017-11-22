@@ -121,7 +121,7 @@ public class FlowGraph implements Iterable<Vertex> {
 		GraphReachability<Vertex, T> optimistic_closure = 
 		    new GraphReachability<>(
 		      new InvertedGraph<>(pruned_flowgraph),
-		      o -> type.isInstance(o)
+		      type::isInstance
 		    );
 		
 		optimistic_closure.solve(monitor);
@@ -533,7 +533,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
             @Override
             public Collection<Object> getReachableInstances(Set<Object> roots) {
-              return DFS.getReachableNodes(this, roots, o -> o instanceof ObjectVertex);
+              return DFS.getReachableNodes(this, roots, ObjectVertex.class::isInstance);
             }
 
             @Override

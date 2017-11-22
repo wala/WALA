@@ -57,7 +57,7 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
     @Before
 	  public void setUp() {
 		    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-			WebUtil.setFactory(() -> TestSimplePageCallGraphShapeRhino.this.getParser());
+			WebUtil.setFactory(TestSimplePageCallGraphShapeRhino.this::getParser);
 		    JSSourceExtractor.USE_TEMP_NAME = false;
 //		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
 	  }

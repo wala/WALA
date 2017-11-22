@@ -95,7 +95,7 @@ public class CopyWriter {
     final ArrayList<ZipEntry> entries = new ArrayList<>();
 
     instrumenter = new OfflineInstrumenter();
-    instrumenter.setManifestBuilder(ze -> entries.add(ze));
+    instrumenter.setManifestBuilder(entries::add);
     instrumenter.parseStandardArgs(args);
     instrumenter.setJARComment(copyright);
     instrumenter.beginTraversal();
