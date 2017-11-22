@@ -578,7 +578,6 @@ public class JdtUtil {
   }
 
   public static ASTNode getAST(IFile javaSourceFile) {
-	  @SuppressWarnings("deprecation")
 	  ASTParser parser = ASTParser.newParser(AST.JLS3);
 	  parser.setSource(JavaCore.createCompilationUnitFrom(javaSourceFile));
 	  parser.setProject(JavaCore.create(javaSourceFile.getProject()));
