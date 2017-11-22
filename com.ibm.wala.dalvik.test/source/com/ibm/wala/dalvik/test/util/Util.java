@@ -5,7 +5,6 @@ import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAVA_JAR;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public class Util {
       libs.add(new File(System.getenv("ANDROID_BOOT_OAT")).toURI());
    
     } else if (walaProperties != null && walaProperties.getProperty(ANDROID_RT_DEX_DIR) != null) {
-      for(File lib : new File(walaProperties.getProperty(ANDROID_RT_DEX_DIR)).listFiles((FilenameFilter) (dir, name) -> name.startsWith("boot") && name.endsWith("oat"))) {
+      for(File lib : new File(walaProperties.getProperty(ANDROID_RT_DEX_DIR)).listFiles((dir, name) -> name.startsWith("boot") && name.endsWith("oat"))) {
         libs.add(lib.toURI());
       }
     } else {

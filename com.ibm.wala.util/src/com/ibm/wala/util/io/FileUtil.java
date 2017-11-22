@@ -11,7 +11,6 @@ package com.ibm.wala.util.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -192,7 +191,7 @@ public class FileUtil {
 
   public static void recurseFiles(Consumer<File> action, final Predicate<File> filter, File top) {
   	if (top.isDirectory()) {
-  		for(File f : top.listFiles((FileFilter) file -> filter.test(file) || file.isDirectory())) {
+  		for(File f : top.listFiles(file -> filter.test(file) || file.isDirectory())) {
   			recurseFiles(action, filter, f);
   		}
   	} else {
