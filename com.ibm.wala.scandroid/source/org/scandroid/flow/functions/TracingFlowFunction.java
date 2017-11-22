@@ -60,12 +60,7 @@ public class TracingFlowFunction implements IUnaryFlowFunction {
 	
 	@Override
 	public IntSet getTargets(int d1) {
-		IntSet result = function.getTargets(d1); 
-		
-		result.foreach(x -> {
-			
-		});
-		return result;
+		return function.getTargets(d1);
 	}
 
 }
