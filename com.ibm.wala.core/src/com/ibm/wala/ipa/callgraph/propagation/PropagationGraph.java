@@ -270,9 +270,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   @Override
   public Iterator<AbstractStatement> getStatements() {
-    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), AbstractStatement.class::isInstance);
-    Iterator<AbstractStatement> converted = new MapIterator<>(it, AbstractStatement.class::cast);
-    return new CompoundIterator<AbstractStatement>(converted, new GlobalImplicitIterator());
+    Iterator<AbstractStatement> it = IteratorUtil.filter(delegateGraph.iterator(), AbstractStatement.class);
+    return new CompoundIterator<AbstractStatement>(it, new GlobalImplicitIterator());
   }
 
   /**
@@ -757,9 +756,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   @Override
   public Iterator<PointsToSetVariable> getVariables() {
-    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), IVariable.class::isInstance);
-    Iterator<PointsToSetVariable> converted = new MapIterator<INodeWithNumber, PointsToSetVariable>(it, PointsToSetVariable.class::cast);
-    return converted;
+    return IteratorUtil.filter(delegateGraph.iterator(), PointsToSetVariable.class);
   }
 
   /*
