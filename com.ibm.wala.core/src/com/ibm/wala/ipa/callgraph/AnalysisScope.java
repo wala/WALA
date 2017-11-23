@@ -20,8 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -379,16 +377,7 @@ public class AnalysisScope {
   private JarFile getRtJar() {
     return RtJar.getRtJar(
         new MapIterator<Module,JarFile>(
-            new FilterIterator<Module>(getModules(getPrimordialLoader()).iterator(), new Predicate<Module>() {
-              @Override
-              public boolean test(Module M) {
-                return M instanceof JarFileModule;
-              } }), new Function<Module,JarFile>() {
-
-              @Override
-              public JarFile apply(Module M) {
-                return ((JarFileModule) M).getJarFile();
-              } }));
+            new FilterIterator<Module>(getModules(getPrimordialLoader()).iterator(), M -> M instanceof JarFileModule), M -> ((JarFileModule) M).getJarFile()));
   }
 
   public String getJavaLibraryVersion() throws IllegalStateException {

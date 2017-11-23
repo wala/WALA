@@ -78,28 +78,22 @@ public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropag
 
   @Override
   protected TargetLanguageSelector<ConstraintVisitor, CGNode> makeMainVisitorSelector() {
-    return new TargetLanguageSelector<ConstraintVisitor, CGNode>() {
-      @Override
-      public ConstraintVisitor get(Atom language, CGNode construct) {
-        if (JavaScriptTypes.jsName.equals(language)) {
-          return new JSConstraintVisitor(JavaJavaScriptHybridCallGraphBuilder.this, construct);
-        } else {
-          return new ConstraintVisitor(JavaJavaScriptHybridCallGraphBuilder.this, construct);
-        }
+    return (language, construct) -> {
+      if (JavaScriptTypes.jsName.equals(language)) {
+        return new JSConstraintVisitor(JavaJavaScriptHybridCallGraphBuilder.this, construct);
+      } else {
+        return new ConstraintVisitor(JavaJavaScriptHybridCallGraphBuilder.this, construct);
       }
     };
   }
 
   @Override
   protected TargetLanguageSelector<InterestingVisitor, Integer> makeInterestingVisitorSelector() {
-    return new TargetLanguageSelector<InterestingVisitor, Integer>() {
-      @Override
-      public InterestingVisitor get(Atom language, Integer construct) {
-        if (JavaScriptTypes.jsName.equals(language)) {
-          return new JSInterestingVisitor(construct);
-        } else {
-          return new InterestingVisitor(construct);
-        }
+    return (language, construct) -> {
+      if (JavaScriptTypes.jsName.equals(language)) {
+        return new JSInterestingVisitor(construct);
+      } else {
+        return new InterestingVisitor(construct);
       }
     };
   }
@@ -107,28 +101,22 @@ public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropag
   @Override
   protected TargetLanguageSelector<AstImplicitPointsToSetVisitor, LocalPointerKey> makeImplicitVisitorSelector(
       CrossLanguagePointerAnalysisImpl analysis) {
-    return new TargetLanguageSelector<AstImplicitPointsToSetVisitor, LocalPointerKey>() {
-      @Override
-      public AstImplicitPointsToSetVisitor get(Atom language, LocalPointerKey construct) {
-        if (JavaScriptTypes.jsName.equals(language)) {
-          return new JSImplicitPointsToSetVisitor((AstPointerAnalysisImpl) getPointerAnalysis(), construct);
-        } else {
-          return new AstImplicitPointsToSetVisitor((AstPointerAnalysisImpl) getPointerAnalysis(), construct);
-        }
+    return (language, construct) -> {
+      if (JavaScriptTypes.jsName.equals(language)) {
+        return new JSImplicitPointsToSetVisitor((AstPointerAnalysisImpl) getPointerAnalysis(), construct);
+      } else {
+        return new AstImplicitPointsToSetVisitor((AstPointerAnalysisImpl) getPointerAnalysis(), construct);
       }
     };
   }
 
   @Override
   protected TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> makeRootNodeSelector() {
-    return new TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph>() {
-      @Override
-      public AbstractRootMethod get(Atom language, CrossLanguageCallGraph construct) {
-        if (JavaScriptTypes.jsName.equals(language)) {
-          return new JSFakeRoot(getClassHierarchy(), getOptions(), getAnalysisCache());
-        } else {
-          return new FakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
-        }
+    return (language, construct) -> {
+      if (JavaScriptTypes.jsName.equals(language)) {
+        return new JSFakeRoot(getClassHierarchy(), getOptions(), getAnalysisCache());
+      } else {
+        return new FakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
       }
     };
   }

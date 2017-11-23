@@ -17,10 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
@@ -82,21 +79,14 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   private Iterator<ModuleEntry> getMessages(final byte severity) {
-    return new MapIterator<>(new FilterIterator<>(errors.entrySet().iterator(), new Predicate<Map.Entry<ModuleEntry,Set<Warning>>>()  {
-      @Override public boolean test(Entry<ModuleEntry, Set<Warning>> o) {
-         for(Warning w : o.getValue()) {
-           if (w.getLevel() == severity) {
-             return true;
-           }
+    return new MapIterator<>(new FilterIterator<>(errors.entrySet().iterator(), o -> {
+       for(Warning w : o.getValue()) {
+         if (w.getLevel() == severity) {
+           return true;
          }
-         return false;
-      }
-    }), new Function<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>() {
-      @Override
-      public ModuleEntry apply(Entry<ModuleEntry, Set<Warning>> object) {
-        return object.getKey();
-      }      
-    });
+       }
+       return false;
+    }), object -> object.getKey());
   }
   
   public Iterator<ModuleEntry> getModulesWithParseErrors() {

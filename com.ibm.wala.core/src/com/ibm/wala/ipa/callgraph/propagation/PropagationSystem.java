@@ -46,7 +46,6 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -644,14 +643,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       PointsToSetVariable rhs = (PointsToSetVariable) u.getRightHandSide();
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
-      value.foreach(new IntSetAction() {
-        @Override
-        public void act(int x) {
-          for (int i = 0; i < 4; i++) {
-            topFive[i] = topFive[i + 1];
-          }
-          topFive[4] = x;
+      value.foreach(x -> {
+        for (int i = 0; i < 4; i++) {
+          topFive[i] = topFive[i + 1];
         }
+        topFive[4] = x;
       });
       StringBuffer result = new StringBuffer();
       for (int i = 0; i < 5; i++) {

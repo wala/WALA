@@ -108,14 +108,11 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     if (PlatformUI.isWorkbenchRunning()) {
       // run the code on the UI thread
       Display d = PlatformUI.getWorkbench().getDisplay();
-      Runnable r = new Runnable() {
-        @Override
-        public void run() {
-          try {
-            w.open();
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
+      Runnable r = () -> {
+        try {
+          w.open();
+        } catch (Exception e) {
+          e.printStackTrace();
         }
       };
       if (isBlockInput()) {
@@ -130,12 +127,9 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
         w.open();
         Display.getCurrent().dispose();
       } else {
-        Runnable r = new Runnable() {
-          @Override
-          public void run() {
-            w.open();
-            Display.getCurrent().dispose();
-          }
+        Runnable r = () -> {
+          w.open();
+          Display.getCurrent().dispose();
         };
         Thread t = new Thread(r);
         t.start();

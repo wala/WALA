@@ -148,14 +148,11 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
       scripts.add(scriptName);
     }
  
-    final Function<IMethod, Boolean> filter = new Function<IMethod, Boolean>() {
-      @Override
-      public Boolean apply(IMethod object) {
-        if (object instanceof AstMethod) {
-           return scripts.contains(getScriptName((AstMethod)object));
-        } else {
-          return true;
-        }
+    final Function<IMethod, Boolean> filter = object -> {
+      if (object instanceof AstMethod) {
+         return scripts.contains(getScriptName((AstMethod)object));
+      } else {
+        return true;
       }
     };
 

@@ -82,103 +82,78 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testTwoClasses() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    new IRAssertion() {
+    (IRAssertion) cg -> {
+      final String typeStr = singleInputForTest();
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = singleInputForTest();
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+      final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, iClass);
+      /*
+      Assert.assertEquals("Expected two classes.", iClass.getClassLoader().getNumberOfClasses(), 2);
 
-        /*
-        Assert.assertEquals("Expected two classes.", iClass.getClassLoader().getNumberOfClasses(), 2);
+      for (Iterator<IClass> it = iClass.getClassLoader().iterateAllClasses(); it.hasNext();) {
+        IClass cls = it.next();
 
-        for (Iterator<IClass> it = iClass.getClassLoader().iterateAllClasses(); it.hasNext();) {
-          IClass cls = it.next();
-
-          Assert.assertTrue("Expected class to be either " + typeStr + " or " + "Bar", cls.getName().getClassName().toString()
-              .equals(typeStr)
-              || cls.getName().getClassName().toString().equals("Bar"));
-        }
-        */
+        Assert.assertTrue("Expected class to be either " + typeStr + " or " + "Bar", cls.getName().getClassName().toString()
+            .equals(typeStr)
+            || cls.getName().getClassName().toString().equals("Bar"));
       }
+      */
     }), true);
   }
 
   @Test public void testInterfaceTest1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    /**
-     * IFoo is an interface
-     */
-    new IRAssertion() {
+    cg -> {
+      final String typeStr = "IFoo";
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = "IFoo";
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+      final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, iClass);
-
-        Assert.assertTrue("Expected IFoo to be an interface.", iClass.isInterface());
-      }
+      Assert.assertTrue("Expected IFoo to be an interface.", iClass.isInterface());
     },
 
-    /**
-     * Foo implements IFoo
-     */
-    new IRAssertion() {
+    cg -> {
+      final String typeStr = "FooIT1";
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = "FooIT1";
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+      final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, iClass);
+      final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
 
-        final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
+      Assert.assertEquals("Expected one single interface.", interfaces.size(), 1);
 
-        Assert.assertEquals("Expected one single interface.", interfaces.size(), 1);
-
-        Assert.assertTrue("Expected Foo to implement IFoo", interfaces.contains(cg.getClassHierarchy().lookupClass(
-            findOrCreateTypeReference("Source", "IFoo", cg.getClassHierarchy()))));
-      }
+      Assert.assertTrue("Expected Foo to implement IFoo", interfaces.contains(cg.getClassHierarchy().lookupClass(
+          findOrCreateTypeReference("Source", "IFoo", cg.getClassHierarchy()))));
     }), true);
   }
 
   @Test public void testInheritance1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    /**
-     * 'Derived' extends 'Base'
-     */
-    new IRAssertion() {
+    (IRAssertion) cg -> {
+      final String typeStr = "Derived";
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = "Derived";
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+      final IClass derivedClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, derivedClass);
 
-        final IClass derivedClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, derivedClass);
+      final TypeReference baseType = findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
+      final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
 
-        final TypeReference baseType = findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
-        final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
+      Assert.assertTrue("Expected 'Base' to be the superclass of 'Derived'", derivedClass.getSuperclass().equals(baseClass));
 
-        Assert.assertTrue("Expected 'Base' to be the superclass of 'Derived'", derivedClass.getSuperclass().equals(baseClass));
+      Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
 
-        Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
-
-        Assert.assertTrue("Expected subclasses of 'Base' to be 'Base' and 'Derived'.", subclasses.contains(derivedClass)
-            && subclasses.contains(baseClass));
-      }
+      Assert.assertTrue("Expected subclasses of 'Base' to be 'Base' and 'Derived'.", subclasses.contains(derivedClass)
+          && subclasses.contains(baseClass));
     }), true);
   }
 
@@ -214,80 +189,62 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test public void testArrayLiteral1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    /**
-     * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
-     * SSAArrayLoadInstruction - 1 SSAArrayStoreInstruction
-     */
-    new IRAssertion() {
+    (IRAssertion) cg -> {
 
-      @Override
-      public void check(CallGraph cg) {
+      MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
-        MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
-
-        CGNode node = cg.getNodes(mref).iterator().next();
-        SSAInstruction s = node.getIR().getInstructions()[2];
-        Assert.assertTrue("Did not find new array instruction.", s instanceof SSANewInstruction);
-        Assert.assertTrue("", ((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType());
-      }
-
+      CGNode node = cg.getNodes(mref).iterator().next();
+      SSAInstruction s = node.getIR().getInstructions()[2];
+      Assert.assertTrue("Did not find new array instruction.", s instanceof SSANewInstruction);
+      Assert.assertTrue("", ((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType());
     }), true);
   }
 
   @Test public void testArrayLiteral2() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    /**
-     * int[] y= { 1, 2, 3, 4 } is represented in the IR as four array store
-     * instructions
-     */
-    new IRAssertion() {
+    (IRAssertion) cg -> {
 
-      @Override
-      public void check(CallGraph cg) {
+      MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
-        MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
+      CGNode node = cg.getNodes(mref).iterator().next();
 
-        CGNode node = cg.getNodes(mref).iterator().next();
-
-        final SSAInstruction[] instructions = node.getIR().getInstructions();
-        // test 1
-        {
-          SSAInstruction s1 = instructions[2];
-          if (s1 instanceof SSANewInstruction) {
-            Assert.assertTrue("", ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType());
-          } else {
-            Assert.assertTrue("Expected 3rd to be a new array instruction.", false);
-          }
-        }
-        // test 2
-        {
-          SSAInstruction s2 = instructions[3];
-          if (s2 instanceof SSANewInstruction) {
-            Assert.assertTrue("", ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType());
-          } else {
-            Assert.assertTrue("Expected 4th to be a new array instruction.", false);
-          }
-        }
-        // test 3: the last 4 instructions are of the form y[i] = i+1;
-        {
-          final SymbolTable symbolTable = node.getIR().getSymbolTable();
-          for (int i = 4; i <= 7; i++) {
-            Assert.assertTrue("Expected only array stores.", instructions[i] instanceof SSAArrayStoreInstruction);
-
-            SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
-
-            Assert.assertEquals("Expected an array store to 'y'.", node.getIR().getLocalNames(i, as.getArrayRef())[0], "y");
-
-            final Integer valueOfArrayIndex = ((Integer) symbolTable.getConstantValue(as.getIndex()));
-            final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
-
-            Assert.assertEquals("Expected an array store to 'y' with value " + (valueOfArrayIndex + 1), valueAssigned.intValue(),
-                valueOfArrayIndex + 1);
-
-          }
+      final SSAInstruction[] instructions = node.getIR().getInstructions();
+      // test 1
+      {
+        SSAInstruction s1 = instructions[2];
+        if (s1 instanceof SSANewInstruction) {
+          Assert.assertTrue("", ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType());
+        } else {
+          Assert.assertTrue("Expected 3rd to be a new array instruction.", false);
         }
       }
+      // test 2
+      {
+        SSAInstruction s2 = instructions[3];
+        if (s2 instanceof SSANewInstruction) {
+          Assert.assertTrue("", ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType());
+        } else {
+          Assert.assertTrue("Expected 4th to be a new array instruction.", false);
+        }
+      }
+      // test 3: the last 4 instructions are of the form y[i] = i+1;
+      {
+        final SymbolTable symbolTable = node.getIR().getSymbolTable();
+        for (int i = 4; i <= 7; i++) {
+          Assert.assertTrue("Expected only array stores.", instructions[i] instanceof SSAArrayStoreInstruction);
 
+          SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
+
+          Assert.assertEquals("Expected an array store to 'y'.", node.getIR().getLocalNames(i, as.getArrayRef())[0], "y");
+
+          final Integer valueOfArrayIndex = ((Integer) symbolTable.getConstantValue(as.getIndex()));
+          final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
+
+          Assert.assertEquals("Expected an array store to 'y' with value " + (valueOfArrayIndex + 1), valueAssigned.intValue(),
+              valueOfArrayIndex + 1);
+
+        }
+      }
     }), true);
   }
 
@@ -299,53 +256,41 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test public void testQualifiedStatic() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    /**
-     * 
-     */
-    new IRAssertion() {
+    (IRAssertion) cg -> {
 
-      @Override
-      public void check(CallGraph cg) {
+      MethodReference mref = descriptorToMethodRef("Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
-        MethodReference mref = descriptorToMethodRef("Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
+      CGNode node = cg.getNodes(mref).iterator().next();
+      SSAInstruction s = node.getIR().getInstructions()[4];
 
-        CGNode node = cg.getNodes(mref).iterator().next();
-        SSAInstruction s = node.getIR().getInstructions()[4];
-
-        Assert.assertTrue("Did not find a getstatic instruction.", s instanceof SSAGetInstruction
-            && ((SSAGetInstruction) s).isStatic());
-        final FieldReference field = ((SSAGetInstruction) s).getDeclaredField();
-        Assert.assertEquals("Expected a getstatic for 'value'.", field.getName().toString(), "value");
-        Assert.assertEquals("Expected a getstatic for 'value'.", field.getDeclaringClass().getName().toString(), "LFooQ");
-      }
-
+      Assert.assertTrue("Did not find a getstatic instruction.", s instanceof SSAGetInstruction
+          && ((SSAGetInstruction) s).isStatic());
+      final FieldReference field = ((SSAGetInstruction) s).getDeclaredField();
+      Assert.assertEquals("Expected a getstatic for 'value'.", field.getName().toString(), "value");
+      Assert.assertEquals("Expected a getstatic for 'value'.", field.getDeclaringClass().getName().toString(), "LFooQ");
     }), true);
   }
 
   @Test public void testStaticNesting() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    new IRAssertion() {
+    (IRAssertion) cg -> {
+      final String typeStr = singleInputForTest() + "$WhatsIt";
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = singleInputForTest() + "$WhatsIt";
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+      final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, iClass);
+      // todo: this fails: Assert.assertNotNull("Expected to be enclosed in
+      // 'StaticNesting'.",
+      // ((JavaSourceLoaderImpl.JavaClass)iClass).getEnclosingClass());
+      // todo: is there the concept of CompilationUnit?
 
-        // todo: this fails: Assert.assertNotNull("Expected to be enclosed in
-        // 'StaticNesting'.",
-        // ((JavaSourceLoaderImpl.JavaClass)iClass).getEnclosingClass());
-        // todo: is there the concept of CompilationUnit?
-
-        /**
-         * {@link JavaCAst2IRTranslator#getEnclosingType} return null for static
-         * inner classes..?
-         */
-      }
+      /**
+       * {@link JavaCAst2IRTranslator#getEnclosingType} return null for static
+       * inner classes..?
+       */
     }), true);
   }
 
@@ -356,21 +301,17 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testInnerClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    new IRAssertion() {
+    (IRAssertion) cg -> {
+      final String typeStr = singleInputForTest();
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = singleInputForTest();
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
+      final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, iClass);
-
-        Assert.assertEquals("Expected to be enclosed in 'InnerClass'.", ((JavaSourceLoaderImpl.JavaClass) iClass)
-            .getEnclosingClass(), // todo is there another way?
-            cg.getClassHierarchy().lookupClass(findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
-      }
+      Assert.assertEquals("Expected to be enclosed in 'InnerClass'.", ((JavaSourceLoaderImpl.JavaClass) iClass)
+          .getEnclosingClass(), // todo is there another way?
+          cg.getClassHierarchy().lookupClass(findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
     }), true);
   }
 
@@ -471,61 +412,49 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testLocalClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    new IRAssertion() {
+    (IRAssertion) cg -> {
+      final String typeStr = singleInputForTest();
+      final String localClassStr = "Foo";
 
-      /**
-       * Classes local to method are enclosed in the class the methods belong
-       * to.
-       */
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = singleInputForTest();
-        final String localClassStr = "Foo";
+      // Observe the descriptor for a class local to a method.
+      final TypeReference mainFooType = findOrCreateTypeReference("Source", typeStr + "/main([Ljava/lang/String;)V/"
+          + localClassStr, cg.getClassHierarchy());
 
-        // Observe the descriptor for a class local to a method.
-        final TypeReference mainFooType = findOrCreateTypeReference("Source", typeStr + "/main([Ljava/lang/String;)V/"
-            + localClassStr, cg.getClassHierarchy());
+      // Observe the descriptor for a class local to a method.
+      final IClass mainFooClass = cg.getClassHierarchy().lookupClass(mainFooType);
+      Assert.assertNotNull("Could not find class " + mainFooType, mainFooClass);
 
-        // Observe the descriptor for a class local to a method.
-        final IClass mainFooClass = cg.getClassHierarchy().lookupClass(mainFooType);
-        Assert.assertNotNull("Could not find class " + mainFooType, mainFooClass);
+      final TypeReference methodFooType = findOrCreateTypeReference("Source", typeStr + "/method()V/" + localClassStr, cg
+          .getClassHierarchy());
 
-        final TypeReference methodFooType = findOrCreateTypeReference("Source", typeStr + "/method()V/" + localClassStr, cg
-            .getClassHierarchy());
+      final IClass methodFooClass = cg.getClassHierarchy().lookupClass(methodFooType);
+      Assert.assertNotNull("Could not find class " + methodFooType, methodFooClass);
 
-        final IClass methodFooClass = cg.getClassHierarchy().lookupClass(methodFooType);
-        Assert.assertNotNull("Could not find class " + methodFooType, methodFooClass);
+      final IClass localClass = cg.getClassHierarchy().lookupClass(
+          findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy()));
 
-        final IClass localClass = cg.getClassHierarchy().lookupClass(
-            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy()));
-
-        Assert.assertSame("'Foo' is enclosed in 'Local'", ((JavaSourceLoaderImpl.JavaClass) methodFooClass).getEnclosingClass(),
-            localClass);
-        // todo: is this failing because 'main' is static?
-        // Assert.assertSame("'Foo' is enclosed in 'Local'",
-        // ((JavaSourceLoaderImpl.JavaClass)mainFooClass).getEnclosingClass(),
-        // localClass);
-      }
+      Assert.assertSame("'Foo' is enclosed in 'Local'", ((JavaSourceLoaderImpl.JavaClass) methodFooClass).getEnclosingClass(),
+          localClass);
+      // todo: is this failing because 'main' is static?
+      // Assert.assertSame("'Foo' is enclosed in 'Local'",
+      // ((JavaSourceLoaderImpl.JavaClass)mainFooClass).getEnclosingClass(),
+      // localClass);
     }), true);
   }
 
   @Test public void testAnonymousClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    new IRAssertion() {
+    (IRAssertion) cg -> {
+      final String typeStr = singleInputForTest();
 
-      @Override
-      public void check(CallGraph cg) {
-        final String typeStr = singleInputForTest();
+      final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-        final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+      final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+      Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-        Assert.assertNotNull("Could not find class " + typeStr, iClass);
-
-        // todo what to check?? could not find anything in the APIs for
-        // anonymous
-      }
+      // todo what to check?? could not find anything in the APIs for
+      // anonymous
     }), true);
   }
 

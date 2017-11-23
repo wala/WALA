@@ -176,11 +176,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
 
     try {
       final P proc = getProcedureForSelection();
-      Predicate<T> filter = new Predicate<T>() {
-        @Override public boolean test(T o) {
-          return supergraph.getProcOf(o).equals(proc);
-        }
-      };
+      Predicate<T> filter = o -> supergraph.getProcOf(o).equals(proc);
       Graph<T> localGraph = GraphSlicer.prune(supergraph, filter);
 
       // spawn the viewer

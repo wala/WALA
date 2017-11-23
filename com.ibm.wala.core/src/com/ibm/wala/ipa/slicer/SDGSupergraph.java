@@ -97,11 +97,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
     switch (call.getKind()) {
     case NORMAL:
-      Predicate<Statement> f = new Predicate<Statement>() {
-        @Override public boolean test(Statement s) {
-          return isEntry(s);
-        }
-      };
+      Predicate<Statement> f = s -> isEntry(s);
       return new FilterIterator<Statement>(getSuccNodes(call), f);
     case PARAM_CALLER:
     case HEAP_PARAM_CALLER:

@@ -69,7 +69,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -473,15 +472,12 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             final IntSetVariable<?> objects = rhs;
             if (objects.getValue() != null) {
-              objects.getValue().foreach(new IntSetAction() {
-                @Override
-                public void act(int optr) {
-                  InstanceKey object = system.getInstanceKey(optr);
-                  if (!getBuilder().isUncataloguedField(object.getConcreteType(), hack)) {
-                    PointerKey cat = getPointerKeyForObjectCatalog(object);
-                    if (cat != null) {
-                      system.newConstraint(cat, fieldNameKeys[0]);
-                    }
+              objects.getValue().foreach(optr -> {
+                InstanceKey object = system.getInstanceKey(optr);
+                if (!getBuilder().isUncataloguedField(object.getConcreteType(), hack)) {
+                  PointerKey cat = getPointerKeyForObjectCatalog(object);
+                  if (cat != null) {
+                    system.newConstraint(cat, fieldNameKeys[0]);
                   }
                 }
               });
@@ -539,14 +535,11 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             final IntSetVariable<?> objects = rhs;
             if (objects.getValue() != null) {
-              objects.getValue().foreach(new IntSetAction() {
-                @Override
-                public void act(int optr) {
-                  InstanceKey object = system.getInstanceKey(optr);
-                  PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
-                  if (objCatalog != null) {
-                    system.newConstraint(lk, assignOperator, objCatalog);
-                  }
+              objects.getValue().foreach(optr -> {
+                InstanceKey object = system.getInstanceKey(optr);
+                PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
+                if (objCatalog != null) {
+                  system.newConstraint(lk, assignOperator, objCatalog);
                 }
               });
             }
@@ -718,19 +711,16 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         } else {
           PointsToSetVariable FV = system.findOrCreatePointsToSet(F);
           if (FV.getValue() != null) {
-            FV.getValue().foreach(new IntSetAction() {
-              @Override
-              public void act(int ptr) {
-                InstanceKey iKey = system.getInstanceKey(ptr);
-                if (iKey instanceof ScopeMappingInstanceKey) {
-                  ScopeMappingInstanceKey K = (ScopeMappingInstanceKey) iKey;
-                  Iterator<CGNode> x = K.getFunargNodes(definer);
-                  while (x.hasNext()) {
-                    result.add(x.next());
-                  }
-                } else {
-                  Assertions.UNREACHABLE("unexpected instance key " + iKey);
+            FV.getValue().foreach(ptr -> {
+              InstanceKey iKey = system.getInstanceKey(ptr);
+              if (iKey instanceof ScopeMappingInstanceKey) {
+                ScopeMappingInstanceKey K = (ScopeMappingInstanceKey) iKey;
+                Iterator<CGNode> x = K.getFunargNodes(definer);
+                while (x.hasNext()) {
+                  result.add(x.next());
                 }
+              } else {
+                Assertions.UNREACHABLE("unexpected instance key " + iKey);
               }
             });
           }
@@ -957,34 +947,28 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           final IntSetVariable<?> receivers = rhs[0];
           final IntSetVariable<?> fields = rhs[1];
           if (receivers.getValue() != null && fields.getValue() != null) {
-            receivers.getValue().foreach(new IntSetAction() {
-              @Override
-              public void act(final int rptr) {
-                final InstanceKey receiver = system.getInstanceKey(rptr);
+            receivers.getValue().foreach(rptr -> {
+              final InstanceKey receiver = system.getInstanceKey(rptr);
 
-                if (!isLoadOperation) {
-                  PointerKey cat = getPointerKeyForObjectCatalog(receiver);
-                  if (cat != null) {
-                    system.newConstraint(cat, assignOperator, fieldKey);
+              if (!isLoadOperation) {
+                PointerKey cat = getPointerKeyForObjectCatalog(receiver);
+                if (cat != null) {
+                  system.newConstraint(cat, assignOperator, fieldKey);
+                }
+              }
+
+              fields.getValue().foreach(fptr -> {
+                if (!doneField.contains(fptr) || !doneReceiver.contains(rptr)) {
+                  InstanceKey field = system.getInstanceKey(fptr);
+                  for (Iterator<PointerKey> keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(receiver, field)
+                      : getPointerKeysForReflectedFieldWrite(receiver, field); keys.hasNext();) {
+                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                    if (DEBUG_PROPERTIES)
+                      action.dump(key, false, false);
+                    action.action(key);
                   }
                 }
-
-                fields.getValue().foreach(new IntSetAction() {
-                  @Override
-                  public void act(int fptr) {
-                    if (!doneField.contains(fptr) || !doneReceiver.contains(rptr)) {
-                      InstanceKey field = system.getInstanceKey(fptr);
-                      for (Iterator<PointerKey> keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(receiver, field)
-                          : getPointerKeysForReflectedFieldWrite(receiver, field); keys.hasNext();) {
-                        AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                        if (DEBUG_PROPERTIES)
-                          action.dump(key, false, false);
-                        action.action(key);
-                      }
-                    }
-                  }
-                });
-              }
+              });
             });
             doneReceiver.addAll(receivers.getValue());
             doneField.addAll(fields.getValue());
@@ -1017,29 +1001,26 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
           final IntSetVariable<?> objects = rhs;
           if (objects.getValue() != null) {
-            objects.getValue().foreach(new IntSetAction() {
-              @Override
-              public void act(int optr) {
-                InstanceKey object = system.getInstanceKey(optr);
-                PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
-                for (int f = 0; f < fieldsKeys.length; f++) {
-                  if (isLoadOperation) {
-                    for (Iterator<PointerKey> keys = getPointerKeysForReflectedFieldRead(object, fieldsKeys[f]); keys.hasNext();) {
-                      AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                      if (DEBUG_PROPERTIES)
-                        action.dump(key, true, false);
-                      action.action(key);
-                    }
-                  } else {
-                    if (objCatalog != null) {
-                      system.newConstraint(objCatalog, fieldsKeys[f]);
-                    }
-                    for (Iterator<PointerKey> keys = getPointerKeysForReflectedFieldWrite(object, fieldsKeys[f]); keys.hasNext();) {
-                      AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                      if (DEBUG_PROPERTIES)
-                        action.dump(key, true, false);
-                      action.action(key);
-                    }
+            objects.getValue().foreach(optr -> {
+              InstanceKey object = system.getInstanceKey(optr);
+              PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
+              for (int f = 0; f < fieldsKeys.length; f++) {
+                if (isLoadOperation) {
+                  for (Iterator<PointerKey> keys1 = getPointerKeysForReflectedFieldRead(object, fieldsKeys[f]); keys1.hasNext();) {
+                    AbstractFieldPointerKey key1 = (AbstractFieldPointerKey) keys1.next();
+                    if (DEBUG_PROPERTIES)
+                      action.dump(key1, true, false);
+                    action.action(key1);
+                  }
+                } else {
+                  if (objCatalog != null) {
+                    system.newConstraint(objCatalog, fieldsKeys[f]);
+                  }
+                  for (Iterator<PointerKey> keys2 = getPointerKeysForReflectedFieldWrite(object, fieldsKeys[f]); keys2.hasNext();) {
+                    AbstractFieldPointerKey key2 = (AbstractFieldPointerKey) keys2.next();
+                    if (DEBUG_PROPERTIES)
+                      action.dump(key2, true, false);
+                    action.action(key2);
                   }
                 }
               }
@@ -1081,18 +1062,15 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
           final IntSetVariable<?> fields = rhs;
           if (fields.getValue() != null) {
-            fields.getValue().foreach(new IntSetAction() {
-              @Override
-              public void act(int fptr) {
-                InstanceKey field = system.getInstanceKey(fptr);
-                for (int o = 0; o < objKeys.length; o++) {
-                  for (Iterator<PointerKey> keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(objKeys[o], field)
-                      : getPointerKeysForReflectedFieldWrite(objKeys[o], field); keys.hasNext();) {
-                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                    if (DEBUG_PROPERTIES)
-                      action.dump(key, false, true);
-                    action.action(key);
-                  }
+            fields.getValue().foreach(fptr -> {
+              InstanceKey field = system.getInstanceKey(fptr);
+              for (int o = 0; o < objKeys.length; o++) {
+                for (Iterator<PointerKey> keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(objKeys[o], field)
+                    : getPointerKeysForReflectedFieldWrite(objKeys[o], field); keys.hasNext();) {
+                  AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                  if (DEBUG_PROPERTIES)
+                    action.dump(key, false, true);
+                  action.action(key);
                 }
               }
             });

@@ -41,11 +41,7 @@ public class PathFinderTest {
   }
 
   private static DFSAllPathsFinder<String> makeFinder(Graph<String> g, String start, final String end) {
-    return new DFSAllPathsFinder<>(g, start, new Predicate<String>() {
-      @Override public boolean test(String o) {
-        return end.equals(o);
-      }
-    });
+    return new DFSAllPathsFinder<>(g, start, (Predicate<String>) o -> end.equals(o));
   }
 
   private static void checkPaths(DFSAllPathsFinder<String> paths, int expectedCount) {

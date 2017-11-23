@@ -103,24 +103,21 @@ public class HeadlessUtil {
 
   for (final Map.Entry<IProject,Map<Unit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
     parser.setProject(proj.getKey());
-    parser.processASTs(proj.getValue(), new Function<Object[],Boolean>() {
-      @Override
-      public Boolean apply(Object[] problems) {
-        int length = problems.length;
-        if (length > 0) {
-          StringBuffer buffer = new StringBuffer();
-          for (int i = 0; i < length; i++) {
-            buffer.append(problems[i].toString());
-            buffer.append('\n');
-          }
-          if (length != 0) {
-            System.err.println(buffer.toString());
-            return true;
-          }
+    parser.processASTs(proj.getValue(), problems -> {
+      int length = problems.length;
+      if (length > 0) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+          buffer.append(problems[i].toString());
+          buffer.append('\n');
         }
-        return false;
-     }    
-    });
+        if (length != 0) {
+          System.err.println(buffer.toString());
+          return true;
+        }
+      }
+      return false;
+   });
   }
   }
 }

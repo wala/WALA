@@ -12,7 +12,6 @@ package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -139,11 +138,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
       return new FilterIterator<>(
           base.getCreationSites(CG),
-          new Predicate<Pair<CGNode, NewSiteReference>>() {
-            @Override public boolean test(Pair<CGNode, NewSiteReference> o) {
-              return o.fst.equals(creator);
-            }
-          });
+          o -> o.fst.equals(creator));
     }
   }
 

@@ -13,10 +13,6 @@ package com.ibm.wala.cast.js.translator;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.rewrite.AstLoopUnwinder;
-import com.ibm.wala.cast.tree.rewrite.AstLoopUnwinder.UnwindKey;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
@@ -46,12 +42,7 @@ public abstract class JavaScriptLoopUnwindingTranslatorFactory
 	  }
 
 	  TranslatorToCAst xlator = translateInternal(ast, (SourceModule)M, N);
-	  xlator.addRewriter(new CAstRewriterFactory<CAstRewriter.RewriteContext<AstLoopUnwinder.UnwindKey>,AstLoopUnwinder.UnwindKey>() {
-		@Override
-    public CAstRewriter<RewriteContext<UnwindKey>, UnwindKey> createCAstRewriter(CAst ast) {
-			return new AstLoopUnwinder(ast, true, unwindFactor);
-		}		  
-	  }, false);
+	  xlator.addRewriter(ast1 -> new AstLoopUnwinder(ast1, true, unwindFactor), false);
 	  
 	  return xlator;
   }

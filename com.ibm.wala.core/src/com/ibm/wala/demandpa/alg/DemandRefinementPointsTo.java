@@ -129,7 +129,6 @@ import com.ibm.wala.util.collections.Util;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableIntSetFactory;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -286,13 +285,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       throw new IllegalArgumentException("p2SetWithStates == null");
     }
     Collection<T> finalP2Set = Iterator2Collection.toSet(new MapIterator<WithState<T>, T>(p2SetWithStates.iterator(),
-        new Function<WithState<T>, T>() {
-
-          @Override
-          public T apply(WithState<T> object) {
-            return object.getWrapped();
-          }
-        }));
+        object -> object.getWrapped()));
     return finalP2Set;
   }
 
@@ -502,13 +495,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * do all instance keys in p2set pass ikeyPred?
    */
   private static boolean passesPred(Collection<InstanceKeyAndState> curP2Set, final Predicate<InstanceKey> ikeyPred) {
-    return Util.forAll(curP2Set, new Predicate<InstanceKeyAndState>() {
-
-      @Override
-      public boolean test(InstanceKeyAndState t) {
-        return ikeyPred.test(t.getInstanceKey());
-      }
-    });
+    return Util.forAll(curP2Set, t -> ikeyPred.test(t.getInstanceKey()));
   }
 
   /**
@@ -910,47 +897,32 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (typeFilter instanceof SingleClassFilter) {
         final IClass concreteType = ((SingleClassFilter) typeFilter).getConcreteType();
         final MutableIntSet tmp = intSetFactory.make();
-        vals.foreach(new IntSetAction() {
-
-          @Override
-          public void act(int x) {
-            InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-            if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().getConcreteType())) {
-              tmp.add(x);
-            }
+        vals.foreach(x -> {
+          InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+          if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().getConcreteType())) {
+            tmp.add(x);
           }
-
         });
         vals = tmp;
       } else if (typeFilter instanceof MultipleClassesFilter) {
         final MutableIntSet tmp = intSetFactory.make();
-        vals.foreach(new IntSetAction() {
-
-          @Override
-          public void act(int x) {
-            InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-            for (IClass t : ((MultipleClassesFilter) typeFilter).getConcreteTypes()) {
-              if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
-                tmp.add(x);
-              }
+        vals.foreach(x -> {
+          InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+          for (IClass t : ((MultipleClassesFilter) typeFilter).getConcreteTypes()) {
+            if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
+              tmp.add(x);
             }
           }
-
         });
         vals = tmp;
       } else if (typeFilter instanceof SingleInstanceFilter) {
         final InstanceKey theOnlyInstanceKey = ((SingleInstanceFilter) typeFilter).getInstance();
         final MutableIntSet tmp = intSetFactory.make();
-        vals.foreach(new IntSetAction() {
-
-          @Override
-          public void act(int x) {
-            InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-            if (ikAndState.getInstanceKey().equals(theOnlyInstanceKey)) {
-              tmp.add(x);
-            }
+        vals.foreach(x -> {
+          InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+          if (ikAndState.getInstanceKey().equals(theOnlyInstanceKey)) {
+            tmp.add(x);
           }
-
         });
         vals = tmp;
       } else {
@@ -983,15 +955,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     void handleCopy(final PointerKeyAndState curPkAndState, final PointerKey succPk, final IFlowLabel label) {
       assert !label.isBarred();
       State curState = curPkAndState.getState();
-      doTransition(curState, label, new Function<State, Object>() {
-
-        @Override
-        public Object apply(State nextState) {
-          PointerKeyAndState succPkAndState = new PointerKeyAndState(succPk, nextState);
-          handleCopy(curPkAndState, succPkAndState, label);
-          return null;
-        }
-
+      doTransition(curState, label, nextState -> {
+        PointerKeyAndState succPkAndState = new PointerKeyAndState(succPk, nextState);
+        handleCopy(curPkAndState, succPkAndState, label);
+        return null;
       });
     }
 
@@ -1153,43 +1120,28 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               final PointerKeyAndState defAndState = new PointerKeyAndState(heapModel.getPointerKeyForLocal(caller, invokeInstr
                   .getDef()), receiverState);
               final PointerKey ret = heapModel.getPointerKeyForReturnValue(targetForCall);
-              doTransition(receiverState, returnLabel, new Function<State, Object>() {
-
-                @Override
-                public Object apply(State retState) {
-                  repropCallArg(defAndState, new PointerKeyAndState(ret, retState), returnLabel.bar());
-                  return null;
-                }
-
+              doTransition(receiverState, returnLabel, retState -> {
+                repropCallArg(defAndState, new PointerKeyAndState(ret, retState), returnLabel.bar());
+                return null;
               });
             }
             final PointerKeyAndState exc = new PointerKeyAndState(heapModel.getPointerKeyForLocal(caller, invokeInstr
                 .getException()), receiverState);
             final PointerKey excRet = heapModel.getPointerKeyForExceptionalReturnValue(targetForCall);
-            doTransition(receiverState, returnLabel, new Function<State, Object>() {
-
-              @Override
-              public Object apply(State excRetState) {
-                repropCallArg(exc, new PointerKeyAndState(excRet, excRetState), returnLabel.bar());
-                return null;
-              }
-
+            doTransition(receiverState, returnLabel, excRetState -> {
+              repropCallArg(exc, new PointerKeyAndState(excRet, excRetState), returnLabel.bar());
+              return null;
             });
             for (Iterator<Integer> iter = new PointerParamValueNumIterator(targetForCall); iter.hasNext();) {
               final int formalNum = iter.next();
               final int actualNum = formalNum - 1;
               final ParamBarLabel paramBarLabel = ParamBarLabel.make(new CallerSiteContext(caller, call));
-              doTransition(receiverState, paramBarLabel, new Function<State, Object>() {
-
-                @Override
-                public Object apply(State formalState) {
-                  repropCallArg(
-                      new PointerKeyAndState(heapModel.getPointerKeyForLocal(targetForCall, formalNum), formalState),
-                      new PointerKeyAndState(heapModel.getPointerKeyForLocal(caller, invokeInstr.getUse(actualNum)), receiverState),
-                      paramBarLabel);
-                  return null;
-                }
-
+              doTransition(receiverState, paramBarLabel, formalState -> {
+                repropCallArg(
+                    new PointerKeyAndState(heapModel.getPointerKeyForLocal(targetForCall, formalNum), formalState),
+                    new PointerKeyAndState(heapModel.getPointerKeyForLocal(caller, invokeInstr.getUse(actualNum)), receiverState),
+                    paramBarLabel);
+                return null;
               });
             }
           }
@@ -1250,17 +1202,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             if (DEBUG) {
               System.err.println("alloc " + ik + " assigned to " + curPk);
             }
-            doTransition(curState, label, new Function<State, Object>() {
-
-              @Override
-              public Object apply(State newState) {
-                InstanceKeyAndState ikAndState = new InstanceKeyAndState(ik, newState);
-                int n = ikAndStates.add(ikAndState);
-                findOrCreate(pkToP2Set, curPkAndState).add(n);
-                addToPToWorklist(curPkAndState);
-                return null;
-              }
-
+            doTransition(curState, label, newState -> {
+              InstanceKeyAndState ikAndState = new InstanceKeyAndState(ik, newState);
+              int n = ikAndStates.add(ikAndState);
+              findOrCreate(pkToP2Set, curPkAndState).add(n);
+              addToPToWorklist(curPkAndState);
+              return null;
             });
           }
 
@@ -1775,15 +1722,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           public void visitAssignGlobal(final AssignGlobalLabel label, Object dst) {
             for (Iterator<? extends Object> readIter = g.getReadsOfStaticField((StaticFieldKey) dst); readIter.hasNext();) {
               final PointerKey predPk = (PointerKey) readIter.next();
-              doTransition(curState, AssignGlobalBarLabel.v(), new Function<State, Object>() {
-
-                @Override
-                public Object apply(State predPkState) {
-                  PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
-                  handleTrackedPred(trackedSet, predPkAndState, AssignGlobalBarLabel.v());
-                  return null;
-                }
-
+              doTransition(curState, AssignGlobalBarLabel.v(), predPkState -> {
+                PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
+                handleTrackedPred(trackedSet, predPkAndState, AssignGlobalBarLabel.v());
+                return null;
               });
             }
           }
@@ -1807,15 +1749,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               // send to all getfield sources
               for (Iterator<PointerKey> readIter = g.getReadsOfInstanceField(storeBase, field); readIter.hasNext();) {
                 final PointerKey predPk = readIter.next();
-                doTransition(curState, MatchBarLabel.v(), new Function<State, Object>() {
-
-                  @Override
-                  public Object apply(State predPkState) {
-                    PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
-                    handleTrackedPred(trackedSet, predPkAndState, MatchBarLabel.v());
-                    return null;
-                  }
-
+                doTransition(curState, MatchBarLabel.v(), predPkState -> {
+                  PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
+                  handleTrackedPred(trackedSet, predPkAndState, MatchBarLabel.v());
+                  return null;
                 });
               }
 
@@ -1846,15 +1783,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitAssign(final AssignLabel label, Object dst) {
             final PointerKey predPk = (PointerKey) dst;
-            doTransition(curState, label.bar(), new Function<State, Object>() {
-
-              @Override
-              public Object apply(State predPkState) {
-                PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
-                handleTrackedPred(trackedSet, predPkAndState, label.bar());
-                return null;
-              }
-
+            doTransition(curState, label.bar(), predPkState -> {
+              PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
+              handleTrackedPred(trackedSet, predPkAndState, label.bar());
+              return null;
             });
           }
 
@@ -1865,14 +1797,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           void handle(PointerKeyAndState src, final PointerKey dst, final IFlowLabel label) {
             assert src == curPkAndState;
-            doTransition(curState, label, new Function<State, Object>() {
-              @Override
-              public Object apply(State dstState) {
-                PointerKeyAndState dstAndState = new PointerKeyAndState(dst, dstState);
-                handleTrackedPred(trackedSet, dstAndState, label);
-                return null;
-              }
-
+            doTransition(curState, label, dstState -> {
+              PointerKeyAndState dstAndState = new PointerKeyAndState(dst, dstState);
+              handleTrackedPred(trackedSet, dstAndState, label);
+              return null;
             });
           }
 
@@ -2127,13 +2055,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     final PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
                     assert g.containsNode(actualPk);
                     assert g.containsNode(localPk);
-                    doTransition(curState, paramLabel, new Function<State, Object>() {
-                      @Override
-                      public Object apply(State nextState) {
-                        propagate(new PointerKeyAndState(actualPk, nextState));
-                        return null;
-                      }
-
+                    doTransition(curState, paramLabel, nextState -> {
+                      propagate(new PointerKeyAndState(actualPk, nextState));
+                      return null;
                     });
                   }
                 }
@@ -2180,14 +2104,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 final PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
                     .getPointerKeyForReturnValue(callee);
                 assert g.containsNode(retVal);
-                doTransition(curState, ReturnLabel.make(callSiteAndCGNode), new Function<State, Object>() {
-
-                  @Override
-                  public Object apply(State nextState) {
-                    propagate(new PointerKeyAndState(retVal, nextState));
-                    return null;
-                  }
-
+                doTransition(curState, ReturnLabel.make(callSiteAndCGNode), nextState -> {
+                  propagate(new PointerKeyAndState(retVal, nextState));
+                  return null;
                 });
               }
             } else {
@@ -2202,14 +2121,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   final PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
                       .getPointerKeyForReturnValue(callee);
                   assert g.containsNode(retVal);
-                  doTransition(curState, ReturnLabel.make(callSiteAndCGNode), new Function<State, Object>() {
-
-                    @Override
-                    public Object apply(State nextState) {
-                      propagate(new PointerKeyAndState(retVal, nextState));
-                      return null;
-                    }
-
+                  doTransition(curState, ReturnLabel.make(callSiteAndCGNode), nextState -> {
+                    propagate(new PointerKeyAndState(retVal, nextState));
+                    return null;
                   });
                 }
               }
@@ -2305,17 +2219,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           if (DEBUG_TOPLEVEL) {
             System.err.println("toplevel alloc " + ik + " assigned to " + curPk);
           }
-          doTransition(curState, label, new Function<State, Object>() {
-
-            @Override
-            public Object apply(State newState) {
-              // just check if ik violates the pred
-              if (!pred.test(ik)) {
-                foundBadInstanceKey = true;
-              }
-              return null;
+          doTransition(curState, label, newState -> {
+            // just check if ik violates the pred
+            if (!pred.test(ik)) {
+              foundBadInstanceKey = true;
             }
-
+            return null;
           });
         }
 
@@ -2360,14 +2269,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             for (Iterator<PointerKey> writesToInstanceField = g.getWritesToInstanceField(loadBase, field); writesToInstanceField
                 .hasNext();) {
               final PointerKey writtenPk = writesToInstanceField.next();
-              doTransition(curState, MatchLabel.v(), new Function<State, Object>() {
-
-                @Override
-                public Object apply(State nextState) {
-                  h.propagate(new PointerKeyAndState(writtenPk, nextState));
-                  return null;
-                }
-
+              doTransition(curState, MatchLabel.v(), nextState -> {
+                h.propagate(new PointerKeyAndState(writtenPk, nextState));
+                return null;
               });
             }
           }
@@ -2418,14 +2322,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           for (Iterator<? extends Object> writesToStaticField = g.getWritesToStaticField((StaticFieldKey) dst); writesToStaticField
               .hasNext();) {
             final PointerKey writtenPk = (PointerKey) writesToStaticField.next();
-            doTransition(curState, label, new Function<State, Object>() {
-
-              @Override
-              public Object apply(State nextState) {
-                h.propagate(new PointerKeyAndState(writtenPk, nextState));
-                return null;
-              }
-
+            doTransition(curState, label, nextState -> {
+              h.propagate(new PointerKeyAndState(writtenPk, nextState));
+              return null;
             });
 
           }
@@ -2434,14 +2333,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         @Override
         public void visitAssign(AssignLabel label, Object dst) {
           final PointerKey succPk = (PointerKey) dst;
-          doTransition(curState, label, new Function<State, Object>() {
-
-            @Override
-            public Object apply(State nextState) {
-              h.propagate(new PointerKeyAndState(succPk, nextState));
-              return null;
-            }
-
+          doTransition(curState, label, nextState -> {
+            h.propagate(new PointerKeyAndState(succPk, nextState));
+            return null;
           });
         }
 

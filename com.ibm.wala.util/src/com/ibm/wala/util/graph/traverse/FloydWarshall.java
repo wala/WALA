@@ -19,7 +19,6 @@ import java.util.Set;
 
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
@@ -67,12 +66,7 @@ public class FloydWarshall<T> {
     for(T from : G) {
       final int fn = G.getNumber(from);
       IntSet tos = G.getSuccNodeNumbers(from);
-      tos.foreach(new IntSetAction() {
-        @Override
-        public void act(int x) {
-          result[fn][x] = edgeCost();
-        }
-      });
+      tos.foreach(x -> result[fn][x] = edgeCost());
     }
     
     for(T kn : G) {
@@ -202,20 +196,17 @@ public class FloydWarshall<T> {
              } else {
                final Set<List<T>> result = new HashSet<>();
               
-               intermediate.foreach(new IntSetAction() {
-                @Override
-                public void act(int x) {
-                  T in = G.getNode(x);
-                  for(List<T> pre : getPaths(from, in)) {
-                    for(List<T> post : getPaths(in, to)) {
-                      List<T> path = new LinkedList<>(pre);
-                      path.add(in);
-                      path.addAll(post);
-                      result.add(path);
-                    }
+               intermediate.foreach(x -> {
+                T in = G.getNode(x);
+                for(List<T> pre : getPaths(from, in)) {
+                  for(List<T> post : getPaths(in, to)) {
+                    List<T> path = new LinkedList<>(pre);
+                    path.add(in);
+                    path.addAll(post);
+                    result.add(path);
                   }
-                }           
-               });
+                }
+              });
                
                return result;
              }

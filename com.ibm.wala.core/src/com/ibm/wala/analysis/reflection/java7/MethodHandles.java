@@ -13,7 +13,6 @@ package com.ibm.wala.analysis.reflection.java7;
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -212,30 +211,17 @@ public class MethodHandles {
       return 
           new MapIterator<SSAInstruction,FieldReference>(
               new FilterIterator<SSAInstruction>(getIR(node).iterateNormalInstructions(), filter), 
-              new Function<SSAInstruction,FieldReference>() {
-                @Override
-                public FieldReference apply(SSAInstruction object) {
-                  return ((SSAFieldAccessInstruction)object).getDeclaredField();
-                }                
-              });
+              object -> ((SSAFieldAccessInstruction)object).getDeclaredField());
     }
     
     @Override
     public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-      return iterateFields(node, new Predicate<SSAInstruction>() {
-        @Override public boolean test(SSAInstruction o) {
-          return o instanceof SSAGetInstruction;
-        }
-      });
+      return iterateFields(node, o -> o instanceof SSAGetInstruction);
     }
     
     @Override
     public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-      return iterateFields(node, new Predicate<SSAInstruction>() {
-        @Override public boolean test(SSAInstruction o) {
-          return o instanceof SSAPutInstruction;
-        }
-      });
+      return iterateFields(node, o -> o instanceof SSAPutInstruction);
     }
 
     @Override

@@ -3,8 +3,6 @@ package com.ibm.wala.util.io;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.jar.JarFile;
 
 import com.ibm.wala.util.PlatformUtil;
@@ -37,21 +35,14 @@ public class RtJar {
     JarFile rt = getRtJar(new MapIterator<>(
         new FilterIterator<>(
             new ArrayIterator<>(System.getProperty("sun.boot.class.path").split(File.pathSeparator)),
-            new Predicate<String>() {
-              @Override
-              public boolean test(String t) {
-                return t.endsWith(".jar");
-              } }),
-        new Function<String,JarFile>() {
-          @Override
-          public JarFile apply(String object) {
-            try {
-              return new JarFile(object);
-            } catch (IOException e) {
-              assert false : e.toString();
-              return null;
-            }
-          } 
+            t -> t.endsWith(".jar")),
+        object -> {
+          try {
+            return new JarFile(object);
+          } catch (IOException e) {
+            assert false : e.toString();
+            return null;
+          }
         }));
     
     System.err.println(rt.getName());

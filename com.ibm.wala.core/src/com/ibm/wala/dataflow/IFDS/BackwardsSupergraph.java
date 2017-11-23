@@ -110,18 +110,9 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   @Override
   public Iterator<T> getNormalSuccessors(final T ret) {
     Iterator<T> allPreds = delegate.getPredNodes(ret);
-    Predicate<T> sameProc = new Predicate<T>() {
-      @Override public boolean test(T o) {
-        // throw out the exit node, which can be a predecessor due to tail recursion.
-        return getProcOf(ret).equals(getProcOf(o)) && !delegate.isExit(o);
-      }
-    };
+    Predicate<T> sameProc = o -> getProcOf(ret).equals(getProcOf(o)) && !delegate.isExit(o);
     Iterator<T> sameProcPreds = new FilterIterator<>(allPreds, sameProc);
-    Predicate<T> notCall = new Predicate<T>() {
-      @Override public boolean test(T o) {
-        return !delegate.isCall(o);
-      }
-    };
+    Predicate<T> notCall = o -> !delegate.isCall(o);
     return new FilterIterator<T>(sameProcPreds, notCall);
   }
 

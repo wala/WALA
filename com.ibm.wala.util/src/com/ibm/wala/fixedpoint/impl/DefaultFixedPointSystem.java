@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.fixedpoint.impl;
 
-import java.util.function.Predicate;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -95,11 +94,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   @Override
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Iterator<AbstractStatement> getStatements() {
-    return new FilterIterator(graph.iterator(), new Predicate<Object>() {
-      @Override public boolean test(Object x) {
-        return x instanceof AbstractStatement;
-      }
-    });
+    return new FilterIterator(graph.iterator(), x -> x instanceof AbstractStatement);
   }
 
   @Override
@@ -259,11 +254,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
 
   @Override
   public Iterator<INodeWithNumber> getVariables() {
-    return new FilterIterator<>(graph.iterator(), new Predicate<Object>() {
-      @Override public boolean test(Object x) {
-        return x != null;
-      }
-    });
+    return new FilterIterator<>(graph.iterator(), x -> x != null);
   }
 
   public int getNumberOfNodes() {

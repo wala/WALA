@@ -125,12 +125,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
    */
   private HeapGraph heapGraph;
 
-  private EntrypointBuilder entrypointBuilder = new EntrypointBuilder() {
-    @Override
-    public Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-      return makeDefaultEntrypoints(scope, cha);
-    }
-  };
+  private EntrypointBuilder entrypointBuilder = (scope, cha) -> makeDefaultEntrypoints(scope, cha);
 
   protected abstract CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 

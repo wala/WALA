@@ -21,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -161,20 +159,13 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
   
 	public static Collection<Object[]> generateData(String droidBenchRoot, final URI[] androidLibs, final File androidJavaJar, final String filter) {
 	  final List<Object[]> files = new LinkedList<>();
-	  FileUtil.recurseFiles(new Consumer<File>() {
-	    @Override
-	    public void accept(File f) {
-	      Set<MethodReference> uncalled = uncalledFunctions.get(f.getName());
-	      if (uncalled == null) {
-	        uncalled = Collections.emptySet();
-	      }
-	      files.add(new Object[]{ androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled }); 
-	    }
-	  }, new Predicate<File>() {
-	    @Override
-	    public boolean test(File t) {
-	      return (filter == null || t.getAbsolutePath().contains(filter)) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString());
-	    } }, new File(droidBenchRoot + "/apk/"));
+	  FileUtil.recurseFiles(f -> {
+      Set<MethodReference> uncalled = uncalledFunctions.get(f.getName());
+      if (uncalled == null) {
+        uncalled = Collections.emptySet();
+      }
+      files.add(new Object[]{ androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled }); 
+    }, t -> (filter == null || t.getAbsolutePath().contains(filter)) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString()), new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}
 }

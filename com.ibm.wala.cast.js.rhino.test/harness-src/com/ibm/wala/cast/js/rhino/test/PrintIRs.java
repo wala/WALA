@@ -58,13 +58,7 @@ public class PrintIRs {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     // build a class hierarchy, for access to code info
     IClassHierarchy cha = JSCallGraphUtil.makeHierarchyForScripts(filename);
-    printIRsForCHA(cha, new Predicate<String>() {
-
-      @Override
-      public boolean test(String t) {
-        return t.startsWith("Lprologue.js");
-      }
-    });
+    printIRsForCHA(cha, t -> t.startsWith("Lprologue.js"));
   }
 
   protected static void printIRsForCHA(IClassHierarchy cha, Predicate<String> exclude) {
@@ -101,13 +95,7 @@ public class PrintIRs {
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
     com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
-    printIRsForCHA(cha, new Predicate<String>() {
-
-      @Override
-      public boolean test(String t) {
-        return t.startsWith("Lprologue.js") || t.startsWith("Lpreamble.js");
-      }
-    });
+    printIRsForCHA(cha, t -> t.startsWith("Lprologue.js") || t.startsWith("Lpreamble.js"));
   }
 
   /**

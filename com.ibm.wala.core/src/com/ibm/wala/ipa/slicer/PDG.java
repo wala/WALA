@@ -674,14 +674,12 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
     // in reaching defs calculation, exclude heap statements that are
     // irrelevant.
-    Predicate<Statement> f = new Predicate<Statement>() {
-      @Override public boolean test(Statement o) {
-        if (o instanceof HeapStatement) {
-          HeapStatement h = (HeapStatement) o;
-          return h.getLocation().equals(pk);
-        } else {
-          return true;
-        }
+    Predicate<Statement> f = o -> {
+      if (o instanceof HeapStatement) {
+        HeapStatement h = (HeapStatement) o;
+        return h.getLocation().equals(pk);
+      } else {
+        return true;
       }
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<Statement>(iterator(), f));
@@ -766,15 +764,13 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    * @return Statements representing each return instruction in the ir
    */
   private Collection<NormalStatement> computeReturnStatements(final IR ir) {
-    Predicate<Statement> filter = new Predicate<Statement>() {
-      @Override public boolean test(Statement o) {
-        if (o instanceof NormalStatement) {
-          NormalStatement s = (NormalStatement) o;
-          SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
-          return st instanceof SSAReturnInstruction;
-        } else {
-          return false;
-        }
+    Predicate<Statement> filter = o -> {
+      if (o instanceof NormalStatement) {
+        NormalStatement s = (NormalStatement) o;
+        SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
+        return st instanceof SSAReturnInstruction;
+      } else {
+        return false;
       }
     };
     return Iterator2Collection.toSet(

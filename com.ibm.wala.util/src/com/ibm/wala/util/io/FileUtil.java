@@ -192,12 +192,7 @@ public class FileUtil {
 
   public static void recurseFiles(Consumer<File> action, final Predicate<File> filter, File top) {
   	if (top.isDirectory()) {
-  		for(File f : top.listFiles(new FileFilter() {
-  			@Override
-  			public boolean accept(File file) {
-  				return filter.test(file) || file.isDirectory();
-  			}	
-  		})) {
+  		for(File f : top.listFiles((FileFilter) file -> filter.test(file) || file.isDirectory())) {
   			recurseFiles(action, filter, f);
   		}
   	} else {

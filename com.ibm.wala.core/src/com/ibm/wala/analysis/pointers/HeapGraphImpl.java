@@ -52,11 +52,7 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
 
   @Override
   public Collection<Object> getReachableInstances(Set<Object> roots) {
-    Predicate<Object> f = new Predicate<Object>() {
-      @Override public boolean test(Object o) {
-        return (o instanceof InstanceKey);
-      }
-    };
+    Predicate<Object> f = o -> (o instanceof InstanceKey);
     return DFS.getReachableNodes(this, roots, f);
   }
 

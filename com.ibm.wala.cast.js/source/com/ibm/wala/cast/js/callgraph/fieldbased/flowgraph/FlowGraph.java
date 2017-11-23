@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
@@ -106,32 +105,23 @@ public class FlowGraph implements Iterable<Vertex> {
 	
 	private static <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
 		// prune flowgraph by taking out 'unknown' vertex
-		Graph<Vertex> pruned_flowgraph = GraphSlicer.prune(graph, new Predicate<Vertex>() {
-			@Override
-			public boolean test(Vertex t) {
-				return t.accept(new AbstractVertexVisitor<Boolean>() {
-					@Override
-					public Boolean visitVertex() {
-						return true;
-					}
-					
-					@Override
-					public Boolean visitUnknownVertex(UnknownVertex unknownVertex) {
-						return false;
-					}
-				});
-			}
-		});
+		Graph<Vertex> pruned_flowgraph = GraphSlicer.prune(graph, t -> t.accept(new AbstractVertexVisitor<Boolean>() {
+    	@Override
+    	public Boolean visitVertex() {
+    		return true;
+    	}
+    	
+    	@Override
+    	public Boolean visitUnknownVertex(UnknownVertex unknownVertex) {
+    		return false;
+    	}
+    }));
 		
 		// compute transitive closure
 		GraphReachability<Vertex, T> optimistic_closure = 
 		    new GraphReachability<>(
 		      new InvertedGraph<>(pruned_flowgraph),
-		      new Predicate<Vertex>() {
-		        @Override public boolean test(Vertex o) {
-		          return type.isInstance(o);
-		        } 
-		      }
+		      o -> type.isInstance(o)
 		    );
 		
 		optimistic_closure.solve(monitor);
@@ -285,15 +275,10 @@ public class FlowGraph implements Iterable<Vertex> {
 
       @Override
       public Iterable<PointerKey> getPointerKeys() {
-        return new Iterable<PointerKey> () {
-          @Override
-          public Iterator<PointerKey> iterator() {
-            return new CompoundIterator<>(factory.getArgVertices().iterator(),
-                new CompoundIterator<>(factory.getRetVertices().iterator(), 
-                    new CompoundIterator<PointerKey>(factory.getVarVertices().iterator(),
-                        factory.getPropVertices().iterator())));
-          }
-        };
+        return () -> new CompoundIterator<>(factory.getArgVertices().iterator(),
+            new CompoundIterator<>(factory.getRetVertices().iterator(), 
+                new CompoundIterator<PointerKey>(factory.getVarVertices().iterator(),
+                    factory.getPropVertices().iterator())));
       }
       
       @Override
@@ -548,11 +533,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
             @Override
             public Collection<Object> getReachableInstances(Set<Object> roots) {
-              return DFS.getReachableNodes(this, roots, new Predicate<Object>() {
-                @Override public boolean test(Object o) {
-                  return o instanceof ObjectVertex;
-                } 
-              });
+              return DFS.getReachableNodes(this, roots, o -> o instanceof ObjectVertex);
             }
 
             @Override

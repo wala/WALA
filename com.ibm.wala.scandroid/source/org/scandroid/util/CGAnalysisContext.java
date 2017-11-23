@@ -58,7 +58,6 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.FieldElement;
@@ -198,13 +197,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		Warnings.clear();
 
 		pa = cgb.getPointerAnalysis();
-		partialGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
-			@Override
-			// CallGraph composed of APK nodes
-			public boolean test(CGNode node) {
-				return LoaderUtils.fromLoader(node, ClassLoaderReference.Application) || node.getMethod().isSynthetic();
-			}
-		});
+		partialGraph = GraphSlicer.prune(cg, node -> LoaderUtils.fromLoader(node, ClassLoaderReference.Application) || node.getMethod().isSynthetic());
 		if (options.includeLibrary()) {
 			graph = (ISupergraph) ICFGSupergraph.make(cg);
 		} else {
@@ -217,65 +210,59 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			graph = (ISupergraph) ICFGSupergraph.make(pcg);
 		}
 
-		oneLevelGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
-			@Override
-			public boolean test(CGNode node) {
-				// Node in APK
-				if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
-					return true;
-				} else {
-					Iterator<CGNode> n = cg.getPredNodes(node);
-					while (n.hasNext()) {
-						// Primordial node has a successor in APK
-						if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
-							return true;
-					}
-					n = cg.getSuccNodes(node);
-					while (n.hasNext()) {
-						// Primordial node has a predecessor in APK
-						if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
-							return true;
-					}
-					// Primordial node with no direct successors or predecessors
-					// to APK code
-					return false;
+		oneLevelGraph = GraphSlicer.prune(cg, node -> {
+			// Node in APK
+			if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
+				return true;
+			} else {
+				Iterator<CGNode> n = cg.getPredNodes(node);
+				while (n.hasNext()) {
+					// Primordial node has a successor in APK
+					if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
+						return true;
 				}
+				n = cg.getSuccNodes(node);
+				while (n.hasNext()) {
+					// Primordial node has a predecessor in APK
+					if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
+						return true;
+				}
+				// Primordial node with no direct successors or predecessors
+				// to APK code
+				return false;
 			}
 		});
 
-		systemToApkGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
-			@Override
-			public boolean test(CGNode node) {
+		systemToApkGraph = GraphSlicer.prune(cg, node -> {
 
-				if (LoaderUtils.fromLoader(node, ClassLoaderReference.Primordial)) {
-					Iterator<CGNode> succs = cg.getSuccNodes(node);
-					while (succs.hasNext()) {
-						CGNode n = succs.next();
+			if (LoaderUtils.fromLoader(node, ClassLoaderReference.Primordial)) {
+				Iterator<CGNode> succs = cg.getSuccNodes(node);
+				while (succs.hasNext()) {
+					CGNode n1 = succs.next();
 
-						if (LoaderUtils.fromLoader(n, ClassLoaderReference.Application)) {
-							return true;
-						}
+					if (LoaderUtils.fromLoader(n1, ClassLoaderReference.Application)) {
+						return true;
 					}
-					// Primordial method, with no link to APK code:
-					return false;
-				} else if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
-					// see if this is an APK method that was
-					// invoked by a Primordial method:
-					Iterator<CGNode> preds = cg.getPredNodes(node);
-					while (preds.hasNext()) {
-						CGNode n = preds.next();
-
-						if (LoaderUtils.fromLoader(n, ClassLoaderReference.Primordial)) {
-							return true;
-						}
-					}
-					// APK code, no link to Primordial:
-					return false;
 				}
+				// Primordial method, with no link to APK code:
+				return false;
+			} else if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
+				// see if this is an APK method that was
+				// invoked by a Primordial method:
+				Iterator<CGNode> preds = cg.getPredNodes(node);
+				while (preds.hasNext()) {
+					CGNode n2 = preds.next();
 
-				// who knows, not interesting:
+					if (LoaderUtils.fromLoader(n2, ClassLoaderReference.Primordial)) {
+						return true;
+					}
+				}
+				// APK code, no link to Primordial:
 				return false;
 			}
+
+			// who knows, not interesting:
+			return false;
 		});
 
 		/*

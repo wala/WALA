@@ -347,30 +347,15 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   }
 
   private CodeReader getCodeReader() {
-    return getReader("Code", new GetReader<CodeReader>() {
-      @Override
-      public CodeReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new CodeReader(iter);
-      }
-    });
+    return getReader("Code", iter -> new CodeReader(iter));
   }
  
   private ExceptionsReader getExceptionReader() {
-    return getReader("Exceptions", new GetReader<ExceptionsReader>() {
-      @Override
-      public ExceptionsReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new ExceptionsReader(iter);
-      }
-    });
+    return getReader("Exceptions", iter -> new ExceptionsReader(iter));
   }
  
   private SignatureReader getSignatureReader() {
-    return getReader("Signature", new GetReader<SignatureReader>() {
-      @Override
-      public SignatureReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new SignatureReader(iter);
-      }
-    });
+    return getReader("Signature", iter -> new SignatureReader(iter));
   }
 
   private AnnotationsReader getAnnotationsReader(AnnotationType type) {

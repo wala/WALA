@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -3476,12 +3475,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         constants.add(var);
 
     // constants are unsorted by default
-    Collections.sort(constants, new Comparator<IVariableBinding>() {
-      @Override
-      public int compare(IVariableBinding arg0, IVariableBinding arg1) {
-        return arg0.getVariableId() - arg1.getVariableId();
-      }
-    });
+    Collections.sort(constants, (arg0, arg1) -> arg0.getVariableId() - arg1.getVariableId());
 
     // PART II: create values()
     memberEntities.add(createEnumValuesMethod(typeBinding, constants, context));

@@ -79,12 +79,7 @@ public class PDFViewUtil {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       labelMap.put(bb, getNodeLabel(ir, bb));
     }
-    NodeDecorator<ISSABasicBlock> labels = new NodeDecorator<ISSABasicBlock>() {
-      @Override
-      public String getLabel(ISSABasicBlock bb) {
-        return labelMap.get(bb);
-      }
-    };
+    NodeDecorator<ISSABasicBlock> labels = bb -> labelMap.get(bb);
     return labels;
   }
 

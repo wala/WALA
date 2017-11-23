@@ -81,24 +81,16 @@ public class Util {
       libs.add(new File(System.getenv("ANDROID_BOOT_OAT")).toURI());
    
     } else if (walaProperties != null && walaProperties.getProperty(ANDROID_RT_DEX_DIR) != null) {
-      for(File lib : new File(walaProperties.getProperty(ANDROID_RT_DEX_DIR)).listFiles(new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String name) {
-          return name.startsWith("boot") && name.endsWith("oat");
-        } 
-      })) {
+      for(File lib : new File(walaProperties.getProperty(ANDROID_RT_DEX_DIR)).listFiles((FilenameFilter) (dir, name) -> name.startsWith("boot") && name.endsWith("oat"))) {
         libs.add(lib.toURI());
       }
     } else {
       assert "Dalvik".equals(System.getProperty("java.vm.name"));
-      for(File f : new File("/system/framework/").listFiles(new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-          String name = pathname.getName();
-          return 
-              (name.startsWith("core") || name.startsWith("framework")) && 
-              (name.endsWith("jar") || name.endsWith("apk"));
-        } 
+      for(File f : new File("/system/framework/").listFiles((FileFilter) pathname -> {
+        String name = pathname.getName();
+        return 
+            (name.startsWith("core") || name.startsWith("framework")) && 
+            (name.endsWith("jar") || name.endsWith("apk"));
       })) 
       {
         System.out.println("adding " + f);

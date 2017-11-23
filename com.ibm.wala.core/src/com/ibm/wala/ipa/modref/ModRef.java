@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -103,13 +102,7 @@ public class ModRef<T extends InstanceKey> {
    */
   private Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, final PointerAnalysis<T> pa, final HeapExclusions heapExclude) {
 
-    return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<PointerKey>>() {
-
-      @Override
-      public Collection<PointerKey> apply(CGNode n) {
-        return scanNodeForMod(n, pa, heapExclude);
-      }
-    });
+    return CallGraphTransitiveClosure.collectNodeResults(cg, n -> scanNodeForMod(n, pa, heapExclude));
   }
 
   /**
@@ -119,13 +112,7 @@ public class ModRef<T extends InstanceKey> {
    * @param heapExclude
    */
   private Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, final PointerAnalysis<T> pa, final HeapExclusions heapExclude) {
-    return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<PointerKey>>() {
-
-      @Override
-      public Collection<PointerKey> apply(CGNode n) {
-        return scanNodeForRef(n, pa, heapExclude);
-      }
-    });
+    return CallGraphTransitiveClosure.collectNodeResults(cg, n -> scanNodeForRef(n, pa, heapExclude));
   }
 
   public ExtendedHeapModel makeHeapModel(PointerAnalysis<T> pa) {

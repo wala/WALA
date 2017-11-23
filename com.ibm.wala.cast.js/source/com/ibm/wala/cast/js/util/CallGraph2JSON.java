@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
@@ -75,12 +74,7 @@ public class CallGraph2JSON {
 
 			for(Iterator<CallSiteReference> iter = nd.iterateCallSites(); iter.hasNext();) {
 				CallSiteReference callsite = iter.next();
-        Set<IMethod> targets = Util.mapToSet(cg.getPossibleTargets(nd, callsite), new Function<CGNode, IMethod>() {
-          @Override
-          public IMethod apply(CGNode nd) {
-            return nd.getMethod();
-          }
-        });
+        Set<IMethod> targets = Util.mapToSet(cg.getPossibleTargets(nd, callsite), nd1 -> nd1.getMethod());
 				serializeCallSite(method, callsite, targets, edges);
 			}
 		}
@@ -137,23 +131,15 @@ public class CallGraph2JSON {
 	public static String toJSON(Map<String, Set<String>> map) {
 		StringBuffer res = new StringBuffer();
 		res.append("{\n");
-		res.append(joinWith(Util.mapToSet(map.entrySet(), new Function<Map.Entry<String, Set<String>>, String>() {
-		  @Override
-		  public String apply(Map.Entry<String, Set<String>> e) {
-		    StringBuffer res = new StringBuffer();
-		    if(e.getValue().size() > 0) {
-		      res.append("    \"" + e.getKey() + "\": [\n");
-		      res.append(joinWith(Util.mapToSet(e.getValue(), new Function<String, String>() {
-		          @Override
-              public String apply(String str) {
-                return "        \"" + str + "\"";
-		          }
-			      }), ",\n"));
-		      res.append("\n    ]");
-		    }
-		    return res.length() == 0 ? null : res.toString();
-			}
-		}), ",\n"));
+		res.append(joinWith(Util.mapToSet(map.entrySet(), e -> {
+      StringBuffer res1 = new StringBuffer();
+      if(e.getValue().size() > 0) {
+        res1.append("    \"" + e.getKey() + "\": [\n");
+        res1.append(joinWith(Util.mapToSet(e.getValue(), str -> "        \"" + str + "\""), ",\n"));
+        res1.append("\n    ]");
+      }
+      return res1.length() == 0 ? null : res1.toString();
+    }), ",\n"));
 		res.append("\n}");
 		return res.toString();
 	}

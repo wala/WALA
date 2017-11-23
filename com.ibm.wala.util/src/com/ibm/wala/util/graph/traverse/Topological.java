@@ -31,28 +31,25 @@ public class Topological {
       throw new IllegalArgumentException("graph == null");
     }
 
-    return new Iterable<T>() {
-      @Override
-      public Iterator<T> iterator() {
-        // the following code ensures a topological order over SCCs.
-        // note that the first two lines of the following give a topological
-        // order for dags, but that can get screwed up by cycles. so
-        // instead, we use Tarjan's SCC algorithm, which happens to
-        // visit nodes in an order consistent with a top. order over SCCs.
+    return () -> {
+      // the following code ensures a topological order over SCCs.
+      // note that the first two lines of the following give a topological
+      // order for dags, but that can get screwed up by cycles. so
+      // instead, we use Tarjan's SCC algorithm, which happens to
+      // visit nodes in an order consistent with a top. order over SCCs.
 
-        // finish time is post-order
-        // note that if you pay attention only to the first representative
-        // of each SCC discovered, we have a top. order of these SCC
-        // representatives
-        Iterator<T> finishTime = DFS.iterateFinishTime(graph);
-        // reverse postorder is usual topological sort.
-        Iterator<T> rev = ReverseIterator.reverse(finishTime);
-        // the following statement helps out the GC; note that finishTime holds
-        // on to a large array
-        finishTime = null;
-        Graph<T> G_T = GraphInverter.invert(graph);
-        return DFS.iterateFinishTime(G_T, rev);
-      }
+      // finish time is post-order
+      // note that if you pay attention only to the first representative
+      // of each SCC discovered, we have a top. order of these SCC
+      // representatives
+      Iterator<T> finishTime = DFS.iterateFinishTime(graph);
+      // reverse postorder is usual topological sort.
+      Iterator<T> rev = ReverseIterator.reverse(finishTime);
+      // the following statement helps out the GC; note that finishTime holds
+      // on to a large array
+      finishTime = null;
+      Graph<T> G_T = GraphInverter.invert(graph);
+      return DFS.iterateFinishTime(G_T, rev);
     };
   }
 }

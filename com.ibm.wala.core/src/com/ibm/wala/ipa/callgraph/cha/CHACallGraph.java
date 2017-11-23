@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -163,21 +162,14 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       new MapIterator<IMethod,CGNode>(
           new FilterIterator<IMethod>(
               getPossibleTargets(site),
-              new Predicate<IMethod>() {
-                @Override public boolean test(IMethod o) {
-                  return isRelevantMethod(o);
-                }
-              }
+              o -> isRelevantMethod(o)
           ),
-        new Function<IMethod,CGNode>() {
-          @Override
-          public CGNode apply(IMethod object) {
-            try {
-              return findOrCreateNode(object, Everywhere.EVERYWHERE);
-            } catch (CancelException e) {
-              assert false : e.toString();
-              return null;
-            }
+        object -> {
+          try {
+            return findOrCreateNode(object, Everywhere.EVERYWHERE);
+          } catch (CancelException e) {
+            assert false : e.toString();
+            return null;
           }
         }));
   }
@@ -191,11 +183,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   public Iterator<CallSiteReference> getPossibleSites(final CGNode src, final CGNode target) {
     return
       new FilterIterator<CallSiteReference>(getInterpreter(src).iterateCallSites(src),
-        new Predicate<CallSiteReference>() {
-          @Override public boolean test(CallSiteReference o) {
-            return getPossibleTargets(src, o).contains(target);
-          }
-        });
+        o -> getPossibleTargets(src, o).contains(target));
   }
 
   private class CHARootNode extends CHANode {

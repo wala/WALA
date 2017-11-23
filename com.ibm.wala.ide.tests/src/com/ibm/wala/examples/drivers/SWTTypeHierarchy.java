@@ -106,11 +106,7 @@ public class SWTTypeHierarchy {
    * Restrict g to nodes from the Application loader
    */
   static Graph<IClass> pruneForAppLoader(Graph<IClass> g) {
-    Predicate<IClass> f = new Predicate<IClass>() {
-      @Override public boolean test(IClass c) {
-        return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
-      }
-    };
+    Predicate<IClass> f = c -> (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
     return pruneGraph(g, f);
   }
 

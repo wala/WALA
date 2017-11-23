@@ -19,7 +19,6 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Comparator;
 
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeCT.ClassConstants;
@@ -119,13 +118,10 @@ public class AddSerialVersion {
             fieldCount++;
           }
         }
-        Arrays.sort(fields, 0, fieldCount, new Comparator<Integer>() {
-          @Override
-          public int compare(Integer o1, Integer o2) {
-            String name1 = fieldNames[o1.intValue()];
-            String name2 = fieldNames[o2.intValue()];
-            return name1.compareTo(name2);
-          }
+        Arrays.sort(fields, 0, fieldCount, (o1, o2) -> {
+          String name1 = fieldNames[o1.intValue()];
+          String name2 = fieldNames[o2.intValue()];
+          return name1.compareTo(name2);
         });
         for (int i = 0; i < fieldCount; i++) {
           int f = fields[i].intValue();
@@ -155,18 +151,15 @@ public class AddSerialVersion {
             methodCount++;
           }
         }
-        Arrays.sort(methods, 0, methodCount, new Comparator<Integer>() {
-          @Override
-          public int compare(Integer o1, Integer o2) {
-            int m1 = o1.intValue();
-            int m2 = o2.intValue();
-            if (methodKinds[m1] != methodKinds[m2]) {
-              return methodKinds[m1] - methodKinds[m2];
-            }
-            String name1 = methodSigs[m1];
-            String name2 = methodSigs[m2];
-            return name1.compareTo(name2);
+        Arrays.sort(methods, 0, methodCount, (o1, o2) -> {
+          int m1 = o1.intValue();
+          int m2 = o2.intValue();
+          if (methodKinds[m1] != methodKinds[m2]) {
+            return methodKinds[m1] - methodKinds[m2];
           }
+          String name1 = methodSigs[m1];
+          String name2 = methodSigs[m2];
+          return name1.compareTo(name2);
         });
         for (int i = 0; i < methodCount; i++) {
           int m = methods[i].intValue();

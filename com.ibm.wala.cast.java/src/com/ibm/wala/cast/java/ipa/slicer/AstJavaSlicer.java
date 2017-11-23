@@ -76,35 +76,19 @@ public class AstJavaSlicer extends Slicer {
   }
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
-      @Override public boolean test(SSAInstruction o) {
-        return o instanceof AstAssertInstruction;
-      }
-    });
+    return gatherStatements(CG, partialRoots, o -> o instanceof AstAssertInstruction);
   }
 
   public static Set<Statement> gatherMonitors(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
-      @Override public boolean test(SSAInstruction o) {
-        return o instanceof SSAMonitorInstruction;
-      }
-    });
+    return gatherStatements(CG, partialRoots, o -> o instanceof SSAMonitorInstruction);
   }
 
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
-      @Override public boolean test(SSAInstruction o) {
-        return (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction);
-      }
-    });
+    return gatherStatements(CG, partialRoots, o -> (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction));
   }
 
   public static Set<Statement> gatherReads(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
-      @Override public boolean test(SSAInstruction o) {
-        return (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction);
-      }
-    });
+    return gatherStatements(CG, partialRoots, o -> (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction));
   }
 
   public static Pair<Collection<Statement>, SDG<InstanceKey>> computeAssertionSlice(CallGraph CG, PointerAnalysis<InstanceKey> pa,

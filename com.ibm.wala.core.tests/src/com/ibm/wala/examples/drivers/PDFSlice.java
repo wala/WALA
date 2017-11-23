@@ -249,11 +249,7 @@ public class PDFSlice {
    * return a view of the sdg restricted to the statements in the slice
    */
   public static Graph<Statement> pruneSDG(SDG<InstanceKey> sdg, final Collection<Statement> slice) {
-    Predicate<Statement> f = new Predicate<Statement>() {
-      @Override public boolean test(Statement o) {
-        return slice.contains(o);
-      }
-    };
+    Predicate<Statement> f = o -> slice.contains(o);
     return GraphSlicer.prune(sdg, f);
   }
 
@@ -261,36 +257,32 @@ public class PDFSlice {
    * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
    */
   public static NodeDecorator<Statement> makeNodeDecorator() {
-    return new NodeDecorator<Statement>() {
-      @Override
-      public String getLabel(Statement s) throws WalaException {
-        switch (s.getKind()) {
-        case HEAP_PARAM_CALLEE:
-        case HEAP_PARAM_CALLER:
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
-          HeapStatement h = (HeapStatement) s;
-          return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-        case NORMAL:
-          NormalStatement n = (NormalStatement) s;
-          return n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
-        case PARAM_CALLEE:
-          ParamCallee paramCallee = (ParamCallee) s;
-          return s.getKind() + " " + paramCallee.getValueNumber() + "\\n" + s.getNode().getMethod().getName();
-        case PARAM_CALLER:
-          ParamCaller paramCaller = (ParamCaller) s;
-          return s.getKind() + " " + paramCaller.getValueNumber() + "\\n" + s.getNode().getMethod().getName() + "\\n"
-              + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
-        case EXC_RET_CALLEE:
-        case EXC_RET_CALLER:
-        case NORMAL_RET_CALLEE:
-        case NORMAL_RET_CALLER:
-        case PHI:
-        default:
-          return s.toString();
-        }
+    return s -> {
+      switch (s.getKind()) {
+      case HEAP_PARAM_CALLEE:
+      case HEAP_PARAM_CALLER:
+      case HEAP_RET_CALLEE:
+      case HEAP_RET_CALLER:
+        HeapStatement h = (HeapStatement) s;
+        return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+      case NORMAL:
+        NormalStatement n = (NormalStatement) s;
+        return n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
+      case PARAM_CALLEE:
+        ParamCallee paramCallee = (ParamCallee) s;
+        return s.getKind() + " " + paramCallee.getValueNumber() + "\\n" + s.getNode().getMethod().getName();
+      case PARAM_CALLER:
+        ParamCaller paramCaller = (ParamCaller) s;
+        return s.getKind() + " " + paramCaller.getValueNumber() + "\\n" + s.getNode().getMethod().getName() + "\\n"
+            + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
+      case EXC_RET_CALLEE:
+      case EXC_RET_CALLER:
+      case NORMAL_RET_CALLEE:
+      case NORMAL_RET_CALLER:
+      case PHI:
+      default:
+        return s.toString();
       }
-
     };
   }
 

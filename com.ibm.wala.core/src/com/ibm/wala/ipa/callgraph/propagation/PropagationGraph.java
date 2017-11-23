@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import com.ibm.wala.fixedpoint.impl.GeneralStatement;
 import com.ibm.wala.fixpoint.AbstractOperator;
@@ -271,11 +270,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   @Override
   public Iterator<AbstractStatement> getStatements() {
-    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), new Predicate<INodeWithNumber>() {
-      @Override public boolean test(INodeWithNumber x) {
-        return x instanceof AbstractStatement;
-      }
-    });
+    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), x -> x instanceof AbstractStatement);
     Iterator<AbstractStatement> converted = new MapIterator<>(it, AbstractStatement.class::cast);
     return new CompoundIterator<AbstractStatement>(converted, new GlobalImplicitIterator());
   }
@@ -762,11 +757,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   @Override
   public Iterator<PointsToSetVariable> getVariables() {
-    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), new Predicate<INodeWithNumber>() {
-      @Override public boolean test(INodeWithNumber x) {
-        return x instanceof IVariable;
-      }
-    });
+    Iterator<INodeWithNumber> it = new FilterIterator<>(delegateGraph.iterator(), x -> x instanceof IVariable);
     Iterator<PointsToSetVariable> converted = new MapIterator<INodeWithNumber, PointsToSetVariable>(it, PointsToSetVariable.class::cast);
     return converted;
   }

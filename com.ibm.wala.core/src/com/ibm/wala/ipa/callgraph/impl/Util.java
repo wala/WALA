@@ -167,12 +167,7 @@ public class Util {
         }
       }
     }
-    return new Iterable<Entrypoint>() {
-      @Override
-      public Iterator<Entrypoint> iterator() {
-        return result.iterator();
-      }
-    };
+    return () -> result.iterator();
   }
 
   /**
@@ -218,32 +213,29 @@ public class Util {
       }
     }
 
-    return new Iterable<Entrypoint>() {
-      @Override
-      public Iterator<Entrypoint> iterator() {
-        final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
-        return new Iterator<Entrypoint>() {
-          private int index = 0;
+    return () -> {
+      final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
+      return new Iterator<Entrypoint>() {
+        private int index = 0;
 
-          @Override
-          public void remove() {
-            Assertions.UNREACHABLE();
-          }
+        @Override
+        public void remove() {
+          Assertions.UNREACHABLE();
+        }
 
-          @Override
-          public boolean hasNext() {
-            return index < classNames.length;
-          }
+        @Override
+        public boolean hasNext() {
+          return index < classNames.length;
+        }
 
-          @Override
-          public Entrypoint next() {
-            TypeReference T = TypeReference.findOrCreate(loaderRef, TypeName.string2TypeName(classNames[index++]));
-            MethodReference mainRef = MethodReference.findOrCreate(T, mainMethod, Descriptor
-                .findOrCreateUTF8("([Ljava/lang/String;)V"));
-            return new DefaultEntrypoint(mainRef, cha);
-          }
-        };
-      }
+        @Override
+        public Entrypoint next() {
+          TypeReference T = TypeReference.findOrCreate(loaderRef, TypeName.string2TypeName(classNames[index++]));
+          MethodReference mainRef = MethodReference.findOrCreate(T, mainMethod, Descriptor
+              .findOrCreateUTF8("([Ljava/lang/String;)V"));
+          return new DefaultEntrypoint(mainRef, cha);
+        }
+      };
     };
   }
 

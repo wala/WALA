@@ -12,8 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -110,18 +108,9 @@ public final class ConcreteTypeKey implements InstanceKey {
         return new MapIterator<NewSiteReference, Pair<CGNode, NewSiteReference>>(
             new FilterIterator<NewSiteReference>(
                 outer.iterateNewSites(),
-                new Predicate<NewSiteReference>() {
-                  @Override public boolean test(NewSiteReference o) {
-                    return o.getDeclaredType().equals(type.getReference());
-                  }
-                }
+                o -> o.getDeclaredType().equals(type.getReference())
             ),
-            new Function<NewSiteReference, Pair<CGNode, NewSiteReference>>() {
-              @Override
-              public Pair<CGNode, NewSiteReference> apply(NewSiteReference object) {
-                return Pair.make(outer, object);
-              }
-            });
+            object -> Pair.make(outer, object));
       }
     };
   }

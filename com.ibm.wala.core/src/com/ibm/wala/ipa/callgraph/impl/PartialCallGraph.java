@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph.impl;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -53,11 +52,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    * @param nodes set of nodes that will be included in the new, partial call graph
    */
   public static PartialCallGraph make(final CallGraph cg, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
-    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
-      @Override public boolean test(CGNode o) {
-        return nodes.contains(o);
-      }
-    });
+    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, o -> nodes.contains(o));
 
     return new PartialCallGraph(cg, partialRoots, partialGraph);
   }
@@ -69,11 +64,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    */
   public static PartialCallGraph make(CallGraph cg, Collection<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(cg, partialRoots);
-    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
-      @Override public boolean test(CGNode o) {
-        return nodes.contains(o);
-      }
-    });
+    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, o -> nodes.contains(o));
 
     return new PartialCallGraph(cg, partialRoots, partialGraph);
   }
@@ -122,11 +113,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
 
   @Override
   public Iterator<CGNode> iterateNodes(IntSet nodes) {
-    return new FilterIterator<CGNode>(cg.iterateNodes(nodes), new Predicate<CGNode>() {
-      @Override public boolean test(CGNode o) {
-        return containsNode(o);
-      }
-    });
+    return new FilterIterator<CGNode>(cg.iterateNodes(nodes), o -> containsNode(o));
   }
 
   @Override
