@@ -13,8 +13,8 @@
 	<property name="javacVerbose" value="false"/>
 	<property name="logExtension" value=".log"/>
 	<property name="compilerArg" value=""/>
-	<property name="javacSource" value="1.5"/>
-	<property name="javacTarget" value="1.5"/>
+	<property name="javacSource" value="1.8"/>
+	<property name="javacTarget" value="1.8"/>
 	<!-- This property has been updated to correspond to the paths used by the latest Java update
 	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
 	try changing the value of the property to "${java.home}/../../../Classes" -->
