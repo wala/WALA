@@ -1,0 +1,25 @@
+apply plugin: 'java'
+    
+repositories {
+    mavenCentral()
+}
+
+
+
+sourceSets {
+    main {
+        java  {
+    	    srcDir 'src'
+    	    }
+    	}
+    test {
+        java {
+    	    srcDir 'test'
+    	    }
+    	}
+}
+
+
+dependencies {
+	compile project(':com.ibm.wala.util')
+}
