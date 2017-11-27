@@ -1,0 +1,34 @@
+apply plugin: 'java'
+    
+repositories {
+    mavenCentral()
+            maven {
+    	    url "https://repo.eclipse.org/content/groups/releases/"
+	    }
+}
+
+
+
+sourceSets {
+    main {
+        java  {
+    	    srcDir 'source'
+    	    }
+    	}
+    test {
+        java {
+    	    srcDir 'test'
+    	    }
+    	}
+}
+
+
+dependencies {
+	compile project(':com.ibm.wala.util')
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.shrike')
+	compile project(':com.ibm.wala.core.tests')
+	compile project(':com.ibm.wala.cast')
+	// https://mvnrepository.com/artifact/net.htmlparser.jericho/jericho-html
+	compile group: 'net.htmlparser.jericho', name: 'jericho-html', version: '3.2'
+}

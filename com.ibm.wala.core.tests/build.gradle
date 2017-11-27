@@ -1,0 +1,41 @@
+apply plugin: 'java'
+    
+repositories {
+    mavenCentral()
+    maven {
+    	    url "https://repo.eclipse.org/content/groups/releases/"
+	    }
+}
+
+
+
+sourceSets {
+    main {
+        java  {
+    	    srcDir 'src'
+    	    }
+    	}
+    test {
+        java {
+    	    srcDir 'test'
+    	    }
+    	}
+}
+
+
+dependencies {
+	compile project(':com.ibm.wala.shrike')
+	compile project(':com.ibm.wala.util')
+	compile project(':com.ibm.wala.core')
+
+	// https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest
+	compile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
+	// https://mvnrepository.com/artifact/junit/junit
+	compile group: 'junit', name: 'junit', version: '4.11'
+	// https://mvnrepository.com/artifact/org.apache.ant/ant
+	compile group: 'org.apache.ant', name: 'ant', version: '1.8.2'
+	// https://mvnrepository.com/artifact/org.eclipse.core/org.eclipse.core.runtime
+	compile group: 'org.eclipse.core', name: 'org.eclipse.core.runtime', version: '3.10.0.v20140318-2214'
+	// https://mvnrepository.com/artifact/org.osgi/org.osgi.core
+	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.2.0'
+}
