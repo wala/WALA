@@ -1,0 +1,33 @@
+apply plugin: 'java'
+    
+repositories {
+    mavenCentral()
+}
+
+
+
+sourceSets {
+    main {
+        java  {
+    	    srcDir 'src'
+    	    }
+    	}
+    test {
+        java {
+    	    srcDir 'test'
+    	    }
+    	}
+}
+
+
+dependencies {
+	compile project(':com.ibm.wala.cast.js.rhino')
+	compile project(':com.ibm.wala.shrike')
+	compile project(':com.ibm.wala.util')
+	compile project(':com.ibm.wala.cast')
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.core.tests')
+	compile project(':com.ibm.wala.cast.js')
+	compile project(':com.ibm.wala.cast.js.test')
+	compile project(':com.ibm.wala.cast.test')
+}
