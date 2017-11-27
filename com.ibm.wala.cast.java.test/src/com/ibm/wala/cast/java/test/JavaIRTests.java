@@ -82,7 +82,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testTwoClasses() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    (IRAssertion) cg -> {
+    cg -> {
       final String typeStr = singleInputForTest();
 
       final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
@@ -137,7 +137,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test public void testInheritance1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    (IRAssertion) cg -> {
+    cg -> {
       final String typeStr = "Derived";
 
       final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
@@ -189,7 +189,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test public void testArrayLiteral1() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    (IRAssertion) cg -> {
+    cg -> {
 
       MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
@@ -202,7 +202,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test public void testArrayLiteral2() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    (IRAssertion) cg -> {
+    cg -> {
 
       MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
@@ -256,7 +256,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test public void testQualifiedStatic() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
-    (IRAssertion) cg -> {
+    cg -> {
 
       MethodReference mref = descriptorToMethodRef("Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
@@ -274,7 +274,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testStaticNesting() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    (IRAssertion) cg -> {
+    cg -> {
       final String typeStr = singleInputForTest() + "$WhatsIt";
 
       final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
@@ -301,7 +301,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testInnerClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    (IRAssertion) cg -> {
+    cg -> {
       final String typeStr = singleInputForTest();
 
       final TypeReference type = findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
@@ -412,7 +412,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testLocalClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    (IRAssertion) cg -> {
+    cg -> {
       final String typeStr = singleInputForTest();
       final String localClassStr = "Foo";
 
@@ -445,7 +445,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test public void testAnonymousClass() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
-    (IRAssertion) cg -> {
+    cg -> {
       final String typeStr = singleInputForTest();
 
       final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());

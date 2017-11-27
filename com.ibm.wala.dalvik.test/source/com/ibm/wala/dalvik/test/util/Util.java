@@ -4,7 +4,6 @@ import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_DEX_DIR;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAVA_JAR;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -85,7 +84,7 @@ public class Util {
       }
     } else {
       assert "Dalvik".equals(System.getProperty("java.vm.name"));
-      for(File f : new File("/system/framework/").listFiles((FileFilter) pathname -> {
+      for(File f : new File("/system/framework/").listFiles(pathname -> {
         String name = pathname.getName();
         return 
             (name.startsWith("core") || name.startsWith("framework")) && 
