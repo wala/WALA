@@ -307,7 +307,7 @@ public class ClassHierarchy implements IClassHierarchy {
       System.err.println(("Attempt to add class " + klass));
     }
     Set<IClass> loadedSuperclasses;
-    Collection loadedSuperInterfaces;
+    Collection<IClass> loadedSuperInterfaces;
     try {
       loadedSuperclasses = computeSuperclasses(klass);
       loadedSuperInterfaces = klass.getAllImplementedInterfaces();
@@ -352,8 +352,8 @@ public class ClassHierarchy implements IClassHierarchy {
     }
 
     if (loadedSuperInterfaces != null) {
-      for (Iterator it3 = loadedSuperInterfaces.iterator(); it3.hasNext();) {
-        final IClass iface = (IClass) it3.next();
+      for (Iterator<IClass> it3 = loadedSuperInterfaces.iterator(); it3.hasNext();) {
+        final IClass iface = it3.next();
         try {
           // make sure we'll be able to load the interface!
           computeSuperclasses(iface);
@@ -454,13 +454,13 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     if (declaredClass.isInterface()) {
       HashSet<IMethod> result = HashSetFactory.make(3);
-      Set impls = implementors.get(declaredClass);
+      Set<IClass> impls = implementors.get(declaredClass);
       if (impls == null) {
         // give up and return no receivers
         return Collections.emptySet();
       }
-      for (Iterator it = impls.iterator(); it.hasNext();) {
-        IClass klass = (IClass) it.next();
+      for (Iterator<IClass> it = impls.iterator(); it.hasNext();) {
+        IClass klass = it.next();
         if (!klass.isInterface() && !klass.isAbstract()) {
           result.addAll(computeTargetsNotInterface(ref, klass));
         }
@@ -1014,8 +1014,8 @@ public class ClassHierarchy implements IClassHierarchy {
     if (subTypeRefsOfError == null) {
       computeSubClasses(TypeReference.JavaLangError);
       subTypeRefsOfError = HashSetFactory.make(subclassesOfError.size());
-      for (Iterator it = subclassesOfError.iterator(); it.hasNext();) {
-        IClass klass = (IClass) it.next();
+      for (Iterator<IClass> it = subclassesOfError.iterator(); it.hasNext();) {
+        IClass klass = it.next();
         subTypeRefsOfError.add(klass.getReference());
       }
     }
@@ -1032,8 +1032,8 @@ public class ClassHierarchy implements IClassHierarchy {
     if (runtimeExceptionTypeRefs == null) {
       computeSubClasses(TypeReference.JavaLangRuntimeException);
       runtimeExceptionTypeRefs = HashSetFactory.make(runtimeExceptionClasses.size());
-      for (Iterator it = runtimeExceptionClasses.iterator(); it.hasNext();) {
-        IClass klass = (IClass) it.next();
+      for (Iterator<IClass> it = runtimeExceptionClasses.iterator(); it.hasNext();) {
+        IClass klass = it.next();
         runtimeExceptionTypeRefs.add(klass.getReference());
       }
     }

@@ -767,7 +767,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       s.append("BB").append(i).append("[").append(bb.getFirstInstructionIndex()).append("..").append(bb.getLastInstructionIndex())
           .append("]\n");
 
-      Iterator succNodes = getSuccNodes(bb);
+      Iterator<ISSABasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
         s.append("    -> BB").append(((BasicBlock) succNodes.next()).getNumber()).append("\n");
       }
@@ -861,7 +861,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       throw new IllegalArgumentException("b == null");
     }
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
-    final Iterator i = delegate.getPredNodes(n);
+    final Iterator<IBasicBlock<IInstruction>> i = delegate.getPredNodes(n);
     return new Iterator<ISSABasicBlock>() {
       @Override
       public boolean hasNext() {
@@ -870,7 +870,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
       @Override
       public BasicBlock next() {
-        IBasicBlock n = (IBasicBlock) i.next();
+        IBasicBlock n = i.next();
         int number = n.getNumber();
         return basicBlocks[number];
       }
@@ -903,7 +903,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       throw new IllegalArgumentException("b == null");
     }
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
-    final Iterator i = delegate.getSuccNodes(n);
+    final Iterator<IBasicBlock<IInstruction>> i = delegate.getSuccNodes(n);
     return new Iterator<ISSABasicBlock>() {
       @Override
       public boolean hasNext() {
@@ -912,7 +912,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
       @Override
       public ISSABasicBlock next() {
-        IBasicBlock n = (IBasicBlock) i.next();
+        IBasicBlock n = i.next();
         int number = n.getNumber();
         return basicBlocks[number];
       }

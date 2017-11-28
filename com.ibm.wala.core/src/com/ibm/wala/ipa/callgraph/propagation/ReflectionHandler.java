@@ -93,8 +93,8 @@ public class ReflectionHandler {
   private Collection<Statement> computeFactoryReturnStatements() {
     // todo: clean up logic with inheritance, delegation.
     HashSet<Statement> result = HashSetFactory.make();
-    for (Iterator it = builder.getCallGraph().iterator(); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
+    for (Iterator<CGNode> it = builder.getCallGraph().iterator(); it.hasNext();) {
+      CGNode n = it.next();
       if (n.getMethod() instanceof SyntheticMethod) {
         SyntheticMethod m = (SyntheticMethod) n.getMethod();
         if (m.isFactoryMethod()) {

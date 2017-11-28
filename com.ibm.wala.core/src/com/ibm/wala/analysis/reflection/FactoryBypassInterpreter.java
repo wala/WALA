@@ -263,7 +263,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   private SpecializedFactoryMethod findOrCreateSpecializedFactoryMethod(CGNode node) {
     SpecializedFactoryMethod m = syntheticMethodCache.get(node.getContext());
     if (m == null) {
-      Set types = getTypesForContext(node.getContext());
+      Set<TypeReference> types = getTypesForContext(node.getContext());
       m = new SpecializedFactoryMethod((SummarizedMethod) node.getMethod(), node.getContext(), types);
       syntheticMethodCache.put(node.getContext(), m);
     }
@@ -312,7 +312,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
   }
 
-  public Iterator iterateCastTypes(CGNode node) {
+  public Iterator<TypeReference> iterateCastTypes(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -378,7 +378,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
     }
 
-    protected SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set S) {
+    protected SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set<TypeReference> S) {
       super(m, m.getDeclaringClass(), m.isStatic(), true);
 
       this.context = context;
@@ -393,8 +393,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       // add original statements from the method summary
       nextLocal = addOriginalStatements(m);
 
-      for (Iterator it = S.iterator(); it.hasNext();) {
-        TypeReference type = (TypeReference) it.next();
+      for (Iterator<TypeReference> it = S.iterator(); it.hasNext();) {
+        TypeReference type = it.next();
         TypeAbstraction T = typeRef2TypeAbstraction(m.getClassHierarchy(), type);
         addStatementsForTypeAbstraction(T);
       }

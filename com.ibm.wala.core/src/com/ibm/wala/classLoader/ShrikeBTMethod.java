@@ -309,7 +309,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * @return Iterator of TypeReference
    * @throws InvalidClassFileException
    */
-  public Iterator getArraysRead() throws InvalidClassFileException {
+  public Iterator<TypeReference> getArraysRead() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
     }
@@ -336,7 +336,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * @return Iterator of TypeReference
    * @throws InvalidClassFileException
    */
-  public Iterator getCastTypes() throws InvalidClassFileException {
+  public Iterator<TypeReference> getCastTypes() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
     }
@@ -541,8 +541,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     info.implicitExceptions = new TypeReference[simpleVisitor.implicitExceptions.size()];
     i = 0;
-    for (Iterator it = simpleVisitor.implicitExceptions.iterator(); it.hasNext();) {
-      info.implicitExceptions[i++] = (TypeReference) it.next();
+    for (Iterator<TypeReference> it = simpleVisitor.implicitExceptions.iterator(); it.hasNext();) {
+      info.implicitExceptions[i++] = it.next();
     }
 
     info.castTypes = new TypeReference[simpleVisitor.castTypes.size()];

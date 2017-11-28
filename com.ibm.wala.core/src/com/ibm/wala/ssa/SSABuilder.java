@@ -965,8 +965,8 @@ public class SSABuilder extends AbstractIntStackMachine {
      * Finish populating the map of local variable information
      */
     private void finishLocalMap(SSABuilder builder) {
-      for (Iterator it = shrikeCFG.iterator(); it.hasNext();) {
-        ShrikeCFG.BasicBlock bb = (ShrikeCFG.BasicBlock) it.next();
+      for (Iterator<BasicBlock> it = shrikeCFG.iterator(); it.hasNext();) {
+        ShrikeCFG.BasicBlock bb = it.next();
         MachineState S = builder.getIn(bb);
         int number = bb.getNumber();
         block2LocalState[number] = S.getLocals();

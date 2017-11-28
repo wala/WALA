@@ -60,6 +60,7 @@ import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
  * Skeleton of functionality to propagate information through the Java bytecode stack machine using ShrikeBT.
@@ -232,7 +233,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
                 /*
                  * Add only the entry variable to the work list.
                  */
-                 for (Iterator it = getFixedPointSystem().getStatementsThatUse(entry); it.hasNext();) {
+                 for (Iterator<? extends INodeWithNumber> it = getFixedPointSystem().getStatementsThatUse(entry); it.hasNext();) {
                      AbstractStatement s = (AbstractStatement) it.next();
                      addToWorkList(s);
                  }

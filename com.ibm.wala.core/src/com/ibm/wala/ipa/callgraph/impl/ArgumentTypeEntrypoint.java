@@ -81,9 +81,9 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
   }
 
   private TypeReference chooseAConcreteSubClass(IClass klass) {
-    Collection subclasses = cha.computeSubClasses(klass.getReference());
-    for (Iterator it = subclasses.iterator(); it.hasNext();) {
-      IClass c = (IClass) it.next();
+    Collection<IClass> subclasses = cha.computeSubClasses(klass.getReference());
+    for (Iterator<IClass> it = subclasses.iterator(); it.hasNext();) {
+      IClass c = it.next();
       if (!c.isAbstract()) {
         return c.getReference();
       }

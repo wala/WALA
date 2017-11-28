@@ -86,16 +86,16 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
       SSAInstruction s = instructions[i];
       makeEquationForInstruction(opFactory, s);
     }
-    for (Iterator it = ir.iteratePhis(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<? extends SSAInstruction> it = ir.iteratePhis(); it.hasNext();) {
+      SSAInstruction s = it.next();
       makeEquationForInstruction(opFactory, s);
     }
-    for (Iterator it = ir.iteratePis(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<? extends SSAInstruction> it = ir.iteratePis(); it.hasNext();) {
+      SSAInstruction s = it.next();
       makeEquationForInstruction(opFactory, s);
     }
-    for (Iterator it = ir.iterateCatchInstructions(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<? extends SSAInstruction> it = ir.iterateCatchInstructions(); it.hasNext();) {
+      SSAInstruction s = it.next();
       makeEquationForInstruction(opFactory, s);
     }
   }

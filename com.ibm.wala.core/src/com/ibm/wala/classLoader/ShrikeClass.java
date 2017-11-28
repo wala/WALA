@@ -228,7 +228,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   public void clearSoftCaches() {
     // toss optional information from each method.
     if (methodMap != null) {
-      for (Iterator it = getDeclaredMethods().iterator(); it.hasNext();) {
+      for (Iterator<IMethod> it = getDeclaredMethods().iterator(); it.hasNext();) {
         ShrikeCTMethod m = (ShrikeCTMethod) it.next();
         m.clearCaches();
       }

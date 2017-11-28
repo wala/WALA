@@ -55,8 +55,8 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     // set up the selector map to record each method that class implements
     registerImplementedMethods(klass, iKey);
 
-    for (Iterator ifaces = klass.getAllImplementedInterfaces().iterator(); ifaces.hasNext();) {
-      IClass c = (IClass) ifaces.next();
+    for (Iterator<IClass> ifaces = klass.getAllImplementedInterfaces().iterator(); ifaces.hasNext();) {
+      IClass c = ifaces.next();
       registerImplementedMethods(c, iKey);
     }
     klass = klass.getSuperclass();
@@ -73,8 +73,8 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     if (DEBUG) {
       System.err.println(("registerImplementedMethods: " + declarer + " " + iKey));
     }
-    for (Iterator it = declarer.getDeclaredMethods().iterator(); it.hasNext();) {
-      IMethod M = (IMethod) it.next();
+    for (Iterator<IMethod> it = declarer.getDeclaredMethods().iterator(); it.hasNext();) {
+      IMethod M = it.next();
       Selector selector = M.getReference().getSelector();
       PointerKey sKey = getKeyForSelector(selector);
       if (DEBUG) {

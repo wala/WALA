@@ -73,7 +73,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public MutableSharedBitVectorIntSet getAllTargetNumbers() {
       MutableSharedBitVectorIntSet result = new MutableSharedBitVectorIntSet(super.getAllTargetNumbers());
-      for (Iterator it = targets.iterator(); it.hasNext();) {
+      for (Iterator<Object> it = targets.iterator(); it.hasNext();) {
         Object n = it.next();
         if (n instanceof CallSite) {
           ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
@@ -119,7 +119,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       if (super.getAllTargetNumbers().contains(y)) {
         return true;
       } else {
-        for (Iterator it = targets.iterator(); it.hasNext();) {
+        for (Iterator<Object> it = targets.iterator(); it.hasNext();) {
           Object n = it.next();
           if (n instanceof CallSite) {
             ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();

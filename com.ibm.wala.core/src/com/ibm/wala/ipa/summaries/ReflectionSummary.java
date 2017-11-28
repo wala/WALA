@@ -51,14 +51,14 @@ public class ReflectionSummary {
     if (cha == null) {
       throw new IllegalArgumentException("null cha");
     }
-    Set S = map.get(new Integer(bcIndex));
+    Set<TypeReference> S = map.get(new Integer(bcIndex));
     if (S == null) {
       return null;
     } else {
       PointType[] p = new PointType[S.size()];
-      Iterator it = S.iterator();
+      Iterator<TypeReference> it = S.iterator();
       for (int i = 0; i < p.length; i++) {
-        TypeReference T = (TypeReference) it.next();
+        TypeReference T = it.next();
         IClass klass = cha.lookupClass(T);
         assert klass != null : "null type for " + T;
         p[i] = new PointType(klass);

@@ -668,8 +668,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     private TypeAbstraction meetDeclaredExceptionTypes(SSAGetCaughtExceptionInstruction s) {
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(s.getBasicBlockNumber());
-      Iterator it = bb.getCaughtExceptionTypes();
-      TypeReference t = (TypeReference) it.next();
+      Iterator<TypeReference> it = bb.getCaughtExceptionTypes();
+      TypeReference t = it.next();
       IClass klass = cha.lookupClass(t);
       TypeAbstraction result = null;
       if (klass == null) {
@@ -680,7 +680,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         result = new ConeType(klass);
       }
       while (it.hasNext()) {
-        t = (TypeReference) it.next();
+        t = it.next();
         IClass tClass = cha.lookupClass(t);
         if (tClass == null) {
           result = BOTTOM;

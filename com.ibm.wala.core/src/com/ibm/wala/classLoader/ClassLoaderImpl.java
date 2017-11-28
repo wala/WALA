@@ -125,8 +125,8 @@ public class ClassLoaderImpl implements IClassLoader {
       System.err.println("Get source files for " + M);
     }
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Iterator it = M.getEntries(); it.hasNext();) {
-      ModuleEntry entry = (ModuleEntry) it.next();
+    for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
+      ModuleEntry entry = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("consider entry for source information: " + entry);
       }
@@ -155,8 +155,8 @@ public class ClassLoaderImpl implements IClassLoader {
       System.err.println("Get class files for " + M);
     }
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Iterator it = M.getEntries(); it.hasNext();) {
-      ModuleEntry entry = (ModuleEntry) it.next();
+    for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
+      ModuleEntry entry = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("ClassLoaderImpl.getClassFiles:Got entry: " + entry);
       }

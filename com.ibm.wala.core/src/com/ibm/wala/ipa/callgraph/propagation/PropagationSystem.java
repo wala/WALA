@@ -147,8 +147,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   protected void updateSideEffects(PointsToSetVariable p, PointsToSetVariable rep) {
     Set<UnarySideEffect> set = fixedSetMap.get(p);
     if (set != null) {
-      for (Iterator it = set.iterator(); it.hasNext();) {
-        UnarySideEffect s = (UnarySideEffect) it.next();
+      for (Iterator<UnarySideEffect> it = set.iterator(); it.hasNext();) {
+        UnarySideEffect s = it.next();
         s.replaceFixedSet(rep);
       }
       Set<UnarySideEffect> s2 = MapUtil.findOrCreateSet(fixedSetMap, rep);
@@ -484,10 +484,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   private void registerArrayInstanceWithAllInterfacesOfElement(int index, IClass elementClass, int dim) {
-    Collection ifaces = null;
+    Collection<IClass> ifaces = null;
     ifaces = elementClass.getAllImplementedInterfaces();
-    for (Iterator it = ifaces.iterator(); it.hasNext();) {
-      IClass I = (IClass) it.next();
+    for (Iterator<IClass> it = ifaces.iterator(); it.hasNext();) {
+      IClass I = it.next();
       TypeReference iArrayRef = makeArray(I.getReference(), dim);
       IClass iArrayClass = null;
       iArrayClass = I.getClassLoader().lookupClass(iArrayRef.getName());
@@ -530,9 +530,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @throws ClassHierarchyException
    */
   private void registerInstanceWithAllInterfaces(IClass klass, int index) throws ClassHierarchyException {
-    Collection ifaces = klass.getAllImplementedInterfaces();
-    for (Iterator it = ifaces.iterator(); it.hasNext();) {
-      IClass I = (IClass) it.next();
+    Collection<IClass> ifaces = klass.getAllImplementedInterfaces();
+    for (Iterator<IClass> it = ifaces.iterator(); it.hasNext();) {
+      IClass I = it.next();
       MutableIntSet set = findOrCreateSparseSetForClass(I);
       set.add(index);
       if (DEBUG) {
@@ -724,7 +724,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     pointsToMap.revertToPreTransitive();
   }
 
-  public Iterator getTransitiveRoots() {
+  public Iterator<PointerKey> getTransitiveRoots() {
     return pointsToMap.getTransitiveRoots();
   }
 
@@ -819,8 +819,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       if (p != pRef) {
         // pRef is the representative for p.
         // be careful: cache the defs before mucking with the underlying system
-        for (Iterator d = Iterator2Collection.toSet(getStatementsThatDef(p)).iterator(); d.hasNext();) {
-          AbstractStatement as = (AbstractStatement) d.next();
+        for (Iterator<AbstractStatement> d = Iterator2Collection.toSet(getStatementsThatDef(p)).iterator(); d.hasNext();) {
+          AbstractStatement as = d.next();
 
           if (as instanceof AssignEquation) {
             AssignEquation assign = (AssignEquation) as;
@@ -836,8 +836,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
           }
         }
         // be careful: cache the defs before mucking with the underlying system
-        for (Iterator u = Iterator2Collection.toSet(getStatementsThatUse(p)).iterator(); u.hasNext();) {
-          AbstractStatement as = (AbstractStatement) u.next();
+        for (Iterator<AbstractStatement> u = Iterator2Collection.toSet(getStatementsThatUse(p)).iterator(); u.hasNext();) {
+          AbstractStatement as = u.next();
           if (as instanceof AssignEquation) {
             AssignEquation assign = (AssignEquation) as;
             PointsToSetVariable lhs = assign.getLHS();

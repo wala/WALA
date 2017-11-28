@@ -136,8 +136,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Add a constraint for each allocate
    */
   private void addNewConstraints(CGNode node) {
-    for (Iterator it = getRTAContextInterpreter().iterateNewSites(node); it.hasNext();) {
-      NewSiteReference n = (NewSiteReference) it.next();
+    for (Iterator<NewSiteReference> it = getRTAContextInterpreter().iterateNewSites(node); it.hasNext();) {
+      NewSiteReference n = it.next();
       visitNew(node, n);
     }
   }
@@ -146,8 +146,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Add a constraint for each invoke
    */
   private void addCallConstraints(CGNode node) {
-    for (Iterator it = getRTAContextInterpreter().iterateCallSites(node); it.hasNext();) {
-      CallSiteReference c = (CallSiteReference) it.next();
+    for (Iterator<CallSiteReference> it = getRTAContextInterpreter().iterateCallSites(node); it.hasNext();) {
+      CallSiteReference c = it.next();
       visitInvoke(node, c);
     }
   }
@@ -156,12 +156,12 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Handle accesses to static fields
    */
   private void addFieldConstraints(CGNode node) {
-    for (Iterator it = getRTAContextInterpreter().iterateFieldsRead(node); it.hasNext();) {
-      FieldReference f = (FieldReference) it.next();
+    for (Iterator<FieldReference> it = getRTAContextInterpreter().iterateFieldsRead(node); it.hasNext();) {
+      FieldReference f = it.next();
       processFieldAccess(f);
     }
-    for (Iterator it = getRTAContextInterpreter().iterateFieldsWritten(node); it.hasNext();) {
-      FieldReference f = (FieldReference) it.next();
+    for (Iterator<FieldReference> it = getRTAContextInterpreter().iterateFieldsWritten(node); it.hasNext();) {
+      FieldReference f = it.next();
       processFieldAccess(f);
     }
   }

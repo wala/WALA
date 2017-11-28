@@ -301,7 +301,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph, BasicBlock b,
       ConstraintVisitor v) {
     // visit each phi instruction in each successor block
-    for (Iterator sbs = controlFlowGraph.getSuccNodes(b); sbs.hasNext();) {
+    for (Iterator<ISSABasicBlock> sbs = controlFlowGraph.getSuccNodes(b); sbs.hasNext();) {
       BasicBlock sb = (BasicBlock) sbs.next();
       if (!sb.hasPhi()) {
         continue;
@@ -487,7 +487,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> g = ir.getControlFlowGraph();
     List<ProgramCounter> result = new ArrayList<ProgramCounter>(g.getPredNodeCount(bb));
-    for (Iterator it = g.getPredNodes(bb); it.hasNext();) {
+    for (Iterator<ISSABasicBlock> it = g.getPredNodes(bb); it.hasNext();) {
       BasicBlock pred = (BasicBlock) it.next();
       if (DEBUG) {
         System.err.println("pred: " + pred);
@@ -2059,8 +2059,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // todo: enhance this by solving a dead-code elimination
     // problem.
     InterestingVisitor v = makeInterestingVisitor(node, vn);
-    for (Iterator it = du.getUses(v.vn); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<SSAInstruction> it = du.getUses(v.vn); it.hasNext();) {
+      SSAInstruction s = it.next();
       s.visit(v);
       if (v.bingo) {
         return false;

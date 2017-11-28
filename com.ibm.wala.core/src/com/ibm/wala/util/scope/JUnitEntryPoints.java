@@ -54,11 +54,11 @@ public class JUnitEntryPoints {
           System.out.println("application class: " + klass);
 
           // return all the tests methods
-          Collection methods = klass.getAllMethods();
-          Iterator methodsIt = methods.iterator();
+          Collection<IMethod> methods = klass.getAllMethods();
+          Iterator<IMethod> methodsIt = methods.iterator();
 
           while (methodsIt.hasNext()) {
-            IMethod m = (IMethod) methodsIt.next();
+            IMethod m = methodsIt.next();
             if (isJUnitMethod(m)) {
               result.add(new DefaultEntrypoint(m, cha));
               System.out.println("- adding test method as entry point: " + m.getName().toString());
@@ -104,8 +104,8 @@ public class JUnitEntryPoints {
           System.err.println("found test class");
         }
         // add entry point corresponding to the target method
-        for (Iterator methodsIt = klass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
-          IMethod method = (IMethod) methodsIt.next();
+        for (Iterator<IMethod> methodsIt = klass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
+          IMethod method = methodsIt.next();
           Atom methodAtom = method.getName();
           if (methodAtom.equals(targetMethodAtom)) {
             entryPts.add(new DefaultEntrypoint(method, cha));
@@ -191,9 +191,9 @@ public class JUnitEntryPoints {
     IClass currClass = testClass;
     while (currClass != null && !currClass.getName().equals(junitTestCaseType) && !currClass.getName().equals(junitTestSuiteType)) {
 
-      for (Iterator methodsIt = currClass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
+      for (Iterator<IMethod> methodsIt = currClass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
 
-        IMethod method = (IMethod) methodsIt.next();
+        IMethod method = methodsIt.next();
         final Atom methodAtom = method.getName();
         if (methodAtom.equals(setUpMethodAtom) || methodAtom.equals(tearDownMethodAtom) || method.isClinit() || method.isInit()) {
           result.add(method);

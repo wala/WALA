@@ -139,10 +139,10 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     return result;
   }
 
-  private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection c) {
+  private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection<IClass> c) {
     BimodalMutableIntSet s = new BimodalMutableIntSet();
-    for (Iterator it = c.iterator(); it.hasNext();) {
-      IClass klass = (IClass) it.next();
+    for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
+      IClass klass = it.next();
       int index = getInstanceKeyMapping().add(new ConcreteTypeKey(klass));
       s.add(index);
     }

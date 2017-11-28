@@ -169,8 +169,8 @@ public class CallGraphStats {
       throw new IllegalArgumentException("cg is null");
     }
     HashSet<MethodReference> result = HashSetFactory.make();
-    for (Iterator it = cg.iterator(); it.hasNext();) {
-      CGNode N = (CGNode) it.next();
+    for (Iterator<CGNode> it = cg.iterator(); it.hasNext();) {
+      CGNode N = it.next();
       result.add(N.getMethod().getReference());
     }
     return result;

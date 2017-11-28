@@ -282,7 +282,7 @@ public class Util {
       System.err.println("subgraph: ");
       System.err.println(subG.toString());
       System.err.println("nodeDiff: ");
-      for (Iterator it = nodeDiff.iterator(); it.hasNext();) {
+      for (Iterator<T> it = nodeDiff.iterator(); it.hasNext();) {
         System.err.println(it.next().toString());
       }
       Assertions.productionAssertion(nodeDiff.isEmpty(), "bad superset, see tracefile\n");
@@ -305,7 +305,7 @@ public class Util {
         System.err.println("subgraph: ");
         System.err.println(subG.toString());
         System.err.println("predDiff: ");
-        for (Iterator it = predDiff.iterator(); it.hasNext();) {
+        for (Iterator<T> it = predDiff.iterator(); it.hasNext();) {
           System.err.println(it.next().toString());
         }
         Assertions.UNREACHABLE("bad superset for predecessors of " + m + ":" + predDiff);

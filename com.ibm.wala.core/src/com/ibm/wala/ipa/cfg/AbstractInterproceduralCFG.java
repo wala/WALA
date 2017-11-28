@@ -290,8 +290,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       System.err.println("addInterproceduralEdgesForEntryAndExitBlocks " + n);
     }
 
-    for (Iterator callers = cg.getPredNodes(n); callers.hasNext();) {
-      CGNode caller = (CGNode) callers.next();
+    for (Iterator<CGNode> callers = cg.getPredNodes(n); callers.hasNext();) {
+      CGNode caller = callers.next();
       if (DEBUG_LEVEL > 1) {
         System.err.println("got caller " + caller);
       }
@@ -499,8 +499,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         System.err.println("got Site: " + site);
       }
       boolean irrelevantTargets = false;
-      for (Iterator ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
-        CGNode tn = (CGNode) ts.next();
+      for (Iterator<CGNode> ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
+        CGNode tn = ts.next();
         if (!relevant.test(tn)) {
           if (DEBUG_LEVEL > 1) {
             System.err.println("Irrelevant target: " + tn);

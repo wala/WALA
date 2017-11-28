@@ -516,7 +516,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       Object node = getNode(i);
       if (node != null) {
         result.append(i).append(" -> ");
-        for (Iterator it = getSuccNodes(node); it.hasNext();) {
+        for (Iterator<Object> it = getSuccNodes(node); it.hasNext();) {
           Object s = it.next();
           result.append(getNumber(s)).append(" ");
         }

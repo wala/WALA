@@ -215,7 +215,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
    */
   protected void addApplicationModulesToScope() {
     ClassLoaderReference app = scope.getApplicationLoader();
-    for (Iterator it = moduleFiles.iterator(); it.hasNext();) {
+    for (Iterator<?> it = moduleFiles.iterator(); it.hasNext();) {
       Object o = it.next();
       if (!(o instanceof Module)) {
         Assertions.UNREACHABLE("Unexpected type: " + o.getClass());

@@ -69,7 +69,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     }
 
     // allocN := set of call graph nodes representing method allocMethod
-    Set allocN = cg.getNodes(allocMethod);
+    Set<CGNode> allocN = cg.getNodes(allocMethod);
     if (allocN.size() == 0) {
       throw new WalaException("could not find call graph node for allocation method " + allocMethod);
     }
@@ -89,11 +89,11 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    *         { nodes }
    * @throws WalaException
    */
-  private boolean mayEscape(Set allocN, int allocPC, Set nodes) throws WalaException {
+  private boolean mayEscape(Set<CGNode> allocN, int allocPC, Set nodes) throws WalaException {
     Set<InstanceKey> instances = HashSetFactory.make();
     // instances := set of instance key allocated at &lt;allocMethod, allocPC>
-    for (Iterator it = allocN.iterator(); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
+    for (Iterator<CGNode> it = allocN.iterator(); it.hasNext();) {
+      CGNode n = it.next();
       NewSiteReference site = findAlloc(n, allocPC);
       InstanceKey ik = hg.getHeapModel().getInstanceKeyForAllocation(n, site);
       if (ik == null) {
@@ -104,7 +104,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
 
     for (Iterator<InstanceKey> it = instances.iterator(); it.hasNext();) {
       InstanceKey ik = it.next();
-      for (Iterator it2 = hg.getPredNodes(ik); it2.hasNext();) {
+      for (Iterator<Object> it2 = hg.getPredNodes(ik); it2.hasNext();) {
         PointerKey p = (PointerKey) it2.next();
         if (!(p instanceof AbstractLocalPointerKey)) {
           // a pointer from the heap. give up.
@@ -136,8 +136,8 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     if (n == null) {
       throw new IllegalArgumentException("null n");
     }
-    for (Iterator it = n.iterateNewSites(); it.hasNext();) {
-      NewSiteReference site = (NewSiteReference) it.next();
+    for (Iterator<NewSiteReference> it = n.iterateNewSites(); it.hasNext();) {
+      NewSiteReference site = it.next();
       if (site.getProgramCounter() == allocPC) {
         return site;
       }

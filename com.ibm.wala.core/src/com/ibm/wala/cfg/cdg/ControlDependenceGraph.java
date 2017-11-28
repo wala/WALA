@@ -110,7 +110,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
         }
         for (Iterator<T> ps = forwardEdges.keySet().iterator(); ps.hasNext();) {
           T p = ps.next();
-          for (Iterator ns = ((Set) forwardEdges.get(p)).iterator(); ns.hasNext();) {
+          for (Iterator<T> ns = forwardEdges.get(p).iterator(); ns.hasNext();) {
             Object n = ns.next();
             backwardEdges.get(n).add(p);
           }
@@ -209,11 +209,11 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     for (Iterator<? extends T> ns = iterator(); ns.hasNext();) {
       T n = ns.next();
       sb.append(n.toString()).append("\n");
-      for (Iterator ss = getSuccNodes(n); ss.hasNext();) {
+      for (Iterator<T> ss = getSuccNodes(n); ss.hasNext();) {
         Object s = ss.next();
         sb.append("  --> ").append(s);
         if (edgeLabels != null)
-          for (Iterator labels = ((Set) edgeLabels.get(Pair.make(n, s))).iterator(); labels.hasNext();)
+          for (Iterator<?> labels = edgeLabels.get(Pair.make(n, s)).iterator(); labels.hasNext();)
             sb.append("\n   label: ").append(labels.next());
         sb.append("\n");
       }

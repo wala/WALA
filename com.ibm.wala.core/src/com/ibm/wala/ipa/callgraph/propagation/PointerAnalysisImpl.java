@@ -89,11 +89,11 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("PointerAnalysis:\n");
-    for (Iterator it = pointsToMap.iterateKeys(); it.hasNext();) {
-      PointerKey p = (PointerKey) it.next();
-      OrdinalSet O = getPointsToSet(p);
+    for (Iterator<PointerKey> it = pointsToMap.iterateKeys(); it.hasNext();) {
+      PointerKey p = it.next();
+      OrdinalSet<InstanceKey> O = getPointsToSet(p);
       result.append("  ").append(p).append(" ->\n");
-      for (Iterator it2 = O.iterator(); it2.hasNext();) {
+      for (Iterator<InstanceKey> it2 = O.iterator(); it2.hasNext();) {
         result.append("     ").append(it2.next()).append("\n");
       }
     }
@@ -283,9 +283,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtALoad(CGNode node, SSAArrayLoadInstruction instruction) {
     PointerKey arrayRef = pointerKeys.getPointerKeyForLocal(node, instruction.getArrayRef());
     MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
-    OrdinalSet refs = getPointsToSet(arrayRef);
-    for (Iterator it = refs.iterator(); it.hasNext();) {
-      InstanceKey ik = (InstanceKey) it.next();
+    OrdinalSet<InstanceKey> refs = getPointsToSet(arrayRef);
+    for (Iterator<InstanceKey> it = refs.iterator(); it.hasNext();) {
+      InstanceKey ik = it.next();
       PointerKey key = pointerKeys.getPointerKeyForArrayContents(ik);
       OrdinalSet pointees = getPointsToSet(key);
       IntSet set = pointees.getBackingSet();
@@ -311,9 +311,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     } else {
       PointerKey ref = pointerKeys.getPointerKeyForLocal(node, refVn);
       MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
-      OrdinalSet refs = getPointsToSet(ref);
-      for (Iterator it = refs.iterator(); it.hasNext();) {
-        InstanceKey ik = (InstanceKey) it.next();
+      OrdinalSet<InstanceKey> refs = getPointsToSet(ref);
+      for (Iterator<InstanceKey> it = refs.iterator(); it.hasNext();) {
+        InstanceKey ik = it.next();
         PointerKey fkey = pointerKeys.getPointerKeyForInstanceField(ik, f);
         if (fkey != null) {
           OrdinalSet pointees = getPointsToSet(fkey);
@@ -346,9 +346,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         e = pointerKeys.getPointerKeyForLocal(node, s.getException());
       }
       if (e != null) {
-        OrdinalSet ep = getPointsToSet(e);
-        for (Iterator it2 = ep.iterator(); it2.hasNext();) {
-          InstanceKey ik = (InstanceKey) it2.next();
+        OrdinalSet<InstanceKey> ep = getPointsToSet(e);
+        for (Iterator<InstanceKey> it2 = ep.iterator(); it2.hasNext();) {
+          InstanceKey ik = it2.next();
           if (PropagationCallGraphBuilder.catches(caughtTypes, ik.getConcreteType(), getCallGraph().getClassHierarchy())) {
             S.add(instanceKeys.getMappedIndex(ik));
           }
@@ -358,10 +358,10 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       // Account for those exceptions for which we do not actually have a
       // points-to set for
       // the pei, but just instance keys
-      Collection types = pei.getExceptionTypes();
+      Collection<TypeReference> types = pei.getExceptionTypes();
       if (types != null) {
-        for (Iterator it2 = types.iterator(); it2.hasNext();) {
-          TypeReference type = (TypeReference) it2.next();
+        for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
+          TypeReference type = it2.next();
           if (type != null) {
             InstanceKey ik = SSAPropagationCallGraphBuilder.getInstanceKeyForPEI(node, peiLoc, type, iKeyFactory);
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
@@ -388,15 +388,15 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         return rhsSet;
       } else {
         if (klass.isInterface()) {
-          for (Iterator it = rhsSet.iterator(); it.hasNext();) {
-            InstanceKey ik = (InstanceKey) it.next();
+          for (Iterator<InstanceKey> it = rhsSet.iterator(); it.hasNext();) {
+            InstanceKey ik = it.next();
             if (getCallGraph().getClassHierarchy().implementsInterface(ik.getConcreteType(), klass)) {
               S.add(getInstanceKeyMapping().getMappedIndex(ik));
             }
           }
         } else {
-          for (Iterator it = rhsSet.iterator(); it.hasNext();) {
-            InstanceKey ik = (InstanceKey) it.next();
+          for (Iterator<InstanceKey> it = rhsSet.iterator(); it.hasNext();) {
+            InstanceKey ik = it.next();
             if (getCallGraph().getClassHierarchy().isSubclassOf(ik.getConcreteType(), klass)) {
               S.add(getInstanceKeyMapping().getMappedIndex(ik));
             }
@@ -435,8 +435,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    */
   private OrdinalSet<InstanceKey> computeImplicitExceptionsForCall(CGNode node, SSAInvokeInstruction call) {
     MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
-    for (Iterator it = getCallGraph().getPossibleTargets(node, call.getCallSite()).iterator(); it.hasNext();) {
-      CGNode target = (CGNode) it.next();
+    for (Iterator<CGNode> it = getCallGraph().getPossibleTargets(node, call.getCallSite()).iterator(); it.hasNext();) {
+      CGNode target = it.next();
       PointerKey retVal = pointerKeys.getPointerKeyForExceptionalReturnValue(target);
       IntSet set = getPointsToSet(retVal).getBackingSet();
       if (set != null) {

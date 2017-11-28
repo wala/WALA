@@ -232,8 +232,8 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
     Map<IClass, Integer> count = HashMapFactory.make();
-    for (Iterator it = contextInterpreter.iterateNewSites(node); it.hasNext();) {
-      NewSiteReference n = (NewSiteReference) it.next();
+    for (Iterator<NewSiteReference> it = contextInterpreter.iterateNewSites(node); it.hasNext();) {
+      NewSiteReference n = it.next();
       IClass alloc = cha.lookupClass(n.getDeclaredType());
       if (alloc != null) {
         Integer old = count.get(alloc);

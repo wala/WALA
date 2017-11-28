@@ -161,7 +161,7 @@ public class CodeScanner {
    * @throws InvalidClassFileException
    * @throws IllegalArgumentException if m is null
    */
-  public static Iterator iterateCastTypes(IMethod m) throws InvalidClassFileException {
+  public static Iterator<TypeReference> iterateCastTypes(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
@@ -173,7 +173,7 @@ public class CodeScanner {
     }
   }
 
-  private static Iterator iterateShrikeBTCastTypes(ShrikeCTMethod wrapper) throws InvalidClassFileException {
+  private static Iterator<TypeReference> iterateShrikeBTCastTypes(ShrikeCTMethod wrapper) throws InvalidClassFileException {
     return wrapper.getCastTypes();
   }
 
@@ -182,8 +182,8 @@ public class CodeScanner {
   }
 
   private static boolean hasShrikeBTObjectArrayStore(ShrikeCTMethod M) throws InvalidClassFileException {
-    for (Iterator it = M.getArraysWritten(); it.hasNext();) {
-      TypeReference t = (TypeReference) it.next();
+    for (Iterator<TypeReference> it = M.getArraysWritten(); it.hasNext();) {
+      TypeReference t = it.next();
       if (t.isReferenceType()) {
         return true;
       }
@@ -232,8 +232,8 @@ public class CodeScanner {
   }
 
   private static boolean hasShrikeBTObjectArrayLoad(ShrikeCTMethod M) throws InvalidClassFileException {
-    for (Iterator it = M.getArraysRead(); it.hasNext();) {
-      TypeReference t = (TypeReference) it.next();
+    for (Iterator<TypeReference> it = M.getArraysRead(); it.hasNext();) {
+      TypeReference t = it.next();
       if (t.isReferenceType()) {
         return true;
       }

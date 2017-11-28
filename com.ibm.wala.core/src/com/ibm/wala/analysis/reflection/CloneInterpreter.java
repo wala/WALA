@@ -258,7 +258,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return CodeScanner.hasObjectArrayStore(statements);
   }
 
-  public Iterator iterateCastTypes(CGNode node) {
+  public Iterator<TypeReference> iterateCastTypes(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.iterateCastTypes(statements);
   }

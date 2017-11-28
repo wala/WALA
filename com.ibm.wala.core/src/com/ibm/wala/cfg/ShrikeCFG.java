@@ -111,8 +111,8 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
    */
   private void computeI2BMapping() {
     instruction2Block = new int[getInstructions().length];
-    for (Iterator it = iterator(); it.hasNext();) {
-      final BasicBlock b = (BasicBlock) it.next();
+    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+      final BasicBlock b = it.next();
       for (int j = b.getFirstInstructionIndex(); j <= b.getLastInstructionIndex(); j++) {
         instruction2Block[j] = getNumber(b);
       }
@@ -123,8 +123,8 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
    * Compute outgoing edges in the control flow graph.
    */
   private void computeEdges() {
-    for (Iterator it = iterator(); it.hasNext();) {
-      BasicBlock b = (BasicBlock) it.next();
+    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+      BasicBlock b = it.next();
       if (b.equals(exit())) {
         continue;
       } else if (b.equals(entry())) {
@@ -502,8 +502,8 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator it = iterator(); it.hasNext();) {
-      BasicBlock bb = (BasicBlock) it.next();
+    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+      BasicBlock bb = it.next();
       s.append("BB").append(getNumber(bb)).append("\n");
       for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {
         s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");

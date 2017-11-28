@@ -133,8 +133,8 @@ public class LocalSummaryEdges {
       return null;
     } else {
       MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-      for (Iterator it = R.iterator(); it.hasNext();) {
-        IntPair p = (IntPair) it.next();
+      for (Iterator<IntPair> it = R.iterator(); it.hasNext();) {
+        IntPair p = it.next();
         if (p.getY() == d2) {
           result.add(p.getX());
         }

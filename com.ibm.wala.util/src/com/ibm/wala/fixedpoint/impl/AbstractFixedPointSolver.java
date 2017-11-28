@@ -25,6 +25,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.debug.VerboseAction;
+import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
  * Represents a set of {@link IFixedPointStatement}s to be solved by a {@link IFixedPointSolver}
@@ -215,13 +216,13 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Fixed Point System:\n");
-    for (Iterator it = getStatements(); it.hasNext();) {
+    for (Iterator<? extends INodeWithNumber> it = getStatements(); it.hasNext();) {
       result.append(it.next()).append("\n");
     }
     return result.toString();
   }
 
-  public Iterator getStatements() {
+  public Iterator<? extends INodeWithNumber> getStatements() {
     return getFixedPointSystem().getStatements();
   }
 
@@ -238,7 +239,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
    * Add all to the work list.
    */
   public void addAllStatementsToWorkList() {
-    for (Iterator i = getStatements(); i.hasNext();) {
+    for (Iterator<? extends INodeWithNumber> i = getStatements(); i.hasNext();) {
       AbstractStatement eq = (AbstractStatement) i.next();
       addToWorkList(eq);
     }
@@ -251,7 +252,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
    * @param v the variable that has changed
    */
   public void changedVariable(T v) {
-    for (Iterator it = getFixedPointSystem().getStatementsThatUse(v); it.hasNext();) {
+    for (Iterator<? extends INodeWithNumber> it = getFixedPointSystem().getStatementsThatUse(v); it.hasNext();) {
       AbstractStatement s = (AbstractStatement) it.next();
       addToWorkList(s);
     }

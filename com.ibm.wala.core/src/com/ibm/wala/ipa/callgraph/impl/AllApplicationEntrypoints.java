@@ -40,8 +40,8 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
     for (IClass klass : cha) {
       if (!klass.isInterface()) {
         if (isApplicationClass(scope, klass)) {
-          for (Iterator methodIt = klass.getDeclaredMethods().iterator(); methodIt.hasNext();) {
-            IMethod method = (IMethod) methodIt.next();
+          for (Iterator<IMethod> methodIt = klass.getDeclaredMethods().iterator(); methodIt.hasNext();) {
+            IMethod method = methodIt.next();
             if (!method.isAbstract()) {
               add(new ArgumentTypeEntrypoint(method, cha));
             }

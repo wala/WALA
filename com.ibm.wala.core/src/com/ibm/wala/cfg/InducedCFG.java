@@ -120,8 +120,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
    * Compute outgoing edges in the control flow graph.
    */
   private void computeEdges() {
-    for (Iterator it = iterator(); it.hasNext();) {
-      BasicBlock b = (BasicBlock) it.next();
+    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+      BasicBlock b = it.next();
       if (b.equals(exit()))
         continue;
       b.computeOutgoingEdges();
@@ -471,8 +471,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
           int tgtNd = getIndexFromIIndex(tgt);  // index in instructions-array
           BasicBlock target = null;
 
-          for (Iterator it = InducedCFG.this.iterator(); it.hasNext();) {
-            final BasicBlock candid = (BasicBlock) it.next();
+          for (Iterator<BasicBlock> it = InducedCFG.this.iterator(); it.hasNext();) {
+            final BasicBlock candid = it.next();
             if (candid.getFirstInstructionIndex() == tgtNd) {
               target = candid;
               break;
@@ -623,8 +623,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator it = iterator(); it.hasNext();) {
-      BasicBlock bb = (BasicBlock) it.next();
+    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+      BasicBlock bb = it.next();
       s.append("BB").append(getNumber(bb)).append("\n");
       for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {
         s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");
