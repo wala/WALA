@@ -132,12 +132,12 @@ public class ClassPrinter {
     StringBuffer buf = new StringBuffer();
     Class<Constants> c = Constants.class;
     Field[] fs = c.getDeclaredFields();
-    for (int i = 0; i < fs.length; i++) {
-      String name = fs[i].getName();
+    for (Field element : fs) {
+      String name = element.getName();
       if (name.startsWith("ACC_")) {
         int val;
         try {
-          val = fs[i].getInt(null);
+          val = element.getInt(null);
         } catch (IllegalArgumentException e) {
           throw new Error(e.getMessage());
         } catch (IllegalAccessException e) {

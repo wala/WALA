@@ -73,8 +73,8 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
     ClassWriter.setInt(buf, offset + 2, 2 + rawTable.length * 2);
     ClassWriter.setUShort(buf, offset + 6, rawTable.length / 5);
     offset += 8;
-    for (int i = 0; i < rawTable.length; i++) {
-      ClassWriter.setUShort(buf, offset, rawTable[i]);
+    for (int element : rawTable) {
+      ClassWriter.setUShort(buf, offset, element);
       offset += 2;
     }
 
@@ -95,9 +95,9 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
     }
     try {
       int varCount = 0;
-      for (int i = 0; i < varMap.length; i++) {
-        if (varMap[i] != null) {
-          varCount = Math.max(varCount, varMap[i].length);
+      for (int[] element : varMap) {
+        if (element != null) {
+          varCount = Math.max(varCount, element.length);
         }
       }
       varCount /= 2;

@@ -159,8 +159,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         addNodeForEachBasicBlock(cfg, n);
         SSAInstruction[] instrs = cfg.getInstructions();
         // create edges for node n.
-        for (Iterator<T> bbs = cfg.iterator(); bbs.hasNext();) {
-          T bb = bbs.next();
+        for (T bb : cfg) {
           if (bb != cfg.entry())
             addEdgesToNonEntryBlock(n, cfg, instrs, bb);
         }
@@ -352,8 +351,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   @SuppressWarnings("unused")
   private void addNodeForEachBasicBlock(ControlFlowGraph<? extends SSAInstruction, ? extends T> cfg, CGNode N) {
-    for (Iterator<? extends T> bbs = cfg.iterator(); bbs.hasNext();) {
-      T bb = bbs.next();
+    for (T bb : cfg) {
       if (DEBUG_LEVEL > 1) {
         System.err.println("IPCFG Add basic block " + bb);
       }
@@ -456,8 +454,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private void addEdgesToCallees(CGNode n) {
     ControlFlowGraph<SSAInstruction, T> cfg = getCFG(n);
     if (cfg != null) {
-      for (Iterator<T> bbs = cfg.iterator(); bbs.hasNext();) {
-        T bb = bbs.next();
+      for (T bb : cfg) {
         BasicBlockInContext<T> block = new BasicBlockInContext<T>(n, bb);
         if (hasCall(block)) {
           addCalleeEdgesForCall(n, block);
@@ -499,8 +496,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         System.err.println("got Site: " + site);
       }
       boolean irrelevantTargets = false;
-      for (Iterator<CGNode> ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
-        CGNode tn = ts.next();
+      for (CGNode tn : cg.getPossibleTargets(n, site)) {
         if (!relevant.test(tn)) {
           if (DEBUG_LEVEL > 1) {
             System.err.println("Irrelevant target: " + tn);

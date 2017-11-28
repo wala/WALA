@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.ArrayClass;
@@ -82,8 +81,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
 
   private TypeReference chooseAConcreteSubClass(IClass klass) {
     Collection<IClass> subclasses = cha.computeSubClasses(klass.getReference());
-    for (Iterator<IClass> it = subclasses.iterator(); it.hasNext();) {
-      IClass c = it.next();
+    for (IClass c : subclasses) {
       if (!c.isAbstract()) {
         return c.getReference();
       }

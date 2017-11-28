@@ -195,13 +195,13 @@ public class StackMapConstants {
       sb.append("  offset: ").append(offset).append("\n");
       
       sb.append("  locals\n");
-      for(int i = 0; i < localTypes.length; i++) {
-        sb.append("  ").append(localTypes[i]).append("\n");
+      for (StackMapType localType : localTypes) {
+        sb.append("  ").append(localType).append("\n");
       }
 
       sb.append("  stack\n");
-      for(int i = 0; i < stackTypes.length; i++) {
-        sb.append("  ").append(stackTypes[i]).append("\n");
+      for (StackMapType stackType : stackTypes) {
+        sb.append("  ").append(stackType).append("\n");
       }
 
       return sb.toString();

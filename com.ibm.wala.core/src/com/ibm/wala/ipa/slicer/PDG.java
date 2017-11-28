@@ -293,8 +293,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       if (src != null) {
         for (Iterator<? extends ISSABasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
           ISSABasicBlock bb2 = succ.next();
-          for (Iterator<SSAInstruction> it2 = bb2.iterator(); it2.hasNext();) {
-            SSAInstruction st = it2.next();
+          for (SSAInstruction st : bb2) {
             if (st != null) {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
@@ -437,8 +436,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       }
     }
 
-    for (Iterator<? extends Statement> it = iterator(); it.hasNext();) {
-      Statement s = it.next();
+    for (Statement s : this) {
       switch (s.getKind()) {
       case NORMAL:
       case CATCH:

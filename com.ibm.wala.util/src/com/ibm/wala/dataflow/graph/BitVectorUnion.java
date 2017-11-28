@@ -57,8 +57,7 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
     }
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
-    for (int i = 0; i < rhs.length; i++) {
-      BitVectorVariable R = rhs[i];
+    for (BitVectorVariable R : rhs) {
       U.addAll(R);
     }
     if (!lhs.sameValue(U)) {

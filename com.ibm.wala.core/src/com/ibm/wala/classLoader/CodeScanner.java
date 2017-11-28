@@ -257,8 +257,7 @@ public class CodeScanner {
         result.addAll(t);
       }
     };
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -274,10 +273,10 @@ public class CodeScanner {
       throw new IllegalArgumentException("statements == null");
     }
     final HashSet<TypeReference> result = HashSetFactory.make(10);
-    for (int i = 0; i < statements.length; i++) {
-      if (statements[i] != null) {
-        if (statements[i] instanceof SSACheckCastInstruction) {
-          SSACheckCastInstruction c = (SSACheckCastInstruction) statements[i];
+    for (SSAInstruction statement : statements) {
+      if (statement != null) {
+        if (statement instanceof SSACheckCastInstruction) {
+          SSACheckCastInstruction c = (SSACheckCastInstruction) statement;
           for(TypeReference t : c.getDeclaredResultTypes()) {
             result.add(t);
           }
@@ -299,8 +298,7 @@ public class CodeScanner {
         result.add(instruction.getCallSite());
       }
     };
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -320,8 +318,7 @@ public class CodeScanner {
         result.add(instruction.getNewSite());
       }
     };
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -345,8 +342,7 @@ public class CodeScanner {
         result.add(instruction.getDeclaredField());
       }
     };
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -370,8 +366,7 @@ public class CodeScanner {
         result.add(instruction.getDeclaredField());
       }
     };
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -397,8 +392,7 @@ public class CodeScanner {
       }
       
     };
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -422,8 +416,7 @@ public class CodeScanner {
       }
     }
     ScanVisitor v = new ScanVisitor();
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }
@@ -450,8 +443,7 @@ public class CodeScanner {
       }
     }
     ScanVisitor v = new ScanVisitor();
-    for (int i = 0; i < statements.length; i++) {
-      SSAInstruction s = statements[i];
+    for (SSAInstruction s : statements) {
       if (s != null) {
         s.visit(v);
       }

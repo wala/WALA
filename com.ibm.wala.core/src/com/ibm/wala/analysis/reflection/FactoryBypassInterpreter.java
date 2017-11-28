@@ -157,8 +157,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     HashSet<NewSiteReference> result = HashSetFactory.make(5);
-    for (Iterator<SSAInstruction> it = m.getAllocationStatements().iterator(); it.hasNext();) {
-      SSANewInstruction s = (SSANewInstruction) it.next();
+    for (SSAInstruction ssaInstruction : m.getAllocationStatements()) {
+      SSANewInstruction s = (SSANewInstruction) ssaInstruction;
       result.add(s.getNewSite());
     }
     return result.iterator();
@@ -393,8 +393,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       // add original statements from the method summary
       nextLocal = addOriginalStatements(m);
 
-      for (Iterator<TypeReference> it = S.iterator(); it.hasNext();) {
-        TypeReference type = it.next();
+      for (TypeReference type : S) {
         TypeAbstraction T = typeRef2TypeAbstraction(m.getClassHierarchy(), type);
         addStatementsForTypeAbstraction(T);
       }
@@ -506,8 +505,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       SSAInstruction[] original = m.getStatements(options.getSSAOptions());
       // local value number 1 is "this", so the next free value number is 2
       int nextLocal = 2;
-      for (int i = 0; i < original.length; i++) {
-        SSAInstruction s = original[i];
+      for (SSAInstruction s : original) {
         allInstructions.add(s);
         if (s instanceof SSAInvokeInstruction) {
           calls.add(s);
@@ -603,8 +601,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     public SSAInstruction[] getStatements() {
       SSAInstruction[] result = new SSAInstruction[allInstructions.size()];
       int i = 0;
-      for (Iterator<SSAInstruction> it = allInstructions.iterator(); it.hasNext();) {
-        result[i++] = it.next();
+      for (SSAInstruction ssaInstruction : allInstructions) {
+        result[i++] = ssaInstruction;
       }
       return result;
     }

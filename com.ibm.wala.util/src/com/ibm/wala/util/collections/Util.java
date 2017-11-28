@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -118,8 +117,7 @@ public class Util {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
     }
-    for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
-      T obj = iter.next();
+    for (T obj : c) {
       if (p.test(obj))
         return obj;
     }
@@ -151,8 +149,8 @@ public class Util {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
     }
-    for (Iterator<T> iter = c.iterator(); iter.hasNext();)
-      v.visit(iter.next());
+    for (T t : c)
+      v.visit(t);
   }
 
   /**
@@ -167,8 +165,8 @@ public class Util {
       throw new IllegalArgumentException("srcList == null");
     }
     ArrayList<U> result = new ArrayList<>();
-    for (Iterator<T> srcIter = srcList.iterator(); srcIter.hasNext();) {
-      result.add(f.apply(srcIter.next()));
+    for (T t : srcList) {
+      result.add(f.apply(t));
     }
     return result;
   }
@@ -185,8 +183,8 @@ public class Util {
       throw new IllegalArgumentException("srcSet == null");
     }
     HashSet<U> result = HashSetFactory.make();
-    for (Iterator<T> srcIter = srcSet.iterator(); srcIter.hasNext();) {
-      result.add(f.apply(srcIter.next()));
+    for (T t : srcSet) {
+      result.add(f.apply(t));
     }
     return result;
   }

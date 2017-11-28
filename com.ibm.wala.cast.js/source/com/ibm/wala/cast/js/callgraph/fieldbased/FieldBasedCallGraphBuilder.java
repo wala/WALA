@@ -158,8 +158,7 @@ public abstract class FieldBasedCallGraphBuilder {
 		// set up call edges from fake root to all script nodes
 		AbstractRootMethod fakeRootMethod = (AbstractRootMethod)cg.getFakeRootNode().getMethod();
 		CGNode fakeRootNode = cg.findOrCreateNode(fakeRootMethod, Everywhere.EVERYWHERE);
-		for(Iterator<? extends Entrypoint> iter = eps.iterator(); iter.hasNext();) {
-			Entrypoint ep = iter.next();
+		for (Entrypoint ep : eps) {
 			CGNode nd = cg.findOrCreateNode(ep.getMethod(), Everywhere.EVERYWHERE);
 			SSAAbstractInvokeInstruction invk = ep.addCall(fakeRootMethod);
 			fakeRootNode.addTarget(invk.getCallSite(), nd);

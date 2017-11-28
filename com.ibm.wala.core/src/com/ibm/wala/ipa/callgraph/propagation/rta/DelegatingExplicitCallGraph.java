@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -73,8 +72,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public MutableSharedBitVectorIntSet getAllTargetNumbers() {
       MutableSharedBitVectorIntSet result = new MutableSharedBitVectorIntSet(super.getAllTargetNumbers());
-      for (Iterator<Object> it = targets.iterator(); it.hasNext();) {
-        Object n = it.next();
+      for (Object n : targets) {
         if (n instanceof CallSite) {
           ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
           IntSet s = DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(delegate, ((CallSite) n).getSite());
@@ -119,8 +117,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       if (super.getAllTargetNumbers().contains(y)) {
         return true;
       } else {
-        for (Iterator<Object> it = targets.iterator(); it.hasNext();) {
-          Object n = it.next();
+        for (Object n : targets) {
           if (n instanceof CallSite) {
             ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
             IntSet s = DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(delegate,((CallSite) n).getSite());

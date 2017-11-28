@@ -50,11 +50,11 @@ public abstract class DirectoryTreeModule implements Module {
     Set<FileModule> result = HashSetFactory.make();
     File[] files = dir.listFiles();
     if (files != null) {
-      for (int i = 0; i < files.length; i++) {
-        if (files[i].isDirectory()) {
-          result.addAll(getEntriesRecursive(files[i]));
-        } else if (includeFile(files[i])) {
-          FileModule fileModule = makeFile(files[i]);
+      for (File file : files) {
+        if (file.isDirectory()) {
+          result.addAll(getEntriesRecursive(file));
+        } else if (includeFile(file)) {
+          FileModule fileModule = makeFile(file);
           if (fileModule != null) {
             result.add(fileModule);
           }

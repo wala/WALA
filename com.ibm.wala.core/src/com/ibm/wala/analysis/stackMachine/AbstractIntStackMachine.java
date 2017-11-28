@@ -684,8 +684,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             return true;
 
       if (locals != null)
-        for (int i = 0; i < locals.length; i++)
-          if (locals[i] == val)
+        for (int local : locals)
+          if (local == val)
             return true;
 
       return false;

@@ -517,8 +517,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     getFixedPointSystem().reorder();
 
     // re-populate worklist
-    for (Iterator<AbstractStatement> it = temp.iterator(); it.hasNext();) {
-      AbstractStatement s = it.next();
+    for (AbstractStatement s : temp) {
       workList.insertStatement(s);
     }
   }

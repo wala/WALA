@@ -234,13 +234,13 @@ public class InflowAnalysis {
         SourceSpec[] ss = s.getSourceSpecs();
         
         ArrayList<SourceSpec> ssAL = new ArrayList<>();
-        for (int i = 0; i < ss.length; i++) {
-        	if (ss[i] instanceof EntryArgSourceSpec)
-        		processInputSource(ctx, taintMap, ss[i], cg, graph, cha, pa);
-        	else if (ss[i] instanceof CallRetSourceSpec || ss[i] instanceof CallArgSourceSpec)
-        		ssAL.add(ss[i]);
-        	else if (ss[i] instanceof StaticFieldSourceSpec) {
-        		processStaticFieldSource(ctx, taintMap, (StaticFieldSourceSpec)ss[i], cg, graph, pa);
+        for (SourceSpec element : ss) {
+        	if (element instanceof EntryArgSourceSpec)
+        		processInputSource(ctx, taintMap, element, cg, graph, cha, pa);
+        	else if (element instanceof CallRetSourceSpec || element instanceof CallArgSourceSpec)
+        		ssAL.add(element);
+        	else if (element instanceof StaticFieldSourceSpec) {
+        		processStaticFieldSource(ctx, taintMap, (StaticFieldSourceSpec)element, cg, graph, pa);
         	} else 
         		throw new UnsupportedOperationException("Unrecognized SourceSpec");
         } 

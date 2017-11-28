@@ -48,13 +48,12 @@ public class CFGSanitizer {
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     Graph<ISSABasicBlock> g = SlowSparseNumberedGraph.make();
     // add all nodes to the graph
-    for (Iterator<? extends ISSABasicBlock> it = cfg.iterator(); it.hasNext();) {
-      g.addNode(it.next());
+    for (ISSABasicBlock basicBlock : cfg) {
+      g.addNode(basicBlock);
     }
 
     // add all edges to the graph, except those that go to exit
-    for (Iterator<ISSABasicBlock> it = cfg.iterator(); it.hasNext();) {
-      ISSABasicBlock b = it.next();
+    for (ISSABasicBlock b : cfg) {
       for (Iterator<ISSABasicBlock> it2 = cfg.getSuccNodes(b); it2.hasNext();) {
         ISSABasicBlock b2 = it2.next();
 
@@ -125,17 +124,17 @@ public class CFGSanitizer {
           Assertions.UNREACHABLE();
         }
         if (declared != null && exceptions != null) {
-          for (int i = 0; i < exceptions.length; i++) {
+          for (TypeReference exception : exceptions) {
             boolean isDeclared = false;
-            if (exceptions[i] != null) {
-              IClass exi = cha.lookupClass(exceptions[i]);
+            if (exception != null) {
+              IClass exi = cha.lookupClass(exception);
               if (exi == null) {
-                throw new WalaException("failed to find " + exceptions[i]);
+                throw new WalaException("failed to find " + exception);
               }
-              for (int j = 0; j < declared.length; j++) {
-                IClass dc = cha.lookupClass(declared[j]);
+              for (TypeReference element : declared) {
+                IClass dc = cha.lookupClass(element);
                 if (dc == null) {
-                  throw new WalaException("failed to find " + declared[j]);
+                  throw new WalaException("failed to find " + element);
                 }
                 if (cha.isSubclassOf(exi, dc)) {
                   isDeclared = true;

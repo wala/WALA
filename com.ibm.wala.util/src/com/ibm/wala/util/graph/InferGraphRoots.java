@@ -12,7 +12,6 @@ package com.ibm.wala.util.graph;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 
@@ -26,8 +25,7 @@ public class InferGraphRoots {
       throw new IllegalArgumentException("g is null");
     }
     HashSet<T> s = HashSetFactory.make();
-    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
-      T node = it.next();
+    for (T node : g) {
       if (g.getPredNodeCount(node) == 0) {
         s.add(node);
       }

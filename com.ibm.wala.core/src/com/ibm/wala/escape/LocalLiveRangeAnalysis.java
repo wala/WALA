@@ -99,10 +99,9 @@ public class LocalLiveRangeAnalysis {
   private static Collection<BasicBlock> findBlocks(IR ir, Iterator<SSAInstruction> statements) {
     Collection<SSAInstruction> s = Iterator2Collection.toSet(statements);
     Collection<BasicBlock> result = HashSetFactory.make();
-    outer: for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
-      SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();
-      for (Iterator<SSAInstruction> it2 = b.iterator(); it2.hasNext();) {
-        SSAInstruction x = it2.next();
+    outer: for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
+      SSACFG.BasicBlock b = (SSACFG.BasicBlock) issaBasicBlock;
+      for (SSAInstruction x : b) {
         if (s.contains(x)) {
           result.add(b);
           continue outer;
@@ -124,10 +123,9 @@ public class LocalLiveRangeAnalysis {
     if (s == null) {
       Assertions.UNREACHABLE();
     }
-    for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
-      SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();
-      for (Iterator<SSAInstruction> it2 = b.iterator(); it2.hasNext();) {
-        SSAInstruction x = it2.next();
+    for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
+      SSACFG.BasicBlock b = (SSACFG.BasicBlock) issaBasicBlock;
+      for (SSAInstruction x : b) {
         if (s.equals(x)) {
           return b;
         }
@@ -143,8 +141,8 @@ public class LocalLiveRangeAnalysis {
    * @return the basic block which contains the ith instruction
    */
   private static ISSABasicBlock findBlock(IR ir, int i) {
-    for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
-      SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();
+    for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
+      SSACFG.BasicBlock b = (SSACFG.BasicBlock) issaBasicBlock;
       if (i >= b.getFirstInstructionIndex() && i <= b.getLastInstructionIndex()) {
         return b;
       }

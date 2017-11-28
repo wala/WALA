@@ -47,8 +47,8 @@ public final class ClassHierarchy {
     }
 
     int r = NO;
-    for (int i = 0; i < ifaces.length; i++) {
-      String iface = ifaces[i];
+    for (String iface2 : ifaces) {
+      String iface = iface2;
       if (!visited.contains(iface)) {
         visited.add(iface);
         if (iface.equals(t2)) {
@@ -114,8 +114,8 @@ public final class ClassHierarchy {
     }
 
     int r = NO;
-    for (int i = 0; i < subtypes.length; i++) {
-      String subt = subtypes[i];
+    for (String subtype : subtypes) {
+      String subt = subtype;
       if (!visited.contains(subt)) {
         visited.add(subt);
         if (subt.equals(t2)) {
@@ -318,8 +318,7 @@ public final class ClassHierarchy {
       String element = iter.next();
       boolean subsumed = false;
 
-      for (Iterator<String> iterator = t2Supers.iterator(); iterator.hasNext();) {
-        String element2 = iterator.next();
+      for (String element2 : t2Supers) {
         if (element != element2 && isSubtypeOf(hierarchy, element2, element) == YES) {
           subsumed = true;
           break;

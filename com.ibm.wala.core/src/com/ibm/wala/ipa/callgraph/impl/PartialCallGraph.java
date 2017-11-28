@@ -105,8 +105,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   @Override
   public Set<CGNode> getNodes(MethodReference m) {
     Set<CGNode> result = HashSetFactory.make();
-    for (Iterator<CGNode> xs = cg.getNodes(m).iterator(); xs.hasNext();) {
-      CGNode x = xs.next();
+    for (CGNode x : cg.getNodes(m)) {
       if (containsNode(x)) {
         result.add(x);
       }
@@ -189,8 +188,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
       return null;
     }
     Set<CGNode> result = HashSetFactory.make();
-    for (Iterator<CGNode> ns = cg.getPossibleTargets(node, site).iterator(); ns.hasNext();) {
-      CGNode target = ns.next();
+    for (CGNode target : cg.getPossibleTargets(node, site)) {
       if (containsNode(target)) {
         result.add(target);
       }

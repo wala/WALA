@@ -55,9 +55,8 @@ public class PDFCallGraph {
 
   public static String findJarFiles(String[] directories) {
     Collection<String> result = HashSetFactory.make();
-    for (int i = 0; i < directories.length; i++) {
-      for (Iterator<File> it = FileUtil.listFiles(directories[i], ".*\\.jar", true).iterator(); it.hasNext();) {
-        File f = it.next();
+    for (String directorie : directories) {
+      for (File f : FileUtil.listFiles(directorie, ".*\\.jar", true)) {
         result.add(f.getAbsolutePath());
       }
     }

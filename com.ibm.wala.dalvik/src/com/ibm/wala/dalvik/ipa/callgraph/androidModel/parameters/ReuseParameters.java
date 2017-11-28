@@ -127,8 +127,8 @@ public class ReuseParameters {
                     }
                     
                     // Assert the rest of the types have the same name
-                    for (int j = 0; j < types.length; ++j) {
-                        final TypeName paramType = types[j].getName();
+                    for (TypeReference type : types) {
+                        final TypeName paramType = type.getName();
 
                         if (isReuse(paramType, ALL_TARGETS)) {
                             if (! reuseParameters.contains(paramType)) {    // XXX: Why not use a Set?

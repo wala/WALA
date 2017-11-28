@@ -93,8 +93,7 @@ public final class ConcreteTypeKey implements InstanceKey {
     }
     InstanceKey[] result = new InstanceKey[types.size()];
     int i = 0;
-    for (Iterator<TypeReference> it = types.iterator(); it.hasNext();) {
-      TypeReference type = it.next();
+    for (TypeReference type : types) {
       assert type != null;
       IClass klass = cha.lookupClass(type);
       result[i++] = new ConcreteTypeKey(klass);

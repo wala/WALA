@@ -120,8 +120,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
    * SSABasicBlocks
    */
   private void addPisFromInducedCFG(InducedCFG cfg) {
-    for (Iterator<? extends InducedCFG.BasicBlock> it = cfg.iterator(); it.hasNext();) {
-      InducedCFG.BasicBlock ib = it.next();
+    for (com.ibm.wala.cfg.InducedCFG.BasicBlock ib : cfg) {
       // we rely on the invariant that basic blocks in this cfg are numbered identically as in the source
       // InducedCFG
       BasicBlock b = getBasicBlock(ib.getNumber());
@@ -137,8 +136,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
    * SSABasicBlocks
    */
   private void addPhisFromInducedCFG(InducedCFG cfg) {
-    for (Iterator<? extends InducedCFG.BasicBlock> it = cfg.iterator(); it.hasNext();) {
-      InducedCFG.BasicBlock ib = it.next();
+    for (com.ibm.wala.cfg.InducedCFG.BasicBlock ib : cfg) {
       // we rely on the invariant that basic blocks in this cfg are numbered identically as in the source
       // InducedCFG
       BasicBlock b = getBasicBlock(ib.getNumber());
@@ -164,8 +162,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   private void recordExceptionTypes(Set<ExceptionHandler> set, IClassLoader loader) {
-    for (Iterator<ExceptionHandler> it = set.iterator(); it.hasNext();) {
-      ExceptionHandler handler = it.next();
+    for (ExceptionHandler handler : set) {
       TypeReference t = null;
       if (handler.getCatchClass() == null) {
         // by convention, in ShrikeCT this means catch everything
@@ -417,9 +414,9 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
           SSAPhiInstruction[] old = stackSlotPhis;
           stackSlotPhis = new SSAPhiInstruction[newLength];
           int j = 0;
-          for (int i = 0; i < old.length; i++) {
-            if (old[i] != null) {
-              stackSlotPhis[j++] = old[i];
+          for (SSAPhiInstruction element : old) {
+            if (element != null) {
+              stackSlotPhis[j++] = element;
             }
           }
         }
@@ -441,9 +438,9 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
           SSAPhiInstruction[] old = localPhis;
           localPhis = new SSAPhiInstruction[newLength];
           int j = 0;
-          for (int i = 0; i < old.length; i++) {
-            if (old[i] != null) {
-              localPhis[j++] = old[i];
+          for (SSAPhiInstruction element : old) {
+            if (element != null) {
+              localPhis[j++] = element;
             }
           }
         }
@@ -541,9 +538,9 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
           SSAPhiInstruction[] old = stackSlotPhis;
           stackSlotPhis = new SSAPhiInstruction[size];
           int j = 0;
-          for (int i = 0; i < old.length; i++) {
-            if (old[i] != null) {
-              stackSlotPhis[j++] = old[i];
+          for (SSAPhiInstruction element : old) {
+            if (element != null) {
+              stackSlotPhis[j++] = element;
             }
           }
         }
@@ -556,9 +553,9 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
           SSAPhiInstruction[] old = localPhis;
           localPhis = new SSAPhiInstruction[size];
           int j = 0;
-          for (int i = 0; i < old.length; i++) {
-            if (old[i] != null) {
-              localPhis[j++] = old[i];
+          for (SSAPhiInstruction element : old) {
+            if (element != null) {
+              localPhis[j++] = element;
             }
           }
         }
@@ -567,8 +564,8 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
     private int countNonNull(SSAPhiInstruction[] a) {
       int result = 0;
-      for (int i = 0; i < a.length; i++) {
-        if (a[i] != null) {
+      for (SSAPhiInstruction element : a) {
+        if (element != null) {
           result++;
         }
       }

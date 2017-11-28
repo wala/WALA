@@ -155,8 +155,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
         if (i == ssLength) {
           MutableIntSet s = new BimodalMutableIntSet(ssLength + 1, 1.1f);
           delegateStore.set(x, s);
-          for (int j = 0; j < smallStore.length; j++) {
-            IntVector vv = smallStore[j];
+          for (IntVector vv : smallStore) {
             s.add(vv.get(x));
             vv.set(x, DELEGATE_CODE);
           }
@@ -304,11 +303,11 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
             return SparseIntSet.singleton(ss0);
           } else {
             MutableSparseIntSet result = MutableSparseIntSet.createMutableSparseIntSet(ssLength);
-            for (int i = 0; i < smallStore.length; i++) {
-              if (smallStore[i].get(x) == EMPTY_CODE) {
+            for (IntVector element : smallStore) {
+              if (element.get(x) == EMPTY_CODE) {
                 break;
               }
-              result.add(smallStore[i].get(x));
+              result.add(element.get(x));
             }
             return result;
           }
@@ -332,8 +331,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
         return getDelegate(x).size();
       } else {
         int result = 0;
-        for (int i = 0; i < smallStore.length; i++) {
-          if (smallStore[i].get(x) == EMPTY_CODE) {
+        for (IntVector element : smallStore) {
+          if (element.get(x) == EMPTY_CODE) {
             break;
           }
           result++;
@@ -357,8 +356,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
       s.remove(y);
       if (s.size() == 0) {
         delegateStore.set(x, null);
-        for (int i = 0; i < smallStore.length; i++) {
-          smallStore[i].set(x, EMPTY_CODE);
+        for (IntVector element : smallStore) {
+          element.set(x, EMPTY_CODE);
         }
       }
     } else {
@@ -379,8 +378,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
 
   @Override
   public void removeAll(int x) {
-    for (int i = 0; i < smallStore.length; i++) {
-      smallStore[i].set(x, EMPTY_CODE);
+    for (IntVector element : smallStore) {
+      element.set(x, EMPTY_CODE);
     }
     delegateStore.set(x, null);
   }
@@ -408,8 +407,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
    */
   private int countPairs() {
     int result = 0;
-    for (Iterator<?> it = iterator(); it.hasNext();) {
-      it.next();
+    for (@SuppressWarnings("unused") Object name : this) {
       result++;
     }
     return result;
@@ -426,8 +424,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     if (usingDelegate(x)) {
       return getDelegate(x).contains(y);
     } else {
-      for (int i = 0; i < smallStore.length; i++) {
-        if (smallStore[i].get(x) == y) {
+      for (IntVector element : smallStore) {
+        if (element.get(x) == y) {
           return true;
         }
       }

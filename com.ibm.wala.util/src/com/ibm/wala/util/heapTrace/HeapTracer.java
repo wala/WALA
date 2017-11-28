@@ -157,8 +157,8 @@ public class HeapTracer {
 	String classpath = System.getProperty("java.class.path");
 	Object[] binDirectories = extractBinDirectories(classpath);
 	HashSet<String> classFileNames = HashSetFactory.make();
-	for (int i = 0; i < binDirectories.length; i++) {
-	    String dir = (String) binDirectories[i];
+	for (Object binDirectorie : binDirectories) {
+	    String dir = (String) binDirectorie;
 	    File fdir = new File(dir);
 	    classFileNames.addAll(findClassNames(dir, fdir));
 	}
@@ -186,8 +186,8 @@ public class HeapTracer {
 	HashSet<String> result = HashSetFactory.make();
 	if (f.isDirectory()) {
 	    File[] files = f.listFiles();
-	    for (int i = 0; i < files.length; i++) {
-		result.addAll(findClassNames(rootDir, files[i]));
+	    for (File file : files) {
+		result.addAll(findClassNames(rootDir, file));
 	    }
 	} else {
 	    if (f.getName().indexOf(".class") > 0) {
@@ -226,22 +226,20 @@ public class HeapTracer {
 	Result result = new Result();
 	IdentityHashMap<Object, Object> objectsVisited = new IdentityHashMap<>();
 	if (traceStatics) {
-	    for (int i = 0; i < rootClasses.length; i++) {
-		Class<?> c = Class.forName(rootClasses[i]);
+	    for (String rootClasse : rootClasses) {
+		Class<?> c = Class.forName(rootClasse);
 		Field[] fields = c.getDeclaredFields();
-		for (int j = 0; j < fields.length; j++) {
-		    if (isStatic(fields[j])) {
-			traverse(fields[j], result, objectsVisited);
+		for (Field field : fields) {
+		    if (isStatic(field)) {
+			traverse(field, result, objectsVisited);
 		    }
 		}
 	    }
 	}
-	for (Iterator<?> it = rootInstances.iterator(); it.hasNext();) {
-	    Object instance = it.next();
+	for (Object instance : rootInstances) {
 	    Class<?> c = instance.getClass();
 	    Set<Field> fields = getAllInstanceFields(c);
-	    for (Iterator<Field> it2 = fields.iterator(); it2.hasNext();) {
-		Field f = it2.next();
+	    for (Field f : fields) {
 		traverse(f, instance, result, objectsVisited);
 	    }
 	}
@@ -264,8 +262,7 @@ public class HeapTracer {
 	    throw new Error();
 	} else {
 	    Collection<Field> fields = getAllInstanceFields(c);
-	    for (Iterator<Field> it = fields.iterator(); it.hasNext();) {
-		Field f = it.next();
+	    for (Field f : fields) {
 		result += sizeOfSlot(f.getType());
 	    }
 	}
@@ -416,8 +413,8 @@ public class HeapTracer {
 	    System.err.println(("traverse scalar " + c));
 	}
 	Field[] fields = getAllReferenceInstanceFields(c);
-	for (int i = 0; i < fields.length; i++) {
-	    traverseFieldOfScalar(root, fields[i], scalar, container,
+	for (Field field : fields) {
+	    traverseFieldOfScalar(root, field, scalar, container,
 		    objectsVisited, result);
 	}
     }
@@ -676,8 +673,7 @@ public class HeapTracer {
 	    result.append("Totals: " + totalInstances + " " + totalSize + "\n");
 	    TreeSet<Object> sorted = new TreeSet<>(new SizeComparator());
 	    sorted.addAll(instanceCount.keySet());
-	    for (Iterator<Object> it = sorted.iterator(); it.hasNext();) {
-		Object key = it.next();
+	    for (Object key : sorted) {
 		Integer I = instanceCount.get(key);
 		Integer bytes = sizeCount.get(key);
 		result.append("  ").append(I).append("   ").append(bytes)
@@ -757,11 +753,9 @@ public class HeapTracer {
 
 	public int getTotalSize() {
 	    int totalSize = 0;
-	    for (Iterator<Demographics> it = roots.values().iterator(); it
-		    .hasNext();) {
-		Demographics d = it.next();
-		totalSize += d.getTotalSize();
-	    }
+	    for (Demographics d : roots.values()) {
+totalSize += d.getTotalSize();
+  }
 	    return totalSize;
 	}
 
@@ -772,19 +766,17 @@ public class HeapTracer {
 		    + " header bytes per object\n");
 	    int totalInstances = 0;
 	    int totalSize = 0;
-	    for (Iterator<Demographics> it = roots.values().iterator(); it
-		    .hasNext();) {
-		Demographics d = it.next();
-		totalInstances += d.getTotalInstances();
-		totalSize += d.getTotalSize();
-	    }
+	    for (Demographics d : roots.values()) {
+totalInstances += d.getTotalInstances();
+totalSize += d.getTotalSize();
+  }
 	    result.append("Total instances: " + totalInstances + "\n");
 	    result.append("Total size(bytes): " + totalSize + "\n");
 
 	    TreeSet<Field> sortedDemo = new TreeSet<>(new SizeComparator());
 	    sortedDemo.addAll(roots.keySet());
-	    for (Iterator<Field> it = sortedDemo.iterator(); it.hasNext();) {
-		Object root = it.next();
+	    for (Field field : sortedDemo) {
+		Object root = field;
 		Demographics d = roots.get(root);
 		if (d.getTotalSize() > 10000) {
 		    result.append(" root: ").append(root).append("\n");

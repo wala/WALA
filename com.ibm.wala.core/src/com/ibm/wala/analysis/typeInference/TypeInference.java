@@ -217,8 +217,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
             x = new TypeReference[]{ language.getThrowableType() };
           }
           if (x != null) {
-            for (int i = 0; i < x.length; i++) {
-              TypeReference tx = x[i];
+            for (TypeReference tx : x) {
               IClass tc = cha.lookupClass(tx);
               if (tc != null) {
                 v.setType(v.getType().meet(new ConeType(tc)));
@@ -308,9 +307,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
-      for (int i = 0; i < rhs.length; i++) {
-        if (rhs[i] != null && rhs[i].getType() != null) {
-          TypeVariable r = rhs[i];
+      for (TypeVariable r : rhs) {
+        if (r != null && r.getType() != null) {
           meet = meet.meet(r.getType());
         }
       }
@@ -386,9 +384,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
-      for (int i = 0; i < rhs.length; i++) {
-        if (rhs[i] != null  && rhs[i].getType() != null) {
-          TypeVariable r = rhs[i];
+      for (TypeVariable r : rhs) {
+        if (r != null  && r.getType() != null) {
           meet = meet.meet(r.getType());
         }
       }

@@ -221,8 +221,8 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   @Override
   public String toString() {
     StringBuffer buf = new StringBuffer("<");
-    for (int i = 0; i < vars.length; i++) {
-      switch (vars[i]) {
+    for (State var : vars) {
+      switch (var) {
       case BOTH:
         buf.append('*');
         break;

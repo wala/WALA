@@ -12,7 +12,6 @@ package com.ibm.wala.util.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -162,12 +161,10 @@ public class MapUtil {
       throw new IllegalArgumentException("m is null");
     }
     Map<V, Set<K>> result = HashMapFactory.make(m.size());
-    for (Iterator<Map.Entry<K, Set<V>>> it = m.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<K, Set<V>> E = it.next();
+    for (Map.Entry<K, Set<V>> E : m.entrySet()) {
       K key = E.getKey();
       Set<V> values = E.getValue();
-      for (Iterator<V> it2 = values.iterator(); it2.hasNext();) {
-        V v = it2.next();
+      for (V v : values) {
         Set<K> s = findOrCreateSet(result, v);
         s.add(key);
       }
@@ -203,14 +200,12 @@ public class MapUtil {
     }
     Map<Set<K>, V> result = HashMapFactory.make();
     Map<V, Set<K>> valueToKeys = HashMapFactory.make();
-    for (Iterator<Map.Entry<K, V>> it = m.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<K, V> E = it.next();
+    for (Map.Entry<K, V> E : m.entrySet()) {
       K key = E.getKey();
       V value = E.getValue();
       findOrCreateSet(valueToKeys, value).add(key);
     }
-    for (Iterator<Map.Entry<V, Set<K>>> it = valueToKeys.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<V, Set<K>> E = it.next();
+    for (Map.Entry<V, Set<K>> E : valueToKeys.entrySet()) {
       V value = E.getKey();
       Set<K> keys = E.getValue();
       result.put(keys, value);

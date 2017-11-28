@@ -31,11 +31,11 @@ public class ComposedEntrypoints implements Iterable<Entrypoint> {
     if (B == null) {
       throw new IllegalArgumentException("B is null");
     }
-    for (Iterator<Entrypoint> it = A.iterator(); it.hasNext(); ) {
-      entrypoints.add(it.next());
+    for (Entrypoint entrypoint : A) {
+      entrypoints.add(entrypoint);
     }
-    for (Iterator<Entrypoint> it = B.iterator(); it.hasNext(); ) {
-      entrypoints.add(it.next());
+    for (Entrypoint entrypoint : B) {
+      entrypoints.add(entrypoint);
     }
   }
 

@@ -13,7 +13,6 @@ package com.ibm.wala.cast.loader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -184,8 +183,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   @Override
   public Collection<IField> getDeclaredInstanceFields() {
     Set<IField> result = HashSetFactory.make();
-    for (Iterator<IField> FS = declaredFields.values().iterator(); FS.hasNext();) {
-      IField F = FS.next();
+    for (IField F : declaredFields.values()) {
       if (!F.isStatic()) {
         result.add(F);
       }
@@ -197,8 +195,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   @Override
   public Collection<IField> getDeclaredStaticFields() {
     Set<IField> result = HashSetFactory.make();
-    for (Iterator<IField> FS = declaredFields.values().iterator(); FS.hasNext();) {
-      IField F = FS.next();
+    for (IField F : declaredFields.values()) {
       if (F.isStatic()) {
         result.add(F);
       }
@@ -240,8 +237,8 @@ abstract public class AstClass implements IClass, ClassConstants {
   @Override
   public Collection<IMethod> getAllMethods() {
     Collection<IMethod> result = HashSetFactory.make();
-    for (Iterator<IMethod> ms = getDeclaredMethods().iterator(); ms.hasNext();) {
-      result.add(ms.next());
+    for (IMethod iMethod : getDeclaredMethods()) {
+      result.add(iMethod);
     }
     if (getSuperclass() != null) {
       result.addAll(getSuperclass().getAllMethods());

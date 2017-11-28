@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -130,8 +129,7 @@ public abstract class Launcher {
   private static String[] buildEnv(Map<String,String> ev) {
     String[] result = new String[ev.size()];
     int i = 0;
-    for (Iterator<Map.Entry<String,String>> it = ev.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<String,String> e = it.next();
+    for (Map.Entry<String, String> e : ev.entrySet()) {
       result[i++] = e.getKey() + "=" + e.getValue();
     }
     return result;

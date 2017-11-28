@@ -14,8 +14,6 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Iterator;
-
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
@@ -55,8 +53,7 @@ public class InterfaceAnalyzer {
       instrumenter.close();
 
       w.write("Type\t# Total\t# Method\t# Public Method\t# Public Method as Foreign\n");
-      for (Iterator<String> i = typeStats.keySet().iterator(); i.hasNext();) {
-        String k = i.next();
+      for (String k : typeStats.keySet()) {
         TypeStats t = typeStats.get(k);
         w.write(k + "\t" + t.totalOccurrences + "\t" + t.methodOccurrences + "\t" + t.publicMethodOccurrences + "\t"
             + t.foreignPublicMethodOccurrences + "\n");
@@ -77,8 +74,8 @@ public class InterfaceAnalyzer {
         String[] params = Util.getParamsTypes(null, sig);
         int flags = reader.getMethodAccessFlags(m);
         int mUID = methodUID++;
-        for (int p = 0; p < params.length; p++) {
-          doType(flags, params[p], cType, mUID);
+        for (String param : params) {
+          doType(flags, param, cType, mUID);
         }
         doType(flags, Util.getReturnType(sig), cType, mUID);
       }

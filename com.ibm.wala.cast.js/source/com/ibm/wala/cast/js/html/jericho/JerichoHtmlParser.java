@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.html.jericho;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -110,8 +109,7 @@ public class JerichoHtmlParser implements IHtmlParser{
 			src = new Source(reader);
 			src.setLogger(Config.LoggerProvider.getLogger(fileName));
 			List<Element> childElements = src.getChildElements();
-			for (Iterator<Element> nodeIterator = childElements.iterator(); nodeIterator.hasNext();) {
-				Element e = nodeIterator.next();
+			for (Element e : childElements) {
 				parser.parse(e);
 			}
 			if (! warnings.isEmpty()) {
@@ -139,8 +137,7 @@ public class JerichoHtmlParser implements IHtmlParser{
 			handler.handleStartTag(tag);
 			handler.handleText(tag.getElementPosition(), tag.getBodyText().snd);
 			List<Element> childElements = root.getChildElements();
-			for (Iterator<Element> nodeIterator = childElements.iterator(); nodeIterator.hasNext();) {
-				Element child = nodeIterator.next();
+			for (Element child : childElements) {
 				parse(child);
 			}
 			handler.handleEndTag(tag);

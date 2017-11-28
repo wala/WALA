@@ -214,8 +214,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     if (s == null) {
       Map<IClass, Integer> count = countAllocsByType(node);
       HashSet<IClass> smushees = HashSetFactory.make(5);
-      for (Iterator<Map.Entry<IClass, Integer>> it = count.entrySet().iterator(); it.hasNext();) {
-        Map.Entry<IClass, Integer> e = it.next();
+      for (Map.Entry<IClass, Integer> e : count.entrySet()) {
         Integer i = e.getValue();
         if (i.intValue() > SMUSH_LIMIT) {
           smushees.add(e.getKey());
@@ -336,8 +335,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       if (c.getReference().equals(TypeReference.JavaLangObject)) {
         return true;
       } else {
-        for (Iterator<IField> it = c.getDeclaredInstanceFields().iterator(); it.hasNext();) {
-          IField f = it.next();
+        for (IField f : c.getDeclaredInstanceFields()) {
           if (f.getReference().getFieldType().isReferenceType()) {
             return false;
           }

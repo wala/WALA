@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -136,9 +135,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     while (cl != null) {
       List<Module> modules = scope.getModules(cl);
 
-      for (Iterator<Module> iter = modules.iterator(); iter.hasNext();) {
-        Module m = iter.next();
-
+      for (Module m : modules) {
         if (m instanceof JarFileModule) {
           JarFileModule jarFileModule = (JarFileModule) m;
 

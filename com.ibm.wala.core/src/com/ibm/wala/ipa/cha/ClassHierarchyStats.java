@@ -25,10 +25,10 @@ public class ClassHierarchyStats {
       throw new IllegalArgumentException("cha cannot be null");
     }
     IClassLoader[] loaders = cha.getLoaders();
-    for (int i = 0; i < loaders.length; i++) {
-      System.out.println("loader: " + loaders[i]);
-      System.out.println("  classes: " + loaders[i].getNumberOfClasses());
-      System.out.println("  methods: " + loaders[i].getNumberOfMethods());
+    for (IClassLoader loader : loaders) {
+      System.out.println("loader: " + loader);
+      System.out.println("  classes: " + loader.getNumberOfClasses());
+      System.out.println("  methods: " + loader.getNumberOfMethods());
     }
   }
 }

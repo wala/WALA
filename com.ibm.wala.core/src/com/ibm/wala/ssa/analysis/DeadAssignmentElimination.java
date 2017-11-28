@@ -58,8 +58,8 @@ public class DeadAssignmentElimination {
    */
   private static void doTransformation(IR ir, DeadValueSystem solution) {
     ControlFlowGraph<?, ISSABasicBlock> cfg = ir.getControlFlowGraph();
-    for (Iterator<ISSABasicBlock> x = cfg.iterator(); x.hasNext();) {
-      BasicBlock b = (BasicBlock) x.next();
+    for (ISSABasicBlock issaBasicBlock : cfg) {
+      BasicBlock b = (BasicBlock) issaBasicBlock;
       if (DEBUG) {
         System.err.println("eliminateDeadPhis: " + b);
       }
@@ -131,8 +131,7 @@ public class DeadAssignmentElimination {
       }
 
       // Now create dataflow equations; v is live iff any phi that uses v is live
-      for (Iterator<Entry<Integer, BooleanVariable>> it = vars.entrySet().iterator(); it.hasNext();) {
-        Map.Entry<Integer, BooleanVariable> E = it.next();
+      for (Entry<Integer, BooleanVariable> E : vars.entrySet()) {
         Integer def = E.getKey();
         BooleanVariable B = E.getValue();
         for (Iterator<SSAInstruction> uses = DU.getUses(def.intValue()); uses.hasNext();) {

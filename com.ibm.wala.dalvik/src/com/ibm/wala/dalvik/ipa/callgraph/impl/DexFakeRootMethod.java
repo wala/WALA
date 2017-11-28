@@ -215,12 +215,12 @@ public class DexFakeRootMethod extends AbstractRootMethod {
 						}
 					}
 					if (allocSites!=null)
-					for (int p=0;p<allocSites.length; p++) {
-						if (allocSites[p] == -1) {
-							Warnings.add(AllocationFailure.create(T));
-							return null;
+						for (int allocSite : allocSites) {
+							if (allocSite == -1) {
+								Warnings.add(AllocationFailure.create(T));
+								return null;
+							}
 						}
-					}
 					addInvocation(allocSites==null?new int[] {instance}:allocSites, CallSiteReference.make(statements.size(), ctor.getReference(),
 							IInvokeInstruction.Dispatch.SPECIAL));
 				}

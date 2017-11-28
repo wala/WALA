@@ -699,8 +699,8 @@ public abstract class IR implements IRView {
     if (instructions == null)
       return true;
 
-    for (int i = 0; i < instructions.length; i++)
-      if (instructions[i] != null)
+    for (SSAInstruction instruction : instructions)
+      if (instruction != null)
         return false;
 
     return true;

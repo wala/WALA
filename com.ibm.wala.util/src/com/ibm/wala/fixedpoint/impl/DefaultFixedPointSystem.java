@@ -133,8 +133,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
       graph.addNode(lhs);
       graph.addEdge(s, lhs);
     }
-    for (int i = 0; i < rhs.length; i++) {
-      IVariable<?> v = rhs[i];
+    for (IVariable<?> v : rhs) {
       IVariable<?> variable = v;
       if (variable != null) {
         variables.add(variable);

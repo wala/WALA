@@ -69,8 +69,8 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
     ClassWriter.setInt(buf, offset + 2, 2 + rawTable.length * 2);
     ClassWriter.setUShort(buf, offset + 6, rawTable.length / 2);
     offset += 8;
-    for (int i = 0; i < rawTable.length; i++) {
-      ClassWriter.setUShort(buf, offset, rawTable[i]);
+    for (int element : rawTable) {
+      ClassWriter.setUShort(buf, offset, element);
       offset += 2;
     }
 
@@ -89,8 +89,7 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
     }
     int rawCount = 0;
     int last = -1;
-    for (int i = 0; i < newLineMap.length; i++) {
-      int next = newLineMap[i];
+    for (int next : newLineMap) {
       if (next != last) {
         rawCount++;
       }

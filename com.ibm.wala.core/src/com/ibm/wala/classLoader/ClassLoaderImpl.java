@@ -183,13 +183,11 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     Set<String> old = HashSetFactory.make();
-    for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
-      ModuleEntry m = it.next();
+    for (ModuleEntry m : t) {
       old.add(m.getClassName());
     }
     HashSet<ModuleEntry> toRemove = HashSetFactory.make();
-    for (Iterator<ModuleEntry> it = s.iterator(); it.hasNext();) {
-      ModuleEntry m = it.next();
+    for (ModuleEntry m : s) {
       if (old.contains(m.getClassName())) {
         toRemove.add(m);
       }
@@ -243,8 +241,7 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   @SuppressWarnings("unused")
   private void loadAllClasses(Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents) {
-    for (Iterator<ModuleEntry> it = moduleEntries.iterator(); it.hasNext();) {
-      ModuleEntry entry = it.next();
+    for (ModuleEntry entry : moduleEntries) {
       if (!entry.isClassFile()) {
         continue;
       }
@@ -411,8 +408,7 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   @SuppressWarnings("unused")
   protected void loadAllSources(Set<ModuleEntry> sourceModules) {
-    for (Iterator<ModuleEntry> it = sourceModules.iterator(); it.hasNext();) {
-      ModuleEntry entry = it.next();
+    for (ModuleEntry entry : sourceModules) {
       String className = entry.getClassName().replace('.', '/');
       className = className.replace(File.separatorChar, '/');
       className = "L" + ((className.startsWith("/")) ? className.substring(1) : className);
@@ -489,8 +485,7 @@ public class ClassLoaderImpl implements IClassLoader {
     // module are loaded according to the given order (same as in Java VM)
     Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
     Set<ModuleEntry> sourceModuleEntries = HashSetFactory.make();
-    for (Iterator<Module> it = modules.iterator(); it.hasNext();) {
-      Module archive = it.next();
+    for (Module archive : modules) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("add archive: " + archive);
       }
@@ -524,12 +519,10 @@ public class ClassLoaderImpl implements IClassLoader {
       }
       loadAllClasses(classFiles, allClassAndSourceFileContents);
       loadAllSources(sourceFiles);
-      for (Iterator<ModuleEntry> it2 = classFiles.iterator(); it2.hasNext();) {
-        ModuleEntry file = it2.next();
+      for (ModuleEntry file : classFiles) {
         classModuleEntries.add(file);
       }
-      for (Iterator<ModuleEntry> it2 = sourceFiles.iterator(); it2.hasNext();) {
-        ModuleEntry file = it2.next();
+      for (ModuleEntry file : sourceFiles) {
         sourceModuleEntries.add(file);
       }
     }
@@ -703,8 +696,7 @@ public class ClassLoaderImpl implements IClassLoader {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
     }
-    for (Iterator<IClass> it = toRemove.iterator(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : toRemove) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("removing " + klass.getName());
       }

@@ -349,8 +349,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
     FakeRootMethod m = (FakeRootMethod) getCallGraph().getFakeRootNode().getMethod();
 
-    for (int i = 0; i < PRE_ALLOC.length; i++) {
-      SSANewInstruction n = m.addAllocation(PRE_ALLOC[i]);
+    for (TypeReference element : PRE_ALLOC) {
+      SSANewInstruction n = m.addAllocation(element);
       // visit now to ensure java.lang.Object is visited first
       visitNew(getCallGraph().getFakeRootNode(), n.getNewSite());
     }

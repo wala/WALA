@@ -12,7 +12,6 @@ package com.ibm.wala.classLoader;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -228,8 +227,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   public void clearSoftCaches() {
     // toss optional information from each method.
     if (methodMap != null) {
-      for (Iterator<IMethod> it = getDeclaredMethods().iterator(); it.hasNext();) {
-        ShrikeCTMethod m = (ShrikeCTMethod) it.next();
+      for (IMethod iMethod : getDeclaredMethods()) {
+        ShrikeCTMethod m = (ShrikeCTMethod) iMethod;
         m.clearCaches();
       }
     }

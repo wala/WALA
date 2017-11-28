@@ -149,9 +149,9 @@ public class FlowAnalysis {
                 for(CodeElement taintElement:bbTaints.get(taintType))
                 {
                 	BasicBlockInContext<E>[] entryBlocks = graph.getEntriesForProcedure(taintBB.getNode());
-                	for (int i = 0; i < entryBlocks.length; i++) {
+                	for (BasicBlockInContext<E> entryBlock : entryBlocks) {
                 		//Add PathEdge <s_p,0> -> <n,d1>
-                		initialEdges.add(PathEdge.createPathEdge(entryBlocks[i], 0, taintBB, domain.getMappedIndex(new DomainElement(taintElement,taintType))));
+                		initialEdges.add(PathEdge.createPathEdge(entryBlock, 0, taintBB, domain.getMappedIndex(new DomainElement(taintElement,taintType))));
                 	}
                     //initialEdges.add(PathEdge.createPathEdge(e.getKey(), 0, e.getKey(), domain.getMappedIndex(new DomainElement(o,e2.getKey()))));
                 }
@@ -160,8 +160,8 @@ public class FlowAnalysis {
         //Add PathEdges to the entry points of the supergraph <s_main,0> -> <s_main,0>
         for (CGNode entry : cg.getEntrypointNodes()) {
         	BasicBlockInContext<E>[] bbic = graph.getEntriesForProcedure(entry);
-        	for (int i = 0; i < bbic.length; i++)
-        		initialEdges.add(PathEdge.createPathEdge(bbic[i], 0, bbic[i], 0));
+        	for (BasicBlockInContext<E> element : bbic)
+				initialEdges.add(PathEdge.createPathEdge(element, 0, element, 0));
         }
         
         final TabulationProblem<BasicBlockInContext<E>, CGNode, DomainElement>

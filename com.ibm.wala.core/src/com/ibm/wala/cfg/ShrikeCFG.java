@@ -111,8 +111,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
    */
   private void computeI2BMapping() {
     instruction2Block = new int[getInstructions().length];
-    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
-      final BasicBlock b = it.next();
+    for (BasicBlock b : this) {
       for (int j = b.getFirstInstructionIndex(); j <= b.getLastInstructionIndex(); j++) {
         instruction2Block[j] = getNumber(b);
       }
@@ -123,8 +122,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
    * Compute outgoing edges in the control flow graph.
    */
   private void computeEdges() {
-    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
-      BasicBlock b = it.next();
+    for (BasicBlock b : this) {
       if (b.equals(exit())) {
         continue;
       } else if (b.equals(entry())) {
@@ -238,8 +236,8 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
 
       IInstruction last = getInstructions()[getLastInstructionIndex()];
       int[] targets = last.getBranchTargets();
-      for (int i = 0; i < targets.length; i++) {
-        BasicBlock b = getBlockForInstruction(targets[i]);
+      for (int target : targets) {
+        BasicBlock b = getBlockForInstruction(target);
         addNormalEdgeTo(b);
       }
       addExceptionalEdges(last);
@@ -310,11 +308,11 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
           // this var gets set to false if goToAllHandlers is true but some enclosing exception handler catches all
           // exceptions.  in such a case, we need not add an exceptional edge to the method exit
           boolean needEdgeToExitForAllHandlers = true;
-          for (int j = 0; j < hs.length; j++) {
+          for (ExceptionHandler element : hs) {
             if (DEBUG) {
-              System.err.println(" handler " + hs[j]);
+              System.err.println(" handler " + element);
             }
-            BasicBlock b = getBlockForInstruction(hs[j].getHandler());
+            BasicBlock b = getBlockForInstruction(element.getHandler());
             if (DEBUG) {
               System.err.println(" target " + b);
             }
@@ -325,15 +323,15 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
               }
               addExceptionalEdgeTo(b);
               // if the handler catches all exceptions, we don't need to add an edge to the exit or any other handlers
-              if (hs[j].getCatchClass() == null) {
+              if (element.getCatchClass() == null) {
                 needEdgeToExitForAllHandlers = false;
                 break;
               }
             } else {
               TypeReference caughtException = null;
-              if (hs[j].getCatchClass() != null) {
+              if (element.getCatchClass() != null) {
                 ClassLoaderReference loader = ShrikeCFG.this.getMethod().getDeclaringClass().getReference().getClassLoader();
-                caughtException = ShrikeUtil.makeTypeReference(loader, hs[j].getCatchClass());
+                caughtException = ShrikeUtil.makeTypeReference(loader, element.getCatchClass());
                 if (DEBUG) {
                   System.err.println(" caughtException " + caughtException);
                 }
@@ -502,8 +500,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
-      BasicBlock bb = it.next();
+    for (BasicBlock bb : this) {
       s.append("BB").append(getNumber(bb)).append("\n");
       for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {
         s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");

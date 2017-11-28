@@ -75,8 +75,8 @@ public class PDFViewUtil {
       throw new IllegalArgumentException("ir is null");
     }
     final HashMap<ISSABasicBlock,String> labelMap = HashMapFactory.make();
-    for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
-      SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
+    for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
+      SSACFG.BasicBlock bb = (SSACFG.BasicBlock) issaBasicBlock;
       labelMap.put(bb, getNodeLabel(ir, bb));
     }
     NodeDecorator<ISSABasicBlock> labels = new NodeDecorator<ISSABasicBlock>() {

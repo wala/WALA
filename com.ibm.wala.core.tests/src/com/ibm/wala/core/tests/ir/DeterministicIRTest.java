@@ -109,8 +109,8 @@ public class DeterministicIRTest extends WalaTestCase {
    * @param instructions
    */
   private static void checkNotAllNull(SSAInstruction[] instructions) {
-    for (int i = 0; i < instructions.length; i++) {
-      if (instructions[i] != null) {
+    for (SSAInstruction instruction : instructions) {
+      if (instruction != null) {
         return;
       }
     }

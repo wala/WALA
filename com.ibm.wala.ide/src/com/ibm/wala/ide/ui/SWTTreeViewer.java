@@ -203,8 +203,8 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
       if (getPopUpActions().size() > 0) {
         MenuManager mm = new MenuManager();
         treeViewer.getTree().setMenu(mm.createContextMenu(treeViewer.getTree()));
-        for (Iterator<IAction> it = getPopUpActions().iterator(); it.hasNext();) {
-          mm.add(it.next());
+        for (IAction iAction : getPopUpActions()) {
+          mm.add(iAction);
         }
       }
       return treeViewer.getTree();

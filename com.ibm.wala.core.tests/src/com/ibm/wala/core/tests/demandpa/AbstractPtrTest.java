@@ -116,8 +116,7 @@ public abstract class AbstractPtrTest {
   }
 
   public static CGNode findStaticMethod(CallGraph cg, Atom name, Descriptor args) {
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : cg) {
       // System.err.println(n.getMethod().getName() + " " +
       // n.getMethod().getDescriptor());
       if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(args)) {
@@ -129,8 +128,7 @@ public abstract class AbstractPtrTest {
   }
 
   public static CGNode findInstanceMethod(CallGraph cg, IClass declaringClass, Atom name, Descriptor args) {
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : cg) {
       // System.err.println(n.getMethod().getDeclaringClass() + " " +
       // n.getMethod().getName() + " " + n.getMethod().getDescriptor());
       if (n.getMethod().getDeclaringClass().equals(declaringClass) && n.getMethod().getName().equals(name)

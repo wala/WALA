@@ -733,8 +733,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return 0;
     }
     int result = delegateGraph.getSuccNodeCount(v);
-    for (Iterator<UnaryOperator<PointsToSetVariable>> it = invImplicitUnaryMap.keySet().iterator(); it.hasNext();) {
-      UnaryOperator<PointsToSetVariable> op = it.next();
+    for (UnaryOperator<PointsToSetVariable> op : invImplicitUnaryMap.keySet()) {
       IBinaryNaturalRelation R = invImplicitUnaryMap.get(op);
       IntSet s = R.getRelated(number);
       if (s != null) {
@@ -754,8 +753,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return 0;
     }
     int result = delegateGraph.getPredNodeCount(v);
-    for (Iterator<UnaryOperator<PointsToSetVariable>> it = implicitUnaryMap.keySet().iterator(); it.hasNext();) {
-      UnaryOperator<PointsToSetVariable> op = it.next();
+    for (UnaryOperator<PointsToSetVariable> op : implicitUnaryMap.keySet()) {
       IBinaryNaturalRelation R = implicitUnaryMap.get(op);
       IntSet s = R.getRelated(number);
       if (s != null) {
@@ -788,9 +786,9 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       System.err.println("implicit map:");
       int count = 0;
       int totalBytes = 0;
-      for (Iterator<Entry<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation>> it = implicitUnaryMap.entrySet().iterator(); it.hasNext();) {
+      for (Entry<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> entry : implicitUnaryMap.entrySet()) {
         count++;
-        Map.Entry<?, IBinaryNaturalRelation> e = it.next();
+        Map.Entry<?, IBinaryNaturalRelation> e = entry;
         IBinaryNaturalRelation R = e.getValue();
         System.err.println(("entry " + count));
         R.performVerboseAction();

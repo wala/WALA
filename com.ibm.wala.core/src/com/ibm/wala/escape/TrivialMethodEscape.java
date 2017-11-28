@@ -92,8 +92,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   private boolean mayEscape(Set<CGNode> allocN, int allocPC, Set nodes) throws WalaException {
     Set<InstanceKey> instances = HashSetFactory.make();
     // instances := set of instance key allocated at &lt;allocMethod, allocPC>
-    for (Iterator<CGNode> it = allocN.iterator(); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : allocN) {
       NewSiteReference site = findAlloc(n, allocPC);
       InstanceKey ik = hg.getHeapModel().getInstanceKeyForAllocation(n, site);
       if (ik == null) {
@@ -102,8 +101,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
       instances.add(ik);
     }
 
-    for (Iterator<InstanceKey> it = instances.iterator(); it.hasNext();) {
-      InstanceKey ik = it.next();
+    for (InstanceKey ik : instances) {
       for (Iterator<Object> it2 = hg.getPredNodes(ik); it2.hasNext();) {
         PointerKey p = (PointerKey) it2.next();
         if (!(p instanceof AbstractLocalPointerKey)) {

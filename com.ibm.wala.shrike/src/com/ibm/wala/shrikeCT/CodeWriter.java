@@ -65,8 +65,8 @@ public final class CodeWriter extends ClassWriter.Element {
 
     int size = 14 + code.length + 2 + (exnHandlers == null ? 0 : exnHandlers.length) * 2 + 2;
     if (attributes != null) {
-      for (int i = 0; i < attributes.length; i++) {
-        size += attributes[i].getSize();
+      for (ClassWriter.Element attribute : attributes) {
+        size += attribute.getSize();
       }
     }
     return size;
@@ -87,8 +87,8 @@ public final class CodeWriter extends ClassWriter.Element {
     ClassWriter.setUShort(buf, offset, (exnHandlers == null ? 0 : exnHandlers.length) / 4);
     offset += 2;
     if (exnHandlers != null) {
-      for (int i = 0; i < exnHandlers.length; i++) {
-        ClassWriter.setUShort(buf, offset, exnHandlers[i]);
+      for (int exnHandler : exnHandlers) {
+        ClassWriter.setUShort(buf, offset, exnHandler);
         offset += 2;
       }
     }
@@ -96,8 +96,8 @@ public final class CodeWriter extends ClassWriter.Element {
     ClassWriter.setUShort(buf, offset, (attributes == null ? 0 : attributes.length));
     offset += 2;
     if (attributes != null) {
-      for (int i = 0; i < attributes.length; i++) {
-        offset = attributes[i].copyInto(buf, offset);
+      for (ClassWriter.Element attribute : attributes) {
+        offset = attribute.copyInto(buf, offset);
       }
     }
     ClassWriter.setInt(buf, start + 2, offset - start - 6);

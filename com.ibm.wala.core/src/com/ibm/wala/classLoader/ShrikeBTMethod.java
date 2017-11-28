@@ -499,56 +499,56 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   private static void copyVisitorSetsToArrays(SimpleVisitor simpleVisitor, BytecodeInfo info) {
     info.newSites = new NewSiteReference[simpleVisitor.newSites.size()];
     int i = 0;
-    for (Iterator<NewSiteReference> it = simpleVisitor.newSites.iterator(); it.hasNext();) {
-      info.newSites[i++] = it.next();
+    for (NewSiteReference newSiteReference : simpleVisitor.newSites) {
+      info.newSites[i++] = newSiteReference;
     }
 
     info.fieldsRead = new FieldReference[simpleVisitor.fieldsRead.size()];
     i = 0;
-    for (Iterator<FieldReference> it = simpleVisitor.fieldsRead.iterator(); it.hasNext();) {
-      info.fieldsRead[i++] = it.next();
+    for (FieldReference fieldReference : simpleVisitor.fieldsRead) {
+      info.fieldsRead[i++] = fieldReference;
     }
 
     info.fieldsRead = new FieldReference[simpleVisitor.fieldsRead.size()];
     i = 0;
-    for (Iterator<FieldReference> it = simpleVisitor.fieldsRead.iterator(); it.hasNext();) {
-      info.fieldsRead[i++] = it.next();
+    for (FieldReference fieldReference : simpleVisitor.fieldsRead) {
+      info.fieldsRead[i++] = fieldReference;
     }
 
     info.fieldsWritten = new FieldReference[simpleVisitor.fieldsWritten.size()];
     i = 0;
-    for (Iterator<FieldReference> it = simpleVisitor.fieldsWritten.iterator(); it.hasNext();) {
-      info.fieldsWritten[i++] = it.next();
+    for (FieldReference fieldReference : simpleVisitor.fieldsWritten) {
+      info.fieldsWritten[i++] = fieldReference;
     }
 
     info.callSites = new CallSiteReference[simpleVisitor.callSites.size()];
     i = 0;
-    for (Iterator<CallSiteReference> it = simpleVisitor.callSites.iterator(); it.hasNext();) {
-      info.callSites[i++] = it.next();
+    for (CallSiteReference callSiteReference : simpleVisitor.callSites) {
+      info.callSites[i++] = callSiteReference;
     }
 
     info.arraysRead = new TypeReference[simpleVisitor.arraysRead.size()];
     i = 0;
-    for (Iterator<TypeReference> it = simpleVisitor.arraysRead.iterator(); it.hasNext();) {
-      info.arraysRead[i++] = it.next();
+    for (TypeReference typeReference : simpleVisitor.arraysRead) {
+      info.arraysRead[i++] = typeReference;
     }
 
     info.arraysWritten = new TypeReference[simpleVisitor.arraysWritten.size()];
     i = 0;
-    for (Iterator<TypeReference> it = simpleVisitor.arraysWritten.iterator(); it.hasNext();) {
-      info.arraysWritten[i++] = it.next();
+    for (TypeReference typeReference : simpleVisitor.arraysWritten) {
+      info.arraysWritten[i++] = typeReference;
     }
 
     info.implicitExceptions = new TypeReference[simpleVisitor.implicitExceptions.size()];
     i = 0;
-    for (Iterator<TypeReference> it = simpleVisitor.implicitExceptions.iterator(); it.hasNext();) {
-      info.implicitExceptions[i++] = it.next();
+    for (TypeReference typeReference : simpleVisitor.implicitExceptions) {
+      info.implicitExceptions[i++] = typeReference;
     }
 
     info.castTypes = new TypeReference[simpleVisitor.castTypes.size()];
     i = 0;
-    for (Iterator<TypeReference> it = simpleVisitor.castTypes.iterator(); it.hasNext();) {
-      info.castTypes[i++] = it.next();
+    for (TypeReference typeReference : simpleVisitor.castTypes) {
+      info.castTypes[i++] = typeReference;
     }
 
     info.hasMonitorOp = simpleVisitor.hasMonitorOp;
@@ -842,9 +842,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
     HashSet<TypeReference> result = HashSetFactory.make(10);
     ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-    for (int i = 0; i < handlers.length; i++) {
-      for (int j = 0; j < handlers[i].length; j++) {
-        TypeReference t = ShrikeUtil.makeTypeReference(loader, handlers[i][j].getCatchClass());
+    for (ExceptionHandler[] handler : handlers) {
+      for (int j = 0; j < handler.length; j++) {
+        TypeReference t = ShrikeUtil.makeTypeReference(loader, handler[j].getCatchClass());
         if (t == null) {
           t = TypeReference.JavaLangThrowable;
         }

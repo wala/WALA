@@ -272,8 +272,7 @@ public abstract class OfflineInstrumenterBase {
     if (fs == null) {
       throw new IllegalArgumentException("bad directory " + d.getAbsolutePath());
     }
-    for (int i = 0; i < fs.length; i++) {
-      File f = fs[i];
+    for (File f : fs) {
       if (f.isDirectory()) {
         addInputDirectory(baseDirectory, f);
       } else {

@@ -173,8 +173,8 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
         InstanceKey[] objs = getInvariantContents(objVal);
 
-        for (int i = 0; i < objs.length; i++) {
-          PointerKey enclosing = new EnclosingObjectReferenceKey(objs[i], cls);
+        for (InstanceKey obj : objs) {
+          PointerKey enclosing = new EnclosingObjectReferenceKey(obj, cls);
           system.newConstraint(lvalKey, assignOperator, enclosing);
         }
 

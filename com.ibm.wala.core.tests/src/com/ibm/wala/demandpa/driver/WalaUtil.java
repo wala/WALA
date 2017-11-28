@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.Properties;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -68,8 +67,7 @@ public class WalaUtil {
     System.err.print("dumping ir...");
     String irFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + benchName + "-ir.txt";
     try (final PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(irFile)))) {
-      for (Iterator<? extends CGNode> iter = cg.iterator(); iter.hasNext();) {
-        CGNode node = iter.next();
+      for (CGNode node : cg) {
         IR ir = node.getIR();
         if (ir == null)
           continue;

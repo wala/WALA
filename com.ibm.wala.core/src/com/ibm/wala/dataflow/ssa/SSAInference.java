@@ -82,8 +82,7 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
 
   private void createEquations(OperatorFactory<T> opFactory) {
     SSAInstruction[] instructions = ir.getInstructions();
-    for (int i = 0; i < instructions.length; i++) {
-      SSAInstruction s = instructions[i];
+    for (SSAInstruction s : instructions) {
       makeEquationForInstruction(opFactory, s);
     }
     for (Iterator<? extends SSAInstruction> it = ir.iteratePhis(); it.hasNext();) {

@@ -372,8 +372,8 @@ public final class Util {
     }
     StringBuffer buf = new StringBuffer();
     buf.append("(");
-    for (int i = 0; i < params.length; i++) {
-      buf.append(makeType(params[i]));
+    for (Class<?> param : params) {
+      buf.append(makeType(param));
     }
     buf.append(")");
     buf.append(makeType(result));
@@ -447,8 +447,7 @@ public final class Util {
     }
     Method[] methods = c.getMethods();
     Method result = null;
-    for (int i = 0; i < methods.length; i++) {
-      Method m = methods[i];
+    for (Method m : methods) {
       if (m.getName().equals(name) && (paramTypes == null || Arrays.equals(m.getParameterTypes(), paramTypes))) {
         if (result != null) {
           throw new IllegalArgumentException("Method " + makeName(name, paramTypes) + " is ambiguous in class " + c);
@@ -473,8 +472,7 @@ public final class Util {
 
     if (name.equals("<init>")) {
       Constructor<?>[] cs = c.getConstructors();
-      for (int i = 0; i < cs.length; i++) {
-        Constructor<?> con = cs[i];
+      for (Constructor<?> con : cs) {
         if (paramTypes == null || Arrays.equals(con.getParameterTypes(), paramTypes)) {
           if (result != null) {
             throw new IllegalArgumentException("Constructor " + makeName(name, paramTypes) + " is ambiguous in class " + c);
