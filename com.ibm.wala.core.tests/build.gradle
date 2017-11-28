@@ -7,21 +7,13 @@ repositories {
 	    }
 }
 
-
-
 sourceSets {
     main {
         java  {
     	    srcDir 'src'
     	    }
     	}
-    test {
-        java {
-    	    srcDir 'test'
-    	    }
-    	}
 }
-
 
 dependencies {
 	compile project(':com.ibm.wala.shrike')
@@ -39,3 +31,4 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.osgi/org.osgi.core
 	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.2.0'
 }
+

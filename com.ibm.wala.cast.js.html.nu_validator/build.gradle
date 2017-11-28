@@ -7,21 +7,13 @@ repositories {
 	    }
 }
 
-
-
 sourceSets {
     main {
         java  {
     	    srcDir 'src'
     	    }
     	}
-    test {
-        java {
-    	    srcDir 'test'
-    	    }
-    	}
 }
-
 
 dependencies {
 	compile project(':com.ibm.wala.util')
@@ -34,3 +26,4 @@ dependencies {
 	// https://mvnrepository.com/artifact/nu.validator.htmlparser/htmlparser
 	compile group: 'nu.validator.htmlparser', name: 'htmlparser', version: '1.4'
 }
+
