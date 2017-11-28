@@ -7,21 +7,13 @@ repositories {
 	    }
 }
 
-
-
 sourceSets {
     main {
         java  {
     	    srcDir 'source'
     	    }
     	}
-    test {
-        java {
-    	    srcDir 'test'
-    	    }
-    	}
 }
-
 
 dependencies {
 	compile project(':com.ibm.wala.util')
@@ -32,3 +24,4 @@ dependencies {
 	// https://mvnrepository.com/artifact/net.htmlparser.jericho/jericho-html
 	compile group: 'net.htmlparser.jericho', name: 'jericho-html', version: '3.2'
 }
+

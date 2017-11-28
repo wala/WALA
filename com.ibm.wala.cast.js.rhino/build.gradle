@@ -7,21 +7,13 @@ repositories {
 	    }
 }
 
-
-
 sourceSets {
     main {
         java  {
     	    srcDir 'source'
     	    }
     	}
-    test {
-        java {
-    	    srcDir 'test'
-    	    }
-    	}
 }
-
 
 dependencies {
 	compile project(':com.ibm.wala.util')
@@ -31,3 +23,4 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.mozilla/rhino
 	compile group: 'org.mozilla', name: 'rhino', version: '1.7.7.1'
 }
+

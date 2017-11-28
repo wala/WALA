@@ -7,21 +7,13 @@ repositories {
 	    }
 }
 
-
-
 sourceSets {
     main {
         java  {
     	    srcDir 'src'
     	    }
     	}
-    test {
-        java {
-    	    srcDir 'test'
-    	    }
-    	}
 }
-
 
 dependencies {
 	compile project(':com.ibm.wala.util')
@@ -34,3 +26,4 @@ dependencies {
 	compile group: 'org.smali', name: 'dexlib2', version: '2.2.1'
 	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.2'
 }
+
