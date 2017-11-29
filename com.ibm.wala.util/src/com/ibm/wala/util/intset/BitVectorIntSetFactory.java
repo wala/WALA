@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
@@ -31,12 +30,11 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
     } else {
       // XXX not very efficient.
       TreeSet<Integer> T = new TreeSet<>();
-      for (int i = 0; i < set.length; i++) {
-        T.add(set[i]);
+      for (int element : set) {
+        T.add(element);
       }
       BitVectorIntSet result = new BitVectorIntSet();
-      for (Iterator<Integer> it = T.iterator(); it.hasNext();) {
-        Integer I = it.next();
+      for (Integer I : T) {
         result.add(I.intValue());
       }
       return result;
@@ -50,8 +48,8 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
   public BitVectorIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
     BitVectorIntSet result = new BitVectorIntSet();
-    for (int i = 0; i < data.length; i++) {
-      result.add(data[i]);
+    for (int element : data) {
+      result.add(element);
     }
     return result;
   }

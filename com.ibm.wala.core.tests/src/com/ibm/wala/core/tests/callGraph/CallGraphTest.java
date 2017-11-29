@@ -396,8 +396,7 @@ public class CallGraphTest extends WalaTestCase {
     // perform a little icfg exercise
     @SuppressWarnings("unused")
     int count = 0;
-    for (Iterator<BasicBlockInContext<ISSABasicBlock>> it = icfg.iterator(); it.hasNext();) {
-      BasicBlockInContext<ISSABasicBlock> bb = it.next();
+    for (BasicBlockInContext<ISSABasicBlock> bb : icfg) {
       if (icfg.hasCall(bb)) {
         count++;
       }
@@ -458,8 +457,8 @@ public class CallGraphTest extends WalaTestCase {
       throw new IllegalArgumentException("cg is null");
     }
     final Set<MethodReference> nodes = HashSetFactory.make();
-    for (Iterator<CGNode> nodesI = cg.iterator(); nodesI.hasNext();) {
-      nodes.add((nodesI.next()).getMethod().getReference());
+    for (CGNode cgNode : cg) {
+      nodes.add((cgNode).getMethod().getReference());
     }
 
     return new Graph<MethodReference>() {
@@ -503,8 +502,8 @@ public class CallGraphTest extends WalaTestCase {
       public Iterator<MethodReference> getPredNodes(MethodReference N) {
         Set<MethodReference> pred = HashSetFactory.make(10);
         MethodReference methodReference = N;
-        for (Iterator<CGNode> i = cg.getNodes(methodReference).iterator(); i.hasNext();)
-          for (Iterator<? extends CGNode> ps = cg.getPredNodes(i.next()); ps.hasNext();)
+        for (CGNode cgNode : cg.getNodes(methodReference))
+          for (Iterator<? extends CGNode> ps = cg.getPredNodes(cgNode); ps.hasNext();)
             pred.add(((CGNode) ps.next()).getMethod().getReference());
 
         return pred.iterator();
@@ -528,8 +527,8 @@ public class CallGraphTest extends WalaTestCase {
       public Iterator<MethodReference> getSuccNodes(MethodReference N) {
         Set<MethodReference> succ = HashSetFactory.make(10);
         MethodReference methodReference = N;
-        for (Iterator<? extends CGNode> i = cg.getNodes(methodReference).iterator(); i.hasNext();)
-          for (Iterator<? extends CGNode> ps = cg.getSuccNodes(i.next()); ps.hasNext();)
+        for (CGNode node : cg.getNodes(methodReference))
+          for (Iterator<? extends CGNode> ps = cg.getSuccNodes(node); ps.hasNext();)
             succ.add(((CGNode) ps.next()).getMethod().getReference());
 
         return succ.iterator();

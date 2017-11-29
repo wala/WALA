@@ -11,8 +11,6 @@
 package com.ibm.wala.util.ref;
 
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
@@ -81,8 +79,7 @@ public class ReferenceCleanser {
           ShrikeClass c = (ShrikeClass) klass;
           c.clearSoftCaches();
         } else {
-          for (Iterator it2 = klass.getDeclaredMethods().iterator(); it2.hasNext(); ) {
-            IMethod m = (IMethod)it2.next();
+          for (IMethod m : klass.getDeclaredMethods()) {
             if (m instanceof ShrikeCTMethod) {
               ((ShrikeCTMethod)m).clearCaches();
             }

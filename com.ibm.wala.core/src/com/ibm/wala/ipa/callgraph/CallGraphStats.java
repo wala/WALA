@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -116,8 +115,7 @@ public class CallGraphStats {
     Set<CGNode> reachableNodes = DFS.getReachableNodes(cg, Collections.singleton(cg.getFakeRootNode()));
     int nNodes = 0;
     int nEdges = 0;
-    for (Iterator<CGNode> it = reachableNodes.iterator(); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : reachableNodes) {
       nNodes++;
       nEdges += cg.getSuccNodeCount(n);
     }
@@ -142,8 +140,7 @@ public class CallGraphStats {
     }
     int ret = 0;
     HashSet<IMethod> counted = HashSetFactory.make();
-    for (Iterator<? extends CGNode> iter = cg.iterator(); iter.hasNext();) {
-      CGNode node = iter.next();
+    for (CGNode node : cg) {
       IMethod method = node.getMethod();
       if (counted.add(method)) {
         if (method instanceof ShrikeCTMethod) {
@@ -169,8 +166,7 @@ public class CallGraphStats {
       throw new IllegalArgumentException("cg is null");
     }
     HashSet<MethodReference> result = HashSetFactory.make();
-    for (Iterator it = cg.iterator(); it.hasNext();) {
-      CGNode N = (CGNode) it.next();
+    for (CGNode N : cg) {
       result.add(N.getMethod().getReference());
     }
     return result;

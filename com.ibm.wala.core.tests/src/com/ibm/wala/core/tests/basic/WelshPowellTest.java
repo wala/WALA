@@ -61,14 +61,14 @@ public class WelshPowellTest {
   private <T> NumberedGraph<TypedNode<T>> buildGraph(T[][] data) {
     DelegatingNumberedGraph<TypedNode<T>> G = new DelegatingNumberedGraph<>();
     Map<T,TypedNode<T>> nodes = HashMapFactory.make();
-    for(int i = 0; i < data.length; i++) {
-      TypedNode<T> n = new TypedNode<>(data[i][0]);
-      nodes.put(data[i][0], n);
+    for (T[] element : data) {
+      TypedNode<T> n = new TypedNode<>(element[0]);
+      nodes.put(element[0], n);
       G.addNode(n);
     }
-    for(int i = 0; i < data.length; i++) {
-      for(int j = 1; j < data[i].length; j++) {
-        G.addEdge(nodes.get(data[i][0]), nodes.get(data[i][j]));
+    for (T[] element : data) {
+      for(int j = 1; j < element.length; j++) {
+        G.addEdge(nodes.get(element[0]), nodes.get(element[j]));
       }
     }
     

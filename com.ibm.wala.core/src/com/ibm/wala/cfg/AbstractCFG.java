@@ -537,8 +537,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator<T> it = iterator(); it.hasNext();) {
-      T bb = it.next();
+    for (T bb : this) {
       s.append("BB").append(getNumber(bb)).append("\n");
 
       Iterator<T> succNodes = getSuccNodes(bb);

@@ -12,7 +12,6 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -110,8 +109,7 @@ public class BimodalMap<K, V> implements Map<K, V> {
     assert backingStore instanceof SmallMap;
     SmallMap<K, V> S = (SmallMap<K, V>) backingStore;
     backingStore = HashMapFactory.make(2 * S.size());
-    for (Iterator<K> it = S.keySet().iterator(); it.hasNext();) {
-      K key = it.next();
+    for (K key : S.keySet()) {
       V value = S.get(key);
       backingStore.put(key, value);
     }

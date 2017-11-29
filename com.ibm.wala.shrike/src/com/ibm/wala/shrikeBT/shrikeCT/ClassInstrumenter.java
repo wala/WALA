@@ -315,8 +315,7 @@ final public class ClassInstrumenter {
           w.addMethod(flags, cr.getMethodNameIndex(i), cr.getMethodTypeIndex(i), makeMethodAttributes(i, w, oc, comp.getOutput(), md));
           Compiler.Output[] aux = comp.getAuxiliaryMethods();
           if (aux != null) {
-            for (int j = 0; j < aux.length; j++) {
-              Compiler.Output a = aux[j];
+            for (Compiler.Output a : aux) {
               w.addMethod(a.getAccessFlags(), a.getMethodName(), a.getMethodSignature(), makeMethodAttributes(i, w, oc, a, md));
             }
           }

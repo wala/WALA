@@ -1,7 +1,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,8 +44,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
     Assert.assertTrue("NList should have cycles", backEdges.iterator().hasNext()); 
     
     Map<CGNode, Set<CGNode>> cgBackEdges = HashMapFactory.make();
-    for (Iterator<IntPair> ps = backEdges.iterator(); ps.hasNext(); ) {
-      IntPair p = ps.next();
+    for (IntPair p : backEdges) {
       CGNode src = cg.getNode(p.getX());
       if (!cgBackEdges.containsKey(src)) {
         cgBackEdges.put(src, HashSetFactory.<CGNode>make());

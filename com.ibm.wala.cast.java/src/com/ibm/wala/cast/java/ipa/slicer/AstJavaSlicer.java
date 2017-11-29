@@ -12,7 +12,6 @@ package com.ibm.wala.cast.java.ipa.slicer;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -59,8 +58,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherStatements(CallGraph CG, Collection<CGNode> partialRoots, Predicate<SSAInstruction> filter) {
     Set<Statement> result = new HashSet<>();
-    for (Iterator<CGNode> ns = DFS.getReachableNodes(CG, partialRoots).iterator(); ns.hasNext();) {
-      CGNode n = ns.next();
+    for (CGNode n : DFS.getReachableNodes(CG, partialRoots)) {
       IR nir = n.getIR();
       if (nir != null) {
 	SSAInstruction insts[] = nir.getInstructions();

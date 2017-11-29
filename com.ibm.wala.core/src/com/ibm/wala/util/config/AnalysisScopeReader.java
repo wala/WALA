@@ -175,8 +175,8 @@ public class AnalysisScopeReader {
       scope.setLoaderImpl(walaLoader, entryPathname);
     } else if ("stdlib".equals(entryType)) {
       String[] stdlibs = WalaProperties.getJ2SEJarFiles();
-      for (int i = 0; i < stdlibs.length; i++) {
-        scope.addToScope(walaLoader, new JarFile(stdlibs[i], false));
+      for (String stdlib : stdlibs) {
+        scope.addToScope(walaLoader, new JarFile(stdlib, false));
       }
     } else {
       Assertions.UNREACHABLE();

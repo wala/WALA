@@ -240,8 +240,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
   private OrdinalSetMapping<PointerKey> getPointerKeys() {
     MutableMapping<PointerKey> result = MutableMapping.make();
 
-    for (Iterator<PointerKey> it = getPointerAnalysis().getPointerKeys().iterator(); it.hasNext();) {
-      PointerKey p = it.next();
+    for (PointerKey p : getPointerAnalysis().getPointerKeys()) {
       result.add(p);
     }
     return result;
@@ -254,8 +253,8 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       OrdinalSet<T> S = getPointerAnalysis().getPointsToSet(P);
       int[] result = new int[S.size()];
       int i = 0;
-      for (Iterator<T> it = S.iterator(); it.hasNext();) {
-        result[i] = nodeManager.getNumber(it.next());
+      for (T t : S) {
+        result[i] = nodeManager.getNumber(t);
         i++;
       }
       return result;
@@ -275,8 +274,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
         IClass klass = getHeapModel().getClassHierarchy().lookupClass(T);
         assert klass != null : "null klass for type " + T;
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-        for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {
-          IField f = it.next();
+        for (IField f : klass.getAllInstanceFields()) {
           if (!f.getReference().getFieldType().isPrimitiveType()) {
             PointerKey p = getHeapModel().getPointerKeyForInstanceField(I, f);
             if (p != null && nodeManager.containsNode(p)) {
@@ -321,8 +319,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       if (!(n instanceof LocalPointerKey)) {
         int[] succ = computeSuccNodeNumbers(n, nodeManager);
         if (succ != null) {
-          for (int z = 0; z < succ.length; z++) {
-            int j = succ[z];
+          for (int j : succ) {
             R.add(j, i);
           }
         }
@@ -336,8 +333,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
   private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 
     ArrayList<LocalPointerKey> list = new ArrayList<LocalPointerKey>();
-    for (Iterator<Object> it = nodeManager.iterator(); it.hasNext();) {
-      Object n = it.next();
+    for (Object n : nodeManager) {
       if (n instanceof LocalPointerKey) {
         list.add((LocalPointerKey) n);
       }
@@ -355,8 +351,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       int num = nodeManager.getNumber(n);
       int[] succ = computeSuccNodeNumbers(n, nodeManager);
       if (succ != null) {
-        for (int z = 0; z < succ.length; z++) {
-          int j = succ[z];
+        for (int j : succ) {
           R.add(j, num);
         }
       }
@@ -511,7 +506,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       Object node = getNode(i);
       if (node != null) {
         result.append(i).append(" -> ");
-        for (Iterator it = getSuccNodes(node); it.hasNext();) {
+        for (Iterator<Object> it = getSuccNodes(node); it.hasNext();) {
           Object s = it.next();
           result.append(getNumber(s)).append(" ");
         }

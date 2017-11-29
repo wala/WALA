@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -323,8 +322,7 @@ public class SparseLongSet implements LongSet {
     }
     long[] result = new long[set.size()];
     int i = 0;
-    for (Iterator<Long> it = set.iterator(); it.hasNext();) {
-      Long L = it.next();
+    for (Long L : set) {
       result[i++] = L.longValue();
     }
     return result;

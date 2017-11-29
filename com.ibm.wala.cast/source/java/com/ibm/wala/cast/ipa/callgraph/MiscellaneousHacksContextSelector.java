@@ -45,8 +45,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     basePolicy = base;
     specialPolicy = special;
     methodsToSpecialize = HashSetFactory.make();
-    for (int i = 0; i < descriptors.length; i++) {
-      String[] descr = descriptors[i];
+    for (String[] descr : descriptors) {
       switch (descr.length) {
 
       // loader name, loader language, classname, method name, method descr

@@ -111,8 +111,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
      */
     private void computeI2BMapping() {
         instruction2Block = new int[getInstructions().length];
-        for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
-            final BasicBlock b = it.next();
+        for (BasicBlock b : this) {
             for (int j = b.getFirstInstructionIndex(); j <= b.getLastInstructionIndex(); j++) {
                 instruction2Block[j] = getNumber(b);
             }
@@ -123,8 +122,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
      * Compute outgoing edges in the control flow graph.
      */
     private void computeEdges() {
-        for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
-            BasicBlock b = it.next();
+        for (BasicBlock b : this) {
             if (b.equals(exit())) {
                 continue;
             } else if (b.equals(entry())) {
@@ -240,8 +238,8 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
             Instruction last = getInstructions()[getLastInstructionIndex()];
             int[] targets = last.getBranchTargets();
-            for (int i = 0; i < targets.length; i++) {
-                BasicBlock b = getBlockForInstruction(targets[i]);
+            for (int target : targets) {
+                BasicBlock b = getBlockForInstruction(target);
                 addNormalEdgeTo(b);
             }
             addExceptionalEdges(last);
@@ -310,11 +308,11 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
                         exceptionTypes = HashSetFactory.make(exceptionTypes);
                     }
 
-                    for (int j = 0; j < hs.length; j++) {
+                    for (ExceptionHandler element : hs) {
                         if (DEBUG) {
-                            System.err.println(" handler " + hs[j]);
+                            System.err.println(" handler " + element);
                         }
-                        BasicBlock b = getBlockForInstruction(hs[j].getHandler());
+                        BasicBlock b = getBlockForInstruction(element.getHandler());
                         if (DEBUG) {
                             System.err.println(" target " + b);
                         }
@@ -326,9 +324,9 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
                             addExceptionalEdgeTo(b);
                         } else {
                             TypeReference caughtException = null;
-                            if (hs[j].getCatchClass() != null) {
+                            if (element.getCatchClass() != null) {
                                 ClassLoaderReference loader = DexCFG.this.getMethod().getDeclaringClass().getReference().getClassLoader();
-                                caughtException = ShrikeUtil.makeTypeReference(loader, hs[j].getCatchClass());
+                                caughtException = ShrikeUtil.makeTypeReference(loader, element.getCatchClass());
                                 if (DEBUG) {
                                     System.err.println(" caughtException " + caughtException);
                                 }
@@ -651,8 +649,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     public String toString() {
         StringBuffer s = new StringBuffer("");
         BitVector catches = this.getCatchBlocks();
-        for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
-            BasicBlock bb = it.next();
+        for (BasicBlock bb : this) {
             s.append("BB").append(getNumber(bb));
             if (catches.contains(bb.getNumber())) {
             	s.append("<Handler>");

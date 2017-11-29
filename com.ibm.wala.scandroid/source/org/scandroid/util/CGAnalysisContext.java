@@ -203,8 +203,8 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		} else {
 
 			Collection<CGNode> nodes = HashSetFactory.make();
-			for (Iterator<CGNode> nIter = partialGraph.iterator(); nIter.hasNext();) {
-				nodes.add(nIter.next());
+			for (CGNode cgNode : partialGraph) {
+				nodes.add(cgNode);
 			}
 			CallGraph pcg = PartialCallGraph.make(cg, cg.getEntrypointNodes(), nodes);
 			graph = (ISupergraph) ICFGSupergraph.make(pcg);

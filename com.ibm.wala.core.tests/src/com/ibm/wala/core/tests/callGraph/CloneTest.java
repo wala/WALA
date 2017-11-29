@@ -63,8 +63,8 @@ public class CloneTest extends WalaTestCase {
           Set<CGNode> targets = cg.getPossibleTargets(node, site);
           if (targets.size() != 1) {
             System.err.println(targets.size() + " targets found for " + site);
-            for (Iterator<CGNode> k = targets.iterator(); k.hasNext();) {
-              System.err.println("  " + k.next());
+            for (CGNode cgNode : targets) {
+              System.err.println("  " + cgNode);
             }
             Assert.fail("found " + targets.size() + " targets for " + site + " in " + node);
           }

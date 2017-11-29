@@ -214,7 +214,7 @@ public class Util {
       throw new IllegalArgumentException("b is null");
     }
     int i = 0;
-    for (Iterator it = cfg.getPredNodes(b); it.hasNext();) {
+    for (Iterator<T> it = cfg.getPredNodes(b); it.hasNext();) {
       if (it.next().equals(a)) {
         return i;
       }

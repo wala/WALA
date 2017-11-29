@@ -157,8 +157,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     HashSet<NewSiteReference> result = HashSetFactory.make(5);
-    for (Iterator<SSAInstruction> it = m.getAllocationStatements().iterator(); it.hasNext();) {
-      SSANewInstruction s = (SSANewInstruction) it.next();
+    for (SSAInstruction ssaInstruction : m.getAllocationStatements()) {
+      SSANewInstruction s = (SSANewInstruction) ssaInstruction;
       result.add(s.getNewSite());
     }
     return result.iterator();
@@ -263,7 +263,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   private SpecializedFactoryMethod findOrCreateSpecializedFactoryMethod(CGNode node) {
     SpecializedFactoryMethod m = syntheticMethodCache.get(node.getContext());
     if (m == null) {
-      Set types = getTypesForContext(node.getContext());
+      Set<TypeReference> types = getTypesForContext(node.getContext());
       m = new SpecializedFactoryMethod((SummarizedMethod) node.getMethod(), node.getContext(), types);
       syntheticMethodCache.put(node.getContext(), m);
     }
@@ -312,7 +312,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
   }
 
-  public Iterator iterateCastTypes(CGNode node) {
+  public Iterator<TypeReference> iterateCastTypes(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -378,7 +378,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
     }
 
-    protected SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set S) {
+    protected SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set<TypeReference> S) {
       super(m, m.getDeclaringClass(), m.isStatic(), true);
 
       this.context = context;
@@ -393,8 +393,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       // add original statements from the method summary
       nextLocal = addOriginalStatements(m);
 
-      for (Iterator it = S.iterator(); it.hasNext();) {
-        TypeReference type = (TypeReference) it.next();
+      for (TypeReference type : S) {
         TypeAbstraction T = typeRef2TypeAbstraction(m.getClassHierarchy(), type);
         addStatementsForTypeAbstraction(T);
       }
@@ -506,8 +505,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       SSAInstruction[] original = m.getStatements(options.getSSAOptions());
       // local value number 1 is "this", so the next free value number is 2
       int nextLocal = 2;
-      for (int i = 0; i < original.length; i++) {
-        SSAInstruction s = original[i];
+      for (SSAInstruction s : original) {
         allInstructions.add(s);
         if (s instanceof SSAInvokeInstruction) {
           calls.add(s);
@@ -603,8 +601,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     public SSAInstruction[] getStatements() {
       SSAInstruction[] result = new SSAInstruction[allInstructions.size()];
       int i = 0;
-      for (Iterator<SSAInstruction> it = allInstructions.iterator(); it.hasNext();) {
-        result[i++] = it.next();
+      for (SSAInstruction ssaInstruction : allInstructions) {
+        result[i++] = ssaInstruction;
       }
       return result;
     }

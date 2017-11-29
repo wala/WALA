@@ -96,8 +96,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   @Override
   public Set<CGNode> getNodes(MethodReference m) {
     Set<CGNode> result = HashSetFactory.make();
-    for (Iterator xs = cg.getNodes(m).iterator(); xs.hasNext();) {
-      CGNode x = (CGNode) xs.next();
+    for (CGNode x : cg.getNodes(m)) {
       if (containsNode(x)) {
         result.add(x);
       }
@@ -136,8 +135,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   public IntSet getSuccNodeNumbers(CGNode node) {
     assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
-    for (Iterator ns = getSuccNodes(node); ns.hasNext();) {
-      CGNode succ = (CGNode) ns.next();
+    for (Iterator<CGNode> ns = getSuccNodes(node); ns.hasNext();) {
+      CGNode succ = ns.next();
       if (containsNode(succ)) {
         x.add(getNumber(succ));
       }
@@ -150,8 +149,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   public IntSet getPredNodeNumbers(CGNode node) {
     assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
-    for (Iterator ns = getPredNodes(node); ns.hasNext();) {
-      CGNode pred = (CGNode) ns.next();
+    for (Iterator<CGNode> ns = getPredNodes(node); ns.hasNext();) {
+      CGNode pred = ns.next();
       if (containsNode(pred)) {
         x.add(getNumber(pred));
       }
@@ -176,8 +175,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
       return null;
     }
     Set<CGNode> result = HashSetFactory.make();
-    for (Iterator ns = cg.getPossibleTargets(node, site).iterator(); ns.hasNext();) {
-      CGNode target = (CGNode) ns.next();
+    for (CGNode target : cg.getPossibleTargets(node, site)) {
       if (containsNode(target)) {
         result.add(target);
       }

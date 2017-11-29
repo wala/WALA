@@ -203,8 +203,8 @@ public class OrdinalSet<T> implements Iterable<T> {
       throw new IllegalArgumentException("m is null");
     }
     MutableSparseIntSet s = MutableSparseIntSet.makeEmpty();
-    for (Iterator<T> it = c.iterator(); it.hasNext();) {
-      int index = m.getMappedIndex(it.next());
+    for (T t : c) {
+      int index = m.getMappedIndex(t);
       assert index >= 0;
       s.add(index);
     }

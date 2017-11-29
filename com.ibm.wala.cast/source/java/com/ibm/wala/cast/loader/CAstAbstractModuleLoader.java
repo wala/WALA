@@ -96,15 +96,14 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
     // convert everything to CAst
     final Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities = new LinkedHashSet<>();
-    for (Iterator<Module> mes = modules.iterator(); mes.hasNext();) {
-      translateModuleToCAst(mes.next(), ast, topLevelEntities);
+    for (Module module : modules) {
+      translateModuleToCAst(module, ast, topLevelEntities);
     }
 
     // generate IR as needed
     final TranslatorToIR xlatorToIR = initTranslator();
 
-    for (Iterator<Pair<CAstEntity, ModuleEntry>> tles = topLevelEntities.iterator(); tles.hasNext();) {
-      Pair<CAstEntity, ModuleEntry> p = tles.next();
+    for (Pair<CAstEntity, ModuleEntry> p : topLevelEntities) {
       if (shouldTranslate(p.fst)) {
         xlatorToIR.translate(p.fst, p.snd);
       }

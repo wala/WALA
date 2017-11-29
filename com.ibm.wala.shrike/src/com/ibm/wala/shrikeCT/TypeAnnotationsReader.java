@@ -363,8 +363,8 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     static {
       final TargetType[] targetTypes = TargetType.values();
       fromValue = HashMapFactory.make(targetTypes.length);
-      for (int i = 0; i < targetTypes.length; i++) {
-        fromValue.put(targetTypes[i].target_type, targetTypes[i]);
+      for (TargetType targetType : targetTypes) {
+        fromValue.put(targetType.target_type, targetType);
       }
     }
     
@@ -710,8 +710,8 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     static {
       final TypePathKind[] typePathKinds = TypePathKind.values();
       fromValue = HashMapFactory.make(typePathKinds.length);
-      for (int i = 0; i < typePathKinds.length; i++) {
-        fromValue.put(typePathKinds[i].type_path_kind, typePathKinds[i]);
+      for (TypePathKind typePathKind : typePathKinds) {
+        fromValue.put(typePathKind.type_path_kind, typePathKind);
       }
     }
     

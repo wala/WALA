@@ -134,8 +134,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
         CallSiteReference call = iterator.next();
         if (cg.getPossibleTargets(caller, call).contains(cgNode)) {
           SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
-          for (int i = 0; i < callInstrs.length; i++) {
-            SSAAbstractInvokeInstruction callInstr = callInstrs[i];
+          for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
             PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
             assert containsNode(actualPk);
             assert containsNode(pk);
@@ -224,8 +223,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
         CallSiteReference call = iterator.next();
         if (cg.getPossibleTargets(caller, call).contains(cgNode)) {
           SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
-          for (int i = 0; i < callInstrs.length; i++) {
-            SSAAbstractInvokeInstruction callInstr = callInstrs[i];
+          for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
             PointerKey returnPk = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException() : callInstr
                 .getDef());
             assert containsNode(returnPk);
@@ -284,8 +282,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
-    for (Iterator<SSAInstruction> it = b.iterator(); it.hasNext();) {
-      SSAInstruction s = it.next();
+    for (SSAInstruction s : b) {
       if (s != null) {
         s.visit(v);
       }

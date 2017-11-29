@@ -226,7 +226,7 @@ public class IntraproceduralExceptionAnalysis {
 
     if (pointerAnalysis != null) {
       PointerKey pointerKey = pointerAnalysis.getHeapModel().getPointerKeyForLocal(node, exceptionVariable);
-      Iterator it = pointerAnalysis.getHeapGraph().getSuccNodes(pointerKey);
+      Iterator<Object> it = pointerAnalysis.getHeapGraph().getSuccNodes(pointerKey);
       while (it.hasNext()) {
         Object next = it.next();
         if (next instanceof InstanceKey) {

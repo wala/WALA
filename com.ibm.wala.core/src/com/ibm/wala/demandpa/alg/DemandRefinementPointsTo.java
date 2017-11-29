@@ -1287,8 +1287,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 // }
                 g.addSubgraphForNode(caller);
                 SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
-                for (int i = 0; i < callInstrs.length; i++) {
-                  SSAAbstractInvokeInstruction callInstr = callInstrs[i];
+                for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
                   PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
                   assert g.containsNode(actualPk);
                   assert g.containsNode(localPk);
@@ -1575,8 +1574,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               // }
               g.addSubgraphForNode(caller);
               SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
-              for (int i = 0; i < callInstrs.length; i++) {
-                SSAAbstractInvokeInstruction callInstr = callInstrs[i];
+              for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
                 PointerKey returnAtCallerKey = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException()
                     : callInstr.getDef());
                 assert g.containsNode(returnAtCallerKey);
@@ -2050,8 +2048,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   // }
                   g.addSubgraphForNode(caller);
                   SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
-                  for (int i = 0; i < callInstrs.length; i++) {
-                    SSAAbstractInvokeInstruction callInstr = callInstrs[i];
+                  for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
                     final PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
                     assert g.containsNode(actualPk);
                     assert g.containsNode(localPk);

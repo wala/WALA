@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -80,8 +79,8 @@ public class ReflectionHandler {
       Collection<Statement> casts = Iterator2Collection.toSet(new FilterIterator<>(slice.iterator(), f));
       changedNodes.addAll(modifyFactoryInterpreter(st, casts, builder.getContextInterpreter(), builder.getClassHierarchy()));
     }
-    for (Iterator<CGNode> it = changedNodes.iterator(); it.hasNext();) {
-      builder.addConstraintsFromChangedNode(it.next(), monitor);
+    for (CGNode cgNode : changedNodes) {
+      builder.addConstraintsFromChangedNode(cgNode, monitor);
     }
     return changedNodes.size() > 0;
 
@@ -90,8 +89,7 @@ public class ReflectionHandler {
   private Collection<Statement> computeFactoryReturnStatements() {
     // todo: clean up logic with inheritance, delegation.
     HashSet<Statement> result = HashSetFactory.make();
-    for (Iterator it = builder.getCallGraph().iterator(); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
+    for (CGNode n : builder.getCallGraph()) {
       if (n.getMethod() instanceof SyntheticMethod) {
         SyntheticMethod m = (SyntheticMethod) n.getMethod();
         if (m.isFactoryMethod()) {

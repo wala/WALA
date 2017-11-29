@@ -232,8 +232,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 					final OrdinalSet<InstanceKey> returnSet =
 							pa.getPointsToSet(new LocalPointerKey(caller, invoke.getReturnValue(0)));
 					
-					for (final Iterator<InstanceKey> rIK = returnSet.iterator(); rIK.hasNext(); ) {
-						final InstanceKey returnIK = rIK.next();
+					for (InstanceKey returnIK : returnSet) {
 						final UriAppendString node = new UriAppendString(mapping.getMappedIndex(returnIK),
 							mapping.getMappedIndex(uriKey), mapping.getMappedIndex(stringKey));
 												

@@ -110,8 +110,8 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
   public static JSCFABuilder make(JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, String[] xmlFiles, byte instancePolicy, boolean doOneCFA) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
-    for (int i = 0; i < xmlFiles.length; i++) {
-      com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
+    for (String xmlFile : xmlFiles) {
+      com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFile, cha);
     }
 
     return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, instancePolicy, doOneCFA);

@@ -52,8 +52,8 @@ public class SourceDirCallGraph {
     AnalysisScope scope = new JavaSourceAnalysisScope();
     // add standard libraries to scope
     String[] stdlibs = WalaProperties.getJ2SEJarFiles();
-    for (int i = 0; i < stdlibs.length; i++) {
-      scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlibs[i]));
+    for (String stdlib : stdlibs) {
+      scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
     }
     // add the source directory
     scope.addToScope(JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(new File(sourceDir)));

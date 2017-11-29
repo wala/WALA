@@ -185,13 +185,13 @@ public class OutflowAnalysis {
 						CGNode node = block.getNode();
 
 						IntSet resultSet = flowResult.getResult(block);
-						for (int j = 0; j < argNums.length; j++) {
+						for (int argNum : argNums) {
 
 							// The set of flow types we're looking for:
 							Set<FlowType<IExplodedBasicBlock>> taintTypeSet = HashSetFactory.make();
 
 							LocalElement le = new LocalElement(
-									invInst.getUse(argNums[j]));
+									invInst.getUse(argNum));
 							Set<DomainElement> elements = domain
 									.getPossibleElements(le);
 							if (elements != null) {
@@ -204,7 +204,7 @@ public class OutflowAnalysis {
 							}
 
 							LocalPointerKey lpkey = new LocalPointerKey(node,
-									invInst.getUse(argNums[j]));
+									invInst.getUse(argNum));
 							for (InstanceKey ik : pa.getPointsToSet(lpkey)) {
 								for (DomainElement de : domain
 										.getPossibleElements(new InstanceKeyElement(
@@ -275,12 +275,12 @@ public class OutflowAnalysis {
 			//
 			// }
 			// }
-			for (int i = 0; i < newArgNums.length; i++) {
+			for (int newArgNum : newArgNums) {
 
 				// see if anything flowed into the args as sinks:
 				for (DomainElement de : domain
 						.getPossibleElements(new LocalElement(node.getIR()
-								.getParameter(newArgNums[i])))) {
+								.getParameter(newArgNum)))) {
 
 					for (BasicBlockInContext<IExplodedBasicBlock> block : graph
 							.getExitsForProcedure(node)) {
@@ -289,7 +289,7 @@ public class OutflowAnalysis {
 						if (flowResult.getResult(block).contains(mappedIndex)) {
 							addEdge(flowGraph, de.taintSource,
 									new ParameterFlow<IExplodedBasicBlock>(
-											entryBlock, newArgNums[i], false));
+											entryBlock, newArgNum, false));
 						}
 					}
 
@@ -297,12 +297,12 @@ public class OutflowAnalysis {
 					if (flowResult.getResult(entryBlock).contains(mappedIndex)) {
 						addEdge(flowGraph, de.taintSource,
 								new ParameterFlow<IExplodedBasicBlock>(
-										entryBlock, newArgNums[i], false));
+										entryBlock, newArgNum, false));
 					}
 
 				}
 				for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(
-						node, node.getIR().getParameter(newArgNums[i])))) {
+						node, node.getIR().getParameter(newArgNum)))) {
 					for (DomainElement de : domain
 							.getPossibleElements(new InstanceKeyElement(ik))) {
 						if (flowResult.getResult(entryBlock).contains(
@@ -310,7 +310,7 @@ public class OutflowAnalysis {
 							
 							addEdge(flowGraph, de.taintSource,
 									new ParameterFlow<IExplodedBasicBlock>(
-											entryBlock, newArgNums[i], false));
+											entryBlock, newArgNum, false));
 						}
 					}
 				}
@@ -425,15 +425,15 @@ public class OutflowAnalysis {
 		SinkSpec[] ss = s.getSinkSpecs();
 		
 
-		for (int i = 0; i < ss.length; i++) {
-			if (ss[i] instanceof EntryArgSinkSpec)
-				processSinkSpec(flowResult, domain, taintFlow, ss[i]);
-			else if (ss[i] instanceof CallArgSinkSpec)
-				processSinkSpec(flowResult, domain, taintFlow, ss[i]);
-			else if (ss[i] instanceof EntryRetSinkSpec)
-				processSinkSpec(flowResult, domain, taintFlow, ss[i]);
-			else if (ss[i] instanceof StaticFieldSinkSpec)
-				processSinkSpec(flowResult, domain, taintFlow, ss[i]);
+		for (SinkSpec element : ss) {
+			if (element instanceof EntryArgSinkSpec)
+				processSinkSpec(flowResult, domain, taintFlow, element);
+			else if (element instanceof CallArgSinkSpec)
+				processSinkSpec(flowResult, domain, taintFlow, element);
+			else if (element instanceof EntryRetSinkSpec)
+				processSinkSpec(flowResult, domain, taintFlow, element);
+			else if (element instanceof StaticFieldSinkSpec)
+				processSinkSpec(flowResult, domain, taintFlow, element);
 			else
 				throw new UnsupportedOperationException(
 						"SinkSpec not yet Implemented");

@@ -206,8 +206,7 @@ public final class Descriptor {
       StringBuffer result = new StringBuffer();
       result.append("(");
       if (parameters != null) {
-        for (int i = 0; i < parameters.length; i++) {
-          TypeName p = parameters[i];
+        for (TypeName p : parameters) {
           result.append(p);
           appendSemicolonIfNeeded(result, p);
         }
@@ -222,8 +221,7 @@ public final class Descriptor {
       StringBuffer result = new StringBuffer();
       result.append("(");
       if (parameters != null) {
-        for (int i = 0; i < parameters.length; i++) {
-          TypeName p = parameters[i];
+        for (TypeName p : parameters) {
           result.append(p.toUnicodeString());
           appendSemicolonIfNeeded(result, p);
         }

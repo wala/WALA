@@ -159,8 +159,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     Set<CAstNode> allNewTargetNodes = HashSetFactory.make(1);
     Collection<CAstNode> oldSources = orig.getMappedNodes();
 
-    for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+    for (Entry<Pair<CAstNode, K>, CAstNode> entry : nodeMap.entrySet()) {
       Pair<CAstNode, K> N = entry.getKey();
       CAstNode oldSource = N.fst;
       K key = N.snd;
@@ -272,8 +271,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   protected CAstSourcePositionMap copySource(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstSourcePositionMap orig) {
     CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
-    for (Iterator<Map.Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Map.Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+    for (Entry<Pair<CAstNode, K>, CAstNode> entry : nodeMap.entrySet()) {
       Pair<CAstNode, K> N = entry.getKey();
       CAstNode oldNode = N.fst;
 
@@ -290,8 +288,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
   protected CAstNodeTypeMap copyTypes(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNodeTypeMap orig) {
     if (orig != null) {
       CAstNodeTypeMapRecorder newMap = new CAstNodeTypeMapRecorder();
-      for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-        Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+      for (Entry<Pair<CAstNode, K>, CAstNode> entry : nodeMap.entrySet()) {
         Pair<CAstNode, K> N = entry.getKey();
         CAstNode oldNode = N.fst;
 
@@ -312,8 +309,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
 
-    for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+    for (Entry<Pair<CAstNode, K>, CAstNode> entry : nodeMap.entrySet()) {
       Pair<CAstNode, K> N = entry.getKey();
       CAstNode oldNode = N.fst;
 
@@ -322,14 +318,13 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       if (children.containsKey(oldNode)) {
         Set<CAstEntity> newEntities = new LinkedHashSet<>();
         newChildren.put(newNode, newEntities);
-        for (Iterator<CAstEntity> oldEntities = children.get(oldNode).iterator(); oldEntities.hasNext();) {
-          newEntities.add(rewrite(oldEntities.next()));
+        for (CAstEntity cAstEntity : children.get(oldNode)) {
+          newEntities.add(rewrite(cAstEntity));
         }
       }
     }
 
-    for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys = children.entrySet().iterator(); keys.hasNext();) {
-      Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
+    for (Entry<CAstNode, Collection<CAstEntity>> entry : children.entrySet()) {
       CAstNode key = entry.getKey();
       if (key == null) {
         Set<CAstEntity> newEntities = new LinkedHashSet<>();
@@ -450,8 +445,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       Map<CAstNode, Collection<CAstEntity>> children = root.getAllScopedEntities();
       final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
-      for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys = children.entrySet().iterator(); keys.hasNext();) {
-        Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
+      for (Entry<CAstNode, Collection<CAstEntity>> entry : children.entrySet()) {
         CAstNode key = entry.getKey();
         Set<CAstEntity> newValues = new LinkedHashSet<>();
         newChildren.put(key, newValues);

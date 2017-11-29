@@ -486,8 +486,7 @@ public class TabulationSolver<T, P, F> {
           // with respect to one s_profOf(c), we have to propagate
           // for each
           // potential entry node s_p /in s_procof(c)
-          for (int i = 0; i < entries.length; i++) {
-            final T s_p = entries[i];
+          for (final T s_p : entries) {
             if (DEBUG_LEVEL > 1) {
               System.err.println(" do entry " + s_p);
             }
@@ -651,8 +650,7 @@ public class TabulationSolver<T, P, F> {
           // for each exit from the callee
           P p = supergraph.getProcOf(calleeEntry);
           T[] exits = supergraph.getExitsForProcedure(p);
-          for (int e = 0; e < exits.length; e++) {
-            final T exit = exits[e];
+          for (final T exit : exits) {
             if (DEBUG_LEVEL > 0) {
               assert supergraph.containsNode(exit);
             }
@@ -923,8 +921,7 @@ public class TabulationSolver<T, P, F> {
         IBasicBlock bb2 = (IBasicBlock) o2;
         return bb1.getNumber() - bb2.getNumber();
       };
-      for (Iterator<? extends T> it = supergraph.iterator(); it.hasNext();) {
-        T n = it.next();
+      for (T n : supergraph) {
         P proc = supergraph.getProcOf(n);
         TreeSet<T> s = map.get(proc);
         if (s == null) {
@@ -934,11 +931,9 @@ public class TabulationSolver<T, P, F> {
         s.add(n);
       }
 
-      for (Iterator<Map.Entry<Object, TreeSet<T>>> it = map.entrySet().iterator(); it.hasNext();) {
-        Map.Entry<Object, TreeSet<T>> e = it.next();
+      for (Entry<Object, TreeSet<T>> e : map.entrySet()) {
         Set<T> s = e.getValue();
-        for (Iterator<T> it2 = s.iterator(); it2.hasNext();) {
-          T o = it2.next();
+        for (T o : s) {
           result.append(o + " : " + getResult(o) + "\n");
         }
       }

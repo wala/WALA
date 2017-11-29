@@ -503,8 +503,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   protected Collection<IClass> computeAllInterfacesAsCollection() {
     Collection<? extends IClass> c = getDirectInterfaces();
     Set<IClass> result = HashSetFactory.make();
-    for (Iterator<? extends IClass> it = c.iterator(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : c) {
       if (klass.isInterface()) {
         result.add(klass);
       } else {
@@ -538,8 +537,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   private Collection<IClass> array2IClassSet(ImmutableByteArray[] interfaces) {
     ArrayList<IClass> result = new ArrayList<IClass>(interfaces.length);
-    for (int i = 0; i < interfaces.length; i++) {
-      ImmutableByteArray name = interfaces[i];
+    for (ImmutableByteArray name : interfaces) {
       IClass klass = null;
       klass = loader.lookupClass(TypeName.findOrCreate(name));
       if (klass == null) {
@@ -556,17 +554,17 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     List<IField> result = new ArrayList<IField>(1);
     
     if (instanceFields != null) {
-      for (int i = 0; i < instanceFields.length; i++) {
-        if (instanceFields[i].getName() == name) {
-          result.add(instanceFields[i]);
+      for (IField instanceField : instanceFields) {
+        if (instanceField.getName() == name) {
+          result.add(instanceField);
         }
       }
     }
 
     if (staticFields != null) {
-      for (int i = 0; i < staticFields.length; i++) {
-        if (staticFields[i].getName() == name) {
-          result.add(staticFields[i]);
+      for (IField staticField : staticFields) {
+        if (staticField.getName() == name) {
+          result.add(staticField);
         }
       }
     }
@@ -603,8 +601,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
           } else {
             tmpMethodMap= new SmallMap<Selector, IMethod>();
           }
-          for (int i = 0; i < methods.length; i++) {
-            IMethod m = methods[i];
+          for (IMethod m : methods) {
             tmpMethodMap.put(m.getReference().getSelector(), m);
           }
           

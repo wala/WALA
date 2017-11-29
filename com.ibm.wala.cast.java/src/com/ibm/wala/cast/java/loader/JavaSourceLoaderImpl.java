@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -123,8 +122,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     @Override
     public IClass getSuperclass() {
       boolean excludedSupertype=false;
-      for (Iterator<TypeName> iter = superTypeNames.iterator(); iter.hasNext();) {
-        TypeName name = iter.next();
+      for (TypeName name : superTypeNames) {
         IClass domoType = lookupClass(name);
         if (domoType != null && !domoType.isInterface()) {
           return domoType;

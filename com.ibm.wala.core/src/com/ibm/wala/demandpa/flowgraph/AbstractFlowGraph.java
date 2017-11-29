@@ -385,13 +385,11 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   protected Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
     arrayRef = convertPointerKeyToHeapModel(arrayRef, mam.getHeapModel());
     Collection<MemoryAccess> arrayReads = mam.getArrayReads(arrayRef);
-    for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
-      MemoryAccess a = it.next();
+    for (MemoryAccess a : arrayReads) {
       addSubgraphForNode(a.getNode());
     }
     ArrayList<PointerKey> read = new ArrayList<PointerKey>();
-    for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
-      MemoryAccess a = it.next();
+    for (MemoryAccess a : arrayReads) {
       IR ir = a.getNode().getIR();
       SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
       if (s == null) {
@@ -430,8 +428,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    */
   protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
       Set<IClass> catchClasses) {
-    for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
-      ProgramCounter peiLoc = it.next();
+    for (ProgramCounter peiLoc : peis) {
       SSAInstruction pei = ir.getPEI(peiLoc);
 
       if (pei instanceof SSAAbstractInvokeInstruction) {
@@ -454,8 +451,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       // the pei, but just instance keys
       Collection<TypeReference> types = pei.getExceptionTypes();
       if (types != null) {
-        for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
-          TypeReference type = it2.next();
+        for (TypeReference type : types) {
           if (type != null) {
             InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
             if (ik == null) {

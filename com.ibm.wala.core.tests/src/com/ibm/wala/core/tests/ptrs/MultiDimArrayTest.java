@@ -11,8 +11,6 @@
 package com.ibm.wala.core.tests.ptrs;
 
 import java.io.IOException;
-import java.util.Iterator;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,8 +73,7 @@ public class MultiDimArrayTest extends WalaTestCase {
   }
   
   private final static CGNode findDoNothingNode(CallGraph cg) {
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext(); ) {
-      CGNode n = it.next();
+    for (CGNode n : cg) {
       if (n.getMethod().getName().toString().equals("doNothing")) {
         return n;
       }

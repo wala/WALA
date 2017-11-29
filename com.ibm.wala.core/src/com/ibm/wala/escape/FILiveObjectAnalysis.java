@@ -125,8 +125,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   private boolean mayBeLiveInSomeCaller(InstanceKey ik, CGNode m) {
-    for (Iterator it = callGraph.getPredNodes(m); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
+    for (Iterator<CGNode> it = callGraph.getPredNodes(m); it.hasNext();) {
+      CGNode n = it.next();
       if (mayBeLive(ik, n, -1)) {
         return true;
       }
@@ -144,7 +144,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     IR ir = m.getIR();
     DefUse du = m.getDU();
 
-    for (Iterator it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
+    for (Iterator<Object> it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
       Object p = it.next();
       if (p instanceof LocalPointerKey) {
         LocalPointerKey lpk = (LocalPointerKey) p;
@@ -164,7 +164,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    */
   private Set<CGNode> computeLiveNodes(InstanceKey ik) {
     Set<CGNode> localRootNodes = HashSetFactory.make();
-    for (Iterator it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
+    for (Iterator<Object> it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
       Object node = it.next();
       if (node instanceof StaticFieldKey) {
         liveEverywhere.add(ik);

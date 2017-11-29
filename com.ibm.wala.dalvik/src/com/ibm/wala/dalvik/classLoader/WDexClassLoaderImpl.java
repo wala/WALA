@@ -101,15 +101,13 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
         // module are loaded according to the given order (same as in Java VM)
         Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
         
-        for (Iterator<Module> it = modules.iterator(); it.hasNext();) {
-            Module archive = it.next();
+        for (Module archive : modules) {
             Set<ModuleEntry> classFiles = getDexFiles(archive);
             
             removeClassFiles(classFiles, classModuleEntries);
             loadAllDexClasses(classFiles);
             
-            for (Iterator<ModuleEntry> it2 = classFiles.iterator(); it2.hasNext();) {
-            	ModuleEntry file = it2.next();
+            for (ModuleEntry file : classFiles) {
             	classModuleEntries.add(file);
             }
         }                       
@@ -121,13 +119,11 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
      */
     private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     	Set<String> old = HashSetFactory.make();
-    	for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
-    		ModuleEntry m = it.next();
+    	for (ModuleEntry m : t) {
     		old.add(m.getClassName());
     	}
     	HashSet<ModuleEntry> toRemove = HashSetFactory.make();
-    	for (Iterator<ModuleEntry> it = s.iterator(); it.hasNext();) {
-    		ModuleEntry m = it.next();
+    	for (ModuleEntry m : s) {
     		if (old.contains(m.getClassName())) {
     			toRemove.add(m);
     		}
@@ -150,9 +146,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     @SuppressWarnings("unused")
 	private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
     	
-    	for (Iterator<ModuleEntry> it = moduleEntries.iterator(); it.hasNext();) {
-    		ModuleEntry entry = it.next();
-
+    	for (ModuleEntry entry : moduleEntries) {
     		// Dalvik class
     		if (entry instanceof DexModuleEntry) {
     			DexModuleEntry dexEntry = ((DexModuleEntry) entry);

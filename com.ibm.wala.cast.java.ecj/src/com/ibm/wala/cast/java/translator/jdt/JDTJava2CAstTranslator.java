@@ -1410,8 +1410,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     argNodes[idx++] = fFactory.makeConstant(callSiteRef);
 
     // rest of args
-    for (Iterator<?> iter = arguments.iterator(); iter.hasNext();) {
-      Object arg = iter.next();
+    for (Object arg : arguments) {
       argNodes[idx++] = (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context);
     }
     callNode = makeNode(context, fFactory, nn, CAstNode.CALL, argNodes);

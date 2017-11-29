@@ -12,7 +12,6 @@ package com.ibm.wala.demandpa.util;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,8 +93,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   }
 
   private void populate(CallGraph cg) {
-    for (Iterator<CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : cg) {
       populate(n);
     }
   }
@@ -387,21 +385,20 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     allFields.addAll(readMap.keySet());
     allFields.addAll(writeMap.keySet());
 
-    for (Iterator<IField> it = allFields.iterator(); it.hasNext();) {
-      IField f = it.next();
+    for (IField f : allFields) {
       result.append("FIELD ").append(f).append(":\n");
       Collection<MemoryAccess> reads = getFieldReads(null, f);
       if (!reads.isEmpty()) {
         result.append("  reads:\n");
-        for (Iterator<MemoryAccess> it2 = reads.iterator(); it2.hasNext();) {
-          result.append("  ").append(it2.next()).append("\n");
+        for (MemoryAccess memoryAccess : reads) {
+          result.append("  ").append(memoryAccess).append("\n");
         }
       }
       Collection<MemoryAccess> writes = getFieldWrites(null, f);
       if (!writes.isEmpty()) {
         result.append("  writes:\n");
-        for (Iterator<MemoryAccess> it2 = writes.iterator(); it2.hasNext();) {
-          result.append("  ").append(it2.next()).append("\n");
+        for (MemoryAccess memoryAccess : writes) {
+          result.append("  ").append(memoryAccess).append("\n");
         }
       }
     }
@@ -410,14 +407,14 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     result.append("ARRAY CONTENTS:\n");
     if (!arrayReads.isEmpty()) {
       result.append("  reads:\n");
-      for (Iterator<MemoryAccess> it2 = arrayReads.iterator(); it2.hasNext();) {
-        result.append("  ").append(it2.next()).append("\n");
+      for (MemoryAccess memoryAccess : arrayReads) {
+        result.append("  ").append(memoryAccess).append("\n");
       }
     }
     if (!arrayWrites.isEmpty()) {
       result.append("  writes:\n");
-      for (Iterator<MemoryAccess> it2 = arrayWrites.iterator(); it2.hasNext();) {
-        result.append("  ").append(it2.next()).append("\n");
+      for (MemoryAccess memoryAccess : arrayWrites) {
+        result.append("  ").append(memoryAccess).append("\n");
       }
     }
     return result.toString();

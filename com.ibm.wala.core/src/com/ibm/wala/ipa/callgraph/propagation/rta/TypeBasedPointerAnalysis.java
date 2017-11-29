@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.classLoader.IClass;
@@ -71,8 +70,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       throw new IllegalArgumentException("null c");
     }
     MutableMapping<InstanceKey> result = MutableMapping.make();
-    for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : c) {
       if (!klass.isAbstract() && !klass.isInterface()) {
         result.add(new ConcreteTypeKey(klass));
       }
@@ -139,10 +137,9 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     return result;
   }
 
-  private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection c) {
+  private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection<IClass> c) {
     BimodalMutableIntSet s = new BimodalMutableIntSet();
-    for (Iterator it = c.iterator(); it.hasNext();) {
-      IClass klass = (IClass) it.next();
+    for (IClass klass : c) {
       int index = getInstanceKeyMapping().add(new ConcreteTypeKey(klass));
       s.add(index);
     }

@@ -63,9 +63,9 @@ public class DefUse {
     if (DEBUG) {
       System.err.println(("DefUse: defs.length " + defs.length));
     }
-    Iterator it = allInstructions.iterator();
+    Iterator<SSAInstruction> it = allInstructions.iterator();
     for (int i = 0; i < allInstructions.size(); i++) {
-      SSAInstruction s = (SSAInstruction) it.next();
+      SSAInstruction s = it.next();
       if (s == null) {
         continue;
       }

@@ -189,8 +189,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       // TODO:
       IClass k = klass;
       while (k != null) {
-        for (Iterator<IField> it = klass.getDeclaredInstanceFields().iterator(); it.hasNext();) {
-          IField f = it.next();
+        for (IField f : klass.getDeclaredInstanceFields()) {
           int tempValue = nextLocal++;
           SSAGetInstruction G = insts.GetInstruction(statements.size(), tempValue, 1, f.getReference());
           statements.add(G);
@@ -258,7 +257,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return CodeScanner.hasObjectArrayStore(statements);
   }
 
-  public Iterator iterateCastTypes(CGNode node) {
+  public Iterator<TypeReference> iterateCastTypes(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.iterateCastTypes(statements);
   }

@@ -76,8 +76,8 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       throw new IllegalArgumentException("options is null");
     }
     Util.addDefaultSelectors(options, cha);
-    for (int i = 0; i < xmlFiles.length; i++) {
-      Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
+    for (String xmlFile : xmlFiles) {
+      Util.addBypassLogic(options, scope, cl, xmlFile, cha);
     }
 
     return new ZeroXCFABuilder(cha, options, cache, null, null, instancePolicy);

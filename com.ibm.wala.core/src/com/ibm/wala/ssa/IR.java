@@ -167,8 +167,8 @@ public abstract class IR implements IRView {
         result.append(")");
       }
       result.append("\n");
-      for (Iterator it = bb.iteratePhis(); it.hasNext();) {
-        SSAPhiInstruction phi = (SSAPhiInstruction) it.next();
+      for (Iterator<SSAPhiInstruction> it = bb.iteratePhis(); it.hasNext();) {
+        SSAPhiInstruction phi = it.next();
         if (phi != null) {
           result.append("           " + phi.toString(symbolTable)).append("\n");
         }
@@ -234,8 +234,8 @@ public abstract class IR implements IRView {
           }
         }
       }
-      for (Iterator it = bb.iteratePis(); it.hasNext();) {
-        SSAPiInstruction pi = (SSAPiInstruction) it.next();
+      for (Iterator<SSAPiInstruction> it = bb.iteratePis(); it.hasNext();) {
+        SSAPiInstruction pi = it.next();
         if (pi != null) {
           result.append("           " + pi.toString(symbolTable)).append("\n");
         }
@@ -464,8 +464,8 @@ public abstract class IR implements IRView {
    * visit each normal (non-phi, non-pi, non-catch) instruction in this IR
    */
   public void visitNormalInstructions(SSAInstruction.Visitor v) {
-    for (Iterator i = iterateNormalInstructions(); i.hasNext();) {
-      ((SSAInstruction) i.next()).visit(v);
+    for (Iterator<SSAInstruction> i = iterateNormalInstructions(); i.hasNext();) {
+      i.next().visit(v);
     }
   }
 
@@ -473,8 +473,8 @@ public abstract class IR implements IRView {
    * visit each instruction in this IR
    */
   public void visitAllInstructions(SSAInstruction.Visitor v) {
-    for (Iterator i = iterateAllInstructions(); i.hasNext();) {
-      ((SSAInstruction) i.next()).visit(v);
+    for (Iterator<SSAInstruction> i = iterateAllInstructions(); i.hasNext();) {
+      i.next().visit(v);
     }
   }
 
@@ -699,8 +699,8 @@ public abstract class IR implements IRView {
     if (instructions == null)
       return true;
 
-    for (int i = 0; i < instructions.length; i++)
-      if (instructions[i] != null)
+    for (SSAInstruction instruction : instructions)
+      if (instruction != null)
         return false;
 
     return true;

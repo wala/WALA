@@ -97,12 +97,12 @@ public class CallArgSourceSpec extends SourceSpec {
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
 			PointerAnalysis<InstanceKey> pa, CallGraph cg) {
 
-		for (int j = 0; j < newArgNums.length; j++) {
+		for (int newArgNum : newArgNums) {
 			for (FlowType<E> ft : getFlowType(block)) {
 				// a collection of a LocalElement for this argument's SSA value,
 				// along with a set of InstanceKeyElements for each instance
 				// that this SSA value might point to
-				final int ssaVal = invInst.getUse(newArgNums[j]);
+				final int ssaVal = invInst.getUse(newArgNum);
 				final CGNode node = block.getNode();
 				Set<CodeElement> valueElements = CodeElement.valueElements(ssaVal);
 				PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, ssaVal);

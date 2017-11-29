@@ -84,15 +84,14 @@ public final class ConcreteTypeKey implements InstanceKey {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
-    Collection types = pei.getExceptionTypes();
+    Collection<TypeReference> types = pei.getExceptionTypes();
     // TODO: institute a cache?
     if (types == null) {
       return null;
     }
     InstanceKey[] result = new InstanceKey[types.size()];
     int i = 0;
-    for (Iterator it = types.iterator(); it.hasNext();) {
-      TypeReference type = (TypeReference) it.next();
+    for (TypeReference type : types) {
       assert type != null;
       IClass klass = cha.lookupClass(type);
       result[i++] = new ConcreteTypeKey(klass);

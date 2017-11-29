@@ -790,8 +790,8 @@ public class PrimitivesTest extends WalaTestCase {
     R.add(3, 11);
     R.add(5, 1);
     int count = 0;
-    for (Iterator<IntPair> it = R.iterator(); it.hasNext();) {
-      System.err.println(it.next());
+    for (IntPair intPair : R) {
+      System.err.println(intPair);
       count++;
     }
     Assert.assertTrue(count == 5);
