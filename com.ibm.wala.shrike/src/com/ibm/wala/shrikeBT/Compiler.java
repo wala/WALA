@@ -13,8 +13,6 @@ package com.ibm.wala.shrikeBT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Iterator;
-
 import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
@@ -182,8 +180,8 @@ public abstract class Compiler implements Constants {
     IInstruction.Visitor visitor = new IInstruction.Visitor() {
       private void visitTargets(IInstruction instr) {
         int[] ts = instr.getBranchTargets();
-        for (int k = 0; k < ts.length; k++) {
-          s.set(ts[k]);
+        for (int element : ts) {
+          s.set(element);
         }
       }
 
@@ -212,14 +210,13 @@ public abstract class Compiler implements Constants {
       }
     };
 
-    for (int i = 0; i < instructions.length; i++) {
-      instructions[i].visit(visitor);
+    for (IInstruction instruction : instructions) {
+      instruction.visit(visitor);
     }
 
     String[] paramTypes = Util.getParamsTypes(isStatic ? null : TYPE_Object, signature);
     int index = 0;
-    for (int i = 0; i < paramTypes.length; i++) {
-      String t = paramTypes[i];
+    for (String t : paramTypes) {
       localsUsed.set(index);
       if (t.equals(TYPE_long) || t.equals(TYPE_double)) {
         localsWide.set(index);
@@ -230,11 +227,10 @@ public abstract class Compiler implements Constants {
     }
 
     ExceptionHandler[] lastHS = null;
-    for (int i = 0; i < handlers.length; i++) {
-      ExceptionHandler[] hs = handlers[i];
+    for (ExceptionHandler[] hs : handlers) {
       if (hs != lastHS) {
-        for (int j = 0; j < hs.length; j++) {
-          s.set(hs[j].handler);
+        for (ExceptionHandler element : hs) {
+          s.set(element.handler);
         }
         lastHS = hs;
       }
@@ -359,20 +355,20 @@ public abstract class Compiler implements Constants {
       }
 
       int[] bt = instr.getBranchTargets();
-      for (int j = 0; j < bt.length; j++) {
-        int t = bt[j];
+      for (int element : bt) {
+        int t = element;
         if (t < 0 || t >= visited.length) {
           throw new IllegalArgumentException("Branch target at offset " + i + " is out of bounds: " + t + " (max " + visited.length
               + ")");
         }
         if (!visited[t]) {
-          computeStackWordsAt(bt[j], stackLen, stackWords.clone(), visited);
+          computeStackWordsAt(element, stackLen, stackWords.clone(), visited);
         }
       }
 
       ExceptionHandler[] hs = handlers[i];
-      for (int j = 0; j < hs.length; j++) {
-        int t = hs[j].handler;
+      for (ExceptionHandler element : hs) {
+        int t = element.handler;
         if (!visited[t]) {
           byte[] newWords = stackWords.clone();
           newWords[0] = 1;
@@ -449,8 +445,7 @@ public abstract class Compiler implements Constants {
   }
 
   private static boolean applyPatches(ArrayList<Patch> patches) {
-    for (Iterator<Patch> i = patches.iterator(); i.hasNext();) {
-      Patch p = i.next();
+    for (Patch p : patches) {
       if (!p.apply()) {
         return false;
       }
@@ -1149,8 +1144,7 @@ public abstract class Compiler implements Constants {
 
       int[] rawHandlers = new int[4 * rawHandlerList.size()];
       int count = 0;
-      for (Iterator<int[]> iter = rawHandlerList.iterator(); iter.hasNext();) {
-        int[] element = iter.next();
+      for (int[] element : rawHandlerList) {
         System.arraycopy(element, 0, rawHandlers, count, 4);
         count += 4;
       }
@@ -1244,8 +1238,8 @@ public abstract class Compiler implements Constants {
       liveLocals[instruction].set(index);
       int[] back = backEdges[instruction];
       if (back != null) {
-        for (int i = 0; i < back.length; i++) {
-          addLiveVar(back[i], index);
+        for (int element : back) {
+          addLiveVar(element, index);
         }
       }
 
@@ -1264,12 +1258,12 @@ public abstract class Compiler implements Constants {
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
       int[] targets = instr.getBranchTargets();
-      for (int j = 0; j < targets.length; j++) {
-        addBackEdge(targets[j], i);
+      for (int target : targets) {
+        addBackEdge(target, i);
       }
       ExceptionHandler[] hs = handlers[i];
-      for (int j = 0; j < hs.length; j++) {
-        addBackEdge(hs[j].handler, i);
+      for (ExceptionHandler element : hs) {
+        addBackEdge(element.handler, i);
       }
       liveLocals[i] = new BitSet();
     }
@@ -1410,10 +1404,10 @@ public abstract class Compiler implements Constants {
 
     ExceptionHandler[] startHS = handlers[start];
     ArrayList<ExceptionHandler> newHS = new ArrayList<>();
-    for (int i = 0; i < startHS.length; i++) {
-      int t = startHS[i].handler;
+    for (ExceptionHandler element : startHS) {
+      int t = element.handler;
       if (t < start || t >= start + len) {
-        newHS.add(startHS[i]);
+        newHS.add(element);
       }
     }
     ExceptionHandler[] patchHS = new ExceptionHandler[newHS.size()];
@@ -1458,8 +1452,8 @@ public abstract class Compiler implements Constants {
         if (instructions[i] instanceof ReturnInstruction) {
           outsideBranch = true;
         }
-        for (int j = 0; j < targets.length; j++) {
-          if (targets[j] < start || targets[j] >= start + len) {
+        for (int target : targets) {
+          if (target < start || target >= start + len) {
             outsideBranch = true;
           }
         }
@@ -1479,15 +1473,14 @@ public abstract class Compiler implements Constants {
       for (int i = start; i < start + len; i++) {
         boolean out = false;
         ExceptionHandler[] hs = handlers[i];
-        for (int j = 0; j < hs.length; j++) {
-          int h = hs[j].handler;
+        for (ExceptionHandler element : hs) {
+          int h = element.handler;
           if (h < start || h >= start + len) {
             out = true;
           }
         }
         int[] targets = instructions[i].getBranchTargets();
-        for (int j = 0; j < targets.length; j++) {
-          int t = targets[j];
+        for (int t : targets) {
           if (t < start || t >= start + len) {
             out = true;
           }
@@ -1606,8 +1599,8 @@ public abstract class Compiler implements Constants {
       // make sure that the same external handlers are used all the way through
       ExceptionHandler[] startHS = handlers[start];
       int numOuts = 0;
-      for (int j = 0; j < startHS.length; j++) {
-        int t = startHS[j].handler;
+      for (ExceptionHandler element : startHS) {
+        int t = element.handler;
         if (t < start || t >= start + len) {
           numOuts++;
         }
@@ -1617,12 +1610,12 @@ public abstract class Compiler implements Constants {
       for (int i = start + 1; i < start + len; i++) {
         ExceptionHandler[] hs = handlers[i];
         int matchingOuts = 0;
-        for (int j = 0; j < hs.length; j++) {
-          int t = hs[j].handler;
+        for (ExceptionHandler element : hs) {
+          int t = element.handler;
           if (t < start || t >= start + len) {
             boolean match = false;
-            for (int k = 0; k < startHS.length; k++) {
-              if (startHS[k].equals(hs[j])) {
+            for (ExceptionHandler element2 : startHS) {
+              if (element2.equals(element)) {
                 match = true;
                 break;
               }
@@ -1680,9 +1673,7 @@ public abstract class Compiler implements Constants {
       }
     }
 
-    for (Iterator<HelperPatch> i = patches.iterator(); i.hasNext();) {
-      HelperPatch p = i.next();
-
+    for (HelperPatch p : patches) {
       System.arraycopy(p.code, 0, instructions, p.start, p.code.length);
       for (int j = 0; j < p.length; j++) {
         int index = j + p.start;

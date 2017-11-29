@@ -85,8 +85,8 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
    */
   public final int populationCount() {
     int count = 0;
-    for (int i = 0; i < bits.length; i++) {
-      count += Bits.populationCount(bits[i]);
+    for (int bit : bits) {
+      count += Bits.populationCount(bit);
     }
     return count;
   }
@@ -165,8 +165,8 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     int top = bits[lastWord];
 
     int j = 0;
-    for (int i = 0; i < masks.length; i++) {
-      if ((top & masks[i][j]) != 0) {
+    for (int[] mask2 : masks) {
+      if ((top & mask2[j]) != 0) {
         j <<= 1;
       } else {
         j <<= 1;

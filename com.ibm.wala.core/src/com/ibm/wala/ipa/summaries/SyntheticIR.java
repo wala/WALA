@@ -80,9 +80,8 @@ public class SyntheticIR extends IR {
     SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
 
     // simulate allocation of value numbers
-    for (int i = 0; i < instructions.length; i++) {
-      if (instructions[i] != null) {
-        SSAInstruction s = instructions[i];
+    for (SSAInstruction s : instructions) {
+      if (s != null) {
         updateForInstruction(constants, symbolTable, s);
       }
     }

@@ -13,7 +13,6 @@ package com.ibm.wala.shrike.copywriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.zip.ZipEntry;
 
 import com.ibm.wala.shrikeBT.Compiler;
@@ -118,8 +117,7 @@ public class CopyWriter {
 
     Writer w = new OutputStreamWriter(instrumenter.addOutputJarEntry(new ZipEntry("IBM-Copyright")));
     w.write(copyright + "\n");
-    for (Iterator<ZipEntry> iter = entries.iterator(); iter.hasNext();) {
-      ZipEntry ze = iter.next();
+    for (ZipEntry ze : entries) {
       w.write("  " + ze.getName() + "\n");
     }
     w.write(copyright + "\n");

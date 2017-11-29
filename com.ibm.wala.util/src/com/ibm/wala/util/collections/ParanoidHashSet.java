@@ -12,7 +12,6 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -45,8 +44,8 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   public ParanoidHashSet(Collection<T> s) throws NullPointerException {
     super(s.size());
     hcFreq = HashMapFactory.make(s.size());
-    for (Iterator<T> it = s.iterator(); it.hasNext();) {
-      add(it.next());
+    for (T t : s) {
+      add(t);
     }
   }
 
@@ -85,8 +84,8 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
         hcFreq.put(hc, h);
       } else {
         if (s.size() == BAD_HC) {
-          for (Iterator<T> it = s.iterator(); it.hasNext();) {
-            Object o = it.next();
+          for (T t : s) {
+            Object o = t;
             System.err.println(o + " " + o.hashCode());
           }
           assert false : "bad hc " + arg0.getClass() + " " + arg0;

@@ -48,15 +48,14 @@ public class CFGSanitizer {
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     Graph<ISSABasicBlock> g = SlowSparseNumberedGraph.make();
     // add all nodes to the graph
-    for (Iterator<? extends ISSABasicBlock> it = cfg.iterator(); it.hasNext();) {
-      g.addNode(it.next());
+    for (ISSABasicBlock basicBlock : cfg) {
+      g.addNode(basicBlock);
     }
 
     // add all edges to the graph, except those that go to exit
-    for (Iterator it = cfg.iterator(); it.hasNext();) {
-      ISSABasicBlock b = (ISSABasicBlock) it.next();
-      for (Iterator it2 = cfg.getSuccNodes(b); it2.hasNext();) {
-        ISSABasicBlock b2 = (ISSABasicBlock) it2.next();
+    for (ISSABasicBlock b : cfg) {
+      for (Iterator<ISSABasicBlock> it2 = cfg.getSuccNodes(b); it2.hasNext();) {
+        ISSABasicBlock b2 = it2.next();
 
         if (!b2.isExitBlock()) {
           g.addEdge(b, b2);
@@ -67,9 +66,9 @@ public class CFGSanitizer {
     // now add edges to exit, ignoring undeclared exceptions
     ISSABasicBlock exit = cfg.exit();
 
-    for (Iterator it = cfg.getPredNodes(exit); it.hasNext();) {
+    for (Iterator<ISSABasicBlock> it = cfg.getPredNodes(exit); it.hasNext();) {
       // for each predecessor of exit ...
-      ISSABasicBlock b = (ISSABasicBlock) it.next();
+      ISSABasicBlock b = it.next();
 
       SSAInstruction s = ir.getInstructions()[b.getLastInstructionIndex()];
       if (s == null) {
@@ -90,14 +89,14 @@ public class CFGSanitizer {
           Assertions.UNREACHABLE();
         }
         // remove any exceptions that are caught by catch blocks
-        for (Iterator it2 = cfg.getSuccNodes(b); it2.hasNext();) {
-          IBasicBlock c = (IBasicBlock) it2.next();
+        for (Iterator<ISSABasicBlock> it2 = cfg.getSuccNodes(b); it2.hasNext();) {
+          IBasicBlock c = it2.next();
 
           if (c.isCatchBlock()) {
             SSACFG.ExceptionHandlerBasicBlock cb = (ExceptionHandlerBasicBlock) c;
 
-            for (Iterator it3 = cb.getCaughtExceptionTypes(); it3.hasNext();) {
-              TypeReference ex = (TypeReference) it3.next();
+            for (Iterator<TypeReference> it3 = cb.getCaughtExceptionTypes(); it3.hasNext();) {
+              TypeReference ex = it3.next();
               IClass exClass = cha.lookupClass(ex);
               if (exClass == null) {
                 throw new WalaException("failed to find " + ex);
@@ -125,17 +124,17 @@ public class CFGSanitizer {
           Assertions.UNREACHABLE();
         }
         if (declared != null && exceptions != null) {
-          for (int i = 0; i < exceptions.length; i++) {
+          for (TypeReference exception : exceptions) {
             boolean isDeclared = false;
-            if (exceptions[i] != null) {
-              IClass exi = cha.lookupClass(exceptions[i]);
+            if (exception != null) {
+              IClass exi = cha.lookupClass(exception);
               if (exi == null) {
-                throw new WalaException("failed to find " + exceptions[i]);
+                throw new WalaException("failed to find " + exception);
               }
-              for (int j = 0; j < declared.length; j++) {
-                IClass dc = cha.lookupClass(declared[j]);
+              for (TypeReference element : declared) {
+                IClass dc = cha.lookupClass(element);
                 if (dc == null) {
-                  throw new WalaException("failed to find " + declared[j]);
+                  throw new WalaException("failed to find " + element);
                 }
                 if (cha.isSubclassOf(exi, dc)) {
                   isDeclared = true;
@@ -158,7 +157,7 @@ public class CFGSanitizer {
    * What are the exception types which s may throw?
    */
   private static TypeReference[] computeExceptions(IClassHierarchy cha, IR ir, SSAInstruction s) throws InvalidClassFileException {
-    Collection c = null;
+    Collection<TypeReference> c = null;
     Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;
@@ -170,9 +169,9 @@ public class CFGSanitizer {
       return null;
     } else {
       TypeReference[] exceptions = new TypeReference[c.size()];
-      Iterator it = c.iterator();
+      Iterator<TypeReference> it = c.iterator();
       for (int i = 0; i < exceptions.length; i++) {
-        exceptions[i] = (TypeReference) it.next();
+        exceptions[i] = it.next();
       }
       return exceptions;
     }

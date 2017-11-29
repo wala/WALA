@@ -35,8 +35,8 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
     ClassWriter.setInt(buf, offset + 2, getSize() - 6);
     offset += 6;
     if (table != null) {
-      for (int i = 0; i < table.length; i++) {
-        ClassWriter.setUByte(buf, offset, table[i]);
+      for (byte element : table) {
+        ClassWriter.setUByte(buf, offset, element);
         offset++;
       }
     }
@@ -47,9 +47,9 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
     if (sourceDebug == null) {
       throw new IllegalArgumentException("sourceDebug is null");
     }
-    for (int i = 0; i < sourceDebug.length; i++) {
-      if (sourceDebug[i] < 1) {
-        throw new IllegalArgumentException("Invalid CP index: " + sourceDebug[i]);
+    for (byte element : sourceDebug) {
+      if (element < 1) {
+        throw new IllegalArgumentException("Invalid CP index: " + element);
       }
     }
     this.table = sourceDebug;

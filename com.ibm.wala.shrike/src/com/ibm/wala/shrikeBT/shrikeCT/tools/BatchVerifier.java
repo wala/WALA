@@ -51,8 +51,8 @@ public class BatchVerifier {
     OfflineInstrumenter oi = new OfflineInstrumenter();
     args = oi.parseStandardArgs(args);
 
-    for (int i = 0; i < args.length; i++) {
-      if (args[i].equals("-d")) {
+    for (String arg : args) {
+      if (arg.equals("-d")) {
         disasm = true;
       }
     }

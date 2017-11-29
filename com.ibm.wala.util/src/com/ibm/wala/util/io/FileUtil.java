@@ -61,12 +61,12 @@ public class FileUtil {
       return Collections.emptyList();
     }
     HashSet<File> result = HashSetFactory.make();
-    for (int i = 0; i < files.length; i++) {
-      if (p == null || p.matcher(files[i].getAbsolutePath()).matches()) {
-        result.add(files[i]);
+    for (File file : files) {
+      if (p == null || p.matcher(file.getAbsolutePath()).matches()) {
+        result.add(file);
       }
-      if (recurse && files[i].isDirectory()) {
-        result.addAll(listFiles(files[i], recurse, p));
+      if (recurse && file.isDirectory()) {
+        result.addAll(listFiles(file, recurse, p));
       }
     }
     return result;

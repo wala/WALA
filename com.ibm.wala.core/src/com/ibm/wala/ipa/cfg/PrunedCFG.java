@@ -150,7 +150,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
 
     @Override
     public boolean hasEdge(T src, T dst) {
-      for (Iterator EE = getSuccNodes(src); EE.hasNext();) {
+      for (Iterator<T> EE = getSuccNodes(src); EE.hasNext();) {
         if (EE.next().equals(dst)) {
           return true;
         }
@@ -215,8 +215,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     @Override
     public int getMaxNumber() {
       int max = -1;
-      for (Iterator<? extends T> NS = nodes.iterator(); NS.hasNext();) {
-        T N = NS.next();
+      for (T N : nodes) {
         if (subset.contains(N) && getNumber(N) > max) {
           max = getNumber(N);
         }
@@ -225,7 +224,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
       return max;
     }
 
-    private Iterator<T> filterNodes(Iterator nodeIterator) {
+    private Iterator<T> filterNodes(Iterator<T> nodeIterator) {
       return new FilterIterator<T>(nodeIterator, new Predicate() {
         @Override public boolean test(Object o) {
           return subset.contains(o);

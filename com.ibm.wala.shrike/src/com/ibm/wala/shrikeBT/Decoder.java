@@ -255,8 +255,8 @@ public abstract class Decoder implements Constants {
   }
 
   private boolean doesSubroutineReturn(int sub) {
-    for (int j = 0; j < retInfo.length; j++) {
-      if (retInfo[j] != null && retInfo[j].sub == sub) {
+    for (RetInfo element : retInfo) {
+      if (element != null && element.sub == sub) {
         return true;
       }
     }
@@ -314,9 +314,9 @@ public abstract class Decoder implements Constants {
             }
 
             int[] targets = instr.getBranchTargets();
-            for (int k = 0; k < targets.length; k++) {
-              if (targets[k] >= 0) {
-                int r = findReturnToVar(v, targets[k], visited);
+            for (int target : targets) {
+              if (target >= 0) {
+                int r = findReturnToVar(v, target, visited);
                 if (r != 0) {
                   return r;
                 }
@@ -407,10 +407,10 @@ public abstract class Decoder implements Constants {
         int offset = decodedOffset[addr];
         instr = decoded.get(offset + size - 1);
         int[] targets = instr.getBranchTargets();
-        for (int k = 0; k < targets.length; k++) {
-          if (targets[k] >= 0) {
+        for (int target : targets) {
+          if (target >= 0) {
             // only chase real gotos; ignore rets
-            assignReachablesToSubroutine(targets[k], sub);
+            assignReachablesToSubroutine(target, sub);
           }
         }
       }
@@ -761,9 +761,7 @@ public abstract class Decoder implements Constants {
           Instruction instr = decoded.get(s + instrCount - 1);
           int[] targets = instr.getBranchTargets();
 
-          for (int i = 0; i < targets.length; i++) {
-            int t = targets[i];
-
+          for (int t : targets) {
             if (t >= 0) {
               decodeAt(t, stackLen, stackWords.clone());
             }

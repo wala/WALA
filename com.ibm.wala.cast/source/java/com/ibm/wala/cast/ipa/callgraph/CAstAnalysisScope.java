@@ -32,16 +32,16 @@ public class CAstAnalysisScope extends AnalysisScope {
 
   public CAstAnalysisScope(String[] sourceFileNames, SingleClassLoaderFactory loaders, Collection<Language> languages) {
     this(loaders, languages);
-    for (int i = 0; i < sourceFileNames.length; i++) {
-      File F = new File(sourceFileNames[i]);
+    for (String sourceFileName : sourceFileNames) {
+      File F = new File(sourceFileName);
       addSourceFileToScope(theLoader, F, F.getPath());
     }
   }
 
   public CAstAnalysisScope(Module[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages) {
     this(loaders, languages);
-    for (int i = 0; i < sources.length; i++) {
-      addToScope(theLoader, sources[i]);
+    for (Module source : sources) {
+      addToScope(theLoader, source);
     }
   }
 

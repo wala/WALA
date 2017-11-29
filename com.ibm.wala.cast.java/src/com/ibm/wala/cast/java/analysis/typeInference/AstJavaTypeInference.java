@@ -132,9 +132,8 @@ public class AstJavaTypeInference extends AstTypeInference {
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction meet = null;
 
-      for (int i = 0; i < rhs.length; i++) {
-        if (rhs[i] != null) {
-          TypeVariable r = rhs[i];
+      for (TypeVariable r : rhs) {
+        if (r != null) {
           TypeAbstraction ta = r.getType();
           if (ta instanceof PointType) {
             if (ta.getType().equals(getStringClass())) {

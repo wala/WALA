@@ -12,8 +12,8 @@ package com.ibm.wala.ssa;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -64,26 +64,23 @@ public class AuxiliaryCache implements IAuxiliaryCache {
     dictionary = HashMapFactory.make();
     nItems = 0;
 
-    for (Iterator<Map.Entry<Pair<IMethod, Context>, Map<SSAOptions, Object>>> it = oldDictionary.entrySet().iterator(); it
-        .hasNext();) {
-      Map.Entry<Pair<IMethod, Context>, Map<SSAOptions, Object>> e = it.next();
-      Map<SSAOptions, Object> m = e.getValue();
-      HashSet<Object> toRemove = HashSetFactory.make();
-      for (Iterator it2 = m.entrySet().iterator(); it2.hasNext();) {
-        Map.Entry e2 = (Map.Entry) it2.next();
-        Object key = e2.getKey();
-        Object val = e2.getValue();
-        if (CacheReference.get(val) == null) {
-          toRemove.add(key);
-        }
-      }
-      for (Iterator<Object> it2 = toRemove.iterator(); it2.hasNext();) {
-        m.remove(it2.next());
-      }
-      if (m.size() > 0) {
-        dictionary.put(e.getKey(), m);
-      }
+    for (Entry<Pair<IMethod, Context>, Map<SSAOptions, Object>> e : oldDictionary.entrySet()) {
+   Map<SSAOptions, Object> m = e.getValue();
+   HashSet<Object> toRemove = HashSetFactory.make();
+   for (Entry<SSAOptions, Object> e2 : m.entrySet()) {
+    Object key = e2.getKey();
+    Object val = e2.getValue();
+    if (CacheReference.get(val) == null) {
+      toRemove.add(key);
     }
+   }
+   for (Object object : toRemove) {
+    m.remove(object);
+   }
+   if (m.size() > 0) {
+    dictionary.put(e.getKey(), m);
+   }
+  }
   }
 
   /* 

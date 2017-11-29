@@ -103,8 +103,8 @@ public class AddSerialVersion {
         // step 3
         String[] interfaces = r.getInterfaceNames();
         Arrays.sort(interfaces);
-        for (int i = 0; i < interfaces.length; i++) {
-          out.writeUTF(interfaces[i]);
+        for (String interface1 : interfaces) {
+          out.writeUTF(interface1);
         }
   
         // step 4

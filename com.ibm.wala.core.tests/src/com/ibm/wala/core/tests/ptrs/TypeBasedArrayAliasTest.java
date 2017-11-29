@@ -11,8 +11,6 @@
 package com.ibm.wala.core.tests.ptrs;
 
 import java.io.IOException;
-import java.util.Iterator;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,8 +66,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
   }
 
   private final static CGNode findNode(CallGraph cg, String methodName) {
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext(); ) {
-      CGNode n = it.next();
+    for (CGNode n : cg) {
       if (n.getMethod().getName().toString().equals(methodName)) {
         return n;
       }

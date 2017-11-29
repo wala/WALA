@@ -33,8 +33,7 @@ public class ThisAssignmentChecker implements MethodData.Results {
     if (!info.getIsStatic()) {
       IInstruction[] instructions = info.getInstructions();
 
-      for (int i = 0; i < instructions.length; i++) {
-        IInstruction instr = instructions[i];
+      for (IInstruction instr : instructions) {
         if (instr instanceof StoreInstruction) {
           StoreInstruction st = (StoreInstruction) instr;
           if (st.getVarIndex() == 0) {

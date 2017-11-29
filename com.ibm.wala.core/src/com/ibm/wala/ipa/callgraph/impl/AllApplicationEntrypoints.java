@@ -11,8 +11,6 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import java.util.HashSet;
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -40,8 +38,7 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
     for (IClass klass : cha) {
       if (!klass.isInterface()) {
         if (isApplicationClass(scope, klass)) {
-          for (Iterator methodIt = klass.getDeclaredMethods().iterator(); methodIt.hasNext();) {
-            IMethod method = (IMethod) methodIt.next();
+          for (IMethod method : klass.getDeclaredMethods()) {
             if (!method.isAbstract()) {
               add(new ArgumentTypeEntrypoint(method, cha));
             }

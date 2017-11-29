@@ -71,11 +71,10 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
-      into.addNode(it.next());
+    for (T name : g) {
+      into.addNode(name);
     }
-    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
-      T n = it.next();
+    for (T n : g) {
       for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
         T s = it2.next();
         for(U l : g.getEdgeLabels(n, s)) {

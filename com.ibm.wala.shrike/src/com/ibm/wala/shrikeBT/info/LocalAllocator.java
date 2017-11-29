@@ -52,8 +52,8 @@ public class LocalAllocator implements MethodData.Results {
       }
     };
 
-    for (int i = 0; i < instructions.length; i++) {
-      instructions[i].visit(visitor);
+    for (IInstruction instruction : instructions) {
+      instruction.visit(visitor);
     }
 
     nextLocal = max[0];

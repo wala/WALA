@@ -171,7 +171,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     /**
      * Graph to visualize
      */
-    private final Graph graph;
+    private final Graph<Object> graph;
 
     /**
      * JFace component implementing the tree viewer
@@ -181,7 +181,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     /**
      * @throws WalaException
      */
-    public GraphViewer(Graph graph) throws WalaException {
+    public GraphViewer(Graph<Object> graph) throws WalaException {
       super(null);
       this.graph = graph;
       if (graph == null) {
@@ -203,8 +203,8 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
       if (getPopUpActions().size() > 0) {
         MenuManager mm = new MenuManager();
         treeViewer.getTree().setMenu(mm.createContextMenu(treeViewer.getTree()));
-        for (Iterator<IAction> it = getPopUpActions().iterator(); it.hasNext();) {
-          mm.add(it.next());
+        for (IAction iAction : getPopUpActions()) {
+          mm.add(iAction);
         }
       }
       return treeViewer.getTree();
@@ -242,7 +242,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
 
         Object[] result = new Object[graph.getSuccNodeCount(parentElement)];
         int i = 0;
-        for (Iterator it = graph.getSuccNodes(parentElement); it.hasNext();) {
+        for (Iterator<Object> it = graph.getSuccNodes(parentElement); it.hasNext();) {
           result[i++] = it.next();
         }
         return result;

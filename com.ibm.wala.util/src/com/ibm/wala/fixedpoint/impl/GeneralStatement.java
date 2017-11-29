@@ -61,8 +61,8 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
     if (lhs == cell) {
       return true;
     }
-    for (int i = 0; i < rhs.length; i++) {
-      if (rhs[i] == cell)
+    for (T rh : rhs) {
+      if (rh == cell)
         return true;
     }
     return false;

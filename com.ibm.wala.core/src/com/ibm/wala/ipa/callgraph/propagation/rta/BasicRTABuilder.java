@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
-import java.util.Iterator;
-
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -55,8 +53,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     // set up the selector map to record each method that class implements
     registerImplementedMethods(klass, iKey);
 
-    for (Iterator ifaces = klass.getAllImplementedInterfaces().iterator(); ifaces.hasNext();) {
-      IClass c = (IClass) ifaces.next();
+    for (IClass c : klass.getAllImplementedInterfaces()) {
       registerImplementedMethods(c, iKey);
     }
     klass = klass.getSuperclass();
@@ -73,8 +70,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     if (DEBUG) {
       System.err.println(("registerImplementedMethods: " + declarer + " " + iKey));
     }
-    for (Iterator it = declarer.getDeclaredMethods().iterator(); it.hasNext();) {
-      IMethod M = (IMethod) it.next();
+    for (IMethod M : declarer.getDeclaredMethods()) {
       Selector selector = M.getReference().getSelector();
       PointerKey sKey = getKeyForSelector(selector);
       if (DEBUG) {

@@ -33,8 +33,8 @@ public class CAstValueImpl extends CAstImpl {
     @Override
     public int hashCode() {
       int value = 1237 * kind;
-      for(int i = 0; i < cs.length; i++) 
-	value *= cs[i].hashCode();
+      for (CAstNode element : cs)
+        value *= element.hashCode();
 
       return value;
     }

@@ -188,8 +188,8 @@ public class PointsToMap {
    * Wipe out the cached transitive closure information
    */
   public void revertToPreTransitive() {
-    for (Iterator it = iterateKeys(); it.hasNext();) {
-      PointerKey key = (PointerKey) it.next();
+    for (Iterator<PointerKey> it = iterateKeys(); it.hasNext();) {
+      PointerKey key = it.next();
       if (!isTransitiveRoot(key) && !isImplicit(key) && !isUnified(key)) {
         PointsToSetVariable v = getPointsToSet(key);
         v.removeAll();

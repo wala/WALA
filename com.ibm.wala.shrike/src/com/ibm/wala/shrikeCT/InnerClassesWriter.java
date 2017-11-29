@@ -47,8 +47,8 @@ public final class InnerClassesWriter extends ClassWriter.Element {
     ClassWriter.setUShort(buf, offset + 6, table == null ? 0 : table.length);
     offset += 8;
     if (table != null) {
-      for (int i = 0; i < table.length; i++) {
-        ClassWriter.setUShort(buf, offset, table[i]);
+      for (int element : table) {
+        ClassWriter.setUShort(buf, offset, element);
         offset += 2;
       }
     }

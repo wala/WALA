@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
@@ -32,13 +31,12 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
     } else {
       // XXX not very efficient.
       TreeSet<Long> T = new TreeSet<>();
-      for (int i = 0; i < set.length; i++) {
-        T.add(Long.valueOf(set[i]));
+      for (long element : set) {
+        T.add(Long.valueOf(element));
       }
       long[] copy = new long[T.size()];
       int i = 0;
-      for (Iterator<Long> it = T.iterator(); it.hasNext();) {
-        Long I = it.next();
+      for (Long I : T) {
         copy[i++] = I.longValue();
       }
       MutableSparseLongSet result = new MutableSparseLongSet(copy);

@@ -176,8 +176,8 @@ public class ImmutableStack<T> implements Iterable<T> {
 		if (entry == null) {
 			return false;
 		}
-		for (int i = 0; i < entries.length; i++) {
-			if (entries[i] != null && entries[i].equals(entry))
+		for (T entrie : entries) {
+			if (entrie != null && entrie.equals(entry))
 				return true;
 		}
 		return false;

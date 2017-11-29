@@ -90,8 +90,8 @@ public class AstCallGraph extends ExplicitCallGraph {
         boolean done = false;
         while (!done) {
           try {
-            for (Iterator<Function<Object, Object>> x = callbacks.iterator(); x.hasNext();) {
-              x.next().apply(null);
+            for (Function<Object, Object> function : callbacks) {
+              function.apply(null);
             }
           } catch (ConcurrentModificationException e) {
             done = false;

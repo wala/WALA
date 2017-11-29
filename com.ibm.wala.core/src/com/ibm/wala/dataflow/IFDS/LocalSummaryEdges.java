@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -133,8 +131,7 @@ public class LocalSummaryEdges {
       return null;
     } else {
       MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-      for (Iterator it = R.iterator(); it.hasNext();) {
-        IntPair p = (IntPair) it.next();
+      for (IntPair p : R) {
         if (p.getY() == d2) {
           result.add(p.getX());
         }

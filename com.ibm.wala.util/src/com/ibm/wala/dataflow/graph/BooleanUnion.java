@@ -51,8 +51,7 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> {
     }
     BooleanVariable U = new BooleanVariable();
     U.copyState(lhs);
-    for (int i = 0; i < rhs.length; i++) {
-      BooleanVariable R = rhs[i];
+    for (BooleanVariable R : rhs) {
       if (R != null) {
         U.or(R);
       }
