@@ -244,8 +244,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     discoveredNodes.add(callGraph.getFakeRootNode());
 
     // Set up the initially reachable methods and classes
-    for (Iterator it = options.getEntrypoints().iterator(); it.hasNext();) {
-      Entrypoint E = (Entrypoint) it.next();
+    for (Entrypoint E : options.getEntrypoints()) {
       if (DEBUG_ENTRYPOINTS) {
         System.err.println("Entrypoint: " + E);
       }
@@ -927,8 +926,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
       List<InstanceKey> instances = system.getInstances(rhs.getValue());
       boolean sideEffect = false;
-      for (Iterator<InstanceKey> it = instances.iterator(); it.hasNext();) {
-        InstanceKey I = it.next();
+      for (InstanceKey I : instances) {
         if (!I.getConcreteType().isArrayClass()) {
           continue;
         }

@@ -94,8 +94,8 @@ public class SimpleVector<T> implements IVector<T> {
    */
   private double computeOccupancy() {
     int count = 0;
-    for (int i = 0; i < store.length; i++) {
-      if (store[i] != null) {
+    for (Object element : store) {
+      if (element != null) {
         count++;
       }
     }

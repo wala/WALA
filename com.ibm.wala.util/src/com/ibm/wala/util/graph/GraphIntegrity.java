@@ -43,8 +43,7 @@ public class GraphIntegrity {
   }
 
   private static <T> void checkEdgeCounts(Graph<T> G) throws UnsoundGraphException {
-    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
-      T N = it.next();
+    for (T N : G) {
       int count1 = G.getSuccNodeCount(N);
       int count2 = 0;
       for (Iterator<T> it2 = G.getSuccNodes(N); it2.hasNext();) {
@@ -68,8 +67,7 @@ public class GraphIntegrity {
   }
 
   private static <T> void checkEdges(Graph<T> G) throws UnsoundGraphException {
-    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
-      T N = it.next();
+    for (T N : G) {
       if (!G.containsNode(N)) {
         throw new UnsoundGraphException(N + " is not contained in the the graph " + G.containsNode(N));
       }
@@ -117,8 +115,8 @@ public class GraphIntegrity {
     try {
       n1 = G.getNumberOfNodes();
       n2 = 0;
-      for (Iterator<T> it = G.iterator(); it.hasNext();) {
-        Object n = it.next();
+      for (T t : G) {
+        Object n = t;
         if (DEBUG_LEVEL > 1) {
           System.err.println(("n2 loop: " + n));
         }
@@ -224,8 +222,8 @@ public class GraphIntegrity {
     if (c.isEmpty()) {
       System.err.println("none\n");
     } else {
-      for (Iterator<?> it = c.iterator(); it.hasNext();) {
-        System.err.println(it.next().toString());
+      for (Object name : c) {
+        System.err.println(name.toString());
       }
       System.err.println("\n");
     }

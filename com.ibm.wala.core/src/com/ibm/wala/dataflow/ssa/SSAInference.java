@@ -82,20 +82,19 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
 
   private void createEquations(OperatorFactory<T> opFactory) {
     SSAInstruction[] instructions = ir.getInstructions();
-    for (int i = 0; i < instructions.length; i++) {
-      SSAInstruction s = instructions[i];
+    for (SSAInstruction s : instructions) {
       makeEquationForInstruction(opFactory, s);
     }
-    for (Iterator it = ir.iteratePhis(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<? extends SSAInstruction> it = ir.iteratePhis(); it.hasNext();) {
+      SSAInstruction s = it.next();
       makeEquationForInstruction(opFactory, s);
     }
-    for (Iterator it = ir.iteratePis(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<? extends SSAInstruction> it = ir.iteratePis(); it.hasNext();) {
+      SSAInstruction s = it.next();
       makeEquationForInstruction(opFactory, s);
     }
-    for (Iterator it = ir.iterateCatchInstructions(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<? extends SSAInstruction> it = ir.iterateCatchInstructions(); it.hasNext();) {
+      SSAInstruction s = it.next();
       makeEquationForInstruction(opFactory, s);
     }
   }

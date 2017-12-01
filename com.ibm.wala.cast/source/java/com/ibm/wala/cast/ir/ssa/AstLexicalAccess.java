@@ -116,8 +116,8 @@ public abstract class AstLexicalAccess extends SSAInstruction {
   @Override
   public int hashCode() {
     int v = 1;
-    for(int i = 0; i < accesses.length; i++) 
-      v *= accesses[i].variableName.hashCode();
+    for (Access accesse : accesses)
+      v *= accesse.variableName.hashCode();
 
     return v;
   }

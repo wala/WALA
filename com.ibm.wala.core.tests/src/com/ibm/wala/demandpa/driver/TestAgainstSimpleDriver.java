@@ -42,8 +42,6 @@ package com.ibm.wala.demandpa.driver;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
-
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -156,8 +154,8 @@ public class TestAgainstSimpleDriver {
       if (result.isEmpty()) {
         System.err.println("  EMPTY!");
       }
-      for (Iterator<InstanceKey> it = result.iterator(); it.hasNext();) {
-        System.err.println("  " + it.next());
+      for (InstanceKey instanceKey : result) {
+        System.err.println("  " + instanceKey);
       }
     }
   }

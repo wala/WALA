@@ -82,8 +82,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   private String array2String(int[] params, SymbolTable symbolTable) {
     StringBuffer result = new StringBuffer();
-    for (int i = 0; i < params.length; i++) {
-      result.append(getValueString(symbolTable, params[i]));
+    for (int param : params) {
+      result.append(getValueString(symbolTable, param));
       result.append(" ");
     }
     return result.toString();

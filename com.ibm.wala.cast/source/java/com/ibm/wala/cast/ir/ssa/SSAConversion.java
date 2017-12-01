@@ -209,8 +209,7 @@ public class SSAConversion extends AbstractSSAConversion {
       if (DEBUG_UNDO)
         System.err.println(("recreating assignment at " + instructionIndex + " as " + lhs + " = " + rhs));
 
-      for (Iterator<Object> uses = renamedUses.iterator(); uses.hasNext();) {
-        Object x = uses.next();
+      for (Object x : renamedUses) {
         if (x instanceof UseRecord) {
           UseRecord use = (UseRecord) x;
           int idx = use.instructionIndex;
@@ -235,8 +234,8 @@ public class SSAConversion extends AbstractSSAConversion {
         }
       }
 
-      for (Iterator<CopyPropagationRecord> cs = childRecords.iterator(); cs.hasNext();) {
-        cs.next().undo(lhs);
+      for (CopyPropagationRecord copyPropagationRecord : childRecords) {
+        copyPropagationRecord.undo(lhs);
       }
     }
 
@@ -545,9 +544,9 @@ public class SSAConversion extends AbstractSSAConversion {
     int[] exitLive = lexicalInfo.getExitExposedUses();
     BitVector v = new BitVector();
     if (exitLive != null) {
-      for (int i = 0; i < exitLive.length; i++) {
-        if (exitLive[i] > -1) {
-          v.set(exitLive[i]);
+      for (int element : exitLive) {
+        if (element > -1) {
+          v.set(element);
         }
       }
     }
@@ -624,8 +623,8 @@ public class SSAConversion extends AbstractSSAConversion {
           int[] lexicalUses = lexicalInfo.getExposedUses(i);
           if (lexicalUses != null) {
             System.err.print(("extra uses for " + instructions[i] + ": "));
-            for (int j = 0; j < lexicalUses.length; j++) {
-              System.err.print((new Integer(lexicalUses[j]).toString() + " "));
+            for (int lexicalUse : lexicalUses) {
+              System.err.print((new Integer(lexicalUse).toString() + " "));
             }
             System.err.println("");
           }
@@ -640,8 +639,7 @@ public class SSAConversion extends AbstractSSAConversion {
     SSAInstruction[] insts = ir.getInstructions();
     MutableIntSet foundOne = new BitVectorIntSet();
     MutableIntSet foundTwo = new BitVectorIntSet();
-    for (int i = 0; i < insts.length; i++) {
-      SSAInstruction inst = insts[i];
+    for (SSAInstruction inst : insts) {
       if (inst != null) {
         for (int j = 0; j < inst.getNumberOfDefs(); j++) {
           int def = inst.getDef(j);

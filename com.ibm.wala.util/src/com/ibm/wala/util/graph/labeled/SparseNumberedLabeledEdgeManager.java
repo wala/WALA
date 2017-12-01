@@ -178,8 +178,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements Serializable, Num
    */
   @Override
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
-    for (Iterator<U> inLabelIter = nodeToPredLabels.get(node).iterator(); inLabelIter.hasNext();) {
-      U label = inLabelIter.next();
+    for (U label : nodeToPredLabels.get(node)) {
       getManagerForLabel(label).removeIncomingEdges(node);
     }
 
@@ -190,8 +189,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements Serializable, Num
    */
   @Override
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
-    for (Iterator<U> outLabelIter = nodeToSuccLabels.get(node).iterator(); outLabelIter.hasNext();) {
-      U label = outLabelIter.next();
+    for (U label : nodeToSuccLabels.get(node)) {
       getManagerForLabel(label).removeOutgoingEdges(node);
     }
 

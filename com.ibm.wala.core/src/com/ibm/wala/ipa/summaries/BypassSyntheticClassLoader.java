@@ -188,8 +188,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
     }
-    for (Iterator<IClass> it = toRemove.iterator(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : toRemove) {
       syntheticClasses.remove(klass.getName());
     }
   }

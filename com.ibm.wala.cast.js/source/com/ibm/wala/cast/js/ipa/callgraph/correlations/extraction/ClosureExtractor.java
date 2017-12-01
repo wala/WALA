@@ -464,8 +464,8 @@ public class ClosureExtractor extends CAstRewriterExt {
           CAstNode[] before = new CAstNode[tler.getStartInner()];
           for(i=0;i<tler.getStartInner();++i)
             before[i] = copyNodes(start.getChild(i), cfg, context, nodeMap);
-          for(int x = 0; x < before.length; x++) {
-            prologue.add(before[x]);
+          for (CAstNode element : before) {
+            prologue.add(element);
           }
           if(i+1 == start.getChildCount()) {
             fun_body_stmts.add(addSpuriousExnFlow(start.getChild(i), cfg));            
@@ -473,8 +473,8 @@ public class ClosureExtractor extends CAstRewriterExt {
             CAstNode[] after = new CAstNode[start.getChildCount()-i];
             for(int j=0;j+i<start.getChildCount();++j)
               after[j] = addSpuriousExnFlow(start.getChild(j+i), cfg);
-            for(int x = 0; x < after.length; x++) {
-              fun_body_stmts.add(after[x]);
+            for (CAstNode element : after) {
+              fun_body_stmts.add(element);
             }
           }
           for(i=context.getStart()+1;i<context.getEnd();++i)

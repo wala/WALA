@@ -75,8 +75,8 @@ public class PDFViewUtil {
       throw new IllegalArgumentException("ir is null");
     }
     final HashMap<ISSABasicBlock,String> labelMap = HashMapFactory.make();
-    for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
-      SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
+    for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
+      SSACFG.BasicBlock bb = (SSACFG.BasicBlock) issaBasicBlock;
       labelMap.put(bb, getNodeLabel(ir, bb));
     }
     NodeDecorator<ISSABasicBlock> labels = new NodeDecorator<ISSABasicBlock>() {
@@ -125,8 +125,8 @@ public class PDFViewUtil {
       result.append("<Handler>");
     }
     result.append("\\n");
-    for (Iterator it = bb.iteratePhis(); it.hasNext();) {
-      SSAPhiInstruction phi = (SSAPhiInstruction) it.next();
+    for (Iterator<SSAPhiInstruction> it = bb.iteratePhis(); it.hasNext();) {
+      SSAPhiInstruction phi = it.next();
       if (phi != null) {
         result.append("           " + phi.toString(ir.getSymbolTable())).append("\\l");
       }
@@ -149,8 +149,8 @@ public class PDFViewUtil {
         result.append("\\l");
       }
     }
-    for (Iterator it = bb.iteratePis(); it.hasNext();) {
-      SSAPiInstruction pi = (SSAPiInstruction) it.next();
+    for (Iterator<SSAPiInstruction> it = bb.iteratePis(); it.hasNext();) {
+      SSAPiInstruction pi = it.next();
       if (pi != null) {
         result.append("           " + pi.toString(ir.getSymbolTable())).append("\\l");
       }

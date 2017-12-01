@@ -134,14 +134,14 @@ public final class MethodOptimizer {
 
     for (int i = 0; i < instructions.length; i++) {
       int[] targets = instructions[i].getBranchTargets();
-      for (int j = 0; j < targets.length; j++) {
-        int target = targets[j];
+      for (int target2 : targets) {
+        int target = target2;
         backEdges[target][backEdgeCount[target]] = i;
         backEdgeCount[target]++;
       }
       ExceptionHandler[] hs = handlers[i];
-      for (int j = 0; j < hs.length; j++) {
-        int target = hs[j].getHandler();
+      for (ExceptionHandler element : hs) {
+        int target = element.getHandler();
         backEdges[target][backEdgeCount[target]] = i;
         backEdgeCount[target]++;
       }
@@ -155,8 +155,8 @@ public final class MethodOptimizer {
     checkStackSizesAt(0, 0);
 
     int result = 0;
-    for (int i = 0; i < stackSizes.length; i++) {
-      result = Math.max(result, stackSizes[i]);
+    for (int stackSize : stackSizes) {
+      result = Math.max(result, stackSize);
     }
     return result;
   }
@@ -189,13 +189,13 @@ public final class MethodOptimizer {
       }
 
       int[] targets = instr.getBranchTargets();
-      for (int i = 0; i < targets.length; i++) {
-        checkStackSizesAt(targets[i], stackSize);
+      for (int target : targets) {
+        checkStackSizesAt(target, stackSize);
       }
 
       ExceptionHandler[] hs = handlers[instruction];
-      for (int i = 0; i < hs.length; i++) {
-        checkStackSizesAt(hs[i].getHandler(), 1);
+      for (ExceptionHandler element : hs) {
+        checkStackSizesAt(element.getHandler(), 1);
       }
 
       if (!instr.isFallThrough()) {
@@ -384,13 +384,13 @@ public final class MethodOptimizer {
       }
 
       int[] targets = instructions[instruction].getBranchTargets();
-      for (int i = 0; i < targets.length; i++) {
-        followStackDef(abstractDefStacks, def, targets[i], stackPointer);
+      for (int target : targets) {
+        followStackDef(abstractDefStacks, def, target, stackPointer);
       }
 
       ExceptionHandler[] hs = handlers[instruction];
-      for (int i = 0; i < hs.length; i++) {
-        followStackDef(abstractDefStacks, -1, hs[i].getHandler(), 0);
+      for (ExceptionHandler element : hs) {
+        followStackDef(abstractDefStacks, -1, element.getHandler(), 0);
       }
 
       if (!instructions[instruction].isFallThrough()) {
@@ -418,8 +418,8 @@ public final class MethodOptimizer {
       }
 
       int[] back = backEdges[instruction];
-      for (int i = 0; i < back.length; i++) {
-        followStackUse(abstractUseStacks, use, back[i], stackPointer);
+      for (int element : back) {
+        followStackUse(abstractUseStacks, use, element, stackPointer);
       }
 
       if (instruction == 0 || !instructions[instruction - 1].isFallThrough()) {
@@ -447,8 +447,8 @@ public final class MethodOptimizer {
       bits.set(from);
 
       int[] targets = instructions[from].getBranchTargets();
-      for (int i = 0; i < targets.length; i++) {
-        getReachableInstructions(bits, targets[i], to);
+      for (int target : targets) {
+        getReachableInstructions(bits, target, to);
       }
 
       if (!instructions[from].isFallThrough()) {
@@ -467,8 +467,8 @@ public final class MethodOptimizer {
       bits.set(to);
 
       int[] targets = backEdges[to];
-      for (int i = 0; i < targets.length; i++) {
-        getReachingInstructions(bits, from, targets[i]);
+      for (int target : targets) {
+        getReachingInstructions(bits, from, target);
       }
 
       if (to == 0 || !instructions[to - 1].isFallThrough()) {

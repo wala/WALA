@@ -89,12 +89,10 @@ public class TypeBasedHeapModel implements HeapModel {
     if (pKeys == null) {
       pKeys = HashMapFactory.make();
     }
-    for (Iterator<IClass> it = klasses.iterator(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : klasses) {
       pKeys.putAll(computePointerKeys(klass));
     }
-    for (Iterator it = cg.iterator(); it.hasNext();) {
-      CGNode node = (CGNode) it.next();
+    for (CGNode node : cg) {
       initPKeysForNode(node);
     }
   }
@@ -159,8 +157,7 @@ public class TypeBasedHeapModel implements HeapModel {
         result.put(p, p);
       }
     } else {
-      for (Iterator<IField> it = klass.getAllFields().iterator(); it.hasNext();) {
-        IField f = it.next();
+      for (IField f : klass.getAllFields()) {
         if (!f.getFieldTypeReference().isPrimitiveType()) {
           if (f.isStatic()) {
             PointerKey p = pointerKeys.getPointerKeyForStaticField(f);

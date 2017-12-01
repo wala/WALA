@@ -44,8 +44,8 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
         if ((m instanceof AstMethod) && !m.isStatic()) {
           AstMethod M = (AstMethod) m;
           LexicalParent[] parents = M.getParents();
-          for (int i = 0; i < parents.length; i++) {
-            result.add(parents[i]);
+          for (LexicalParent parent : parents) {
+            result.add(parent);
           }
         }
       }

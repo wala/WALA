@@ -121,8 +121,8 @@ public class SimpleIntVector implements IntVector, Serializable {
    */
   private double computeOccupancy() {
     int count1 = 0;
-    for (int i = 0; i < store.length; i++) {
-      if (store[i] != -1) {
+    for (int element : store) {
+      if (element != -1) {
         count1++;
       }
     }

@@ -46,8 +46,7 @@ public class GraphSlicer {
       throw new IllegalArgumentException("g is null");
     }
     HashSet<T> roots = HashSetFactory.make();
-    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
-      T o = it.next();
+    for (T o : g) {
       if (p.test(o)) {
         roots.add(o);
       }

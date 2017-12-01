@@ -82,14 +82,14 @@ public class AndroidAnalysisScope {
 		try {
 			String[] paths = classPath.split(File.pathSeparator);
 
-			for (int i = 0; i < paths.length; i++) {
-				if (paths[i].endsWith(".jar")
-						|| paths[i].endsWith(".apk")
-						|| paths[i].endsWith(".dex")) { // Handle android file.
-					File f = new File(paths[i]);
+			for (String path : paths) {
+				if (path.endsWith(".jar")
+						|| path.endsWith(".apk")
+						|| path.endsWith(".dex")) { // Handle android file.
+					File f = new File(path);
 					scope.addToScope(loader, DexFileModule.make(f));
 				} else {
-					File f = new File(paths[i]);
+					File f = new File(path);
 					if (f.isDirectory()) { // handle directory FIXME not working
 											// for .dex and .apk files into that
 											// directory

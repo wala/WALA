@@ -209,12 +209,12 @@ public class Util {
       throw new IllegalArgumentException("(0 < classNames.length) and (classNames[0] == null)");
     }
 
-    for (int i = 0; i < classNames.length; i++) {
-      if (classNames[i].indexOf("L") != 0) {
-        throw new IllegalArgumentException("Expected class name to start with L " + classNames[i]);
+    for (String className : classNames) {
+      if (className.indexOf("L") != 0) {
+        throw new IllegalArgumentException("Expected class name to start with L " + className);
       }
-      if (classNames[i].indexOf(".") > 0) {
-        Assertions.productionAssertion(false, "Expected class name formatted with /, not . " + classNames[i]);
+      if (className.indexOf(".") > 0) {
+        Assertions.productionAssertion(false, "Expected class name formatted with /, not . " + className);
       }
     }
 
@@ -282,15 +282,13 @@ public class Util {
       System.err.println("subgraph: ");
       System.err.println(subG.toString());
       System.err.println("nodeDiff: ");
-      for (Iterator it = nodeDiff.iterator(); it.hasNext();) {
-        System.err.println(it.next().toString());
+      for (T t : nodeDiff) {
+        System.err.println(t.toString());
       }
       Assertions.productionAssertion(nodeDiff.isEmpty(), "bad superset, see tracefile\n");
     }
 
-    for (Iterator<? extends T> subNodes = subG.iterator(); subNodes.hasNext();) {
-      T m = subNodes.next();
-
+    for (T m : subG) {
       Set<T> succDiff = setify(subG.getSuccNodes(m));
       succDiff.removeAll(setify(supG.getSuccNodes(m)));
       if (!succDiff.isEmpty()) {
@@ -305,8 +303,8 @@ public class Util {
         System.err.println("subgraph: ");
         System.err.println(subG.toString());
         System.err.println("predDiff: ");
-        for (Iterator it = predDiff.iterator(); it.hasNext();) {
-          System.err.println(it.next().toString());
+        for (T t : predDiff) {
+          System.err.println(t.toString());
         }
         Assertions.UNREACHABLE("bad superset for predecessors of " + m + ":" + predDiff);
       }

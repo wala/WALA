@@ -131,9 +131,9 @@ public final class SwitchInstruction extends Instruction {
   public String toString() {
     StringBuffer b = new StringBuffer("Switch(");
     b.append(defaultLabel);
-    for (int i = 0; i < casesAndLabels.length; i++) {
+    for (int casesAndLabel : casesAndLabels) {
       b.append(',');
-      b.append(casesAndLabels[i]);
+      b.append(casesAndLabel);
     }
     b.append(")");
     return b.toString();

@@ -334,10 +334,10 @@ public class LocalPathEdges {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
       // and contents. TODO: better data structure?
-      Iterator contents = paths.iterator();
+      Iterator<IBinaryNaturalRelation> contents = paths.iterator();
       for (IntIterator it = paths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
-        IBinaryNaturalRelation R = (IBinaryNaturalRelation) contents.next();
+        IBinaryNaturalRelation R = contents.next();
         if (R != null && R.contains(n, d1)) {
           result.add(d2);
         }
@@ -353,10 +353,10 @@ public class LocalPathEdges {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
       // and contents. TODO: better data structure?
-      Iterator contents = zeroPaths.iterator();
+      Iterator<IntSet> contents = zeroPaths.iterator();
       for (IntIterator it = zeroPaths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
-        BitVectorIntSet s = (BitVectorIntSet) contents.next();
+        IntSet s = contents.next();
         if (s != null && s.contains(n)) {
           result.add(d2);
         }
@@ -389,10 +389,10 @@ public class LocalPathEdges {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
       // and contents. TODO: better data structure?
-      Iterator contents = paths.iterator();
+      Iterator<IBinaryNaturalRelation> contents = paths.iterator();
       for (IntIterator it = paths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
-        IBinaryNaturalRelation R = (IBinaryNaturalRelation) contents.next();
+        IBinaryNaturalRelation R = contents.next();
         if (R != null && R.anyRelated(n)) {
           result.add(d2);
         }
@@ -402,10 +402,10 @@ public class LocalPathEdges {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
       // and contents. TODO: better data structure?
-      Iterator contents = identityPaths.iterator();
+      Iterator<IntSet> contents = identityPaths.iterator();
       for (IntIterator it = identityPaths.iterateIndices(); it.hasNext();) {
         int d1 = it.next();
-        BitVectorIntSet s = (BitVectorIntSet) contents.next();
+        IntSet s = contents.next();
         if (s != null && s.contains(n)) {
           result.add(d1);
         }
@@ -415,10 +415,10 @@ public class LocalPathEdges {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
       // and contents. TODO: better data structure?
-      Iterator contents = zeroPaths.iterator();
+      Iterator<IntSet> contents = zeroPaths.iterator();
       for (IntIterator it = zeroPaths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
-        BitVectorIntSet s = (BitVectorIntSet) contents.next();
+        IntSet s = contents.next();
         if (s != null && s.contains(n)) {
           result.add(d2);
         }

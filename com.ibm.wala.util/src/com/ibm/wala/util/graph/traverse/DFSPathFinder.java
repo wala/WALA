@@ -125,8 +125,8 @@ public class DFSPathFinder<T> extends ArrayList<T> {
 
   protected List<T> currentPath() {
     ArrayList<T> result = new ArrayList<>();
-    for (Iterator<T> path = iterator(); path.hasNext();) {
-      result.add(0, path.next());
+    for (T t : this) {
+      result.add(0, t);
     }
     return result;
   }

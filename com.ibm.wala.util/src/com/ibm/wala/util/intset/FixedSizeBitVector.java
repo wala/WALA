@@ -268,8 +268,8 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    */
   public int populationCount() {
     int count = 0;
-    for (int i = 0; i < bits.length; i++) {
-      count += Bits.populationCount(bits[i]);
+    for (int bit : bits) {
+      count += Bits.populationCount(bit);
     }
     return count;
   }

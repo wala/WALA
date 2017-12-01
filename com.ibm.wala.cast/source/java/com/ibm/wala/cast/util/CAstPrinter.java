@@ -294,8 +294,8 @@ public class CAstPrinter {
 	if (e.getArgumentNames().length > 0) {
 	  w.write("(");
 	  String[] names = e.getArgumentNames();
-	  for(int i = 0; i < names.length; i++) {
-	    w.write("  " + names[i]);
+	  for (String name : names) {
+	    w.write("  " + name);
 	  }
 	  w.write("  )\n");
 	}

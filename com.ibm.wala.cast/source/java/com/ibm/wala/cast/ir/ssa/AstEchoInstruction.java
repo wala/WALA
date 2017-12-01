@@ -56,8 +56,8 @@ public class AstEchoInstruction extends SSAInstruction {
   @Override
   public int hashCode() {
     int v = 1;
-    for(int i = 0;i < rvals.length; i++) {
-      v *= rvals[i];
+    for (int rval : rvals) {
+      v *= rval;
     }
 
     return v;
@@ -66,8 +66,8 @@ public class AstEchoInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     StringBuffer result = new StringBuffer("echo/print ");
-    for(int i = 0; i < rvals.length; i++) {
-      result.append(getValueString(symbolTable, rvals[i])).append(" ");
+    for (int rval : rvals) {
+      result.append(getValueString(symbolTable, rval)).append(" ");
     }
 
     return result.toString();

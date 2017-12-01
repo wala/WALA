@@ -24,11 +24,10 @@ public class GraphPrint {
       throw new IllegalArgumentException("G is null");
     }
     SlowSparseNumberedGraph<T> sg = SlowSparseNumberedGraph.make();
-    for (Iterator<? extends T> it = G.iterator(); it.hasNext(); ) {
-      sg.addNode(it.next());
+    for (T name : G) {
+      sg.addNode(name);
     }
-    for (Iterator<? extends T> it = G.iterator(); it.hasNext(); ) {
-      T n = it.next();
+    for (T n : G) {
       for (Iterator<? extends T> it2 = G.getSuccNodes(n); it2.hasNext(); ) {
         T d = it2.next();
         sg.addEdge(n,d);

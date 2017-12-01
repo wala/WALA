@@ -39,7 +39,6 @@ package com.ibm.wala.cast.java.translator.jdt;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -131,9 +130,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     while (cl != null) {
       List<Module> modules = scope.getModules(cl);
 
-      for (Iterator<Module> iter = modules.iterator(); iter.hasNext();) {
-        Module m = iter.next();
-
+      for (Module m : modules) {
         if (buf.length() > 0)
           buf.append(File.pathSeparator);
         if (m instanceof JarFileModule) {

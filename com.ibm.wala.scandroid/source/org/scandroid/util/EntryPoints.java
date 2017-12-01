@@ -137,9 +137,9 @@ public class EntryPoints {
 //            "android.app.Service.onTransact(ILandroid/os/Parcel;Landroid/os/Parcel;I)B"
          };
 
-        for (int i = 0; i < methodReferences.length; i++) {
+        for (String methodReference : methodReferences) {
             MethodReference mr =
-                    StringStuff.makeMethodReference(methodReferences[i]);
+                    StringStuff.makeMethodReference(methodReference);
             
             for (IMethod im : cha.getPossibleTargets(mr)) {
                 
@@ -165,9 +165,9 @@ public class EntryPoints {
     			"android.view.View.setOnClickListener(Landroid/view/View$OnClickListener;)V",
     	};
 
-    	for (int i = 0; i < methodReferences.length; i++) {
+    	for (String methodReference : methodReferences) {
     		MethodReference mr =
-    				StringStuff.makeMethodReference(methodReferences[i]);
+    				StringStuff.makeMethodReference(methodReference);
 
     		for (IMethod im : cha.getPossibleTargets(mr)) {
     			

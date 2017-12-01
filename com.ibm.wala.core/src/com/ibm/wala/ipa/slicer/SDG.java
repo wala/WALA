@@ -180,8 +180,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     if (!statementsAdded.contains(node)) {
       statementsAdded.add(node);
       PDG<?> pdg = getPDG(node);
-      for (Iterator<? extends Statement> it = pdg.iterator(); it.hasNext();) {
-        addNode(it.next());
+      for (Statement statement : pdg) {
+        addNode(statement);
       }
     }
   }
@@ -190,8 +190,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
    * force computation of all PDGs in the SDG
    */
   private void computeAllPDGs() {
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : cg) {
       getPDG(n);
     }
   }

@@ -521,8 +521,7 @@ public class ClassWriter implements ClassConstants {
       if (ifaces.length > 0xFFFF) {
         throw new IllegalArgumentException("Too many interfaces implemented: " + ifaces.length);
       }
-      for (int i = 0; i < ifaces.length; i++) {
-        int c = ifaces[i];
+      for (int c : ifaces) {
         if (c < 1 || c > 0xFFFF) {
           throw new IllegalArgumentException("Interface name index out of range: " + c);
         }
@@ -687,8 +686,8 @@ public class ClassWriter implements ClassConstants {
     public int getSize() {
       int size = 8;
       if (attributes != null) {
-        for (int i = 0; i < attributes.length; i++) {
-          size += attributes[i].getSize();
+        for (Element attribute : attributes) {
+          size += attribute.getSize();
         }
       }
       return size;
@@ -702,8 +701,8 @@ public class ClassWriter implements ClassConstants {
       if (attributes != null) {
         setUShort(buf, offset + 6, attributes.length);
         offset += 8;
-        for (int i = 0; i < attributes.length; i++) {
-          offset = attributes[i].copyInto(buf, offset);
+        for (Element attribute : attributes) {
+          offset = attribute.copyInto(buf, offset);
         }
       } else {
         setUShort(buf, offset + 6, 0);

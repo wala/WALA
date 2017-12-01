@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
@@ -31,13 +30,12 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
     } else {
       // XXX not very efficient.
       TreeSet<Integer> T = new TreeSet<>();
-      for (int i = 0; i < set.length; i++) {
-        T.add(set[i]);
+      for (int element : set) {
+        T.add(element);
       }
       int[] copy = new int[T.size()];
       int i = 0;
-      for (Iterator<Integer> it = T.iterator(); it.hasNext();) {
-        Integer I = it.next();
+      for (Integer I : T) {
         copy[i++] = I.intValue();
       }
       MutableSparseIntSet result = new MutableSparseIntSet(copy);

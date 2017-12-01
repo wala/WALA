@@ -106,7 +106,7 @@ public class ConeType extends TypeAbstraction {
   /**
    * @return an Iterator of IClass that implement this interface
    */
-  public Iterator iterateImplementors() {
+  public Iterator<IClass> iterateImplementors() {
     return type.getClassHierarchy().getImplementors(getType().getReference()).iterator();
   }
 

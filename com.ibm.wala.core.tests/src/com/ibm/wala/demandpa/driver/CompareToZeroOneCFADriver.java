@@ -43,8 +43,6 @@ package com.ibm.wala.demandpa.driver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
-
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -206,8 +204,7 @@ public class CompareToZeroOneCFADriver {
 
     }
     Helper h = new Helper();
-    for (Iterator<? extends CGNode> nodeIter = cg.iterator(); nodeIter.hasNext();) {
-      CGNode node = nodeIter.next();
+    for (CGNode node : cg) {
       h.checkPointersInMethod(node);
     }
   }

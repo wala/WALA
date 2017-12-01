@@ -209,8 +209,7 @@ public class DexDotUtil extends DotUtil {
 
         outputNodes(labels, result, dotNodes);
 
-        for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
-          T n = it.next();
+        for (T n : g) {
           for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
             T s = it2.next();
             result.append(" ");
@@ -226,8 +225,8 @@ public class DexDotUtil extends DotUtil {
       }
 
       private static <T> void outputNodes(NodeDecorator<T> labels, StringBuffer result, Collection<T> dotNodes) throws WalaException {
-        for (Iterator<T> it = dotNodes.iterator(); it.hasNext();) {
-          outputNode(labels, result, it.next());
+        for (T t : dotNodes) {
+          outputNode(labels, result, t);
         }
       }
 

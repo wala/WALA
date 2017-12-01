@@ -14,7 +14,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -78,8 +77,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     }
 
     public TranslatorAssertions(Object[][] data) {
-      for (int dataIndex = 0; dataIndex < data.length; dataIndex++) {
-        Object[] entry = data[dataIndex];
+      for (Object[] entry : data) {
         String clsName = (String) entry[0];
         this.classes.add(clsName);
 
@@ -88,29 +86,29 @@ public abstract class TestCAstTranslator extends WalaTestCase {
 
         String[] instanceFields = (String[]) entry[2];
         if (instanceFields != null) {
-          for (int i = 0; i < instanceFields.length; i++) {
-            this.instanceFields.add(Pair.make(clsName, instanceFields[i]));
+          for (String instanceField : instanceFields) {
+            this.instanceFields.add(Pair.make(clsName, instanceField));
           }
         }
 
         String[] staticFields = (String[]) entry[3];
         if (staticFields != null) {
-          for (int i = 0; i < staticFields.length; i++) {
-            this.staticFields.add(Pair.make(clsName, staticFields[i]));
+          for (String staticField : staticFields) {
+            this.staticFields.add(Pair.make(clsName, staticField));
           }
         }
 
         Pair<?, ?>[] instanceMethods = (Pair[]) entry[4];
         if (instanceMethods != null) {
-          for (int i = 0; i < instanceMethods.length; i++) {
-            this.instanceMethods.put(Pair.make(clsName, (Object) instanceMethods[i].fst), instanceMethods[i].snd);
+          for (Pair<?, ?> instanceMethod : instanceMethods) {
+            this.instanceMethods.put(Pair.make(clsName, (Object) instanceMethod.fst), instanceMethod.snd);
           }
         }
 
         Pair<?, ?>[] staticMethods = (Pair[]) entry[5];
         if (staticMethods != null) {
-          for (int i = 0; i < staticMethods.length; i++) {
-            this.staticMethods.put(Pair.make(clsName, (Object) staticMethods[i].fst), staticMethods[i].snd);
+          for (Pair<?, ?> staticMethod : staticMethods) {
+            this.staticMethods.put(Pair.make(clsName, (Object) staticMethod.fst), staticMethod.snd);
           }
         }
       }
@@ -138,19 +136,19 @@ public abstract class TestCAstTranslator extends WalaTestCase {
   }
 
   protected void dump(ClassHierarchy cha) {
-    for (Iterator<?> clss = cha.iterator(); clss.hasNext();) {
-      IClass cls = (IClass) clss.next();
+    for (Object name : cha) {
+      IClass cls = (IClass) name;
       System.err.println(("class " + cls));
-      for (Iterator<?> flds = cls.getDeclaredInstanceFields().iterator(); flds.hasNext();) {
-        IField fld = (IField) flds.next();
+      for (Object name2 : cls.getDeclaredInstanceFields()) {
+        IField fld = (IField) name2;
         System.err.println(("instance field " + fld));
       }
-      for (Iterator<?> flds = cls.getDeclaredStaticFields().iterator(); flds.hasNext();) {
-        IField fld = (IField) flds.next();
+      for (Object name2 : cls.getDeclaredStaticFields()) {
+        IField fld = (IField) name2;
         System.err.println(("static field " + fld));
       }
-      for (Iterator<?> mths = cls.getDeclaredMethods().iterator(); mths.hasNext();) {
-        IMethod mth = (IMethod) mths.next();
+      for (Object name2 : cls.getDeclaredMethods()) {
+        IMethod mth = (IMethod) name2;
         if (mth.isStatic())
           System.err.print("static ");
         System.err.println(("method " + mth + " with " + mth.getNumberOfParameters() + " parameters"));
@@ -171,8 +169,8 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     Map<Pair<String, Object>, Object> staticMethods = assertions.getStaticMethods();
 
     int clsCount = 0;
-    for (Iterator<?> clss = cha.iterator(); clss.hasNext();) {
-      IClass cls = (IClass) clss.next();
+    for (Object name : cha) {
+      IClass cls = (IClass) name;
       clsCount++;
       Assert.assertTrue("found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
 
@@ -183,20 +181,20 @@ public abstract class TestCAstTranslator extends WalaTestCase {
             .get(cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));
       }
 
-      for (Iterator<?> flds = cls.getDeclaredInstanceFields().iterator(); flds.hasNext();) {
-        IField fld = (IField) flds.next();
+      for (Object name2 : cls.getDeclaredInstanceFields()) {
+        IField fld = (IField) name2;
         Assert.assertTrue(cls.getName() + " has field " + fld.getName(), instanceFields.contains(Pair.make(
             cls.getName().toString(), fld.getName().toString())));
       }
 
-      for (Iterator<?> flds = cls.getDeclaredStaticFields().iterator(); flds.hasNext();) {
-        IField fld = (IField) flds.next();
+      for (Object name2 : cls.getDeclaredStaticFields()) {
+        IField fld = (IField) name2;
         Assert.assertTrue(cls.getName() + " has static field " + fld.getName(), staticFields.contains(Pair.make(cls.getName()
             .toString(), fld.getName().toString())));
       }
 
-      for (Iterator<?> mths = cls.getDeclaredMethods().iterator(); mths.hasNext();) {
-        IMethod mth = (IMethod) mths.next();
+      for (Object name2 : cls.getDeclaredMethods()) {
+        IMethod mth = (IMethod) name2;
         Integer np = new Integer(mth.getNumberOfParameters());
         Pair<String, String> key = Pair.make(cls.getName().toString(), mth.getName().toString());
 
