@@ -37,4 +37,3 @@ curl -s -X POST \
    -d "$body" \
    https://api.travis-ci.org/repo/april1989%2FIncremental_Points_to_Analysis/requests
 
-csrRz28Xo1NDqBpcuY28
