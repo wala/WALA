@@ -21,7 +21,7 @@ import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 public class BootstrapMethodsReader extends AttributeReader {
 
   public interface BootstrapMethod {
-    int invokeType();
+    byte invokeType();
     String methodClass();
     String methodName();
     String methodType();
@@ -52,7 +52,7 @@ public class BootstrapMethodsReader extends AttributeReader {
       
       final int argumentCount = cr.getUShort(attr + base + 2);
       entries[i] = new BootstrapMethod() {
-        private final int invokeType = cp.getCPHandleKind(methodHandleOffset);
+        private final byte invokeType = cp.getCPHandleKind(methodHandleOffset);
         private final String methodClass = cp.getCPHandleClass(methodHandleOffset);
         private final String methodName = cp.getCPHandleName(methodHandleOffset);
         private final String methodType = cp.getCPHandleType(methodHandleOffset);
@@ -63,7 +63,7 @@ public class BootstrapMethodsReader extends AttributeReader {
         }
         
         @Override
-        public int invokeType() {
+        public byte invokeType() {
           return invokeType;
         }
 

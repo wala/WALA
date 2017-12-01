@@ -73,4 +73,13 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
     checkEdges(staticCG);
   }
 
+  @Test
+  public void testLambdas() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, IllegalArgumentException, ClassHierarchyException, CancelException, InterruptedException  {
+    instrument(testJarLocation);
+    run("lambda.SortingExample", null);
+    CallGraph staticCG = staticCG("Llambda/SortingExample", null);
+    System.err.println(staticCG);
+    checkEdges(staticCG);
+  }
+
 }

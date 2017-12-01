@@ -15,6 +15,7 @@ import java.util.Random;
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeCT.ClassWriter;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 
 /**
@@ -71,6 +72,11 @@ final public class CTCompiler extends Compiler {
   @Override
   protected int allocateConstantPoolMethodHandle(ReferenceToken c) {
     return cw.addCPMethodHandle(c);
+  }
+
+  @Override
+  protected int allocateConstantPoolInvokeDynamic(BootstrapMethod b, String name, String type) {
+    return cw.addCPInvokeDynamic(b, name, type);
   }
 
   /**

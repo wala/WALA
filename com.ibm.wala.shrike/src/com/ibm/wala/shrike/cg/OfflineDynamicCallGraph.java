@@ -23,6 +23,7 @@ import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
@@ -248,7 +249,7 @@ public class OfflineDynamicCallGraph {
                   this.replaceWith(new MethodEditor.Patch() {                    
                     @Override
                     public void emitTo(final Output w) {
-                      final String methodSignature = inv.getInvocationCode().hasImplicitThis()?
+                      final String methodSignature = inv.getInvocationCode().hasImplicitThis() && !(inv instanceof InvokeDynamicInstruction)?
                           "(" + inv.getClassType() + inv.getMethodSignature().substring(1):
                           inv.getMethodSignature();
                       Pair<String,Pair<String,String>> key = Pair.make(inv.getClassType(), Pair.make(inv.getMethodName(), methodSignature));
@@ -274,7 +275,13 @@ public class OfflineDynamicCallGraph {
                               }
                             }
                             Dispatch mode = (Dispatch)inv.getInvocationCode();
-                            w.emit(InvokeInstruction.make(inv.getMethodSignature(), inv.getClassType(), inv.getMethodName(), mode));
+                            if (inv instanceof InvokeDynamicInstruction) {
+                              InvokeDynamicInstruction inst = new InvokeDynamicInstruction(((InvokeDynamicInstruction) inv).getOpcode(), ((InvokeDynamicInstruction) inv).getBootstrap(), inv.getMethodName(), inv.getMethodSignature());
+                              w.emit(inst);
+                            } else {
+                              InvokeInstruction inst = InvokeInstruction.make(inv.getMethodSignature(), inv.getClassType(), inv.getMethodName(), mode);
+                              w.emit(inst);
+                            }
                           }
                         });
                         me.applyPatches();

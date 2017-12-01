@@ -208,12 +208,15 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
             continue loop;
         } else {
           String callerMethod = edge.nextToken();
+          if (callerMethod.startsWith("lambda$")) {
+            continue loop;
+          }
           MethodReference callerRef = MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + callerClass), Selector.make(callerMethod));
           Set<CGNode> nodes = staticCG.getNodes(callerRef);
           if (! filter.test(callerRef)) {
             continue loop;
           }
-          Assert.assertEquals(1, nodes.size());
+          Assert.assertEquals(callerMethod, 1, nodes.size());
           caller = nodes.iterator().next();
         }
         

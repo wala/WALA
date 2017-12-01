@@ -19,7 +19,9 @@ public class SortingExample {
 		return strs;
 	}
 	
-  private static int id1(int x) { return x; }
+  private static int id0(int x) { return x; }
+
+  private static int id1(int x) { return id0(x); }
 
   public String[] sortForward() {
 		return sort( (String l, String r) -> id1(l.compareTo(r)));

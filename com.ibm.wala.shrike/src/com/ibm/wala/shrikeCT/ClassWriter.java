@@ -13,6 +13,7 @@ package com.ibm.wala.shrikeCT;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 
 /**
@@ -202,6 +203,40 @@ public class ClassWriter implements ClassConstants {
     }
   }
 
+  static class CWInvokeDynamic extends CWItem {
+    final private BootstrapMethod b;
+
+    final private String n;
+
+    final private String t;
+
+    CWInvokeDynamic(BootstrapMethod b, String n, String t) {
+      this.b = b;
+      this.n = n;
+      this.t = t;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o instanceof CWInvokeDynamic) {
+        CWInvokeDynamic r = (CWInvokeDynamic) o;
+        return r.b.equals(b) && r.n.equals(n) && r.t.equals(t);
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public int hashCode() {
+      return (b.hashCode() << 10) + (n.hashCode() << 3) + t.hashCode();
+    }
+
+    @Override
+    byte getType() {
+      return CONSTANT_InvokeDynamic;
+    }
+  }
+
   /**
    * Copy a constant pool from some ClassReader into this class. This must be done before any entries are allocated in this
    * ClassWriter's constant pool, and it can only be done once. If and only if this is done, it is safe to copy "raw" fields,
@@ -246,6 +281,9 @@ public class ClassWriter implements ClassConstants {
           break;
         case CONSTANT_NameAndType:
           cachedCPEntries.put(new CWNAT(cp.getCPNATName(i), cp.getCPNATType(i)), new Integer(i));
+          break;
+        case CONSTANT_InvokeDynamic:
+          cachedCPEntries.put(new CWInvokeDynamic(cp.getCPDynBootstrap(i), cp.getCPDynName(i), cp.getCPDynType(i)), new Integer(i));
           break;
         case CONSTANT_Integer:
           cachedCPEntries.put(new Integer(cp.getCPInt(i)), new Integer(i));
@@ -433,6 +471,18 @@ public class ClassWriter implements ClassConstants {
     return addCPEntry(new CWNAT(n, t), 1);
   }
 
+  /**
+   * Add an InvokeDynamic to the constant pool if necessary.
+   * 
+   * @param n the name
+   * @param t the type, in JVM format
+   * @return the index of a constant pool item with the right value
+   */
+  public int addCPInvokeDynamic(BootstrapMethod b, String n, String t) {
+    return addCPEntry(new CWInvokeDynamic(b, n, t), 1);
+  }
+
+  
   /**
    * Set the access flags for the class.
    */
@@ -760,6 +810,13 @@ public class ClassWriter implements ClassConstants {
           CWNAT nat = (CWNAT) item;
           setUShort(buf, offset + 1, addCPUtf8(nat.n));
           setUShort(buf, offset + 3, addCPUtf8(nat.t));
+          break;
+        }
+        case CONSTANT_InvokeDynamic: {
+          offset = reserveBuf(5);
+          CWInvokeDynamic inv = (CWInvokeDynamic) item;
+          setUShort(buf, offset+1, inv.b.getIndexInClassFile());
+          setUShort(buf, offset+3, addCPNAT(inv.n, inv.t));
           break;
         }
         case CONSTANT_MethodHandle: {

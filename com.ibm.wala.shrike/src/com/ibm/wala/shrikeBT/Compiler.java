@@ -19,6 +19,7 @@ import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeBT.analysis.Verifier;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 
 /**
@@ -172,8 +173,10 @@ public abstract class Compiler implements Constants {
 
   protected abstract int allocateConstantPoolInterfaceMethod(String c, String name, String sig);
 
-  protected abstract String createHelperMethod(boolean isStatic, String sig);
+  protected abstract int allocateConstantPoolInvokeDynamic(BootstrapMethod b, String name, String type);
 
+  protected abstract String createHelperMethod(boolean isStatic, String sig);
+  
   private void collectInstructionInfo() {
     final BitSet s = new BitSet(instructions.length);
     final BitSet localsUsed = new BitSet(32);
@@ -955,14 +958,14 @@ public abstract class Compiler implements Constants {
         }
         case OP_invokedynamic: {
           InvokeDynamicInstruction inv = (InvokeDynamicInstruction) instr;
-          String sig = inv.getMethodSignature();
+          
           int cpIndex;
-
           if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
             cpIndex = ((InvokeDynamicInstruction.Lazy) inv).getCPIndex();
           } else {
-            cpIndex = allocateConstantPoolInterfaceMethod(inv.getClassType(), inv.getMethodName(), sig);
+            cpIndex = allocateConstantPoolInvokeDynamic(inv.getBootstrap(), inv.getMethodName(), inv.getMethodSignature());
           }
+
           writeShort(curOffset, cpIndex);
           code[curOffset + 2] = 0;
           code[curOffset + 3] = 0;
