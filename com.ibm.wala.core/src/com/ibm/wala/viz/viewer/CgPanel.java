@@ -20,6 +20,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -43,7 +45,10 @@ public class CgPanel extends JSplitPane{
     final IrAndSourceViewer irViewer = new IrAndSourceViewer();
     this.setRightComponent(irViewer.getComponent());
 
-    tree.addTreeSelectionListener(e -> {
+    tree.addTreeSelectionListener(new TreeSelectionListener() {
+
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
       TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
       if (null == newLeadSelectionPath){
         return;
@@ -59,8 +64,8 @@ public class CgPanel extends JSplitPane{
         IR ir2 = parentNode.getIR();
         irViewer.setIRAndPc(ir2, ((CallSiteReference) userObject).getProgramCounter());
       }
+      }
     });
-
   }
 
   private JTree buildTree() {

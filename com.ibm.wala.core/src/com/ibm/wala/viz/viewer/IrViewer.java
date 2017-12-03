@@ -24,6 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.IR;
@@ -56,7 +58,10 @@ public class IrViewer extends JPanel{
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
     
     
-    irLines.addListSelectionListener(e -> {
+    irLines.addListSelectionListener(new ListSelectionListener() {
+
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
       int index = irLines.getSelectedIndex();
       Integer pc = lineToPc.get(index);
       if (pc == null) {
@@ -65,7 +70,7 @@ public class IrViewer extends JPanel{
       for (SelectedPcListner selectedPcListner : selectedPcListners) {
         selectedPcListner.valueChanged(pc);
       }
-    });
+    }});
   }
   
   public void setIR(IR ir) {

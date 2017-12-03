@@ -19,6 +19,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -42,7 +44,9 @@ public class ChaPanel extends JSplitPane {
     JList methodList = new JList<String>(methodListModel);
     this.setRightComponent(methodList);
     
-    tree.addTreeSelectionListener(e -> {
+    tree.addTreeSelectionListener(new TreeSelectionListener() {
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
       TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
       if (null == newLeadSelectionPath){
         return;
@@ -53,8 +57,8 @@ public class ChaPanel extends JSplitPane {
       for (IMethod m : klass.getDeclaredMethods()){
         methodListModel.addElement(m.toString());
       }
-    });
-    
+    }   
+  });
   }
 
   private JTree buildTree() {

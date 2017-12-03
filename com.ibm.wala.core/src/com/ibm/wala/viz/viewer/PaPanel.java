@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -116,7 +118,10 @@ public class PaPanel extends JSplitPane {
       }
     });
 
-    heapTree.addTreeSelectionListener(e -> {
+    heapTree.addTreeSelectionListener(new TreeSelectionListener() {
+
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
       TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
       if (null == newLeadSelectionPath){
         return;
@@ -157,8 +162,7 @@ public class PaPanel extends JSplitPane {
       }
 
 
-    });
-
+    }});
   }
 
   private void initDataStructures(PointerAnalysis<InstanceKey> pa) {
