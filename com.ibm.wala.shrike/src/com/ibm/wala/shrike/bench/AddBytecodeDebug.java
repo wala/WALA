@@ -74,8 +74,8 @@ public class AddBytecodeDebug {
         ExceptionHandler[][] handlers = me.getHandlers();
         boolean[] putDumperAt = new boolean[handlers.length];
         for (ExceptionHandler[] handler : handlers) {
-          for (int j = 0; j < handler.length; j++) {
-            int offset = handler[j].getHandler();
+          for (ExceptionHandler element : handler) {
+            int offset = element.getHandler();
             if (!putDumperAt[offset]) {
               putDumperAt[offset] = true;
               me.insertBefore(offset, new MethodEditor.Patch() {

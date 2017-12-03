@@ -2918,9 +2918,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (instructionLexicalUses != null) {
           for (int[] instructionLexicalUse : instructionLexicalUses) {
             if (instructionLexicalUse != null) {
-              for (int j = 0; j < instructionLexicalUse.length; j++) {
-                if (instructionLexicalUse[j] > 0) {
-                  allExposedUses.add(instructionLexicalUse[j]);
+              for (int element : instructionLexicalUse) {
+                if (element > 0) {
+                  allExposedUses.add(element);
                 }
               }
             }

@@ -843,8 +843,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     HashSet<TypeReference> result = HashSetFactory.make(10);
     ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
     for (ExceptionHandler[] handler : handlers) {
-      for (int j = 0; j < handler.length; j++) {
-        TypeReference t = ShrikeUtil.makeTypeReference(loader, handler[j].getCatchClass());
+      for (ExceptionHandler element : handler) {
+        TypeReference t = ShrikeUtil.makeTypeReference(loader, element.getCatchClass());
         if (t == null) {
           t = TypeReference.JavaLangThrowable;
         }
