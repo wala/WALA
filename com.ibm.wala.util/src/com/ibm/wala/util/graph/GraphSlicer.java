@@ -233,21 +233,11 @@ public class GraphSlicer {
       }
 
       private void setPredNodes(E N) {
-        preds.put(N, getConnected(N, new Function<E, Iterator<? extends E>>() {
-          @Override
-          public Iterator<? extends E> apply(E object) {
-            return G.getPredNodes(object);
-          }
-        }));
+        preds.put(N, getConnected(N, G::getPredNodes));
       }
 
       private void setSuccNodes(E N) {
-        succs.put(N, getConnected(N, new Function<E, Iterator<? extends E>>() {
-          @Override
-          public Iterator<? extends E> apply(E object) {
-            return G.getSuccNodes(object);
-          }
-        }));
+        succs.put(N, getConnected(N, G::getSuccNodes));
       }
 
       @Override

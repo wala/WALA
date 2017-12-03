@@ -20,7 +20,6 @@ import javax.swing.JSplitPane;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.viz.viewer.IrViewer.SelectedPcListner;
 
 public class IrAndSourceViewer {
 
@@ -39,35 +38,30 @@ public class IrAndSourceViewer {
     sourceViewer = new SourceViewer();    
     splitPane.setRightComponent(sourceViewer);
 
-    irViewer.addSelectedPcListner(new SelectedPcListner(){
-
-      @Override
-      public void valueChanged(int pc) {
-        IMethod method = ir.getMethod();
-        int sourceLineNumber = IrViewer.NA;
-        String sourceFileName = null;
-        if (pc != IrViewer.NA){
-          try{
-            sourceLineNumber = method.getLineNumber(pc);
-            IClassLoader loader = method.getDeclaringClass().getClassLoader();
-            sourceFileName = loader.getSourceFileName(method, pc);
-          } catch (Exception e){
-            e.printStackTrace();
-          }
-        }
-        if (sourceFileName != null){
-          URL url;
-          try {
-            url = (new File(sourceFileName)).toURI().toURL();
-            sourceViewer.setSource(url, sourceLineNumber);
-          } catch (MalformedURLException e) {
-            e.printStackTrace();
-          }
-        } else {
-           sourceViewer.removeSource();
+    irViewer.addSelectedPcListner(pc -> {
+      IMethod method = ir.getMethod();
+      int sourceLineNumber = IrViewer.NA;
+      String sourceFileName = null;
+      if (pc != IrViewer.NA){
+        try{
+          sourceLineNumber = method.getLineNumber(pc);
+          IClassLoader loader = method.getDeclaringClass().getClassLoader();
+          sourceFileName = loader.getSourceFileName(method, pc);
+        } catch (Exception e1){
+          e1.printStackTrace();
         }
       }
-      
+      if (sourceFileName != null){
+        URL url;
+        try {
+          url = (new File(sourceFileName)).toURI().toURL();
+          sourceViewer.setSource(url, sourceLineNumber);
+        } catch (MalformedURLException e2) {
+          e2.printStackTrace();
+        }
+      } else {
+         sourceViewer.removeSource();
+      }
     });
     
     return splitPane;

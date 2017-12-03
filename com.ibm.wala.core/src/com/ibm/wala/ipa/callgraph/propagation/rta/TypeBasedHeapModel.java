@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -37,9 +36,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
@@ -175,12 +172,7 @@ public class TypeBasedHeapModel implements HeapModel {
   @Override
   public Iterator<PointerKey> iteratePointerKeys() {
     initAllPKeys();
-    return new FilterIterator<>(pKeys.values().iterator(), new Predicate() {
-      @Override
-      public boolean test(Object o) {
-        return o instanceof PointerKey;
-      }
-    });
+    return IteratorUtil.filter(pKeys.values().iterator(), PointerKey.class);
   }
 
   @Override

@@ -19,7 +19,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
@@ -120,21 +119,16 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
     if (cha.isAssignableFrom(cha.lookupClass(TypeReference.JavaLangThrowable), type)) {
       return;
     }
-    b.foreach(new IntSetAction() {
-
-      @Override
-      public void act(int x) {
-        InstanceKey ik = instanceKeys.getMappedObject(x);
-        IClass concreteType = ik.getConcreteType();
-        if (!cha.isAssignableFrom(type, concreteType)) {
-          System.err.println("BOOM");
-          System.err.println(ir);
-          System.err.println(lpk + " type " + type);
-          System.err.println(ik + " type " + concreteType);
-          Assertions.UNREACHABLE();
-        }
+    b.foreach(x -> {
+      InstanceKey ik = instanceKeys.getMappedObject(x);
+      IClass concreteType = ik.getConcreteType();
+      if (!cha.isAssignableFrom(type, concreteType)) {
+        System.err.println("BOOM");
+        System.err.println(ir);
+        System.err.println(lpk + " type " + type);
+        System.err.println(ik + " type " + concreteType);
+        Assertions.UNREACHABLE();
       }
-
     });
   }
 

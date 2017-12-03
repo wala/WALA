@@ -65,17 +65,13 @@ public class WelshPowell<T> {
   }
 
   public static <T> Comparator<T> defaultComparator(final NumberedGraph<T> G) {
-    return new Comparator<T>() {
-
-      @Override
-      public int compare(T o1, T o2) {
-        int o1edges = G.getSuccNodeCount(o1) + G.getPredNodeCount(o1);
-        int o2edges = G.getSuccNodeCount(o2) + G.getPredNodeCount(o2);
-        if (o1edges != o2edges) {
-          return o2edges - o1edges;
-        } else {
-          return o2.toString().compareTo(o1.toString());
-        }
+    return (o1, o2) -> {
+      int o1edges = G.getSuccNodeCount(o1) + G.getPredNodeCount(o1);
+      int o2edges = G.getSuccNodeCount(o2) + G.getPredNodeCount(o2);
+      if (o1edges != o2edges) {
+        return o2edges - o1edges;
+      } else {
+        return o2.toString().compareTo(o1.toString());
       }
     };
   }

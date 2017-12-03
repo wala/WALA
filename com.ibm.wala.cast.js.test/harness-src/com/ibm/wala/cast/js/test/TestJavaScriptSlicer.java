@@ -33,7 +33,6 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.intset.IntSetAction;
 
 public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
 
@@ -89,12 +88,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       for(Iterator<CGNode> callers = CG.getPredNodes(n); callers.hasNext(); ) {
         final CGNode caller = callers.next();
         for(Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, n); sites.hasNext(); ) {
-          caller.getIR().getCallInstructionIndices(sites.next()).foreach(new IntSetAction() {
-            @Override
-            public void act(int x) {
-              ss.add(new NormalStatement(caller, x));
-            }
-          });
+          caller.getIR().getCallInstructionIndices(sites.next()).foreach(x -> ss.add(new NormalStatement(caller, x)));
         }
       }
     }

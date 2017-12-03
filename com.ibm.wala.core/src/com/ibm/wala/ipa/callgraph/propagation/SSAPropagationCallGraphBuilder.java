@@ -547,12 +547,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         } else {
           IntSet s = getParamObjects(pi, rhsi);
           if (s != null && !s.isEmpty()) {
-            s.foreach(new IntSetAction() {
-              @Override
-              public void act(int x) {
-                keys[pi] = system.getInstanceKey(x);
-                rec(pi + 1, rhsi + 1);
-              }
+            s.foreach(x -> {
+              keys[pi] = system.getInstanceKey(x);
+              rec(pi + 1, rhsi + 1);
             });
           } /*else {
             if (!site.isDispatch() || p != 0) {
@@ -1171,12 +1168,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
  
           final List<PointerKey> pks = new ArrayList<PointerKey>(params.size());
-          params.foreach(new IntSetAction() {
-            @Override
-            public void act(int x) {
-              if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
-                pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));                   
-              }
+          params.foreach(x -> {
+            if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
+              pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));                   
             }
           });
    
@@ -1736,42 +1730,34 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         IntSet currentObjs = rhs[rhsIndex].getValue();
         if (currentObjs != null) {
           final IntSet oldObjs = previousPtrs[rhsIndex];
-          currentObjs.foreachExcluding(oldObjs, new IntSetAction() {
-            @Override
-            public void act(final int x) {
-              new CrossProductRec(constParams, call, node,
-                  new Consumer<InstanceKey[]>() {
-                    @Override
-                    public void accept(InstanceKey[] v) {
-                      IClass recv = null;
-                      if (call.getCallSite().isDispatch()) {
-                        recv = v[0].getConcreteType();
-                      }
-                      CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
-                      if (target != null) {                        
-                        changed.b = true;
-                        processResolvedCall(node, call, target, constParams, uniqueCatch);
-                        if (!haveAlreadyVisited(target)) {
-                          markDiscovered(target);
-                        }
-                      }  
-                    } 
-                  }) {
-                
-                {
-                  rec(0, 0);
+          currentObjs.foreachExcluding(oldObjs, x -> new CrossProductRec(constParams, call, node,
+              v -> {
+                IClass recv = null;
+                if (call.getCallSite().isDispatch()) {
+                  recv = v[0].getConcreteType();
                 }
-                
-                @Override 
-                protected IntSet getParamObjects(int paramVn, int rhsi) {
-                  if (rhsi == y) {
-                    return IntSetUtil.make(new int[]{ x });
-                  } else {
-                    return previousPtrs[rhsi];
+                CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
+                if (target != null) {                        
+                  changed.b = true;
+                  processResolvedCall(node, call, target, constParams, uniqueCatch);
+                  if (!haveAlreadyVisited(target)) {
+                    markDiscovered(target);
                   }
                 }  
-              };
-            }     
+              }) {
+            
+            {
+              rec(0, 0);
+            }
+            
+            @Override 
+            protected IntSet getParamObjects(int paramVn, int rhsi) {
+              if (rhsi == y) {
+                return IntSetUtil.make(new int[]{ x });
+              } else {
+                return previousPtrs[rhsi];
+              }
+            }  
           });
           previousPtrs[rhsIndex].addAll(currentObjs);
         }
@@ -2019,17 +2005,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // associated with the instruction
     final CallSiteReference site = instruction.getCallSite();
     final Set<CGNode> targets = HashSetFactory.make();
-    Consumer<InstanceKey[]> f = new Consumer<InstanceKey[]>() {
-      @Override
-      public void accept(InstanceKey[] v) {
-        IClass recv = null;
-        if (site.isDispatch()) {
-          recv = v[0].getConcreteType();
-        }
-        CGNode target = getTargetForCall(caller, site, recv, v);
-        if (target != null) {
-          targets.add(target);
-        }
+    Consumer<InstanceKey[]> f = v -> {
+      IClass recv = null;
+      if (site.isDispatch()) {
+        recv = v[0].getConcreteType();
+      }
+      CGNode target = getTargetForCall(caller, site, recv, v);
+      if (target != null) {
+        targets.add(target);
       }
     };
     iterateCrossProduct(caller, instruction, invs, f);

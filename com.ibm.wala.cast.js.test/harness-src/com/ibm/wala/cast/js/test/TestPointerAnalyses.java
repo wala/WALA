@@ -333,23 +333,15 @@ public abstract class TestPointerAnalyses {
       CallGraph CG,
       CGNode node, 
       int vn) {
-    return getPrototypeSites(fbPA, CG, new Function<ObjectVertex,Iterator<ObjectVertex>>() {
-      @Override
-      public Iterator<ObjectVertex> apply(ObjectVertex o) {
-        PrototypeFieldVertex proto = new PrototypeFieldVertex(PrototypeField.__proto__, o);
-        if (hg.containsNode(proto)) {
-        return 
-            new MapIterator<>(hg.getSuccNodes(proto),
-                new Function<Object,ObjectVertex>() {
-                  @Override
-                  public ObjectVertex apply(Object object) {
-                    return (ObjectVertex)object;
-                  } 
-            });
-        } else {
-          return EmptyIterator.instance();
-        }
-      } 
+    return getPrototypeSites(fbPA, CG, o -> {
+      PrototypeFieldVertex proto = new PrototypeFieldVertex(PrototypeField.__proto__, o);
+      if (hg.containsNode(proto)) {
+      return 
+          new MapIterator<>(hg.getSuccNodes(proto),
+              ObjectVertex.class::cast);
+      } else {
+        return EmptyIterator.instance();
+      }
     }, node, vn);
   }
 
@@ -357,12 +349,7 @@ public abstract class TestPointerAnalyses {
       CallGraph CG, 
       CGNode node, 
       int vn) {
-    return getPrototypeSites(fbPA, CG, new Function<InstanceKey,Iterator<InstanceKey>>() {
-      @Override
-      public Iterator<InstanceKey> apply(InstanceKey o) {
-        return fbPA.getPointsToSet(new TransitivePrototypeKey(o)).iterator();
-      } 
-    }, node, vn);
+    return getPrototypeSites(fbPA, CG, o -> fbPA.getPointsToSet(new TransitivePrototypeKey(o)).iterator(), node, vn);
   }
 
   private void testPageUserCodeEquivalent(URL page) throws WalaException, CancelException {
@@ -371,13 +358,10 @@ public abstract class TestPointerAnalyses {
   }
 
   protected Predicate<MethodReference> nameFilter(final String name) {
-    return new Predicate<MethodReference>() {
-      @Override
-      public boolean test(MethodReference t) {
-        System.err.println(t + "  " + name);
-        return t.getSelector().equals(AstMethodReference.fnSelector) &&
-            t.getDeclaringClass().getName().toString().startsWith("L" + name);
-      }      
+    return t -> {
+      System.err.println(t + "  " + name);
+      return t.getSelector().equals(AstMethodReference.fnSelector) &&
+          t.getDeclaringClass().getName().toString().startsWith("L" + name);
     };
   }
   

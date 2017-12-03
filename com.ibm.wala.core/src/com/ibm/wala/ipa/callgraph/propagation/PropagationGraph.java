@@ -16,8 +16,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
 
 import com.ibm.wala.fixedpoint.impl.GeneralStatement;
 import com.ibm.wala.fixpoint.AbstractOperator;
@@ -27,11 +25,7 @@ import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
-import com.ibm.wala.util.collections.CompoundIterator;
-import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.SmallMap;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
@@ -275,13 +269,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
-    Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterator(), new Predicate() {
-      @Override public boolean test(Object x) {
-        return x instanceof AbstractStatement;
-      }
-    });
+    Iterator<AbstractStatement> it = IteratorUtil.filter(delegateGraph.iterator(), AbstractStatement.class);
     return new CompoundIterator<AbstractStatement>(it, new GlobalImplicitIterator());
   }
 
@@ -764,14 +753,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Iterator<PointsToSetVariable> getVariables() {
-    Iterator<PointsToSetVariable> it = new FilterIterator(delegateGraph.iterator(), new Predicate() {
-      @Override public boolean test(Object x) {
-        return x instanceof IVariable;
-      }
-    });
-    return it;
+    return IteratorUtil.filter(delegateGraph.iterator(), PointsToSetVariable.class);
   }
 
   /*
@@ -786,8 +769,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       System.err.println("implicit map:");
       int count = 0;
       int totalBytes = 0;
-      for (Entry<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> entry : implicitUnaryMap.entrySet()) {
-        count++;
+      for (Map.Entry<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> entry : implicitUnaryMap.entrySet()) {
+		  count++;
         Map.Entry<?, IBinaryNaturalRelation> e = entry;
         IBinaryNaturalRelation R = e.getValue();
         System.err.println(("entry " + count));

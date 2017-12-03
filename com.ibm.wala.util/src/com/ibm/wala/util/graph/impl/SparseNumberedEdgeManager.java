@@ -21,7 +21,6 @@ import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 
 /**
  * An object which tracks edges for nodes that have numbers.
@@ -204,22 +203,14 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     }
     IntSet succ = successors.getRelated(number);
     if (succ != null) {
-      succ.foreach(new IntSetAction() {
-        @Override
-        public void act(int x) {
-          predecessors.remove(x, number);
-        }
-      });
+      succ.foreach(x -> predecessors.remove(x, number));
     }
     IntSet pred = predecessors.getRelated(number);
     if (pred != null) {
-      pred.foreach(new IntSetAction() {
-        @Override
-        public void act(int x) {
-          successors.remove(x, number);
-          if (successors.getRelatedCount(x) == 0) {
-            hasSuccessor.clear(x);
-          }
+      pred.foreach(x -> {
+        successors.remove(x, number);
+        if (successors.getRelatedCount(x) == 0) {
+          hasSuccessor.clear(x);
         }
       });
     }
@@ -239,13 +230,10 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     }
     IntSet pred = predecessors.getRelated(number);
     if (pred != null) {
-      pred.foreach(new IntSetAction() {
-        @Override
-        public void act(int x) {
-          successors.remove(x, number);
-          if (successors.getRelatedCount(x) == 0) {
-            hasSuccessor.clear(x);
-          }
+      pred.foreach(x -> {
+        successors.remove(x, number);
+        if (successors.getRelatedCount(x) == 0) {
+          hasSuccessor.clear(x);
         }
       });
     }
@@ -280,12 +268,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     }
     IntSet succ = successors.getRelated(number);
     if (succ != null) {
-      succ.foreach(new IntSetAction() {
-        @Override
-        public void act(int x) {
-          predecessors.remove(x, number);
-        }
-      });
+      succ.foreach(x -> predecessors.remove(x, number));
     }
     successors.removeAll(number);
     hasSuccessor.clear(number);

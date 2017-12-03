@@ -16,7 +16,6 @@ import static com.ibm.wala.dalvik.test.util.Util.getJavaJar;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.function.Predicate;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -27,7 +26,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
@@ -42,12 +40,7 @@ public abstract class DynamicDalvikComparisonTest extends DalvikCallGraphTestBas
 
 		dynamicCG(new File(javaJarPath), mainClass, args);
 		
-		checkEdges(android.fst, new Predicate<MethodReference>() {
-		  @Override
-		  public boolean test(MethodReference t) {
-		    return t.getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application);
-		  }
-		});
+		checkEdges(android.fst, t -> t.getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application));
 	}
 	
   protected File testFile(String file) throws IOException {

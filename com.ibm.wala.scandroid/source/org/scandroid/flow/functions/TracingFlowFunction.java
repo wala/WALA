@@ -50,7 +50,6 @@ package org.scandroid.flow.functions;
 
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 
 public class TracingFlowFunction implements IUnaryFlowFunction {	
 	private final IUnaryFlowFunction function;
@@ -61,16 +60,7 @@ public class TracingFlowFunction implements IUnaryFlowFunction {
 	
 	@Override
 	public IntSet getTargets(int d1) {
-		IntSet result = function.getTargets(d1); 
-		
-		result.foreach(new IntSetAction() {
-			
-			@Override
-			public void act(int x) {
-				
-			}
-		});
-		return result;
+		return function.getTargets(d1);
 	}
 
 }

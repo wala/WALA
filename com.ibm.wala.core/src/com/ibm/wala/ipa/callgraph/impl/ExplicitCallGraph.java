@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.IntFunction;
-import java.util.function.Predicate;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -187,11 +186,9 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
      */
     protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
-      return new FilterIterator<CallSiteReference>(iterateCallSites(), new Predicate() {
-        @Override public boolean test(Object o) {
-          IntSet s = getPossibleTargetNumbers((CallSiteReference) o);
-          return s == null ? false : s.contains(n);
-        }
+      return new FilterIterator<CallSiteReference>(iterateCallSites(), o -> {
+        IntSet s = getPossibleTargetNumbers(o);
+        return s == null ? false : s.contains(n);
       });
     }
 
@@ -356,15 +353,12 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
   protected class ExplicitEdgeManager implements NumberedEdgeManager<CGNode> {
 
-    final IntFunction<CGNode> toNode = new IntFunction<CGNode>() {
-      @Override
-      public CGNode apply(int i) {
-        CGNode result = getNode(i);
-        // if (Assertions.verifyAssertions && result == null) {
-        // Assertions.UNREACHABLE("uh oh " + i);
-        // }
-        return result;
-      }
+    final IntFunction<CGNode> toNode = i -> {
+      CGNode result = getNode(i);
+      // if (Assertions.verifyAssertions && result == null) {
+      // Assertions.UNREACHABLE("uh oh " + i);
+      // }
+      return result;
     };
 
     /**

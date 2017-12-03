@@ -601,23 +601,20 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable ptrs) {
                 if (ptrs.getValue() != null) {
-                  ptrs.getValue().foreachExcluding(previous, new IntSetAction() {
-                    @Override
-                    public void act(int x) {
-                      final InstanceKey functionObj = system.getInstanceKey(x);
-                      visitInvokeInternal(instruction, new DefaultInvariantComputer() {
-                        @Override
-                        public InstanceKey[][] computeInvariantParameters(SSAAbstractInvokeInstruction call) {
-                          InstanceKey[][] x = super.computeInvariantParameters(call);
-                          if (x == null) {
-                            x = new InstanceKey[call.getNumberOfUses()][];
-                          }
-                          x[0] = new InstanceKey[]{ functionObj };
-                          x[1] = new InstanceKey[]{ receiverType };
-                          return x;
+                  ptrs.getValue().foreachExcluding(previous, x -> {
+                    final InstanceKey functionObj = system.getInstanceKey(x);
+                    visitInvokeInternal(instruction, new DefaultInvariantComputer() {
+                      @Override
+                      public InstanceKey[][] computeInvariantParameters(SSAAbstractInvokeInstruction call) {
+                        InstanceKey[][] x = super.computeInvariantParameters(call);
+                        if (x == null) {
+                          x = new InstanceKey[call.getNumberOfUses()][];
                         }
-                      });
-                    } 
+                        x[0] = new InstanceKey[]{ functionObj };
+                        x[1] = new InstanceKey[]{ receiverType };
+                        return x;
+                      }
+                    });
                   });
                   previous.addAll(ptrs.getValue());
                 }
@@ -682,17 +679,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           @Override
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             if (rhs.getValue() != null) {
-              rhs.getValue().foreachExcluding(previous, new IntSetAction() {
-                @Override
-                public void act(int x) {
-                  try {
-                    MonitorUtil.throwExceptionIfCanceled(getBuilder().monitor);
-                  } catch (CancelException e) {
-                    throw new CancelRuntimeException(e);
-                  }
-                  InstanceKey ik = system.getInstanceKey(x);
-                  handleJavascriptDispatch(instruction, ik);
+              rhs.getValue().foreachExcluding(previous, x -> {
+                try {
+                  MonitorUtil.throwExceptionIfCanceled(getBuilder().monitor);
+                } catch (CancelException e) {
+                  throw new CancelRuntimeException(e);
                 }
+                InstanceKey ik = system.getInstanceKey(x);
+                handleJavascriptDispatch(instruction, ik);
               });
               previous.addAll(rhs.getValue());
             }
@@ -775,12 +769,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               return new InstanceKey[0];
             } else {
               final Set<InstanceKey> temp = HashSetFactory.make();
-              v.getValue().foreach(new IntSetAction() {
-                @Override
-                public void act(int keyIndex) {
-                  temp.add(system.getInstanceKey(keyIndex));
-                }
-              });
+              v.getValue().foreach(keyIndex -> temp.add(system.getInstanceKey(keyIndex)));
 
               return temp.toArray(new InstanceKey[temp.size()]);
             }

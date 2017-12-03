@@ -281,12 +281,7 @@ public class Util {
    * @return <code>true</code> if the sets intersect; <code>false</code> otherwise
    */
   public static <T> boolean intersecting(final Set<T> s1, final Set<T> s2) {
-    return forSome(s1, new Predicate<T>() {
-      @Override
-      public boolean test(T obj) {
-        return s2.contains(obj);
-      }
-    });
+    return forSome(s1, s2::contains);
   }
 
   /**

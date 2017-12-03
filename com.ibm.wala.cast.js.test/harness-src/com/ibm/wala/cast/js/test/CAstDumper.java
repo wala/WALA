@@ -19,7 +19,6 @@ import static com.ibm.wala.cast.tree.CAstNode.EMPTY;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -99,12 +98,7 @@ public class CAstDumper {
 				scopedEntities.add(scopedEntity);
 				m.put(scopedEntity, e.getKey());
 			}
-		Collections.sort(scopedEntities, new Comparator<CAstEntity>() {
-			@Override
-      public int compare(CAstEntity o1, CAstEntity o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+		Collections.sort(scopedEntities, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		
 		buf.append(indent(indent) + "> ");
 		boolean first = true;

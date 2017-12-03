@@ -18,7 +18,6 @@ import java.lang.management.MemoryType;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.ListenerNotFoundException;
-import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.openmbean.CompositeData;
 
@@ -169,18 +168,15 @@ public class ProgressMaster implements IProgressMonitor {
           final Thread nannyThread = this;
           gcbean = ManagementFactory.getMemoryMXBean();
 
-          listener = new NotificationListener() {
-            @Override
-            public void handleNotification(Notification notification, Object arg1) {
-              MemoryNotificationInfo info = MemoryNotificationInfo.from((CompositeData) notification.getUserData());
-              long used = info.getUsage().getUsed();
-              long max = Runtime.getRuntime().maxMemory();
+          listener = (notification, arg1) -> {
+            MemoryNotificationInfo info = MemoryNotificationInfo.from((CompositeData) notification.getUserData());
+            long used = info.getUsage().getUsed();
+            long max = Runtime.getRuntime().maxMemory();
 
-              if (((double)used/(double)max) > MAX_USED_MEM_BEFORE_BACKING_OUT) {
-                System.err.println("used " + used + " of " + max);
-                tooMuchMemory = true;
-                nannyThread.interrupt();
-              }
+            if (((double)used/(double)max) > MAX_USED_MEM_BEFORE_BACKING_OUT) {
+              System.err.println("used " + used + " of " + max);
+              tooMuchMemory = true;
+              nannyThread.interrupt();
             }
           };
           try {

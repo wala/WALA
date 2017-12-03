@@ -188,14 +188,12 @@ public class AndroidManifestXMLReader {
                 Collections.EMPTY_SET,
                 IntentItem.class),
         ACTION("action", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
-                    return Collections.EMPTY_SET; }},
+                Collections::emptySet,
                 EnumSet.of(Attr.NAME),
                 FinalItem.class), //(new ITagDweller() {
                     //public Tag getTag() { return Tag.ACTION; }})),
         DATA("data", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
-                    return Collections.EMPTY_SET; }},
+                Collections::emptySet,
                 EnumSet.of(Attr.SCHEME, Attr.HOST, Attr.PATH, Attr.MIME),
                 FinalItem.class), //(new ITagDweller() {
                     //public Tag getTag() { return Tag.DATA; }})),

@@ -754,40 +754,20 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     TypeAnnotationsReader apply() throws InvalidClassFileException;
   }
   public static TypeAnnotationsReader getReaderForAnnotationAtClassfile(final AnnotationType type, final ClassReader.AttrIterator iter, final SignatureReader signatureReader) {
-      return advanceIter(type, iter, new Action() {
-        @Override
-        public TypeAnnotationsReader apply() throws InvalidClassFileException {
-          return getTypeAnnotationReaderAtClassfile(iter, type.toString(), signatureReader); 
-        }
-      });
+      return advanceIter(type, iter, () -> getTypeAnnotationReaderAtClassfile(iter, type.toString(), signatureReader));
   }
   
   public static TypeAnnotationsReader getReaderForAnnotationAtMethodInfo(final AnnotationType type, final ClassReader.AttrIterator iter, final ExceptionsReader exceptionReader, final SignatureReader signatureReader) {
-    return advanceIter(type, iter, new Action() {
-      @Override
-      public TypeAnnotationsReader apply() throws InvalidClassFileException {
-        return getTypeAnnotationReaderAtMethodInfo(iter, type.toString(), exceptionReader, signatureReader);
-      }
-    });
+    return advanceIter(type, iter, () -> getTypeAnnotationReaderAtMethodInfo(iter, type.toString(), exceptionReader, signatureReader));
   }
 
   public static TypeAnnotationsReader getReaderForAnnotationAtFieldInfo(final AnnotationType type, final ClassReader.AttrIterator iter) {
-    return advanceIter(type, iter, new Action() {
-      @Override
-      public TypeAnnotationsReader apply() throws InvalidClassFileException {
-        return getTypeAnnotationReaderAtFieldInfo(iter, type.toString());
-      }
-    });
+    return advanceIter(type, iter, () -> getTypeAnnotationReaderAtFieldInfo(iter, type.toString()));
   }
   
   
   public static TypeAnnotationsReader getReaderForAnnotationAtCode(final AnnotationType type, final ClassReader.AttrIterator iter, final CodeReader codereader) {
-    return advanceIter(type, iter, new Action() {
-      @Override
-      public TypeAnnotationsReader apply() throws InvalidClassFileException {
-        return getTypeAnnotationReaderAtCode(iter, type.toString(), codereader);
-      }
-    });
+    return advanceIter(type, iter, () -> getTypeAnnotationReaderAtCode(iter, type.toString(), codereader));
   }
 
   

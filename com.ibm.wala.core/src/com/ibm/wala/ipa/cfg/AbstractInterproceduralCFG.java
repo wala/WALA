@@ -838,12 +838,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
     // a successor node is a return site if it is in the same
     // procedure, and is not the entry() node.
-    Predicate isReturn = new Predicate() {
-      @Override public boolean test(Object o) {
-        BasicBlockInContext other = (BasicBlockInContext) o;
-        return !other.isEntryBlock() && node.equals(other.getNode());
-      }
-    };
+    Predicate<BasicBlockInContext> isReturn = other -> !other.isEntryBlock() && node.equals(other.getNode());
     return new FilterIterator<BasicBlockInContext<T>>(getSuccNodes(callBlock), isReturn);
   }
 
@@ -859,37 +854,28 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate());
     final CGNode node = returnBlock.getNode();
 
-    Predicate<? extends T> dispatchFilter = new Predicate<T>() {
-      @Override public boolean test(T callBlock) {
-        BasicBlockInContext<T> bb = new BasicBlockInContext<T>(node, callBlock);
-        if (!hasCall(bb, cfg)) {
-          return false;
-        }
-        if (callee != null) {
-          return getCallTargets(bb).contains(callee);
-        } else {
-          return getCallTargets(bb).isEmpty();
-        }
+    Predicate<T> dispatchFilter = callBlock -> {
+      BasicBlockInContext<T> bb = new BasicBlockInContext<T>(node, callBlock);
+      if (!hasCall(bb, cfg)) {
+        return false;
+      }
+      if (callee != null) {
+        return getCallTargets(bb).contains(callee);
+      } else {
+        return getCallTargets(bb).isEmpty();
       }
     };
     it = new FilterIterator<T>(it, dispatchFilter);
 
-    Function<T, BasicBlockInContext<T>> toContext = new Function<T, BasicBlockInContext<T>>() {
-      @Override
-      public BasicBlockInContext<T> apply(T object) {
-        T b = object;
-        return new BasicBlockInContext<T>(node, b);
-      }
+    Function<T, BasicBlockInContext<T>> toContext = object -> {
+      T b = object;
+      return new BasicBlockInContext<T>(node, b);
     };
     MapIterator<T, BasicBlockInContext<T>> m = new MapIterator<T, BasicBlockInContext<T>>(it, toContext);
     return new FilterIterator<BasicBlockInContext<T>>(m, isCall);
   }
 
-  private final Predicate<BasicBlockInContext<T>> isCall = new Predicate<BasicBlockInContext<T>>() {
-    @Override public boolean test(BasicBlockInContext<T> o) {
-      return hasCall(o);
-    }
-  };
+  private final Predicate<BasicBlockInContext<T>> isCall = this::hasCall;
 
   public boolean isReturn(BasicBlockInContext<T> bb) throws IllegalArgumentException {
     if (bb == null) {

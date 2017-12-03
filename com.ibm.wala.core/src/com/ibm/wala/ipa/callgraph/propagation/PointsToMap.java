@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Iterator;
-import java.util.function.Predicate;
 
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IVector;
@@ -201,11 +200,7 @@ public class PointsToMap {
    * @return {@link Iterator}&lt;{@link PointerKey}&gt;
    */
   public Iterator<PointerKey> getTransitiveRoots() {
-    return new FilterIterator<PointerKey>(iterateKeys(), new Predicate() {
-      @Override public boolean test(Object o) {
-        return isTransitiveRoot((PointerKey) o);
-      }
-    });
+    return new FilterIterator<PointerKey>(iterateKeys(), this::isTransitiveRoot);
   }
 
   /**

@@ -75,18 +75,8 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	
 	protected static Set<MethodReference> applicationMethods(CallGraph cg) {
 		return processCG(cg,
-			new Predicate<CGNode>() {
-				@Override
-				public boolean test(CGNode t) {
-					return t.getMethod().getReference().getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application);
-				}
-			},
-			new Function<CGNode,MethodReference>() {
-				@Override
-				public MethodReference apply(CGNode object) {
-					return object.getMethod().getReference();
-				}
-			});
+			t -> t.getMethod().getReference().getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application),
+			object -> object.getMethod().getReference());
 	}
 	
 
@@ -110,18 +100,8 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 					new MapIterator<SSAInstruction,NewSiteReference>(
 						new FilterIterator<SSAInstruction>(
 								node.getIR().iterateAllInstructions(), 
-								new Predicate<SSAInstruction>() {
-									@Override
-									public boolean test(SSAInstruction t) {
-										return t instanceof SSANewInstruction;
-									} 
-								}), 
-						new Function<SSAInstruction,NewSiteReference>() {
-							@Override
-							public NewSiteReference apply(SSAInstruction object) {
-								return ((SSANewInstruction)object).getNewSite();
-							} 
-						}
+								SSANewInstruction.class::isInstance), 
+						object -> ((SSANewInstruction)object).getNewSite()
 					);
 			}
 		};

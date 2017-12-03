@@ -13,7 +13,6 @@ package com.ibm.wala.core.tests.callGraph;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Predicate;
 import java.util.jar.JarFile;
 
 import org.junit.Test;
@@ -35,7 +34,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.io.TemporaryFile;
 
@@ -69,12 +67,9 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     instrument(F.getAbsolutePath());
     run("pack.ocamljavaMain", null, args);
     
-    checkNodes(cg, new Predicate<MethodReference>() {
-      @Override
-      public boolean test(MethodReference t) {
-        String s = t.toString();
-        return s.contains("Lpack/") || s.contains("Locaml/stdlib/");
-      }
+    checkNodes(cg, t -> {
+      String s = t.toString();
+      return s.contains("Lpack/") || s.contains("Locaml/stdlib/");
     });
   }
 

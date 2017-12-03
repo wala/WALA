@@ -313,19 +313,13 @@ class DebuggingMutableIntSet implements MutableIntSet {
   @Override
   public void foreach(IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();
-    primaryImpl.foreach(new IntSetAction() {
-      @Override
-      public void act(int x) {
-        assert !bits.contains(Integer.valueOf(x));
-        bits.add(Integer.valueOf(x));
-      }
+    primaryImpl.foreach(x -> {
+      assert !bits.contains(Integer.valueOf(x));
+      bits.add(Integer.valueOf(x));
     });
-    secondaryImpl.foreach(new IntSetAction() {
-      @Override
-      public void act(int x) {
-        assert bits.contains(Integer.valueOf(x));
-        bits.remove(Integer.valueOf(x));
-      }
+    secondaryImpl.foreach(x -> {
+      assert bits.contains(Integer.valueOf(x));
+      bits.remove(Integer.valueOf(x));
     });
     assert bits.isEmpty();
 
@@ -338,19 +332,13 @@ class DebuggingMutableIntSet implements MutableIntSet {
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();
-    primaryImpl.foreachExcluding(X, new IntSetAction() {
-      @Override
-      public void act(int x) {
-        assert !bits.contains(Integer.valueOf(x));
-        bits.add(Integer.valueOf(x));
-      }
+    primaryImpl.foreachExcluding(X, x -> {
+      assert !bits.contains(Integer.valueOf(x));
+      bits.add(Integer.valueOf(x));
     });
-    secondaryImpl.foreachExcluding(X, new IntSetAction() {
-      @Override
-      public void act(int x) {
-        assert bits.contains(Integer.valueOf(x));
-        bits.remove(Integer.valueOf(x));
-      }
+    secondaryImpl.foreachExcluding(X, x -> {
+      assert bits.contains(Integer.valueOf(x));
+      bits.remove(Integer.valueOf(x));
     });
     assert bits.isEmpty();
 

@@ -12,7 +12,6 @@ package com.ibm.wala.cast.ipa.lexical;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.Function;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
@@ -56,13 +55,7 @@ public class LexicalModRef {
    */
   public Map<CGNode, OrdinalSet<Pair<CGNode, String>>> computeLexicalRef() {
     Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg,
-        new Function<CGNode, Collection<Pair<CGNode, String>>>() {
-
-          @Override
-          public Collection<Pair<CGNode, String>> apply(CGNode n) {
-            return scanNodeForLexReads(n);
-          }
-        });
+        this::scanNodeForLexReads);
     return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 
@@ -73,13 +66,7 @@ public class LexicalModRef {
    */
   public Map<CGNode, OrdinalSet<Pair<CGNode, String>>> computeLexicalMod() {
     Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg,
-        new Function<CGNode, Collection<Pair<CGNode, String>>>() {
-
-          @Override
-          public Collection<Pair<CGNode, String>> apply(CGNode n) {
-            return scanNodeForLexWrites(n);
-          }
-        });
+        this::scanNodeForLexWrites);
     return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 

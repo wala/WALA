@@ -1031,12 +1031,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       throw new IllegalArgumentException("b is null");
     }
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
-    Function<IBasicBlock<IInstruction>, ISSABasicBlock> f = new Function<IBasicBlock<IInstruction>, ISSABasicBlock>() {
-      @Override
-      public ISSABasicBlock apply(IBasicBlock<IInstruction> object) {
-        return basicBlocks[delegate.getNumber(object)];
-      }
-    };
+    Function<IBasicBlock<IInstruction>, ISSABasicBlock> f = object -> basicBlocks[delegate.getNumber(object)];
     return Iterator2Collection.toSet(new MapIterator<IBasicBlock<IInstruction>, ISSABasicBlock>(delegate
         .getExceptionalPredecessors(n).iterator(), f));
   }

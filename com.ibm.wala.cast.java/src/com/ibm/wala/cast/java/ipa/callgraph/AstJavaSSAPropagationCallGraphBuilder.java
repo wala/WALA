@@ -37,7 +37,6 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.strings.Atom;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
@@ -184,13 +183,10 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             IntSetVariable<?> tv = rhs;
             if (tv.getValue() != null) {
-              tv.getValue().foreach(new IntSetAction() {
-                @Override
-                public void act(int ptr) {
-                  InstanceKey iKey = system.getInstanceKey(ptr);
-                  PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
-                  system.newConstraint(lvalKey, assignOperator, enclosing);
-                }
+              tv.getValue().foreach(ptr -> {
+                InstanceKey iKey = system.getInstanceKey(ptr);
+                PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
+                system.newConstraint(lvalKey, assignOperator, enclosing);
               });
             }
             return NOT_CHANGED;

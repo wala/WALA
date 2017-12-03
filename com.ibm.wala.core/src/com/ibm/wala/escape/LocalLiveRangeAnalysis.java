@@ -57,11 +57,7 @@ public class LocalLiveRangeAnalysis {
     final Collection<BasicBlock> uses = findBlocks(ir, du.getUses(v));
 
     // a filter which accepts everything but the block which defs v
-    Predicate notDef = new Predicate() {
-      @Override public boolean test(Object o) {
-        return (defBlock == null || !defBlock.equals(o));
-      }
-    };
+    Predicate<Object> notDef = o -> (defBlock == null || !defBlock.equals(o));
 
     if (defBlock != null && defBlock.equals(queryBlock)) {
       // for now, conservatively say it's live. fix this later if necessary.

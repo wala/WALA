@@ -70,12 +70,7 @@ abstract public class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
     AnalysisOptions options = new AnalysisOptions(getScope(), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
-    ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
-      @Override
-      public int getDefaultValue(SymbolTable symtab, int valueNumber) {
-        return symtab.getDefaultValue(valueNumber);
-      }
-    });
+    ssaOptions.setDefaultValues(SymbolTable::getDefaultValue);
 
     options.setSSAOptions(ssaOptions);
 

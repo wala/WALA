@@ -41,7 +41,7 @@ public interface IFixedPointSystem<T extends IVariable<T>> {
    * 
    * @return {@link Iterator}&lt;{@link IVariable}&gt;
    */
-  public Iterator<T> getVariables();
+  public Iterator<? extends INodeWithNumber> getVariables();
 
   /**
    * @return true iff this system already contains an equation that is equal() to s

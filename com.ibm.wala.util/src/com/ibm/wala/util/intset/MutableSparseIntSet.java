@@ -325,13 +325,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 			return addAll((SparseIntSet) set);
 		} else {
 			int oldSize = size;
-			set.foreach(new IntSetAction() {
-				@Override
-        public void act(int i) {
-					if (!contains(i))
-						add(i);
-				}
-			});
+			set.foreach(i -> {
+      	if (!contains(i))
+      		add(i);
+      });
 
 			if (DEBUG_LARGE && size() > TRAP_SIZE) {
 				Assertions.UNREACHABLE();

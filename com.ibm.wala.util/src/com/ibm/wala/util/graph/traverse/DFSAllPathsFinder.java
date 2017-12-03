@@ -41,11 +41,7 @@ public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
   @Override
   protected Iterator<? extends T> getConnected(T n) {
     final List<T> cp = currentPath();
-    return new FilterIterator<>(G.getSuccNodes(n), new Predicate<T>() {
-      @Override public boolean test(T o) {
-        return ! cp.contains(o);
-      }
-    });
+    return new FilterIterator<>(G.getSuccNodes(n), o -> ! cp.contains(o));
   }
 
   @Override

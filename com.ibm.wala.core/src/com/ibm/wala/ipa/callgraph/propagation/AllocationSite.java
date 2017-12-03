@@ -11,8 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Iterator;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -96,17 +94,8 @@ public class AllocationSite implements InstanceKey {
     return new MapIterator<CGNode, Pair<CGNode, NewSiteReference>>(
         new FilterIterator<CGNode>(
           CG.getNodes(method.getReference()).iterator(),
-          new Predicate<CGNode>() {
-            @Override public boolean test(CGNode o) {
-              return o.getMethod().equals(method);
-            }
-          }
+          o -> o.getMethod().equals(method)
         ), 
-        new Function<CGNode, Pair<CGNode, NewSiteReference>>() {
-          @Override
-          public Pair<CGNode, NewSiteReference> apply(CGNode object) {
-            return Pair.make(object, site);
-          }
-        });
+        object -> Pair.make(object, site));
   }
 }

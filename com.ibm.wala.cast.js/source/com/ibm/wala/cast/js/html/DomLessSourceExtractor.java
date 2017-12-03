@@ -42,12 +42,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("^[a-zA-Z$_][a-zA-Z\\d$_]*$");
   private static final Pattern LEGAL_JS_KEYWORD_REGEXP = Pattern.compile("^((break)|(case)|(catch)|(continue)|(debugger)|(default)|(delete)|(do)|(else)|(finally)|(for)|(function)|(if)|(in)|(instanceof)|(new)|(return)|(switch)|(this)|(throw)|(try)|(typeof)|(var)|(void)|(while)|(with))$");
 
-  public static Supplier<JSSourceExtractor> factory = new Supplier<JSSourceExtractor>() {
-    @Override
-    public JSSourceExtractor get() {
-      return new DomLessSourceExtractor();
-    }
-  };
+  public static Supplier<JSSourceExtractor> factory = DomLessSourceExtractor::new;
 
   protected interface IGeneratorCallback extends IHtmlCallback {
     void writeToFinalRegion(SourceRegion finalRegion);

@@ -159,12 +159,7 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
     AnalysisOptions options = new AnalysisOptions(getScope(), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
-    ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
-      @Override
-      public int getDefaultValue(SymbolTable symtab, int valueNumber) {
-        return symtab.getDefaultValue(valueNumber);
-      }
-    });
+    ssaOptions.setDefaultValues(SymbolTable::getDefaultValue);
 
     options.setSSAOptions(ssaOptions);
 

@@ -1194,22 +1194,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       final Map<PreBasicBlock, Collection<PreBasicBlock>> exceptionalEdges = 
         hasDeadBlocks? HashMapFactory.<PreBasicBlock,Collection<PreBasicBlock>>make() : null;
       if (hasDeadBlocks) {
-        transferEdges(liveBlocks, icfg, new EdgeOperation() {
-          @Override
-          public void act(PreBasicBlock src, PreBasicBlock dst) {
-            if (! normalEdges.containsKey(src)) {
-              normalEdges.put(src, HashSetFactory.<PreBasicBlock>make());
-            }
-            normalEdges.get(src).add(dst);
+        transferEdges(liveBlocks, icfg, (src, dst) -> {
+          if (! normalEdges.containsKey(src)) {
+            normalEdges.put(src, HashSetFactory.<PreBasicBlock>make());
           }
-        }, new EdgeOperation() {
-          @Override
-          public void act(PreBasicBlock src, PreBasicBlock dst) {
-            if (! exceptionalEdges.containsKey(src)) {
-              exceptionalEdges.put(src, HashSetFactory.<PreBasicBlock>make());
-            }
-            exceptionalEdges.get(src).add(dst);
-          }         
+          normalEdges.get(src).add(dst);
+        }, (src, dst) -> {
+          if (! exceptionalEdges.containsKey(src)) {
+            exceptionalEdges.put(src, HashSetFactory.<PreBasicBlock>make());
+          }
+          exceptionalEdges.get(src).add(dst);
         });
       }
       
@@ -1266,17 +1260,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
         }
       } else {
-        transferEdges(liveBlocks, icfg, new EdgeOperation() {
-          @Override
-          public void act(PreBasicBlock src, PreBasicBlock dst) {
-            addNormalEdge(src, dst);
-          }
-        }, new EdgeOperation() {
-          @Override
-          public void act(PreBasicBlock src, PreBasicBlock dst) {
-            addExceptionalEdge(src, dst);
-          }
-        });
+        transferEdges(liveBlocks, icfg, this::addNormalEdge, this::addExceptionalEdge);
       }
       
       int x = 0;

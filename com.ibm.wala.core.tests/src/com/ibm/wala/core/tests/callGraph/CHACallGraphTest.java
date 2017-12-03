@@ -33,12 +33,7 @@ public class CHACallGraphTest {
   }
     
   public static CallGraph testCHA(String scopeFile, final String mainClass, final String exclusionsFile) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    return testCHA(scopeFile, exclusionsFile, new Function<IClassHierarchy, Iterable<Entrypoint>>() {
-        @Override
-        public Iterable<Entrypoint> apply(IClassHierarchy cha) {
-          return Util.makeMainEntrypoints(cha.getScope(), cha, mainClass);
-        }
-    });
+    return testCHA(scopeFile, exclusionsFile, cha -> Util.makeMainEntrypoints(cha.getScope(), cha, mainClass));
   }
   
   public static CallGraph testCHA(String scopeFile, 

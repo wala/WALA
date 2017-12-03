@@ -13,7 +13,6 @@ package com.ibm.wala.analysis.pointers;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -52,12 +51,7 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
 
   @Override
   public Collection<Object> getReachableInstances(Set<Object> roots) {
-    Predicate f = new Predicate() {
-      @Override public boolean test(Object o) {
-        return (o instanceof InstanceKey);
-      }
-    };
-    return DFS.getReachableNodes(this, roots, f);
+    return DFS.getReachableNodes(this, roots, InstanceKey.class::isInstance);
   }
 
   @Override

@@ -67,12 +67,7 @@ public class JUnitEntryPoints {
         }
       }
     }
-    return new Iterable<Entrypoint>() {
-      @Override
-      public Iterator<Entrypoint> iterator() {
-        return result.iterator();
-      }
-    };
+    return result::iterator;
   }
 
   /**
@@ -119,12 +114,7 @@ public class JUnitEntryPoints {
         }
       }
     }
-    return new Iterable<Entrypoint>() {
-      @Override
-      public Iterator<Entrypoint> iterator() {
-        return entryPts.iterator();
-      }
-    };
+    return entryPts::iterator;
   }
 
   /**

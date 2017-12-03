@@ -644,28 +644,20 @@ public class HeapReachingDefs<T extends InstanceKey> {
           return null;
         } else {
           // only static fields are actually killed
-          Predicate staticFilter = new Predicate() {
-            @Override public boolean test(Object o) {
-              return o instanceof StaticFieldKey;
-            }
-          };
+          Predicate<PointerKey> staticFilter = StaticFieldKey.class::isInstance;
           final Collection<PointerKey> kill = Iterator2Collection
               .toSet(new FilterIterator<PointerKey>(mod.iterator(), staticFilter));
           if (kill.isEmpty()) {
             return null;
           } else {
-            Predicate f = new Predicate() {
-              // accept any statement which writes a killed location.
-              @Override public boolean test(Object o) {
-                Statement s = (Statement) o;
-                Collection m = getMod(s, node, heapModel, pa, exclusions);
-                for (PointerKey k : kill) {
-                  if (m.contains(k)) {
-                    return true;
-                  }
+            Predicate<Statement> f = s1 -> {
+              Collection m = getMod(s1, node, heapModel, pa, exclusions);
+              for (PointerKey k : kill) {
+                if (m.contains(k)) {
+                  return true;
                 }
-                return false;
               }
+              return false;
             };
             BitVector result = new BitVector();
             for (Statement k : Iterator2Iterable.make(new FilterIterator<Statement>(domain.iterator(), f))) {

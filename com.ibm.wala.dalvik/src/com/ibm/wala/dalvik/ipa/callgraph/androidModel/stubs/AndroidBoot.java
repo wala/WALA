@@ -177,7 +177,6 @@ public class AndroidBoot {
      *
      *  @see    android.app.ContextImpl.createPackageContextAsUser
      */
-    @SuppressWarnings("javadoc")
 	private SSAValue createSystemContext(SSAValue mainThread) {
         final SSAValue systemContext = this.pm.getUnmanaged(AndroidTypes.ContextImpl, "systemContextImpl");
         { // Call ContextImpl.getSystemContext()
@@ -210,7 +209,6 @@ public class AndroidBoot {
      *
      *  @see    android.app.ContextImpl.createPackageContextAsUser
      */
-    @SuppressWarnings("javadoc")
 	private SSAValue createPackageContext(final SSAValue mainThread) {
         final SSAValue packageContext = this.pm.getUnmanaged(AndroidTypes.ContextImpl, "packageContextImpl");
         { // New-Site

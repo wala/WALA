@@ -53,12 +53,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -677,14 +672,12 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
     // in reaching defs calculation, exclude heap statements that are
     // irrelevant.
-    Predicate f = new Predicate() {
-      @Override public boolean test(Object o) {
-        if (o instanceof HeapStatement) {
-          HeapStatement h = (HeapStatement) o;
-          return h.getLocation().equals(pk);
-        } else {
-          return true;
-        }
+    Predicate<Statement> f = o -> {
+      if (o instanceof HeapStatement) {
+        HeapStatement h = (HeapStatement) o;
+        return h.getLocation().equals(pk);
+      } else {
+        return true;
       }
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<Statement>(iterator(), f));
@@ -769,18 +762,19 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    * @return Statements representing each return instruction in the ir
    */
   private Collection<NormalStatement> computeReturnStatements(final IR ir) {
-    Predicate filter = new Predicate() {
-      @Override public boolean test(Object o) {
-        if (o instanceof NormalStatement) {
-          NormalStatement s = (NormalStatement) o;
-          SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
-          return st instanceof SSAReturnInstruction;
-        } else {
-          return false;
-        }
+    Predicate<Statement> filter = o -> {
+      if (o instanceof NormalStatement) {
+        NormalStatement s = (NormalStatement) o;
+        SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
+        return st instanceof SSAReturnInstruction;
+      } else {
+        return false;
       }
     };
-    return Iterator2Collection.toSet(new FilterIterator<NormalStatement>(iterator(), filter));
+    return Iterator2Collection.toSet(
+        new MapIterator<Statement, NormalStatement>(
+            new FilterIterator<Statement>(iterator(), filter),
+            NormalStatement.class::cast));
   }
 
   /**

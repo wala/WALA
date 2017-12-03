@@ -105,12 +105,7 @@ public class EclipseTestUtil {
   protected static <T> void importProject(IImportStructureProvider provider, IProgressMonitor monitor, String projectName, T root) {
     IPath containerPath = getWorkspacePath().append(projectName).addTrailingSeparator();
 
-    ImportOperation importOp = new ImportOperation(containerPath, root, provider, new IOverwriteQuery() {
-      @Override
-      public String queryOverwrite(String pathString) {
-        return IOverwriteQuery.ALL;
-      }
-    });
+    ImportOperation importOp = new ImportOperation(containerPath, root, provider, pathString -> IOverwriteQuery.ALL);
 
     importOp.setCreateContainerStructure(false);
     importOp.setOverwriteResources(true);

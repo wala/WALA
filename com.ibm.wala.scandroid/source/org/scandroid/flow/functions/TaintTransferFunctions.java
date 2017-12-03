@@ -94,7 +94,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.SparseIntSet;
@@ -494,12 +493,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 
 	private static IUnaryFlowFunction union(final IUnaryFlowFunction g,
 			final IUnaryFlowFunction h) {
-		return new IUnaryFlowFunction() {
-			@Override
-			public IntSet getTargets(int d1) {
-				return g.getTargets(d1).union(h.getTargets(d1));
-			}
-		};
+		return d1 -> g.getTargets(d1).union(h.getTargets(d1));
 	}
 
 	/**
@@ -511,20 +505,10 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	 */
 	private static IUnaryFlowFunction compose(final IUnaryFlowFunction f,
 			final IUnaryFlowFunction g) {
-		return new IUnaryFlowFunction() {
-
-			@Override
-			public IntSet getTargets(int d1) {
-				final MutableSparseIntSet set = MutableSparseIntSet.makeEmpty();
-				g.getTargets(d1).foreach(new IntSetAction() {
-
-					@Override
-					public void act(int x) {
-						set.addAll(f.getTargets(x));
-					}
-				});
-				return set;
-			}
+		return d1 -> {
+			final MutableSparseIntSet set = MutableSparseIntSet.makeEmpty();
+			g.getTargets(d1).foreach(x -> set.addAll(f.getTargets(x)));
+			return set;
 		};
 	}
 

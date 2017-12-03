@@ -342,12 +342,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     getReader().initClassAttributeIterator(attrs);
 
-    return getReader(attrs, "SourceFile", new GetReader<SourceFileReader>() {
-      @Override
-      public SourceFileReader getReader(AttrIterator iter) throws InvalidClassFileException {
-        return new SourceFileReader(iter);
-      }
-    });
+    return getReader(attrs, "SourceFile", SourceFileReader::new);
   }
 
   private AnnotationsReader getFieldAnnotationsReader(boolean runtimeInvisible, int fieldIndex) throws InvalidClassFileException {

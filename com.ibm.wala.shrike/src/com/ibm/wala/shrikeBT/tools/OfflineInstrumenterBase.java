@@ -13,7 +13,6 @@ package com.ibm.wala.shrikeBT.tools;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -263,12 +262,7 @@ public abstract class OfflineInstrumenterBase {
     if (d == null) {
       throw new IllegalArgumentException("d is null");
     }
-    File[] fs = d.listFiles(new FileFilter() {
-      @Override
-      public boolean accept(File f) {
-        return f.isDirectory() || f.getName().endsWith(".class");
-      }
-    });
+    File[] fs = d.listFiles(f -> f.isDirectory() || f.getName().endsWith(".class"));
     if (fs == null) {
       throw new IllegalArgumentException("bad directory " + d.getAbsolutePath());
     }

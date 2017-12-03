@@ -165,44 +165,38 @@ public class PDFSDG {
   }
 
   private static Graph<Statement> pruneSDG(final SDG<?> sdg) {
-    Predicate<Statement> f = new Predicate<Statement>() {
-      @Override public boolean test(Statement s) {
-        if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
-          return false;
-        } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {
-          return false;
-        } else {
-          return true;
-        }
+    Predicate<Statement> f = s -> {
+      if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
+        return false;
+      } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {
+        return false;
+      } else {
+        return true;
       }
     };
     return GraphSlicer.prune(sdg, f);
   }
 
   private static NodeDecorator<Statement> makeNodeDecorator() {
-    return new NodeDecorator<Statement>() {
-      @Override
-      public String getLabel(Statement s) throws WalaException {
-        switch (s.getKind()) {
-        case HEAP_PARAM_CALLEE:
-        case HEAP_PARAM_CALLER:
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
-          HeapStatement h = (HeapStatement) s;
-          return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-        case EXC_RET_CALLEE:
-        case EXC_RET_CALLER:
-        case NORMAL:
-        case NORMAL_RET_CALLEE:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case PARAM_CALLER:
-        case PHI:
-        default:
-          return s.toString();
-        }
+    return s -> {
+      switch (s.getKind()) {
+      case HEAP_PARAM_CALLEE:
+      case HEAP_PARAM_CALLER:
+      case HEAP_RET_CALLEE:
+      case HEAP_RET_CALLER:
+        HeapStatement h = (HeapStatement) s;
+        return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+      case EXC_RET_CALLEE:
+      case EXC_RET_CALLER:
+      case NORMAL:
+      case NORMAL_RET_CALLEE:
+      case NORMAL_RET_CALLER:
+      case PARAM_CALLEE:
+      case PARAM_CALLER:
+      case PHI:
+      default:
+        return s.toString();
       }
-
     };
   }
 

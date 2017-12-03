@@ -69,14 +69,11 @@ public class ReflectionHandler {
           System.err.println(" " + x);
         }
       }
-      Predicate<Statement> f = new Predicate<Statement>() {
-        @Override
-        public boolean test(Statement s) {
-          if (s.getKind() == Kind.NORMAL) {
-            return ((NormalStatement) s).getInstruction() instanceof SSACheckCastInstruction;
-          } else {
-            return false;
-          }
+      Predicate<Statement> f = s -> {
+        if (s.getKind() == Kind.NORMAL) {
+          return ((NormalStatement) s).getInstruction() instanceof SSACheckCastInstruction;
+        } else {
+          return false;
         }
       };
       Collection<Statement> casts = Iterator2Collection.toSet(new FilterIterator<>(slice.iterator(), f));

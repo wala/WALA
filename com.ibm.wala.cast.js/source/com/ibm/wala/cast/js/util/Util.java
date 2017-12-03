@@ -18,7 +18,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
@@ -35,14 +34,11 @@ public class Util {
     int size; 
     do {
       size = result.size();
-      result.foreach(new IntSetAction() {
-        @Override
-        public void act(int vn) {
-          for(Iterator<SSAInstruction> insts = du.getUses(vn); insts.hasNext(); ) {
-            SSAInstruction inst = insts.next();
-            if (inst instanceof PrototypeLookup || inst instanceof SSAPhiInstruction) {
-              result.add(inst.getDef());
-            }
+      result.foreach(vn -> {
+        for(Iterator<SSAInstruction> insts = du.getUses(vn); insts.hasNext(); ) {
+          SSAInstruction inst = insts.next();
+          if (inst instanceof PrototypeLookup || inst instanceof SSAPhiInstruction) {
+            result.add(inst.getDef());
           }
         }
       });

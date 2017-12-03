@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.Constants;
@@ -228,12 +227,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       throw new IllegalArgumentException("N is null");
     }
     if (N.equals(exit())) {
-      return new FilterIterator<>(iterator(), new Predicate<T>() {
-        @Override
-        public boolean test(T o) {
-          int i = getNumber(o);
-          return normalToExit.get(i) || exceptionalToExit.get(i);
-        }
+      return new FilterIterator<>(iterator(), o -> {
+        int i = getNumber(o);
+        return normalToExit.get(i) || exceptionalToExit.get(i);
       });
     } else {
       int number = getNumber(N);
@@ -341,12 +337,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   Iterator<T> iterateExceptionalPredecessors(T N) {
     if (N.equals(exit())) {
-      return new FilterIterator<>(iterator(), new Predicate<T>() {
-        @Override
-        public boolean test(T o) {
-          int i = getNumber(o);
-          return exceptionalToExit.get(i);
-        }
+      return new FilterIterator<>(iterator(), o -> {
+        int i = getNumber(o);
+        return exceptionalToExit.get(i);
       });
     } else {
       return exceptionalEdgeManager.getPredNodes(N);
@@ -355,12 +348,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   Iterator<T> iterateNormalPredecessors(T N) {
     if (N.equals(exit())) {
-      return new FilterIterator<>(iterator(), new Predicate<T>() {
-        @Override
-        public boolean test(T o) {
-          int i = getNumber(o);
-          return normalToExit.get(i);
-        }
+      return new FilterIterator<>(iterator(), o -> {
+        int i = getNumber(o);
+        return normalToExit.get(i);
       });
     } else {
       int number = getNumber(N);
