@@ -26,6 +26,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
@@ -167,8 +168,7 @@ public abstract class IR implements IRView {
         result.append(")");
       }
       result.append("\n");
-      for (Iterator<SSAPhiInstruction> it = bb.iteratePhis(); it.hasNext();) {
-        SSAPhiInstruction phi = it.next();
+      for (SSAPhiInstruction phi : Iterator2Iterable.make(bb.iteratePhis())) {
         if (phi != null) {
           result.append("           " + phi.toString(symbolTable)).append("\n");
         }
@@ -234,8 +234,7 @@ public abstract class IR implements IRView {
           }
         }
       }
-      for (Iterator<SSAPiInstruction> it = bb.iteratePis(); it.hasNext();) {
-        SSAPiInstruction pi = it.next();
+      for (SSAPiInstruction pi : Iterator2Iterable.make(bb.iteratePis())) {
         if (pi != null) {
           result.append("           " + pi.toString(symbolTable)).append("\n");
         }
@@ -464,8 +463,8 @@ public abstract class IR implements IRView {
    * visit each normal (non-phi, non-pi, non-catch) instruction in this IR
    */
   public void visitNormalInstructions(SSAInstruction.Visitor v) {
-    for (Iterator<SSAInstruction> i = iterateNormalInstructions(); i.hasNext();) {
-      i.next().visit(v);
+    for (SSAInstruction inst : Iterator2Iterable.make(iterateNormalInstructions())) {
+      inst.visit(v);
     }
   }
 
@@ -473,8 +472,8 @@ public abstract class IR implements IRView {
    * visit each instruction in this IR
    */
   public void visitAllInstructions(SSAInstruction.Visitor v) {
-    for (Iterator<SSAInstruction> i = iterateAllInstructions(); i.hasNext();) {
-      i.next().visit(v);
+    for (SSAInstruction inst : Iterator2Iterable.make(iterateAllInstructions())) {
+      inst.visit(v);
     }
   }
 

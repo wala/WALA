@@ -60,6 +60,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphReachability;
@@ -194,14 +195,12 @@ public class FlowGraph implements Iterable<Vertex> {
       {
         PropVertex proto = factory.makePropVertex("prototype");
         if (graph.containsNode(proto)) {
-          for(Iterator<Vertex> ps = graph.getPredNodes(proto); ps.hasNext(); ) {
-            Vertex p = ps.next();
+          for(Vertex p : Iterator2Iterable.make(graph.getPredNodes(proto))) {
             if (p instanceof VarVertex) {
               int rval = ((VarVertex) p).getValueNumber();
               FuncVertex func = ((VarVertex) p).getFunction();
               DefUse du = cache.getDefUse(getIR(cache, func));
-              for(Iterator<SSAInstruction> insts = du.getUses(rval); insts.hasNext(); ) {
-                SSAInstruction inst = insts.next();
+              for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                 if (inst instanceof JavaScriptPropertyWrite) {
                   int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
                   VarVertex object = factory.makeVarVertex(func, obj);
@@ -452,14 +451,12 @@ public class FlowGraph implements Iterable<Vertex> {
               for(PropVertex property : factory.getPropVertices()) {
 
                 // edges from objects to properties assigned to them
-                for(Iterator<Vertex> ps = dataflow.getPredNodes(property); ps.hasNext(); ) {
-                  Vertex p = ps.next();
+                for(Vertex p : Iterator2Iterable.make(dataflow.getPredNodes(property))) {
                   if (p instanceof VarVertex) {
                     int rval = ((VarVertex) p).getValueNumber();
                     FuncVertex func = ((VarVertex) p).getFunction();
                     DefUse du = cache.getDefUse(getIR(cache, func));
-                    for(Iterator<SSAInstruction> insts = du.getUses(rval); insts.hasNext(); ) {
-                      SSAInstruction inst = insts.next();
+                    for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                       if (inst instanceof JavaScriptPropertyWrite) {
                         int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
                         VarVertex object = factory.makeVarVertex(func, obj);
@@ -502,8 +499,7 @@ public class FlowGraph implements Iterable<Vertex> {
               // prototype dataflow for object creations
               for(CreationSiteVertex cs : factory.creationSites()) {
                 if (cg.getNode(cs.getMethod(), Everywhere.EVERYWHERE) != null) {
-                for(Iterator<Pair<CGNode, NewSiteReference>> sites = cs.getCreationSites(cg); sites.hasNext(); ) {
-                  Pair<CGNode, NewSiteReference> site = sites.next();
+                for(Pair<CGNode, NewSiteReference> site : Iterator2Iterable.make(cs.getCreationSites(cg))) {
                   IR ir = site.fst.getIR();
                   SSAInstruction creation = ir.getInstructions()[ site.snd.getProgramCounter() ];
                   if (creation instanceof JavaScriptInvoke) {

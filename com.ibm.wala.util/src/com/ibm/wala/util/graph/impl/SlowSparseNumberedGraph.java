@@ -11,8 +11,7 @@
 package com.ibm.wala.util.graph.impl;
 
 import java.io.Serializable;
-import java.util.Iterator;
-
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -77,8 +76,8 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> impleme
       into.addNode(name);
     }
     for (T n : g) {
-      for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
-        into.addEdge(n, it2.next());
+      for (T succ : Iterator2Iterable.make(g.getSuccNodes(n))) {
+        into.addEdge(n, succ);
       }
     }
   }

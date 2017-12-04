@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.impl.DelegatingGraph;
@@ -135,8 +136,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   public IntSet getSuccNodeNumbers(CGNode node) {
     assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
-    for (Iterator<CGNode> ns = getSuccNodes(node); ns.hasNext();) {
-      CGNode succ = ns.next();
+    for (CGNode succ : Iterator2Iterable.make(getSuccNodes(node))) {
       if (containsNode(succ)) {
         x.add(getNumber(succ));
       }
@@ -149,8 +149,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   public IntSet getPredNodeNumbers(CGNode node) {
     assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
-    for (Iterator<CGNode> ns = getPredNodes(node); ns.hasNext();) {
-      CGNode pred = ns.next();
+    for (CGNode pred : Iterator2Iterable.make(getPredNodes(node))) {
       if (containsNode(pred)) {
         x.add(getNumber(pred));
       }

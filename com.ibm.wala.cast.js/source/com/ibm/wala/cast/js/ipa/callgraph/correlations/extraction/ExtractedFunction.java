@@ -30,6 +30,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter.Rewrite;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * A simple implementation of {@link CAstEntity} used by the {@link ClosureExtractor}.
@@ -120,8 +121,7 @@ class ExtractedFunction implements CAstEntity {
 				}
 			}
 			// now, add all new entities which arise from extracted nested for-in loops
-			for(Iterator<ExtractionPos> iter=pos.getNestedLoops(); iter.hasNext();) {
-				ExtractionPos nested_loop = iter.next();
+			for(ExtractionPos nested_loop : Iterator2Iterable.make(pos.getNestedLoops())) {
 				CAstNode callsite = nested_loop.getCallSite();
 				CAstEntity scoped_entity = nested_loop.getExtractedEntity();
 				Collection<CAstEntity> c = scopedEntities.get(callsite);

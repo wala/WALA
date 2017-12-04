@@ -51,6 +51,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -178,8 +179,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       }
     }
 
-    for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
-      SSAInstruction s = it.next();
+    for (SSAInstruction s : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
       if (s instanceof SSAAbstractInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
         TypeVariable v = getVariable(call.getException());

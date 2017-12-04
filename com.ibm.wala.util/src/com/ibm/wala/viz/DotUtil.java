@@ -18,10 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -214,8 +213,7 @@ public class DotUtil {
     outputNodes(labels, result, dotNodes);
 
     for (T n : g) {
-      for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
-        T s = it2.next();
+      for (T s : Iterator2Iterable.make(g.getSuccNodes(n))) {
         result.append(" ");
         result.append(getPort(n, labels));
         result.append(" -> ");

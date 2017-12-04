@@ -16,8 +16,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Iterator;
-
 import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
 
@@ -37,6 +35,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.IRView;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCallGraphUtil {
@@ -126,12 +125,12 @@ public class CAstCallGraphUtil {
     for (CGNode N : CG) {
       System.err.print("callees of node " + getShortName(N) + " : [");
       boolean fst = true;
-      for (Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext();) {
+      for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(N))) {
         if (fst)
           fst = false;
         else
           System.err.print(", ");
-        System.err.print(getShortName(ns.next()));
+        System.err.print(getShortName(n));
       }
       System.err.println("]");
       System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());

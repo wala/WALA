@@ -82,6 +82,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -159,10 +160,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    */
   @Override
   public void visitSuccs(Object node, IFlowLabelVisitor v) {
-    for (Iterator<? extends IFlowLabel> succLabelIter = getSuccLabels(node); succLabelIter.hasNext();) {
-      final IFlowLabel label = succLabelIter.next();
-      for (Iterator<? extends Object> succNodeIter = getSuccNodes(node, label); succNodeIter.hasNext();) {
-        label.visit(v, succNodeIter.next());
+    for (final IFlowLabel label : Iterator2Iterable.make(getSuccLabels(node))) {
+      for (Object succNode : Iterator2Iterable.make(getSuccNodes(node, label))) {
+        label.visit(v, succNode);
       }
     }
   }
@@ -173,10 +173,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    */
   @Override
   public void visitPreds(Object node, IFlowLabelVisitor v) {
-    for (Iterator<? extends IFlowLabel> predLabelIter = getPredLabels(node); predLabelIter.hasNext();) {
-      final IFlowLabel label = predLabelIter.next();
-      for (Iterator<? extends Object> predNodeIter = getPredNodes(node, label); predNodeIter.hasNext();) {
-        label.visit(v, predNodeIter.next());
+    for (final IFlowLabel label : Iterator2Iterable.make(getPredLabels(node))) {
+      for (Object predNode : Iterator2Iterable.make(getPredNodes(node, label))) {
+        label.visit(v, predNode);
       }
     }
   }
@@ -187,8 +186,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * @param node
    */
   protected void addNodesForInvocations(CGNode node, IR ir) {
-    for (Iterator<CallSiteReference> iter = ir.iterateCallSites(); iter.hasNext();) {
-      CallSiteReference site = iter.next();
+    for (CallSiteReference site : Iterator2Iterable.make(ir.iterateCallSites())) {
       SSAAbstractInvokeInstruction[] calls = ir.getCalls(site);
       for (SSAAbstractInvokeInstruction invokeInstr : calls) {
         for (int i = 0; i < invokeInstr.getNumberOfUses(); i++) {

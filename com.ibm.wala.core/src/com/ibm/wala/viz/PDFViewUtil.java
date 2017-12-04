@@ -11,8 +11,6 @@
 package com.ibm.wala.viz;
 
 import java.util.HashMap;
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
@@ -26,6 +24,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.strings.StringStuff;
 
@@ -120,8 +119,7 @@ public class PDFViewUtil {
       result.append("<Handler>");
     }
     result.append("\\n");
-    for (Iterator<SSAPhiInstruction> it = bb.iteratePhis(); it.hasNext();) {
-      SSAPhiInstruction phi = it.next();
+    for (SSAPhiInstruction phi : Iterator2Iterable.make(bb.iteratePhis())) {
       if (phi != null) {
         result.append("           " + phi.toString(ir.getSymbolTable())).append("\\l");
       }
@@ -144,8 +142,7 @@ public class PDFViewUtil {
         result.append("\\l");
       }
     }
-    for (Iterator<SSAPiInstruction> it = bb.iteratePis(); it.hasNext();) {
-      SSAPiInstruction pi = it.next();
+    for (SSAPiInstruction pi : Iterator2Iterable.make(bb.iteratePis())) {
       if (pi != null) {
         result.append("           " + pi.toString(ir.getSymbolTable())).append("\\l");
       }

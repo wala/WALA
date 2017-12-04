@@ -11,8 +11,6 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.ssa;
 
-import java.util.Iterator;
-
 import com.ibm.wala.dalvik.classLoader.DexCFG;
 import com.ibm.wala.dalvik.classLoader.DexCFG.BasicBlock;
 import com.ibm.wala.dalvik.classLoader.DexConstants;
@@ -59,6 +57,7 @@ import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.INodeWithNumber;
 
@@ -233,8 +232,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
                 /*
                  * Add only the entry variable to the work list.
                  */
-                 for (Iterator<? extends INodeWithNumber> it = getFixedPointSystem().getStatementsThatUse(entry); it.hasNext();) {
-                     AbstractStatement s = (AbstractStatement) it.next();
+                 for (INodeWithNumber inn : Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(entry))) {
+                     AbstractStatement s = (AbstractStatement) inn;
                      addToWorkList(s);
                  }
             }

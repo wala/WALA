@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.cast.js.util;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -35,8 +34,7 @@ public class Util {
     do {
       size = result.size();
       result.foreach(vn -> {
-        for(Iterator<SSAInstruction> insts = du.getUses(vn); insts.hasNext(); ) {
-          SSAInstruction inst = insts.next();
+        for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(vn))) {
           if (inst instanceof PrototypeLookup || inst instanceof SSAPhiInstruction) {
             result.add(inst.getDef());
           }

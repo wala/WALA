@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 
@@ -106,8 +107,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     recurse: while (!empty()) {
       T v = peek();
       Iterator<? extends T> pc = getPendingChildren(v);
-      for (Iterator<? extends T> e = pc; e.hasNext();) {
-        T n = e.next();
+      for (T n : Iterator2Iterable.make(pc)) {
         assert n != null : "null node in pc";
         Iterator<T> nChildren = getPendingChildren(n);
         if (nChildren == null) {

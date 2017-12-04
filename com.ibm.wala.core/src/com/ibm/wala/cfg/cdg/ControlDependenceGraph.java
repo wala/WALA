@@ -19,6 +19,7 @@ import com.ibm.wala.cfg.MinimalCFG;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -72,14 +73,12 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     for (T y : cfg) {
-      for (Iterator<T> ns2 = RDF.getDominanceFrontier(y); ns2.hasNext();) {
-        T x = ns2.next();
+      for (T x : Iterator2Iterable.make(RDF.getDominanceFrontier(y))) {
         controlDependence.get(x).add(y);
         if (wantEdgeLabels) {
            HashSet<Object> labels = HashSetFactory.make();
           edgeLabels.put(Pair.make(x, y), labels);
-          for (Iterator<? extends T> ss = cfg.getSuccNodes(x); ss.hasNext();) {
-            T s = ss.next();
+          for (T s : Iterator2Iterable.make(cfg.getSuccNodes(x))) {
             if (RDF.isDominatedBy(s, y)) {
               labels.add(makeEdgeLabel(x, y, s));
             }
@@ -206,8 +205,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     StringBuffer sb = new StringBuffer();
     for (T n : this) {
       sb.append(n.toString()).append("\n");
-      for (Iterator<T> ss = getSuccNodes(n); ss.hasNext();) {
-        Object s = ss.next();
+      for (T s : Iterator2Iterable.make(getSuccNodes(n))) {
         sb.append("  --> ").append(s);
         if (edgeLabels != null)
           for (Object name : edgeLabels.get(Pair.make(n, s)))
@@ -265,8 +263,8 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
       return false;
     }
 
-    for (Iterator<? extends T> pbs1 = getPredNodes(bb1); pbs1.hasNext();) {
-      if (!hasEdge(pbs1.next(), bb2)) {
+    for (T pb : Iterator2Iterable.make(getPredNodes(bb1))) {
+      if (!hasEdge(pb, bb2)) {
         return false;
       }
     }

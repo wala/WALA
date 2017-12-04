@@ -93,9 +93,7 @@ public abstract class JavaIRTests extends IRTests {
       /*
       Assert.assertEquals("Expected two classes.", iClass.getClassLoader().getNumberOfClasses(), 2);
 
-      for (Iterator<IClass> it = iClass.getClassLoader().iterateAllClasses(); it.hasNext();) {
-        IClass cls = it.next();
-
+      for (IClass cls : Iterator2Iterable.make(iClass.getClassLoader().iterateAllClasses())) {
         Assert.assertTrue("Expected class to be either " + typeStr + " or " + "Bar", cls.getName().getClassName().toString()
             .equals(typeStr)
             || cls.getName().getClassName().toString().equals("Bar"));

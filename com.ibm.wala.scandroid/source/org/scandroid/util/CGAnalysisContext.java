@@ -157,8 +157,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		/*
 		if (analysisContext.getOptions().cgBuilderWarnings()) {
 			// CallGraphBuilder construction warnings
-			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
-				Warning w = wi.next();
+			for (Warning w : Iterator2Iterable.make(Warnings.iterator())) {
 				
 			}
 		}
@@ -189,8 +188,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
 		/*
 		// makeCallGraph warnings
-		for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
-			Warning w = wi.next();
+		for (Warning w : Iterator2Iterable.make(Warnings.iterator())) {
 			
 		}
 		*/
@@ -267,14 +265,12 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
 		/*
 		if (options.stdoutCG()) {
-			for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
-				CGNode node = nodeI.next();
+			for (CGNode node : Iterator2Iterable.make(cg.iterator())) {
 
 				
 			}
 		}
-		for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
-			CGNode node = nodeI.next();
+		for (CGNode node : Iterator2Iterable.make(cg.iterator())) {
 			if (node.getMethod().isSynthetic()) {
 				SSACFG ssaCFG = node.getIR().getControlFlowGraph();
 				int totalBlocks = ssaCFG.getNumberOfNodes();

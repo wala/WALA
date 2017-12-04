@@ -64,6 +64,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.ref.ReferenceCleanser;
 
@@ -130,8 +131,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       // as the argument
       addSubgraphForNode(caller);
       IR ir = caller.getIR();
-      for (Iterator<CallSiteReference> iterator = ir.iterateCallSites(); iterator.hasNext();) {
-        CallSiteReference call = iterator.next();
+      for (CallSiteReference call : Iterator2Iterable.make(ir.iterateCallSites())) {
         if (cg.getPossibleTargets(caller, call).contains(cgNode)) {
           SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
           for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
@@ -219,8 +219,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       // as the argument
       addSubgraphForNode(caller);
       IR ir = caller.getIR();
-      for (Iterator<CallSiteReference> iterator = ir.iterateCallSites(); iterator.hasNext();) {
-        CallSiteReference call = iterator.next();
+      for (CallSiteReference call : Iterator2Iterable.make(ir.iterateCallSites())) {
         if (cg.getPossibleTargets(caller, call).contains(cgNode)) {
           SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
           for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
@@ -294,8 +293,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
-    for (Iterator<? extends IBasicBlock> iter = cfg.getSuccNodes(b); iter.hasNext();) {
-      ISSABasicBlock sb = (ISSABasicBlock) iter.next();
+    for (IBasicBlock ibb : Iterator2Iterable.make(cfg.getSuccNodes(b))) {
+      ISSABasicBlock sb = (ISSABasicBlock) ibb;
       if (sb.isExitBlock()) {
         // an optimization based on invariant that exit blocks should
         // have no
@@ -304,15 +303,15 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       }
       int n = 0;
       // set n to be whichPred(this, sb);
-      for (Iterator<? extends IBasicBlock> back = cfg.getPredNodes(sb); back.hasNext(); n++) {
-        if (back.next() == b) {
+      for (IBasicBlock back : Iterator2Iterable.make(cfg.getPredNodes(sb))) {
+        if (back == b) {
           break;
         }
+        ++n;
       }
       assert n < cfg.getPredNodeCount(sb);
-      for (Iterator<SSAPhiInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
+      for (SSAPhiInstruction phi : Iterator2Iterable.make(sb.iteratePhis())) {
         // Assertions.UNREACHABLE();
-        SSAPhiInstruction phi = phis.next();
         if (phi == null) {
           continue;
         }
@@ -361,10 +360,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     Set<CallerSiteContext> ret = callerCache.get(callee);
     if (ret == null) {
       ret = HashSetFactory.make();
-      for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext();) {
-        CGNode caller = predNodes.next();
-        for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext();) {
-          CallSiteReference call = iterator.next();
+      for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(callee))) {
+        for (CallSiteReference call : Iterator2Iterable.make(cg.getPossibleSites(caller, callee))) {
           ret.add(new CallerSiteContext(caller, call));
         }
       }

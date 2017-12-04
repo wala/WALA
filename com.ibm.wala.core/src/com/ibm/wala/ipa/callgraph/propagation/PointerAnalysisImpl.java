@@ -89,8 +89,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("PointerAnalysis:\n");
-    for (Iterator<PointerKey> it = pointsToMap.iterateKeys(); it.hasNext();) {
-      PointerKey p = it.next();
+    for (PointerKey p : Iterator2Iterable.make(pointsToMap.iterateKeys())) {
       OrdinalSet<InstanceKey> O = getPointsToSet(p);
       result.append("  ").append(p).append(" ->\n");
       for (InstanceKey instanceKey : O) {

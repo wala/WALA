@@ -10,8 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
@@ -50,6 +48,7 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -117,11 +116,11 @@ public class FlowGraphBuilder {
     	
     	// now visit phis and catches
     	visitor.instructionIndex = -1;
-    	for(Iterator<? extends SSAInstruction> iter=ir.iteratePhis();iter.hasNext();)
-    		iter.next().visit(visitor);
+    	for(SSAInstruction inst : Iterator2Iterable.make(ir.iteratePhis()))
+    		inst.visit(visitor);
     	
-    	for(Iterator<SSAInstruction> iter=ir.iterateCatchInstructions();iter.hasNext();)
-    		iter.next().visit(visitor);
+    	for(SSAInstruction inst : Iterator2Iterable.make(ir.iterateCatchInstructions()))
+    		inst.visit(visitor);
     }
   }
 	

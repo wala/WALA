@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.modref;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +32,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
@@ -130,8 +130,8 @@ public class ModRef<T extends InstanceKey> {
     SSAInstruction.Visitor v = makeModVisitor(n, result, pa, h);
     IR ir = n.getIR();
     if (ir != null) {
-      for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
-        it.next().visit(v);
+      for (SSAInstruction inst : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
+        inst.visit(v);
         assert ! result.contains(null);
       }
     }
@@ -151,8 +151,7 @@ public class ModRef<T extends InstanceKey> {
     SSAInstruction.Visitor v = makeRefVisitor(n, result, pa, h);
     IR ir = n.getIR();
     if (ir != null) {
-      for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
-        SSAInstruction x = it.next();
+      for (SSAInstruction x : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
         x.visit(v);
         assert ! result.contains(null) : x;
      }

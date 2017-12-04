@@ -23,6 +23,7 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -96,8 +97,8 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     @Override
     public IntSet getSuccNodeNumbers(T N) {
       MutableIntSet bits = IntSetUtil.make();
-      for (Iterator<T> EE = getSuccNodes(N); EE.hasNext();) {
-        bits.add(EE.next().getNumber());
+      for (T EE : Iterator2Iterable.make(getSuccNodes(N))) {
+        bits.add(EE.getNumber());
       }
 
       return bits;
@@ -116,8 +117,8 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     @Override
     public IntSet getPredNodeNumbers(T N) {
       MutableIntSet bits = IntSetUtil.make();
-      for (Iterator<T> EE = getPredNodes(N); EE.hasNext();) {
-        bits.add(EE.next().getNumber());
+      for (T EE : Iterator2Iterable.make(getPredNodes(N))) {
+        bits.add(EE.getNumber());
       }
 
       return bits;
@@ -125,8 +126,8 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
 
     @Override
     public boolean hasEdge(T src, T dst) {
-      for (Iterator<T> EE = getSuccNodes(src); EE.hasNext();) {
-        if (EE.next().equals(dst)) {
+      for (T EE : Iterator2Iterable.make(getSuccNodes(src))) {
+        if (EE.equals(dst)) {
           return true;
         }
       }
@@ -279,8 +280,8 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
   @Override
   public List<T> getExceptionalSuccessors(final T N) {
     ArrayList<T> result = new ArrayList<>();
-    for (Iterator<T> it = edges.getExceptionalSuccessors(N); it.hasNext();) {
-      result.add(it.next());
+    for (T s : Iterator2Iterable.make(edges.getExceptionalSuccessors(N))) {
+      result.add(s);
     }
     return result;
   }
@@ -350,10 +351,11 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
 
     int i = 0;
     MutableIntSet valid = IntSetUtil.make();
-    for (Iterator<? extends T> pbs = cfg.getPredNodes(bb); pbs.hasNext(); i++) {
-      if (nodes.containsNode(pbs.next())) {
+    for (T pb : Iterator2Iterable.make(cfg.getPredNodes(bb))) {
+      if (nodes.containsNode(pb)) {
         valid.add(i);
       }
+      ++i;
     }
 
     return valid;

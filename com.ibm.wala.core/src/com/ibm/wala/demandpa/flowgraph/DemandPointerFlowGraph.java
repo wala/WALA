@@ -38,7 +38,6 @@
 package com.ibm.wala.demandpa.flowgraph;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -81,6 +80,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 
 /**
@@ -98,8 +98,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
    */
   @Override
   protected void addNodesForParameters(CGNode node, IR ir) {
-    for (Iterator<Integer> iter = new PointerParamValueNumIterator(node); iter.hasNext();) {
-      int parameter = iter.next();
+    for (int parameter : Iterator2Iterable.make(new PointerParamValueNumIterator(node))) {
       PointerKey paramPk = heapModel.getPointerKeyForLocal(node, parameter);
       addNode(paramPk);
       params.put(paramPk, node);

@@ -1696,8 +1696,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       if (finallyNode != null) {
         int i = 0;
         CAstNode[] finallyAsts = new CAstNode[finallyList.size()];
-        for (Iterator<Node> fns = finallyList.iterator(); fns.hasNext();) {
-          finallyAsts[i++] = walkNodes(fns.next(), context);
+        for (Node fn : finallyList) {
+          finallyAsts[i++] = walkNodes(fn, context);
         }
         finallyBlock = Ast.makeNode(CAstNode.BLOCK_STMT, finallyAsts);
       }
@@ -1707,8 +1707,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         int i = 0;
         WalkContext catchChild = new CatchBlockContext(context);
         CAstNode[] catchAsts = new CAstNode[catchList.size()];
-        for (Iterator<Node> cns = catchList.iterator(); cns.hasNext();) {
-          catchAsts[i++] = walkNodes(cns.next(), catchChild);
+        for (Node cn : catchList.iterator()) {
+          catchAsts[i++] = walkNodes(cn, catchChild);
         }
         CAstNode catchBlock = Ast.makeNode(CAstNode.CATCH, Ast.makeConstant(catchChild.getCatchVar()),
             Ast.makeNode(CAstNode.BLOCK_STMT, catchAsts));
@@ -1717,8 +1717,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         i = 0;
         WalkContext tryChild = new TryBlockContext(context, catchBlock);
         CAstNode[] tryAsts = new CAstNode[tryList.size()];
-        for (Iterator<Node> tns = tryList.iterator(); tns.hasNext();) {
-          tryAsts[i++] = walkNodes(tns.next(), tryChild);
+        for (Node tn : tryList) {
+          tryAsts[i++] = walkNodes(tn, tryChild);
         }
         CAstNode tryBlock = Ast.makeNode(CAstNode.BLOCK_STMT, tryAsts);
 
@@ -1732,8 +1732,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       } else {
         int i = 0;
         CAstNode[] tryAsts = new CAstNode[tryList.size()];
-        for (Iterator<Node> tns = tryList.iterator(); tns.hasNext();) {
-          tryAsts[i++] = walkNodes(tns.next(), context);
+        for (Node tn : tryList) {
+          tryAsts[i++] = walkNodes(tn, context);
         }
         CAstNode tryBlock = Ast.makeNode(CAstNode.BLOCK_STMT, tryAsts);
 

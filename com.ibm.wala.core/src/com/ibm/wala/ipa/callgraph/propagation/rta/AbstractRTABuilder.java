@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
@@ -54,6 +53,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * Abstract superclass of various RTA flavors
@@ -136,8 +136,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Add a constraint for each allocate
    */
   private void addNewConstraints(CGNode node) {
-    for (Iterator<NewSiteReference> it = getRTAContextInterpreter().iterateNewSites(node); it.hasNext();) {
-      NewSiteReference n = it.next();
+    for (NewSiteReference n : Iterator2Iterable.make(getRTAContextInterpreter().iterateNewSites(node))) {
       visitNew(node, n);
     }
   }
@@ -146,8 +145,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Add a constraint for each invoke
    */
   private void addCallConstraints(CGNode node) {
-    for (Iterator<CallSiteReference> it = getRTAContextInterpreter().iterateCallSites(node); it.hasNext();) {
-      CallSiteReference c = it.next();
+    for (CallSiteReference c : Iterator2Iterable.make(getRTAContextInterpreter().iterateCallSites(node))) {
       visitInvoke(node, c);
     }
   }
@@ -156,12 +154,10 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Handle accesses to static fields
    */
   private void addFieldConstraints(CGNode node) {
-    for (Iterator<FieldReference> it = getRTAContextInterpreter().iterateFieldsRead(node); it.hasNext();) {
-      FieldReference f = it.next();
+    for (FieldReference f : Iterator2Iterable.make(getRTAContextInterpreter().iterateFieldsRead(node))) {
       processFieldAccess(f);
     }
-    for (Iterator<FieldReference> it = getRTAContextInterpreter().iterateFieldsWritten(node); it.hasNext();) {
-      FieldReference f = it.next();
+    for (FieldReference f : Iterator2Iterable.make(getRTAContextInterpreter().iterateFieldsWritten(node))) {
       processFieldAccess(f);
     }
   }

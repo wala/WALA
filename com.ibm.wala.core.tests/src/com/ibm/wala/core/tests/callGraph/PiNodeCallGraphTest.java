@@ -11,7 +11,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -40,6 +39,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -95,8 +95,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     assert callerNodes.size() == 2;
 
     for (CGNode n : callerNodes) {
-      for (Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext();) {
-        CallSiteReference csRef = sites.next();
+      for (CallSiteReference csRef : Iterator2Iterable.make(n.iterateCallSites())) {
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {
           numberOfCalls++;
           assert cg.getNumberOfTargets(n, csRef) == desiredNumberOfTargets;

@@ -40,6 +40,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
@@ -273,13 +274,12 @@ public class ClassHierarchy implements IClassHierarchy {
       System.err.println(("Add all classes from loader " + loader));
     }
     Collection<IClass> toRemove = HashSetFactory.make();
-    for (Iterator<IClass> it = loader.iterateAllClasses(); it.hasNext();) {
+    for (IClass klass : Iterator2Iterable.make(loader.iterateAllClasses())) {
       if (progressMonitor != null) {
         if (progressMonitor.isCanceled()) {
           throw new CancelCHAConstructionException();
         }
       }
-      IClass klass = it.next();
       boolean added = addClass(klass);
       if (!added) {
         toRemove.add(klass);
@@ -606,9 +606,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   private Set<IMethod> computeOverriders(Node node, Selector selector) {
     HashSet<IMethod> result = HashSetFactory.make(3);
-    for (Iterator<Node> it = node.getChildren(); it.hasNext();) {
-
-      Node child = it.next();
+    for (Node child : Iterator2Iterable.make(node.getChildren())) {
       IMethod m = findMethod(child.getJavaClass(), selector);
       if (m != null) {
         result.add(m);
@@ -640,8 +638,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   private void recursiveStringify(Node n, StringBuffer buffer) {
     buffer.append(n.toString()).append("\n");
-    for (Iterator<Node> it = n.getChildren(); it.hasNext();) {
-      Node child = it.next();
+    for (Node child : Iterator2Iterable.make(n.getChildren())) {
       recursiveStringify(child, buffer);
     }
   }
@@ -1048,8 +1045,7 @@ public class ClassHierarchy implements IClassHierarchy {
     assert node != null : "null node for class " + T;
     HashSet<IClass> result = HashSetFactory.make(3);
     result.add(T);
-    for (Iterator<Node> it = node.getChildren(); it.hasNext();) {
-      Node child = it.next();
+    for (Node child : Iterator2Iterable.make(node.getChildren())) {
       result.addAll(computeSubClasses(child.klass.getReference()));
     }
     return result;

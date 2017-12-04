@@ -12,8 +12,6 @@
 package com.ibm.wala.cfg.exc.intra;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.Util;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
@@ -50,6 +48,7 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * @author Juergen Graf <graf@kit.edu>
@@ -139,8 +138,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
   @Override
   public UnaryOperator<NullPointerState> getNodeTransferFunction(final T node) {
     final ArrayList<UnaryOperator<NullPointerState>> phiTransferFunctions = new ArrayList<>(1);
-    for (final Iterator<SSAPhiInstruction> phiIterator = node.iteratePhis(); phiIterator.hasNext(); ) {
-      final SSAPhiInstruction phi = phiIterator.next();
+    for (SSAPhiInstruction phi : Iterator2Iterable.make(node.iteratePhis())) {
       int[] uses = new int[phi.getNumberOfUses()];
       for (int i = 0; i < uses.length; i++) {
         uses[i] = phi.getUse(i);

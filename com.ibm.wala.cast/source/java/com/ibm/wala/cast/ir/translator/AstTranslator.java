@@ -81,6 +81,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -922,8 +923,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     void makeExitBlock(PreBasicBlock bb) {
       bb.makeExitBlock();
 
-      for (Iterator<? extends PreBasicBlock> ps = getPredNodes(bb); ps.hasNext();)
-        normalToExit.add(ps.next());
+      for (PreBasicBlock p : Iterator2Iterable.make(getPredNodes(bb)))
+        normalToExit.add(p);
 
       // now that we have created the exit block, add the delayed edges to the
       // exit
@@ -1143,8 +1144,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                                       EdgeOperation normal,
                                       EdgeOperation except) {
       for (PreBasicBlock src : blocks) {
-        for (Iterator<PreBasicBlock> j = icfg.getSuccNodes(src); j.hasNext();) {
-          PreBasicBlock dst = j.next();
+        for (PreBasicBlock dst : Iterator2Iterable.make(icfg.getSuccNodes(src))) {
           if (isCatchBlock(dst.getNumber()) || (dst.isExitBlock() && icfg.exceptionalToExit.contains(src))) {
             except.act(src, dst);
           }
@@ -1352,8 +1352,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         PreBasicBlock bb = getNode(i);
         s.append(bb).append("\n");
 
-        for (Iterator<PreBasicBlock> ss = getSuccNodes(bb); ss.hasNext();)
-          s.append("    -->" + ss.next() + "\n");
+        for (PreBasicBlock pbb : Iterator2Iterable.make(getSuccNodes(bb)))
+          s.append("    -->" + pbb + "\n");
 
         for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++)
           if (insts[j] != null)
@@ -3102,8 +3102,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     for (Scope scope : scopes) {
-      for (Iterator<String> I = scope.getAllNames(); I.hasNext();) {
-        String nm = I.next();
+      for (String nm : Iterator2Iterable.make(scope.getAllNames())) {
         
         if (ignoreName(nm)) {
           continue;

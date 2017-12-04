@@ -11,7 +11,6 @@
 package com.ibm.wala.viz.viewer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +28,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public class CgPanel extends JSplitPane{
 
@@ -111,8 +111,7 @@ public class CgPanel extends JSplitPane{
       Object userObject = treeNode.getUserObject();
       if (userObject instanceof CGNode) {
         CGNode cgNode = (CGNode) userObject;
-        for (Iterator<CallSiteReference> iter = cgNode.iterateCallSites(); iter.hasNext();) {
-          CallSiteReference csr = iter.next();
+        for (CallSiteReference csr : Iterator2Iterable.make(cgNode.iterateCallSites())) {
           newChilds.add(new DefaultMutableTreeNode(csr));
         }
       } else {

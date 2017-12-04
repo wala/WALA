@@ -43,6 +43,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -94,8 +95,7 @@ public class ReflectionTest extends WalaTestCase {
 
     Warnings.clear();
     CallGraphTest.doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
-    for (Iterator<Warning> it = Warnings.iterator(); it.hasNext();) {
-      Warning w = it.next();
+    for (Warning w : Iterator2Iterable.make(Warnings.iterator())) {
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }

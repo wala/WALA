@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
@@ -105,8 +106,7 @@ public class BFSIterator<T> implements Iterator<T> {
   }
 
   private void visitChildren(T N) {
-    for (Iterator<? extends T> children = getConnected(N); children.hasNext();) {
-      T child = children.next();
+    for (T child : Iterator2Iterable.make(getConnected(N))) {
       if (!visited.contains(child)) {
         Q.add(child);
         visited.add(child);

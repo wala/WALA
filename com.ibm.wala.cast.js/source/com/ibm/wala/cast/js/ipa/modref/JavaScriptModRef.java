@@ -12,8 +12,6 @@
 package com.ibm.wala.cast.js.ipa.modref;
 
 import java.util.Collection;
-import java.util.Iterator;
-
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ipa.modref.AstModRef;
 import com.ibm.wala.cast.js.ssa.JSInstructionVisitor;
@@ -31,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
 
@@ -56,8 +55,7 @@ public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
       PointerKey prop = h.getPointerKeyForLocal(n, instruction.getMemberRef());
       for(InstanceKey o : pa.getPointsToSet(obj)) {
         for(InstanceKey p : pa.getPointsToSet(prop)) {
-          for(Iterator<PointerKey> keys = h.getPointerKeysForReflectedFieldRead(o, p); keys.hasNext(); ) {
-            PointerKey x = keys.next();
+          for(PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldRead(o, p))) {
             assert x != null : instruction;
             result.add(x);
           }
@@ -130,8 +128,7 @@ public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
       PointerKey prop = h.getPointerKeyForLocal(n, instruction.getMemberRef());
       for(T o : pa.getPointsToSet(obj)) {
         for(T p : pa.getPointsToSet(prop)) {
-          for(Iterator<PointerKey> keys = h.getPointerKeysForReflectedFieldWrite(o, p); keys.hasNext(); ) {
-            PointerKey x = keys.next();
+          for(PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldWrite(o, p))) {
             assert x != null : instruction;
             result.add(x);
           }

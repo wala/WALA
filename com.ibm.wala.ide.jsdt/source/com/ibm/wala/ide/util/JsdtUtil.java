@@ -13,7 +13,6 @@ package com.ibm.wala.ide.util;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +54,7 @@ import com.ibm.wala.ide.util.HeadlessUtil.EclipseCompiler;
 import com.ibm.wala.ide.util.HeadlessUtil.Parser;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -83,8 +83,8 @@ public class JsdtUtil {
     List<Module> modules = s.getModules(JavaScriptTypes.jsLoader);
     Set<ModuleEntry> mes = HashSetFactory.make();
     for(Module m : modules) {
-      for(Iterator<? extends ModuleEntry> mm = m.getEntries(); mm.hasNext(); ) {
-        mes.add(mm.next());
+      for(ModuleEntry entry : Iterator2Iterable.make(m.getEntries())) {
+        mes.add(entry);
       }
     }
     return mes;

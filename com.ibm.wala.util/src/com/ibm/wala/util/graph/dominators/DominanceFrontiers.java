@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -76,18 +77,15 @@ public class DominanceFrontiers<T> {
       DF.put(X, DF_X);
 
       // DF_local
-      for (Iterator<? extends T> YS = G.getSuccNodes(X); YS.hasNext();) {
-        T Y = YS.next();
+      for (T Y : Iterator2Iterable.make(G.getSuccNodes(X))) {
         if (dom.getIdom(Y) != X) {
           DF_X.add(Y);
         }
       }
 
       // DF_up
-      for (Iterator<? extends T> ZS = DT.getSuccNodes(X); ZS.hasNext();) {
-        T Z = ZS.next();
-        for (Iterator<T> YS2 = getDominanceFrontier(Z); YS2.hasNext();) {
-          T Y2 = YS2.next();
+      for (T Z : Iterator2Iterable.make(DT.getSuccNodes(X))) {
+        for (T Y2 : Iterator2Iterable.make(getDominanceFrontier(Z))) {
           if (dom.getIdom(Y2) != X)
             DF_X.add(Y2);
         }

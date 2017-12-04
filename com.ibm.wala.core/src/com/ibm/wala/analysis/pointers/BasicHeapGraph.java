@@ -27,6 +27,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.IntMapIterator;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
@@ -506,8 +507,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       Object node = getNode(i);
       if (node != null) {
         result.append(i).append(" -> ");
-        for (Iterator<Object> it = getSuccNodes(node); it.hasNext();) {
-          Object s = it.next();
+        for (Object s : Iterator2Iterable.make(getSuccNodes(node))) {
           result.append(getNumber(s)).append(" ");
         }
         result.append("\n");

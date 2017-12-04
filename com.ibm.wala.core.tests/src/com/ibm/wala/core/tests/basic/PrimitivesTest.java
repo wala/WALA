@@ -12,7 +12,6 @@ package com.ibm.wala.core.tests.basic;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +22,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -761,13 +761,12 @@ public class PrimitivesTest extends WalaTestCase {
     // Assert.assertions
     int i = 0;
     Object[] desired4 = new Object[] { nodes[4], nodes[7], nodes[8], nodes[5], nodes[10] };
-    for (Iterator<Object> d4 = D.dominators(nodes[4]); d4.hasNext();)
-      Assert.assertTrue(d4.next() == desired4[i++]);
+    for (Object d4 : Iterator2Iterable.make(D.dominators(nodes[4])))
+      Assert.assertTrue(d4 == desired4[i++]);
 
     int j = 0;
     Object[] desired5 = new Object[] { nodes[8] };
-    for (Iterator<? extends Object> t4 = D.dominatorTree().getSuccNodes(nodes[5]); t4.hasNext();) {
-      Object o4 = t4.next();
+    for (Object o4 : Iterator2Iterable.make(D.dominatorTree().getSuccNodes(nodes[5]))) {
       Object d = desired5[j++];
       boolean ok = (o4.equals(d));
       if (!ok) {

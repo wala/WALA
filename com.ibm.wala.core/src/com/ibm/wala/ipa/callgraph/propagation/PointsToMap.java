@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IVector;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BitVector;
@@ -187,8 +188,7 @@ public class PointsToMap {
    * Wipe out the cached transitive closure information
    */
   public void revertToPreTransitive() {
-    for (Iterator<PointerKey> it = iterateKeys(); it.hasNext();) {
-      PointerKey key = it.next();
+    for (PointerKey key : Iterator2Iterable.make(iterateKeys())) {
       if (!isTransitiveRoot(key) && !isImplicit(key) && !isUnified(key)) {
         PointsToSetVariable v = getPointsToSet(key);
         v.removeAll();

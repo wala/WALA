@@ -57,6 +57,7 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
@@ -132,8 +133,8 @@ public abstract class TestPointerAnalyses {
         OrdinalSet<? extends InstanceKey> pointers = pa.getPointsToSet(l);
         if (pointers != null) {
           for(InstanceKey k : pointers) {
-            for(Iterator<Pair<CGNode, NewSiteReference>> css = k.getCreationSites(CG); css.hasNext(); ) {
-              result.add(css.next());
+            for(Pair<CGNode, NewSiteReference> cs : Iterator2Iterable.make(k.getCreationSites(CG))) {
+              result.add(cs);
             }
           }
         }
@@ -302,8 +303,8 @@ public abstract class TestPointerAnalyses {
           System.err.println("empty " + f + " for " + k + "(" + k.getConcreteType() + ")");          
         }
         if (dump) {
-          for(Iterator<Pair<CGNode, NewSiteReference>> css = k.getCreationSites(fbCG); css.hasNext(); ) {
-            System.err.println(css.next());
+          for(Pair<CGNode, NewSiteReference> cs : Iterator2Iterable.make(k.getCreationSites(fbCG))) {
+            System.err.println(cs);
           }
         }
       }
@@ -319,9 +320,9 @@ public abstract class TestPointerAnalyses {
     PointerKey fbKey = fbPA.getHeapModel().getPointerKeyForLocal(node, vn);
     OrdinalSet<T> fbPointsTo = fbPA.getPointsToSet(fbKey);
     for(T o : fbPointsTo) {
-      for(Iterator<T> ps = proto.apply(o); ps.hasNext(); ) {
-        for(Iterator<Pair<CGNode, NewSiteReference>> css = ps.next().getCreationSites(CG); css.hasNext(); ) {
-          fbProtos.add(css.next());
+      for(T p : Iterator2Iterable.make(proto.apply(o))) {
+        for(Pair<CGNode, NewSiteReference> cs : Iterator2Iterable.make(p.getCreationSites(CG))) {
+          fbProtos.add(cs);
         }
       }
     }

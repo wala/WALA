@@ -31,6 +31,7 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * Simple utilities to scan {@link IMethod}s to gather information without building an IR.
@@ -182,8 +183,7 @@ public class CodeScanner {
   }
 
   private static boolean hasShrikeBTObjectArrayStore(ShrikeCTMethod M) throws InvalidClassFileException {
-    for (Iterator<TypeReference> it = M.getArraysWritten(); it.hasNext();) {
-      TypeReference t = it.next();
+    for (TypeReference t : Iterator2Iterable.make(M.getArraysWritten())) {
       if (t.isReferenceType()) {
         return true;
       }
@@ -207,8 +207,8 @@ public class CodeScanner {
   private static List<FieldReference> getFieldsReadFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     // TODO move the logic here from ShrikeCTMethodWrapper
     LinkedList<FieldReference> result = new LinkedList<>();
-    for (Iterator<FieldReference> it = M.getFieldsRead(); it.hasNext();) {
-      result.add(it.next());
+    for (FieldReference fr : Iterator2Iterable.make(M.getFieldsRead())) {
+      result.add(fr);
     }
     return result;
   }
@@ -216,8 +216,8 @@ public class CodeScanner {
   private static List<FieldReference> getFieldsWrittenFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     // TODO move the logic here from ShrikeCTMethodWrapper
     LinkedList<FieldReference> result = new LinkedList<>();
-    for (Iterator<FieldReference> it = M.getFieldsWritten(); it.hasNext();) {
-      result.add(it.next());
+    for (FieldReference fr : Iterator2Iterable.make(M.getFieldsWritten())) {
+      result.add(fr);
     }
     return result;
   }
@@ -225,16 +225,15 @@ public class CodeScanner {
   private static List<TypeReference> getArraysWrittenFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     // TODO move the logic here from ShrikeCTMethodWrapper
     List<TypeReference> result = new LinkedList<>();
-    for (Iterator<TypeReference> it = M.getArraysWritten(); it.hasNext();) {
-      result.add(it.next());
+    for (TypeReference tr : Iterator2Iterable.make(M.getArraysWritten())) {
+      result.add(tr);
     }
     return result;
   }
 
   private static boolean hasShrikeBTObjectArrayLoad(ShrikeCTMethod M) throws InvalidClassFileException {
-    for (Iterator<TypeReference> it = M.getArraysRead(); it.hasNext();) {
-      TypeReference t = it.next();
-      if (t.isReferenceType()) {
+    for (TypeReference tr : Iterator2Iterable.make(M.getArraysRead())) {
+      if (tr.isReferenceType()) {
         return true;
       }
     }

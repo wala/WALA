@@ -40,6 +40,7 @@ import com.ibm.wala.ide.util.JavaEclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -86,8 +87,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
       @Override
       protected IStatus run(IProgressMonitor monitor) {
-        for (Iterator<Object> it = selection.iterator(); it.hasNext();) {
-          Object object = it.next();
+        for (Object object : Iterator2Iterable.make((Iterator<?>) selection.iterator())) {
           if (object instanceof IJavaElement) {
             IJavaElement e = (IJavaElement) object;
             IJavaProject jp = e.getJavaProject();
@@ -136,8 +136,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   protected Collection<IJavaProject> computeJavaProjects() {
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<IJavaProject> projects = HashSetFactory.make();
-    for (Iterator<Object> it = selection.iterator(); it.hasNext();) {
-      Object object = it.next();
+    for (Object object : Iterator2Iterable.make((Iterator<?>) selection.iterator())) {
       if (object instanceof IJavaElement) {
         IJavaElement e = (IJavaElement) object;
         IJavaProject jp = e.getJavaProject();

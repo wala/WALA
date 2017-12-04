@@ -286,8 +286,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       // any
       // control-dependent successors
       if (src != null) {
-        for (Iterator<? extends ISSABasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
-          ISSABasicBlock bb2 = succ.next();
+        for (ISSABasicBlock bb2 : Iterator2Iterable.make(cdg.getSuccNodes(bb))) {
           for (SSAInstruction st : bb2) {
             if (st != null) {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
@@ -333,12 +332,10 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
      */
     if (!dOptions.equals(DataDependenceOptions.NONE)) {
       for (ISSABasicBlock bb : cdg) {
-        for (Iterator<SSAPhiInstruction> ps = bb.iteratePhis(); ps.hasNext();) {
-          SSAPhiInstruction phi = ps.next();
+        for (SSAPhiInstruction phi : Iterator2Iterable.make(bb.iteratePhis())) {
           Statement phiSt = ssaInstruction2Statement(phi, ir, instructionIndices);
           int phiUseIndex = 0;
-          for (Iterator<? extends ISSABasicBlock> preds = controlFlowGraph.getPredNodes(bb); preds.hasNext();) {
-            ISSABasicBlock pb = preds.next();
+          for (ISSABasicBlock pb : Iterator2Iterable.make(controlFlowGraph.getPredNodes(bb))) {
             int use = phi.getUse(phiUseIndex);
             if (use == AbstractIntStackMachine.TOP) {
               // the predecessor is part of some infeasible bytecode. we probably don't want slices to include such code, so ignore.
@@ -358,8 +355,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
               delegate.addEdge(pst, phiSt, Dependency.CONTROL_DEP);
 /** END Custom change: control deps */                
             } else {
-              for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); cdps.hasNext();) {
-                ISSABasicBlock cpb = cdps.next();
+              for (ISSABasicBlock cpb : Iterator2Iterable.make(cdg.getPredNodes(pb))) {
 /** BEGIN Custom change: control deps */                
                 if (cpb.getLastInstructionIndex() < 0) {
                   continue;
@@ -451,8 +447,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
           // statement
           for (int i = 0; i < statement.getNumberOfDefs(); i++) {
             int def = statement.getDef(i);
-            for (Iterator<SSAInstruction> it2 = DU.getUses(def); it2.hasNext();) {
-              SSAInstruction use = it2.next();
+            for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def))) {
               if (dOptions.isIgnoreBasePtrs()) {
                 if (use instanceof SSANewInstruction) {
                   // cut out array length parameters
@@ -488,8 +483,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
         }
 
         ValueNumberCarrier a = (ValueNumberCarrier) s;
-        for (Iterator<SSAInstruction> it2 = DU.getUses(a.getValueNumber()); it2.hasNext();) {
-          SSAInstruction use = it2.next();
+        for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(a.getValueNumber()))) {
           if (dOptions.isIgnoreBasePtrs()) {
             if (use instanceof SSANewInstruction) {
               // cut out array length parameters
@@ -952,8 +946,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    */
   private void createSpecialStatements(IR ir) {
     // create a node for instructions which do not correspond to bytecode
-    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
-      SSAInstruction s = it.next();
+    for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
       if (s instanceof SSAPhiInstruction) {
         delegate.addNode(new PhiStatement(node, (SSAPhiInstruction) s));
       } else if (s instanceof SSAGetCaughtExceptionInstruction) {

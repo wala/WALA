@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.stackMachine;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
@@ -54,6 +52,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
@@ -216,9 +215,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         /*
          * Add only the entry variable to the work list.
          */
-        for (Iterator<? extends INodeWithNumber> it = getFixedPointSystem().getStatementsThatUse(entry); it.hasNext();) {
-          AbstractStatement s = (AbstractStatement) it.next();
-          addToWorkList(s);
+        for (INodeWithNumber s : Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(entry))) {
+          addToWorkList((AbstractStatement) s);
         }
       }
 

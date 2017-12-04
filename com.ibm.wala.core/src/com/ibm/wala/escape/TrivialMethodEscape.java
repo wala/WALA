@@ -11,7 +11,6 @@
 package com.ibm.wala.escape;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
@@ -25,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * Trivial method-level escape analysis.
@@ -102,8 +102,8 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     }
 
     for (InstanceKey ik : instances) {
-      for (Iterator<Object> it2 = hg.getPredNodes(ik); it2.hasNext();) {
-        PointerKey p = (PointerKey) it2.next();
+      for (Object o : Iterator2Iterable.make(hg.getPredNodes(ik))) {
+        PointerKey p = (PointerKey) o;
         if (!(p instanceof AbstractLocalPointerKey)) {
           // a pointer from the heap. give up.
           return true;
@@ -134,8 +134,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     if (n == null) {
       throw new IllegalArgumentException("null n");
     }
-    for (Iterator<NewSiteReference> it = n.iterateNewSites(); it.hasNext();) {
-      NewSiteReference site = it.next();
+    for (NewSiteReference site : Iterator2Iterable.make(n.iterateNewSites())) {
       if (site.getProgramCounter() == allocPC) {
         return site;
       }

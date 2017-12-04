@@ -26,6 +26,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.IntStack;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
 
@@ -211,8 +212,8 @@ public abstract class AbstractSSAConversion {
       while (!W.isEmpty()) {
         SSACFG.BasicBlock X = W.iterator().next();
         W.remove(X);
-        for (Iterator<ISSABasicBlock> YS = DF.getDominanceFrontier(X); YS.hasNext();) {
-          SSACFG.BasicBlock Y = (SSACFG.BasicBlock) YS.next();
+        for (ISSABasicBlock IY : Iterator2Iterable.make(DF.getDominanceFrontier(X))) {
+          SSACFG.BasicBlock Y = (SSACFG.BasicBlock) IY;
           if (getHasAlready(Y) < IterCount) {
             if (isLive(Y, V)) {
               placeNewPhiAt(V, Y);
@@ -353,8 +354,8 @@ public abstract class AbstractSSAConversion {
       repairExit();
     }
 
-    for (Iterator<ISSABasicBlock> YS = CFG.getSuccNodes(X); YS.hasNext();) {
-      SSACFG.BasicBlock Y = (SSACFG.BasicBlock) YS.next();
+    for (ISSABasicBlock IY : Iterator2Iterable.make(CFG.getSuccNodes(X))) {
+      SSACFG.BasicBlock Y = (SSACFG.BasicBlock) IY;
       int Y_id = Y.getGraphNodeId();
       int j = com.ibm.wala.cast.ir.cfg.Util.whichPred(CFG, Y, X);
       for (int i = 0; i < phiCounts[Y_id]; i++) {

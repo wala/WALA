@@ -125,8 +125,7 @@ public class ClassLoaderImpl implements IClassLoader {
       System.err.println("Get source files for " + M);
     }
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
-      ModuleEntry entry = it.next();
+    for (ModuleEntry entry : Iterator2Iterable.make(M.getEntries())) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("consider entry for source information: " + entry);
       }
@@ -155,8 +154,7 @@ public class ClassLoaderImpl implements IClassLoader {
       System.err.println("Get class files for " + M);
     }
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
-      ModuleEntry entry = it.next();
+    for (ModuleEntry entry : Iterator2Iterable.make(M.getEntries())) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("ClassLoaderImpl.getClassFiles:Got entry: " + entry);
       }
@@ -649,8 +647,7 @@ public class ClassLoaderImpl implements IClassLoader {
   @Override
   public int getNumberOfMethods() {
     int result = 0;
-    for (Iterator<IClass> it = iterateAllClasses(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : Iterator2Iterable.make(iterateAllClasses())) {
       result += klass.getDeclaredMethods().size();
     }
     return result;

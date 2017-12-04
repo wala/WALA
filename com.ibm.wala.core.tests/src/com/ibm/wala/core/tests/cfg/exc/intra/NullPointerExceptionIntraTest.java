@@ -11,8 +11,6 @@
 package com.ibm.wala.core.tests.cfg.exc.intra;
 
 import java.util.Collection;
-import java.util.Iterator;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -42,6 +40,7 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.FileProvider;
@@ -732,8 +731,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   
   public static IExplodedBasicBlock returnNodeExploded(ISSABasicBlock returnNode, ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> explodedCfg) {
     final IExplodedBasicBlock exit = explodedCfg.exit();
-    for (Iterator<IExplodedBasicBlock> it = explodedCfg.getPredNodes(exit); it.hasNext();) {
-      IExplodedBasicBlock candidate  = it.next();
+    for (IExplodedBasicBlock candidate : Iterator2Iterable.make(explodedCfg.getPredNodes(exit))) {
       if (candidate.getInstruction() == returnNode.getLastInstruction()) {
         return candidate;
       }

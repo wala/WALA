@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +32,7 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import com.ibm.wala.util.warnings.Warning;
@@ -174,8 +174,8 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
    * in topLevelEntities
    */
   private void translateModuleToCAst(Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
-    for (Iterator<? extends ModuleEntry> mes = module.getEntries(); mes.hasNext();) {
-      translateModuleEntryToCAst(mes.next(), ast, topLevelEntities);
+    for (ModuleEntry me : Iterator2Iterable.make(module.getEntries())) {
+      translateModuleEntryToCAst(me, ast, topLevelEntities);
     }
   }
 

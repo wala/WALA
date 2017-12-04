@@ -11,7 +11,6 @@
 package com.ibm.wala.ide.ui;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.viz.NodeDecorator;
@@ -236,8 +236,8 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
 
         Object[] result = new Object[graph.getSuccNodeCount(parentElement)];
         int i = 0;
-        for (Iterator<Object> it = graph.getSuccNodes(parentElement); it.hasNext();) {
-          result[i++] = it.next();
+        for (Object o : Iterator2Iterable.make(graph.getSuccNodes(parentElement))) {
+          result[i++] = o;
         }
         return result;
       }
