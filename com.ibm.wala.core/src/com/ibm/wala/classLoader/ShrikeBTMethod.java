@@ -145,7 +145,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
     if (result == null) {
       result = computeBCInfo();
-      bcInfo = new SoftReference<BytecodeInfo>(result);
+      bcInfo = new SoftReference<>(result);
     }
     return result;
   }

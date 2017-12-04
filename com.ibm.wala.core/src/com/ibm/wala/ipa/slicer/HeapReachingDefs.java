@@ -124,12 +124,12 @@ public class HeapReachingDefs<T extends InstanceKey> {
     Map<Integer, NormalStatement> ssaInstructionIndex2Statement = mapInstructionsToStatements(domain);
 
     // solve reaching definitions as a dataflow problem
-    BitVectorFramework<IExplodedBasicBlock, Statement> rd = new BitVectorFramework<IExplodedBasicBlock, Statement>(cfg, new RD(node,
+    BitVectorFramework<IExplodedBasicBlock, Statement> rd = new BitVectorFramework<>(cfg, new RD(node,
         cfg, pa, domain, ssaInstructionIndex2Statement, exclusions), domain);
     if (VERBOSE) {
       System.err.println("Solve ");
     }
-    BitVectorSolver<? extends ISSABasicBlock> solver = new BitVectorSolver<IExplodedBasicBlock>(rd);
+    BitVectorSolver<? extends ISSABasicBlock> solver = new BitVectorSolver<>(rd);
     try {
       solver.solve(null);
     } catch (CancelException e) {
@@ -322,7 +322,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
               }
             }
           }
-          return new OrdinalSet<Statement>(defs, domain);
+          return new OrdinalSet<>(defs, domain);
         } else {
           return OrdinalSet.empty();
         }
@@ -336,7 +336,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
         if (pointerKeyMod.get(p) == null) {
           return OrdinalSet.empty();
         }
-        return new OrdinalSet<Statement>(pointerKeyMod.get(p).intersection(v.getValue()), domain);
+        return new OrdinalSet<>(pointerKeyMod.get(p).intersection(v.getValue()), domain);
       }
       case HEAP_RET_CALLER: {
         HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) s;
@@ -348,7 +348,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
         } else {
           // the defs that flow to the call may flow to this return, since
           // the callees may have no relevant effect.
-          return new OrdinalSet<Statement>(pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
+          return new OrdinalSet<>(pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
         }
       }
       case HEAP_PARAM_CALLER: {
@@ -359,14 +359,14 @@ public class HeapReachingDefs<T extends InstanceKey> {
           int x = domain.getMappedIndex(new HeapStatement.HeapParamCallee(node, r.getLocation()));
           assert x >= 0;
           IntSet xset = SparseIntSet.singleton(x);
-          return new OrdinalSet<Statement>(xset, domain);
+          return new OrdinalSet<>(xset, domain);
         }
         BitVectorVariable v = solver.getIn(callBlock);
         if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
           return OrdinalSet.empty();
         } else {
-          return new OrdinalSet<Statement>(pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
+          return new OrdinalSet<>(pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
         }
       }
       case NORMAL_RET_CALLEE:
@@ -465,7 +465,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
   private static OrdinalSetMapping<Statement> createStatementDomain(Collection<Statement> statements) {
     Statement[] arr = new Statement[statements.size()];
-    OrdinalSetMapping<Statement> domain = new ObjectArrayMapping<Statement>(statements.toArray(arr));
+    OrdinalSetMapping<Statement> domain = new ObjectArrayMapping<>(statements.toArray(arr));
     return domain;
   }
 
@@ -646,7 +646,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
           // only static fields are actually killed
           Predicate<PointerKey> staticFilter = StaticFieldKey.class::isInstance;
           final Collection<PointerKey> kill = Iterator2Collection
-              .toSet(new FilterIterator<PointerKey>(mod.iterator(), staticFilter));
+              .toSet(new FilterIterator<>(mod.iterator(), staticFilter));
           if (kill.isEmpty()) {
             return null;
           } else {
@@ -660,7 +660,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
               return false;
             };
             BitVector result = new BitVector();
-            for (Statement k : Iterator2Iterable.make(new FilterIterator<Statement>(domain.iterator(), f))) {
+            for (Statement k : Iterator2Iterable.make(new FilterIterator<>(domain.iterator(), f))) {
               result.set(domain.getMappedIndex(k));
             }
             return result;

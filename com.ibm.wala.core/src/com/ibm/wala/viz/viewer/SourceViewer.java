@@ -32,7 +32,7 @@ public class SourceViewer extends JPanel{
   public SourceViewer() {
     super(new BorderLayout());
     sourceURL = null;
-    sourceCodeLines = new JList<String>(sourceCodeLinesList);
+    sourceCodeLines = new JList<>(sourceCodeLinesList);
     sourceCodeLocation = new JTextField("Source code");
     this.add(sourceCodeLocation, BorderLayout.PAGE_START);
     this.add(new JScrollPane(sourceCodeLines), BorderLayout.CENTER);

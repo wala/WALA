@@ -33,7 +33,7 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
   @SuppressWarnings("unchecked")
   public GenReach(Graph<T> flowGraph, Map<T, Collection<L>> gen) {
-    super(flowGraph, new GenFunctions<T, L>(gen), makeDomain(gen));
+    super(flowGraph, new GenFunctions<>(gen), makeDomain(gen));
     // ugly but necessary, in order to avoid computing the domain twice.
     GenReach.GenFunctions<T, L> g = (GenReach.GenFunctions<T, L>) getTransferFunctionProvider();
     g.domain = getLatticeValues();

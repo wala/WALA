@@ -38,7 +38,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   }
   
   public static <I, T extends IBasicBlock<I>> MutableCFG<I, T> copyFrom(ControlFlowGraph<I, T> cfg) {
-    MutableCFG<I, T> mutable = new MutableCFG<I, T>(cfg);
+    MutableCFG<I, T> mutable = new MutableCFG<>(cfg);
     
     for (T node : cfg) {
       mutable.addNode(node);
@@ -108,7 +108,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public List<T> getExceptionalSuccessors(T b) {
     final List<T> origSucc = orig.getExceptionalSuccessors(b);
     final IntSet allSuccs = this.getSuccNodeNumbers(b);
-    final List<T> thisSuccs = new LinkedList<T>();
+    final List<T> thisSuccs = new LinkedList<>();
     
     for (final T block : origSucc) {
       if (allSuccs.contains(block.getNumber())) {
@@ -122,7 +122,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   @Override
   public Collection<T> getNormalSuccessors(T b) {
     final List<T> excSuccs = getExceptionalSuccessors(b);
-    final List<T> thisSuccs = new LinkedList<T>();
+    final List<T> thisSuccs = new LinkedList<>();
     
     final Iterator<T> succs = getSuccNodes(b);
     while (succs.hasNext()) {
@@ -139,7 +139,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public Collection<T> getExceptionalPredecessors(T b) {
     final Collection<T> origPreds = orig.getExceptionalPredecessors(b);
     final IntSet allPreds = this.getPredNodeNumbers(b);
-    final List<T> thisPreds = new LinkedList<T>();
+    final List<T> thisPreds = new LinkedList<>();
     
     for (final T block : origPreds) {
       if (allPreds.contains(block.getNumber())) {
@@ -153,7 +153,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   @Override
   public Collection<T> getNormalPredecessors(T b) {
     final Collection<T> excPreds = getExceptionalPredecessors(b);
-    final List<T> thisPreds = new LinkedList<T>();
+    final List<T> thisPreds = new LinkedList<>();
     
     final Iterator<T> preds = getPredNodes(b);
     while (preds.hasNext()) {

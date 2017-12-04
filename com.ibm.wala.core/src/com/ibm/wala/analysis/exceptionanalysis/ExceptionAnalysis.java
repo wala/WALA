@@ -93,7 +93,7 @@ public class ExceptionAnalysis {
     ExceptionTransferFunctionProvider transferFunctionProvider = new ExceptionTransferFunctionProvider(intraResult, callgraph,
         transformer);
 
-    Graph<CGNode> graph = new InvertedGraph<CGNode>(callgraph);
+    Graph<CGNode> graph = new InvertedGraph<>(callgraph);
     BitVectorFramework<CGNode, TypeReference> problem = new BitVectorFramework<>(graph, transferFunctionProvider,
         transformer.getValues());
 

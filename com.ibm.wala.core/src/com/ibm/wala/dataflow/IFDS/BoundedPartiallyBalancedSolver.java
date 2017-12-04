@@ -28,7 +28,7 @@ public class BoundedPartiallyBalancedSolver<T, P, F> extends PartiallyBalancedTa
   
   public static <T, P, F> BoundedPartiallyBalancedSolver<T, P, F> createdBoundedPartiallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P, F> p, int bound,
       IProgressMonitor monitor) {
-    return new BoundedPartiallyBalancedSolver<T, P, F>(p, bound, monitor);
+    return new BoundedPartiallyBalancedSolver<>(p, bound, monitor);
   }
 
   private final int bound;

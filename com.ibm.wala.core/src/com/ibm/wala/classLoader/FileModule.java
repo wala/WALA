@@ -49,7 +49,7 @@ public abstract class FileModule implements Module, ModuleEntry {
    */
   @Override
   public Iterator<ModuleEntry> getEntries() {
-    return new NonNullSingletonIterator<ModuleEntry>(this);
+    return new NonNullSingletonIterator<>(this);
   }
 
   @Override

@@ -28,7 +28,7 @@ public interface ContextItem {
     }
 
     public static <T> Value make(T v) {
-      return new Value<T>(v);
+      return new Value<>(v);
     }
 
     @Override

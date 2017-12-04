@@ -209,8 +209,8 @@ public class MethodHandles {
 
     public Iterator<FieldReference> iterateFields(CGNode node, Predicate<SSAInstruction> filter) {
       return 
-          new MapIterator<SSAInstruction,FieldReference>(
-              new FilterIterator<SSAInstruction>(getIR(node).iterateNormalInstructions(), filter), 
+          new MapIterator<>(
+              new FilterIterator<>(getIR(node).iterateNormalInstructions(), filter), 
               object -> ((SSAFieldAccessInstruction)object).getDeclaredField());
     }
     
@@ -269,7 +269,7 @@ public class MethodHandles {
           code.addStatement(insts.LoadMetadataInstruction(code.getNextProgramCounter(), 2, TypeReference.JavaLangInvokeMethodType, ref.getDescriptor()));
           code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2, false));
         }
-        irs.put(node, new SoftReference<IR>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
+        irs.put(node, new SoftReference<>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
       }
 
       return irs.get(node).get();

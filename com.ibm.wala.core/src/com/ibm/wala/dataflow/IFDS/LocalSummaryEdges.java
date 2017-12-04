@@ -39,7 +39,7 @@ public class LocalSummaryEdges {
    * 
    * TODO: more representation optimization.
    */
-  private final SparseVector<IBinaryNaturalRelation> summaries = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
+  private final SparseVector<IBinaryNaturalRelation> summaries = new SparseVector<>(1, 1.1f);
 
   /**
    * Let (s_p,x) be an entry-exit pair, and let l := the long whose high word is s_p and low word is x.

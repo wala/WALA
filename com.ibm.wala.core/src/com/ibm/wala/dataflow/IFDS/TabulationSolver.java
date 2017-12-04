@@ -191,7 +191,7 @@ public class TabulationSolver<T, P, F> {
    * @throws IllegalArgumentException if p is null
    */
   public static <T, P, F> TabulationSolver<T, P, F> make(TabulationProblem<T, P, F> p) {
-    return new TabulationSolver<T, P, F>(p, null);
+    return new TabulationSolver<>(p, null);
   }
 
   /**
@@ -911,7 +911,7 @@ public class TabulationSolver<T, P, F> {
     public String toString() {
 
       StringBuffer result = new StringBuffer();
-      TreeMap<Object, TreeSet<T>> map = new TreeMap<Object, TreeSet<T>>(ToStringComparator.instance());
+      TreeMap<Object, TreeSet<T>> map = new TreeMap<>(ToStringComparator.instance());
 
       Comparator<Object> c = (o1, o2) -> {
         if (!(o1 instanceof IBasicBlock)) {
@@ -925,7 +925,7 @@ public class TabulationSolver<T, P, F> {
         P proc = supergraph.getProcOf(n);
         TreeSet<T> s = map.get(proc);
         if (s == null) {
-          s = new TreeSet<T>(c);
+          s = new TreeSet<>(c);
           map.put(proc, s);
         }
         s.add(n);

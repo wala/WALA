@@ -526,8 +526,8 @@ public abstract class IR implements IRView {
    * @return an {@link Iterator} of all instructions (Normal, Phi, and Catch)
    */
   public Iterator<SSAInstruction> iterateAllInstructions() {
-    return new CompoundIterator<SSAInstruction>(iterateNormalInstructions(), new CompoundIterator<SSAInstruction>(
-        iterateCatchInstructions(), new CompoundIterator<SSAInstruction>(iteratePhis(), iteratePis())));
+    return new CompoundIterator<>(iterateNormalInstructions(), new CompoundIterator<>(
+        iterateCatchInstructions(), new CompoundIterator<>(iteratePhis(), iteratePis())));
   }
 
   /**

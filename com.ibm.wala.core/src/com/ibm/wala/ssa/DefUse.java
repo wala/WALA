@@ -39,7 +39,7 @@ public class DefUse {
   /**
    * A Mapping from integer -> Instruction
    */
-  final protected ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
+  final protected ArrayList<SSAInstruction> allInstructions = new ArrayList<>();
 
   /**
    * prevent the IR from being collected while this is live.

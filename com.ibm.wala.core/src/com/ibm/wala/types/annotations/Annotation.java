@@ -122,7 +122,7 @@ public class Annotation {
       sb.append(" ]");
     }
     if (!namedArguments.isEmpty()) {
-      sb.append(" " + new TreeMap<String, ElementValue>(namedArguments));
+      sb.append(" " + new TreeMap<>(namedArguments));
     }
     return sb.toString();
   }

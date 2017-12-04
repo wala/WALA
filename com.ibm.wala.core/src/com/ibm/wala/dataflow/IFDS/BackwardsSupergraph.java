@@ -52,7 +52,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   }
 
   public static <T, P> BackwardsSupergraph<T, P> make(ISupergraph<T, P> forwardGraph) {
-    return new BackwardsSupergraph<T, P>(forwardGraph);
+    return new BackwardsSupergraph<>(forwardGraph);
   }
 
   /**
@@ -99,7 +99,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
       System.err.println("called nodes: "
           + Iterator2Collection.toSet(new FilterIterator<>(getSuccNodes(ret), exitFilter)));
     }
-    return new FilterIterator<T>(getSuccNodes(ret), exitFilter);
+    return new FilterIterator<>(getSuccNodes(ret), exitFilter);
   }
 
   /**
@@ -113,7 +113,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     Predicate<T> sameProc = o -> getProcOf(ret).equals(getProcOf(o)) && !delegate.isExit(o);
     Iterator<T> sameProcPreds = new FilterIterator<>(allPreds, sameProc);
     Predicate<T> notCall = o -> !delegate.isCall(o);
-    return new FilterIterator<T>(sameProcPreds, notCall);
+    return new FilterIterator<>(sameProcPreds, notCall);
   }
 
   /*

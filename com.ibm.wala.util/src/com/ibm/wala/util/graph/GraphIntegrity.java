@@ -123,7 +123,7 @@ public class GraphIntegrity {
         n2++;
       }
       n3 = 0;
-      for (Iterator<T> it = new BFSIterator<T>(G); it.hasNext();) {
+      for (Iterator<T> it = new BFSIterator<>(G); it.hasNext();) {
         it.next();
         n3++;
       }
@@ -145,7 +145,7 @@ public class GraphIntegrity {
       throw new UnsoundGraphException("n1: " + n1 + " n2: " + n2);
     }
     if (n1 != n3) {
-      throw setDiffException("n1: " + n1 + " n3: " + n3, G.iterator(), new BFSIterator<T>(G));
+      throw setDiffException("n1: " + n1 + " n3: " + n3, G.iterator(), new BFSIterator<>(G));
     }
     if (n1 != n4) {
       throw new UnsoundGraphException("n1: " + n1 + " n4: " + n3);

@@ -107,7 +107,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
   }
 
   private static SSAInstruction[] makeStatements(JavaTypeContext context) {
-    ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+    ArrayList<SSAInstruction> statements = new ArrayList<>();
     int nextLocal = 2;
     int retValue = nextLocal++;
     TypeReference tr = context.getType().getTypeReference();

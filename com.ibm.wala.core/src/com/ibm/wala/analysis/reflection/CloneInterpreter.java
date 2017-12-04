@@ -141,13 +141,13 @@ public class CloneInterpreter implements SSAContextInterpreter {
     }
     assert understands(node);
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
-    return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(NEW_PC, cls.getReference()));
+    return new NonNullSingletonIterator<>(NewSiteReference.make(NEW_PC, cls.getReference()));
   }
 
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     assert understands(node);
-    return new NonNullSingletonIterator<CallSiteReference>(ARRAYCOPY_SITE);
+    return new NonNullSingletonIterator<>(ARRAYCOPY_SITE);
   }
 
   /**
@@ -156,7 +156,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   private SSAInstruction[] makeStatements(IClass klass) {
     assert klass != null;
 
-    ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+    ArrayList<SSAInstruction> statements = new ArrayList<>();
     // value number 1 is "this".
     int nextLocal = 2;
 

@@ -109,7 +109,7 @@ public class SSAValueManager {
 
     /** The main data-structure of the management  */
     private Map<VariableKey, List<Managed<? extends SSAValue>>> seenTypes = HashMapFactory.make();
-    private List<SSAValue> unmanaged = new ArrayList<SSAValue>();
+    private List<SSAValue> unmanaged = new ArrayList<>();
    
     public SSAValueManager(ParameterAccessor acc) {
         this.nextLocal = acc.getFirstAfter();
@@ -181,7 +181,7 @@ public class SSAValueManager {
             param.setInScope = currentScope;
             param.setBy = setBy;
 
-            final List<Managed<? extends SSAValue>> aParam = new ArrayList<Managed<? extends SSAValue>>();
+            final List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
             aParam.add(param);
 
             seenTypes.put(value.key, aParam);
@@ -283,7 +283,7 @@ public class SSAValueManager {
         if (seenTypes.containsKey(key)) {
             seenTypes.get(key).add(param);
         } else {
-            List<Managed<? extends SSAValue>> aParam = new ArrayList<Managed<? extends SSAValue>>();
+            List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
             aParam.add(param);
 
             seenTypes.put(key, aParam);
@@ -328,7 +328,7 @@ public class SSAValueManager {
         if (seenTypes.containsKey(key)) {
             seenTypes.get(key).add(param);
         } else {
-            List<Managed<? extends SSAValue>> aParam = new ArrayList<Managed<? extends SSAValue>>();
+            List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
             aParam.add(param);
 
             seenTypes.put(key, aParam);
@@ -436,7 +436,7 @@ public class SSAValueManager {
             throw new IllegalArgumentException("The argument key may not be null");
         }
 
-        List<SSAValue> ret = new ArrayList<SSAValue>();
+        List<SSAValue> ret = new ArrayList<>();
 
         if (seenTypes.containsKey(key)) {
             for (Managed<? extends SSAValue> param : seenTypes.get(key)) {
@@ -659,8 +659,8 @@ public class SSAValueManager {
      *  Collect the variable-names of all known variables.
      */
     public Map<Integer, Atom> makeLocalNames() {
-        final Map<Integer, Atom> names = new HashMap<Integer, Atom>();
-        final Map<VariableKey, Integer> suffix = new HashMap<VariableKey, Integer>();
+        final Map<Integer, Atom> names = new HashMap<>();
+        final Map<VariableKey, Integer> suffix = new HashMap<>();
         int currentSuffix = 0;
 
         for (final List<Managed<? extends SSAValue>> manageds : seenTypes.values()) {

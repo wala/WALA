@@ -89,7 +89,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
   @Override
   public void setDef(int instructionIndex, ShrikeLocalName name, int newDef) {
     if (defs[instructionIndex] == null) {
-      defs[instructionIndex] = new HashMap<ShrikeLocalName, Integer>(2);
+      defs[instructionIndex] = new HashMap<>(2);
     }
 
     defs[instructionIndex].put(name, newDef);
@@ -98,7 +98,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
   @Override
   public void setUse(int instructionIndex, ShrikeLocalName name, int newUse) {
     if (uses[instructionIndex] == null) {
-      uses[instructionIndex] = new HashMap<ShrikeLocalName, Integer>(2);
+      uses[instructionIndex] = new HashMap<>(2);
     }
 
     uses[instructionIndex].put(name, newUse);
@@ -106,7 +106,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
 
   @Override
   public Collection<ShrikeLocalName> getNames() {
-    HashSet<ShrikeLocalName> result = new HashSet<ShrikeLocalName>();
+    HashSet<ShrikeLocalName> result = new HashSet<>();
     for (int i = 0; i < uses.length; i++) {
       if (uses[i] != null) {
         result.addAll(uses[i].keySet());

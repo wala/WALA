@@ -88,8 +88,8 @@ public class VolatileMethodSummary {
     private static final boolean DEBUG = false;
     private boolean allowReservedPC = false;
     private MethodSummary summary;
-    private List<SSAInstruction> instructions = new ArrayList<SSAInstruction>();
-    private Map<Integer, Atom> localNames = new HashMap<Integer, Atom>();
+    private List<SSAInstruction> instructions = new ArrayList<>();
+    private Map<Integer, Atom> localNames = new HashMap<>();
     private int currentProgramCounter = 0;
     private boolean locked = false;
 

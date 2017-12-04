@@ -75,7 +75,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   public enum Dependency {CONTROL_DEP, DATA_AND_CONTROL_DEP}
   
   private final SlowSparseNumberedLabeledGraph<Statement, Dependency> delegate =
-    new SlowSparseNumberedLabeledGraph<Statement, Dependency>(Dependency.DATA_AND_CONTROL_DEP);
+    new SlowSparseNumberedLabeledGraph<>(Dependency.DATA_AND_CONTROL_DEP);
 /** END Custom change: control deps */                
 
   private final static boolean VERBOSE = false;
@@ -245,7 +245,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
 
-    ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(
+    ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<>(
         controlFlowGraph);
     for (ISSABasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
@@ -680,9 +680,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
         return true;
       }
     };
-    Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<Statement>(iterator(), f));
+    Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<>(iterator(), f));
 
-    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs<T>(modRef, heapModel).computeReachingDefs(node, ir, pa, mod,
+    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs<>(modRef, heapModel).computeReachingDefs(node, ir, pa, mod,
         relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {
@@ -772,8 +772,8 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       }
     };
     return Iterator2Collection.toSet(
-        new MapIterator<Statement, NormalStatement>(
-            new FilterIterator<Statement>(iterator(), filter),
+        new MapIterator<>(
+            new FilterIterator<>(iterator(), filter),
             NormalStatement.class::cast));
   }
 
@@ -894,7 +894,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    * @param dOptions
    */
   private void createReturnStatements() {
-    ArrayList<Statement> list = new ArrayList<Statement>();
+    ArrayList<Statement> list = new ArrayList<>();
     if (!node.getMethod().getReturnType().equals(TypeReference.Void)) {
       NormalReturnCallee n = new NormalReturnCallee(node);
       delegate.addNode(n);
@@ -923,7 +923,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    */
   private void createCalleeParams() {
     if (paramCalleeStatements == null) {
-      ArrayList<Statement> list = new ArrayList<Statement>();
+      ArrayList<Statement> list = new ArrayList<>();
       int paramCount = node.getMethod().getNumberOfParameters();
       
       for (int i = 1; i <= paramCount; i++) {
@@ -1038,7 +1038,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     for (CGNode t : cg.getPossibleTargets(n, call.getCallSite())) {
       bv.addAll(loc.get(t).getBackingSet());
     }
-    return new OrdinalSet<PointerKey>(bv, loc.get(n).getMapping());
+    return new OrdinalSet<>(bv, loc.get(n).getMapping());
   }
 
   @Override

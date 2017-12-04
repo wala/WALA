@@ -55,7 +55,7 @@ public class MethodGenerics {
 	}
 	
 	private void doit() {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 		String array[] = new String[] { "coucou monde", "ciao mondo", "guten tag welt", "hola mundo", "shalom olam" };
 		fromArrayToCollection(array, list);
 		System.out.println(list);

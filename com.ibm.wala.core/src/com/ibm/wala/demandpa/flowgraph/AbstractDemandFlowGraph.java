@@ -123,7 +123,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       return EmptyIterator.instance();
     }
     int paramPos = pk.getValueNumber() - 1;
-    ArrayList<PointerKeyAndCallSite> paramSuccs = new ArrayList<PointerKeyAndCallSite>();
+    ArrayList<PointerKeyAndCallSite> paramSuccs = new ArrayList<>();
     // iterate over callers
     for (CGNode caller : cg) {
       // TODO optimization: we don't need to add the graph if null is passed
@@ -155,7 +155,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     if (instrs == null) {
       return EmptyIterator.instance();
     }
-    ArrayList<PointerKeyAndCallSite> paramPreds = new ArrayList<PointerKeyAndCallSite>();
+    ArrayList<PointerKeyAndCallSite> paramPreds = new ArrayList<>();
     for (SSAAbstractInvokeInstruction callInstr : instrs) {
       for (int i = 0; i < callInstr.getNumberOfUses(); i++) {
         if (pk.getValueNumber() != callInstr.getUse(i))
@@ -185,7 +185,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     SSAAbstractInvokeInstruction callInstr = callDefs.get(pk);
     if (callInstr == null)
       return EmptyIterator.instance();
-    ArrayList<PointerKeyAndCallSite> returnSuccs = new ArrayList<PointerKeyAndCallSite>();
+    ArrayList<PointerKeyAndCallSite> returnSuccs = new ArrayList<>();
     boolean isExceptional = pk.getValueNumber() == callInstr.getException();
 
     CallSiteReference callSiteRef = callInstr.getCallSite();
@@ -212,7 +212,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       return EmptyIterator.instance();
     }
     boolean isExceptional = pk == heapModel.getPointerKeyForExceptionalReturnValue(cgNode);
-    ArrayList<PointerKeyAndCallSite> returnPreds = new ArrayList<PointerKeyAndCallSite>();
+    ArrayList<PointerKeyAndCallSite> returnPreds = new ArrayList<>();
     // iterate over callers
     for (CGNode caller : cg) {
       // TODO we don't need to add the graph if null is passed

@@ -52,7 +52,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   private final Map<PointerKey, Set<Statement>> invRef;
 
   public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    this(pa, new SDG<InstanceKey>(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
+    this(pa, new SDG<>(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
   }
 
   public PABasedMemoryAccessMap(PointerAnalysis<InstanceKey> pa, SDG<InstanceKey> sdg) {
@@ -71,7 +71,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   @Override
   public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef) {
-    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
+    Collection<MemoryAccess> memAccesses = new ArrayList<>();
     if (DEBUG) {
       System.err.println(("looking at reads of array ref " + arrayRef));
     }
@@ -84,7 +84,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   @Override
   public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef) {
-    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
+    Collection<MemoryAccess> memAccesses = new ArrayList<>();
     if (DEBUG) {
       System.err.println(("looking at writes to array ref " + arrayRef));
     }
@@ -100,7 +100,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   @Override
   public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field) {
-    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
+    Collection<MemoryAccess> memAccesses = new ArrayList<>();
     for (InstanceKey ik : pa.getPointsToSet(baseRef)) {
       PointerKey ifk = heapModel.getPointerKeyForInstanceField(ik, field);
       convertStmtsToMemoryAccess(invRef.get(ifk), memAccesses);
@@ -110,7 +110,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   @Override
   public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field) {
-    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
+    Collection<MemoryAccess> memAccesses = new ArrayList<>();
     for (InstanceKey ik : pa.getPointsToSet(baseRef)) {
       PointerKey ifk = heapModel.getPointerKeyForInstanceField(ik, field);
       convertStmtsToMemoryAccess(invMod.get(ifk), memAccesses);
@@ -120,14 +120,14 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   @Override
   public Collection<MemoryAccess> getStaticFieldReads(IField field) {
-    Collection<MemoryAccess> result = new ArrayList<MemoryAccess>();
+    Collection<MemoryAccess> result = new ArrayList<>();
     convertStmtsToMemoryAccess(invRef.get(heapModel.getPointerKeyForStaticField(field)), result);
     return result;
   }
 
   @Override
   public Collection<MemoryAccess> getStaticFieldWrites(IField field) {
-    Collection<MemoryAccess> result = new ArrayList<MemoryAccess>();
+    Collection<MemoryAccess> result = new ArrayList<>();
     convertStmtsToMemoryAccess(invMod.get(heapModel.getPointerKeyForStaticField(field)), result);
     return result;
   }

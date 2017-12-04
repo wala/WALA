@@ -187,7 +187,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
     };
 
-    IKilldallFramework<BasicBlock, MachineState> problem = new BasicFramework<BasicBlock, MachineState>(cfg, xferFunctions);
+    IKilldallFramework<BasicBlock, MachineState> problem = new BasicFramework<>(cfg, xferFunctions);
     solver = new DataflowSolver<BasicBlock, MachineState>(problem) {
       private MachineState entry;
 

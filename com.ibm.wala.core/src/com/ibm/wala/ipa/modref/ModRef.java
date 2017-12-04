@@ -44,7 +44,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 public class ModRef<T extends InstanceKey> {
 
   public static <U extends InstanceKey> ModRef<U> make() {
-    return new ModRef<U>();
+    return new ModRef<>();
   }
 
   public ModRef() {

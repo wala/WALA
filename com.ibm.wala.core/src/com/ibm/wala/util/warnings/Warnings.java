@@ -32,7 +32,7 @@ public class Warnings {
   }
 
   public static synchronized String asString() {
-    TreeSet<Warning> T = new TreeSet<Warning>();
+    TreeSet<Warning> T = new TreeSet<>();
     T.addAll(warnings);
     Iterator<Warning> it = T.iterator();
     StringBuffer result = new StringBuffer();

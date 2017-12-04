@@ -348,7 +348,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     /**
      * List of synthetic invoke instructions we model for this specialized instance.
      */
-    final private ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
+    final private ArrayList<SSAInstruction> calls = new ArrayList<>();
 
     /**
      * The method being modelled

@@ -437,7 +437,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   }
 
   public void repOk() {
-    for (MemoryAccess m : Iterator2Iterable.make(new CompoundIterator<MemoryAccess>(arrayReads.iterator(), arrayWrites.iterator()))) {
+    for (MemoryAccess m : Iterator2Iterable.make(new CompoundIterator<>(arrayReads.iterator(), arrayWrites.iterator()))) {
       CGNode node = m.getNode();
       IR ir = node.getIR();
       assert ir != null : "null IR for " + node + " but we have a memory access";

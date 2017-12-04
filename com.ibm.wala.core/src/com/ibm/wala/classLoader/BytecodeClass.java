@@ -306,7 +306,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IField> getAllFields() {
-    Collection<IField> result = new LinkedList<IField>();
+    Collection<IField> result = new LinkedList<>();
     result.addAll(getAllInstanceFields());
     result.addAll(getAllStaticFields());
     return result;
@@ -359,7 +359,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IField> getAllInstanceFields() {
-    Collection<IField> result = new LinkedList<IField>(getDeclaredInstanceFields());
+    Collection<IField> result = new LinkedList<>(getDeclaredInstanceFields());
     IClass s = getSuperclass();
     while (s != null) {
       result.addAll(s.getDeclaredInstanceFields());
@@ -373,7 +373,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IField> getAllStaticFields() {
-    Collection<IField> result = new LinkedList<IField>(getDeclaredStaticFields());
+    Collection<IField> result = new LinkedList<>(getDeclaredStaticFields());
     IClass s = getSuperclass();
     while (s != null) {
       result.addAll(s.getDeclaredStaticFields());
@@ -387,7 +387,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IMethod> getAllMethods() {
-    Collection<IMethod> result = new LinkedList<IMethod>();
+    Collection<IMethod> result = new LinkedList<>();
     Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
     while (declaredMethods.hasNext()) {
       result.add(declaredMethods.next());
@@ -459,7 +459,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
         IMethod inherit = superclass.getMethod(selector);
         if (inherit != null) {
           if (inheritCache == null) {
-            inheritCache = new BimodalMap<Selector, IMethod>(5);
+            inheritCache = new BimodalMap<>(5);
           }
           inheritCache.put(selector, inherit);
           return inherit;
@@ -473,7 +473,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       for(IMethod m : iface.getDeclaredMethods()) {
         if (!m.isAbstract() && m.getSelector().equals(selector)) {          
           if (inheritCache == null) {
-            inheritCache = new BimodalMap<Selector, IMethod>(5);
+            inheritCache = new BimodalMap<>(5);
           }
           inheritCache.put(selector, m);
 
@@ -484,7 +484,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     
     // no method found
     if (inheritCache == null) {
-      inheritCache = new BimodalMap<Selector, IMethod>(5);
+      inheritCache = new BimodalMap<>(5);
     }
     inheritCache.put(selector, null);
     return null;
@@ -536,7 +536,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    *         classes can not be loaded
    */
   private Collection<IClass> array2IClassSet(ImmutableByteArray[] interfaces) {
-    ArrayList<IClass> result = new ArrayList<IClass>(interfaces.length);
+    ArrayList<IClass> result = new ArrayList<>(interfaces.length);
     for (ImmutableByteArray name : interfaces) {
       IClass klass = null;
       klass = loader.lookupClass(TypeName.findOrCreate(name));
@@ -551,7 +551,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   protected List<IField> findDeclaredField(Atom name) {
     
-    List<IField> result = new ArrayList<IField>(1);
+    List<IField> result = new ArrayList<>(1);
     
     if (instanceFields != null) {
       for (IField instanceField : instanceFields) {
@@ -599,7 +599,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
           if (methods.length > 5) {
             tmpMethodMap = HashMapFactory.make(methods.length);
           } else {
-            tmpMethodMap= new SmallMap<Selector, IMethod>();
+            tmpMethodMap= new SmallMap<>();
           }
           for (IMethod m : methods) {
             tmpMethodMap.put(m.getReference().getSelector(), m);

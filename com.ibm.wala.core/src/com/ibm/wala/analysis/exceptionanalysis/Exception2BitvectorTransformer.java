@@ -37,7 +37,7 @@ public class Exception2BitvectorTransformer {
   private void createValues(Set<TypeReference> exceptions) {
     TypeReference[] exceptionsArray = new TypeReference[exceptions.size()];
     exceptions.toArray(exceptionsArray);
-    values = new ObjectArrayMapping<TypeReference>(exceptionsArray);
+    values = new ObjectArrayMapping<>(exceptionsArray);
   }
 
   public BitVector computeBitVector(Set<TypeReference> exceptions) {

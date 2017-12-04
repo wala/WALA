@@ -60,7 +60,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
   private Map<T, Set<T>> buildControlDependence(boolean wantEdgeLabels) {
     Map<T, Set<T>> controlDependence = HashMapFactory.make(cfg.getNumberOfNodes());
 
-    DominanceFrontiers<T> RDF = new DominanceFrontiers<T>(GraphInverter.invert(cfg), cfg.exit());
+    DominanceFrontiers<T> RDF = new DominanceFrontiers<>(GraphInverter.invert(cfg), cfg.exit());
 
     if (wantEdgeLabels) {
       edgeLabels = HashMapFactory.make();

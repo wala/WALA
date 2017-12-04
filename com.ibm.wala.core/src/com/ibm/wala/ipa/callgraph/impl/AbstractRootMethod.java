@@ -54,7 +54,7 @@ import com.ibm.wala.util.warnings.Warnings;
  */
 public abstract class AbstractRootMethod extends SyntheticMethod {
 
-  final protected ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+  final protected ArrayList<SSAInstruction> statements = new ArrayList<>();
 
   private Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
 
@@ -361,7 +361,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
       @Override
       public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-        ArrayList<NewSiteReference> result = new ArrayList<NewSiteReference>();
+        ArrayList<NewSiteReference> result = new ArrayList<>();
         SSAInstruction[] statements = getStatements(options.getSSAOptions());
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSANewInstruction) {
@@ -373,7 +373,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       }
 
       public Iterator<SSAInstruction> getInvokeStatements() {
-        ArrayList<SSAInstruction> result = new ArrayList<SSAInstruction>();
+        ArrayList<SSAInstruction> result = new ArrayList<>();
         SSAInstruction[] statements = getStatements(options.getSSAOptions());
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSAInvokeInstruction) {

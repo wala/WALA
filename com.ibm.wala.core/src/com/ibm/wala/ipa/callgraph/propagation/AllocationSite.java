@@ -91,8 +91,8 @@ public class AllocationSite implements InstanceKey {
 
   @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
-    return new MapIterator<CGNode, Pair<CGNode, NewSiteReference>>(
-        new FilterIterator<CGNode>(
+    return new MapIterator<>(
+        new FilterIterator<>(
           CG.getNodes(method.getReference()).iterator(),
           o -> o.getMethod().equals(method)
         ), 

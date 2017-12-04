@@ -88,7 +88,7 @@ public abstract class TypeSignature extends Signature {
    * @return tokenize it
    */
   static String[] parseForTypeSignatures(String typeSigs) throws IllegalArgumentException {
-    ArrayList<String> sigs = new ArrayList<String>(10);
+    ArrayList<String> sigs = new ArrayList<>(10);
     if (typeSigs.length() < 2) {
       // TODO: check this?
       throw new IllegalArgumentException("illegal string of TypeSignature " + typeSigs);

@@ -360,7 +360,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
                 IClass caughtClass = cha.lookupClass(caughtException);
                 // the set "caught" should be the set of exceptions that MUST
                 // have been caught by the handlers in scope
-                ArrayList<TypeReference> caught = new ArrayList<TypeReference>(exceptionTypes.size());
+                ArrayList<TypeReference> caught = new ArrayList<>(exceptionTypes.size());
                 // check if we should add an edge to the catch block.
                 for (TypeReference t : exceptionTypes) {
                   if (t != null) {
@@ -493,7 +493,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
 
     @Override
     public Iterator<IInstruction> iterator() {
-      return new ArrayIterator<IInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
+      return new ArrayIterator<>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
   }
 

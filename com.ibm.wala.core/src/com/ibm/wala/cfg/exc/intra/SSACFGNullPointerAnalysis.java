@@ -45,7 +45,7 @@ public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAIn
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> orig = ir.getControlFlowGraph();
 
-    intra = new IntraprocNullPointerAnalysis<ISSABasicBlock>(ir, orig, ignoredExceptions, initialState, mState);
+    intra = new IntraprocNullPointerAnalysis<>(ir, orig, ignoredExceptions, initialState, mState);
     intra.run(progress);
 
     return intra.getNumberOfDeletedEdges();

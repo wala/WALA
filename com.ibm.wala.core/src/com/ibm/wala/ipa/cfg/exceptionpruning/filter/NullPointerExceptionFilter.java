@@ -35,7 +35,7 @@ ExceptionFilter<SSAInstruction> {
 	public Collection<FilteredException> filteredExceptions(
 			SSAInstruction instruction) {
 		if (this.analysis.nullPointerExceptionThrowState(instruction) == State.NOT_NULL) {
-			final LinkedList<FilteredException> result = new LinkedList<FilteredException>();
+			final LinkedList<FilteredException> result = new LinkedList<>();
 			result.add(new FilteredException(
 					TypeReference.JavaLangNullPointerException));
 			return result;

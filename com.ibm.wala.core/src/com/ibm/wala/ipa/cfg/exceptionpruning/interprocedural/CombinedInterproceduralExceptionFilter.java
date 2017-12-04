@@ -40,7 +40,7 @@ public class CombinedInterproceduralExceptionFilter<Instruction> implements Inte
   
   @Override
   public ExceptionFilter<Instruction> getFilter(CGNode node) {
-    CombinedExceptionFilter<Instruction> result = new CombinedExceptionFilter<Instruction>();
+    CombinedExceptionFilter<Instruction> result = new CombinedExceptionFilter<>();
     for (InterproceduralExceptionFilter<Instruction> exceptionFilter:filter) {
       result.add(exceptionFilter.getFilter(node));
     }    

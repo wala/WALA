@@ -83,7 +83,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     if (options.getUseConstantSpecificKeys())
-      return new ConstantKey<T>(S, cha.lookupClass(type));
+      return new ConstantKey<>(S, cha.lookupClass(type));
     else
       return new ConcreteTypeKey(cha.lookupClass(type));
   }

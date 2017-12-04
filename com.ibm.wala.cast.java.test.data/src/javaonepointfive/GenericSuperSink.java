@@ -47,14 +47,14 @@ public class GenericSuperSink {
 	
 	private void doit() {
 		Collection<? super String> sink;
-		Collection<String> cs = new ArrayList<String>();
+		Collection<String> cs = new ArrayList<>();
 		cs.add("hello");
 		
 		sink = new ArrayList<Object>();
 		sink.add(cs.iterator().next());
 		System.out.println(sink);
 
-		sink = new ArrayList<String>();
+		sink = new ArrayList<>();
 		sink.add(cs.iterator().next());
 		System.out.println(sink);
 	}

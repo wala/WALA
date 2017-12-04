@@ -43,7 +43,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class LambdaSummaryClass extends SyntheticClass {
 
-  private static WeakHashMap<BootstrapMethod, LambdaSummaryClass> summaries = new WeakHashMap<BootstrapMethod, LambdaSummaryClass>();
+  private static WeakHashMap<BootstrapMethod, LambdaSummaryClass> summaries = new WeakHashMap<>();
   
   public static LambdaSummaryClass findOrCreate(CGNode caller, SSAInvokeDynamicInstruction inst) {
     if (! summaries.containsKey(inst.getBootstrap())) {

@@ -41,7 +41,7 @@ public class PointsToMap {
    * <li>UNIFIED
    * </ul>
    */
-  private final IVector<Object> pointsToSets = new SimpleVector<Object>();
+  private final IVector<Object> pointsToSets = new SimpleVector<>();
 
   private final IntegerUnionFind uf = new IntegerUnionFind();
 
@@ -200,7 +200,7 @@ public class PointsToMap {
    * @return {@link Iterator}&lt;{@link PointerKey}&gt;
    */
   public Iterator<PointerKey> getTransitiveRoots() {
-    return new FilterIterator<PointerKey>(iterateKeys(), this::isTransitiveRoot);
+    return new FilterIterator<>(iterateKeys(), this::isTransitiveRoot);
   }
 
   /**

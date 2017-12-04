@@ -197,7 +197,7 @@ public class PaPanel extends JSplitPane {
    * @return
    */
   protected List<Object> getRootNodes(){
-    List<Object> ret = new ArrayList<Object>();
+    List<Object> ret = new ArrayList<>();
     for (CGNode n : cg){
       ret.add(n);
     }
@@ -233,7 +233,7 @@ public class PaPanel extends JSplitPane {
    * @return
    */
   protected List<Object> getChildrenFor(Object node) {
-    List<Object> ret = new ArrayList<Object>();
+    List<Object> ret = new ArrayList<>();
     if (node instanceof InstanceKey){
       ret.addAll(getPointerKeysUnderInstanceKey((InstanceKey) node));
     } else if (node instanceof PointerKey){
@@ -284,7 +284,7 @@ public class PaPanel extends JSplitPane {
       set = null;
     }
     if (null == set){
-      set = new ArrayList<T>();
+      set = new ArrayList<>();
       map.put(index, set);
     }
     set.add(o);

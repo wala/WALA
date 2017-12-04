@@ -561,7 +561,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     if (target == null) {
       throw new IllegalArgumentException("target is null");
     }
-    ArrayList<TypeReference> set = new ArrayList<TypeReference>(cha.getJavaLangRuntimeExceptionTypes());
+    ArrayList<TypeReference> set = new ArrayList<>(cha.getJavaLangRuntimeExceptionTypes());
     set.addAll(cha.getJavaLangErrorTypes());
 
     IClass klass = cha.lookupClass(target.getDeclaringClass());

@@ -50,7 +50,7 @@ public class LocalPathEdges {
    * TODO: more representation optimization. A special representation for triples? sparse representations for CFG? exploit shorts
    * for ints?
    */
-  private final SparseVector<IBinaryNaturalRelation> paths = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
+  private final SparseVector<IBinaryNaturalRelation> paths = new SparseVector<>(1, 1.1f);
 
   /**
    * If this is non-null, it holds a redundant representation of the paths information, designed to make getReachable(II) faster.
@@ -75,20 +75,20 @@ public class LocalPathEdges {
    * 
    * for fact d1, identityPaths[d1] gives the set of block numbers N s.t. for n \in N, <s_p, d1> -> <n, d1> is a path edge.
    */
-  private final SparseVector<IntSet> identityPaths = new SparseVector<IntSet>(1, 1.1f);
+  private final SparseVector<IntSet> identityPaths = new SparseVector<>(1, 1.1f);
 
   /**
    * a map from integer d2 -> int set
    * 
    * for fact d2, zeroPaths[d2] gives the set of block numbers N s.t. for n \in N, <s_p, 0> -> <n, d2> is a path edge.
    */
-  private final SparseVector<IntSet> zeroPaths = new SparseVector<IntSet>(1, 1.1f);
+  private final SparseVector<IntSet> zeroPaths = new SparseVector<>(1, 1.1f);
 
   /**
    * @param fastMerge if true, the representation uses extra space in order to support faster merge operations
    */
   public LocalPathEdges(boolean fastMerge) {
-    altPaths = fastMerge ? new SparseVector<IBinaryNaturalRelation>(1, 1.1f) : null;
+    altPaths = fastMerge ? new SparseVector<>(1, 1.1f) : null;
   }
 
   /**

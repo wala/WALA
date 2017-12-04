@@ -50,7 +50,7 @@ public class DummyStateMachine<T> implements StateMachine<T> {
 
     @Override
     public StateMachine<T> make() {
-      return new DummyStateMachine<T>();
+      return new DummyStateMachine<>();
     }
 
   }

@@ -34,14 +34,14 @@ public class CallFlowEdges {
    * TODO: more representation optimization. A special representation for triples? sparse representations for CFG? exploit shorts
    * for ints?
    */
-  private final SparseVector<IBinaryNaturalRelation> edges = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
+  private final SparseVector<IBinaryNaturalRelation> edges = new SparseVector<>(1, 1.1f);
 
   /**
    * a map from integer d1 -> int set.
    * 
    * for fact d1, identityPaths[d1] gives the set of block numbers C s.t. for c \in C, <c, d1> -> <s_p, d1> is an edge.
    */
-  private final SparseVector<IntSet> identityEdges = new SparseVector<IntSet>(1, 1.1f);
+  private final SparseVector<IntSet> identityEdges = new SparseVector<>(1, 1.1f);
 
   public CallFlowEdges() {
   }

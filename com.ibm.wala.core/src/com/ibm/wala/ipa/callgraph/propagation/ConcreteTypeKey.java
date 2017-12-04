@@ -104,8 +104,8 @@ public final class ConcreteTypeKey implements InstanceKey {
     return new ComposedIterator<CGNode, Pair<CGNode, NewSiteReference>>(CG.iterator()) {
       @Override
       public Iterator<? extends Pair<CGNode, NewSiteReference>> makeInner(final CGNode outer) {
-        return new MapIterator<NewSiteReference, Pair<CGNode, NewSiteReference>>(
-            new FilterIterator<NewSiteReference>(
+        return new MapIterator<>(
+            new FilterIterator<>(
                 outer.iterateNewSites(),
                 o -> o.getDeclaredType().equals(type.getReference())
             ),

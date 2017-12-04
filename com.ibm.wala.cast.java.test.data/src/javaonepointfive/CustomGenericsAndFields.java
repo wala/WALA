@@ -95,7 +95,7 @@ class MyGeneric<A extends Object, B extends IGeneric<A>> {
 }
 
 public class CustomGenericsAndFields {
-	static ConcreteGeneric2<String> cg2 = new ConcreteGeneric2<String>();
+	static ConcreteGeneric2<String> cg2 = new ConcreteGeneric2<>();
 
 	static public ConcreteGeneric2<String> cg2WithSideEffects() {
 		System.out.println("look at me! I'm a side effect!");
@@ -109,7 +109,7 @@ public class CustomGenericsAndFields {
 	private void doit() {
 		// Simple: concrete generic
 		
-		ConcreteGeneric<String> absinthe = new ConcreteGeneric<String>();
+		ConcreteGeneric<String> absinthe = new ConcreteGeneric<>();
 		IGeneric<String> rye = absinthe;
 		String foo = rye.bar("hello", "world");
 		System.out.println(absinthe.foo() + foo);
@@ -118,7 +118,7 @@ public class CustomGenericsAndFields {
 
 		String thrownaway = cg2.bar("a","b");
 		cg2.setFoo("real one");
-		MyGeneric<String,ConcreteGeneric2<String>> mygeneric = new MyGeneric<String,ConcreteGeneric2<String>>("useless",cg2);
+		MyGeneric<String,ConcreteGeneric2<String>> mygeneric = new MyGeneric<>("useless",cg2);
 		String x = mygeneric.doFoo();
 		System.out.println(x);
 		String y = cg2.x;

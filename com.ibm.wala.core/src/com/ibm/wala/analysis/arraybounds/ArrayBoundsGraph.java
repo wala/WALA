@@ -141,7 +141,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 
 		final EdgeWeight edgeWeight = new AdditiveEdgeWeight(weight);
 
-		final DirectedHyperEdge<Integer> edge = new DirectedHyperEdge<Integer>();
+		final DirectedHyperEdge<Integer> edge = new DirectedHyperEdge<>();
 		edge.getDestination().add(dstNode);
 		edge.getSource().add(srcNode);
 		edge.setWeight(edgeWeight);
@@ -193,7 +193,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	public HyperNode<Integer> addNode(Integer value) {
 		HyperNode<Integer> result;
 		if (!this.getNodes().keySet().contains(value)) {
-			result = new HyperNode<Integer>(value);
+			result = new HyperNode<>(value);
 			this.getNodes().put(value, result);
 		} else {
 			result = this.getNodes().get(value);
@@ -227,7 +227,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	    throw new AssertionError("Source variables should only be created once.");
 	  }
 	  
-	  SoftFinalHyperNode<Integer> node = new SoftFinalHyperNode<Integer>(var);
+	  SoftFinalHyperNode<Integer> node = new SoftFinalHyperNode<>(var);
 	  this.getNodes().put(var, node);		
 
 //		final HyperNode<Integer> varNode = this.getNodes().get(var);
@@ -276,7 +276,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	public void markAsArrayAccess(Integer array, Integer index) {
 		Set<Integer> indices;
 		if (!this.arrayAccess.containsKey(array)) {
-			indices = new HashSet<Integer>();
+			indices = new HashSet<>();
 			this.arrayAccess.put(array, indices);
 		} else {
 			indices = this.arrayAccess.get(array);

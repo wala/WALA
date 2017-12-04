@@ -56,12 +56,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * Track nodes (PointsToSet Variables and AbstractEquations)
    */
-  private final NumberedNodeManager<INodeWithNumber> nodeManager = new DelegatingNumberedNodeManager<INodeWithNumber>();
+  private final NumberedNodeManager<INodeWithNumber> nodeManager = new DelegatingNumberedNodeManager<>();
 
   /**
    * Track edges (equations) that are not represented implicitly
    */
-  private final NumberedEdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2,
+  private final NumberedEdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<>(nodeManager, 2,
       BasicNaturalRelation.SIMPLE);
 
   private final DelegateGraph delegateGraph = new DelegateGraph();
@@ -75,14 +75,14 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    * for UnaryOperator op, let R be implicitMap.get(op) then (i,j) \in R implies i op j is an equation in the graph
    * 
    */
-  private final SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> implicitUnaryMap = new SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation>();
+  private final SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> implicitUnaryMap = new SmallMap<>();
 
   /**
    * The inverse of relations in the implicit map
    * 
    * for UnaryOperator op, let R be invImplicitMap.get(op) then (i,j) \in R implies j op i is an equation in the graph
    */
-  private final SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> invImplicitUnaryMap = new SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation>();
+  private final SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> invImplicitUnaryMap = new SmallMap<>();
 
   /**
    * Number of implicit unary equations registered
@@ -271,7 +271,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @Override
   public Iterator<AbstractStatement> getStatements() {
     Iterator<AbstractStatement> it = IteratorUtil.filter(delegateGraph.iterator(), AbstractStatement.class);
-    return new CompoundIterator<AbstractStatement>(it, new GlobalImplicitIterator());
+    return new CompoundIterator<>(it, new GlobalImplicitIterator());
   }
 
   /**
@@ -668,10 +668,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       IBinaryNaturalRelation R = (IBinaryNaturalRelation) invImplicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
-        result = new CompoundIterator<INodeWithNumber>(new ImplicitUseIterator(op, v, s), result);
+        result = new CompoundIterator<>(new ImplicitUseIterator(op, v, s), result);
       }
     }
-    List<AbstractStatement> list = new ArrayList<AbstractStatement>();
+    List<AbstractStatement> list = new ArrayList<>();
     while (result.hasNext()) {
       list.add((AbstractStatement) result.next());
     }
@@ -694,11 +694,11 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       IBinaryNaturalRelation R = (IBinaryNaturalRelation) implicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
-        result = new CompoundIterator<INodeWithNumber>(new ImplicitDefIterator(op, s, v), result);
+        result = new CompoundIterator<>(new ImplicitDefIterator(op, s, v), result);
       }
     }
 
-    List<AbstractStatement> list = new ArrayList<AbstractStatement>();
+    List<AbstractStatement> list = new ArrayList<>();
     while (result.hasNext()) {
       list.add((AbstractStatement) result.next());
     }

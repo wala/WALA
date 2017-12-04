@@ -54,7 +54,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   /**
    * The ith element of this vector is the basic block holding instruction i. this basic block has number i+1.
    */
-  private final SimpleVector<IExplodedBasicBlock> normalNodes = new SimpleVector<IExplodedBasicBlock>();
+  private final SimpleVector<IExplodedBasicBlock> normalNodes = new SimpleVector<>();
 
   private final Collection<IExplodedBasicBlock> allNodes = HashSetFactory.make();
 
@@ -127,7 +127,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       return Collections.emptySet();
     }
     if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
-      List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
+      List<IExplodedBasicBlock> result = new ArrayList<>();
       for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalPredecessors(eb.original)) {
         assert normalNodes.get(s.getLastInstructionIndex()) != null;
         result.add(normalNodes.get(s.getLastInstructionIndex()));
@@ -146,7 +146,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       return Collections.emptyList();
     }
     if (eb.isEntryBlock() || eb.instructionIndex == eb.original.getLastInstructionIndex()) {
-      List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
+      List<IExplodedBasicBlock> result = new ArrayList<>();
       ISSABasicBlock orig = eb.original;
       if (eb.isEntryBlock() && orig == null) {
         orig = ir.getControlFlowGraph().entry();
@@ -184,7 +184,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       return Collections.emptySet();
     }
     if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
-      List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
+      List<IExplodedBasicBlock> result = new ArrayList<>();
       for (ISSABasicBlock s : ir.getControlFlowGraph().getNormalPredecessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().entry())) {
           if (s.getLastInstructionIndex() >= 0) {
@@ -216,7 +216,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       return Collections.singleton(normalNodes.get(0));
     }
     if (eb.instructionIndex == eb.original.getLastInstructionIndex()) {
-      List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
+      List<IExplodedBasicBlock> result = new ArrayList<>();
       for (ISSABasicBlock s : ir.getControlFlowGraph().getNormalSuccessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
@@ -309,7 +309,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
     ISSABasicBlock original = eb.isExitBlock() ? ir.getControlFlowGraph().exit() : eb.original;
     if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
-      List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
+      List<IExplodedBasicBlock> result = new ArrayList<>();
       if (eb.original != null && eb.original.isEntryBlock()) {
         result.add(entry);
       }
@@ -355,7 +355,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       return z == null ? EmptyIterator.<IExplodedBasicBlock> instance() : NonNullSingletonIterator.make(z);
     }
     if (eb.instructionIndex == eb.original.getLastInstructionIndex()) {
-      List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
+      List<IExplodedBasicBlock> result = new ArrayList<>();
       for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getSuccNodes(eb.original); it.hasNext();) {
         ISSABasicBlock s = it.next();
         if (s.equals(ir.getControlFlowGraph().exit())) {
