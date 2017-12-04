@@ -431,7 +431,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       }
     }
 
-    for (Object decl : bodyDecls) {
+    for (BodyDeclaration decl : bodyDecls) {
       if (decl instanceof Initializer) {
         Initializer initializer = (Initializer) decl;
         boolean isStatic = ((initializer.getModifiers() & Modifier.STATIC) != 0);
@@ -450,13 +450,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // process entities. initializers will be folded in here.
     if (enumConstants != null) {
-      for (Object decl : enumConstants) {
-        memberEntities.add(visit((EnumConstantDeclaration) decl, context));
+      for (EnumConstantDeclaration decl : enumConstants) {
+        memberEntities.add(visit(decl, context));
       }
     }
 
-    for (Object d : bodyDecls) {
-      BodyDeclaration decl = (BodyDeclaration) d;
+    for (BodyDeclaration decl : bodyDecls) {
       if (decl instanceof FieldDeclaration) {
         FieldDeclaration fieldDecl = (FieldDeclaration) decl;
         Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(fieldDecl.getModifiers(), false, false);
@@ -496,8 +495,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // add default constructor(s) if necessary
     // most default constructors have no parameters; however, those created by anonymous classes will have parameters
     // (they just call super with those parameters)
-    for (Object m : typeBinding.getDeclaredMethods()) {
-      IMethodBinding met = (IMethodBinding) m;
+    for (IMethodBinding met : typeBinding.getDeclaredMethods()) {
       if (met.isDefaultConstructor()) {
         if (typeBinding.isEnum())
           memberEntities.add(createEnumConstructorWithParameters(met, n, context, inits, null));
@@ -2382,8 +2380,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ArrayList<CAstNode> currentBlock = new ArrayList<>();
 
     // Now produce the CAst representation for each case
-    for (Object o : cases) {
-      Statement s = (Statement) o;
+    for (Statement s : cases) {
       if (s instanceof SwitchCase) {
         if (!currentBlock.isEmpty()) {
           // bundle up statements before this case
