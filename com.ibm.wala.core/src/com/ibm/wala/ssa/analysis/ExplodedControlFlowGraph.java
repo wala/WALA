@@ -30,6 +30,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
@@ -313,8 +314,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       if (eb.original != null && eb.original.isEntryBlock()) {
         result.add(entry);
       }
-      for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getPredNodes(original); it.hasNext();) {
-        ISSABasicBlock s = it.next();
+      for (ISSABasicBlock s : Iterator2Iterable.make(ir.getControlFlowGraph().getPredNodes(original))) {
         if (s.isEntryBlock()) {
           // it's possible for an entry block to have instructions; in this case, add
           // the exploded basic block for the last instruction in the entry block
@@ -356,8 +356,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
     if (eb.instructionIndex == eb.original.getLastInstructionIndex()) {
       List<IExplodedBasicBlock> result = new ArrayList<>();
-      for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getSuccNodes(eb.original); it.hasNext();) {
-        ISSABasicBlock s = it.next();
+      for (ISSABasicBlock s : Iterator2Iterable.make(ir.getControlFlowGraph().getSuccNodes(eb.original))) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
@@ -379,8 +378,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
 
   @Override
   public boolean hasEdge(IExplodedBasicBlock src, IExplodedBasicBlock dst) throws UnimplementedError {
-    for (Iterator<IExplodedBasicBlock> it = getSuccNodes(src); it.hasNext();) {
-      IExplodedBasicBlock succ = it.next();
+    for (IExplodedBasicBlock succ : Iterator2Iterable.make(getSuccNodes(src))) {
       if (succ == dst) {
         return true;
       }
@@ -443,8 +441,8 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   @Override
   public IntSet getPredNodeNumbers(IExplodedBasicBlock node) {
     MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-    for (Iterator<? extends IExplodedBasicBlock> it = getPredNodes(node); it.hasNext();) {
-      result.add(getNumber(it.next()));
+    for (IExplodedBasicBlock ebb : Iterator2Iterable.make(getPredNodes(node))) {
+      result.add(getNumber(ebb));
     }
     return result;
   }

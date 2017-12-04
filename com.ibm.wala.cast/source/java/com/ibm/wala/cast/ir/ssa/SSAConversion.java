@@ -13,7 +13,6 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +28,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -532,10 +532,7 @@ public class SSAConversion extends AbstractSSAConversion {
     for (int i = 0; i < CFG.getNumberOfNodes(); i++) {
       SSACFG.BasicBlock bb = CFG.getNode(i);
       if (bb.hasPhi()) {
-        int n = 0;
-        for (Iterator<SSAPhiInstruction> X = bb.iteratePhis(); X.hasNext(); n++)
-          X.next();
-        phiCounts[i] = n;
+        phiCounts[i] = IteratorUtil.count(bb.iteratePhis());
       }
     }
 

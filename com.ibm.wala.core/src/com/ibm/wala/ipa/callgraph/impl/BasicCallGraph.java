@@ -29,6 +29,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -231,8 +232,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("");
-    for (Iterator<CGNode> i = DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<>(getFakeRootNode())); i.hasNext();) {
-      CGNode n = i.next();
+    for (CGNode n : Iterator2Iterable.make(DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<>(getFakeRootNode())))) {
       result.append(nodeToString(this, n) + "\n");
     }
     return result.toString();
@@ -241,14 +241,12 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   public static String nodeToString(CallGraph CG, CGNode n) {
     StringBuffer result = new StringBuffer(n.toString() +  "\n");
      if (n.getMethod() != null) {
-      for (Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext();) {
-        CallSiteReference site = sites.next();
+      for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
         Iterator<CGNode> targets = CG.getPossibleTargets(n, site).iterator();
         if (targets.hasNext()) {
           result.append(" - " + site + "\n");
         }
-        for (; targets.hasNext();) {
-          CGNode target = targets.next();
+        for (CGNode target : Iterator2Iterable.make(targets)) {
           result.append("     -> " + target + "\n");
         }
       }

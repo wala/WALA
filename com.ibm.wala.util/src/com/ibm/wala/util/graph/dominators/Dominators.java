@@ -18,6 +18,7 @@ import java.util.Set;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.AbstractGraph;
@@ -586,8 +587,8 @@ public abstract class Dominators<T> {
     StringBuffer sb = new StringBuffer();
     for (T node : G) {
       sb.append("Dominators of " + node + ":\n");
-      for (Iterator<T> j = dominators(node); j.hasNext();)
-        sb.append("   " + j.next() + "\n");
+      for (T dom : Iterator2Iterable.make(dominators(node)))
+        sb.append("   " + dom + "\n");
       sb.append("\n");
     }
     return sb.toString();

@@ -53,6 +53,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
@@ -190,9 +191,7 @@ public abstract class IRTests {
         CGNode tgtNode = tgtNodes.iterator().next();
 
         boolean found = false;
-        for (Iterator<? extends CGNode> succIter = callGraph.getSuccNodes(srcNode); succIter.hasNext();) {
-          CGNode succ = succIter.next();
-
+        for (CGNode succ : Iterator2Iterable.make(callGraph.getSuccNodes(srcNode))) {
           if (tgtNode == succ) {
             found = true;
             break;
@@ -378,8 +377,7 @@ public abstract class IRTests {
     Set<IMethod> unreachable = HashSetFactory.make();
     IClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE);
-    for (Iterator<IClass> iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
-      IClass clazz = iter.next();
+    for (IClass clazz : Iterator2Iterable.make(sourceLoader.iterateAllClasses())) {
 
       System.err.println(clazz);
       if (clazz.isInterface())

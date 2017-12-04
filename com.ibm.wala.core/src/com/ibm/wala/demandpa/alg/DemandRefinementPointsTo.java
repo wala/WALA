@@ -178,10 +178,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private void sanityCheckCG() {
     if (PARANOID) {
       for (CGNode callee : cg) {
-        for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext();) {
-          CGNode caller = predNodes.next();
-          for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext();) {
-            CallSiteReference site = iterator.next();
+        for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(callee))) {
+          for (CallSiteReference site : Iterator2Iterable.make(cg.getPossibleSites(caller, callee))) {
             try {
               caller.getIR().getCalls(site);
             } catch (IllegalArgumentException e) {
@@ -1132,8 +1130,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               repropCallArg(exc, new PointerKeyAndState(excRet, excRetState), returnLabel.bar());
               return null;
             });
-            for (Iterator<Integer> iter = new PointerParamValueNumIterator(targetForCall); iter.hasNext();) {
-              final int formalNum = iter.next();
+            for (int formalNum : Iterator2Iterable.make(new PointerParamValueNumIterator(targetForCall))) {
               final int actualNum = formalNum - 1;
               final ParamBarLabel paramBarLabel = ParamBarLabel.make(new CallerSiteContext(caller, call));
               doTransition(receiverState, paramBarLabel, formalState -> {
@@ -1390,8 +1387,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     private void addPredsOfIKeyAndStateToTrackedPointsTo(InstanceKeyAndState ikAndState) throws UnimplementedError {
-      for (Iterator<? extends Object> iter = g.getPredNodes(ikAndState.getInstanceKey(), NewLabel.v()); iter.hasNext();) {
-        PointerKey ikPred = (PointerKey) iter.next();
+      for (Object o : Iterator2Iterable.make(g.getPredNodes(ikAndState.getInstanceKey(), NewLabel.v()))) {
+        PointerKey ikPred = (PointerKey) o;
         PointerKeyAndState ikPredAndState = new PointerKeyAndState(ikPred, ikAndState.getState());
         int mappedIndex = ikAndStates.getMappedIndex(ikAndState);
         assert mappedIndex != -1;
@@ -1614,8 +1611,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         LocalPointerKey localPk = (LocalPointerKey) curPk;
         CGNode caller = localPk.getNode();
         // from actual parameter to callee
-        for (Iterator<SSAAbstractInvokeInstruction> iter = g.getInstrsPassingParam(localPk); iter.hasNext();) {
-          SSAAbstractInvokeInstruction callInstr = iter.next();
+        for (SSAAbstractInvokeInstruction callInstr : Iterator2Iterable.make(g.getInstrsPassingParam(localPk))) {
           for (int i = 0; i < callInstr.getNumberOfUses(); i++) {
             if (localPk.getValueNumber() != callInstr.getUse(i))
               continue;
@@ -1718,8 +1714,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
           @Override
           public void visitAssignGlobal(final AssignGlobalLabel label, Object dst) {
-            for (Iterator<? extends Object> readIter = g.getReadsOfStaticField((StaticFieldKey) dst); readIter.hasNext();) {
-              final PointerKey predPk = (PointerKey) readIter.next();
+            for (Object o : Iterator2Iterable.make(g.getReadsOfStaticField((StaticFieldKey) dst))) {
+              final PointerKey predPk = (PointerKey) o;
               doTransition(curState, AssignGlobalBarLabel.v(), predPkState -> {
                 PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
                 handleTrackedPred(trackedSet, predPkAndState, AssignGlobalBarLabel.v());
@@ -1745,8 +1741,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
             } else {
               // send to all getfield sources
-              for (Iterator<PointerKey> readIter = g.getReadsOfInstanceField(storeBase, field); readIter.hasNext();) {
-                final PointerKey predPk = readIter.next();
+              for (final PointerKey predPk : Iterator2Iterable.make(g.getReadsOfInstanceField(storeBase, field))) {
                 doTransition(curState, MatchBarLabel.v(), predPkState -> {
                   PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
                   handleTrackedPred(trackedSet, predPkAndState, MatchBarLabel.v());
@@ -2263,9 +2258,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
             }
           } else { // use match edges
-            for (Iterator<PointerKey> writesToInstanceField = g.getWritesToInstanceField(loadBase, field); writesToInstanceField
-                .hasNext();) {
-              final PointerKey writtenPk = writesToInstanceField.next();
+            for (final PointerKey writtenPk : Iterator2Iterable.make(g.getWritesToInstanceField(loadBase, field))) {
               doTransition(curState, MatchLabel.v(), nextState -> {
                 h.propagate(new PointerKeyAndState(writtenPk, nextState));
                 return null;
@@ -2316,9 +2309,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         @Override
         public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {
-          for (Iterator<? extends Object> writesToStaticField = g.getWritesToStaticField((StaticFieldKey) dst); writesToStaticField
-              .hasNext();) {
-            final PointerKey writtenPk = (PointerKey) writesToStaticField.next();
+          for (Object writeToStaticField : Iterator2Iterable.make(g.getWritesToStaticField((StaticFieldKey) dst))) {
+            final PointerKey writtenPk = (PointerKey) writeToStaticField;
             doTransition(curState, label, nextState -> {
               h.propagate(new PointerKeyAndState(writtenPk, nextState));
               return null;

@@ -77,6 +77,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntIterator;
@@ -256,8 +257,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     ConstraintVisitor v = makeVisitor(node);
 
     IRView ir = v.ir;
-    for (Iterator<ISSABasicBlock> x = ir.getBlocks(); x.hasNext();) {
-      BasicBlock b = (BasicBlock) x.next();
+    for (ISSABasicBlock sbb : Iterator2Iterable.make(ir.getBlocks())) {
+      BasicBlock b = (BasicBlock) sbb;
       addBlockInstructionConstraints(node, ir, b, v, monitor);
       if (wasChanged(node)) {
         return;
@@ -300,20 +301,21 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph, BasicBlock b,
       ConstraintVisitor v) {
     // visit each phi instruction in each successor block
-    for (Iterator<ISSABasicBlock> sbs = controlFlowGraph.getSuccNodes(b); sbs.hasNext();) {
-      BasicBlock sb = (BasicBlock) sbs.next();
+    for (ISSABasicBlock isb : Iterator2Iterable.make(controlFlowGraph.getSuccNodes(b))) {
+      BasicBlock sb = (BasicBlock) isb;
       if (!sb.hasPhi()) {
         continue;
       }
       int n = 0;
-      for (Iterator<? extends IBasicBlock> back = controlFlowGraph.getPredNodes(sb); back.hasNext(); n++) {
-        if (back.next() == b) {
+      for (IBasicBlock back : Iterator2Iterable.make(controlFlowGraph.getPredNodes(sb))) {
+        if (back == b) {
           break;
         }
+        ++n;
       }
       assert n < controlFlowGraph.getPredNodeCount(sb);
-      for (Iterator<? extends SSAInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
-        SSAPhiInstruction phi = (SSAPhiInstruction) phis.next();
+      for (SSAInstruction inst : Iterator2Iterable.make(sb.iteratePhis())) {
+        SSAPhiInstruction phi = (SSAPhiInstruction) inst;
         if (phi == null) {
           continue;
         }
@@ -484,8 +486,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> g = ir.getControlFlowGraph();
     List<ProgramCounter> result = new ArrayList<>(g.getPredNodeCount(bb));
-    for (Iterator<ISSABasicBlock> it = g.getPredNodes(bb); it.hasNext();) {
-      BasicBlock pred = (BasicBlock) it.next();
+    for (ISSABasicBlock sbb : Iterator2Iterable.make(g.getPredNodes(bb))) {
+      BasicBlock pred = (BasicBlock) sbb;
       if (DEBUG) {
         System.err.println("pred: " + pred);
       }
@@ -2039,8 +2041,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // todo: enhance this by solving a dead-code elimination
     // problem.
     InterestingVisitor v = makeInterestingVisitor(node, vn);
-    for (Iterator<SSAInstruction> it = du.getUses(v.vn); it.hasNext();) {
-      SSAInstruction s = it.next();
+    for (SSAInstruction s : Iterator2Iterable.make(du.getUses(v.vn))) {
       s.visit(v);
       if (v.bingo) {
         return false;
@@ -2397,8 +2398,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     Iterator<TypeReference> exceptionTypes = ((ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(
         instruction.getBasicBlockNumber())).getCaughtExceptionTypes();
     HashSet<IClass> types = HashSetFactory.make(10);
-    for (; exceptionTypes.hasNext();) {
-      IClass c = ir.getMethod().getClassHierarchy().lookupClass(exceptionTypes.next());
+    for (TypeReference tr : Iterator2Iterable.make(exceptionTypes)) {
+      IClass c = ir.getMethod().getClassHierarchy().lookupClass(tr);
       if (c != null) {
         types.add(c);
       }

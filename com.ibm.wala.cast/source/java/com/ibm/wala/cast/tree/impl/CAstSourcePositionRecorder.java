@@ -21,6 +21,7 @@ import java.util.Iterator;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
  
@@ -98,8 +99,7 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
   }
 
   public void addAll(CAstSourcePositionMap other) {
-    for(Iterator<CAstNode> nodes = other.getMappedNodes(); nodes.hasNext(); ) {
-      CAstNode node = nodes.next();
+    for(CAstNode node : Iterator2Iterable.make(other.getMappedNodes())) {
       setPosition(node, other.getPosition(node));
     }
   }

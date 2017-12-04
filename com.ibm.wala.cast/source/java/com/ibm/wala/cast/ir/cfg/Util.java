@@ -10,19 +10,20 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.cfg;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 
 public class Util {
 
   public static <I, T extends IBasicBlock<I>> int whichPred(ControlFlowGraph<I, T> CFG, T Y, T X) {
     int i = 0;
-    for (Iterator<?> N = CFG.getPredNodes(Y); N.hasNext(); i++)
-      if (N.next() == X)
+    for (Object N : Iterator2Iterable.make(CFG.getPredNodes(Y))) {
+      if (N == X)
         return i;
+      ++i;
+    }
 
     Assertions.UNREACHABLE();
     return -1;

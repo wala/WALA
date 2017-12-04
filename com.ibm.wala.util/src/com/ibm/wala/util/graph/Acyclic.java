@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
@@ -73,8 +74,7 @@ public class Acyclic {
   private static <T> void dfs(BasicNaturalRelation result, T root, NumberedGraph<T> G, Set<T> visited, Set<T> onstack) {
     visited.add(root);
     onstack.add(root);
-    for (Iterator<? extends T> it = G.getSuccNodes(root); it.hasNext();) {
-      T dstNode = it.next();
+    for (T dstNode : Iterator2Iterable.make(G.getSuccNodes(root))) {
       if (onstack.contains(dstNode)) {
         int src = G.getNumber(root);
         int dst = G.getNumber(dstNode);

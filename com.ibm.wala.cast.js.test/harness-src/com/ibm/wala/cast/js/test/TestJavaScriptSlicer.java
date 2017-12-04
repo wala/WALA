@@ -12,8 +12,6 @@ package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +31,7 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
 
@@ -85,10 +84,9 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
   private Collection<Statement> findTargetStatement(CallGraph CG) {
     final Collection<Statement> ss = HashSetFactory.make();
     for(CGNode n : getNodes(CG, "suffix:_slice_target_fn")) {
-      for(Iterator<CGNode> callers = CG.getPredNodes(n); callers.hasNext(); ) {
-        final CGNode caller = callers.next();
-        for(Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, n); sites.hasNext(); ) {
-          caller.getIR().getCallInstructionIndices(sites.next()).foreach(x -> ss.add(new NormalStatement(caller, x)));
+      for(CGNode caller : Iterator2Iterable.make(CG.getPredNodes(n))) {
+        for(CallSiteReference site : Iterator2Iterable.make(CG.getPossibleSites(caller, n))) {
+          caller.getIR().getCallInstructionIndices(site).foreach(x -> ss.add(new NormalStatement(caller, x)));
         }
       }
     }

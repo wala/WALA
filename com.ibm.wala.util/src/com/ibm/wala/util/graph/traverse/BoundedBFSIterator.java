@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
 
@@ -127,8 +128,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     if (boundary[currentHops] == 0) {
       boundary[currentHops] = Q.size();
     }
-    for (Iterator<? extends T> children = getConnected(N); children.hasNext();) {
-      T child = children.next();
+    for (T child : Iterator2Iterable.make(getConnected(N))) {
       if (!visited.contains(child)) {
         Q.add(child);
         visited.add(child);

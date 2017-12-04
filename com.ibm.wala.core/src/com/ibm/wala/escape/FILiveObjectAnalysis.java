@@ -11,7 +11,6 @@
 package com.ibm.wala.escape;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +28,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -125,8 +125,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   private boolean mayBeLiveInSomeCaller(InstanceKey ik, CGNode m) {
-    for (Iterator<CGNode> it = callGraph.getPredNodes(m); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : Iterator2Iterable.make(callGraph.getPredNodes(m))) {
       if (mayBeLive(ik, n, -1)) {
         return true;
       }
@@ -144,8 +143,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     IR ir = m.getIR();
     DefUse du = m.getDU();
 
-    for (Iterator<Object> it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
-      Object p = it.next();
+    for (Object p : Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
       if (p instanceof LocalPointerKey) {
         LocalPointerKey lpk = (LocalPointerKey) p;
         if (lpk.getNode().equals(m)) {
@@ -164,8 +162,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    */
   private Set<CGNode> computeLiveNodes(InstanceKey ik) {
     Set<CGNode> localRootNodes = HashSetFactory.make();
-    for (Iterator<Object> it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
-      Object node = it.next();
+    for (Object node : Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
       if (node instanceof StaticFieldKey) {
         liveEverywhere.add(ik);
         return Collections.emptySet();

@@ -547,8 +547,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     public int getPredNodeCount(INodeWithNumber N) {
       PointsToSetVariable v = (PointsToSetVariable) N;
       int result = 0;
-      for (Iterator<AbstractStatement> eqs = getStatementsThatDef(v); eqs.hasNext();) {
-        AbstractStatement eq = eqs.next();
+      for (AbstractStatement eq : Iterator2Iterable.make(getStatementsThatDef(v))) {
         if (useImplicitRepresentation(eq)) {
           result++;
         } else {
@@ -604,8 +603,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     @Override
     public int getSuccNodeCount(PointsToSetVariable v) {
       int result = 0;
-      for (Iterator<AbstractStatement> eqs = getStatementsThatUse(v); eqs.hasNext();) {
-        AbstractStatement eq = eqs.next();
+      for (AbstractStatement eq : Iterator2Iterable.make(getStatementsThatUse(v))) {
         IVariable lhs = eq.getLHS();
         if (lhs != null) {
           result++;
@@ -978,8 +976,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     @Override
     public int getPredNodeCount(PointsToSetVariable v) {
       int result = 0;
-      for (Iterator<AbstractStatement> eqs = getStatementsThatDef(v); eqs.hasNext();) {
-        AbstractStatement eq = eqs.next();
+      for (AbstractStatement eq : Iterator2Iterable.make(getStatementsThatDef(v))) {
         if (isInteresting(eq)) {
           result++;
         }
@@ -1035,8 +1032,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     @Override
     public int getSuccNodeCount(PointsToSetVariable v) {
       int result = 0;
-      for (Iterator<AbstractStatement> eqs = getStatementsThatUse(v); eqs.hasNext();) {
-        AbstractStatement eq = eqs.next();
+      for (AbstractStatement eq : Iterator2Iterable.make(getStatementsThatUse(v))) {
         if (isInteresting(eq)) {
           result++;
         }
@@ -1090,12 +1086,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   private int countImplicitEdges() {
-    int result = 0;
-    for (Iterator<AbstractStatement> it = new GlobalImplicitIterator(); it.hasNext();) {
-      it.next();
-      result++;
-    }
-    return result;
+    return IteratorUtil.count(new GlobalImplicitIterator());
   }
 
 }

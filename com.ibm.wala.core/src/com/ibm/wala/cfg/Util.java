@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.cfg;
 
-import java.util.Iterator;
-
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -90,8 +89,7 @@ public class Util {
       throw new IllegalArgumentException(b.toString() + " does not end with a conditional branch");
     }
     T fs = getNotTakenSuccessor(G, b);
-    for (Iterator<? extends T> ss = G.getSuccNodes(b); ss.hasNext();) {
-      T s = ss.next();
+    for (T s : Iterator2Iterable.make(G.getSuccNodes(b))) {
       if (s != fs)
         return s;
     }
@@ -214,8 +212,8 @@ public class Util {
       throw new IllegalArgumentException("b is null");
     }
     int i = 0;
-    for (Iterator<T> it = cfg.getPredNodes(b); it.hasNext();) {
-      if (it.next().equals(a)) {
+    for (T p : Iterator2Iterable.make(cfg.getPredNodes(b))) {
+      if (p.equals(a)) {
         return i;
       }
       i++;

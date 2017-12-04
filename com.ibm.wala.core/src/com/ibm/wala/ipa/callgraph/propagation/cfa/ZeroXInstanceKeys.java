@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +34,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * Flexible class to create {@link InstanceKey}s depending on various policies ranging from class-based (i.e. 0-CFA) to
@@ -231,8 +231,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
     Map<IClass, Integer> count = HashMapFactory.make();
-    for (Iterator<NewSiteReference> it = contextInterpreter.iterateNewSites(node); it.hasNext();) {
-      NewSiteReference n = it.next();
+    for (NewSiteReference n : Iterator2Iterable.make(contextInterpreter.iterateNewSites(node))) {
       IClass alloc = cha.lookupClass(n.getDeclaredType());
       if (alloc != null) {
         Integer old = count.get(alloc);

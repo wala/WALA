@@ -65,6 +65,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -301,8 +302,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // as the argument
       addSubgraphForNode(caller);
       IR ir = caller.getIR();
-      for (Iterator<CallSiteReference> iterator = ir.iterateCallSites(); iterator.hasNext();) {
-        CallSiteReference call = iterator.next();
+      for (CallSiteReference call : Iterator2Iterable.make(ir.iterateCallSites())) {
         if (cg.getPossibleTargets(caller, call).contains(node)) {
           SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
           for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
@@ -494,8 +494,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
-    for (Iterator<? extends IBasicBlock> sbs = cfg.getSuccNodes(b); sbs.hasNext();) {
-      ISSABasicBlock sb = (ISSABasicBlock) sbs.next();
+    for (ISSABasicBlock sb : Iterator2Iterable.make(cfg.getSuccNodes(b))) {
       if (sb.isExitBlock()) {
         // an optimization based on invariant that exit blocks should have no
         // phis.
@@ -503,14 +502,14 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
       int n = 0;
       // set n to be whichPred(this, sb);
-      for (Iterator<? extends IBasicBlock> back = cfg.getPredNodes(sb); back.hasNext(); n++) {
-        if (back.next() == b) {
+      for (IBasicBlock back : Iterator2Iterable.make(cfg.getPredNodes(sb))) {
+        if (back == b) {
           break;
         }
+        ++n;
       }
       assert n < cfg.getPredNodeCount(sb);
-      for (Iterator<SSAPhiInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
-        SSAPhiInstruction phi = phis.next();
+      for (SSAPhiInstruction phi : Iterator2Iterable.make(sb.iteratePhis())) {
         if (phi == null) {
           continue;
         }

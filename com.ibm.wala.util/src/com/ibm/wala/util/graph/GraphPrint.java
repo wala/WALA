@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-import java.util.Iterator;
-
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
 /**
@@ -28,8 +27,7 @@ public class GraphPrint {
       sg.addNode(name);
     }
     for (T n : G) {
-      for (Iterator<? extends T> it2 = G.getSuccNodes(n); it2.hasNext(); ) {
-        T d = it2.next();
+      for (T d : Iterator2Iterable.make(G.getSuccNodes(n))) {
         sg.addEdge(n,d);
       }
     }

@@ -11,12 +11,12 @@
 package com.ibm.wala.util.graph.traverse;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedGraph;
 
 public class WelshPowell<T> {
@@ -108,15 +108,13 @@ public class WelshPowell<T> {
         for(T m : vertices) {
           if (colors[G.getNumber(m)] == -1) {
             color_me: {
-              for(Iterator<T> ps = G.getPredNodes(m); ps.hasNext(); ) {
-                T p = ps.next();
+              for(T p : Iterator2Iterable.make(G.getPredNodes(m)) ) {
                 if (colors[ G.getNumber(p) ] == currentColor) {
                   break color_me;
                 }
               }
   
-              for(Iterator<T> ss = G.getSuccNodes(m); ss.hasNext(); ) {
-                T s = ss.next();
+              for(T s : Iterator2Iterable.make(G.getSuccNodes(m))) {
                 if (colors[G.getNumber(s)] == currentColor) {
                   break color_me;
                 }

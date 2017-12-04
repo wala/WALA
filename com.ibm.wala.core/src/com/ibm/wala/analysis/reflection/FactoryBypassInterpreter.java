@@ -57,6 +57,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -535,8 +536,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         allInstructions.add(r);
       }
 
-      for (; it.hasNext();) {
-        IClass klass = it.next();
+      for (IClass klass : Iterator2Iterable.make(it)) {
         TypeReference T = klass.getReference();
         if (klass.isAbstract() || klass.isInterface() || typesAllocated.contains(T)) {
           continue;

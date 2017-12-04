@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -99,8 +100,8 @@ public class DefUse {
    * Initialize the allInstructions field with every {@link SSAInstruction} in the ir.
    */
   protected void initAllInstructions() {
-    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
-      allInstructions.add(it.next());
+    for (SSAInstruction inst : Iterator2Iterable.make(ir.iterateAllInstructions())) {
+      allInstructions.add(inst);
     }
   }
 

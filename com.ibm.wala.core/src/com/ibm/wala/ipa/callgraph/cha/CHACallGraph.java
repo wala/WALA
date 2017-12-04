@@ -41,6 +41,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -242,8 +243,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private void closure() throws CancelException {
     while (! newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
-      for(Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext(); ) {
-        Iterator<IMethod> methods = getPossibleTargets(sites.next());
+      for(CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
+        Iterator<IMethod> methods = getPossibleTargets(site);
         while (methods.hasNext()) {
           IMethod target = methods.next();
           if (isRelevantMethod(target)) {
@@ -364,8 +365,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       @Override
       public IntSet getSuccNodeNumbers(CGNode node) {
         MutableIntSet result = IntSetUtil.make();
-        for(Iterator<CGNode> ss = getSuccNodes(node); ss.hasNext(); ) {
-          result.add(ss.next().getGraphNodeId());
+        for(CGNode s : Iterator2Iterable.make(getSuccNodes(node))) {
+          result.add(s.getGraphNodeId());
         }
         return result;
       }
@@ -373,8 +374,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       @Override
       public IntSet getPredNodeNumbers(CGNode node) {
         MutableIntSet result = IntSetUtil.make();
-        for(Iterator<CGNode> ss = getPredNodes(node); ss.hasNext(); ) {
-          result.add(ss.next().getGraphNodeId());
+        for(CGNode s : Iterator2Iterable.make(getPredNodes(node))) {
+          result.add(s.getGraphNodeId());
         }
         return result;
       }

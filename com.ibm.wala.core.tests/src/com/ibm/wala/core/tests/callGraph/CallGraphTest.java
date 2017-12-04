@@ -52,6 +52,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
@@ -503,8 +504,8 @@ public class CallGraphTest extends WalaTestCase {
         Set<MethodReference> pred = HashSetFactory.make(10);
         MethodReference methodReference = N;
         for (CGNode cgNode : cg.getNodes(methodReference))
-          for (Iterator<? extends CGNode> ps = cg.getPredNodes(cgNode); ps.hasNext();)
-            pred.add(((CGNode) ps.next()).getMethod().getReference());
+          for (CGNode p : Iterator2Iterable.make(cg.getPredNodes(cgNode)))
+            pred.add(p.getMethod().getReference());
 
         return pred.iterator();
       }
@@ -514,10 +515,7 @@ public class CallGraphTest extends WalaTestCase {
        */
       @Override
       public int getPredNodeCount(MethodReference N) {
-        int count = 0;
-        for (Iterator<? extends MethodReference> ps = getPredNodes(N); ps.hasNext(); count++, ps.next())
-          ;
-        return count;
+        return IteratorUtil.count(getPredNodes(N));
       }
 
       /*
@@ -528,8 +526,8 @@ public class CallGraphTest extends WalaTestCase {
         Set<MethodReference> succ = HashSetFactory.make(10);
         MethodReference methodReference = N;
         for (CGNode node : cg.getNodes(methodReference))
-          for (Iterator<? extends CGNode> ps = cg.getSuccNodes(node); ps.hasNext();)
-            succ.add(((CGNode) ps.next()).getMethod().getReference());
+          for (CGNode p : Iterator2Iterable.make(cg.getSuccNodes(node)))
+            succ.add(p.getMethod().getReference());
 
         return succ.iterator();
       }
@@ -539,10 +537,7 @@ public class CallGraphTest extends WalaTestCase {
        */
       @Override
       public int getSuccNodeCount(MethodReference N) {
-        int count = 0;
-        for (Iterator<MethodReference> ps = getSuccNodes(N); ps.hasNext(); count++, ps.next())
-          ;
-        return count;
+        return IteratorUtil.count(getSuccNodes(N));
       }
 
       /*
@@ -606,8 +601,8 @@ public class CallGraphTest extends WalaTestCase {
 
       @Override
       public boolean hasEdge(MethodReference src, MethodReference dst) {
-        for (Iterator<MethodReference> succNodes = getSuccNodes(src); succNodes.hasNext();) {
-          if (dst.equals(succNodes.next())) {
+        for (MethodReference succ : Iterator2Iterable.make(getSuccNodes(src))) {
+          if (dst.equals(succ)) {
             return true;
           }
         }

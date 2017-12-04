@@ -39,8 +39,6 @@ package com.ibm.wala.core.tests.demandpa;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 
@@ -105,8 +103,7 @@ public abstract class AbstractPtrTest {
   public static CGNode findMainMethod(CallGraph cg) {
     Descriptor d = Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V");
     Atom name = Atom.findOrCreateUnicodeAtom("main");
-    for (Iterator<? extends CGNode> it = cg.getSuccNodes(cg.getFakeRootNode()); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : Iterator2Iterable.make(cg.getSuccNodes(cg.getFakeRootNode()))) {
       if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {
         return n;
       }
@@ -142,8 +139,7 @@ public abstract class AbstractPtrTest {
 
   public static PointerKey getParam(CGNode n, String methodName, HeapModel heapModel) {
     IR ir = n.getIR();
-    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
-      SSAInstruction s = it.next();
+    for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
       if (s instanceof SSAInvokeInstruction) {
         SSAInvokeInstruction call = (SSAInvokeInstruction) s;
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {

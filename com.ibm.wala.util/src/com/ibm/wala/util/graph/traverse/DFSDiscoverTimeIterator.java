@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -85,8 +86,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
     assert getPendingChildren(toReturn) != null;
     do {
       T stackTop = peek();
-      for (Iterator<? extends T> it = getPendingChildren(stackTop); it.hasNext();) {
-        T child = it.next();
+      for (T child : Iterator2Iterable.make(getPendingChildren(stackTop))) {
         if (getPendingChildren(child) == null) {
           // found a new child.
           visitEdge(stackTop, child);

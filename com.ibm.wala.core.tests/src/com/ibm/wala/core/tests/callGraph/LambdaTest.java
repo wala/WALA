@@ -11,7 +11,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -34,6 +33,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -103,8 +103,8 @@ public class LambdaTest extends WalaTestCase {
     // caller of id1 is dynamic from sortForward, and has 1 compareTo
     CGNode sfnode = cg.getPredNodes(id1node).next();
     int count = 0;
-    for(Iterator<CallSiteReference> sites = sfnode.iterateCallSites(); sites.hasNext(); ) {
-     if (ctnodes.containsAll(cg.getPossibleTargets(sfnode, sites.next()))) {
+    for(CallSiteReference site : Iterator2Iterable.make(sfnode.iterateCallSites())) {
+     if (ctnodes.containsAll(cg.getPossibleTargets(sfnode, site))) {
        count++;
      }
     }

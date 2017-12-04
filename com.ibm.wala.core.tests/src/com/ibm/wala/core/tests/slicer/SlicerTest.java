@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,6 +66,7 @@ import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
@@ -1072,8 +1071,7 @@ public class SlicerTest {
    * @return
    */
   private static CGNode findMethod(CallGraph cg, Descriptor d, Atom name) {
-    for (Iterator<? extends CGNode> it = cg.getSuccNodes(cg.getFakeRootNode()); it.hasNext();) {
-      CGNode n = it.next();
+    for (CGNode n : Iterator2Iterable.make(cg.getSuccNodes(cg.getFakeRootNode()))) {
       if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {
         return n;
       }
@@ -1102,8 +1100,7 @@ public class SlicerTest {
 
   public static Statement findCallTo(CGNode n, String methodName) {
     IR ir = n.getIR();
-    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
-      SSAInstruction s = it.next();
+    for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
       if (s instanceof SSAInvokeInstruction) {
         SSAInvokeInstruction call = (SSAInvokeInstruction) s;
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {

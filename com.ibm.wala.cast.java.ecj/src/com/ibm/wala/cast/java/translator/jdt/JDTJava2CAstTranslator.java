@@ -425,10 +425,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ArrayList<ASTNode> staticInits = new ArrayList<>();
 
     if (enumConstants != null) {
-      for (Object decl : enumConstants) {
-        EnumConstantDeclaration ecd = (EnumConstantDeclaration) decl;
-        staticInits.add(ecd); // always (implicitly) static,final (actually, no modifiers allowed)
-      }
+      // always (implicitly) static,final (actually, no modifiers allowed)
+      staticInits.addAll(enumConstants);
     }
 
     for (BodyDeclaration decl : bodyDecls) {

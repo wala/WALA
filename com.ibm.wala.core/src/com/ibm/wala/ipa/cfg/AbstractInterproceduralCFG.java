@@ -25,6 +25,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IndiscriminateFilter;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -182,8 +183,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       System.err.println("nPred: " + cfg.getPredNodeCount(bb));
     }
 
-    for (Iterator<? extends T> ps = cfg.getPredNodes(bb); ps.hasNext();) {
-      T pb = ps.next();
+    for (T pb : Iterator2Iterable.make(cfg.getPredNodes(bb))) {
       if (DEBUG_LEVEL > 1) {
         System.err.println("Consider previous block: " + pb);
       }
@@ -289,8 +289,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       System.err.println("addInterproceduralEdgesForEntryAndExitBlocks " + n);
     }
 
-    for (Iterator<CGNode> callers = cg.getPredNodes(n); callers.hasNext();) {
-      CGNode caller = callers.next();
+    for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(n))) {
       if (DEBUG_LEVEL > 1) {
         System.err.println("got caller " + caller);
       }
@@ -331,8 +330,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
             BasicBlockInContext<T> b2 = new BasicBlockInContext<>(n, entryBlock);
             g.addEdge(b1, b2);
             // also add edges from exit node to all return nodes (successor of call bb)
-            for (Iterator<? extends T> succIter = ccfg.getSuccNodes(callerBB); succIter.hasNext();) {
-              T returnBB = succIter.next();
+            for (T returnBB : Iterator2Iterable.make(ccfg.getSuccNodes(callerBB))) {
               BasicBlockInContext<T> b3 = new BasicBlockInContext<>(n, exitBlock);
               BasicBlockInContext<T> b4 = new BasicBlockInContext<>(caller, returnBB);
               addNodeForBasicBlockIfNeeded(b4);
@@ -882,8 +880,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       throw new IllegalArgumentException("bb == null");
     }
     ControlFlowGraph<SSAInstruction, T> cfg = getCFG(bb);
-    for (Iterator<? extends T> it = cfg.getPredNodes(bb.getDelegate()); it.hasNext();) {
-      T b = it.next();
+    for (T b : Iterator2Iterable.make(cfg.getPredNodes(bb.getDelegate()))) {
       if (hasCall(new BasicBlockInContext<>(bb.getNode(), b))) {
         return true;
       }

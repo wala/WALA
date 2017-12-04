@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ide.ui;
 
-import java.util.Iterator;
 import java.util.function.Predicate;
 
 import org.eclipse.jface.action.Action;
@@ -25,6 +24,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
@@ -117,8 +117,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
         if (bb.getDelegate() instanceof IExplodedBasicBlock) {
           IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();
           String s = delegate.getNumber() + " " + result.getResult(t) + "\\n" + stringify(delegate.getInstruction());
-          for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext();) {
-            SSAPhiInstruction phi = phis.next();
+          for (SSAPhiInstruction phi : Iterator2Iterable.make(delegate.iteratePhis())) {
             s += " " + phi;
           }
           if (delegate.isCatchBlock()) {

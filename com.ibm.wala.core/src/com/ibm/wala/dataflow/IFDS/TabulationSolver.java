@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -30,6 +29,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.heapTrace.HeapTracer;
@@ -332,8 +332,7 @@ public class TabulationSolver<T, P, F> {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process normal: " + edge);
     }
-    for (Iterator<? extends T> it = supergraph.getSuccNodes(edge.target); it.hasNext();) {
-      final T m = it.next();
+    for (T m : Iterator2Iterable.make(supergraph.getSuccNodes(edge.target))) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("normal successor: " + m);
       }
@@ -409,8 +408,7 @@ public class TabulationSolver<T, P, F> {
     // note that we might have different summary edges for each
     // potential return site, and different flow functions from this
     // exit block to each return site.
-    for (Iterator<? extends T> retSites = supergraph.getReturnSites(c, supergraph.getProcOf(edge.target)); retSites.hasNext();) {
-      final T retSite = retSites.next();
+    for (T retSite : Iterator2Iterable.make(supergraph.getReturnSites(c, supergraph.getProcOf(edge.target)))) {
       if (DEBUG_LEVEL > 1) {
         System.err.println("candidate return site: " + retSite + " " + supergraph.getNumber(retSite));
       }
@@ -537,20 +535,18 @@ public class TabulationSolver<T, P, F> {
 
     Collection<T> allReturnSites = HashSetFactory.make();
     // populate allReturnSites with return sites for missing calls.
-    for (Iterator<? extends T> it = supergraph.getReturnSites(edge.target, null); it.hasNext();) {
-      allReturnSites.add(it.next());
+    for (T retSite : Iterator2Iterable.make(supergraph.getReturnSites(edge.target, null))) {
+      allReturnSites.add(retSite);
     }
     // [14 - 16]
     boolean hasCallee = false;
-    for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.target); it.hasNext();) {
+    for (T callee : Iterator2Iterable.make(supergraph.getCalledNodes(edge.target))) {
       hasCallee = true;
-      final T callee = it.next();
       processParticularCallee(edge, c, allReturnSites, callee);
     }
     // special logic: in backwards problems, a "call" node can have
     // "normal" successors as well. deal with these.
-    for (Iterator<? extends T> it = supergraph.getNormalSuccessors(edge.target); it.hasNext();) {
-      final T m = it.next();
+    for (T m : Iterator2Iterable.make(supergraph.getNormalSuccessors(edge.target))) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("normal successor: " + m);
       }

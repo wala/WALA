@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
@@ -149,8 +150,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
         while (srcs.hasNext()) {
           CGNode src = srcs.next();
-          for (Iterator<CallSiteReference> sites = src.iterateCallSites(); sites.hasNext();) {
-            CallSiteReference sr = sites.next();
+          for (CallSiteReference sr : Iterator2Iterable.make(src.iterateCallSites())) {
            
             Iterator<CGNode> dsts = getNodes(CG, targetName).iterator();
             if (! checkAbsence) {
@@ -194,8 +194,8 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     Collection<CGNode> dests = getNodes(CG, destDescription);
     for (Object source : sources) {
       for (Object dest : dests) {
-        for (Iterator<CGNode> i = CG.getSuccNodes((CGNode) source); i.hasNext();) {
-          if (i.next().equals(dest)) {
+        for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes((CGNode) source))) {
+          if (n.equals(dest)) {
             Assert.fail("Found a link from " + source + " to " + dest);
           }
         }

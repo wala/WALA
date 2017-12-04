@@ -27,6 +27,7 @@ import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -54,9 +55,7 @@ public class CFGSanitizer {
 
     // add all edges to the graph, except those that go to exit
     for (ISSABasicBlock b : cfg) {
-      for (Iterator<ISSABasicBlock> it2 = cfg.getSuccNodes(b); it2.hasNext();) {
-        ISSABasicBlock b2 = it2.next();
-
+      for (ISSABasicBlock b2 : Iterator2Iterable.make(cfg.getSuccNodes(b))) {
         if (!b2.isExitBlock()) {
           g.addEdge(b, b2);
         }
@@ -66,9 +65,8 @@ public class CFGSanitizer {
     // now add edges to exit, ignoring undeclared exceptions
     ISSABasicBlock exit = cfg.exit();
 
-    for (Iterator<ISSABasicBlock> it = cfg.getPredNodes(exit); it.hasNext();) {
+    for (ISSABasicBlock b : Iterator2Iterable.make(cfg.getPredNodes(exit))) {
       // for each predecessor of exit ...
-      ISSABasicBlock b = it.next();
 
       SSAInstruction s = ir.getInstructions()[b.getLastInstructionIndex()];
       if (s == null) {
@@ -89,14 +87,12 @@ public class CFGSanitizer {
           Assertions.UNREACHABLE();
         }
         // remove any exceptions that are caught by catch blocks
-        for (Iterator<ISSABasicBlock> it2 = cfg.getSuccNodes(b); it2.hasNext();) {
-          IBasicBlock c = it2.next();
+        for (ISSABasicBlock c : Iterator2Iterable.make(cfg.getSuccNodes(b))) {
 
           if (c.isCatchBlock()) {
             SSACFG.ExceptionHandlerBasicBlock cb = (ExceptionHandlerBasicBlock) c;
 
-            for (Iterator<TypeReference> it3 = cb.getCaughtExceptionTypes(); it3.hasNext();) {
-              TypeReference ex = it3.next();
+            for (TypeReference ex : Iterator2Iterable.make(cb.getCaughtExceptionTypes())) {
               IClass exClass = cha.lookupClass(ex);
               if (exClass == null) {
                 throw new WalaException("failed to find " + ex);

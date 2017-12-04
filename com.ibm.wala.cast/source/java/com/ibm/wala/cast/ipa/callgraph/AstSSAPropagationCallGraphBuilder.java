@@ -66,6 +66,7 @@ import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
@@ -960,9 +961,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               fields.getValue().foreach(fptr -> {
                 if (!doneField.contains(fptr) || !doneReceiver.contains(rptr)) {
                   InstanceKey field = system.getInstanceKey(fptr);
-                  for (Iterator<PointerKey> keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(receiver, field)
-                      : getPointerKeysForReflectedFieldWrite(receiver, field); keys.hasNext();) {
-                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                  for (PointerKey pkey : Iterator2Iterable.make(isLoadOperation ? getPointerKeysForReflectedFieldRead(receiver, field)
+                      : getPointerKeysForReflectedFieldWrite(receiver, field))) {
+                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) pkey;
                     if (DEBUG_PROPERTIES)
                       action.dump(key, false, false);
                     action.action(key);
@@ -1006,8 +1007,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
               for (InstanceKey fieldsKey : fieldsKeys) {
                 if (isLoadOperation) {
-                  for (Iterator<PointerKey> keys = getPointerKeysForReflectedFieldRead(object, fieldsKey); keys.hasNext();) {
-                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                  for (PointerKey pkey : Iterator2Iterable.make(getPointerKeysForReflectedFieldRead(object, fieldsKey))) {
+                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) pkey;
                     if (DEBUG_PROPERTIES)
                       action.dump(key, true, false);
                     action.action(key);
@@ -1016,8 +1017,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                   if (objCatalog != null) {
                     system.newConstraint(objCatalog, fieldsKey);
                   }
-                  for (Iterator<PointerKey> keys = getPointerKeysForReflectedFieldWrite(object, fieldsKey); keys.hasNext();) {
-                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                  for (PointerKey pkey : Iterator2Iterable.make(getPointerKeysForReflectedFieldWrite(object, fieldsKey))) {
+                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) pkey;
                     if (DEBUG_PROPERTIES)
                       action.dump(key, true, false);
                     action.action(key);
@@ -1065,9 +1066,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             fields.getValue().foreach(fptr -> {
               InstanceKey field = system.getInstanceKey(fptr);
               for (InstanceKey objKey : objKeys) {
-                for (Iterator<PointerKey> keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(objKey, field)
-                    : getPointerKeysForReflectedFieldWrite(objKey, field); keys.hasNext();) {
-                  AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                for (PointerKey pkey : Iterator2Iterable.make(isLoadOperation ? getPointerKeysForReflectedFieldRead(objKey, field)
+                    : getPointerKeysForReflectedFieldWrite(objKey, field))) {
+                  AbstractFieldPointerKey key = (AbstractFieldPointerKey) pkey;
                   if (DEBUG_PROPERTIES)
                     action.dump(key, false, true);
                   action.action(key);
@@ -1101,8 +1102,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         PointerKey objCatalog = getPointerKeyForObjectCatalog(objKey);
         for (InstanceKey fieldsKey : fieldsKeys) {
           if (isLoadOperation) {
-            for (Iterator<PointerKey> keys = getPointerKeysForReflectedFieldRead(objKey, fieldsKey); keys.hasNext();) {
-              AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+            for (PointerKey pkey : Iterator2Iterable.make(getPointerKeysForReflectedFieldRead(objKey, fieldsKey))) {
+              AbstractFieldPointerKey key = (AbstractFieldPointerKey) pkey;
               if (DEBUG_PROPERTIES)
                 action.dump(key, true, true);
               action.action(key);
@@ -1111,8 +1112,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             if (objCatalog != null) {
               system.newConstraint(objCatalog, fieldsKey);
             }
-            for (Iterator<PointerKey> keys = getPointerKeysForReflectedFieldWrite(objKey, fieldsKey); keys.hasNext();) {
-              AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+            for (PointerKey pkey : Iterator2Iterable.make(getPointerKeysForReflectedFieldWrite(objKey, fieldsKey))) {
+              AbstractFieldPointerKey key = (AbstractFieldPointerKey) pkey;
               if (DEBUG_PROPERTIES)
                 action.dump(key, true, true);
               action.action(key);

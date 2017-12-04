@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.util;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +23,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Util;
 
@@ -72,8 +72,7 @@ public class CallGraph2JSON {
 				continue;
 			AstMethod method = (AstMethod)nd.getMethod();
 
-			for(Iterator<CallSiteReference> iter = nd.iterateCallSites(); iter.hasNext();) {
-				CallSiteReference callsite = iter.next();
+			for(CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
         Set<IMethod> targets = Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
 				serializeCallSite(method, callsite, targets, edges);
 			}

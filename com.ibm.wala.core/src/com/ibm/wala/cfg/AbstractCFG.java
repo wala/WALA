@@ -23,6 +23,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.IteratorPlusTwo;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -592,8 +593,8 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       throw new IllegalArgumentException("b is null");
     }
     List<T> result = new ArrayList<>();
-    for (Iterator<T> it = iterateExceptionalSuccessors(b.getNumber()); it.hasNext();) {
-      result.add(it.next());
+    for (T s : Iterator2Iterable.make(iterateExceptionalSuccessors(b.getNumber()))) {
+      result.add(s);
     }
     return result;
   }

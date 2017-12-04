@@ -10,8 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
@@ -30,6 +28,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * Call graph builder for building pessimistic call graphs, where inter-procedural flows are not
@@ -103,8 +102,7 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 				FuncVertex callee = factory.makeFuncVertex(fnClass);
 				
 				// look at all uses
-				for(Iterator<SSAInstruction> uses = du.getUses(defn);uses.hasNext();) {
-					SSAInstruction use = uses.next();
+				for(SSAInstruction use : Iterator2Iterable.make(du.getUses(defn))) {
 					
 					// check whether this is a local call
 					if(use instanceof JavaScriptInvoke && ((JavaScriptInvoke)use).getFunction() == defn) {

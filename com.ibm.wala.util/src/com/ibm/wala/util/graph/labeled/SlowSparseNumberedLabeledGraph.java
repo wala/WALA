@@ -48,8 +48,7 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
-import java.util.Iterator;
-
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 
@@ -75,8 +74,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
       into.addNode(name);
     }
     for (T n : g) {
-      for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
-        T s = it2.next();
+      for (T s : Iterator2Iterable.make(g.getSuccNodes(n))) {
         for(U l : g.getEdgeLabels(n, s)) {
           into.addEdge(n, s, l);
         }

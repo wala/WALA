@@ -50,7 +50,6 @@ package com.ibm.wala.dalvik.classLoader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -63,6 +62,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
@@ -133,8 +133,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     
     private static Set<ModuleEntry> getDexFiles(Module M) {
     	HashSet<ModuleEntry> result = HashSetFactory.make();
-    	for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
-    		ModuleEntry entry = it.next();
+    	for (ModuleEntry entry : Iterator2Iterable.make(M.getEntries())) {
     		if (entry instanceof DexModuleEntry) {    		
     			result.add(entry);
     		} 

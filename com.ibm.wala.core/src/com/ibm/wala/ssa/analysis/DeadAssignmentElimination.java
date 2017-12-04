@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa.analysis;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -25,6 +24,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * Eliminate dead assignments (phis) from an SSA IR.
@@ -65,8 +65,7 @@ public class DeadAssignmentElimination {
       }
       if (b.hasPhi()) {
         HashSet<SSAPhiInstruction> toRemove = HashSetFactory.make(5);
-        for (Iterator<SSAPhiInstruction> it = b.iteratePhis(); it.hasNext();) {
-          SSAPhiInstruction phi = it.next();
+        for (SSAPhiInstruction phi : Iterator2Iterable.make(b.iteratePhis())) {
           if (phi != null) {
             int def = phi.getDef();
             if (solution.isDead(def)) {
@@ -103,8 +102,8 @@ public class DeadAssignmentElimination {
      */
     DeadValueSystem(IR ir, DefUse DU) {
       // create a variable for each potentially dead phi instruction.
-      for (Iterator<? extends SSAInstruction> it = ir.iteratePhis(); it.hasNext();) {
-        SSAPhiInstruction phi = (SSAPhiInstruction) it.next();
+      for (SSAInstruction inst : Iterator2Iterable.make(ir.iteratePhis())) {
+        SSAPhiInstruction phi = (SSAPhiInstruction) inst;
         if (phi == null) {
           continue;
         }
@@ -114,8 +113,7 @@ public class DeadAssignmentElimination {
           trivialDead.add(new Integer(def));
         } else {
           boolean maybeDead = true;
-          for (Iterator<SSAInstruction> uses = DU.getUses(def); uses.hasNext();) {
-            SSAInstruction u = uses.next();
+          for (SSAInstruction u : Iterator2Iterable.make(DU.getUses(def))) {
             if (!(u instanceof SSAPhiInstruction)) {
               // certainly not dead
               maybeDead = false;
@@ -134,8 +132,8 @@ public class DeadAssignmentElimination {
       for (Entry<Integer, BooleanVariable> E : vars.entrySet()) {
         Integer def = E.getKey();
         BooleanVariable B = E.getValue();
-        for (Iterator<SSAInstruction> uses = DU.getUses(def.intValue()); uses.hasNext();) {
-          SSAPhiInstruction u = (SSAPhiInstruction) uses.next();
+        for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def.intValue()))) {
+          SSAPhiInstruction u = (SSAPhiInstruction) use;
           Integer ud = new Integer(u.getDef());
           if (trivialDead.contains(ud)) {
             // do nothing ... u will not keep def live

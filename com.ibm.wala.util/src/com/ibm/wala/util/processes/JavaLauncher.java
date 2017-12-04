@@ -14,11 +14,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
  * A Java process launcher
@@ -269,9 +269,9 @@ public class JavaLauncher extends Launcher {
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
       return cp.trim();
     } else {
-      for (Iterator<String> it = getXtraClassPath().iterator(); it.hasNext();) {
+      for (String p : Iterator2Iterable.make(getXtraClassPath().iterator())) {
         cp += File.pathSeparatorChar;
-        cp += it.next();
+        cp += p;
       }
       return cp.trim();
     }
