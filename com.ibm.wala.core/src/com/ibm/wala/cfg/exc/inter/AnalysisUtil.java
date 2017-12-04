@@ -76,7 +76,7 @@ public final class AnalysisUtil {
    * @return a Set of all blocks that contain an invoke
    */
   public static Set<IExplodedBasicBlock> extractInvokeBlocks(final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg) {
-    final HashSet<IExplodedBasicBlock> invokeBlocks = new HashSet<IExplodedBasicBlock>();
+    final HashSet<IExplodedBasicBlock> invokeBlocks = new HashSet<>();
 
     for (final IExplodedBasicBlock block : cfg) {
       if (block.getInstruction() instanceof SSAAbstractInvokeInstruction) {

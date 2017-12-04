@@ -46,7 +46,7 @@ public class ArrayBoundsGraphBuilder {
 	public ArrayBoundsGraphBuilder(IR ir) {
 		this.ir = ir;
 
-		this.foundVariables = new HashSet<Integer>();
+		this.foundVariables = new HashSet<>();
 		this.defUse = new DefUse(ir);
 
 		this.arrayReferenceInstructions = new HashSet<>();
@@ -210,7 +210,7 @@ public class ArrayBoundsGraphBuilder {
 	 * @param graph
 	 */
 	private static void collapseNonPhiEdges(ArrayBoundsGraph graph) {
-		final Map<HyperNode<Integer>, DirectedHyperEdge<Integer>> inEdges = new HashMap<HyperNode<Integer>, DirectedHyperEdge<Integer>>();
+		final Map<HyperNode<Integer>, DirectedHyperEdge<Integer>> inEdges = new HashMap<>();
 		final Set<DirectedHyperEdge<Integer>> edges = new HashSet<>();
 		edges.addAll(graph.getEdges());
 		for (final DirectedHyperEdge<Integer> edge : edges) {
@@ -323,7 +323,7 @@ public class ArrayBoundsGraphBuilder {
 	}
 
 	private void exploreIr() {
-		final Set<Integer> variablesUsedAsIndex = new HashSet<Integer>();
+		final Set<Integer> variablesUsedAsIndex = new HashSet<>();
 		for (final Set<Integer> variables : this.lowerBoundGraph
 				.getArrayAccess().values()) {
 			variablesUsedAsIndex.addAll(variables);
@@ -386,7 +386,7 @@ public class ArrayBoundsGraphBuilder {
 	 * the given variable.
 	 */
 	private void startDFS(int index) {
-		final Stack<Integer> todo = new Stack<Integer>();
+		final Stack<Integer> todo = new Stack<>();
 		todo.push(index);
 
 		while (!todo.isEmpty()) {

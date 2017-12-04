@@ -45,7 +45,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
 
   private static final boolean DEBUG = false;
 
-  private final DelegatingNumberedNodeManager<CGNode> nodeManager = new DelegatingNumberedNodeManager<CGNode>();
+  private final DelegatingNumberedNodeManager<CGNode> nodeManager = new DelegatingNumberedNodeManager<>();
 
   /**
    * A fake root node for the graph
@@ -231,7 +231,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("");
-    for (Iterator<CGNode> i = DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<CGNode>(getFakeRootNode())); i.hasNext();) {
+    for (Iterator<CGNode> i = DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<>(getFakeRootNode())); i.hasNext();) {
       CGNode n = i.next();
       result.append(nodeToString(this, n) + "\n");
     }

@@ -78,7 +78,7 @@ public final class InterprocNullPointerAnalysis {
   private InterprocNullPointerAnalysis(final TypeReference[] ignoredExceptions, final MethodState defaultMethodState, boolean optHasExceptions) {
     this.ignoredExceptions = ignoredExceptions;
     this.defaultMethodState = defaultMethodState;
-    this.states = new HashMap<CGNode, IntraprocAnalysisState>();
+    this.states = new HashMap<>();
     this.optHasExceptions = optHasExceptions;
   }
 
@@ -163,7 +163,7 @@ public final class InterprocNullPointerAnalysis {
   private Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> analysisFirstPass(final CGNode startNode,
       final ParameterState paramState, final IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     final Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> result =
-        new HashMap<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>>();
+        new HashMap<>();
     final IR ir = startNode.getIR();
 
     if (!startNode.getMethod().isStatic()) {
@@ -195,7 +195,7 @@ public final class InterprocNullPointerAnalysis {
         final Set<CGNode> targets = cgFiltered.getPossibleTargets(startNode, invokeInstruction.getCallSite());
 
         for (final CGNode target : targets) {
-          final HashMap<SSAAbstractInvokeInstruction, ParameterState> stateMap = new HashMap<SSAAbstractInvokeInstruction, ParameterState>();
+          final HashMap<SSAAbstractInvokeInstruction, ParameterState> stateMap = new HashMap<>();
           stateMap.put(invokeInstruction, paramStateOfInvokeBlock);
           result.put(target, stateMap);
         }
@@ -218,7 +218,7 @@ public final class InterprocNullPointerAnalysis {
    * Reduces the Callgraph to only the nodes that we need
    */
   private static CallGraph computeFilteredCallgraph(final CallGraph cg) {
-    final HashSet<Atom> filterSet = new HashSet<Atom>();
+    final HashSet<Atom> filterSet = new HashSet<>();
     final Atom worldClinit = Atom.findOrCreateAsciiAtom("fakeWorldClinit");
     filterSet.add(worldClinit);
     filterSet.add(MethodReference.initAtom);
@@ -254,14 +254,14 @@ public final class InterprocNullPointerAnalysis {
      * @return the filtered CallGraph
      */
     private CallGraph filter(final CallGraph fullCG) {
-      final HashSet<CGNode> nodes = new HashSet<CGNode>();
+      final HashSet<CGNode> nodes = new HashSet<>();
 
       // fill all nodes into a set
       for (final CGNode n : fullCG) {
         nodes.add(n);
       }
 
-      final HashSet<CGNode> nodesToRemove = new HashSet<CGNode>();
+      final HashSet<CGNode> nodesToRemove = new HashSet<>();
       // collect all nodes that we do not need
       for (final CGNode node : nodes) {
         for (final Atom method : filter) {
@@ -272,7 +272,7 @@ public final class InterprocNullPointerAnalysis {
       }
       nodes.removeAll(nodesToRemove);
 
-      final HashSet<CGNode> partialRoots = new HashSet<CGNode>();
+      final HashSet<CGNode> partialRoots = new HashSet<>();
       partialRoots.add(fullCG.getFakeRootNode());
 
       // delete the nodes

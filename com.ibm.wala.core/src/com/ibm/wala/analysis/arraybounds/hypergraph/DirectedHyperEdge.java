@@ -21,8 +21,8 @@ public class DirectedHyperEdge<T> {
 	private EdgeWeight weight;
 
 	public DirectedHyperEdge() {
-		this.tail = new HashSet<HyperNode<T>>();
-		this.head = new HashSet<HyperNode<T>>();
+		this.tail = new HashSet<>();
+		this.head = new HashSet<>();
 	}
 
 	public Set<HyperNode<T>> getDestination() {

@@ -31,7 +31,7 @@ public class HyperNode<T> {
 
 	public HyperNode(T value) {
 		this.value = value;
-		this.outEdges = new HashSet<DirectedHyperEdge<T>>();
+		this.outEdges = new HashSet<>();
 		this.weight = Weight.NOT_SET;
 		this.newWeight = Weight.NOT_SET;
 	}

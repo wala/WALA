@@ -39,7 +39,7 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
   
   @Override
   public Iterator<ModuleEntry> getEntries() {
-    return new NonNullSingletonIterator<ModuleEntry>(this);
+    return new NonNullSingletonIterator<>(this);
   }
   
   @Override
@@ -103,7 +103,7 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
   }
 
   public class Reader extends java.io.Reader {
-    private final List<Pair<Integer,URL>> locations = new ArrayList<Pair<Integer,URL>>();
+    private final List<Pair<Integer,URL>> locations = new ArrayList<>();
     private int line = 0;
     private int index = 0;
     private LineNumberReader currentReader;

@@ -212,7 +212,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @return an List of instance keys corresponding to the integers in a set
    */
   List<InstanceKey> getInstances(IntSet set) {
-    LinkedList<InstanceKey> result = new LinkedList<InstanceKey>();
+    LinkedList<InstanceKey> result = new LinkedList<>();
     for (IntIterator it = set.intIterator(); it.hasNext();) {
       int j = it.next();
       result.add(getInstanceKey(j));

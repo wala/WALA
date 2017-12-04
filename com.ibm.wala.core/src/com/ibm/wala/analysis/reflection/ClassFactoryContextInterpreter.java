@@ -115,7 +115,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     JavaTypeContext context = (JavaTypeContext) node.getContext();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
-      return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(0, tr));
+      return new NonNullSingletonIterator<>(NewSiteReference.make(0, tr));
     }
     return EmptyIterator.instance();
   }
@@ -131,7 +131,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static SSAInstruction[] makeStatements(JavaTypeContext context) {
     SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
-    ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+    ArrayList<SSAInstruction> statements = new ArrayList<>();
     // vn1 is the string parameter
     int retValue = 2;
     TypeReference tr = context.getType().getTypeReference();

@@ -107,7 +107,7 @@ public class TypeArgument extends Signature {
    * @return tokenize it
    */
   static String[] parseForTypeArguments(String typeArgs) {
-    ArrayList<String> args = new ArrayList<String>(10);
+    ArrayList<String> args = new ArrayList<>(10);
 
     int i = 1;
     while (true) {

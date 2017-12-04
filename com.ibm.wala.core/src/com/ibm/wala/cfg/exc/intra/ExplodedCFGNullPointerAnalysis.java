@@ -54,7 +54,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> orig = ExplodedControlFlowGraph.make(ir);
 
-    intra = new IntraprocNullPointerAnalysis<IExplodedBasicBlock>(ir, orig, ignoredExceptions, initialState, mState);
+    intra = new IntraprocNullPointerAnalysis<>(ir, orig, ignoredExceptions, initialState, mState);
     intra.run(progress);
     
     return intra.getNumberOfDeletedEdges();

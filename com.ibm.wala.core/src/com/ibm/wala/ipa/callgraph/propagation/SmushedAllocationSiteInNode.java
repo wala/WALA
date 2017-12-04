@@ -54,8 +54,8 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
 
   @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
-    return new MapIterator<NewSiteReference,Pair<CGNode, NewSiteReference>>(
-        new FilterIterator<NewSiteReference>(
+    return new MapIterator<>(
+        new FilterIterator<>(
           getNode().iterateNewSites(),
           o -> o.getDeclaredType().equals(getConcreteType().getReference())),
         object -> Pair.make(getNode(), object));

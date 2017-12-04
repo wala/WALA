@@ -64,7 +64,7 @@ public class GenericMemberClasses<T>
 		}
     }
     public static void main(String args[]) {
-    	(new GenericMemberClasses<Object>()).doit();
+    	(new GenericMemberClasses<>()).doit();
     }
     
     private void doit() {

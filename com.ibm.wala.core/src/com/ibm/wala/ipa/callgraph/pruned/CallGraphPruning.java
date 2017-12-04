@@ -70,9 +70,9 @@ public final class CallGraphPruning {
       System.out.println("Running optimization with depth: " + depth);
    }
    
-   this.marked = new LinkedList<CGNode>();
-   this.keep = new HashSet<CGNode>();
-   this.visited = new LinkedList<CGNode>();
+   this.marked = new LinkedList<>();
+   this.keep = new HashSet<>();
+   this.visited = new LinkedList<>();
    this.depth = depth;
    this.pruningPolicy = policy;
    
@@ -107,8 +107,8 @@ public final class CallGraphPruning {
 	
 	private void addDepth(CGNode node) {
 		
-		LinkedList<CGNode> A = new LinkedList<CGNode>();
-		LinkedList<CGNode> B = new LinkedList<CGNode>();
+		LinkedList<CGNode> A = new LinkedList<>();
+		LinkedList<CGNode> B = new LinkedList<>();
 		int i = depth;
 		A.add(node);
 		while (i > 0) {

@@ -474,7 +474,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
               addNode(s);
               result.add(s);
             }
-            return new CompoundIterator<Statement>(result.iterator(), getPDG(N.getNode()).getSuccNodes(N));
+            return new CompoundIterator<>(result.iterator(), getPDG(N.getNode()).getSuccNodes(N));
           } else {
             return getPDG(N.getNode()).getSuccNodes(N);
           }
@@ -799,7 +799,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   public PDG<T> getPDG(CGNode node) {
     PDG<T> result = pdgMap.get(node);
     if (result == null) {
-      result = new PDG<T>(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
+      result = new PDG<>(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
       pdgMap.put(node, result);
       // Let's not eagerly add nodes, shall we?
       // for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {

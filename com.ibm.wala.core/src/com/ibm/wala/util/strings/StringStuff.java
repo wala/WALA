@@ -223,7 +223,7 @@ public class StringStuff {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
 
-    ArrayList<TypeName> sigs = new ArrayList<TypeName>(10);
+    ArrayList<TypeName> sigs = new ArrayList<>(10);
 
     int i = 1;
     while (true) {

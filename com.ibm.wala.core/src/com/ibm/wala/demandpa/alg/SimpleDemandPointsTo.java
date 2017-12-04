@@ -92,7 +92,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
       System.err.println(g.toString());
     }
 
-    SlowDFSDiscoverTimeIterator<Object> dfs = new SlowDFSDiscoverTimeIterator<Object>(g, pk);
+    SlowDFSDiscoverTimeIterator<Object> dfs = new SlowDFSDiscoverTimeIterator<>(g, pk);
     Collection<InstanceKey> keys = HashSetFactory.make();
     while (dfs.hasNext()) {
       Object o = dfs.next();

@@ -64,14 +64,14 @@ public class Wildcards {
 	}
 	
 	private void doit() {
-		ArrayList<String> e = new ArrayList<String>();
+		ArrayList<String> e = new ArrayList<>();
 		e.add("hello");
 		e.add("goodbye");
 		printCollection(e);
 		printCollection1(e);
 		printCollection2(e);
 
-		ArrayList<Integer> e3 = new ArrayList<Integer>();
+		ArrayList<Integer> e3 = new ArrayList<>();
 		e3.add(new Integer(123));
 		e3.add(new Integer(42));
 		printCollection(e3);

@@ -80,8 +80,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   private void computeFields() throws InvalidClassFileException {
     ClassReader cr = reader.get();
     int fieldCount = cr.getFieldCount();
-    List<FieldImpl> instanceList = new ArrayList<FieldImpl>(fieldCount);
-    List<FieldImpl> staticList = new ArrayList<FieldImpl>(fieldCount);
+    List<FieldImpl> instanceList = new ArrayList<>(fieldCount);
+    List<FieldImpl> staticList = new ArrayList<>(fieldCount);
     try {
       for (int i = 0; i < fieldCount; i++) {
         int accessFlags = cr.getFieldAccessFlags(i);

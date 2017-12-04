@@ -206,7 +206,7 @@ public class CodeScanner {
 
   private static List<FieldReference> getFieldsReadFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     // TODO move the logic here from ShrikeCTMethodWrapper
-    LinkedList<FieldReference> result = new LinkedList<FieldReference>();
+    LinkedList<FieldReference> result = new LinkedList<>();
     for (Iterator<FieldReference> it = M.getFieldsRead(); it.hasNext();) {
       result.add(it.next());
     }
@@ -215,7 +215,7 @@ public class CodeScanner {
 
   private static List<FieldReference> getFieldsWrittenFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     // TODO move the logic here from ShrikeCTMethodWrapper
-    LinkedList<FieldReference> result = new LinkedList<FieldReference>();
+    LinkedList<FieldReference> result = new LinkedList<>();
     for (Iterator<FieldReference> it = M.getFieldsWritten(); it.hasNext();) {
       result.add(it.next());
     }
@@ -224,7 +224,7 @@ public class CodeScanner {
 
   private static List<TypeReference> getArraysWrittenFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     // TODO move the logic here from ShrikeCTMethodWrapper
-    List<TypeReference> result = new LinkedList<TypeReference>();
+    List<TypeReference> result = new LinkedList<>();
     for (Iterator<TypeReference> it = M.getArraysWritten(); it.hasNext();) {
       result.add(it.next());
     }
@@ -291,7 +291,7 @@ public class CodeScanner {
    * @return List of InvokeInstruction
    */
   private static List<CallSiteReference> getCallSites(SSAInstruction[] statements) {
-    final List<CallSiteReference> result = new LinkedList<CallSiteReference>();
+    final List<CallSiteReference> result = new LinkedList<>();
     Visitor v = new Visitor() {
       @Override
       public void visitInvoke(SSAInvokeInstruction instruction) {
@@ -311,7 +311,7 @@ public class CodeScanner {
    * @return List of InvokeInstruction
    */
   private static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
-    final List<NewSiteReference> result = new LinkedList<NewSiteReference>();
+    final List<NewSiteReference> result = new LinkedList<>();
     Visitor v = new Visitor() {
       @Override
       public void visitNew(SSANewInstruction instruction) {
@@ -335,7 +335,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<FieldReference> result = new LinkedList<FieldReference>();
+    final List<FieldReference> result = new LinkedList<>();
     Visitor v = new Visitor() {
       @Override
       public void visitGet(SSAGetInstruction instruction) {
@@ -359,7 +359,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<FieldReference> result = new LinkedList<FieldReference>();
+    final List<FieldReference> result = new LinkedList<>();
     Visitor v = new Visitor() {
       @Override
       public void visitPut(SSAPutInstruction instruction) {
@@ -383,7 +383,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<TypeReference> result = new LinkedList<TypeReference>();
+    final List<TypeReference> result = new LinkedList<>();
     Visitor v = new Visitor() {
 
       @Override

@@ -41,13 +41,13 @@ public class CallGraphTransitiveClosure {
   public static <T> Map<CGNode, OrdinalSet<T>> transitiveClosure(CallGraph cg, Map<CGNode, Collection<T>> nodeResults) {
     try {
       // invert the call graph, to compute the bottom-up result
-      GenReach<CGNode, T> gr = new GenReach<CGNode, T>(GraphInverter.invert(cg), nodeResults);
-      BitVectorSolver<CGNode> solver = new BitVectorSolver<CGNode>(gr);
+      GenReach<CGNode, T> gr = new GenReach<>(GraphInverter.invert(cg), nodeResults);
+      BitVectorSolver<CGNode> solver = new BitVectorSolver<>(gr);
       solver.solve(null);
       Map<CGNode, OrdinalSet<T>> result = HashMapFactory.make();
       for (CGNode n : cg) {
         BitVectorVariable bv = solver.getOut(n);
-        result.put(n, new OrdinalSet<T>(bv.getValue(), gr.getLatticeValues()));
+        result.put(n, new OrdinalSet<>(bv.getValue(), gr.getLatticeValues()));
       }
       return result;
     } catch (CancelException e) {

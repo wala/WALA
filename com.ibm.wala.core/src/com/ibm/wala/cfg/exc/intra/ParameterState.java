@@ -36,7 +36,7 @@ public class ParameterState extends AbstractVariable<ParameterState> {
   public static final int NO_THIS_PTR = -1;
   
   // maps the parmeter's varNum --> State
-  private final HashMap<Integer, State> params = new HashMap<Integer, State>();
+  private final HashMap<Integer, State> params = new HashMap<>();
   
   public static ParameterState createDefault(IMethod m) {
     ParameterState p = new ParameterState();

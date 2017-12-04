@@ -261,7 +261,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       throw new IllegalArgumentException("null type");
     }
     if (disambiguateConstants() || isReflectiveType(type)) {
-      return new ConstantKey<T>(S, getClassHierarchy().lookupClass(type));
+      return new ConstantKey<>(S, getClassHierarchy().lookupClass(type));
     } else {
       return classBased.getInstanceKeyForConstant(type, S);
     }

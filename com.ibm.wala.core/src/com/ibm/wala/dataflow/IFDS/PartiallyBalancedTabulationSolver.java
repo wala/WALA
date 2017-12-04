@@ -31,7 +31,7 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
 
   public static <T, P, F> PartiallyBalancedTabulationSolver<T, P, F> createPartiallyBalancedTabulationSolver(
       PartiallyBalancedTabulationProblem<T, P, F> p, IProgressMonitor monitor) {
-    return new PartiallyBalancedTabulationSolver<T, P, F>(p, monitor);
+    return new PartiallyBalancedTabulationSolver<>(p, monitor);
   }
 
   private final Collection<Pair<T,Integer>> unbalancedSeeds = HashSetFactory.make();

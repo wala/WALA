@@ -35,7 +35,7 @@ public class ReferenceCleanser {
   private static WeakReference<AnalysisCacheImpl> cache;
 
   public static void registerClassHierarchy(IClassHierarchy cha) {
-    ReferenceCleanser.cha = new WeakReference<IClassHierarchy>(cha);
+    ReferenceCleanser.cha = new WeakReference<>(cha);
   }
 
   private static IClassHierarchy getClassHierarchy() {
@@ -48,7 +48,7 @@ public class ReferenceCleanser {
 
   public static void registerCache(IAnalysisCacheView cache) {
     if (cache instanceof AnalysisCacheImpl) {
-      ReferenceCleanser.cache = new WeakReference<AnalysisCacheImpl>((AnalysisCacheImpl) cache);
+      ReferenceCleanser.cache = new WeakReference<>((AnalysisCacheImpl) cache);
     }
   }
 

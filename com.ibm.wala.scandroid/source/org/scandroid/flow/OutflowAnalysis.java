@@ -140,7 +140,7 @@ public class OutflowAnalysis {
 			IFDSTaintDomain<IExplodedBasicBlock> domain,
 			Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> flowGraph,
 			List<SinkSpec> sinkSpecs) {
-		List<Collection<IMethod>> targetList = new ArrayList<Collection<IMethod>>();
+		List<Collection<IMethod>> targetList = new ArrayList<>();
 
 		for (int i = 0; i < sinkSpecs.size(); i++) {
 			Collection<IMethod> tempList = sinkSpecs.get(i).getNamePattern()
@@ -288,7 +288,7 @@ public class OutflowAnalysis {
 						int mappedIndex = domain.getMappedIndex(de);
 						if (flowResult.getResult(block).contains(mappedIndex)) {
 							addEdge(flowGraph, de.taintSource,
-									new ParameterFlow<IExplodedBasicBlock>(
+									new ParameterFlow<>(
 											entryBlock, newArgNum, false));
 						}
 					}
@@ -296,7 +296,7 @@ public class OutflowAnalysis {
 					int mappedIndex = domain.getMappedIndex(de);
 					if (flowResult.getResult(entryBlock).contains(mappedIndex)) {
 						addEdge(flowGraph, de.taintSource,
-								new ParameterFlow<IExplodedBasicBlock>(
+								new ParameterFlow<>(
 										entryBlock, newArgNum, false));
 					}
 
@@ -309,7 +309,7 @@ public class OutflowAnalysis {
 								domain.getMappedIndex(de))) {
 							
 							addEdge(flowGraph, de.taintSource,
-									new ParameterFlow<IExplodedBasicBlock>(
+									new ParameterFlow<>(
 											entryBlock, newArgNum, false));
 						}
 					}
@@ -351,7 +351,7 @@ public class OutflowAnalysis {
 							domain.getMappedIndex(de))) {
 						
 						addEdge(flowGraph, de.taintSource,
-								new ReturnFlow<IExplodedBasicBlock>(block,
+								new ReturnFlow<>(block,
 										false));
 					}
 					// Iterator<BasicBlockInContext<E>> it =
@@ -394,7 +394,7 @@ public class OutflowAnalysis {
 										domain.getMappedIndex(ikElement))) {
 									addEdge(flowGraph,
 											ikElement.taintSource,
-											new ReturnFlow<IExplodedBasicBlock>(
+											new ReturnFlow<>(
 													realBlock, false));
 								}
 							}

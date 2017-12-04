@@ -82,7 +82,7 @@ public class MethodSummary {
 
   public void addStatement(SSAInstruction statement) {
     if (statements == null) {
-      statements = new ArrayList<SSAInstruction>();
+      statements = new ArrayList<>();
     }
     statements.add(statement);
   }

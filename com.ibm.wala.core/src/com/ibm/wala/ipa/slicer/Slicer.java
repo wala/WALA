@@ -179,7 +179,7 @@ public class Slicer {
    */
   public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<U> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<U>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
+    return computeSlice(new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
   }
 
   /**
@@ -190,7 +190,7 @@ public class Slicer {
   public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(Statement s, CallGraph cg,
       PointerAnalysis<U> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<U>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
+    return computeSlice(new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
   }
 
   /**
@@ -322,7 +322,7 @@ public class Slicer {
     @Override
     public TabulationDomain<Object, Statement> getDomain() {
       // a dummy
-      return new UnorderedDomain<Object, Statement>();
+      return new UnorderedDomain<>();
     }
 
     /*

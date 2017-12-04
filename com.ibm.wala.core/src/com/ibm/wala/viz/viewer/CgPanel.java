@@ -102,7 +102,7 @@ public class CgPanel extends JSplitPane{
     }
 
     if (treeNode.getChildCount() == 0) {
-      List<DefaultMutableTreeNode> newChilds = new ArrayList<DefaultMutableTreeNode>();
+      List<DefaultMutableTreeNode> newChilds = new ArrayList<>();
       Object userObject = treeNode.getUserObject();
       if (userObject instanceof CGNode) {
         CGNode cgNode = (CGNode) userObject;

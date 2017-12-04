@@ -78,7 +78,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     final NumberedNodeManager<Object> nodeMgr = new NumberedNodeManager<Object>() {
       @Override
       public Iterator<Object> iterator() {
-        return new CompoundIterator<Object>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
+        return new CompoundIterator<>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
       }
 
       @Override
@@ -130,7 +130,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
       @Override
       public Iterator<Object> iterateNodes(IntSet s) {
-        return new NumberedNodeIterator<Object>(s, this);
+        return new NumberedNodeIterator<>(s, this);
       }
     };
 
@@ -146,7 +146,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
           if (p == null) {
             return EmptyIterator.instance();
           } else {
-            return new IntMapIterator<Object>(p.intIterator(), toNode);
+            return new IntMapIterator<>(p.intIterator(), toNode);
           }
         }
 
@@ -174,7 +174,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
             return EmptyIterator.instance();
           }
           SparseIntSet s = factory.make(succ);
-          return new IntMapIterator<Object>(s.intIterator(), toNode);
+          return new IntMapIterator<>(s.intIterator(), toNode);
         }
 
         @Override
@@ -332,7 +332,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
    */
   private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 
-    ArrayList<LocalPointerKey> list = new ArrayList<LocalPointerKey>();
+    ArrayList<LocalPointerKey> list = new ArrayList<>();
     for (Object n : nodeManager) {
       if (n instanceof LocalPointerKey) {
         list.add((LocalPointerKey) n);

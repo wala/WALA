@@ -52,7 +52,7 @@ public class NullPointerFrameWork<T extends ISSABasicBlock> implements IKilldall
       this.flow = cfg;
     }
 
-    this.transferFunct = new NullPointerTransferFunctionProvider<T>(cfg, ir);
+    this.transferFunct = new NullPointerTransferFunctionProvider<>(cfg, ir);
   }
   
   /* (non-Javadoc)

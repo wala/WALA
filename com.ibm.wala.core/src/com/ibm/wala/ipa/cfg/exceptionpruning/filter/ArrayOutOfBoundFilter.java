@@ -37,7 +37,7 @@ public class ArrayOutOfBoundFilter implements ExceptionFilter<SSAInstruction> {
 				.getBoundsCheckNecessary().get(instruction);
 		if (unnecessary == UnnecessaryCheck.BOTH) {
 
-			final LinkedList<FilteredException> result = new LinkedList<FilteredException>();
+			final LinkedList<FilteredException> result = new LinkedList<>();
 			result.add(new FilteredException(
 					TypeReference.JavaLangArrayIndexOutOfBoundsException));
 

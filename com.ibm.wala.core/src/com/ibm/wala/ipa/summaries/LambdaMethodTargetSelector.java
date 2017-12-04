@@ -28,7 +28,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
-  private final WeakHashMap<BootstrapMethod, SummarizedMethod> summaries = new WeakHashMap<BootstrapMethod, SummarizedMethod>();
+  private final WeakHashMap<BootstrapMethod, SummarizedMethod> summaries = new WeakHashMap<>();
 
   private final MethodTargetSelector base;
   

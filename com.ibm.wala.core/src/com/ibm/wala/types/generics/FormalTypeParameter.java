@@ -65,7 +65,7 @@ public class FormalTypeParameter extends Signature {
   }
 
   private static TypeSignature[] parseForInterfaceBounds(String s) {
-    List<TypeSignature> list = new LinkedList<TypeSignature>();
+    List<TypeSignature> list = new LinkedList<>();
 
     int start = s.indexOf(':');
     if (start == s.length() - 1) {
@@ -143,7 +143,7 @@ public class FormalTypeParameter extends Signature {
   }
 
   static String[] parseForFormalTypeParameters(String s) {
-    ArrayList<String> sigs = new ArrayList<String>(10);
+    ArrayList<String> sigs = new ArrayList<>(10);
 
     int beginToken = 1;
     while (s.charAt(beginToken) != '>') {

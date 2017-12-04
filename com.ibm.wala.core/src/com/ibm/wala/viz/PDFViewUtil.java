@@ -60,7 +60,7 @@ public class PDFViewUtil {
 
     NodeDecorator<ISSABasicBlock> labels = makeIRDecorator(ir);
     if (annotations != null) {
-      labels = new ConcatenatingNodeDecorator<ISSABasicBlock>(annotations, labels);
+      labels = new ConcatenatingNodeDecorator<>(annotations, labels);
     }
 
     g = CFGSanitizer.sanitize(ir, cha);

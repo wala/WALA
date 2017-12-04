@@ -27,7 +27,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
   }
 
   public InstructionByIIndexMap() {
-    this.map = new LinkedHashMap<InstructionByIIndexWrapper<Instruction>, T>();
+    this.map = new LinkedHashMap<>();
   }
 
   @Override
@@ -45,7 +45,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
     if (key instanceof SSAInstruction) {
       SSAInstruction instruction = (SSAInstruction) key;
       if (instruction.iindex >= 0) {
-        return map.containsKey(new InstructionByIIndexWrapper<SSAInstruction>(instruction));
+        return map.containsKey(new InstructionByIIndexWrapper<>(instruction));
       }
     }
     return false;
@@ -61,7 +61,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
     if (key instanceof SSAInstruction) {
       SSAInstruction instruction = (SSAInstruction) key;
       if (instruction.iindex >= 0) {
-        return map.get(new InstructionByIIndexWrapper<SSAInstruction>(instruction));
+        return map.get(new InstructionByIIndexWrapper<>(instruction));
       }
     }
     return null;
@@ -69,7 +69,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
 
   @Override
   public T put(Instruction key, T value) {
-    return map.put(new InstructionByIIndexWrapper<Instruction>(key), value);
+    return map.put(new InstructionByIIndexWrapper<>(key), value);
   }
 
   @Override
@@ -77,7 +77,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
     if (key instanceof SSAInstruction) {
       SSAInstruction instruction = (SSAInstruction) key;
       if (instruction.iindex >= 0) {
-        return map.remove(new InstructionByIIndexWrapper<SSAInstruction>(instruction));
+        return map.remove(new InstructionByIIndexWrapper<>(instruction));
       }
     }
     return null;
@@ -114,7 +114,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
   public Set<java.util.Map.Entry<Instruction, T>> entrySet() {
     Set<java.util.Map.Entry<Instruction, T>> result = new LinkedHashSet<>();
     for (java.util.Map.Entry<InstructionByIIndexWrapper<Instruction>, T> entry:map.entrySet()) {
-      result.add(new AbstractMap.SimpleImmutableEntry<Instruction, T>(entry.getKey().getInstruction(), entry.getValue()));
+      result.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey().getInstruction(), entry.getValue()));
     }
 
     return result;

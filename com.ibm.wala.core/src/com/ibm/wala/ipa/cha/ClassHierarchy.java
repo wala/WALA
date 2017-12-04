@@ -1081,7 +1081,7 @@ public class ClassHierarchy implements IClassHierarchy {
   @Override
   public Iterator<IClass> iterator() {
     Function<Node, IClass> toClass = n -> n.klass;
-    return new MapIterator<Node, IClass>(map.values().iterator(), toClass);
+    return new MapIterator<>(map.values().iterator(), toClass);
   }
 
   /**
@@ -1138,7 +1138,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return getImmediateArraySubclasses((ArrayClass)klass);
     }
     Function<Node, IClass> node2Class = n -> n.klass;
-    return Iterator2Collection.toSet(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
+    return Iterator2Collection.toSet(new MapIterator<>(findNode(klass).children.iterator(), node2Class));
   }
 
   private Collection<IClass> getImmediateArraySubclasses(ArrayClass klass) {

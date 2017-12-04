@@ -46,7 +46,7 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
 
   @Override
   public Iterator<Object> iterateNodes(IntSet s) {
-    return new NumberedNodeIterator<Object>(s, this);
+    return new NumberedNodeIterator<>(s, this);
   }
 
   @Override

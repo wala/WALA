@@ -26,7 +26,7 @@ public class BoundedTabulationSolver<T, P, F> extends TabulationSolver<T, P, F> 
 
   public static <T, P, F> BoundedTabulationSolver<T, P, F> createBoundedTabulationSolver(TabulationProblem<T, P, F> p, int bound,
       IProgressMonitor monitor) {
-    return new BoundedTabulationSolver<T, P, F>(p, bound, monitor);
+    return new BoundedTabulationSolver<>(p, bound, monitor);
   }
 
   private final int bound;

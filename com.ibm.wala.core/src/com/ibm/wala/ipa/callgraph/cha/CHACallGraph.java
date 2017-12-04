@@ -160,7 +160,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
       new MapIterator<IMethod,CGNode>(
-          new FilterIterator<IMethod>(
+          new FilterIterator<>(
               getPossibleTargets(site),
               this::isRelevantMethod
           ),
@@ -182,7 +182,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   @Override
   public Iterator<CallSiteReference> getPossibleSites(final CGNode src, final CGNode target) {
     return
-      new FilterIterator<CallSiteReference>(getInterpreter(src).iterateCallSites(src),
+      new FilterIterator<>(getInterpreter(src).iterateCallSites(src),
         o -> getPossibleTargets(src, o).contains(target));
   }
 
@@ -237,7 +237,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return n;
   }
 
-  private Stack<CGNode> newNodes = new Stack<CGNode>();
+  private Stack<CGNode> newNodes = new Stack<>();
 
   private void closure() throws CancelException {
     while (! newNodes.isEmpty()) {
@@ -290,7 +290,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
               preds.add(node);
             }
           }
-          predecessors.put(n, new SoftReference<Set<CGNode>>(preds));
+          predecessors.put(n, new SoftReference<>(preds));
           return preds;
         }
       }
@@ -307,7 +307,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
       @Override
       public Iterator<CGNode> getSuccNodes(final CGNode n) {
-        return new FilterIterator<CGNode>(new ComposedIterator<CallSiteReference, CGNode>(n.iterateCallSites()) {
+        return new FilterIterator<>(new ComposedIterator<CallSiteReference, CGNode>(n.iterateCallSites()) {
           @Override
           public Iterator<? extends CGNode> makeInner(CallSiteReference outer) {
             return getPossibleTargets(n, outer).iterator();

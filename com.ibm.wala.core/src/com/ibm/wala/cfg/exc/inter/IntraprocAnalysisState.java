@@ -39,10 +39,10 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
 
   private final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg;
   private final HashMap<IExplodedBasicBlock, NullPointerState> statesOfSsaVars =
-      new HashMap<IExplodedBasicBlock, NullPointerState>();
-  private final HashMap<IExplodedBasicBlock, Object[]> valuesOfSsaVars = new HashMap<IExplodedBasicBlock, Object[]>();
+      new HashMap<>();
+  private final HashMap<IExplodedBasicBlock, Object[]> valuesOfSsaVars = new HashMap<>();
   private final HashMap<IExplodedBasicBlock, int[]> numbersOfSsaVarsThatAreParemerters =
-      new HashMap<IExplodedBasicBlock, int[]>();
+      new HashMap<>();
   private final boolean noAnalysisPossible;
   private final int deletedEdges;
   private boolean throwsException = true;

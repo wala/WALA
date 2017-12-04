@@ -768,17 +768,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * forward worklist: for initially processing points-to queries
      */
-    private final Collection<PointerKeyAndState> initWorklist = new LinkedHashSet<PointerKeyAndState>();
+    private final Collection<PointerKeyAndState> initWorklist = new LinkedHashSet<>();
 
     /**
      * worklist for variables whose points-to set has been updated
      */
-    private final Collection<PointerKeyAndState> pointsToWorklist = new LinkedHashSet<PointerKeyAndState>();
+    private final Collection<PointerKeyAndState> pointsToWorklist = new LinkedHashSet<>();
 
     /**
      * worklist for variables whose tracked points-to set has been updated
      */
-    private final Collection<PointerKeyAndState> trackedPointsToWorklist = new LinkedHashSet<PointerKeyAndState>();
+    private final Collection<PointerKeyAndState> trackedPointsToWorklist = new LinkedHashSet<>();
 
     /**
      * maps a pointer key to those on-the-fly virtual calls for which it is the receiver
@@ -843,7 +843,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private OrdinalSet<InstanceKeyAndState> makeOrdinalSet(IntSet intSet) {
       // make a copy here, to avoid comodification during iteration
       // TODO remove the copying, do it only at necessary call sites
-      return new OrdinalSet<InstanceKeyAndState>(intSetFactory.makeCopy(intSet), ikAndStates);
+      return new OrdinalSet<>(intSetFactory.makeCopy(intSet), ikAndStates);
     }
 
     /**
@@ -1974,7 +1974,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private boolean doTopLevelTraversal(PointerKey pk, final Predicate<InstanceKey> pred, final PointsToComputer ptoComputer,
       PointerAnalysis<InstanceKey> pa) {
     final Set<PointerKeyAndState> visited = HashSetFactory.make();
-    final LinkedList<PointerKeyAndState> worklist = new LinkedList<PointerKeyAndState>();
+    final LinkedList<PointerKeyAndState> worklist = new LinkedList<>();
 
     class Helper {
 
@@ -2385,7 +2385,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     // here we compute the number of unique *method* targets, as opposed to call graph nodes.
     // if we have a context-sensitive call graph, with many targets representing clones of
     // the same method, we don't want to count the clones twice
-    Set<IMethod> methodTargets = new HashSet<IMethod>();
+    Set<IMethod> methodTargets = new HashSet<>();
     for (CGNode node : possibleTargets) {
       methodTargets.add(node.getMethod());
     }

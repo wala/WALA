@@ -176,17 +176,17 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     /**
      * List of synthetic allocation statements we model for this specialized instance
      */
-    final protected ArrayList<SSAInstruction> allocations = new ArrayList<SSAInstruction>();
+    final protected ArrayList<SSAInstruction> allocations = new ArrayList<>();
 
     /**
      * List of synthetic invoke instructions we model for this specialized instance.
      */
-    final protected ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
+    final protected ArrayList<SSAInstruction> calls = new ArrayList<>();
 
     /**
      * List of all instructions
      */
-    protected final ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
+    protected final ArrayList<SSAInstruction> allInstructions = new ArrayList<>();
 
     private final SSAInstructionFactory insts = declaringClass.getClassLoader().getInstructionFactory();
     

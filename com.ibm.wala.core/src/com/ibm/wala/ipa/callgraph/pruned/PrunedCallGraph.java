@@ -55,7 +55,7 @@ public class PrunedCallGraph implements CallGraph {
 	@Override
 	public Iterator<CGNode> iterator() {
 		Iterator<CGNode> tmp = cg.iterator();
-		Collection<CGNode> col = new LinkedList<CGNode>();
+		Collection<CGNode> col = new LinkedList<>();
 		while (tmp.hasNext()) {
 			CGNode n = tmp.next();
 			if (keep.contains(n)) {
@@ -96,7 +96,7 @@ public class PrunedCallGraph implements CallGraph {
 	@Override
 	public Iterator<CGNode> getPredNodes(CGNode n) {
 		Iterator<CGNode> tmp = cg.getPredNodes(n);
-		Collection<CGNode> col = new LinkedList<CGNode>();
+		Collection<CGNode> col = new LinkedList<>();
 		while (tmp.hasNext()) {
 			CGNode no = tmp.next();
 			if (keep.contains(no) && !removedEdge(no, n)) {
@@ -124,7 +124,7 @@ public class PrunedCallGraph implements CallGraph {
 	@Override
 	public Iterator<CGNode> getSuccNodes(CGNode n) {
 		Iterator<CGNode> tmp = cg.getSuccNodes(n);
-		Collection<CGNode> col = new LinkedList<CGNode>();
+		Collection<CGNode> col = new LinkedList<>();
 		while (tmp.hasNext()) {
 			CGNode no = tmp.next();
 			if (keep.contains(no) && !removedEdge(n, no)) {
@@ -218,7 +218,7 @@ public class PrunedCallGraph implements CallGraph {
 	@Override
 	public Iterator<CGNode> iterateNodes(IntSet s) {
 		Iterator<CGNode> tmp = cg.iterateNodes(s);
-		Collection<CGNode> col = new LinkedList<CGNode>();
+		Collection<CGNode> col = new LinkedList<>();
 		while (tmp.hasNext()) {
 			CGNode n = tmp.next();
 			if (keep.contains(n)) {
@@ -287,7 +287,7 @@ public class PrunedCallGraph implements CallGraph {
 	@Override
 	public Collection<CGNode> getEntrypointNodes() {
 		Collection<CGNode> tmp = cg.getEntrypointNodes();
-		Set<CGNode> ret = new HashSet<CGNode>();
+		Set<CGNode> ret = new HashSet<>();
 		for (CGNode n : tmp) {
 			if (keep.contains(n)) {
 				ret.add(n);
@@ -310,7 +310,7 @@ public class PrunedCallGraph implements CallGraph {
 	@Override
 	public Set<CGNode> getNodes(MethodReference m) {
 		Set<CGNode> tmp = cg.getNodes(m);
-		Set<CGNode> ret = new HashSet<CGNode>();
+		Set<CGNode> ret = new HashSet<>();
 		for (CGNode n : tmp) {
 			if (keep.contains(n)) {
 				ret.add(n);
@@ -332,7 +332,7 @@ public class PrunedCallGraph implements CallGraph {
 			return null;
 		}
 		Set<CGNode> tmp = cg.getPossibleTargets(node, site);
-		Set<CGNode> ret = new HashSet<CGNode>();
+		Set<CGNode> ret = new HashSet<>();
 		for (CGNode n : tmp) {
 			if (keep.contains(n) && !removedEdge(node, n)) {
 				ret.add(n);

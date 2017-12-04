@@ -33,9 +33,9 @@ public final class CacheReference {
 
     switch (choice) {
     case SOFT:
-      return new SoftReference<Object>(referent);
+      return new SoftReference<>(referent);
     case WEAK:
-      return new WeakReference<Object>(referent);
+      return new WeakReference<>(referent);
     case HARD:
       return referent;
     default:

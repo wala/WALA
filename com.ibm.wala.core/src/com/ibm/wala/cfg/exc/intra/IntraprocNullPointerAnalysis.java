@@ -84,7 +84,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       maxVarNum = ir.getSymbolTable().getMaxValueNumber();
     }
     
-    this.ignoreExceptions = new HashSet<TypeReference>();
+    this.ignoreExceptions = new HashSet<>();
     
     if (ignoreExceptions != null) {
       for (TypeReference tRef : ignoreExceptions) {
@@ -98,7 +98,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
 
   private static <T extends ISSABasicBlock> List<T> 
       searchNodesWithPathToCatchAll(ControlFlowGraph<SSAInstruction, T> cfg) {
-    final List<T> nodes = new LinkedList<T>();
+    final List<T> nodes = new LinkedList<>();
 
     for (final T exp : cfg) {
       final List<T> excSucc = cfg.getExceptionalSuccessors(exp);
@@ -134,9 +134,9 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         pruned = cfg;
       } else {
         final List<T> catched = searchNodesWithPathToCatchAll(cfg);
-        final NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
+        final NullPointerFrameWork<T> problem = new NullPointerFrameWork<>(cfg, ir);
       
-        solver = new NullPointerSolver<T>(problem, maxVarNum, cfg.entry(), ir, initialState);
+        solver = new NullPointerSolver<>(problem, maxVarNum, cfg.entry(), ir, initialState);
         
         solver.solve(progress);
         
@@ -151,7 +151,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         for (T node : deleted) {
           deletedEdges += deleted.getSuccNodeCount(node);
         }
-        final NegativeGraphFilter<T> filter = new NegativeGraphFilter<T>(deleted);
+        final NegativeGraphFilter<T> filter = new NegativeGraphFilter<>(deleted);
         
         final PrunedCFG<SSAInstruction, T> newCfg = PrunedCFG.make(cfg, filter);
 
@@ -201,7 +201,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
 
     private final Graph<T> deleted;
     private NegativeCFGBuilderVisitor() {
-      this.deleted = new SparseNumberedGraph<T>(2);
+      this.deleted = new SparseNumberedGraph<>(2);
       for (T bb : cfg) {
         deleted.addNode(bb);
       }
@@ -244,7 +244,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         return mState != null && !mState.throwsException((SSAAbstractInvokeInstruction) instr);  
       } else {
         Collection<TypeReference> exc = instr.getExceptionTypes();
-        Set<TypeReference> myExcs = new HashSet<TypeReference>(exc);
+        Set<TypeReference> myExcs = new HashSet<>(exc);
         myExcs.removeAll(ignoreExceptions);
         
         return myExcs.size() == 1 && myExcs.contains(TypeReference.JavaLangNullPointerException);
@@ -259,7 +259,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         return mState != null && !mState.throwsException((SSAAbstractInvokeInstruction) instr); 
       } else {
         Collection<TypeReference> exc = instr.getExceptionTypes();
-        Set<TypeReference> myExcs = new HashSet<TypeReference>(exc);
+        Set<TypeReference> myExcs = new HashSet<>(exc);
         myExcs.removeAll(ignoreExceptions);
         
         return myExcs.isEmpty();

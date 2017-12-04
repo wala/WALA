@@ -127,7 +127,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     JavaTypeContext context = (JavaTypeContext) node.getContext();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
-      return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(0, tr));
+      return new NonNullSingletonIterator<>(NewSiteReference.make(0, tr));
     }
     return EmptyIterator.instance();
   }

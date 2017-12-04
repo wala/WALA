@@ -271,7 +271,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (MemoryAccess a : writes) {
       addSubgraphForNode(a.getNode());
     }
-    ArrayList<PointerKey> written = new ArrayList<PointerKey>();
+    ArrayList<PointerKey> written = new ArrayList<>();
     for (MemoryAccess a : writes) {
       IR ir = a.getNode().getIR();
       SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
@@ -332,7 +332,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (MemoryAccess a : reads) {
       addSubgraphForNode(a.getNode());
     }
-    ArrayList<PointerKey> readInto = new ArrayList<PointerKey>();
+    ArrayList<PointerKey> readInto = new ArrayList<>();
     for (MemoryAccess a : reads) {
       IR ir = a.getNode().getIR();
       SSAGetInstruction s = (SSAGetInstruction) ir.getInstructions()[a.getInstructionIndex()];
@@ -355,7 +355,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (MemoryAccess a : arrayWrites) {
       addSubgraphForNode(a.getNode());
     }
-    ArrayList<PointerKey> written = new ArrayList<PointerKey>();
+    ArrayList<PointerKey> written = new ArrayList<>();
     for (MemoryAccess a : arrayWrites) {
       final CGNode node = a.getNode();
       IR ir = node.getIR();
@@ -388,7 +388,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (MemoryAccess a : arrayReads) {
       addSubgraphForNode(a.getNode());
     }
-    ArrayList<PointerKey> read = new ArrayList<PointerKey>();
+    ArrayList<PointerKey> read = new ArrayList<>();
     for (MemoryAccess a : arrayReads) {
       IR ir = a.getNode().getIR();
       SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];

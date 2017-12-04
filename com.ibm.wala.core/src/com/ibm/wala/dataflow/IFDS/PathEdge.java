@@ -30,7 +30,7 @@ public final class PathEdge<T> {
     if (n == null) {
       throw new IllegalArgumentException("null n");
     }
-    return new PathEdge<T>(s_p, d1, n, d2);
+    return new PathEdge<>(s_p, d1, n, d2);
   }
   
   private PathEdge(T s_p, int d1, T n, int d2) {

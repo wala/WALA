@@ -135,7 +135,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return OrdinalSet.empty();
     } else {
       IntSet S = v.getValue();
-      return new OrdinalSet<InstanceKey>(S, instanceKeys);
+      return new OrdinalSet<>(S, instanceKeys);
     }
   }
 
@@ -261,7 +261,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         }
       }
     }
-    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    return new OrdinalSet<>(S, instanceKeys);
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtPhi(CGNode node, SSAPhiInstruction instruction) {
@@ -277,7 +277,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         }
       }
     }
-    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    return new OrdinalSet<>(S, instanceKeys);
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtALoad(CGNode node, SSAArrayLoadInstruction instruction) {
@@ -292,7 +292,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         S.addAll(set);
       }
     }
-    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    return new OrdinalSet<>(S, instanceKeys);
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, SSAGetInstruction instruction) {
@@ -321,7 +321,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
           }
         }
       }
-      return new OrdinalSet<InstanceKey>(S, instanceKeys);
+      return new OrdinalSet<>(S, instanceKeys);
     }
   }
 
@@ -369,7 +369,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         }
       }
     }
-    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    return new OrdinalSet<>(S, instanceKeys);
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCheckCast(CGNode node, SSACheckCastInstruction instruction) {
@@ -397,7 +397,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         }
       }
     }
-    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    return new OrdinalSet<>(S, instanceKeys);
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCall(LocalPointerKey lpk, CGNode node, SSAInvokeInstruction call) {
@@ -420,7 +420,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         assert index != -1 : "instance " + element + " not mapped!";
       }
     }
-    return new OrdinalSet<InstanceKey>(s, instanceKeys);
+    return new OrdinalSet<>(s, instanceKeys);
   }
 
   /**
@@ -435,7 +435,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         S.addAll(set);
       }
     }
-    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    return new OrdinalSet<>(S, instanceKeys);
   }
 
   /*

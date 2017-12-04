@@ -143,7 +143,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       int index = getInstanceKeyMapping().add(new ConcreteTypeKey(klass));
       s.add(index);
     }
-    return new OrdinalSet<InstanceKey>(s, getInstanceKeyMapping());
+    return new OrdinalSet<>(s, getInstanceKeyMapping());
   }
 
   private IClass inferType(PointerKey key) {

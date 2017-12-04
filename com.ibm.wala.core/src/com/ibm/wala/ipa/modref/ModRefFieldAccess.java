@@ -46,10 +46,10 @@ public final class ModRefFieldAccess {
 			this.mods = mods;
 			this.refs = refs;
 			if (mods == null) {
-				this.mods = new HashMap<IClass, Set<IField>>();
+				this.mods = new HashMap<>();
 			}
 			if (refs == null) {
-				this.refs = new HashMap<IClass, Set<IField>>();
+				this.refs = new HashMap<>();
 			}
 		}
 		
@@ -73,11 +73,11 @@ public final class ModRefFieldAccess {
 
 	private ModRefFieldAccess(CallGraph cg) {
 		this.cg = cg;
-		this.refs = new HashMap<CGNode, Map<IClass, Set<IField>>>();
-		this.mods = new HashMap<CGNode, Map<IClass, Set<IField>>>();
-		this.trefs = new HashMap<CGNode, Map<IClass, Set<IField>>>();
-		this.tmods = new HashMap<CGNode, Map<IClass, Set<IField>>>();
-		this.done = new LinkedList<CGNode>();
+		this.refs = new HashMap<>();
+		this.mods = new HashMap<>();
+		this.trefs = new HashMap<>();
+		this.tmods = new HashMap<>();
+		this.done = new LinkedList<>();
 	}
 	
 	public static ModRefFieldAccess compute(CallGraph cg) {

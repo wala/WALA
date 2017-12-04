@@ -393,7 +393,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
     public void addPhi(SSAPhiInstruction phiInstruction) {
       if (phis == null) {
-        phis = new ArrayList<SSAPhiInstruction>(1);
+        phis = new ArrayList<>(1);
       }
       phis.add(phiInstruction);
     }
@@ -406,7 +406,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
     public void addPi(SSAPiInstruction piInstruction) {
       if (pis == null) {
-        pis = new ArrayList<SSAPiInstruction>(1);
+        pis = new ArrayList<>(1);
       }
       pis.add(piInstruction);
     }
@@ -614,7 +614,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
     @Override
     public Iterator<SSAInstruction> iterator() {
-      return new ArrayIterator<SSAInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
+      return new ArrayIterator<>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
   }
 

@@ -483,7 +483,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       System.err.println("getIncomingPEIs " + bb);
     }
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> g = ir.getControlFlowGraph();
-    List<ProgramCounter> result = new ArrayList<ProgramCounter>(g.getPredNodeCount(bb));
+    List<ProgramCounter> result = new ArrayList<>(g.getPredNodeCount(bb));
     for (Iterator<ISSABasicBlock> it = g.getPredNodes(bb); it.hasNext();) {
       BasicBlock pred = (BasicBlock) it.next();
       if (DEBUG) {
@@ -1167,7 +1167,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             System.err.println("Add side effect, dispatch to " + instruction + " for " + params);
           }
  
-          final List<PointerKey> pks = new ArrayList<PointerKey>(params.size());
+          final List<PointerKey> pks = new ArrayList<>(params.size());
           params.foreach(x -> {
             if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
               pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));                   
