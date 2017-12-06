@@ -100,6 +100,7 @@ public class OfflineDynamicCallGraph {
   private static boolean patchExits = true;
   private static boolean patchCalls = false;
   private static boolean extractCalls = true;
+  private static boolean extractDynamicCalls = false;
 
   private static Class<?> runtime = Runtime.class;
 
@@ -121,6 +122,8 @@ public class OfflineDynamicCallGraph {
           patchExits = false;
         } else if ("--patch-calls".equals(args[i])) {
           patchCalls = true;
+        } else if ("--extract-dynamic-calls".equals(args[i])) {
+          extractDynamicCalls = true;
         } else if ("--rt-jar".equals(args[i])) {
           System.err.println("using " + args[i+1] + " as stdlib");
           OfflineInstrumenter libReader = new OfflineInstrumenter();
@@ -243,7 +246,10 @@ public class OfflineDynamicCallGraph {
             me.visitInstructions(new AddTracingToInvokes() {
               @Override
               public void visitInvoke(final IInvokeInstruction inv) {
-                if (inv.getMethodName().equals("<init>") || (r.getAccessFlags()&Constants.ACC_INTERFACE) != 0) {
+                if (inv.getMethodName().equals("<init>") || 
+                    (r.getAccessFlags()&Constants.ACC_INTERFACE) != 0 ||
+                    (!extractDynamicCalls && inv instanceof InvokeDynamicInstruction)) 
+                {
                   super.visitInvoke(inv);
                 } else {
                   this.replaceWith(new MethodEditor.Patch() {                    
