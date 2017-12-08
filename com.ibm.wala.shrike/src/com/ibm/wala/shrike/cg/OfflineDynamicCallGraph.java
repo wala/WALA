@@ -98,10 +98,11 @@ public class OfflineDynamicCallGraph {
   private final static boolean verify = true;
 
   private static boolean patchExits = true;
-  private static boolean patchCalls = false;
+  private static boolean patchCalls = true;
   private static boolean extractCalls = true;
   private static boolean extractDynamicCalls = false;
-
+  private static boolean extractConstructors = true;
+  
   private static Class<?> runtime = Runtime.class;
 
   private static SetOfClasses filter;
@@ -124,6 +125,8 @@ public class OfflineDynamicCallGraph {
           patchCalls = true;
         } else if ("--extract-dynamic-calls".equals(args[i])) {
           extractDynamicCalls = true;
+        } else if ("--extract-constructors".equals(args[i])) {
+          extractConstructors = true;
         } else if ("--rt-jar".equals(args[i])) {
           System.err.println("using " + args[i+1] + " as stdlib");
           OfflineInstrumenter libReader = new OfflineInstrumenter();
@@ -171,7 +174,7 @@ public class OfflineDynamicCallGraph {
 
     final ClassReader r = ci.getReader();
 
-    final Map<Pair<String,Pair<String,String>>,MethodData> methods = HashMapFactory.make();
+    final Map<Object,MethodData> methods = HashMapFactory.make();
     
     for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
       final MethodData d = ci.visitMethod(m);
@@ -246,7 +249,7 @@ public class OfflineDynamicCallGraph {
             me.visitInstructions(new AddTracingToInvokes() {
               @Override
               public void visitInvoke(final IInvokeInstruction inv) {
-                if (inv.getMethodName().equals("<init>") || 
+                if ((!extractConstructors && inv.getMethodName().equals("<init>")) || 
                     (r.getAccessFlags()&Constants.ACC_INTERFACE) != 0 ||
                     (!extractDynamicCalls && inv instanceof InvokeDynamicInstruction)) 
                 {
@@ -255,24 +258,36 @@ public class OfflineDynamicCallGraph {
                   this.replaceWith(new MethodEditor.Patch() {                    
                     @Override
                     public void emitTo(final Output w) {
-                      final String methodSignature = inv.getInvocationCode().hasImplicitThis() && !(inv instanceof InvokeDynamicInstruction)?
-                          "(" + inv.getClassType() + inv.getMethodSignature().substring(1):
-                          inv.getMethodSignature();
-                      Pair<String,Pair<String,String>> key = Pair.make(inv.getClassType(), Pair.make(inv.getMethodName(), methodSignature));
+                      final String methodSignature = 
+                          inv.getInvocationCode().hasImplicitThis() && !(inv instanceof InvokeDynamicInstruction)?
+                              "(" + inv.getClassType() + inv.getMethodSignature().substring(1):
+                              inv.getMethodSignature(); 
+                      Object key;
+                      if (inv instanceof InvokeDynamicInstruction) {
+                        key = inv;
+                      } else {
+                        key = Pair.make(inv.getClassType(), Pair.make(inv.getMethodName(), methodSignature));
+                      }
+                      
                       if (! methods.containsKey(key)) {
                         MethodData trampoline = ci.createEmptyMethodData("$shrike$trampoline$" + methods.size(), methodSignature, Constants.ACC_STATIC|Constants.ACC_PRIVATE);
                         methods.put(key,  trampoline);
                         MethodEditor me = new MethodEditor(trampoline);
                         me.beginPass();
                         me.insertAtStart(new MethodEditor.Patch() {
+                          private String hackType(String type) {
+                            if ("B".equals(type) || "C".equals(type) || "S".equals(type) || "Z".equals(type)) {
+                              return "I";
+                            } else {
+                              return type;
+                            }
+                          }
+                          
                           @Override
                           public void emitTo(MethodEditor.Output w) {
                             String[] types = Util.getParamsTypes(null, methodSignature);
                             for(int i = 0, local = 0; i < types.length; i++) {
-                              String type = types[i];
-                              if ("B".equals(type) || "C".equals(type) || "S".equals(type) || "Z".equals(type)) {
-                                type = "I";
-                              }
+                              String type = hackType(types[i]);
                               w.emit(LoadInstruction.make(type, local));
                               if ("J".equals(type) || "D".equals(type)) {
                                 local += 2;
@@ -288,11 +303,14 @@ public class OfflineDynamicCallGraph {
                               InvokeInstruction inst = InvokeInstruction.make(inv.getMethodSignature(), inv.getClassType(), inv.getMethodName(), mode);
                               w.emit(inst);
                             }
-                          }
+                            //w.emit(ReturnInstruction.make(hackType(inv.getMethodSignature().substring(inv.getMethodSignature().indexOf(")")+1))));
+                            }   
                         });
+                        
                         me.applyPatches();
                         me.endPass();
 
+                           
                         me.beginPass();
                         me.visitInstructions(new AddTracingToInvokes());
                         me.applyPatches();
@@ -334,7 +352,7 @@ public class OfflineDynamicCallGraph {
             w.emit(Util.makeInvoke(runtime, "execution", new Class[] {String.class, String.class, Object.class}));
           }
         });
-
+        
         // this updates the data d
         me.applyPatches();
 
@@ -346,7 +364,7 @@ public class OfflineDynamicCallGraph {
           w.flush();
         }
 
-        if (verify) {
+        if (verify && !extractConstructors) {
           Verifier v = new Verifier(d);
           // v.setClassHierarchy(cha);
           v.verify();

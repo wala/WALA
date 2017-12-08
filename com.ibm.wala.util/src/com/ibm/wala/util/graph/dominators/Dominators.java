@@ -99,10 +99,6 @@ public abstract class Dominators<T> {
     return false;
   }
 
-  public Graph<T> getGraph() {
-    return G;
-  }
-
   /**
    * return the immediate dominator of node
    */

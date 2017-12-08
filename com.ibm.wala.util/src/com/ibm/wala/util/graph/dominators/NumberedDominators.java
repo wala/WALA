@@ -34,11 +34,6 @@ public class NumberedDominators<T> extends Dominators<T> {
     analyze();
   }
 
-  @Override
-  public NumberedGraph<T> getGraph() {
-    return (NumberedGraph<T>) G;
-  }
-
   /*
    * Look-aside table for DominatorInfo objects
    */
@@ -48,7 +43,7 @@ public class NumberedDominators<T> extends Dominators<T> {
   @Override
   protected final DominatorInfo getInfo(T node) {
     assert node != null;
-    return (DominatorInfo) infoMap[getGraph().getNumber(node)];
+    return (DominatorInfo) infoMap[((NumberedGraph<T>)G).getNumber(node)];
   }
 
 }

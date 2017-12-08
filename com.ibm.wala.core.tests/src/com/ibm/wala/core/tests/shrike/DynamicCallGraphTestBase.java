@@ -189,6 +189,10 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     try (final BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cgLocation))))) {
       String line;
       loop: while ((line = dynamicEdgesFile.readLine()) != null) {
+        if (line.startsWith("call to") || line.startsWith("return from")) {
+          continue;
+        }
+        
         lines++;
         StringTokenizer edge = new StringTokenizer(line, "\t");
         

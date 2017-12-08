@@ -78,7 +78,6 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
     instrument(testJarLocation);
     run("lambda.SortingExample", null);
     CallGraph staticCG = staticCG("Llambda/SortingExample", null);
-    System.err.println(staticCG);
     checkEdges(staticCG);
   }
 
