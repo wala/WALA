@@ -4,9 +4,11 @@
 *.swp
 */bin/
 */bin/*
+*/build/
 *~
 .metadata/
-com.ibm.wala.cast/lib/
+/.gradle/
+/build/
 com.ibm.wala.cast.java.jdt.test/
 com.ibm.wala.cast.java.polyglot/lib/
 com.ibm.wala.cast.java.test.data/src/JLex/
@@ -25,6 +27,7 @@ com.ibm.wala.cast.js.rhino/lib/
 com.ibm.wala.cast.js.test.data/examples-src/ajaxslt/
 com.ibm.wala.cast.js.test/examples-src/ajaxslt/
 com.ibm.wala.cast.js/lib/
+com.ibm.wala.cast/lib/
 com.ibm.wala.core.testdata/*.jar
 com.ibm.wala.core.testdata/@dot/
 com.ibm.wala.core.testdata/lib/
@@ -34,12 +37,12 @@ com.ibm.wala.core.tests/report
 com.ibm.wala.core/@dot
 com.ibm.wala.core/com.ibm.wala.core*.jar
 com.ibm.wala.core/dat/wala.properties
-com.ibm.wala.dalvik/src/logback.xml
-com.ibm.wala.ide.jdt.test/testdata/
-edu.kit.wala.smali.test/out/
-target/
 com.ibm.wala.dalvik.test/data/sample.cup
 com.ibm.wala.dalvik.test/parser.java
 com.ibm.wala.dalvik.test/report
 com.ibm.wala.dalvik.test/sym.java
+com.ibm.wala.dalvik/src/logback.xml
+com.ibm.wala.ide.jdt.test/testdata/
+edu.kit.wala.smali.test/out/
 results
+target/

@@ -26,9 +26,7 @@ Export-Package: .,
  com.ibm.wala.cast.js.translator,
  com.ibm.wala.cast.js.types,
  com.ibm.wala.cast.js.util,
- com.ibm.wala.cast.js.vis,
- net.htmlparser.jericho,
- net.htmlparser.jericho.nodoc
+ com.ibm.wala.cast.js.vis
 Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.cast,

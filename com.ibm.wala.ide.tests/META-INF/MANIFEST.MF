@@ -4,20 +4,9 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.ide.tests;singleton:=true
 Bundle-Version: 1.4.4.qualifier
 Bundle-Vendor: %providerName
-Require-Bundle: com.ibm.wala.shrike,
- com.ibm.wala.core,
+Require-Bundle: com.ibm.wala.core,
  com.ibm.wala.ide,
- com.ibm.wala.ide.jdt;bundle-version="1.4.4.qualifier",
- com.ibm.wala.core.tests,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.jdt.core,
- org.eclipse.ui,
- org.eclipse.ui.ide,
- org.eclipse.osgi.services;bundle-version="3.3.100";resolution:=optional,
- org.eclipse.e4.ui.model.workbench;bundle-version="0.10.1";resolution:=optional,
- org.eclipse.e4.core.di;bundle-version="1.2.0";resolution:=optional,
- org.junit;bundle-version="4.0.0"
+ com.ibm.wala.core.tests
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy

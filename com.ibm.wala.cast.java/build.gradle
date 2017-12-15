@@ -1,28 +1,10 @@
-apply plugin: 'java'
-    
-repositories {
-    mavenCentral()
-        maven {
-    	    url "https://repo.eclipse.org/content/groups/releases/"
-	    }
-}
-
-sourceSets {
-    main {
-        java  {
-    	    srcDir 'src'
-    	    }
-    	}
-}
+sourceSets.main.java.srcDir 'src'
 
 dependencies {
 	compile project(':com.ibm.wala.cast')
 	compile project(':com.ibm.wala.core')
 	compile project(':com.ibm.wala.shrike')
 	compile project(':com.ibm.wala.util')
-	// https://mvnrepository.com/artifact/org.eclipse.core/org.eclipse.core.runtime
-	compile group: 'org.eclipse.core', name: 'org.eclipse.core.runtime', version: '3.10.0.v20140318-2214'
-	// https://mvnrepository.com/artifact/org.osgi/org.osgi.core
-	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.2.0'
+	// compile 'org.eclipse.core:org.eclipse.core.runtime:3.10.0.v20140318-2214'
+	// compile 'org.osgi:org.osgi.core:4.2.0'
 }
-

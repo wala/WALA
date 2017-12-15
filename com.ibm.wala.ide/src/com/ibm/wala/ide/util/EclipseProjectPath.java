@@ -60,7 +60,6 @@ import com.ibm.wala.util.debug.Assertions;
  * SOURCE_FOR_PROJ_AND_LINKED_PROJS is specified.
  * </ul>
  */
-@SuppressWarnings("restriction")
 public abstract class EclipseProjectPath<E, P> {
 
   protected abstract P makeProject(IProject p);

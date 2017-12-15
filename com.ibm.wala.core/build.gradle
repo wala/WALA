@@ -1,19 +1,12 @@
-apply plugin: 'java'
-    
-repositories {
-    mavenCentral()
-}
-
-sourceSets {
-    main {
-        java  {
-    	    srcDir 'src'
-    	    }
-    	}
+sourceSets.main {
+	java.srcDir 'src'
+	resources.srcDirs = [
+		'dat',
+		'lib',
+	]
 }
 
 dependencies {
 	compile project(':com.ibm.wala.util')
 	compile project(':com.ibm.wala.shrike')
 }
-
