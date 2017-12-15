@@ -1,26 +1,9 @@
-apply plugin: 'java'
-    
-repositories {
-    mavenCentral()
-            maven {
-    	    url "https://repo.eclipse.org/content/groups/releases/"
-	    }
-}
-
-sourceSets {
-    main {
-        java  {
-    	    srcDir 'source'
-    	    }
-    	}
-}
+sourceSets.main.java.srcDir 'source/java'
 
 dependencies {
 	compile project(':com.ibm.wala.util')
 	compile project(':com.ibm.wala.shrike')
 	compile project(':com.ibm.wala.core')
 	compile project(':com.ibm.wala.core.tests')
-	// https://mvnrepository.com/artifact/commons-io/commons-io
-	compile group: 'commons-io', name: 'commons-io', version: '2.4'
+	compile 'commons-io:commons-io:2.4'
 }
-

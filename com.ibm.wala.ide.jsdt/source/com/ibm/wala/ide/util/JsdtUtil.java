@@ -59,7 +59,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
-@SuppressWarnings("restriction")
 public class JsdtUtil {
 
   public static URL getPrologueFile(String file, Plugin plugin) {

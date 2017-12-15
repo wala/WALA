@@ -1,0 +1,14 @@
+sourceSets.main {
+	java.srcDir 'src'
+	resources.srcDir 'dat'
+}
+
+dependencies {
+	compile project(':com.ibm.wala.cast')
+	compile project(':com.ibm.wala.cast.js')
+	compile project(':com.ibm.wala.cast.js.rhino')
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.util')
+	compile 'commons-io:commons-io:2.4'
+	compile 'org.json:json:20160212'
+}

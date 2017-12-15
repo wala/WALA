@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.nodejs
 Bundle-Version: 1.4.4.qualifier
-Export-Package: com.ibm.wala.cast.js.nodejs,
- org.json
+Export-Package: com.ibm.wala.cast.js.nodejs
 Require-Bundle: com.ibm.wala.cast.js;bundle-version="1.3.10",
  com.ibm.wala.cast.js.rhino;bundle-version="1.3.10"
 Bundle-ClassPath: lib/json-20160212.jar,

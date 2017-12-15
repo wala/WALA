@@ -1,16 +1,4 @@
-apply plugin: 'java'
-    
-repositories {
-    mavenCentral()
-}
-
-sourceSets {
-    main {
-        java  {
-    	    srcDir 'src'
-    	    }
-    	}
-}
+sourceSets.main.java.srcDir 'harness-src'
 
 dependencies {
 	compile project(':com.ibm.wala.cast.js.rhino')
@@ -22,5 +10,5 @@ dependencies {
 	compile project(':com.ibm.wala.cast.js')
 	compile project(':com.ibm.wala.cast.js.test')
 	compile project(':com.ibm.wala.cast.test')
+	compile 'junit:junit:4.11'
 }
-

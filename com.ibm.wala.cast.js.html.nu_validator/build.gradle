@@ -1,18 +1,5 @@
-apply plugin: 'java'
-    
-repositories {
-    mavenCentral()
-            maven {
-    	    url "https://repo.eclipse.org/content/groups/releases/"
-	    }
-}
-
 sourceSets {
-    main {
-        java  {
-    	    srcDir 'src'
-    	    }
-    	}
+	main.java.srcDirs = ['src', 'tests']
 }
 
 dependencies {
@@ -23,7 +10,6 @@ dependencies {
 	compile project(':com.ibm.wala.cast.test')
 	compile project(':com.ibm.wala.cast.js.test')
 	compile project(':com.ibm.wala.core.tests')
-	// https://mvnrepository.com/artifact/nu.validator.htmlparser/htmlparser
-	compile group: 'nu.validator.htmlparser', name: 'htmlparser', version: '1.4'
+	compile 'nu.validator.htmlparser:htmlparser:1.4'
 }
 

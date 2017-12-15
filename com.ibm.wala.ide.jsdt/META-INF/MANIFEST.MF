@@ -19,10 +19,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;bundle-version="3.104.0",
  org.eclipse.ui.ide;bundle-version="3.8.2",
  org.eclipse.pde;bundle-version="3.8.0",
- org.eclipse.pde.core;bundle-version="3.8.1"
+ org.eclipse.pde.core;bundle-version="3.8.1",
+ com.ibm.wala.ide.jsdt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.wst.jsdt.internal.corext.callhierarchy
+Import-Package: com.ibm.wala.ide.util,
+ org.eclipse.jdt.internal.compiler.tool,
+ org.eclipse.wst.jsdt.internal.corext.callhierarchy
 Export-Package: com.ibm.wala.cast.js.client,
  com.ibm.wala.ide.jsdt,
  com.ibm.wala.ide.util

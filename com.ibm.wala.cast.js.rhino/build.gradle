@@ -1,26 +1,9 @@
-apply plugin: 'java'
-    
-repositories {
-    mavenCentral()
-            maven {
-    	    url "https://repo.eclipse.org/content/groups/releases/"
-	    }
-}
-
-sourceSets {
-    main {
-        java  {
-    	    srcDir 'source'
-    	    }
-    	}
-}
+sourceSets.main.java.srcDir 'source'
 
 dependencies {
 	compile project(':com.ibm.wala.util')
 	compile project(':com.ibm.wala.cast')
 	compile project(':com.ibm.wala.core')
 	compile project(':com.ibm.wala.cast.js')
-	// https://mvnrepository.com/artifact/org.mozilla/rhino
-	compile group: 'org.mozilla', name: 'rhino', version: '1.7.7.1'
+	compile 'org.mozilla:rhino:1.7.7.1'
 }
-
