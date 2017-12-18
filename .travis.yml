@@ -16,7 +16,9 @@ before_install:
 - export PATH=$M2_HOME/bin:$PATH
 install:
 - mvn clean verify -DskipTests=true -B -q
+- ./gradlew compileJava
 script:
+- xvfb ./gradlew build
 - xvfb-run mvn clean install -B -q
 - bash ./dependent-projects-trigger.sh $AUTH_TOKEN
 - mvn javadoc:aggregate -B -q
