@@ -1,0 +1,12 @@
+sourceSets.main {
+	java.srcDir 'source'
+	resources.srcDir 'testdata'
+}
+
+dependencies {
+	compile project(':com.ibm.wala.cast.java.ecj')
+	compile project(':com.ibm.wala.cast.java.test')
+	compile project(':com.ibm.wala.ide.tests')
+	compile 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
+	compile 'org.osgi:org.osgi.core:4.2.0'
+}
