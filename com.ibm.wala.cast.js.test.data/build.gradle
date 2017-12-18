@@ -1,0 +1,35 @@
+plugins {
+	id 'de.undercouch.download' version '3.3.0'
+}
+
+apply plugin: 'base'
+
+import de.undercouch.gradle.tasks.download.*
+
+def versionedArchive = 'ajaxslt-0.8.1'
+def packedArchive = "${versionedArchive}.tar.gz"
+
+task downloadAjaxslt(type: Download) {
+	src "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/${packedArchive}"
+	dest new File(buildDir, packedArchive)
+	overwrite false
+}
+
+task verifyAjaxslt(type: Verify, dependsOn: downloadAjaxslt) {
+	src downloadAjaxslt.dest
+	checksum 'c995abe3310a401bb4db7f28a6409756'
+}
+
+task unpackAjaxslt(type: Sync, dependsOn: verifyAjaxslt) {
+	from tarTree(verifyAjaxslt.src)
+	into buildDir
+}
+
+task unversionAjaxslt(type: Sync, dependsOn: unpackAjaxslt) {
+	from new File(buildDir, versionedArchive)
+	into 'examples-src/ajaxslt'
+}
+
+clean {
+	delete unversionAjaxslt
+}

@@ -11,3 +11,5 @@ dependencies {
 	compile project(':com.ibm.wala.shrike')
 	compile 'junit:junit:4.11'
 }
+
+processTestResources.dependsOn tasks.getByPath(':com.ibm.wala.cast.js.test.data:unversionAjaxslt')
