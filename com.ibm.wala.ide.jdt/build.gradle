@@ -15,4 +15,5 @@ dependencies {
 	compile 'org.eclipse.platform:org.eclipse.jface:3.13.1'
 	compile 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
 	compile 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
+	runtime 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
 }
