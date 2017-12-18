@@ -1,0 +1,13 @@
+sourceSets.main {
+	java.srcDir 'source'
+	resources.srcDir 'data'
+}
+
+dependencies {
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.core.tests')
+	compile project(':com.ibm.wala.dalvik')
+	compile 'com.google.android.tools:dx:1.7'
+	compile 'junit:junit:4.11'
+	compile 'org.osgi:org.osgi.core:4.2.0'
+}
