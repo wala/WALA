@@ -1,0 +1,10 @@
+sourceSets.main {
+	java.srcDir 'src'
+	resources.srcDir 'testdata'
+}
+
+dependencies {
+	compile project(':com.ibm.wala.cast.js.nodejs')
+	compile project(':com.ibm.wala.core')
+	compile 'junit:junit:4.11'
+}
