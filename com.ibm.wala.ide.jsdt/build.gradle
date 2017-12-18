@@ -11,7 +11,9 @@ dependencies {
 	compile 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
 	compile 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
 	compile 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
+	compile 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
+	compile 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
 	compile 'org.eclipse.wst.jsdt:core:1.0.201.v2010012803'
 	compile 'org.eclipse.wst.jsdt:ui:1.0.201.v2010012803'
-	runtime 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
+	compile 'org.osgi:org.osgi.core:4.2.0'
 }
