@@ -201,7 +201,7 @@ nextMethod:
                     // Restrict the set
                     bases.add(AndroidTypes.Application);
                     bases.add(AndroidTypes.Activity);
-                    /** @todo TODO: add Fragments in getEntryPoints */
+                    /** TODO: TODO: add Fragments in getEntryPoints */
                     //bases.add(AndroidTypes.Fragment);
                     bases.add(AndroidTypes.Service);
                     bases.add(AndroidTypes.ContentProvider);

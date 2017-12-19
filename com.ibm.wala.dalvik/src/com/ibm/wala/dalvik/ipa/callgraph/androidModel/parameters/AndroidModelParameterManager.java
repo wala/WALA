@@ -66,9 +66,10 @@ import com.ibm.wala.util.ssa.SSAValue;
  *  @since   2013-09-19
  *
  *  TODO:
- *  @todo   Track if a variable has been refered to to be able to prune unused Phi-Instructions later
- *  @todo   Trim Memory consumption? The whole class should not be in memory for long time so this
- *      might be not neccessary.
+ *  <ul>
+ *    <li>Track if a variable has been refered to to be able to prune unused Phi-Instructions later</li>
+ *    <li>Trim Memory consumption? The whole class should not be in *  memory for long time so this might be not neccessary.</li>
+ *  </ul>
  */
 public class AndroidModelParameterManager {
  

@@ -182,7 +182,7 @@ public class SystemServiceModel extends AndroidModel {
     /**
      *  Fill the model with instructions.
      *
-     *  @todo use "global" instances
+     *  TODO: use "global" instances
      */
     //@Override
     private void populate(Iterable<? extends AndroidEntryPoint> entrypoints) {

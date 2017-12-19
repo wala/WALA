@@ -137,7 +137,7 @@ public class AndroidSettingFactory {
      *  @param  name    The Action this intent represents
      *  @param  uri     The URI to match may be null
      *  @throws IllegalArgumentException If name was null or starts with a dot and pack is null
-     *  @todo   Check Target-Types
+     *  TODO: Check Target-Types
      */
     public static Intent intent(String pack, String name, String uri) {
         if ((name == null) || (name.isEmpty())) {

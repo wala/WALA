@@ -126,7 +126,7 @@ public class Instantiator implements IInstantiator {
      *
      *  If T is an array-type a new array of length 1 is generated.
      *
-     *  @todo   Do we want to mix in REUSE-Parameters?
+     *  TODO: Do we want to mix in REUSE-Parameters?
      */
     public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
         if (T == null) {

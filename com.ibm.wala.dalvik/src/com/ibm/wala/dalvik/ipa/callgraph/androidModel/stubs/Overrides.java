@@ -194,7 +194,7 @@ public class Overrides {
      *  the MethodTargetSelector returned.
      *
      *  @return a MethodTargetSelector that overrides all startComponent-calls.
-     *  @todo   Use delayed computation?
+     *  TODO: Use delayed computation?
      */
     public MethodTargetSelector overrideAll() throws CancelException {
         final HashMap<MethodReference, SummarizedMethod> overrides = HashMapFactory.make();

@@ -83,7 +83,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
  *      You will be able to access it using attributesHistory.get(Attr).peek()
  *
  * TODO:
- * @todo    Handle Info in the DATA-Tag correctly!
+ * TODO: Handle Info in the DATA-Tag correctly!
  * @since   2013-10-13
  * @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
@@ -520,7 +520,7 @@ public class AndroidManifestXMLReader {
     /**
      *  Read the specification of an Intent from AndroidManifest.
      *
-     *  @todo   Handle the URI
+     *  TODO: Handle the URI
      */
     private static class IntentItem extends ParserItem {
         @Override
