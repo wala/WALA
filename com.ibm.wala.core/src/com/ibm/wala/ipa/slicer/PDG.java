@@ -161,7 +161,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s, and equals() of {@link SSAInstruction} assumes a
-   * canonical representative for each instruction, we <bf>must</bf> ensure that we use the same IR object throughout
+   * canonical representative for each instruction, we <b>must</b> ensure that we use the same IR object throughout
    * initialization!!
    */
   private void populate() {
@@ -786,7 +786,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * Wrap an {@link SSAInstruction} in a {@link Statement}. WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s,
-   * and equals() of {@link SSAInstruction} assumes a canonical representative for each instruction, we <bf>must</bf> ensure that we
+   * and equals() of {@link SSAInstruction} assumes a canonical representative for each instruction, we <b>must</b> ensure that we
    * use the same IR object throughout initialization!!
    */
   private Statement ssaInstruction2Statement(SSAInstruction s, IR ir, Map<SSAInstruction, Integer> instructionIndices) {

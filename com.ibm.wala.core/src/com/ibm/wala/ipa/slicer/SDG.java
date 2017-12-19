@@ -197,7 +197,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   }
 
   /**
-   * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph traversals that
+   * iterate over the nodes <b>without</b> constructing any new ones. Use with extreme care. May break graph traversals that
    * lazily add more nodes.
    */
   @Override
@@ -260,7 +260,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     }
 
     /**
-     * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph traversals that
+     * iterate over the nodes <b>without</b> constructing any new ones. Use with extreme care. May break graph traversals that
      * lazily add more nodes.
      */
     Iterator<? extends Statement> iterateLazyNodes() {

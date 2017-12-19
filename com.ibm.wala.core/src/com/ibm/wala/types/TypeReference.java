@@ -579,8 +579,8 @@ public final class TypeReference implements Serializable {
    * TypeReferences are canonical. However, note that two TypeReferences can be non-equal, yet still represent the same
    * IClass.
    * 
-   * These two TypeReference are <bf>NOT</bf> equal(), but they both represent the IClass which is named
    * For example, the there can be two TypeReferences &lt;Application,java.lang.Object&gt; and &lt;Primordial,java.lang.Object&gt;.
+   * These two TypeReference are <b>NOT</b> equal(), but they both represent the IClass which is named
    * &lt;Primordial,java.lang.Object&gt;
    */
   @Override
