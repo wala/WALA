@@ -246,7 +246,7 @@ public class VolatileMethodSummary {
     }
 
     /**
-     *  Like {@link addStatement(SSAInstructionWithPC <? extends SSAInstruction>) but may replace an existing one.
+     *  Like {@link addStatement(SSAInstructionWithPC <? extends SSAInstruction>)} but may replace an existing one.
      *
      *  @param  statement    The statement to add without care of overwriting
      *  @return true if a statement has actually been overwritten 
