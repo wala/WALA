@@ -1,0 +1,7 @@
+# -*- mode: sh; sh-shell: sh -*-
+
+caches="$HOME/.gradle/caches"
+
+rm --force --recursive \
+   "$caches/modules-2/modules-2.lock" \
+   "$caches"/*/plugin-resolution
