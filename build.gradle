@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////
+//
+//  find platform-specific SWT implementations
+//
+
 def osgi_platform
 
 switch (System.getProperty('os.name')) {
@@ -47,7 +52,9 @@ subprojects { subproject ->
 
 
 ////////////////////////////////////////////////////////////////////////
-
+//
+//  optional lint checking of Gradle scripts
+//
 
 buildscript {
 	repositories.jcenter()
