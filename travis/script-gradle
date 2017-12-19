@@ -1,0 +1,3 @@
+# -*- mode: sh; sh-shell: sh -*-
+
+xvfb-run ./gradlew check javadoc
