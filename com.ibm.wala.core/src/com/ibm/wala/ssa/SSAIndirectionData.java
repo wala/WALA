@@ -21,11 +21,11 @@ import java.util.Collection;
  * So if we have
  * 
  * Example A:
- * <tt>
+ * <pre>
  * v2 = SSAAddressOf v1;
  * v7 = #1;
  * v3 = SSALoadIndirect v2; (1)
- * <\tt>
+ * </pre>
  * 
  * Then this map will tell us that instruction (1) indirectly uses whichever source-level entity (in the source or bytecode) v1 represents.
  * 
