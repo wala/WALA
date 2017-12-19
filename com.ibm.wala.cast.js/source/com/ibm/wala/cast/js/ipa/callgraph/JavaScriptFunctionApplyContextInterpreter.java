@@ -30,9 +30,7 @@ import com.ibm.wala.types.TypeName;
 /**
  * TODO cache generated IRs
  * 
- * @see <a
- *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
- *      Function.apply() docs</a> *
+ * @see <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN Function.apply() docs</a>
  */
 public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensitiveSSAContextInterpreter {
 
