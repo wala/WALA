@@ -44,3 +44,20 @@ subprojects { subproject ->
 		}
 	}
 }
+
+
+////////////////////////////////////////////////////////////////////////
+
+
+buildscript {
+	repositories.jcenter()
+	dependencies {
+		classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
+	}
+}
+
+allprojects {
+	apply plugin: 'nebula.lint'
+	gradleLint.alwaysRun = false
+	gradleLint.rules = ['all-dependency']
+}
