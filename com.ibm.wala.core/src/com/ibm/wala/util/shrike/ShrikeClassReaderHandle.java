@@ -51,7 +51,7 @@ public class ShrikeClassReaderHandle {
 
   /**
    * @return an instance of the class reader ... create one if necessary
-   * @throw InvalidClassFileException iff Shrike fails to read the class file
+   * @throws InvalidClassFileException iff Shrike fails to read the class file
    *        correctly.
    */
   public ClassReader get() throws InvalidClassFileException {
