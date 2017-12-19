@@ -68,3 +68,15 @@ allprojects {
 	gradleLint.alwaysRun = false
 	gradleLint.rules = ['all-dependency']
 }
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  disable Javadoc linter until documentation is in better shape
+//
+
+allprojects {
+	tasks.withType(Javadoc) {
+		options.addStringOption('Xdoclint:none', '-quiet')
+	}
+}
