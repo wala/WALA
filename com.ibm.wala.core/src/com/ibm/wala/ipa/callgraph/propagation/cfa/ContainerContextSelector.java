@@ -36,8 +36,8 @@ import com.ibm.wala.util.strings.Atom;
  * This context selector returns a context customized for the {@link InstanceKey} of the receiver if
  * <ul>
  * <li>receiver is a container, or</li>
- * was allocated in a node whose context was a {@link ReceiverInstanceContext}, and the type is interesting according to a delegate
- * {@link ZeroXInstanceKeys}
+ * <li>was allocated in a node whose context was a {@link ReceiverInstanceContext}, and the type is interesting according to a delegate
+ * {@link ZeroXInstanceKeys}</li>
  * </ul>
  * 
  * Additionally, we add one level of call string context to a few well-known static factory methods from the standard libraries.

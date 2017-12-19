@@ -53,7 +53,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * In this implementation, super.targets is a mapping from call site -&gt;
    * Object, where Object is a
    * <ul>
-   * A Mapping from call site -&gt; Object, where Object is a
    * <li>CGNode if we've discovered exactly one target for the site
    * <li> or an IntSet of node numbers if we've discovered more than one target
    * for the site.
