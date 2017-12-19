@@ -69,7 +69,7 @@ public class HeapTracer {
     private final boolean traceStatics;
 
     /**
-     * Map: Class -> Integer, the size of each class
+     * Map: Class -&gt; Integer, the size of each class
      */
     private final HashMap<Class<?>, Integer> sizeMap = HashMapFactory.make();
 
@@ -627,13 +627,13 @@ public class HeapTracer {
      */
     class Demographics {
 	/**
-	 * mapping: Object (key) -> Integer (number of instances in a partition)
+	 * mapping: Object (key) -&gt; Integer (number of instances in a partition)
 	 */
 	private final HashMap<Object, Integer> instanceCount = HashMapFactory
 		.make();
 
 	/**
-	 * mapping: Object (key) -> Integer (bytes)
+	 * mapping: Object (key) -&gt; Integer (bytes)
 	 */
 	private final HashMap<Object, Integer> sizeCount = HashMapFactory
 		.make();
@@ -725,7 +725,7 @@ public class HeapTracer {
     public class Result {
 
 	/**
-	 * a mapping from Field (static field roots) -> Demographics object
+	 * a mapping from Field (static field roots) -&gt; Demographics object
 	 */
 	private final HashMap<Field, Demographics> roots = HashMapFactory
 		.make();

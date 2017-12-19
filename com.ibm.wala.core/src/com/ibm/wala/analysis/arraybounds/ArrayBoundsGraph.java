@@ -156,8 +156,8 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	/**
 	 * Add variable as constant with value value.
 	 *
-	 * This will create the following construct: [zero] -(value)-> [h1] -0- >
-	 * [variable] -(-value)-> [h2] -0-> [zero].
+	 * This will create the following construct: [zero] -(value)-&gt; [h1] -0- &gt;
+	 * [variable] -(-value)-&gt; [h2] -0-&gt; [zero].
 	 *
 	 * The bidirectional linking, allows things like
 	 *
@@ -214,8 +214,8 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	 * Adds var as source var. A source var is a variable, which can be used as
 	 * source for shortest path computation.
 	 *
-	 * This will create the following construct: [unlimited] -> [var] -> [var]
-	 * -(unlimited)-> [unlimited]
+	 * This will create the following construct: [unlimited] -&gt; [var] -&gt; [var]
+	 * -(unlimited)-&gt; [unlimited]
 	 *
 	 * This is a trap door construct: if [var] is not set to 0 it will get the
 	 * value unlimited, if [var] is set to 0 it will stay 0.

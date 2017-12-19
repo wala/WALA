@@ -12,7 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 
 /**
- * an individual edge <entry, d1> -> <target, d2>
+ * an individual edge &lt;entry, d1&gt; -&gt; &lt;target, d2&gt;
  * 
  * @param <T> node type in the supergraph
  */

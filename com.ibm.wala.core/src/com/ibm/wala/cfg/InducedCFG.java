@@ -53,7 +53,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
   private static final boolean DEBUG = false;
 
   /**
-   * A partial map from Instruction -> BasicBlock
+   * A partial map from Instruction -&gt; BasicBlock
    */
   private final BasicBlock[] i2block;
 

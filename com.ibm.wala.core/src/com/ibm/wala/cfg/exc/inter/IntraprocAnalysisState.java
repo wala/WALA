@@ -31,8 +31,8 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
  * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
  * It has been adapted and integrated into the WALA project by Juergen Graf.
  * 
- * @author Markus Herhoffer <markus.herhoffer@student.kit.edu>
- * @author Juergen Graf <graf@kit.edu>
+ * @author Markus Herhoffer &lt;markus.herhoffer@student.kit.edu&gt;
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  * 
  */
 final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> {

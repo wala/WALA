@@ -45,12 +45,12 @@ public class NotDetectable {
   }
 
   /**
-   * This example does not work: We know 5 > 3 and sometimes length > 5 > 3. In
+   * This example does not work: We know 5 &gt; 3 and sometimes length &gt; 5 &gt; 3. In
    * case of variables this conditional relation is resolved by introducing pi
    * nodes. For constants pi nodes can be generated, but the pi variables will
    * not be used (maybe due to constant propagation?). Additionally 5 != 3, so
    * even if we would use pi-variables for 5, there would be no relation to 3: 0
-   * -(5)-> 5, 5 -(-5)-> 0, {5,length} -(0)-> 5', 0 -(3)-> 3, 3 -(-3)-> 0 Given
+   * -(5)-&gt; 5, 5 -(-5)-&gt; 0, {5,length} -(0)-&gt; 5', 0 -(3)-&gt; 3, 3 -(-3)-&gt; 0 Given
    * the inequality graph above, we know that 5,5',3 are larger than 0 and 5
    * larger 3 and length is larger than 5', but not 5' larger than 3. Which is
    * not always the case in general anyway.

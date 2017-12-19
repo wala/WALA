@@ -85,7 +85,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
  * TODO:
  * @todo    Handle Info in the DATA-Tag correctly!
  * @since   2013-10-13
- * @author  Tobias Blaschke <code@tobiasblaschke.de>
+ * @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class AndroidManifestXMLReader {
     /**

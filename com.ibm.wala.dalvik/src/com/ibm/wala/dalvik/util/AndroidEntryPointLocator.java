@@ -78,7 +78,7 @@ import com.ibm.wala.util.config.SetOfClasses;
  *  Iterates the ClassHierarchy matching its elements to a set of hardcoded entrypoint-specifications.
  *  Then optionally uses heuristics to select further entrypoints.
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public final class AndroidEntryPointLocator {
     private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointLocator.class);

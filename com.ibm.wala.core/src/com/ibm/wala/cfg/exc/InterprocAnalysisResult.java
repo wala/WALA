@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 /**
  * Interface to retrieve the result of the interprocedural analysis.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  */
 public interface InterprocAnalysisResult<I, T extends IBasicBlock<I>> {
 

@@ -32,7 +32,7 @@ public class SymbolTable implements Cloneable {
   final private int[] parameters;
 
   /**
-   * Mapping from Constant -> value number
+   * Mapping from Constant -&gt; value number
    */
   private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
 
@@ -52,7 +52,7 @@ public class SymbolTable implements Cloneable {
   }
 
   /**
-   * Values. Note: this class must maintain the following invariant: values.length > nextFreeValueNumber.
+   * Values. Note: this class must maintain the following invariant: values.length &gt; nextFreeValueNumber.
    */
   private Value[] values = new Value[5];
 

@@ -72,7 +72,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  needed again they get started using that savedIstanceState.
  *
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class LoopKillAndroidModel extends LoopAndroidModel {
     private static final Logger logger = LoggerFactory.getLogger(LoopKillAndroidModel.class);

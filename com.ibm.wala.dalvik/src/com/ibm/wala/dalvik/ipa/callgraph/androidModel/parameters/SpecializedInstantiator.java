@@ -72,7 +72,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  For example instantiating an android.content.Context would pull in all Android-components in
  *  scope resulting in a massivly overapproximated model.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class SpecializedInstantiator extends FlatInstantiator {
 

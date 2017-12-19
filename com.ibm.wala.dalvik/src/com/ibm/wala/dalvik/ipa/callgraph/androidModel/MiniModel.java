@@ -66,7 +66,7 @@ import com.ibm.wala.util.strings.Atom;
  *  the Context at the call site is insufficient to determine the actual target. In this case an 
  *  UnknownTargetModel which uses an MiniModel and an ExternalModel is placed there.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-29
  */
 public class MiniModel extends AndroidModel {

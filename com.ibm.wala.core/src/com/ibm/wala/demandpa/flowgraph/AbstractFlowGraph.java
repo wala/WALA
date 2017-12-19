@@ -114,7 +114,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   };
 
   /**
-   * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that means that x was def'fed by the return value from the
+   * Map: LocalPointerKey -&gt; SSAInvokeInstruction. If we have (x, foo()), that means that x was def'fed by the return value from the
    * call to foo()
    */
   protected final Map<PointerKey, SSAAbstractInvokeInstruction> callDefs = HashMapFactory.make();
@@ -127,7 +127,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   protected final Map<PointerKey, Set<SSAAbstractInvokeInstruction>> callParams = HashMapFactory.make();
 
   /**
-   * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter of method foo. For now, we have to re-discover the
+   * Map: LocalPointerKey -&gt; CGNode. If we have (x, foo), then x is a parameter of method foo. For now, we have to re-discover the
    * parameter position. TODO this should just be a set; we can get the CGNode from the {@link LocalPointerKey}
    */
   protected final Map<PointerKey, CGNode> params = HashMapFactory.make();

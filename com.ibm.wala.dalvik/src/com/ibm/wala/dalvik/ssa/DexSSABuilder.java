@@ -113,7 +113,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     final private SymbolTable symbolTable;
 
     /**
-     * A logical mapping from <bcIndex, valueNumber> -> local number if null, don't build it.
+     * A logical mapping from &lt;bcIndex, valueNumber&gt; -&gt; local number if null, don't build it.
      */
     private final SSA2LocalMap localMap;
 
@@ -1378,7 +1378,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     }
 
     /**
-     * A logical mapping from <pc, valueNumber> -> local number Note: make sure this class remains static: this persists as part of
+     * A logical mapping from &lt;pc, valueNumber&gt; -&gt; local number Note: make sure this class remains static: this persists as part of
      * the IR!!
      */
     private static class SSA2LocalMap implements com.ibm.wala.ssa.IR.SSA2LocalMap {
@@ -1386,7 +1386,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         private final DexCFG dexCFG;
 
         /**
-         * Mapping Integer -> IntPair where p maps to (vn,L) iff we've started a range at pc p where value number vn corresponds to
+         * Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a range at pc p where value number vn corresponds to
          * local L
          */
         private final IntPair[] localStoreMap;

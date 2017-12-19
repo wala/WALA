@@ -243,7 +243,7 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the offset of the branch (as a signed short) Used for if<cond>, ificmp<cond>, ifacmp<cond>, goto, jsr
+   * Returns the offset of the branch (as a signed short) Used for if&lt;cond&gt;, ificmp&lt;cond&gt;, ifacmp&lt;cond&gt;, goto, jsr
    * 
    * @return branch offset
    * @see #getWideBranchOffset()

@@ -122,7 +122,7 @@ public interface IClassLoader {
   /**
    * blow away references to any classes in the set
    * 
-   * @param toRemove Collection<IClass>
+   * @param toRemove Collection&lt;IClass&gt;
    */
   public abstract void removeAll(Collection<IClass> toRemove);
 }

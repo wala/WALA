@@ -21,7 +21,7 @@ package com.ibm.wala.sourcepos;
  * An exception for invalid positions.
  * 
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 class InvalidPositionException extends Exception {
 

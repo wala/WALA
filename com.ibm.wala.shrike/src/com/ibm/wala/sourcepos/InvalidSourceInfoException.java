@@ -23,7 +23,7 @@ package com.ibm.wala.sourcepos;
  * CharacterRangeTable.
  * 
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public class InvalidSourceInfoException extends Exception {
 

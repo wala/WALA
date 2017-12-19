@@ -20,7 +20,7 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
  * Under construction.
  * 
  * ClassSignature: 
- *    (<FormalTypeParameter+>)? SuperclassSignature SuperinterfaceSignature*
+ *    (&lt;FormalTypeParameter+&gt;)? SuperclassSignature SuperinterfaceSignature*
  * 
  * SuperclassSignature:
  *    ClassTypeSignature

@@ -84,7 +84,7 @@ import com.ibm.wala.util.strings.Atom;
  *
  *  Creates an instance of (hopefully) anything.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class Instantiator implements IInstantiator {
     private static final Logger logger = LoggerFactory.getLogger(Instantiator.class);

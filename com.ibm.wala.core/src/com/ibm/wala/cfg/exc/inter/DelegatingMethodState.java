@@ -19,7 +19,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
  * This class combines two MethodState objects. A MethodState decides if a given method call may throw an exception.
  * If the primary MethodState thinks that the call may throw an exception, the fallback MethodState is asked.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  * 
  */
 class DelegatingMethodState extends MethodState {

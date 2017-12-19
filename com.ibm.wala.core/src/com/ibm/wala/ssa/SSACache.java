@@ -15,7 +15,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 
 /**
- * A mapping from IMethod -> SSAOptions -> SoftReference -> Something
+ * A mapping from IMethod -&gt; SSAOptions -&gt; SoftReference -&gt; Something
  * 
  * This doesn't work very well ... GCs don't do such a great job with SoftReferences ... revamp it.
  */
@@ -132,21 +132,21 @@ public class SSACache {
   }
 
   /**
-   * Invalidate the cached IR for a <method,context> pair
+   * Invalidate the cached IR for a &lt;method,context&gt; pair
    */
   public void invalidateIR(IMethod method, Context c) {
     irCache.invalidate(method, c);
   }
 
   /**
-   * Invalidate the cached {@link DefUse} for a <method,context> pair
+   * Invalidate the cached {@link DefUse} for a &lt;method,context&gt; pair
    */
   public void invalidateDU(IMethod method, Context c) {
     duCache.invalidate(method, c);
   }
 
   /**
-   * Invalidate all cached information for a <method,context> pair
+   * Invalidate all cached information for a &lt;method,context&gt; pair
    */
   public void invalidate(IMethod method, Context c) {
     invalidateIR(method, c);

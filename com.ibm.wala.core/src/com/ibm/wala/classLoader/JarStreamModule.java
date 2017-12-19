@@ -29,7 +29,7 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * Read in a jar file from an input stream. Most parts are copied from the NestedJarFileModule class
  * and adapted to work with an input stream. 
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public class JarStreamModule extends JarInputStream implements Module {
 

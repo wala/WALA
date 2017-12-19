@@ -30,7 +30,7 @@ import com.ibm.wala.util.io.Streams;
  * environment. The resulting function will be named GLOBAL_PREFIX + relative
  * file-name. To retrieve the final function name, use getFunctioName().
  * 
- * @author Brian Pfretzschner <brian.pfretzschner@gmail.com>
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
  */
 public class NodejsRequiredSourceModule extends SourceFileModule {
 

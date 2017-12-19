@@ -195,7 +195,7 @@ public class ContextSensitiveReachingDefs {
    * balanced since a definition in a callee used as a seed for the analysis may then reach a caller, yielding a "return" without a
    * corresponding "call." An alternative to this approach, used in the Reps-Horwitz-Sagiv POPL95 paper, would be to "lift" the
    * domain of putstatic instructions with a 0 (bottom) element, have a 0->0 transition in all transfer functions, and then seed the
-   * analysis with the path edge (main_entry, 0) -> (main_entry, 0). We choose the partially-balanced approach to avoid pollution of
+   * analysis with the path edge (main_entry, 0) -&gt; (main_entry, 0). We choose the partially-balanced approach to avoid pollution of
    * the flow functions.
    * 
    */

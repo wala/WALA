@@ -144,14 +144,14 @@ public interface IClassHierarchy extends Iterable<IClass> {
   public Collection<IClass> computeSubClasses(TypeReference type);
 
   /**
-   * Solely for optimization; return a Collection<TypeReference> representing the subclasses of Error
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of Error
    * 
    * kind of ugly. a better scheme?
    */
   public Collection<TypeReference> getJavaLangErrorTypes();
 
   /**
-   * Solely for optimization; return a Collection<TypeReference> representing the subclasses of {@link RuntimeException}
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of {@link RuntimeException}
    * 
    * kind of ugly. a better scheme?
    */

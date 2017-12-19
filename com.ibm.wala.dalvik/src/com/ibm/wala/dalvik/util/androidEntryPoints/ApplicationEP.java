@@ -53,7 +53,7 @@ import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoi
  *  see: http://developer.android.com/reference/android/app/Application.html
  *
  *  @see    com.ibm.wala.dalvik.util.AndroidEntryPointLocator
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public final class ApplicationEP {
 

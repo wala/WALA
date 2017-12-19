@@ -74,7 +74,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  restart of the Application (instance-state) or when the potential restart of the App
  *  shall be ignored.
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class LoopAndroidModel extends SingleStartAndroidModel {
     private static final Logger logger = LoggerFactory.getLogger(LoopAndroidModel.class);

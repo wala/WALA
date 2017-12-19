@@ -269,7 +269,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     private int nextLocal = -1;
 
     /**
-     * A mapping from String (variable name) -> Integer (local number)
+     * A mapping from String (variable name) -&gt; Integer (local number)
      */
     private Map<String, Integer> symbolTable = null;
 

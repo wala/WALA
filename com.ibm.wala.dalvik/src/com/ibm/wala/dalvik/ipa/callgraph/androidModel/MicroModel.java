@@ -52,7 +52,7 @@ import com.ibm.wala.util.strings.Atom;
  *
  *  Is used by the IntentContextInterpreter if a Intent can be resolved internally.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-12
  */
 public class MicroModel extends AndroidModel {

@@ -33,11 +33,11 @@ public class LocalPathEdges {
   private final static boolean PARANOID = false;
 
   /**
-   * A map from integer (d2) -> (IBinaryNonNegativeIntRelation)
+   * A map from integer (d2) -&gt; (IBinaryNonNegativeIntRelation)
    * 
-   * For fact d2, paths[d2] gives a relation R=(n,d1) s.t. (<s_p, d1> -> <n,d2>) is a path edge.
+   * For fact d2, paths[d2] gives a relation R=(n,d1) s.t. (&lt;s_p, d1&gt; -&gt; &lt;n,d2&gt;) is a path edge.
    * 
-   * Note that we handle paths of the form <s_p, d1> -> <n,d1> specially, below. We also handle paths of the form <s_p, 0> -> <n,
+   * Note that we handle paths of the form &lt;s_p, d1&gt; -&gt; &lt;n,d1&gt; specially, below. We also handle paths of the form &lt;s_p, 0&gt; -&gt; &lt;n,
    * d1> specially below.
    * 
    * We choose this somewhat convoluted representation for the following reasons: 1) of the (n, d1, d2) tuple-space, we expect the
@@ -58,9 +58,9 @@ public class LocalPathEdges {
    * space or time of the non-merging IFDS solver, for which the original paths representation works well. Is there a better data
    * structure tradeoff?
    * 
-   * A map from integer (d1) -> (IBinaryNonNegativeIntRelation)
+   * A map from integer (d1) -&gt; (IBinaryNonNegativeIntRelation)
    * 
-   * For fact d1, paths[d1] gives a relation R=(n,d2) s.t. (<s_p, d1> -> <n,d2>) is a path edge.
+   * For fact d1, paths[d1] gives a relation R=(n,d2) s.t. (&lt;s_p, d1&gt; -&gt; &lt;n,d2&gt;) is a path edge.
    * 
    * 
    * We choose this somewhat convoluted representation for the following reasons: 1) of the (n, d1, d2) tuple-space, we expect the
@@ -71,16 +71,16 @@ public class LocalPathEdges {
   private final SparseVector<IBinaryNaturalRelation> altPaths;
 
   /**
-   * a map from integer d1 -> int set.
+   * a map from integer d1 -&gt; int set.
    * 
-   * for fact d1, identityPaths[d1] gives the set of block numbers N s.t. for n \in N, <s_p, d1> -> <n, d1> is a path edge.
+   * for fact d1, identityPaths[d1] gives the set of block numbers N s.t. for n \in N, &lt;s_p, d1&gt; -&gt; &lt;n, d1&gt; is a path edge.
    */
   private final SparseVector<IntSet> identityPaths = new SparseVector<>(1, 1.1f);
 
   /**
-   * a map from integer d2 -> int set
+   * a map from integer d2 -&gt; int set
    * 
-   * for fact d2, zeroPaths[d2] gives the set of block numbers N s.t. for n \in N, <s_p, 0> -> <n, d2> is a path edge.
+   * for fact d2, zeroPaths[d2] gives the set of block numbers N s.t. for n \in N, &lt;s_p, 0&gt; -&gt; &lt;n, d2&gt; is a path edge.
    */
   private final SparseVector<IntSet> zeroPaths = new SparseVector<>(1, 1.1f);
 
@@ -193,8 +193,8 @@ public class LocalPathEdges {
   }
 
   /**
-   * N.B: If we're using the ZERO_PATH_SHORT_CIRCUIT, then we may have <s_p, d1> -> <n, d2> implicitly represented since we also
-   * have <s_p, 0> -> <n,d2>. However, getInverse() <b> will NOT </b> return these implicit d1 bits in the result. This translates
+   * N.B: If we're using the ZERO_PATH_SHORT_CIRCUIT, then we may have &lt;s_p, d1&gt; -&gt; &lt;n, d2&gt; implicitly represented since we also
+   * have &lt;s_p, 0&gt; -&gt; &lt;n,d2&gt;. However, getInverse() &lt;b&gt; will NOT &lt;/b&gt; return these implicit d1 bits in the result. This translates
    * to saying that the caller had better not care about any other d1 other than d1==0 if d1==0 is present. This happens to be true
    * in the single use of getInverse() in the tabulation solver, which uses getInverse() to propagate flow from an exit node back to
    * the caller's return site(s). Since we know that we will see flow from fact 0 to the return sites(s), we don't care about other

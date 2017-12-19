@@ -63,7 +63,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * TODO:
  * @todo    Fill in better values for targetAccuracy and componentType
  * @todo    Add declaring class
- * @author  Tobias Blaschke <code@tobiasblaschke.de>
+ * @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  * @since   1013-10-16
  */
 public class IntentStarters {

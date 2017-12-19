@@ -26,7 +26,7 @@ import com.ibm.wala.util.strings.UTF8Convert;
 public final class Descriptor {
 
   /**
-   * A mapping from Key -> Descriptor
+   * A mapping from Key -&gt; Descriptor
    */
   private static final Map<Key, Descriptor> map = HashMapFactory.make();
 

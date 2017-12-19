@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
- * A context which is a <CGNode, CallSiteReference> pair.
+ * A context which is a &lt;CGNode, CallSiteReference&gt; pair.
  */
 public class CallerSiteContext extends CallerContext {
 

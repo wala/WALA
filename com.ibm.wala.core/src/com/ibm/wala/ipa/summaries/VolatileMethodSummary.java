@@ -79,7 +79,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @see com.ibm.wala.dalvik.ipa.callgraph.impl.DexFakeRootMethod
  *  @see com.ibm.wala.ipa.summaries.MethodSummary
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since      2013-09-08
  */
 @SuppressWarnings("javadoc")

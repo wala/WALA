@@ -28,17 +28,17 @@ public class DefUse {
   static final boolean DEBUG = false;
 
   /**
-   * A mapping from integer (value number) -> {@link SSAInstruction} that defines the value
+   * A mapping from integer (value number) -&gt; {@link SSAInstruction} that defines the value
    */
   final private SSAInstruction[] defs;
 
   /**
-   * A mapping from integer (value number) -> bit vector holding integers representing instructions that use the value number
+   * A mapping from integer (value number) -&gt; bit vector holding integers representing instructions that use the value number
    */
   final private MutableIntSet[] uses;
 
   /**
-   * A Mapping from integer -> Instruction
+   * A Mapping from integer -&gt; Instruction
    */
   final protected ArrayList<SSAInstruction> allInstructions = new ArrayList<>();
 

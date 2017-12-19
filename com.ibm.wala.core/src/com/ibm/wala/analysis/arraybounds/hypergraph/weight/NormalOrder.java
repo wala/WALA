@@ -5,7 +5,7 @@ import java.util.Comparator;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 
 /**
- * Defines a normal Order on Weight: unlimited < ... < -1 < 0 < 1 < ... not_set
+ * Defines a normal Order on Weight: unlimited &lt; ... &lt; -1 &lt; 0 &lt; 1 &lt; ... not_set
  * is not comparable
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}

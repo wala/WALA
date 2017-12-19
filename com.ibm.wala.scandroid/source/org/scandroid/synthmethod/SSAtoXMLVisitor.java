@@ -461,7 +461,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
      * local name associated with it) then this will throw an illegal state
      * exception.
      *
-     * TODO needs to return 'arg0' -> 'argN' for those value numbers...
+     * TODO needs to return 'arg0' -&gt; 'argN' for those value numbers...
      *
      * @param defNum
      *

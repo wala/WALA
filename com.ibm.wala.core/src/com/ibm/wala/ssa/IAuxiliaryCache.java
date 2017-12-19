@@ -28,7 +28,7 @@ interface IAuxiliaryCache {
   Object find(IMethod m, Context c, SSAOptions options);
 
   /**
-   * cache new auxiliary information for an <m,options> pair
+   * cache new auxiliary information for an &lt;m,options&gt; pair
    * 
    * @param m a method
    * @param options options governing ssa construction

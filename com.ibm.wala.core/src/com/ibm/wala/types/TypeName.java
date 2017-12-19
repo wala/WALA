@@ -39,7 +39,7 @@ public final class TypeName implements Serializable {
   private static final long serialVersionUID = -3256390509887654326L;
 
   /**
-   * canonical mapping from TypeNameKey -> TypeName
+   * canonical mapping from TypeNameKey -&gt; TypeName
    */
   private final static Map<TypeNameKey, TypeName> map = HashMapFactory.make();
 
@@ -253,7 +253,7 @@ public final class TypeName implements Serializable {
      *                  0 => class 
      *                  >0 => mask of levels of array, reference, pointer
      *                  
-     *  When the mask is > 0, it represents levels of type qualifiers (in C 
+     *  When the mask is &gt; 0, it represents levels of type qualifiers (in C
      *  terminology) for array, reference and pointer types.  There is also a
      *  special mask for when the innermost type is a primitive.  The mask is
      *  a bitfield laid out in inverse dimension order. 

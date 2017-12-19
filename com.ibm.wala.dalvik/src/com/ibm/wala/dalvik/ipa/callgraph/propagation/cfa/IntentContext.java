@@ -49,7 +49,7 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
  *
  *  This class takes a parent so we don't loose information by overwriting.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-14
  */
 public class IntentContext implements Context {

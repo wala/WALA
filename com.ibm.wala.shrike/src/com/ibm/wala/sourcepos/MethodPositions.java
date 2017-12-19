@@ -26,7 +26,7 @@ import com.ibm.wala.sourcepos.InvalidRangeException.Cause;
  * This class represents the MethodPositions attribute.
  * 
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public final class MethodPositions extends PositionsAttribute {
 

@@ -2438,7 +2438,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * Expands the form: for ( [final] Type var: iterable ) { ... } Into something equivalent to: for ( Iterator iter =
    * iterable.iter(); iter.hasNext(); ) { [final] Type var = (Type) iter.next(); ... } Or, in the case of an array: for ( int idx =
-   * 0; i < iterable.length; i++ ) { [final] Type var = iterable[idx]; ... } Except that the expression "iterable" is only evaluate
+   * 0; i &lt; iterable.length; i++ ) { [final] Type var = iterable[idx]; ... } Except that the expression "iterable" is only evaluate
    * once (or is it?)
    * 
    * @param n

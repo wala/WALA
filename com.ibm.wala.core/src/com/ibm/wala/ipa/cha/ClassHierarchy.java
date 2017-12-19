@@ -98,7 +98,7 @@ public class ClassHierarchy implements IClassHierarchy {
   final private IClassLoader[] loaders;
 
   /**
-   * A mapping from IClass -> Selector -> Set of IMethod
+   * A mapping from IClass -&gt; Selector -&gt; Set of IMethod
    */
   final private HashMap<IClass, Object> targetCache = HashMapFactory.make();
 
@@ -108,7 +108,7 @@ public class ClassHierarchy implements IClassHierarchy {
   private final AnalysisScope scope;
 
   /**
-   * A mapping from IClass (representing an interface) -> Set of IClass that implement that interface
+   * A mapping from IClass (representing an interface) -&gt; Set of IClass that implement that interface
    */
   private final Map<IClass, Set<IClass>> implementors = HashMapFactory.make();
 
@@ -645,7 +645,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2 iff n2.left
-   * <= n1.left ^ n1.left <= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall, OOPSLA 97
+   * &lt;= n1.left ^ n1.left &lt;= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall, OOPSLA 97
    * 
    * TODO: this implementation is recursive; un-recursify if needed
    */
@@ -999,7 +999,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Solely for optimization; return a Collection<TypeReference> representing the subclasses of Error
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of Error
    * 
    * kind of ugly. a better scheme?
    */
@@ -1016,7 +1016,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Solely for optimization; return a Collection<TypeReference> representing the subclasses of RuntimeException
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of RuntimeException
    * 
    * kind of ugly. a better scheme?
    */

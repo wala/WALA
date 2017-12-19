@@ -91,7 +91,7 @@ import com.ibm.wala.util.CancelException;
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.MicroModel
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-14
  */
 public class IntentContextInterpreter implements SSAContextInterpreter {

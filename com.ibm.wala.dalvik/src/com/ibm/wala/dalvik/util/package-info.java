@@ -44,6 +44,6 @@
  * These include mainly locationg and managing EntryPoints. The model howver is
  * built in the androidModel-Package.
  *
- * @author Tobias Blaschke <code@tobiasblaschke.de>
+ * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 package com.ibm.wala.dalvik.util;

@@ -52,6 +52,6 @@
  * adapted to load the specifications.
  *
  * @see    com.ibm.wala.dalvik.util.AndroidEntryPointLocator
- * @author Tobias Blaschke <code@tobiasblaschke.de>
+ * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 package com.ibm.wala.dalvik.util.androidEntryPoints;

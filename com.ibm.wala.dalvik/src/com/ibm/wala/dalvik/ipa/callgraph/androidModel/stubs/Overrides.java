@@ -73,7 +73,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-28
  */
 public class Overrides {

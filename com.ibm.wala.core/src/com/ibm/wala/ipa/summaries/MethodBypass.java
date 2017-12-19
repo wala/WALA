@@ -37,7 +37,7 @@ public class MethodBypass {
   static final boolean DEBUG = false;
 
   /**
-   * Method summaries collected for methods. Mapping Object -> MethodSummary where Object is either a
+   * Method summaries collected for methods. Mapping Object -&gt; MethodSummary where Object is either a
    * <ul>
    * <li>MethodReference
    * <li>TypeReference
@@ -57,7 +57,7 @@ public class MethodBypass {
   private final IClassHierarchy cha;
 
   /**
-   * Mapping from MethodReference -> SyntheticMethod
+   * Mapping from MethodReference -&gt; SyntheticMethod
    */
   final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 

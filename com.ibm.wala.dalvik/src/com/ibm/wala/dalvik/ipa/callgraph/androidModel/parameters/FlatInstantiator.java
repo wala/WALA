@@ -80,7 +80,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *
  *  This variant limits recursion depth.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class FlatInstantiator implements IInstantiator {
     private static final Logger logger = LoggerFactory.getLogger(FlatInstantiator.class);

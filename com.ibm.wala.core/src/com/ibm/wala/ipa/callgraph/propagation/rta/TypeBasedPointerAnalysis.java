@@ -48,7 +48,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   private final TypeBasedHeapModel heapModel;
 
   /**
-   * Map: IClass -> OrdinalSet
+   * Map: IClass -&gt; OrdinalSet
    */
   private final Map<IClass, OrdinalSet<InstanceKey>> pointsTo = HashMapFactory.make();
 

@@ -13,7 +13,7 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * A flow function which has only the edge 0 -> dest
+ * A flow function which has only the edge 0 -&gt; dest
  */
 public class SingletonFlowFunction implements IReversibleFlowFunction {
 

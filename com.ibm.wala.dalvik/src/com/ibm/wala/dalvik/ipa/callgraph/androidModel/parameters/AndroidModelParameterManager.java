@@ -62,7 +62,7 @@ import com.ibm.wala.util.ssa.SSAValue;
  *
  *  @see com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
  *
- *  @author  Tobias Blaschke <code@toiasblaschke.de>
+ *  @author  Tobias Blaschke &lt;code@toiasblaschke.de&gt;
  *  @since   2013-09-19
  *
  *  TODO:

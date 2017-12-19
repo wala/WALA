@@ -59,7 +59,7 @@ import com.ibm.wala.util.strings.Atom;
  *
  *  @see    com.ibm.wala.dalvik.util.AndroidEntryPointLocator
  *
- *  @author  Tobias Blaschke <code@toiasblaschke.de>
+ *  @author  Tobias Blaschke &lt;code@toiasblaschke.de&gt;
  *  @since   2013-09-01
  */
 public class AndroidEntryPoint extends DexEntryPoint {

@@ -15,7 +15,7 @@ import java.util.Collection;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * The solution of a tabulation problem: a mapping from supergraph node -> bit vector representing the dataflow facts that hold at
+ * The solution of a tabulation problem: a mapping from supergraph node -&gt; bit vector representing the dataflow facts that hold at
  * the entry to the supergraph node.
  * 
  * @param <T> type of node in the supergraph

@@ -51,7 +51,7 @@ package com.ibm.wala.util.ssa;
  *  In typical cases this should not be propergated out from the utility
  *  classes.
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class ClassLookupException extends RuntimeException {
     private static final long serialVersionUID = 7551139209041666026L;

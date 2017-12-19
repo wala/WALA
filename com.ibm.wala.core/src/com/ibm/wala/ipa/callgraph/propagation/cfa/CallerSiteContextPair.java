@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
- * This is a context which is defined by a pair consisting of <caller node, base context>.
+ * This is a context which is defined by a pair consisting of &lt;caller node, base context&gt;.
  * 
  * The base context is typically some special case; e.g., a JavaTypeContext used for reflection.
  */

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  * 
  */
 public final class Debug {

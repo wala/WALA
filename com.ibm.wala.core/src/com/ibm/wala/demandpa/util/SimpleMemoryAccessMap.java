@@ -63,12 +63,12 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private static final boolean ALWAYS_BUILD_IR = true;
 
   /**
-   * Map: IField -> Set<MemoryAccess>
+   * Map: IField -&gt; Set&lt;MemoryAccess&gt;
    */
   final private Map<IField, Set<MemoryAccess>> readMap = HashMapFactory.make();
 
   /**
-   * Map: IField -> Set<MemoryAccess>
+   * Map: IField -&gt; Set&lt;MemoryAccess&gt;
    */
   final private Map<IField, Set<MemoryAccess>> writeMap = HashMapFactory.make();
 

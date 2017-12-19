@@ -51,7 +51,7 @@ import com.ibm.wala.util.ssa.ClassLookupException;
  * This class is used by WALA internals to resolve to what functions a call
  * could potentially invoke.
  * 
- * @author Brian Pfretzschner <brian.pfretzschner@gmail.com>
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
  */
 public class NodejsRequireTargetSelector implements MethodTargetSelector {
 
@@ -314,7 +314,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 1. let PARTS = path split(START)
 	 * 2. let I = count of PARTS - 1
 	 * 3. let DIRS = []
-	 * 4. while I >= 0,
+	 * 4. while I &gt;= 0,
 	 *    a. if PARTS[I] = "node_modules" CONTINUE
 	 *    b. DIR = path join(PARTS[0 .. I] + "node_modules")
 	 *    c. DIRS = DIRS + DIR

@@ -52,7 +52,7 @@ import com.ibm.wala.types.TypeReference;
  *
  * This mainly applies to the connectThrough-Function.
  *
- * @author Tobias Blaschke <code@tobiasblaschke.de>
+ * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public interface IInstantiator {
     /**

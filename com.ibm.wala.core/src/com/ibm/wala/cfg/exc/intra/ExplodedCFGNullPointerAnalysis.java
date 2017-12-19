@@ -27,7 +27,7 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 /**
  * Intraprocedural null pointer analysis for the exploded control flow graph.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> {

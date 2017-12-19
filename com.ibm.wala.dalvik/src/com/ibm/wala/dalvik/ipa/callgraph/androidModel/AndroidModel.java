@@ -120,7 +120,7 @@ import com.ibm.wala.util.strings.Atom;
  *
  *  All these Models are added to a synthetic AndroidModelClass.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class AndroidModel /* makes SummarizedMethod */ 
         implements IClassHierarchyDweller {

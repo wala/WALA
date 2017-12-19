@@ -87,7 +87,7 @@ public class DeadAssignmentElimination {
   private static class DeadValueSystem extends DefaultFixedPointSolver<BooleanVariable> {
 
     /**
-     * Map: value number -> BooleanVariable isLive
+     * Map: value number -&gt; BooleanVariable isLive
      */
     final private Map<Integer, BooleanVariable> vars = HashMapFactory.make();
 

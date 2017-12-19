@@ -31,7 +31,7 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
  * Tries to detect impossible (or always appearing) NullPointerExceptions and removes impossible
  * control flow from the CFG.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public final class NullPointerAnalysis { 

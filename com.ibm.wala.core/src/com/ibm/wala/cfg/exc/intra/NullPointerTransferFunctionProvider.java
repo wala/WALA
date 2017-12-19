@@ -51,7 +51,7 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 
 /**
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements ITransferFunctionProvider<T, NullPointerState> {

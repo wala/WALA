@@ -22,7 +22,7 @@ public class ConditionNormalizer {
 	 * hand side of the comparison, also if the branch is not taken, the
 	 * operation needs to be negated.
 	 *
-	 * p.a. the condition is !(rhs >= lhs), it will be normalized to lhs > rhs
+	 * p.a. the condition is !(rhs &gt;= lhs), it will be normalized to lhs &gt; rhs
 	 *
 	 * @param cnd
 	 *            condition to normalize

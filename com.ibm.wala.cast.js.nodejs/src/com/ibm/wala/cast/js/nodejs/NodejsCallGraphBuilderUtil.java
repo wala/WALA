@@ -46,7 +46,7 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.WalaException;
 
 /**
- * @author Brian Pfretzschner <brian.pfretzschner@gmail.com>
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
  */
 public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 

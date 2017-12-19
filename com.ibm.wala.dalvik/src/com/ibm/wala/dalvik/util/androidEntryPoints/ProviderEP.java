@@ -52,7 +52,7 @@ import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoi
  *  The specifications are read and handled by AndroidEntryPointLocator.
  *
  *  @see    com.ibm.wala.dalvik.util.AndroidEntryPointLocator
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public final class ProviderEP {
 	public static final AndroidPossibleEntryPoint onCreate = new AndroidPossibleEntryPoint("onCreate", ExecutionOrder.AT_FIRST);

@@ -94,7 +94,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   private final static int NEW_PC = 0;
 
   /**
-   * Mapping from TypeReference -> IR TODO: Soft references?
+   * Mapping from TypeReference -&gt; IR TODO: Soft references?
    */
   final private Map<TypeReference, IR> IRCache = HashMapFactory.make();
 

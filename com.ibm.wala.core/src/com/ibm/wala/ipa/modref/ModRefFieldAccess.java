@@ -33,7 +33,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
  * Computes interprocedural field accesses for a given method.
  * 
  * @author Martin Seidel
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  *
  */
 public final class ModRefFieldAccess {
