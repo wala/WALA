@@ -124,7 +124,6 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    * @param caller
    * @param site
    * @param receiver
-   * @return
    */
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     int nargs = getNumberOfArgsPassed(caller, site);

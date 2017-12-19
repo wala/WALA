@@ -177,7 +177,6 @@ public class DemandCastChecker {
    * @param scope
    * @param cha
    * @param options
-   * @return
    * @throws CancelException
    * @throws IllegalArgumentException
    */

@@ -98,7 +98,6 @@ public class MethodNamePattern {
 	 * Returns a Collection of IMethods which are found in the following 
 	 * ClassLoaders: Application, Primordial, Extension
 	 * @param cha
-	 * @return
 	 */
 	public Collection<IMethod> getPossibleTargets(IClassHierarchy cha) {
 		Collection<IMethod> matching = new LinkedList<>();

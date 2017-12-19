@@ -185,7 +185,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 
 	 * @param dir Y in the pseudo algorithm
 	 * @param target X in the pseudo algorithm
-	 * @return
 	 * @throws IOException
 	 */
 	public static SourceFileModule resolve(File rootDir, File dir, String target) throws IOException {
@@ -214,8 +213,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 4. If X.node is a file, load X.node as binary addon.  STOP
 	 * 
 	 * @param f
-	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private static SourceFileModule loadAsFile(File rootDir, File f) throws IOException {
 		// 1.
@@ -248,7 +246,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 4. If X/index.node is a file, load X/index.node as binary addon.  STOP
 	 * 
 	 * @param d
-	 * @return
 	 * @throws IOException
 	 */
 	private static SourceFileModule loadAsDirectory(File rootDir, File d) throws IOException {
@@ -293,8 +290,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 
 	 * @param dir
 	 * @param target
-	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private static SourceFileModule loadNodeModules(File rootDir, File d, String target) throws IOException {
 		List<File> dirs = nodeModulePaths(rootDir, d);
@@ -322,8 +318,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 5. return DIRS
 	 * 
 	 * @param d
-	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private static List<File> nodeModulePaths(File rootDir, File d) throws IOException {
 		LinkedList<File> dirs = new LinkedList<>();

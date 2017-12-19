@@ -259,7 +259,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   /**
    * @param pk
    * @param ikeyPred
-   * @return
    */
   private Pair<PointsToResult, Collection<InstanceKeyAndState>> getPointsToWithStates(PointerKey pk, Predicate<InstanceKey> ikeyPred) {
     if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
@@ -539,7 +538,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   /**
    * @param ik
-   * @return
    */
   private Pair<PointsToResult, Collection<PointerKey>> getFlowsToInternal(InstanceKeyAndState ikAndState) {
     InstanceKey ik = ikAndState.getInstanceKey();
@@ -1666,7 +1664,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @param addGraphs whether graphs should always be added
      * @param callee
      * @param pkAndState
-     * @return
      */
     protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, PointerKeyAndState pkAndState) {
       return !addGraphs && !g.hasSubgraphForNode(callee);

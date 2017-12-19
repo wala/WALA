@@ -125,7 +125,6 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	 * 
 	 * @param rootDir
 	 * @param file
-	 * @return
 	 */
 	public static String convertFileToClassName(File rootDir, File file) {
 		URI normalizedWorkingDirURI = rootDir.getAbsoluteFile().toURI().normalize();

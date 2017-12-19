@@ -465,7 +465,6 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
      *
      * @param defNum
      *
-     * @return
      * @throws IllegalStateException
      */
     private String getLocalName(int defNum) throws IllegalStateException {

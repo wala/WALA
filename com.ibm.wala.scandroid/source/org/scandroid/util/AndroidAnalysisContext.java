@@ -299,7 +299,6 @@ public class AndroidAnalysisContext {
 	/**
 	 * Returns all concrete classes implementing the given interface or any subinterfaces
 	 * @param iRoot
-	 * @return
 	 */
 	public Collection<IClass> concreteClassesForInterface(IClass iRoot) {
 		Set<IClass> clazzes = HashSetFactory.make();

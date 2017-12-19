@@ -411,7 +411,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param typeBinding
    * @param name Used in creating default constructor, and passed into new ClassEntity()
    * @param context
-   * @return
    */
   private CAstEntity createClassDeclaration(ASTNode n, List<BodyDeclaration> bodyDecls,
       List<EnumConstantDeclaration> enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
@@ -649,7 +648,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    *          constructor.
    * @param context
    * @param inits
-   * @return
    */
   private CAstNode createConstructorBody(MethodDeclaration n, ITypeBinding classBinding, WalkContext context,
       ArrayList<ASTNode> inits) {
@@ -721,7 +719,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param overriding Declaration of the overriding method.
    * @param overridden Binding of the overridden method, in a a superclass or implemented interface.
    * @param oldContext
-   * @return
    */
   private CAstEntity makeSyntheticCovariantRedirect(MethodDeclaration overriding, IMethodBinding overridingBinding,
       IMethodBinding overridden, WalkContext oldContext) {
@@ -1665,7 +1662,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * the code into an assignment and binary operation.
    * 
    * @param context
-   * @return
    */
   private CAstNode doFunkyGenericAssignPreOpHack(Assignment assign, WalkContext context) {
     Expression left = assign.getLeftHandSide();
@@ -1751,7 +1747,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param n
    * @param context
-   * @return
    */
   private CAstNode visit(SimpleName n, WalkContext context) {
     // class name, handled above in either method invocation, qualified name, or qualified this
@@ -1818,7 +1813,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param typeOfThis
    * @param isPrivate
-   * @return
    */
   private static ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
     // GENERICS
@@ -1866,7 +1860,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param n
    * @param context
-   * @return
    */
   private CAstNode visit(FieldAccess n, WalkContext context) {
     CAstNode targetNode = visitNode(n.getExpression(), context);
@@ -1883,7 +1876,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param fieldName Name of the field.
    * @param positioningNode Used only for making a JdtPosition.
    * @param context
-   * @return
    */
   private CAstNode createFieldAccess(CAstNode targetNode, String fieldName, IVariableBinding possiblyParameterizedBinding,
       ASTNode positioningNode, WalkContext context) {
@@ -1978,7 +1970,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param n
    * @param context
-   * @return
    */
   private CAstNode visit(QualifiedName n, WalkContext context) {
     // "package.Class" is a QualifiedName, but also is "Class.staticField"
@@ -2443,7 +2434,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param n
    * @param context
-   * @return
    */
   private CAstNode visit(EnhancedForStatement n, WalkContext context) {
     if (n.getExpression().resolveTypeBinding().isArray())
@@ -2791,7 +2781,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * Giant switch statement.
    * 
    * @param n
-   * @return
    */
   private CAstEntity visit(AbstractTypeDeclaration n, WalkContext context) {
     // handling of compilationunit in translate()
@@ -2811,7 +2800,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * Giant switch statement, part deux
    * 
    * @param context
-   * @return
    */
   private CAstNode visitNode(ASTNode n, WalkContext context) {
     if (n == null)
@@ -3320,7 +3308,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param decl
    * @param context
-   * @return
    */
   private CAstEntity visit(EnumConstantDeclaration decl, WalkContext context) {
     return new FieldEntity(decl.getName().getIdentifier(), decl.resolveVariable().getType(), enumQuals, makePosition(decl

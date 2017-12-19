@@ -145,7 +145,6 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
    * @param element
    * @param context
    * @param nodeMap
-   * @return
    */
   private CAstNode makeConstRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
       Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {

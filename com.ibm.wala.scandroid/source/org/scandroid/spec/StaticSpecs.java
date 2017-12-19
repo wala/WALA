@@ -99,9 +99,6 @@ public class StaticSpecs implements ISpecs {
 		return new SourceSpec[] {};
 	}
 
-	/**
-	 * @return
-	 */
 	private List<IField> collectFields() {
 		List<IField> fields = new ArrayList<>();
 		Iterator<IClass> itr = cha.iterator();

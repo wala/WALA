@@ -124,7 +124,6 @@ public abstract class FlowType<E extends ISSABasicBlock> {
      * 
      * @param a
      * @param b
-     * @return
      */
     @SuppressWarnings("unused")
 	private boolean compareBlocks(BasicBlockInContext<E> a,

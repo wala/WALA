@@ -22,14 +22,12 @@ public interface IUrlResolver {
   /**
    * From Internet to local
    * @param input
-   * @return
    */
   public URL resolve(URL input);
   
   /**
    * From local to Internet
    * @param input
-   * @return
    */
   public URL deResolve(URL input);
   
