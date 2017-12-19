@@ -47,8 +47,6 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	private final String className;
 
 	/**
-	 * @param workingDir
-	 *            Must be a direct or indirect parent folder of file f.
 	 * @param f
 	 *            Must be a file located below folder workingDir.
 	 * @param clonedFrom
