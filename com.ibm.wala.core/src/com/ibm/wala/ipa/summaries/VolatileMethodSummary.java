@@ -409,7 +409,7 @@ public class VolatileMethodSummary {
     /**
     *   Retrieves a mapping from SSA-Number to a constant.
     *
-    *   You can add Constants using the function {@link addConstant(java.lang.Integer, ConstantValue)}.
+    *   You can add Constants using the function {@link #addConstant(java.lang.Integer, ConstantValue)}.
     *   A call to this function gets passed directly to the internal MethodSummary.
     *
     *   @return a mapping from SSA-Number to assigned ConstantValue
