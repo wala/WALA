@@ -165,7 +165,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * 
    * This ShrikeBTMethod must not be native.
    * 
-   * @throws InvalidClassFileException, {@link UnsupportedOperationException}
+   * @throws InvalidClassFileException {@link UnsupportedOperationException}
    */
   public int getInstructionIndex(int bcIndex) throws InvalidClassFileException {
     if (isNative()) {
