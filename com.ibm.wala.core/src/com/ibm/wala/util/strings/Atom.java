@@ -173,6 +173,11 @@ public final class Atom implements Serializable {
   public final boolean startsWith(Atom start) {
       assert (start != null);
 
+      // can't start with something that's longer.
+      if (val.length < start.val.length)
+        return false;
+
+      // otherwise, we know that this length is greater than or equal to the length of start.
       for (int i = 0; i < start.val.length; ++i) {
           if (val[i] != start.val[i])
               return false;
