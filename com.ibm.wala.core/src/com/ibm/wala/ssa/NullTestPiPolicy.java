@@ -18,9 +18,9 @@ import com.ibm.wala.util.collections.Pair;
 /**
  * A pi node policy with the following rule:
  * 
- * If we have the following code: <verbatim> S1: if (c op null) { ... } </verbatim>
+ * If we have the following code: <pre> S1: if (c op null) { ... } </pre>
  * 
- * replace it with: <verbatim> S1: if (c op null) { v2 = PI(c, S1) .... } </verbatim>
+ * replace it with: <pre> S1: if (c op null) { v2 = PI(c, S1) .... } </pre>
  * 
  * This renaming allows SSA-based analysis to reason about the nullness of v2 depending on the outcome of the branch.
  */

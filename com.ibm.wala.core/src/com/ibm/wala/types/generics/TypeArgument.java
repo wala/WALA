@@ -18,12 +18,12 @@ import com.ibm.wala.types.TypeReference;
 /**
  * UNDER CONSTRUCTION
  * 
- * <verbatim> TypeArgument: WildcardIndicator? FieldTypeSignature *
+ * <pre> TypeArgument: WildcardIndicator? FieldTypeSignature *
  * 
  * WildcardIndicator: + -
  * 
  * 
- * </verbatim>
+ * </pre>
  * 
  * @author sjfink
  * 

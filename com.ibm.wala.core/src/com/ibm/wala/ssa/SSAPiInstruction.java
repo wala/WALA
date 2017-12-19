@@ -20,18 +20,18 @@ package com.ibm.wala.ssa;
  * 
  * for example, the following pseudo-code
  * <p>
- * <verbatim>
+ * <pre>
  *     boolean condition = (x instanceof Integer);
  *     if (condition) {
  *        S1;
  *     else {
  *        S2;
  *     }
- * </verbatim>
+ * </pre>
  * 
  * could be translated roughly as follows:
  * 
- * <verbatim>
+ * <pre>
  *     boolean condition = (x instanceof Integer);
  *     LABEL1: if (condition) {
  *        x_1 = pi(x, LABEL1);
@@ -40,7 +40,7 @@ package com.ibm.wala.ssa;
  *        x_2 = pi(x, LABEL2);
  *        S2;
  *     }
- * </verbatim>
+ * </pre>
  */
 public class SSAPiInstruction extends SSAUnaryOpInstruction {
   private final SSAInstruction cause;
