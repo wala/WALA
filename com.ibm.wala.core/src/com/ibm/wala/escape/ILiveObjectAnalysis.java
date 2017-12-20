@@ -26,8 +26,8 @@ public interface ILiveObjectAnalysis {
    * @param m method in question
    * @param instructionIndex index of an instruction in SSA IR. in m. if -1, it is interpreted as a wildcard meaning "any statement"
    * @throws WalaException
-   * @returns true if an object allocated at the allocation site &lt;allocMethod,allocPC> may be live immediately after the
-   *          statement <m,instructionIndex>
+   * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be live immediately after the
+   *          statement &lt;m,instructionIndex&gt;
    */
   public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws WalaException;
 
@@ -36,8 +36,8 @@ public interface ILiveObjectAnalysis {
    * @param m method in question
    * @param instructionIndex index of an instruction in SSA IR. in m. if -1, it is interpreted as a wildcard meaning "any statement"
    * @throws WalaException
-   * @returns true if an object allocated at the allocation site &lt;allocMethod,allocPC> may be live immediately after the
-   *          statement <m,instructionIndex>
+   * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be live immediately after the
+   *          statement &lt;m,instructionIndex&gt;
    */
   public boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) throws WalaException;
 
@@ -45,8 +45,8 @@ public interface ILiveObjectAnalysis {
    * @param ik an instance key
    * @param m method in question
    * @param instructionIndices indices of instructions in SSA IR.
-   * @returns true if an object allocated at the allocation site &lt;allocMethod,allocPC> may be live immediately after the
-   *          statement <m,instructionIndex> for any instructionIndex in the set
+   * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be live immediately after the
+   *          statement &lt;m,instructionIndex&gt; for any instructionIndex in the set
    */
   public boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices);
 

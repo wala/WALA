@@ -51,6 +51,6 @@
  *  the regular one.
  *
  *  @since  2013-10-25
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 package com.ibm.wala.util.ssa;

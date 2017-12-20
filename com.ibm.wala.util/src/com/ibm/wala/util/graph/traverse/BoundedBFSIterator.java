@@ -55,7 +55,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   private final int k;
 
   /**
-   * boundary[i] is the first index which represents a child that is > i hops away.
+   * boundary[i] is the first index which represents a child that is &gt; i hops away.
    */
   private final int[] boundary;
 

@@ -24,8 +24,8 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
  * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
  * It has been adapted and integrated into the WALA project by Juergen Graf.
  * 
- * @author Markus Herhoffer <markus.herhoffer@student.kit.edu>
- * @author Juergen Graf <graf@kit.edu>
+ * @author Markus Herhoffer &lt;markus.herhoffer@student.kit.edu&gt;
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  * 
  */
 class InterprocMethodState extends MethodState {

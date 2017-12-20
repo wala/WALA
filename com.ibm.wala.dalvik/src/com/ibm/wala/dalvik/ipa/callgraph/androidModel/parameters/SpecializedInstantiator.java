@@ -72,7 +72,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  For example instantiating an android.content.Context would pull in all Android-components in
  *  scope resulting in a massivly overapproximated model.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class SpecializedInstantiator extends FlatInstantiator {
 
@@ -96,7 +96,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
      *
      *  If T is an array-type a new array of length 1 is generated.
      *
-     *  @todo   Do we want to mix in REUSE-Parameters?
+     *  TODO: Do we want to mix in REUSE-Parameters?
      */
     @Override
     public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {

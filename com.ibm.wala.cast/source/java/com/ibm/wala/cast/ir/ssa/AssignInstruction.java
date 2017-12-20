@@ -62,9 +62,6 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
     ((AstPreInstructionVisitor) v).visitAssign(this);
   }
 
-  /**
-   * @return
-   */
   public int getVal() {
     return getUse(0);
   }

@@ -267,7 +267,6 @@ public class XMLSummaryWriter {
      * (I[Ljava/lang/String;)[Ljava/lang/String;
      * 
      * @param summary
-     * @return
      */
     private static String getMethodDescriptor(MethodSummary summary) {
         StringBuilder typeSigs = new StringBuilder("(");

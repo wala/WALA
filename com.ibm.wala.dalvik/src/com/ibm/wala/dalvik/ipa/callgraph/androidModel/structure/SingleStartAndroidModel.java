@@ -73,7 +73,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopKillAndroidModel
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class SingleStartAndroidModel extends AbstractAndroidModel {
     private static final Logger logger = LoggerFactory.getLogger(SingleStartAndroidModel.class);

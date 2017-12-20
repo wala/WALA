@@ -25,7 +25,7 @@ import java.io.IOException;
  * This is the super class of all position attributes.
  * 
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 abstract class PositionsAttribute {
 

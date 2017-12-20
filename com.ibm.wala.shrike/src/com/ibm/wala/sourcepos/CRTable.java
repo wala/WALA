@@ -27,7 +27,7 @@ import java.util.LinkedList;
  * @see CRTData
  * @see CRTFlags
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public final class CRTable extends PositionsAttribute {
 

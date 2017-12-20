@@ -323,7 +323,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    *          the AST node representing the read
    * @param context
    * @param name
-   * @return
    */
   protected int doLexicallyScopedRead(CAstNode node, WalkContext context, final String name, TypeReference type) {
     return doLexReadHelper(context, name, type);

@@ -18,7 +18,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 /**
  * Intraprocedural dataflow analysis to detect impossible NullPointerExceptions.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<B, NullPointerState> {

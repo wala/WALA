@@ -1068,7 +1068,6 @@ public class SlicerTest {
    * @param cg
    * @param d
    * @param name
-   * @return
    */
   private static CGNode findMethod(CallGraph cg, Descriptor d, Atom name) {
     for (CGNode n : Iterator2Iterable.make(cg.getSuccNodes(cg.getFakeRootNode()))) {

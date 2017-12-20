@@ -1041,7 +1041,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   /**
-   * has exceptional edge src -> dest
+   * has exceptional edge src -&gt; dest
    * 
    * @throws IllegalArgumentException if dest is null
    */
@@ -1057,7 +1057,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   /**
-   * has normal edge src -> dest
+   * has normal edge src -&gt; dest
    * 
    * @throws IllegalArgumentException if dest is null
    */

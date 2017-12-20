@@ -77,7 +77,7 @@ import com.ibm.wala.types.TypeReference;
  *
  *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-20
  */
 public class TypeSafeInstructionFactory {

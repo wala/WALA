@@ -63,7 +63,7 @@ import com.ibm.wala.util.strings.Atom;
  *  names in synthetic methods. This should not change th analysis-result but may come in handy when
  *  debugging.
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since      2013-11-25
  */
 public class SummarizedMethodWithNames extends SummarizedMethod {

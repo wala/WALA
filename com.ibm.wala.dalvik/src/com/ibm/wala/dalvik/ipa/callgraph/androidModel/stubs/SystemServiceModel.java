@@ -77,7 +77,7 @@ import com.ibm.wala.util.strings.Atom;
  *
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-15
  */
 public class SystemServiceModel extends AndroidModel {
@@ -182,7 +182,7 @@ public class SystemServiceModel extends AndroidModel {
     /**
      *  Fill the model with instructions.
      *
-     *  @todo use "global" instances
+     *  TODO: use "global" instances
      */
     //@Override
     private void populate(Iterable<? extends AndroidEntryPoint> entrypoints) {

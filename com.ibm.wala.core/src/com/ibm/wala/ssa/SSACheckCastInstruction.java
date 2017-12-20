@@ -46,7 +46,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
   /**
    * @param result A new value number def'fed by this instruction when the type check succeeds.
    * @param val The value being checked by this instruction
-   * @param type The type which this instruction checks
+   * @param types The types which this instruction checks
    */
   protected SSACheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
     super(iindex);

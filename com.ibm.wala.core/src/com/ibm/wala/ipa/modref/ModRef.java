@@ -95,7 +95,7 @@ public class ModRef<T extends InstanceKey> {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including its
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, <b> NOT </b> including its
    * callees transitively
    * 
    * @param heapExclude
@@ -106,7 +106,7 @@ public class ModRef<T extends InstanceKey> {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including its callees
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, <b> NOT </b> including its callees
    * transitively
    * 
    * @param heapExclude
@@ -119,7 +119,7 @@ public class ModRef<T extends InstanceKey> {
     return new DelegatingExtendedHeapModel(pa.getHeapModel());
   }
   /**
-   * For a call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including it's callees
+   * For a call graph node, what heap locations (as determined by a heap model) may it write, <b> NOT </b> including it's callees
    * transitively
    * 
    * @param heapExclude
@@ -142,7 +142,7 @@ public class ModRef<T extends InstanceKey> {
   }
 
   /**
-   * For a call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including it's callees
+   * For a call graph node, what heap locations (as determined by a heap model) may it read, <b> NOT </b> including it's callees
    * transitively
    */
   private Collection<PointerKey> scanNodeForRef(final CGNode n, final PointerAnalysis<T> pa, HeapExclusions heapExclude) {

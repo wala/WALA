@@ -28,7 +28,7 @@ public final class Atom implements Serializable {
   private static final long serialVersionUID = -3256390509887654329L;
 
   /**
-   * Used to canonicalize Atoms, a mapping from AtomKey -> Atom. AtomKeys are not canonical, but Atoms are.
+   * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but Atoms are.
    */
   final private static HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
 
@@ -196,8 +196,8 @@ public final class Atom implements Serializable {
   }
 
 /**
-   * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with '<' for future use. At present,
-   * only <init> and <clinit> are used.
+   * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with '&lt;' for future use. At present,
+   * only &lt;init&gt; and &lt;clinit&gt; are used.
    */
   public final boolean isReservedMemberName() {
     if (length() == 0) {
@@ -468,8 +468,6 @@ public final class Atom implements Serializable {
   /**
    * Special method that is called by Java deserialization process. Any HashCons'ed object should implement it, in order to make
    * sure that all equal objects are consolidated.
-   * 
-   * @return
    */
   private Object readResolve() {
     return findOrCreate(this.val);

@@ -153,7 +153,7 @@ public class Util {
    * constants c1 and c2, respectively.
    * 
    * Callers must resolve the constant values from the {@link SymbolTable}
-   * before calling this method. These integers are <bf>not</bf> value numbers;
+   * before calling this method. These integers are <b>not</b> value numbers;
    */
   public static <I, T extends IBasicBlock<I>> T resolveBranch(ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);

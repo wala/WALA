@@ -81,7 +81,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   protected final MutableMapping<InstanceKey> instanceKeys = MutableMapping.make();
 
   /**
-   * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents the instance keys that correspond to a given class.
+   * A mapping from IClass -&gt; MutableSharedBitVectorIntSet The range represents the instance keys that correspond to a given class.
    * This mapping is used to filter sets based on declared types; e.g., in cast constraints
    */
   final private Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
@@ -104,7 +104,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * When doing unification, we must also updated the fixed sets in unary side effects.
    * 
-   * This maintains a map from PointsToSetVariable -> Set<UnarySideEffect>
+   * This maintains a map from PointsToSetVariable -&gt; Set&lt;UnarySideEffect&gt;
    */
   final private Map<PointsToSetVariable, Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
 

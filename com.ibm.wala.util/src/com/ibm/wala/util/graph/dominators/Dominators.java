@@ -352,7 +352,7 @@ public abstract class Dominators<T> {
   /**
    * This method inspects the passed node and returns the following: node, if node is a root of a tree in the forest
    * 
-   * any vertex, u != r such that otherwise r is the root of the tree containing node and * semi(u) is minimum on the path r -> v
+   * any vertex, u != r such that otherwise r is the root of the tree containing node and * semi(u) is minimum on the path r -&gt; v
    * 
    * See TOPLAS 1(1), July 1979, p 128 for details.
    * 

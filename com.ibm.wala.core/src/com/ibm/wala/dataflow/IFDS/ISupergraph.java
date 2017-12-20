@@ -68,7 +68,7 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
   Iterator<? extends T> getReturnSites(T call, P callee);
 
   /**
-   * @param r a "return" node in the supergraph
+   * @param ret a "return" node in the supergraph
    * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites for which no callee was found.
    * @return the corresponding call nodes. There may be many.
    */

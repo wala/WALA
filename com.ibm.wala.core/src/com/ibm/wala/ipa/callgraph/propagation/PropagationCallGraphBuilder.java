@@ -589,7 +589,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * LHS U= (RHS n k)
    * 
    * 
-   * Unary op: <lhs>:= Cast_k( <rhs>)
+   * Unary op: &lt;lhs&gt;:= Cast_k( &lt;rhs&gt;)
    * 
    * (Again, technically a binary op -- see note for Assign)
    * 
@@ -803,7 +803,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   }
 
   /**
-   * Binary op: <dummy>:= ArrayLoad( &lt;arrayref>) Side effect: Creates new equations.
+   * Binary op: &lt;dummy&gt;:= ArrayLoad( &lt;arrayref&gt;) Side effect: Creates new equations.
    */
   public final class ArrayLoadOperator extends UnarySideEffect implements IPointerOperator {
     protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
@@ -892,7 +892,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   }
 
   /**
-   * Binary op: <dummy>:= ArrayStore( &lt;arrayref>) Side effect: Creates new equations.
+   * Binary op: &lt;dummy&gt;:= ArrayStore( &lt;arrayref&gt;) Side effect: Creates new equations.
    */
   public final class ArrayStoreOperator extends UnarySideEffect implements IPointerOperator {
     @Override
@@ -976,7 +976,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   }
 
   /**
-   * Binary op: <dummy>:= GetField( <ref>) Side effect: Creates new equations.
+   * Binary op: &lt;dummy&gt;:= GetField( &lt;ref&gt;) Side effect: Creates new equations.
    */
   public class GetFieldOperator extends UnarySideEffect implements IPointerOperator {
     private final IField field;

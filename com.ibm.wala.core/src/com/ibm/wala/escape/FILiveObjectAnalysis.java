@@ -51,7 +51,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   private final HeapGraph<?> heapGraph;
 
   /**
-   * Cached map from InstanceKey -> Set<CGNode>
+   * Cached map from InstanceKey -&gt; Set&lt;CGNode&gt;
    */
   final private Map<InstanceKey, Set<CGNode>> liveNodes = HashMapFactory.make();
 

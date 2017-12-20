@@ -64,6 +64,6 @@
  * @see     com.ibm.wala.dalvik.ipa.callgraph.androidModel.MicroModel 
  * @see     com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.UnknownTargetModel
  * @see     com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel
- * @author  Tobias Blaschke <code@tobiasblaschke.de>
+ * @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;

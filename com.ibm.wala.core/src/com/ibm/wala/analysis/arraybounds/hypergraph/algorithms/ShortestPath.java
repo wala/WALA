@@ -172,8 +172,8 @@ public class ShortestPath<T> {
    *
    * <pre>
    * (n1, n2)->(n3)
-   * Round 1: n1 = unset, n2 = -3 -> n3 = max(unset,-3) = -3
-   * Round 2: n1 = 1, n2 = -3 -> n3 = max(1,-3) = 1
+   * Round 1: n1 = unset, n2 = -3 -&gt; n3 = max(unset,-3) = -3
+   * Round 2: n1 = 1, n2 = -3 -&gt; n3 = max(1,-3) = 1
    * </pre>
    *
    * Would we compute the minimum of n3 over all rounds, it would be -3, but 1

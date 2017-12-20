@@ -31,7 +31,7 @@ import com.ibm.wala.util.intset.IntSet;
  *
  *  @see com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector
  *
- *  @author  Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class UnionContextSelector implements ContextSelector {
     private final ContextSelector A;

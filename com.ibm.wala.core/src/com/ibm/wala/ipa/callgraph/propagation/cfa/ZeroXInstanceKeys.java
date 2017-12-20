@@ -86,8 +86,8 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   public static final int SMUSH_PRIMITIVE_HOLDERS = 8;
 
   /**
-   * This variant counts the N, number of allocation sites of a particular type T in each method. If N > SMUSH_LIMIT, then these N
-   * allocation sites are NOT distinguished ... instead there is a single abstract allocation site for <N,T>
+   * This variant counts the N, number of allocation sites of a particular type T in each method. If N &gt; SMUSH_LIMIT, then these N
+   * allocation sites are NOT distinguished ... instead there is a single abstract allocation site for &lt;N,T&gt;
    * 
    * Probably the best choice in many cases.
    */
@@ -134,7 +134,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   final private RTAContextInterpreter contextInterpreter;
 
   /**
-   * a Map from CGNode->Set<IClass> that should be smushed.
+   * a Map from CGNode-&gt;Set&lt;IClass&gt; that should be smushed.
    */
   protected final Map<CGNode, Set<IClass>> smushMap = HashMapFactory.make();
 

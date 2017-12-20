@@ -79,7 +79,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @see com.ibm.wala.dalvik.ipa.callgraph.impl.DexFakeRootMethod
  *  @see com.ibm.wala.ipa.summaries.MethodSummary
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since      2013-09-08
  */
 @SuppressWarnings("javadoc")
@@ -246,7 +246,7 @@ public class VolatileMethodSummary {
     }
 
     /**
-     *  Like {@link addStatement(SSAInstructionWithPC <? extends SSAInstruction>) but may replace an existing one.
+     *  Like {@link #addStatement(SSAInstructionWithPC)} but may replace an existing one.
      *
      *  @param  statement    The statement to add without care of overwriting
      *  @return true if a statement has actually been overwritten 
@@ -409,7 +409,7 @@ public class VolatileMethodSummary {
     /**
     *   Retrieves a mapping from SSA-Number to a constant.
     *
-    *   You can add Constants using the function {@link addConstant(java.lang.Integer, ConstantValue)}.
+    *   You can add Constants using the function {@link #addConstant(java.lang.Integer, ConstantValue)}.
     *   A call to this function gets passed directly to the internal MethodSummary.
     *
     *   @return a mapping from SSA-Number to assigned ConstantValue

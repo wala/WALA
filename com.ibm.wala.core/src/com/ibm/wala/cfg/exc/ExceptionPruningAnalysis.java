@@ -23,7 +23,7 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
  * control flow from a CFG. This is done by detecting exceptions that may always
  * (or never) appear.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  * 
  */
 public interface ExceptionPruningAnalysis<I, T extends IBasicBlock<I>> {

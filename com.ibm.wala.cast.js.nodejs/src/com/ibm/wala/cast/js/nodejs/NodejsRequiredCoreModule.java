@@ -24,7 +24,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.io.TemporaryFile;
 
 /**
- * @author Brian Pfretzschner <brian.pfretzschner@gmail.com>
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
  */
 public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
 

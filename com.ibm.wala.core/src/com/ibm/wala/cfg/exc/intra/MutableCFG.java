@@ -26,7 +26,7 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * A modifiable control flow graph.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph<T> implements ControlFlowGraph<X, T> {

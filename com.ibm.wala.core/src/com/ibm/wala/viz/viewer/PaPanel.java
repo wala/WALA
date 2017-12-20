@@ -194,7 +194,6 @@ public class PaPanel extends JSplitPane {
 
   /**
    * Override if you want different roots for your heap tree.
-   * @return
    */
   protected List<Object> getRootNodes(){
     List<Object> ret = new ArrayList<>();
@@ -230,7 +229,6 @@ public class PaPanel extends JSplitPane {
   /**
    * Used for filling the tree dynamically. Override and handle your own nodes / different links.
    * @param node
-   * @return
    */
   protected List<Object> getChildrenFor(Object node) {
     List<Object> ret = new ArrayList<>();
@@ -255,7 +253,6 @@ public class PaPanel extends JSplitPane {
    * pointer keys (not just for fields)
    * 
    * @param ik
-   * @return
    */
   protected List<? extends PointerKey> getPointerKeysUnderInstanceKey(InstanceKey ik) {
     int ikIndex = pa.getInstanceKeyMapping().getMappedIndex(ik);

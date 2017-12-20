@@ -86,8 +86,8 @@ import com.ibm.wala.util.strings.Atom;
  *
  *  @see    com.ibm.wala.ipa.callgraph.impl.FakeRootClass
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
- *  @todo   Move this class into an other loader? Currently: Primordial
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
+ *  TODO: Move this class into an other loader? Currently: Primordial
  */
 public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     private static Logger logger = LoggerFactory.getLogger(AndroidModelClass.class);

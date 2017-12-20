@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents dup instructions. There are two kinds of dup instructions, dup and dup_x1:
  * 
- * dup: a::rest => a::a::rest dup_x1: a::b::rest => a::b::a::rest
+ * dup: a::rest =&gt; a::a::rest dup_x1: a::b::rest =&gt; a::b::a::rest
  */
 public final class DupInstruction extends Instruction {
   final private int size;

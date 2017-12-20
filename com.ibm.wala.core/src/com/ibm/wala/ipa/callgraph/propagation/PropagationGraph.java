@@ -442,7 +442,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 iff there exists equation e s.t. e uses v1 and e defs v2.
+   * A graph of just the variables in the system. v1 -&gt; v2 iff there exists equation e s.t. e uses v1 and e defs v2.
    * 
    * Note that this graph trickily and fragilely reuses the nodeManager from the delegateGraph, above. This will work ok as long as
    * every variable is inserted in the delegateGraph.
@@ -834,7 +834,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 iff there exists an assignment equation e s.t. e uses v1 and e defs v2.
+   * A graph of just the variables in the system. v1 -&gt; v2 iff there exists an assignment equation e s.t. e uses v1 and e defs v2.
    * 
    */
   public NumberedGraph<PointsToSetVariable> getAssignmentGraph() {
@@ -848,7 +848,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 iff there exists an Assingnment or Filter equation e s.t. e uses v1 and e
+   * A graph of just the variables in the system. v1 -&gt; v2 iff there exists an Assingnment or Filter equation e s.t. e uses v1 and e
    * defs v2.
    * 
    */
@@ -871,7 +871,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 that are related by def-use with "interesting" operators
+   * A graph of just the variables in the system. v1 -&gt; v2 that are related by def-use with "interesting" operators
    * 
    */
   private abstract class FilteredConstraintGraphView extends AbstractNumberedGraph<PointsToSetVariable> {

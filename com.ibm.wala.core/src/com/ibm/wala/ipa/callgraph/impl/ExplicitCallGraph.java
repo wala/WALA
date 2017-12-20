@@ -134,7 +134,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
   public class ExplicitNode extends NodeImpl {
 
     /**
-     * A Mapping from call site program counter (int) -> Object, where Object is a CGNode if we've discovered exactly one target for
+     * A Mapping from call site program counter (int) -&gt; Object, where Object is a CGNode if we've discovered exactly one target for
      * the site, or an IntSet of node numbers if we've discovered more than one target for the site.
      */
     protected final SparseVector<Object> targets = new SparseVector<>();

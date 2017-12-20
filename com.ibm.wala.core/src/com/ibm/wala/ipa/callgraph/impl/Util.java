@@ -188,7 +188,7 @@ public class Util {
   /**
    * @return Entrypoints for a set of J2SE Main classes
    * @throws IllegalArgumentException if classNames == null
-   * @throws IllegalArgumentException if (classNames != null) and (0 < classNames.length) and (classNames[0] == null)
+   * @throws IllegalArgumentException if (classNames != null) and (0 &lt; classNames.length) and (classNames[0] == null)
    * @throws IllegalArgumentException if classNames.length == 0
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(final ClassLoaderReference loaderRef, final IClassHierarchy cha,

@@ -57,7 +57,7 @@ import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 /**
  * Intraprocedural dataflow analysis to detect impossible NullPointerExceptions.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {

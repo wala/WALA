@@ -48,7 +48,7 @@ import com.ibm.wala.types.TypeName;
 
 /**
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public abstract class IInstantiationBehavior implements Serializable {
 	private static final long serialVersionUID = -3698760758700891479L;

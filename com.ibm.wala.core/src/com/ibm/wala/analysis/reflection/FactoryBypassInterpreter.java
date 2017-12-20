@@ -67,7 +67,7 @@ import com.ibm.wala.util.warnings.Warnings;
 public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /**
-   * A Map from CallerSiteContext -> Set <TypeReference>represents the types a factory method might create in a particular context
+   * A Map from CallerSiteContext -&gt; Set &lt;TypeReference&gt;represents the types a factory method might create in a particular context
    */
   private final Map<Context, Set<TypeReference>> map = HashMapFactory.make();
 

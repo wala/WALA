@@ -45,7 +45,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   static final boolean DEBUG = false;
 
   /**
-   * Method summaries collected for methods. Mapping Object -> MethodSummary where Object is either a
+   * Method summaries collected for methods. Mapping Object -&gt; MethodSummary where Object is either a
    * <ul>
    * <li>MethodReference
    * <li>TypeReference
@@ -75,7 +75,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   private final ClassHierarchyMethodTargetSelector chaMethodTargetSelector;
 
   /**
-   * Mapping from MethodReference -> SyntheticMethod We may call syntheticMethod.put(m,null) .. in which case we use containsKey()
+   * Mapping from MethodReference -&gt; SyntheticMethod We may call syntheticMethod.put(m,null) .. in which case we use containsKey()
    * to check for having already considered m.
    */
   final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();

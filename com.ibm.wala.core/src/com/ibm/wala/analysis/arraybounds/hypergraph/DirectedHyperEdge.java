@@ -11,7 +11,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeigh
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
  * @param <T>
- *            Type used in HyperNodes (HyperNode<T>)
+ *            Type used in HyperNodes (HyperNode&lt;T&gt;)
  */
 public class DirectedHyperEdge<T> {
 	/** Contains all destinations of this HyperEdge */

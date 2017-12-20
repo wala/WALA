@@ -68,7 +68,7 @@ import com.ibm.wala.util.strings.Atom;
  * @see     com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextSelector
  * @see     com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
  *
- * @author  Tobias Blaschke <code@tobiasblaschke.de>
+ * @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  * @since   2013-10-12
  */
 public class Intent implements ContextItem, Comparable<Intent> {
@@ -253,7 +253,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
      *  IntentStarters.StartInfo to determine the Target. However it is nicer to set the Component
      *  here.
      *
-     *  @todo   Set the Component somewhere
+     *  TODO: Set the Component somewhere
      */
     public AndroidComponent getComponent() {
         return this.targetCompontent;
@@ -272,9 +272,9 @@ public class Intent implements ContextItem, Comparable<Intent> {
      *  Recomputes if the Intent is internal.
      *  TODO: 
      *  @param intent 
-     *  @todo   Implement it ;)
-     *  @todo   What to return if it does not, but Summary-Information is available?
-     *  @todo   We should read in the Manifest.xml rather than relying on the packet name!
+     *  TODO: Implement it ;)
+     *  TODO: What to return if it does not, but Summary-Information is available?
+     *  TODO: We should read in the Manifest.xml rather than relying on the packet name!
      */
     private static boolean isInternal(Intent intent) {  // XXX: This may loop forever!
         /*final Intent override = AndroidEntryPointManager.MANAGER.getIntent(intent);

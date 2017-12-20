@@ -51,7 +51,7 @@ public abstract class UTF8Convert {
    * 
    * @param utf8 (pseudo-)utf8 byte array
    * @throws UTFDataFormatException if the (pseudo-)utf8 byte array is not valid (pseudo-)utf8
-   * @returns unicode string
+   * @return unicode string
    * @throws IllegalArgumentException if utf8 is null
    */
   @SuppressWarnings("unused")
@@ -112,7 +112,7 @@ public abstract class UTF8Convert {
    * The output format is controlled by the WRITE_PSEUDO_UTF8 flag.
    * 
    * @param s String to convert
-   * @returns array containing sequence of (pseudo-)utf8 formatted bytes
+   * @return array containing sequence of (pseudo-)utf8 formatted bytes
    * @throws IllegalArgumentException if s is null
    */
   public static byte[] toUTF8(String s) {
@@ -165,7 +165,7 @@ public abstract class UTF8Convert {
    * Check whether the given sequence of bytes is valid (pseudo-)utf8.
    * 
    * @param bytes byte array to check
-   * @returns true iff the given sequence is valid (pseudo-)utf8.
+   * @return true iff the given sequence is valid (pseudo-)utf8.
    * @throws IllegalArgumentException if bytes is null
    */
   public static boolean check(byte[] bytes) {

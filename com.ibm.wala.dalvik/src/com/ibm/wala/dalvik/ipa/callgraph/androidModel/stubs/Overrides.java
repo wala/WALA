@@ -73,7 +73,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-28
  */
 public class Overrides {
@@ -194,7 +194,7 @@ public class Overrides {
      *  the MethodTargetSelector returned.
      *
      *  @return a MethodTargetSelector that overrides all startComponent-calls.
-     *  @todo   Use delayed computation?
+     *  TODO: Use delayed computation?
      */
     public MethodTargetSelector overrideAll() throws CancelException {
         final HashMap<MethodReference, SummarizedMethod> overrides = HashMapFactory.make();

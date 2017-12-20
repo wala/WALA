@@ -19,7 +19,6 @@ public class UrlManipulator {
   /**
    * @param urlFound the link as appear
    * @param context the URL in which the link appeared
-   * @return
    * @throws MalformedURLException
    */
   public static URL relativeToAbsoluteUrl(String urlFound, URL context) throws MalformedURLException {

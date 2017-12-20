@@ -19,7 +19,7 @@ import com.ibm.wala.util.graph.Graph;
  * An EdgeFilter that ignores all edges contained in a given graph. This ca be used
  * to subtract a subgraph from its main graph.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public class NegativeGraphFilter<T extends IBasicBlock<?>> implements EdgeFilter<T> {

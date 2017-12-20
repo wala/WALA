@@ -3275,7 +3275,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
      *
      * @throws UnsupportedOperationException
      *
-     * @todo    Review this implementation - it may be horribly wrong!
+     * TODO: Review this implementation - it may be horribly wrong!
      */
 	@Override
 	public Collection<CallSiteReference> getCallSites() {

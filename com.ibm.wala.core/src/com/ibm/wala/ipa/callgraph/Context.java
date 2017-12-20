@@ -16,7 +16,7 @@ package com.ibm.wala.ipa.callgraph;
  * For example, for CFA-1, there is only one name ("caller"); and the context maps "caller" to an IMethod
  * 
  * As another example, for CPA, there would be name for each parameter slot ("zero","one","two"), and the Context provides a mapping
- * from this name to a set of types. eg. "one" -> {java.lang.String, java.lang.Date}
+ * from this name to a set of types. eg. "one" -&gt; {java.lang.String, java.lang.Date}
  */
 public interface Context {
   /**

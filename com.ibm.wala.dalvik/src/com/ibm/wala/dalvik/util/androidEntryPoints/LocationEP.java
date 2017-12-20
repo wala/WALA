@@ -52,7 +52,7 @@ import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoi
  *  AndroidEntryPointLocator are set to include call-backs.
  *  
  *  @see    com.ibm.wala.dalvik.util.AndroidEntryPointLocator
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public final class LocationEP {
 	public static final AndroidPossibleEntryPoint onLocationChanged = new AndroidPossibleEntryPoint("onLocationChanged", ExecutionOrder.MIDDLE_OF_LOOP);

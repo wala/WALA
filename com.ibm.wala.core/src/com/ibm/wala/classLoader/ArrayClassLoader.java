@@ -26,7 +26,7 @@ public class ArrayClassLoader {
   private final static boolean DEBUG = false;
 
   /**
-   * map: TypeReference -> ArrayClass
+   * map: TypeReference -&gt; ArrayClass
    */
   final private HashMap<TypeReference, ArrayClass> arrayClasses = HashMapFactory.make();
 

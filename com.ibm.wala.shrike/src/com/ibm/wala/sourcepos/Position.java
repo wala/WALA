@@ -22,7 +22,7 @@ package com.ibm.wala.sourcepos;
  * format: {@code line-number << LINESHIFT + column-number}
  * 
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public final class Position {
 

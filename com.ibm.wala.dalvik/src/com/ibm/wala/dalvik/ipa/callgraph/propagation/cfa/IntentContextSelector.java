@@ -70,7 +70,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-14
  */
 public class IntentContextSelector implements ContextSelector {

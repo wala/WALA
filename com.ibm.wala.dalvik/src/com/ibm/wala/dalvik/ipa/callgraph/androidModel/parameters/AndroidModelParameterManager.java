@@ -62,13 +62,14 @@ import com.ibm.wala.util.ssa.SSAValue;
  *
  *  @see com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
  *
- *  @author  Tobias Blaschke <code@toiasblaschke.de>
+ *  @author  Tobias Blaschke &lt;code@toiasblaschke.de&gt;
  *  @since   2013-09-19
  *
  *  TODO:
- *  @todo   Track if a variable has been refered to to be able to prune unused Phi-Instructions later
- *  @todo   Trim Memory consumption? The whole class should not be in memory for long time so this
- *      might be not neccessary.
+ *  <ul>
+ *    <li>Track if a variable has been refered to to be able to prune unused Phi-Instructions later</li>
+ *    <li>Trim Memory consumption? The whole class should not be in *  memory for long time so this might be not neccessary.</li>
+ *  </ul>
  */
 public class AndroidModelParameterManager {
  

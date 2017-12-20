@@ -21,7 +21,7 @@ package com.ibm.wala.sourcepos;
  * This class represents a range in the source file.
  * 
  * @author Siegfried Weber
- * @author Juergen Graf <juergen.graf@gmail.com>
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public class Range {
 

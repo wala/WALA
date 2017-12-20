@@ -23,10 +23,10 @@ import com.ibm.wala.util.collections.Pair;
  * An InstanceKey serves as the representative for an equivalence class of
  * objects in the heap, that can be pointed to.
  * 
- * For example, for 0-CFA, an InstanceKey would embody an <IClass>... we model
+ * For example, for 0-CFA, an InstanceKey would embody an &lt;IClass&gt;... we model
  * all instances of a particular class
  * 
- * For 0-1-CFA, an InstanceKey could be <IMethod,statement #>, representing a
+ * For 0-1-CFA, an InstanceKey could be &lt;IMethod,statement #&gt;, representing a
  * particular allocation statement in a particular method.
  */
 public interface InstanceKey extends ContextItem {

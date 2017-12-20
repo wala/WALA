@@ -89,7 +89,7 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
   }
 
   /**
-   * A path edge <s_p, i> -> <n, j> was propagated, and <s_p, i> was an unbalanced seed.
+   * A path edge &lt;s_p, i&gt; -&gt; &lt;n, j&gt; was propagated, and &lt;s_p, i&gt; was an unbalanced seed.
    * So, we added a new seed callerSeed (to some return site) in the caller.  To be overridden
    * in subclasses.
    */

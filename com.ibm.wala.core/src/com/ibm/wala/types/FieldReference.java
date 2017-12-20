@@ -25,7 +25,7 @@ public final class FieldReference extends MemberReference {
   private final static boolean DEBUG = false;
 
   /**
-   * Used to canonicalize MemberReferences a mapping from Key -> MemberReference
+   * Used to canonicalize MemberReferences a mapping from Key -&gt; MemberReference
    */
   final private static HashMap<Key, FieldReference> dictionary = HashMapFactory.make();
 

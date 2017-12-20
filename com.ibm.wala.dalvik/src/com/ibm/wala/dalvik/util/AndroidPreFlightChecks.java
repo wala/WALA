@@ -59,7 +59,7 @@ import com.ibm.wala.types.TypeReference;
  *
  *  These checks may be run before building the CallGraph to verify everything is in place.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-11-01
  */
 public class AndroidPreFlightChecks {
@@ -128,7 +128,7 @@ public class AndroidPreFlightChecks {
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.Overrides.StartComponentMethodTargetSelector
      *
      *  @return if check passed
-     *  @todo this doesn't check anything yet
+     *  TODO: this doesn't check anything yet
      */
     public boolean checkOverridesInPlace() {
         boolean pass = true;

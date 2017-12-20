@@ -22,7 +22,7 @@ import com.ibm.wala.util.strings.Atom;
  */
 public final class MethodReference extends MemberReference {
   /**
-   * Used to canonicalize MethodReferences a mapping from Key -> MethodReference
+   * Used to canonicalize MethodReferences a mapping from Key -&gt; MethodReference
    */
   final private static HashMap<Key, MethodReference> dictionary = HashMapFactory.make();
 

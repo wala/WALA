@@ -249,7 +249,6 @@ public abstract class AbstractPtrTest {
 
   /**
    * @param scope
-   * @return
    * @throws ClassHierarchyException
    */
   private static IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
@@ -261,7 +260,6 @@ public abstract class AbstractPtrTest {
 
   /**
    * @param scopeFile
-   * @return
    * @throws IOException
    */
   private AnalysisScope findOrCreateAnalysisScope() throws IOException {

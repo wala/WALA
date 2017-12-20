@@ -76,7 +76,7 @@ import com.ibm.wala.util.strings.StringStuff;
  *
  *  See the single settings for further description.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public final /* singleton */ class AndroidEntryPointManager implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
@@ -583,7 +583,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  @param  intent  The intent to resolve
      *  @return where to resolve it to or the given intent if no information is available
      *
-     *  @todo TODO: Malicious Intent-Table could cause endless loops
+     *  TODO: TODO: Malicious Intent-Table could cause endless loops
      */
     public Intent getIntent(Intent intent) {
         if (overrideIntents.containsKey(intent)) {

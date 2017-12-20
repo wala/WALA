@@ -24,7 +24,7 @@ public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstTyp
    * is an index into the instruction array that contains all the instructions
    * for the method.
    * 
-   * If the result is < 0, the block has no instructions
+   * If the result is &lt; 0, the block has no instructions
    * 
    * @return the instruction index for the first instruction in the basic block.
    */
@@ -35,7 +35,7 @@ public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstTyp
    * is an index into the instruction array that contains all the instructions
    * for the method.
    * 
-   * If the result is < 0, the block has no instructions
+   * If the result is &lt; 0, the block has no instructions
    * 
    * @return the instruction index for the last instruction in the basic block
    */

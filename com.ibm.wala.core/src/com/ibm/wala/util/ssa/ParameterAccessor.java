@@ -77,7 +77,7 @@ import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
  *  If you want to alter the values of the incoming parameters you may also want to use the ParameterManager
  *  which tracks the changes.
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-19
  */
 public class ParameterAccessor {
@@ -142,7 +142,7 @@ public class ParameterAccessor {
      *
      *  Use .getNumber() to access the associated SSA-Value.
      *
-     *  @author Tobias Blaschke <code@tobiasblaschke.de>
+     *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
      *  @since  2013-10-19
      */
     public static class Parameter extends SSAValue {
@@ -1582,7 +1582,7 @@ public class ParameterAccessor {
     }
 
     /**
-     *  Shorthand for forInvokeStatic(final List<? extends Parameter> args, final ParameterAccessor target, final IClassHierarchy cha).
+     *  Shorthand for forInvokeStatic(final List&lt;? extends Parameter&gt; args, final ParameterAccessor target, final IClassHierarchy cha).
      *
      *  Generates a new ParameterAccessor for target and hands the call through.
      */
@@ -1591,7 +1591,7 @@ public class ParameterAccessor {
     }
 
     /**
-     *  Shorthand for forInvokeVirtual(final int self, final List<? extends Parameter> args, final ParameterAccessor target, final IClassHierarchy cha).
+     *  Shorthand for forInvokeVirtual(final int self, final List&lt;? extends Parameter&gt; args, final ParameterAccessor target, final IClassHierarchy cha).
      *
      *  Generates a new ParameterAccessor for target and hands the call through.
      */

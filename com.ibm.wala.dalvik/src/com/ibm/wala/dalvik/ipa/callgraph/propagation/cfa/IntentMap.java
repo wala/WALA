@@ -54,7 +54,7 @@ import com.ibm.wala.util.strings.StringStuff;
  *
  *  This class is only of use in conjunction with the IntentContextSelector
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 /*package*/ class IntentMap {
     private final Map<InstanceKey, Intent> seen = new HashMap<>();

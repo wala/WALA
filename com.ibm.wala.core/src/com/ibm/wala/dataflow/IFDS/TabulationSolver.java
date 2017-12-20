@@ -110,23 +110,23 @@ public class TabulationSolver<T, P, F> {
   private final TabulationProblem<T, P, F> problem;
 
   /**
-   * A map from Object (entry node in supergraph) -> LocalPathEdges.
+   * A map from Object (entry node in supergraph) -&gt; LocalPathEdges.
    *
-   * Logically, this represents a set of edges (s_p,d_i) -> (n, d_j). The data structure is chosen to attempt to save space over
+   * Logically, this represents a set of edges (s_p,d_i) -&gt; (n, d_j). The data structure is chosen to attempt to save space over
    * representing each edge explicitly.
    */
   final private Map<T, LocalPathEdges> pathEdges = HashMapFactory.make();
 
   /**
-   * A map from Object (entry node in supergraph) -> CallFlowEdges.
+   * A map from Object (entry node in supergraph) -&gt; CallFlowEdges.
    *
-   * Logically, this represents a set of edges (c,d_i) -> (s_p, d_j). The data structure is chosen to attempt to save space over
+   * Logically, this represents a set of edges (c,d_i) -&gt; (s_p, d_j). The data structure is chosen to attempt to save space over
    * representing each edge explicitly.
    */
   final private Map<T, CallFlowEdges> callFlowEdges = HashMapFactory.make();
 
   /**
-   * A map from Object (procedure) -> LocalSummaryEdges.
+   * A map from Object (procedure) -&gt; LocalSummaryEdges.
    *
    */
   final protected Map<P, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
@@ -754,7 +754,7 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Returns <code>true</code> iff the path edge was not previously
+   * Propagate the fact &lt;s_p,i&gt; -&gt; &lt;n, j&gt; has arisen as a path edge. Returns &lt;code&gt;true&lt;/code&gt; iff the path edge was not previously
    * observed.
    *
    * @param s_p entry block
@@ -791,10 +791,10 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and
-   * <s_p,i> -><n, z>.
+   * Merging: suppose we're doing propagate &lt;s_p,i&gt; -&gt; &lt;n,j&gt; but we already have path edges &lt;s_p,i&gt; -&gt; &lt;n, x&gt;, &lt;s_p,i&gt; -&gt; &lt;n,y&gt;, and
+   * &lt;s_p,i&gt; -&gt;&lt;n, z&gt;.
    *
-   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
+   * let \alpha be the merge function. then instead of &lt;s_p,i&gt; -&gt; &lt;n,j&gt;, we propagate &lt;s_p,i&gt; -&gt; &lt;n, \alpha(j,x,y,z) &gt; !!!
    *
    * return -1 if no fact should be propagated
    */
@@ -1042,9 +1042,9 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * Indicates that due to a path edge <s_p, d1> -> <n, d2> (the 'edge'
-   * parameter) and a normal flow function application, a new path edge <s_p,
-   * d1> -> <m, d3> was created. To be overridden in subclasses. We also use
+   * Indicates that due to a path edge &lt;s_p, d1&gt; -&gt; &lt;n, d2&gt; (the 'edge'
+   * parameter) and a normal flow function application, a new path edge &lt;s_p,
+   * d1&gt; -&gt; &lt;m, d3&gt; was created. To be overridden in subclasses. We also use
    * this function to record call-to-return flow.
    *
    */
@@ -1054,9 +1054,9 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * Indicates that due to a path edge 'edge' <s_p, d1> -> <n, d2> and
-   * application of a call flow function, a new path edge <calleeEntry, d3> ->
-   * <calleeEntry, d3> was created. To be overridden in subclasses.
+   * Indicates that due to a path edge 'edge' &lt;s_p, d1&gt; -&gt; &lt;n, d2&gt; and
+   * application of a call flow function, a new path edge &lt;calleeEntry, d3&gt; -&gt;
+   * &lt;calleeEntry, d3&gt; was created. To be overridden in subclasses.
    *
    */
   @SuppressWarnings("unused")
@@ -1066,10 +1066,10 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Combines [25] and [26-28]. In the caller we have a path edge
-   * 'edgeToCallSite' <s_c, d3> -> <c, d4>, where c is the call site. In the
-   * callee, we have path edge 'calleeSummaryEdge' <s_p, d1> -> <e_p, d2>. Of
-   * course, there is a call edge <c, d4> -> <s_p, d1>. Finally, we have a
-   * return edge <e_p, d2> -> <returnSite, d5>.
+   * 'edgeToCallSite' &lt;s_c, d3&gt; -&gt; &lt;c, d4&gt;, where c is the call site. In the
+   * callee, we have path edge 'calleeSummaryEdge' &lt;s_p, d1&gt; -&gt; &lt;e_p, d2&gt;. Of
+   * course, there is a call edge &lt;c, d4&gt; -&gt; &lt;s_p, d1&gt;. Finally, we have a
+   * return edge &lt;e_p, d2&gt; -&gt; &lt;returnSite, d5&gt;.
    */
   @SuppressWarnings("unused")
   protected void newSummaryEdge(PathEdge<T> edgeToCallSite, PathEdge<T> calleeSummaryEdge, T returnSite, int d5) {

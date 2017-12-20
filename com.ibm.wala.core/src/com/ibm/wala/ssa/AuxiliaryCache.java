@@ -26,19 +26,19 @@ import com.ibm.wala.util.ref.CacheReference;
 /**
  * A cache for auxiliary information based on an SSA representation
  * 
- * A mapping from (IMethod,Context) -> SSAOptions -> SoftReference -> something
+ * A mapping from (IMethod,Context) -&gt; SSAOptions -&gt; SoftReference -&gt; something
  * 
  * This doesn't work very well ... GCs don't do such a great job with SoftReferences ... revamp it.
  */
 public class AuxiliaryCache implements IAuxiliaryCache {
 
   /**
-   * A mapping from IMethod -> SSAOptions -> SoftReference -> IR
+   * A mapping from IMethod -&gt; SSAOptions -&gt; SoftReference -&gt; IR
    */
   private HashMap<Pair<IMethod, Context>, Map<SSAOptions, Object>> dictionary = HashMapFactory.make();
 
   /**
-   * Help out the garbage collector: clear this cache when the number of items is > RESET_THRESHOLD
+   * Help out the garbage collector: clear this cache when the number of items is &gt; RESET_THRESHOLD
    */
   final private static int RESET_THRESHOLD = 2000;
 

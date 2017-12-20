@@ -23,7 +23,7 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 /**
  * A wrapper for the interprocedural analysis result.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 class InterprocAnalysisResultWrapper implements InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> {

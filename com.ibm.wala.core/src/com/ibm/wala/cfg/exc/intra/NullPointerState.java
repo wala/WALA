@@ -22,7 +22,7 @@ import com.ibm.wala.ssa.SymbolTable;
 /**
  * States for the ssa variables.
  * 
- * @author Juergen Graf <graf@kit.edu>
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
  */
 public class NullPointerState extends AbstractVariable<NullPointerState> {
@@ -76,7 +76,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
    * <pre>
    * v3 = phi v1, v2
    * ^ := Meet-operator
-   * f := phiValueMeetFunction(3, {1, 2}) = v1,v2,v3 -> v1,v2,[v1 ^ v2]
+   * f := phiValueMeetFunction(3, {1, 2}) = v1,v2,v3 -&gt; v1,v2,[v1 ^ v2]
    * 
    * f(1,?,?) ^ f(?,1,?) = 1,?,? ^ ?,1,? = 1,1,?
    * 
@@ -134,7 +134,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
    * <pre>
    * ? == unknown, 1 == not null, 0 == null, * == both
    * 
-   * meet | ? | 0 | 1 | * |  <- rhs
+   * meet | ? | 0 | 1 | * |  &lt;- rhs
    * -----|---|---|---|---|
    *    ? | ? | 0 | 1 | * |
    * -----|---|---|---|---|

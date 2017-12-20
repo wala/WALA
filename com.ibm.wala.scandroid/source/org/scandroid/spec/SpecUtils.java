@@ -58,7 +58,6 @@ public class SpecUtils {
 	 * 
 	 * @param s1
 	 * @param s2
-	 * @return
 	 */
 	public static ISpecs combine(final ISpecs s1, final ISpecs s2) {
 		return new ISpecs() {

@@ -47,7 +47,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  *  Constants for types used by the AndroidModel
  *
- *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author     Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public final class AndroidTypes {
 

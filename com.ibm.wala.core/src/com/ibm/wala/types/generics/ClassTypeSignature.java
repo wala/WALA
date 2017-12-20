@@ -28,7 +28,7 @@ import com.ibm.wala.types.TypeReference;
  *   Identifier TypeArguments?
  *   
  * TypeArguments:
- *   <TypeArguments+>
+ *   &lt;TypeArguments+&gt;
  * 
  * @author sjfink
  * 

@@ -107,7 +107,6 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
 
   /**
    * @param preprocessor CAst rewriter to use for preprocessing JavaScript source files; may be null
-   * @return
    */
   public static JavaScriptLoaderFactory makeLoaders(CAstRewriterFactory<?, ?> preprocessor) {
     if (translatorFactory == null) {

@@ -70,7 +70,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel
  *  @see    com.ibm.wala.dalvik.util.AndroidEntryPointManager
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-10-23
  */
 public class AndroidBoot {

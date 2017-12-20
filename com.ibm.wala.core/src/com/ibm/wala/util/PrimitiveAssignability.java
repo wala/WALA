@@ -54,7 +54,7 @@ import com.ibm.wala.types.TypeReference;
  *
  *  This Class does not consider Boxing / Unboxing 
  *
- *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  *  @since  2013-11-21
  */
 public class PrimitiveAssignability {

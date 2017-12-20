@@ -61,9 +61,9 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * This is used by the IntentContextSelector to add an IntentContext to this Methods.
  *
  * TODO:
- * @todo    Fill in better values for targetAccuracy and componentType
- * @todo    Add declaring class
- * @author  Tobias Blaschke <code@tobiasblaschke.de>
+ * TODO: Fill in better values for targetAccuracy and componentType
+ * TODO: Add declaring class
+ * @author  Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  * @since   1013-10-16
  */
 public class IntentStarters {

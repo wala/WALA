@@ -22,7 +22,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 
 /**
- * @author Brian Pfretzschner <brian.pfretzschner@gmail.com>
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
  */
 public class NodejsRequireJsonTest {
 

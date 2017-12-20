@@ -63,14 +63,14 @@ public class TypeBasedHeapModel implements HeapModel {
   private final Collection<CGNode> nodesHandled = HashSetFactory.make();
 
   /**
-   * Map: <PointerKey> -> thing, where thing is a FilteredPointerKey or an InstanceKey representing a constant.
+   * Map: &lt;PointerKey&gt; -&gt; thing, where thing is a FilteredPointerKey or an InstanceKey representing a constant.
    * 
    * computed lazily
    */
   private Map<PointerKey, Object> pKeys;
 
   /**
-   * @param klasses Collection<IClass>
+   * @param klasses Collection&lt;IClass&gt;
    * @throws IllegalArgumentException if cg is null
    */
   public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {

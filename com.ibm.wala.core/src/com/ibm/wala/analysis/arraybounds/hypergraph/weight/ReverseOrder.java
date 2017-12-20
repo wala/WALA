@@ -5,7 +5,7 @@ import java.util.Comparator;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 
 /**
- * Defines a reverse Order on Weight: ... > 1 > 0 > -1 > ... > unlimited not_set
+ * Defines a reverse Order on Weight: ... &gt; 1 &gt; 0 &gt; -1 &gt; ... &gt; unlimited not_set
  * is not comparable
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
