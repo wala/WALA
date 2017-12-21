@@ -1,23 +1,23 @@
-sourceSets.main {
+sourceSets.test {
 	java.srcDir 'source'
 	resources.srcDir 'testdata'
 }
 
 dependencies {
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.cast.java')
-	compile project(':com.ibm.wala.cast.java.ecj')
-	compile project(':com.ibm.wala.cast.java.test')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.core.tests')
-	compile project(':com.ibm.wala.ide')
-	compile project(':com.ibm.wala.ide.jdt')
-	compile project(':com.ibm.wala.ide.tests')
-	compile project(':com.ibm.wala.shrike')
-	compile project(':com.ibm.wala.util')
-	compile 'junit:junit:4.11'
-	compile 'org.eclipse.core:org.eclipse.core.runtime:3.10.0.v20140318-2214'
-	compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50'
-	compile 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
-	runtime 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
+	testCompile 'junit:junit:4.11'
+	testCompile 'org.eclipse.core:org.eclipse.core.runtime:3.10.0.v20140318-2214'
+	testCompile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50'
+	testCompile 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
+	testCompile project(':com.ibm.wala.cast')
+	testCompile project(':com.ibm.wala.cast.java')
+	testCompile project(':com.ibm.wala.cast.java.ecj')
+	testCompile project(':com.ibm.wala.core')
+	testCompile project(':com.ibm.wala.ide')
+	testCompile project(':com.ibm.wala.ide.jdt')
+	testCompile project(':com.ibm.wala.shrike')
+	testCompile project(':com.ibm.wala.util')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.java.test')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests')
+	testRuntime 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
 }

@@ -4,11 +4,11 @@ sourceSets.main {
 }
 
 dependencies {
-	compile project(':com.ibm.wala.util')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.shrike')
-	compile project(':com.ibm.wala.core.tests')
 	compile project(':com.ibm.wala.cast')
+	compile project(':com.ibm.wala.core')
+	// compile project(':com.ibm.wala.core.tests')
+	compile project(':com.ibm.wala.shrike')
+	compile project(':com.ibm.wala.util')
 	compile 'commons-io:commons-io:2.4'
 	compile 'net.htmlparser.jericho:jericho-html:3.2'
 }

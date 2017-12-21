@@ -1,14 +1,18 @@
-sourceSets.main.java.srcDir 'harness-src'
+plugins {
+	id 'com.github.hauner.jarTest' version '1.0.1'
+}
+
+sourceSets.test.java.srcDir 'harness-src'
 
 dependencies {
-	compile project(':com.ibm.wala.cast.js.rhino')
-	compile project(':com.ibm.wala.shrike')
-	compile project(':com.ibm.wala.util')
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.core.tests')
-	compile project(':com.ibm.wala.cast.js')
-	compile project(':com.ibm.wala.cast.js.test')
-	compile project(':com.ibm.wala.cast.test')
-	compile 'junit:junit:4.11'
+	testCompile 'junit:junit:4.11'
+	testCompile project(':com.ibm.wala.cast')
+	testCompile project(':com.ibm.wala.cast.js')
+	testCompile project(':com.ibm.wala.cast.js.rhino')
+	testCompile project(':com.ibm.wala.core')
+	testCompile project(':com.ibm.wala.shrike')
+	testCompile project(':com.ibm.wala.util')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.test')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
 }
