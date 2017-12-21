@@ -1,10 +1,14 @@
-sourceSets.main.java.srcDir 'harness-src/java'
+plugins {
+	id 'com.github.hauner.jarTest' version '1.0.1'
+}
+
+sourceSets.test.java.srcDir 'harness-src/java'
 // TODO: hook up harness-src/c somehow
 
 dependencies {
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.core.tests')
-	compile project(':com.ibm.wala.util')
-	compile 'junit:junit:4.11'
+	testCompile 'junit:junit:4.11'
+	testCompile project(':com.ibm.wala.cast')
+	testCompile project(':com.ibm.wala.core')
+	testCompile project(':com.ibm.wala.util')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
 }

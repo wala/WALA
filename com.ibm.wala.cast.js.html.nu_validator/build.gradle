@@ -1,15 +1,16 @@
 sourceSets {
-	main.java.srcDirs = ['src', 'tests']
+	main.java.srcDir 'src'
+	test.java.srcDir 'tests'
 }
 
 dependencies {
-	compile project(':com.ibm.wala.util')
 	compile project(':com.ibm.wala.cast')
 	compile project(':com.ibm.wala.cast.js')
-	compile project(':com.ibm.wala.cast.js.rhino.test')
-	compile project(':com.ibm.wala.cast.test')
-	compile project(':com.ibm.wala.cast.js.test')
-	compile project(':com.ibm.wala.core.tests')
+	compile project(':com.ibm.wala.util')
 	compile 'nu.validator.htmlparser:htmlparser:1.4'
-}
 
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
+	testCompile project(':com.ibm.wala.cast.test')
+	testCompile project(':com.ibm.wala.core.tests')
+}
