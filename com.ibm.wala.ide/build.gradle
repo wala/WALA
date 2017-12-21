@@ -1,8 +1,6 @@
 sourceSets.main.java.srcDir 'src'
 
 dependencies {
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.util')
 	compile 'org.eclipse.pde:org.eclipse.pde.core:3.11.1'
 	compile 'org.eclipse.platform:org.eclipse.core.commands:3.9.0'
 	compile 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
@@ -12,4 +10,6 @@ dependencies {
 	compile 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
 	compile 'org.eclipse.platform:org.eclipse.swt.${osgi.platform}:3.106.1'
 	compile 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.util')
 }
