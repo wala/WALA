@@ -4,13 +4,12 @@ sourceSets {
 }
 
 dependencies {
+	compile 'nu.validator.htmlparser:htmlparser:1.4'
 	compile project(':com.ibm.wala.cast')
 	compile project(':com.ibm.wala.cast.js')
 	compile project(':com.ibm.wala.util')
-	compile 'nu.validator.htmlparser:htmlparser:1.4'
-
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test')
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
 	testCompile project(':com.ibm.wala.cast.test')
 	testCompile project(':com.ibm.wala.core.tests')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test')
+	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
 }

@@ -1,9 +1,9 @@
 sourceSets.main.java.srcDir 'source'
 
 dependencies {
-	compile project(':com.ibm.wala.util')
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.cast.js')
 	compile 'org.mozilla:rhino:1.7.7.1'
+	compile project(':com.ibm.wala.cast')
+	compile project(':com.ibm.wala.cast.js')
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.util')
 }

@@ -1,12 +1,6 @@
 sourceSets.main.java.srcDir 'source'
 
 dependencies {
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.cast.java')
-	compile project(':com.ibm.wala.cast.java.ecj')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.ide')
-	compile project(':com.ibm.wala.util')
 	compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50'
 	compile 'org.eclipse.platform:org.eclipse.core.jobs:3.9.1'
 	compile 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
@@ -14,7 +8,13 @@ dependencies {
 	compile 'org.eclipse.platform:org.eclipse.equinox.app:1.3.400'
 	compile 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
 	compile 'org.eclipse.platform:org.eclipse.jface:3.13.1'
+	compile 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
 	compile 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
 	compile 'org.osgi:org.osgi.core:4.2.0'
-	compile 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
+	compile project(':com.ibm.wala.cast')
+	compile project(':com.ibm.wala.cast.java')
+	compile project(':com.ibm.wala.cast.java.ecj')
+	compile project(':com.ibm.wala.core')
+	compile project(':com.ibm.wala.ide')
+	compile project(':com.ibm.wala.util')
 }
