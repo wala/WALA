@@ -74,7 +74,13 @@ buildscript {
 allprojects {
 	apply plugin: 'nebula.lint'
 	gradleLint.alwaysRun = false
-	gradleLint.rules = ['all-dependency']
+	gradleLint {
+		rules = ['all-dependency']
+		excludedRules = [
+			'duplicate-dependency-class',
+			'transitive-duplicate-dependency-class',
+			]
+	}
 }
 
 
