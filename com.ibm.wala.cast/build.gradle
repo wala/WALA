@@ -1,3 +1,5 @@
+apply plugin: 'cpp'
+
 sourceSets.main.java.srcDir 'source/java'
 
 dependencies {
@@ -5,4 +7,28 @@ dependencies {
 	compile project(':com.ibm.wala.core')
 	compile project(':com.ibm.wala.shrike')
 	compile project(':com.ibm.wala.util')
+}
+
+def jvm = org.gradle.internal.jvm.Jvm.current()
+
+model {
+	components {
+		cast(NativeLibrarySpec) {
+			sources {
+				cpp {
+					source {
+						srcDir 'source/c/jni'
+						include '*.cpp'
+					}
+				}
+			}
+			def library = it
+			binaries.all {
+				def jniIncludeDir = "${jvm.getJavaHome()}/include"
+				cppCompiler.args '-I', "${library.properties.sources.cpp.source.srcDirs[0].parent}/include"
+				cppCompiler.args '-I', jniIncludeDir
+				cppCompiler.args '-I', "${jniIncludeDir}/linux" // TODO: make more portable
+			}
+		}
+	}
 }
