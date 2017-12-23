@@ -453,7 +453,8 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
 
     // check parent, caching if found
-    if (!selector.equals(MethodReference.clinitSelector) && !selector.equals(MethodReference.initSelector)) {
+    if (!selector.equals(MethodReference.clinitSelector) 
+        && !selector.getName().equals(MethodReference.initAtom)) {
       IClass superclass = getSuperclass();
       if (superclass != null) {
         IMethod inherit = superclass.getMethod(selector);

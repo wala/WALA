@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -28,6 +29,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
@@ -95,5 +97,13 @@ public class GetTargetsTest extends WalaTestCase {
       System.err.println(method);
     }
     Assert.assertEquals(1, c.size());
+  }
+  
+  @Test
+  public void testConstructorLookup() {
+    IClass testKlass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, 
+        "LmethodLookup/MethodLookupStuff$B"));
+    IMethod m = testKlass.getMethod(Selector.make("<init>(I)V"));
+    Assert.assertNull(m);
   }
 }
