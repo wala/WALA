@@ -9,25 +9,36 @@ dependencies {
 	compile project(':com.ibm.wala.util')
 }
 
-def jvm = org.gradle.internal.jvm.Jvm.current()
+def currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome
 
 model {
-	components {
-		cast(NativeLibrarySpec) {
-			sources {
-				cpp {
-					source {
-						srcDir 'source/c/jni'
-						include '*.cpp'
-					}
+	repositories {
+		libs(PrebuiltLibraries) {
+			jdk {
+				def jniIncludeDir = "$currentJavaHome/include"
+				// TODO: make "linux" more portable on next line; should be "win32" on Windows; should be "darwin" on MacOS
+				headers.srcDirs files(jniIncludeDir, "$jniIncludeDir/linux")
+				binaries.withType(SharedLibraryBinary) {
+					// TODO: make next line more portable
+					sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/amd64/server/libjvm.so")
 				}
 			}
-			def library = it
+		}
+	}
+	components {
+		cast(NativeLibrarySpec) {
+			sources.cpp {
+				def cSourceDir = 'source/c'
+				source {
+					srcDir "$cSourceDir/jni"
+					include '*.cpp'
+				}
+				exportedHeaders.srcDir "$cSourceDir/include"
+			}
 			binaries.all {
-				def jniIncludeDir = "${jvm.getJavaHome()}/include"
-				cppCompiler.args '-I', "${library.properties.sources.cpp.source.srcDirs[0].parent}/include"
-				cppCompiler.args '-I', jniIncludeDir
-				cppCompiler.args '-I', "${jniIncludeDir}/linux" // TODO: make more portable
+				lib library: 'jdk'
+				// TODO: compute path on following line from 'jdk' library properties somehow
+				linker.args '-Wl,-rpath', "$currentJavaHome/jre/lib/amd64/server"
 			}
 		}
 	}
