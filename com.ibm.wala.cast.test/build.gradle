@@ -2,8 +2,9 @@ plugins {
 	id 'com.github.hauner.jarTest' version '1.0.1'
 }
 
+apply plugin: 'cpp'
+
 sourceSets.test.java.srcDir 'harness-src/java'
-// TODO: hook up harness-src/c somehow
 
 dependencies {
 	testCompile 'junit:junit:4.11'
@@ -12,3 +13,75 @@ dependencies {
 	testCompile project(':com.ibm.wala.util')
 	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
 }
+
+// TODO: build following targets for "test"-only, not "main"
+
+def currentJvm = org.gradle.internal.jvm.Jvm.current()
+
+task generateJniHeaders(type: Exec, dependsOn: [testClasses, ':com.ibm.wala.cast:classes']) {
+	// classes for which we need headers
+	def nativePackage = 'com.ibm.wala.cast.test'
+	def nativeClasses = ['TestNativeTranslator']
+	def qualifiedClasses = nativeClasses.collect { "$nativePackage.$it" }
+
+	// inputs and outputs, suitable for use with rule-based model configuration
+	ext {
+		sourceDir = null
+		headerDir = "$buildDir/include"
+	}
+	inputs.files files(qualifiedClasses.collect { "$buildDir/${it.replace('.', '/')}.class" })
+	outputs.files files(qualifiedClasses.collect { "$headerDir/${it.replace('.', '_')}.h" })
+
+	// javah command to generate headers
+	def sourceSets = [sourceSets.test, project(':com.ibm.wala.cast').sourceSets.main]
+	def classesDirs = sourceSets.inject(files()) { acc, val -> acc.plus(val.output.classesDirs) }
+	def classpath = classesDirs.join(':')
+	def javah = currentJvm.getExecutable('javah')
+	commandLine(javah, '-d', "$headerDir", '-classpath', classpath)
+	args(qualifiedClasses)
+}
+
+model {
+	components {
+		xlator_test(NativeLibrarySpec) {
+			sources.cpp {
+				source {
+					srcDir 'harness-src/c'
+					include 'smoke.cpp'
+				}
+				generatedBy tasks.generateJniHeaders
+			}
+			binaries {
+				withType(StaticLibraryBinarySpec) {
+					buildable = false
+				}
+				all {
+					['cast', 'jdk'].each {
+						lib project: ':com.ibm.wala.cast', library: it
+					}
+					// TODO: compute path on following line from 'cast' library properties somehow
+					linker.args '-Wl,-rpath', "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
+					// TODO: compute path on following line from 'jdk' library properties somehow
+					linker.args '-Wl,-rpath', "${currentJvm.javaHome}/jre/lib/amd64/server"
+				}
+			}
+		}
+		smoke_main(NativeExecutableSpec) {
+			sources.cpp.source {
+				srcDir 'harness-src/c'
+				include 'smoke_main.cpp'
+			}
+			binaries.all {
+				['cast', 'jdk'].each {
+					lib project: ':com.ibm.wala.cast', library: it
+				}
+				// TODO: compute path on following line from 'cast' library properties somehow
+				linker.args '-Wl,-rpath', "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
+				// TODO: compute path on following line from 'jdk' library properties somehow
+				linker.args '-Wl,-rpath', "${currentJvm.javaHome}/jre/lib/amd64/server"
+			}
+		}
+	}
+}
+
+// TODO: running the Java tests in this subproject requires the xlator_test library, since the Java test code loads the xlator_test library at run time
