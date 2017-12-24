@@ -50,15 +50,15 @@ model {
 					include 'smoke.cpp'
 				}
 				generatedBy tasks.generateJniHeaders
+				['cast', 'jdk'].each {
+					lib project: ':com.ibm.wala.cast', library: it
+				}
 			}
 			binaries {
 				withType(StaticLibraryBinarySpec) {
 					buildable = false
 				}
 				all {
-					['cast', 'jdk'].each {
-						lib project: ':com.ibm.wala.cast', library: it
-					}
 					// TODO: compute path on following line from 'cast' library properties somehow
 					linker.args '-Wl,-rpath', "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
 					// TODO: compute path on following line from 'jdk' library properties somehow
@@ -67,14 +67,16 @@ model {
 			}
 		}
 		smoke_main(NativeExecutableSpec) {
-			sources.cpp.source {
-				srcDir 'harness-src/c'
-				include 'smoke_main.cpp'
-			}
-			binaries.all {
+			sources.cpp {
+				source {
+					srcDir 'harness-src/c'
+					include 'smoke_main.cpp'
+				}
 				['cast', 'jdk'].each {
 					lib project: ':com.ibm.wala.cast', library: it
 				}
+			}
+			binaries.all {
 				// TODO: compute path on following line from 'cast' library properties somehow
 				linker.args '-Wl,-rpath', "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
 				// TODO: compute path on following line from 'jdk' library properties somehow
