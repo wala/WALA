@@ -4,6 +4,6 @@ tasks.javadoc {
 	dependsOn ':com.ibm.wala.core:compileJava'
 
 	doFirst {
-		classpath += files(new File(project(':com.ibm.wala.core').buildDir, 'classes/java/main'))
+		classpath += files(project(':com.ibm.wala.core').tasks.compileJava)
 	}
 }
