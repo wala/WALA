@@ -187,7 +187,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Visit all instructions in a node, and add dataflow constraints induced by each statement in the SSA form.
    * @throws CancelException 
    * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#addConstraintsFromNode(com.ibm.wala.ipa.callgraph.CGNode)
+   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#addConstraintsFromNode(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.util.MonitorUtil.IProgressMonitor)
    */
   @Override
   protected boolean addConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException {
