@@ -10,3 +10,11 @@ dependencies {
 	compile project(':com.ibm.wala.shrike')
 	compile project(':com.ibm.wala.util')
 }
+
+tasks.javadoc {
+	dependsOn ':com.ibm.wala.dalvik:compileJava'
+
+	doFirst {
+		classpath += files(project(':com.ibm.wala.dalvik').tasks.compileJava)
+	}
+}

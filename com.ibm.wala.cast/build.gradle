@@ -9,6 +9,14 @@ dependencies {
 	compile project(':com.ibm.wala.util')
 }
 
+tasks.javadoc {
+	dependsOn ':com.ibm.wala.cast.js:compileJava'
+
+	doFirst {
+		classpath += files(project(':com.ibm.wala.cast.js').tasks.compileJava)
+	}
+}
+
 def currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome
 
 model {
