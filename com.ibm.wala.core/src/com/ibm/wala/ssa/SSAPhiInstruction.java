@@ -147,7 +147,7 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getValueString(SymbolTable, ValueDecorator, int)
+   * @see com.ibm.wala.ssa.SSAInstruction#getValueString(SymbolTable, int)
    */
   @Override
   protected String getValueString(SymbolTable symbolTable, int valueNumber) {
