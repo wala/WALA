@@ -1,4 +1,4 @@
-sourceSets.main.java.srcDir 'src'
+sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
 	compile 'org.eclipse.pde:org.eclipse.pde.core:3.11.1'

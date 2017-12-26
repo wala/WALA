@@ -1,6 +1,6 @@
 sourceSets.main {
-	java.srcDir 'src'
-	resources.srcDir 'dat'
+	java.srcDirs = ['src']
+	resources.srcDirs = ['dat']
 }
 
 dependencies {

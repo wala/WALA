@@ -1,4 +1,4 @@
-sourceSets.main.java.srcDir 'src'
+sourceSets.main.java.srcDirs = ['src']
 
 tasks.javadoc {
 	def coreCompileJava = project(':com.ibm.wala.core').tasks.compileJava

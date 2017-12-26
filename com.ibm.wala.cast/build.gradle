@@ -1,6 +1,6 @@
 apply plugin: 'cpp'
 
-sourceSets.main.java.srcDir 'source/java'
+sourceSets.main.java.srcDirs = ['source/java']
 
 dependencies {
 	compile 'commons-io:commons-io:2.4'
@@ -38,10 +38,10 @@ model {
 			sources.cpp {
 				def cSourceDir = 'source/c'
 				source {
-					srcDir "$cSourceDir/jni"
+					srcDirs = ["$cSourceDir/jni"]
 					include '*.cpp'
 				}
-				exportedHeaders.srcDir "$cSourceDir/include"
+				exportedHeaders.srcDirs = ["$cSourceDir/include"]
 				lib library: 'jdk'
 			}
 			binaries.all {

@@ -1,6 +1,6 @@
 sourceSets.test {
-	java.srcDir 'source'
-	resources.srcDir 'data'
+	java.srcDirs = ['source']
+	resources.srcDirs = ['data']
 }
 
 dependencies {

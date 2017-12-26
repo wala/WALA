@@ -4,7 +4,7 @@ plugins {
 
 apply plugin: 'cpp'
 
-sourceSets.test.java.srcDir 'harness-src/java'
+sourceSets.test.java.srcDirs = ['harness-src/java']
 
 dependencies {
 	testCompile 'junit:junit:4.11'
@@ -46,7 +46,7 @@ model {
 		xlator_test(NativeLibrarySpec) {
 			sources.cpp {
 				source {
-					srcDir 'harness-src/c'
+					srcDirs = ['harness-src/c']
 					include 'smoke.cpp'
 				}
 				generatedBy tasks.generateJniHeaders
@@ -69,7 +69,7 @@ model {
 		smoke_main(NativeExecutableSpec) {
 			sources.cpp {
 				source {
-					srcDir 'harness-src/c'
+					srcDirs = ['harness-src/c']
 					include 'smoke_main.cpp'
 				}
 				['cast', 'jdk'].each {
