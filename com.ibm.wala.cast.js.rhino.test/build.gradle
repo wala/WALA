@@ -2,7 +2,10 @@ plugins {
 	id 'com.github.hauner.jarTest' version '1.0.1'
 }
 
-sourceSets.test.java.srcDirs = ['harness-src']
+sourceSets.test {
+	java.srcDirs = ['harness-src']
+	resources.srcDirs = [project(':com.ibm.wala.cast.js.test.data').file('examples-src')]
+}
 
 dependencies {
 	testCompile 'junit:junit:4.11'
@@ -16,3 +19,5 @@ dependencies {
 	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.test')
 	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
 }
+
+test.environment 'TRAVIS', 1
