@@ -86,4 +86,9 @@ model {
 	}
 }
 
-// TODO: running the Java tests in this subproject requires the xlator_test library, since the Java test code loads the xlator_test library at run time
+// TODO: Java tests in this subproject should depend on the xlator_test library at run time
+
+test {
+	// TODO: compute path on following line from 'xlator_test' library properties somehow
+	systemProperty "java.library.path", "$buildDir/libs/xlator_test/shared"
+}
