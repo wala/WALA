@@ -1,6 +1,9 @@
 sourceSets.test {
 	java.srcDirs = ['source']
-	resources.srcDirs = ['testdata']
+	resources.srcDirs = [
+		'testdata',
+		project(':com.ibm.wala.cast.java.test.data').sourceSets.test.java,
+		]
 }
 
 dependencies {
