@@ -8,8 +8,6 @@ dependencies {
 	testCompile 'org.eclipse.core:org.eclipse.core.runtime:3.10.0.v20140318-2214'
 	testCompile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50'
 	testCompile 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
-	testCompile 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
-	testCompile 'org.osgi:org.osgi.core:4.2.0'
 	testCompile project(':com.ibm.wala.cast')
 	testCompile project(':com.ibm.wala.cast.java')
 	testCompile project(':com.ibm.wala.cast.java.ecj')
@@ -21,4 +19,5 @@ dependencies {
 	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.java.test')
 	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
 	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests')
+	testRuntime 'org.eclipse.platform:org.eclipse.osgi:3.12.50'
 }
