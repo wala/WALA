@@ -1,1 +1,1 @@
-sourceSets.test.java.srcDir 'src'
+sourceSets.test.java.srcDirs = ['src']

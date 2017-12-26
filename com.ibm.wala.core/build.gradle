@@ -1,5 +1,5 @@
 sourceSets.main {
-	java.srcDir 'src'
+	java.srcDirs = ['src']
 	resources.srcDirs = [
 		'dat',
 		'lib',

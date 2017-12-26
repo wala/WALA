@@ -1,4 +1,4 @@
-sourceSets.main.java.srcDir 'source'
+sourceSets.main.java.srcDirs = ['source']
 
 dependencies {
 	compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50'

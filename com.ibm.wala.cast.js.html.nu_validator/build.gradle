@@ -1,8 +1,8 @@
 sourceSets {
-	main.java.srcDir 'src'
+	main.java.srcDirs = ['src']
 	test {
-		java.srcDir 'tests'
-		resources.srcDir project(':com.ibm.wala.cast.js.test.data').file('examples-src')
+		java.srcDirs = ['tests']
+		resources.srcDirs = [project(':com.ibm.wala.cast.js.test.data').file('examples-src')]
 	}
 }
 

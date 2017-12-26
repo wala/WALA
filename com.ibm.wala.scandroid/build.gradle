@@ -1,4 +1,4 @@
-sourceSets.main.java.srcDir 'source'
+sourceSets.main.java.srcDirs = ['source']
 
 dependencies {
 	compile 'com.google.guava:guava:18.0'

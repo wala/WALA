@@ -1,4 +1,4 @@
-sourceSets.main.java.srcDir 'src'
+sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
 	compile project(':com.ibm.wala.util')
