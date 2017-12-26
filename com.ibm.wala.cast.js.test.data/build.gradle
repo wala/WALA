@@ -30,6 +30,10 @@ task unversionAjaxslt(type: Sync, dependsOn: unpackAjaxslt) {
 	into 'examples-src/ajaxslt'
 }
 
+task processTestResources(dependsOn: unversionAjaxslt) {
+}
+
 clean {
 	delete unversionAjaxslt
+	delete downloadAjaxslt
 }

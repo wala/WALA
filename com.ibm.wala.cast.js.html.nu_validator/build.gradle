@@ -1,6 +1,9 @@
 sourceSets {
 	main.java.srcDir 'src'
-	test.java.srcDir 'tests'
+	test {
+		java.srcDir 'tests'
+		resources.srcDir project(':com.ibm.wala.cast.js.test.data').file('examples-src')
+	}
 }
 
 dependencies {
