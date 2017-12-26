@@ -35,7 +35,7 @@ task generateJniHeaders(type: Exec, dependsOn: [testClasses, ':com.ibm.wala.cast
 	// javah command to generate headers
 	def sourceSets = [sourceSets.test, project(':com.ibm.wala.cast').sourceSets.main]
 	def classesDirs = sourceSets.inject(files()) { acc, val -> acc.plus(val.output.classesDirs) }
-	def classpath = classesDirs.join(':')
+	def classpath = classesDirs.asPath
 	def javah = currentJvm.getExecutable('javah')
 	commandLine(javah, '-d', "$headerDir", '-classpath', classpath)
 	args(qualifiedClasses)
