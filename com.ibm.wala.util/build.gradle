@@ -1,9 +1,9 @@
 sourceSets.main.java.srcDir 'src'
 
 tasks.javadoc {
-	dependsOn ':com.ibm.wala.core:compileJava'
-
+	def coreCompileJava = project(':com.ibm.wala.core').tasks.compileJava
+	dependsOn coreCompileJava
 	doFirst {
-		classpath += files(project(':com.ibm.wala.core').tasks.compileJava)
+		classpath += files(coreCompileJava)
 	}
 }
