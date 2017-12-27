@@ -24,11 +24,32 @@ model {
 		libs(PrebuiltLibraries) {
 			jdk {
 				def jniIncludeDir = "$currentJavaHome/include"
-				// TODO: make "linux" more portable on next line; should be "win32" on Windows; should be "darwin" on MacOS
-				headers.srcDirs files(jniIncludeDir, "$jniIncludeDir/linux")
+				headers.srcDir jniIncludeDir
 				binaries.withType(SharedLibraryBinary) {
-					// TODO: make next line more portable
-					sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/amd64/server/libjvm.so")
+					switch (targetPlatform.operatingSystem.name) {
+						case 'linux':
+							headers.srcDirs "$jniIncludeDir/linux"
+							break
+						case 'osx':
+							headers.srcDirs "$jniIncludeDir/darwin"
+							break
+						case 'windows':
+							headers.srcDirs "$jniIncludeDir/win32"
+							break
+					}
+					switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
+						case 'linux/x86-64':
+							sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/amd64/server/libjvm.so")
+							break
+						case 'osx/x86-64':
+							// TODO: determine JVM library name and location on MacOS
+							// sharedLibraryLinkFile = '???'
+							break
+						case 'windows/x86-64':
+							// TODO: determine JVM library name and location on Windows
+							// sharedLibraryLinkFile = '???'
+							break
+					}
 				}
 			}
 		}
