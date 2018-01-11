@@ -1,11 +1,13 @@
 sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
-	compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50'
-	compile 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.cast.java')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.shrike')
-	compile project(':com.ibm.wala.util')
+	compile(
+		'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50',
+		'org.eclipse.platform:org.eclipse.equinox.common:3.9.0',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.cast.java'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		)
 }

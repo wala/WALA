@@ -8,16 +8,18 @@ sourceSets.test {
 }
 
 dependencies {
-	testCompile 'junit:junit:4.11'
-	testCompile project(':com.ibm.wala.cast')
-	testCompile project(':com.ibm.wala.cast.js')
-	testCompile project(':com.ibm.wala.cast.js.rhino')
-	testCompile project(':com.ibm.wala.core')
-	testCompile project(':com.ibm.wala.shrike')
-	testCompile project(':com.ibm.wala.util')
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.cast.test')
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
+	testCompile(
+		'junit:junit:4.11',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.cast.js'),
+		project(':com.ibm.wala.cast.js.rhino'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.test'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+		)
 }
 
 test.environment 'TRAVIS', 1

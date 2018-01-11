@@ -4,7 +4,9 @@ sourceSets.test {
 }
 
 dependencies {
-	testCompile 'junit:junit:4.11'
-	testCompile project(':com.ibm.wala.cast.js.nodejs')
-	testCompile project(':com.ibm.wala.core')
+	testCompile(
+		'junit:junit:4.11',
+		project(':com.ibm.wala.cast.js.nodejs'),
+		project(':com.ibm.wala.core'),
+		)
 }

@@ -7,11 +7,13 @@ apply plugin: 'cpp'
 sourceSets.test.java.srcDirs = ['harness-src/java']
 
 dependencies {
-	testCompile 'junit:junit:4.11'
-	testCompile project(':com.ibm.wala.cast')
-	testCompile project(':com.ibm.wala.core')
-	testCompile project(':com.ibm.wala.util')
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
+	testCompile(
+		'junit:junit:4.11',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.util'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+		)
 }
 
 // TODO: build following targets for "test"-only, not "main"
