@@ -1,7 +1,3 @@
-plugins {
-	id 'de.undercouch.download' version '3.3.0'
-}
-
 apply plugin: 'base'
 
 import de.undercouch.gradle.tasks.download.*
