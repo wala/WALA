@@ -1,16 +1,18 @@
 sourceSets.main.java.srcDirs = ['source']
 
 dependencies {
-	compile 'org.eclipse.core:org.eclipse.core.runtime:3.10.0.v20140318-2214'
-	compile 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
-	compile 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
-	compile 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
-	compile 'org.eclipse.wst.jsdt:core:1.0.201.v2010012803'
-	compile 'org.eclipse.wst.jsdt:ui:1.0.201.v2010012803'
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.cast.js')
-	compile project(':com.ibm.wala.cast.js.rhino')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.ide')
-	compile project(':com.ibm.wala.util')
+	compile(
+		'org.eclipse.core:org.eclipse.core.runtime:3.10.0.v20140318-2214',
+		'org.eclipse.platform:org.eclipse.core.resources:3.12.0',
+		'org.eclipse.platform:org.eclipse.core.runtime:3.13.0',
+		'org.eclipse.platform:org.eclipse.equinox.common:3.9.0',
+		'org.eclipse.wst.jsdt:core:1.0.201.v2010012803',
+		'org.eclipse.wst.jsdt:ui:1.0.201.v2010012803',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.cast.js'),
+		project(':com.ibm.wala.cast.js.rhino'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.ide'),
+		project(':com.ibm.wala.util'),
+		)
 }

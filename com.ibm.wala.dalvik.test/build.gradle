@@ -7,12 +7,14 @@ sourceSets.test {
 }
 
 dependencies {
-	testCompile 'com.google.android.tools:dx:1.7'
-	testCompile 'junit:junit:4.11'
-	testCompile 'org.osgi:org.osgi.core:4.2.0'
-	testCompile project(':com.ibm.wala.core')
-	testCompile project(':com.ibm.wala.dalvik')
-	testCompile project(':com.ibm.wala.shrike')
-	testCompile project(':com.ibm.wala.util')
-	testCompile project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')
+	testCompile(
+		'com.google.android.tools:dx:1.7',
+		'junit:junit:4.11',
+		'org.osgi:org.osgi.core:4.2.0',
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.dalvik'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+		)
 }

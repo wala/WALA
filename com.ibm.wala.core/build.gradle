@@ -7,8 +7,10 @@ sourceSets.main {
 }
 
 dependencies {
-	compile project(':com.ibm.wala.shrike')
-	compile project(':com.ibm.wala.util')
+	compile(
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		)
 }
 
 tasks.javadoc {

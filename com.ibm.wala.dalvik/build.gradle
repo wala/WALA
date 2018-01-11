@@ -1,10 +1,12 @@
 sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.2'
-	compile 'org.smali:dexlib2:2.2.1'
-	compile project(':com.ibm.wala.cast')
-	compile project(':com.ibm.wala.core')
-	compile project(':com.ibm.wala.shrike')
-	compile project(':com.ibm.wala.util')
+	compile(
+		'org.slf4j:slf4j-api:1.7.2',
+		'org.smali:dexlib2:2.2.1',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		)
 }
