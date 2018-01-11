@@ -1,6 +1,4 @@
-plugins {
-	id 'com.github.hauner.jarTest' version '1.0.1'
-}
+apply plugin: 'com.github.hauner.jarTest'
 
 sourceSets.test {
 	java.srcDirs = ['src']

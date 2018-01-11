@@ -1,5 +1,17 @@
 ////////////////////////////////////////////////////////////////////////
 //
+//  plugin configuration must precede everything else
+//
+
+plugins {
+	id 'com.github.hauner.jarTest' version '1.0.1' apply false
+	id 'de.undercouch.download' version '3.3.0' apply false
+	id 'nebula.lint' version '8.3.1'
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
 //  common Java setup shared by multiple projects
 //
 
@@ -65,13 +77,6 @@ subprojects {
 //
 //  optional lint checking of Gradle scripts
 //
-
-buildscript {
-	repositories.jcenter()
-	dependencies {
-		classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
-	}
-}
 
 allprojects {
 	apply plugin: 'nebula.lint'
