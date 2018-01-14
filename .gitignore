@@ -6,7 +6,9 @@
 */bin/*
 */build/
 *~
+.classpath
 .metadata/
+.project
 /.gradle/
 /build/
 com.ibm.wala.cast.java.jdt.test/
