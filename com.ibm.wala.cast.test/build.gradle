@@ -1,6 +1,8 @@
 apply plugin: 'com.github.hauner.jarTest'
-
 apply plugin: 'cpp'
+apply plugin: 'eclipse'
+
+eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.test.java.srcDirs = ['harness-src/java']
 

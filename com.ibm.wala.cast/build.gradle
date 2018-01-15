@@ -1,4 +1,7 @@
 apply plugin: 'cpp'
+apply plugin: 'eclipse'
+
+eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.main.java.srcDirs = ['source/java']
 
