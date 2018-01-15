@@ -76,3 +76,16 @@ model {
 		}
 	}
 }
+
+// TODO: if we eventually stop supporting Maven, then we may be able
+// to discard the "copyJarsIntoLib" task and the corresponding lines
+// in "META-INF/MANIFEST.MF" and "build.properties"
+
+task copyJarsIntoLib(type: Copy) {
+	def commonsIoJar = configurations.runtimeClasspath.files[0]
+	assert commonsIoJar.name.startsWith('commons-io-')
+	from commonsIoJar
+	into 'lib'
+}
+
+assemble.dependsOn copyJarsIntoLib
