@@ -12,7 +12,7 @@ def versionedArchive = 'ajaxslt-0.8.1'
 def packedArchive = "${versionedArchive}.tar.gz"
 
 task downloadJLex(type: Download) {
-	src "http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java"
+	src 'http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
 	dest 'src/JLex/Main.java'
 	overwrite false
 }
