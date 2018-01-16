@@ -3,3 +3,168 @@ apply plugin: 'eclipse'
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.test.java.srcDirs = ['src']
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  download and/or create extra bundled jar archives
+//
+
+task extraBundledJars
+processTestResources.dependsOn extraBundledJars
+
+import de.undercouch.gradle.tasks.download.*
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  download and extract "bcel-5.2.jar"
+//
+
+task downloadBcel(type: Download) {
+	src 'http://archive.apache.org/dist/jakarta/bcel/binaries/bcel-5.2.tar.gz'
+	dest temporaryDir
+	overwrite false
+}
+
+task verifyBcel(type: Verify, dependsOn: downloadBcel) {
+	src files(downloadBcel)[0]
+	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
+}
+
+task extractBcel(type: Sync, dependsOn: verifyBcel) {
+	from tarTree(verifyBcel.src)
+	include 'bcel-5.2/bcel-5.2.jar'
+	into temporaryDir
+}
+
+task copyBcel(type: Copy, dependsOn: extractBcel) {
+	from new File(files(extractBcel)[0], extractBcel.includes[0])
+	into projectDir
+	clean { delete 'bcel-5.2.jar' }
+}
+
+extraBundledJars.dependsOn copyBcel
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  download "java-cup-11a.jar"
+//
+
+task downloadJavaCup(type: Download) {
+	src 'http://www2.cs.tum.edu/projects/cup/java-cup-11a.jar'
+	dest projectDir
+	overwrite false
+	clean { delete downloadJavaCup }
+}
+
+task verifyJavaCup(type: Verify, dependsOn: downloadJavaCup) {
+	src files(downloadJavaCup)[0]
+	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
+}
+
+extraBundledJars.dependsOn verifyJavaCup
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  collect "JLex.jar"
+//
+
+task collectJLex(type: Jar) {
+	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
+	include 'JLex/'
+	baseName 'JLex'
+	destinationDir projectDir
+	clean { delete collectJLex }
+}
+
+extraBundledJars.dependsOn collectJLex
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  generate "hello_hash.jar"
+//
+
+task downloadOcamlJava(type: Download) {
+	def version = '2.0-alpha1'
+	ext {
+		basename = "ocamljava-$version"
+	}
+	src "http://www.ocamljava.org/downloads/download.php?version=$version-bin"
+	dest new File(temporaryDir, "${basename}.tar.gz")
+	overwrite false
+}
+
+task verifyOcamlJava(type: Verify, dependsOn: downloadOcamlJava) {
+	src downloadOcamlJava.outputFiles[0]
+	checksum '45feec6e3889f5073a39c2c4c84878d1'
+}
+
+task unpackOcamlJava(type: Sync, dependsOn: verifyOcamlJava) {
+	from tarTree(verifyOcamlJava.src)
+	into temporaryDir
+}
+
+task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
+	inputs.file 'ocaml/hello_hash.ml'
+	outputs.file 'hello_hash.jar'
+	args inputs.files[0], '-o', outputs.files[0]
+
+	def ocamlJavaHome = new File(files(unpackOcamlJava)[0], downloadOcamlJava.basename)
+	classpath new File(ocamlJavaHome, 'lib/ocamljava.jar')
+	main 'ocaml.compilers.ocamljavaMain'
+	inputs.dir ocamlJavaHome
+
+	clean { delete generateHelloHash }
+}
+
+extraBundledJars.dependsOn generateHelloHash
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  collect "com.ibm.wala.core.testdata_1.0.0.jar"
+//
+
+task collectTestData(type: Jar) {
+	version '1.0.0'
+	archiveName "${baseName}_${version}.${extension}"
+	from compileTestJava
+	from 'classes'
+	exclude 'methodLookup'
+	destinationDir projectDir
+	clean { delete collectTestData }
+}
+
+extraBundledJars.dependsOn collectTestData
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  collect "com.ibm.wala.core.testdata_1.0.0a.jar"
+//
+
+task collectTestDataA(type: Jar) {
+	version '1.0.0a'
+	archiveName "${baseName}_${version}.${extension}"
+	from compileTestJava
+	from 'classes'
+	exclude (
+		'annotations/Foo*',
+		'annotations/Outer*',
+		'annotations/Type*',
+		'bug144/*',
+		'CodeDeleted.class',
+		'defaultMethods/*',
+		'methodLookup',
+		'lambda/*',
+		'special/*',
+		)
+	destinationDir projectDir
+	clean { delete collectTestDataA }
+}
+
+extraBundledJars.dependsOn collectTestDataA
