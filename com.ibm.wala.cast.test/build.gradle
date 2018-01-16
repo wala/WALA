@@ -92,5 +92,5 @@ model {
 
 test {
 	// TODO: compute path on following line from 'xlator_test' library properties somehow
-	systemProperty "java.library.path", "$buildDir/libs/xlator_test/shared"
+	systemProperty 'java.library.path', "$buildDir/libs/xlator_test/shared"
 }
