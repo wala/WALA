@@ -16,7 +16,4 @@ dependencies {
 		)
 }
 
-processTestResources {
-	// TODO: figure out why we cannot get at tasks from ':com.ibm.wala.cast.js.test.data'
-	// dependsOn project(':com.ibm.wala.cast.js.test.data').tasks.processTestResources
-}
+processTestResources.dependsOn ':com.ibm.wala.cast.js.test.data:processTestResources'
