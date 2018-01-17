@@ -4,8 +4,8 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.main.java.srcDirs = ['src']
 
-tasks.javadoc {
-	def coreCompileJava = project(':com.ibm.wala.core').tasks.compileJava
+javadoc {
+	def coreCompileJava = project(':com.ibm.wala.core').compileJava
 	dependsOn coreCompileJava
 	doFirst {
 		classpath += files(coreCompileJava)

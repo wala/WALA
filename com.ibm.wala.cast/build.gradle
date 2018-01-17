@@ -14,11 +14,11 @@ dependencies {
 		)
 }
 
-tasks.javadoc {
+javadoc {
 	dependsOn ':com.ibm.wala.cast.js:compileJava'
 
 	doFirst {
-		classpath += files(project(':com.ibm.wala.cast.js').tasks.compileJava)
+		classpath += files(project(':com.ibm.wala.cast.js').compileJava)
 	}
 }
 
