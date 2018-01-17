@@ -12,6 +12,8 @@ dependencies {
 }
 
 test {
+	maxHeapSize = '800M'
+
 	// https://github.com/liblit/WALA/issues/5
 	exclude '**/NodejsRequireTargetSelectorResolveTest.class'
 }

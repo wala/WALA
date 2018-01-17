@@ -20,3 +20,7 @@ dependencies {
 		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
 		)
 }
+
+test {
+	maxHeapSize = '800M'
+}

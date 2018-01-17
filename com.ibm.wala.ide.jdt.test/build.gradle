@@ -29,6 +29,8 @@ dependencies {
 }
 
 test {
+	maxHeapSize = '1200M'
+
 	// https://github.com/liblit/WALA/issues/5
 	exclude '**/ECJJavaIRTest.class'
 	exclude '**/ECJSyncDuplicatorTest.class'
