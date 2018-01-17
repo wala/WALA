@@ -21,7 +21,7 @@ dependencies {
 
 task cloneDroidBench(type: Exec) {
 	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
-	def destDir = '/tmp/DroidBench'
+	def destDir = file('/tmp/DroidBench')
 	inputs.property('repository', 'https://github.com/secure-software-engineering/DroidBench.git')
 	outputs.dirs destDir
 	doFirst { delete destDir }
