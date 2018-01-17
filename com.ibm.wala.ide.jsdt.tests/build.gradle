@@ -18,3 +18,8 @@ dependencies {
 		project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
 		)
 }
+
+test {
+	// https://github.com/liblit/WALA/issues/5
+	exclude '**/JSProjectScopeTest.class'
+}

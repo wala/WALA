@@ -10,3 +10,8 @@ dependencies {
 		project(':com.ibm.wala.core'),
 		)
 }
+
+test {
+	// https://github.com/liblit/WALA/issues/5
+	exclude '**/NodejsRequireTargetSelectorResolveTest.class'
+}
