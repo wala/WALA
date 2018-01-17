@@ -32,6 +32,8 @@ processTestResources {
 
 test {
 	maxHeapSize = '800M'
+	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
+	systemProperty 'com.ibm.wala.junit.profile', 'short'
 
 	// https://github.com/liblit/WALA/issues/5
 	exclude '**/CallGraphTest.class'
