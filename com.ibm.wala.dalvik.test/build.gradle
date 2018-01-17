@@ -39,6 +39,8 @@ processTestResources {
 }
 
 test {
+	maxHeapSize = '800M'
+
 	// https://github.com/liblit/WALA/issues/5 and possibly https://github.com/wala/WALA/issues/268
 	exclude '**/AliasingTest.class'
 	exclude '**/AndroidSpecificTest.class'

@@ -18,3 +18,7 @@ dependencies {
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
 }
+
+test {
+	maxHeapSize = '800M'
+}

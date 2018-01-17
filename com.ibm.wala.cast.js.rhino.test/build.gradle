@@ -20,4 +20,10 @@ dependencies {
 		)
 }
 
-test.environment 'TRAVIS', 1
+test {
+	environment 'TRAVIS', 1
+	maxHeapSize = '800M'
+
+	// https://github.com/liblit/WALA/issues/5
+	exclude '**/NodejsRequireTargetSelectorResolveTest.class'
+}
