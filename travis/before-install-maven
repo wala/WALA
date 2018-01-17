@@ -1,5 +1,7 @@
 # -*- mode: sh; sh-shell: sh -*-
 
+git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
+
 export M2_HOME=$HOME/apache-maven-3.5.0
 
 if [ ! -d $M2_HOME/bin ]; then

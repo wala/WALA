@@ -18,3 +18,22 @@ dependencies {
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
 }
+
+task cloneDroidBench(type: Exec) {
+	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
+	def destDir = '/tmp/DroidBench'
+	inputs.property('repository', 'https://github.com/secure-software-engineering/DroidBench.git')
+	outputs.dirs destDir
+	doFirst { delete destDir }
+	commandLine 'git', 'clone', '--depth=1', inputs.properties.repository, destDir
+	// TODO: should check out a specific tag or hash
+}
+
+processTestResources {
+	dependsOn cloneDroidBench
+
+	def testdata = project(':com.ibm.wala.core.testdata')
+	dependsOn testdata.verifyJavaCup
+	from testdata.collectJLex
+	from testdata.downloadJavaCup
+}
