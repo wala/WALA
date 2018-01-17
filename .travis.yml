@@ -9,10 +9,7 @@ addons:
     packages:
     - realpath
     - xvfb
-before_install:
-- echo $ANDROID_HOME
-- git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
-- source "travis/before-install-$BUILD_SYSTEM"
+before_install: source "travis/before-install-$BUILD_SYSTEM"
 install: source "travis/install-$BUILD_SYSTEM"
 script: source "travis/script-$BUILD_SYSTEM"
 before_cache: source "travis/before-cache-$BUILD_SYSTEM"
