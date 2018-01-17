@@ -80,7 +80,7 @@ subprojects {
 
 allprojects {
 	apply plugin: 'nebula.lint'
-	gradleLint.alwaysRun = true
+	gradleLint.alwaysRun = false
 	gradleLint {
 		rules = ['all-dependency']
 		excludedRules = [
