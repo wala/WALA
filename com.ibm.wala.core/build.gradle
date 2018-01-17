@@ -17,10 +17,10 @@ dependencies {
 		)
 }
 
-tasks.javadoc {
+javadoc {
 	dependsOn ':com.ibm.wala.dalvik:compileJava'
 
 	doFirst {
-		classpath += files(project(':com.ibm.wala.dalvik').tasks.compileJava)
+		classpath += files(project(':com.ibm.wala.dalvik').compileJava)
 	}
 }

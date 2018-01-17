@@ -51,7 +51,7 @@ model {
 					srcDirs = ['harness-src/c']
 					include 'smoke.cpp'
 				}
-				generatedBy tasks.generateJniHeaders
+				generatedBy generateJniHeaders
 				['cast', 'jdk'].each {
 					lib project: ':com.ibm.wala.cast', library: it
 				}

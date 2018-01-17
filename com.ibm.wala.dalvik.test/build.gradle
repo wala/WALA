@@ -2,7 +2,7 @@ sourceSets.test {
 	java.srcDirs = ['source']
 	resources.srcDirs = [
 		'data',
-		project(':com.ibm.wala.core.testdata').tasks.compileTestJava,
+		project(':com.ibm.wala.core.testdata').compileTestJava,
 		]
 }
 
