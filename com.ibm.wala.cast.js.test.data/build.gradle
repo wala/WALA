@@ -13,8 +13,12 @@ task downloadAjaxslt(type: Download) {
 }
 
 task verifyAjaxslt(type: Verify, dependsOn: downloadAjaxslt) {
+	// TODO: refactor this logic into a reusable custom task class
 	src files(downloadAjaxslt)[0]
 	checksum 'c995abe3310a401bb4db7f28a6409756'
+	def stamp = new File(temporaryDir, 'stamp')
+	outputs.file stamp
+	doLast { stamp.text = '' }
 }
 
 task unpackAjaxslt(type: Sync, dependsOn: verifyAjaxslt) {
