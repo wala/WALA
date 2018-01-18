@@ -29,17 +29,22 @@ task verifyBcel(type: VerifyWithStamp, dependsOn: downloadBcel) {
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
 }
 
-task extractBcel(type: Sync, dependsOn: verifyBcel) {
-	from tarTree(verifyBcel.src)
-	include 'bcel-5.2/bcel-5.2.jar'
-	into temporaryDir
+task extractBcel(type: Copy, dependsOn: verifyBcel) {
+	from(tarTree(verifyBcel.src)) {
+		include 'bcel-5.2/bcel-5.2.jar'
+		eachFile {
+			relativePath = new RelativePath(!directory, relativePath.lastName)
+		}
+	}
+	into projectDir
+	includeEmptyDirs false
+	outputs.files 'bcel-5.2.jar'
 }
 
-task copyBcel(type: Copy, dependsOn: extractBcel) {
-	from new File(files(extractBcel)[0], extractBcel.includes[0])
-	into projectDir
-	clean { delete 'bcel-5.2.jar' }
+task cleanExtractBcel(type: Delete) {
+	delete files(extractBcel)[0]
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////
