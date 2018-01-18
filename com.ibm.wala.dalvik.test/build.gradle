@@ -17,6 +17,7 @@ dependencies {
 		project(':com.ibm.wala.util'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
+	testRuntime 'com.google.android:android:4.1.1.4'
 }
 
 task cloneDroidBench(type: Exec) {
@@ -29,8 +30,23 @@ task cloneDroidBench(type: Exec) {
 	// TODO: should check out a specific tag or hash
 }
 
+// TODO: can Gradle's dependency system manage this download for us?
+task downloadAndroidJar(type: de.undercouch.gradle.tasks.download.Download) {
+	src 'http://central.maven.org/maven2/com/google/android/android/4.1.1.4/android-4.1.1.4.jar'
+	dest new File(temporaryDir, 'android.jar')
+	overwrite false
+}
+
+task verifyAndroidJar(type: VerifyWithStamp, dependsOn: downloadAndroidJar) {
+	src files(downloadAndroidJar)[0]
+	checksum '88be04f4d84d58fadee2e780a322fdb9'
+}
+
 processTestResources {
 	dependsOn cloneDroidBench
+
+	dependsOn verifyAndroidJar
+	from downloadAndroidJar
 
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.verifyJavaCup
