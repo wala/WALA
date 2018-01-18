@@ -1,0 +1,7 @@
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'de.undercouch:gradle-download-task:3.3.0'
+}

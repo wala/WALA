@@ -17,13 +17,9 @@ task downloadJLex(type: Download) {
 	overwrite false
 }
 
-task verifyJLex(type: Verify, dependsOn: downloadJLex) {
-	// TODO: refactor this logic into a reusable custom task class
+task verifyJLex(type: VerifyWithStamp, dependsOn: downloadJLex) {
 	src downloadJLex.dest
 	checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
-	def stamp = new File(temporaryDir, 'stamp')
-	outputs.file stamp
-	doLast { stamp.text = '' }
 }
 
 clean {
