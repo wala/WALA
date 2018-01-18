@@ -22,7 +22,6 @@ task verifyNodeJS(type: VerifyWithStamp, dependsOn: downloadNodeJS) {
 }
 
 task unpackNodeJSLib(type: Sync, dependsOn: verifyNodeJS) {
-	println "unpack zip tree \"$verifyNodeJS.src\" into \"$temporaryDir\""
 	from(zipTree(verifyNodeJS.src)) {
 		eachFile { details ->
 			if (details.relativePath.pathString.startsWith('nodejs-node-0a604e9/lib/')) {
