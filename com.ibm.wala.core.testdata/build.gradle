@@ -10,9 +10,6 @@ sourceSets.test.java.srcDirs = ['src']
 //  download and/or create extra bundled jar archives
 //
 
-task extraBundledJars
-processTestResources.dependsOn extraBundledJars
-
 import de.undercouch.gradle.tasks.download.*
 
 
@@ -44,8 +41,6 @@ task copyBcel(type: Copy, dependsOn: extractBcel) {
 	clean { delete 'bcel-5.2.jar' }
 }
 
-extraBundledJars.dependsOn copyBcel
-
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -64,8 +59,6 @@ task verifyJavaCup(type: VerifyWithStamp, dependsOn: downloadJavaCup) {
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
-extraBundledJars.dependsOn verifyJavaCup
-
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -79,8 +72,6 @@ task collectJLex(type: Jar) {
 	destinationDir projectDir
 	clean { delete collectJLex }
 }
-
-extraBundledJars.dependsOn collectJLex
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -121,8 +112,6 @@ task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
 	clean { delete generateHelloHash }
 }
 
-extraBundledJars.dependsOn generateHelloHash
-
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -138,8 +127,6 @@ task collectTestData(type: Jar) {
 	destinationDir projectDir
 	clean { delete collectTestData }
 }
-
-extraBundledJars.dependsOn collectTestData
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -166,5 +153,3 @@ task collectTestDataA(type: Jar) {
 	destinationDir projectDir
 	clean { delete collectTestDataA }
 }
-
-extraBundledJars.dependsOn collectTestDataA
