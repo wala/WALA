@@ -17,7 +17,7 @@ task downloadNodeJS(type: de.undercouch.gradle.tasks.download.Download) {
 }
 
 task verifyNodeJS(type: VerifyWithStamp, dependsOn: downloadNodeJS) {
-	src downloadNodeJS.outputs.files[0]
+	src files(downloadNodeJS)[0]
 	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
 }
 
