@@ -1,8 +1,6 @@
 apply plugin: 'base'
 
-import de.undercouch.gradle.tasks.download.*
-
-task downloadAjaxslt(type: Download) {
+task downloadAjaxslt(type: de.undercouch.gradle.tasks.download.Download) {
 	def version = '0.8.1'
 	ext {
 		versionedArchive = "ajaxslt-$version"

@@ -6,12 +6,10 @@ sourceSets.test.java.srcDirs = ['src']
 //  download JLex
 //
 
-import de.undercouch.gradle.tasks.download.*
-
 def versionedArchive = 'ajaxslt-0.8.1'
 def packedArchive = "${versionedArchive}.tar.gz"
 
-task downloadJLex(type: Download) {
+task downloadJLex(type: de.undercouch.gradle.tasks.download.Download) {
 	src 'http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
 	dest 'src/JLex/Main.java'
 	overwrite false
