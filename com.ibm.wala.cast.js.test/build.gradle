@@ -19,7 +19,7 @@ dependencies {
 		)
 }
 
-processTestResources.dependsOn ':com.ibm.wala.cast.js.test.data:processTestResources'
+processTestResources.dependsOn ':com.ibm.wala.cast.js.test.data:unpackAjaxslt'
 
 test {
 	maxHeapSize = '800M'
