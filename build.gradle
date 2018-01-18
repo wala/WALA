@@ -5,7 +5,7 @@
 
 plugins {
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
-	id 'de.undercouch.download' version '3.3.0' apply false
+	id 'de.undercouch.download' apply false
 	id 'nebula.lint' version '8.3.1'
 }
 

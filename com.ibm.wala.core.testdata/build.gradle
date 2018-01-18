@@ -27,13 +27,9 @@ task downloadBcel(type: Download) {
 	overwrite false
 }
 
-task verifyBcel(type: Verify, dependsOn: downloadBcel) {
-	// TODO: refactor this logic into a reusable custom task class
+task verifyBcel(type: VerifyWithStamp, dependsOn: downloadBcel) {
 	src files(downloadBcel)[0]
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
-	def stamp = new File(temporaryDir, 'stamp')
-	outputs.file stamp
-	doLast { stamp.text = '' }
 }
 
 task extractBcel(type: Sync, dependsOn: verifyBcel) {
@@ -63,13 +59,9 @@ task downloadJavaCup(type: Download) {
 	clean { delete downloadJavaCup }
 }
 
-task verifyJavaCup(type: Verify, dependsOn: downloadJavaCup) {
-	// TODO: refactor this logic into a reusable custom task class
+task verifyJavaCup(type: VerifyWithStamp, dependsOn: downloadJavaCup) {
 	src files(downloadJavaCup)[0]
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
-	def stamp = new File(temporaryDir, 'stamp')
-	outputs.file stamp
-	doLast { stamp.text = '' }
 }
 
 extraBundledJars.dependsOn verifyJavaCup
@@ -106,13 +98,9 @@ task downloadOcamlJava(type: Download) {
 	overwrite false
 }
 
-task verifyOcamlJava(type: Verify, dependsOn: downloadOcamlJava) {
-	// TODO: refactor this logic into a reusable custom task class
+task verifyOcamlJava(type: VerifyWithStamp, dependsOn: downloadOcamlJava) {
 	src downloadOcamlJava.outputFiles[0]
 	checksum '45feec6e3889f5073a39c2c4c84878d1'
-	def stamp = new File(temporaryDir, 'stamp')
-	outputs.file stamp
-	doLast { stamp.text = '' }
 }
 
 task unpackOcamlJava(type: Sync, dependsOn: verifyOcamlJava) {

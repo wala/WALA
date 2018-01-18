@@ -1,3 +1,4 @@
+**/.gradle/
 *.DS_Store
 *.class
 *.out
@@ -10,7 +11,6 @@
 .metadata/
 .project
 /*/.settings/org.eclipse.buildship.core.prefs
-/.gradle/
 /.settings/org.eclipse.buildship.core.prefs
 /build/
 com.ibm.wala.cast.java.jdt.test/
