@@ -1,8 +1,3 @@
-sourceSets.main {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['dat']
-}
-
 dependencies {
 	compile(
 		'commons-io:commons-io:2.4',
@@ -13,4 +8,39 @@ dependencies {
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.util'),
 		)
+}
+
+task downloadNodeJS(type: de.undercouch.gradle.tasks.download.Download) {
+	src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
+	dest new File(temporaryDir, 'nodejs.zip')
+	overwrite false
+}
+
+task verifyNodeJS(type: VerifyWithStamp, dependsOn: downloadNodeJS) {
+	src downloadNodeJS.outputs.files[0]
+	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
+}
+
+task unpackNodeJSLib(type: Sync, dependsOn: verifyNodeJS) {
+	println "unpack zip tree \"$verifyNodeJS.src\" into \"$temporaryDir\""
+	from(zipTree(verifyNodeJS.src)) {
+		eachFile { details ->
+			if (details.relativePath.pathString.startsWith('nodejs-node-0a604e9/lib/')) {
+				def renamedRelative = new RelativePath(!details.directory, 'core-modules', details.relativePath.lastName)
+				details.relativePath = renamedRelative
+			} else
+				details.exclude()
+		}
+	}
+
+	into temporaryDir
+	includeEmptyDirs = false
+}
+
+sourceSets.main {
+	java.srcDirs = ['src']
+	resources.srcDirs = [
+		'dat',
+		unpackNodeJSLib
+		]
 }
