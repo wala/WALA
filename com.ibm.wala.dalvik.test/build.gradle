@@ -42,21 +42,8 @@ test {
 	maxHeapSize = '800M'
 
 	// https://github.com/liblit/WALA/issues/5 and possibly https://github.com/wala/WALA/issues/268
-	exclude '**/AliasingTest.class'
-	exclude '**/AndroidSpecificTest.class'
-	exclude '**/ArraysAndListsTest.class'
-	exclude '**/CallbacksTest.class'
 	exclude '**/DalvikAnnotationsTest.class'
 	exclude '**/DynamicDalvikComparisonJavaLibsTest.class'
 	exclude '**/DynamicDalvikComparisonTestForAndroidLibs.class'
-	exclude '**/EmulatorDetectionTest.class'
-	exclude '**/FieldAndObjectSensitivityTest.class'
-	exclude '**/GeneralJavaTest.class'
-	exclude '**/ImplicitFlowsTest.class'
-	exclude '**/InterAppCommunicationTest.class'
-	exclude '**/InterComponentCommunicationTest.class'
 	exclude '**/JVMLDalvikComparisonTest.class'
-	exclude '**/LifecycleTest.class'
-	exclude '**/ReflectionTest.class'
-	exclude '**/ThreadingTest.class'
 }
