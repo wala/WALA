@@ -1,9 +1,6 @@
 sourceSets.test {
 	java.srcDirs = ['source']
-	resources.srcDirs = [
-		'testdata',
-		project(':com.ibm.wala.cast.java.test.data').sourceSets.test.java,
-		]
+	resources.srcDirs = ['testdata']
 }
 
 dependencies {
@@ -36,4 +33,6 @@ test {
 	exclude '**/ECJSyncDuplicatorTest.class'
 	exclude '**/JDTJava15IRTests.class'
 	exclude '**/JDTJavaIRTests.class'
+
+	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
 }
