@@ -84,7 +84,7 @@ model {
 // to discard the "copyJarsIntoLib" task and the corresponding lines
 // in "META-INF/MANIFEST.MF" and "build.properties"
 
-task copyJarsIntoLib(type: Copy) {
+task copyJarsIntoLib(type: Sync) {
 	def commonsIoJar = configurations.runtimeClasspath.files[0]
 	assert commonsIoJar.name.startsWith('commons-io-')
 	from commonsIoJar

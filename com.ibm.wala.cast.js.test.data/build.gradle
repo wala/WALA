@@ -1,3 +1,5 @@
+apply plugin: 'base'
+
 task downloadAjaxslt(type: de.undercouch.gradle.tasks.download.Download) {
 	def version = '0.8.1'
 	ext {
@@ -13,12 +15,14 @@ task verifyAjaxslt(type: VerifyWithStamp, dependsOn: downloadAjaxslt) {
 	checksum 'c995abe3310a401bb4db7f28a6409756'
 }
 
-task unpackAjaxslt(type: Copy, dependsOn: verifyAjaxslt) {
+task unpackAjaxslt(type: Sync, dependsOn: verifyAjaxslt) {
 	from(tarTree(verifyAjaxslt.src)) {
 		eachFile {
-			def newSegments = ['ajaxslt'] + relativePath.segments[1 .. -1] as String[]
+			def newSegments = relativePath.segments[1 .. -1] as String[]
 			relativePath new RelativePath(!directory, newSegments)
 		}
 	}
-	into 'examples-src'
+	into 'examples-src/ajaxslt'
 }
+
+clean.dependsOn cleanUnpackAjaxslt
