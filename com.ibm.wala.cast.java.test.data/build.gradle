@@ -15,13 +15,13 @@ task downloadJLex(type: de.undercouch.gradle.tasks.download.Download) {
 	overwrite false
 }
 
+task cleanDownloadJLex(type: Delete) {
+	delete downloadJLex.dest.parent
+}
+
 task verifyJLex(type: VerifyWithStamp, dependsOn: downloadJLex) {
 	src downloadJLex.dest
 	checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
-}
-
-clean {
-	delete downloadJLex.dest.parent
 }
 
 compileTestJava.dependsOn verifyJLex
