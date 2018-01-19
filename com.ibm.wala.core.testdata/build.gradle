@@ -56,7 +56,10 @@ task downloadJavaCup(type: Download) {
 	src 'http://www2.cs.tum.edu/projects/cup/java-cup-11a.jar'
 	dest projectDir
 	overwrite false
-	clean { delete downloadJavaCup }
+}
+
+task cleanDownloadJavaCup(type: Delete) {
+	delete downloadJavaCup
 }
 
 task verifyJavaCup(type: VerifyWithStamp, dependsOn: downloadJavaCup) {
@@ -75,7 +78,10 @@ task collectJLex(type: Jar) {
 	include 'JLex/'
 	baseName 'JLex'
 	destinationDir projectDir
-	clean { delete collectJLex }
+}
+
+task cleanCollectJLex(type: Delete) {
+	delete collectJLex
 }
 
 
@@ -113,8 +119,10 @@ task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
 	classpath new File(ocamlJavaHome, 'lib/ocamljava.jar')
 	main 'ocaml.compilers.ocamljavaMain'
 	inputs.dir ocamlJavaHome
+}
 
-	clean { delete generateHelloHash }
+task cleanGenerateHelloHash(type: Delete) {
+	delete generateHelloHash
 }
 
 
@@ -130,7 +138,10 @@ task collectTestData(type: Jar) {
 	from 'classes'
 	exclude 'methodLookup'
 	destinationDir projectDir
-	clean { delete collectTestData }
+}
+
+task cleanCollectTestData(type: Delete) {
+	delete collectTestData
 }
 
 
@@ -156,5 +167,8 @@ task collectTestDataA(type: Jar) {
 		'special/*',
 		)
 	destinationDir projectDir
-	clean { delete collectTestDataA }
+}
+
+task cleanColllectTestDataA(type: Delete) {
+	delete collectTestDataA
 }
