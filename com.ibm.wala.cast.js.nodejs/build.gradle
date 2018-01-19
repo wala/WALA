@@ -33,7 +33,7 @@ task unpackNodeJSLib(type: Sync, dependsOn: verifyNodeJS) {
 	}
 
 	into temporaryDir
-	includeEmptyDirs = false
+	includeEmptyDirs false
 }
 
 sourceSets.main {

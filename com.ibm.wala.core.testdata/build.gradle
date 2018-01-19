@@ -33,7 +33,7 @@ task extractBcel(type: Copy, dependsOn: verifyBcel) {
 	from(tarTree(verifyBcel.src)) {
 		include 'bcel-5.2/bcel-5.2.jar'
 		eachFile {
-			relativePath = new RelativePath(!directory, relativePath.lastName)
+			relativePath new RelativePath(!directory, relativePath.lastName)
 		}
 	}
 	into projectDir

@@ -17,7 +17,7 @@ task unpackAjaxslt(type: Copy, dependsOn: verifyAjaxslt) {
 	from(tarTree(verifyAjaxslt.src)) {
 		eachFile {
 			def newSegments = ['ajaxslt'] + relativePath.segments[1 .. -1] as String[]
-			relativePath = new RelativePath(!directory, newSegments)
+			relativePath new RelativePath(!directory, newSegments)
 		}
 	}
 	into 'examples-src'
