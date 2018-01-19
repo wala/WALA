@@ -23,12 +23,9 @@ task verifyNodeJS(type: VerifyWithStamp, dependsOn: downloadNodeJS) {
 
 task unpackNodeJSLib(type: Sync, dependsOn: verifyNodeJS) {
 	from(zipTree(verifyNodeJS.src)) {
+		include 'nodejs-node-0a604e9/lib/*'
 		eachFile {
-			if (relativePath.pathString.startsWith('nodejs-node-0a604e9/lib/')) {
-				def renamedRelative = new RelativePath(!directory, 'core-modules', relativePath.lastName)
-				relativePath = renamedRelative
-			} else
-				exclude()
+			relativePath new RelativePath(!directory, 'core-modules', relativePath.lastName)
 		}
 	}
 
