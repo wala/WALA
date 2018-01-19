@@ -24,11 +24,11 @@ task verifyNodeJS(type: VerifyWithStamp, dependsOn: downloadNodeJS) {
 task unpackNodeJSLib(type: Sync, dependsOn: verifyNodeJS) {
 	from(zipTree(verifyNodeJS.src)) {
 		eachFile {
-			if (it.relativePath.pathString.startsWith('nodejs-node-0a604e9/lib/')) {
-				def renamedRelative = new RelativePath(!it.directory, 'core-modules', it.relativePath.lastName)
-				it.relativePath = renamedRelative
+			if (relativePath.pathString.startsWith('nodejs-node-0a604e9/lib/')) {
+				def renamedRelative = new RelativePath(!directory, 'core-modules', relativePath.lastName)
+				relativePath = renamedRelative
 			} else
-				it.exclude()
+				exclude()
 		}
 	}
 
