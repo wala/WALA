@@ -17,7 +17,7 @@ endif
 
 vpath %.cpp	jni
 
-JAVA_INCLUDES = -I$(JAVA_SDK)include -I$(JAVA_SDK)include/$(JNI_MD_DIR) -DWALA_CLASSPATH="\"$(DOMO_AST_BIN)$(JAVAH_CLASS_PATH)\"" 
+JAVA_INCLUDES = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(JNI_MD_DIR) -DWALA_CLASSPATH="\"$(DOMO_AST_BIN)$(JAVAH_CLASS_PATH)\"" 
 
 CAPA_INCLUDE_DIR = ../../../com.ibm.wala.cast/source/c/include/
 CAPA_INCLUDES = -I$(CAPA_INCLUDE_DIR) -I$(C_GENERATED)
@@ -57,7 +57,7 @@ else
 endif
 endif
 
-CC_LD_PATHS = -L$(JAVA_SDK)jre/lib/amd64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/amd64/server -L$(JAVA_SDK)jre/lib/x86_64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/x86_64/server -L$(JAVA_SDK)jre/lib/x64/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/x64/server -L$(JAVA_SDK)jre/lib/server -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib/server -L$(JAVA_SDK)jre/lib -Wl,-rpath -Wl,$(JAVA_SDK)jre/lib -ljvm
+CC_LD_PATHS = -L$(JAVA_HOME)/jre/lib/amd64/server -Wl,-rpath -Wl,$(JAVA_HOME)/jre/lib/amd64/server -L$(JAVA_HOME)/jre/lib/x86_64/server -Wl,-rpath -Wl,$(JAVA_HOME)/jre/lib/x86_64/server -L$(JAVA_HOME)/jre/lib/x64/server -Wl,-rpath -Wl,$(JAVA_HOME)/jre/lib/x64/server -L$(JAVA_HOME)/jre/lib/server -Wl,-rpath -Wl,$(JAVA_HOME)/jre/lib/server -L$(JAVA_HOME)/jre/lib -Wl,-rpath -Wl,$(JAVA_HOME)/jre/lib -ljvm
 
 CC_LDFLAGS += $(CC_LD_PATHS)
 

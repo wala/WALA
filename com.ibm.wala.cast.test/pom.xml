@@ -35,7 +35,7 @@
 	    <id>test-native</id>
 	    <phase>test</phase>
 	    <configuration>
-	      <executable>/tmp/smoke_main</executable>
+	      <executable>${basedir}/../com.ibm.wala.cast/target/classes/libcast/smoke_main</executable>
 	      <arguments>
 		<argument>${project.build.outputDirectory}:${basedir}/../com.ibm.wala.cast/target/classes:${basedir}/../com.ibm.wala.core/target/classes:${basedir}/../com.ibm.wala.util/target/classes</argument>
 	      </arguments>
