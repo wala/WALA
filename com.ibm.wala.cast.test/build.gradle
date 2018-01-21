@@ -92,11 +92,10 @@ model {
 			}
 		}
 	}
-}
 
-// TODO: Java tests in this subproject should depend on the xlator_test library at run time
-
-test {
-	// TODO: compute path on following line from 'xlator_test' library properties somehow
-	systemProperty 'java.library.path', "$buildDir/libs/xlator_test/shared"
+	tasks.test {
+		dependsOn xlator_testSharedLibrary
+		// TODO: compute path on following line from 'xlator_test' library properties somehow
+		systemProperty 'java.library.path', "$buildDir/libs/xlator_test/shared"
+	}
 }
