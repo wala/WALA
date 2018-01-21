@@ -60,7 +60,7 @@ model {
 				withType(StaticLibraryBinarySpec) {
 					buildable = false
 				}
-				all {
+				withType(SharedLibraryBinarySpec) {
 					switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
 						case 'linux/x86-64':
 							// TODO: compute path on following line from 'cast' library properties somehow
