@@ -94,8 +94,8 @@ model {
 	}
 
 	tasks.test {
-		dependsOn xlator_testSharedLibrary
-		// TODO: compute path on following line from 'xlator_test' library properties somehow
-		systemProperty 'java.library.path', "$buildDir/libs/xlator_test/shared"
+		def lib = linkXlator_testSharedLibrary
+		dependsOn lib
+		systemProperty 'java.library.path', lib.destinationDir
 	}
 }
