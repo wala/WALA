@@ -42,8 +42,17 @@ task verifyAndroidJar(type: VerifyWithStamp, dependsOn: downloadAndroidJar) {
 	checksum '88be04f4d84d58fadee2e780a322fdb9'
 }
 
+task copyDxJar(type: Sync) {
+	from configurations.testCompile.files {
+		include '**/dx-1.7.jar'
+		rename 'dx-1.7.jar', 'dx.jar'
+	}
+	into 'lib'
+}
+
 processTestResources {
 	dependsOn cloneDroidBench
+	dependsOn copyDxJar
 
 	dependsOn verifyAndroidJar
 	from downloadAndroidJar
