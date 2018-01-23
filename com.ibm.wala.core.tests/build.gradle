@@ -27,6 +27,7 @@ processTestResources {
 	from testdata.collectJLex
 	from testdata.collectTestData
 	from testdata.downloadJavaCup
+	from testdata.extractBcel
 	from testdata.generateHelloHash
 }
 
@@ -36,7 +37,6 @@ test {
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
 
 	// https://github.com/liblit/WALA/issues/5
-	exclude '**/CallGraphTest.class'
 	exclude '**/DynamicCallGraphTest.class'
 	exclude '**/GetTargetsTest.class'
 	exclude '**/PruneArrayOutOfBoundExceptionEdge.class'
