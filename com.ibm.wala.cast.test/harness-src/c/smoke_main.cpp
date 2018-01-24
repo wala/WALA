@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   
   JNIEnv *java_env = launch_jvm(buf);
   
-  printf("2: %s\n", buf);
+  printf("2: %s, %p\n", buf, java_env);
   
   jclass NativeTranslatorTest =
     java_env->FindClass("com/ibm/wala/cast/test/TestNativeTranslator");
