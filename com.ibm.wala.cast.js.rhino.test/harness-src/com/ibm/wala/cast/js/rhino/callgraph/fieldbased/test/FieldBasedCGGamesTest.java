@@ -38,15 +38,15 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     runTestExceptOnTravis(new URL("http://www.inmensia.com/files/solitaire1.0.html"), new Object[][]{}, BuilderType.OPTIMISTIC);
   }
  
-  @Test(expected = CancelException.class)
+  @Test // (expected = CancelException.class)
   public void testWorldOfSolitaire() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://worldofsolitaire.com/"), new Object[][]{}, BuilderType.OPTIMISTIC);
     if (System.getenv("TRAVIS") != null) {
       // fake it
-      throw new CancelException(null);
+      // throw new CancelException(null);
     }
   }
-
+  
   @Test
   public void testMinesweeper() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://www.inmensia.com/files/minesweeper1.0.html"), new Object[][]{}, BuilderType.OPTIMISTIC_WORKLIST);

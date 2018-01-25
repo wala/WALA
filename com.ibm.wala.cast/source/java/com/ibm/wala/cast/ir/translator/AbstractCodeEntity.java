@@ -16,7 +16,6 @@ package com.ibm.wala.cast.ir.translator;
 
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
@@ -60,7 +59,7 @@ public abstract class AbstractCodeEntity extends AbstractEntity {
   }
 
   @Override
-  public CAstNodeTypeMap getNodeTypeMap() {
+  public CAstNodeTypeMapRecorder getNodeTypeMap() {
     return types;
   }
 

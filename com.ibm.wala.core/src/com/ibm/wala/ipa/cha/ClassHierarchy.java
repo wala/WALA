@@ -147,7 +147,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     klass = klass.getSuperclass();
 
-    while (klass != null) {
+     while (klass != null) {
       if (DEBUG) {
         System.err.println("got superclass " + klass);
       }
@@ -295,6 +295,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public boolean addClass(IClass klass) {
+   
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
@@ -325,7 +326,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     if (klass.getReference().equals(this.rootTypeRef)) {
       // there is only one root
-      assert root == null;
+      assert root == null || root == node;
       root = node;
     }
 
@@ -342,6 +343,10 @@ public class ClassHierarchy implements IClassHierarchy {
         }
         supernode.addChild(node);
         if (supernode.getJavaClass().getReference().equals(rootTypeRef)) {
+          
+          assert root == null || root == supernode;
+          root = supernode;
+
           node = null;
         } else {
           node = supernode;

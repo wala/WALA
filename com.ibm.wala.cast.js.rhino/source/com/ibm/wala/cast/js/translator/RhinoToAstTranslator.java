@@ -159,10 +159,9 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
    */
   private static class FunctionContext extends JavaScriptTranslatorToCAst.FunctionContext<WalkContext,Node> implements WalkContext {
     FunctionContext(WalkContext parent, Node s) {
-		super(parent, s);
-	}
-
-   }
+      super(parent, s);
+    }
+  }
 
   /**
    * context used for top-level script declarations
@@ -191,25 +190,40 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
   private static class BreakContext extends JavaScriptTranslatorToCAst.BreakContext<WalkContext, Node> implements WalkContext {
 
+    @Override
+    public WalkContext getParent() {
+      return (WalkContext) super.getParent();
+    }
+
     BreakContext(WalkContext parent, Node breakTo, String label) {
       super(parent, breakTo, label);
     }
 
   }
 
-  private static class LoopContext extends JavaScriptTranslatorToCAst.LoopContext<WalkContext, Node> implements WalkContext {
+  private static class LoopContext extends TranslatorToCAst.LoopContext<WalkContext, Node> implements WalkContext {
 
 	LoopContext(WalkContext parent, Node breakTo, Node continueTo, String label) {
 		super(parent, breakTo, continueTo, label);
 	}
 
+  @Override
+  public WalkContext getParent() {
+    return (WalkContext) super.getParent();
   }
 
-  private static class TryCatchContext extends JavaScriptTranslatorToCAst.TryCatchContext<WalkContext, Node> implements WalkContext {
+  }
+
+  private static class TryCatchContext extends TranslatorToCAst.TryCatchContext<WalkContext, Node> implements WalkContext {
 
 	TryCatchContext(WalkContext parent, CAstNode catchNode) {
 		super(parent, catchNode);
 	}
+
+  @Override
+  public WalkContext getParent() {
+    return (WalkContext) super.getParent();
+  }
 
   }
 

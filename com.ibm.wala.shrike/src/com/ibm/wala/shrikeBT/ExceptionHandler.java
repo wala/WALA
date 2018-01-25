@@ -34,22 +34,33 @@ final public class ExceptionHandler {
   int handler;
 
   final String catchClass;
+  
+  final Object catchClassLoader;
 
   /**
    * @param handler the label for the handler code
    * @param catchClass the type of exception that should be caught (in JVM format), or null if all exceptions should be caught (as
    *          with 'finally')
    */
-  public ExceptionHandler(int handler, String catchClass) {
+  public ExceptionHandler(int handler, String catchClass, Object catchClassLoader) {
     this.handler = handler;
     this.catchClass = catchClass;
+    this.catchClassLoader = catchClassLoader;
   }
 
+  public ExceptionHandler(int handler, String catchClass) {
+    this(handler, catchClass, null);
+  }
+  
   /**
    * @return the label of the handler code
    */
   public int getHandler() {
     return handler;
+  }
+
+  public Object getCatchClassLoader() {
+    return catchClassLoader;
   }
 
   /**

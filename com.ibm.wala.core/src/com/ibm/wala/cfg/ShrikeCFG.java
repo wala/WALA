@@ -330,13 +330,19 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
             } else {
               TypeReference caughtException = null;
               if (element.getCatchClass() != null) {
-                ClassLoaderReference loader = ShrikeCFG.this.getMethod().getDeclaringClass().getReference().getClassLoader();
+                ClassLoaderReference loader = 
+                    element.getCatchClassLoader() == null?
+                    ShrikeCFG.this.getMethod().getDeclaringClass().getReference().getClassLoader():
+                    (ClassLoaderReference)element.getCatchClassLoader();
                 caughtException = ShrikeUtil.makeTypeReference(loader, element.getCatchClass());
-                if (DEBUG) {
+                //if (DEBUG) {
                   System.err.println(" caughtException " + caughtException);
-                }
+                //}
                 IClass caughtClass = cha.lookupClass(caughtException);
-                if (caughtClass == null) {
+                //if (DEBUG) {
+                System.err.println(" caughtException class " + caughtClass);
+              //}
+               if (caughtClass == null) {
                   // conservatively add the edge, and raise a warning
                   addExceptionalEdgeTo(b);
                   Warnings.add(FailedExceptionResolutionWarning.create(caughtException));

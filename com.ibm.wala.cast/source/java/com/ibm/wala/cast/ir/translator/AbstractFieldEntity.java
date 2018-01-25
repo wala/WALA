@@ -23,7 +23,7 @@ import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.util.debug.Assertions;
 
-class AbstractFieldEntity extends AbstractDataEntity {
+public class AbstractFieldEntity extends AbstractDataEntity {
   private final String name;
 
   private final Set<CAstQualifier> modifiers;

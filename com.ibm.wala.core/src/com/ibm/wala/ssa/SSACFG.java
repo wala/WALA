@@ -30,6 +30,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -168,6 +169,8 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       if (handler.getCatchClass() == null) {
         // by convention, in ShrikeCT this means catch everything
         t = TypeReference.JavaLangThrowable;
+      } else if (handler.getCatchClassLoader() instanceof ClassLoaderReference) {
+        t = ShrikeUtil.makeTypeReference((ClassLoaderReference)handler.getCatchClassLoader(), handler.getCatchClass());
       } else {
         TypeReference exceptionType = ShrikeUtil.makeTypeReference(loader.getReference(), handler.getCatchClass());
         IClass klass = null;

@@ -79,7 +79,9 @@ public class CAstImpl implements CAst {
     public int hashCode() {
       int code = getKind() * (getChildCount() + 13);
       for (int i = 0; i < getChildCount() && i < 15; i++) {
-        code *= getChild(i).getKind();
+        if (getChild(i) != null) {
+          code *= getChild(i).getKind();
+        }
       }
 
       return code;

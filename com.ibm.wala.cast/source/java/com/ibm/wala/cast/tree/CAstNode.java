@@ -158,9 +158,9 @@ public interface CAstNode {
   public static final int IS_DEFINED_EXPR = 128;
   public static final int MACRO_VAR = 129;
   public static final int NARY_EXPR = 130;
-
   // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly treated the same, except in JavaCAst2IRTranslator.doNewObject
   public static final int NEW_ENCLOSING = 131;
+  public static final int COMPREHENSION_EXPR = 132;
   
   // explicit lexical scopes
   public static final int LOCAL_SCOPE = 200;

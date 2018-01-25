@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.translator;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.warnings.Warning;
 
 public interface TranslatorToCAst {
@@ -48,42 +50,70 @@ public interface TranslatorToCAst {
 
   public interface WalkContext<C extends WalkContext<C, T>, T> {
 
+    WalkContext<C, T> getParent();
+    
     /**
      * get a mapping from CAstNodes to the scoped entities (e.g. functions or
      * local classes) introduced by those nodes. Also maps <code>null</code> to
      * those entities not corresponding to any node (e.g nested classes)
      */
-    Map<CAstNode, Collection<CAstEntity>> getScopedEntities();
+    default Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
+      return getParent().getScopedEntities();
+    }
+
+    default CAstNode getCatchTarget() {
+      return getParent().getCatchTarget();
+    }
+
+    default CAstNode getCatchTarget(String s) {
+      return getParent().getCatchTarget(s);
+    }
+
+    default T top() {
+      return getParent().top();
+    }
 
     /**
      *   associate a child entity with a given CAstNode, e.g. for a function declaration
      */
-    void addScopedEntity(CAstNode newNode, CAstEntity visit);
+    default void addScopedEntity(CAstNode newNode, CAstEntity visit) {
+      getParent().addScopedEntity(newNode, visit);
+    }
 
     /**
      * for recording control-flow relationships among the CAst nodes
      */
-    CAstControlFlowRecorder cfg();
+    default CAstControlFlowRecorder cfg() {
+      return getParent().cfg();
+    }
 
     /**
      * for recording source positions
      */
-    CAstSourcePositionRecorder pos();
+    default CAstSourcePositionRecorder pos()  {
+      return getParent().pos();
+    }
 
     /**
      * for recording types of nodes
      */
-    CAstNodeTypeMapRecorder getNodeTypeMap();
+    default CAstNodeTypeMapRecorder getNodeTypeMap() {
+      return getParent().getNodeTypeMap();
+    }
 
     /**
      * for a 'continue' style goto, return the control flow target
      */
-    T getContinueFor(String label);
-
+    default T getContinueFor(String label) {
+      return getParent().getContinueFor(label);
+    }
+    
     /**
      * for a 'break' style goto, return the control flow target
      */
-    T getBreakFor(String label);
+    default T getBreakFor(String label) {
+      return getParent().getBreakFor(label);
+    }
 
   }
   
@@ -128,6 +158,18 @@ public interface TranslatorToCAst {
       assert false;
       return null;
     }
+
+    @Override
+    public T top() {
+      assert false;
+      return null;
+    }
+
+    @Override
+    public WalkContext<C, T> getParent() {
+      assert false;
+      return null;
+    }
    
   }
   
@@ -139,42 +181,106 @@ public interface TranslatorToCAst {
     }
     
     @Override
-    public CAstControlFlowRecorder cfg() {
-      return parent.cfg();
+    public T top() {
+      return parent.top();
     }
 
     @Override
-    public CAstSourcePositionRecorder pos() {
-      return parent.pos();
-    }
-
-    @Override
-    public CAstNodeTypeMapRecorder getNodeTypeMap() {
-      return parent.getNodeTypeMap();
-    }
-
-    @Override
-    public T getContinueFor(String label) {
-      return parent.getContinueFor(label);
-    }
-
-    @Override
-    public T getBreakFor(String label) {
-      return parent.getBreakFor(label);
-    }
-
-    @Override
-    public void addScopedEntity(CAstNode newNode, CAstEntity visit) {
-      parent.addScopedEntity(newNode, visit);
-    }
-
-    @Override
-    public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
-      return parent.getScopedEntities();
+    public WalkContext<C, T> getParent() {
+      return parent;
     }
     
   }
   
+  class BreakContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C,T> {
+    private final T breakTarget;
+    protected final String label;
+
+    protected BreakContext(C parent, T breakTarget, String label) {
+      super(parent);
+      this.breakTarget = breakTarget;
+      this.label = label;
+    }
+
+    @Override
+    public T getBreakFor(String l) {
+      return (l == null || l.equals(label))? breakTarget: super.getBreakFor(l);
+    }
+  }
+
+  public class LoopContext<C extends WalkContext<C, T>, T> extends BreakContext<C,T> {
+    private final T continueTo;
+
+    protected LoopContext(C parent, T breakTo, T continueTo, String label) {
+      super(parent, breakTo, label);
+      this.continueTo = continueTo;
+    }
+
+    @Override
+    public T getContinueFor(String l) {
+      return (l == null || l.equals(label))? continueTo: super.getContinueFor(l);
+    }
+  }
+  
+  public static class TryCatchContext<C extends WalkContext<C, T>, T> implements WalkContext<C,T> {
+    private final Map<String,CAstNode> catchNode;
+    private final WalkContext<C,T> parent;
+    
+    protected TryCatchContext(C parent, CAstNode catchNode) {
+      this(parent, Collections.singletonMap(null, catchNode));
+    }
+
+    protected TryCatchContext(C parent, Map<String,CAstNode> catchNode) {
+      this.parent = parent;
+      this.catchNode = catchNode;
+    }
+
+    @Override
+    public CAstNode getCatchTarget() { return getCatchTarget(null); }
+
+    @Override
+    public CAstNode getCatchTarget(String s) { return catchNode.get(s); }
+
+    @Override
+    public WalkContext<C, T> getParent() {
+       return parent;
+    }
+  }
+ 
+  public static class FunctionContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C,T> {
+    private final T topNode;
+    private final CAstSourcePositionRecorder pos = new CAstSourcePositionRecorder();
+    private final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder(pos);
+    private final Map<CAstNode, Collection<CAstEntity>> scopedEntities = HashMapFactory.make();
+
+    protected FunctionContext(C parent, T s) {
+      super(parent);
+      this.topNode = s;
+    }
+
+    @Override
+    public T top() { return topNode; }
+
+    @Override
+    public void addScopedEntity(CAstNode construct, CAstEntity e) {
+      if (! scopedEntities.containsKey(construct)) {
+        scopedEntities.put(construct, new HashSet<CAstEntity>(1));
+      }
+      scopedEntities.get(construct).add(e);
+    }
+
+    @Override
+    public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
+      return scopedEntities;
+    }
+
+    @Override
+    public CAstControlFlowRecorder cfg() { return cfg; }
+
+    @Override
+    public CAstSourcePositionRecorder pos() { return pos; }
+  }
+
   public static class DoLoopTranslator {
     private final boolean replicateForDoLoops;
     
