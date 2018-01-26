@@ -172,3 +172,14 @@ task collectTestDataA(type: Jar) {
 task cleanColllectTestDataA(type: Delete) {
 	delete collectTestDataA
 }
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  help Eclipse build these extra jars when needed
+//
+
+eclipse.project {
+	buildCommand 'org.eclipse.ui.externaltools.ExternalToolBuilder', LaunchConfigHandle: '<project>/.externalToolBuilders/Extra Bundled Jars Builder.launch', incclean: 'true'
+	// TODO: buildCommand XML element should have "<triggers>auto,full,incremental,</triggers>" child
+}
