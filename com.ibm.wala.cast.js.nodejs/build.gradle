@@ -38,6 +38,7 @@ task cleanUnpackNodeJSLib(type: Delete) {
 }
 
 processResources.dependsOn unpackNodeJSLib
+clean.dependsOn cleanUnpackNodeJSLib
 
 sourceSets.main {
 	java.srcDirs = ['src']

@@ -41,3 +41,9 @@ test {
 	exclude '**/GetTargetsTest.class'
 	exclude '**/PruneArrayOutOfBoundExceptionEdge.class'
 }
+
+task cleanTest(type: Delete) {
+	delete 'report'
+}
+
+clean.dependsOn cleanTest
