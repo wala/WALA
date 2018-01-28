@@ -50,6 +50,8 @@ task copyDxJar(type: Sync) {
 	into 'lib'
 }
 
+clean.dependsOn cleanCopyDxJar
+
 processTestResources {
 	dependsOn cloneDroidBench
 	dependsOn copyDxJar

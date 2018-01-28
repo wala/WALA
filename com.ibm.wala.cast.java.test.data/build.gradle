@@ -25,3 +25,4 @@ task verifyJLex(type: VerifyWithStamp, dependsOn: downloadJLex) {
 }
 
 compileTestJava.dependsOn verifyJLex
+clean.dependsOn cleanDownloadJLex

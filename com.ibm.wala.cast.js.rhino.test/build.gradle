@@ -24,3 +24,10 @@ test {
 	environment 'TRAVIS', 1
 	maxHeapSize = '800M'
 }
+
+task cleanTest(type: Delete) {
+	delete 'actual.dump'
+	delete 'expected.dump'
+}
+
+clean.dependsOn cleanTest

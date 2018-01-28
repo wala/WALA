@@ -45,6 +45,8 @@ task cleanExtractBcel(type: Delete) {
 	delete files(extractBcel)[0]
 }
 
+clean.dependsOn cleanExtractBcel
+
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -67,6 +69,8 @@ task verifyJavaCup(type: VerifyWithStamp, dependsOn: downloadJavaCup) {
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
+clean.dependsOn cleanDownloadJavaCup
+
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -83,6 +87,8 @@ task collectJLex(type: Jar) {
 task cleanCollectJLex(type: Delete) {
 	delete collectJLex
 }
+
+clean.dependsOn cleanCollectJLex
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -123,7 +129,10 @@ task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
 
 task cleanGenerateHelloHash(type: Delete) {
 	delete generateHelloHash
+	delete fileTree('ocaml') { exclude '*.ml' }
 }
+
+clean.dependsOn cleanGenerateHelloHash
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -143,6 +152,8 @@ task collectTestData(type: Jar) {
 task cleanCollectTestData(type: Delete) {
 	delete collectTestData
 }
+
+clean.dependsOn cleanCollectTestData
 
 
 ////////////////////////////////////////////////////////////////////////
