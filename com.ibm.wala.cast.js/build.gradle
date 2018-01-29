@@ -13,3 +13,11 @@ dependencies {
 		project(':com.ibm.wala.util'),
 		)
 }
+
+javadoc {
+	def rhino = project(':com.ibm.wala.cast.js.rhino').compileJava
+	dependsOn rhino
+	doFirst {
+		classpath += files rhino
+	}
+}

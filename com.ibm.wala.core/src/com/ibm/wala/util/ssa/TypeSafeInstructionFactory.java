@@ -52,7 +52,6 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -102,7 +101,7 @@ public class TypeSafeInstructionFactory {
      *
      *  Calls result.setAssigned()
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int, int[], int, CallSiteReference, BootstrapMethod)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int, int[], int, CallSiteReference, com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod)
      *
      *  @param  iindex  Zero or a positive number unique to any instruction of the same method
      *  @param  result  Where to place the return-value of the called method. Is SSAValue.setAssigned() automatically.
@@ -215,7 +214,7 @@ public class TypeSafeInstructionFactory {
      *  All parameters (but exception) are typechecked first. If the check passes they get unpacked and handed over
      *  to the corresponding JavaInstructionFactory.InvokeInstruction.
      *
-     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int[], int, CallSiteReference, BootstrapMethod)
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int[], int, CallSiteReference, com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod)
      *
      *  @param  iindex  Zero or a positive number unique to any instruction of the same method
      *  @param  params  Parameters to the call starting with the implicit this-pointer if necessary 

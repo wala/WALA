@@ -8,7 +8,7 @@ javadoc {
 	def coreCompileJava = project(':com.ibm.wala.core').compileJava
 	dependsOn coreCompileJava
 	doFirst {
-		classpath += files(coreCompileJava)
+		classpath += files coreCompileJava
 	}
 	options.links 'https://docs.oracle.com/javase/8/docs/api/'
 }

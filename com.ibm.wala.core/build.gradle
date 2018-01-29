@@ -18,9 +18,10 @@ dependencies {
 }
 
 javadoc {
-	dependsOn ':com.ibm.wala.dalvik:compileJava'
+	def dalvik = ':com.ibm.wala.dalvik'
+	dependsOn "$dalvik:compileJava"
 
 	doFirst {
-		classpath += files(project(':com.ibm.wala.dalvik').compileJava)
+		classpath += files project(dalvik).compileJava
 	}
 }
