@@ -24,6 +24,8 @@ dependencies {
 processTestResources {
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.verifyJavaCup
+	// TODO: something of what follows ends up copying the entire
+	// 'com.ibm.wala.core.testdata' directory!
 	from testdata.collectJLex
 	from testdata.collectTestData
 	from testdata.downloadJavaCup
