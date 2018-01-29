@@ -6,7 +6,6 @@
 <stringAttribute key="gradle_user_home" value=""/>
 <listAttribute key="jvm_arguments"/>
 <booleanAttribute key="offline_mode" value="false"/>
-<booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
