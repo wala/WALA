@@ -190,7 +190,13 @@ task cleanColllectTestDataA(type: Delete) {
 //  help Eclipse build these extra jars when needed
 //
 
-eclipse.project {
-	buildCommand 'org.eclipse.ui.externaltools.ExternalToolBuilder', LaunchConfigHandle: '<project>/.externalToolBuilders/Extra Bundled Jars Builder.launch', incclean: 'true'
-	// TODO: buildCommand XML element should have "<triggers>auto,full,incremental,</triggers>" child
+task eclipseProcessTestResources {
+	dependsOn(
+		collectJLex,
+		collectTestData,
+		collectTestDataA,
+		extractBcel,
+		generateHelloHash,
+		verifyJavaCup,
+		)
 }
