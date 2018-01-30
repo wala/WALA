@@ -28,7 +28,6 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.ir.translator.AstTranslator.WalkContext;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
@@ -47,25 +46,18 @@ import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.cast.loader.AstClass;
-import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
-import com.ibm.wala.cast.loader.AstFunctionClass;
-import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
-import com.ibm.wala.cast.loader.AstMethod.Retranslatable;
 import com.ibm.wala.cast.loader.CAstAbstractModuleLoader;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
-import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
@@ -109,10 +101,8 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
@@ -670,10 +660,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   };
 
-  private static final Map<Selector, IMethod> emptyMap1 = Collections.emptyMap();
-
-  private static final Map<Atom, IField> emptyMap2 = Collections.emptyMap();
-
   private final JavaScriptTranslatorFactory translatorFactory;
   
   private final CAstRewriterFactory<?, ?> preprocessor;
@@ -688,106 +674,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     this.preprocessor = preprocessor;
   }
 
-  public class JavaScriptClass extends AstClass {
-    private IClass superClass;
-
-    private JavaScriptClass(IClassLoader loader, TypeReference classRef, TypeReference superRef,
-        CAstSourcePositionMap.Position sourcePosition) {
-      super(sourcePosition, classRef.getName(), loader, (short) 0, emptyMap2, emptyMap1);
-      types.put(classRef.getName(), this);
-      superClass = superRef == null ? null : loader.lookupClass(superRef.getName());
-    }
-
-    @Override
-    public IClassHierarchy getClassHierarchy() {
-      return cha;
-    }
-
-    @Override
-    public String toString() {
-      return "JS:" + getReference().toString();
-    }
-
-    @Override
-    public Collection<IClass> getDirectInterfaces() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public IClass getSuperclass() {
-      return superClass;
-    }
-
-    @Override
-    public Collection<Annotation> getAnnotations() {
-      return Collections.emptySet();
-    }
-  }
-
-  public class JavaScriptRootClass extends AstDynamicPropertyClass {
-
-    private JavaScriptRootClass(IClassLoader loader, CAstSourcePositionMap.Position sourcePosition) {
-      super(sourcePosition, JavaScriptTypes.Root.getName(), loader, (short) 0, emptyMap1, JavaScriptTypes.Root);
-
-      types.put(JavaScriptTypes.Root.getName(), this);
-    }
-
-    @Override
-    public IClassHierarchy getClassHierarchy() {
-      return cha;
-    }
-
-    @Override
-    public String toString() {
-      return "JS Root:" + getReference().toString();
-    }
-
-    @Override
-    public Collection<IClass> getDirectInterfaces() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public IClass getSuperclass() {
-      return null;
-    }
-    
-    @Override
-    public Collection<Annotation> getAnnotations() {
-      return Collections.emptySet();
-    }
-  }
-
-  class JavaScriptCodeBody extends AstFunctionClass {
-    private final WalkContext translationContext;
-    private final CAstEntity entity;
-    
-    public JavaScriptCodeBody(TypeReference codeName, TypeReference parent, IClassLoader loader,
-        CAstSourcePositionMap.Position sourcePosition, CAstEntity entity, WalkContext context) {
-      super(codeName, parent, loader, sourcePosition);
-      types.put(codeName.getName(), this);
-      this.translationContext = context;
-      this.entity = entity;
-    }
-
-    @Override
-    public IClassHierarchy getClassHierarchy() {
-      return cha;
-    }
-    
-    private IMethod setCodeBody(JavaScriptMethodObject codeBody) {
-      this.functionBody = codeBody;
-      codeBody.entity = entity;
-      codeBody.translationContext = translationContext;
-      return codeBody;
-    }
-    
-    @Override
-    public Collection<Annotation> getAnnotations() {
-      return Collections.emptySet();
-    }
-  }
-
   private static final Set<CAstQualifier> functionQualifiers;
 
   static {
@@ -796,113 +682,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     functionQualifiers.add(CAstQualifier.FINAL);
   }
 
-  public class JavaScriptMethodObject extends AstMethod implements Retranslatable {
-    private WalkContext translationContext;
-    private CAstEntity entity;
-
-    JavaScriptMethodObject(IClass cls, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-      super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
-          hasMonitorOp, lexicalInfo, debugInfo, null);
-
-      // force creation of these constants by calling the getter methods
-      symtab.getNullConstant();
-    }
-
-    
-    @Override
-    public CAstEntity getEntity() {
-      return entity;
-    }
-
-
-    @Override
-    public void retranslate(AstTranslator xlator) {
-      xlator.translate(entity, translationContext);
-    }
-
-    @Override
-    public IClassHierarchy getClassHierarchy() {
-      return cha;
-    }
-
-    @Override
-    public String toString() {
-      return "<Code body of " + cls + ">";
-    }
-
-    @Override
-    public TypeReference[] getDeclaredExceptions() {
-      return null;
-    }
-
-    @Override
-    public LexicalParent[] getParents() {
-      if (lexicalInfo() == null)
-        return new LexicalParent[0];
-
-      final String[] parents = lexicalInfo().getScopingParents();
-
-      if (parents == null)
-        return new LexicalParent[0];
-
-      LexicalParent result[] = new LexicalParent[parents.length];
-
-      for (int i = 0; i < parents.length; i++) {
-        final int hack = i;
-        final AstMethod method = (AstMethod) lookupClass(parents[i], cha).getMethod(AstMethodReference.fnSelector);
-        result[i] = new LexicalParent() {
-          @Override
-          public String getName() {
-            return parents[hack];
-          }
-
-          @Override
-          public AstMethod getMethod() {
-            return method;
-          }
-        };
-
-        if (AstTranslator.DEBUG_LEXICAL) {
-          System.err.println(("parent " + result[i].getName() + " is " + result[i].getMethod()));
-        }
-      }
-
-      return result;
-    }
-
-    @Override
-    public String getLocalVariableName(int bcIndex, int localNumber) {
-      return null;
-    }
-
-    @Override
-    public boolean hasLocalVariableTable() {
-      return false;
-    }
-
-    public int getMaxLocals() {
-      Assertions.UNREACHABLE();
-      return -1;
-    }
-
-    public int getMaxStackHeight() {
-      Assertions.UNREACHABLE();
-      return -1;
-    }
-
-    @Override
-    public TypeReference getParameterType(int i) {
-      if (i == 0) {
-        return getDeclaringClass().getReference();
-      } else {
-        return JavaScriptTypes.Root;
-      }
-    }
-  }
-
   public IClass makeCodeBodyType(String name, TypeReference P, CAstSourcePositionMap.Position sourcePosition, CAstEntity entity, WalkContext context) {
-    return new JavaScriptCodeBody(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(name)), P, this,
+    return new DynamicCodeBody(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(name)), P, this,
         sourcePosition, entity, context);
   }
 
@@ -916,59 +697,59 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   public IMethod defineCodeBodyCode(String clsName, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
       Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-    JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
+    DynamicCodeBody C = (DynamicCodeBody) lookupClass(clsName, cha);
     assert C != null : clsName;
     return C.setCodeBody(makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, C));
   }
 
-  public JavaScriptMethodObject makeCodeBodyCode(AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
+  public DynamicMethodObject makeCodeBodyCode(AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
       Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
       IClass C) {
-    return new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
+    return new DynamicMethodObject(C, functionQualifiers, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
         debugInfo);
   }
 
-  final JavaScriptRootClass ROOT = new JavaScriptRootClass(this, null);
+  final CoreClass ROOT = new CoreClass(AstTypeReference.rootTypeName, null, this, null);
 
-  final JavaScriptClass UNDEFINED = new JavaScriptClass(this, JavaScriptTypes.Undefined, JavaScriptTypes.Root, null);
+  final CoreClass UNDEFINED = new CoreClass(JavaScriptTypes.Undefined.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass PRIMITIVES = new JavaScriptClass(this, JavaScriptTypes.Primitives, JavaScriptTypes.Root, null);
+  final CoreClass PRIMITIVES = new CoreClass(JavaScriptTypes.Primitives.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass FAKEROOT = new JavaScriptClass(this, JavaScriptTypes.FakeRoot, JavaScriptTypes.Root, null);
+  final CoreClass FAKEROOT = new CoreClass(JavaScriptTypes.FakeRoot.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass STRING = new JavaScriptClass(this, JavaScriptTypes.String, JavaScriptTypes.Root, null);
+  final CoreClass STRING = new CoreClass(JavaScriptTypes.String.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass NULL = new JavaScriptClass(this, JavaScriptTypes.Null, JavaScriptTypes.Root, null);
+  final CoreClass NULL = new CoreClass(JavaScriptTypes.Null.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass ARRAY = new JavaScriptClass(this, JavaScriptTypes.Array, JavaScriptTypes.Root, null);
+  final CoreClass ARRAY = new CoreClass(JavaScriptTypes.Array.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass OBJECT = new JavaScriptClass(this, JavaScriptTypes.Object, JavaScriptTypes.Root, null);
+  final CoreClass OBJECT = new CoreClass(JavaScriptTypes.Object.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass TYPE_ERROR = new JavaScriptClass(this, JavaScriptTypes.TypeError, JavaScriptTypes.Root, null);
+  final CoreClass TYPE_ERROR = new CoreClass(JavaScriptTypes.TypeError.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass CODE_BODY = new JavaScriptClass(this, JavaScriptTypes.CodeBody, JavaScriptTypes.Root, null);
+  final CoreClass CODE_BODY = new CoreClass(JavaScriptTypes.CodeBody.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass FUNCTION = new JavaScriptClass(this, JavaScriptTypes.Function, JavaScriptTypes.CodeBody, null);
+  final CoreClass FUNCTION = new CoreClass(JavaScriptTypes.Function.getName(), JavaScriptTypes.CodeBody.getName(), this, null);
 
-  final JavaScriptClass SCRIPT = new JavaScriptClass(this, JavaScriptTypes.Script, JavaScriptTypes.CodeBody, null);
+  final CoreClass SCRIPT = new CoreClass(JavaScriptTypes.Script.getName(), JavaScriptTypes.CodeBody.getName(), this, null);
 
-  final JavaScriptClass BOOLEAN = new JavaScriptClass(this, JavaScriptTypes.Boolean, JavaScriptTypes.Root, null);
+  final CoreClass BOOLEAN = new CoreClass(JavaScriptTypes.Boolean.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass NUMBER = new JavaScriptClass(this, JavaScriptTypes.Number, JavaScriptTypes.Root, null);
+  final CoreClass NUMBER = new CoreClass(JavaScriptTypes.Number.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass DATE = new JavaScriptClass(this, JavaScriptTypes.Date, JavaScriptTypes.Root, null);
+  final CoreClass DATE = new CoreClass(JavaScriptTypes.Date.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass REGEXP = new JavaScriptClass(this, JavaScriptTypes.RegExp, JavaScriptTypes.Root, null);
+  final CoreClass REGEXP = new CoreClass(JavaScriptTypes.RegExp.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final JavaScriptClass BOOLEAN_OBJECT = new JavaScriptClass(this, JavaScriptTypes.BooleanObject, JavaScriptTypes.Object, null);
+  final CoreClass BOOLEAN_OBJECT = new CoreClass(JavaScriptTypes.BooleanObject.getName(), JavaScriptTypes.Object.getName(), this, null);
 
-  final JavaScriptClass NUMBER_OBJECT = new JavaScriptClass(this, JavaScriptTypes.NumberObject, JavaScriptTypes.Object, null);
+  final CoreClass NUMBER_OBJECT = new CoreClass(JavaScriptTypes.NumberObject.getName(), JavaScriptTypes.Object.getName(), this, null);
 
-  final JavaScriptClass DATE_OBJECT = new JavaScriptClass(this, JavaScriptTypes.DateObject, JavaScriptTypes.Object, null);
+  final CoreClass DATE_OBJECT = new CoreClass(JavaScriptTypes.DateObject.getName(), JavaScriptTypes.Object.getName(), this, null);
 
-  final JavaScriptClass REGEXP_OBJECT = new JavaScriptClass(this, JavaScriptTypes.RegExpObject, JavaScriptTypes.Object, null);
+  final CoreClass REGEXP_OBJECT = new CoreClass(JavaScriptTypes.RegExpObject.getName(), JavaScriptTypes.Object.getName(), this, null);
 
-  final JavaScriptClass STRING_OBJECT = new JavaScriptClass(this, JavaScriptTypes.StringObject, JavaScriptTypes.Object, null);
+  final CoreClass STRING_OBJECT = new CoreClass(JavaScriptTypes.StringObject.getName(), JavaScriptTypes.Object.getName(), this, null);
 
   @Override
   public Language getLanguage() {

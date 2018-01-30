@@ -51,7 +51,7 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstTypeDictionaryImpl;
 import com.ibm.wala.util.debug.Assertions;
 
-public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
+public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
   // TODO: better way of getting type "ObjecT" that doesn't require us to keep AST? although this is similar to
   // polyglot.
@@ -88,7 +88,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
         type = new JdtJavaArrayType(jdtType);
       } else
         Assertions.UNREACHABLE("getCAstTypeFor() passed type that is not primitive, array, or class?");
-      super.map(astType, type); // put in cache
+      super.map((ITypeBinding)astType, type); // put in cache
     }
     return type;
   }

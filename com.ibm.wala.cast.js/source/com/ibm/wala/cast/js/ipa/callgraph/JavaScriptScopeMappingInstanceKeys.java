@@ -15,9 +15,9 @@ import java.util.Collections;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.loader.JavaScriptLoader.JavaScriptMethodObject;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
+import com.ibm.wala.cast.loader.CAstAbstractModuleLoader.DynamicMethodObject;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -50,7 +50,7 @@ public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys
   }
 
   protected LexicalParent[] getParents(InstanceKey base) {
-    JavaScriptMethodObject function = (JavaScriptMethodObject)
+    DynamicMethodObject function = (DynamicMethodObject)
       base.getConcreteType().getMethod(AstMethodReference.fnSelector);
 
     return function==null? new LexicalParent[0]: function.getParents();

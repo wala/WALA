@@ -21,15 +21,15 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstTypeDictionary;
 import com.ibm.wala.util.collections.HashMapFactory;
 
-public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
-  protected final Map<Object, CAstType> fMap = HashMapFactory.make();
+public class CAstTypeDictionaryImpl<A> implements CAstTypeDictionary {
+  protected final Map<A, CAstType> fMap = HashMapFactory.make();
 
   @Override
-  public CAstType getCAstTypeFor(Object/*ASTType*/ astType) {
+  public CAstType getCAstTypeFor(Object astType) {
       return fMap.get(astType);
   }
 
-  public void map(Object/*ASTType*/ astType, CAstType castType) {
+  public void map(A astType, CAstType castType) {
     fMap.put(astType, castType);
   }
 

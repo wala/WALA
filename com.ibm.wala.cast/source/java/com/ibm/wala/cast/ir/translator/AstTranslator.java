@@ -85,6 +85,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntSet;
@@ -2112,7 +2113,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           } else if (hasSpecialUndeclaredVariables()) {
             return null;
           } else {
-            throw new Error("cannot find " + name);
+            throw new UnimplementedError("cannot find " + name);
           }
         }
 
