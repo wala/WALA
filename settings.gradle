@@ -1,3 +1,5 @@
+rootProject.name = 'com.ibm.wala'
+
 include(
 	'com.ibm.wala-repository',
 	'com.ibm.wala.cast',
