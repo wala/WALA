@@ -15,5 +15,5 @@
 <listAttribute key="tasks">
 <listEntry value="eclipseProcessTestResources"/>
 </listAttribute>
-<stringAttribute key="working_dir" value="${workspace_loc:/WALA}"/>
+<stringAttribute key="working_dir" value="${workspace_loc:/com.ibm.wala}"/>
 </launchConfiguration>
