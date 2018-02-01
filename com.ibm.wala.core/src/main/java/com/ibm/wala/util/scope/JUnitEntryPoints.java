@@ -44,11 +44,13 @@ public class JUnitEntryPoints {
   private static final Logger logger = Logger.getLogger(JUnitEntryPoints.class.getName());
 
   /**
-   * Names of annotations that denote JUnit4 test methods.
+   * Names of annotations that denote JUnit4/5 test methods.
    */
   private static final Set<String> TEST_ENTRY_POINT_ANNOTATION_NAMES = new HashSet<>(
       Arrays.asList("org.junit.After", "org.junit.AfterClass", "org.junit.Before", "org.junit.BeforeClass", "org.junit.ClassRule",
-          "org.junit.Rule", "org.junit.Test", "org.junit.runners.Parameterized.Parameters"));
+          "org.junit.Rule", "org.junit.Test", "org.junit.runners.Parameterized.Parameters", "org.junit.jupiter.api.AfterAll",
+          "org.junit.jupiter.api.AfterEach", "org.junit.jupiter.api.BeforeAll", "org.junit.jupiter.api.BeforeEach",
+          "org.junit.jupiter.api.RepeatedTest", "org.junit.jupiter.api.Test"));
 
   /**
    * Construct JUnit entrypoints for all the JUnit test methods in the given scope.
