@@ -46,7 +46,7 @@ public class JUnitEntryPoints {
   /**
    * Names of annotations that denote JUnit4 test methods.
    */
-  private static final Set<String> testEntryPointAnnotationNames = new HashSet<>(
+  private static final Set<String> TEST_ENTRY_POINT_ANNOTATION_NAMES = new HashSet<>(
       Arrays.asList("org.junit.After", "org.junit.AfterClass", "org.junit.Before", "org.junit.BeforeClass", "org.junit.ClassRule",
           "org.junit.Rule", "org.junit.Test", "org.junit.runners.Parameterized.Parameters"));
 
@@ -125,7 +125,7 @@ public class JUnitEntryPoints {
 
   private static boolean isTestEntryPoint(TypeName typeName) {
     String javaName = walaTypeNameToJavaName(typeName);
-    return testEntryPointAnnotationNames.contains(javaName);
+    return TEST_ENTRY_POINT_ANNOTATION_NAMES.contains(javaName);
   }
 
   private static String walaTypeNameToJavaName(TypeName typeName) {
