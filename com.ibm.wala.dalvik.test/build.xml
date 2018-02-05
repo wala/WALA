@@ -36,7 +36,10 @@
 	<property name="bundleJavacTarget" value="${javacTarget}"/>
 	<property name="bundleBootClasspath" value="${bootclasspath}"/>
 
-	<property environment="env"/>
+	<property environment="env" /> 
+	<condition property="androiddir" value="${env.ANDROID_HOME}"> 
+          <isset property="env.ANDROID_HOME" /> 
+	</condition> 
 
      <target name="sampleLexPresent" depends="init">
         <available file="${plugin.destination}/data/sample.lex" property="sample.lex.present"/>
@@ -65,7 +68,7 @@
 	<target name="fetchDxJar">
 		<mkdir dir="${basedir}/lib/"/>
 		<copy
-		    file="${env.ANDROID_HOME}/build-tools/26.0.2/lib/dx.jar"
+		    file="${androiddir}/build-tools/26.0.2/lib/dx.jar"
 		    tofile="${basedir}/lib/dx.jar" force="true"/>
 	</target>
 
