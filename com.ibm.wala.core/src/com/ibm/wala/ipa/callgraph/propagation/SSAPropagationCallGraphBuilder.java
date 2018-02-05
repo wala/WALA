@@ -40,7 +40,6 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -159,9 +158,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   public IProgressMonitor monitor;
 
-  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
+  protected SSAPropagationCallGraphBuilder(IMethod abstractRootMethod, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, options, cache, pointerKeyFactory);
+    super(abstractRootMethod, options, cache, pointerKeyFactory);
     // this.usePreTransitiveSolver = options.usePreTransitiveSolver();
   }
 
@@ -1581,7 +1580,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     caller.addTarget(instruction.getCallSite(), target);
 
-    if (FakeRootMethod.isFakeRootMethod(caller.getMethod().getReference())) {
+    if (callGraph.getFakeRootNode().equals(caller)) {
       if (entrypointCallSites.contains(instruction.getCallSite())) {
         callGraph.registerEntrypoint(target);
       }

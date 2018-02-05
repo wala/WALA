@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -29,7 +30,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.BasicCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -207,12 +207,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
-    return new CHARootNode(new FakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
+    return new CHARootNode(Language.JAVA.getFakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
 
   @Override
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
-    return new CHARootNode(new FakeWorldClinitMethod(cha, options, cache), Everywhere.EVERYWHERE);
+    return new CHARootNode(new FakeWorldClinitMethod(Language.JAVA.getFakeRootMethod(cha, options, cache).getDeclaringClass(), options, cache), Everywhere.EVERYWHERE);
   }
 
   private int clinitPC = 0;

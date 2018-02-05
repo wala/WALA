@@ -54,7 +54,7 @@ import com.ibm.wala.util.warnings.Warnings;
  */
 public abstract class AbstractRootMethod extends SyntheticMethod {
 
-  final protected ArrayList<SSAInstruction> statements = new ArrayList<>();
+  public final ArrayList<SSAInstruction> statements = new ArrayList<>();
 
   private Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
 
@@ -62,9 +62,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * The number of the next local value number available for the fake root method. Note that we reserve value number 1 to represent
    * the value "any exception caught by the root method"
    */
-  protected int nextLocal = 2;
+  public int nextLocal = 2;
 
-  protected final IClassHierarchy cha;
+  public final IClassHierarchy cha;
 
   private final AnalysisOptions options;
 
@@ -90,7 +90,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    this(method, new FakeRootClass(cha), cha, options, cache);
+    this(method, new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha), cha, options, cache);
   }
 
   /*
@@ -407,7 +407,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
       @Override
       public boolean understands(CGNode node) {
-        return node.getMethod().getDeclaringClass().getReference().equals(FakeRootClass.FAKE_ROOT_CLASS);
+        return node.getMethod().getDeclaringClass().equals(AbstractRootMethod.this.getDeclaringClass());
       }
 
       @Override

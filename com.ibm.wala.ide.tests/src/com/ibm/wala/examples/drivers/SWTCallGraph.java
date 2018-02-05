@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 
 import org.eclipse.jface.window.ApplicationWindow;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
@@ -118,7 +119,7 @@ public class SWTCallGraph {
       // //
       // build the call graph
       // //
-      com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope, null,
+      com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope, null,
           null);
       CallGraph cg = builder.makeCallGraph(options,null);
 

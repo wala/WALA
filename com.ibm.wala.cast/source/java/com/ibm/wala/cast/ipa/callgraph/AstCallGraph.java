@@ -20,6 +20,7 @@ import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -27,19 +28,18 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public class AstCallGraph extends ExplicitCallGraph {
-  public AstCallGraph(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    super(cha, options, cache);
+  public AstCallGraph(IMethod fakeRootClass2, AnalysisOptions options, IAnalysisCacheView cache) {
+    super(fakeRootClass2, options, cache);
   }
 
   public static class AstFakeRoot extends AbstractRootMethod {
@@ -75,6 +75,19 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
 
     public abstract SSAAbstractInvokeInstruction addDirectCall(int functionVn, int[] argVns, CallSiteReference callSite);
+
+    @Override
+    public SSANewInstruction addAllocation(TypeReference T) {
+      if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(declaringClass.getClassLoader().getLanguage().getRootType()))) {
+        int instance = nextLocal++;
+        NewSiteReference ref = NewSiteReference.make(statements.size(), T);
+        SSANewInstruction result = getDeclaringClass().getClassLoader().getInstructionFactory().NewInstruction(statements.size(), instance, ref);
+        statements.add(result);
+        return result;
+      } else {
+        return super.addAllocation(T);
+      }
+    }
 
   }
 
@@ -159,11 +172,6 @@ public class AstCallGraph extends ExplicitCallGraph {
   @Override
   protected ExplicitNode makeNode(IMethod method, Context context) {
     return new AstCGNode(method, context);
-  }
-
-  @Override
-  protected CGNode makeFakeRootNode() throws CancelException {
-    return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 
 }

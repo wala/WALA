@@ -48,6 +48,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
@@ -151,9 +152,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     this.scriptBaseURL = url;
   }
 
-  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
+  protected JSSSAPropagationCallGraphBuilder(AbstractRootMethod abstractRootMethod, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, options, cache, pointerKeyFactory);
+    super(abstractRootMethod, options, cache, pointerKeyFactory);
     globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Root));
   }
 
@@ -218,8 +219,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return getPointerKeyForInstanceField(getGlobalObject(JavaScriptTypes.jsName), f);
   }
   @Override
-  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new JSCallGraph(cha, options, getAnalysisCache());
+  protected ExplicitCallGraph createEmptyCallGraph(IMethod fakeRootClass, AnalysisOptions options) {
+    return new JSCallGraph(fakeRootClass, options, getAnalysisCache());
   }
 
   protected TypeInference makeTypeInference(IR ir, IClassHierarchy cha) {

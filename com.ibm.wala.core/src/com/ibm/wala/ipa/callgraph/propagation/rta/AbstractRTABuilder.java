@@ -17,6 +17,7 @@ import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -99,7 +100,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter) {
-    super(cha, options, cache, new DefaultPointerKeyFactory());
+    super(Language.JAVA.getFakeRootMethod(cha, options, cache), options, cache, new DefaultPointerKeyFactory());
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
     setContextSelector(makeContextSelector(appContextSelector));
     setContextInterpreter(makeContextInterpreter(appContextInterpreter));
@@ -281,7 +282,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     }
     caller.addTarget(site, target);
 
-    if (FakeRootMethod.isFakeRootMethod(caller.getMethod().getReference())) {
+    if (caller.equals(callGraph.getFakeRootNode())) {
       if (entrypointCallSites.contains(site)) {
         callGraph.registerEntrypoint(target);
       }
@@ -395,8 +396,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   @Override
-  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new DelegatingExplicitCallGraph(cha, options, getAnalysisCache());
+  protected ExplicitCallGraph createEmptyCallGraph(IMethod fakeRootClass, AnalysisOptions options) {
+    return new DelegatingExplicitCallGraph(fakeRootClass, options, getAnalysisCache());
   }
 
   /*

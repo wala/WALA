@@ -35,7 +35,7 @@
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}/JLex"/>
      <get src="http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java" dest="${temp.folder}/JLex/Main.java"/>
-     <javac target="1.4" source="1.4" includeAntRuntime="no" srcdir="${temp.folder}" destdir="${temp.folder}"/>
+     <javac includeAntRuntime="no" srcdir="${temp.folder}" destdir="${temp.folder}"/>
      <jar destfile="${plugin.destination}/JLex.jar" basedir="${temp.folder}" />
      <delete dir="${temp.folder}"/>
    </target>
@@ -120,12 +120,7 @@
 		<antcall target="gather.bin.parts">
 		  <param name="destination.temp.folder" value="${temp.folder}/jdk"/>
 		</antcall>
-		<antcall target="gather.bin.parts">
-		  <param name="destination.temp.folder" value="${temp.folder}/dalvik/"/>
-		</antcall>
-		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/dalvik/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
-		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/dalvik/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
-		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/jdk/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/jdk/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class,**/SortingExample.class,**/A.class"/>
 		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/jdk/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
@@ -162,12 +157,6 @@
 		  <param name="jsv" value="${bundleJavacSource}"/>
 		  <param name="jtv" value="${bundleJavacTarget}"/>
 		  <param name="excludes" value="**/bak/"/>
-		</antcall>
-		<antcall target="@dot">
-		  <param name="destdir" value="${temp.folder}/dalvik/@dot"/>
-		  <param name="jsv" value="1.6"/>
-		  <param name="jtv" value="1.6"/>
-		  <param name="excludes" value="**/bak/,**/SortingExample.java,defaultMethods/*.java,special/A.java,bug144/A.java,annotations/TypeAnnotatedClass*.java, annotations/TypeAnnotationTypeUse.java"/>
 		</antcall>
 	</target>
 

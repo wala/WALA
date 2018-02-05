@@ -16,6 +16,7 @@ import java.util.Properties;
 import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -92,7 +93,7 @@ public class SWTPointsTo {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(),cha, scope, null, null);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(),cha, scope, null, null);
     CallGraph cg = builder.makeCallGraph(options,null);
     PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
     

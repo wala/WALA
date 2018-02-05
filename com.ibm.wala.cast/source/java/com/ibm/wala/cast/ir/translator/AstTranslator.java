@@ -3230,8 +3230,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected boolean visitFunctionEntity(CAstEntity n, WalkContext context, WalkContext codeContext, CAstVisitor<WalkContext> visitor) {
     if (n.getAST() == null) // presumably abstract
       declareFunction(n, context);
-    else
+    else {
+      declareFunction(n, context);
       initFunctionEntity(codeContext);
+    }
     return false;
   }
 

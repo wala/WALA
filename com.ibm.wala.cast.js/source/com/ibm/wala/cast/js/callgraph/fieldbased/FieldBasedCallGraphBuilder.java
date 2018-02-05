@@ -29,6 +29,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionApplyTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -146,7 +147,7 @@ public abstract class FieldBasedCallGraphBuilder {
   @SuppressWarnings("deprecation")
 	public JSCallGraph extract(SSAContextInterpreter interpreter, FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
 	  // set up call graph
-		final JSCallGraph cg = new JSCallGraph(cha, options, cache);
+		final JSCallGraph cg = new JSCallGraph(JavaScriptLoader.JS.getFakeRootMethod(cha, options, cache), options, cache);
 		cg.init();
 		
 		// setup context interpreters

@@ -13,8 +13,9 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import com.ibm.wala.cast.ipa.callgraph.AstContextInsensitiveSSAContextInterpreter;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -103,7 +104,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
 //    int curValNum = passArbitraryPropertyValAsParams(insts, nargs, S, paramsToPassToInvoked);
     int curValNum = passActualPropertyValsAsParams(insts, nargs, S, paramsToPassToInvoked);
     
-    CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
+    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
 
     // function being invoked is in v2
     int resultVal = curValNum++;
@@ -175,7 +176,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
 
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
-    CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
+    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     int[] params = new int[1];
     params[0] = 3;
     // function being invoked is in v2

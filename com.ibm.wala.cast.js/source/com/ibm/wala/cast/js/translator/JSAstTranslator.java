@@ -16,13 +16,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -196,7 +196,7 @@ public class JSAstTranslator extends AstTranslator {
 
     context.cfg().addInstruction(
         ((JSInstructionFactory) insts).Invoke(context.cfg().getCurrentInstruction(), receiver, result, arguments, exception, 
-            new JSCallSiteReference(ref, context.cfg().getCurrentInstruction())));
+            new DynamicCallSiteReference(ref, context.cfg().getCurrentInstruction())));
 
     context.cfg().addPreNode(call, context.getUnwindState());
 
@@ -226,7 +226,7 @@ public class JSAstTranslator extends AstTranslator {
     int tmp = super.doGlobalRead(n, context, "Function", JavaScriptTypes.Function);
     context.cfg().addInstruction(
       ((JSInstructionFactory)insts).Invoke(context.cfg().getCurrentInstruction(), tmp, result, new int[]{ nm }, exception,
-        new JSCallSiteReference(JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
+        new DynamicCallSiteReference(JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
   }
 
   @Override

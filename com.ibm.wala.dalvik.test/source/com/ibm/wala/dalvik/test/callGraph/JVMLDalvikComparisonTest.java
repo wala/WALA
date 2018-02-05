@@ -21,6 +21,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -54,7 +55,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 		Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
 		AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-		SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+		SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
 		CallGraph CG = builder.makeCallGraph(options);
 		return Pair.make(CG, builder.getPointerAnalysis());
 	}

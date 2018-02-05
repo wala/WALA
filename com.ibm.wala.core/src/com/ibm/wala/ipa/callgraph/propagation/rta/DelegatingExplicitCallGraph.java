@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
@@ -45,8 +44,8 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * @param cha
    * @param options
    */
-  public DelegatingExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    super(cha, options, cache);
+  public DelegatingExplicitCallGraph(IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
+    super(fakeRootClass, options, cache);
   }
 
   /**

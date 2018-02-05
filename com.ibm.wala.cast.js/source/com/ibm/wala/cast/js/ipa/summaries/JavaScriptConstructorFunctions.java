@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -316,7 +316,7 @@ public class JavaScriptConstructorFunctions {
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 2, "toString"));
     S.getNextProgramCounter();
     
-    CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
+    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] { 2 }, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
@@ -356,7 +356,7 @@ public class JavaScriptConstructorFunctions {
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 2, "toNumber"));
     S.getNextProgramCounter();
     
-    CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
+    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] { 2 }, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
@@ -569,7 +569,7 @@ public class JavaScriptConstructorFunctions {
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), nargs + 5, nargs + 4));
     S.getNextProgramCounter();
     
-    CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
+    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     int[] args = new int[nargs + 1];
     args[0] = nargs + 5;
     for (int i = 0; i < nargs; i++)

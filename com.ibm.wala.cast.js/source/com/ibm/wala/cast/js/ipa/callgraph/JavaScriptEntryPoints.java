@@ -11,8 +11,8 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.ScriptEntryPoints;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -22,7 +22,7 @@ public class JavaScriptEntryPoints extends ScriptEntryPoints {
 
   @Override
   protected CallSiteReference makeScriptSite(IMethod m, int pc) {
-    return new JSCallSiteReference(pc);
+    return new DynamicCallSiteReference(JavaScriptTypes.CodeBody, pc);
   }
 
   public JavaScriptEntryPoints(IClassHierarchy cha, IClassLoader loader) {

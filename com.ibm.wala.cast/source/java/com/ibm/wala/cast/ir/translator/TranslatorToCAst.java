@@ -20,6 +20,7 @@ import java.util.Set;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
@@ -323,5 +324,14 @@ public interface TranslatorToCAst {
       }
     }
     }
+
+  default <X extends WalkContext<X,Y>, Y> void pushSourcePosition(WalkContext<X, Y> context, CAstNode n, Position p) {
+    if (context.pos().getPosition(n) == null && !(n.getKind()==CAstNode.FUNCTION_EXPR || n.getKind()==CAstNode.FUNCTION_STMT)) {
+        context.pos().setPosition(n, p);
+        for(int i = 0; i < n.getChildCount(); i++) {
+          pushSourcePosition(context, n.getChild(i), p);
+        }
+    }
+  }
 
 }

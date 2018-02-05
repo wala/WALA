@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -32,7 +33,7 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
   public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
 
-    super(cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
+    super(Language.JAVA, cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
 
     ContextSelector CCS = makeContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);

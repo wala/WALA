@@ -41,7 +41,7 @@ public class SyntheticMethod implements IMethod {
 
   protected final IMethod resolvedMethod;
 
-  protected final IClass declaringClass;
+  public final IClass declaringClass;
 
   private final boolean isStatic;
 

@@ -115,7 +115,7 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
         }
       }
       if (declaringEntity != null) {
-//        System.err.println("marking " + nm + " from entity " + declaringEntity + " as exposed");
+        // System.err.println("marking " + nm + " from entity " + declaringEntity + " as exposed");
         MapUtil.findOrCreateSet(entity2ExposedNames, declaringEntity).add(nm);
       }
     }

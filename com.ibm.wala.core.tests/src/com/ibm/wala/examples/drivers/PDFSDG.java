@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.function.Predicate;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -128,7 +129,7 @@ public class PDFSDG {
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-      CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+      CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options,null);
       final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
       SDG<?> sdg = new SDG<>(cg, pointerAnalysis, dOptions, cOptions);

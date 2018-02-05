@@ -65,7 +65,8 @@ public final class InterprocNullPointerAnalysis {
   private final MethodState defaultMethodState;
   private final Map<CGNode, IntraprocAnalysisState> states;
   private final boolean optHasExceptions;
-
+  private CallGraph cg;
+  
   public static InterprocNullPointerAnalysis compute(final TypeReference[] ignoredExceptions, final CallGraph cg,
       final MethodState defaultMethodState, final IProgressMonitor progress, boolean optHasExceptions)
           throws WalaException, UnsoundGraphException, CancelException {
@@ -88,6 +89,7 @@ public final class InterprocNullPointerAnalysis {
     }
 
     // we filter out everything we do not need now
+    this.cg = cg;
     this.cgFiltered = computeFilteredCallgraph(cg);
 
     // we start with the first node
@@ -142,7 +144,7 @@ public final class InterprocNullPointerAnalysis {
   private void analysisSecondPass(final CGNode startNode, final ParameterState paramState,
       final IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     final IR ir = startNode.getIR();
-    if (!AnalysisUtil.isFakeRoot(startNode) && !(ir == null || ir.isEmptyIR())) {
+    if (!AnalysisUtil.isFakeRoot(cg, startNode) && !(ir == null || ir.isEmptyIR())) {
       final MethodState ims =  new InterprocMethodState(startNode, cgFiltered, states);
       final MethodState mState = (defaultMethodState != null
           ? new DelegatingMethodState(defaultMethodState, ims) : ims);

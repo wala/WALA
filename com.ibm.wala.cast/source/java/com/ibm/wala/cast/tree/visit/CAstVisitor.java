@@ -386,7 +386,8 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    *
    * @return true if node was handled
    */
-  protected boolean doVisitAssignNodes() {
+  @SuppressWarnings("unused")
+  protected boolean doVisitAssignNodes(CAstNode n, C context, CAstNode v, CAstNode a, CAstVisitor<C> visitor) {
     return false;
   }
 
@@ -967,8 +968,16 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       break;
     }
 
+    case CAstNode.ARRAY_LITERAL: {
+      assert assign;
+      if (visitor.visitArrayLiteralAssign(n, v, a, context, visitor))
+        return true;
+      visitor.leaveArrayLiteralAssign(n, v, a, context, visitor);
+      break;
+    }
+
     default: {
-      if (!visitor.doVisitAssignNodes()) {
+      if (!visitor.doVisitAssignNodes(n, context, a, v, visitor)) {
         if (DEBUG) {
           System.err.println(("cannot handle assign to kind " + n.getKind()));
         }
@@ -1559,6 +1568,23 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param c a visitor-specific context
    */
   protected void leaveVarAssign(CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) { /* empty */ }
+  /**
+   * Visit an array literal Assignment node after visiting the RHS.
+   * @param n the LHS node to process
+   * @param v the RHS node to process
+   * @param a the assignment node to process
+   * @param c a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  protected boolean visitArrayLiteralAssign(CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) { /* empty */ return false; }
+  /**
+   * Visit an array literal Assignment node after visiting the LHS.
+   * @param n the LHS node to process
+   * @param v the RHS node to process
+   * @param a the assignment node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveArrayLiteralAssign(CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) { /* empty */ }
   /**
    * Visit a Var Op/Assignment node after visiting the RHS.
    * @param n the LHS node to process

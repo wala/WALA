@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.AstCFAPointerKeys;
 import com.ibm.wala.cast.ipa.callgraph.ReflectedFieldPointerKey;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -34,7 +35,7 @@ import com.ibm.wala.util.strings.Atom;
 public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
   public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    super(cha, options, cache, new AstCFAPointerKeys() {
+    super(JavaScriptLoader.JS.getFakeRootMethod(cha, options, cache), options, cache, new AstCFAPointerKeys() {
 
       private boolean isBogusKey(InstanceKey K) {
         TypeReference t = K.getConcreteType().getReference();

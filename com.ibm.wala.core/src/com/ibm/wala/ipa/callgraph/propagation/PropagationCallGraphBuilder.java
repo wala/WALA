@@ -175,22 +175,22 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * @param options governing call graph construction options
    * @param pointerKeyFactory factory which embodies pointer abstraction policy
    */
-  protected PropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
+  protected PropagationCallGraphBuilder(IMethod abstractRootMethod, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
-    if (cha == null) {
+    if (abstractRootMethod == null) {
       throw new IllegalArgumentException("cha is null");
     }
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     assert cache != null;
-    this.cha = cha;
+    this.cha = abstractRootMethod.getClassHierarchy();
     this.options = options;
     this.analysisCache = cache;
     // we need pointer keys to handle reflection
     assert pointerKeyFactory != null;
     this.pointerKeyFactory = pointerKeyFactory;
-    callGraph = createEmptyCallGraph(cha, options);
+    callGraph = createEmptyCallGraph(abstractRootMethod, options);
     try {
       callGraph.init();
     } catch (CancelException e) {
@@ -202,8 +202,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     JAVA_LANG_OBJECT = cha.lookupClass(TypeReference.JavaLangObject);
   }
 
-  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new ExplicitCallGraph(cha, options, getAnalysisCache());
+  protected ExplicitCallGraph createEmptyCallGraph(IMethod abstractRootMethod, AnalysisOptions options) {
+    return new ExplicitCallGraph(abstractRootMethod, options, getAnalysisCache());
   }
 
   /**

@@ -24,6 +24,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
@@ -121,7 +122,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		options.setReflectionOptions(policy);
 		
 		// SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope, null, makeDefaultInterpreter(options, cache));
-		SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope);
+		SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
   
 		CallGraph callGraph = cgb.makeCallGraph(options, monitor);
 		
@@ -157,7 +158,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
 		AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
-		SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope);
+		SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
   
 		CallGraph callGraph = cgb.makeCallGraph(options);
 

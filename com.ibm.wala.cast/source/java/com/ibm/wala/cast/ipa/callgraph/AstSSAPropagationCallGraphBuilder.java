@@ -34,6 +34,7 @@ import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
@@ -115,9 +116,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   
   public abstract GlobalObjectKey getGlobalObject(Atom language);
 
-  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
+  protected AstSSAPropagationCallGraphBuilder(IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, options, cache, pointerKeyFactory);
+    super(fakeRootClass, options, cache, pointerKeyFactory);
   }
 
   public SSAContextInterpreter makeDefaultContextInterpreters(SSAContextInterpreter appContextInterpreter, AnalysisOptions options,
@@ -249,8 +250,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   // /////////////////////////////////////////////////////////////////////////
 
   @Override
-  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new AstCallGraph(cha, options, getAnalysisCache());
+  protected ExplicitCallGraph createEmptyCallGraph(IMethod fakeRootClass, AnalysisOptions options) {
+    return new AstCallGraph(fakeRootClass, options, getAnalysisCache());
   }
 
   public static class AstInterestingVisitor extends InterestingVisitor implements AstInstructionVisitor {

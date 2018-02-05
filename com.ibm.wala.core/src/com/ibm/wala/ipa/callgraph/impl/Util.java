@@ -21,6 +21,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -325,9 +326,9 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
    */
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(Language l, AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope) {
-    return makeZeroCFABuilder(options, cache, cha, scope, null, null);
+    return makeZeroCFABuilder(l, options, cache, cha, scope, null, null);
   }
 
   /**
@@ -339,7 +340,7 @@ public class Util {
    * @return a 0-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(Language l, AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -348,7 +349,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.NONE);
+    return ZeroXCFABuilder.make(l, cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.NONE);
   }
 
   /**
@@ -358,9 +359,9 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
-  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(Language l, AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope) {
-    return makeZeroOneCFABuilder(options, cache, cha, scope, null, null);
+    return makeZeroOneCFABuilder(l, options, cache, cha, scope, null, null);
   }
 
   /**
@@ -372,7 +373,7 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView analysisCache,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(Language l, AnalysisOptions options, IAnalysisCacheView analysisCache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -381,7 +382,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return ZeroXCFABuilder.make(cha, options, analysisCache, customSelector, customInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC);
+    return ZeroXCFABuilder.make(l, cha, options, analysisCache, customSelector, customInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC);
   }
 
   /**
@@ -391,9 +392,9 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView analysisCache,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(Language l, AnalysisOptions options, IAnalysisCacheView analysisCache,
       IClassHierarchy cha, AnalysisScope scope) {
-    return makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope, null, null);
+    return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, scope, null, null);
   }
 
   /**
@@ -405,7 +406,7 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(Language l, AnalysisOptions options, IAnalysisCacheView cache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -414,7 +415,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+    return ZeroXCFABuilder.make(l, cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
         | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
@@ -478,7 +479,7 @@ public class Util {
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder result = new nCFABuilder(n, cha, options, cache, appSelector, appInterpreter);
+    SSAPropagationCallGraphBuilder result = new nCFABuilder(n, Language.JAVA.getFakeRootMethod(cha, options, cache), options, cache, appSelector, appInterpreter);
     // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
     result.setInstanceKeys(new ZeroXInstanceKeys(options, cha, result.getContextInterpreter(), ZeroXInstanceKeys.ALLOCATIONS
         | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS | ZeroXInstanceKeys.SMUSH_STRINGS
@@ -501,7 +502,7 @@ public class Util {
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder result = new nCFABuilder(n, cha, options, cache, appSelector, appInterpreter);
+    SSAPropagationCallGraphBuilder result = new nCFABuilder(n, Language.JAVA.getFakeRootMethod(cha, options, cache), options, cache, appSelector, appInterpreter);
     // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
     result.setInstanceKeys(new ZeroXInstanceKeys(options, cha, result.getContextInterpreter(), ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC));
     return result;

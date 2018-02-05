@@ -14,14 +14,13 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph;
 import com.ibm.wala.cast.js.cfg.JSInducedCFG;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -30,15 +29,13 @@ import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 public class JSCallGraph extends AstCallGraph {
 
-  public JSCallGraph(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    super(cha, options, cache);
+  public JSCallGraph(IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
+    super(fakeRootClass, options, cache);
   }
 
   public final static MethodReference fakeRoot = MethodReference.findOrCreate(JavaScriptTypes.FakeRoot, FakeRootMethod.name,
@@ -56,21 +53,8 @@ public class JSCallGraph extends AstCallGraph {
     }
 
     @Override
-    public SSANewInstruction addAllocation(TypeReference T) {
-      if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(JavaScriptTypes.Root))) {
-        int instance = nextLocal++;
-        NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-        SSANewInstruction result = getDeclaringClass().getClassLoader().getInstructionFactory().NewInstruction(statements.size(), instance, ref);
-        statements.add(result);
-        return result;
-      } else {
-        return super.addAllocation(T);
-      }
-    }
-
-    @Override
     public SSAAbstractInvokeInstruction addDirectCall(int function, int[] params, CallSiteReference site) {
-      CallSiteReference newSite = new JSCallSiteReference(statements.size());
+      CallSiteReference newSite = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, statements.size());
 
       JavaScriptInvoke s = new JavaScriptInvoke(statements.size(), function, nextLocal++, params, nextLocal++, newSite);
       statements.add(s);

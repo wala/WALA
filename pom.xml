@@ -14,81 +14,107 @@
     <tycho-version>0.23.1</tycho-version>
     <tycho.scmUrl>scm:git:ssh://github.com:wala/WALA.git</tycho.scmUrl>
   </properties>
-  
-  <modules>
-    <module>targets</module>
-
-    <module>com.ibm.wala_feature</module>
-    <module>com.ibm.wala.core</module>
-    <module>com.ibm.wala.shrike</module>
-    <module>com.ibm.wala.util</module>
-    
-    <module>com.ibm.wala.core.testdata</module>
-    <module>com.ibm.wala.core.tests</module>
-    
-    <module>com.ibm.wala.cast</module>
-    <module>com.ibm.wala.cast.test</module>
-    <module>com.ibm.wala.cast.java</module>
-    <module>com.ibm.wala.cast.java.test</module>
-    <module>com.ibm.wala.cast.java.test.data</module>
-
-    <module>com.ibm.wala.cast.java.ecj</module>
-    
-    <module>com.ibm.wala.ide_feature</module>
-    <module>com.ibm.wala.ide</module>
-    <module>com.ibm.wala.ide.tests</module>
-    
-    <module>com.ibm.wala.ide.jdt</module>
-    <module>com.ibm.wala.ide.jdt.test</module>
-    
-    <module>com.ibm.wala.cast.js</module>
-    <module>com.ibm.wala.cast.js.html.nu_validator</module> 
-    <module>com.ibm.wala.cast.js.test</module>
-    <module>com.ibm.wala.cast.js.test.data</module>
-    <module>com.ibm.wala.cast.js.rhino</module>
-    <module>com.ibm.wala.cast.js.rhino.test</module>
-
-    <module>com.ibm.wala.cast.js.nodejs</module>
-    <module>com.ibm.wala.cast.js.nodejs.test</module>
-
-    <module>com.ibm.wala.ide.jsdt</module>
-    <module>com.ibm.wala.ide.jsdt.tests</module>
-    
-    <module>com.ibm.wala.dalvik</module>
-    <module>com.ibm.wala.dalvik.test</module>
-    
-    <module>com.ibm.wala.scandroid</module>
-    
-    <module>com.ibm.wala-repository</module>
-
-    </modules>
 
   <profiles>
-   <profile>
-    <id>linux</id>
-    <activation>
-      <os> 
-        <family>unix</family> 
-        <name>Linux</name>
-      </os>
-    </activation>
-    <build>
-      <plugins>
-	<plugin>
-	  <groupId>org.eclipse.tycho</groupId>
-	  <artifactId>target-platform-configuration</artifactId>
-	  <version>${tycho-version}</version>
-	  <configuration>
-	    <dependency-resolution>
-              <optionalDependencies>ignore</optionalDependencies>
-	    </dependency-resolution>
-	  </configuration>
-	</plugin>
-      </plugins>
-    </build>
-   </profile>
+    <profile>
+      <id>noAndroid</id>
+      <modules>
+	<module>targets</module>
+	<module>com.ibm.wala_feature</module>
+	<module>com.ibm.wala.core</module>
+	<module>com.ibm.wala.shrike</module>
+	<module>com.ibm.wala.util</module>
+	<module>com.ibm.wala.core.testdata</module>
+	<module>com.ibm.wala.core.tests</module>
+	<module>com.ibm.wala.cast</module>
+	<module>com.ibm.wala.cast.test</module>
+	<module>com.ibm.wala.cast.java</module>
+	<module>com.ibm.wala.cast.java.test</module>
+	<module>com.ibm.wala.cast.java.test.data</module>
+	<module>com.ibm.wala.cast.java.ecj</module>
+	<module>com.ibm.wala.ide_feature</module>
+	<module>com.ibm.wala.ide</module>
+	<module>com.ibm.wala.ide.tests</module>
+	<module>com.ibm.wala.ide.jdt</module>
+	<module>com.ibm.wala.ide.jdt.test</module>
+	<module>com.ibm.wala.cast.js</module>
+	<module>com.ibm.wala.cast.js.html.nu_validator</module> 
+	<module>com.ibm.wala.cast.js.test</module>
+	<module>com.ibm.wala.cast.js.test.data</module>
+	<module>com.ibm.wala.cast.js.rhino</module>
+	<module>com.ibm.wala.cast.js.rhino.test</module>
+	<module>com.ibm.wala.cast.js.nodejs</module>
+	<module>com.ibm.wala.cast.js.nodejs.test</module>
+	<module>com.ibm.wala.ide.jsdt</module>
+	<module>com.ibm.wala.ide.jsdt.tests</module>
+	<module>com.ibm.wala-repository</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+	<module>targets</module>
+	<module>com.ibm.wala_feature</module>
+	<module>com.ibm.wala.core</module>
+	<module>com.ibm.wala.shrike</module>
+	<module>com.ibm.wala.util</module>
+	<module>com.ibm.wala.core.testdata</module>
+	<module>com.ibm.wala.core.tests</module>
+	<module>com.ibm.wala.cast</module>
+	<module>com.ibm.wala.cast.test</module>
+	<module>com.ibm.wala.cast.java</module>
+	<module>com.ibm.wala.cast.java.test</module>
+	<module>com.ibm.wala.cast.java.test.data</module>
+	<module>com.ibm.wala.cast.java.ecj</module>
+	<module>com.ibm.wala.ide_feature</module>
+	<module>com.ibm.wala.ide</module>
+	<module>com.ibm.wala.ide.tests</module>
+	<module>com.ibm.wala.ide.jdt</module>
+	<module>com.ibm.wala.ide.jdt.test</module>
+	<module>com.ibm.wala.cast.js</module>
+	<module>com.ibm.wala.cast.js.html.nu_validator</module> 
+	<module>com.ibm.wala.cast.js.test</module>
+	<module>com.ibm.wala.cast.js.test.data</module>
+	<module>com.ibm.wala.cast.js.rhino</module>
+	<module>com.ibm.wala.cast.js.rhino.test</module>
+	<module>com.ibm.wala.cast.js.nodejs</module>
+	<module>com.ibm.wala.cast.js.nodejs.test</module>
+	<module>com.ibm.wala.ide.jsdt</module>
+	<module>com.ibm.wala.ide.jsdt.tests</module>
+	<module>com.ibm.wala.dalvik</module>
+	<module>com.ibm.wala.dalvik.test</module>
+	<module>com.ibm.wala.scandroid</module>
+	<module>com.ibm.wala-repository</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>linux</id>
+      <activation>
+	<os> 
+          <family>unix</family> 
+          <name>Linux</name>
+	</os>
+      </activation>
+      <build>
+	<plugins>
+	  <plugin>
+	    <groupId>org.eclipse.tycho</groupId>
+	    <artifactId>target-platform-configuration</artifactId>
+	    <version>${tycho-version}</version>
+	    <configuration>
+	      <dependency-resolution>
+		<optionalDependencies>ignore</optionalDependencies>
+	      </dependency-resolution>
+	    </configuration>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
   </profiles>
-
+  
   <build>
     <plugins>
       <plugin>

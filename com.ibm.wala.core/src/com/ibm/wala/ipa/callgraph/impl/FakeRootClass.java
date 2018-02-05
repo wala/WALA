@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
@@ -37,19 +38,25 @@ import com.ibm.wala.util.strings.Atom;
  * A synthetic class for the fake root method.
  */
 public class FakeRootClass extends SyntheticClass {
-  public static final TypeReference FAKE_ROOT_CLASS = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
-      .string2TypeName("Lcom/ibm/wala/FakeRootClass"));
-
+  public static final TypeReference fakeRootClass(ClassLoaderReference clr) {
+    return TypeReference.findOrCreate(clr, TypeName.string2TypeName("Lcom/ibm/wala/FakeRootClass"));
+  }
+  
   private Map<Atom, IField> fakeRootStaticFields = null;
 
   private Set<IMethod> methods = HashSetFactory.make();
 
-  public FakeRootClass(IClassHierarchy cha) {
-    this(FAKE_ROOT_CLASS, cha);
+  public FakeRootClass(ClassLoaderReference clr, IClassHierarchy cha) {
+    this(fakeRootClass(clr), cha);
   }
 
   public FakeRootClass(TypeReference typeRef, IClassHierarchy cha) {
     super(typeRef, cha);
+  }
+
+  @Override
+  public IClassLoader getClassLoader() {
+    return getClassHierarchy().getLoader(getReference().getClassLoader());
   }
 
   public void addMethod(IMethod m) {
@@ -94,7 +101,7 @@ public class FakeRootClass extends SyntheticClass {
 
       @Override
       public FieldReference getReference() {
-        return FieldReference.findOrCreate(FAKE_ROOT_CLASS, name, fieldType);
+        return FieldReference.findOrCreate(FakeRootClass.this.getReference(), name, fieldType);
       }
 
       @Override

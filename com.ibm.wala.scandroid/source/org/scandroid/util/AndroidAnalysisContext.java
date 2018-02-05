@@ -61,6 +61,7 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -150,7 +151,7 @@ public class AndroidAnalysisContext {
 		// AndroidAppLoader.class.getClassLoader(), methodSpec, cha);
 		addBypassLogic(options, scope, summariesStream, cha, extraSummary);
 
-		return ZeroXCFABuilder.make(cha, options, cache, customSelector,
+		return ZeroXCFABuilder.make(Language.JAVA, cha, options, cache, customSelector,
 				customInterpreter, ZeroXInstanceKeys.ALLOCATIONS
 						| ZeroXInstanceKeys.CONSTANT_SPECIFIC);
 	}
@@ -213,7 +214,7 @@ public class AndroidAnalysisContext {
 			addBypassLogic(options, scope, stream, cha, extraSummary);
 		}
 
-		return ZeroXCFABuilder.make(cha, options, cache, customSelector,
+		return ZeroXCFABuilder.make(Language.JAVA, cha, options, cache, customSelector,
 				customInterpreter, ZeroXInstanceKeys.NONE);
 	}
 

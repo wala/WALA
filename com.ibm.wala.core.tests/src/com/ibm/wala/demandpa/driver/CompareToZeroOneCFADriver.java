@@ -46,6 +46,7 @@ import java.util.Collection;
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.demandpa.TestInfo;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
@@ -149,7 +150,7 @@ public class CompareToZeroOneCFADriver {
   }
 
   private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
-    final SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    final SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     final CallGraph oldCG = builder.makeCallGraph(options,null);
     final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
@@ -225,7 +226,7 @@ public class CompareToZeroOneCFADriver {
 
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       CallGraph cg, MemoryAccessMap fam) {
-    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, fam, cha, options, new DummyStateMachine.Factory<IFlowLabel>());
     // fullDemandPointsTo.setOnTheFly(true);

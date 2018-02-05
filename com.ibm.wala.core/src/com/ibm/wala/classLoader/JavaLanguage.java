@@ -20,6 +20,11 @@ import java.util.Collections;
 
 import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
@@ -764,4 +769,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public boolean methodsHaveDeclaredParameterTypes() {
     return true;
   }
+
+  @Override
+  public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+    return new FakeRootMethod(new FakeRootClass(ClassLoaderReference.Primordial, cha), options, cache); 
+  }
+
 }

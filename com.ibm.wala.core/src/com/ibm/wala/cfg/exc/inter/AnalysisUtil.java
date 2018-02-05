@@ -16,7 +16,7 @@ import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
@@ -43,8 +43,8 @@ public final class AnalysisUtil {
    *          the node to check
    * @return true if node is FakeRoot
    */
-  public static boolean isFakeRoot(CGNode node) {
-    return (node.getMethod().getName().equals(FakeRootMethod.rootMethod.getName()));
+  public static boolean isFakeRoot(CallGraph CG, CGNode node) {
+    return (node.equals(CG.getFakeRootNode()));
   }
   
   /**

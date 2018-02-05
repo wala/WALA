@@ -43,6 +43,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
@@ -230,14 +231,14 @@ public abstract class AbstractPtrTest {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     final IAnalysisCacheView analysisCache = new AnalysisCacheImpl();
-    CallGraphBuilder<InstanceKey> cgBuilder = Util.makeZeroCFABuilder(options, analysisCache, cha, scope);
+    CallGraphBuilder<InstanceKey> cgBuilder = Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
     // MemoryAccessMap mam = new SimpleMemoryAccessMap(cg,
     // cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
-    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope);
+    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
     DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, mam, cha, options,
         getStateMachineFactory());
 

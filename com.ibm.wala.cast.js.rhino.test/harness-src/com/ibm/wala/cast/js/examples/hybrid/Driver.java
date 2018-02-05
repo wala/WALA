@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
+import com.ibm.wala.cast.ipa.callgraph.CrossLanguageCallGraph;
 import com.ibm.wala.cast.ipa.callgraph.CrossLanguageMethodTargetSelector;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ipa.cha.CrossLanguageClassHierarchy;
@@ -22,6 +23,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ComposedEntrypoints;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
@@ -82,7 +85,7 @@ public class Driver {
 
     addDefaultDispatchLogic(options, cha);
 
-    JavaJavaScriptHybridCallGraphBuilder b = new JavaJavaScriptHybridCallGraphBuilder(cha, options, cache);
+    JavaJavaScriptHybridCallGraphBuilder b = new JavaJavaScriptHybridCallGraphBuilder(new FakeRootMethod(new FakeRootClass(CrossLanguageCallGraph.crossCoreLoader, cha), options, cache), options, cache);
     
     System.err.println(b.makeCallGraph(options));
   }

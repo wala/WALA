@@ -231,7 +231,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
     assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
 
-    ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
+    if (N.getQualifiers().contains(CAstQualifier.ABSTRACT)) {
+      ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
+    }
   }
 
   @Override

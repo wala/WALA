@@ -15,11 +15,12 @@ import java.util.Map;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -153,7 +154,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
-    CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
+    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     int[] params = new int[nargs - 2];
     for (int i = 0; i < params.length; i++) {
       // add 3 to skip v1 (which points to Function.call() itself) and v2 (the

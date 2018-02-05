@@ -30,7 +30,10 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -49,9 +52,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class CrossLanguageCallGraph extends AstCallGraph {
 
-  public CrossLanguageCallGraph(TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots, IClassHierarchy cha,
+  public CrossLanguageCallGraph(TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots, IMethod fakeRootClass2,
       AnalysisOptions options, IAnalysisCacheView cache) {
-    super(cha, options, cache);
+    super(fakeRootClass2, options, cache);
     this.roots = roots;
   }
 
@@ -91,14 +94,20 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     return (AbstractRootMethod) languageRoots.get(language);
   }
 
+  public static ClassLoaderReference crossCoreLoader = ClassLoaderReference.Primordial;
+  
+  public static TypeReference fakeRootClass = TypeReference.findOrCreate(crossCoreLoader, TypeName.findOrCreate("CrossFakeRoot"));
+  
+  public static MethodReference rootMethod = MethodReference.findOrCreate(fakeRootClass, FakeRootMethod.name, FakeRootMethod.descr);
+  
   public class CrossLanguageFakeRoot extends ScriptFakeRoot {
 
     public CrossLanguageFakeRoot(IClass declaringClass, IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      super(FakeRootMethod.rootMethod, declaringClass, cha, options, cache);
+      super(rootMethod, declaringClass, cha, options, cache);
     }
 
     public CrossLanguageFakeRoot(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      super(FakeRootMethod.rootMethod, cha, options, cache);
+      super(rootMethod, cha, options, cache);
     }
 
     public int addPhi(TypeReference type, int[] values) {
