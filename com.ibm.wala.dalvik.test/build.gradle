@@ -6,20 +6,6 @@ sourceSets.test {
 		]
 }
 
-dependencies {
-	testCompile(
-		'com.google.android.tools:dx:1.7',
-		'junit:junit:4.11',
-		'org.osgi:org.osgi.core:4.2.0',
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.dalvik'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
-		)
-	testRuntime 'com.google.android:android:4.1.1.4'
-}
-
 task cloneDroidBench(type: Exec) {
 	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
 	def destDir = file('/tmp/DroidBench')
@@ -42,19 +28,55 @@ task verifyAndroidJar(type: VerifyWithStamp, dependsOn: downloadAndroidJar) {
 	checksum '88be04f4d84d58fadee2e780a322fdb9'
 }
 
-task copyDxJar(type: Sync) {
-	from configurations.testCompile.files {
-		include '**/dx-1.7.jar'
-		rename 'dx-1.7.jar', 'dx.jar'
-	}
+task downloadAndroidSdk(type: de.undercouch.gradle.tasks.download.Download) {
+	src 'https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip'
+	dest temporaryDir
+	overwrite false
+}
+
+task verifyAndroidSdk(type: VerifyWithStamp, dependsOn: downloadAndroidSdk) {
+	src files(downloadAndroidSdk)[0]
+	algorithm 'SHA-256'
+	checksum '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
+}
+
+task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
+	from zipTree(verifyAndroidSdk.src)
+	into temporaryDir
+}
+
+task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
+	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
+	commandLine 'sh', '-ceu', "yes | $manager build-tools\\;26.0.2 >/dev/null"
+	inputs.dir "${unpackAndroidSdk.outputs.files[0]}/tools"
+	outputs.dir "${unpackAndroidSdk.outputs.files[0]}/build-tools"
+}
+
+task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
+	from "${unpackAndroidSdk.outputs.files[0]}/build-tools/26.0.2/lib/dx.jar"
 	into 'lib'
 }
 
 clean.dependsOn cleanCopyDxJar
 
+compileTestJava.dependsOn copyDxJar
+
+dependencies {
+	testCompile(
+		'junit:junit:4.11',
+		'org.osgi:org.osgi.core:4.2.0',
+		files("${copyDxJar.outputs.files[0]}/dx.jar"),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.dalvik'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+		)
+	testRuntime 'com.google.android:android:4.1.1.4'
+}
+
 processTestResources {
 	dependsOn cloneDroidBench
-	dependsOn copyDxJar
 
 	dependsOn verifyAndroidJar
 	from downloadAndroidJar
@@ -69,8 +91,6 @@ test {
 	maxHeapSize = '800M'
 
 	// https://github.com/liblit/WALA/issues/5 and possibly https://github.com/wala/WALA/issues/268
-	exclude '**/DalvikAnnotationsTest.class'
 	exclude '**/DynamicDalvikComparisonJavaLibsTest.class'
 	exclude '**/DynamicDalvikComparisonTestForAndroidLibs.class'
-	exclude '**/JVMLDalvikComparisonTest.class'
 }
