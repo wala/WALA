@@ -115,6 +115,7 @@ processTestResources {
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.verifyJavaCup
 	from testdata.collectJLex
+	from testdata.collectTestDataA
 	from testdata.downloadJavaCup
 }
 
