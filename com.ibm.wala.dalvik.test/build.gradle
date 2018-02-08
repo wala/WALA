@@ -61,6 +61,28 @@ task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
 	into 'lib'
 }
 
+task downloadSampleCup(type: Download) {
+	src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
+	dest 'data/sample.cup'
+	overwrite false
+}
+
+task verifySampleCup(type: VerifyWithStamp, dependsOn: downloadSampleCup) {
+	src files(downloadSampleCup)[0]
+	checksum '76b549e7c6e802b811a374248175ecf4'
+}
+
+task downloadSampleLex(type: Download) {
+	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
+	dest 'data'
+	overwrite false
+}
+
+task verifySampleLex(type: VerifyWithStamp, dependsOn: downloadSampleLex) {
+	src files(downloadSampleLex)[0]
+	checksum 'ae887758b2657981d023a72a165da830'
+}
+
 clean.dependsOn cleanCopyDxJar
 
 compileTestJava.dependsOn copyDxJar
@@ -81,6 +103,12 @@ dependencies {
 
 processTestResources {
 	dependsOn cloneDroidBench
+
+	dependsOn verifySampleCup
+	from downloadSampleCup
+
+	dependsOn verifySampleLex
+	from downloadSampleLex
 
 	from copyAndroidJar
 
