@@ -16,18 +16,6 @@ task cloneDroidBench(type: Exec) {
 	// TODO: should check out a specific tag or hash
 }
 
-// TODO: can Gradle's dependency system manage this download for us?
-task downloadAndroidJar(type: de.undercouch.gradle.tasks.download.Download) {
-	src 'http://central.maven.org/maven2/com/google/android/android/4.1.1.4/android-4.1.1.4.jar'
-	dest new File(temporaryDir, 'android.jar')
-	overwrite false
-}
-
-task verifyAndroidJar(type: VerifyWithStamp, dependsOn: downloadAndroidJar) {
-	src files(downloadAndroidJar)[0]
-	checksum '88be04f4d84d58fadee2e780a322fdb9'
-}
-
 task downloadAndroidSdk(type: de.undercouch.gradle.tasks.download.Download) {
 	src 'https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip'
 	dest temporaryDir
@@ -42,6 +30,19 @@ task verifyAndroidSdk(type: VerifyWithStamp, dependsOn: downloadAndroidSdk) {
 
 task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
 	from zipTree(verifyAndroidSdk.src)
+	into temporaryDir
+}
+
+task installAndroidPlatforms(type: Exec, dependsOn: unpackAndroidSdk) {
+	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
+	ext.version = 'android-26'
+	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager platforms\\;$version >/dev/null"
+	inputs.dir "${unpackAndroidSdk.outputs.files[0]}/tools"
+	outputs.dir "${unpackAndroidSdk.outputs.files[0]}/platforms"
+}
+
+task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
+	from "${installAndroidPlatforms.outputs.files[0]}/${installAndroidPlatforms.version}/android.jar"
 	into temporaryDir
 }
 
@@ -73,14 +74,13 @@ dependencies {
 		project(':com.ibm.wala.util'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
-	testRuntime 'com.google.android:android:4.1.1.4'
+	testRuntime files("${copyAndroidJar.outputs.files[0]}/android.jar")
 }
 
 processTestResources {
 	dependsOn cloneDroidBench
 
-	dependsOn verifyAndroidJar
-	from downloadAndroidJar
+	from copyAndroidJar
 
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.verifyJavaCup
