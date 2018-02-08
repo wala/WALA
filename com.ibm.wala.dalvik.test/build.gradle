@@ -6,6 +6,8 @@ sourceSets.test {
 		]
 }
 
+import de.undercouch.gradle.tasks.download.Download
+
 task cloneDroidBench(type: Exec) {
 	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
 	def destDir = file('/tmp/DroidBench')
@@ -16,7 +18,7 @@ task cloneDroidBench(type: Exec) {
 	// TODO: should check out a specific tag or hash
 }
 
-task downloadAndroidSdk(type: de.undercouch.gradle.tasks.download.Download) {
+task downloadAndroidSdk(type: Download) {
 	src 'https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip'
 	dest temporaryDir
 	overwrite false
