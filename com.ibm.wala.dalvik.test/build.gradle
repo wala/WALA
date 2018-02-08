@@ -47,13 +47,14 @@ task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
 
 task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
 	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
-	commandLine 'sh', '-ceu', "yes | $manager build-tools\\;26.0.2 >/dev/null"
+	ext.version = '26.0.2'
+	commandLine 'sh', '-ceu', "yes | $manager build-tools\\;$version >/dev/null"
 	inputs.dir "${unpackAndroidSdk.outputs.files[0]}/tools"
 	outputs.dir "${unpackAndroidSdk.outputs.files[0]}/build-tools"
 }
 
 task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
-	from "${unpackAndroidSdk.outputs.files[0]}/build-tools/26.0.2/lib/dx.jar"
+	from "${installAndroidBuildTools.outputs.files[0]}/${installAndroidBuildTools.version}/lib/dx.jar"
 	into 'lib'
 }
 
