@@ -1,9 +1,7 @@
 sudo: false
-language: android
 android:
   components:
     - build-tools-26.0.2
-jdk: oraclejdk8
 addons:
   apt:
     packages:
@@ -24,6 +22,16 @@ env:
   global:
     - secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
     - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=
-  matrix:
-    - BUILD_SYSTEM=gradle
-    - BUILD_SYSTEM=maven
+matrix:
+  include:
+    - os: linux
+      env: BUILD_SYSTEM=gradle
+      language: java
+      jdk: oraclejdk8
+    - os: linux
+      env: BUILD_SYSTEM=maven
+      language: android
+      jdk: oraclejdk8
+    - os: osx
+      env: BUILD_SYSTEM=gradle
+      language: java
