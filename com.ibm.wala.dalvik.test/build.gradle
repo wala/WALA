@@ -39,8 +39,9 @@ task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
 	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
 	ext.version = '26.0.2'
 	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager build-tools\\;$version >/dev/null"
-	inputs.dir "${unpackAndroidSdk.outputs.files[0]}/tools"
-	outputs.dir "${unpackAndroidSdk.outputs.files[0]}/build-tools"
+	def androidSdk = unpackAndroidSdk.outputs.files[0]
+	inputs.dir "$androidSdk/tools"
+	outputs.dir "$androidSdk/build-tools"
 }
 
 task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
@@ -52,8 +53,9 @@ task installAndroidPlatforms(type: Exec, dependsOn: unpackAndroidSdk) {
 	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
 	ext.version = "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
 	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager platforms\\;$version >/dev/null"
-	inputs.dir "${unpackAndroidSdk.outputs.files[0]}/tools"
-	outputs.dir "${unpackAndroidSdk.outputs.files[0]}/platforms"
+	def androidSdk = unpackAndroidSdk.outputs.files[0]
+	inputs.dir "$androidSdk/tools"
+	outputs.dir "$androidSdk/platforms"
 }
 
 task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
