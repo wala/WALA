@@ -19,7 +19,22 @@ task cloneDroidBench(type: Exec) {
 }
 
 task downloadAndroidSdk(type: Download) {
-	src 'https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip'
+	def sdkOs
+	switch (System.getProperty('os.name')) {
+		case ~/Linux/:
+			sdkOs = 'linux'
+			ext.checksum = '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
+			break
+		case ~/Mac OS X/:
+			sdkOs = 'darwin'
+			ext.checksum = '4a81754a760fce88cba74d69c364b05b31c53d57b26f9f82355c61d5fe4b9df9'
+			break
+		case ~/Windows.*/:
+			sdkOs = 'windows'
+			ext.checksum = '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
+			break
+	}
+	src "https://dl.google.com/android/repository/sdk-tools-$sdkOs-3859397.zip"
 	dest temporaryDir
 	overwrite false
 }
@@ -27,7 +42,7 @@ task downloadAndroidSdk(type: Download) {
 task verifyAndroidSdk(type: VerifyWithStamp, dependsOn: downloadAndroidSdk) {
 	src files(downloadAndroidSdk)[0]
 	algorithm 'SHA-256'
-	checksum '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
+	checksum downloadAndroidSdk.checksum
 }
 
 task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
