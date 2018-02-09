@@ -2,6 +2,6 @@
 
 caches="$HOME/.gradle/caches"
 
-rm --force --recursive \
+rm -rf \
    "$caches/modules-2/modules-2.lock" \
    "$caches"/*/plugin-resolution
