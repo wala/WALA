@@ -99,3 +99,8 @@ model {
 		systemProperty 'java.library.path', lib.destinationDir
 	}
 }
+
+
+// https://github.com/liblit/WALA/issues/3
+if (System.getProperty('os.name') == 'Mac OS X')
+	test.exclude '**/TestNativeTranslator.class'
