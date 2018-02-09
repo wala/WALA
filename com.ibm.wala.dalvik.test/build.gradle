@@ -12,10 +12,10 @@ task cloneDroidBench(type: Exec) {
 	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
 	def destDir = file('/tmp/DroidBench')
 	inputs.property('repository', 'https://github.com/secure-software-engineering/DroidBench.git')
+	inputs.property('branch', 'DroidBench_2.0')
 	outputs.dirs destDir
 	doFirst { delete destDir }
-	commandLine 'git', 'clone', '--depth=1', inputs.properties.repository, destDir
-	// TODO: should check out a specific tag or hash
+	commandLine 'git', 'clone', "--branch=$inputs.properties.branch", '--config=advice.detachedHead=false', '--depth=1', '--quiet', inputs.properties.repository, destDir
 }
 
 task downloadAndroidSdk(type: Download) {
