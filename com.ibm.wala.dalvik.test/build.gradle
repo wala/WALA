@@ -35,6 +35,7 @@ task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
 	into temporaryDir
 }
 
+// TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
 task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
 	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
 	ext.version = '26.0.2'
@@ -49,6 +50,7 @@ task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
 	into 'lib'
 }
 
+// TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
 task installAndroidPlatforms(type: Exec, dependsOn: unpackAndroidSdk) {
 	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
 	ext.version = "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
