@@ -171,7 +171,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   final private boolean rememberGetPutHistory = true;
 
   /**
-   * @param cha governing class hierarchy
    * @param options governing call graph construction options
    * @param pointerKeyFactory factory which embodies pointer abstraction policy
    */

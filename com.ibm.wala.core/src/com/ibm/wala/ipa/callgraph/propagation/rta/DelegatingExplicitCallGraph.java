@@ -41,7 +41,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
   private final IBinaryNaturalRelation delegateR = new BasicNaturalRelation();
 
   /**
-   * @param cha
    * @param options
    */
   public DelegatingExplicitCallGraph(IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
