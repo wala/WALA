@@ -190,7 +190,7 @@ task cleanColllectTestDataA(type: Delete) {
 //  help Eclipse build these extra jars when needed
 //
 
-task eclipseProcessTestResources {
+eclipseProcessTestResources {
 	dependsOn(
 		collectJLex,
 		collectTestData,

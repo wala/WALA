@@ -39,6 +39,10 @@ subprojects { subproject ->
 			url 'https://repo.eclipse.org/content/groups/releases/'
 		}
 	}
+
+	task eclipseProcessTestResources {
+		dependsOn processTestResources
+	}
 }
 
 
