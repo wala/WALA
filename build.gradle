@@ -128,6 +128,7 @@ allprojects {
 		excludedRules = [
 			'duplicate-dependency-class',
 			'transitive-duplicate-dependency-class',
+			'unused-dependency',
 			]
 	}
 }
