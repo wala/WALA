@@ -22,14 +22,16 @@ dependencies {
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
 		)
+	testRuntime(
+		'eclipse-deps:org.eclipse.core.contenttype:+',
+		'eclipse-deps:org.eclipse.equinox.preferences:+',
+		)
 }
 
 test {
 	maxHeapSize = '1200M'
 
 	// https://github.com/liblit/WALA/issues/5
-	exclude '**/ECJJavaIRTest.class'
-	exclude '**/ECJSyncDuplicatorTest.class'
 	exclude '**/JDTJava15IRTests.class'
 	exclude '**/JDTJavaIRTests.class'
 

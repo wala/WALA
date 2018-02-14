@@ -7,7 +7,6 @@ sourceSets.test.java.srcDirs = ['src']
 
 dependencies {
 	testCompile(
-		'eclipse-deps:org.eclipse.core.runtime:+',
 		'junit:junit:4.11',
 		'org.osgi:org.osgi.core:4.2.0',
 		project(':com.ibm.wala.cast'),
