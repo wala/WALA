@@ -13,6 +13,7 @@ script: source "travis/script-$BUILD_SYSTEM"
 before_cache: source "travis/before-cache-$BUILD_SYSTEM"
 cache:
   directories:
+  - "$HOME/.goomph"
   - "$HOME/.gradle/caches"
   - "$HOME/.gradle/wrapper"
   - "$HOME/.m2"

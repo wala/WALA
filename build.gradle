@@ -4,9 +4,36 @@
 //
 
 plugins {
+	id 'com.diffplug.gradle.p2.asmaven' version '3.10.0'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'de.undercouch.download' apply false
 	id 'nebula.lint' version '8.3.1'
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  required Eclipse components
+//
+
+p2AsMaven {
+	group 'eclipse-deps', {
+		repoEclipse '4.7.2'
+		slicingOption 'latestVersionOnly', 'true'
+		iu 'org.eclipse.core.commands'
+		iu 'org.eclipse.core.jobs'
+		iu 'org.eclipse.core.resources'
+		iu 'org.eclipse.core.runtime'
+		iu 'org.eclipse.equinox.app'
+		iu 'org.eclipse.equinox.common'
+		iu 'org.eclipse.jdt.core'
+		iu 'org.eclipse.jface'
+		iu 'org.eclipse.osgi'
+		iu 'org.eclipse.pde.core'
+		iu 'org.eclipse.swt'
+		iu 'org.eclipse.ui.ide'
+		iu 'org.eclipse.ui.workbench'
+	}
 }
 
 
@@ -37,6 +64,9 @@ subprojects { subproject ->
 		}
 		maven {
 			url 'https://repo.eclipse.org/content/groups/releases/'
+		}
+		maven {
+			url "$rootProject.buildDir/p2asmaven/maven"
 		}
 	}
 
@@ -72,7 +102,7 @@ subprojects {
 		resolutionStrategy {
 			// failOnVersionConflict()
 			dependencySubstitution {
-				substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') with module("org.eclipse.platform:org.eclipse.swt.${System.getProperty('osgi.platform')}:3.+")
+				substitute module('eclipse-deps:org.eclipse.swt.${osgi.platform}') with module("eclipse-deps:org.eclipse.swt.${System.getProperty('osgi.platform')}:3.+")
 			}
 		}
 	}

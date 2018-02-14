@@ -2,8 +2,10 @@ sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
 	compile(
-		'org.eclipse.jdt:org.eclipse.jdt.core:3.13.50',
-		'org.eclipse.platform:org.eclipse.equinox.common:3.9.0',
+		'eclipse-deps:org.eclipse.core.runtime:+',
+		'eclipse-deps:org.eclipse.equinox.common:+',
+		'eclipse-deps:org.eclipse.jdt.core:+',
+		'org.osgi:org.osgi.core:4.2.0',
 		project(':com.ibm.wala.cast'),
 		project(':com.ibm.wala.cast.java'),
 		project(':com.ibm.wala.core'),
