@@ -1,4 +1,7 @@
-sourceSets.test.java.srcDirs = ['src']
+sourceSets.test {
+	java.srcDirs = ['src']
+	resources.srcDirs = ['testdata']
+}
 
 dependencies {
 	testCompile(
