@@ -34,6 +34,12 @@ p2AsMaven {
 		iu 'org.eclipse.ui.ide'
 		iu 'org.eclipse.ui.workbench'
 	}
+	group 'wst-deps', {
+		repo 'http://download.eclipse.org/releases/oxygen'
+		slicingOption 'latestVersionOnly', 'true'
+		iu 'org.eclipse.wst.jsdt.core'
+		iu 'org.eclipse.wst.jsdt.ui'
+	}
 }
 
 
