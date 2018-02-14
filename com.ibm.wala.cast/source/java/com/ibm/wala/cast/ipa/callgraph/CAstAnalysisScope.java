@@ -94,7 +94,6 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   @Override
   public ClassLoaderReference getSyntheticLoader() {
-    Assertions.UNREACHABLE();
     return null;
   }
 

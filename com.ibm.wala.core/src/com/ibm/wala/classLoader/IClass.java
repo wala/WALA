@@ -135,7 +135,7 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * @return an Iterator of the IMethods declared by this class.
    */
-  Collection<IMethod> getDeclaredMethods();
+  Collection<? extends IMethod> getDeclaredMethods();
 
   /**
    * Compute the instance fields declared by this class or any of its superclasses.
@@ -155,7 +155,7 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * Compute the methods declared by this class or any of its superclasses.
    */
-  Collection<IMethod> getAllMethods();
+  Collection<? extends IMethod> getAllMethods();
 
   /**
    * Compute the instance fields declared by this class.

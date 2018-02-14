@@ -239,7 +239,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
    */
   private static Collection<IMethod> getAllNormalPublicMethods(IClass cls) {
     Collection<IMethod> result = HashSetFactory.make();
-    Collection<IMethod> allMethods = null;
+    Collection<? extends IMethod> allMethods = null;
     allMethods = cls.getAllMethods();
     for (IMethod m : allMethods) {
       if (!m.isInit() && !m.isClinit() && m.isPublic()) {

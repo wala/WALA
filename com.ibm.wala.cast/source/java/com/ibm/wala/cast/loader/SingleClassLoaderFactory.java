@@ -14,6 +14,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -28,8 +29,13 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
    */
   private IClassLoader THE_LOADER = null;
 
+  /**
+   * Support synthetic classes
+   */
+  private IClassLoader syntheticLoader;
+  
   @Override
-  public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope) {
+  public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope) {    
     if (THE_LOADER == null) {
       THE_LOADER = makeTheLoader(cha);
       try {
@@ -39,9 +45,14 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
       }
     }
 
-    assert classLoaderReference.equals(getTheReference());
-
-    return THE_LOADER;
+    if (classLoaderReference.equals(scope.getSyntheticLoader())) {
+      syntheticLoader = new BypassSyntheticClassLoader(scope.getSyntheticLoader(), THE_LOADER, scope.getExclusions(), cha);
+      return syntheticLoader;
+      
+    } else {
+      assert classLoaderReference.equals(getTheReference());
+      return THE_LOADER;
+    }
   }
 
   public IClassLoader getTheLoader() {

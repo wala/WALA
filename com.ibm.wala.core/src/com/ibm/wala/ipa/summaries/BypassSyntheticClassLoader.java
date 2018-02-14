@@ -50,7 +50,7 @@ import com.ibm.wala.util.strings.Atom;
  * 
  * Code that wants to introduce synthetic classes uses the registerClass method,
  * giving it an Atom which is the class name, and an IClass which is the class
- * to load. Since the synthetic loader musat be a child of the others, it would
+ * to load. Since the synthetic loader must be a child of the others, it would
  * be very bad to use an existing name for a new synthetic class.
  * 
  * Class lookup works just as for any other classloader.
@@ -148,7 +148,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    */
   @Override
   public Language getLanguage() {
-    return Language.JAVA;
+    return parent.getLanguage();
   }
 
   /*

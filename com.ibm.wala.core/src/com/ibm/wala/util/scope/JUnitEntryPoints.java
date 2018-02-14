@@ -54,8 +54,8 @@ public class JUnitEntryPoints {
           System.out.println("application class: " + klass);
 
           // return all the tests methods
-          Collection<IMethod> methods = klass.getAllMethods();
-          Iterator<IMethod> methodsIt = methods.iterator();
+          Collection<? extends IMethod> methods = klass.getAllMethods();
+          Iterator<? extends IMethod> methodsIt = methods.iterator();
 
           while (methodsIt.hasNext()) {
             IMethod m = methodsIt.next();

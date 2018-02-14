@@ -176,7 +176,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return getField(name);
   }
   @Override
-  public Collection<IMethod> getDeclaredMethods() {
+  public Collection<? extends IMethod> getDeclaredMethods() {
     return declaredMethods.values();
   }
 
@@ -235,7 +235,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   @Override
-  public Collection<IMethod> getAllMethods() {
+  public Collection<? extends IMethod> getAllMethods() {
     Collection<IMethod> result = HashSetFactory.make();
     for (IMethod iMethod : getDeclaredMethods()) {
       result.add(iMethod);

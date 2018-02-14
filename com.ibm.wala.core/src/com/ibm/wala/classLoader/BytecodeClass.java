@@ -405,7 +405,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     IClass s = getSuperclass();
     while (s != null) {
-      Iterator<IMethod> superDeclaredMethods = s.getDeclaredMethods().iterator();
+      Iterator<? extends IMethod> superDeclaredMethods = s.getDeclaredMethods().iterator();
       while (superDeclaredMethods.hasNext()) {
         result.add(superDeclaredMethods.next());
       }

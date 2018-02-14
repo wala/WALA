@@ -86,7 +86,7 @@ public class DefaultMethodsTest extends WalaTestCase {
     TypeReference test1Type = TypeReference.findOrCreate(ClassLoaderReference.Application, "LdefaultMethods/DefaultMethods$Test1");
     IClass test1Class = cha.lookupClass(test1Type);
 
-    Collection<IMethod> allMethods = test1Class.getAllMethods();
+    Collection<? extends IMethod> allMethods = test1Class.getAllMethods();
     IMethod defaultMethod = test1Class.getMethod(t1m.getSelector());
     Assert.assertTrue("Expecting default methods to show up in IClass.allMethods()", allMethods.contains(defaultMethod));
   }

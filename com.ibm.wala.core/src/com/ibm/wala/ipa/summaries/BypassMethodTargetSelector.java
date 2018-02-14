@@ -112,7 +112,14 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     IMethod target = (chaTarget == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : findOrCreateSyntheticMethod(chaTarget,
         site.isStatic());
 
-
+    // try synthetic method that matches receiver type
+    if (dispatchType != null) {
+      ref = MethodReference.findOrCreate(dispatchType.getReference(), ref.getSelector());
+      chaTarget = chaMethodTargetSelector.getCalleeTarget(caller, site, dispatchType);
+      target = (chaTarget == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : findOrCreateSyntheticMethod(chaTarget,
+          site.isStatic());      
+    }
+    
     if (DEBUG) {
       System.err.println("target is initially " + target);
     }

@@ -137,7 +137,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   @Override
-  public Collection<IMethod> getDeclaredMethods() {
+  public Collection<? extends IMethod> getDeclaredMethods() {
     return realType.getDeclaredMethods();
   }
 
@@ -236,7 +236,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   @Override
-  public Collection<IMethod> getAllMethods() {
+  public Collection<? extends IMethod> getAllMethods() {
     return realType.getAllMethods();
   }
 

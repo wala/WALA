@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -77,7 +76,7 @@ public abstract class SyntheticClass implements IClass {
    */
   @Override
   public IClassLoader getClassLoader() {
-    return cha.getLoader(ClassLoaderReference.Primordial);
+    return cha.getLoader(T.getClassLoader());
   }
 
   /* 
