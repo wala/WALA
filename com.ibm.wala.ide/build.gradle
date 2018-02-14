@@ -6,15 +6,17 @@ sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
 	compile(
-		'org.eclipse.pde:org.eclipse.pde.core:3.11.1',
-		'org.eclipse.platform:org.eclipse.core.commands:3.9.0',
-		'org.eclipse.platform:org.eclipse.core.resources:3.12.0',
-		'org.eclipse.platform:org.eclipse.core.runtime:3.13.0',
-		'org.eclipse.platform:org.eclipse.equinox.common:3.9.0',
-		'org.eclipse.platform:org.eclipse.jface:3.13.1',
-		'org.eclipse.platform:org.eclipse.osgi:3.12.50',
-		'org.eclipse.platform:org.eclipse.swt.${osgi.platform}:3.106.1',
-		'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1',
+		'eclipse-deps:org.eclipse.core.commands:+',
+		'eclipse-deps:org.eclipse.core.jobs:+',
+		'eclipse-deps:org.eclipse.core.resources:+',
+		'eclipse-deps:org.eclipse.core.runtime:+',
+		'eclipse-deps:org.eclipse.equinox.common:+',
+		'eclipse-deps:org.eclipse.jdt.core:+',
+		'eclipse-deps:org.eclipse.jface:+',
+		'eclipse-deps:org.eclipse.osgi:+',
+		'eclipse-deps:org.eclipse.pde.core:+',
+		'eclipse-deps:org.eclipse.swt.${osgi.platform}:+',
+		'eclipse-deps:org.eclipse.ui.workbench:+',
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.util'),
 		)
