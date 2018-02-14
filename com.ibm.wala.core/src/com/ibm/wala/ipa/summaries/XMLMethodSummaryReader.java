@@ -353,7 +353,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     }
 
     private void startClass(String cname, Attributes atts) {
-      String clName = "L" + governingPackage + "/" + cname;
+      String clName = governingPackage==null? "L" + cname: "L" + governingPackage + "/" + cname;
       governingClass = className2Ref(clName);
       String allocString = atts.getValue(A_ALLOCATABLE);
       if (allocString != null) {
@@ -634,10 +634,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (V == null) {
         Assertions.UNREACHABLE("Must specify value for putfield " + governingMethod);
       }
-      Integer valueNumber = symbolTable.get(V);
-      if (valueNumber == null) {
-        Assertions.UNREACHABLE("Cannot lookup value: " + V);
-      }
+      Integer valueNumber = symbolTable.containsKey(V)? symbolTable.get(V): Integer.parseInt(V);
 
       // get the ref stored to
       String R = atts.getValue(A_REF);
