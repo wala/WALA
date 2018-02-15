@@ -141,6 +141,6 @@ processTestResources {
 test {
 	maxHeapSize = '800M'
 
-	// https://github.com/liblit/WALA/issues/5
+	// intentionally skipped; not a bug
 	exclude '**/DynamicDalvikComparisonTestForAndroidLibs.class'
 }
