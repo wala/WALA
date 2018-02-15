@@ -145,7 +145,7 @@ task collectTestData(type: Jar) {
 	archiveName "${baseName}_${version}.${extension}"
 	from compileTestJava
 	from 'classes'
-	exclude 'methodLookup'
+	includeEmptyDirs false
 	destinationDir projectDir
 }
 
@@ -166,18 +166,13 @@ task collectTestDataA(type: Jar) {
 	archiveName "${baseName}_${version}.${extension}"
 	from compileTestJava
 	from 'classes'
-	exclude (
-		'annotations/Foo*',
-		'annotations/Outer*',
-		'annotations/Type*',
-		'bug144/*',
-		'CodeDeleted.class',
-		'defaultMethods/*',
-		'methodLookup',
-		'lambda/*',
-		'special/*',
-		)
+	includeEmptyDirs false
 	destinationDir projectDir
+	exclude (
+		'**/CodeDeleted.class',
+		'**/SortingExample.class',
+		'**/A.class',
+		)
 }
 
 task cleanColllectTestDataA(type: Delete) {
