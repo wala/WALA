@@ -175,7 +175,7 @@ public class SyntheticMethod implements IMethod {
    * NOTE: SIDE EFFECT!!! ... nulls out phi instructions in the instruction array!
    */
   public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
-    return new InducedCFG(instructions, this, Everywhere.EVERYWHERE);
+    return this.getDeclaringClass().getClassLoader().getLanguage().makeInducedCFG(instructions, this, Everywhere.EVERYWHERE);
   }
 
   public BytecodeStream getBytecodeStream() throws UnsupportedOperationException {

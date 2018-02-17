@@ -45,7 +45,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -198,7 +198,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       if (targetMethod != null) {
         CGNode target = callGraph.getNode(targetMethod, Everywhere.EVERYWHERE);
         if (target == null) {
-          SSAInvokeInstruction s = fakeWorldClinitMethod.addInvocation(null, site);
+          SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(null, site);
           try {
             target = callGraph.findOrCreateNode(targetMethod, Everywhere.EVERYWHERE);
             processResolvedCall(callGraph.getFakeWorldClinitNode(), s.getCallSite(), target);

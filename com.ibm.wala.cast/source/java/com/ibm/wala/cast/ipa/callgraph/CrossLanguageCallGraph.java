@@ -28,7 +28,6 @@ import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -147,14 +146,14 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     }
 
     @Override
-    public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
+    public SSAAbstractInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
       TypeReference type = site.getDeclaredTarget().getDeclaringClass();
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addInvocation(params, site);
     }
 
-    public SSAInvokeInstruction addInvocationInternal(int[] params, CallSiteReference site) {
+    public SSAAbstractInvokeInstruction addInvocationInternal(int[] params, CallSiteReference site) {
       return super.addInvocation(params, site);
     }
 

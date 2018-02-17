@@ -66,7 +66,7 @@ public interface SSAInstructionFactory {
 
   SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType);
 
-  SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap);
+  SSAAbstractInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap);
 
   SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap);
 

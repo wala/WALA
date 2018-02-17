@@ -12,6 +12,9 @@ package com.ibm.wala.classLoader;
 
 import java.util.Set;
 
+import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -64,5 +67,11 @@ public abstract class LanguageImpl implements Language {
   @Override
   public String toString() {
     return getName().toString();
+  }
+  
+  @Override
+  public
+  InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
+    return new InducedCFG(instructions, method, context);
   }
 }

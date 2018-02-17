@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
@@ -130,12 +131,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * @return the invoke instructions added by this operation
    * @throws IllegalArgumentException if site is null
    */
-  public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
+  public SSAAbstractInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
     if (site == null) {
       throw new IllegalArgumentException("site is null");
     }
     CallSiteReference newSite = CallSiteReference.make(statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
-    SSAInvokeInstruction s = null;
+    SSAAbstractInvokeInstruction s = null;
     if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
       s = insts.InvokeInstruction(statements.size(), params, nextLocal++, newSite, null);
     } else {

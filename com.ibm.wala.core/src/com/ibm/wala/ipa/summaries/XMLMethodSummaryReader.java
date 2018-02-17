@@ -459,6 +459,12 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       } else {
         Assertions.UNREACHABLE("Invalid call type " + typeString);
       }
+
+      String paramCount = atts.getValue(A_NUM_ARGS);
+      if (paramCount != null) {
+        nParams = Integer.parseInt(paramCount);
+      }
+      
       int[] params = new int[nParams];
 
       for (int i = 0; i < params.length; i++) {
@@ -466,7 +472,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.productionAssertion(argString != null, "unspecified arg in method " + governingMethod + " " + site);
         Integer valueNumber = symbolTable.get(argString);
         if (valueNumber == null) {
-          Assertions.UNREACHABLE("Cannot lookup value: " + argString);
+          valueNumber = Integer.parseInt(argString);
         }
         params[i] = valueNumber.intValue();
       }
