@@ -23,6 +23,7 @@ dependencies {
 
 processTestResources {
 	def testdata = project(':com.ibm.wala.core.testdata')
+	dependsOn testdata.compileTestJava
 	dependsOn testdata.extractBcel
 	dependsOn testdata.verifyJavaCup
 
@@ -37,9 +38,9 @@ test {
 	maxHeapSize = '800M'
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
+	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
 
 	// https://github.com/liblit/WALA/issues/5
-	exclude '**/DynamicCallGraphTest.class'
 	exclude '**/PruneArrayOutOfBoundExceptionEdge.class'
 }
 
