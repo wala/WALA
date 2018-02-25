@@ -81,6 +81,14 @@ subprojects { subproject ->
 	task eclipseProcessTestResources {
 		dependsOn processTestResources
 	}
+
+	test {
+		include '**/*Test.class'
+		include '**/*TestCase.class'
+		include '**/*Tests.class'
+		include '**/Test*.class'
+		exclude '**/*AndroidLibs*.class'
+	}
 }
 
 
