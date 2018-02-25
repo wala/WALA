@@ -8,6 +8,7 @@ plugins {
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'de.undercouch.download' apply false
 	id 'nebula.lint' version '8.3.1'
+	id "nebula.source-jar" version '7.0.1' apply false
 }
 
 
@@ -50,6 +51,7 @@ p2AsMaven {
 //  common Java setup shared by multiple projects
 //
 
+group name
 version '1.4.4-SNAPSHOT'
 
 subprojects { subproject ->
@@ -62,8 +64,12 @@ subprojects { subproject ->
 	}
 
 	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+	apply plugin: 'nebula.source-jar'
 
 	sourceCompatibility = 1.8
+
+	version rootProject.version
 
 	repositories {
 		mavenCentral()

@@ -81,6 +81,7 @@ task collectJLex(type: Jar) {
 	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
 	include 'JLex/'
 	baseName 'JLex'
+	version null
 	destinationDir projectDir
 }
 
