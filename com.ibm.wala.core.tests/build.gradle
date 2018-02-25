@@ -39,9 +39,6 @@ test {
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
 	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
-
-	// https://github.com/liblit/WALA/issues/5
-	exclude '**/PruneArrayOutOfBoundExceptionEdge.class'
 }
 
 task cleanTest(type: Delete) {

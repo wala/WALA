@@ -140,7 +140,4 @@ processTestResources {
 
 test {
 	maxHeapSize = '800M'
-
-	// intentionally skipped; not a bug
-	exclude '**/DynamicDalvikComparisonTestForAndroidLibs.class'
 }
