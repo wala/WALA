@@ -10,3 +10,12 @@ dependencies {
 		project(':com.ibm.wala.util'),
 		)
 }
+
+task createPackageList(type: CreatePackageList) {
+	sourceSet sourceSets.main.java
+}
+
+javadoc {
+	dependsOn createPackageList
+	options.linksOffline outputDirectory.path, files(createPackageList).singleFile.parent
+}

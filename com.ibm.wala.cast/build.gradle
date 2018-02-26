@@ -16,16 +16,16 @@ dependencies {
 
 javadoc {
 	def js = ':com.ibm.wala.cast.js'
+	evaluationDependsOn(js)
+
 	dependsOn "$js:compileJava"
+	js = project(js)
 	doFirst {
-		classpath += files project(js).compileJava
+		classpath += files js.compileJava
 	}
-	/*
-	// creates circular dependency
-	def jsDoc = project(js).javadoc
-	dependsOn jsDoc
-	options.links jsDoc.outputDirectory.path
-	*/
+
+	dependsOn js.createPackageList
+	options.linksOffline js.javadoc.outputDirectory.path, files(js.createPackageList).singleFile.parent
 }
 
 def currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome
