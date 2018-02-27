@@ -97,9 +97,9 @@ model {
 		def lib = linkXlator_testSharedLibrary
 		dependsOn lib
 		systemProperty 'java.library.path', lib.destinationDir
+
+		// TODO: compute path on following line from 'cast' library properties somehow
+		def castLibDir = "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
+		environment 'DYLD_LIBRARY_PATH', castLibDir
 	}
 }
-
-// https://github.com/liblit/WALA/issues/3
-if (System.getProperty('os.name') == 'Mac OS X')
-	test.exclude '**/TestNativeTranslator.class'
