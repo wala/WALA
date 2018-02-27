@@ -40,7 +40,7 @@ task downloadAndroidSdk(type: Download) {
 }
 
 task verifyAndroidSdk(type: VerifyWithStamp, dependsOn: downloadAndroidSdk) {
-	src files(downloadAndroidSdk)[0]
+	src files(downloadAndroidSdk).singleFile
 	algorithm 'SHA-256'
 	checksum downloadAndroidSdk.checksum
 }
@@ -52,31 +52,31 @@ task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
 
 // TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
 task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
-	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
+	def manager = "${unpackAndroidSdk.outputs.files.singleFile}/tools/bin/sdkmanager"
 	ext.version = '26.0.2'
 	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager build-tools\\;$version >/dev/null"
-	def androidSdk = unpackAndroidSdk.outputs.files[0]
+	def androidSdk = unpackAndroidSdk.outputs.files.singleFile
 	inputs.dir "$androidSdk/tools"
 	outputs.dir "$androidSdk/build-tools"
 }
 
 task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
-	from "${installAndroidBuildTools.outputs.files[0]}/${installAndroidBuildTools.version}/lib/dx.jar"
+	from "${installAndroidBuildTools.outputs.files.singleFile}/${installAndroidBuildTools.version}/lib/dx.jar"
 	into 'lib'
 }
 
 // TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
 task installAndroidPlatforms(type: Exec, dependsOn: unpackAndroidSdk) {
-	def manager = "${unpackAndroidSdk.outputs.files[0]}/tools/bin/sdkmanager"
+	def manager = "${unpackAndroidSdk.outputs.files.singleFile}/tools/bin/sdkmanager"
 	ext.version = "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
 	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager platforms\\;$version >/dev/null"
-	def androidSdk = unpackAndroidSdk.outputs.files[0]
+	def androidSdk = unpackAndroidSdk.outputs.files.singleFile
 	inputs.dir "$androidSdk/tools"
 	outputs.dir "$androidSdk/platforms"
 }
 
 task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
-	from "${installAndroidPlatforms.outputs.files[0]}/${installAndroidPlatforms.version}/android.jar"
+	from "${installAndroidPlatforms.outputs.files.singleFile}/${installAndroidPlatforms.version}/android.jar"
 	into temporaryDir
 }
 
@@ -87,7 +87,7 @@ task downloadSampleCup(type: Download) {
 }
 
 task verifySampleCup(type: VerifyWithStamp, dependsOn: downloadSampleCup) {
-	src files(downloadSampleCup)[0]
+	src files(downloadSampleCup).singleFile
 	checksum '76b549e7c6e802b811a374248175ecf4'
 }
 
@@ -98,7 +98,7 @@ task downloadSampleLex(type: Download) {
 }
 
 task verifySampleLex(type: VerifyWithStamp, dependsOn: downloadSampleLex) {
-	src files(downloadSampleLex)[0]
+	src files(downloadSampleLex).singleFile
 	checksum 'ae887758b2657981d023a72a165da830'
 }
 
@@ -110,14 +110,14 @@ dependencies {
 	testCompile(
 		'junit:junit:4.11',
 		'org.osgi:org.osgi.core:4.2.0',
-		files("${copyDxJar.outputs.files[0]}/dx.jar"),
+		files("${copyDxJar.outputs.files.singleFile}/dx.jar"),
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.dalvik'),
 		project(':com.ibm.wala.shrike'),
 		project(':com.ibm.wala.util'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
-	testRuntime files("${copyAndroidJar.outputs.files[0]}/android.jar")
+	testRuntime files("${copyAndroidJar.outputs.files.singleFile}/android.jar")
 }
 
 processTestResources {
