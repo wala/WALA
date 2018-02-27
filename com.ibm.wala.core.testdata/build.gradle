@@ -25,7 +25,7 @@ task downloadBcel(type: Download) {
 }
 
 task verifyBcel(type: VerifyWithStamp, dependsOn: downloadBcel) {
-	src files(downloadBcel)[0]
+	src files(downloadBcel).singleFile
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
 }
 
@@ -65,7 +65,7 @@ task cleanDownloadJavaCup(type: Delete) {
 }
 
 task verifyJavaCup(type: VerifyWithStamp, dependsOn: downloadJavaCup) {
-	src files(downloadJavaCup)[0]
+	src files(downloadJavaCup).singleFile
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
@@ -108,7 +108,7 @@ task downloadOcamlJava(type: Download) {
 }
 
 task verifyOcamlJava(type: VerifyWithStamp, dependsOn: downloadOcamlJava) {
-	src downloadOcamlJava.outputFiles[0]
+	src files(downloadOcamlJava).singleFile
 	checksum '45feec6e3889f5073a39c2c4c84878d1'
 }
 
@@ -120,9 +120,9 @@ task unpackOcamlJava(type: Sync, dependsOn: verifyOcamlJava) {
 task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
 	inputs.file 'ocaml/hello_hash.ml'
 	outputs.file 'hello_hash.jar'
-	args inputs.files[0], '-o', outputs.files[0]
+	args inputs.files.singleFile, '-o', outputs.files.singleFile
 
-	def ocamlJavaHome = new File(files(unpackOcamlJava)[0], downloadOcamlJava.basename)
+	def ocamlJavaHome = new File(files(unpackOcamlJava).singleFile, downloadOcamlJava.basename)
 	classpath new File(ocamlJavaHome, 'lib/ocamljava.jar')
 	main 'ocaml.compilers.ocamljavaMain'
 	inputs.dir ocamlJavaHome
