@@ -186,7 +186,7 @@ task cleanColllectTestDataA(type: Delete) {
 //  help Eclipse build these extra jars when needed
 //
 
-eclipseProcessTestResources {
+afterEclipseBuildshipImport {
 	dependsOn(
 		collectJLex,
 		collectTestData,
