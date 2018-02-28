@@ -84,9 +84,7 @@ subprojects { subproject ->
 		}
 	}
 
-	task eclipseProcessTestResources {
-		dependsOn processTestResources
-	}
+	task afterEclipseBuildshipImport(dependsOn: processTestResources)
 
 	test {
 		include '**/*Test.class'
@@ -95,6 +93,10 @@ subprojects { subproject ->
 		include '**/Test*.class'
 		exclude '**/*AndroidLibs*.class'
 	}
+}
+
+task afterEclipseBuildshipImport(type: Exec) {
+	commandLine './revert-launchers.sh'
 }
 
 
