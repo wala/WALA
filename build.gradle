@@ -74,12 +74,6 @@ subprojects { subproject ->
 	repositories {
 		mavenCentral()
 		maven {
-			url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
-		}
-		maven {
-			url 'https://repo.eclipse.org/content/groups/releases/'
-		}
-		maven {
 			url "$rootProject.buildDir/p2asmaven/maven"
 		}
 	}
