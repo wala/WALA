@@ -478,8 +478,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     public void addNode(PointsToSetVariable n) {
-      Assertions.UNREACHABLE();
-
+      assert containsNode(n);
     }
 
     /*
@@ -543,15 +542,14 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     /*
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
-    @SuppressWarnings("unused")
-    public int getPredNodeCount(INodeWithNumber N) {
-      PointsToSetVariable v = (PointsToSetVariable) N;
+    @Override
+    public int getPredNodeCount(PointsToSetVariable v) {
       int result = 0;
       for (AbstractStatement eq : Iterator2Iterable.make(getStatementsThatDef(v))) {
         if (useImplicitRepresentation(eq)) {
           result++;
         } else {
-          result += delegateGraph.getPredNodeCount(N);
+          result += delegateGraph.getPredNodeCount(v);
         }
       }
       return result;
@@ -643,9 +641,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     @Override
     @SuppressWarnings("unchecked")
     protected NumberedEdgeManager getEdgeManager() {
-      // TODO Auto-generated method stub
-      Assertions.UNREACHABLE();
-      return null;
+      return this;
     }
 
   }
