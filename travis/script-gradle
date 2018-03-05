@@ -2,7 +2,7 @@
 
 case "$TRAVIS_OS_NAME" in
   (linux) headless=xvfb-run ;;
-  (osx) headless= ;;
+  (osx) headless='' ;;
 esac
 
 $headless ./gradlew --continue build javadoc lintGradle
