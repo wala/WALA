@@ -7,38 +7,40 @@ sourceSets.test.java.srcDirs = ['src']
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  download and/or create extra bundled jar archives
-//
-
-import de.undercouch.gradle.tasks.download.*
-
-
-////////////////////////////////////////////////////////////////////////
-//
 //  download and extract "bcel-5.2.jar"
 //
 
-task downloadBcel(type: Download) {
-	src 'http://archive.apache.org/dist/jakarta/bcel/binaries/bcel-5.2.tar.gz'
-	dest temporaryDir
-	overwrite false
+task downloadBcel {
+	ext {
+		version = '5.2'
+	}
+	def archive = "bcel-${version}.tar.gz"
+	outputs.file "$temporaryDir/$archive"
+	doLast {
+		download {
+			src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag false // server does not provide ETags
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum '19bffd7f217b0eae415f1ef87af2f0bc'
+		}
+	}
 }
 
-task verifyBcel(type: VerifyWithStamp, dependsOn: downloadBcel) {
-	src files(downloadBcel).singleFile
-	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
-}
-
-task extractBcel(type: Copy, dependsOn: verifyBcel) {
-	from(tarTree(verifyBcel.src)) {
-		include 'bcel-5.2/bcel-5.2.jar'
+task extractBcel(type: Copy, dependsOn: downloadBcel) {
+	from(tarTree(files(downloadBcel).singleFile)) {
+		include "bcel-${downloadBcel.version}/bcel-${downloadBcel.version}.jar"
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)
 		}
 	}
 	into projectDir
 	includeEmptyDirs false
-	outputs.files 'bcel-5.2.jar'
+	outputs.file "bcel-${downloadBcel.version}.jar"
 }
 
 task cleanExtractBcel(type: Delete) {
@@ -54,19 +56,26 @@ clean.dependsOn cleanExtractBcel
 //  download "java-cup-11a.jar"
 //
 
-task downloadJavaCup(type: Download) {
-	src 'http://www2.cs.tum.edu/projects/cup/java-cup-11a.jar'
-	dest projectDir
-	overwrite false
+task downloadJavaCup {
+	def archive = 'java-cup-11a.jar'
+	outputs.file "$projectDir/$archive"
+	doLast {
+		download {
+			src "http://www2.cs.tum.edu/projects/cup/$archive"
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum '2bda8c40abd0cbc295d3038643d6e4ec'
+		}
+	}
 }
 
 task cleanDownloadJavaCup(type: Delete) {
 	delete downloadJavaCup
-}
-
-task verifyJavaCup(type: VerifyWithStamp, dependsOn: downloadJavaCup) {
-	src files(downloadJavaCup).singleFile
-	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
 clean.dependsOn cleanDownloadJavaCup
@@ -97,23 +106,28 @@ clean.dependsOn cleanCollectJLex
 //  generate "hello_hash.jar"
 //
 
-task downloadOcamlJava(type: Download) {
+task downloadOcamlJava {
 	def version = '2.0-alpha1'
-	ext {
-		basename = "ocamljava-$version"
+	ext.basename = "ocamljava-$version"
+	def archive = "${basename}.tar.gz"
+	outputs.file "$temporaryDir/$archive"
+	doLast {
+		download {
+			src "http://www.ocamljava.org/downloads/download.php?version=$version-bin"
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum '45feec6e3889f5073a39c2c4c84878d1'
+		}
 	}
-	src "http://www.ocamljava.org/downloads/download.php?version=$version-bin"
-	dest new File(temporaryDir, "${basename}.tar.gz")
-	overwrite false
 }
 
-task verifyOcamlJava(type: VerifyWithStamp, dependsOn: downloadOcamlJava) {
-	src files(downloadOcamlJava).singleFile
-	checksum '45feec6e3889f5073a39c2c4c84878d1'
-}
-
-task unpackOcamlJava(type: Sync, dependsOn: verifyOcamlJava) {
-	from tarTree(verifyOcamlJava.src)
+task unpackOcamlJava(type: Sync, dependsOn: downloadOcamlJava) {
+	from tarTree(files(downloadOcamlJava).singleFile)
 	into temporaryDir
 }
 
@@ -191,8 +205,8 @@ afterEclipseBuildshipImport {
 		collectJLex,
 		collectTestData,
 		collectTestDataA,
+		downloadJavaCup,
 		extractBcel,
 		generateHelloHash,
-		verifyJavaCup,
 		)
 }

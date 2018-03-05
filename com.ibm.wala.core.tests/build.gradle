@@ -25,7 +25,6 @@ processTestResources {
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.compileTestJava
 	dependsOn testdata.extractBcel
-	dependsOn testdata.verifyJavaCup
 
 	from testdata.collectJLex
 	from testdata.collectTestData

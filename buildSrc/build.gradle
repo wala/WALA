@@ -3,5 +3,5 @@ repositories {
 }
 
 dependencies {
-	compile 'de.undercouch:gradle-download-task:3.3.0'
+	compile 'de.undercouch:gradle-download-task:3.4.1'
 }
