@@ -6,21 +6,31 @@ sourceSets.test.java.srcDirs = ['src']
 //  download JLex
 //
 
-task downloadJLex {
-	outputs.file 'src/JLex/Main.java'
-	doLast {
+class VerifiedDownload extends org.gradle.api.DefaultTask {
+
+	@Input String src
+	@Input String checksum
+	@OutputFile File dest
+
+	@TaskAction
+	downloadAndVerify() {
 		download {
-			src 'http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
-			dest outputs.files.singleFile
+			src this.src
+			dest this.dest
 			overwrite true
 			onlyIfModified true
-			useETag true
 		}
 		verifyChecksum {
-			src outputs.files.singleFile
-			checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
+			src this.dest
+			checksum this.checksum
 		}
 	}
+}
+
+task downloadJLex(type: VerifiedDownload) {
+	src 'http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
+	checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
+	dest file('src/JLex/Main.java')
 }
 
 task cleanDownloadJLex(type: Delete) {
