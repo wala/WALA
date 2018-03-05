@@ -10,19 +10,25 @@ dependencies {
 		)
 }
 
-task downloadNodeJS(type: de.undercouch.gradle.tasks.download.Download) {
-	src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
-	dest new File(temporaryDir, 'nodejs.zip')
-	overwrite false
+task downloadNodeJS {
+	outputs.file "$temporaryDir/nodejs.zip"
+	doLast {
+		download {
+			src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum '33c5ba7a5d45644e70d268d8ad3e57df'
+		}
+	}
 }
 
-task verifyNodeJS(type: VerifyWithStamp, dependsOn: downloadNodeJS) {
-	src files(downloadNodeJS).singleFile
-	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
-}
-
-task unpackNodeJSLib(type: Copy, dependsOn: verifyNodeJS) {
-	from(zipTree(verifyNodeJS.src)) {
+task unpackNodeJSLib(type: Copy, dependsOn: downloadNodeJS) {
+	from(zipTree(files(downloadNodeJS).singleFile)) {
 		include 'nodejs-node-0a604e9/lib/*.js'
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)

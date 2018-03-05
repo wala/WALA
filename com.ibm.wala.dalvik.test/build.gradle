@@ -6,8 +6,6 @@ sourceSets.test {
 		]
 }
 
-import de.undercouch.gradle.tasks.download.Download
-
 task cloneDroidBench(type: Exec) {
 	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
 	def destDir = file('/tmp/DroidBench')
@@ -18,88 +16,108 @@ task cloneDroidBench(type: Exec) {
 	commandLine 'git', 'clone', "--branch=$inputs.properties.branch", '--config=advice.detachedHead=false', '--depth=1', '--quiet', inputs.properties.repository, destDir
 }
 
-task downloadAndroidSdk(type: Download) {
+task downloadAndroidSdk {
 	def sdkOs
+	def sdkChecksum
 	switch (System.getProperty('os.name')) {
 		case ~/Linux/:
 			sdkOs = 'linux'
-			ext.checksum = '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
+			sdkChecksum = '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
 			break
 		case ~/Mac OS X/:
 			sdkOs = 'darwin'
-			ext.checksum = '4a81754a760fce88cba74d69c364b05b31c53d57b26f9f82355c61d5fe4b9df9'
+			sdkChecksum = '4a81754a760fce88cba74d69c364b05b31c53d57b26f9f82355c61d5fe4b9df9'
 			break
 		case ~/Windows.*/:
 			sdkOs = 'windows'
-			ext.checksum = '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
+			sdkChecksum = '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
 			break
 	}
-	src "https://dl.google.com/android/repository/sdk-tools-$sdkOs-3859397.zip"
-	dest temporaryDir
-	overwrite false
+	def archive = "sdk-tools-$sdkOs-3859397.zip"
+	outputs.file "$temporaryDir/$archive"
+	doLast {
+		download {
+			src "https://dl.google.com/android/repository/$archive"
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			algorithm 'SHA-256'
+			checksum sdkChecksum
+		}
+	}
 }
 
-task verifyAndroidSdk(type: VerifyWithStamp, dependsOn: downloadAndroidSdk) {
-	src files(downloadAndroidSdk).singleFile
-	algorithm 'SHA-256'
-	checksum downloadAndroidSdk.checksum
-}
-
-task unpackAndroidSdk(type: Sync, dependsOn: verifyAndroidSdk) {
-	from zipTree(verifyAndroidSdk.src)
+task unpackAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
+	from zipTree(files(downloadAndroidSdk).singleFile)
 	into temporaryDir
 }
 
 // TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
 task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
-	def manager = "${unpackAndroidSdk.outputs.files.singleFile}/tools/bin/sdkmanager"
+	def androidSdk = files(unpackAndroidSdk).singleFile
+	def manager = "$androidSdk/tools/bin/sdkmanager"
 	ext.version = '26.0.2'
 	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager build-tools\\;$version >/dev/null"
-	def androidSdk = unpackAndroidSdk.outputs.files.singleFile
 	inputs.dir "$androidSdk/tools"
 	outputs.dir "$androidSdk/build-tools"
 }
 
 task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
-	from "${installAndroidBuildTools.outputs.files.singleFile}/${installAndroidBuildTools.version}/lib/dx.jar"
+	from "${files(installAndroidBuildTools).singleFile}/${installAndroidBuildTools.version}/lib/dx.jar"
 	into 'lib'
 }
 
 // TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
 task installAndroidPlatforms(type: Exec, dependsOn: unpackAndroidSdk) {
-	def manager = "${unpackAndroidSdk.outputs.files.singleFile}/tools/bin/sdkmanager"
+	def manager = "${files(unpackAndroidSdk).singleFile}/tools/bin/sdkmanager"
 	ext.version = "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
 	commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager platforms\\;$version >/dev/null"
-	def androidSdk = unpackAndroidSdk.outputs.files.singleFile
+	def androidSdk = files(unpackAndroidSdk).singleFile
 	inputs.dir "$androidSdk/tools"
 	outputs.dir "$androidSdk/platforms"
 }
 
 task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
-	from "${installAndroidPlatforms.outputs.files.singleFile}/${installAndroidPlatforms.version}/android.jar"
+	from "${files(installAndroidPlatforms).singleFile}/${installAndroidPlatforms.version}/android.jar"
 	into temporaryDir
 }
 
-task downloadSampleCup(type: Download) {
-	src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
-	dest 'data/sample.cup'
-	overwrite false
+task downloadSampleCup {
+	outputs.file 'data/sample.cup'
+	doLast {
+		download {
+			src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum '76b549e7c6e802b811a374248175ecf4'
+		}
+	}
 }
 
-task verifySampleCup(type: VerifyWithStamp, dependsOn: downloadSampleCup) {
-	src files(downloadSampleCup).singleFile
-	checksum '76b549e7c6e802b811a374248175ecf4'
-}
-
-task downloadSampleLex(type: Download) {
-	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
-	dest 'data'
-	overwrite false
-}
-
-task verifySampleLex(type: VerifyWithStamp, dependsOn: downloadSampleLex) {
-	src files(downloadSampleLex).singleFile
-	checksum 'ae887758b2657981d023a72a165da830'
+task downloadSampleLex {
+	outputs.file 'data/sample.lex'
+	doLast {
+		download {
+			src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum 'ae887758b2657981d023a72a165da830'
+		}
+	}
 }
 
 clean.dependsOn cleanCopyDxJar
@@ -110,29 +128,24 @@ dependencies {
 	testCompile(
 		'junit:junit:4.11',
 		'org.osgi:org.osgi.core:4.2.0',
-		files("${copyDxJar.outputs.files.singleFile}/dx.jar"),
+		files("${files(copyDxJar).singleFile}/dx.jar"),
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.dalvik'),
 		project(':com.ibm.wala.shrike'),
 		project(':com.ibm.wala.util'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
-	testRuntime files("${copyAndroidJar.outputs.files.singleFile}/android.jar")
+	testRuntime files("${files(copyAndroidJar).singleFile}/android.jar")
 }
 
 processTestResources {
 	dependsOn cloneDroidBench
 
-	dependsOn verifySampleCup
+	from copyAndroidJar
 	from downloadSampleCup
-
-	dependsOn verifySampleLex
 	from downloadSampleLex
 
-	from copyAndroidJar
-
 	def testdata = project(':com.ibm.wala.core.testdata')
-	dependsOn testdata.verifyJavaCup
 	from testdata.collectJLex
 	from testdata.collectTestDataA
 	from testdata.downloadJavaCup

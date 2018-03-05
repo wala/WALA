@@ -6,23 +6,26 @@ sourceSets.test.java.srcDirs = ['src']
 //  download JLex
 //
 
-def versionedArchive = 'ajaxslt-0.8.1'
-def packedArchive = "${versionedArchive}.tar.gz"
-
-task downloadJLex(type: de.undercouch.gradle.tasks.download.Download) {
-	src 'http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
-	dest 'src/JLex/Main.java'
-	overwrite false
+task downloadJLex {
+	outputs.file 'src/JLex/Main.java'
+	doLast {
+		download {
+			src 'http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
+			dest outputs.files.singleFile
+			overwrite true
+			onlyIfModified true
+			useETag true
+		}
+		verifyChecksum {
+			src outputs.files.singleFile
+			checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
+		}
+	}
 }
 
 task cleanDownloadJLex(type: Delete) {
-	delete downloadJLex.dest.parent
+	delete files(downloadJLex).singleFile.parent
 }
 
-task verifyJLex(type: VerifyWithStamp, dependsOn: downloadJLex) {
-	src downloadJLex.dest
-	checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
-}
-
-compileTestJava.dependsOn verifyJLex
+compileTestJava.dependsOn downloadJLex
 clean.dependsOn cleanDownloadJLex
