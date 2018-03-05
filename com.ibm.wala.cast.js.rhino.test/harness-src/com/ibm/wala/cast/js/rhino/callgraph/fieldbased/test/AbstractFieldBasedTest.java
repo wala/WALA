@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assume.*;
 import org.junit.Before;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -55,12 +57,9 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   /**
    * for long-running tests that tend to time out on Travis
    */
-  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
-    if (System.getenv("TRAVIS") == null) {
-      return runTest(url, assertions, builderTypes);
-    } else {
-      return null;
-    }
+  protected void runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
+    assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
+    runTest(url, assertions, builderTypes);
   }
 
   protected void dumpCG(JSCallGraph cg) {
