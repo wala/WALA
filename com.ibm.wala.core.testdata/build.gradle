@@ -10,25 +10,13 @@ sourceSets.test.java.srcDirs = ['src']
 //  download and extract "bcel-5.2.jar"
 //
 
-task downloadBcel {
-	ext {
-		version = '5.2'
-	}
+task downloadBcel(type: VerifiedDownload) {
+	ext.version = '5.2'
 	def archive = "bcel-${version}.tar.gz"
-	outputs.file "$temporaryDir/$archive"
-	doLast {
-		download {
-			src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag false // server does not provide ETags
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			checksum '19bffd7f217b0eae415f1ef87af2f0bc'
-		}
-	}
+	src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
+	dest "$temporaryDir/$archive"
+	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
+	useETag false
 }
 
 task extractBcel(type: Copy, dependsOn: downloadBcel) {
@@ -56,22 +44,11 @@ clean.dependsOn cleanExtractBcel
 //  download "java-cup-11a.jar"
 //
 
-task downloadJavaCup {
+task downloadJavaCup(type: VerifiedDownload) {
 	def archive = 'java-cup-11a.jar'
-	outputs.file "$projectDir/$archive"
-	doLast {
-		download {
-			src "http://www2.cs.tum.edu/projects/cup/$archive"
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag true
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			checksum '2bda8c40abd0cbc295d3038643d6e4ec'
-		}
-	}
+	src "http://www2.cs.tum.edu/projects/cup/$archive"
+	dest "$projectDir/$archive"
+	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
 task cleanDownloadJavaCup(type: Delete) {
@@ -106,24 +83,13 @@ clean.dependsOn cleanCollectJLex
 //  generate "hello_hash.jar"
 //
 
-task downloadOcamlJava {
+task downloadOcamlJava(type: VerifiedDownload) {
 	def version = '2.0-alpha1'
 	ext.basename = "ocamljava-$version"
 	def archive = "${basename}.tar.gz"
-	outputs.file "$temporaryDir/$archive"
-	doLast {
-		download {
-			src "http://www.ocamljava.org/downloads/download.php?version=$version-bin"
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag true
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			checksum '45feec6e3889f5073a39c2c4c84878d1'
-		}
-	}
+	src "http://www.ocamljava.org/downloads/download.php?version=$version-bin"
+	dest "$temporaryDir/$archive"
+	checksum '45feec6e3889f5073a39c2c4c84878d1'
 }
 
 task unpackOcamlJava(type: Sync, dependsOn: downloadOcamlJava) {

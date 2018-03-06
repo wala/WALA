@@ -10,21 +10,10 @@ dependencies {
 		)
 }
 
-task downloadNodeJS {
-	outputs.file "$temporaryDir/nodejs.zip"
-	doLast {
-		download {
-			src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag true
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			checksum '33c5ba7a5d45644e70d268d8ad3e57df'
-		}
-	}
+task downloadNodeJS(type: VerifiedDownload) {
+	src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
+	dest "$temporaryDir/nodejs.zip"
+	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
 }
 
 task unpackNodeJSLib(type: Copy, dependsOn: downloadNodeJS) {

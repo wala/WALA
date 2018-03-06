@@ -16,39 +16,26 @@ task cloneDroidBench(type: Exec) {
 	commandLine 'git', 'clone', "--branch=$inputs.properties.branch", '--config=advice.detachedHead=false', '--depth=1', '--quiet', inputs.properties.repository, destDir
 }
 
-task downloadAndroidSdk {
+task downloadAndroidSdk(type: VerifiedDownload) {
 	def sdkOs
-	def sdkChecksum
 	switch (System.getProperty('os.name')) {
 		case ~/Linux/:
 			sdkOs = 'linux'
-			sdkChecksum = '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
+			checksum '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
 			break
 		case ~/Mac OS X/:
 			sdkOs = 'darwin'
-			sdkChecksum = '4a81754a760fce88cba74d69c364b05b31c53d57b26f9f82355c61d5fe4b9df9'
+			checksum '4a81754a760fce88cba74d69c364b05b31c53d57b26f9f82355c61d5fe4b9df9'
 			break
 		case ~/Windows.*/:
 			sdkOs = 'windows'
-			sdkChecksum = '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
+			checksum '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
 			break
 	}
 	def archive = "sdk-tools-$sdkOs-3859397.zip"
-	outputs.file "$temporaryDir/$archive"
-	doLast {
-		download {
-			src "https://dl.google.com/android/repository/$archive"
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag true
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			algorithm 'SHA-256'
-			checksum sdkChecksum
-		}
-	}
+	src "https://dl.google.com/android/repository/$archive"
+	dest "$temporaryDir/$archive"
+	algorithm 'SHA-256'
 }
 
 task unpackAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
@@ -86,38 +73,16 @@ task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
 	into temporaryDir
 }
 
-task downloadSampleCup {
-	outputs.file 'data/sample.cup'
-	doLast {
-		download {
-			src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag true
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			checksum '76b549e7c6e802b811a374248175ecf4'
-		}
-	}
+task downloadSampleCup(type: VerifiedDownload) {
+	src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
+	dest 'data/sample.cup'
+	checksum '76b549e7c6e802b811a374248175ecf4'
 }
 
-task downloadSampleLex {
-	outputs.file 'data/sample.lex'
-	doLast {
-		download {
-			src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
-			dest outputs.files.singleFile
-			overwrite true
-			onlyIfModified true
-			useETag true
-		}
-		verifyChecksum {
-			src outputs.files.singleFile
-			checksum 'ae887758b2657981d023a72a165da830'
-		}
-	}
+task downloadSampleLex(type: VerifiedDownload) {
+	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
+	dest 'data/sample.lex'
+	checksum 'ae887758b2657981d023a72a165da830'
 }
 
 clean.dependsOn cleanCopyDxJar
