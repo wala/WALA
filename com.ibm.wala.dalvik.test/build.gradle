@@ -6,14 +6,21 @@ sourceSets.test {
 		]
 }
 
-task cloneDroidBench(type: Exec) {
-	// TODO: download to somewhere private to this build tree; update code that looks in "/tmp" accordingly
-	def destDir = file('/tmp/DroidBench')
-	inputs.property('repository', 'https://github.com/secure-software-engineering/DroidBench.git')
-	inputs.property('branch', 'DroidBench_2.0')
-	outputs.dirs destDir
-	doFirst { delete destDir }
-	commandLine 'git', 'clone', "--branch=$inputs.properties.branch", '--config=advice.detachedHead=false', '--depth=1', '--quiet', inputs.properties.repository, destDir
+task downloadDroidBench(type: VerifiedDownload) {
+	src 'https://github.com/secure-software-engineering/DroidBench/archive/DroidBench_2.0.zip'
+	dest "$temporaryDir/DroidBench_2.0.zip"
+	checksum '16726a48329835140e14f18470a1b4a3'
+}
+
+task unpackDroidBench(type: Sync, dependsOn: downloadDroidBench) {
+	from(zipTree(files(downloadDroidBench).singleFile)) {
+		eachFile {
+			relativePath new RelativePath(!directory, relativePath.segments[1..-1] as String[])
+		}
+	}
+
+	into '/tmp/DroidBench'
+	includeEmptyDirs false
 }
 
 task downloadAndroidSdk(type: VerifiedDownload) {
@@ -104,7 +111,7 @@ dependencies {
 }
 
 processTestResources {
-	dependsOn cloneDroidBench
+	dependsOn unpackDroidBench
 
 	from copyAndroidJar
 	from downloadSampleCup
