@@ -120,8 +120,6 @@ dependencies {
 }
 
 processTestResources {
-	dependsOn unpackDroidBench
-
 	from copyAndroidJar
 	from downloadSampleCup
 	from downloadSampleLex
@@ -131,6 +129,11 @@ processTestResources {
 	from testdata.collectTestDataA
 	from testdata.downloadJavaCup
 }
+
+if (isWindows)
+	test.exclude '**/droidbench/**'
+else
+	processTestResources.dependsOn unpackDroidBench
 
 test {
 	maxHeapSize = '800M'
