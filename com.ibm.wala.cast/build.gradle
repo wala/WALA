@@ -56,8 +56,7 @@ model {
 							sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/server/libjvm.dylib")
 							break
 						case 'windows/x86-64':
-							// TODO: determine JVM library name and location on Windows
-							// sharedLibraryLinkFile = '???'
+							sharedLibraryLinkFile = file("$currentJavaHome/jre/bin/server/jvm.dll")
 							break
 					}
 				}
