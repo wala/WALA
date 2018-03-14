@@ -7,7 +7,7 @@ sourceSets.test {
 }
 
 def osName = System.getProperty('os.name')
-def isWindows = osName.startsWith('Windows ')
+ext.isWindows = osName.startsWith('Windows ')
 
 task downloadDroidBench(type: VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
@@ -53,17 +53,38 @@ task unpackAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
 	into temporaryDir
 }
 
-// TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
-task installAndroidBuildTools(type: Exec, dependsOn: unpackAndroidSdk) {
-	def androidSdk = files(unpackAndroidSdk).singleFile
-	def manager = new File(androidSdk, 'tools/bin/sdkmanager')
-	ext.version = '26.0.2'
-	if (isWindows)
-		commandLine 'PowerShell', '-Command', "echo y | $manager build-tools`;$version >\$null"
-	else
-		commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager build-tools\\;$version >/dev/null"
-	inputs.dir "$androidSdk/tools"
-	outputs.dir "$androidSdk/build-tools"
+class InstallAndroidSdkComponent extends DefaultTask {
+	@Input def component
+	@Input def version
+	@Internal def sdkRoot = project.files(project.tasks.unpackAndroidSdk).singleFile
+
+	@Internal getSdkFile(subpath) {
+		return new File(sdkRoot, subpath)
+	}
+
+	@InputDirectory getTools() {
+		return getSdkFile('tools')
+	}
+
+	@OutputDirectory getInstallationDirectory() {
+		return getSdkFile(component)
+	}
+
+	@TaskAction
+	install() {
+		def manager = new File(tools, 'bin/sdkmanager')
+		project.exec {
+			if (project.isWindows)
+				commandLine 'PowerShell', '-Command', "echo y | $manager $component`;$version >\$null"
+			else
+				commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager $component\\;$version >/dev/null"
+		}
+	}
+}
+
+task installAndroidBuildTools(type: InstallAndroidSdkComponent, dependsOn: unpackAndroidSdk) {
+	component 'build-tools'
+	version '26.0.2'
 }
 
 task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
@@ -71,17 +92,9 @@ task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
 	into 'lib'
 }
 
-// TODO: factor out common code in installAndroidBuildTools and installAndroidPlatforms
-task installAndroidPlatforms(type: Exec, dependsOn: unpackAndroidSdk) {
-	def androidSdk = files(unpackAndroidSdk).singleFile
-	def manager = new File(androidSdk, 'tools/bin/sdkmanager')
-	ext.version = "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
-	if (isWindows)
-		commandLine 'PowerShell', '-Command', "echo y | $manager platforms`;$version >\$null"
-	else
-		commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager platforms\\;$version >/dev/null"
-	inputs.dir "$androidSdk/tools"
-	outputs.dir "$androidSdk/platforms"
+task installAndroidPlatforms(type: InstallAndroidSdkComponent, dependsOn: unpackAndroidSdk) {
+	component 'platforms'
+	version "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
 }
 
 task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
