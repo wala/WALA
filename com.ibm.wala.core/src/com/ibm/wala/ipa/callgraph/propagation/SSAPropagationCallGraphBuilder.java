@@ -2219,7 +2219,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * @return true iff the contents of the local with this value number can be deduced locally, without propagation
    */
-  protected boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int valueNumber) {
+  public boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int valueNumber) {
     if (isConstantRef(symbolTable, valueNumber)) {
       return true;
     } else if (SHORT_CIRCUIT_INVARIANT_SETS) {
