@@ -41,3 +41,7 @@ JNIEnv *launch_jvm(char *classpath) {
 void kill() {
    javaVM->DestroyJavaVM();
 }
+
+// Local variables:
+// c-basic-offset: 3
+// End:
