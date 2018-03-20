@@ -40,23 +40,19 @@ model {
 					switch (targetPlatform.operatingSystem.name) {
 						case 'linux':
 							headers.srcDirs "$jniIncludeDir/linux"
+							switch (targetPlatform.architecture.name) {
+								case 'x86-64':
+									sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/amd64/server/libjvm.so")
+									break
+							}
 							break
 						case 'osx':
 							headers.srcDirs "$jniIncludeDir/darwin"
+							sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/server/libjvm.dylib")
 							break
 						case 'windows':
 							headers.srcDirs "$jniIncludeDir/win32"
-							break
-					}
-					switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
-						case 'linux/x86-64':
-							sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/amd64/server/libjvm.so")
-							break
-						case 'osx/x86-64':
-							sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/server/libjvm.dylib")
-							break
-						case 'windows/x86-64':
-							sharedLibraryLinkFile = file("$currentJavaHome/jre/bin/server/jvm.dll")
+							sharedLibraryLinkFile = file("$currentJavaHome/lib/jvm.lib")
 							break
 					}
 				}
