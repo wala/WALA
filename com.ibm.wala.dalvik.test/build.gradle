@@ -117,6 +117,7 @@ task downloadSampleLex(type: VerifiedDownload) {
 clean.dependsOn cleanCopyDxJar
 
 compileTestJava.dependsOn copyDxJar
+afterEclipseBuildshipImport.dependsOn copyDxJar
 
 dependencies {
 	testCompile(
