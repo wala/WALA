@@ -10,6 +10,27 @@ Require-Bundle: com.ibm.wala.cast;bundle-version="1.4.4",
  com.ibm.wala.util;bundle-version="1.4.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.cast.js.translator
+Export-Package: com.ibm.wala.cast.js.translator,
+ org.mozilla.classfile,
+ org.mozilla.javascript,
+ org.mozilla.javascript.annotations,
+ org.mozilla.javascript.ast,
+ org.mozilla.javascript.commonjs.module,
+ org.mozilla.javascript.commonjs.module.provider,
+ org.mozilla.javascript.debug,
+ org.mozilla.javascript.jdk13,
+ org.mozilla.javascript.jdk15,
+ org.mozilla.javascript.json,
+ org.mozilla.javascript.optimizer,
+ org.mozilla.javascript.regexp,
+ org.mozilla.javascript.serialize,
+ org.mozilla.javascript.tools,
+ org.mozilla.javascript.tools.debugger,
+ org.mozilla.javascript.tools.debugger.treetable,
+ org.mozilla.javascript.tools.idswitch,
+ org.mozilla.javascript.tools.jsc,
+ org.mozilla.javascript.tools.shell,
+ org.mozilla.javascript.xml,
+ org.mozilla.javascript.xmlimpl
 Bundle-ClassPath: .,
  lib/rhino-1.7.6.jar
