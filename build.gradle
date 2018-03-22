@@ -58,7 +58,6 @@ subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever
 	switch (subproject.name) {
 		case 'com.ibm.wala-repository':
-		case 'com.ibm.wala.cast.js.test.data':
 		case ~/.*_feature/:
 			return
 	}
@@ -77,6 +76,8 @@ subprojects { subproject ->
 			url "$rootProject.buildDir/p2asmaven/maven"
 		}
 	}
+
+	jar.manifest.from('META-INF/MANIFEST.MF')
 
 	task afterEclipseBuildshipImport(dependsOn: processTestResources)
 
