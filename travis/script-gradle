@@ -5,4 +5,4 @@ case "$TRAVIS_OS_NAME" in
   (osx) headless='' ;;
 esac
 
-$headless ./gradlew --continue --parallel build javadoc lintGradle
+$headless ./gradlew --continue build javadoc lintGradle

@@ -9,7 +9,11 @@ tutorial.
 
 - [more comprehensive management of external
   dependencies](#comprehensive-external-dependencies)
-- [`--parallel` for faster builds](#parallel)
+- faster builds using [parallel task
+  execution](https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:parallel_execution)
+  and [user-scoped
+  caching](https://docs.gradle.org/current/userguide/build_cache.html)
+  (both enabled by default)
 - [trustworthy dependencies for incremental
   builds](#trustworthy-dependencies-for-incremental-builds)
 - [composite builds](#composite-builds) for easier integration of WALA
@@ -42,13 +46,12 @@ need to avoid this switch.
 Gradle downloads many packages and supporting Java libraries as
 needed.  Your first Gradle build may take a long time.  On a fast
 workstation with a University-grade network and no local caches, my
-initial run of `./gradlew --parallel assemble processTestResources`
-took five minutes.  On a decent laptop with residential DSL and no
-local caches, the same initial build took twenty minutes.
-Fortunately, user- and project-level Gradle caches will make
-incremental rebuilds much faster.  Rerunning `./gradlew --parallel
-assemble processTestResources` with a warm cache in an already-built
-tree takes under three seconds.
+initial run of `./gradlew assemble processTestResources` took five
+minutes.  On a decent laptop with residential DSL and no local caches,
+the same initial build took twenty minutes.  Fortunately, user- and
+project-level Gradle caches will make incremental rebuilds much
+faster.  Rerunning `./gradlew assemble processTestResources` with a
+warm cache in an already-built tree takes under three seconds.
 
 Maven is the same, really.  You may already have most of what Maven
 needs downloaded and cached locally, but your first Maven WALA build
@@ -193,11 +196,6 @@ as `procTeRes` or even `pTR`.
 
 Among Gradle’s command-line flags, I have found the following
 particularly useful:
-
-- <a
-  id="parallel"/>[`--parallel`](https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:parallel_execution):
-  use multiple CPUs to build multiple independent sub-targets
-  simultaneously.  There’s rarely any good reason *not* to use this.
 
 - [`--continue`](https://docs.gradle.org/current/userguide/command_line_interface.html#sec:continue_build_on_failure):
   keep building non-dependent sub-tasks even after an initial failure.
