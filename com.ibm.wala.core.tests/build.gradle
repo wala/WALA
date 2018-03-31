@@ -30,7 +30,7 @@ processTestResources {
 	from testdata.collectTestData
 	from testdata.downloadJavaCup
 	from files(testdata.extractBcel)[0]
-	from testdata.generateHelloHash
+	from testdata.generateHelloHashJar
 }
 
 test {

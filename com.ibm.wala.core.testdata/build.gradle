@@ -97,7 +97,7 @@ task unpackOcamlJava(type: Sync, dependsOn: downloadOcamlJava) {
 	into temporaryDir
 }
 
-task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
+task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
 	inputs.file 'ocaml/hello_hash.ml'
 	outputs.file 'hello_hash.jar'
 	args inputs.files.singleFile, '-o', outputs.files.singleFile
@@ -108,12 +108,12 @@ task generateHelloHash(type: JavaExec, dependsOn: unpackOcamlJava) {
 	inputs.dir ocamlJavaHome
 }
 
-task cleanGenerateHelloHash(type: Delete) {
-	delete generateHelloHash
+task cleanGenerateHelloHashJar(type: Delete) {
+	delete generateHelloHashJar
 	delete fileTree('ocaml') { exclude '*.ml' }
 }
 
-clean.dependsOn cleanGenerateHelloHash
+clean.dependsOn cleanGenerateHelloHashJar
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -175,6 +175,6 @@ afterEclipseBuildshipImport {
 		collectTestDataA,
 		downloadJavaCup,
 		extractBcel,
-		generateHelloHash,
+		generateHelloHashJar,
 		)
 }
