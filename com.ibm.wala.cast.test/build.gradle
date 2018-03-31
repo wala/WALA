@@ -33,6 +33,7 @@ task generateJniHeaders(type: Exec, dependsOn: [testClasses, ':com.ibm.wala.cast
 	}
 	inputs.files files(qualifiedClasses.collect { "$buildDir/${it.replace('.', '/')}.class" })
 	outputs.files files(qualifiedClasses.collect { "$headerDir/${it.replace('.', '_')}.h" })
+	outputs.cacheIf { true }
 
 	// javah command to generate headers
 	def sourceSets = [sourceSets.test, project(':com.ibm.wala.cast').sourceSets.main]

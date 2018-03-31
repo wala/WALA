@@ -53,6 +53,7 @@ task unpackAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
 	into temporaryDir
 }
 
+@CacheableTask
 class InstallAndroidSdkComponent extends DefaultTask {
 	@Input def component
 	@Input def version
