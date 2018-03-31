@@ -63,6 +63,7 @@ class InstallAndroidSdkComponent extends DefaultTask {
 		return new File(sdkRoot, subpath)
 	}
 
+	@PathSensitive(PathSensitivity.RELATIVE)
 	@InputDirectory getTools() {
 		return getSdkFile('tools')
 	}

@@ -9,7 +9,9 @@ import org.gradle.api.tasks.*
 @CacheableTask
 class CreatePackageList extends org.gradle.api.DefaultTask {
 
+	@PathSensitive(PathSensitivity.RELATIVE)
 	@Input Object sourceSet
+
 	@OutputFile File packageList = new File("$temporaryDir/package-list")
 
 	@TaskAction
