@@ -32,7 +32,7 @@ task generateJniHeaders(type: Exec, dependsOn: [testClasses, ':com.ibm.wala.cast
 		headerDir = "$buildDir/include"
 	}
 	inputs.files files(qualifiedClasses.collect { "$buildDir/${it.replace('.', '/')}.class" })
-	outputs.files files(qualifiedClasses.collect { "$headerDir/${it.replace('.', '_')}.h" })
+	outputs.dir headerDir
 	outputs.cacheIf { true }
 
 	// javah command to generate headers
