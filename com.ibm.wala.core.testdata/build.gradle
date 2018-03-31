@@ -101,6 +101,7 @@ task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
 	inputs.file 'ocaml/hello_hash.ml'
 	outputs.file 'hello_hash.jar'
 	args inputs.files.singleFile, '-o', outputs.files.singleFile
+	outputs.cacheIf { true }
 
 	def ocamlJavaHome = new File(files(unpackOcamlJava).singleFile, downloadOcamlJava.basename)
 	classpath new File(ocamlJavaHome, 'lib/ocamljava.jar')

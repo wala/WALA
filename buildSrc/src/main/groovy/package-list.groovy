@@ -6,6 +6,7 @@ import org.gradle.api.tasks.*
 //  create a Javadoc-style "package-list" file
 //
 
+@CacheableTask
 class CreatePackageList extends org.gradle.api.DefaultTask {
 
 	@Input Object sourceSet

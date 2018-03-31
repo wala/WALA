@@ -6,6 +6,7 @@ import org.gradle.api.tasks.*
 //  download and use checksum to verify that we got what we expected
 //
 
+@CacheableTask
 class VerifiedDownload extends org.gradle.api.DefaultTask {
 
 	// URL of resource to download
