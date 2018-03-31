@@ -87,6 +87,8 @@ subprojects { subproject ->
 		include '**/*Tests.class'
 		include '**/Test*.class'
 		exclude '**/*AndroidLibs*.class'
+
+		maxParallelForks = Integer.MAX_VALUE
 	}
 }
 
