@@ -92,6 +92,11 @@ task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
 	into 'lib'
 }
 
+clean.dependsOn cleanCopyDxJar
+
+compileTestJava.dependsOn copyDxJar
+afterEclipseBuildshipImport.dependsOn copyDxJar
+
 task installAndroidPlatforms(type: InstallAndroidSdkComponent, dependsOn: unpackAndroidSdk) {
 	component 'platforms'
 	version "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
@@ -108,16 +113,15 @@ task downloadSampleCup(type: VerifiedDownload) {
 	checksum '76b549e7c6e802b811a374248175ecf4'
 }
 
+clean.dependsOn cleanDownloadSampleCup
+
 task downloadSampleLex(type: VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
 	dest 'data/sample.lex'
 	checksum 'ae887758b2657981d023a72a165da830'
 }
 
-clean.dependsOn cleanCopyDxJar
-
-compileTestJava.dependsOn copyDxJar
-afterEclipseBuildshipImport.dependsOn copyDxJar
+clean.dependsOn cleanDownloadSampleLex
 
 dependencies {
 	testCompile(
@@ -152,3 +156,13 @@ else
 test {
 	maxHeapSize = '800M'
 }
+
+task cleanTest(type: Delete) {
+	delete(
+		'parser.java',
+		'report',
+		'sym.java',
+		)
+}
+
+clean.dependsOn cleanTest

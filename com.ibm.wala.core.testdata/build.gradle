@@ -160,6 +160,8 @@ task cleanColllectTestDataA(type: Delete) {
 	delete collectTestDataA
 }
 
+clean.dependsOn cleanCollectTestDataA
+
 
 ////////////////////////////////////////////////////////////////////////
 //
