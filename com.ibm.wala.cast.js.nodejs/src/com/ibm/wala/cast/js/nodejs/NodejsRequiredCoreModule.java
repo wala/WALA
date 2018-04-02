@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.nodejs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -52,7 +53,8 @@ public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
 
 	}
 	public static NodejsRequiredCoreModule make(String name) throws IOException {
-		File file = new File(System.getProperty("java.io.tmpdir"), name+".js");
+		File file = Files.createTempFile(name, ".js").toFile();
+		file.deleteOnExit();
 		TemporaryFile.streamToFile(file, getModule(name));
 		SourceFileModule sourceFileModule = CAstCallGraphUtil.makeSourceModule(file.toURI().toURL(), file.getName());
 		return new NodejsRequiredCoreModule(file, sourceFileModule);
