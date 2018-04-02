@@ -49,6 +49,7 @@ package com.ibm.wala.dalvik.classLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -83,12 +84,12 @@ public class DexFileModule implements Module {
     	}
     }
     
-    private static File tf(JarFile f) {
+    private static File tf(JarFile f) throws IOException {
     	String name = f.getName();
     	if (name.indexOf('/') >= 0) {
     		name = name.substring(name.lastIndexOf('/')+1);
     	}
-    	File tf = new File(System.getProperty("java.io.tmpdir") + "/" + name + "_classes.dex");
+    	File tf = Files.createTempFile("name", "_classes.dex").toFile();
     	tf.deleteOnExit();
     	System.err.println("using " + tf);
     	return tf;

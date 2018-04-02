@@ -1,11 +1,12 @@
 package com.ibm.wala.shrike.instrumentation;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.ProtectionDomain;
 
 import com.ibm.wala.shrikeCT.ClassReader;
@@ -15,11 +16,16 @@ import com.ibm.wala.shrikeCT.SourceFileReader;
 
 public class CodeScraper implements ClassFileTransformer {
 
-  private static final String prefix = System.getProperty("java.io.tmpdir") + File.separator + "loggedClasses" + File.separator + System.currentTimeMillis();
+  private static final Path prefix;
   
   static {
+    try {
+      prefix = Files.createTempDirectory("loggedClasses");
+      prefix.toFile().deleteOnExit();
+    } catch (final IOException problem) {
+      throw new RuntimeException(problem);
+    }
     System.err.println("scraping to " + prefix);
-    (new File(prefix)).mkdirs();
   }
   
   @Override
@@ -38,9 +44,8 @@ public class CodeScraper implements ClassFileTransformer {
         }
       }
       if (className == null || sourceFile == null || !sourceFile.endsWith("java") || true) try {
-        String log = prefix + File.separator + reader.getName() + ".class";
-        (new File(log)).getParentFile().mkdirs();
-        try (final FileOutputStream f = new FileOutputStream(log)) {
+        Path log = prefix.resolve(reader.getName() + ".class");
+        try (final OutputStream f = Files.newOutputStream(log)) {
           f.write(classfileBuffer);
         }
       } catch (IOException e) {
