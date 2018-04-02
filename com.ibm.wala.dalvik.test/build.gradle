@@ -48,49 +48,44 @@ task downloadAndroidSdk(type: VerifiedDownload) {
 	algorithm 'SHA-256'
 }
 
-task unpackAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
+task installAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
 	from zipTree(files(downloadAndroidSdk).singleFile)
 	into temporaryDir
-}
 
-@CacheableTask
-class InstallAndroidSdkComponent extends DefaultTask {
-	@Input def component
-	@Input def version
-	@Internal def sdkRoot = project.files(project.tasks.unpackAndroidSdk).singleFile
-
-	@Internal getSdkFile(subpath) {
-		return new File(sdkRoot, subpath)
+	def buildToolsVersion = '26.0.2'
+	ext {
+		components = [
+			'build-tools': buildToolsVersion,
+			'platforms': "android-${buildToolsVersion.tokenize('.')[0]}"
+		]
 	}
 
-	@PathSensitive(PathSensitivity.RELATIVE)
-	@InputDirectory getTools() {
-		return getSdkFile('tools')
-	}
+	doLast {
+		exec {
+			def shell, shellFlags, yes, semicolon, discard
+			if (project.isWindows) {
+				shell = 'PowerShell'
+				shellFlags = '-Command'
+				yes = 'echo y'
+				semicolon = '`;'
+				discard = '$null'
+			} else {
+				shell = 'sh'
+				shellFlags = '-ceu'
+				yes = 'yes 2>/dev/null'
+				semicolon = /\;/
+				discard = '/dev/null'
+			}
 
-	@OutputDirectory getInstallationDirectory() {
-		return getSdkFile(component)
-	}
-
-	@TaskAction
-	install() {
-		def manager = new File(tools, 'bin/sdkmanager')
-		project.exec {
-			if (project.isWindows)
-				commandLine 'PowerShell', '-Command', "echo y | $manager $component`;$version >\$null"
-			else
-				commandLine 'sh', '-ceu', "yes 2>/dev/null | $manager $component\\;$version >/dev/null"
+			def componentArgs = components.collect { "$it.key$semicolon$it.value" }.join ' '
+			commandLine shell, shellFlags, "$yes | $temporaryDir/tools/bin/sdkmanager $componentArgs >$discard"
 		}
 	}
+	outputs.cacheIf { true }
 }
 
-task installAndroidBuildTools(type: InstallAndroidSdkComponent, dependsOn: unpackAndroidSdk) {
-	component 'build-tools'
-	version '26.0.2'
-}
-
-task copyDxJar(type: Sync, dependsOn: installAndroidBuildTools) {
-	from "${files(installAndroidBuildTools).singleFile}/${installAndroidBuildTools.version}/lib/dx.jar"
+task copyDxJar(type: Sync, dependsOn: installAndroidSdk) {
+	from "${files(installAndroidSdk).singleFile}/build-tools/${installAndroidSdk.components['build-tools']}/lib/dx.jar"
 	into 'lib'
 }
 
@@ -99,13 +94,8 @@ clean.dependsOn cleanCopyDxJar
 compileTestJava.dependsOn copyDxJar
 afterEclipseBuildshipImport.dependsOn copyDxJar
 
-task installAndroidPlatforms(type: InstallAndroidSdkComponent, dependsOn: unpackAndroidSdk) {
-	component 'platforms'
-	version "android-${installAndroidBuildTools.version.tokenize('.')[0]}"
-}
-
-task copyAndroidJar(type: Sync, dependsOn: installAndroidPlatforms) {
-	from "${files(installAndroidPlatforms).singleFile}/${installAndroidPlatforms.version}/android.jar"
+task copyAndroidJar(type: Sync, dependsOn: installAndroidSdk) {
+	from "${files(installAndroidSdk).singleFile}/platforms/${installAndroidSdk.components['platforms']}/android.jar"
 	into temporaryDir
 }
 
