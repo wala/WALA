@@ -17,7 +17,7 @@ task downloadNodeJS(type: VerifiedDownload) {
 }
 
 task unpackNodeJSLib(type: Copy, dependsOn: downloadNodeJS) {
-	from(zipTree(files(downloadNodeJS).singleFile)) {
+	from(zipTree(downloadNodeJS.dest)) {
 		include 'nodejs-node-0a604e9/lib/*.js'
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)

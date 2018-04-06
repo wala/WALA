@@ -17,5 +17,5 @@ task createPackageList(type: CreatePackageList) {
 
 javadoc {
 	dependsOn createPackageList
-	options.linksOffline outputDirectory.path, files(createPackageList).singleFile.parent
+	options.linksOffline outputDirectory.path, createPackageList.packageList.parent
 }
