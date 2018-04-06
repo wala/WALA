@@ -16,7 +16,7 @@ task downloadDroidBench(type: VerifiedDownload) {
 }
 
 task unpackDroidBench(type: Sync, dependsOn: downloadDroidBench) {
-	from(zipTree(files(downloadDroidBench).singleFile)) {
+	from(zipTree(downloadDroidBench.dest)) {
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.segments[1..-1] as String[])
 		}
@@ -49,7 +49,7 @@ task downloadAndroidSdk(type: VerifiedDownload) {
 }
 
 task installAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
-	from zipTree(files(downloadAndroidSdk).singleFile)
+	from zipTree(downloadAndroidSdk.dest)
 	into temporaryDir
 
 	def buildToolsVersion = '26.0.2'
@@ -95,7 +95,7 @@ compileTestJava.dependsOn copyDxJar
 afterEclipseBuildshipImport.dependsOn copyDxJar
 
 task copyAndroidJar(type: Sync, dependsOn: installAndroidSdk) {
-	from "${files(installAndroidSdk).singleFile}/platforms/${installAndroidSdk.components['platforms']}/android.jar"
+	from "${installAndroidSdk.destinationDir}/platforms/${installAndroidSdk.components['platforms']}/android.jar"
 	into temporaryDir
 }
 
@@ -119,14 +119,14 @@ dependencies {
 	testCompile(
 		'junit:junit:4.11',
 		'org.osgi:org.osgi.core:4.2.0',
-		files("${files(copyDxJar).singleFile}/dx.jar"),
+		files("${copyDxJar.destinationDir}/dx.jar"),
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.dalvik'),
 		project(':com.ibm.wala.shrike'),
 		project(':com.ibm.wala.util'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 		)
-	testRuntime files("${files(copyAndroidJar).singleFile}/android.jar")
+	testRuntime files("${copyAndroidJar.destinationDir}/android.jar")
 }
 
 processTestResources {

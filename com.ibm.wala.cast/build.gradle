@@ -25,7 +25,7 @@ javadoc {
 	}
 
 	dependsOn js.createPackageList
-	options.linksOffline js.javadoc.outputDirectory.path, files(js.createPackageList).singleFile.parent
+	options.linksOffline js.javadoc.outputDirectory.path, js.createPackageList.packageList.parent
 }
 
 def currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome

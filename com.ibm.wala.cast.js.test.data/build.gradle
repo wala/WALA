@@ -9,7 +9,7 @@ task downloadAjaxslt(type: VerifiedDownload) {
 }
 
 task unpackAjaxslt(type: Sync, dependsOn: downloadAjaxslt) {
-	from(tarTree(files(downloadAjaxslt).singleFile)) {
+	from(tarTree(downloadAjaxslt.dest)) {
 		eachFile {
 			def newSegments = relativePath.segments[1 .. -1] as String[]
 			relativePath new RelativePath(!directory, newSegments)

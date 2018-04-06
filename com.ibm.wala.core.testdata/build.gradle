@@ -20,7 +20,7 @@ task downloadBcel(type: VerifiedDownload) {
 }
 
 task extractBcel(type: Copy, dependsOn: downloadBcel) {
-	from(tarTree(files(downloadBcel).singleFile)) {
+	from(tarTree(downloadBcel.dest)) {
 		include "bcel-${downloadBcel.version}/bcel-${downloadBcel.version}.jar"
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)
@@ -93,20 +93,24 @@ task downloadOcamlJava(type: VerifiedDownload) {
 }
 
 task unpackOcamlJava(type: Sync, dependsOn: downloadOcamlJava) {
-	from tarTree(files(downloadOcamlJava).singleFile)
+	from tarTree(downloadOcamlJava.dest)
 	into temporaryDir
 }
 
 task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
-	inputs.file 'ocaml/hello_hash.ml'
-	outputs.file 'hello_hash.jar'
-	args inputs.files.singleFile, '-o', outputs.files.singleFile
+	def ocamlSource = file('ocaml/hello_hash.ml')
+	inputs.file ocamlSource
+
+	def jarTarget = file('hello_hash.jar')
+	outputs.file jarTarget
 	outputs.cacheIf { true }
 
-	def ocamlJavaHome = new File(files(unpackOcamlJava).singleFile, downloadOcamlJava.basename)
-	classpath new File(ocamlJavaHome, 'lib/ocamljava.jar')
+	def ocamlJavaJar = new File("$unpackOcamlJava.destinationDir/$downloadOcamlJava.basename/lib/ocamljava.jar")
+	inputs.file ocamlJavaJar
+	classpath ocamlJavaJar
+
 	main 'ocaml.compilers.ocamljavaMain'
-	inputs.dir ocamlJavaHome
+	args ocamlSource, '-o', jarTarget
 }
 
 task cleanGenerateHelloHashJar(type: Delete) {
