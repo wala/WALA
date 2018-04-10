@@ -32,6 +32,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -52,7 +53,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
           Dispatch.STATIC);
   
   @Override
-  protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+  protected <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     JavaSourceAnalysisEngine<I> engine = new ECJJavaSourceAnalysisEngine<I>() {
       @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {

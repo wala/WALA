@@ -40,6 +40,7 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -345,11 +346,11 @@ public abstract class IRTests {
     return new String[] { "L" + pkgName + "/" + getTestName().substring(4) };
   }
 
-  protected abstract <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
+  protected abstract <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
   public <I extends InstanceKey> Pair<CallGraph, PointerAnalysis<I>> runTest(Collection<String> sources, List<String> libs,
         String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable) throws IllegalArgumentException, CancelException, IOException {
-      AbstractAnalysisEngine<I> engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
+      AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
 
       CallGraph callGraph;
         callGraph = engine.buildDefaultCallGraph();

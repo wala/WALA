@@ -43,7 +43,7 @@ import com.ibm.wala.util.io.FileProvider;
 
 /**
  */
-public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I> {
+public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I, CallGraphBuilder<I>, Void> {
 
   /**
    * Modules which are user-space code

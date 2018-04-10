@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.Attributes;
@@ -61,7 +62,7 @@ import com.ibm.wala.util.warnings.Warning;
  * This class reads method summaries from an XML Stream.
  */
 public class XMLMethodSummaryReader implements BytecodeConstants {
-
+  
   static final boolean DEBUG = false;
 
   /**
@@ -198,8 +199,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     try {
       readXML(xmlFile);
     } catch (Exception e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
+      throw new Error("bad xml file", e);
     }
   }
 
@@ -208,7 +208,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     assert xml != null : "Null xml stream";
     SAXParserFactory factory = SAXParserFactory.newInstance();
-    factory.newSAXParser().parse(new InputSource(xml), handler);
+    SAXParser parser = factory.newSAXParser();
+    parser.parse(new InputSource(xml), handler);
   }
 
   /**

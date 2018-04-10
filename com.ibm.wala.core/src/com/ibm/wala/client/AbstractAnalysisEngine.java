@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -51,7 +52,7 @@ import com.ibm.wala.util.io.FileProvider;
  * Some clients choose to build on this, but many don't. I usually don't in new code; I usually don't find the re-use enabled by
  * this class compelling. I would probably nuke this except for some legacy code that uses it.
  */
-public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements AnalysisEngine {
+public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends CallGraphBuilder<I>, Y> implements AnalysisEngine {
 
   public interface EntrypointBuilder {
     Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha);
@@ -126,11 +127,11 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
 
   private EntrypointBuilder entrypointBuilder = this::makeDefaultEntrypoints;
 
-  protected abstract CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
+  protected abstract X getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 
-  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
+  protected X buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
       IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
-    CallGraphBuilder<I> builder = getCallGraphBuilder(cha, options, cache);
+    X builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options, monitor);
 
@@ -300,7 +301,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public CallGraphBuilder defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
+  public X defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
@@ -322,4 +323,9 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     return options;
   }
 
+  @SuppressWarnings("unused")
+  public Y performAnalysis(PropagationCallGraphBuilder builder) throws CancelException {
+    return null;
+    
+  }
 }

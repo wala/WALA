@@ -51,7 +51,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
-public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I> {
+public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I, CallGraphBuilder<I>, Void> {
   protected JavaScriptLoaderFactory loaderFactory;
 
   protected JavaScriptTranslatorFactory translatorFactory;
