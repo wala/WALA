@@ -179,7 +179,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			// build list of actual parameter code elements, and return a
 			// function
 			final int numParams = ((SSAInvokeInstruction) srcInst)
-					.getNumberOfParameters();
+					.getNumberOfPositionalParameters();
 			List<CodeElement> actualParams = new ArrayList<>(numParams);
 			for (int i = 0; i < numParams; i++) {
 				actualParams.add(i, new LocalElement(srcInst.getUse(i)));

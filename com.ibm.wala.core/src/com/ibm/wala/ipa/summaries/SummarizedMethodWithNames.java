@@ -73,6 +73,10 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
     private final MethodSummary summary;
     private final Map<Integer, Atom> localNames;
 
+    public SummarizedMethodWithNames(MethodReference ref, MethodSummary summary, IClass declaringClass) {
+      this(ref, summary, declaringClass, summary.getValueNames());
+    }
+
     public SummarizedMethodWithNames(MethodReference ref, MethodSummary summary, IClass declaringClass, Map<Integer, Atom> localNames) 
                 throws NullPointerException {
         super(ref, summary, declaringClass);

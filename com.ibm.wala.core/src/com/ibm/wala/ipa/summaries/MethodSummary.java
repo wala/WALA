@@ -20,6 +20,7 @@ import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
@@ -69,11 +70,28 @@ public class MethodSummary {
    */
   private boolean isFactory = false;
 
+  /**
+   * Known names for values
+   */
+  private Map<Integer, Atom> valueNames = null;
+  
   public MethodSummary(MethodReference method) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
     this.method = method;
+  }
+  
+  public void setValueNames(Map<Integer, Atom> nameTable) {
+    this.valueNames = nameTable;
+  }
+
+  public Map<Integer, Atom> getValueNames() {
+    return valueNames;
+  }
+
+  public Atom getValue(Integer v) {
+    return valueNames != null && valueNames.containsKey(v)? valueNames.get(v): null;
   }
   
   public int getNumberOfStatements() {

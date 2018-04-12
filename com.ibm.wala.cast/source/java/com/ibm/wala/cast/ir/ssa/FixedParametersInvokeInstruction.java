@@ -89,7 +89,7 @@ public abstract class FixedParametersInvokeInstruction
   }
 
   @Override
-  public int getNumberOfParameters() {
+  public int getNumberOfPositionalParameters() {
     if (params == null) {
       return 0;
     } else {
@@ -107,7 +107,7 @@ public abstract class FixedParametersInvokeInstruction
 
   @Override
   public int getNumberOfUses() {
-    return getNumberOfParameters();
+    return getNumberOfPositionalParameters();
   }
 
   @Override
@@ -119,7 +119,7 @@ public abstract class FixedParametersInvokeInstruction
 
   @Override
   public int getUse(int j) {
-    if (j < getNumberOfParameters())
+    if (j < getNumberOfPositionalParameters())
       return params[j];
     else {
       return super.getUse(j);

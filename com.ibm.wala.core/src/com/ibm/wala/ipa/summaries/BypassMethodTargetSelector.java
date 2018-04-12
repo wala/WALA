@@ -186,7 +186,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
           syntheticMethods.put(m, null);
           return null;
         }
-        SummarizedMethod n = new SummarizedMethod(m, summ, C);
+        SummarizedMethod n = new SummarizedMethodWithNames(m, summ, C);
         syntheticMethods.put(m, n);
         return n;
       } else {

@@ -135,9 +135,9 @@ public class ArgumentSpecialization {
         int v = -1;
         for (SSAAbstractInvokeInstruction x : caller.getIR().getCalls(site)) {
           if (v == -1) {
-            v = x.getNumberOfParameters();
+            v = x.getNumberOfPositionalParameters();
           } else {
-            if (v != x.getNumberOfParameters()) {
+            if (v != x.getNumberOfPositionalParameters()) {
               return baseContext; 
             }
           }

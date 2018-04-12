@@ -696,7 +696,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
             // don't track reflection into reflective invokes
             return false;
           }
-          for (int i = 0; i < call.getNumberOfParameters(); i++) {
+          for (int i = 0; i < call.getNumberOfPositionalParameters(); i++) {
             if (call.getUse(i) == caller.getValueNumber()) {
               if (callee.getValueNumber() == i + 1) {
                 return true;

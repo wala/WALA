@@ -101,7 +101,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   }
 
   @Override
-  public int getNumberOfParameters() {
+  public int getNumberOfPositionalParameters() {
     return getNumberOfUses();
   }
 

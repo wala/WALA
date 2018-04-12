@@ -48,7 +48,7 @@ public class EscapeCorrelation extends Correlation {
 	}
 	
 	public int getNumberOfArguments() {
-	  return invoke.getNumberOfParameters() - 2; // deduct one for the function object, one for the receiver
+	  return invoke.getNumberOfPositionalParameters() - 2; // deduct one for the function object, one for the receiver
 	}
 	
 	@Override

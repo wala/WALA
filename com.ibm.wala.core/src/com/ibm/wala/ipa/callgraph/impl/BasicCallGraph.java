@@ -302,10 +302,10 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   @Override
   public Set<CGNode> getNodes(MethodReference m) {
     IMethod im = getClassHierarchy().resolveMethod(m);
-    if (im == null) {
-      return Collections.emptySet();
+    if (im != null) {
+      m = im.getReference();
     }
-    Set<CGNode> result = mr2Nodes.get(im.getReference());
+    Set<CGNode> result = mr2Nodes.get(m);
     Set<CGNode> empty = Collections.emptySet();
     return (result == null) ? empty : result;
   }

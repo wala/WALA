@@ -151,7 +151,7 @@ public class LambdaSummaryClass extends SyntheticClass {
    
   private Map<Atom,IField> makeFields() {
     Map<Atom,IField> result = HashMapFactory.make();
-    for(int i = 0; i < invoke.getNumberOfParameters(); i++) {
+    for(int i = 0; i < invoke.getNumberOfPositionalParameters(); i++) {
       final int yuck = i;
       result.put(Atom.findOrCreateUnicodeAtom("c" + yuck), new IField() {
         @Override
@@ -248,8 +248,8 @@ public class LambdaSummaryClass extends SyntheticClass {
     MethodSummary summary = new MethodSummary(ref);
     
     int inst = 0;
-    int args = invoke.getNumberOfParameters(), v = args + 1;
-    for(int i = 0; i < invoke.getNumberOfParameters(); i++) {
+    int args = invoke.getNumberOfPositionalParameters(), v = args + 1;
+    for(int i = 0; i < invoke.getNumberOfPositionalParameters(); i++) {
       Atom f = Atom.findOrCreateUnicodeAtom("c" + i);
       summary.addStatement(insts.GetInstruction(inst++, v++, 1, getField(f).getReference()));
     }
@@ -273,11 +273,11 @@ public class LambdaSummaryClass extends SyntheticClass {
            
       int numParams = getClassHierarchy().resolveMethod(callee).getNumberOfParameters();
       int params[] = new int[ numParams ];
-      for(int i = isNew? 1: 0; i < invoke.getNumberOfParameters(); i++) {
+      for(int i = isNew? 1: 0; i < invoke.getNumberOfPositionalParameters(); i++) {
         params[i] = args + i + 1;
       }
       int n = 2;
-      for(int i = invoke.getNumberOfParameters(); i < numParams; i++) {
+      for(int i = invoke.getNumberOfPositionalParameters(); i < numParams; i++) {
         params[i] = n++;
       }
      

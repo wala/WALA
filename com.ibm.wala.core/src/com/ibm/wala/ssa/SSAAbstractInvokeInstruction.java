@@ -139,7 +139,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
   /**
    * How many parameters does this call specify?
    */
-  public abstract int getNumberOfParameters();
+  public abstract int getNumberOfPositionalParameters();
 
   /**
    * How many distinct values does this call return?
@@ -199,9 +199,9 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     s.append(" ");
     s.append(site.getDeclaredTarget().toString());
 
-    if (getNumberOfParameters() > 0) {
+    if (getNumberOfPositionalParameters() > 0) {
       s.append(" ").append(getValueString(symbolTable, getUse(0)));
-      for (int i = 1; i < getNumberOfParameters(); i++) {
+      for (int i = 1; i < getNumberOfPositionalParameters(); i++) {
         s.append(",").append(getValueString(symbolTable, getUse(i)));
       }
     }

@@ -57,7 +57,7 @@ public final class AnalysisUtil {
    *         including the this pointer.
    */
   public static int[] getParameterNumbers(SSAAbstractInvokeInstruction invokeInstruction) {
-    final int number = invokeInstruction.getNumberOfParameters();
+    final int number = invokeInstruction.getNumberOfPositionalParameters();
     final int[] parameterNumbers = new int[number];
     assert (parameterNumbers.length == invokeInstruction.getNumberOfUses());
 

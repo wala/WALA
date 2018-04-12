@@ -115,4 +115,9 @@ public class SummarizedMethod extends SyntheticMethod {
     return summary.getParameterType(i);
   }
 
+  @Override
+  public String getLocalVariableName(int bcIndex, int localNumber) {
+    return summary.getValue(localNumber).toString();
+  }
+
 }

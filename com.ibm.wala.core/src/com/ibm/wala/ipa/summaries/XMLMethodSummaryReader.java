@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -183,10 +184,12 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private final static String A_NUM_ARGS = "numArgs";
 
+  private final static String A_PARAM_NAMES = "paramNames";
+
   private final static String V_NULL = "null";
 
   private final static String V_TRUE = "true";
-
+  
   public XMLMethodSummaryReader(InputStream xmlFile, AnalysisScope scope) {
     super();
     if (xmlFile == null) {
@@ -924,6 +927,24 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       for (int i = 0; i < nParams; i++) {
         symbolTable.put("arg" + i, new Integer(i + 1));
       }
+      
+      int pn = 1;
+      String paramDescString = atts.getValue(A_PARAM_NAMES);
+      if (paramDescString != null) {
+        StringTokenizer paramNames = new StringTokenizer(paramDescString);
+        while (paramNames.hasMoreTokens()) {
+          symbolTable.put(paramNames.nextToken(), pn++);
+        }
+      }
+       
+      Map<Integer,Atom> nameTable = HashMapFactory.make();
+      for(Map.Entry<String, Integer> x : symbolTable.entrySet()) {
+        if (! x.getKey().startsWith("arg")) {
+          nameTable.put(x.getValue(), Atom.findOrCreateUnicodeAtom(x.getKey()));
+        }
+      }
+      
+      governingMethod.setValueNames(nameTable);
     }
 
     /**

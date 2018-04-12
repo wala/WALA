@@ -55,7 +55,7 @@ public class JSMethodInstructionVisitor extends JSAbstractInstructionVisitor {
 			if(fndef instanceof AstGlobalRead) {
 				AstGlobalRead agr = (AstGlobalRead)fndef;
 				if(agr.getGlobalName().equals("global Function")) {
-					if(invk.getNumberOfParameters() != 2)
+					if(invk.getNumberOfPositionalParameters() != 2)
 						return false;
 					// this may be a genuine use of "new Function()", not a declaration/expression
 					if(!symtab.isStringConstant(invk.getUse(1)))

@@ -143,7 +143,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       offset = 1;
     }
     
-		for(int i=0;i<invk.getNumberOfParameters();++i) {
+		for(int i=0;i<invk.getNumberOfPositionalParameters();++i) {
 		  // only flow receiver into 'this' if invk is, in fact, a method call
       flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
 		  if(i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
@@ -166,7 +166,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     FuncVertex caller = reflectiveCallee.getFunction();
 
     // flow from arguments to parameters
-    for(int i=2;i<invk.getNumberOfParameters();++i) {
+    for(int i=2;i<invk.getNumberOfPositionalParameters();++i) {
       addFlowEdge(flowgraph, factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(realCallee, i-1), worklist);
 
       // flow from return vertex to result vertex

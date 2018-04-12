@@ -455,7 +455,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 //		}
 
 		final Map<CodeElement,CodeElement> parameterMap = HashMapFactory.make();
-		for (int i = 0; i < instruction.getNumberOfParameters(); i++) {
+		for (int i = 0; i < instruction.getNumberOfPositionalParameters(); i++) {
 			Set<CodeElement> elements = CodeElement.valueElements(instruction.getUse(i));
 			for(CodeElement e: elements) {
 				parameterMap.put(e, new LocalElement(i+1));

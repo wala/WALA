@@ -132,7 +132,7 @@ public class PropertyNameContextSelector implements ContextSelector {
     SSAAbstractInvokeInstruction inst = caller.getIR().getCalls(site)[0];
     DefUse du = caller.getDU();
     
-    for(int i = 0; i < inst.getNumberOfParameters(); i++) {
+    for(int i = 0; i < inst.getNumberOfPositionalParameters(); i++) {
       MutableIntSet values = IntSetUtil.make();
       values.add(inst.getUse(i));
       collectValues(du, du.getDef(inst.getUse(i)), values);

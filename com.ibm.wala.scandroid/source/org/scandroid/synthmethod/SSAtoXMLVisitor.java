@@ -333,7 +333,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
                 elt.setAttribute(XMLSummaryWriter.A_DEF, localName);
             }
 
-            int paramCount = instruction.getNumberOfParameters();
+            int paramCount = instruction.getNumberOfPositionalParameters();
             for (int i=0; i < paramCount; i++) {
             	String argName = getLocalName(instruction.getUse(i));
             	elt.setAttribute(XMLSummaryWriter.A_ARG+i, argName);

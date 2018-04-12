@@ -392,7 +392,7 @@ public class FlowGraphBuilder {
 	        flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef())); 
 	        
 	        // also passed as 'this' to constructor
-	        if (invk.getNumberOfParameters() > 1) {
+	        if (invk.getNumberOfPositionalParameters() > 1) {
 	          flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getUse(0)));
 	        }
 			  }

@@ -80,7 +80,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
   
   @Override
   public int getNumberOfUses() {
-    return getNumberOfParameters();
+    return getNumberOfPositionalParameters();
   }
 
   @Override
@@ -126,7 +126,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
   }
 
   @Override
-  public int getNumberOfParameters() {
+  public int getNumberOfPositionalParameters() {
     if (params == null) {
       return 1;
     } else {

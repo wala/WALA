@@ -1035,7 +1035,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     int paramCount = targetST.getParameterValueNumbers().length;
-    int argCount = instruction.getNumberOfParameters();
+    int argCount = instruction.getNumberOfPositionalParameters();
     
     // the first two arguments are the function object and the receiver, neither of which
     // should become part of the arguments array
