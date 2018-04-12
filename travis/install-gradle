@@ -1,3 +1,6 @@
 # -*- mode: sh; sh-shell: sh -*-
 
+# initial p2AsMaven downloads are sometimes slow
+travis_wait ./gradlew --dry-run
+
 ./gradlew --continue --no-build-cache assemble
