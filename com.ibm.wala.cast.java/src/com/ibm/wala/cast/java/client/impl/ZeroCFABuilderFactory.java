@@ -16,6 +16,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
@@ -26,7 +27,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ZeroCFABuilderFactory  {
 
-  public CallGraphBuilder make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+  public CallGraphBuilder<InstanceKey> make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.NONE);

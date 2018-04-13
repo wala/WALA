@@ -40,7 +40,7 @@ public abstract class SyncDuplicatorTests extends IRTests {
       Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z")), IInvokeInstruction.Dispatch.STATIC);
 
   @Test public void testMonitor2() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<InstanceKey>> result = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
     System.err.println(result.fst);
   }
 

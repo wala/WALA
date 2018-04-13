@@ -89,10 +89,10 @@ public class AstJavaSlicer extends Slicer {
     return gatherStatements(CG, partialRoots, o -> (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction));
   }
 
-  public static Pair<Collection<Statement>, SDG<InstanceKey>> computeAssertionSlice(CallGraph CG, PointerAnalysis<InstanceKey> pa,
+  public static Pair<Collection<Statement>, SDG<? extends InstanceKey>> computeAssertionSlice(CallGraph CG, PointerAnalysis<? extends InstanceKey> pa,
       Collection<CGNode> partialRoots, boolean multiThreadedCode) throws IllegalArgumentException, CancelException {
     CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<>(partialRoots));
-    SDG<InstanceKey> sdg = new SDG<>(pcg, pa, new AstJavaModRef<>(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    SDG<? extends InstanceKey> sdg = new SDG<>(pcg, pa, new AstJavaModRef<>(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     //System.err.println(("SDG:\n" + sdg));
     Set<Statement> stmts = gatherAssertions(CG, partialRoots);
     if (multiThreadedCode) {
