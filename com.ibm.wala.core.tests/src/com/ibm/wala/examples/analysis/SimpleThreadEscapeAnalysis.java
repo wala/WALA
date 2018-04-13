@@ -205,7 +205,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
     // extract data for analysis
     //
     CallGraph cg = getCallGraph();
-    PointerAnalysis<InstanceKey> pa = getPointerAnalysis();
+    PointerAnalysis<? extends InstanceKey> pa = getPointerAnalysis();
 
     //
     // collect all places where objects can escape their creating thread:
@@ -252,7 +252,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
     // pass 1: get abstract objects (instance keys) for escaping locations
     //
     for (PointerKey root : escapeAnalysisRoots) {
-      OrdinalSet<InstanceKey> objects = pa.getPointsToSet(root);
+      OrdinalSet<? extends InstanceKey> objects = pa.getPointsToSet(root);
       for (InstanceKey obj : objects) {
         escapingInstanceKeys.add(obj);
       }
@@ -270,7 +270,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
           if (type.isArrayClass()) {
             if (((ArrayClass) type).getElementClass() != null) {
               PointerKey fk = heapModel.getPointerKeyForArrayContents(key);
-              OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
+              OrdinalSet<? extends InstanceKey> fobjects = pa.getPointsToSet(fk);
               for (InstanceKey fobj : fobjects) {
                 if (!escapingInstanceKeys.contains(fobj)) {
                   newKeys.add(fobj);
@@ -282,7 +282,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
             for (IField f : fields) {
               if (f.getFieldTypeReference().isReferenceType()) {
                 PointerKey fk = heapModel.getPointerKeyForInstanceField(key, f);
-                OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
+                OrdinalSet<? extends InstanceKey> fobjects = pa.getPointsToSet(fk);
                 for (InstanceKey fobj : fobjects) {
                   if (!escapingInstanceKeys.contains(fobj)) {
                     newKeys.add(fobj);

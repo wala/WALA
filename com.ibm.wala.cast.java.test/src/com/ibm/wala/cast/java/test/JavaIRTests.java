@@ -318,13 +318,13 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testInnerClassA() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
     // can't do an IRAssertion() -- we need the pointer analysis
     
     CallGraph cg = x.fst;
-    PointerAnalysis<InstanceKey> pa = x.snd;
+    PointerAnalysis<? extends InstanceKey> pa = x.snd;
 
     Iterator<CGNode> iter = cg.iterator();
     while ( iter.hasNext() ) {
@@ -377,13 +377,13 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testInnerClassSuper() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
     // can't do an IRAssertion() -- we need the pointer analysis
     
     CallGraph cg = x.fst;
-    PointerAnalysis<InstanceKey> pa = x.snd;
+    PointerAnalysis<? extends InstanceKey> pa = x.snd;
 
     Iterator<CGNode> iter = cg.iterator();
     while ( iter.hasNext() ) {
@@ -534,15 +534,15 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<InstanceKey>> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
 
-    PointerAnalysis<InstanceKey> pa = x.snd;
+    PointerAnalysis<? extends InstanceKey> pa = x.snd;
     CallGraph cg = x.fst;
 
     // test partial slice
     MethodReference sliceRootRef = getSliceRootReference("MiniaturSliceBug", "validNonDispatchedCall", "(LIntWrapper;)V");
     Set<CGNode> roots = cg.getNodes(sliceRootRef);
-    Pair<Collection<Statement>,SDG<InstanceKey>> y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
+    Pair<Collection<Statement>,SDG<? extends InstanceKey>> y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
     SlicerTest.dumpSlice(slice);
     Assert.assertEquals(0, SlicerTest.countAllocations(slice));

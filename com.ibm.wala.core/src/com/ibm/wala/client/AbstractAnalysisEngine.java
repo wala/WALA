@@ -118,7 +118,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
   /**
    * Results of pointer analysis
    */
-  protected PointerAnalysis<I> pointerAnalysis;
+  protected PointerAnalysis<? super I> pointerAnalysis;
 
   /**
    * Graph view of flow of pointers between heap abstractions
@@ -127,11 +127,11 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
 
   private EntrypointBuilder entrypointBuilder = this::makeDefaultEntrypoints;
 
-  protected abstract X getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
+  protected abstract CallGraphBuilder<? super I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 
-  protected X buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
+  protected CallGraphBuilder<? super I> buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
       IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
-    X builder = getCallGraphBuilder(cha, options, cache);
+    CallGraphBuilder<? super I> builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options, monitor);
 
@@ -254,7 +254,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
     return scope;
   }
 
-  public PointerAnalysis<I> getPointerAnalysis() {
+  public PointerAnalysis<? super I> getPointerAnalysis() {
     return pointerAnalysis;
   }
 
@@ -265,7 +265,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
     return heapGraph;
   }
 
-  public SDG<I> getSDG(DataDependenceOptions data, ControlDependenceOptions ctrl) {
+  public SDG<? super I> getSDG(DataDependenceOptions data, ControlDependenceOptions ctrl) {
     return new SDG<>(getCallGraph(), getPointerAnalysis(), data, ctrl);
   }
   
@@ -301,7 +301,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public X defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
+  public CallGraphBuilder<? super I> defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
