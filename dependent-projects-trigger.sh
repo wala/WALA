@@ -45,3 +45,10 @@ curl -s -X POST \
    -d "$body" \
    https://api.travis-ci.org/repo/SunghoLee%2FHybriDroid/requests
 
+curl -s -X POST \
+   -H "Content-Type: application/json" \
+   -H "Accept: application/json" \
+   -H "Travis-API-Version: 3" \
+   -H "Authorization: token $1" \
+   -d "$body" \
+   https://api.travis-ci.org/repo/wala%2FML/requests
