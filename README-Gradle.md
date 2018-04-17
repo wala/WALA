@@ -39,6 +39,16 @@ things the Gradle way](#eclipse).  Fortunately, this is rather
 seamless; I see no reason why an Eclipse-using WALA developer should
 need to avoid this switch.
 
+As noted [below](#classpath-and-project-as-generated-files), Eclipse
+`.classpath` and `.project` files are now generated rather than being
+repository-tracked source files.  However, a few Maven-run tests
+depend on having certain of these files present.  One way to create
+them is to [import WALA into
+Eclipse](#importing-wala-projects-into-eclipse) before starting your
+Maven tests.  If you prefer a non-interactive approach, you can
+instead run `./gradlew prepareMavenBuild` before starting your Maven
+tests.
+
 # Getting Started
 
 ## External Dependencies: Patience is a Virtue
