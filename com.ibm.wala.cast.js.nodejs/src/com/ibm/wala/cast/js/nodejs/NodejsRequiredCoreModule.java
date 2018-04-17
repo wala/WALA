@@ -13,14 +13,15 @@ package com.ibm.wala.cast.js.nodejs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.io.TemporaryFile;
 
@@ -52,8 +53,14 @@ public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
 	  return NodejsRequiredCoreModule.class.getClassLoader().getResourceAsStream("core-modules/" + name + ".js");
 
 	}
+	       
+	private static final Map<String,File> names = HashMapFactory.make();
+	       
 	public static NodejsRequiredCoreModule make(String name) throws IOException {
-		File file = Files.createTempFile(name, ".js").toFile();
+	  if (! names.containsKey(name)) {
+	    names.put(name,  new File(System.getProperty("java.io.tmpdir") + "/" + name + ".js"));
+	  }
+	  File file = names.get(name);
 		file.deleteOnExit();
 		TemporaryFile.streamToFile(file, getModule(name));
 		SourceFileModule sourceFileModule = CAstCallGraphUtil.makeSourceModule(file.toURI().toURL(), file.getName());
