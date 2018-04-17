@@ -1,3 +1,5 @@
+apply plugin: 'eclipse'
+
 sourceSets.test.java.srcDirs = ['src']
 
 
@@ -18,3 +20,14 @@ task cleanDownloadJLex(type: Delete) {
 
 compileTestJava.dependsOn downloadJLex
 clean.dependsOn cleanDownloadJLex
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  create Eclipse metadata for use by Maven when running
+//  com.ibm.wala.cast.java.test.JDTJavaIRTests and
+//  com.ibm.wala.cast.java.test.JDTJava15IRTests tests
+//
+
+task prepareMavenBuild(dependsOn: [eclipseClasspath, eclipseProject]) {
+}
