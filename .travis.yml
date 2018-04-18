@@ -1,23 +1,30 @@
-sudo: false
+language: android
 android:
   components:
     - build-tools-26.0.2
+jdk: oraclejdk8
 addons:
   apt:
     packages:
     - realpath
     - xvfb
 before_install:
-  - set -e
-  - source "travis/before-install-$BUILD_SYSTEM"
-install: source "travis/install-$BUILD_SYSTEM"
-script: source "travis/script-$BUILD_SYSTEM"
-before_cache: source "travis/before-cache-$BUILD_SYSTEM"
+- echo $ANDROID_HOME
+- git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
+- export M2_HOME=$HOME/apache-maven-3.5.0
+- if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C $HOME; fi
+- export PATH=$M2_HOME/bin:$PATH
+install:
+- mvn clean verify -DskipTests=true -B -q
+script:
+- xvfb-run mvn clean install -B -q
+- bash ./dependent-projects-trigger.sh $AUTH_TOKEN
+- mvn javadoc:aggregate -B -q
+- bash ./upload-javascript.sh $GH_TOKEN
+- ./build-maven-jars.py "install -Dgpg.skip"
+sudo: false
 cache:
   directories:
-  - "$HOME/.goomph"
-  - "$HOME/.gradle/caches"
-  - "$HOME/.gradle/wrapper"
   - "$HOME/.m2"
   - "$HOME/apache-maven-3.5.0"
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
@@ -25,16 +32,3 @@ env:
   global:
     - secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
     - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=
-matrix:
-  include:
-    - os: linux
-      env: BUILD_SYSTEM=gradle
-      language: java
-      jdk: oraclejdk8
-    - os: linux
-      env: BUILD_SYSTEM=maven
-      language: android
-      jdk: oraclejdk8
-    - os: osx
-      env: BUILD_SYSTEM=gradle
-      language: java

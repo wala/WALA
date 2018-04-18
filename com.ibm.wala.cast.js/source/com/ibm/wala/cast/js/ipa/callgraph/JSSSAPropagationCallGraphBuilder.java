@@ -104,7 +104,7 @@ import com.ibm.wala.util.strings.Atom;
  * {@link JSImplicitPointsToSetVisitor#visitAstGlobalRead(AstGlobalRead)}.
  * Finally, we need to represent direct flow of the global object to handle
  * receiver argument semantics (see
- * {@link com.ibm.wala.cast.js.translator.RhinoToAstTranslator}). To do so, we create a
+ * {@link org.mozilla.javascript.RhinoToAstTranslator}). To do so, we create a
  * reference to a global named {@link #GLOBAL_OBJ_VAR_NAME}, which is handled
  * specially in {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)}.
  */

@@ -163,7 +163,7 @@ public class DemandCastChecker {
     return fullDemandPointsTo;
   }
 
-  private static String getExclusions(String benchName) {
+  private static String getExclusions(@SuppressWarnings("unused") String benchName) {
     return CallGraphTestUtil.REGRESSION_EXCLUSIONS;
   }
 
@@ -208,6 +208,7 @@ public class DemandCastChecker {
     return Pair.make(retCG, retPA);
   }
 
+  @SuppressWarnings("unused")
   private static RefinementPolicyFactory chooseRefinePolicyFactory(ClassHierarchy cha) {
     if (true) {
       return new TunedRefinementPolicy.Factory(cha);
