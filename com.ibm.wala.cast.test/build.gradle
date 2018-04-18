@@ -97,7 +97,7 @@ model {
 	tasks.test {
 		def lib = linkXlator_testSharedLibrary
 		dependsOn lib
-		systemProperty 'java.library.path', lib.destinationDir
+		systemProperty 'java.library.path', lib.destinationDirectory.orNull.asFile
 
 		// TODO: compute path on following line from 'cast' library properties somehow
 		def castLibDir = "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
