@@ -1,0 +1,4 @@
+# -*- mode: sh; sh-shell: sh -*-
+
+./gradlew prepareMavenBuild
+mvn clean verify -DskipTests=true -B -q

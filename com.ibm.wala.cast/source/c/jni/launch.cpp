@@ -1,24 +1,24 @@
-#include <jni.h>
-#include <string.h>
-#include <strings.h>
+#include <cstdio>
+ #include <jni.h>
+#include <string>
 #include "Exceptions.h"
 #include "CAstWrapper.h"
 #include "launch.h"
 
 JavaVM *javaVM;
 
+static string javaPathFlag(const string &kind, const char *classpath) {
+   return "-Djava." + kind + ".path=" + classpath;
+}
+
 JNIEnv *launch_jvm(char *classpath) {
    JavaVMOption jvmopt[2];
 
-   const char *jcp = "-Djava.class.path=";
-   char buf_jcp[ strlen(jcp) + strlen(classpath) + 1 ];
-   sprintf(buf_jcp, "%s%s", jcp, classpath);
-   jvmopt[0].optionString = buf_jcp;
+   string buf_jcp = javaPathFlag("class", classpath);
+   jvmopt[0].optionString = const_cast<char *>(buf_jcp.c_str());
 
-   const char *jlp = "-Djava.library.path=";
-   char buf_jlp[ strlen(jlp) + strlen(classpath) + 1 ];
-   sprintf(buf_jlp, "%s%s", jlp, classpath);
-   jvmopt[1].optionString = buf_jlp;
+   string buf_jlp = javaPathFlag("library", classpath);
+   jvmopt[1].optionString = const_cast<char *>(buf_jlp.c_str());
 
    JavaVMInitArgs vmArgs;
    vmArgs.version = JNI_VERSION_1_8;
@@ -41,3 +41,7 @@ JNIEnv *launch_jvm(char *classpath) {
 void kill() {
    javaVM->DestroyJavaVM();
 }
+
+// Local variables:
+// c-basic-offset: 3
+// End:

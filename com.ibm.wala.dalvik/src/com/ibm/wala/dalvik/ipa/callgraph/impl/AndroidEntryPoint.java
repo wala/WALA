@@ -214,7 +214,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
          *  Unrecommended way to generate the Order based on an Integer.
          *
          *  This method is handy when reading back files. In your code you should prefer the methods
-         *  {@link #after(IExecutionOrder)} and {@link #between(IExecutionOrder, IExecutionOrder)}.
+         *  {@link #after(com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder)} and {@link #between(com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder, com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder)}.
          */
         public ExecutionOrder(int val) { 
             this.value=val; 
@@ -264,7 +264,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
          *  Use this to place a call to an EntryPoint between two other EntryPoint calls or ExecutionOrder "labels".
          *  between() does not care about section-boundaries by itself! 
          *
-         *  Use {@link #between(IExecutionOrder[], IExecutionOrder[])} and use labels as additional placement-information 
+         *  Use {@link #between(com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder[], com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder[])} and use labels as additional placement-information 
          *  to prevent unexpected misplacement.
          *
          *  @param  after   the call or "label" to be executed before this one
@@ -299,7 +299,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
          *  This method is intended to be more robust when changing the position-information of referred-to
          *  ExecutionOrders.
          *
-         *  In any other means it behaves exactly like {@link #between(IExecutionOrder, IExecutionOrder)}.
+         *  In any other means it behaves exactly like {@link #between(com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder, com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder)}.
          *
          *  @param  after   the calls or "labels"  to be executed before this one
          *  @param  before  the calls or "labels" to be executed after this one (inclusive)
@@ -359,7 +359,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
         }
 
         /**
-         *  Prefer {@link #after(IExecutionOrder)} whenever possible.
+         *  Prefer {@link #after(com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder)} whenever possible.
          */
         public static ExecutionOrder after (int after) {
             return between(after, ((after / (Integer.MAX_VALUE / 8)) + 1) * (Integer.MAX_VALUE / 8));

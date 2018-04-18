@@ -1,0 +1,47 @@
+apply plugin: 'com.github.hauner.jarTest'
+apply plugin: 'eclipse'
+
+eclipse.project.natures 'org.eclipse.pde.PluginNature'
+
+sourceSets.test {
+	java.srcDirs = ['src']
+	resources.srcDirs = ['dat']
+}
+
+dependencies {
+	testCompile(
+		'eclipse-deps:org.eclipse.core.runtime:+',
+		'junit:junit:4.11',
+		'org.apache.ant:ant:1.8.2',
+		'org.hamcrest:hamcrest-core:1.3',
+		'org.osgi:org.osgi.core:4.2.0',
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		)
+}
+
+processTestResources {
+	def testdata = project(':com.ibm.wala.core.testdata')
+	dependsOn testdata.compileTestJava
+	dependsOn testdata.extractBcel
+
+	from testdata.collectJLex
+	from testdata.collectTestData
+	from testdata.downloadJavaCup
+	from files(testdata.extractBcel)[0]
+	from testdata.generateHelloHashJar
+}
+
+test {
+	maxHeapSize = '800M'
+	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
+	systemProperty 'com.ibm.wala.junit.profile', 'short'
+	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
+}
+
+task cleanTest(type: Delete) {
+	delete 'report'
+}
+
+clean.dependsOn cleanTest
