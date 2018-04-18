@@ -1,14 +1,9 @@
-#include <jni.h>
-
-#include <iterator>
-
-#include <stdarg.h>
-#include <string.h>
 #include <CAstWrapper.h>
-
-#if defined(__MINGW32__) || defined(_MSC_VER) || defined(__APPLE__)
-#define strndup(s,n) strdup(s)
-#endif
+#include <cstring>
+#include <iterator>
+#include <jni.h>
+#include <sstream>
+#include <string>
 
 #define __SIG( __nm ) "L" __nm ";"
 
@@ -264,16 +259,13 @@ void CAstWrapper::assertIsCAstNode(jobject obj, int n) {
     jstring jclsstr = (jstring)env->CallObjectMethod(cls, toString);
     const char *cclsstr = env->GetStringUTFChars(jclsstr, NULL);
 
-#if defined(_MSC_VER)
-	char* buf = (char*)_alloca(strlen(cstr) + strlen(cclsstr) + 100);
-#else
-    char buf[ strlen(cstr) + strlen(cclsstr) + 100 ];
-#endif
-    sprintf(buf, "argument %d (%s of type %s) is not a CAstNode\n", n, cstr, cclsstr); 
+    ostringstream formatter;
+    formatter << "argument " << n << " (" << cstr << " of type " << cclsstr << ") is not a CAstNode\n";
+    const string message = formatter.str();
 
     env->ReleaseStringUTFChars(jstr, cstr);
     env->ReleaseStringUTFChars(jclsstr, cclsstr);
-    THROW(java_ex, buf);
+    THROW(java_ex, message.c_str());
   }
 }
   
@@ -417,14 +409,12 @@ jobject CAstWrapper::makeConstant(jobject val) {
   return r;
 }
 
-jobject CAstWrapper::makeConstant(const char *strData) {
-  return makeConstant(strData, strlen(strData));
+jobject CAstWrapper::makeConstant(const char *strData, int strLen) {
+  return makeConstant(string(strData, strLen).c_str());
 }
 
-jobject CAstWrapper::makeConstant(const char *strData, int strLen) {
-  char *safeData = strndup(strData, strLen);
-  jobject val = env->NewStringUTF( safeData );
-  delete safeData;
+jobject CAstWrapper::makeConstant(const char *strData) {
+  jobject val = env->NewStringUTF( strData );
   jobject r = env->CallObjectMethod(Ast, makeObject, val);
   THROW_ANY_EXCEPTION(java_ex);
   LOG(r);
@@ -588,9 +578,7 @@ const char *CAstWrapper::getEntityName(jobject entity) {
 }
 
 jobject CAstWrapper::makeSymbol(const char *name) {
-  char *safeName = strndup(name, strlen(name)+1);
-  jobject val = env->NewStringUTF( safeName );
-  delete safeName;
+  jobject val = env->NewStringUTF( name );
 
   jobject s = env->NewObject(CAstSymbol, castSymbolInit1, val);
   THROW_ANY_EXCEPTION(java_ex);
@@ -600,9 +588,7 @@ jobject CAstWrapper::makeSymbol(const char *name) {
 }
 
 jobject CAstWrapper::makeSymbol(const char *name, bool isFinal) {
-  char *safeName = strndup(name, strlen(name)+1);
-  jobject val = env->NewStringUTF( safeName );
-  delete safeName;
+  jobject val = env->NewStringUTF( name );
 
   THROW_ANY_EXCEPTION(java_ex);
 
@@ -614,9 +600,7 @@ jobject CAstWrapper::makeSymbol(const char *name, bool isFinal) {
 jobject 
   CAstWrapper::makeSymbol(const char *name, bool isFinal, bool isCaseInsensitive) 
 {
-  char *safeName = strndup(name, strlen(name)+1);
-  jobject val = env->NewStringUTF( safeName );
-  delete safeName;
+  jobject val = env->NewStringUTF( name );
 
   jobject s = env->NewObject(CAstSymbol, castSymbolInit3, val, isFinal, isCaseInsensitive);
   THROW_ANY_EXCEPTION(java_ex);
@@ -631,9 +615,7 @@ jobject
 			  bool isCaseInsensitive, 
 			  jobject defaultValue) 
 {
-  char *safeName = strndup(name, strlen(name)+1);
-  jobject val = env->NewStringUTF( safeName );
-  delete safeName;
+  jobject val = env->NewStringUTF( name );
 
   jobject s = env->NewObject(CAstSymbol, castSymbolInit4, val, isFinal, isCaseInsensitive, defaultValue);
   THROW_ANY_EXCEPTION(java_ex);
@@ -703,10 +685,8 @@ jobject CAstWrapper::makeClassEntity(jobject classType) {
 }
 
 jobject CAstWrapper::makeGlobalEntity(char *name, jobject type, list<jobject> *modifiers) {
-  char *safeData = strdup(name);
-  jobject val = env->NewStringUTF( safeData );
+  jobject val = env->NewStringUTF( name );
   THROW_ANY_EXCEPTION(java_ex);
-  delete safeData;
 
   jobject entity = env->NewObject(NativeGlobalEntity, globalEntityInit, val, type, makeSet(modifiers));
   THROW_ANY_EXCEPTION(java_ex);

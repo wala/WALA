@@ -13,9 +13,9 @@ package com.ibm.wala.core.tests.shrike;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,17 +65,26 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   
   private boolean instrumentedJarBuilt = false;
   
-  private String instrumentedJarLocation = System.getProperty("java.io.tmpdir") + File.separator + "test.jar";
+  private java.nio.file.Path instrumentedJarLocation;
 
-  private String cgLocation = System.getProperty("java.io.tmpdir") + File.separator + "cg.txt";
+  private java.nio.file.Path cgLocation;
+
+  protected DynamicCallGraphTestBase() {
+      try {
+          instrumentedJarLocation = Files.createTempFile("wala-test", ".jar");
+	  instrumentedJarLocation.toFile().deleteOnExit();
+          cgLocation = Files.createTempFile("cg", ".txt");
+	  cgLocation.toFile().deleteOnExit();
+      } catch (IOException problem) {
+          throw new RuntimeException(problem);
+      }
+  }
 
   protected void instrument(String testJarLocation) throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
     if (! instrumentedJarBuilt) {
       System.err.println("core data jar to instrument: " + testJarLocation);
       
-      if (new File(instrumentedJarLocation).exists()) {
-        assert new File(instrumentedJarLocation).delete();
-      }
+      Files.deleteIfExists(instrumentedJarLocation);
       
       String rtJar = null;
       for(String jar : WalaProperties.getJ2SEJarFiles()) {
@@ -85,7 +94,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       }
       
       List<String> args = new ArrayList<>();
-      args.addAll(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation));
+      args.addAll(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation.toString()));
       if (rtJar != null) {
         args.addAll(Arrays.asList("--rt-jar", rtJar));
       }
@@ -93,14 +102,16 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         args.add("--patch-calls");
       }
       OfflineDynamicCallGraph.main(args.toArray(new String[ args.size() ]));
-      Assert.assertTrue("expected to create /tmp/test.jar", new File(instrumentedJarLocation).exists());   
+      Assert.assertTrue("expected to create " + instrumentedJarLocation, Files.exists(instrumentedJarLocation));
       instrumentedJarBuilt = true;
     }
   }
   
   protected void run(String mainClass, String exclusionsFile, String... args) throws IOException, SecurityException, IllegalArgumentException, InterruptedException {
     Project p = new Project();
-    p.setBaseDir(new File(System.getProperty("java.io.tmpdir")));
+    final File projectDir = Files.createTempDirectory("wala-test").toFile();
+    projectDir.deleteOnExit();
+    p.setBaseDir(projectDir);
     p.init();
     p.fireBuildStarted();
 
@@ -125,9 +136,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     childJvm.setFailonerror(true);
     childJvm.setFork(true);
     
-    if (new File(cgLocation).exists()) {
-      new File(cgLocation).delete();
-    }
+    Files.deleteIfExists(cgLocation);
     
     childJvm.init();
     String commandLine = childJvm.getCommandLine().toString();
@@ -135,7 +144,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     Process x = Runtime.getRuntime().exec(commandLine);
     x.waitFor();
     
-    Assert.assertTrue("expected to create call graph", new File(cgLocation).exists());
+    Assert.assertTrue("expected to create call graph", Files.exists(cgLocation));
   }
    
   interface EdgesTest {
@@ -186,7 +195,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
  
   protected void check(CallGraph staticCG, EdgesTest test, Predicate<MethodReference> filter) throws IOException {
     int lines = 0;
-    try (final BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cgLocation))))) {
+    try (final BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(Files.newInputStream(cgLocation))))) {
       String line;
       loop: while ((line = dynamicEdgesFile.readLine()) != null) {
         if (line.startsWith("call to") || line.startsWith("return from")) {

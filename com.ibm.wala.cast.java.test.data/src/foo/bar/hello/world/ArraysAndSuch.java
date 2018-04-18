@@ -42,7 +42,6 @@ public class ArraysAndSuch {
 	public static void main(String args[]) {
 		ArraysAndSuch.main();
 	}
-	@SuppressWarnings("null")
 	public static void main() {
 		Object o1 = null;
 		Object[] os1 = new Object[] { null, o1, null };

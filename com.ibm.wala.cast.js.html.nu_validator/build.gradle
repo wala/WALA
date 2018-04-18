@@ -1,0 +1,26 @@
+sourceSets {
+	main.java.srcDirs = ['src']
+	test {
+		java.srcDirs = ['tests']
+		resources.srcDirs = [project(':com.ibm.wala.cast.js.test.data').file('examples-src')]
+	}
+}
+
+dependencies {
+	compile(
+		'nu.validator.htmlparser:htmlparser:1.4',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.cast.js'),
+		project(':com.ibm.wala.util'),
+		)
+	testCompile(
+		project(':com.ibm.wala.cast.test'),
+		project(':com.ibm.wala.core.tests'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
+		)
+}
+
+test {
+	maxHeapSize = '800M'
+}

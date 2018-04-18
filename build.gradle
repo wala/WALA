@@ -1,0 +1,161 @@
+////////////////////////////////////////////////////////////////////////
+//
+//  plugin configuration must precede everything else
+//
+
+plugins {
+	id 'com.diffplug.gradle.p2.asmaven' version '3.10.0'
+	id 'com.github.hauner.jarTest' version '1.0.1' apply false
+	id 'de.undercouch.download'
+	id 'nebula.lint' version '8.3.1'
+	id "nebula.source-jar" version '7.0.1' apply false
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  required Eclipse components
+//
+
+p2AsMaven {
+	group 'eclipse-deps', {
+		repoEclipse '4.7.2'
+		slicingOption 'latestVersionOnly', 'true'
+		iu 'org.eclipse.core.commands'
+		iu 'org.eclipse.core.contenttype'
+		iu 'org.eclipse.core.jobs'
+		iu 'org.eclipse.core.resources'
+		iu 'org.eclipse.core.runtime'
+		iu 'org.eclipse.equinox.app'
+		iu 'org.eclipse.equinox.common'
+		iu 'org.eclipse.equinox.preferences'
+		iu 'org.eclipse.jdt.core'
+		iu 'org.eclipse.jface'
+		iu 'org.eclipse.osgi'
+		iu 'org.eclipse.pde.core'
+		iu 'org.eclipse.swt'
+		iu 'org.eclipse.ui.ide'
+		iu 'org.eclipse.ui.workbench'
+	}
+	group 'wst-deps', {
+		repo 'http://download.eclipse.org/releases/oxygen'
+		slicingOption 'latestVersionOnly', 'true'
+		iu 'org.eclipse.wst.jsdt.core'
+		iu 'org.eclipse.wst.jsdt.ui'
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  common Java setup shared by multiple projects
+//
+
+group name
+version '1.5.0-SNAPSHOT'
+
+subprojects { subproject ->
+	// skip generic Java setup for the few projects that have no Java code whatsoever
+	switch (subproject.name) {
+		case 'com.ibm.wala-repository':
+		case ~/.*_feature/:
+			return
+	}
+
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+	apply plugin: 'nebula.source-jar'
+
+	sourceCompatibility = 1.8
+
+	version rootProject.version
+
+	repositories {
+		mavenCentral()
+		maven {
+			url "$rootProject.buildDir/p2asmaven/maven"
+		}
+	}
+
+	jar.manifest.from('META-INF/MANIFEST.MF')
+
+	task afterEclipseBuildshipImport(dependsOn: processTestResources)
+
+	test {
+		include '**/*Test.class'
+		include '**/*TestCase.class'
+		include '**/*Tests.class'
+		include '**/Test*.class'
+		exclude '**/*AndroidLibs*.class'
+
+		maxParallelForks = Integer.MAX_VALUE
+	}
+}
+
+task afterEclipseBuildshipImport(type: Exec) {
+	commandLine './revert-launchers.sh'
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  find platform-specific SWT implementations
+//
+
+def osgi_platform
+
+switch (System.getProperty('os.name')) {
+	case ~/Mac OS X/:
+		osgi_platform = 'cocoa.macosx.x86_64'
+		break
+	case ~/Windows.*/:
+		osgi_platform = 'win32.win32.x86_64'
+		break
+	case ~/Linux/:
+		osgi_platform = 'gtk.linux.x86_64'
+		break
+}
+
+System.setProperty('osgi.platform', osgi_platform)
+
+subprojects {
+	configurations.all {
+		resolutionStrategy {
+			// failOnVersionConflict()
+			dependencySubstitution {
+				substitute module('eclipse-deps:org.eclipse.swt.${osgi.platform}') with module("eclipse-deps:org.eclipse.swt.${System.getProperty('osgi.platform')}:3.+")
+			}
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  optional lint checking of Gradle scripts
+//
+
+allprojects {
+	apply plugin: 'nebula.lint'
+	gradleLint.alwaysRun = false
+	gradleLint {
+		rules = ['all-dependency']
+		excludedRules = [
+			'duplicate-dependency-class',
+			'transitive-duplicate-dependency-class',
+			'unused-dependency',
+			]
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  disable Javadoc linter until documentation is in better shape
+//
+
+allprojects {
+	tasks.withType(Javadoc) {
+		options.addStringOption('Xdoclint:none', '-quiet')
+	}
+}

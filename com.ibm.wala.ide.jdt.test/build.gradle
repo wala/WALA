@@ -1,0 +1,39 @@
+sourceSets.test {
+	java.srcDirs = ['source']
+	resources.srcDirs = ['testdata']
+}
+
+dependencies {
+	testCompile(
+		'eclipse-deps:org.eclipse.core.runtime:+',
+		'eclipse-deps:org.eclipse.jdt.core:+',
+		'eclipse-deps:org.eclipse.osgi:+',
+		'junit:junit:4.11',
+		'org.osgi:org.osgi.core:4.2.0',
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.cast.java'),
+		project(':com.ibm.wala.cast.java.ecj'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.ide'),
+		project(':com.ibm.wala.ide.jdt'),
+		project(':com.ibm.wala.shrike'),
+		project(':com.ibm.wala.util'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.java.test'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+		project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
+		)
+	testRuntime(
+		'eclipse-deps:org.eclipse.core.contenttype:+',
+		'eclipse-deps:org.eclipse.equinox.preferences:+',
+		)
+}
+
+test {
+	maxHeapSize = '1200M'
+
+	// https://github.com/liblit/WALA/issues/5
+	exclude '**/JDTJava15IRTests.class'
+	exclude '**/JDTJavaIRTests.class'
+
+	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
+}

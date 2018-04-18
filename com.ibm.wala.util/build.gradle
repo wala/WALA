@@ -1,0 +1,14 @@
+apply plugin: 'eclipse'
+
+eclipse.project.natures 'org.eclipse.pde.PluginNature'
+
+sourceSets.main.java.srcDirs = ['src']
+
+javadoc {
+	def coreCompileJava = project(':com.ibm.wala.core').compileJava
+	dependsOn coreCompileJava
+	doFirst {
+		classpath += files coreCompileJava
+	}
+	options.links 'https://docs.oracle.com/javase/8/docs/api/'
+}
