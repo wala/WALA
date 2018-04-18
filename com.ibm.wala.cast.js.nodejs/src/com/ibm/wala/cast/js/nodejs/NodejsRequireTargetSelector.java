@@ -116,6 +116,8 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 					IClass script = builder.getClassHierarchy()
 							.lookupClass(TypeReference.findOrCreate(jsLoader.getReference(), className));
 					
+					System.err.println(builder.getClassHierarchy());
+					
 					IMethod method = script.getMethod(AstMethodReference.fnSelector);
 					previouslyRequired.put(sourceModule.getClassName(), method);
 					

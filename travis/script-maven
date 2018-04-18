@@ -1,7 +1,0 @@
-# -*- mode: sh; sh-shell: sh -*-
-
-xvfb-run mvn clean install -B -q
-bash ./dependent-projects-trigger.sh "$AUTH_TOKEN"
-mvn javadoc:aggregate -B -q
-bash ./upload-javascript.sh "$GH_TOKEN"
-./build-maven-jars.py "install -Dgpg.skip"
