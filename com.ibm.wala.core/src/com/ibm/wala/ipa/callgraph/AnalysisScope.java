@@ -118,7 +118,7 @@ public class AnalysisScope {
    */
   private SetOfClasses exclusions;
 
-  final protected LinkedHashMap<Atom, ClassLoaderReference> loadersByName = new LinkedHashMap<>();
+  public final LinkedHashMap<Atom, ClassLoaderReference> loadersByName = new LinkedHashMap<>();
 
   /**
    * Special class loader for array instances

@@ -23,8 +23,8 @@ import com.ibm.wala.util.debug.Assertions;
  * abstract base class for {@link CAstRewriter}s that do no cloning of nodes
  *
  */
-public abstract class CAstBasicRewriter
-  extends CAstRewriter<CAstBasicRewriter.NonCopyingContext, 
+public abstract class CAstBasicRewriter<T extends CAstBasicRewriter.NonCopyingContext>
+  extends CAstRewriter<T, 
 	               CAstBasicRewriter.NoKey> 
 {
 
@@ -69,11 +69,11 @@ public abstract class CAstBasicRewriter
     }
   }
 
-  protected CAstBasicRewriter(CAst Ast, boolean recursive) {
-    super(Ast, recursive, new NonCopyingContext());
+  protected CAstBasicRewriter(CAst Ast, T context, boolean recursive) {
+    super(Ast, recursive, context);
   }
 
   @Override
-  protected abstract CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap);
+  protected abstract CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, T context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap);
   
 }

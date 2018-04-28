@@ -4604,7 +4604,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             nodeMap.put(Pair.make(root, c.key()), expr);
             return expr;
           } else {
-            return super.copyNodesHackForEclipse(root, cfg, c, nodeMap);
+            return super.copyNodes(root, cfg, c, nodeMap);
           }
         }
       }).rewrite(included);

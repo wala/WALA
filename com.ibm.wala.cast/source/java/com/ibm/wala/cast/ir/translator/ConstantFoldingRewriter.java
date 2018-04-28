@@ -17,12 +17,13 @@ import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter;
+import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NonCopyingContext;
 import com.ibm.wala.util.collections.Pair;
 
-public abstract class ConstantFoldingRewriter extends CAstBasicRewriter {
+public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyingContext> {
 
   protected ConstantFoldingRewriter(CAst Ast) {
-    super(Ast, true);
+    super(Ast, new NonCopyingContext(), true);
   }
 
   protected abstract Object eval(CAstOperator op, Object lhs, Object rhs);

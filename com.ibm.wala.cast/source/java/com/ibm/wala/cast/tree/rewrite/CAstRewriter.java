@@ -361,7 +361,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       @Override
       public CAstControlFlowMap newCfg() {
-        if (theCfg == null)
+        if (theCfg == null && cfg != null)
           theCfg = copyFlow(nodes, cfg, newPos());
         return theCfg;
       }
@@ -375,7 +375,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       @Override
       public CAstNodeTypeMap newTypes() {
-        if (theTypes == null)
+        if (theTypes == null && types != null)
           theTypes = copyTypes(nodes, types);
         return theTypes;
       }
