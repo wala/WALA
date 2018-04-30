@@ -154,4 +154,7 @@ public interface Language {
   AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache);
  
   InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context);
+  
+  boolean modelConstant(Object o);
+  
 }

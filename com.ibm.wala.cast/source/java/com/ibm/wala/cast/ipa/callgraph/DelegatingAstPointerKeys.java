@@ -106,8 +106,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
     Object v = F.getValue();
     // FIXME: current only constant string are handled
-    if (v instanceof String) {
-      IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) v));
+    if (I.getConcreteType().getClassLoader().getLanguage().modelConstant(v)) {
+      IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom(String.valueOf(v)));
       return getPointerKeyForInstanceField(I, f);
     }
     return null;

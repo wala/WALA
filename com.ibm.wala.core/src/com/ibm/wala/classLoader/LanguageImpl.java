@@ -74,4 +74,11 @@ public abstract class LanguageImpl implements Language {
   InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
     return new InducedCFG(instructions, method, context);
   }
+
+  @Override
+  public boolean modelConstant(Object o) {
+    return o instanceof String;
+  }
+  
+  
 }
