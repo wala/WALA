@@ -18,6 +18,7 @@ import java.util.Set;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
@@ -202,7 +203,7 @@ public class FlowGraph implements Iterable<Vertex> {
               DefUse du = cache.getDefUse(getIR(cache, func));
               for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                 if (inst instanceof JavaScriptPropertyWrite) {
-                  int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
+                  int obj = ((AstPropertyWrite) inst).getObjectRef();
                   VarVertex object = factory.makeVarVertex(func, obj);
                   for(ObjectVertex o : getPointsToSet(object)) {
                     PrototypeFieldVertex prototype = get(PrototypeField.prototype, o);
@@ -458,7 +459,7 @@ public class FlowGraph implements Iterable<Vertex> {
                     DefUse du = cache.getDefUse(getIR(cache, func));
                     for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                       if (inst instanceof JavaScriptPropertyWrite) {
-                        int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
+                        int obj = ((AstPropertyWrite) inst).getObjectRef();
                         VarVertex object = factory.makeVarVertex(func, obj);
                         for(ObjectVertex o : getPointsToSet(object)) {
                           addEdge(ensureNode(o), ensureNode(propertyKey(property.getPropName(), o)));

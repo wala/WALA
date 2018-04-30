@@ -51,4 +51,8 @@ public interface AstInstructionFactory extends SSAInstructionFactory {
   
   EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int lValue, int objectRef, int previousProp);
   
+  AstPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef);
+  
+  AstPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value);
+  
 }

@@ -18,8 +18,6 @@ import com.ibm.wala.cast.analysis.typeInference.AstTypeInference;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
-import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
-import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
@@ -46,11 +44,6 @@ public class JSTypeInference extends AstTypeInference {
       }
 
       @Override
-      public void visitJavaScriptPropertyRead(JavaScriptPropertyRead inst) {
-        result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
-      }
-
-      @Override
       public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
         result = new DeclaredTypeOperator(new PointType(cha.lookupClass(JavaScriptTypes.String)));
       }
@@ -58,10 +51,6 @@ public class JSTypeInference extends AstTypeInference {
       @Override
       public void visitJavaScriptInstanceOf(JavaScriptInstanceOf inst) {
         result = new DeclaredTypeOperator(new PointType(cha.lookupClass(JavaScriptTypes.Boolean)));
-      }
-
-      @Override
-      public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite inst) {
       }
 
       @Override

@@ -21,6 +21,8 @@ import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -29,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public class AstModRef<T extends InstanceKey> extends ModRef<T> {
 
@@ -41,6 +44,25 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
       
     protected AstRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, AstHeapModel h) {
       super(n, result, pa, h);
+    }
+
+    @Override
+    public void visitPropertyRead(AstPropertyRead instruction) {
+      PointerKey obj = h.getPointerKeyForLocal(n, instruction.getObjectRef());
+      PointerKey prop = h.getPointerKeyForLocal(n, instruction.getMemberRef());
+      for(InstanceKey o : pa.getPointsToSet(obj)) {
+        for(InstanceKey p : pa.getPointsToSet(prop)) {
+          for(PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldRead(o, p))) {
+            assert x != null : instruction;
+            result.add(x);
+          }
+        }
+      }
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite instruction) {
+      // do nothing
     }
 
     @Override
@@ -146,6 +168,25 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
     @Override
     public void visitEcho(AstEchoInstruction inst) {
 
+    }
+    
+    @Override
+    public void visitPropertyRead(AstPropertyRead instruction) {
+      // do nothing
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite instruction) {
+      PointerKey obj = h.getPointerKeyForLocal(n, instruction.getObjectRef());
+      PointerKey prop = h.getPointerKeyForLocal(n, instruction.getMemberRef());
+      for(T o : pa.getPointsToSet(obj)) {
+        for(T p : pa.getPointsToSet(prop)) {
+          for(PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldWrite(o, p))) {
+            assert x != null : instruction;
+            result.add(x);
+          }
+        }
+      }
     }
   }
 

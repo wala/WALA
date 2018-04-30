@@ -21,6 +21,8 @@ import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.ssa.IR;
@@ -30,6 +32,15 @@ public abstract class AstTypeInference extends TypeInference {
   private final TypeAbstraction booleanType;
 
   protected class AstTypeOperatorFactory extends TypeOperatorFactory implements AstInstructionVisitor {
+    @Override
+    public void visitPropertyRead(AstPropertyRead inst) {
+      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite inst) {
+    }
+
     @Override
     public void visitAstLexicalRead(AstLexicalRead inst) {
       result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));

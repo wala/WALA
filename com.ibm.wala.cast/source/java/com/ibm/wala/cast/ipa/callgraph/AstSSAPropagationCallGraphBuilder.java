@@ -28,11 +28,14 @@ import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
@@ -64,6 +67,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.modref.ArrayLengthKey;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IRView;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -197,6 +201,16 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       @Override
+      public void visitPropertyRead(AstPropertyRead instruction) {
+
+      }
+
+      @Override
+      public void visitPropertyWrite(AstPropertyWrite instruction) {
+
+      }
+
+      @Override
       public void visitAstLexicalRead(AstLexicalRead instruction) {
 
       }
@@ -258,6 +272,16 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     public AstInterestingVisitor(int vn) {
       super(vn);
+    }
+
+    @Override
+    public void visitPropertyRead(AstPropertyRead instruction) {
+      bingo = true;
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite instruction) {
+      bingo = true;
     }
 
     @Override
@@ -367,6 +391,35 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       // }
     }
 
+    @Override
+    public void visitPropertyRead(AstPropertyRead instruction) {
+      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+        Position instructionPosition = getInstructionPosition(instruction);
+        if (instructionPosition != null) {
+          System.err.println("processing read instruction " + instruction + ", position " + instructionPosition);
+        }
+      }
+      newFieldRead(node, instruction.getUse(0), instruction.getUse(1), instruction.getDef(0));
+    }
+
+    private Position getInstructionPosition(SSAInstruction instruction) {
+      IMethod method = node.getMethod();
+      if (method instanceof AstMethod) {
+        return ((AstMethod) method).getSourcePosition(instruction.iindex);
+      }
+      return null;
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite instruction) {
+      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+        Position instructionPosition = getInstructionPosition(instruction);
+        if (instructionPosition != null) {
+          System.err.println("processing write instruction " + instruction + ", position " + instructionPosition);
+        }
+      }
+      newFieldWrite(node, instruction.getUse(0), instruction.getUse(1), instruction.getUse(2));
+    }
 
 
     @Override

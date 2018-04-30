@@ -26,6 +26,8 @@ import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
@@ -241,12 +243,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public JavaScriptPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef) {
+        public AstPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef) {
           return new JavaScriptPropertyRead(iindex, result, objectRef, memberRef);
         }
 
         @Override
-        public JavaScriptPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value) {
+        public AstPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value) {
           return new JavaScriptPropertyWrite(iindex, objectRef, memberRef, value);
         }
 

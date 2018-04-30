@@ -1454,6 +1454,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     boolean isFinal();
 
+    boolean isGlobal();
+    
     boolean isInternalName();
 
     Object defaultInitValue();
@@ -1613,10 +1615,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public void declare(CAstSymbol s, int vn) {
       String nm = s.name();
-      assert !contains(nm) : nm;
-      if (s.isCaseInsensitive())
-        caseInsensitiveNames.put(nm.toLowerCase(), nm);
-      values.put(nm, makeSymbol(s, vn));
+      if (!contains(nm)) {
+        if (s.isCaseInsensitive())
+          caseInsensitiveNames.put(nm.toLowerCase(), nm);
+        values.put(nm, makeSymbol(s, vn));
+      } else {
+        assert hasImplicitGlobals();
+        assert isGlobal(lookup(nm));
+      }
     }
 
     @Override
@@ -1762,7 +1768,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           public boolean isParameter() {
             return false;
           }
-        };
+
+
+          @Override
+          public boolean isGlobal() {
+            return false;
+          }
+};
       }
     };
   }
@@ -1922,6 +1934,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           public boolean isParameter() {
             return vn <= params.length;
           }
+
+          @Override
+          public boolean isGlobal() {
+            return false;
+          }
         };
       }
     };
@@ -1988,6 +2005,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
           @Override
           public boolean isParameter() {
+            return false;
+          }
+
+          @Override
+          public boolean isGlobal() {
             return false;
           }
         };
@@ -2157,6 +2179,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           public int valueNumber() {
             throw new UnsupportedOperationException();
           }
+
+          @Override
+          public boolean isGlobal() {
+            return true;
+          }
         });
       }
     };
@@ -2281,6 +2308,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           @Override
           public int valueNumber() {
             throw new UnsupportedOperationException();
+          }
+
+          @Override
+          public boolean isGlobal() {
+            return false;
           }
         });
       }
@@ -3775,10 +3807,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     WalkContext context = c;
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
       context.cfg().addPreNode(n, context.getUnwindState());
-           context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
+      CAstControlFlowMap controlFlowMap = context.getControlFlow();
+      context.cfg().addPreEdge(n, controlFlowMap.getTarget(n, null), false);
       context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction, -1));            
-      if (context.getControlFlow().getTarget(n, null) == null) {
-        assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n + " ("
+      if (controlFlowMap.getTarget(n, null) == null) {
+        assert controlFlowMap.getTarget(n, null) != null : controlFlowMap + " does not map " + n + " ("
             + context.getSourceMap().getPosition(n) + ")";
       }
       context.cfg().newBlock(false);

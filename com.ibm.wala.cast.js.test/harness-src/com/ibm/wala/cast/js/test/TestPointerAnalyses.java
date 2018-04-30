@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex;
@@ -251,18 +252,18 @@ public abstract class TestPointerAnalyses {
       SymbolTable symtab = ir.getSymbolTable();
       for(SSAInstruction inst : ir.getInstructions()) {
         if (inst instanceof JavaScriptPropertyWrite) {
-          int property = ((JavaScriptPropertyWrite) inst).getMemberRef();
+          int property = ((AstPropertyWrite) inst).getMemberRef();
           if (symtab.isConstant(property)) {
             String p = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(property));
             
-            int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
+            int obj = ((AstPropertyWrite) inst).getObjectRef();
             PointerKey objKey = fbPA.getHeapModel().getPointerKeyForLocal(node, obj);
             OrdinalSet<ObjectVertex> objPtrs = fbPA.getPointsToSet(objKey);
             for(ObjectVertex o : objPtrs) {
               PointerKey propKey = fbPA.getHeapModel().getPointerKeyForInstanceField(o, new AstDynamicField(false, o.getConcreteType(), Atom.findOrCreateUnicodeAtom(p), JavaScriptTypes.Root));
               Assert.assertTrue("object " + o + " should have field " + propKey, hg.hasEdge(o, propKey));
 
-              int val = ((JavaScriptPropertyWrite) inst).getValue();
+              int val = ((AstPropertyWrite) inst).getValue();
               PointerKey valKey = fbPA.getHeapModel().getPointerKeyForLocal(node, val);
               OrdinalSet<ObjectVertex> valPtrs = fbPA.getPointsToSet(valKey);
               for(ObjectVertex v : valPtrs) {

@@ -17,11 +17,7 @@ public interface JSInstructionVisitor extends AstInstructionVisitor {
   public void visitJavaScriptInvoke(JavaScriptInvoke instruction);
     
   public void visitTypeOf(JavaScriptTypeOfInstruction instruction);
-    
-  public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction);
-  
-  public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction);
-  
+      
   public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction);
   
   public void visitWithRegion(JavaScriptWithRegion instruction);

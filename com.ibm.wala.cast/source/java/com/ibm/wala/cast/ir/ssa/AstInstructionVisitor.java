@@ -31,5 +31,10 @@ public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
   public void visitIsDefined(AstIsDefinedInstruction inst);
 
   public void visitEcho(AstEchoInstruction inst);
+  
+  public void visitPropertyRead(AstPropertyRead instruction);
+  
+  public void visitPropertyWrite(AstPropertyWrite instruction);
+  
 }
 

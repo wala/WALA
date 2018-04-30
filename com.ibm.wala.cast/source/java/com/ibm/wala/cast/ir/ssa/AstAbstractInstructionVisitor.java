@@ -18,6 +18,16 @@ public abstract class AstAbstractInstructionVisitor
 {
 
   @Override
+  public void visitPropertyRead(AstPropertyRead instruction) {
+    
+  }
+
+  @Override
+  public void visitPropertyWrite(AstPropertyWrite instruction) {
+    
+  }
+
+  @Override
   public void visitAstLexicalRead(AstLexicalRead instruction) {
 
   }

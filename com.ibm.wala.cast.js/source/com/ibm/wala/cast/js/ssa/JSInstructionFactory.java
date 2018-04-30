@@ -29,10 +29,6 @@ public interface JSInstructionFactory extends AstInstructionFactory {
   
   JavaScriptInvoke Invoke(int iindex, int function, int[] params, int exception, CallSiteReference site);
  
-  JavaScriptPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef);
-  
-  JavaScriptPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value);
-
   SSAPutInstruction PutInstruction(int iindex, int ref, int value, String field);
   
   JavaScriptTypeOfInstruction TypeOfInstruction(int iindex, int lval, int object);

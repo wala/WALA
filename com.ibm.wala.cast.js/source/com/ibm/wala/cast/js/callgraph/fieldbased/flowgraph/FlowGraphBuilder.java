@@ -15,6 +15,8 @@ import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.JSMethodInstructionVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
@@ -24,8 +26,6 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactor
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
-import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
-import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
@@ -255,7 +255,7 @@ public class FlowGraphBuilder {
 		}
 		
 		@Override
-		public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite pw) {
+		public void visitPropertyWrite(AstPropertyWrite pw) {
 			int p = pw.getMemberRef();
 			if(symtab.isConstant(p)) {
 				String pn = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(p));
@@ -298,7 +298,7 @@ public class FlowGraphBuilder {
 		}
 		
 		@Override
-		public void visitJavaScriptPropertyRead(JavaScriptPropertyRead pr) {
+		public void visitPropertyRead(AstPropertyRead pr) {
 			int p = pr.getMemberRef();
 			if(symtab.isConstant(p)) {
 				String pn = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(p));

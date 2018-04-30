@@ -18,6 +18,8 @@ import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
+import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cfg.InducedCFG;
@@ -35,6 +37,14 @@ public class AstInducedCFG extends InducedCFG {
 
     protected AstPEIVisitor(boolean[] r) {
       super(r);
+    }
+
+    @Override
+    public void visitPropertyRead(AstPropertyRead inst) {
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite inst) {
     }
 
     @Override
@@ -83,6 +93,14 @@ public class AstInducedCFG extends InducedCFG {
 
     protected AstBranchVisitor(boolean[] r) {
       super(r);
+    }
+
+    @Override
+    public void visitPropertyRead(AstPropertyRead inst) {
+    }
+
+    @Override
+    public void visitPropertyWrite(AstPropertyWrite inst) {
     }
 
     @Override
