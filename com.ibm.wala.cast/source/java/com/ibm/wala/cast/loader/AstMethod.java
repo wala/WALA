@@ -50,6 +50,8 @@ public abstract class AstMethod implements IMethod {
 
     String[][] getSourceNamesForValues();
 
+    Position getOperandPosition(int instructionOffset, int operand);
+
   }
 
   /**
