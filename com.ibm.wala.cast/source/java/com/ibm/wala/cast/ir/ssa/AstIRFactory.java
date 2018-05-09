@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.ibm.wala.cast.ir.ssa.SSAConversion.SSAInformation;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -73,7 +74,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
   public static class AstIR extends IR {
     private final LexicalInformation lexicalInfo;
     
-    private final SSA2LocalMap localMap;
+    private final SSAConversion.SSAInformation localMap;
 
     public LexicalInformation lexicalInfo() {
       return lexicalInfo;
@@ -100,7 +101,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     }
 
     @Override
-    protected SSA2LocalMap getLocalMap() {
+    public SSAInformation getLocalMap() {
       return localMap;
     }
 

@@ -12,7 +12,6 @@ package com.ibm.wala.cast.ir.ssa;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import com.ibm.wala.cast.ir.ssa.analysis.LiveAnalysis;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.ssa.IR.SSA2LocalMap;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -62,7 +60,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private final LiveAnalysis.Result liveness;
 
-  private SSA2LocalMap computedLocalMap;
+  private SSAInformation computedLocalMap;
 
   private Map<Integer,Integer> assignments = HashMapFactory.make();
   
@@ -74,10 +72,18 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private final ArrayList<CopyPropagationRecord> R[];
 
-  private static class UseRecord {
+  public static class UseRecord {
     final int instructionIndex;
 
     final int useNumber;
+
+    public int getInstructionIndex() {
+      return instructionIndex;
+    }
+
+    public int getUseNumber() {
+      return useNumber;
+    }
 
     private UseRecord(int instructionIndex, int useNumber) {
       this.useNumber = useNumber;
@@ -101,7 +107,7 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
-  private class PhiUseRecord {
+  public class PhiUseRecord {
     final int BBnumber;
 
     final int phiNumber;
@@ -112,6 +118,18 @@ public class SSAConversion extends AbstractSSAConversion {
       this.BBnumber = BBnumber;
       this.phiNumber = phiNumber;
       this.useNumber = useNumber;
+    }
+
+    public int getBBnumber() {
+      return BBnumber;
+    }
+
+    public int getPhiNumber() {
+      return phiNumber;
+    }
+
+    public int getUseNumber() {
+      return useNumber;
     }
 
     @Override
@@ -131,7 +149,7 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
-  private class CopyPropagationRecord {
+  public class CopyPropagationRecord {
     final int rhs;
 
     final int instructionIndex;
@@ -139,6 +157,22 @@ public class SSAConversion extends AbstractSSAConversion {
     final Set<Object> renamedUses = HashSetFactory.make(2);
 
     private final Set<CopyPropagationRecord> childRecords = HashSetFactory.make(1);
+
+    public int getRhs() {
+      return rhs;
+    }
+
+    public int getInstructionIndex() {
+      return instructionIndex;
+    }
+
+    public Set<Object> getRenamedUses() {
+      return renamedUses;
+    }
+
+    public Set<CopyPropagationRecord> getChildRecords() {
+      return childRecords;
+    }
 
     @Override
     public String toString() {
@@ -246,19 +280,19 @@ public class SSAConversion extends AbstractSSAConversion {
   }
 
   public static void undoCopyPropagation(AstIRFactory.AstIR ir, int instruction, int use) {
-    SSAInformation info = (SSAInformation) ir.getLocalMap();
+    SSAInformation info = ir.getLocalMap();
     info.undoCopyPropagation(instruction, use);
   }
 
   public static void copyUse(AstIRFactory.AstIR ir, int fromInst, int fromUse, int toInst, int toUse) {
-    SSAInformation info = (SSAInformation) ir.getLocalMap();
+    SSAInformation info = ir.getLocalMap();
     info.copyUse(fromInst, fromUse, toInst, toUse);
   }
 
   //
   // SSA2LocalMap implementation for SSAConversion
   //
-  private class SSAInformation implements com.ibm.wala.ssa.IR.SSA2LocalMap {
+  public class SSAInformation implements com.ibm.wala.ssa.IR.SSA2LocalMap {
     private final String[][] computedNames = new String[valueMap.length][]; 
     
     @Override
@@ -303,7 +337,7 @@ public class SSAConversion extends AbstractSSAConversion {
       }
     }
 
-    private Map<Object, CopyPropagationRecord> getCopyHistory() {
+    public Map<Object, CopyPropagationRecord> getCopyHistory() {
       return copyPropagationMap;
     }
     
@@ -519,10 +553,8 @@ public class SSAConversion extends AbstractSSAConversion {
   @SuppressWarnings("unchecked")
   private SSAConversion(AstMethod M, AstIRFactory.AstIR ir, SSAOptions options) {
     super(ir, options);
-    HashMap<Object, CopyPropagationRecord> m = HashMapFactory.make();
-    this.copyPropagationMap = (ir.getLocalMap() instanceof SSAInformation) ? ((SSAInformation) ir.getLocalMap()).getCopyHistory()
-        : m;
-
+    Map<Object, CopyPropagationRecord> m = HashMapFactory.make();
+    this.copyPropagationMap = (ir.getLocalMap() != null) ? ir.getLocalMap().getCopyHistory() : m;    
     this.ir = ir;
     this.debugInfo = M.debugInfo();
     this.lexicalInfo = ir.lexicalInfo();
@@ -605,7 +637,7 @@ public class SSAConversion extends AbstractSSAConversion {
     super.fail(v);
   }
 
-  public SSA2LocalMap getComputedLocalMap() {
+  public SSAInformation getComputedLocalMap() {
     return computedLocalMap;
   }
 
@@ -655,11 +687,11 @@ public class SSAConversion extends AbstractSSAConversion {
     return foundTwo;
   }
 
-  public static SSA2LocalMap convert(AstMethod M, AstIRFactory.AstIR ir, SSAOptions options) {
+  public static SSAInformation convert(AstMethod M, AstIRFactory.AstIR ir, SSAOptions options) {
     return convert(M, ir, options, valuesToConvert(ir));
   }
 
-  public static SSA2LocalMap convert(AstMethod M, final AstIRFactory.AstIR ir, SSAOptions options, final IntSet values) {
+  public static SSAInformation convert(AstMethod M, final AstIRFactory.AstIR ir, SSAOptions options, final IntSet values) {
     try {
       if (DEBUG) {
         System.err.println(("starting conversion for " + values));
