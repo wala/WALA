@@ -32,7 +32,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   
   private final IClassLoader loader;
 
-  protected IMethod functionBody;
+  protected AstMethod functionBody;
 
   private final CAstSourcePositionMap.Position sourcePosition;
 
@@ -217,7 +217,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return true;
   }
   
-  public IMethod getCodeBody() {
+  public AstMethod getCodeBody() {
     return functionBody;
   }
 }
