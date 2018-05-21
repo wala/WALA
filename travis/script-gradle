@@ -5,4 +5,7 @@ case "$TRAVIS_OS_NAME" in
   (osx) headless='' ;;
 esac
 
-$headless ./gradlew --continue --no-build-cache --stacktrace build javadoc lintGradle
+$headless ./gradlew --continue --no-build-cache --stacktrace \
+	  "$submodule"build \
+	  "$submodule"javadoc \
+	  lintGradle
