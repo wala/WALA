@@ -117,7 +117,7 @@ clean.dependsOn cleanDownloadSampleLex
 
 dependencies {
 	testCompile(
-		'junit:junit:4.11',
+		'junit:junit:4.12',
 		'org.osgi:org.osgi.core:4.2.0',
 		files("${copyDxJar.destinationDir}/dx.jar"),
 		project(':com.ibm.wala.core'),

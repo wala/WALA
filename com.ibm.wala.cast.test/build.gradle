@@ -8,7 +8,7 @@ sourceSets.test.java.srcDirs = ['harness-src/java']
 
 dependencies {
 	testCompile(
-		'junit:junit:4.11',
+		'junit:junit:4.12',
 		project(':com.ibm.wala.cast'),
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.util'),
