@@ -115,7 +115,10 @@ task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
 
 task cleanGenerateHelloHashJar(type: Delete) {
 	delete generateHelloHashJar
-	delete fileTree('ocaml') { exclude '*.ml' }
+	delete fileTree('ocaml') {
+		exclude '*.ml'
+		exclude '.gitignore'
+	}
 }
 
 clean.dependsOn cleanGenerateHelloHashJar
