@@ -66,8 +66,6 @@ subprojects { subproject ->
 	apply plugin: 'maven-publish'
 	apply plugin: 'nebula.source-jar'
 
-	sourceCompatibility = 1.8
-
 	version rootProject.version
 
 	repositories {
