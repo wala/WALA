@@ -1,4 +1,6 @@
-apply plugin: 'com.github.hauner.jarTest'
+plugins {
+	id 'com.github.hauner.jarTest'
+}
 
 sourceSets.test {
 	java.srcDirs = ['harness-src']
