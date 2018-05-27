@@ -59,6 +59,7 @@ model {
 					lib project: ':com.ibm.wala.cast', library: it
 				}
 			}
+
 			binaries {
 				withType(StaticLibraryBinarySpec) {
 					buildable = false
@@ -74,6 +75,7 @@ model {
 				}
 			}
 		}
+
 		smoke_main(NativeExecutableSpec) {
 			sources.cpp {
 				source {
@@ -84,6 +86,7 @@ model {
 					lib project: ':com.ibm.wala.cast', library: it
 				}
 			}
+
 			binaries.all {
 				switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
 					case 'linux/x86-64':
