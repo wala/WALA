@@ -18,8 +18,6 @@ dependencies {
 		)
 }
 
-// TODO: build following targets for "test"-only, not "main"
-
 def currentJvm = org.gradle.internal.jvm.Jvm.current()
 
 task generateJniHeaders(type: Exec, dependsOn: [testClasses, ':com.ibm.wala.cast:classes']) {
