@@ -42,11 +42,9 @@ model {
 					switch (targetPlatform.operatingSystem.name) {
 						case 'linux':
 							headers.srcDirs "$jniIncludeDir/linux"
-							switch (targetPlatform.architecture.name) {
-								case 'x86-64':
-									sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/amd64/server/libjvm.so")
-									break
-							}
+							def subdirs = ['jre/lib/amd64/server', 'lib/amd64/server', 'lib/server']
+							def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.so") }
+							sharedLibraryLinkFile = candidates.find { it.exists() }
 							break
 						case 'osx':
 							headers.srcDirs "$jniIncludeDir/darwin"
@@ -79,17 +77,11 @@ model {
 					buildable = false
 				}
 				withType(SharedLibraryBinarySpec) {
-					switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
-						case 'linux/x86-64':
-							$
-							.repositories['libs']
-							.resolveLibrary('jdk')
-							.binaries
-							.withType(SharedLibraryBinary)
-							.findResults { it.sharedLibraryLinkFile }
-							*.parentFile
-							.each { linker.args "-Wl,-rpath=$it" }
-					}
+					def libDir = $.repositories['libs'].resolveLibrary('jdk')
+						.binaries.withType(SharedLibraryBinary)
+						.find { it.targetPlatform.name == targetPlatform.name }
+						.sharedLibraryLinkFile.parent
+					linker.args "-Wl,-rpath,$libDir"
 				}
 			}
 		}
