@@ -25,6 +25,9 @@ dependencies {
 test {
 	environment 'TRAVIS', 1
 	maxHeapSize = '800M'
+
+	if (gradle.startParameter.offline)
+		exclude '**/FieldBasedJQueryTest.class'
 }
 
 task cleanTest(type: Delete) {
