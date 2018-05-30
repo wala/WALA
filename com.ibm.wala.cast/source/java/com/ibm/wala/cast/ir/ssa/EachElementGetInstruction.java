@@ -59,4 +59,10 @@ public class EachElementGetInstruction extends SSAAbstractBinaryInstruction {
   public boolean isFallThrough() {
     return true;
   }
+
+  @Override
+  public boolean isPEI() {
+    return true;
+  }
+  
 }

@@ -3669,14 +3669,21 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   private static boolean handleBinaryOpThrow(CAstNode n, CAstNode op, WalkContext context) {
-    // currently, only integer / and % throw exceptions
-    boolean mayBeInteger = false;
+    boolean mayBeInteger = handlePossibleThrow(n, context);
+    if (mayBeInteger) {
+      // currently, only integer / and % throw exceptions
+      assert op == CAstOperator.OP_DIV || op == CAstOperator.OP_MOD : CAstPrinter.print(n);
+    }
+    return mayBeInteger;
+  }
+  
+  private static boolean handlePossibleThrow(CAstNode n, WalkContext context) {
+    boolean mayThrow = false;
     Collection<Object> labels = context.getControlFlow().getTargetLabels(n);
     if (!labels.isEmpty()) {
-      context.cfg().addPreNode(n, context.getUnwindState());
+       mayThrow = true;
 
-      mayBeInteger = true;
-      assert op == CAstOperator.OP_DIV || op == CAstOperator.OP_MOD : CAstPrinter.print(n);
+      context.cfg().addPreNode(n, context.getUnwindState());
       for (Object label : labels) {
         CAstNode target = context.getControlFlow().getTarget(n, label);
         if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
@@ -3686,7 +3693,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
     }
 
-    return mayBeInteger;
+    return mayThrow;
   }
 
   @Override
@@ -4589,6 +4596,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int currentInstruction = c.cfg().getCurrentInstruction();
     c.cfg().addInstruction(new EachElementGetInstruction(currentInstruction, result, c.getValue(n.getChild(0)), c.getValue(n.getChild(1))));
     c.cfg().noteOperands(currentInstruction, c.getSourceMap().getPosition(n.getChild(0)), c.getSourceMap().getPosition(n.getChild(1)));
+
+    if (handlePossibleThrow(n, c)) {
+      c.cfg().newBlock(true);
+    }
   }
 
   @Override

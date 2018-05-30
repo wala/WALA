@@ -105,8 +105,9 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   @Override
   public Collection<Object> getTargetLabels(CAstNode from) {
-    if (labelMap.containsKey(CAstToNode.get(from))) {
-      return labelMap.get(CAstToNode.get(from));
+    Object node = CAstToNode.get(from);
+    if (labelMap.containsKey(node)) {
+      return labelMap.get(node);
     } else {
       return Collections.emptySet();
     }
