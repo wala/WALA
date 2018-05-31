@@ -513,10 +513,11 @@ public abstract class Decoder implements Constants {
       case OP_dup2_x1:
         i = DupInstruction.make(elemCount(stackWords, stackLen - 1), 1);
         break;
-      case OP_dup2_x2:
-        i = DupInstruction.make(elemCount(stackWords, stackLen - 1), elemCount(stackWords, stackLen - 2));
+      case OP_dup2_x2: {
+        int twoDown = elemCount(stackWords, stackLen - 1);
+        i = DupInstruction.make(twoDown, elemCount(stackWords, stackLen - twoDown - 1));
         break;
-      case OP_iinc: {
+      } case OP_iinc: {
         int v = wide ? decodeUShort(index) : (code[index] & 0xFF);
         int c = wide ? decodeShort(index + 2) : code[index + 1];
 
