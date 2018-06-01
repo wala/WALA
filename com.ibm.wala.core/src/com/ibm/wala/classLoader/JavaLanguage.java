@@ -21,11 +21,18 @@ import java.util.Collections;
 import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.modref.ExtendedHeapModel;
+import com.ibm.wala.ipa.modref.ModRef.ModVisitor;
+import com.ibm.wala.ipa.modref.ModRef.RefVisitor;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
 import com.ibm.wala.shrikeBT.Constants;
@@ -774,6 +781,18 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   @Override
   public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return new FakeRootMethod(new FakeRootClass(ClassLoaderReference.Primordial, cha), options, cache); 
+  }
+
+  @Override
+  public <T extends InstanceKey> RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n, Collection<PointerKey> result,
+      PointerAnalysis<T> pa, ExtendedHeapModel h) {
+    return new RefVisitor<>(n, result, pa, h);
+  }
+
+  @Override
+  public <T extends InstanceKey> ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result,
+      PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+    return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
   }
 
 }

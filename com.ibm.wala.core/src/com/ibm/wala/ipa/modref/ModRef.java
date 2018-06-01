@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphTransitiveClosure;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -116,8 +117,14 @@ public class ModRef<T extends InstanceKey> {
   }
 
   public ExtendedHeapModel makeHeapModel(PointerAnalysis<T> pa) {
-    return new DelegatingExtendedHeapModel(pa.getHeapModel());
+    HeapModel heapModel = pa.getHeapModel();
+    if (heapModel instanceof ExtendedHeapModel) {
+      return (ExtendedHeapModel) heapModel;
+    } else {
+      return new DelegatingExtendedHeapModel(heapModel);
+    }
   }
+  
   /**
    * For a call graph node, what heap locations (as determined by a heap model) may it write, <b> NOT </b> including it's callees
    * transitively
@@ -162,7 +169,7 @@ public class ModRef<T extends InstanceKey> {
     return result;
   }
 
-  protected static class RefVisitor<T extends InstanceKey, H extends ExtendedHeapModel> extends SSAInstruction.Visitor {
+  public static class RefVisitor<T extends InstanceKey, H extends ExtendedHeapModel> extends SSAInstruction.Visitor {
     protected final CGNode n;
 
     protected final Collection<PointerKey> result;
@@ -171,7 +178,7 @@ public class ModRef<T extends InstanceKey> {
 
     protected final H h;
 
-    protected RefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa2, H h) {
+    public RefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa2, H h) {
       this.n = n;
       this.result = result;
       this.pa = pa2;
@@ -213,7 +220,7 @@ public class ModRef<T extends InstanceKey> {
     }
   }
 
-  protected static class ModVisitor<T extends InstanceKey, H extends ExtendedHeapModel> extends SSAInstruction.Visitor {
+  public static class ModVisitor<T extends InstanceKey, H extends ExtendedHeapModel> extends SSAInstruction.Visitor {
     protected final CGNode n;
 
     protected final Collection<PointerKey> result;
@@ -224,7 +231,7 @@ public class ModRef<T extends InstanceKey> {
 
     private final boolean ignoreAllocHeapDefs;
 
-    protected ModVisitor(CGNode n, Collection<PointerKey> result, H h, PointerAnalysis<T> pa,
+    public ModVisitor(CGNode n, Collection<PointerKey> result, H h, PointerAnalysis<T> pa,
         boolean ignoreAllocHeapDefs) {
       this.n = n;
       this.result = result;
@@ -330,7 +337,8 @@ public class ModRef<T extends InstanceKey> {
 
   protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h,
       boolean ignoreAllocHeapDefs) {
-    return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
+    return n.getMethod().getDeclaringClass().getClassLoader().getLanguage().makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
+    //return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
   }
 
   /**
@@ -355,7 +363,7 @@ public class ModRef<T extends InstanceKey> {
   }
 
   protected RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
-    return new RefVisitor<>(n, result, pa, h);
+    return n.getMethod().getDeclaringClass().getClassLoader().getLanguage().makeRefVisitor(n, result, pa, h);
   }
 
   /**

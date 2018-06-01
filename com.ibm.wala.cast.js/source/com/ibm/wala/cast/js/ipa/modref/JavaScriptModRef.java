@@ -31,9 +31,9 @@ import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 
 public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
 
-  protected static class JavaScriptRefVisitor<T extends InstanceKey> extends AstRefVisitor<T> implements JSInstructionVisitor {
+  public static class JavaScriptRefVisitor<T extends InstanceKey> extends AstRefVisitor<T> implements JSInstructionVisitor {
 
-    protected JavaScriptRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
+    public JavaScriptRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
       super(n, result, pa, (AstHeapModel)h);
     }
 
@@ -80,9 +80,9 @@ public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
     return new JavaScriptRefVisitor<>(n, result, pa, h);
   }
 
-  protected static class JavaScriptModVisitor<T extends InstanceKey> extends AstModVisitor<T> implements JSInstructionVisitor {
+  public static class JavaScriptModVisitor<T extends InstanceKey> extends AstModVisitor<T> implements JSInstructionVisitor {
 
-    protected JavaScriptModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<T> pa) {
+    public JavaScriptModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<T> pa) {
       super(n, result, (AstHeapModel)h, pa);
     }
 

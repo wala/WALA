@@ -36,6 +36,8 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.cast.js.analysis.typeInference.JSPrimitiveType;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph.JSFakeRoot;
+import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef;
+import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef.JavaScriptRefVisitor;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
@@ -67,9 +69,16 @@ import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.modref.ExtendedHeapModel;
+import com.ibm.wala.ipa.modref.ModRef.ModVisitor;
+import com.ibm.wala.ipa.modref.ModRef.RefVisitor;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
@@ -667,6 +676,18 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     @Override
     public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       return new JSFakeRoot(cha, options, cache);
+    }
+
+    @Override
+    public <T extends InstanceKey> RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n,
+        Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
+      return new JavaScriptRefVisitor<>(n, result, pa, h);
+    }
+
+    @Override
+    public <T extends InstanceKey> ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result,
+        PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+      return new JavaScriptModRef.JavaScriptModVisitor<>(n, result, h, pa);
     }
 
   };
