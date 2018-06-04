@@ -1,5 +1,7 @@
-apply plugin: 'com.github.hauner.jarTest'
-apply plugin: 'eclipse'
+plugins {
+	id 'com.github.hauner.jarTest'
+	id 'eclipse'
+}
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 

@@ -1,4 +1,6 @@
-apply plugin: 'eclipse'
+plugins {
+	id 'eclipse'
+}
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
