@@ -63,7 +63,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
 
   @Override
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
-    return interesting.get(getLanguage(node), new Integer(vn));
+    return interesting.get(getLanguage(node), Integer.valueOf(vn));
   }
 
   @Override

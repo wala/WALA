@@ -653,7 +653,7 @@ public class SSAConversion extends AbstractSSAConversion {
           if (lexicalUses != null) {
             System.err.print(("extra uses for " + instructions[i] + ": "));
             for (int lexicalUse : lexicalUses) {
-              System.err.print((new Integer(lexicalUse).toString() + " "));
+              System.err.print((Integer.valueOf(lexicalUse).toString() + " "));
             }
             System.err.println("");
           }

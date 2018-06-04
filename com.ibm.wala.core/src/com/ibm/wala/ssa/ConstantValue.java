@@ -21,11 +21,11 @@ public class ConstantValue implements Value {
   }
 
   public ConstantValue(int constant) {
-    this(new Integer(constant));
+    this(Integer.valueOf(constant));
   }
 
   public ConstantValue(double constant) {
-    this(new Double(constant));
+    this(Double.valueOf(constant));
   }
 
 

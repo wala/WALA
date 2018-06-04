@@ -318,7 +318,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     final public Object getValue() {
-      return new Float(getFloatValue());
+      return Float.valueOf(getFloatValue());
     }
 
     @Override
@@ -390,7 +390,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     final public Object getValue() {
-      return new Double(getDoubleValue());
+      return Double.valueOf(getDoubleValue());
     }
 
     @Override

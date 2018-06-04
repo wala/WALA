@@ -2691,7 +2691,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public final int setValue(CAstNode n, int v) {
-      results.put(n, new Integer(v));
+      results.put(n, Integer.valueOf(v));
       return v;
     }
 
@@ -3538,7 +3538,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         + " of loop " + CAstPrinter.print(n, context.top().getSourceMap());
     context.cfg().addInstruction(
         insts.ConditionalBranchInstruction(context.cfg().currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), null, c.getValue(n.getChild(0)), context
-            .currentScope().getConstantValue(new Integer(0)), -1));
+            .currentScope().getConstantValue(Integer.valueOf(0)), -1));
     PreBasicBlock branchB = context.cfg().getCurrentBlock();
 
     // loop body
@@ -3832,7 +3832,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       CAstNode arg = n.getChild(0);
       context.cfg().addInstruction(
           insts.ConditionalBranchInstruction(currentInstruction, translateConditionOpcode(CAstOperator.OP_NE), null, c.getValue(arg), context
-              .currentScope().getConstantValue(new Integer(0)), -1));
+              .currentScope().getConstantValue(Integer.valueOf(0)), -1));
       context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
     } else if (n.getChildCount() == 3) {
       CAstNode op = n.getChild(0);
@@ -3896,7 +3896,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int currentInstruction = context.cfg().getCurrentInstruction();
     context.cfg().addInstruction(
         insts.ConditionalBranchInstruction(currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), null, c.getValue(l), context.currentScope()
-            .getConstantValue(new Integer(0)), -1));
+            .getConstantValue(Integer.valueOf(0)), -1));
     context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(l));
     PreBasicBlock srcB = context.cfg().getCurrentBlock();
     // true clause
@@ -4036,7 +4036,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveArrayLiteralInitElement(CAstNode n, int i, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
     arrayOpHandler.doArrayWrite(context, c.getValue(n.getChild(0)), n,
-        new int[] { context.currentScope().getConstantValue(new Integer(i - 1)) }, c.getValue(n.getChild(i)));
+        new int[] { context.currentScope().getConstantValue(Integer.valueOf(i - 1)) }, c.getValue(n.getChild(i)));
   }
 
   @Override

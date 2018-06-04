@@ -10,7 +10,7 @@
  *****************************************************************************/
 public class LocalClass {
     public static void main(String[] args) {
-	final Integer base = new Integer(6);
+	final Integer base = Integer.valueOf(6);
 
 	class Foo {
 	    int value;
@@ -27,7 +27,7 @@ public class LocalClass {
     }
 
     public void method() {
-	final Integer base = new Integer(6);
+	final Integer base = Integer.valueOf(6);
 
 	class Foo {
 	    int value;

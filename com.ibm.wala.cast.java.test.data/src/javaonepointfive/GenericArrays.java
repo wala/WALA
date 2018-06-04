@@ -50,7 +50,7 @@ public class GenericArrays {
 		Object o = lsa;
 		Object[] oa = (Object[]) o;
 		List<Integer> li = new ArrayList<>();
-		li.add(new Integer(3));
+		li.add(Integer.valueOf(3));
 		oa[1] = li; // correct
 		String s = (String) lsa[1].get(0); // run time error, but cast is explicit
 

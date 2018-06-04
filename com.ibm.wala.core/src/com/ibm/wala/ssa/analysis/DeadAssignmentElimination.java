@@ -110,7 +110,7 @@ public class DeadAssignmentElimination {
         int def = phi.getDef();
         if (DU.getNumberOfUses(def) == 0) {
           // the phi is certainly dead ... record this with a dataflow fact.
-          trivialDead.add(new Integer(def));
+          trivialDead.add(Integer.valueOf(def));
         } else {
           boolean maybeDead = true;
           for (SSAInstruction u : Iterator2Iterable.make(DU.getUses(def))) {
@@ -123,7 +123,7 @@ public class DeadAssignmentElimination {
           if (maybeDead) {
             // perhaps the phi is dead .. create a variable
             BooleanVariable B = new BooleanVariable(false);
-            vars.put(new Integer(def), B);
+            vars.put(Integer.valueOf(def), B);
           }
         }
       }
@@ -134,7 +134,7 @@ public class DeadAssignmentElimination {
         BooleanVariable B = E.getValue();
         for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def.intValue()))) {
           SSAPhiInstruction u = (SSAPhiInstruction) use;
-          Integer ud = new Integer(u.getDef());
+          Integer ud = Integer.valueOf(u.getDef());
           if (trivialDead.contains(ud)) {
             // do nothing ... u will not keep def live
           } else {

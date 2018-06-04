@@ -106,8 +106,8 @@ public class SyntheticIR extends IR {
     for (int j = 0; j < s.getNumberOfUses(); j++) {
       int vn = s.getUse(j);
       symbolTable.ensureSymbol(vn);
-      if (constants != null && constants.containsKey(new Integer(vn)))
-        symbolTable.setConstantValue(vn, constants.get(new Integer(vn)));
+      if (constants != null && constants.containsKey(Integer.valueOf(vn)))
+        symbolTable.setConstantValue(vn, constants.get(Integer.valueOf(vn)));
     }
   }
 

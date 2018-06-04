@@ -26,7 +26,7 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
       if (lhs instanceof String || rhs instanceof String) {
         return "" + lhs + rhs;
       } else if (lhs instanceof Number && rhs instanceof Number) {
-        return new Double(((Number)lhs).doubleValue() + ((Number)rhs).doubleValue());
+        return Double.valueOf(((Number)lhs).doubleValue() + ((Number)rhs).doubleValue());
       } 
     } else if (op == CAstOperator.OP_BIT_AND) {
 
@@ -43,7 +43,7 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
       
     } else if (op == CAstOperator.OP_DIV) {
       if (lhs instanceof Number && rhs instanceof Number) {
-        return new Double(((Number)lhs).doubleValue() / ((Number)rhs).doubleValue());
+        return Double.valueOf(((Number)lhs).doubleValue() / ((Number)rhs).doubleValue());
       } 
       
     } else if (op == CAstOperator.OP_EQ) {
@@ -72,12 +72,12 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
 
     } else if (op == CAstOperator.OP_MOD) {
       if (lhs instanceof Number && rhs instanceof Number) {
-        return new Double(((Number)lhs).doubleValue() % ((Number)rhs).doubleValue());
+        return Double.valueOf(((Number)lhs).doubleValue() % ((Number)rhs).doubleValue());
       } 
       
     } else if (op == CAstOperator.OP_MUL) {
       if (lhs instanceof Number && rhs instanceof Number) {
-        return new Double(((Number)lhs).doubleValue() * ((Number)rhs).doubleValue());
+        return Double.valueOf(((Number)lhs).doubleValue() * ((Number)rhs).doubleValue());
       } 
       
     } else if (op == CAstOperator.OP_NE) {
@@ -98,7 +98,7 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
 
     } else if (op == CAstOperator.OP_SUB) {
       if (lhs instanceof Number && rhs instanceof Number) {
-        return new Double(((Number)lhs).doubleValue() - ((Number)rhs).doubleValue());
+        return Double.valueOf(((Number)lhs).doubleValue() - ((Number)rhs).doubleValue());
       } 
       
     } else if (op == CAstOperator.OP_URSH) {

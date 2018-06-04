@@ -321,35 +321,35 @@ public class JSAstTranslator extends AstTranslator {
       if (name.equals("GlobalNaN")) {
 	context.cfg().addInstruction(
 	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-	    resultVal, context.currentScope().getConstantValue(new Float(Float.NaN))));
+	    resultVal, context.currentScope().getConstantValue(Float.valueOf(Float.NaN))));
       } else if (name.equals("GlobalInfinity")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Float(Float.POSITIVE_INFINITY))));
+            resultVal, context.currentScope().getConstantValue(Float.valueOf(Float.POSITIVE_INFINITY))));
       } else if (name.equals("MathE")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Double(Math.E))));
+            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.E))));
       } else if (name.equals("MathPI")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Double(Math.PI))));
+            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.PI))));
       } else if (name.equals("MathSQRT1_2")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Double(Math.sqrt(.5)))));
+            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(.5)))));
       } else if (name.equals("MathSQRT2")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Double(Math.sqrt(2)))));
+            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(2)))));
       } else if (name.equals("MathLN2")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Double(Math.log(2)))));
+            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.log(2)))));
       } else if (name.equals("MathLN10")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(new Double(Math.log(10)))));
+            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.log(10)))));
       } else if (name.equals("NewObject")) {
         doNewObject(context, null, resultVal, "Object", null);
 

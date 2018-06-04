@@ -15,7 +15,7 @@ public class AnonymousClass {
     }
 
     public static void main(String[] args) {
-	final Integer base = new Integer(6);
+	final Integer base = Integer.valueOf(6);
 
 	Foo f= new Foo() {
 	    int value = 3;
@@ -34,7 +34,7 @@ public class AnonymousClass {
     }
 
     public void method() {
-	final Integer base = new Integer(7);
+	final Integer base = Integer.valueOf(7);
 
 	abstract class FooImpl implements Foo {
 	    int y;

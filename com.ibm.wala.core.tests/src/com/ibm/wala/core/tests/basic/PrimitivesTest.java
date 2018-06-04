@@ -601,21 +601,21 @@ public class PrimitivesTest extends WalaTestCase {
 
   @Test public void testSmallMap() {
     SmallMap<Integer, Integer> M = new SmallMap<>();
-    Integer I1 = new Integer(1);
-    Integer I2 = new Integer(2);
-    Integer I3 = new Integer(3);
+    Integer I1 = Integer.valueOf(1);
+    Integer I2 = Integer.valueOf(2);
+    Integer I3 = Integer.valueOf(3);
     M.put(I1, I1);
     M.put(I2, I2);
     M.put(I3, I3);
 
-    Integer I = M.get(new Integer(2));
+    Integer I = M.get(Integer.valueOf(2));
     Assert.assertTrue(I != null);
     Assert.assertTrue(I.equals(I2));
 
-    I = M.get(new Integer(4));
+    I = M.get(Integer.valueOf(4));
     Assert.assertTrue(I == null);
 
-    I = M.put(new Integer(2), new Integer(3));
+    I = M.put(Integer.valueOf(2), Integer.valueOf(3));
     Assert.assertTrue(I.equals(I2));
     I = M.get(I2);
     Assert.assertTrue(I.equals(I3));
@@ -623,24 +623,24 @@ public class PrimitivesTest extends WalaTestCase {
 
   @Test public void testBimodalMap() {
     Map<Integer, Integer> M = new BimodalMap<>(3);
-    Integer I1 = new Integer(1);
-    Integer I2 = new Integer(2);
-    Integer I3 = new Integer(3);
-    Integer I4 = new Integer(4);
-    Integer I5 = new Integer(5);
-    Integer I6 = new Integer(6);
+    Integer I1 = Integer.valueOf(1);
+    Integer I2 = Integer.valueOf(2);
+    Integer I3 = Integer.valueOf(3);
+    Integer I4 = Integer.valueOf(4);
+    Integer I5 = Integer.valueOf(5);
+    Integer I6 = Integer.valueOf(6);
     M.put(I1, I1);
     M.put(I2, I2);
     M.put(I3, I3);
 
-    Integer I = M.get(new Integer(2));
+    Integer I = M.get(Integer.valueOf(2));
     Assert.assertTrue(I != null);
     Assert.assertTrue(I.equals(I2));
 
-    I = M.get(new Integer(4));
+    I = M.get(Integer.valueOf(4));
     Assert.assertTrue(I == null);
 
-    I = M.put(new Integer(2), new Integer(3));
+    I = M.put(Integer.valueOf(2), Integer.valueOf(3));
     Assert.assertTrue(I.equals(I2));
     I = M.get(I2);
     Assert.assertTrue(I.equals(I3));
@@ -648,14 +648,14 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I4, I4);
     M.put(I5, I5);
     M.put(I6, I6);
-    I = M.get(new Integer(4));
+    I = M.get(Integer.valueOf(4));
     Assert.assertTrue(I != null);
     Assert.assertTrue(I.equals(I4));
 
-    I = M.get(new Integer(7));
+    I = M.get(Integer.valueOf(7));
     Assert.assertTrue(I == null);
 
-    I = M.put(new Integer(2), new Integer(6));
+    I = M.put(Integer.valueOf(2), Integer.valueOf(6));
     Assert.assertTrue(I.equals(I3));
     I = M.get(I2);
     Assert.assertTrue(I.equals(I6));
@@ -714,7 +714,7 @@ public class PrimitivesTest extends WalaTestCase {
     // add 10 nodes
     Integer[] nodes = new Integer[10];
     for (int i = 0; i < nodes.length; i++)
-      G.addNode(nodes[i] = new Integer(i));
+      G.addNode(nodes[i] = Integer.valueOf(i));
 
     // edges to i-1, i+1, i+2
     for (int i = 0; i < nodes.length; i++) {
@@ -738,7 +738,7 @@ public class PrimitivesTest extends WalaTestCase {
     // add nodes
     Object[] nodes = new Object[11];
     for (int i = 0; i < nodes.length; i++)
-      G.addNode(nodes[i] = new Integer(i));
+      G.addNode(nodes[i] = Integer.valueOf(i));
 
     // add edges
     G.addEdge(nodes[10], nodes[0]);
@@ -861,7 +861,7 @@ public class PrimitivesTest extends WalaTestCase {
   private static int countEquivalenceClasses(IntegerUnionFind uf) {
     HashSet<Integer> s = HashSetFactory.make();
     for (int i = 0; i < uf.size(); i++) {
-      s.add(new Integer(uf.find(i)));
+      s.add(Integer.valueOf(uf.find(i)));
     }
     return s.size();
   }

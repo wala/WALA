@@ -188,7 +188,7 @@ public class JDT2CAstUtils {
    */
   public static Object defaultValueForType(ITypeBinding type) {
     if (isLongOrLess(type))
-      return new Integer(0);
+      return Integer.valueOf(0);
     else if (type.getBinaryName().equals("D") || type.getBinaryName().equals("F"))
       return new Double(0.0);
     else
