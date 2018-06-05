@@ -274,7 +274,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   protected final class ClassEntity implements CAstEntity {
     // TAGALONG (not static, will keep reference to ast, fIdentityMapper, etc)
 
-    private final String fName;
+    @Override
+	public Position getPosition(int arg) {
+		return null;
+	}
+
+	private final String fName;
 
     private final Collection<CAstQualifier> fQuals;
 
@@ -1031,7 +1036,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       return new CAstType.Method() {
         private Collection<CAstType> fExceptionTypes = null;
 
+        
         @Override
+		public boolean isStatic() {
+			return getQualifiers().contains(CAstQualifier.STATIC);
+		}
+
+		@Override
         public CAstType getReturnType() {
           if (fReturnType != null)
             return fTypeDict.getCAstTypeFor(fReturnType);
@@ -1088,6 +1099,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         }
       };
     }
+
+	@Override
+	public Position getPosition(int arg) {
+		// TODO Auto-generated method stub
+		SingleVariableDeclaration p = (SingleVariableDeclaration) fDecl.parameters().get(arg);
+		return makePosition(p);
+	}
   }
 
   // ////////////////////////////////////
@@ -1239,6 +1257,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     public CAstType getType() {
       return fTypeDict.getCAstTypeFor(type);
     }
+
+
+	@Override
+	public Position getPosition(int arg) {
+		return null;
+	}
   }
 
   // /////////////////////////////////////
@@ -3016,6 +3040,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       Assertions.UNREACHABLE("CompilationUnitEntity.getType()");
       return null;
     }
+
+	@Override
+	public Position getPosition(int arg) {
+		return null;
+	}
   }
 
   // /////////////////////////////

@@ -19,7 +19,7 @@ import java.util.Collection;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 
-public class AbstractClassEntity extends AbstractDataEntity {
+public abstract class AbstractClassEntity extends AbstractDataEntity {
   private final CAstType.Class type;
 
   public AbstractClassEntity(CAstType.Class type) {

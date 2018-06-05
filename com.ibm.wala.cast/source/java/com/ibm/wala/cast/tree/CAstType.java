@@ -54,6 +54,9 @@ public interface CAstType {
 
     public interface Method extends Function {
 	CAstType getDeclaringType();
+	
+	boolean isStatic();
+	
     }
 
     public interface Complex extends CAstType {

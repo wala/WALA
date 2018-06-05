@@ -27,6 +27,7 @@ import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstQualifier;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Method;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
@@ -436,6 +437,16 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     return getType("java.lang.Exception");
   }
 
-
-
+  @Override
+  protected Position[] getParameterPositions(CAstEntity n) {
+    int offset = 0;
+    Position[] parameterPositions = new Position[ n.getArgumentCount() ];
+    if ((n.getType() instanceof CAstType.Method) && !((CAstType.Method)n.getType()).isStatic()) {
+      offset = 1;
+    }
+    for(int i = 0; i < n.getArgumentCount() - offset; i++) {
+      parameterPositions[i+offset] = n.getPosition(i);
+    }
+    return parameterPositions;
+  }
 }

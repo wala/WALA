@@ -502,12 +502,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private Position[][] operandPositions;
 
-    AstDebuggingInformation(Position codeBodyPosition, Position[] instructionPositions, Position[][] operandPositions, String[] names) {
+    private Position[] parameterPositions;
+    
+    AstDebuggingInformation(Position codeBodyPosition, Position[] instructionPositions, Position[][] operandPositions, Position[] parameterPositions, String[] names) {
       this.codeBodyPosition = codeBodyPosition;
 
       this.instructionPositions = instructionPositions;
 
       this.operandPositions = operandPositions;
+      
+      this.parameterPositions = parameterPositions;
       
       valueNumberNames = new String[names.length][];
       for (int i = 0; i < names.length; i++) {
@@ -541,6 +545,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public String[][] getSourceNamesForValues() {
       return valueNumberNames;
+    }
+
+    @Override
+    public Position getParameterPosition(int param) {
+      return parameterPositions[param];
     }
   }
 
@@ -3359,12 +3368,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         functionContext.exposeNameSet(n, true), 
         functionContext.getAccesses(n));
 
-    DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, operand, nms);
+    Position[] parameterPositions = getParameterPositions(n);
+    
+    DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, operand, parameterPositions, nms);
 
     // actually make code body
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, monitor, LI, DBG);
   }
 
+  protected abstract Position[] getParameterPositions(CAstEntity e);
+  
   @Override
   protected WalkContext makeLocalContext(WalkContext context, CAstNode n) {
     return new LocalContext(context, makeLocalScope(context.currentScope()));

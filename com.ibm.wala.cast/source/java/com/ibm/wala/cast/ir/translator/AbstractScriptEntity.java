@@ -22,7 +22,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 
-public class AbstractScriptEntity extends AbstractCodeEntity {
+public abstract class AbstractScriptEntity extends AbstractCodeEntity {
   private final File file;
 
   public AbstractScriptEntity(File file, CAstType type) {

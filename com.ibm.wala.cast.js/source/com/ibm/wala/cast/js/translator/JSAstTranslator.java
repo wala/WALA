@@ -26,6 +26,7 @@ import com.ibm.wala.cast.loader.DynamicCallSiteReference;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
@@ -483,6 +484,19 @@ public class JSAstTranslator extends AstTranslator {
   @Override
   protected CAstType exceptionType() {
     return Any;
+  }
+
+  @Override
+  protected Position[] getParameterPositions(CAstEntity e) {
+    if (e.getKind() == CAstEntity.SCRIPT_ENTITY) {
+      return new Position[0];
+    } else {
+      Position[] ps = new Position[ e.getArgumentCount() ];
+      for(int i = 2; i < e.getArgumentCount(); i++) {
+        ps[i] = e.getPosition(i-2);
+      }
+      return ps;
+    }
   }
 
 }

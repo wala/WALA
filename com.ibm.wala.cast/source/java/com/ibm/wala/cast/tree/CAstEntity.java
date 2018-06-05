@@ -162,6 +162,11 @@ public interface CAstEntity {
   CAstSourcePositionMap.Position getPosition();
 
   /**
+   *  The source position of argument 'arg' this entity, if any;
+   */
+  CAstSourcePositionMap.Position getPosition(int arg);
+
+  /**
    * The map from CAstNodes to types. Valid for nodes that have an explicitly
    * declared type (e.g. local vars).
    */

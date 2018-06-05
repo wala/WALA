@@ -393,7 +393,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
    * Used to represent a script or function in the CAst; see walkEntity().
    * 
    */
-  private static class ScriptOrFnEntity implements CAstEntity {
+  private class ScriptOrFnEntity implements CAstEntity {
     private final String[] arguments;
 
     private final String name;
@@ -410,6 +410,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     
     private final Position entityPosition;
     
+    private final Position[] paramPositions;
+    
     private ScriptOrFnEntity(AstNode n, Map<CAstNode, Collection<CAstEntity>> subs, CAstNode ast, CAstControlFlowMap map, CAstSourcePositionMap pos, String name) {
       this.name = name;
       this.entityPosition = pos.getPosition(ast);
@@ -424,7 +426,15 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         for (int j = 0; j < f.getParamCount(); j++) {
           arguments[i++] = f.getParamOrVarName(j);
         }
+   
+        List<AstNode> params = f.getParams();
+        paramPositions = new Position[ params.size() ];
+        for(int pi = 0; pi < params.size(); pi++) {
+          paramPositions[pi] = makePosition(params.get(pi));
+        }
+        
       } else {
+        paramPositions = new Position[0];
         arguments = new String[0];
       }
       kind = (n instanceof FunctionNode) ? CAstEntity.FUNCTION_ENTITY : CAstEntity.SCRIPT_ENTITY;
@@ -522,6 +532,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     @Override
     public CAstType getType() {
       return JSAstTranslator.Any;
+    }
+
+    @Override
+    public Position getPosition(int arg) {
+      return paramPositions[arg];
     }
   }
 

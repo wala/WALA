@@ -21,6 +21,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 
 public class DelegatingEntity implements CAstEntity {
@@ -108,6 +109,11 @@ public class DelegatingEntity implements CAstEntity {
     @Override
     public Collection<CAstAnnotation> getAnnotations() {
       return base.getAnnotations();
+    }
+
+    @Override
+    public Position getPosition(int arg) {
+      return base.getPosition(arg);
     }
 
 }

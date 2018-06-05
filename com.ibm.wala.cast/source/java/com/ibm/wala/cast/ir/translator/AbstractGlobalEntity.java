@@ -21,7 +21,7 @@ import java.util.Set;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 
-public class AbstractGlobalEntity extends AbstractDataEntity {
+public abstract class AbstractGlobalEntity extends AbstractDataEntity {
   private final String name;
 
   private final Set<CAstQualifier> modifiers;
