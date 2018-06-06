@@ -2,6 +2,7 @@ plugins {
 	id 'com.github.hauner.jarTest'
 	id 'cpp'
 	id 'eclipse'
+	id 'edu.wpi.first.GradleJni' version '0.2.1'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
@@ -18,62 +19,54 @@ dependencies {
 		)
 }
 
-// TODO: build following targets for "test"-only, not "main"
-
 def currentJvm = org.gradle.internal.jvm.Jvm.current()
 
-task generateJniHeaders(type: Exec, dependsOn: [testClasses, ':com.ibm.wala.cast:classes']) {
-	// classes for which we need headers
-	def nativePackage = 'com.ibm.wala.cast.test'
-	def nativeClasses = ['TestNativeTranslator']
-	def qualifiedClasses = nativeClasses.collect { "$nativePackage.$it" }
-
-	// inputs and outputs, suitable for use with rule-based model configuration
-	ext {
-		sourceDir = null
-		headerDir = "$buildDir/include"
+def addCastRpath(currentJvm, targetPlatform, linker) {
+	switch (targetPlatform.operatingSystem.name) {
+		case 'linux':
+		case 'osx':
+			[
+				// TODO: compute path on following line from 'cast' library properties somehow
+				"${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared",
+				// TODO: compute paths on following lines from 'jdk' library properties somehow
+				"${currentJvm.javaHome}/jre/lib/amd64/server",
+				"${currentJvm.javaHome}/jre/lib/server",
+			].each { linker.args "-Wl,-rpath,$it" }
 	}
-	inputs.files files(qualifiedClasses.collect { "$buildDir/${it.replace('.', '/')}.class" })
-	outputs.dir headerDir
-	outputs.cacheIf { true }
+}
 
-	// javah command to generate headers
-	def sourceSets = [sourceSets.test, project(':com.ibm.wala.cast').sourceSets.main]
-	def classesDirs = sourceSets.inject(files()) { acc, val -> acc.plus(val.output.classesDirs) }
-	def classpath = classesDirs.asPath
-	def javah = currentJvm.getExecutable('javah')
-	commandLine(javah, '-d', "$headerDir", '-classpath', classpath)
-	args(qualifiedClasses)
+def addCastEnvironment(task, xlatorLibrary) {
+	def castLibrary = xlatorLibrary.libs[2].linkFiles.singleFile
+	def castLibraryDirectory = castLibrary.parent
+	assert castLibraryDirectory.endsWith('/com.ibm.wala.cast/build/libs/cast/shared')
+	task.environment 'DYLD_LIBRARY_PATH', castLibrary.parent
 }
 
 model {
 	components {
-		xlator_test(NativeLibrarySpec) {
+		xlator_test(JniNativeLibrarySpec) {
+			javaCompileTasks << compileTestJava
+
 			sources.cpp {
 				source {
 					srcDirs = ['harness-src/c']
 					include 'smoke.cpp'
 				}
-				generatedBy generateJniHeaders
 				['cast', 'jdk'].each {
 					lib project: ':com.ibm.wala.cast', library: it
 				}
 			}
+
 			binaries {
 				withType(StaticLibraryBinarySpec) {
 					buildable = false
 				}
 				withType(SharedLibraryBinarySpec) {
-					switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
-						case 'linux/x86-64':
-							// TODO: compute path on following line from 'cast' library properties somehow
-							linker.args '-Wl,-rpath', "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
-							// TODO: compute path on following line from 'jdk' library properties somehow
-							linker.args '-Wl,-rpath', "${currentJvm.javaHome}/jre/lib/amd64/server"
-					}
+					addCastRpath(currentJvm, targetPlatform, linker)
 				}
 			}
 		}
+
 		smoke_main(NativeExecutableSpec) {
 			sources.cpp {
 				source {
@@ -84,25 +77,52 @@ model {
 					lib project: ':com.ibm.wala.cast', library: it
 				}
 			}
+
 			binaries.all {
-				switch ("$targetPlatform.operatingSystem.name/$targetPlatform.architecture.name") {
-					case 'linux/x86-64':
-						// TODO: compute path on following line from 'cast' library properties somehow
-						linker.args '-Wl,-rpath', "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
-						// TODO: compute path on following line from 'jdk' library properties somehow
-						linker.args '-Wl,-rpath', "${currentJvm.javaHome}/jre/lib/amd64/server"
-				}
+				addCastRpath(currentJvm, targetPlatform, linker)
 			}
 		}
 	}
 
-	tasks.test {
-		def lib = linkXlator_testSharedLibrary
-		dependsOn lib
-		systemProperty 'java.library.path', lib.destinationDirectory.orNull.asFile
+	tasks {
+		test {
+			def lib = linkXlator_testSharedLibrary
+			dependsOn lib
+			systemProperty 'java.library.path', lib.destinationDirectory.get().asFile
 
-		// TODO: compute path on following line from 'cast' library properties somehow
-		def castLibDir = "${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared"
-		environment 'DYLD_LIBRARY_PATH', castLibDir
+			addCastEnvironment(it, $.binaries.xlator_testSharedLibrary)
+		}
+
+		checkSmoke_main(Exec) {
+			// main executable to run for test
+			def executableBinary = $.binaries.smoke_mainExecutable
+			executable executableBinary.executableFile
+			dependsOn executableBinary
+			def pathElements = [$.binaries.test.getClassesDir()]
+
+			// implementations of native methods
+			def library = $.binaries.xlator_testSharedLibrary
+			dependsOn library
+			pathElements << library.sharedLibraryFile.parent
+
+			// "primorial.txt" resource loaded during test
+			def coreResources = project(':com.ibm.wala.core').processResources
+			dependsOn coreResources
+			pathElements << coreResources.destinationDir
+
+			// additional supporting Java class files
+			['cast', 'core', 'util'].each {
+				def compileJava = project(":com.ibm.wala.$it").compileJava
+				dependsOn compileJava
+				pathElements << compileJava.destinationDir
+			}
+
+			// all combined as a colon-delimited path list
+			args pathElements.join(':')
+
+			addCastEnvironment(it, $.binaries.xlator_testSharedLibrary)
+		}
+
+		check.dependsOn checkSmoke_main
 	}
 }

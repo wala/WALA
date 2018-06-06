@@ -58,7 +58,7 @@ public class MoreOverriddenGenerics {
 		
     @Override
     public Long get() {
-			return new Long(6);
+			return Long.valueOf(6);
 		}
 	}
 

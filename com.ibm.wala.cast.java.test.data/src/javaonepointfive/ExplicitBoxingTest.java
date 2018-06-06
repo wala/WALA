@@ -47,8 +47,8 @@ public class ExplicitBoxingTest {
 		int a = 6;
 		a = a + a;
 		System.out.println(a);
-		Integer useless1 = new Integer(5+6);
-		Integer aa = new Integer(a+a);
+		Integer useless1 = Integer.valueOf(5+6);
+		Integer aa = Integer.valueOf(a+a);
 		int aaa = aa.intValue();
 		System.out.println(aaa);
 

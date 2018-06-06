@@ -828,7 +828,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       for (int i = 0; i < instructions.length; i++) {
         SSAInstruction s = instructions[i];
         if (s != null) {
-          result.put(s, new Integer(i));
+          result.put(s, Integer.valueOf(i));
         }
       }
     }

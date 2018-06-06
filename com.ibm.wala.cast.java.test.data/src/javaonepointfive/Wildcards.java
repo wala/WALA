@@ -72,8 +72,8 @@ public class Wildcards {
 		printCollection2(e);
 
 		ArrayList<Integer> e3 = new ArrayList<>();
-		e3.add(new Integer(123));
-		e3.add(new Integer(42));
+		e3.add(Integer.valueOf(123));
+		e3.add(Integer.valueOf(42));
 		printCollection(e3);
 		printCollection1(e3);
 		

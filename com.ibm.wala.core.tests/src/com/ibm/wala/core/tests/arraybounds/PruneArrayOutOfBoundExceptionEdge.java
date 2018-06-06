@@ -206,8 +206,9 @@ public class PruneArrayOutOfBoundExceptionEdge {
         SSAInstruction lastInstruction = block.getLastInstruction();
         lastInstruction.getExceptionTypes();
 
-        Matcher<Iterable<? super TypeReference>> matcher1 = anyOf(hasItem(equalTo(TypeReference.JavaLangNullPointerException)),
-            hasItem(equalTo(TypeReference.JavaLangArrayIndexOutOfBoundsException)));
+        final Matcher<Iterable<? super TypeReference>> isJLNPE = hasItem(equalTo(TypeReference.JavaLangNullPointerException));
+        final Matcher<Iterable<? super TypeReference>> isJLAIOOBE = hasItem(equalTo(TypeReference.JavaLangArrayIndexOutOfBoundsException));
+        final Matcher<Iterable<? super TypeReference>> matcher1 = anyOf(isJLNPE, isJLAIOOBE);
 
         collector.checkThat("Edge deleted but cause instruction can't throw NullPointerException"
             + "nor ArrayIndexOutOfBoundsException: " + identifyer + ":" + method.getLineNumber(lastInstruction.iindex),

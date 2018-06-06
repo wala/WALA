@@ -195,7 +195,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
 
       for (Object name2 : cls.getDeclaredMethods()) {
         IMethod mth = (IMethod) name2;
-        Integer np = new Integer(mth.getNumberOfParameters());
+        Integer np = Integer.valueOf(mth.getNumberOfParameters());
         Pair<String, String> key = Pair.make(cls.getName().toString(), mth.getName().toString());
 
         if (mth.isStatic()) {

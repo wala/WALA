@@ -2329,7 +2329,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstNode getSwitchCaseConstant(SwitchCase n, WalkContext context) {
     // TODO: enums
     Expression expr = n.getExpression();
-    Object constant = (expr == null) ? new Integer(0) : expr.resolveConstantExpressionValue(); // default case label of
+    Object constant = (expr == null) ? Integer.valueOf(0) : expr.resolveConstantExpressionValue(); // default case label of
     // "0" (what polyglot
     // does). we also set
     // SWITCH_DEFAULT
@@ -2586,7 +2586,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     /*------ indexDecl --------- int tmpindex = 0 ------*/
     final String tmpIndexName = "for temp index";
     CAstNode indexDeclNode = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(
-        tmpIndexName, fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")), true)), fFactory.makeConstant(new Integer(0)));
+        tmpIndexName, fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")), true)), fFactory.makeConstant(Integer.valueOf(0)));
 
     /*------ cond ------------- tmpindex < tmparray.length ------*/
     CAstNode tmpArrayLengthNode = makeNode(context, fFactory, n, CAstNode.ARRAY_LENGTH, makeNode(context, fFactory, n,

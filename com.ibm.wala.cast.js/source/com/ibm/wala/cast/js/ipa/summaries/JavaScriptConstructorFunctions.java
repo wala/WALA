@@ -102,7 +102,7 @@ public class JavaScriptConstructorFunctions {
     //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
-    S.addConstant(new Integer(8), new ConstantValue(value));
+    S.addConstant(Integer.valueOf(8), new ConstantValue(value));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 8, "$value"));
     if (value instanceof String) {
       S.addConstant(9, new ConstantValue(0));
@@ -146,7 +146,7 @@ public class JavaScriptConstructorFunctions {
   private IMethod makeValueConstructor(IClass cls, int nargs, Object value) {
     if (nargs == 0 || nargs == 1) {
 
-      Object key = Pair.make(cls, new Integer(nargs));
+      Object key = Pair.make(cls, Integer.valueOf(nargs));
       if (constructors.containsKey(key))
         return constructors.get(key);
 
@@ -197,7 +197,7 @@ public class JavaScriptConstructorFunctions {
   private IMethod makeObjectConstructor(IClass cls, int nargs) {
     if (nargs == 0 || nargs == 1) {
 
-      Object key = Pair.make(cls, new Integer(nargs));
+      Object key = Pair.make(cls, Integer.valueOf(nargs));
       if (constructors.containsKey(key))
         return constructors.get(key);
 
@@ -213,7 +213,7 @@ public class JavaScriptConstructorFunctions {
   private IMethod makeObjectCall(IClass cls, int nargs) {
     assert nargs == 0;
 
-    Object key = Pair.make(cls, new Integer(nargs));
+    Object key = Pair.make(cls, Integer.valueOf(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -251,7 +251,7 @@ public class JavaScriptConstructorFunctions {
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
 
-    S.addConstant(new Integer(nargs + 3), new ConstantValue("prototype"));
+    S.addConstant(Integer.valueOf(nargs + 3), new ConstantValue("prototype"));
     S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), nargs + 4, 1, nargs + 3));
     S.getNextProgramCounter();
     
@@ -263,13 +263,13 @@ public class JavaScriptConstructorFunctions {
     //S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
     
-    S.addConstant(new Integer(nargs + 7), new ConstantValue(nargs));
+    S.addConstant(Integer.valueOf(nargs + 7), new ConstantValue(nargs));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), nargs + 5, nargs + 7, "length"));
     S.getNextProgramCounter();
     
     int vn = nargs + 9;
     for (int i = 0; i < nargs; i++, vn += 2) {
-      S.addConstant(new Integer(vn), new ConstantValue(i));
+      S.addConstant(Integer.valueOf(vn), new ConstantValue(i));
       S.addStatement(insts.PropertyWrite(S.getNumberOfStatements(), nargs + 5, vn, i + 1));
       S.getNextProgramCounter();
       }
@@ -283,7 +283,7 @@ public class JavaScriptConstructorFunctions {
   }
 
   private IMethod makeArrayConstructor(IClass cls, int nargs) {
-    Object key = Pair.make(cls, new Integer(nargs));
+    Object key = Pair.make(cls, Integer.valueOf(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -296,9 +296,9 @@ public class JavaScriptConstructorFunctions {
     MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
-    S.addConstant(new Integer(2), new ConstantValue(""));
+    S.addConstant(Integer.valueOf(2), new ConstantValue(""));
 
-    S.addConstant(new Integer(3), new ConstantValue(0));
+    S.addConstant(Integer.valueOf(3), new ConstantValue(0));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 2, 3, "length"));
     S.getNextProgramCounter();
 
@@ -328,7 +328,7 @@ public class JavaScriptConstructorFunctions {
   private IMethod makeStringCall(IClass cls, int nargs) {
     assert nargs == 0 || nargs == 1;
 
-    Object key = Pair.make(cls, new Integer(nargs));
+    Object key = Pair.make(cls, Integer.valueOf(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -341,7 +341,7 @@ public class JavaScriptConstructorFunctions {
     MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
-    S.addConstant(new Integer(2), new ConstantValue(0.0));
+    S.addConstant(Integer.valueOf(2), new ConstantValue(0.0));
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
     
@@ -368,7 +368,7 @@ public class JavaScriptConstructorFunctions {
   private IMethod makeNumberCall(IClass cls, int nargs) {
     assert nargs == 0 || nargs == 1;
 
-    Object key = Pair.make(cls, new Integer(nargs));
+    Object key = Pair.make(cls, Integer.valueOf(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -552,7 +552,7 @@ public class JavaScriptConstructorFunctions {
  
   private IMethod makeFunctionObjectConstructor(IClass cls, int nargs) {
     JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   Object key = Pair.make(cls, new Integer(nargs));
+   Object key = Pair.make(cls, Integer.valueOf(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
     
@@ -601,7 +601,7 @@ public class JavaScriptConstructorFunctions {
       assert nargs == 1;
       return makeValueConstructor(receiver, nargs, null);
     } else if (receiver.getReference().equals(JavaScriptTypes.NumberObject))
-      return makeValueConstructor(receiver, nargs, new Integer(0));
+      return makeValueConstructor(receiver, nargs, Integer.valueOf(0));
     else if (receiver.getReference().equals(JavaScriptTypes.Function))
       return makeFunctionConstructor(callerIR, callStmt, receiver, nargs);
     else if (cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.CodeBody)))

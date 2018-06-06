@@ -186,32 +186,32 @@ public class CAstImpl implements CAst {
 
   @Override
   public CAstNode makeConstant(char value) {
-    return makeConstant(new Character(value));
+    return makeConstant(Character.valueOf(value));
   }
 
   @Override
   public CAstNode makeConstant(short value) {
-    return makeConstant(new Short(value));
+    return makeConstant(Short.valueOf(value));
   }
 
   @Override
   public CAstNode makeConstant(int value) {
-    return makeConstant(new Integer(value));
+    return makeConstant(Integer.valueOf(value));
   }
 
   @Override
   public CAstNode makeConstant(long value) {
-    return makeConstant(new Long(value));
+    return makeConstant(Long.valueOf(value));
   }
 
   @Override
   public CAstNode makeConstant(float value) {
-    return makeConstant(new Float(value));
+    return makeConstant(Float.valueOf(value));
   }
 
   @Override
   public CAstNode makeConstant(double value) {
-    return makeConstant(new Double(value));
+    return makeConstant(Double.valueOf(value));
   }
 
 }

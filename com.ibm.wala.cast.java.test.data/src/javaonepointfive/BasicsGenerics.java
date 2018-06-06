@@ -64,7 +64,7 @@ public class BasicsGenerics {
 		System.out.println(frenchy);
 		System.out.println(sicilian);
 		strs.add("hello");
-		ints.add(new Integer(3));
+		ints.add(Integer.valueOf(3));
 		
 		String qqq;
 		
