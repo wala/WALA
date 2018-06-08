@@ -12,6 +12,7 @@
 /*/.settings/org.eclipse.buildship.core.prefs
 /.gradle/
 /.settings/org.eclipse.buildship.core.prefs
+/.vscode/settings.json
 /build/
 com.ibm.wala.*/out/
 com.ibm.wala.cast.java.jdt.test/
