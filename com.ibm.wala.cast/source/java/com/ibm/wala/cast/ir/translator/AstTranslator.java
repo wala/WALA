@@ -208,6 +208,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected abstract CAstType exceptionType();
   
   /**
+   * lift variable declarations for lexical scoping purposes?
+   */
+  protected boolean liftDeclarationsForLexicalScoping() {
+    return false;
+  }
+  
+  /**
    * used to generate instructions for array operations; defaults to this
    */
   private ArrayOpHandler arrayOpHandler;
@@ -3303,7 +3310,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       declareFunction(n, context);
     else {
       declareFunction(n, context);
-      initFunctionEntity(codeContext);
+      initFunctionEntity(n, codeContext);
     }
     return false;
   }
@@ -3322,7 +3329,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   @Override
   protected boolean visitScriptEntity(CAstEntity n, WalkContext context, WalkContext codeContext, CAstVisitor<WalkContext> visitor) {
     declareFunction(n, codeContext);
-    initFunctionEntity(codeContext);
+    initFunctionEntity(n, codeContext);
     return false;
   }
 
@@ -3331,7 +3338,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     closeFunctionEntity(n, context, codeContext);
   }
 
-  public void initFunctionEntity(WalkContext functionContext) {
+  public void initFunctionEntity(CAstEntity n, WalkContext functionContext) {
+    if (liftDeclarationsForLexicalScoping()) {
+      Set<String> names = entity2ExposedNames.get(n);
+      if (names != null) {
+        names.forEach((String nm) -> {
+          functionContext.currentScope().declare(new CAstSymbolImpl(nm, CAstType.DYNAMIC));
+        });
+      }
+    }
     // entry block
     functionContext.cfg().makeEntryBlock(functionContext.cfg().newBlock(false));
     // first real block
@@ -4909,6 +4924,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // this.inlinedSourceMap = inlinedSourceMap;
     final ExposedNamesCollector exposedNamesCollector = new ExposedNamesCollector();
     exposedNamesCollector.run(N);
+    if (liftDeclarationsForLexicalScoping()) {
+      exposedNamesCollector.run(N);      
+    }
     entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
     // CAstEntity rewrite = (new ExposedParamRenamer(new CAstImpl(),
     // entity2ExposedNames)).rewrite(N);
@@ -4918,6 +4936,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   public void translate(final CAstEntity N, final WalkContext context) {
     final ExposedNamesCollector exposedNamesCollector = new ExposedNamesCollector();
     exposedNamesCollector.run(N);
+    if (liftDeclarationsForLexicalScoping()) {
+      exposedNamesCollector.run(N);      
+    }
     entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
     walkEntities(N, context);
   }
