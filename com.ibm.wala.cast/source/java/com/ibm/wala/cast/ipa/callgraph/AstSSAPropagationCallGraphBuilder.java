@@ -775,7 +775,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                   result.add(x.next());
                 }
               } else {
-                Assertions.UNREACHABLE("unexpected instance key " + iKey);
+                //Assertions.UNREACHABLE("unexpected instance key " + iKey);
               }
             });
           }
