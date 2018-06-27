@@ -33,4 +33,4 @@ Export-Package: com.ibm.wala.cast.js.translator,
  org.mozilla.javascript.xml,
  org.mozilla.javascript.xmlimpl
 Bundle-ClassPath: .,
- lib/rhino-1.7.6.jar
+ lib/rhino-1.7.10.jar

@@ -24,7 +24,7 @@
                                           <artifactItem>
                                             <groupId>org.mozilla</groupId>
                                             <artifactId>rhino</artifactId>
-                                            <version>1.7.6</version>
+                                            <version>1.7.10</version>
                                             <type>jar</type>
                                             <overWrite>false</overWrite>
                                           </artifactItem>
