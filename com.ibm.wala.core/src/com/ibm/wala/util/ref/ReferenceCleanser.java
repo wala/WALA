@@ -79,9 +79,11 @@ public class ReferenceCleanser {
           ShrikeClass c = (ShrikeClass) klass;
           c.clearSoftCaches();
         } else {
-          for (IMethod m : klass.getDeclaredMethods()) {
-            if (m instanceof ShrikeCTMethod) {
-              ((ShrikeCTMethod)m).clearCaches();
+          if (klass.getDeclaredMethods() != null) {
+            for (IMethod m : klass.getDeclaredMethods()) {
+              if (m instanceof ShrikeCTMethod) {
+                ((ShrikeCTMethod)m).clearCaches();
+              }
             }
           }
         }
