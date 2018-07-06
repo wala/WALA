@@ -79,6 +79,7 @@ subprojects { subproject ->
 	jar.manifest.from('META-INF/MANIFEST.MF')
 
 	task afterEclipseBuildshipImport(dependsOn: processTestResources)
+	task afterIntelliJIDEAOpen
 
 	test {
 		include '**/*Test.class'

@@ -6,6 +6,7 @@ plugins {
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
+afterIntelliJIDEAOpen.dependsOn jarTest
 
 sourceSets.test.java.srcDirs = ['harness-src/java']
 
