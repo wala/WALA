@@ -1,9 +1,6 @@
 sourceSets {
 	main.java.srcDirs = ['src']
-	test {
-		java.srcDirs = ['tests']
-		resources.srcDirs = [project(':com.ibm.wala.cast.js.test.data').file('examples-src')]
-	}
+	test.java.srcDirs = ['tests']
 }
 
 dependencies {
@@ -19,6 +16,12 @@ dependencies {
 		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test'),
 		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
 		)
+}
+
+processTestResources {
+	def data = project(':com.ibm.wala.cast.js.test.data')
+	dependsOn data.processTestResources
+	from data.sourceSets.test.resources
 }
 
 test {
