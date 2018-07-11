@@ -119,7 +119,7 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  public static void dumpCG(SSAContextInterpreter interp, PointerAnalysis<InstanceKey> PA, CallGraph CG) {
+  public static void dumpCG(SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
     if (AVOID_DUMP)
       return;
     for (CGNode N : CG) {

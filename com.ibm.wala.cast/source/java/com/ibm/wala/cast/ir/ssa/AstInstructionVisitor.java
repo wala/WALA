@@ -12,29 +12,30 @@ package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.ssa.SSAInstruction;
 
+@SuppressWarnings("unused") 
 public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
 
-  public void visitAstLexicalRead(AstLexicalRead instruction);
+  default void visitAstLexicalRead(AstLexicalRead instruction){ }
     
-  public void visitAstLexicalWrite(AstLexicalWrite instruction);
+  default void visitAstLexicalWrite(AstLexicalWrite instruction){ }
     
-  public void visitAstGlobalRead(AstGlobalRead instruction);
+  default void visitAstGlobalRead(AstGlobalRead instruction){ }
     
-  public void visitAstGlobalWrite(AstGlobalWrite instruction);
+  default void visitAstGlobalWrite(AstGlobalWrite instruction){ }
 
-  public void visitAssert(AstAssertInstruction instruction);    
+  default void visitAssert(AstAssertInstruction instruction){ }    
 
-  public void visitEachElementGet(EachElementGetInstruction inst);
+  default void visitEachElementGet(EachElementGetInstruction inst){ }
 
-  public void visitEachElementHasNext(EachElementHasNextInstruction inst);
+  default void visitEachElementHasNext(EachElementHasNextInstruction inst){ }
 
-  public void visitIsDefined(AstIsDefinedInstruction inst);
+  default void visitIsDefined(AstIsDefinedInstruction inst){ }
 
-  public void visitEcho(AstEchoInstruction inst);
+  default void visitEcho(AstEchoInstruction inst){ }
   
-  public void visitPropertyRead(AstPropertyRead instruction);
+  default void visitPropertyRead(AstPropertyRead instruction){ }
   
-  public void visitPropertyWrite(AstPropertyWrite instruction);
+  default void visitPropertyWrite(AstPropertyWrite instruction){ }
   
 }
 

@@ -462,7 +462,7 @@ public abstract class IR implements IRView {
   /**
    * visit each normal (non-phi, non-pi, non-catch) instruction in this IR
    */
-  public void visitNormalInstructions(SSAInstruction.Visitor v) {
+  public void visitNormalInstructions(SSAInstruction.IVisitor v) {
     for (SSAInstruction inst : Iterator2Iterable.make(iterateNormalInstructions())) {
       inst.visit(v);
     }
@@ -471,7 +471,7 @@ public abstract class IR implements IRView {
   /**
    * visit each instruction in this IR
    */
-  public void visitAllInstructions(SSAInstruction.Visitor v) {
+  public void visitAllInstructions(SSAInstruction.IVisitor v) {
     for (SSAInstruction inst : Iterator2Iterable.make(iterateAllInstructions())) {
       inst.visit(v);
     }

@@ -69,52 +69,53 @@ public abstract class SSAInstruction {
   /**
    * This interface is used by Instruction.visit to dispatch based on the instruction type.
    */
+  @SuppressWarnings("unused")
   public static interface IVisitor {
-    void visitGoto(SSAGotoInstruction instruction);
+    default void visitGoto(SSAGotoInstruction instruction){ }
 
-    void visitArrayLoad(SSAArrayLoadInstruction instruction);
+    default void visitArrayLoad(SSAArrayLoadInstruction instruction){ }
 
-    void visitArrayStore(SSAArrayStoreInstruction instruction);
+    default void visitArrayStore(SSAArrayStoreInstruction instruction){ }
 
-    void visitBinaryOp(SSABinaryOpInstruction instruction);
+    default void visitBinaryOp(SSABinaryOpInstruction instruction){ }
 
-    void visitUnaryOp(SSAUnaryOpInstruction instruction);
+    default void visitUnaryOp(SSAUnaryOpInstruction instruction){ }
 
-    void visitConversion(SSAConversionInstruction instruction);
+    default void visitConversion(SSAConversionInstruction instruction){ }
 
-    void visitComparison(SSAComparisonInstruction instruction);
+    default void visitComparison(SSAComparisonInstruction instruction){ }
 
-    void visitConditionalBranch(SSAConditionalBranchInstruction instruction);
+    default void visitConditionalBranch(SSAConditionalBranchInstruction instruction){ }
 
-    void visitSwitch(SSASwitchInstruction instruction);
+    default void visitSwitch(SSASwitchInstruction instruction){ }
 
-    void visitReturn(SSAReturnInstruction instruction);
+    default void visitReturn(SSAReturnInstruction instruction){ }
 
-    void visitGet(SSAGetInstruction instruction);
+    default void visitGet(SSAGetInstruction instruction){ }
 
-    void visitPut(SSAPutInstruction instruction);
+    default void visitPut(SSAPutInstruction instruction){ }
 
-    void visitInvoke(SSAInvokeInstruction instruction);
+    default void visitInvoke(SSAInvokeInstruction instruction){ }
 
-    void visitNew(SSANewInstruction instruction);
+    default void visitNew(SSANewInstruction instruction){ }
 
-    void visitArrayLength(SSAArrayLengthInstruction instruction);
+    default void visitArrayLength(SSAArrayLengthInstruction instruction){ }
 
-    void visitThrow(SSAThrowInstruction instruction);
+    default void visitThrow(SSAThrowInstruction instruction){ }
 
-    void visitMonitor(SSAMonitorInstruction instruction);
+    default void visitMonitor(SSAMonitorInstruction instruction){ }
 
-    void visitCheckCast(SSACheckCastInstruction instruction);
+    default void visitCheckCast(SSACheckCastInstruction instruction){ }
 
-    void visitInstanceof(SSAInstanceofInstruction instruction);
+    default void visitInstanceof(SSAInstanceofInstruction instruction){ }
 
-    void visitPhi(SSAPhiInstruction instruction);
+    default void visitPhi(SSAPhiInstruction instruction){ }
 
-    void visitPi(SSAPiInstruction instruction);
+    default void visitPi(SSAPiInstruction instruction){ }
 
-    void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction);
+    default void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction){ }
 
-    void visitLoadMetadata(SSALoadMetadataInstruction instruction);
+    default void visitLoadMetadata(SSALoadMetadataInstruction instruction){ }
   }
 
   /**
