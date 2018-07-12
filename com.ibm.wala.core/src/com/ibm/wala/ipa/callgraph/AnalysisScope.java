@@ -214,6 +214,12 @@ public class AnalysisScope {
     s.add(new ClassFileModule(file, null));
   }
 
+  /**
+   * Add a jar file to the scope via an {@link InputStream}.  NOTE: The InputStream should *not*
+   * be a {@link java.util.jar.JarInputStream}; it should be a regular {@link InputStream} for
+   * the raw bytes of the jar file.
+   *
+   */
   public void addInputStreamForJarToScope(ClassLoaderReference loader, InputStream stream) throws
       IOException {
     MapUtil.findOrCreateList(moduleMap, loader).add(new JarStreamModule(stream));
