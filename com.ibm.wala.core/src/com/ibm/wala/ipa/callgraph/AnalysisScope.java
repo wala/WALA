@@ -11,6 +11,8 @@
 package com.ibm.wala.ipa.callgraph;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +31,7 @@ import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassFileModule;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -210,6 +213,12 @@ public class AnalysisScope {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     s.add(new ClassFileModule(file, null));
   }
+
+  public void addInputStreamForJarToScope(ClassLoaderReference loader, InputStream stream) throws
+      IOException {
+    MapUtil.findOrCreateList(moduleMap, loader).add(new JarStreamModule(stream));
+  }
+
 
   /**
    * Add a jar file to the scope for a loader
