@@ -57,7 +57,6 @@ version '1.5.0-SNAPSHOT'
 subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever
 	switch (subproject.name) {
-		case 'com.ibm.wala.cast.js.test.data':
 		case 'com.ibm.wala-repository':
 		case ~/.*_feature/:
 			return
@@ -79,6 +78,7 @@ subprojects { subproject ->
 	jar.manifest.from('META-INF/MANIFEST.MF')
 
 	task afterEclipseBuildshipImport(dependsOn: processTestResources)
+	task afterIntelliJIDEAOpen
 
 	test {
 		include '**/*Test.class'
