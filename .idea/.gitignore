@@ -1,3 +1,6 @@
-/gradle.xml
-/modules
+*.iml
+/libraries/*.xml
+/modules.xml
+/tasks.xml
+/usage.statistics.xml
 /workspace.xml

@@ -93,7 +93,7 @@ clean.dependsOn cleanCopyDxJar
 
 compileTestJava.dependsOn copyDxJar
 afterEclipseBuildshipImport.dependsOn copyDxJar
-afterIntelliJIDEAOpen.dependsOn copyDxJar
+prepareIntelliJIDEA.dependsOn copyDxJar
 
 task copyAndroidJar(type: Sync, dependsOn: installAndroidSdk) {
 	from "${installAndroidSdk.destinationDir}/platforms/${installAndroidSdk.components['platforms']}/android.jar"
