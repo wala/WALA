@@ -141,6 +141,63 @@ plugin](https://docs.gradle.org/current/userguide/eclipse_plugin.html).
 A few WALA sub-projects already use this:  look for `eclipse.project`
 in `*/build.gradle` for examples.
 
+## IntelliJ IDEA
+
+### Opening WALA in IntelliJ IDEA
+
+WALA comes preconfigured as an openable IntelliJ IDEA project.  Open
+the top-level WALA directory as a project; it should have a
+distinctive badge on its folder icon marking it as a directory
+containing a recognized IntelliJ IDEA project.  Do *not* open the
+top-level WALA `build.gradle` in that directory as a project:  this
+will begin an “Import Project from Gradle” process that is *not* the
+recommended way to bring WALA up in IntelliJ IDEA.
+
+The first time you open the WALA project, IntelliJ IDEA will
+synchronize its project model with the Gradle build configuration,
+including downloading some large supporting libraries.  After the
+lengthy import process completes, **use “Run → Run… → After Opening
+Pristine Project” to perform some post-import configuration.** This
+also can take tens of minutes, but is only necessary in a clean,
+never-previously-built tree.  Immediately after importing, you may see
+some Java compilation errors in the IntelliJ IDEA “Messages” view.
+These should all go away after running the “After Opening Pristine
+Project” step.  [Be
+patient](#external-dependencies-patience-is-a-virtue) during the
+initial project open and also during the “After Opening Pristine
+Project” step, especially if you have a slow network connection.
+
+If you prefer a non-interactive approach, instead of using “After
+Opening Pristine Project” you can run `./gradlew prepareIntelliJIDEA`
+either before or after opening WALA in IntelliJ IDEA.
+
+### Benign Warning About Non-Managed Maven Project
+
+Each time you open the WALA project, IntelliJ IDEA may report
+“Non-managed pom.xml file found” in its event log.  This arises
+because WALA supports both Gradle and Maven, but WALA in IntelliJ IDEA
+needs only the Gradle configuration.  You can safely ignore this
+notification, permanently disable it using the offered “Disable
+notification” link, or even disable the IntelliJ IDEA Maven plugin
+entirely if you have no other need for it.
+
+### Project Configuration as Derived Model
+
+IntelliJ IDEA automatically derives its project models from the Gradle
+build configuration, including all information about both internal and
+external build dependencies.  However, this synchronization only goes
+in one direction: from Gradle to IntelliJ IDEA, not from IntelliJ IDEA
+back into Gradle.  If you manipulate the project structure using the
+IntelliJ IDEA’s user interface, your changes will likely be
+overwritten the next time IntelliJ IDEA scans the Gradle build
+configuration.
+
+This particularly applies to settings found in the “Modules” and
+“Libraries” sections of the “Project Structure” dialog.  The right way
+to change module and library settings is to change the Gradle
+configuration such that the *derived* IntelliJ IDEA model is what you
+want it to be.
+
 ## Gradle Command Line
 
 You do not need to install Gradle separately.  **WALA includes its own

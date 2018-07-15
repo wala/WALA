@@ -1,6 +1,4 @@
-plugins {
-	id 'base'
-}
+sourceSets.test.resources.srcDirs = ['examples-src']
 
 task downloadAjaxslt(type: VerifiedDownload) {
 	def version = '0.8.1'
@@ -21,3 +19,5 @@ task unpackAjaxslt(type: Sync, dependsOn: downloadAjaxslt) {
 }
 
 clean.dependsOn cleanUnpackAjaxslt
+
+processTestResources.dependsOn(unpackAjaxslt)
