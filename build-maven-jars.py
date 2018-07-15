@@ -29,14 +29,14 @@ projects = [
 
 for proj in projects:
     full_proj = "com.ibm.wala." + proj
-    print full_proj
+    print(full_proj)
     os.chdir(full_proj)
     mvnCmd = "mvn -f mvncentral.xml clean " + action
     try:
         subprocess.check_output(mvnCmd, shell=True)
     except subprocess.CalledProcessError as e:
-        print "OUTPUT"
-        print e.output
+        print("OUTPUT")
+        print(e.output)
         raise
     os.chdir("..")    
 
