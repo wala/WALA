@@ -43,7 +43,8 @@ public class MissingSuperTest extends WalaTestCase {
   @Test
   public void testMissingSuper() throws IOException, ClassHierarchyException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
+        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+        MissingSuperTest.class.getClassLoader());
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application,
         "Lmissingsuper/MissingSuper");
     // without phantom classes, won't be able to resolve
