@@ -10,18 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cha;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -33,7 +21,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NoSuperclassFoundException;
 import com.ibm.wala.classLoader.PhantomClass;
 import com.ibm.wala.classLoader.ShrikeClass;
-import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -55,6 +42,18 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Simple implementation of a class hierarchy.

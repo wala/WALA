@@ -10,16 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cha;
 
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy.Node;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
+
+import java.util.Set;
 
 public class SeqClassHierarchyFactory {
 
