@@ -82,6 +82,9 @@ model {
 						.find { it.targetPlatform.name == targetPlatform.name }
 						.sharedLibraryLinkFile.parent
 					linker.args "-Wl,-rpath,$libDir"
+					if (targetPlatform.operatingSystem.name == "osx") {
+						linker.args "-Wl,-install_name,@rpath/$sharedLibraryFile.name"
+					}
 				}
 			}
 		}
