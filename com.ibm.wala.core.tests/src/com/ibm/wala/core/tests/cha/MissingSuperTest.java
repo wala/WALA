@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class MissingSuperTest extends WalaTestCase {
 
@@ -45,10 +46,22 @@ public class MissingSuperTest extends WalaTestCase {
   public void testMissingSuper() throws IOException, ClassHierarchyException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
         (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
-    ClassHierarchy cha = ClassHierarchyFactory.makeWithPhantom(scope);
-    System.out.println(Warnings.asString());
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application,
         "Lmissingsuper/MissingSuper");
-    Assert.assertNotNull("expected class MissingSuper to load", cha.lookupClass(ref));
+    // without phantom classes, won't be able to resolve
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Assert.assertNull("lookup should not work", cha.lookupClass(ref));
+    // with phantom classes, lookup and IR construction should work
+    cha = ClassHierarchyFactory.makeWithPhantom(scope);
+    IClass klass = cha.lookupClass(ref);
+    Assert.assertNotNull("expected class MissingSuper to load", klass);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
+    Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
+    Assert.assertEquals(declaredMethods.toString(), 2, declaredMethods.size());
+    for (IMethod m : declaredMethods) {
+      // should succeed
+      cache.getIR(m);
+    }
+
   }
 }
