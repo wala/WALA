@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.cha;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.PhantomClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -61,6 +62,15 @@ public class MissingSuperTest extends WalaTestCase {
       // should succeed
       cache.getIR(m);
     }
-
+    // there should be one PhantomClass in the Application class loader
+    boolean found = false;
+    for (IClass klass2: cha) {
+      if (klass2 instanceof PhantomClass && klass2.getReference().getClassLoader().equals
+          (ClassLoaderReference.Application)) {
+        Assert.assertEquals("Lmissingsuper/Super", klass2.getReference().getName().toString());
+        found = true;
+      }
+    }
+    Assert.assertTrue(found);
   }
 }
