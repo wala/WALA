@@ -10,16 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cha;
 
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy.Node;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
+
+import java.util.Set;
 
 public class SeqClassHierarchyFactory {
 
@@ -51,7 +49,8 @@ public class SeqClassHierarchyFactory {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
-    return new ClassHierarchy(scope, factory, null, HashMapFactory.<TypeReference, Node>make());
+    return new ClassHierarchy(scope, factory, null, HashMapFactory.make(),
+        false);
   }
 
   /**
@@ -59,17 +58,17 @@ public class SeqClassHierarchyFactory {
    */
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, monitor, HashMapFactory.<TypeReference, Node>make());
+    return new ClassHierarchy(scope, factory, monitor, HashMapFactory.make(), false);
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, languages, null, HashMapFactory.<TypeReference, Node>make());
+    return new ClassHierarchy(scope, factory, languages, null, HashMapFactory.make(), false);
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, language, null, HashMapFactory.<TypeReference, Node>make());
+    return new ClassHierarchy(scope, factory, language, null, HashMapFactory.make(), false);
   }
 
   /**
@@ -80,7 +79,7 @@ public class SeqClassHierarchyFactory {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
-    return new ClassHierarchy(scope, factory, language, monitor, HashMapFactory.<TypeReference, Node>make());
+    return new ClassHierarchy(scope, factory, language, monitor, HashMapFactory.make(), false);
   }
 
 }

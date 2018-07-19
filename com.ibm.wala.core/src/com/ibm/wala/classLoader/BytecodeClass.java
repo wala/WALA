@@ -296,10 +296,15 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       computeSuperclass();
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
-      throw new IllegalStateException("No superclass found for " + this + " Superclass name " + superName);
+      throw new NoSuperclassFoundException("No superclass found for " + this + " Superclass name " + superName);
     }
     return superClass;
   }
+
+  public TypeName getSuperName() {
+    return TypeName.findOrCreate(superName);
+  }
+
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
