@@ -36,11 +36,13 @@ def addCastRpath(currentJvm, targetPlatform, linker) {
 	}
 }
 
-def addCastEnvironment(task, xlatorLibrary) {
-	def castLibrary = xlatorLibrary.libs[2].linkFiles.singleFile
-	def castLibraryDirectory = castLibrary.parent
+static final def addCastEnvironment(task, xlatorLibrary) {
+	final def castLibrary = xlatorLibrary.libs[2]
+	if (castLibrary == null) return
+	final def castLibraryFile = castLibrary.linkFiles.singleFile
+	final def castLibraryDirectory = castLibraryFile.parent
 	assert castLibraryDirectory.endsWith('/com.ibm.wala.cast/build/libs/cast/shared')
-	task.environment 'DYLD_LIBRARY_PATH', castLibrary.parent
+	task.environment 'DYLD_LIBRARY_PATH', castLibraryDirectory
 }
 
 model {
