@@ -108,7 +108,7 @@ model {
 			dependsOn library
 			pathElements << library.sharedLibraryFile.parent
 
-			// "primorial.txt" resource loaded during test
+			// "primordial.txt" resource loaded during test
 			def coreResources = project(':com.ibm.wala.core').processResources
 			dependsOn coreResources
 			pathElements << coreResources.destinationDir
