@@ -10,31 +10,23 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cha;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-
 import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.NoSuperclassFoundException;
+import com.ibm.wala.classLoader.PhantomClass;
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -50,6 +42,18 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Simple implementation of a class hierarchy.
@@ -133,6 +137,13 @@ public class ClassHierarchy implements IClassHierarchy {
   private Collection<TypeReference> runtimeExceptionTypeRefs;
 
   /**
+   * when a superclass is missing, should we create a phantom superclass and add the subclass to
+   * the hierarchy?  Note that we can only create phantom superclass when the class is a
+   * {@link com.ibm.wala.classLoader.BytecodeClass}
+   */
+  private final boolean createPhantomSuperclasses;
+
+  /**
    * Return a set of {@link IClass} that holds all superclasses of klass
    * 
    * @param klass class in question
@@ -145,44 +156,60 @@ public class ClassHierarchy implements IClassHierarchy {
 
     Set<IClass> result = HashSetFactory.make(3);
 
-    klass = klass.getSuperclass();
-
-     while (klass != null) {
-      if (DEBUG) {
-        System.err.println("got superclass " + klass);
-      }
-      boolean added = result.add(klass);
-      if (!added) {
-        // oops.  we have A is a sub-class of B and B is a sub-class of A.  blow up.
-        throw new IllegalStateException("cycle in the extends relation for class " + klass);
-      }
+    try {
       klass = klass.getSuperclass();
-      if (klass != null && klass.getReference().getName().equals(rootTypeRef.getName())) {
-        if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
-          throw new IllegalStateException("class " + klass + " is invalid, unexpected classloader");
+
+      while (klass != null) {
+        if (DEBUG) {
+          System.err.println("got superclass " + klass);
         }
+        boolean added = result.add(klass);
+        if (!added) {
+          // oops.  we have A is a sub-class of B and B is a sub-class of A.  blow up.
+          throw new IllegalStateException("cycle in the extends relation for class " + klass);
+        }
+        klass = klass.getSuperclass();
+        if (klass != null && klass.getReference().getName().equals(rootTypeRef.getName())) {
+          if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
+            throw new IllegalStateException("class " + klass + " is invalid, unexpected classloader");
+          }
+        }
+      }
+    } catch (NoSuperclassFoundException e) {
+      if (createPhantomSuperclasses && klass instanceof BytecodeClass) {
+        // create a phantom superclass.  add it and the root class to the result
+        IClass phantom = getPhantomSuperclass((BytecodeClass) klass);
+        result.add(phantom);
+        result.add(getRootClass());
+      } else {
+        throw e;
       }
     }
     return result;
   }
 
-  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor progressMonitor, Map<TypeReference, Node> map)
+  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language,
+      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, boolean createPhantomSuperclasses)
       throws ClassHierarchyException, IllegalArgumentException {
-    this(scope, factory, Collections.singleton(language), progressMonitor, map);
+    this(scope, factory, Collections.singleton(language), progressMonitor, map,
+        createPhantomSuperclasses);
   }
 
-  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor progressMonitor, Map<TypeReference, Node> map)
+  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor
+      progressMonitor, Map<TypeReference, Node> map, boolean createPhantomSuperclasses)
       throws ClassHierarchyException, IllegalArgumentException {
-    this(scope, factory, scope.getLanguages(), progressMonitor, map);
+    this(scope, factory, scope.getLanguages(), progressMonitor, map, createPhantomSuperclasses);
   }
 
   ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages,
-      IProgressMonitor progressMonitor, Map<TypeReference, Node> map) throws ClassHierarchyException, IllegalArgumentException {
+      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, boolean createPhantomSuperclasses) throws
+      ClassHierarchyException, IllegalArgumentException {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.
     Warnings.clear();
 
     this.map = map;
+    this.createPhantomSuperclasses = createPhantomSuperclasses;
     
     if (factory == null) {
       throw new IllegalArgumentException();
@@ -307,20 +334,26 @@ public class ClassHierarchy implements IClassHierarchy {
     if (DEBUG) {
       System.err.println(("Attempt to add class " + klass));
     }
-    Set<IClass> loadedSuperclasses;
+    Set<IClass> loadedSuperclasses = null;
     Collection<IClass> loadedSuperInterfaces;
     try {
       loadedSuperclasses = computeSuperclasses(klass);
       loadedSuperInterfaces = klass.getAllImplementedInterfaces();
     } catch (Exception e) {
-      // a little cleanup
-      if (klass instanceof ShrikeClass) {
-        if (DEBUG) {
-          System.err.println(("Exception.  Clearing " + klass));
+      if (createPhantomSuperclasses && e instanceof NoSuperclassFoundException) {
+        // this must have been thrown by the getAllImplementedInterfaces() call.
+        // for now, just pretend it implements no interfaces
+        loadedSuperInterfaces = Collections.emptySet();
+      } else {
+        // a little cleanup
+        if (klass instanceof ShrikeClass) {
+          if (DEBUG) {
+            System.err.println(("Exception.  Clearing " + klass));
+          }
         }
+        Warnings.add(ClassExclusion.create(klass.getReference(), e.getMessage()));
+        return false;
       }
-      Warnings.add(ClassExclusion.create(klass.getReference(), e.getMessage()));
-      return false;
     }
     Node node = findOrCreateNode(klass);
 
@@ -333,8 +366,13 @@ public class ClassHierarchy implements IClassHierarchy {
     Set workingSuperclasses = HashSetFactory.make(loadedSuperclasses);
     while (node != null) {
       IClass c = node.getJavaClass();
-      IClass superclass = null;
-      superclass = c.getSuperclass();
+      IClass superclass;
+      try {
+        superclass = c.getSuperclass();
+      } catch (NoSuperclassFoundException e) {
+        assert createPhantomSuperclasses;
+        superclass = getPhantomSuperclass((BytecodeClass) c);
+      }
       if (superclass != null) {
         workingSuperclasses.remove(superclass);
         Node supernode = findOrCreateNode(superclass);
@@ -379,6 +417,18 @@ public class ClassHierarchy implements IClassHierarchy {
       }
     }
     return true;
+  }
+
+  private IClass getPhantomSuperclass(BytecodeClass klass) {
+    ClassLoaderReference loader = klass.getReference().getClassLoader();
+    TypeName superName = klass.getSuperName();
+    TypeReference superRef = TypeReference.findOrCreate(loader, superName);
+    IClass superClass = lookupClass(superRef);
+    if (superClass == null) {
+      superClass = new PhantomClass(superRef, this);
+      addClass(superClass);
+    }
+    return superClass;
   }
 
   /**

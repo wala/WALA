@@ -28,6 +28,12 @@ class VerifiedDownload extends org.gradle.api.DefaultTask {
 		return project.file(dest)
 	}
 
+	VerifiedDownload() {
+		outputs.upToDateWhen {
+			getDest().exists()
+		}
+	}
+
 	@TaskAction
 	downloadAndVerify() {
 		def destFile = getDest()

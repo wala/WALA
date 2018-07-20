@@ -77,6 +77,12 @@ subprojects { subproject ->
 
 	jar.manifest.from('META-INF/MANIFEST.MF')
 
+	publishing.publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
 	task afterEclipseBuildshipImport(dependsOn: processTestResources)
 	task prepareIntelliJIDEA
 
