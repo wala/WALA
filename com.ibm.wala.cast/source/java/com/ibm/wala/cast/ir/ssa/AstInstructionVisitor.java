@@ -33,6 +33,8 @@ public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
 
   default void visitEcho(AstEchoInstruction inst){ }
   
+  default void visitYield(AstYieldInstruction inst){ }
+  
   default void visitPropertyRead(AstPropertyRead instruction){ }
   
   default void visitPropertyWrite(AstPropertyWrite instruction){ }

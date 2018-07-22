@@ -55,4 +55,6 @@ public interface AstInstructionFactory extends SSAInstructionFactory {
   
   AstPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value);
   
+  AstYieldInstruction YieldInstruction(int iindex, int[] rvals);
+
 }

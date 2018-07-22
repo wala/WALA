@@ -32,6 +32,7 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
+import com.ibm.wala.cast.ir.ssa.AstYieldInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.java.ssa.AstJavaInstructionFactory;
@@ -660,6 +661,11 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
        return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
     }
 
+    @Override
+    public AstYieldInstruction YieldInstruction(int iindex, int[] rvals) {
+      return new AstYieldInstruction(iindex, rvals);
+    }
+    
     @Override
     public AstPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef) {
       assert false;

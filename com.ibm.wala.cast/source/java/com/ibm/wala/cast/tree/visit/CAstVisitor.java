@@ -871,6 +871,17 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       break;
     }
 
+    case CAstNode.RETURN_WITHOUT_BRANCH: {
+      if (visitor.visitYield(n, context, visitor)) {
+  break;
+      }
+      for(int i = 0; i < n.getChildCount(); i++) {
+  visitor.visit(n.getChild(i), context, visitor);
+      }
+      visitor.leaveYield(n, context, visitor);
+      break;
+    }
+
     default: {
       if (!visitor.doVisit(n, context, visitor)) {
         System.err.println(("looking at unhandled " + n + "(" + NT + ")" + " of " + n.getClass()));
@@ -1269,6 +1280,19 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param c a visitor-specific context
    */
   protected void leaveReturn(CAstNode n, C c, CAstVisitor<C> visitor) { visitor.leaveNode(n, c, visitor); }
+  /**
+   * Visit a Return node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  protected boolean visitYield(CAstNode n, C c, CAstVisitor<C> visitor) { return visitor.visitNode(n, c, visitor); }
+  /**
+   * Leave a Return node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveYield(CAstNode n, C c, CAstVisitor<C> visitor) { visitor.leaveNode(n, c, visitor); }
   /**
    * Visit an Ifgoto node.
    * @param n the node to process

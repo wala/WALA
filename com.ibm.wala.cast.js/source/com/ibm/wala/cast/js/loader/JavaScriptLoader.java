@@ -28,6 +28,7 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
+import com.ibm.wala.cast.ir.ssa.AstYieldInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
@@ -306,6 +307,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         @Override
         public AstEchoInstruction EchoInstruction(int iindex, int[] rvals) {
           return new AstEchoInstruction(iindex, rvals);
+        }
+
+        @Override
+        public AstYieldInstruction YieldInstruction(int iindex, int[] rvals) {
+          return new AstYieldInstruction(iindex, rvals);
         }
 
         @Override

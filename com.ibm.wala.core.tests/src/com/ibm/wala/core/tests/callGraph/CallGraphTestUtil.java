@@ -42,6 +42,8 @@ public class CallGraphTestUtil {
 
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
 
+  public static String REGRESSION_EXCLUSIONS_FOR_GUI = "Java60RegressionExclusionsForGUI.txt";
+
   /**
    * should we check the heap footprint before and after CG construction?
    */

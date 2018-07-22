@@ -14,9 +14,9 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 
-public class AstEchoInstruction extends AstConsumeInstruction {
+public class AstYieldInstruction extends AstConsumeInstruction {
   
-  public AstEchoInstruction(int iindex, int[] rvals) {
+  public AstYieldInstruction(int iindex, int[] rvals) {
     super(iindex, rvals);
   }
 
@@ -38,8 +38,7 @@ public class AstEchoInstruction extends AstConsumeInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    ((AstInstructionVisitor)v).visitEcho(this);
+    ((AstInstructionVisitor)v).visitYield(this);
   }
-
 
 }

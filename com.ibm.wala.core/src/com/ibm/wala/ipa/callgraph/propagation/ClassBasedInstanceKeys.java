@@ -49,6 +49,11 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
       throw new IllegalArgumentException("allocation is null");
     }
 
+    if (String.valueOf(allocation).contains("java/lang/invoke/DirectMethodHandle$StaticAccessor")) {
+      System.err.println("got " + allocation + " in " + node);
+    }
+    
+
     if (options.getClassTargetSelector() == null) {
       throw new IllegalStateException("options did not specify class target selector");
     }
@@ -130,6 +135,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
     IClass cls = cha.lookupClass(objType);
     assert cls != null : objType;
+    
     if (obj instanceof TypeReference) {
       IClass klass = cha.lookupClass((TypeReference)obj);
       if (klass == null) {
@@ -141,7 +147,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     } else if (obj instanceof MethodReference) {
       IMethod m = cha.resolveMethod((MethodReference)obj);
       if (m == null) {
-        return new ConcreteTypeKey(cls);
+         return new ConcreteTypeKey(cls);
       } else {
         return new ConstantKey<>(m, cls);
       }

@@ -30,6 +30,7 @@ import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstYieldInstruction;
 import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.cast.ir.ssa.CAstUnaryOp;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
@@ -4702,6 +4703,27 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     int currentInstruction = wc.cfg().getCurrentInstruction();
     wc.cfg().addInstruction(new AstEchoInstruction(currentInstruction, rvals));
+    wc.cfg().noteOperands(currentInstruction, rposs);
+  }
+
+  @Override
+  protected boolean visitYield(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
+    return false;
+  }
+
+  @Override
+  protected void leaveYield(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
+    WalkContext wc = c;
+
+    int rvals[] = new int[n.getChildCount()];
+    Position rposs[] = new Position[n.getChildCount()];
+    for (int i = 0; i < n.getChildCount(); i++) {
+      rvals[i] = c.getValue(n.getChild(i));
+      rposs[i] = c.getSourceMap().getPosition(n.getChild(i));
+    }
+
+    int currentInstruction = wc.cfg().getCurrentInstruction();
+    wc.cfg().addInstruction(new AstYieldInstruction(currentInstruction, rvals));
     wc.cfg().noteOperands(currentInstruction, rposs);
   }
 
