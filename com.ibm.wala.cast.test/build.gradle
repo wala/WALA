@@ -36,15 +36,6 @@ def addCastRpath(currentJvm, targetPlatform, linker) {
 	}
 }
 
-static final def addCastEnvironment(task, xlatorLibrary) {
-	final def castLibrary = xlatorLibrary.libs[2]
-	if (castLibrary == null) return
-	final def castLibraryFile = castLibrary.linkFiles.singleFile
-	final def castLibraryDirectory = castLibraryFile.parent
-	assert castLibraryDirectory.endsWith('/com.ibm.wala.cast/build/libs/cast/shared')
-	task.environment 'DYLD_LIBRARY_PATH', castLibraryDirectory
-}
-
 model {
 	components {
 		xlator_test(JniNativeLibrarySpec) {
@@ -92,8 +83,6 @@ model {
 			def lib = linkXlator_testSharedLibrary
 			dependsOn lib
 			systemProperty 'java.library.path', lib.destinationDirectory.get().asFile
-
-			addCastEnvironment(it, $.binaries.xlator_testSharedLibrary)
 		}
 
 		checkSmoke_main(Exec) {
@@ -122,8 +111,6 @@ model {
 
 			// all combined as a colon-delimited path list
 			args pathElements.join(':')
-
-			addCastEnvironment(it, $.binaries.xlator_testSharedLibrary)
 		}
 
 		check.dependsOn checkSmoke_main
