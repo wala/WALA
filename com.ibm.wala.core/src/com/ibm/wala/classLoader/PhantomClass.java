@@ -53,7 +53,8 @@ public class PhantomClass extends SyntheticClass {
 
   @Override
   public IMethod getMethod(Selector selector) {
-    throw new UnsupportedOperationException();
+    //throw new UnsupportedOperationException();
+    return null;
   }
 
   @Override
