@@ -164,3 +164,21 @@ allprojects {
 		options.addStringOption('Xdoclint:none', '-quiet')
 	}
 }
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Eclipse IDE integration
+//
+
+// workaround for <https://github.com/gradle/gradle/issues/4802>
+allprojects {
+	apply plugin: 'eclipse'
+
+	eclipse.classpath.file.whenMerged {
+		entries.each {
+			if (it in org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry && it.entryAttributes['gradle_used_by_scope'] == 'test')
+				it.entryAttributes['test'] = true
+		}
+	}
+}
