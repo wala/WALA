@@ -33,6 +33,9 @@ processTestResources {
 	from testdata.downloadJavaCup
 	from files(testdata.extractBcel)[0]
 	from testdata.generateHelloHashJar
+	from testdata.extractKawa
+	from testdata.buildChessJar
+	from testdata.buildKawaTestJar
 }
 
 test {

@@ -1112,7 +1112,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (DEBUG) {
         System.err.println("visitInvoke: " + instruction);
       }
-
+      
       PointerKey uniqueCatch = null;
       if (hasUniqueCatchBlock(instruction, ir)) {
         uniqueCatch = getBuilder().getUniqueCatchKey(instruction, ir, node);
@@ -1731,12 +1731,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         IntSet currentObjs = rhs[rhsIndex].getValue();
         if (currentObjs != null) {
           final IntSet oldObjs = previousPtrs[rhsIndex];
-          currentObjs.foreachExcluding(oldObjs, x -> new CrossProductRec(constParams, call, node,
+ 
+         currentObjs.foreachExcluding(oldObjs, x -> new CrossProductRec(constParams, call, node,
               v -> {
                 IClass recv = null;
                 if (call.getCallSite().isDispatch()) {
                   recv = v[0].getConcreteType();
                 }
+
                 CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
                 if (target != null) {                        
                   changed.b = true;

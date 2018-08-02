@@ -1,3 +1,8 @@
+buildscript {
+  repositories { mavenCentral() }
+  dependencies { classpath 'org.ajoberstar:gradle-git:0.2.3' }
+}
+
 plugins {
 	id 'eclipse'
 }
@@ -5,6 +10,121 @@ plugins {
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.test.java.srcDirs = ['src']
+
+////////////////////////////////////////////////////////////////////////
+//
+//  download and extract kawa 3.0 "kawa.jar"
+//
+
+task downloadKawa(type: Exec) {
+     commandLine "wget", "ftp://ftp.gnu.org/pub/gnu/kawa/kawa-3.0.zip"
+     workingDir "$temporaryDir"
+     def destination = file("$temporaryDir/kawa-3.0.zip")
+     enabled = !destination.exists() //to clone only once
+}
+
+task extractKawa(type: Copy, dependsOn: downloadKawa) {
+	from(zipTree("${downloadKawa.temporaryDir}/kawa-3.0.zip")) {
+		include "kawa-3.0/lib/kawa.jar"
+		eachFile {
+			relativePath new RelativePath(!directory, relativePath.lastName)
+		}
+	}
+	into projectDir
+	includeEmptyDirs false
+	outputs.file "kawa.jar"
+}
+
+task cleanExtractKawa(type: Delete) {
+	delete files(extractKawa)[0]
+}
+
+clean.dependsOn cleanExtractKawa
+
+////////////////////////////////////////////////////////////////////////
+//
+//  build kawa chess
+//
+import org.ajoberstar.gradle.git.tasks.*
+
+task getKawaChess(type: GitClone) {
+        def destination = file("$temporaryDir/kawachess")
+        uri = "https://github.com/ttu-fpclub/kawa-chess"
+        destinationPath = destination
+        bare = false
+        enabled = !destination.exists() //to clone only once
+}
+
+task compileChessFiles(type: JavaExec) {
+        def kawaImg = file('kawa-chess/img.scm')
+	def kawaPos = file('kawa-chess/pos.scm')
+	def kawaChess = file('kawa-chess/chess.scm')
+	def kawaGui = file('kawa-chess/gui.scm')
+	inputs.file kawaImg
+	inputs.file kawaPos
+	inputs.file kawaChess
+	inputs.file kawaGui
+
+	workingDir = file('kawa-chess')
+
+	def kawaJar = new File("kawa.jar")
+	inputs.file kawaJar
+	classpath kawaJar
+
+	main 'kawa.repl'
+	args '-C', kawaImg, kawaPos, kawaChess, kawaGui
+}
+
+compileChessFiles.dependsOn extractKawa
+compileChessFiles.dependsOn getKawaChess
+
+task compileChessMain(type: JavaExec, dependsOn: compileChessFiles) {
+	def kawaMain = file('kawa-chess/main.scm')
+	inputs.file kawaMain
+
+	workingDir = file('kawa-chess')
+
+	def kawaJar = new File("kawa.jar")
+	inputs.file kawaJar
+	classpath kawaJar
+
+	main 'kawa.repl'
+	args '--main', '-C', kawaMain
+}
+
+task buildChessJar(type: Jar, dependsOn: compileChessMain) {
+	from file('kawa-chess')
+	baseName 'kawachess'
+	version null
+	destinationDir projectDir
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  build the kawa test jar
+//
+
+task compileKawaTestMain(type: JavaExec, dependsOn: extractKawa) {
+	def kawaMain = file('kawasrc/test.scm')
+	inputs.file kawaMain
+
+	workingDir = file('kawasrc')
+
+	def kawaJar = new File("kawa.jar")
+	inputs.file kawaJar
+	classpath kawaJar
+
+	main 'kawa.repl'
+	args '--main', '-C', kawaMain
+}
+
+task buildKawaTestJar(type: Jar, dependsOn: compileKawaTestMain) {
+	from file('kawasrc')
+	baseName 'kawatest'
+	version null
+	destinationDir projectDir
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -186,5 +306,7 @@ afterEclipseBuildshipImport {
 		downloadJavaCup,
 		extractBcel,
 		generateHelloHashJar,
+		buildChessJar,
+		buildKawaTestJar,
 		)
 }

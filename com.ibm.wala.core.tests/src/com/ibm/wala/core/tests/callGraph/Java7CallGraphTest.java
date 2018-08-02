@@ -59,8 +59,11 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     
     SSAPropagationCallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     
+    options.setSelector(new MethodHandles.InvokeExactTargetSelector(options.getMethodTargetSelector()));
+
     builder.setContextSelector(new MethodHandles.ContextSelectorImpl(builder.getContextSelector()));
-    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new MethodHandles.ContextInterpreterImpl(), builder.getCFAContextInterpreter()));
+    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new MethodHandles.InvokeContextInterpreterImpl(), builder.getCFAContextInterpreter()));
+    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new MethodHandles.FindContextInterpreterImpl(), builder.getCFAContextInterpreter()));
     
     CallGraph cg = builder.makeCallGraph(options, null); 
     
