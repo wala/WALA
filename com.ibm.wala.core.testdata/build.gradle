@@ -48,7 +48,7 @@ clean.dependsOn cleanExtractKawa
 import org.ajoberstar.gradle.git.tasks.*
 
 task getKawaChess(type: GitClone) {
-        def destination = file("$temporaryDir/kawachess")
+        def destination = file("kawa-chess")
         uri = "https://github.com/ttu-fpclub/kawa-chess"
         destinationPath = destination
         bare = false
@@ -56,7 +56,9 @@ task getKawaChess(type: GitClone) {
 }
 
 task compileChessFiles(type: JavaExec) {
-        def kawaImg = file('kawa-chess/img.scm')
+	workingDir = file('kawa-chess')
+
+	def kawaImg = file('kawa-chess/img.scm')
 	def kawaPos = file('kawa-chess/pos.scm')
 	def kawaChess = file('kawa-chess/chess.scm')
 	def kawaGui = file('kawa-chess/gui.scm')
@@ -69,8 +71,6 @@ task compileChessFiles(type: JavaExec) {
 	inputs.file kawaJar
 	classpath kawaJar
 
-	workingDir = file('kawa-chess')
-
 	main 'kawa.repl'
 	args '-C', kawaImg, kawaPos, kawaChess, kawaGui
 }
@@ -79,14 +79,14 @@ compileChessFiles.dependsOn extractKawa
 compileChessFiles.dependsOn getKawaChess
 
 task compileChessMain(type: JavaExec, dependsOn: compileChessFiles) {
+	workingDir = file("kawa-chess")
+
 	def kawaMain = file('kawa-chess/main.scm')
 	inputs.file kawaMain
 
-	def kawaJar = new File("${projectDir}/kawa.jar")
+	def kawaJar = new File("kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
-
-	workingDir = file('kawa-chess')
 
 	main 'kawa.repl'
 	args '--main', '-C', kawaMain
@@ -109,9 +109,7 @@ task compileKawaTestMain(type: JavaExec, dependsOn: extractKawa) {
 	def kawaMain = file('kawasrc/test.scm')
 	inputs.file kawaMain
 
-	workingDir = file('kawasrc')
-
-	def kawaJar = new File("${projectDir}/kawa.jar")
+	def kawaJar = new File("kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
 

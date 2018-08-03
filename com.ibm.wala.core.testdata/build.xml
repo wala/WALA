@@ -115,7 +115,9 @@
 	<target name="fetchKawa" depends="KawaPresent" unless="kawa.present">
 	  <delete dir="${temp.folder}"/>
 	  <mkdir dir="${temp.folder}"/>
-	  <get src="ftp://ftp.gnu.org/pub/gnu/kawa/kawa-latest.zip" dest="${temp.folder}/kawa.zip"/>
+	  <exec executable="wget" dir="${temp.folder}">
+	    <arg line="ftp://ftp.gnu.org/pub/gnu/kawa/kawa-latest.zip"/>
+	  </exec>	
 	  <unzip src="${temp.folder}/kawa.zip" dest="${plugin.destination}"/>
 	  <delete dir="${temp.folder}"/>
 	</target>
