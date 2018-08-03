@@ -65,7 +65,7 @@ task compileChessFiles(type: JavaExec) {
 	inputs.file kawaChess
 	inputs.file kawaGui
 
-	def kawaJar = new File("kawa.jar")
+	def kawaJar = new File("${projectDir}/kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
 
@@ -82,7 +82,7 @@ task compileChessMain(type: JavaExec, dependsOn: compileChessFiles) {
 	def kawaMain = file('kawa-chess/main.scm')
 	inputs.file kawaMain
 
-	def kawaJar = new File("kawa.jar")
+	def kawaJar = new File("${projectDir}/kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
 
@@ -111,7 +111,7 @@ task compileKawaTestMain(type: JavaExec, dependsOn: extractKawa) {
 
 	workingDir = file('kawasrc')
 
-	def kawaJar = new File("kawa.jar")
+	def kawaJar = new File("${projectDir}/kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
 
