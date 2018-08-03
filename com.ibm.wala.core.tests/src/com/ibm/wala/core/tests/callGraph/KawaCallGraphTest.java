@@ -31,7 +31,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -85,11 +84,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
     
     SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
 
-    options.setSelector(new MethodHandles.InvokeExactTargetSelector(options.getMethodTargetSelector()));
-
-    builder.setContextSelector(new MethodHandles.ContextSelectorImpl(builder.getContextSelector()));
-    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new MethodHandles.InvokeContextInterpreterImpl(), builder.getCFAContextInterpreter()));
-    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new MethodHandles.FindContextInterpreterImpl(), builder.getCFAContextInterpreter()));
+    MethodHandles.analyzeMethodHandles(options, builder);
 
     return builder.makeCallGraph(options, null); 
    }

@@ -21,6 +21,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -30,6 +31,8 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
@@ -176,7 +179,7 @@ public class MethodHandles {
     
   }
   
-  public static class MethodContext implements Context {
+  private static class MethodContext implements Context {
     private final Context base;
     private final MethodReference method;
         
@@ -231,7 +234,7 @@ public class MethodHandles {
     }
   }
   
-  public static class ContextSelectorImpl implements ContextSelector {
+  private static class ContextSelectorImpl implements ContextSelector {
     private final ContextSelector base;
     
     public ContextSelectorImpl(ContextSelector base) {
@@ -271,7 +274,7 @@ public class MethodHandles {
     }
   }
   
-  public static class InvokeExactTargetSelector implements MethodTargetSelector {
+  private static class InvokeExactTargetSelector implements MethodTargetSelector {
     private final MethodTargetSelector base;
     private final Map<MethodReference, SyntheticMethod> impls = HashMapFactory.make();
     
@@ -385,7 +388,7 @@ public class MethodHandles {
 
   }
   
-  public static class FindContextInterpreterImpl extends HandlersContextInterpreterImpl {
+  private static class FindContextInterpreterImpl extends HandlersContextInterpreterImpl {
     
     @Override
     public boolean understands(CGNode node) {
@@ -420,7 +423,7 @@ public class MethodHandles {
     }
   }
     
-  public static class InvokeContextInterpreterImpl extends HandlersContextInterpreterImpl {
+  private static class InvokeContextInterpreterImpl extends HandlersContextInterpreterImpl {
       
     @Override
     public boolean understands(CGNode node) {
@@ -476,6 +479,13 @@ public class MethodHandles {
 
       return irs.get(node).get();
     }
-    
+  }
+  
+  public static void analyzeMethodHandles(AnalysisOptions options, SSAPropagationCallGraphBuilder builder) {
+    options.setSelector(new InvokeExactTargetSelector(options.getMethodTargetSelector()));
+
+    builder.setContextSelector(new ContextSelectorImpl(builder.getContextSelector()));
+    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new InvokeContextInterpreterImpl(), builder.getCFAContextInterpreter()));
+    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new FindContextInterpreterImpl(), builder.getCFAContextInterpreter()));
   }
 }
