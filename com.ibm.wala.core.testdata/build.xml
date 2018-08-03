@@ -119,7 +119,7 @@
 	    <arg line="ftp://ftp.gnu.org/pub/gnu/kawa/kawa-3.0.zip"/>
 	  </exec>	
 	  <unzip src="${temp.folder}/kawa-3.0.zip" dest="${plugin.destination}"/>
-	  <copy file="${plugin.destination}/kawa-3.0/lib/kawa.jar" todir="${plugin.destination}/kawa.jar" failonerror="false" overwrite="false"/>
+	  <copy file="${plugin.destination}/kawa-3.0/lib/kawa.jar" todir="${plugin.destination}" failonerror="false" overwrite="false"/>
 	  <delete dir="${temp.folder}"/>
 	</target>
 	
