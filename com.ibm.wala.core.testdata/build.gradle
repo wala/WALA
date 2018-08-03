@@ -32,7 +32,9 @@ task extractKawa(type: Copy, dependsOn: downloadKawa) {
 	}
 	into projectDir
 	includeEmptyDirs false
-	outputs.file "kawa.jar"
+	outputs.file 'kawa.jar'
+	def destination = file('kawa.jar')
+        enabled = !destination.exists() //to clone only once
 }
 
 task cleanExtractKawa(type: Delete) {
@@ -56,8 +58,6 @@ task getKawaChess(type: GitClone) {
 }
 
 task compileChessFiles(type: JavaExec) {
-	workingDir = file('kawa-chess')
-
 	def kawaImg = file('kawa-chess/img.scm')
 	def kawaPos = file('kawa-chess/pos.scm')
 	def kawaChess = file('kawa-chess/chess.scm')
@@ -67,29 +67,31 @@ task compileChessFiles(type: JavaExec) {
 	inputs.file kawaChess
 	inputs.file kawaGui
 
-	def kawaJar = new File("${projectDir}/kawa.jar")
-	inputs.file kawaJar
-	classpath kawaJar
-
-	main 'kawa.repl'
-	args '-C', kawaImg, kawaPos, kawaChess, kawaGui
-}
-
-compileChessFiles.dependsOn extractKawa
-compileChessFiles.dependsOn getKawaChess
-
-task compileChessMain(type: JavaExec, dependsOn: compileChessFiles) {
-	workingDir = file("kawa-chess")
-
-	def kawaMain = file('kawa-chess/main.scm')
-	inputs.file kawaMain
+	workingDir = file('kawa-chess')
 
 	def kawaJar = new File("kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
 
 	main 'kawa.repl'
-	args '--main', '-C', kawaMain
+	args '-C', 'img.scm', 'pos.scm', 'chess.scm', 'gui.scm'
+}
+
+compileChessFiles.dependsOn extractKawa
+compileChessFiles.dependsOn getKawaChess
+
+task compileChessMain(type: JavaExec, dependsOn: compileChessFiles) {
+	def kawaJar = new File("kawa.jar")
+	inputs.file kawaJar
+	classpath kawaJar
+
+	workingDir = file("kawa-chess")
+
+	def kawaMain = file('kawa-chess/main.scm')
+	inputs.file kawaMain
+
+	main 'kawa.repl'
+	args '--main', '-C', 'main.scm'
 }
 
 task buildChessJar(type: Jar, dependsOn: compileChessMain) {
@@ -106,15 +108,17 @@ task buildChessJar(type: Jar, dependsOn: compileChessMain) {
 //
 
 task compileKawaTestMain(type: JavaExec, dependsOn: extractKawa) {
-	def kawaMain = file('kawasrc/test.scm')
-	inputs.file kawaMain
-
 	def kawaJar = new File("kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
 
+	workingDir file('kawasrc')
+	
+        def kawaMain = file('kawasrc/test.scm')
+	inputs.file kawaMain
+
 	main 'kawa.repl'
-	args '--main', '-C', kawaMain
+	args '--main', '-C', 'test.scm'
 }
 
 task buildKawaTestJar(type: Jar, dependsOn: compileKawaTestMain) {
