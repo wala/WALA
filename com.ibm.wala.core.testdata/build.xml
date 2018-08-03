@@ -116,9 +116,9 @@
 	  <delete dir="${temp.folder}"/>
 	  <mkdir dir="${temp.folder}"/>
 	  <exec executable="wget" dir="${temp.folder}">
-	    <arg line="ftp://ftp.gnu.org/pub/gnu/kawa/kawa-latest.zip"/>
+	    <arg line="ftp://ftp.gnu.org/pub/gnu/kawa/kawa-3.0.zip"/>
 	  </exec>	
-	  <unzip src="${temp.folder}/kawa.zip" dest="${plugin.destination}"/>
+	  <unzip src="${temp.folder}/kawa-3.0.zip" dest="${plugin.destination}"/>
 	  <delete dir="${temp.folder}"/>
 	</target>
 	
