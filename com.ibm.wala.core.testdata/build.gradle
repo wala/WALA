@@ -65,11 +65,11 @@ task compileChessFiles(type: JavaExec) {
 	inputs.file kawaChess
 	inputs.file kawaGui
 
-	workingDir = file('kawa-chess')
-
 	def kawaJar = new File("kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
+
+	workingDir = file('kawa-chess')
 
 	main 'kawa.repl'
 	args '-C', kawaImg, kawaPos, kawaChess, kawaGui
@@ -82,11 +82,11 @@ task compileChessMain(type: JavaExec, dependsOn: compileChessFiles) {
 	def kawaMain = file('kawa-chess/main.scm')
 	inputs.file kawaMain
 
-	workingDir = file('kawa-chess')
-
 	def kawaJar = new File("kawa.jar")
 	inputs.file kawaJar
 	classpath kawaJar
+
+	workingDir = file('kawa-chess')
 
 	main 'kawa.repl'
 	args '--main', '-C', kawaMain
