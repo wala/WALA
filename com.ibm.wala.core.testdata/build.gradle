@@ -270,22 +270,3 @@ task cleanColllectTestDataA(type: Delete) {
 }
 
 clean.dependsOn cleanCollectTestDataA
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  help Eclipse build these extra jars when needed
-//
-
-afterEclipseBuildshipImport {
-	dependsOn(
-		collectJLex,
-		collectTestData,
-		collectTestDataA,
-		downloadJavaCup,
-		extractBcel,
-		generateHelloHashJar,
-		buildChessJar,
-		buildKawaTestJar,
-		)
-}
