@@ -111,6 +111,15 @@ model {
 
 			// all combined as a colon-delimited path list
 			args pathElements.join(':')
+
+			// log output to file, although we don't validate it
+			final def outFile = file("$temporaryDir/stdout-and-stderr.log")
+			outputs.file outFile
+			doFirst {
+				final def fileStream = new FileOutputStream(outFile)
+				standardOutput fileStream
+				errorOutput fileStream
+			}
 		}
 
 		check.dependsOn checkSmoke_main
