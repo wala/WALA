@@ -45,8 +45,8 @@ test {
 	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
 }
 
-task cleanTest(type: Delete) {
+task cleanTestExtras(type: Delete) {
 	delete 'report'
 }
 
-clean.dependsOn cleanTest
+cleanTest.dependsOn cleanTestExtras

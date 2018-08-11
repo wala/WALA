@@ -150,12 +150,12 @@ test {
 	maxHeapSize = '800M'
 }
 
-task cleanTest(type: Delete) {
+task cleanTestExtras(type: Delete) {
 	delete(
-		'parser.java',
-		'report',
-		'sym.java',
-		)
+			'parser.java',
+			'report',
+			'sym.java',
+	)
 }
 
-clean.dependsOn cleanTest
+cleanTest.dependsOn cleanTestExtras
