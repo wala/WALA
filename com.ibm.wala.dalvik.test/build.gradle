@@ -134,11 +134,7 @@ processTestResources {
 	from copyAndroidJar
 	from downloadSampleCup
 	from downloadSampleLex
-
-	def testdata = project(':com.ibm.wala.core.testdata')
-	from testdata.collectJLex
-	from testdata.collectTestDataA
-	from testdata.downloadJavaCup
+	from project(':com.ibm.wala.core.testdata').collectTestDataA
 }
 
 if (isWindows)
@@ -150,12 +146,12 @@ test {
 	maxHeapSize = '800M'
 }
 
-task cleanTest(type: Delete) {
+task cleanTestExtras(type: Delete) {
 	delete(
-		'parser.java',
-		'report',
-		'sym.java',
-		)
+			'parser.java',
+			'report',
+			'sym.java',
+	)
 }
 
-clean.dependsOn cleanTest
+cleanTest.dependsOn cleanTestExtras

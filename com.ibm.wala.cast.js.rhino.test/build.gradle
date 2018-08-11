@@ -33,9 +33,9 @@ test {
 		exclude '**/FieldBasedJQueryTest.class'
 }
 
-task cleanTest(type: Delete) {
+task cleanTestExtras(type: Delete) {
 	delete 'actual.dump'
 	delete 'expected.dump'
 }
 
-clean.dependsOn cleanTest
+cleanTest.dependsOn cleanTestExtras
