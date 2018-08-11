@@ -134,11 +134,7 @@ processTestResources {
 	from copyAndroidJar
 	from downloadSampleCup
 	from downloadSampleLex
-
-	def testdata = project(':com.ibm.wala.core.testdata')
-	from testdata.collectJLex
-	from testdata.collectTestDataA
-	from testdata.downloadJavaCup
+	from project(':com.ibm.wala.core.testdata').collectTestDataA
 }
 
 if (isWindows)
