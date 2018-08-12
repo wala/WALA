@@ -623,6 +623,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         class ReceiverForDispatchOp extends UnaryOperator<PointsToSetVariable> {
           MutableIntSet previous = IntSetUtil.make();
           
+          private CGNode getNode() {
+            return node;
+          }
+
           private JavaScriptInvoke getInstruction() {
             return instruction;
           }
@@ -646,12 +650,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
           @Override
           public int hashCode() {
-            return instruction.hashCode(); 
+            return instruction.hashCode() * node.hashCode(); 
           }
 
           @Override
           public boolean equals(Object o) {
-            return o instanceof ReceiverForDispatchOp && ((ReceiverForDispatchOp)o).getInstruction()==getInstruction();
+            return o instanceof ReceiverForDispatchOp && 
+                ((ReceiverForDispatchOp)o).getInstruction()==getInstruction() &&
+                ((ReceiverForDispatchOp)o).getNode()==getNode();
           }
 
           @Override
