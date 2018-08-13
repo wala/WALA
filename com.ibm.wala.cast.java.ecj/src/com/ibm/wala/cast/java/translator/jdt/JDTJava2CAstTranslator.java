@@ -1055,7 +1055,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         public CAstType getReturnType() {
           if (fReturnType != null)
             return fTypeDict.getCAstTypeFor(fReturnType);
-          Type type = fDecl == null ? null : (ast.apiLevel() == 2 ? fDecl.getReturnType() : fDecl.getReturnType2());
+          @SuppressWarnings("deprecation") Type type = fDecl == null ? null : (ast.apiLevel() == 2 ? fDecl.getReturnType() : fDecl.getReturnType2());
           if (type == null)
             return fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("void"));
           else

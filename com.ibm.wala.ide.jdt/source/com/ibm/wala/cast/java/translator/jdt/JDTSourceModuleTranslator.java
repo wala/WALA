@@ -172,7 +172,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }
 
-    final ASTParser parser = ASTParser.newParser(AST.JLS8);
+    @SuppressWarnings("deprecation") final ASTParser parser = ASTParser.newParser(AST.JLS8);
  
     for (final Map.Entry<IProject,Map<ICompilationUnit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
       parser.setProject(JavaCore.create(proj.getKey()));

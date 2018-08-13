@@ -77,6 +77,7 @@ public class SummarizedMethod extends SyntheticMethod {
     return summary.hasPoison();
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public SSAInstruction[] getStatements(SSAOptions options) {
     if (DEBUG) {
