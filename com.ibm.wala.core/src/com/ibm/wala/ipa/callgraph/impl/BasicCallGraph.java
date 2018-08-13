@@ -223,6 +223,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       return context;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public abstract boolean addTarget(CallSiteReference reference, CGNode target);
 

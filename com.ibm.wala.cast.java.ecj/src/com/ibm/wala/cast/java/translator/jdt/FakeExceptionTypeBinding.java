@@ -134,6 +134,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return null;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public int getDeclaredModifiers() {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");

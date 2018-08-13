@@ -97,6 +97,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
    */
+  @SuppressWarnings("deprecation")
   @Override
   public SSAInstruction[] getStatements(SSAOptions options) {
     SSAInstruction[] result = new SSAInstruction[statements.size()];

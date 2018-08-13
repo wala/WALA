@@ -185,7 +185,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     }
     
     String[] sourceFiles = sources.toArray(new String[ sources.size() ]);
-    final ASTParser parser = ASTParser.newParser(AST.JLS8);
+    @SuppressWarnings("deprecation") final ASTParser parser = ASTParser.newParser(AST.JLS8);
     parser.setResolveBindings(true);
     parser.setEnvironment(libs, this.sources, null, false);
     Hashtable<String, String> options = JavaCore.getOptions();
