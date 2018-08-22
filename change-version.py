@@ -5,6 +5,10 @@
 import sys
 import subprocess
 
+def runAndPrint(cmd):
+    print cmd
+    subprocess.check_output(cmd, shell=True)
+
 oldVersion = sys.argv[1]
 newVersion = sys.argv[2]
 
@@ -13,13 +17,11 @@ print oldVersion + " --> " + newVersion
 oldVersion = oldVersion.replace(".", "\.")
 newVersion = newVersion.replace(".", "\.")
 
-cleanCmd = "mvn clean -q"
-print cleanCmd
-subprocess.check_output(cleanCmd, shell=True)
+runAndPrint("mvn clean -q")
 
-xmlCmd = "find -E ./ -regex \".*(pom|mvncentral)\.xml\" | xargs -n 1 perl -pi -e \'s/" + oldVersion + "/" + newVersion + "/g\'"
-print xmlCmd
-subprocess.check_output(xmlCmd, shell=True)
+runAndPrint("find -E ./ -regex \".*(pom|mvncentral)\.xml\" | xargs -n 1 perl -pi -e \'s/" + oldVersion + "/" + newVersion + "/g\'")
+
+runAndPrint("perl -pi -e \'s/" + oldVersion + "/" + newVersion + "/g\' build.gradle")
 
 oldIsSnapshot = oldVersion.endswith("SNAPSHOT")
 newIsSnapShot = newVersion.endswith("SNAPSHOT")
@@ -27,10 +29,7 @@ newIsSnapShot = newVersion.endswith("SNAPSHOT")
 bundleOld = oldVersion if not oldIsSnapshot else oldVersion.replace("-SNAPSHOT","\.qualifier")
 bundleNew = newVersion if not newIsSnapShot else newVersion.replace("-SNAPSHOT","\.qualifier")
 
-otherCmd = "find -E ./ -regex \".*(MANIFEST\.MF|feature\.xml)\" | xargs -n 1 perl -pi -e \'s/" + bundleOld + "/" + bundleNew + "/g\'"
-
-print otherCmd
-subprocess.check_output(otherCmd, shell=True)
+runAndPrint("find -E ./ -regex \".*(MANIFEST\.MF|feature\.xml)\" | xargs -n 1 perl -pi -e \'s/" + bundleOld + "/" + bundleNew + "/g\'")
 
 print "done"
     
