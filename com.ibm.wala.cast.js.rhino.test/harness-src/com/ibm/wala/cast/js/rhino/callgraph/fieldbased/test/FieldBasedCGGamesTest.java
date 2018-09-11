@@ -16,8 +16,9 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
   public void testBunnyHunt() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://www.themaninblue.com/experiment/BunnyHunt/"), new Object[][]{}, BuilderType.OPTIMISTIC);
   }
-  
-  @Test
+    
+  // seems to break with http issues
+  //@Test
   public void testBeslimed() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(new URL("http://www.markus-inger.de/test/game.php"), new Object[][]{}, BuilderType.OPTIMISTIC);
   }
