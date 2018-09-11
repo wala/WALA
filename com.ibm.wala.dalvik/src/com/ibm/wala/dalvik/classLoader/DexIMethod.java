@@ -1730,7 +1730,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
 				String cname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getDefiningClass();
 				String mname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getName();
-				String pname = ((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference()).getReturnType();
+        String pname = DexUtil.getSignature((org.jf.dexlib2.iface.reference.MethodReference)((Instruction3rc)inst).getReference());
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
