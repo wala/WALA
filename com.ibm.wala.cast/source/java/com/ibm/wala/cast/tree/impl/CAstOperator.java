@@ -88,6 +88,7 @@ public class CAstOperator implements CAstNode {
   public final static CAstOperator OP_BIT_XOR = new CAstOperator("^");
   public final static CAstOperator OP_REL_XOR = new CAstOperator("^^");
   public final static CAstOperator OP_IN = new CAstOperator("in");
+  public final static CAstOperator OP_NOT_IN = new CAstOperator("not in");
 
 }
 
