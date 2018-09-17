@@ -464,6 +464,8 @@ public interface Constants {
 
   public static final short ACC_STRICT = 0x800;
 
+  public static final short ACC_SYNTHETIC = 0x1000;
+
   public static final byte CONSTANT_Utf8 = 1;
 
   public static final byte CONSTANT_Integer = 3;

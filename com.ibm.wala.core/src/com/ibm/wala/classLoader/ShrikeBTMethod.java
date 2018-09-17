@@ -441,9 +441,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   @Override
-  public boolean isSynthetic() {
-    return false;
-  }
+  public boolean isSynthetic() { return ((getModifiers() & Constants.ACC_SYNTHETIC) != 0); }
 
   @Override
   public IClass getDeclaringClass() {
