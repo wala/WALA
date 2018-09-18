@@ -102,6 +102,14 @@ public class ArrayClass implements IClass, Constants {
   }
 
   /*
+ * @see com.ibm.wala.classLoader.IClass#isSynthetic()
+ */
+  @Override
+  public boolean isSynthetic() {
+    return false;
+  }
+
+  /*
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
   @Override
