@@ -50,10 +50,7 @@ public class AndroidAnalysisScope {
 				try {
 					scope.addToScope(ClassLoaderReference.Primordial, DexFileModule.make(new File(al)));
 				} catch (Exception e) {
-					e.printStackTrace();
-					try (final JarFile jar = new JarFile(new File(al))) {
-						scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(jar));
-					}
+					scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(new JarFile(new File(al))));
 				}
 			}
 
