@@ -48,21 +48,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   
   protected boolean testPatchCalls = false;
   
-  protected static String getClasspathEntry(String elt) {
-    for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
-      if (s.indexOf(elt) >= 0) {
-        File e = new File(s);
-         Assert.assertTrue(elt + " expected to exist", e.exists());
-        if (e.isDirectory() && !s.endsWith("/")) {
-          s = s + "/";
-        }
-        return s;
-      }
-    }
-    Assert.assertFalse("cannot find " + elt, true);
-    return null;
-  }
-  
   private boolean instrumentedJarBuilt = false;
   
   private java.nio.file.Path instrumentedJarLocation;
@@ -88,7 +73,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       
       String rtJar = null;
       for(String jar : WalaProperties.getJ2SEJarFiles()) {
-        if (jar.endsWith("rt.jar") || jar.endsWith("classes.jar")) {
+        if (jar.endsWith(File.separator + "rt.jar") || jar.endsWith(File.separator + "classes.jar")) {
           rtJar = jar;
         }
       }
