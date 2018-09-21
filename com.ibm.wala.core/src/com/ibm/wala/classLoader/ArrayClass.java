@@ -372,6 +372,11 @@ public class ArrayClass implements IClass, Constants {
   }
 
   @Override
+  public boolean isSynthetic() {
+    return false;
+  }
+
+  @Override
   public Reader getSource() {
     return null;
   }

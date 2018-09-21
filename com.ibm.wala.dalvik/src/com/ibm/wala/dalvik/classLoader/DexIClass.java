@@ -51,6 +51,7 @@ import static org.jf.dexlib2.AccessFlags.ABSTRACT;
 import static org.jf.dexlib2.AccessFlags.INTERFACE;
 import static org.jf.dexlib2.AccessFlags.PRIVATE;
 import static org.jf.dexlib2.AccessFlags.PUBLIC;
+import static org.jf.dexlib2.AccessFlags.SYNTHETIC;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -229,6 +230,13 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         return (modifiers & ABSTRACT.getValue()) != 0;
     }
 
+    /*
+     * @see com.ibm.wala.classLoader.IClass#isAbstract()
+     */
+    @Override
+    public boolean isSynthetic() {
+        return (modifiers & SYNTHETIC.getValue()) != 0;
+    }
 
     /*
      * (non-Javadoc)
