@@ -297,7 +297,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
     @Override
     public IR getIR() {
-      if (getMethod().isSynthetic()) {
+      if (getMethod().isWalaSynthetic()) {
         // disable local cache in this case, as context interpreters
         // do weird things like mutate IRs
         return getCallGraph().getInterpreter(this).getIR(this);
@@ -312,7 +312,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
     @Override
     public DefUse getDU() {
-      if (getMethod().isSynthetic()) {
+      if (getMethod().isWalaSynthetic()) {
         // disable local cache in this case, as context interpreters
         // do weird things like mutate IRs
         return getCallGraph().getInterpreter(this).getDU(this);

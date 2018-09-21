@@ -102,7 +102,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private void populate(CGNode n) {
     // we analyze bytecodes to avoid the cost of IR construction, except
     // for synthetic methods, where we must use the synthetic IR
-    if (ALWAYS_BUILD_IR || n.getMethod().isSynthetic()) {
+    if (ALWAYS_BUILD_IR || n.getMethod().isWalaSynthetic()) {
       if (DEBUG) {
         System.err.println("synthetic method");
       }

@@ -43,7 +43,14 @@ public interface IMethod extends IMember, ContextItem {
   boolean isNative();
 
   /**
-   * Did someone synthesize this method? (As opposed to reading it from a class file)
+   * Is this method created by WALA?
+   * For compiler-generated synthetic methods, refer to {@link #isWalaSynthetic()}
+   */
+  boolean isWalaSynthetic();
+
+  /**
+   * Is this method synthetic, i.e., compiler-generated (this refers to the
+   * synthetic flag in java/dex bytecode)
    */
   boolean isSynthetic();
 

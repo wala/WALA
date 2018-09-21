@@ -40,7 +40,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
-    if (method.isSynthetic()) {
+    if (method.isWalaSynthetic()) {
       return syntheticFactory.makeCFG((SyntheticMethod) method);
     } else if (method instanceof IBytecodeMethod) {
       @SuppressWarnings("unchecked")
@@ -61,7 +61,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
-    if (method.isSynthetic()) {
+    if (method.isWalaSynthetic()) {
       return syntheticFactory.makeIR((SyntheticMethod) method, c, options);
     } else if (method instanceof IBytecodeMethod) {
       @SuppressWarnings("unchecked")
@@ -81,7 +81,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
-    if (method.isSynthetic()) {
+    if (method.isWalaSynthetic()) {
       return syntheticFactory.contextIsIrrelevant((SyntheticMethod) method);
     } else if (method instanceof ShrikeCTMethod) {
       // we know ShrikeFactory contextIsIrrelevant

@@ -59,6 +59,7 @@ import static org.jf.dexlib2.AccessFlags.PROTECTED;
 import static org.jf.dexlib2.AccessFlags.PUBLIC;
 import static org.jf.dexlib2.AccessFlags.STATIC;
 import static org.jf.dexlib2.AccessFlags.VOLATILE;
+import static org.jf.dexlib2.AccessFlags.SYNTHETIC;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -508,12 +509,19 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
+	 * @see com.ibm.wala.classLoader.IMethod#isWalaSynthetic()
 	 */
 	@Override
-	public boolean isSynthetic() {
+	public boolean isWalaSynthetic() {
 		return false;
 	}
+
+    /*
+     * (non-Javadoc)
+     * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
+     */
+    @Override
+    public boolean isSynthetic() { return (eMethod.getAccessFlags() & SYNTHETIC.getValue()) != 0; }
 
 	/*
 	 * (non-Javadoc)

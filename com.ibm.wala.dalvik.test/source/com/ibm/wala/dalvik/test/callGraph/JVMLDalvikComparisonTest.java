@@ -63,9 +63,9 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 	private static Set<Pair<CGNode,CGNode>> edgeDiff(CallGraph from, CallGraph to, boolean userOnly) {
 		Set<Pair<CGNode,CGNode>> result = HashSetFactory.make();
 		for(CGNode f : from) {
-			if (! f.getMethod().isSynthetic()) {
+			if (! f.getMethod().isWalaSynthetic()) {
 			outer: for(CGNode t : from) {
-				if (!t.getMethod().isSynthetic() && 
+				if (!t.getMethod().isWalaSynthetic() &&
 				    from.hasEdge(f, t) && 
 				    (!userOnly || 
 				     !t.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Primordial))) 
