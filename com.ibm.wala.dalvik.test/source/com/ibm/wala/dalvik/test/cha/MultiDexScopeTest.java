@@ -77,4 +77,23 @@ public class MultiDexScopeTest {
         Assert.assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
     }
 
+    @Test
+    public void testMultiDex() throws ClassHierarchyException, IOException {
+        AnalysisScope scope, scope2;
+        ClassHierarchy cha, cha2;
+        String multidexApk =  "data/multidex-test.apk";
+
+        scope = setUpTestScope(multidexApk,"", MultiDexScopeTest.class.getClassLoader());
+        cha = ClassHierarchyFactory.make(scope);
+
+        scope2 = Util.makeDalvikScope(null,null, multidexApk);
+        cha2 = ClassHierarchyFactory.make(scope2);
+
+        Assert.assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)),Integer.valueOf(5));
+        Assert.assertNotEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
+
+    }
+
+
+
 }
