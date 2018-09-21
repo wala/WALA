@@ -92,6 +92,11 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   }
 
   @Override
+  public boolean isSynthetic() {
+    return false;
+  }
+
+  @Override
   public int getModifiers() {
     return ACC_PUBLIC;
   }

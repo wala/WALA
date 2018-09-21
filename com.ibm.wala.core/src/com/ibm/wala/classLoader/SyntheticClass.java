@@ -95,6 +95,14 @@ public abstract class SyntheticClass implements IClass {
     return false;
   }
 
+  /*
+   * @see com.ibm.wala.classLoader.IClass#isSynthetic()
+   */
+  @Override
+  public boolean isSynthetic() {
+    return true;
+  }
+
   /* 
    * @see com.ibm.wala.classLoader.IClass#getReference()
    */
