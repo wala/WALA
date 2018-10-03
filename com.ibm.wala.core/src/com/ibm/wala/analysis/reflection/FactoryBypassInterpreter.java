@@ -141,7 +141,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (node.getMethod().isSynthetic()) {
+    if (node.getMethod().isWalaSynthetic()) {
       SyntheticMethod s = (SyntheticMethod) node.getMethod();
       if (s.isFactoryMethod()) {
         return getTypesForContext(node.getContext()) != null;

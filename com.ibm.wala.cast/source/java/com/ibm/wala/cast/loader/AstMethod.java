@@ -268,6 +268,11 @@ public abstract class AstMethod implements IMethod {
   }
 
   @Override
+  public boolean isWalaSynthetic() {
+    return false;
+  }
+
+  @Override
   public boolean isSynthetic() {
     return false;
   }

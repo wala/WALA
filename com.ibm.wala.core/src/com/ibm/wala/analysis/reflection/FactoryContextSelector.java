@@ -38,7 +38,7 @@ class FactoryContextSelector implements ContextSelector {
     if (callee == null) {
       throw new IllegalArgumentException("callee is null");
     }
-    if (callee.isSynthetic()) {
+    if (callee.isWalaSynthetic()) {
       SyntheticMethod s = (SyntheticMethod) callee;
       if (s.isFactoryMethod()) {
         return new CallStringContext(new CallString(site, caller.getMethod()));

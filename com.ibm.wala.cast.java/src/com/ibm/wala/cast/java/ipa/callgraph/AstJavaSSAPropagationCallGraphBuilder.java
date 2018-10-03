@@ -256,7 +256,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
             System.err.println(("class is " + klass + ", enclosing is " + enclosingClass + ", method is " + node.getMethod()));
 
-            if (node.getMethod().isSynthetic()) {
+            if (node.getMethod().isWalaSynthetic()) {
               return;
             }
 

@@ -195,7 +195,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		Warnings.clear();
 
 		pa = cgb.getPointerAnalysis();
-		partialGraph = GraphSlicer.prune(cg, node -> LoaderUtils.fromLoader(node, ClassLoaderReference.Application) || node.getMethod().isSynthetic());
+		partialGraph = GraphSlicer.prune(cg, node -> LoaderUtils.fromLoader(node, ClassLoaderReference.Application) || node.getMethod().isWalaSynthetic());
 		if (options.includeLibrary()) {
 			graph = (ISupergraph) ICFGSupergraph.make(cg);
 		} else {
@@ -271,7 +271,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 		}
 		for (CGNode node : Iterator2Iterable.make(cg.iterator())) {
-			if (node.getMethod().isSynthetic()) {
+			if (node.getMethod().isWalaSynthetic()) {
 				SSACFG ssaCFG = node.getIR().getControlFlowGraph();
 				int totalBlocks = ssaCFG.getNumberOfNodes();
 				for (int i = 0; i < totalBlocks; i++) {
