@@ -33,16 +33,19 @@ public class AndroidAnalysisScope {
 
 	public static AnalysisScope setUpAndroidAnalysisScope(URI classpath, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		AnalysisScope scope;
+		File exclusionsFile = exclusions != null? new File(exclusions) : null;
+
 		if (androidLib == null || androidLib.length == 0) {
-			scope = AnalysisScopeReader.readJavaScope(BASIC_FILE, new File(exclusions), loader);
+			scope = AnalysisScopeReader.readJavaScope(BASIC_FILE, exclusionsFile, loader);
 		} else {
 			scope = AnalysisScope.createJavaAnalysisScope();
 
-			File exclusionsFile = new File(exclusions);
-	        try (final InputStream fs = exclusionsFile.exists()? new FileInputStream(exclusionsFile): FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName())) {
-	        	scope.setExclusions(new FileOfClasses(fs));
-	        }
-	        
+			if (exclusionsFile != null) {
+				try (final InputStream fs = exclusionsFile.exists() ? new FileInputStream(exclusionsFile) : FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName())) {
+					scope.setExclusions(new FileOfClasses(fs));
+				}
+			}
+
 			scope.setLoaderImpl(ClassLoaderReference.Primordial,
 					"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
@@ -50,10 +53,7 @@ public class AndroidAnalysisScope {
 				try {
 					scope.addToScope(ClassLoaderReference.Primordial, DexFileModule.make(new File(al)));
 				} catch (Exception e) {
-					e.printStackTrace();
-					try (final JarFile jar = new JarFile(new File(al))) {
-						scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(jar));
-					}
+					scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(new JarFile(new File(al))));
 				}
 			}
 

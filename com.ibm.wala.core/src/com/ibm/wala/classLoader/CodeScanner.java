@@ -46,7 +46,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCallSites(sm.getStatements());
     } else {
@@ -62,7 +62,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsRead(sm.getStatements());
     } else {
@@ -78,7 +78,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsWritten(sm.getStatements());
     } else {
@@ -95,7 +95,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getArraysWritten(sm.getStatements());
     } else {
@@ -111,7 +111,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getNewSites(sm.getStatements());
     } else {
@@ -123,7 +123,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return hasObjectArrayLoad(sm.getStatements());
     } else {
@@ -135,7 +135,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return hasObjectArrayStore(sm.getStatements());
     } else {
@@ -147,7 +147,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCaughtExceptions(sm.getStatements());
     } else {
@@ -166,7 +166,7 @@ public class CodeScanner {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    if (m.isSynthetic()) {
+    if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return iterateCastTypes(sm.getStatements());
     } else {

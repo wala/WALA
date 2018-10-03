@@ -154,11 +154,19 @@ public class SyntheticMethod implements IMethod {
   }
 
   /**
+   * @see com.ibm.wala.classLoader.IMethod#isWalaSynthetic()
+   */
+  @Override
+  public boolean isWalaSynthetic() {
+    return true;
+  }
+
+  /**
    * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
    */
   @Override
   public boolean isSynthetic() {
-    return true;
+    return false;
   }
 
   /**

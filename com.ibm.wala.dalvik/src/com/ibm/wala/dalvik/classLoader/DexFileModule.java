@@ -121,6 +121,30 @@ public class DexFileModule implements Module {
     }
 
     /**
+     * @param f
+     *            the .dex or .apk file
+     * @param entry
+     *            the name of the .dex file inside the apk
+     * @param apiLevel
+     *            the api level wanted
+     * @throws IllegalArgumentException
+     */
+    public DexFileModule(File f, String entry, int apiLevel) throws IllegalArgumentException {
+        try {
+            this.f = f;
+            dexfile = DexFileFactory.loadDexEntry(f, entry,true, Opcodes.forApi(apiLevel));
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        // create ModuleEntries from ClassDefItem
+        entries = new HashSet<>();
+        for (ClassDef cdefitems : dexfile.getClasses()) {
+            entries.add(new DexModuleEntry(cdefitems, this));
+        }
+    }
+
+    /**
      * @return The DexFile associated to this module.
      */
     public DexFile getDexFile() {

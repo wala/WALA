@@ -86,6 +86,11 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   @Override
+  public boolean isSynthetic() {
+    return false;
+  }
+
+  @Override
   public int getModifiers() {
     return modifiers;
   }
