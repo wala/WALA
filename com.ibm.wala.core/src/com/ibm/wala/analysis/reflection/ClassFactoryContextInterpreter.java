@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -21,6 +22,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.ssa.DefUse;
@@ -63,7 +66,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 /** BEGIN Custom change: caching */
     
     
-    final JavaTypeContext context = (JavaTypeContext) node.getContext();
+    final Context context = node.getContext();
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + "@" + context.toString();
     
@@ -97,7 +100,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext() instanceof JavaTypeContext)) {
+    if (!(node.getContext().isA(JavaTypeContext.class))) {
       return false;
     }
     return ClassFactoryContextSelector.isClassFactory(node.getMethod().getReference());
@@ -112,8 +115,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     assert understands(node);
-    JavaTypeContext context = (JavaTypeContext) node.getContext();
-    TypeReference tr = context.getType().getTypeReference();
+    TypeReference tr = ((TypeAbstraction)node.getContext().get(ContextKey.RECEIVER)).getTypeReference();
     if (tr != null) {
       return new NonNullSingletonIterator<>(NewSiteReference.make(0, tr));
     }
@@ -129,12 +131,12 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
-  private static SSAInstruction[] makeStatements(JavaTypeContext context) {
-    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
+  private static SSAInstruction[] makeStatements(Context context) {
+    SSAInstructionFactory insts = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType().getClassLoader().getInstructionFactory();
     ArrayList<SSAInstruction> statements = new ArrayList<>();
     // vn1 is the string parameter
     int retValue = 2;
-    TypeReference tr = context.getType().getTypeReference();
+    TypeReference tr = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getTypeReference();
     if (tr != null) {
       SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(statements.size(), retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
@@ -149,7 +151,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return result;
   }
 
-  private static IR makeIR(IMethod method, JavaTypeContext context) {
+  private static IR makeIR(IMethod method, Context context) {
     SSAInstruction instrs[] = makeStatements(context);
     return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
   }

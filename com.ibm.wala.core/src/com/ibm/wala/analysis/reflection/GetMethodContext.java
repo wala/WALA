@@ -83,10 +83,17 @@ public class GetMethodContext implements Context {
     this.name = name;
   }
 
+  class NameItem implements ContextItem {
+    String name() { return getName(); }
+  };
+
   @Override
   public ContextItem get(ContextKey name) {
+    
     if (name == ContextKey.RECEIVER) {
       return type;
+    } else if (name == ContextKey.NAME) {
+      return new NameItem();
     } else if (name == ContextKey.PARAMETERS[0]) {
       if (type instanceof PointType) {
         IClass cls = ((PointType) type).getIClass();

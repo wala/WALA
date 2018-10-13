@@ -74,6 +74,7 @@ public class AnalysisOptions {
     ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD("one_flow_to_casts_application_get_method", 1, false, false, true),
     MULTI_FLOW_TO_CASTS_APPLICATION_GET_METHOD("multi_flow_to_casts_application_get_method", 100, false, false, true),
     NO_STRING_CONSTANTS("no_string_constants", Integer.MAX_VALUE, false, true, false), 
+    STRING_ONLY("string_constants", 0, true, false, true), 
     NONE("none", 0, true, true, true);
 
     private final String name;

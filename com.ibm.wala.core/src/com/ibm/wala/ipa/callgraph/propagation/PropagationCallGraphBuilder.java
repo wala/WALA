@@ -720,7 +720,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     }
     Context targetContext = contextSelector.getCalleeTarget(caller, site, targetMethod, iKey);
     
-    if (targetContext instanceof IllegalArgumentExceptionContext) {
+    if (targetContext.isA(IllegalArgumentExceptionContext.class)) {
       return null;
     }
     try {

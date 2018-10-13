@@ -18,7 +18,6 @@ import sun.java2d.FontSupport;
  * When analyzed with J2EEClassHierarchy exclusions, the superinterface
  * FontSupport should not be found because we exclude sun.java2d.*
  */
-@SuppressWarnings("restriction")
 public interface YuckyInterface extends FontSupport {
 
 

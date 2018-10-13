@@ -409,7 +409,9 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     private final CAstSourcePositionMap pos;
     
     private final Position entityPosition;
-    
+
+    private final Position namePosition;
+
     private final Position[] paramPositions;
     
     private ScriptOrFnEntity(AstNode n, Map<CAstNode, Collection<CAstEntity>> subs, CAstNode ast, CAstControlFlowMap map, CAstSourcePositionMap pos, String name) {
@@ -418,6 +420,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
       if (n instanceof FunctionNode) {
         FunctionNode f = (FunctionNode) n;
+        namePosition = makePosition(f.getFunctionName());
         f.flattenSymbolTable(false);
         int i = 0;
         arguments = new String[f.getParamCount() + 2];
@@ -436,6 +439,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       } else {
         paramPositions = new Position[0];
         arguments = new String[0];
+        namePosition = null;
       }
       kind = (n instanceof FunctionNode) ? CAstEntity.FUNCTION_ENTITY : CAstEntity.SCRIPT_ENTITY;
       this.subs = subs;
@@ -538,6 +542,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     public Position getPosition(int arg) {
       return paramPositions[arg];
     }
+
+    @Override
+    public Position getNamePosition() {
+      return namePosition;
+    }
   }
 
   private CAstEntity walkEntity(final AstNode n, List<CAstNode> body, String name, WalkContext child) {
@@ -569,18 +578,22 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   }
     
   private Position makePosition(AstNode n) {
-    URL url = ((SourceModule)sourceModule).getURL();
-    int line = n.getLineno(); 
-    Position pos = new RangePosition(url, line, n.getAbsolutePosition(), n.getAbsolutePosition()+n.getLength());
+    if (n != null) {
+      URL url = ((SourceModule)sourceModule).getURL();
+      int line = n.getLineno(); 
+      Position pos = new RangePosition(url, line, n.getAbsolutePosition(), n.getAbsolutePosition()+n.getLength());
 
-    if (sourceModule instanceof MappedSourceModule) {
-      Position np = ((MappedSourceModule) sourceModule).getMapping().getIncludedPosition(pos);
-      if (np != null) {
-        return np;
+      if (sourceModule instanceof MappedSourceModule) {
+        Position np = ((MappedSourceModule) sourceModule).getMapping().getIncludedPosition(pos);
+        if (np != null) {
+          return np;
+        }
       }
-    }
         
-    return pos;
+      return pos;
+    } else {
+      return null;
+    }
   }
 
   protected CAstNode noteSourcePosition(WalkContext context, CAstNode n, AstNode p) {

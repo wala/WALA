@@ -56,7 +56,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
     }
 
     // disallow recursion in contexts.
-    if (node.getContext() instanceof ReceiverInstanceContext) {
+    if (node.getContext().isA(ReceiverInstanceContext.class)) {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {

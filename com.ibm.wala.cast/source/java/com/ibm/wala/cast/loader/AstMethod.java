@@ -46,6 +46,8 @@ public abstract class AstMethod implements IMethod {
 
     Position getCodeBodyPosition();
 
+    Position getCodeNamePosition();
+
     Position getInstructionPosition(int instructionOffset);
 
     String[][] getSourceNamesForValues();

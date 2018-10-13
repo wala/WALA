@@ -51,6 +51,8 @@ public class TargetMethodContextSelector implements ContextSelector {
       public ContextItem get(ContextKey name) {
         if (name.equals(ContextKey.PARAMETERS[0])) {
           return new FilteredPointerKey.TargetMethodFilter(M);
+        } else if (name.equals(ContextKey.TARGET)) {
+          return M;
         } else {
           return null;
         }
@@ -68,7 +70,9 @@ public class TargetMethodContextSelector implements ContextSelector {
 
       @Override
       public boolean equals(Object o) {
-        return (o instanceof MethodDispatchContext) && ((MethodDispatchContext) o).getTargetMethod().equals(M);
+        return (o instanceof Context) && 
+            ((Context)o).isA(MethodDispatchContext.class) && 
+            ((Context)o).get(ContextKey.TARGET).equals(M);
       }
     }
 

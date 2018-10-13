@@ -788,7 +788,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
                 Language lang = dexCFG.getMethod().getDeclaringClass().getClassLoader().getLanguage();
                 // TODO: check that the signature needed by findOrCreate can use the descriptor
-                
                 MethodReference m = MethodReference.findOrCreate(lang, loader, instruction.clazzName, instruction.methodName, instruction.descriptor);
 
 

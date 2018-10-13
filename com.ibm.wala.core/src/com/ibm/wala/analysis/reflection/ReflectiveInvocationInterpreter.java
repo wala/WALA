@@ -20,6 +20,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -69,8 +71,8 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    ReceiverInstanceContext recv = (ReceiverInstanceContext) node.getContext();
-    ConstantKey c = (ConstantKey) recv.getReceiver();
+    Context recv = node.getContext();
+    ConstantKey c = (ConstantKey) recv.get(ContextKey.RECEIVER);
     IMethod m = (IMethod) c.getValue();
 /** BEGIN Custom change: caching */
     final IMethod method = node.getMethod();
@@ -109,11 +111,11 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext() instanceof ReceiverInstanceContext)) {
+    if (!(node.getContext().isA(ReceiverInstanceContext.class))) {
       return false;
     }
-    ReceiverInstanceContext r = (ReceiverInstanceContext) node.getContext();
-    if (!(r.getReceiver() instanceof ConstantKey)) {
+    Context r = node.getContext();
+    if (!(r.get(ContextKey.RECEIVER) instanceof ConstantKey)) {
       return false;
     }
     return node.getMethod().getReference().equals(METHOD_INVOKE) || node.getMethod().getReference().equals(CTOR_NEW_INSTANCE);
@@ -146,7 +148,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    * @param method is something like Method.invoke or Construction.newInstance
    * @param target is the method being called reflectively
    */
-  private IR makeIR(IMethod method, IMethod target, ReceiverInstanceContext context) {
+  private IR makeIR(IMethod method, IMethod target, Context recv) {
     SSAInstructionFactory insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
 
     SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
@@ -225,7 +227,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     SSAInstruction[] instrs = new SSAInstruction[m.allInstructions.size()];
     m.allInstructions.<SSAInstruction> toArray(instrs);
 
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
+    return new SyntheticIR(method, recv, new InducedCFG(instrs, method, recv), instrs, SSAOptions.defaultOptions(), constants);
   }
 
   @Override

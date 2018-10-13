@@ -504,6 +504,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   private static class AstDebuggingInformation implements DebuggingInformation {
     private Position codeBodyPosition;
 
+    private Position codeBodyNamePosition;
+    
     private String[][] valueNumberNames;
 
     private Position[] instructionPositions;
@@ -512,7 +514,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private Position[] parameterPositions;
     
-    AstDebuggingInformation(Position codeBodyPosition, Position[] instructionPositions, Position[][] operandPositions, Position[] parameterPositions, String[] names) {
+    AstDebuggingInformation(Position codeBodyNamePosition, Position codeBodyPosition, Position[] instructionPositions, Position[][] operandPositions, Position[] parameterPositions, String[] names) {
+      this.codeBodyNamePosition = codeBodyNamePosition;
+      
       this.codeBodyPosition = codeBodyPosition;
 
       this.instructionPositions = instructionPositions;
@@ -534,6 +538,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public Position getCodeBodyPosition() {
       return codeBodyPosition;
+    }
+
+    @Override
+    public Position getCodeNamePosition() {
+      return codeBodyNamePosition;
     }
 
     @Override
@@ -3386,7 +3395,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     Position[] parameterPositions = getParameterPositions(n);
     
-    DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, operand, parameterPositions, nms);
+    DebuggingInformation DBG = new AstDebuggingInformation(n.getNamePosition(), n.getPosition(), line, operand, parameterPositions, nms);
 
     // actually make code body
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, monitor, LI, DBG);

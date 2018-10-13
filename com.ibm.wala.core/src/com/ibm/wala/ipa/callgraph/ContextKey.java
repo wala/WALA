@@ -22,6 +22,18 @@ public interface ContextKey {
   };
 
   /**
+   * A property of contexts that might be generally useful: the "target" method.
+   */
+  public final static ContextKey TARGET = new ContextKey() {
+  };
+
+  /**
+   * A property of contexts that might be generally useful: the "name".
+   */
+  public final static ContextKey NAME = new ContextKey() {
+  };
+
+  /**
    * A property of contexts that might be generally useful: the "call site" method ... used for call-string context schemes.
    */
   public final static ContextKey CALLSITE = new ContextKey() {

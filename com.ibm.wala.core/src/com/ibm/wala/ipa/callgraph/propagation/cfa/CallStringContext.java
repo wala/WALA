@@ -26,7 +26,9 @@ public class CallStringContext implements Context {
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof CallStringContext) && ((CallStringContext) o).cs.equals(cs);
+    return (o instanceof Context) && 
+        ((Context)o).isA(CallStringContext.class) &&
+        ((Context)o).get(CallStringContextSelector.CALL_STRING).equals(cs);
   }
 
   @Override

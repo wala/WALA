@@ -101,7 +101,7 @@ public class APKCallGraphDriver {
             return "timeout";
           }	
         };
-        CG = DalvikCallGraphTestBase.makeAPKCallGraph(libs(), null, apk1.getAbsolutePath(), pm, ReflectionOptions.NONE);
+        CG = DalvikCallGraphTestBase.makeAPKCallGraph(null, Util.androidJavaLib(), apk1.getAbsolutePath(), pm, ReflectionOptions.NONE);
         System.err.println("Analyzed " + apk1 + " in " + (System.currentTimeMillis() - time));
 
         System.err.println(new SDG<>(CG.fst, CG.snd, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));

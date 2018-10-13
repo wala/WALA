@@ -75,7 +75,8 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     CGNode nodeToUse = node;
 
     // disallow recursion in contexts.
-    if (node.getContext() instanceof ReceiverInstanceContext || node.getContext() instanceof CallerContext) {
+    if (node.getContext().isA(ReceiverInstanceContext.class) || 
+        node.getContext().isA(CallerContext.class)) {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {

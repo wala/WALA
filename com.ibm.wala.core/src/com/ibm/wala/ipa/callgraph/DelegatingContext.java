@@ -70,6 +70,9 @@ public class DelegatingContext implements Context {
     return "DelegatingContext [A=" + A + ", B=" + B + "]";
   }
   
-  
+  @Override
+  public boolean isA(Class<? extends Context> type) {
+    return A.isA(type) || B.isA(type);
+  }
 
 }

@@ -108,6 +108,7 @@ public abstract class Invoke extends Instruction {
                 String clazzName, String methodName, String descriptor,
                 int[] args, Opcode opcode, DexIMethod method) {
             super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
+           	assert descriptor.contains("(");
         }
 
         @Override

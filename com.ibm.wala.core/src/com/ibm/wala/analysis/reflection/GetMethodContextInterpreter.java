@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.ibm.wala.analysis.reflection.GetMethodContext.NameItem;
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -22,6 +24,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.ssa.ConstantValue;
@@ -79,15 +83,15 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
       System.err.println("generating IR for " + node);
     }
     IMethod method = node.getMethod();
-    GetMethodContext context = (GetMethodContext) node.getContext();
+    Context context = node.getContext();
     Map<Integer,ConstantValue> constants = HashMapFactory.make();
     if (method.getReference().equals(GET_METHOD)) {
-      Atom name = Atom.findOrCreateAsciiAtom(context.getName());
+      Atom name = Atom.findOrCreateAsciiAtom(((NameItem)(context.get(ContextKey.NAME))).name());
       SSAInstruction instrs[] = makeGetMethodStatements(context,constants,name);
       return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
     }
     if (method.getReference().equals(GET_DECLARED_METHOD)) {
-      Atom name = Atom.findOrCreateAsciiAtom(context.getName());
+      Atom name = Atom.findOrCreateAsciiAtom(((NameItem)(context.get(ContextKey.NAME))).name());
       SSAInstruction instrs[] = makeGetDeclaredMethodStatements(context,constants,name);
       return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
     }
@@ -117,7 +121,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext() instanceof GetMethodContext)) {
+    if (!(node.getContext().isA(GetMethodContext.class))) {
       return false;
     }
     MethodReference mRef = node.getMethod().getReference();
@@ -190,13 +194,13 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
       (
         MethodReference ref,
         Collection<IMethod> returnValues,
-        GetMethodContext context,
+        Context context,
         Map<Integer, ConstantValue> constants
        ) {
     ArrayList<SSAInstruction> statements = new ArrayList<>();
     int nextLocal = ref.getNumberOfParameters() + 2;
-    IClass cls = context.getType().getType();
-    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
+    IClass cls = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType();
+    SSAInstructionFactory insts = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType().getClassLoader().getInstructionFactory();
     if (cls != null) {
       for (IMethod m : returnValues) {
         int c = nextLocal++;
@@ -219,11 +223,11 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
 
   private static SSAInstruction[] makeGetMethodStatements
         (
-          GetMethodContext context,
+          Context context,
           Map<Integer,ConstantValue> constants,
           Atom name
         ) {
-    IClass cls = context.getType().getType();
+    IClass cls = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType();
     if (cls == null) {
       return getParticularMethodStatements(GET_METHOD, null, context, constants);
     } else {
@@ -234,8 +238,8 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   /**
    * Create statements for {@link Class#getDeclaredMethod(String, Class...)}.
    */
-  private static SSAInstruction[] makeGetDeclaredMethodStatements(GetMethodContext context, Map<Integer, ConstantValue> constants,Atom name) {
-    IClass cls = context.getType().getType();
+  private static SSAInstruction[] makeGetDeclaredMethodStatements(Context context, Map<Integer, ConstantValue> constants,Atom name) {
+    IClass cls = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType();
     if (cls == null) {
       return getParticularMethodStatements(GET_DECLARED_METHOD, null, context, constants);
     } else {

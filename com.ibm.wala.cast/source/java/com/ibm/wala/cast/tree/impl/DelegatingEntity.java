@@ -116,4 +116,9 @@ public class DelegatingEntity implements CAstEntity {
       return base.getPosition(arg);
     }
 
+    @Override
+    public Position getNamePosition() {
+      return base.getNamePosition();
+    }
+
 }

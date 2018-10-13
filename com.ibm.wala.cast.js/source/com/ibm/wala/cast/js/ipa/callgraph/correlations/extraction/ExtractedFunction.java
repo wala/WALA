@@ -191,4 +191,9 @@ class ExtractedFunction implements CAstEntity {
   public Position getPosition(int arg) {
     return null;
   }
+
+  @Override
+  public Position getNamePosition() {
+    return null;
+  }
 }

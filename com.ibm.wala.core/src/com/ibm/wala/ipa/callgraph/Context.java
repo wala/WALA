@@ -18,9 +18,16 @@ package com.ibm.wala.ipa.callgraph;
  * As another example, for CPA, there would be name for each parameter slot ("zero","one","two"), and the Context provides a mapping
  * from this name to a set of types. eg. "one" -&gt; {java.lang.String, java.lang.Date}
  */
-public interface Context {
+public interface Context extends ContextItem {
   /**
    * @return the objects corresponding to a given name
    */
   ContextItem get(ContextKey name);
+  
+  /**
+   * @return whether this context has a specific type
+   */
+  default boolean isA(Class<? extends Context> type) {
+    return type.isInstance(this);
+  }
 }

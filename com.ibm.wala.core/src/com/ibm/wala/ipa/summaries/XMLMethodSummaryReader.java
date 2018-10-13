@@ -757,10 +757,13 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (refNumber == null) {
         Assertions.UNREACHABLE("Cannot lookup value: " + R);
       }
-      // N.B: we currently ignore the index
       String I = atts.getValue(A_INDEX);
       if (I == null) {
         Assertions.UNREACHABLE("Must specify index for aaload " + governingMethod);
+      }
+      Integer idxNumber = symbolTable.get(I);
+      if (idxNumber == null) {
+        Assertions.UNREACHABLE("Cannot lookup value: " + I);
       }
       String strType = atts.getValue(A_TYPE);
       TypeReference type;
@@ -779,8 +782,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
       int defNum = nextLocal;
       symbolTable.put(defVar, Integer.valueOf(nextLocal++));
-      SSAArrayLoadInstruction S = insts.ArrayLoadInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber.intValue(), 0,
-          type);
+      SSAArrayLoadInstruction S = insts.ArrayLoadInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber, idxNumber, type);
       governingMethod.addStatement(S);
     }
 

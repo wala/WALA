@@ -114,7 +114,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
             @Override
             public String[] getLocalNames(int index, int vn) {
                 if (DEBUG) { System.err.printf("IR.getLocalNames({}, {})", index, vn); }
-                if (this.localNames.containsKey(vn)) {
+                if (localNames != null && localNames.containsKey(vn)) {
                     return new String[] { this.localNames.get(vn).toString() };
                 } else {
                     return null;

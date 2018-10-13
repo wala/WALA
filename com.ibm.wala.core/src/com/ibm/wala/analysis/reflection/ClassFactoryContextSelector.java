@@ -13,10 +13,12 @@ package com.ibm.wala.analysis.reflection;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
@@ -103,19 +105,35 @@ class ClassFactoryContextSelector implements ContextSelector {
           return new JavaTypeContext(new PointType(klass));
         }
       }
+      int nameVn = callee.isStatic()? 0: 1;
+      if (receiver != null && receiver.length > nameVn) {
+        if (receiver[nameVn] instanceof ConstantKey) {
+          ConstantKey ik = (ConstantKey) receiver[nameVn];
+          if (ik.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
+            String className = StringStuff.deployment2CanonicalTypeString(ik.getValue().toString());
+            for(IClassLoader cl : caller.getClassHierarchy().getLoaders()) {
+              TypeReference t = TypeReference.findOrCreate(cl.getReference(), className);
+              IClass klass = caller.getClassHierarchy().lookupClass(t);
+              if (klass != null) {
+                return new JavaTypeContext(new PointType(klass));
+              }
+            }
+          }
+        }
+      }
     }
     return null;
   }
 
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
-  private static final IntSet firstParameter = IntSetUtil.make(new int[]{1});
+  private static final IntSet firstParameter = IntSetUtil.make(new int[]{0, 1});
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (isClassFactory(site.getDeclaredTarget())) {
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
-      if (invokeInstructions.length != 1) {
+      if (invokeInstructions.length >= 1) {
         if (invokeInstructions[0].isStatic()) {
           return thisParameter;
         } else {

@@ -35,7 +35,7 @@ public class AstConstantCollector {
         Object val = s.getSingle("value").getValue();
         if (! bad.contains(var)) {
           if (values.containsKey(var)) {
-            if (!values.get(var).equals(val)) {
+            if (val == null? values.get(var) != null: !values.get(var).equals(val)) {
               values.remove(var);
               bad.add(var);
             }

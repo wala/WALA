@@ -72,6 +72,13 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     if (field == null) {
       throw new IllegalArgumentException("field is null");
     }
+    
+    
+    IField resolveAgain = I.getConcreteType().getField(field.getName(), field.getFieldTypeReference().getName());
+    if (resolveAgain != null) {
+      field = resolveAgain;
+    }
+    
     return new InstanceFieldKey(I, field);
   }
 

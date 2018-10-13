@@ -55,6 +55,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.MutableIntSet;
 
 public class MethodHandles {
 
@@ -270,7 +271,9 @@ public class MethodHandles {
 
     @Override
     public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-      return isFindStatic(site.getDeclaredTarget())? params: self;
+      MutableIntSet x = IntSetUtil.makeMutableCopy(base.getRelevantParameters(caller, site));
+      x.addAll(isFindStatic(site.getDeclaredTarget())? params: self);
+      return x;
     }
   }
   
@@ -392,7 +395,7 @@ public class MethodHandles {
     
     @Override
     public boolean understands(CGNode node) {
-      return isFindStatic(node) && node.getContext() instanceof FindContext;
+      return isFindStatic(node) && node.getContext().isA(FindContext.class);
     }
 
     @Override
@@ -401,7 +404,7 @@ public class MethodHandles {
         MethodSummary code = new MethodSummary(node.getMethod().getReference());
         SummarizedMethod m = new SummarizedMethod(node.getMethod().getReference(), code, node.getMethod().getDeclaringClass());
         SSAInstructionFactory insts = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().instructionFactory();
-        assert node.getContext() instanceof FindContext;
+        assert node.getContext().isA(FindContext.class);
         
         @SuppressWarnings("unchecked")
         IClass cls = node.getClassHierarchy().lookupClass(((HandlesItem<TypeReference>)node.getContext().get(CLASS_KEY)).item);
@@ -427,7 +430,7 @@ public class MethodHandles {
       
     @Override
     public boolean understands(CGNode node) {
-      return (isInvoke(node) || isType(node)) && node.getContext() instanceof MethodContext;
+      return (isInvoke(node) || isType(node)) && node.getContext().isA(MethodContext.class);
     }
 
     @Override
@@ -436,7 +439,7 @@ public class MethodHandles {
         MethodSummary code = new MethodSummary(node.getMethod().getReference());
         SummarizedMethod m = new SummarizedMethod(node.getMethod().getReference(), code, node.getMethod().getDeclaringClass());
         SSAInstructionFactory insts = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().instructionFactory();
-        assert node.getContext() instanceof MethodContext;
+        assert node.getContext().isA(MethodContext.class);
         MethodReference ref = ((MethodContext)node.getContext()).method;
         boolean isStatic = node.getClassHierarchy().resolveMethod(ref).isStatic();
         boolean isVoid = ref.getReturnType().equals(TypeReference.Void);

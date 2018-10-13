@@ -53,6 +53,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
     Set<CGNode> color = getNodes(CG, "Lchess", "startingColor", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
     assert ! color.isEmpty();
     
+    System.out.println(CG);
   }
 
   @Test
@@ -78,7 +79,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     
-    options.setReflectionOptions(ReflectionOptions.NONE);
+    options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
     options.setTraceStringConstants(true);
     options.setUseConstantSpecificKeys(true);
     

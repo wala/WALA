@@ -15,6 +15,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.DelegatingContext;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -56,7 +57,12 @@ public class DelegatingContextSelector implements ContextSelector {
         if (DEBUG) {
           System.err.println(("Case A " + A.getClass() + " " + C));
         }
-        return C;
+        Context CB = B.getCalleeTarget(caller, site, callee, receiver);
+        if (CB != null) {
+          return new DelegatingContext(C, CB);
+        } else {
+          return C;
+        }
       }
     }
     Context C = B.getCalleeTarget(caller, site, callee, receiver);

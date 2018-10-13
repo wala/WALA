@@ -30,6 +30,13 @@ public abstract class CallStringContextSelector implements ContextSelector {
     }
   };
 
+  public static final ContextKey BASE = new ContextKey() {
+    @Override
+    public String toString() {
+      return "BASE_KEY";
+    }
+  };
+
   public static class CallStringContextPair implements Context {
     private final CallString cs;
 
@@ -42,8 +49,10 @@ public abstract class CallStringContextSelector implements ContextSelector {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof CallStringContextPair) && ((CallStringContextPair) o).cs.equals(cs)
-          && ((CallStringContextPair) o).base.equals(base);
+      return o instanceof Context &&
+          ((Context)o).isA(CallStringContextPair.class) && 
+          ((Context)o).get(CALL_STRING).equals(cs) &&
+          ((Context)o).get(BASE).equals(base);
     }
 
     @Override
@@ -60,6 +69,8 @@ public abstract class CallStringContextSelector implements ContextSelector {
     public ContextItem get(ContextKey name) {
       if (CALL_STRING.equals(name)) {
         return cs;
+      } else if (BASE.equals(name)) {
+        return base;
       } else {
         return base.get(name);
       }

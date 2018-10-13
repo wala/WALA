@@ -29,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
@@ -278,9 +279,8 @@ public class ReflectionTest extends WalaTestCase {
 
     for (CGNode node : mainChildren) {
       Context context = node.getContext();
-      if (context instanceof ReceiverInstanceContext && node.getMethod().getReference().equals(newInstanceMr)) {
-        ReceiverInstanceContext r = (ReceiverInstanceContext) context;
-        ConstantKey<IMethod> c = (ConstantKey<IMethod>) r.getReceiver();
+      if (context.isA(ReceiverInstanceContext.class) && node.getMethod().getReference().equals(newInstanceMr)) {
+        ConstantKey<IMethod> c = (ConstantKey<IMethod>) context.get(ContextKey.RECEIVER);
         IMethod ctor = c.getValue();
         if (ctor.getSignature().equals(fpInitSig)) {
           filePermConstrNewInstanceNode = node;
@@ -377,6 +377,7 @@ public class ReflectionTest extends WalaTestCase {
     TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
+    System.err.println(cg);
     Assert.assertFalse(nodes.isEmpty());
   }
 
