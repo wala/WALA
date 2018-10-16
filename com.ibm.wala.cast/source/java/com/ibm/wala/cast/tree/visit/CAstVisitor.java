@@ -987,6 +987,17 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       break;
     }
 
+    case CAstNode.OBJECT_LITERAL: {
+      assert assign;
+      for(int i = 1; i < n.getChildCount(); i+=2) {
+        visitor.visit(n.getChild(i), context, visitor);
+      }
+      if (visitor.visitObjectLiteralAssign(n, v, a, context, visitor))
+        return true;
+      visitor.leaveObjectLiteralAssign(n, v, a, context, visitor);
+      break;
+    }
+
     default: {
       if (!visitor.doVisitAssignNodes(n, context, a, v, visitor)) {
         if (DEBUG) {
@@ -1609,6 +1620,23 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param c a visitor-specific context
    */
   protected void leaveArrayLiteralAssign(CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) { /* empty */ }
+  /**
+   * Visit an array literal Assignment node after visiting the RHS.
+   * @param n the LHS node to process
+   * @param v the RHS node to process
+   * @param a the assignment node to process
+   * @param c a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  protected boolean visitObjectLiteralAssign(CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) { /* empty */ return false; }
+  /**
+   * Visit an array literal Assignment node after visiting the LHS.
+   * @param n the LHS node to process
+   * @param v the RHS node to process
+   * @param a the assignment node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveObjectLiteralAssign(CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) { /* empty */ }
   /**
    * Visit a Var Op/Assignment node after visiting the RHS.
    * @param n the LHS node to process

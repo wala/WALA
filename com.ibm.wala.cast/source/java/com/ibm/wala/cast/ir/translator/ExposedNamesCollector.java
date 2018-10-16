@@ -144,5 +144,13 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
     return true;
   }
 
+  @Override
+  protected boolean doVisitAssignNodes(CAstNode n, EntityContext context, CAstNode v, CAstNode a,
+      CAstVisitor<EntityContext> visitor) {
+    // assume unknown node types don't do anything relevant to exposed names.  
+    // override if this is untrue
+    return true;
+  }
+
   
 }
