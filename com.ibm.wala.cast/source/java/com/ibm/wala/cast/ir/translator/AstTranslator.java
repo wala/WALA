@@ -1181,7 +1181,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * an {@link IncipientCFG}
    */
   protected final static class AstCFG extends AbstractCFG<SSAInstruction, PreBasicBlock> {
-    private final SSAInstruction[] instructions;
+    private SSAInstruction[] instructions;
 
     private final int[] instructionToBlockMap;
 
@@ -1363,6 +1363,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             instructions[x++] = inst;
           }
         }
+      }
+      
+      if (instructions.length > x) {
+        SSAInstruction[] ni = new SSAInstruction[x];
+        System.arraycopy(instructions, 0, ni, 0, x);
+        instructions = ni;
       }
     }
 
