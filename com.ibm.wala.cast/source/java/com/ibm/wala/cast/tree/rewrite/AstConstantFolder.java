@@ -46,7 +46,7 @@ public class AstConstantFolder {
           }
         } 
         
-      }.rewrite(ce.getAST(), ce.getControlFlow(), ce.getSourceMap(), ce.getNodeTypeMap(), ce.getAllScopedEntities());
+      }.rewrite(ce.getAST(), ce.getControlFlow(), ce.getSourceMap(), ce.getNodeTypeMap(), ce.getAllScopedEntities(), ce.getArgumentDefaults());
       return new DelegatingEntity(ce) {
 
         @Override

@@ -184,6 +184,10 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       break;
     }
     case CAstEntity.FUNCTION_ENTITY: {
+      for(CAstNode dflt : n.getArgumentDefaults()) {
+        visitor.visit(dflt, context, visitor);
+        visitor.visitScopedEntities(context.top(), context.top().getScopedEntities(dflt), context, visitor);
+      }
       C codeContext = visitor.makeCodeContext(context, n);
       if (visitor.visitFunctionEntity(n, context, codeContext, visitor))
         break;

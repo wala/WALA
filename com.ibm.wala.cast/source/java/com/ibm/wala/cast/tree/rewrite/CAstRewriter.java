@@ -100,6 +100,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
     Map<CAstNode, Collection<CAstEntity>> newChildren();
 
+    CAstNode[] newDefaults();
   }
 
   protected final CAst Ast;
@@ -342,9 +343,14 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    * rewrite the CAst sub-tree rooted at root
    */
   public Rewrite rewrite(final CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
-      final Map<CAstNode, Collection<CAstEntity>> children) {
+      final Map<CAstNode, Collection<CAstEntity>> children, final CAstNode[] defaults) {
     final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, cfg, rootContext, nodes);
+    final CAstNode newDefaults[] = new CAstNode[ defaults==null? 0: defaults.length ];
+    for(int i = 0; i < newDefaults.length; i++) {
+        newDefaults[i] = copyNodes(defaults[i], cfg, rootContext, nodes);
+    }
+
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;
 
@@ -353,6 +359,11 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       private CAstNodeTypeMap theTypes = null;
 
       private Map<CAstNode, Collection<CAstEntity>> theChildren = null;
+
+      @Override
+      public CAstNode[] newDefaults() {
+         return newDefaults;
+      }
 
       @Override
       public CAstNode newRoot() {
@@ -397,7 +408,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
     if (root.getAST() != null) {
       final Rewrite rewrite = rewrite(root.getAST(), root.getControlFlow(), root.getSourceMap(), root.getNodeTypeMap(),
-          root.getAllScopedEntities());
+          root.getAllScopedEntities(), root.getArgumentDefaults());
 
       return new DelegatingEntity(root) {
         @Override
@@ -438,6 +449,11 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
         @Override
         public CAstControlFlowMap getControlFlow() {
           return rewrite.newCfg();
+        }
+
+        @Override
+        public CAstNode[] getArgumentDefaults() {
+          return rewrite.newDefaults();
         }
       };
 

@@ -62,7 +62,7 @@ public class CAstCloner extends CAstBasicRewriter<CAstBasicRewriter.NonCopyingCo
   }
 
   public Rewrite copy(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
-      final Map<CAstNode, Collection<CAstEntity>> children) {
-    return rewrite(root, cfg, pos, types, children);
+      final Map<CAstNode, Collection<CAstEntity>> children, CAstNode[] defaults) {
+    return rewrite(root, cfg, pos, types, children, defaults);
   }
 }

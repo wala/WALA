@@ -160,4 +160,9 @@ public interface IMethod extends IMember, ContextItem {
    * @return true iff the local variable table information for this method is available
    */
   boolean hasLocalVariableTable();
+  
+  default int getNumberOfDefaultParameters() {
+    return 0;
+  }
+
 }

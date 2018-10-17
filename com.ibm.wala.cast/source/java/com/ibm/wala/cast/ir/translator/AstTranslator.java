@@ -815,7 +815,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 }
               }
             }).copy(sourceContext.unwindAst, sourceContext.astContext.getControlFlow(), sourceContext.astContext.getSourceMap(),
-                sourceContext.astContext.top().getNodeTypeMap(), sourceContext.astContext.top().getAllScopedEntities());
+                sourceContext.astContext.top().getNodeTypeMap(), sourceContext.astContext.top().getAllScopedEntities(), 
+                sourceContext.astContext.top().getArgumentDefaults());
             sourceContext.astVisitor.visit(ast.newRoot(), new DelegatingContext(sourceContext.astContext) {
               @Override
               public CAstSourcePositionMap getSourceMap() {

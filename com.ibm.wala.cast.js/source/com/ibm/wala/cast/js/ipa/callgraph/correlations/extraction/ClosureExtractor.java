@@ -562,6 +562,10 @@ public class ClosureExtractor extends CAstRewriterExt {
       public CAstNodeTypeMap newTypes() { return theTypes; }
       @Override
       public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
+      @Override
+      public CAstNode[] newDefaults() {
+        return null;
+      }
     };
     new_entity.setRewrite(rw);
 
