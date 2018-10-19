@@ -39,6 +39,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.strings.Atom;
 
 public class KawaCallGraphTest extends DynamicCallGraphTestBase {
@@ -94,7 +95,54 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
     MethodHandles.analyzeMethodHandles(options, builder);
 
-    CallGraph cg = builder.makeCallGraph(options, null);
+    CallGraph cg = builder.makeCallGraph(options, new IProgressMonitor() {
+      private long time = System.currentTimeMillis();
+      
+      @Override
+      public void beginTask(String task, int totalWork) {
+        noteElapsedTime(); 
+      }
+
+      private void noteElapsedTime() {
+        long now = System.currentTimeMillis();
+        if (now - time >= 120000) {
+          System.err.println("worked " + (now - time));
+          time = now;
+        }
+      }
+
+      @Override
+      public void subTask(String subTask) {
+        noteElapsedTime(); 
+      }
+
+      @Override
+      public void cancel() {
+        assert false;
+      }
+
+      @Override
+      public boolean isCanceled() {
+         return false;
+      }
+
+      @Override
+      public void done() {
+        noteElapsedTime(); 
+      }
+
+      @Override
+      public void worked(int units) {
+        noteElapsedTime(); 
+      }
+
+      @Override
+      public String getCancelMessage() {
+        assert false : "should not cancel";
+        return null;
+      }
+      
+    });
     
     return cg; 
    }
