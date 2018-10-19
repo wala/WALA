@@ -20,8 +20,10 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-              <argLine>-Xmx2000M -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea</argLine>
+              <argLine>-Xmx4G -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
+	      <forkCount>2</forkCount>
+	      <reuseForks>false</reuseForks>
             </configuration>
             <goals>
               <goal>test</goal>
