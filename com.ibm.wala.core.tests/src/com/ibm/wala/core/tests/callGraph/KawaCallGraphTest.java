@@ -58,6 +58,9 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
     Set<CGNode> append$v = getNodes(CG, "Lkawa/lang/Quote", "append$V", "([Ljava/lang/Object;)Ljava/lang/Object;");
     assert ! append$v.isEmpty();
+
+    Set<CGNode> clinit = getNodes(CG, "Lkawa/lib/kawa/base", "<clinit>", "()V");
+    assert ! clinit.isEmpty();
 }
 
   @Test
@@ -91,7 +94,9 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
     MethodHandles.analyzeMethodHandles(options, builder);
 
-    return builder.makeCallGraph(options, null); 
+    CallGraph cg = builder.makeCallGraph(options, null);
+    
+    return cg; 
    }
 
 }

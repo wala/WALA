@@ -131,7 +131,8 @@ class ClassFactoryContextSelector implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (isClassFactory(site.getDeclaredTarget())) {
+    IMethod resolved = caller.getMethod().getClassHierarchy().resolveMethod(site.getDeclaredTarget());
+    if (isClassFactory(resolved != null? resolved.getReference(): site.getDeclaredTarget())) {
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
       if (invokeInstructions.length >= 1) {
         if (invokeInstructions[0].isStatic()) {
