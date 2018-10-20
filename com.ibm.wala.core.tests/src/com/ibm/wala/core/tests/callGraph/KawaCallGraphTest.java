@@ -106,7 +106,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
       private void noteElapsedTime() {
         long now = System.currentTimeMillis();
         if (now - time >= 120000) {
-          System.err.println("worked " + (now - time));
+          System.out.println("worked " + (now - time));
           time = now;
         }
       }
