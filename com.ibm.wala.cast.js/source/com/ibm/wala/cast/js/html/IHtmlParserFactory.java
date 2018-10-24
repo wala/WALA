@@ -11,6 +11,7 @@
 
 package com.ibm.wala.cast.js.html;
 
+@FunctionalInterface
 public interface IHtmlParserFactory {
 
   IHtmlParser getParser();
