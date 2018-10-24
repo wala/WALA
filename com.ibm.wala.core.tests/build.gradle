@@ -10,6 +10,19 @@ sourceSets.test {
 	resources.srcDirs = ['dat']
 }
 
+task testJar(type: Jar) {
+    classifier = 'tests'
+    from sourceSets.test.output.classesDirs
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact testJar
+        }
+    }
+}
+
 dependencies {
 	testCompile(
 		'eclipse-deps:org.eclipse.core.runtime:+',

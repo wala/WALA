@@ -28,7 +28,7 @@ public abstract class JLexTest extends IRTests {
   }
 
   @Test public void testJLex() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, emptyList, false);
+    runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, emptyList, false, null);
   }
 
   @Override

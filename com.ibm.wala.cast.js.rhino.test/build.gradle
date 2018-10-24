@@ -4,6 +4,19 @@ plugins {
 
 sourceSets.test.java.srcDirs = ['harness-src']
 
+task testJar(type: Jar) {
+    classifier = 'tests'
+    from sourceSets.test.output.classesDirs
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact testJar
+        }
+    }
+}
+
 dependencies {
 	testCompile(
 		'junit:junit:4.12',

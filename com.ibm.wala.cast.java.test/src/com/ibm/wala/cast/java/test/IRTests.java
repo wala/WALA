@@ -349,9 +349,13 @@ public abstract class IRTests {
   protected abstract <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
   public <I extends InstanceKey> Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> runTest(Collection<String> sources, List<String> libs,
-        String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable) throws IllegalArgumentException, CancelException, IOException {
+        String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable, String exclusionsFile) throws IllegalArgumentException, CancelException, IOException {
       AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
 
+      if (exclusionsFile != null) {
+        engine.setExclusionsFile(exclusionsFile);
+      }
+      
       CallGraph callGraph;
         callGraph = engine.buildDefaultCallGraph();
         //System.err.println(callGraph.toString());

@@ -70,6 +70,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.io.TemporaryFile;
 
 /**
@@ -113,6 +114,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   protected ECJSourceLoaderImpl sourceLoader;
   private final String[] sources;
   private final String[] libs;
+  private final SetOfClasses exclusions;
   
   public ECJSourceModuleTranslator(AnalysisScope scope, ECJSourceLoaderImpl sourceLoader) {
     this(scope, sourceLoader, false);
@@ -125,6 +127,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     Pair<String[], String[]> paths = computeClassPath(scope);
     sources = paths.fst;
     libs = paths.snd;
+    
+    this.exclusions = scope.getExclusions();
   }
 
   private static Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
@@ -173,7 +177,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     List<String> sources = new LinkedList<>();
     Map<String, ModuleEntry> sourceMap = HashMapFactory.make();
     for(ModuleEntry m : modules) {
-      if (m.isSourceFile()) {
+      if (m.isSourceFile()) { 
         SourceFileModule s = (SourceFileModule)m;
         sourceMap.put(s.getAbsolutePath(), s);
         sources.add(s.getAbsolutePath());
@@ -191,7 +195,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   protected Java2IRTranslator makeIRTranslator() {
-    return new Java2IRTranslator(sourceLoader);
+    return new Java2IRTranslator(sourceLoader, exclusions);
   }
 
   protected JDTJava2CAstTranslator<Position> makeCAstTranslator(CompilationUnit cu, String fullPath) {

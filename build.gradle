@@ -9,6 +9,7 @@ plugins {
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '8.3.1'
 	id 'nebula.source-jar' version '7.0.1' apply false
+	id 'maven-publish'
 }
 
 

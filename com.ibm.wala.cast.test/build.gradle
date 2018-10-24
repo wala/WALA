@@ -8,7 +8,22 @@ plugins {
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 prepareIntelliJIDEA.dependsOn jarTest
 
+apply plugin: 'java'
+
 sourceSets.test.java.srcDirs = ['harness-src/java']
+
+task testJar(type: Jar) {
+    classifier = 'tests'
+    from sourceSets.test.output.classesDirs
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact testJar
+        }
+    }
+}
 
 dependencies {
 	testCompile(

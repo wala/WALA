@@ -42,16 +42,19 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
 public class JavaCAst2IRTranslator extends AstTranslator {
   private final CAstEntity fSourceEntity;
   private final ModuleEntry module;
+  private final SetOfClasses exclusions;
 
-  public JavaCAst2IRTranslator(ModuleEntry module, CAstEntity sourceFileEntity, JavaSourceLoaderImpl loader) {
+  public JavaCAst2IRTranslator(ModuleEntry module, CAstEntity sourceFileEntity, JavaSourceLoaderImpl loader, SetOfClasses exclusions) {
     super(loader);
     fSourceEntity = sourceFileEntity;
     this.module = module;
+    this.exclusions = exclusions;
   }
 
   public void translate() {
@@ -215,11 +218,15 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
     // N.B.: base class may actually ask to create a synthetic type to wrap
     // code bodies, so we may see other things than TYPE_ENTITY here.
-    IClass owner = loader.lookupClass(makeType(topEntity.getType()).getName());
+    TypeName ownerName = makeType(topEntity.getType()).getName();
+    IClass owner = loader.lookupClass(ownerName);
 
-    assert owner != null : makeType(topEntity.getType()).getName() + " not found in " + loader;
+    assert owner != null || exclusions.contains(ownerName.toString())
+        : ownerName + " not found in " + loader;
 
-    ((JavaSourceLoaderImpl) loader).defineField(n, owner);
+    if (owner != null) {
+      ((JavaSourceLoaderImpl) loader).defineField(n, owner);
+    }
   }
 
   // handles abstract method declarations, which do not get defineFunction
@@ -228,11 +235,13 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   protected void declareFunction(CAstEntity N, WalkContext definingContext) {
     CAstType.Method methodType = (Method) N.getType();
     CAstType owningType = methodType.getDeclaringType();
+    
     IClass owner = loader.lookupClass(makeType(owningType).getName());
 
-    assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
+    assert owner != null || exclusions.contains(owningType.getName())
+      : makeType(owningType).getName().toString() + " not found in " + loader;
 
-    if (N.getQualifiers().contains(CAstQualifier.ABSTRACT)) {
+    if (owner != null && N.getQualifiers().contains(CAstQualifier.ABSTRACT)) {
       ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
     }
   }
@@ -248,13 +257,16 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeName typeName = makeType(owningType).getName();
     IClass owner = loader.lookupClass(typeName);
 
-    assert owner != null : typeName.toString() + " not found in " + loader;
+    assert owner != null || exclusions.contains(owningType.getName())
+        : typeName.toString() + " not found in " + loader;
 
-    symtab.getConstant(0);
-    symtab.getNullConstant();
+    if (owner != null) {
+      symtab.getConstant(0);
+      symtab.getNullConstant();
 
-    ((JavaSourceLoaderImpl) loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
+      ((JavaSourceLoaderImpl) loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
         debugInfo);
+    }
   }
 
   @Override
@@ -312,7 +324,11 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     CAstEntity parentType = getEnclosingType(type);
     // ((JavaSourceLoaderImpl)loader).defineType(type,
     // composeEntityName(wc,type), parentType);
-    return ((JavaSourceLoaderImpl) loader).defineType(type, type.getType().getName(), parentType) != null;
+    if (exclusions.contains(type.getType().getName().substring(1))) {
+      return false;
+    } else {
+      return ((JavaSourceLoaderImpl) loader).defineType(type, type.getType().getName(), parentType) != null;
+    }
   }
 
   @Override

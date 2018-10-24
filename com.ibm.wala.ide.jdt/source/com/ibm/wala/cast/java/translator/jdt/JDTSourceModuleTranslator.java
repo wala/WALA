@@ -65,6 +65,7 @@ import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
 import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -111,7 +112,8 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
 
   protected boolean dump;
   protected JDTSourceLoaderImpl sourceLoader;
-
+  private final SetOfClasses exclusions;
+  
   public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader) {
     this(scope, sourceLoader, false);
   }
@@ -120,6 +122,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     computeClassPath(scope);
     this.sourceLoader = sourceLoader;
     this.dump = dump;
+    this.exclusions = scope.getExclusions();
   }
 
   private static void computeClassPath(AnalysisScope scope) {
@@ -182,7 +185,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   protected Java2IRTranslator makeIRTranslator() {
-    return new Java2IRTranslator(sourceLoader);
+    return new Java2IRTranslator(sourceLoader, exclusions);
   }
 
   protected JDTJava2CAstTranslator<JdtPosition> makeCAstTranslator(CompilationUnit cu, final IFile sourceFile, String fullPath) {

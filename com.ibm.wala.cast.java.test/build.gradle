@@ -5,7 +5,23 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.test.java.srcDirs = ['src']
+sourceSets.test {
+	java.srcDirs = ['src']
+	resources.srcDirs = ['data']
+}
+
+task testJar(type: Jar) {
+    classifier = 'tests'
+    from sourceSets.test.output.classesDirs
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact testJar
+        }
+    }
+}
 
 dependencies {
 	testCompile(
