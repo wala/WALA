@@ -62,7 +62,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
     Set<CGNode> clinit = getNodes(CG, "Lkawa/lib/kawa/base", "<clinit>", "()V");
     assert ! clinit.isEmpty();
-}
+  }
 
   @Test
   public void testKawaTest() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, SecurityException {   
