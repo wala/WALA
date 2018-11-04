@@ -324,7 +324,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     CAstEntity parentType = getEnclosingType(type);
     // ((JavaSourceLoaderImpl)loader).defineType(type,
     // composeEntityName(wc,type), parentType);
-    if (exclusions.contains(type.getType().getName().substring(1))) {
+    if (exclusions != null && exclusions.contains(type.getType().getName().substring(1))) {
       return false;
     } else {
       return ((JavaSourceLoaderImpl) loader).defineType(type, type.getType().getName(), parentType) != null;
