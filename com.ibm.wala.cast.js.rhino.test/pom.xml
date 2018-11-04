@@ -22,6 +22,8 @@
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
               <argLine>-Xmx800M -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
+	      <forkCount>2</forkCount>
+	      <reuseForks>false</reuseForks>
               <additionalClasspathElements>
                 <additionalClasspathElement>${basedir}/../com.ibm.wala.cast.js.test.data/examples-src</additionalClasspathElement>
               </additionalClasspathElements>

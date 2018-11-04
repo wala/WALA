@@ -40,7 +40,9 @@
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
               <argLine>-Xmx800M -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
-            </configuration>
+  	      <forkCount>2</forkCount>
+	      <reuseForks>false</reuseForks>
+          </configuration>
             <goals>
               <goal>test</goal>
             </goals>
