@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
 /** A class loader that reads class definitions from a set of Modules. */
@@ -207,14 +208,21 @@ public class ClassLoaderImpl implements IClassLoader {
   /** Set up the set of classes loaded by this object. */
   @SuppressWarnings("unused")
   private void loadAllClasses(
-      Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents) {
+      Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents, boolean isJMODType) {
     for (ModuleEntry entry : moduleEntries) {
-      if (!entry.isClassFile()) {
+      // java11 support for jmod files
+      if (!entry.isClassFile()
+          || (isJMODType && entry.getClassName().startsWith("classes/module-info"))) {
         continue;
       }
 
       @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
       String className = entry.getClassName().replace('.', '/');
+
+      // java11 support for jmod files
+      if (isJMODType && className.startsWith("classes/")) {
+        className = className.replace("classes/", "");
+      }
 
       if (DEBUG_LEVEL > 0) {
         System.err.println("Consider " + className);
@@ -451,6 +459,11 @@ public class ClassLoaderImpl implements IClassLoader {
     Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
     Set<ModuleEntry> sourceModuleEntries = HashSetFactory.make();
     for (Module archive : modules) {
+      boolean isJMODType = false;
+      if (archive instanceof JarFileModule) {
+        JarFile jarFile = ((JarFileModule) archive).getJarFile();
+        isJMODType = (jarFile != null) && jarFile.getName().endsWith(".jmod");
+      }
       if (DEBUG_LEVEL > 0) {
         System.err.println("add archive: " + archive);
       }
@@ -489,7 +502,7 @@ public class ClassLoaderImpl implements IClassLoader {
         // }
         // jarFileContents = null;
       }
-      loadAllClasses(classFiles, allClassAndSourceFileContents);
+      loadAllClasses(classFiles, allClassAndSourceFileContents, isJMODType);
       loadAllSources(sourceFiles);
       classModuleEntries.addAll(classFiles);
       sourceModuleEntries.addAll(sourceFiles);

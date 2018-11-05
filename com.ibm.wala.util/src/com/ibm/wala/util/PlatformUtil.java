@@ -11,7 +11,11 @@
 package com.ibm.wala.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /** Platform-specific utility functions. */
 public class PlatformUtil {
@@ -46,14 +50,29 @@ public class PlatformUtil {
    * @throws IllegalStateException if boot classpath cannot be found
    */
   public static String[] getBootClassPathJars() {
-    String classpath = System.getProperty("sun.boot.class.path");
+    String classpath = null;
+    String javaVersion = System.getProperty("java.specification.version");
+    if (javaVersion.equals("9") || javaVersion.equals("10") || javaVersion.equals("11")) {
+      // java11 support for jmod files
+      try {
+        classpath =
+            String.join(
+                File.pathSeparator,
+                Files.list(Paths.get(System.getenv("JAVA_HOME"), "jmods"))
+                    .map(x -> x.toString())
+                    .collect(Collectors.toList()));
+      } catch (IOException e) {
+      }
+    } else {
+      classpath = System.getProperty("sun.boot.class.path");
+    }
     if (classpath == null) {
       throw new IllegalStateException("could not find boot classpath");
     }
     String[] jars = classpath.split(File.pathSeparator);
     ArrayList<String> result = new ArrayList<>();
     for (String jar : jars) {
-      if (jar.endsWith(".jar") && (new File(jar)).exists()) {
+      if ((jar.endsWith(".jar") || jar.endsWith(".jmod")) && (new File(jar)).exists()) {
         result.add(jar);
       }
     }
