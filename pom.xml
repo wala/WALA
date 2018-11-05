@@ -166,7 +166,6 @@
 	  </includes>
 	  <excludes>
 	    <exclude>**/*AndroidLibs*.java</exclude>
-	    <exclude>**/*KawaCallGraphTest*.java</exclude>
 	  </excludes>
 	</configuration>
       </plugin>

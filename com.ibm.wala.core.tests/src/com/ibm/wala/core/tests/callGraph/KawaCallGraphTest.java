@@ -11,6 +11,9 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assume.assumeThat;
+
 import java.io.IOException;
 import java.util.Set;
 
@@ -46,6 +49,8 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testKawaChess() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, SecurityException {   
+    assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
+    
     CallGraph CG = testKawa(new ResourceJarFileModule(getClass().getClassLoader().getResource("kawachess.jar")), "main");
     
     Set<CGNode> status = getNodes(CG, "Lchess", "startingStatus", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
@@ -66,6 +71,8 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testKawaTest() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, SecurityException {   
+    assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
+
     CallGraph CG = testKawa(new ResourceJarFileModule(getClass().getClassLoader().getResource("kawatest.jar")), "test");
     
     Set<CGNode> nodes = getNodes(CG, "Ltest", "plusish$V", "(Lgnu/lists/LList;)Ljava/lang/Object;");
