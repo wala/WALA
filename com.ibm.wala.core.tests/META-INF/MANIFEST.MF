@@ -39,3 +39,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin
 Eclipse-RegisterBuddy: com.ibm.wala.core, com.ibm.wala.core.testdata
+Automatic-Module-Name: com.ibm.wala.core.tests

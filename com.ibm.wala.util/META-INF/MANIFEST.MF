@@ -25,3 +25,4 @@ Export-Package: com.ibm.wala.dataflow.graph,
  com.ibm.wala.viz
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: com.ibm.wala.util

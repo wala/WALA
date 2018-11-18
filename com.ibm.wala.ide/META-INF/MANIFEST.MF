@@ -26,3 +26,4 @@ Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.ide.plugin,
  com.ibm.wala.ide.ui,
  com.ibm.wala.ide.util
+Automatic-Module-Name: com.ibm.wala.ide

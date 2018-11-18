@@ -6,3 +6,4 @@ Bundle-Version: 1.5.1.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-BuddyPolicy: registered
+Automatic-Module-Name: com.ibm.wala.core.testdata

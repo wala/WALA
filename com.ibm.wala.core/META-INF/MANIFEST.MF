@@ -79,3 +79,4 @@ Export-Package: .,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-BuddyPolicy: registered
 Bundle-ClassPath: .
+Automatic-Module-Name: com.ibm.wala.core
