@@ -20,3 +20,4 @@ Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.sourcepos
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.ibm.wala.util
+Automatic-Module-Name: com.ibm.wala.shrike

@@ -25,3 +25,4 @@ Export-Package: com.ibm.wala.examples.drivers,
  com.ibm.wala.ide.test,
  com.ibm.wala.ide.tests.util
 Bundle-Activator: com.ibm.wala.ide.test.Activator
+Automatic-Module-Name: com.ibm.wala.ide.tests
