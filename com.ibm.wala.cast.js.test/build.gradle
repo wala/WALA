@@ -4,17 +4,10 @@ plugins {
 
 sourceSets.test.java.srcDirs = ['harness-src']
 
-task testJar(type: Jar) {
-    classifier = 'tests'
-    from sourceSets.test.output.classesDirs
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact testJar
-        }
-    }
+publishing.publications {
+	mavenJava(MavenPublication) {
+		artifact jarTest
+	}
 }
 
 dependencies {
