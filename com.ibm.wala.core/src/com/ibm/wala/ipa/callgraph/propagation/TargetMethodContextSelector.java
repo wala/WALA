@@ -43,10 +43,6 @@ public class TargetMethodContextSelector implements ContextSelector {
 
     class MethodDispatchContext implements Context {
 
-      private IMethod getTargetMethod() {
-        return M;
-      }
-
       @Override
       public ContextItem get(ContextKey name) {
         if (name.equals(ContextKey.PARAMETERS[0])) {
