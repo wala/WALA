@@ -45,7 +45,7 @@ processTestResources {
 }
 
 test {
-	maxHeapSize = '800M'
+	maxHeapSize = '1500M'
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
 	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
