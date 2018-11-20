@@ -1,4 +1,3 @@
-sudo: false
 android:
   components:
     - build-tools-26.0.2
