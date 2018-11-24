@@ -357,6 +357,17 @@
 						value="secure" />
 					<call type="static" name="initializeSystemClass"
 						class="Ljava/lang/System" descriptor="()V" />
+                    <!-- a hack to model running of shutdown hooks (actually runs at
+                         JVM shutdown) -->
+                    <call type="static" name="runHooks"
+                          class="Ljava/lang/Shutdown" descriptor="()V" />
+                    <!-- Model propagation of an uncaught exception on a thread.  Imprecise
+                         as a subsequent analysis may be able to prove this is impossible -->
+                    <new def="tg" class="Ljava/lang/ThreadGroup" />
+                    <call type="virtual" name="uncaughtException"
+                          class="Ljava/lang/ThreadGroup"
+                          descriptor="(Ljava/lang/Thread;Ljava/lang/Throwable;)V"
+                          arg0="tg" arg1="null" arg2="null" />
 				</method>
 
 				<method name="initializeSystemClass" descriptor="()V"
