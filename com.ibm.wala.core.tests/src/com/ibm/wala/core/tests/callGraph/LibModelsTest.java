@@ -47,6 +47,8 @@ public class LibModelsTest extends WalaTestCase {
 
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
 
+    //System.err.println(cg);
+
     // Find node corresponding to finalize
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, libModelsTestClass);
     MethodReference m = MethodReference.findOrCreate(t, "reachable1", "()V");
