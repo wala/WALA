@@ -14,7 +14,12 @@ public class LibModels {
     }
   }
   public static void main( String[] argv) {
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> reachable1()));
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        reachable1();
+      }
+    });
     Thread.setDefaultUncaughtExceptionHandler(new Handler());
   }
 }
