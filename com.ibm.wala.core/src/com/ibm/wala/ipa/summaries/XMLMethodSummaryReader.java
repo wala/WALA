@@ -476,7 +476,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.productionAssertion(argString != null, "unspecified arg in method " + governingMethod + " " + site);
         Integer valueNumber = symbolTable.get(argString);
         if (valueNumber == null) {
-          valueNumber = Integer.parseInt(argString);
+          if (argString.equals(V_NULL)) {
+            valueNumber = getValueNumberForNull();
+          } else {
+            valueNumber = Integer.parseInt(argString);
+          }
         }
         params[i] = valueNumber.intValue();
       }
@@ -806,11 +810,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             if (!retV.equals(V_NULL)) {
               Assertions.UNREACHABLE("Cannot return value with no def: " + retV);
             } else {
-              valueNumber = symbolTable.get(V_NULL);
-              if (valueNumber == null) {
-                valueNumber = Integer.valueOf(nextLocal++);
-                symbolTable.put(V_NULL, valueNumber);
-              }
+              valueNumber = getValueNumberForNull();
             }
           }
           boolean isPrimitive = governingMethod.getReturnType().isPrimitiveType();
@@ -818,6 +818,16 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
           governingMethod.addStatement(R);
         }
       }
+    }
+
+    private Integer getValueNumberForNull() {
+      Integer valueNumber;
+      valueNumber = symbolTable.get(V_NULL);
+      if (valueNumber == null) {
+        valueNumber = Integer.valueOf(nextLocal++);
+        symbolTable.put(V_NULL, valueNumber);
+      }
+      return valueNumber;
     }
 
     /**

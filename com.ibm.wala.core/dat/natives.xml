@@ -320,6 +320,14 @@
 				<method name="freeMemory" descriptor="()J"></method>
 				<method name="gc" descriptor="()V"></method>
 				<method name="totalMemory" descriptor="()J"></method>
+                <method name="addShutdownHook"
+                        descriptor="(Ljava/lang/Thread;)V">
+                    <call type="virtual"
+                          name="start"
+                          class="Ljava/lang/Thread"
+                          descriptor="()V"
+                          arg0="arg1" />
+                </method>
 			</class>
 			<class name="SecurityManager">
 				<method name="getClassContext"
@@ -508,6 +516,16 @@
 					<call type="interface" name="run"
 						class="Ljava/lang/Runnable" descriptor="()V" arg0="y" />
 				</method>
+                <method name="setDefaultUncaughtExceptionHandler"
+                        descriptor="(Ljava/lang/Thread$UncaughtExceptionHandler;)V"
+                        static="true">
+                    <call type="interface"
+                          name="uncaughtException"
+                          class="Ljava/lang/Thread$UncaughtExceptionHandler"
+                          descriptor="(Ljava/lang/Thread;Ljava/lang/Throwable;)V"
+                          arg0="arg0" arg1="null" arg2="null"
+                    />
+                </method>
 				<method name="stop0" descriptor="()V" />
 				<method name="yield" descriptor="()V" static="true" />
 			</class>
