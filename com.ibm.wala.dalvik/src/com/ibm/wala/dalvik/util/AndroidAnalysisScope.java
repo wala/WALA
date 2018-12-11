@@ -26,12 +26,16 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
+import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.MultiDexContainer;
 
 public class AndroidAnalysisScope {
 
 	private static final String BASIC_FILE = "primordial.txt";
 
-	public static AnalysisScope setUpAndroidAnalysisScope(URI classpath, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
+	public static AnalysisScope setUpAndroidAnalysisScope(URI apkFileName, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		AnalysisScope scope;
 		File exclusionsFile = exclusions != null? new File(exclusions) : null;
 
@@ -56,17 +60,23 @@ public class AndroidAnalysisScope {
 					scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(new JarFile(new File(al))));
 				}
 			}
-
 		}
 
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-		scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(new File(classpath)));
-		
+		final int apiLevel = 28;
+		File apkFile = new File(apkFileName);
+		MultiDexContainer<? extends DexBackedDexFile> multiDex = DexFileFactory.loadDexContainer(apkFile, Opcodes.forApi(apiLevel));
+
+		for (String dexEntry : multiDex.getDexEntryNames()) {
+			scope.addToScope(ClassLoaderReference.Application, new DexFileModule(apkFile, dexEntry, apiLevel));
+		}
+
 		return scope;
 	}
-	
+
+
 	/**
 	 * Handle .apk file.
 	 * 
