@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -296,7 +297,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       computeSuperclass();
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
-      throw new NoSuperclassFoundException("No superclass found for " + this + " Superclass name " + superName);
+      // TODO MissingSuperClassHandling.Phantom needs to be implemented
+      if (cha instanceof ClassHierarchy && ((ClassHierarchy) cha).getSuperClassHandling().equals(ClassHierarchy.MissingSuperClassHandling.ROOT)) {
+        superClass = loader.lookupClass(loader.getLanguage().getRootType().getName());
+      } else
+        throw new NoSuperclassFoundException("No superclass found for " + this + " Superclass name " + superName);
     }
     return superClass;
   }
