@@ -35,7 +35,16 @@ public class AndroidAnalysisScope {
 
 	private static final String BASIC_FILE = "primordial.txt";
 
-	public static AnalysisScope setUpAndroidAnalysisScope(URI apkFileName, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
+	/**
+	 * Creates an Android Analysis Scope
+	 * @param codeFileName  the name of a .oat|.apk|.dex file
+	 * @param exclusions  the name of the exclusions file (nullable)
+	 * @param loader  the classloader to use
+	 * @param androidLib  an array of libraries (e.g. the Android SDK jar) to add to the scope
+	 * @return  a {@link AnalysisScope}
+	 * @throws IOException
+	 */
+	public static AnalysisScope setUpAndroidAnalysisScope(URI codeFileName, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		AnalysisScope scope;
 		File exclusionsFile = exclusions != null? new File(exclusions) : null;
 
@@ -65,12 +74,18 @@ public class AndroidAnalysisScope {
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-		final int apiLevel = 28;
-		File apkFile = new File(apkFileName);
-		MultiDexContainer<? extends DexBackedDexFile> multiDex = DexFileFactory.loadDexContainer(apkFile, Opcodes.forApi(apiLevel));
 
-		for (String dexEntry : multiDex.getDexEntryNames()) {
-			scope.addToScope(ClassLoaderReference.Application, new DexFileModule(apkFile, dexEntry, apiLevel));
+		File codeFile = new File(codeFileName);
+		boolean isContainerFile = codeFile.getName().endsWith(".oat") || codeFile.getName().endsWith(".apk");
+
+		if (isContainerFile) {
+			MultiDexContainer<? extends DexBackedDexFile> multiDex = DexFileFactory.loadDexContainer(codeFile, Opcodes.forApi(DexFileModule.API_LEVEL));
+
+			for (String dexEntry : multiDex.getDexEntryNames()) {
+				scope.addToScope(ClassLoaderReference.Application, new DexFileModule(codeFile, dexEntry));
+			}
+		} else {
+			scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(codeFile));
 		}
 
 		return scope;

@@ -73,6 +73,7 @@ public class DexFileModule implements Module {
 	private final File f;
     private final DexFile dexfile;
     private final Collection<ModuleEntry> entries;
+    public final static int API_LEVEL = 28;  // Android API level
 
     public static DexFileModule make(File f) throws IllegalArgumentException, IOException {
     	if (f.getName().endsWith("jar")) {
@@ -104,10 +105,10 @@ public class DexFileModule implements Module {
      *            the .dex or .apk file
      * @throws IllegalArgumentException
      */
-    private DexFileModule(File f) throws IllegalArgumentException {    	
+    private DexFileModule(File f) throws IllegalArgumentException {
         try {
-        		this.f = f;
-            dexfile = DexFileFactory.loadDexFile(f, Opcodes.forApi(24));
+        	this.f = f;
+            dexfile = DexFileFactory.loadDexFile(f, Opcodes.forApi(API_LEVEL));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -122,9 +123,9 @@ public class DexFileModule implements Module {
 
     /**
      * @param f
-     *            the .dex or .apk file
+     *            the .oat or .apk file
      * @param entry
-     *            the name of the .dex file inside the apk
+     *            the name of the .dex file inside the container file
      * @param apiLevel
      *            the api level wanted
      * @throws IllegalArgumentException
@@ -142,6 +143,10 @@ public class DexFileModule implements Module {
         for (ClassDef cdefitems : dexfile.getClasses()) {
             entries.add(new DexModuleEntry(cdefitems, this));
         }
+    }
+
+    public DexFileModule(File f, String entry) throws IllegalArgumentException {
+        this(f, entry, API_LEVEL);
     }
 
     /**
