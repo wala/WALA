@@ -49,6 +49,7 @@ public class MultiDexScopeTest {
         scope.setLoaderImpl(ClassLoaderReference.Application,
                 "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
+        addAPKtoScope(ClassLoaderReference.Application, scope, apkName);
         return scope;
     }
 
@@ -83,10 +84,12 @@ public class MultiDexScopeTest {
         ClassHierarchy cha, cha2;
         String multidexApk =  "data/multidex-test.apk";
 
-        // extract dex files to disk and add them manually to scope
-        scope = setUpTestScope(multidexApk,"", MultiDexScopeTest.class.getClassLoader());
+        scope = AnalysisScopeReader.readJavaScope("primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
+        scope.setLoaderImpl(ClassLoaderReference.Application,
+                "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
         try {
+            // extract dex files to disk and add them manually to scope
             File dexTmpDir = new File(System.getProperty("java.io.tmpdir"));
             extractDexFiles(multidexApk, dexTmpDir);
 
