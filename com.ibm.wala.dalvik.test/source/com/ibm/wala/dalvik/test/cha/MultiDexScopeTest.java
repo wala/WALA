@@ -17,7 +17,11 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -115,28 +119,28 @@ public class MultiDexScopeTest {
     }
 
     private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(new File(apkFileName)));
-        ZipEntry entry;
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(new File(apkFileName)))) {
+            ZipEntry entry;
 
-        while ((entry = zis.getNextEntry()) != null) {
-            if (!entry.isDirectory()) {
-                if (entry.getName().startsWith("classes") && entry.getName().endsWith(".dex")) {
-                    extractFile(zis, outDir + File.separator + entry.getName());
+            while ((entry = zis.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
+                    if (entry.getName().startsWith("classes") && entry.getName().endsWith(".dex")) {
+                        extractFile(zis, outDir + File.separator + entry.getName());
+                    }
                 }
+                zis.closeEntry();
             }
-            zis.closeEntry();
         }
-        zis.close();
     }
 
     private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(outFileName)));
-        byte[] buffer = new byte[4096];
-        int read = 0;
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(outFileName)))) {
+            byte[] buffer = new byte[4096];
+            int read;
 
-        while ((read = zipIn.read(buffer)) != -1) {
-            bos.write(buffer, 0, read);
+            while ((read = zipIn.read(buffer)) != -1) {
+                bos.write(buffer, 0, read);
+            }
         }
-        bos.close();
     }
 }
