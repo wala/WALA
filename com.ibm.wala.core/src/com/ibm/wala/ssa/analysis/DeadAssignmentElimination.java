@@ -108,7 +108,7 @@ public class DeadAssignmentElimination {
           continue;
         }
         int def = phi.getDef();
-        if (DU.getNumberOfUses(def) == 0) {
+        if (DU.isUnused(def)) {
           // the phi is certainly dead ... record this with a dataflow fact.
           trivialDead.add(Integer.valueOf(def));
         } else {
