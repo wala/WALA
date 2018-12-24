@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 
@@ -20,7 +20,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
  */
 public class InferGraphRoots {
 
-  public static <T> Collection<T> inferRoots(Graph<T> g){
+  public static <T> Set<T> inferRoots(Graph<T> g){
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
