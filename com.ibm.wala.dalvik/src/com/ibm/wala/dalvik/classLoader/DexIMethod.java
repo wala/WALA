@@ -3287,9 +3287,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
      */
 	@Override
 	public Collection<CallSiteReference> getCallSites() {
-        Collection<CallSiteReference> empty = Collections.emptySet();
         if (isNative()) {
-            return empty;
+            return Collections.emptySet();
         }
 
         // assert(false) : "Please review getCallSites-Implementation before use!";        // TODO
