@@ -310,8 +310,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       m = im.getReference();
     }
     Set<CGNode> result = mr2Nodes.get(m);
-    Set<CGNode> empty = Collections.emptySet();
-    return (result == null) ? empty : result;
+    return (result == null) ? Collections.emptySet() : result;
   }
 
   /**
