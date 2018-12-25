@@ -731,12 +731,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         private boolean addKey(InstanceKey k) {
           int n = system.findOrCreateIndexForInstanceKey(k);
-          if (!lv.contains(n)) {
-            lv.add(n);
-            return true;
-          } else {
-            return false;
-          }
+          return lv.add(n);
         }
 
         @Override
