@@ -259,10 +259,8 @@ nextMethod:
                     if (baseClass.getMethod(method.getSelector()) != null) {
                         final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
                        
-                        if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
-                            if (eps.add(ep)) {
-                                logger.debug("Heuristic 1: selecting {} for base {}", method, base);
-                            }
+                        if (eps.add(ep)) {  // Just to be sure that a previous element stays as-is
+                            logger.debug("Heuristic 1: selecting {} for base {}", method, base);
                         }
                     }
                 }
@@ -340,10 +338,9 @@ nextMethod:
                     if (androidClass.getMethod(method.getSelector()) != null) {
                         final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
 
-                        if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
-                        if (eps.add(ep)) {
+                        if (eps.add(ep)) {  // Just to be sure that a previous element stays as-is
                             logger.debug("Heuristic 2a: selecting {}", method);
-                        }} else {
+                        } else {
                             logger.debug("Heuristic 2a: already selected {}", method);
                         }
                     }
@@ -366,10 +363,9 @@ nextMethod:
                             // The function is overridden
                             final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(), method, cha);
 
-                            if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
-                            if (eps.add(ep)) {
+                            if (eps.add(ep)) {  // Just to be sure that a previous element stays as-is
                                 logger.debug("Heuristic 2b: selecting {}", method);
-                            }}
+                            }
                         } else if (method != null) {
                             // The function is taken from the super-class
                             if (this.flags.contains(LocatorFlags.WITH_SUPER)) {

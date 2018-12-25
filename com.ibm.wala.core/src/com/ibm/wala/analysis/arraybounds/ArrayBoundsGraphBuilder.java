@@ -391,8 +391,7 @@ public class ArrayBoundsGraphBuilder {
 
 		while (!todo.isEmpty()) {
 			final int next = todo.pop();
-			if (!this.foundVariables.contains(next)) {
-				this.foundVariables.add(next);
+			if (this.foundVariables.add(next)) {
 				this.lowerBoundGraph.addNode(next);
 				this.upperBoundGraph.addNode(next);
 

@@ -106,7 +106,7 @@ public class Acyclic {
       while (isFinished && currentIt.hasNext() ) {
         final T succ = currentIt.next();
         if (!finished.contains(succ)) {
-          if (succ == current || stackSet.contains(succ)) {
+          if (succ == current || !stackSet.add(succ)) {
             // found a backedge
             final int src = G.getNumber(current);
             final int dst = G.getNumber(succ);
@@ -116,7 +116,6 @@ public class Acyclic {
             stackSet.add(current);
             stackIt.push(currentIt);
             stack.push(succ);
-            stackSet.add(succ);
             stackIt.push(G.getSuccNodes(succ));
             isFinished = false;
           }

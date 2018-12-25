@@ -41,8 +41,7 @@ public class Worklist extends Heap<AbstractStatement> {
   }
   
   public void insertStatement(AbstractStatement eq) {
-    if (!contents.contains(eq)) {
-      contents.add(eq);
+    if (contents.add(eq)) {
       super.insert(eq);
     }
   }
