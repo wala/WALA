@@ -11,11 +11,8 @@
 
 package com.ibm.wala.cfg.exc.inter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
@@ -273,8 +270,7 @@ public final class InterprocNullPointerAnalysis {
       }
       nodes.removeAll(nodesToRemove);
 
-      final HashSet<CGNode> partialRoots = new HashSet<>();
-      partialRoots.add(fullCG.getFakeRootNode());
+      final Set<CGNode> partialRoots = Collections.singleton(fullCG.getFakeRootNode());
 
       // delete the nodes
       final PartialCallGraph partialCG1 = PartialCallGraph.make(fullCG, partialRoots, nodes);
