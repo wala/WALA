@@ -103,9 +103,7 @@ public class PrefixVariable extends AbstractVariable<PrefixVariable>{
 
     public boolean include(Integer i)
     {
-        if (fullPrefixKnown.contains(i)) return false;
-        fullPrefixKnown.add(i);
-        return true;
+        return fullPrefixKnown.add(i);
     }
 
     // set an instance key to have a known prefix

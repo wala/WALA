@@ -201,10 +201,9 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       types = HashSetFactory.make(2);
       map.put(context, types);
     }
-    if (types.contains(type)) {
+    if (!types.add(type)) {
       return false;
     } else {
-      types.add(type);
       // update any extant synthetic method
       SpecializedFactoryMethod m = syntheticMethodCache.get(context);
       if (m != null) {

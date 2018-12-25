@@ -1492,8 +1492,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     
     private void processFinalizeMethod(final IClass klass) {
-      if (! getBuilder().finalizeVisited.contains(klass)) {
-        getBuilder().finalizeVisited.add(klass);
+      if (getBuilder().finalizeVisited.add(klass)) {
         IMethod finalizer = klass.getMethod(MethodReference.finalizeSelector);
         if (finalizer != null && ! finalizer.getDeclaringClass().getReference().equals(TypeReference.JavaLangObject)) {
           Entrypoint ef = new DefaultEntrypoint(finalizer, getClassHierarchy()) {

@@ -153,8 +153,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       
         Assert.assertTrue("no edge for " + caller + " --> " + callee, staticCG1.getPossibleSites(caller, callee).hasNext());
         Pair<CGNode,CGNode> x = Pair.make(caller, callee);
-        if (! edges.contains(x)) {
-          edges.add(x);
+        if (edges.add(x)) {
           System.err.println("found expected edge " + caller + " --> " + callee);
         }
     }, filter);

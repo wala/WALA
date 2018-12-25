@@ -114,11 +114,10 @@ public final class InterprocNullPointerAnalysis {
       final IProgressMonitor progress) throws UnsoundGraphException, CancelException, WalaException {
     assert paramState != null;
 
-    if (visited.contains(startNode)) {
+    if (!visited.add(startNode)) {
       return;
     }    
-    visited.add(startNode);
-    
+
     MonitorUtil.throwExceptionIfCanceled(progress);
     
     final Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> firstPass =
