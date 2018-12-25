@@ -99,11 +99,11 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
    * 
    * @param b the bit to set
    */
-  public void add(int b) {
+  public boolean add(int b) {
     if (V == null) {
       V = IntSetUtil.getDefaultIntSetFactory().make();
     }
-    V.add(b);
+    return V.add(b);
   }
 
   /**

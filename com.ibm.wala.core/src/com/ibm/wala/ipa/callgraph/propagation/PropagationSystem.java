@@ -413,11 +413,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     // This works since the solver is monotonic with TOP = {}
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     int index = findOrCreateIndexForInstanceKey(value);
-    if (L.contains(index)) {
+    if (!L.add(index)) {
       // a no-op
       return false;
     } else {
-      L.add(index);
 
       // also register that we have an instanceKey for the klass
       assert value.getConcreteType() != null;
