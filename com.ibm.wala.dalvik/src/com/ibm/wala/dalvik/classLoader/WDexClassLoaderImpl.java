@@ -118,17 +118,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
      * Remove from s any class file module entries which already are in t
      */
     private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
-    	Set<String> old = HashSetFactory.make();
-    	for (ModuleEntry m : t) {
-    		old.add(m.getClassName());
-    	}
-    	HashSet<ModuleEntry> toRemove = HashSetFactory.make();
-    	for (ModuleEntry m : s) {
-    		if (old.contains(m.getClassName())) {
-    			toRemove.add(m);
-    		}
-    	}
-    	s.removeAll(toRemove);
+	    s.removeAll(t);
     }
     
     private static Set<ModuleEntry> getDexFiles(Module M) {
