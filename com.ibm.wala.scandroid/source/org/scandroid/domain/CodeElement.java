@@ -47,7 +47,7 @@
 
 package org.scandroid.domain;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 public abstract class CodeElement {
@@ -56,8 +56,7 @@ public abstract class CodeElement {
      * associated local variable and any instances it may refer to). */
     public static Set<CodeElement> valueElements(int valueNumber) {
     	//System.out.println("ValueNumber: " + valueNumber + ", Node: " + node.getMethod().getSignature());
-        Set<CodeElement> elements = new HashSet<>();
-        elements.add(new LocalElement(valueNumber));
+        Set<CodeElement> elements = Collections.singleton(new LocalElement(valueNumber));
 //        PointerKey pk = new LocalPointerKey(node, valueNumber);
 //        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
 //        if(m != null) {
