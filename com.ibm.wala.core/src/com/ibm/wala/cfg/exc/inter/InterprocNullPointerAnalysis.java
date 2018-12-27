@@ -252,23 +252,13 @@ public final class InterprocNullPointerAnalysis {
      * @return the filtered CallGraph
      */
     private CallGraph filter(final CallGraph fullCG) {
+
+      // collect nodes not named for exclusion
       final HashSet<CGNode> nodes = new HashSet<>();
-
-      // fill all nodes into a set
-      for (final CGNode n : fullCG) {
-        nodes.add(n);
-      }
-
-      final HashSet<CGNode> nodesToRemove = new HashSet<>();
-      // collect all nodes that we do not need
-      for (final CGNode node : nodes) {
-        for (final Atom method : filter) {
-          if (node.getMethod().getName().equals(method)) {
-            nodesToRemove.add(node);
-          }
-        }
-      }
-      nodes.removeAll(nodesToRemove);
+      fullCG.forEach(node -> {
+        if (!filter.contains(node.getMethod().getName()))
+          nodes.add(node);
+      });
 
       final Set<CGNode> partialRoots = Collections.singleton(fullCG.getFakeRootNode());
 
