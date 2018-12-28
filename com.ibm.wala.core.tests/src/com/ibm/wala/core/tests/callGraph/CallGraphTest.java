@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -463,6 +464,11 @@ public class CallGraphTest extends WalaTestCase {
       @Override
       public Iterator<MethodReference> iterator() {
         return nodes.iterator();
+      }
+
+      @Override
+      public Stream<MethodReference> stream() {
+        return nodes.stream();
       }
 
       /*

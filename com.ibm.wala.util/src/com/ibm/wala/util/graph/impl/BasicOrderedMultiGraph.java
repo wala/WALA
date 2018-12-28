@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph.impl;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.SimpleVector;
@@ -108,6 +109,11 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return delegate.stream();
   }
 
   @Override

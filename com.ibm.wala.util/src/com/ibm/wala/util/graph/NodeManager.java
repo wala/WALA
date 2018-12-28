@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * An object which tracks graph nodes.
@@ -27,7 +28,14 @@ public interface NodeManager<T> extends Iterable<T> {
    * @return an {@link Iterator} of the nodes in this graph
    */
   @Override
-  public Iterator<T> iterator();
+  default Iterator<T> iterator() {
+    return stream().iterator();
+  }
+
+  /**
+   * @return a {@link Stream} of the nodes in this graph
+   */
+  Stream<T> stream();
 
   /**
    * @return the number of nodes in this graph

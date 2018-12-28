@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.slicer;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -353,6 +354,11 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
   @Override
   public Iterator<Statement> iterator() {
     return sdg.iterator();
+  }
+
+  @Override
+  public Stream<Statement> stream() {
+    return sdg.stream();
   }
 
   @Override

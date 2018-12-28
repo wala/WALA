@@ -12,6 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Iterator;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -150,6 +151,11 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return delegate.stream();
   }
 
   /*

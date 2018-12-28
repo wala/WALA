@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 
@@ -125,6 +126,11 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return map.keySet().stream();
   }
 
   /*

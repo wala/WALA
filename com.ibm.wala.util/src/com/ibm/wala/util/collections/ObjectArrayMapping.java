@@ -13,6 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -65,6 +66,11 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return map.keySet().stream();
   }
 
   @Override

@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -70,6 +71,11 @@ public class GraphSlicer {
       @Override
       public Iterator<T> iterator() {
         return new FilterIterator<>(g.iterator(), p);
+      }
+
+      @Override
+      public Stream<T> stream() {
+        return g.stream().filter(p);
       }
 
       @Override
@@ -191,6 +197,11 @@ public class GraphSlicer {
       @Override
       public Iterator<E> iterator() {
         return new FilterIterator<>(G.iterator(), fmember);
+      }
+
+      @Override
+      public Stream<E> stream() {
+        return G.stream().filter(fmember);
       }
 
       @Override

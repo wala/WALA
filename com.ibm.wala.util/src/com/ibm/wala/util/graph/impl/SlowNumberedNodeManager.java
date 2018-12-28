@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph.impl;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntSet;
@@ -58,6 +59,10 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     return map.iterator();
   }
 
+  @Override
+  public Stream<T> stream() {
+    return map.stream();
+  }
 
   @Override
   public int getNumberOfNodes() {

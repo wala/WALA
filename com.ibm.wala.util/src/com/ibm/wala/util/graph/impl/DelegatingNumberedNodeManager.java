@@ -12,6 +12,8 @@ package com.ibm.wala.util.graph.impl;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.INodeWithNumber;
@@ -107,6 +109,12 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
         Assertions.UNREACHABLE();
       }
     };
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Stream<T> stream() {
+    return Arrays.stream(nodes).filter(Objects::nonNull).map(node -> (T) node);
   }
 
   /*

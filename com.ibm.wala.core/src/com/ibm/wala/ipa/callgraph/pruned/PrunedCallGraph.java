@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -64,6 +65,12 @@ public class PrunedCallGraph implements CallGraph {
 		}
 		
 		return col.iterator();
+	}
+
+	@Override
+	public Stream<CGNode> stream() {
+		assert keep.stream().allMatch(cg::containsNode);
+		return keep.stream();
 	}
 
 	@Override

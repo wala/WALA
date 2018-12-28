@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -409,6 +410,21 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     }
     constructFullGraph();
     return g.iterator();
+  }
+
+  /*
+   * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
+   */
+  @Override
+  public Stream<BasicBlockInContext<T>> stream() {
+    if (WARN_ON_EAGER_CONSTRUCTION) {
+      System.err.println("WARNING: forcing full ICFG construction by calling stream()");
+    }
+    if (FAIL_ON_EAGER_CONSTRUCTION) {
+      throw new UnimplementedError();
+    }
+    constructFullGraph();
+    return g.stream();
   }
 
   /*

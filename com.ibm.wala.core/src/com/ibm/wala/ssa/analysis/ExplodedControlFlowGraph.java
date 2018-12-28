@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
@@ -264,6 +265,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   @Override
   public Iterator<IExplodedBasicBlock> iterator() {
     return allNodes.iterator();
+  }
+
+  @Override
+  public Stream<IExplodedBasicBlock> stream() {
+    return allNodes.stream();
   }
 
   @Override

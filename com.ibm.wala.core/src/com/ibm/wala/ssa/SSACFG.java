@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.BytecodeCFG;
@@ -827,6 +828,11 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   @Override
   public Iterator<ISSABasicBlock> iterator() {
     return Arrays.<ISSABasicBlock>asList(basicBlocks).iterator();
+  }
+
+  @Override
+  public Stream<ISSABasicBlock> stream() {
+    return Arrays.stream(basicBlocks);
   }
 
   /*
