@@ -675,6 +675,9 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   @Override
   public void removeAll(Collection<IClass> toRemove) {
+    if (toRemove == null) {
+      throw new IllegalArgumentException("toRemove is null");
+    }
     toRemove.stream().map(IClass::getName)
             .peek(loadedClasses::remove)
             .forEach(sourceMap::remove);
