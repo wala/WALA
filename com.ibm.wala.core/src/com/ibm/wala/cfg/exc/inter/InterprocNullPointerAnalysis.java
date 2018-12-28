@@ -11,8 +11,12 @@
 
 package com.ibm.wala.cfg.exc.inter;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;

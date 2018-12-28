@@ -54,7 +54,14 @@ package org.scandroid.flow;
 
 //import static util.MyLogger.LogLevel.DEBUG;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.scandroid.domain.CodeElement;
 import org.scandroid.flow.types.FlowType;
