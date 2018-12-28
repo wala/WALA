@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.scandroid.prefixtransfer.StringBuilderUseAnalysis.StringBuilderToStringInstanceKeySite;
 import org.scandroid.prefixtransfer.modeledAllocations.ConstantString;
@@ -344,6 +345,11 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
     @Override
     public Iterator<InstanceKeySite> iterator() {
         return nodes.iterator();
+    }
+
+    @Override
+    public Stream<InstanceKeySite> stream() {
+        return nodes.stream();
     }
 
     @Override

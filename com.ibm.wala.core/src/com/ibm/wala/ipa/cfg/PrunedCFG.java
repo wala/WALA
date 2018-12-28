@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -212,6 +213,11 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     @Override
     public Iterator<T> iterator() {
       return filterNodes(nodes.iterator());
+    }
+
+    @Override
+    public Stream<T> stream() {
+      return nodes.stream().filter(subset::contains);
     }
 
     @Override

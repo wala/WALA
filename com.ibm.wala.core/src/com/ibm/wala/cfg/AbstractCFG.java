@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.Constants;
@@ -415,6 +416,11 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   @Override
   public Iterator<T> iterator() {
     return nodeManager.iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return nodeManager.stream();
   }
 
   @Override

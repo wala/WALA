@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.impl;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -173,6 +174,11 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   @Override
   public Iterator<T> iterator() {
     return new CompoundIterator<>(original.iterator(), additionalNodes.iterator());
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return Stream.concat(original.stream(), additionalNodes.stream());
   }
 
   @Override

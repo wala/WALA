@@ -23,6 +23,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Iterator;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -196,6 +197,11 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   @Override
   public Iterator<BasicBlockInContext<IExplodedBasicBlock>> iterator() {
     return icfg.iterator();
+  }
+
+  @Override
+  public Stream<BasicBlockInContext<IExplodedBasicBlock>> stream() {
+    return icfg.stream();
   }
 
   @Override

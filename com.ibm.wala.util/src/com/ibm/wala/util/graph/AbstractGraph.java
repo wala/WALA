@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.collections.Iterator2Iterable;
 
@@ -28,6 +29,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * @return the object which manages edges in the graph
    */
   protected abstract EdgeManager<T> getEdgeManager();
+
+  @Override
+  public Stream<T> stream() {
+    return getNodeManager().stream();
+  }
 
   /*
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()

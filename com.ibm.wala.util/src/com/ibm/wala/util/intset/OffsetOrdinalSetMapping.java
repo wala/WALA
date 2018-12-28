@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 /**
  * An ordinal set mapping, backed a delegate, but adding an offset to each index.
@@ -75,6 +76,11 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return delegate.stream();
   }
 
 }

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.function.IntFunction;
+import java.util.stream.Stream;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -80,6 +81,11 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       @Override
       public Iterator<Object> iterator() {
         return new CompoundIterator<>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
+      }
+
+      @Override
+      public Stream<Object> stream() {
+        return Stream.concat(pointerKeys.stream(), P.getInstanceKeyMapping().stream());
       }
 
       @Override
@@ -405,6 +411,14 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
   @Override
   public Iterator<Object> iterator() {
     return G.iterator();
+  }
+
+  /*
+   * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
+   */
+  @Override
+  public Stream<Object> stream() {
+    return G.stream();
   }
 
   /*

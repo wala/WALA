@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 /**
  * An object that implements a bijection between whole numbers and objects.
@@ -47,4 +48,11 @@ public interface OrdinalSetMapping<T> extends Iterable<T> {
    * @return the integer to which the object is mapped.
    */
   public int add(T o);
+
+  /**
+   * Stream over mapped objects.
+   *
+   * @return a stream over the mapped objects
+   */
+  Stream<T> stream();
 }

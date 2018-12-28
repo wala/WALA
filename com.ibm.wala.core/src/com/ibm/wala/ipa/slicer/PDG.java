@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -1178,6 +1179,12 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   public Iterator<Statement> iterator() {
     populate();
     return delegate.iterator();
+  }
+
+  @Override
+  public Stream<Statement> stream() {
+    populate();
+    return delegate.stream();
   }
 
   @Override

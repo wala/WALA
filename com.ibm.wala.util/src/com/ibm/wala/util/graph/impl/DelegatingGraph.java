@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph.impl;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import com.ibm.wala.util.graph.Graph;
 
@@ -81,6 +82,11 @@ public class DelegatingGraph<T> implements Graph<T> {
   @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return delegate.stream();
   }
 
   @Override

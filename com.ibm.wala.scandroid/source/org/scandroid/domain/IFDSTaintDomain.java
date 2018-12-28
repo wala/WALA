@@ -53,6 +53,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.ibm.wala.dataflow.IFDS.PathEdge;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
@@ -148,6 +149,11 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
         return table.keySet().iterator();
     }
     
+    @Override
+    public Stream<DomainElement> stream() {
+        return objects.stream();
+    }
+
     public Set<CodeElement> codeElements () {
     	return elementIndex.keySet();
     }

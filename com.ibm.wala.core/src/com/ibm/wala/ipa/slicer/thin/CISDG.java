@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -210,6 +211,11 @@ public class CISDG implements ISDG {
   @Override
   public Iterator<Statement> iterator() {
     return noHeap.iterator();
+  }
+
+  @Override
+  public Stream<Statement> stream() {
+    return noHeap.stream();
   }
 
   @Override
