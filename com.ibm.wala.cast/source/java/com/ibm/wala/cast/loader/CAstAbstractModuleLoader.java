@@ -165,7 +165,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           topLevelEntities.add(Pair.make(fileEntity, moduleEntry));
 
         } catch (TranslatorToCAst.Error e) {
-          addMessage(moduleEntry, e.warning);
+          addMessages(moduleEntry, e.warning);
         }
       }
     } catch (final IOException e) {
