@@ -63,7 +63,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return errors.computeIfAbsent(module, (key) -> new HashSet<>());
   }
 
-  public void addMessage(ModuleEntry module, Set<Warning> message) {
+  public void addMessages(ModuleEntry module, Set<Warning> message) {
     messagesFor(module).addAll(message);
   }
 
