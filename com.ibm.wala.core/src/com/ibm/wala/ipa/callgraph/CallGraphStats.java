@@ -92,7 +92,7 @@ public class CallGraphStats {
 
     @Override
     public String toString() {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       result.append("Call graph stats:");
       result.append("\n");
       result.append("  Nodes: " + nNodes);

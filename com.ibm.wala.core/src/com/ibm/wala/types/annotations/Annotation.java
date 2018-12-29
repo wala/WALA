@@ -113,7 +113,7 @@ public class Annotation {
   
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer("Annotation type " + type);
+    StringBuilder sb = new StringBuilder("Annotation type " + type);
     if (unnamedArguments != null) {
       sb.append("[");
       for (Pair<TypeReference, Object> arg : unnamedArguments) {

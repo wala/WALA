@@ -28,7 +28,7 @@ public class GXL {
       Function<T,String> nodeIds, 
       Function<T,Map<String,String>> nodeProperties) 
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     
     sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     sb.append("<!DOCTYPE gxl SYSTEM \"http://www.gupro.de/GXL/gxl-1.0.dtd\">\n");

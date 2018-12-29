@@ -155,7 +155,7 @@ public abstract class Heap<T> {
   
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     s.append("[");
     for (int i = 0; i < size(); i++) {
       if (backingStore[i] != null) {

@@ -74,7 +74,7 @@ public class AstLexicalRead extends AstLexicalAccess {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < getAccessCount(); i++) {
       Access A = getAccess(i);
       if (i != 0)

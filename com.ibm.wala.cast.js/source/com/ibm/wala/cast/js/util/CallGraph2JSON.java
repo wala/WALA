@@ -128,10 +128,10 @@ public class CallGraph2JSON {
 	}
 	
 	public static String toJSON(Map<String, Set<String>> map) {
-		StringBuffer res = new StringBuffer();
+		StringBuilder res = new StringBuilder();
 		res.append("{\n");
 		res.append(joinWith(Util.mapToSet(map.entrySet(), e -> {
-      StringBuffer res1 = new StringBuffer();
+      StringBuilder res1 = new StringBuilder();
       if(e.getValue().size() > 0) {
         res1.append("    \"" + e.getKey() + "\": [\n");
         res1.append(joinWith(Util.mapToSet(e.getValue(), str -> "        \"" + str + "\""), ",\n"));
@@ -144,7 +144,7 @@ public class CallGraph2JSON {
 	}
 	
 	private static String joinWith(Iterable<String> lst, String sep) {
-	  StringBuffer res = new StringBuffer();
+	  StringBuilder res = new StringBuilder();
 	  ArrayList<String> strings = new ArrayList<>();
 	  for(String s : lst)
 	    if(s != null)

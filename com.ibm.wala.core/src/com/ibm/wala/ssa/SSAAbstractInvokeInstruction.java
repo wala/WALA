@@ -191,7 +191,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     String code = site.getInvocationString();
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     if (hasDef()) {
       s.append(getValueString(symbolTable, getDef())).append(" = ");
     }

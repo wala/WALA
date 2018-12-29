@@ -113,7 +113,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i = 0; i < nextIndex; i++) {
       result.append(i).append("  ").append(array[i]).append("\n");
     }

@@ -112,7 +112,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     }
     childJvm.setJvmargs(jvmArgs);
     
-    StringBuffer argsStr = new StringBuffer();
+    StringBuilder argsStr = new StringBuilder();
     for(String a : args) {
       argsStr.append(a).append(" ");
     }

@@ -149,7 +149,7 @@ public class JavaLauncher extends Launcher {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (programArgs: ");
     result.append(programArgs);
     result.append(", mainClass: ");

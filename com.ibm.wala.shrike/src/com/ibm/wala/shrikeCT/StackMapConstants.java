@@ -190,7 +190,7 @@ public class StackMapConstants {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append("frame type: ").append(frameType).append("\n");
       sb.append("  offset: ").append(offset).append("\n");
       

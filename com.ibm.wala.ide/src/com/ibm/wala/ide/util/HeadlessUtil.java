@@ -106,7 +106,7 @@ public class HeadlessUtil {
     parser.processASTs(proj.getValue(), problems -> {
       int length = problems.length;
       if (length > 0) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < length; i++) {
           buffer.append(problems[i].toString());
           buffer.append('\n');

@@ -641,7 +641,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
 
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer("");
+    StringBuilder s = new StringBuilder("");
     for (IExplodedBasicBlock bb : this) {
       s.append("BB").append(getNumber(bb)).append("\n");
 

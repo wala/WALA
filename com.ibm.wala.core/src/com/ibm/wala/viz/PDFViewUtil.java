@@ -105,7 +105,7 @@ public class PDFViewUtil {
   }
 
   private static String getNodeLabel(IR ir, BasicBlock bb) {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
 
     int start = bb.getFirstInstructionIndex();
     int end = bb.getLastInstructionIndex();

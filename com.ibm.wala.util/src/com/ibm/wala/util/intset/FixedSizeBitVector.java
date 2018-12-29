@@ -338,7 +338,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    */
   @Override
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     boolean needSeparator = false;
     buffer.append('{');
     // int limit = length();

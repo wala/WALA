@@ -1316,7 +1316,7 @@ public abstract class Compiler implements Constants {
     ArrayList<Instruction> callWrapper = new ArrayList<>();
     int curStackLen = stackTypes[start].length;
 
-    StringBuffer sigBuf = new StringBuffer();
+    StringBuilder sigBuf = new StringBuilder();
     sigBuf.append("(");
     // spill needed stack variables to allocated locals;
     allocateLocals(curStackLen - unreadStack);

@@ -771,7 +771,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     @Override
     public String toString() {
-      StringBuffer result = new StringBuffer(100);
+      StringBuilder result = new StringBuilder(100);
       result.append(klass.toString()).append(":");
       for (Iterator<Node> i = children.iterator(); i.hasNext();) {
         Node n = i.next();

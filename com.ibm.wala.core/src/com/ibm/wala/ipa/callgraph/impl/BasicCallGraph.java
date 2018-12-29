@@ -235,7 +235,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("");
+    StringBuilder result = new StringBuilder("");
     for (CGNode n : Iterator2Iterable.make(DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<>(getFakeRootNode())))) {
       result.append(nodeToString(this, n) + "\n");
     }
@@ -243,7 +243,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   }
 
   public static String nodeToString(CallGraph CG, CGNode n) {
-    StringBuffer result = new StringBuffer(n.toString() +  "\n");
+    StringBuilder result = new StringBuilder(n.toString() +  "\n");
      if (n.getMethod() != null) {
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
         Iterator<CGNode> targets = CG.getPossibleTargets(n, site).iterator();

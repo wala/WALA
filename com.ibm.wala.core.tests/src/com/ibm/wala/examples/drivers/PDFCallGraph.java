@@ -65,7 +65,7 @@ public class PDFCallGraph {
   }
   
   private static String composeString(Collection<String> s) {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     Iterator<String> it = s.iterator();
     for (int i = 0; i < s.size() - 1; i++) {
       result.append(it.next());

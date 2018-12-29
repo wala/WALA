@@ -191,7 +191,7 @@ public abstract class Entrypoint implements BytecodeConstants {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(method.toString());
+    StringBuilder result = new StringBuilder(method.toString());
     result.append("(");
     for (int i = 0; i < getNumberOfParameters() - 1; i++) {
       result.append(Arrays.toString(getParameterTypes(i)));
