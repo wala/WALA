@@ -56,7 +56,7 @@ class PDFViewLauncher {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(", psfile: ");
     result.append(pdffile);
     result.append(", gvExe: ");

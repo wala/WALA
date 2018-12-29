@@ -252,7 +252,7 @@ public class DexDotUtil extends DotUtil {
        * @param d decorating master
        */
       private static <T> String decorateNode(T n, NodeDecorator<T> d) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(" [ ]\n");
         return result.toString();
       }

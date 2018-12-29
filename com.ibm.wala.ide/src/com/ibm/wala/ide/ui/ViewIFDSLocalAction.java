@@ -153,7 +153,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       SSAGetInstruction g = (SSAGetInstruction) s;
       String fieldName = g.getDeclaredField().getName().toString();
 
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       result.append(g.getDef());
       result.append(":=");
       result.append(g.isStatic() ? "getstatic " : "getfield ");

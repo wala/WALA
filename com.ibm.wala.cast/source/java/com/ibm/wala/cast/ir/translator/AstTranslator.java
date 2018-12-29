@@ -1160,7 +1160,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     
     @Override
     public String toString() { 
-      StringBuffer sb = new StringBuffer(super.toString());
+      StringBuilder sb = new StringBuilder(super.toString());
       for(PreBasicBlock b : blocks) {
         if (b.firstIndex > 0) {
           sb.append("\n" + b);
@@ -1405,7 +1405,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public String toString() {
       SSAInstruction[] insts = getInstructions();
-      StringBuffer s = new StringBuffer("CAst CFG of " + functionName);
+      StringBuilder s = new StringBuilder("CAst CFG of " + functionName);
       int params[] = symtab.getParameterValueNumbers();
       for (int param : params)
         s.append(" ").append(param);

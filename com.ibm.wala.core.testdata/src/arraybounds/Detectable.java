@@ -177,7 +177,7 @@ public class Detectable {
 
   public String afterLoop(int[] arr) {
     int len = arr.length - 1;
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     int zero = 0;
     if (zero < arr.length) {
       int i = zero;

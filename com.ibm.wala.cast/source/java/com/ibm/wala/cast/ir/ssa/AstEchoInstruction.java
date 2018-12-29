@@ -28,7 +28,7 @@ public class AstEchoInstruction extends AstConsumeInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuffer result = new StringBuffer("echo/print ");
+    StringBuilder result = new StringBuilder("echo/print ");
     for (int rval : rvals) {
       result.append(getValueString(symbolTable, rval)).append(" ");
     }

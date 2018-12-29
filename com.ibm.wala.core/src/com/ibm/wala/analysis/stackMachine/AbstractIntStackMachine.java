@@ -694,7 +694,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       if (isTOP()) {
         return "<TOP>@" + System.identityHashCode(this);
       }
-      StringBuffer result = new StringBuffer("<");
+      StringBuilder result = new StringBuilder("<");
       result.append("S");
       if (stackHeight == 0) {
         result.append("[empty]");

@@ -645,7 +645,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         }
         topFive[4] = x;
       });
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       for (int i = 0; i < 5; i++) {
         int p = topFive[i];
         if (p != 0) {

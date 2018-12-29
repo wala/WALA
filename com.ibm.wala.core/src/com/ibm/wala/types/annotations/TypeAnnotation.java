@@ -62,7 +62,7 @@ public class TypeAnnotation {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer("TypeAnnotation");
+    StringBuilder sb = new StringBuilder("TypeAnnotation");
     sb.append("{ annotation = ");
     sb.append(annotation);
     sb.append(", path = ");

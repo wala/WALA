@@ -200,7 +200,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer("control flow map\n");
+    StringBuilder sb = new StringBuilder("control flow map\n");
     for (Key key : table.keySet()) {
       sb.append(key.from);
       if (src != null && nodeToCAst.get(key.from) != null && src.getPosition(nodeToCAst.get(key.from)) != null) {

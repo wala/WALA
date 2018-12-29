@@ -85,7 +85,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     if (getNumberOfReturnValues() > 0) {
       s.append(getValueString(symbolTable, getReturnValue(0)));
       s.append(" = ");

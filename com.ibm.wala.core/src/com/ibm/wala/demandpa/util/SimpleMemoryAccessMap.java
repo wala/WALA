@@ -379,7 +379,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
 
     Collection<IField> allFields = HashSetFactory.make();
     allFields.addAll(readMap.keySet());

@@ -98,7 +98,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
         IProblem[] problems = ast.getProblems();
         int length = problems.length;
         if (length > 0) {
-          StringBuffer buffer = new StringBuffer();
+          StringBuilder buffer = new StringBuilder();
           for (int i = 0; i < length; i++) {
             buffer.append(problems[i].getMessage());
             buffer.append('\n');
@@ -126,7 +126,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   private static void computeClassPath(AnalysisScope scope) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
 
     ClassLoaderReference cl = scope.getApplicationLoader();
 

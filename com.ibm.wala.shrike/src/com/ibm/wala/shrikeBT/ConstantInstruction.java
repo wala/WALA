@@ -845,7 +845,7 @@ public abstract class ConstantInstruction extends Instruction {
   private static String quote(Object o) {
     if (o instanceof String) {
       String s = (String) o;
-      StringBuffer buf = new StringBuffer("\"");
+      StringBuilder buf = new StringBuilder("\"");
       int len = s.length();
       for (int i = 0; i < len; i++) {
         char ch = s.charAt(i);

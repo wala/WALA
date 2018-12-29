@@ -38,7 +38,7 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
 
   @Override
   public final String report() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     long total = 0;
     for (int i = 0; i < getNumberOfCategories(); i++) {
       total += stopwatch[i].getElapsedMillis();

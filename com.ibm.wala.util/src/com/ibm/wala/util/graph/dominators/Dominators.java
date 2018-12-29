@@ -580,7 +580,7 @@ public abstract class Dominators<T> {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (T node : G) {
       sb.append("Dominators of " + node + ":\n");
       for (T dom : Iterator2Iterable.make(dominators(node)))

@@ -46,7 +46,7 @@ public abstract class AbstractJFaceRunner  {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (applicationWindow: ");
     result.append(applicationWindow);
     result.append(", blockInput: ");

@@ -153,7 +153,7 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
    */
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("Type inference : \n");
+    StringBuilder result = new StringBuilder("Type inference : \n");
     for (int i = 0; i < vars.length; i++) {
       result.append("v").append(i).append("  ").append(vars[i]).append("\n");
     }

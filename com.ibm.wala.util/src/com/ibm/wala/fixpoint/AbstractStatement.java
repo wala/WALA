@@ -30,7 +30,7 @@ public abstract class AbstractStatement<T extends IVariable<T>, O extends Abstra
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("");
+    StringBuilder result = new StringBuilder("");
     if (getLHS() == null) {
       result.append("null ");
     } else {

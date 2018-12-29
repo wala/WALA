@@ -176,7 +176,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer("<vn " + rhs + " at " + instructionIndex);
+      StringBuilder sb = new StringBuilder("<vn " + rhs + " at " + instructionIndex);
       for (CopyPropagationRecord c : childRecords) {
         sb.append("\n " + c.toString());
       }
@@ -343,7 +343,7 @@ public class SSAConversion extends AbstractSSAConversion {
     
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer( super.toString() );
+      StringBuilder sb = new StringBuilder( super.toString() );
       
       for(Map.Entry<Object, CopyPropagationRecord> x : copyPropagationMap.entrySet()) {
         sb.append(x.getKey().toString() + " --> " + x.getValue().toString() + "\n");

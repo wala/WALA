@@ -42,7 +42,7 @@ public final class PathEdge<T> {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append("<");
     result.append(entry.toString());
     result.append(",");

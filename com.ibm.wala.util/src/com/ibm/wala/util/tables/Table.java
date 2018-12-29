@@ -67,7 +67,7 @@ public class Table<T> {
   @Override
   public String toString() {
     int[] format = computeColumnWidths();
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i = 0; i < getNumberOfColumns(); i++) {
       StringBuffer heading = new StringBuffer(getColumnHeading(i));
       padWithSpaces(heading, format[i]);

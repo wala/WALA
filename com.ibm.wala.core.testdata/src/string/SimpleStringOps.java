@@ -13,7 +13,7 @@ package string;
 public class SimpleStringOps {
 
   private static void whatever(String s) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(s.substring(5));
     sb.append(" and other garbage");
     System.out.println(sb.toString());

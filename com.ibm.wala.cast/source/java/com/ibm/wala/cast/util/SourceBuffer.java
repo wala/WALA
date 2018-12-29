@@ -90,7 +90,7 @@ public class SourceBuffer {
      
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for(int i = 0; i < lines.length; i++) {
       if (i == lines.length - 1) {
         result.append(lines[i]);

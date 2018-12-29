@@ -338,7 +338,7 @@ public class AnalysisScope {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (ClassLoaderReference loader : loadersByName.values()) {
       result.append(loader.getName());
       result.append("\n");

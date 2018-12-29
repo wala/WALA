@@ -77,7 +77,7 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
-      StringBuffer result = new StringBuffer("[");
+      StringBuilder result = new StringBuilder("[");
       for (int i = 1; i < dim; i++) {
         result.append("[");
       }
@@ -109,7 +109,7 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalDescriptorTypeString(baseType);
-      StringBuffer result = new StringBuffer("[");
+      StringBuilder result = new StringBuilder("[");
       for (int i = 1; i < dim; i++) {
         result.append("[");
       }
@@ -666,7 +666,7 @@ public class StringStuff {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }
-    StringBuffer dotForm = new StringBuffer(path);
+    StringBuilder dotForm = new StringBuilder(path);
     // replace all '/' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '/') {
@@ -687,7 +687,7 @@ public class StringStuff {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }
-    StringBuffer dotForm = new StringBuffer(path);
+    StringBuilder dotForm = new StringBuilder(path);
     // replace all '$' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '$') {
@@ -708,7 +708,7 @@ public class StringStuff {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }
-    StringBuffer dotForm = new StringBuffer(path);
+    StringBuilder dotForm = new StringBuilder(path);
     // replace all '.' in the path with '$'
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '.') {

@@ -370,7 +370,7 @@ public final class Util {
     if (params == null) {
       throw new IllegalArgumentException("params == null");
     }
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append("(");
     for (Class<?> param : params) {
       buf.append(makeType(param));
@@ -424,7 +424,7 @@ public final class Util {
     if (paramTypes == null) {
       return name;
     } else {
-      StringBuffer buf = new StringBuffer(name);
+      StringBuilder buf = new StringBuilder(name);
       buf.append("(");
       for (int i = 0; i < paramTypes.length; i++) {
         if (i > 0) {

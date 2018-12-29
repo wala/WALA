@@ -111,7 +111,7 @@ public class ClassLoaderReference implements Serializable {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append(name.toString());
     result.append(" classloader");
     result.append("\n");

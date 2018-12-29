@@ -82,7 +82,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("Nodes:\n");
+    StringBuilder result = new StringBuilder("Nodes:\n");
     for (int i = 0; i <= getMaxNumber(); i++) {
       result.append(i).append("  ");
       result.append(map.getMappedObject(i));

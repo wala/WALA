@@ -145,7 +145,7 @@ public abstract class IR implements IRView {
     if (getIndirectionData() != null) {
       names = getIndirectionData().getNames();
     }
-    StringBuffer result = new StringBuffer(method.toString());
+    StringBuilder result = new StringBuilder(method.toString());
     result.append("\nCFG:\n");
     result.append(cfg.toString());
     result.append("Instructions:\n");

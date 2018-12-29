@@ -76,7 +76,7 @@ public class ClassTypeSignature extends TypeSignature {
   public TypeName getRawName() {
     // note: need to handle type arguments for raw signatures like the following:
     // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     StringTokenizer t = new StringTokenizer(rawString(),".");
     while (t.hasMoreTokens()) {
       String x = t.nextToken();

@@ -44,7 +44,7 @@ public class DirectedHyperGraph<T> {
 
 	@Override
 	public String toString() {
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		for (final DirectedHyperEdge<T> edge : this.getEdges()) {
 			buffer.append(edge.getSource());
 			buffer.append(" -- ");

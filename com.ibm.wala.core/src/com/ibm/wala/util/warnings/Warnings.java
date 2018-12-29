@@ -35,7 +35,7 @@ public class Warnings {
     TreeSet<Warning> T = new TreeSet<>();
     T.addAll(warnings);
     Iterator<Warning> it = T.iterator();
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i = 1; i <= T.size(); i++) {
       result.append(i).append(". ");
       result.append(it.next());

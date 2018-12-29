@@ -92,7 +92,7 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(super.toString());
 //    if (count == 1){
 //      sb.append (", Footprint at entry: " + (float) startMemory / 1000000 + " MB");

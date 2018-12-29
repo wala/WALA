@@ -494,7 +494,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append("Nodes:\n");
     for (int i = 0; i <= getMaxNumber(); i++) {
       Object node = getNode(i);

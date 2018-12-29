@@ -119,7 +119,7 @@ public class ParameterState extends AbstractVariable<ParameterState> {
    */
   @Override
   public String toString() {
-    StringBuffer buf = new StringBuffer("<");
+    StringBuilder buf = new StringBuilder("<");
     Set<Entry<Integer, State>> paramsSet = params.entrySet();
         
     for (Entry<Integer, State> param : paramsSet){
