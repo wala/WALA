@@ -685,7 +685,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 //          if (isTOP()) {
 //              return "<TOP>@" + System.identityHashCode(this);
 //          }
-//          StringBuffer result = new StringBuffer("<");
+//          StringBuffer result = new StringBuilder("<");
 //          result.append("S");
 //          if (stackHeight == 0) {
 //              result.append("[empty]");
@@ -699,7 +699,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         }
 
 //      private StringBuffer array2StringBuffer(int[] array, int n) {
-//          StringBuffer result = new StringBuffer("[");
+//          StringBuffer result = new StringBuilder("[");
 //          if (array == null) {
 //              result.append(OPTIMISTIC ? "TOP" : "BOTTOM");
 //          } else {

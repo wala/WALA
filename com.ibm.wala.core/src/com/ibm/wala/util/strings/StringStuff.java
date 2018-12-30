@@ -49,7 +49,7 @@ public class StringStuff {
     primitiveClassNames.put("void", "V");
   }
 
-  public static void padWithSpaces(StringBuffer b, int length) {
+  public static void padWithSpaces(StringBuilder b, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -546,7 +546,7 @@ public class StringStuff {
     if (jvmType == null) {
       throw new IllegalArgumentException("jvmType is null");
     }
-    StringBuffer readable = new StringBuffer(); // human readable version
+    StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
     if (jvmType.length() == 0) {
@@ -586,8 +586,8 @@ public class StringStuff {
           jvmType.length()) // Trim off the trailing ';'
           );
       // Convert to standard Java dot-notation
-      readable = new StringBuffer(slashToDot(readable.toString()));
-      readable = new StringBuffer(dollarToDot(readable.toString()));
+      readable = new StringBuilder(slashToDot(readable.toString()));
+      readable = new StringBuilder(dollarToDot(readable.toString()));
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {
@@ -607,7 +607,7 @@ public class StringStuff {
     if (jvmType == null) {
       throw new IllegalArgumentException("jvmType is null");
     }
-    StringBuffer readable = new StringBuffer(); // human readable version
+    StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
     if (jvmType.length() == 0) {
@@ -647,7 +647,7 @@ public class StringStuff {
           jvmType.length()) // Trim off the trailing ';'
           );
       // Convert to standard Java dot-notation
-      readable = new StringBuffer(slashToDot(readable.toString()));
+      readable = new StringBuilder(slashToDot(readable.toString()));
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {

@@ -69,7 +69,7 @@ public class Table<T> {
     int[] format = computeColumnWidths();
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      StringBuffer heading = new StringBuffer(getColumnHeading(i));
+      StringBuilder heading = new StringBuilder(getColumnHeading(i));
       padWithSpaces(heading, format[i]);
       result.append(heading);
     }
@@ -77,7 +77,7 @@ public class Table<T> {
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {
         T e = getElement(j, i);
-        StringBuffer element = e == null ? new StringBuffer() : new StringBuffer(e.toString());
+        StringBuilder element = e == null ? new StringBuilder() : new StringBuilder(e.toString());
         padWithSpaces(element, format[i]);
         result.append(element);
       }
@@ -162,7 +162,7 @@ public class Table<T> {
 
   }
   
-  public static void padWithSpaces(StringBuffer b, int length) {
+  public static void padWithSpaces(StringBuilder b, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }

@@ -707,8 +707,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return result.toString();
     }
 
-    private StringBuffer array2StringBuffer(int[] array, int n) {
-      StringBuffer result = new StringBuffer("[");
+    private StringBuilder array2StringBuffer(int[] array, int n) {
+      StringBuilder result = new StringBuilder("[");
       if (array == null) {
         result.append(OPTIMISTIC ? "TOP" : "BOTTOM");
       } else {

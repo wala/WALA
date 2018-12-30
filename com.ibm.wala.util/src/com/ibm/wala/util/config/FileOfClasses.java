@@ -40,14 +40,14 @@ public class FileOfClasses extends SetOfClasses {
     }
     try (final BufferedReader is = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
   
-      StringBuffer regex = null;
+      StringBuilder regex = null;
       String line;
       while ((line = is.readLine()) != null) {
   
         if (line.startsWith("#")) continue;
   
         if (regex == null) {
-          regex = new StringBuffer("(" + line + ")");
+          regex = new StringBuilder("(" + line + ")");
         } else {
           regex.append("|(" + line + ")");
         }

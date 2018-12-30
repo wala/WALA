@@ -196,7 +196,7 @@ public abstract class IR implements IRView {
               result.append("\n");
             }
           }
-          StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(symbolTable));
+          StringBuilder x = new StringBuilder(j + "   " + instructions[j].toString(symbolTable));
           StringStuff.padWithSpaces(x, 45);
           result.append(x);
           result.append(instructionPosition(j));
