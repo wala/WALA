@@ -698,12 +698,12 @@ public class ClassHierarchy implements IClassHierarchy {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(100);
+    StringBuilder result = new StringBuilder(100);
     recursiveStringify(root, result);
     return result.toString();
   }
 
-  private void recursiveStringify(Node n, StringBuffer buffer) {
+  private void recursiveStringify(Node n, StringBuilder buffer) {
     buffer.append(n.toString()).append("\n");
     for (Node child : Iterator2Iterable.make(n.getChildren())) {
       recursiveStringify(child, buffer);

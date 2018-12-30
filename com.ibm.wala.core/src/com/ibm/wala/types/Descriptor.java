@@ -203,7 +203,7 @@ public final class Descriptor {
 
     @Override
     public String toString() {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       result.append("(");
       if (parameters != null) {
         for (TypeName p : parameters) {
@@ -218,7 +218,7 @@ public final class Descriptor {
     }
 
     public String toUnicodeString() {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       result.append("(");
       if (parameters != null) {
         for (TypeName p : parameters) {
@@ -232,7 +232,7 @@ public final class Descriptor {
       return result.toString();
     }
 
-    private static void appendSemicolonIfNeeded(StringBuffer result, TypeName p) {
+    private static void appendSemicolonIfNeeded(StringBuilder result, TypeName p) {
       if (p.isArrayType()) {
         TypeName e = p.getInnermostElementType();
         String x = e.toUnicodeString();

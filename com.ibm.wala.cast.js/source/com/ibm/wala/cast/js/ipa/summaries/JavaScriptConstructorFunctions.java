@@ -441,7 +441,7 @@ public class JavaScriptConstructorFunctions {
         if (!ST.isStringConstant(callStmt.getUse(i)))
           return makeFunctionConstructor(cls, cls);
 
-      final StringBuffer fun = new StringBuffer("function _fromctor (");
+      final StringBuilder fun = new StringBuilder("function _fromctor (");
       for (int j = 1; j < callStmt.getNumberOfUses() - 1; j++) {
         if (j != 1)
           fun.append(",");
