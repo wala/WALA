@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -838,11 +839,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
    */
   @Override
   public Iterator<ISSABasicBlock> iterator() {
-    ArrayList<ISSABasicBlock> list = new ArrayList<>();
-    for (BasicBlock b : basicBlocks) {
-      list.add(b);
-    }
-    return list.iterator();
+    return Arrays.<ISSABasicBlock>asList(basicBlocks).iterator();
   }
 
   /*
