@@ -106,10 +106,8 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
             
             removeClassFiles(classFiles, classModuleEntries);
             loadAllDexClasses(classFiles);
-            
-            for (ModuleEntry file : classFiles) {
-            	classModuleEntries.add(file);
-            }
+
+            classModuleEntries.addAll(classFiles);
         }                       
     }
     

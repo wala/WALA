@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.ir;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -188,9 +189,7 @@ public class AnnotationTest extends WalaTestCase {
     harness.assertEquals(expected.length, parameterAnnotations.length);
     for (int i = 0; i < expected.length; i++) {
       Set<String> e = HashSetFactory.make();
-      for(String s : expected[i]) {
-        e.add(s);
-      }
+      e.addAll(Arrays.asList(expected[i]));
       
       Set<String> a = HashSetFactory.make();
       if (parameterAnnotations[i] != null) {

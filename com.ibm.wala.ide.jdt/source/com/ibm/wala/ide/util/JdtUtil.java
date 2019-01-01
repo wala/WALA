@@ -11,6 +11,7 @@
 package com.ibm.wala.ide.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -519,9 +520,7 @@ public class JdtUtil {
       Collection<IMethod> result = HashSetFactory.make();
       for (IType type : getClasses((ICompilationUnit) elt)) {
         try {
-          for (IMethod m : type.getMethods()) {
-            result.add(m);
-          }
+          result.addAll(Arrays.asList(type.getMethods()));
         } catch (JavaModelException e) {
           e.printStackTrace();
         }

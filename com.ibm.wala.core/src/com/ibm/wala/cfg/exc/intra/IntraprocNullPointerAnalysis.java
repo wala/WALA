@@ -11,6 +11,7 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -87,9 +88,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     this.ignoreExceptions = new HashSet<>();
     
     if (ignoreExceptions != null) {
-      for (TypeReference tRef : ignoreExceptions) {
-          this.ignoreExceptions.add(tRef);
-      }
+      this.ignoreExceptions.addAll(Arrays.asList(ignoreExceptions));
     }
     
     this.initialState = initialState;
