@@ -277,7 +277,7 @@ public class CorrelationFinder {
   }
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(Collection<? extends SourceModule> scripts) throws ClassHierarchyException {
-    return findCorrelatedAccesses(scripts.toArray(new SourceModule[scripts.size()]));
+    return findCorrelatedAccesses(scripts.toArray(new SourceModule[0]));
   }
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(SourceModule[] scripts_array) throws ClassHierarchyException {

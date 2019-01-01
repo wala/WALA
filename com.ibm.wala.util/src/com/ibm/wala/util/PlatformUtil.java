@@ -68,6 +68,6 @@ public class PlatformUtil {
         result.add(jar);
       }
     }
-    return result.toArray(new String[result.size()]);
+    return result.toArray(new String[0]);
   }
 }

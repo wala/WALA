@@ -201,7 +201,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       ((CAstAbstractLoader)loaders.getTheLoader()).addMessages(dummy, e.warning);
     }
         
-    SourceModule[] scriptsArray = scripts.toArray(new SourceModule[ scripts.size() ]);
+    SourceModule[] scriptsArray = scripts.toArray(new SourceModule[0]);
     return scriptsArray;
   }
 

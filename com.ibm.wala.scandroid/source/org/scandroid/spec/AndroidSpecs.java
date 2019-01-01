@@ -358,7 +358,7 @@ public class AndroidSpecs implements ISpecs {
 
 //		entrypointSpecs =
 		callBacks = 
-				moreEntryPointSpecs.toArray(new MethodNamePattern[moreEntryPointSpecs.size()]);
+				moreEntryPointSpecs.toArray(new MethodNamePattern[0]);
 
 	}
 	

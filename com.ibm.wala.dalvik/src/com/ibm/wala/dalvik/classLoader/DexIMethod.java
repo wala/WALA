@@ -696,7 +696,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
 
 		for (int i = 0; i < instructions().size(); i++) {
-			handlers[i] = temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
+			handlers[i] = temp_array.get(i).toArray(new ExceptionHandler[0]);
 		
 			/*
 			System.out.println("i: " + i);
@@ -718,7 +718,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 		if (instructions == null)
 			parseBytecode();
 
-		return instructions.toArray(new Instruction[ instructions.size() ]);
+		return instructions.toArray(new Instruction[0]);
 	}
 
 	private boolean odexMethod() {
@@ -3213,7 +3213,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 	}
 
 	public Instruction[] getDexInstructions() {
-		return instructions().toArray(new Instruction[instructions().size()]);
+		return instructions().toArray(new Instruction[0]);
 	}
 
 

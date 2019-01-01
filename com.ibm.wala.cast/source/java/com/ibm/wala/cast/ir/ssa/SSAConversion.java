@@ -316,7 +316,7 @@ public class SSAConversion extends AbstractSSAConversion {
         x.addAll(Arrays.asList(vNames));        
       }
 
-      return computedNames[vn] = x.toArray(new String[x.size()]);
+      return computedNames[vn] = x.toArray(new String[0]);
     }
 
     private void undoCopyPropagation(int instructionIndex, int useNumber) {

@@ -84,7 +84,7 @@ public class SourceBuffer {
       }
     }
 
-    this.lines = lines.toArray(new String[ lines.size() ]);
+    this.lines = lines.toArray(new String[0]);
   }
   
      

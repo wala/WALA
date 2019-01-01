@@ -493,7 +493,7 @@ public class CAstPattern {
         } while (patternString.startsWith("||", end));
         assert patternString.startsWith(")|", end) : patternString;
         end += 2;
-        result = new CAstPattern(name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[alternatives.size()]));
+        result = new CAstPattern(name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[0]));
 
       } else if (patternString.startsWith("@(", start)) {
         start += 2;
@@ -545,7 +545,7 @@ public class CAstPattern {
           assert patternString.charAt(end) == ')';
           end++;
 
-          result = new CAstPattern(name, kind, children.toArray(new CAstPattern[children.size()]));
+          result = new CAstPattern(name, kind, children.toArray(new CAstPattern[0]));
         }
       }
 
