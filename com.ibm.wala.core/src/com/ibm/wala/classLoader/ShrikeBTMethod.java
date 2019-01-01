@@ -229,7 +229,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     if (isNative()) {
       return Collections.emptySet();
     }
-    return (getBCInfo().implicitExceptions == null) ? Arrays.asList(new TypeReference[0]) : Arrays
+    return (getBCInfo().implicitExceptions == null) ? Collections.emptyList() : Arrays
         .asList(getBCInfo().implicitExceptions);
   }
 
