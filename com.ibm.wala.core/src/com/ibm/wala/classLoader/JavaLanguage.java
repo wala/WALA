@@ -757,7 +757,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     return TypeReference.JavaLangString;
   }
   
-  {
+  static {
     JavaPrimitiveType.init();
   }
   
