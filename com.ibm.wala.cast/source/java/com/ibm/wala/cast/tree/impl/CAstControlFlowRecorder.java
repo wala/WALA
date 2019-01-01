@@ -210,9 +210,9 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       sb.append(key.label);
       sb.append(" --> ");
       sb.append(table.get(key));
-      sb.append("\n");
+      sb.append('\n');
     }
-    sb.append("\n");
+    sb.append('\n');
     return sb.toString();
   }
 }

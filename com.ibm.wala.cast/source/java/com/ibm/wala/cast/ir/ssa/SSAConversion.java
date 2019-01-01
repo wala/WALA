@@ -180,7 +180,7 @@ public class SSAConversion extends AbstractSSAConversion {
       for (CopyPropagationRecord c : childRecords) {
         sb.append("\n " + c.toString());
       }
-      sb.append(">");
+      sb.append('>');
       return sb.toString();
     }
     

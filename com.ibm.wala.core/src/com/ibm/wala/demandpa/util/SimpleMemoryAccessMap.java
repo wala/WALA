@@ -391,14 +391,14 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       if (!reads.isEmpty()) {
         result.append("  reads:\n");
         for (MemoryAccess memoryAccess : reads) {
-          result.append("  ").append(memoryAccess).append("\n");
+          result.append("  ").append(memoryAccess).append('\n');
         }
       }
       Collection<MemoryAccess> writes = getFieldWrites(null, f);
       if (!writes.isEmpty()) {
         result.append("  writes:\n");
         for (MemoryAccess memoryAccess : writes) {
-          result.append("  ").append(memoryAccess).append("\n");
+          result.append("  ").append(memoryAccess).append('\n');
         }
       }
     }
@@ -408,13 +408,13 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     if (!arrayReads.isEmpty()) {
       result.append("  reads:\n");
       for (MemoryAccess memoryAccess : arrayReads) {
-        result.append("  ").append(memoryAccess).append("\n");
+        result.append("  ").append(memoryAccess).append('\n');
       }
     }
     if (!arrayWrites.isEmpty()) {
       result.append("  writes:\n");
       for (MemoryAccess memoryAccess : arrayWrites) {
-        result.append("  ").append(memoryAccess).append("\n");
+        result.append("  ").append(memoryAccess).append('\n');
       }
     }
     return result.toString();

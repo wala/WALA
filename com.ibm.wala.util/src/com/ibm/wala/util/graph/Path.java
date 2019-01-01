@@ -80,10 +80,10 @@ public class Path extends SimpleIntVector {
     for (int i = 0; i < size; i++) {
       result.append(get(i));
       if (i < size -1) {
-        result.append(",");
+        result.append(',');
       }
     }
-    result.append("]");
+    result.append(']');
     return result.toString();
   }
 

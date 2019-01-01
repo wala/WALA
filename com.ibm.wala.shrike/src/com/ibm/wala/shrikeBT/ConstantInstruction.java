@@ -864,7 +864,7 @@ public abstract class ConstantInstruction extends Instruction {
           buf.append(ch);
         }
       }
-      buf.append("\"");
+      buf.append('\"');
       return buf.toString();
     } else if (o == null) {
       return "null";

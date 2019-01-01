@@ -196,7 +196,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
       s.append(getValueString(symbolTable, getDef())).append(" = ");
     }
     s.append("invoke").append(code);
-    s.append(" ");
+    s.append(' ');
     s.append(site.getDeclaredTarget().toString());
 
     if (getNumberOfPositionalParameters() > 0) {

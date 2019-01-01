@@ -81,7 +81,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
         sb.append(", ");
       sb.append("lexical:");
       sb.append(A.variableName);
-      sb.append("@");
+      sb.append('@');
       sb.append(A.variableDefiner);
       sb.append(" = ");
       sb.append(getValueString(symbolTable, A.valueNumber));

@@ -114,7 +114,7 @@ public class ClassLoaderReference implements Serializable {
     StringBuilder result = new StringBuilder();
     result.append(name.toString());
     result.append(" classloader");
-    result.append("\n");
+    result.append('\n');
     return result.toString();
   }
 

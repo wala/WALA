@@ -95,7 +95,7 @@ public class SourceBuffer {
       if (i == lines.length - 1) {
         result.append(lines[i]);
       } else {
-        result.append(lines[i]).append("\n");
+        result.append(lines[i]).append('\n');
       }
     }
     

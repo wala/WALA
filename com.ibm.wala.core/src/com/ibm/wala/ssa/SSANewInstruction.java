@@ -84,7 +84,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
     StringBuilder result = new StringBuilder();
     for (int param : params) {
       result.append(getValueString(symbolTable, param));
-      result.append(" ");
+      result.append(' ');
     }
     return result.toString();
   }

@@ -39,7 +39,7 @@ public class Warnings {
     for (int i = 1; i <= T.size(); i++) {
       result.append(i).append(". ");
       result.append(it.next());
-      result.append("\n");
+      result.append('\n');
     }
     return result.toString();
   }

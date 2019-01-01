@@ -112,7 +112,7 @@ public class ArrayboundsAnalysisTest {
         for (ISSABasicBlock block : ir.getControlFlowGraph()) {
           for (SSAInstruction instruction : block) {
             builder.append(instruction);
-            builder.append("\n");
+            builder.append('\n');
           }
         }
 

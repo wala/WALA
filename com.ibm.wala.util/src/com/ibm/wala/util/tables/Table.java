@@ -73,7 +73,7 @@ public class Table<T> {
       padWithSpaces(heading, format[i]);
       result.append(heading);
     }
-    result.append("\n");
+    result.append('\n');
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {
         T e = getElement(j, i);
@@ -81,7 +81,7 @@ public class Table<T> {
         padWithSpaces(element, format[i]);
         result.append(element);
       }
-      result.append("\n");
+      result.append('\n');
     }
     return result.toString();
   }
@@ -168,7 +168,7 @@ public class Table<T> {
     }
     if (b.length() < length) {
       for (int i = b.length(); i < length; i++) {
-        b.append(" ");
+        b.append(' ');
       }
     }
   }

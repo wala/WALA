@@ -281,7 +281,7 @@ public class XMLSummaryWriter {
 
             // unwrap array types
             while (tr.isArrayType()) {
-            	typeSigs.append("[");
+            	typeSigs.append('[');
             	tr = tr.getArrayElementType();
             }
             
@@ -291,7 +291,7 @@ public class XMLSummaryWriter {
             	typeSigs.append(tr.getName().toUnicodeString()+ ";");
             }
         }
-        typeSigs.append(")");
+        typeSigs.append(')');
         
         TypeReference returnType = summary.getReturnType();
         if (returnType.isPrimitiveType()) {

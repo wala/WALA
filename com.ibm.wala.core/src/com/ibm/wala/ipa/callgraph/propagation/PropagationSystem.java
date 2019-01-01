@@ -650,7 +650,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         int p = topFive[i];
         if (p != 0) {
           InstanceKey ik = getInstanceKey(p);
-          result.append(p).append("  ").append(ik).append("\n");
+          result.append(p).append("  ").append(ik).append('\n');
         }
       }
       return result.toString();

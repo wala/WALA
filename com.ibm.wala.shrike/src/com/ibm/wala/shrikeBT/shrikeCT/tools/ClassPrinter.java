@@ -145,7 +145,7 @@ public class ClassPrinter {
         }
         if ((flags & val) != 0) {
           if (buf.length() > 0) {
-            buf.append(" ");
+            buf.append(' ');
           }
           buf.append(name.substring(4).toLowerCase());
         }

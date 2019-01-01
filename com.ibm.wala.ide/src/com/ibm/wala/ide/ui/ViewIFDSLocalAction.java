@@ -159,7 +159,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       result.append(g.isStatic() ? "getstatic " : "getfield ");
       result.append(fieldName);
       if (!g.isStatic()) {
-        result.append(" ");
+        result.append(' ');
         result.append(g.getUse(0));
       }
       return result.toString();

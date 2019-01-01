@@ -204,14 +204,14 @@ public final class Descriptor {
     @Override
     public String toString() {
       StringBuilder result = new StringBuilder();
-      result.append("(");
+      result.append('(');
       if (parameters != null) {
         for (TypeName p : parameters) {
           result.append(p);
           appendSemicolonIfNeeded(result, p);
         }
       }
-      result.append(")");
+      result.append(')');
       result.append(returnType);
       appendSemicolonIfNeeded(result, returnType);
       return result.toString();
@@ -219,14 +219,14 @@ public final class Descriptor {
 
     public String toUnicodeString() {
       StringBuilder result = new StringBuilder();
-      result.append("(");
+      result.append('(');
       if (parameters != null) {
         for (TypeName p : parameters) {
           result.append(p.toUnicodeString());
           appendSemicolonIfNeeded(result, p);
         }
       }
-      result.append(")");
+      result.append(')');
       result.append(returnType);
       appendSemicolonIfNeeded(result, returnType);
       return result.toString();
@@ -237,12 +237,12 @@ public final class Descriptor {
         TypeName e = p.getInnermostElementType();
         String x = e.toUnicodeString();
         if (x.startsWith("L") || x.startsWith("P")) {
-          result.append(";");
+          result.append(';');
         }
       } else {
         String x = p.toUnicodeString();
         if (x.startsWith("L") || x.startsWith("P")) {
-          result.append(";");
+          result.append(';');
         }
       }
     }

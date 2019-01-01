@@ -82,7 +82,7 @@ public class AstLexicalRead extends AstLexicalAccess {
       sb.append(getValueString(symbolTable, A.valueNumber));
       sb.append(" = lexical:");
       sb.append(A.variableName);
-      sb.append("@");
+      sb.append('@');
       sb.append(A.variableDefiner);
     }
 

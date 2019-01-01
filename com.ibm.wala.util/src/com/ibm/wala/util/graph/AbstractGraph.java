@@ -192,12 +192,12 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (T n : this) {
-      sb.append(n.toString()).append("\n");
+      sb.append(n.toString()).append('\n');
       for (T s : Iterator2Iterable.make(getSuccNodes(n))) {
         sb.append(edgeString(n, s)).append(s);
-        sb.append("\n");
+        sb.append('\n');
       }
-      sb.append("\n");
+      sb.append('\n');
     }
 
     return sb.toString();

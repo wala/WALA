@@ -695,15 +695,15 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         return "<TOP>@" + System.identityHashCode(this);
       }
       StringBuilder result = new StringBuilder("<");
-      result.append("S");
+      result.append('S');
       if (stackHeight == 0) {
         result.append("[empty]");
       } else {
         result.append(array2StringBuffer(stack, stackHeight));
       }
-      result.append("L");
+      result.append('L');
       result.append(array2StringBuffer(locals, locals==null?0:locals.length));
-      result.append(">");
+      result.append('>');
       return result.toString();
     }
 
@@ -713,11 +713,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         result.append(OPTIMISTIC ? "TOP" : "BOTTOM");
       } else {
         for (int i = 0; i < n - 1; i++) {
-          result.append(array[i]).append(",");
+          result.append(array[i]).append(',');
         }
         result.append(array[n - 1]);
       }
-      result.append("]");
+      result.append(']');
       return result;
     }
 

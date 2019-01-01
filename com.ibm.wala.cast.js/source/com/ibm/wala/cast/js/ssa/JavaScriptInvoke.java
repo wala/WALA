@@ -99,14 +99,14 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
     s.append(getValueString(symbolTable, function));
 
     if (site != null)
-      s.append("@").append(site.getProgramCounter());
+      s.append('@').append(site.getProgramCounter());
 
     if (params != null) {
       if (params.length > 0) {
-        s.append(" ").append(getValueString(symbolTable, params[0]));
+        s.append(' ').append(getValueString(symbolTable, params[0]));
       }
       for (int i = 1; i < params.length; i++) {
-        s.append(",").append(getValueString(symbolTable, params[i]));
+        s.append(',').append(getValueString(symbolTable, params[i]));
       }
     }
 

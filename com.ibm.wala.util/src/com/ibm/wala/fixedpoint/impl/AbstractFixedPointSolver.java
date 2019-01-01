@@ -218,7 +218,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
   public String toString() {
     StringBuilder result = new StringBuilder("Fixed Point System:\n");
     for (INodeWithNumber nwn : Iterator2Iterable.make(getStatements())) {
-      result.append(nwn).append("\n");
+      result.append(nwn).append('\n');
     }
     return result.toString();
   }

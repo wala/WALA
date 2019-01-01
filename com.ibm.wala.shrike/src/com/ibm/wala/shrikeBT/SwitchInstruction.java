@@ -135,7 +135,7 @@ public final class SwitchInstruction extends Instruction {
       b.append(',');
       b.append(casesAndLabel);
     }
-    b.append(")");
+    b.append(')');
     return b.toString();
   }
 
