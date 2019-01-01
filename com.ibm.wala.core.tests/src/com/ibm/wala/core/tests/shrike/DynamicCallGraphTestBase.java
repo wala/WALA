@@ -86,7 +86,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       if (testPatchCalls) {
         args.add("--patch-calls");
       }
-      OfflineDynamicCallGraph.main(args.toArray(new String[ args.size() ]));
+      OfflineDynamicCallGraph.main(args.toArray(new String[0]));
       Assert.assertTrue("expected to create " + instrumentedJarLocation, Files.exists(instrumentedJarLocation));
       instrumentedJarBuilt = true;
     }

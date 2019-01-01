@@ -1310,7 +1310,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private CAstNode visit(Block n, WalkContext context) {
     ArrayList<CAstNode> stmtNodes = createBlock(n, context);
-    CAstNode stmtNodesArray[] = stmtNodes.toArray(new CAstNode[stmtNodes.size()]);
+    CAstNode stmtNodesArray[] = stmtNodes.toArray(new CAstNode[0]);
     return makeNode(context, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, stmtNodesArray));
   }
 
@@ -2425,7 +2425,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       if (s instanceof SwitchCase) {
         if (!currentBlock.isEmpty()) {
           // bundle up statements before this case
-          CAstNode stmtNodes[] = currentBlock.toArray(new CAstNode[currentBlock.size()]);
+          CAstNode stmtNodes[] = currentBlock.toArray(new CAstNode[0]);
           // make position from start of first statement to end of last statement
           T positionOfAll = makePosition(childContext.pos().getPosition(stmtNodes[0]).getFirstOffset(), childContext
               .pos().getPosition(stmtNodes[stmtNodes.length - 1]).getLastOffset());
@@ -2439,7 +2439,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
     if (!currentBlock.isEmpty()) {
       // bundle up statements before this case
-      CAstNode stmtNodes[] = currentBlock.toArray(new CAstNode[currentBlock.size()]);
+      CAstNode stmtNodes[] = currentBlock.toArray(new CAstNode[0]);
       // make position from start of first statement to end of last statement
       T positionOfAll = makePosition(childContext.pos().getPosition(stmtNodes[0]).getFirstOffset(), childContext.pos()
           .getPosition(stmtNodes[stmtNodes.length - 1]).getLastOffset());
@@ -2448,7 +2448,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // Now produce the switch stmt itself
     CAstNode switchAst = makeNode(context, fFactory, n, CAstNode.SWITCH, visitNode(cond, context), makeNode(context, fFactory, n,
-        CAstNode.BLOCK_STMT, caseNodes.toArray(new CAstNode[caseNodes.size()])));
+        CAstNode.BLOCK_STMT, caseNodes.toArray(new CAstNode[0])));
 
     context.cfg().map(n, switchAst);
 
@@ -2676,7 +2676,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     for (int i = 0; i < iters.length; i++)
       iters[i] = visitNode((ASTNode) n.updaters().get(i), context);
 
-    CAstNode initsBlock = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, inits.toArray(new CAstNode[inits.size()]));
+    CAstNode initsBlock = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, inits.toArray(new CAstNode[0]));
     CAstNode itersBlock = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, iters);
 
     // { [inits]; while (cond) { [body]; [label continueTarget]; iters } [label breakTarget]

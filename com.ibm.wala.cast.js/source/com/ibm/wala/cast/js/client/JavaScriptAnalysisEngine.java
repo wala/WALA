@@ -60,7 +60,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   public void buildAnalysisScope() {
     loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
-    SourceModule[] files = moduleFiles.toArray(new SourceModule[moduleFiles.size()]);
+    SourceModule[] files = moduleFiles.toArray(new SourceModule[0]);
 
     scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
   }

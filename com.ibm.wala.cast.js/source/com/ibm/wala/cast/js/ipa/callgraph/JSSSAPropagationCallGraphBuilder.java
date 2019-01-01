@@ -720,7 +720,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               final Set<InstanceKey> temp = HashSetFactory.make();
               v.getValue().foreach(keyIndex -> temp.add(system.getInstanceKey(keyIndex)));
 
-              return temp.toArray(new InstanceKey[temp.size()]);
+              return temp.toArray(new InstanceKey[0]);
             }
           }
         }

@@ -2920,7 +2920,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (exposedNamesForWriteSet != null) {
           exposedNamesSet.addAll(exposedNamesForWriteSet);
         }
-        EN = exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
+        EN = exposedNamesSet.toArray(new Pair[0]);
       }
 
       if (exposedNamesForReadSet != null) {
@@ -2963,7 +2963,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             parents.add(AC.variableDefiner);
           }
         }
-        scopingParents = parents.toArray(new String[parents.size()]);
+        scopingParents = parents.toArray(new String[0]);
 
         if (DEBUG_LEXICAL) {
           System.err.println(("scoping parents of " + scope.getEntity()));

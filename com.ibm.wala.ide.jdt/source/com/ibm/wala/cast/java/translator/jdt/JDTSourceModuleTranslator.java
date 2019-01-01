@@ -179,7 +179,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       parser.setResolveBindings(true);
  
       Set<ICompilationUnit> units = proj.getValue().keySet();
-      parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new JdtAstToIR(proj), null);
+      parser.createASTs(units.toArray(new ICompilationUnit[0]), new String[0], new JdtAstToIR(proj), null);
 
     }
   }

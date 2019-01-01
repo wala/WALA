@@ -162,7 +162,7 @@ public class JsdtUtil {
               ASTParser parser = ASTParser.newParser(AST.JLS3);
               parser.setProject(project);
               parser.setResolveBindings(true);
-              parser.createASTs(files.keySet().toArray(new IJavaScriptUnit[files.size()]), new String[0], new ASTRequestor() {
+              parser.createASTs(files.keySet().toArray(new IJavaScriptUnit[0]), new String[0], new ASTRequestor() {
                 @Override
                 public void acceptAST(IJavaScriptUnit source, JavaScriptUnit ast) {
                   ast.accept(visitor);

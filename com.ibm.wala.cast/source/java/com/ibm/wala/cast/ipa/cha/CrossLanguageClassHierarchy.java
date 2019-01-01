@@ -105,7 +105,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
       loaders.add(getLoader(loaderReference));
     }
 
-    return loaders.toArray(new IClassLoader[loaders.size()]);
+    return loaders.toArray(new IClassLoader[0]);
   }
 
   @Override

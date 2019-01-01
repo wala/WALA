@@ -86,7 +86,7 @@ public final class CRTFlags {
       tFlags >>= 1;
       ++index;
     }
-    return names.toArray(new String[names.size()]);
+    return names.toArray(new String[0]);
   }
 
   /**

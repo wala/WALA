@@ -165,7 +165,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     }
     }
     
-    return Pair.make(sources.toArray(new String[ sources.size() ]),  libs.toArray(new String[ libs.size() ]));
+    return Pair.make(sources.toArray(new String[0]),  libs.toArray(new String[0]));
   }
   
   /*
@@ -184,7 +184,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
       }
     }
     
-    String[] sourceFiles = sources.toArray(new String[ sources.size() ]);
+    String[] sourceFiles = sources.toArray(new String[0]);
     @SuppressWarnings("deprecation") final ASTParser parser = ASTParser.newParser(AST.JLS8);
     parser.setResolveBindings(true);
     parser.setEnvironment(libs, this.sources, null, false);

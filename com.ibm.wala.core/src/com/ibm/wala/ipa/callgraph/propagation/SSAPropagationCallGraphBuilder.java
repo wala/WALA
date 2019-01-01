@@ -853,7 +853,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
       
-      PointerKey result = getFilteredPointerKeyForLocal(instruction.getResult(), new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[ types.size() ])));
+      PointerKey result = getFilteredPointerKeyForLocal(instruction.getResult(), new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0])));
       PointerKey value = getPointerKeyForLocal(instruction.getVal());
 
       if (hasNoInterestingUses(instruction.getDef())) {
@@ -1177,7 +1177,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    
           DispatchOperator dispatchOperator = getBuilder().new DispatchOperator(instruction, node,
               invariantParameters, uniqueCatch, params);
-          system.newSideEffect(dispatchOperator, pks.toArray(new PointerKey[pks.size()]));
+          system.newSideEffect(dispatchOperator, pks.toArray(new PointerKey[0]));
         }
       }
     }
