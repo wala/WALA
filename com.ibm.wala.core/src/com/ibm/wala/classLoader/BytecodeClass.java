@@ -398,10 +398,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   @Override
   public Collection<IMethod> getAllMethods() {
     Collection<IMethod> result = new LinkedList<>();
-    Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
-    while (declaredMethods.hasNext()) {
-      result.add(declaredMethods.next());
-    }
+    result.addAll(getDeclaredMethods());
     if (isInterface()) {
       for (IClass i : getDirectInterfaces()) {
         result.addAll(i.getAllMethods());
@@ -415,10 +412,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     IClass s = getSuperclass();
     while (s != null) {
-      Iterator<? extends IMethod> superDeclaredMethods = s.getDeclaredMethods().iterator();
-      while (superDeclaredMethods.hasNext()) {
-        result.add(superDeclaredMethods.next());
-      }
+      result.addAll(s.getDeclaredMethods());
       s = s.getSuperclass();
     }
     return result;

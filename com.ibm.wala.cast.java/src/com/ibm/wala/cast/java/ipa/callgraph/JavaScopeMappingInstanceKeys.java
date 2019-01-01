@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -44,9 +45,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
         if ((m instanceof AstMethod) && !m.isStatic()) {
           AstMethod M = (AstMethod) m;
           LexicalParent[] parents = M.getParents();
-          for (LexicalParent parent : parents) {
-            result.add(parent);
-          }
+            result.addAll(Arrays.asList(parents));
         }
       }
 

@@ -197,9 +197,7 @@ public class JavaLauncher extends Launcher {
       cmd.add("-ea");
     }
     if (vmArgs != null) {
-      for (String s : vmArgs) {
-        cmd.add(s);
-      }
+      cmd.addAll(vmArgs);
     }
     cmd.add(getMainClass());
     if (getProgramArgs() != null) {
