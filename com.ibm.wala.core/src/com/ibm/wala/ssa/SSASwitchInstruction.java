@@ -50,10 +50,10 @@ public class SSASwitchInstruction extends SSAInstruction {
       result.append("->");
       result.append(casesAndLabels[i]);
       if (i < casesAndLabels.length - 2) {
-        result.append(",");
+        result.append(',');
       }
     }
-    result.append("]");
+    result.append(']');
     return result.toString();
   }
 

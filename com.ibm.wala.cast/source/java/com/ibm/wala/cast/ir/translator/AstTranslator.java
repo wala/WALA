@@ -1408,12 +1408,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       StringBuilder s = new StringBuilder("CAst CFG of " + functionName);
       int params[] = symtab.getParameterValueNumbers();
       for (int param : params)
-        s.append(" ").append(param);
-      s.append("\n");
+        s.append(' ').append(param);
+      s.append('\n');
 
       for (int i = 0; i < getNumberOfNodes(); i++) {
         PreBasicBlock bb = getNode(i);
-        s.append(bb).append("\n");
+        s.append(bb).append('\n');
 
         for (PreBasicBlock pbb : Iterator2Iterable.make(getSuccNodes(bb)))
           s.append("    -->" + pbb + "\n");

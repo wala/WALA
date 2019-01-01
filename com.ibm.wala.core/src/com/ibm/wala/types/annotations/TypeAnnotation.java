@@ -69,7 +69,7 @@ public class TypeAnnotation {
     sb.append(typePath);
     sb.append(", target = ");
     sb.append(typeAnnotationTarget);
-    sb.append("}");
+    sb.append('}');
     return sb.toString();
   }
 
@@ -210,7 +210,7 @@ public class TypeAnnotation {
       StringBuilder sb = new StringBuilder("TypeParameterTarget");
       sb.append("{ type_parameter_index = ");
       sb.append(type_parameter_index);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -252,7 +252,7 @@ public class TypeAnnotation {
       StringBuilder sb = new StringBuilder("SuperTypeTarget");
       sb.append("{ superType = ");
       sb.append(superType);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -298,7 +298,7 @@ public class TypeAnnotation {
       sb.append(type_parameter_index);
       sb.append(", bound_index = ");
       sb.append(bound_index);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -380,7 +380,7 @@ public class TypeAnnotation {
       StringBuilder sb = new StringBuilder("FormalParameterTarget");
       sb.append("{ formal_parameter_index = ");
       sb.append(formal_parameter_index);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -422,7 +422,7 @@ public class TypeAnnotation {
       StringBuilder sb = new StringBuilder("ThrowsTarget");
       sb.append("{ throwType = ");
       sb.append(throwType);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -470,7 +470,7 @@ public class TypeAnnotation {
       sb.append(varIindex);
       sb.append(", name = ");
       sb.append(name);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -552,7 +552,7 @@ public class TypeAnnotation {
       sb.append(catchIIndex);
       sb.append(", catchType = ");
       sb.append(catchType);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -605,7 +605,7 @@ public class TypeAnnotation {
       StringBuilder sb = new StringBuilder("OffsetTarget");
       sb.append("{ iindex = ");
       sb.append(iindex);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 
@@ -656,7 +656,7 @@ public class TypeAnnotation {
       sb.append(iindex);
       sb.append(", type_argument_index = ");
       sb.append(type_argument_index);
-      sb.append("}");
+      sb.append('}');
       return sb.toString();
     }
 

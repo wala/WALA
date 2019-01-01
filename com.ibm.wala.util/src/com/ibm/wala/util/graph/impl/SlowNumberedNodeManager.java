@@ -86,7 +86,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     for (int i = 0; i <= getMaxNumber(); i++) {
       result.append(i).append("  ");
       result.append(map.getMappedObject(i));
-      result.append("\n");
+      result.append('\n');
     }
     return result.toString();
   }

@@ -30,7 +30,7 @@ public class AstEchoInstruction extends AstConsumeInstruction {
   public String toString(SymbolTable symbolTable) {
     StringBuilder result = new StringBuilder("echo/print ");
     for (int rval : rvals) {
-      result.append(getValueString(symbolTable, rval)).append(" ");
+      result.append(getValueString(symbolTable, rval)).append(' ');
     }
 
     return result.toString();

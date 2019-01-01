@@ -204,13 +204,13 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (T n : this) {
-      sb.append(n.toString()).append("\n");
+      sb.append(n.toString()).append('\n');
       for (T s : Iterator2Iterable.make(getSuccNodes(n))) {
         sb.append("  --> ").append(s);
         if (edgeLabels != null)
           for (Object name : edgeLabels.get(Pair.make(n, s)))
             sb.append("\n   label: ").append(name);
-        sb.append("\n");
+        sb.append('\n');
       }
     }
 

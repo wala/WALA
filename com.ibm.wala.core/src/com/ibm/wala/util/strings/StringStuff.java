@@ -55,7 +55,7 @@ public class StringStuff {
     }
     if (b.length() < length) {
       for (int i = b.length(); i < length; i++) {
-        b.append(" ");
+        b.append(' ');
       }
     }
   }
@@ -79,7 +79,7 @@ public class StringStuff {
       baseType = deployment2CanonicalTypeString(baseType);
       StringBuilder result = new StringBuilder("[");
       for (int i = 1; i < dim; i++) {
-        result.append("[");
+        result.append('[');
       }
       result.append(baseType);
       return result.toString();
@@ -111,7 +111,7 @@ public class StringStuff {
       baseType = deployment2CanonicalDescriptorTypeString(baseType);
       StringBuilder result = new StringBuilder("[");
       for (int i = 1; i < dim; i++) {
-        result.append("[");
+        result.append('[');
       }
       result.append(baseType);
       return result.toString();

@@ -156,15 +156,15 @@ public abstract class Heap<T> {
   @Override
   public String toString() {
     StringBuilder s = new StringBuilder();
-    s.append("[");
+    s.append('[');
     for (int i = 0; i < size(); i++) {
       if (backingStore[i] != null) {
         if (i > 0)
-          s.append(",");
+          s.append(',');
         s.append(backingStore[i].toString());
       }
     }
-    s.append("]");
+    s.append(']');
     return s.toString();
   }
 }

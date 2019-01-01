@@ -680,7 +680,7 @@ public class HeapTracer {
 			.append("   ");
 		result.append(bytes.intValue() / I.intValue()).append("   ");
 		result.append(key);
-		result.append("\n");
+		result.append('\n');
 	    }
 	    return result.toString();
 	}
@@ -779,7 +779,7 @@ totalSize += d.getTotalSize();
 		Object root = field;
 		Demographics d = roots.get(root);
 		if (d.getTotalSize() > 10000) {
-		    result.append(" root: ").append(root).append("\n");
+		    result.append(" root: ").append(root).append('\n');
 		    result.append(d);
 		}
 	    }

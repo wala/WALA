@@ -93,7 +93,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       OrdinalSet<InstanceKey> O = getPointsToSet(p);
       result.append("  ").append(p).append(" ->\n");
       for (InstanceKey instanceKey : O) {
-        result.append("     ").append(instanceKey).append("\n");
+        result.append("     ").append(instanceKey).append('\n');
       }
     }
     return result.toString();

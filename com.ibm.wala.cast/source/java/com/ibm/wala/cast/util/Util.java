@@ -24,7 +24,7 @@ public class Util {
             ModuleEntry errorModule = errors.next();
             for(Warning w : (((CAstAbstractLoader)loader).getMessages(errorModule))) {
               message.append("error in ").append(errorModule.getName()).append(":\n");
-              message.append(w.toString()).append("\n");
+              message.append(w.toString()).append('\n');
             }
           }
         }

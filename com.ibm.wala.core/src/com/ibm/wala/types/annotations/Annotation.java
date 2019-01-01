@@ -115,7 +115,7 @@ public class Annotation {
   public String toString() {
     StringBuilder sb = new StringBuilder("Annotation type " + type);
     if (unnamedArguments != null) {
-      sb.append("[");
+      sb.append('[');
       for (Pair<TypeReference, Object> arg : unnamedArguments) {
         sb.append(" " + arg.fst.getName().getClassName() + ":" + arg.snd);
       }

@@ -214,7 +214,7 @@ public class DotUtil {
 
     for (T n : g) {
       for (T s : Iterator2Iterable.make(g.getSuccNodes(n))) {
-        result.append(" ");
+        result.append(' ');
         result.append(getPort(n, labels));
         result.append(" -> ");
         result.append(getPort(s, labels));
@@ -234,9 +234,9 @@ public class DotUtil {
 
   private static <T> void outputNode(NodeDecorator<T> labels, StringBuilder result, T n) throws WalaException {
     result.append("   ");
-    result.append("\"");
+    result.append('\"');
     result.append(getLabel(n, labels));
-    result.append("\"");
+    result.append('\"');
     result.append(decorateNode(n, labels));
   }
 

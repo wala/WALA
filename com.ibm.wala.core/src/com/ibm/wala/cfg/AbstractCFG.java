@@ -539,11 +539,11 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   public String toString() {
     StringBuilder s = new StringBuilder("");
     for (T bb : this) {
-      s.append("BB").append(getNumber(bb)).append("\n");
+      s.append("BB").append(getNumber(bb)).append('\n');
 
       Iterator<T> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
-        s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
+        s.append("    -> BB").append(getNumber(succNodes.next())).append('\n');
       }
     }
     return s.toString();

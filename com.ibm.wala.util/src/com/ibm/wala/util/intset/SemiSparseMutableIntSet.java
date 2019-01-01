@@ -657,9 +657,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public String toString() {
     StringBuilder sb = new StringBuilder("[");
     if (densePart != null) {
-      sb.append("densePart: ").append(densePart.toString()).append(" ");
+      sb.append("densePart: ").append(densePart.toString()).append(' ');
     }
-    sb.append("sparsePart: ").append(sparsePart.toString()).append("]");
+    sb.append("sparsePart: ").append(sparsePart.toString()).append(']');
     return sb.toString();
   }
 

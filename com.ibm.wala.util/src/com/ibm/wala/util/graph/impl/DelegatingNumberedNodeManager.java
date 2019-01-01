@@ -181,11 +181,11 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   public String toString() {
     StringBuilder result = new StringBuilder("Nodes:\n");
     for (int i = 0; i <= maxNumber; i++) {
-      result.append(i).append(" ");
+      result.append(i).append(' ');
       if (nodes[i] != null) {
         result.append(nodes[i].toString());
       }
-      result.append("\n");
+      result.append('\n');
     }
     return result.toString();
   }

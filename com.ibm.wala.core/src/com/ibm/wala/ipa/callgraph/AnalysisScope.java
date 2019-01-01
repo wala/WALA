@@ -341,15 +341,15 @@ public class AnalysisScope {
     StringBuilder result = new StringBuilder();
     for (ClassLoaderReference loader : loadersByName.values()) {
       result.append(loader.getName());
-      result.append("\n");
+      result.append('\n');
       for (Module m : getModules(loader)) {
-        result.append(" ");
+        result.append(' ');
         result.append(m);
-        result.append("\n");
+        result.append('\n');
       }
     }
     result.append(getExclusionString());
-    result.append("\n");
+    result.append('\n');
     return result.toString();
   }
 

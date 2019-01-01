@@ -51,7 +51,7 @@ public class DirectedHyperGraph<T> {
 			buffer.append(edge.getWeight());
 			buffer.append(" --> ");
 			buffer.append(edge.getDestination());
-			buffer.append("\n");
+			buffer.append('\n');
 		}
 		return buffer.toString();
 	}

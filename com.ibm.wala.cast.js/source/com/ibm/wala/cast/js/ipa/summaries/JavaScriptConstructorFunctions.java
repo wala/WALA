@@ -444,13 +444,13 @@ public class JavaScriptConstructorFunctions {
       final StringBuilder fun = new StringBuilder("function _fromctor (");
       for (int j = 1; j < callStmt.getNumberOfUses() - 1; j++) {
         if (j != 1)
-          fun.append(",");
+          fun.append(',');
         fun.append(ST.getStringValue(callStmt.getUse(j)));
       }
 
       fun.append(") {");
       fun.append(ST.getStringValue(callStmt.getUse(callStmt.getNumberOfUses() - 1)));
-      fun.append("}");
+      fun.append('}');
 
       try {
         final String fileName = "ctor$" + ++ctorCount;

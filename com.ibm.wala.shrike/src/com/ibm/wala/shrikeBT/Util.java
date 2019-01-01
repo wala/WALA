@@ -371,11 +371,11 @@ public final class Util {
       throw new IllegalArgumentException("params == null");
     }
     StringBuilder buf = new StringBuilder();
-    buf.append("(");
+    buf.append('(');
     for (Class<?> param : params) {
       buf.append(makeType(param));
     }
-    buf.append(")");
+    buf.append(')');
     buf.append(makeType(result));
     return buf.toString();
   }
@@ -425,14 +425,14 @@ public final class Util {
       return name;
     } else {
       StringBuilder buf = new StringBuilder(name);
-      buf.append("(");
+      buf.append('(');
       for (int i = 0; i < paramTypes.length; i++) {
         if (i > 0) {
-          buf.append(",");
+          buf.append(',');
         }
         buf.append(paramTypes[i].getName());
       }
-      buf.append(")");
+      buf.append(')');
       return buf.toString();
     }
   }
