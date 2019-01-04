@@ -186,9 +186,9 @@ import com.ibm.wala.util.strings.StringStuff;
     }
 
     public Intent setAction(final Intent intent, final String action, boolean isExplicit) {
-        for (final InstanceKey candKey : seen.keySet()) {
-            if (seen.get(candKey).equals(intent)) {
-                return setAction(candKey, action, isExplicit);
+        for (final Map.Entry<InstanceKey, Intent> entry : seen.entrySet()) {
+            if (entry.getValue().equals(intent)) {
+                return setAction(entry.getKey(), action, isExplicit);
             }
         }
 

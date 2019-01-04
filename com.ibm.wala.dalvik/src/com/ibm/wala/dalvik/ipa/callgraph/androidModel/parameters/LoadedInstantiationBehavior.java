@@ -306,10 +306,10 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
             stream.writeObject(this.behaviours);
         } else {
             final Map<BehaviorKey<?>, BehviourValue> strippedBehaviours = new HashMap<>();
-            for (final BehaviorKey<?> key : this.behaviours.keySet()) {
-                final BehviourValue val = this.behaviours.get(key);
+            for (final Map.Entry<BehaviorKey<?>, BehviourValue> entry : this.behaviours.entrySet()) {
+                final BehviourValue val = entry.getValue();
                 if (! val.isCached() ) {
-                    strippedBehaviours.put(key, val);
+                    strippedBehaviours.put(entry.getKey(), val);
                 }
             }
             stream.writeObject(strippedBehaviours);

@@ -238,7 +238,6 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     @Override
     public Set<Entry<Statement, OrdinalSet<Statement>>> entrySet() {
-      Assertions.UNREACHABLE();
       return delegate.entrySet();
     }
 

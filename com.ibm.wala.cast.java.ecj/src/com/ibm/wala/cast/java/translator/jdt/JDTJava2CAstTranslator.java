@@ -926,8 +926,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       // from CodeBodyEntity
       fEntities = new LinkedHashMap<>();
-      for (CAstNode key : entities.keySet()) {
-        fEntities.put(key, Collections.singleton(entities.get(key)));
+      for (Map.Entry<CAstNode, CAstEntity> entry : entities.entrySet()) {
+        fEntities.put(entry.getKey(), Collections.singleton(entry.getValue()));
       }
 
       if (fDecl != null) {

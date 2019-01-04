@@ -63,13 +63,14 @@ public class CFGSanitizerTest extends WalaTestCase {
     }
     AnalysisOptions options = new AnalysisOptions(scope, null);
     Map<MethodReference, MethodSummary> summaries = summary.getSummaries();
-    for (MethodReference mr : summaries.keySet()) {
+    for (Map.Entry<MethodReference, MethodSummary> entry : summaries.entrySet()) {
+      final MethodReference mr = entry.getKey();
       IMethod m = cha.resolveMethod(mr);
       if (m == null) {
         continue;
       }
       System.out.println(m.getSignature());
-      MethodSummary methodSummary = summaries.get(mr);
+      MethodSummary methodSummary = entry.getValue();
       SummarizedMethod summMethod = new SummarizedMethod(mr, methodSummary, m.getDeclaringClass());
       IR ir = summMethod.makeIR(Everywhere.EVERYWHERE, options.getSSAOptions());
       System.out.println(ir);

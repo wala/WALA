@@ -14,6 +14,8 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Map;
+
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
@@ -53,9 +55,9 @@ public class InterfaceAnalyzer {
       instrumenter.close();
 
       w.write("Type\t# Total\t# Method\t# Public Method\t# Public Method as Foreign\n");
-      for (String k : typeStats.keySet()) {
-        TypeStats t = typeStats.get(k);
-        w.write(k + "\t" + t.totalOccurrences + "\t" + t.methodOccurrences + "\t" + t.publicMethodOccurrences + "\t"
+      for (Map.Entry<String, TypeStats> entry : typeStats.entrySet()) {
+        TypeStats t = entry.getValue();
+        w.write(entry.getKey() + "\t" + t.totalOccurrences + "\t" + t.methodOccurrences + "\t" + t.publicMethodOccurrences + "\t"
             + t.foreignPublicMethodOccurrences + "\n");
       }
     }

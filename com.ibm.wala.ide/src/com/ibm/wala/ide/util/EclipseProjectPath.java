@@ -317,9 +317,9 @@ public abstract class EclipseProjectPath<E, P> {
 
   public AnalysisScope toAnalysisScope(AnalysisScope scope) {
 
-    for (ILoader loader : modules.keySet()) {
-      for (Module m : modules.get(loader)) {
-        scope.addToScope(loader.ref(), m);
+    for (Map.Entry<ILoader, List<Module>> entry : modules.entrySet()) {
+      for (Module m : entry.getValue()) {
+        scope.addToScope(entry.getKey().ref(), m);
       }
     }
     return scope;

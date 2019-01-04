@@ -127,9 +127,9 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     Collection<CAstNode> nodes = cachedMappedNodes;
     if (nodes == null) {
       nodes = new LinkedHashSet<>();
-      for (Key key : table.keySet()) {
-        nodes.add(nodeToCAst.get(key.from));
-        nodes.add(nodeToCAst.get(table.get(key)));
+      for (Map.Entry<Key, Object> entry : table.entrySet()) {
+        nodes.add(nodeToCAst.get(entry.getKey().from));
+        nodes.add(nodeToCAst.get(entry.getValue()));
       }
       cachedMappedNodes = nodes;
     }
@@ -201,7 +201,8 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("control flow map\n");
-    for (Key key : table.keySet()) {
+    for (Map.Entry<Key, Object> entry : table.entrySet()) {
+      final Key key = entry.getKey();
       sb.append(key.from);
       if (src != null && nodeToCAst.get(key.from) != null && src.getPosition(nodeToCAst.get(key.from)) != null) {
         sb.append(" (").append(src.getPosition(nodeToCAst.get(key.from))).append(") ");
@@ -209,7 +210,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       sb.append(" -- ");
       sb.append(key.label);
       sb.append(" --> ");
-      sb.append(table.get(key));
+      sb.append(entry.getValue());
       sb.append('\n');
     }
     sb.append('\n');
