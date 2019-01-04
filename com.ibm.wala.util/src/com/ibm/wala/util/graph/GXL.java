@@ -33,18 +33,18 @@ public class GXL {
     sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     sb.append("<!DOCTYPE gxl SYSTEM \"http://www.gupro.de/GXL/gxl-1.0.dtd\">\n");
     sb.append("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-    sb.append("  <graph id=\"" + graphId + "\" edgemode=\"directed\" hypergraph=\"false\">\n");
-    sb.append("    <type xlink:href=\"" + types.type(G) + "\"/>\n");
+    sb.append("  <graph id=\"").append(graphId).append("\" edgemode=\"directed\" hypergraph=\"false\">\n");
+    sb.append("    <type xlink:href=\"").append(types.type(G)).append("\"/>\n");
     
     for(T n : G) {
-      sb.append("    <node id=\"" + nodeIds.apply(n) + "\">\n");
-      sb.append("      <type xlink:href=\"" + types.type(n) + "\"/>\n");
+      sb.append("    <node id=\"").append(nodeIds.apply(n)).append("\">\n");
+      sb.append("      <type xlink:href=\"").append(types.type(n)).append("\"/>\n");
       Map<String,String> props = nodeProperties.apply(n);
       if (props != null) {
         for(Map.Entry<String,String> e : props.entrySet()) {
-          sb.append("      <attr name=\"" + e.getKey() + "\">\n");
+          sb.append("      <attr name=\"").append(e.getKey()).append("\">\n");
           if (e.getValue() != null) {
-            sb.append("        <string>" + e.getValue() + "</string>\n");
+            sb.append("        <string>").append(e.getValue()).append("</string>\n");
           } else {
             sb.append("        <string/>\n");            
           }
@@ -58,8 +58,8 @@ public class GXL {
       Iterator<T> ss = G.getSuccNodes(n);
       while (ss.hasNext()) {
         T s = ss.next();
-        sb.append("    <edge from=\"" + nodeIds.apply(n) + "\" to=\"" + nodeIds.apply(s) + "\">\n");
-        sb.append("      <type xlink:href=\"" + types.type(n, s) + "\"/>\n");
+        sb.append("    <edge from=\"").append(nodeIds.apply(n)).append("\" to=\"").append(nodeIds.apply(s)).append("\">\n");
+        sb.append("      <type xlink:href=\"").append(types.type(n, s)).append("\"/>\n");
         
         sb.append("    </edge>\n");
       }

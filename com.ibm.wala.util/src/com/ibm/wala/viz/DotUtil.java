@@ -183,14 +183,14 @@ public class DotUtil {
     StringBuilder result = new StringBuilder("digraph \"DirectedGraph\" {\n");
 
     if (title != null) {
-      result.append("graph [label = \""+title+"\", labelloc=t, concentrate = true];");
+      result.append("graph [label = \"").append(title).append("\", labelloc=t, concentrate = true];");
     } else {
       result.append("graph [concentrate = true];");
     }
     
     String rankdir = getRankDir();
     if (rankdir != null) {
-      result.append("rankdir=" + rankdir + ";");
+      result.append("rankdir=").append(rankdir).append(';');
     }
     String fontsizeStr = "fontsize=" + fontSize;
     String fontcolorStr = (fontColor != null) ? ",fontcolor="+fontColor : "";

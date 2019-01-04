@@ -42,7 +42,7 @@ public class CallString implements ContextItem {
   public String toString() {
     StringBuilder str = new StringBuilder("[");
     for (int i = 0; i < sites.length; i++) {
-      str.append(" ").append(methods[i].getSignature()).append('@').append(sites[i].getProgramCounter());
+      str.append(' ').append(methods[i].getSignature()).append('@').append(sites[i].getProgramCounter());
     }
     str.append(" ]");
     return str.toString();

@@ -117,12 +117,12 @@ public class Annotation {
     if (unnamedArguments != null) {
       sb.append('[');
       for (Pair<TypeReference, Object> arg : unnamedArguments) {
-        sb.append(" " + arg.fst.getName().getClassName() + ":" + arg.snd);
+        sb.append(' ').append(arg.fst.getName().getClassName()).append(':').append(arg.snd);
       }
       sb.append(" ]");
     }
     if (!namedArguments.isEmpty()) {
-      sb.append(" " + new TreeMap<>(namedArguments));
+      sb.append(' ').append(new TreeMap<>(namedArguments));
     }
     return sb.toString();
   }

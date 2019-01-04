@@ -49,7 +49,7 @@ public class FileOfClasses extends SetOfClasses {
         if (regex == null) {
           regex = new StringBuilder("(" + line + ")");
         } else {
-          regex.append("|(" + line + ")");
+          regex.append("|(").append(line).append(')');
         }
       }
   

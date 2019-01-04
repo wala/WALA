@@ -42,9 +42,9 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
     long total = 0;
     for (int i = 0; i < getNumberOfCategories(); i++) {
       total += stopwatch[i].getElapsedMillis();
-      result.append(getCategoryNames()[i] + ": " + stopwatch[i].getElapsedMillis() + "\n");
+      result.append(getCategoryNames()[i]).append(": ").append(stopwatch[i].getElapsedMillis()).append('\n');
     }
-    result.append("Total       : " + total + "\n");
+    result.append("Total       : ").append(total).append('\n');
     return result.toString();
   }
 

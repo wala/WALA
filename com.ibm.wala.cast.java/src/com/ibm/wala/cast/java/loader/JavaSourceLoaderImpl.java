@@ -191,11 +191,11 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       StringBuilder sb = new StringBuilder("<src-class: " );
       sb.append(getName().toString());
       if (enclosingClass != null) {
-        sb.append(" (within " + enclosingClass.getName() + ")");
+        sb.append(" (within ").append(enclosingClass.getName()).append(')');
       }
       if (annotations != null && !annotations.isEmpty()) {
         for(Annotation a : annotations) {
-          sb.append("[" + a.getType().getName().getClassName() + "]");
+          sb.append('[').append(a.getType().getName().getClassName()).append(']');
         }
       }
       return sb.toString();

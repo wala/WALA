@@ -123,10 +123,10 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < defs.length; i++) {
       if (defs[i] != null) {
-        result.append(i + " <- " + defs[i] + "\n");
+        result.append(i).append(" <- ").append(defs[i]).append('\n');
       }
       if (uses[i] != null) {
-        result.append(i + " -> " + uses[i] + "\n");
+        result.append(i).append(" -> ").append(uses[i]).append('\n');
       }
     }
     return result.toString();

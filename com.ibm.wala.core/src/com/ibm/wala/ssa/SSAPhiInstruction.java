@@ -71,9 +71,9 @@ public class SSAPhiInstruction extends SSAInstruction {
     StringBuilder s = new StringBuilder();
 
     s.append(getValueString(symbolTable, result)).append(" = phi ");
-    s.append(" ").append(getValueString(symbolTable, params[0]));
+    s.append(' ').append(getValueString(symbolTable, params[0]));
     for (int i = 1; i < params.length; i++) {
-      s.append(",").append(getValueString(symbolTable, params[i]));
+      s.append(',').append(getValueString(symbolTable, params[i]));
     }
     return s.toString();
   }

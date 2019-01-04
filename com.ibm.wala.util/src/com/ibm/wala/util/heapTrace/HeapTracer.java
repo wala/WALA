@@ -670,7 +670,7 @@ public class HeapTracer {
 	@Override
 	public String toString() {
 	    StringBuilder result = new StringBuilder();
-	    result.append("Totals: " + totalInstances + " " + totalSize + "\n");
+	    result.append("Totals: ").append(totalInstances).append(' ').append(totalSize).append('\n');
 	    TreeSet<Object> sorted = new TreeSet<>(new SizeComparator());
 	    sorted.addAll(instanceCount.keySet());
 	    for (Object key : sorted) {
@@ -770,8 +770,8 @@ totalSize += d.getTotalSize();
 totalInstances += d.getTotalInstances();
 totalSize += d.getTotalSize();
   }
-	    result.append("Total instances: " + totalInstances + "\n");
-	    result.append("Total size(bytes): " + totalSize + "\n");
+	    result.append("Total instances: ").append(totalInstances).append('\n');
+	    result.append("Total size(bytes): ").append(totalSize).append('\n');
 
 	    TreeSet<Field> sortedDemo = new TreeSet<>(new SizeComparator());
 	    sortedDemo.addAll(roots.keySet());

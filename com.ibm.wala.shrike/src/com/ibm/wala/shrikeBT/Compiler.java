@@ -1316,7 +1316,7 @@ public abstract class Compiler implements Constants {
     int curStackLen = stackTypes[start].length;
 
     StringBuilder sigBuf = new StringBuilder();
-    sigBuf.append("(");
+    sigBuf.append('(');
     // spill needed stack variables to allocated locals;
     allocateLocals(curStackLen - unreadStack);
     for (int i = curStackLen - 1; i >= unreadStack; i--) {
@@ -1337,7 +1337,7 @@ public abstract class Compiler implements Constants {
         }
       } else {
         // dummy
-        sigBuf.append("I");
+        sigBuf.append('I');
         callWrapper.add(ConstantInstruction.make(0));
       }
     }
@@ -1346,11 +1346,11 @@ public abstract class Compiler implements Constants {
       callWrapper.add(LoadInstruction.make(stackTypes[start][i], allocatedLocals + 2 * (i - unreadStack)));
       sigBuf.append(stackTypes[start][i]);
       if (Util.getWordSize(stackTypes[start][i]) == 2) {
-        sigBuf.append("I");
+        sigBuf.append('I');
         callWrapper.add(ConstantInstruction.make(0));
       }
     }
-    sigBuf.append(")");
+    sigBuf.append(')');
     sigBuf.append(retType);
     String sig = sigBuf.toString();
 

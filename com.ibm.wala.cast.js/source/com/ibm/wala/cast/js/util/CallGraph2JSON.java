@@ -133,7 +133,7 @@ public class CallGraph2JSON {
 		res.append(joinWith(Util.mapToSet(map.entrySet(), e -> {
       StringBuilder res1 = new StringBuilder();
       if(e.getValue().size() > 0) {
-        res1.append("    \"" + e.getKey() + "\": [\n");
+        res1.append("    \"").append(e.getKey()).append("\": [\n");
         res1.append(joinWith(Util.mapToSet(e.getValue(), str -> "        \"" + str + "\""), ",\n"));
         res1.append("\n    ]");
       }

@@ -1160,9 +1160,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       StringBuilder sb = new StringBuilder(super.toString());
       for(PreBasicBlock b : blocks) {
         if (b.firstIndex > 0) {
-          sb.append("\n" + b);
+          sb.append('\n').append(b);
           for(int i = 0; i < b.instructions.size(); i++) {
-            sb.append("\n" + b.instructions.get(i));
+            sb.append('\n').append(b.instructions.get(i));
           }
         }
       }
@@ -1413,11 +1413,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         s.append(bb).append('\n');
 
         for (PreBasicBlock pbb : Iterator2Iterable.make(getSuccNodes(bb)))
-          s.append("    -->" + pbb + "\n");
+          s.append("    -->").append(pbb).append('\n');
 
         for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++)
           if (insts[j] != null)
-            s.append("  " + insts[j].toString(symtab) + "\n");
+            s.append("  ").append(insts[j].toString(symtab)).append('\n');
       }
 
       s.append("-- END --");

@@ -288,7 +288,7 @@ public class XMLSummaryWriter {
             if (tr.isPrimitiveType()) {
             	typeSigs.append(tr.getName().toUnicodeString());
             } else {
-            	typeSigs.append(tr.getName().toUnicodeString()+ ";");
+            	typeSigs.append(tr.getName().toUnicodeString()).append(';');
             }
         }
         typeSigs.append(')');
@@ -297,7 +297,7 @@ public class XMLSummaryWriter {
         if (returnType.isPrimitiveType()) {
         	typeSigs.append(returnType.getName().toUnicodeString());
         } else {
-        	typeSigs.append(returnType.getName().toUnicodeString() + ";");
+        	typeSigs.append(returnType.getName().toUnicodeString()).append(';');
         }
         String descriptor = typeSigs.toString();
         return descriptor;

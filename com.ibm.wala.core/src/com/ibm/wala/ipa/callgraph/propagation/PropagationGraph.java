@@ -1071,7 +1071,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   public String spaceReport() {
     StringBuilder result = new StringBuilder("PropagationGraph\n");
-    result.append("ImplicitEdges:" + countImplicitEdges() + "\n");
+    result.append("ImplicitEdges:").append(countImplicitEdges()).append('\n');
     // for (Iterator it = implicitUnaryMap.values().iterator(); it.hasNext(); )
     // {
     // result.append(it.next() + "\n");

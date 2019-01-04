@@ -306,7 +306,7 @@ public final class TypeName implements Serializable {
       
       if (packageName != null) {
         result.append(packageName.toString());
-        result.append("/");
+        result.append('/');
       }
       result.append(className.toString());
 
@@ -320,13 +320,13 @@ public final class TypeName implements Serializable {
           final int masked = d&ElementMask;
           switch (masked) {
           case ArrayMask:
-            result.append("[");
+            result.append('[');
             break;
           case PointerMask:
-            result.append("*");
+            result.append('*');
             break;
           case ReferenceMask:
-            result.append("&");
+            result.append('&');
             break;
           default:
             throw new UnsupportedOperationException("unexpected masked type-name component " + masked);
@@ -334,9 +334,9 @@ public final class TypeName implements Serializable {
         }
       }
       if (!isPrimitive) {
-        result.append("L");
+        result.append('L');
       } else if (packageName != null && isPrimitive) {
-        result.append("P");        
+        result.append('P');
       }
     }
 
@@ -347,7 +347,7 @@ public final class TypeName implements Serializable {
         
         if (packageName != null) {
           result.append(packageName.toUnicodeString());
-          result.append("/");
+          result.append('/');
         }
         result.append(className.toUnicodeString());
 
