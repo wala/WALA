@@ -75,8 +75,7 @@ public class ExceptionTransferFunctionProvider implements ITransferFunctionProvi
 
       CallSiteReference callsite = callsites.next();
 
-      Set<TypeReference> caught = new LinkedHashSet<>();
-      caught.addAll(intraResult.getAnalysis(src).getCaughtExceptions(callsite));
+      Set<TypeReference> caught = new LinkedHashSet<>(intraResult.getAnalysis(src).getCaughtExceptions(callsite));
       while (callsites.hasNext()) {
         callsite = callsites.next();
         caught.retainAll(intraResult.getAnalysis(src).getCaughtExceptions(callsite));

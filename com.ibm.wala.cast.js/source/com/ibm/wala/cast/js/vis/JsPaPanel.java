@@ -65,8 +65,7 @@ public class JsPaPanel extends PaPanel {
 
 	@Override
   protected List<PointerKey> getPointerKeysUnderInstanceKey(InstanceKey ik) {
-		List<PointerKey> ret = new ArrayList<>();
-		ret.addAll(super.getPointerKeysUnderInstanceKey(ik));
+		List<PointerKey> ret = new ArrayList<>(super.getPointerKeysUnderInstanceKey(ik));
 		int ikIndex = pa.getInstanceKeyMapping().getMappedIndex(ik);
 		ret.addAll(nonNullList(instanceKeyIdToObjectPropertyCatalogKey.getMappedObject(ikIndex)));
 		return ret;

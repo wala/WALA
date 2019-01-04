@@ -198,8 +198,7 @@ public class IntraproceduralExceptionAnalysis {
    *         within this method
    */
   public Set<TypeReference> collectThrownExceptions(SSAInstruction throwingInstruction) {
-    final LinkedHashSet<TypeReference> result = new LinkedHashSet<>();
-    result.addAll(throwingInstruction.getExceptionTypes());
+    final LinkedHashSet<TypeReference> result = new LinkedHashSet<>(throwingInstruction.getExceptionTypes());
 
     throwingInstruction.visit(new Visitor() {
       @Override
@@ -309,8 +308,7 @@ public class IntraproceduralExceptionAnalysis {
 
         ISSABasicBlock block = ir.getBasicBlockForInstruction(instruction);
         if (result == null) {
-          result = new LinkedHashSet<>();
-          result.addAll(collectCaughtExceptions(block));
+          result = new LinkedHashSet<>(collectCaughtExceptions(block));
         } else {
           result.retainAll(collectCaughtExceptions(block));
         }

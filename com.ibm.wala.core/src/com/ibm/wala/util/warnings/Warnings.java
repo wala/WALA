@@ -32,8 +32,7 @@ public class Warnings {
   }
 
   public static synchronized String asString() {
-    TreeSet<Warning> T = new TreeSet<>();
-    T.addAll(warnings);
+    TreeSet<Warning> T = new TreeSet<>(warnings);
     Iterator<Warning> it = T.iterator();
     StringBuilder result = new StringBuilder();
     for (int i = 1; i <= T.size(); i++) {
