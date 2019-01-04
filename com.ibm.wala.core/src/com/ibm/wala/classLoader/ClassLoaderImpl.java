@@ -314,9 +314,10 @@ public class ClassLoaderImpl implements IClassLoader {
           if (nestedResult == null) {
             return null;
           }
-          for (String entryName : nestedResult.keySet()) {
+          for (Map.Entry<String, Object> nestedEntry : nestedResult.entrySet()) {
+            final String entryName = nestedEntry.getKey();
             if (!result.containsKey(entryName)) {
-              result.put(entryName, nestedResult.get(entryName));
+              result.put(entryName, nestedEntry.getValue());
             }
           }
         } else if (FileSuffixes.isClassFile(name) || FileSuffixes.isSourceFile(name)) {

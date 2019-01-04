@@ -141,17 +141,18 @@ public class FlowAnalysis {
 
         //Add PathEdges to the taints
         //Places that initial taints occur, and where they initially flow into
-        for(BasicBlockInContext<E> taintBB:initialTaints.keySet())
+        for(Map.Entry<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> bbEntry : initialTaints.entrySet())
         {
-        	Map<FlowType<E>, Set<CodeElement>> bbTaints = initialTaints.get(taintBB);
-        	for(FlowType<E> taintType:bbTaints.keySet())
+        	Map<FlowType<E>, Set<CodeElement>> bbTaints = bbEntry.getValue();
+        	for(Map.Entry<FlowType<E>, Set<CodeElement>> flowEntry : bbTaints.entrySet())
             {
-                for(CodeElement taintElement:bbTaints.get(taintType))
+                for(CodeElement taintElement: flowEntry.getValue())
                 {
+                    final BasicBlockInContext<E> taintBB = bbEntry.getKey();
                 	BasicBlockInContext<E>[] entryBlocks = graph.getEntriesForProcedure(taintBB.getNode());
                 	for (BasicBlockInContext<E> entryBlock : entryBlocks) {
                 		//Add PathEdge <s_p,0> -> <n,d1>
-                		initialEdges.add(PathEdge.createPathEdge(entryBlock, 0, taintBB, domain.getMappedIndex(new DomainElement(taintElement,taintType))));
+                		initialEdges.add(PathEdge.createPathEdge(entryBlock, 0, taintBB, domain.getMappedIndex(new DomainElement(taintElement, flowEntry.getKey()))));
                 	}
                     //initialEdges.add(PathEdge.createPathEdge(e.getKey(), 0, e.getKey(), domain.getMappedIndex(new DomainElement(o,e2.getKey()))));
                 }

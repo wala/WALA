@@ -129,9 +129,10 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     }
 
     if (DEBUG) {
-      for (TypeName tn : types.keySet()) {
+      for (Map.Entry<TypeName, IClass> entry : types.entrySet()) {
         try {
-          System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + types.get(tn).getSuperclass()));
+          final IClass value = entry.getValue();
+          System.err.println(("found type " + entry.getKey() + " : " + value + " < " + value.getSuperclass()));
         } catch (Exception e) {
           System.err.println(e);
         }

@@ -221,9 +221,9 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements Serializable, Num
   public Set<? extends U> getEdgeLabels(T src, T dst) {
     Set<U> labels = HashSetFactory.make();
 
-    for (U key : edgeLabelToManager.keySet()) {
-      if (edgeLabelToManager.get(key).hasEdge(src, dst)) {
-        labels.add(key);
+    for (Map.Entry<U, SparseNumberedEdgeManager<T>> entry : edgeLabelToManager.entrySet()) {
+      if (entry.getValue().hasEdge(src, dst)) {
+        labels.add(entry.getKey());
       }
     }
 

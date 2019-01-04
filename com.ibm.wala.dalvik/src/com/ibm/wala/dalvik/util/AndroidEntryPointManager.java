@@ -545,12 +545,13 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  See {@link #setOverride(Intent, Intent)}. 
      */
     public void setOverrides(Map<Intent, Intent> overrides) {
-        for (final Intent from : overrides.keySet()) {
-            final Intent to = overrides.get(from);
+        for (final Map.Entry<Intent, Intent> entry : overrides.entrySet()) {
+            final Intent from = entry.getKey();
+            final Intent to = entry.getValue();
             if (from.equals(to)) {
                 registerIntent(to);
             } else {
-                setOverride(from, overrides.get(from));
+                setOverride(from, to);
             }
         }
     }

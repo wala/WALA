@@ -34,10 +34,11 @@ public abstract class TestLexicalModRef {
     LexicalModRef lexAccesses = LexicalModRef.make(CG, b.getPointerAnalysis());
     Map<CGNode, OrdinalSet<Pair<CGNode, String>>> readResult = lexAccesses.computeLexicalRef();
     Map<CGNode, OrdinalSet<Pair<CGNode, String>>> writeResult = lexAccesses.computeLexicalMod();
-    for (CGNode n : readResult.keySet()) {
+    for (Map.Entry<CGNode, OrdinalSet<Pair<CGNode, String>>> entry : readResult.entrySet()) {
+      final CGNode n = entry.getKey();
       if (n.toString().contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner>")) {
         // function "inner" reads exactly x and z 
-        OrdinalSet<Pair<CGNode, String>> readVars = readResult.get(n);
+        OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
         Assert.assertEquals(2, readVars.size());
         Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", readVars.toString());
         // writes x and z as well
@@ -48,7 +49,7 @@ public abstract class TestLexicalModRef {
       }
       if (n.toString().contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner2>")) {
         // function "inner3" reads exactly innerName, inner3, and x and z via callees
-        OrdinalSet<Pair<CGNode, String>> readVars = readResult.get(n);
+        OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
         Assert.assertEquals(4, readVars.size());
         for(Pair<CGNode, String> rv : readVars) {
           Assert.assertTrue(rv.toString(), 

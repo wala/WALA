@@ -2,6 +2,7 @@ package com.ibm.wala.analysis.arraybounds;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperEdge;
@@ -111,10 +112,11 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	}
 
   public void postProcessConstants() {
-    for (Integer constant:constants.keySet()) {
-		  HyperNode<Integer> constantNode = this.getNodes().get(constant);
-		  HyperNode<Integer> helper1 = this.getNodes().get(constants.get(constant).fst);
-		  HyperNode<Integer> helper2 = this.getNodes().get(constants.get(constant).snd);
+    for (Map.Entry<Integer, Pair<Integer, Integer>> entry : constants.entrySet()) {
+		  HyperNode<Integer> constantNode = this.getNodes().get(entry.getKey());
+		  final Pair<Integer, Integer> value = entry.getValue();
+		  HyperNode<Integer> helper1 = this.getNodes().get(value.fst);
+		  HyperNode<Integer> helper2 = this.getNodes().get(value.snd);
 		  
 		  for (DirectedHyperEdge<Integer> edge:constantNode.getOutEdges()) {
 		    if (!edge.getDestination().contains(helper2)) {
