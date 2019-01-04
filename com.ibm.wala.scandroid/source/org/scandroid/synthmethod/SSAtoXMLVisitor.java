@@ -134,7 +134,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
             String defStr = getLocalName(instruction.getDef());
             elt.setAttribute(XMLSummaryWriter.A_VALUE, defStr);
             
-            elt.setAttribute(XMLSummaryWriter.A_INDEX, ""+instruction.getIndex());
+            elt.setAttribute(XMLSummaryWriter.A_INDEX, String.valueOf(instruction.getIndex()));
             summary.add(elt);
         } catch (Exception e) {
             throw new SSASerializationException(e);
@@ -155,7 +155,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
             String valueStr = getLocalName(instruction.getValue());
             elt.setAttribute(XMLSummaryWriter.A_VALUE, valueStr);
             
-            elt.setAttribute(XMLSummaryWriter.A_INDEX, ""+instruction.getIndex());
+            elt.setAttribute(XMLSummaryWriter.A_INDEX, String.valueOf(instruction.getIndex()));
             summary.add(elt);
         } catch (Exception e) {
             throw new SSASerializationException(e);

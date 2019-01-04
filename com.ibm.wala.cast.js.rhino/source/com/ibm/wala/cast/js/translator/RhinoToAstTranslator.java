@@ -698,7 +698,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 			if (elt instanceof EmptyExpression) {
 				index++;
 			} else {
-				eltNodes.add(Ast.makeConstant("" + (index++)));
+				eltNodes.add(Ast.makeConstant(String.valueOf(index++)));
 				eltNodes.add(visit(elt, arg));
 			}
 		}

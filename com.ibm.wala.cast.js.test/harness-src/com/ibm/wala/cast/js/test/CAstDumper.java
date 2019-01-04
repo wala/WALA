@@ -150,7 +150,7 @@ public class CAstDumper {
 				if(node.getValue() == null)
 					buf.append("null");
 				else if(node.getValue() instanceof Integer)
-					buf.append(node.getValue()+"");
+					buf.append(String.valueOf(node.getValue()));
 				else
 					buf.append("\"" + node.getValue() + "\"");
 			} else if(node.getKind() == CAstNode.OPERATOR) {

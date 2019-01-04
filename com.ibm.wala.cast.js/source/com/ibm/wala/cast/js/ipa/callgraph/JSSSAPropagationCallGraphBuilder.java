@@ -986,7 +986,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn = new InstanceKey[] { builder.getInstanceKeyForConstant(JavaScriptTypes.String, ""+(i-num_pseudoargs)) };
+      InstanceKey[] fn = new InstanceKey[] { builder.getInstanceKeyForConstant(JavaScriptTypes.String, String.valueOf(i - num_pseudoargs)) };
       PointerKey F = builder.getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -1012,7 +1012,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn = new InstanceKey[] { builder.getInstanceKeyForConstant(JavaScriptTypes.String, ""+(i-num_pseudoargs)) };
+          InstanceKey[] fn = new InstanceKey[] { builder.getInstanceKeyForConstant(JavaScriptTypes.String, String.valueOf(i - num_pseudoargs)) };
           if (constParams != null && constParams[i] != null && i >= num_pseudoargs) {
               targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
           } else if(i >= num_pseudoargs) {
