@@ -11,6 +11,7 @@
 package com.ibm.wala.shrikeBT;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.IdentityHashMap;
 
 /**
@@ -190,8 +191,7 @@ public final class MethodEditor {
     } else if (h2.length == 0) {
       return h1;
     } else {
-      ExceptionHandler[] r = new ExceptionHandler[h1.length + h2.length];
-      System.arraycopy(h1, 0, r, 0, h1.length);
+      ExceptionHandler[] r = Arrays.copyOf(h1, h1.length + h2.length);
       System.arraycopy(h2, 0, r, h1.length, h2.length);
       return r;
     }
@@ -243,9 +243,7 @@ public final class MethodEditor {
 
       int s = newInstructions.size();
       if (s + 1 > instructionsToBytecodes.length) {
-        int[] t = new int[instructionsToBytecodes.length * 2];
-        System.arraycopy(instructionsToBytecodes, 0, t, 0, instructionsToBytecodes.length);
-        instructionsToBytecodes = t;
+        instructionsToBytecodes = Arrays.copyOf(instructionsToBytecodes, instructionsToBytecodes.length * 2);
       }
 
       instructionsToBytecodes[s] = originalBytecode;
@@ -256,9 +254,7 @@ public final class MethodEditor {
     void internalEmitInstruction(IInstruction i) {
       int s = newInstructions.size();
       if (s + 1 > instructionsToBytecodes.length) {
-        int[] t = new int[instructionsToBytecodes.length * 2];
-        System.arraycopy(instructionsToBytecodes, 0, t, 0, instructionsToBytecodes.length);
-        instructionsToBytecodes = t;
+        instructionsToBytecodes = Arrays.copyOf(instructionsToBytecodes, instructionsToBytecodes.length * 2);
       }
 
       instructionsToBytecodes[s] = originalBytecode;
@@ -285,9 +281,7 @@ public final class MethodEditor {
 
       int s = newInstructions.size();
       if (s + instrs.length > instructionsToBytecodes.length) {
-        int[] t = new int[instructionsToBytecodes.length * 2 + instrs.length];
-        System.arraycopy(instructionsToBytecodes, 0, t, 0, instructionsToBytecodes.length);
-        instructionsToBytecodes = t;
+        instructionsToBytecodes = Arrays.copyOf(instructionsToBytecodes, instructionsToBytecodes.length * 2 + instrs.length);
       }
 
       ExceptionHandler[] hs = mergeHandlers(handlers, additionalHandlers);

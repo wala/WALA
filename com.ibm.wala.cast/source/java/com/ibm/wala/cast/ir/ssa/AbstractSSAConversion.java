@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -413,9 +414,7 @@ public abstract class AbstractSSAConversion {
         int ii = getNextNewValueNumber();
 
         if (valueMap.length <= ii) {
-          int[] nvm = new int[valueMap.length * 2 + ii + 1];
-          System.arraycopy(valueMap, 0, nvm, 0, valueMap.length);
-          valueMap = nvm;
+          valueMap = Arrays.copyOf(valueMap, valueMap.length * 2 + ii + 1);
         }
 
         valueMap[ii] = getDef(inst, j);

@@ -376,8 +376,7 @@ nextMethod:
                                     for (final AndroidEntryPoint eps_ep : eps) {
                                         if (eps_ep.equals(ep)) {
                                             final TypeReference[] oldTypes = eps_ep.getParameterTypes(0);
-                                            final TypeReference[] newTypes = new TypeReference[oldTypes.length + 1];
-                                            System.arraycopy(oldTypes, 0, newTypes, 0, oldTypes.length);
+                                            final TypeReference[] newTypes = Arrays.copyOf(oldTypes, oldTypes.length + 1);
                                             newTypes[oldTypes.length] = appClass.getReference();
                                             eps_ep.setParameterTypes(0, newTypes);
                                             logger.debug("New This-Types for {} are {}", method.getSelector(), Arrays.toString(newTypes));

@@ -11,6 +11,8 @@
 package com.ibm.wala.util.intset;
 
 
+import java.util.Arrays;
+
 /**
  * An implementation of Tarjan's union-find, using path compression and balancing, for non-negative integers
  */
@@ -84,9 +86,7 @@ public class IntegerUnionFind {
   }
 
   private void grow(int size) {
-    int[] old = parent;
-    parent = new int[size + 1];
-    System.arraycopy(old, 0, parent, 0, old.length);
+    parent = Arrays.copyOf(parent, size + 1);
   }
 
   /**

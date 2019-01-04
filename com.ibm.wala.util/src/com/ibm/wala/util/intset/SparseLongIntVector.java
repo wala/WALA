@@ -11,6 +11,8 @@
 package com.ibm.wala.util.intset;
 
 
+import java.util.Arrays;
+
 /**
  * an int vector implementation designed for low occupancy. Note that get() from
  * this vector is a binary search.
@@ -71,9 +73,7 @@ public class SparseLongIntVector {
 
   private void ensureCapacity(int capacity) {
     if (data.length < capacity + 1) {
-      int[] old = data;
-      data = new int[1 + (int) (capacity * EXPANSION)];
-      System.arraycopy(old, 0, data, 0, old.length);
+      data = Arrays.copyOf(data, 1 + (int) (capacity * EXPANSION));
     }
   }
 

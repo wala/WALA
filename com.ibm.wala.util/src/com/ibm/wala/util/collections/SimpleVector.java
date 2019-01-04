@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -74,9 +75,7 @@ public class SimpleVector<T> implements IVector<T> {
    */
   private void ensureCapacity(int capacity) {
     if (capacity >= store.length) {
-      Object[] old = store;
-      store = new Object[1 + (int) (GROWTH_FACTOR * capacity)];
-      System.arraycopy(old, 0, store, 0, old.length);
+      store = Arrays.copyOf(store, 1 + (int) (GROWTH_FACTOR * capacity));
     }
   }
 
