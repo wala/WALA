@@ -306,7 +306,7 @@ public class ClosureExtractor extends CAstRewriterExt {
           Ast.makeConstant("type"),
           Ast.makeConstant("goto"),
           Ast.makeConstant("target"),
-          Ast.makeConstant(((double)label)+"")),
+          Ast.makeConstant(String.valueOf((double) label))),
           getCurrentEntity().getControlFlow());
 
       addNode(returnLit, getCurrentEntity().getControlFlow());
@@ -704,7 +704,7 @@ public class ClosureExtractor extends CAstRewriterExt {
           addExnFlow(Ast.makeNode(OBJECT_REF,
               addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
               Ast.makeConstant("target")), JavaScriptTypes.TypeError, entity, context),
-          Ast.makeConstant((double)labeller.getLabel(goto_target.snd)+""));
+          Ast.makeConstant(String.valueOf((double) labeller.getLabel(goto_target.snd))));
       CAstNode then_branch;
       if(goto_target.fst != null)
         then_branch = Ast.makeNode(GOTO, Ast.makeConstant(goto_target.fst));

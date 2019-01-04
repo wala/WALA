@@ -186,7 +186,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     if (SEPARATE_SYNTHETIC_METHOD_PER_SITE) {
       return CAstCallGraphUtil.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
     } else {
-      return ""+nargs;
+      return String.valueOf(nargs);
     }
   }
 

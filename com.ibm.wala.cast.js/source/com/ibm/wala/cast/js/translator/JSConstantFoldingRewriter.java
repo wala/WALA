@@ -24,7 +24,7 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
   protected Object eval(CAstOperator op, Object lhs, Object rhs) {
     if (op == CAstOperator.OP_ADD) {
       if (lhs instanceof String || rhs instanceof String) {
-        return "" + lhs + rhs;
+        return String.valueOf(lhs) + rhs;
       } else if (lhs instanceof Number && rhs instanceof Number) {
         return Double.valueOf(((Number)lhs).doubleValue() + ((Number)rhs).doubleValue());
       } 
@@ -38,7 +38,7 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
 
     } else if (op == CAstOperator.OP_CONCAT) {
       if (lhs instanceof String || rhs instanceof String) {
-        return "" + lhs + rhs;
+        return String.valueOf(lhs) + rhs;
       }
       
     } else if (op == CAstOperator.OP_DIV) {
