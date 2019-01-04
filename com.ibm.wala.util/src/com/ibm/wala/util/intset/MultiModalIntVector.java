@@ -220,27 +220,24 @@ public class MultiModalIntVector implements IntVector {
         int[] old = intStore;
         // New array size
         int newSize = 1 + (int) (getGrowthFactor(length) * capacity) - byteStore.length - shortStore.length;
-        int[] newData = new int[newSize];
-        Arrays.fill(newData, defaultValue);
-        System.arraycopy(old, 0, newData, 0, old.length);
+        int[] newData = Arrays.copyOf(old, newSize);
+        Arrays.fill(newData, old.length, newSize, defaultValue);
         intStore = newData;
       }
     } else if (shortStore.length > 0 || NumberUtility.isShort(value)) {
       if (capacity >= length) {
         short[] old = shortStore;
         int newSize = 1 + (int) (getGrowthFactor(length) * capacity) - byteStore.length;
-        short[] newData = new short[newSize];
-        Arrays.fill(newData, (short) defaultValue);
-        System.arraycopy(old, 0, newData, 0, old.length);
+        short[] newData = Arrays.copyOf(old, newSize);
+        Arrays.fill(newData, old.length, newSize, (short) defaultValue);
         shortStore = newData;
       }
     } else {
       if (capacity >= length) {
         byte[] old = byteStore;
         int newSize = 1 + (int) (getGrowthFactor(length) * capacity);
-        byte[] newData = new byte[newSize];
-        Arrays.fill(newData, (byte) defaultValue);
-        System.arraycopy(old, 0, newData, 0, old.length);
+        byte[] newData = Arrays.copyOf(old, newSize);
+        Arrays.fill(newData, old.length, newSize, (byte) defaultValue);
         byteStore = newData;
       }
     }
