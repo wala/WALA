@@ -397,8 +397,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IMethod> getAllMethods() {
-    Collection<IMethod> result = new LinkedList<>();
-    result.addAll(getDeclaredMethods());
+    Collection<IMethod> result = new LinkedList<>(getDeclaredMethods());
     if (isInterface()) {
       for (IClass i : getDirectInterfaces()) {
         result.addAll(i.getAllMethods());

@@ -85,8 +85,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
     public PrefixTransferGraph(PointerAnalysis<InstanceKey> pa)
     {
         Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies = new HashMap<>();
-        ArrayList<InstanceKey> instanceKeys = new ArrayList<>();
-        instanceKeys.addAll(pa.getInstanceKeys());
+        ArrayList<InstanceKey> instanceKeys = new ArrayList<>(pa.getInstanceKeys());
         for(InstanceKey k:instanceKeys)
         {
             if(k.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder"))

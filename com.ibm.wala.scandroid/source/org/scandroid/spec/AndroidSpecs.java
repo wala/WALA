@@ -320,12 +320,10 @@ public class AndroidSpecs implements ISpecs {
 		ignoreMethods.add("finalize");
 		ignoreMethods.add("wait");		
 
-		List<MethodNamePattern> moreEntryPointSpecs = new ArrayList<> ();
-		
 		//add default entrypoints from AndroidSpecs.entrypointSpecs
 		//Currently adds methods even if they exist in the ignnoreMethods
 		//set.
-		moreEntryPointSpecs.addAll(Arrays.asList(defaultCallbacks));
+		List<MethodNamePattern> moreEntryPointSpecs = new ArrayList<>(Arrays.asList(defaultCallbacks));
 
 		for (IClass ic:cha) {
 			if (!LoaderUtils.fromLoader(ic, ClassLoaderReference.Application)) {

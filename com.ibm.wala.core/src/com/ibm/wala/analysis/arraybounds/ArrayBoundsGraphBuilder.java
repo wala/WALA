@@ -188,8 +188,7 @@ public class ArrayBoundsGraphBuilder {
 	 * @param graph
 	 */
 	private static void bundleDeadEnds(ArrayBoundsGraph graph) {
-		final Set<HyperNode<Integer>> nodes = new HashSet<>();
-		nodes.addAll(graph.getNodes().values());
+		final Set<HyperNode<Integer>> nodes = new HashSet<>(graph.getNodes().values());
 
 		for (final DirectedHyperEdge<Integer> edge : graph.getEdges()) {
 			for (final HyperNode<Integer> node : edge.getDestination()) {
@@ -211,8 +210,7 @@ public class ArrayBoundsGraphBuilder {
 	 */
 	private static void collapseNonPhiEdges(ArrayBoundsGraph graph) {
 		final Map<HyperNode<Integer>, DirectedHyperEdge<Integer>> inEdges = new HashMap<>();
-		final Set<DirectedHyperEdge<Integer>> edges = new HashSet<>();
-		edges.addAll(graph.getEdges());
+		final Set<DirectedHyperEdge<Integer>> edges = new HashSet<>(graph.getEdges());
 		for (final DirectedHyperEdge<Integer> edge : edges) {
 			assert edge.getDestination().size() == 1;
 

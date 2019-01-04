@@ -77,9 +77,8 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           rtJar = jar;
         }
       }
-      
-      List<String> args = new ArrayList<>();
-      args.addAll(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation.toString()));
+
+      List<String> args = new ArrayList<>(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation.toString()));
       if (rtJar != null) {
         args.addAll(Arrays.asList("--rt-jar", rtJar));
       }
