@@ -704,7 +704,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   private void recursiveStringify(Node n, StringBuilder buffer) {
-    buffer.append(n.toString()).append("\n");
+    buffer.append(n.toString()).append('\n');
     for (Node child : Iterator2Iterable.make(n.getChildren())) {
       recursiveStringify(child, buffer);
     }
@@ -772,12 +772,12 @@ public class ClassHierarchy implements IClassHierarchy {
     @Override
     public String toString() {
       StringBuilder result = new StringBuilder(100);
-      result.append(klass.toString()).append(":");
+      result.append(klass.toString()).append(':');
       for (Iterator<Node> i = children.iterator(); i.hasNext();) {
         Node n = i.next();
         result.append(n.klass.toString());
         if (i.hasNext())
-          result.append(",");
+          result.append(',');
       }
       return result.toString();
     }

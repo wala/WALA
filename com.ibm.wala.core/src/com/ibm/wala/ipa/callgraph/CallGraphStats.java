@@ -95,13 +95,13 @@ public class CallGraphStats {
       StringBuilder result = new StringBuilder();
       result.append("Call graph stats:");
       result.append('\n');
-      result.append("  Nodes: " + nNodes);
+      result.append("  Nodes: ").append(nNodes);
       result.append('\n');
-      result.append("  Edges: " + nEdges);
+      result.append("  Edges: ").append(nEdges);
       result.append('\n');
-      result.append("  Methods: " + nMethods);
+      result.append("  Methods: ").append(nMethods);
       result.append('\n');
-      result.append("  Bytecode Bytes: " + bytecodeBytes);
+      result.append("  Bytecode Bytes: ").append(bytecodeBytes);
       result.append('\n');
       return result.toString();
 

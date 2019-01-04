@@ -224,11 +224,11 @@ public class ClassPrinter {
             String line2 = null;
             if (vars != null) {
               StringBuilder buf = new StringBuilder();
-              buf.append("      " + j + ":");
+              buf.append("      ").append(j).append(':');
               for (int k = 0; k < vars.length; k += 2) {
                 if (vars[k] != 0) {
                   String n = cr.getCP().getCPUtf8(vars[k]) + "(" + cr.getCP().getCPUtf8(vars[k + 1]) + ")";
-                  buf.append(" " + (k / 2) + ":" + n);
+                  buf.append(' ').append(k / 2).append(':').append(n);
                 }
               }
               line2 = buf.toString();

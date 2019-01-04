@@ -242,7 +242,7 @@ public class Util {
 
           // name=value : type
           buf = buf.append(name);
-          buf = buf.append("=");
+          buf = buf.append('=');
           buf = buf.append(value == null ? "null" : value.toString());
           buf = buf.append(" : ");
           buf = buf.append(FULLY_QUALIFIED_NAMES ? type.getName() : removePackageName(type.getName()));

@@ -289,10 +289,10 @@ public class SparseLongSet implements LongSet {
     if (elements != null) {
       for (int ii = 0; ii < size; ii++) {
         sb.append(elements[ii]);
-        sb.append(" ");
+        sb.append(' ');
       }
     }
-    sb.append("}");
+    sb.append('}');
     return sb.toString();
   }
 

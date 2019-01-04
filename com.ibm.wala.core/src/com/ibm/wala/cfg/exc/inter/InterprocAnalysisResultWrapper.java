@@ -58,7 +58,7 @@ class InterprocAnalysisResultWrapper implements InterprocAnalysisResult<SSAInstr
     
     for (final Entry<CGNode, IntraprocAnalysisState> e : map.entrySet()) {
       sb.append(e.getValue().hasExceptions() ? "THROWS " : "CLEAN  ");
-      sb.append(e.getKey().toString() + "\n");
+      sb.append(e.getKey().toString()).append('\n');
     }
     
     return sb.toString();

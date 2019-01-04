@@ -121,9 +121,9 @@ public final class CRTable extends PositionsAttribute {
     StringBuilder sb = new StringBuilder();
 
     for (int i = 0; i < crt.length; i++) {
-      sb.append(i + " -> ");
+      sb.append(i).append(" -> ");
       sb.append(crt[i] == null ? "<null>" : crt[i]);
-      sb.append("\n");
+      sb.append('\n');
     }
 
     return sb.toString();

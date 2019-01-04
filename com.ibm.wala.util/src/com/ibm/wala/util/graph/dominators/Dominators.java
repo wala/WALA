@@ -582,10 +582,10 @@ public abstract class Dominators<T> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (T node : G) {
-      sb.append("Dominators of " + node + ":\n");
+      sb.append("Dominators of ").append(node).append(":\n");
       for (T dom : Iterator2Iterable.make(dominators(node)))
-        sb.append("   " + dom + "\n");
-      sb.append("\n");
+        sb.append("   ").append(dom).append('\n');
+      sb.append('\n');
     }
     return sb.toString();
   }

@@ -930,7 +930,7 @@ public class TabulationSolver<T, P, F> {
       for (Entry<Object, TreeSet<T>> e : map.entrySet()) {
         Set<T> s = e.getValue();
         for (T o : s) {
-          result.append(o + " : " + getResult(o) + "\n");
+          result.append(o).append(" : ").append(getResult(o)).append('\n');
         }
       }
       return result.toString();
