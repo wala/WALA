@@ -2847,8 +2847,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       for (int i = 0; i < instructionLexicalUses.length; i++) {
         int[] x = original.instructionLexicalUses[i];
         if (x != null) {
-          instructionLexicalUses[i] = new int[x.length];
-          System.arraycopy(x, 0, instructionLexicalUses[i], 0, x.length);
+          instructionLexicalUses[i] = x.clone();
         }
       }
 

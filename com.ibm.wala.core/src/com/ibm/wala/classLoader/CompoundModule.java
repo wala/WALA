@@ -32,9 +32,7 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
   }
 
   public SourceModule[] getConstituents() {
-    SourceModule[] stuff = new SourceModule[ constituents.length ];
-    System.arraycopy(constituents, 0, stuff, 0, constituents.length);
-    return stuff;
+    return constituents.clone();
   }
   
   @Override

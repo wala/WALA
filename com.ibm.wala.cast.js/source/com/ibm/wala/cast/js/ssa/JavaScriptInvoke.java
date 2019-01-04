@@ -58,8 +58,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
 
     }
 
-    int newLvals[] = new int[results.length];
-    System.arraycopy(results, 0, newLvals, 0, results.length);
+    int[] newLvals = results.clone();
     int newExp = exception;
 
     if (defs != null) {

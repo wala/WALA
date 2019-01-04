@@ -235,8 +235,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
     if (libs == null) {
       throw new IllegalArgumentException("libs is null");
     }
-    this.j2seLibs = new Module[libs.length];
-    System.arraycopy(libs, 0, j2seLibs, 0, libs.length);
+    this.j2seLibs = libs.clone();
   }
 
   @Override
