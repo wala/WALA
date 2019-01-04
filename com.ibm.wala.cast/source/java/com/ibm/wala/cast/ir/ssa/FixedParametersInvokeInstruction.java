@@ -69,8 +69,7 @@ public abstract class FixedParametersInvokeInstruction
 
     int newLvals[] = null;
     if (getNumberOfReturnValues() > 0) {
-      newLvals = new int[results.length];
-      System.arraycopy(results, 0, newLvals, 0, results.length);
+      newLvals = results.clone();
     }
     int newExp = exception;
 

@@ -399,9 +399,7 @@ public final class Atom implements Serializable {
    * return an array of bytes representing the utf8 characters in this
    */
   public byte[] getValArray() {
-    byte[] result = new byte[val.length];
-    System.arraycopy(val, 0, result, 0, val.length);
-    return result;
+    return val.clone();
   }
   
   public byte getVal(int i) throws IllegalArgumentException {

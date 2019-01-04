@@ -71,8 +71,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
       throw new IllegalArgumentException("s is null");
     }
     offset = s.offset;
-    bits = new int[s.bits.length];
-    System.arraycopy(s.bits, 0, bits, 0, s.bits.length);
+    bits = s.bits.clone();
   }
 
   @Override
