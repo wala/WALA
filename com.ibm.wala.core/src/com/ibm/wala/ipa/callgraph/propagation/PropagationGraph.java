@@ -716,8 +716,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return 0;
     }
     int result = delegateGraph.getSuccNodeCount(v);
-    for (UnaryOperator<PointsToSetVariable> op : invImplicitUnaryMap.keySet()) {
-      IBinaryNaturalRelation R = invImplicitUnaryMap.get(op);
+    for (IBinaryNaturalRelation R : invImplicitUnaryMap.values()) {
       IntSet s = R.getRelated(number);
       if (s != null) {
         result += s.size();
@@ -736,8 +735,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return 0;
     }
     int result = delegateGraph.getPredNodeCount(v);
-    for (UnaryOperator<PointsToSetVariable> op : implicitUnaryMap.keySet()) {
-      IBinaryNaturalRelation R = implicitUnaryMap.get(op);
+    for (IBinaryNaturalRelation R : implicitUnaryMap.values()) {
       IntSet s = R.getRelated(number);
       if (s != null) {
         result += s.size();
