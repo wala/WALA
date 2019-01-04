@@ -141,8 +141,7 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
         int phiPC = outerLoopPC + 1;
         boolean oldAllowReserved = body.allowReserved(true);
         logger.info("Setting block-inner Phis");
-        for (TypeReference phiType : outerStartingPhis.keySet()) {
-            final SSAValue oldPhi = outerStartingPhis.get(phiType);
+        for (final SSAValue oldPhi : outerStartingPhis.values()) {
             final List<SSAValue> forPhi = new ArrayList<>(2);
             forPhi.add(paramManager.getSuper(oldPhi.key));
             forPhi.add(paramManager.getCurrent(oldPhi.key));
