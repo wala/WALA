@@ -590,8 +590,7 @@ public final class Util {
     if (b < 0) {
       return bytes;
     } else {
-      byte[] big = new byte[bytes.length * 2 + 1];
-      System.arraycopy(bytes, 0, big, 0, bytes.length);
+      byte[] big = Arrays.copyOf(bytes, bytes.length * 2 + 1);
       big[bytes.length] = (byte) b;
       int offset = bytes.length + 1;
       do {

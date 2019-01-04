@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.translator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -1115,12 +1116,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private void ensurePositionSpace(int instruction) {
       if (linePositions.length < (instruction + 1)) {
-        Position[] newData = new Position[instruction * 2 + 1];
-        Position[][] newOperands = new Position[instruction * 2 + 1][];
-        System.arraycopy(linePositions, 0, newData, 0, linePositions.length);
-        linePositions = newData;
-        System.arraycopy(operandPositions, 0, newOperands, 0, operandPositions.length);
-        operandPositions = newOperands;
+        linePositions = Arrays.copyOf(linePositions, instruction * 2 + 1);
+        operandPositions = Arrays.copyOf(operandPositions, instruction * 2 + 1);
       }
     }
 
@@ -2704,8 +2701,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
         }
 
-        TypeReference[] newData = new TypeReference[data.length + 1];
-        System.arraycopy(data, 0, newData, 0, data.length);
+        TypeReference[] newData = Arrays.copyOf(data, data.length + 1);
         newData[data.length] = catchType;
 
         catchTypes.put(bb, newData);

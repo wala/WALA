@@ -117,9 +117,7 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
                 int entryOffset = entryCount * 5;
                 entryCount++;
                 if (entryCount * 5 > entries.length) {
-                  int[] newEntries = new int[entries.length * 2];
-                  System.arraycopy(entries, 0, newEntries, 0, entries.length);
-                  entries = newEntries;
+                  entries = Arrays.copyOf(entries, entries.length * 2);
                 }
                 int nameIndex = lastVector[k * 2];
                 int typeIndex = lastVector[k * 2 + 1];

@@ -56,6 +56,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
+import java.util.Arrays;
+
 /**
  * Skeleton of functionality to propagate information through the Java bytecode stack machine using ShrikeBT.
  * <p>
@@ -605,9 +607,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         stack = new int[stackHeight + 1 ];
         this.stackHeight = 0;
       } else {
-        int[] newStack = new int[ Math.max(stack.length, stackHeight) * 2 + 1 ];
-        System.arraycopy(stack, 0, newStack, 0, stack.length);
-        stack = newStack;
+        stack = Arrays.copyOf(stack, Math.max(stack.length, stackHeight) * 2 + 1);
       }
     }
 

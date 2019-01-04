@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph.impl;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.ibm.wala.util.debug.Assertions;
@@ -152,9 +153,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   private void ensureCapacity(int number) {
     if (nodes.length < number + 1) {
       int newLength = (int) ((number + 1) * BUFFER_FACTOR);
-      INodeWithNumber[] old = nodes;
-      nodes = new INodeWithNumber[newLength];
-      System.arraycopy(old, 0, nodes, 0, old.length);
+      nodes = Arrays.copyOf(nodes, newLength);
     }
   }
 

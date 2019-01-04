@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
+import java.util.Arrays;
+
 /**
  * This class reads LocalVariableTable attributes.
  * 
@@ -46,8 +48,7 @@ public final class LocalVariableTableReader extends AttributeReader {
     if (curVector == null) {
       newVector = new int[(varIndex + 1) * 2];
     } else {
-      newVector = new int[Math.max(curVector.length, (varIndex + 1) * 2)];
-      System.arraycopy(curVector, 0, newVector, 0, curVector.length);
+      newVector = Arrays.copyOf(curVector, Math.max(curVector.length, (varIndex + 1) * 2));
     }
     newVector[varIndex * 2] = nameIndex;
     newVector[varIndex * 2 + 1] = typeIndex;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
@@ -78,12 +79,9 @@ public abstract class Heap<T> {
   }
 
 
-  @SuppressWarnings("unchecked")
   final private void ensureCapacity(int min) {
     if (backingStore.length < min) {
-      T newStore[] = (T[])new Object[2 * min];
-      System.arraycopy(backingStore, 0, newStore, 0, backingStore.length);
-      backingStore = newStore;
+      backingStore = Arrays.copyOf(backingStore, 2 * min);
     }
   }
 

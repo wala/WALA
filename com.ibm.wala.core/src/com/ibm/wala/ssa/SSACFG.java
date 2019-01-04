@@ -379,9 +379,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         stackSlotPhis = new SSAPhiInstruction[initialCapacity];
       }
       if (slot >= stackSlotPhis.length) {
-        SSAPhiInstruction[] temp = stackSlotPhis;
-        stackSlotPhis = new SSAPhiInstruction[slot * 2];
-        System.arraycopy(temp, 0, stackSlotPhis, 0, temp.length);
+        stackSlotPhis = Arrays.copyOf(stackSlotPhis, slot * 2);
       }
       stackSlotPhis[slot] = phi;
     }
@@ -391,9 +389,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         localPhis = new SSAPhiInstruction[initialCapacity];
       }
       if (n >= localPhis.length) {
-        SSAPhiInstruction[] temp = localPhis;
-        localPhis = new SSAPhiInstruction[n * 2];
-        System.arraycopy(temp, 0, localPhis, 0, temp.length);
+        localPhis = Arrays.copyOf(localPhis, n * 2);
       }
       localPhis[n] = phi;
     }
@@ -739,9 +735,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       }
       nExceptionTypes++;
       if (nExceptionTypes > exceptionTypes.length) {
-        TypeReference[] temp = exceptionTypes;
-        exceptionTypes = new TypeReference[nExceptionTypes * 2];
-        System.arraycopy(temp, 0, exceptionTypes, 0, temp.length);
+        exceptionTypes = Arrays.copyOf(exceptionTypes, nExceptionTypes * 2);
       }
       exceptionTypes[nExceptionTypes - 1] = exceptionType;
     }

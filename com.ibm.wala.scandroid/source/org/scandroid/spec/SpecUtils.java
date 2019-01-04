@@ -49,7 +49,7 @@
 
 package org.scandroid.spec;
 
-import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class SpecUtils {
 
@@ -79,7 +79,6 @@ public class SpecUtils {
 				return concat(s1.getEntrypointSpecs(), s2.getEntrypointSpecs());
 			}
 	
-			@SuppressWarnings("unchecked")
 			private <T> T[] concat(final T[] a, final T[] b) {
 				if (null == a) {
 					return b;
@@ -87,9 +86,8 @@ public class SpecUtils {
 				if (null == b) {
 					return a;
 				}
-				
-				T[] newArray = (T[]) Array.newInstance(a.getClass().getComponentType(), a.length + b.length);
-				System.arraycopy(a, 0, newArray, 0, a.length);
+
+				T[] newArray = Arrays.copyOf(a, a.length + b.length);
 				System.arraycopy(b, 0, newArray, a.length, b.length);
 				return newArray;
 			}

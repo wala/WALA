@@ -38,6 +38,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.AbstractSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -117,9 +118,7 @@ public class ArraySet<T> extends AbstractSet<T> {
     }
     if (_curIndex == _elems.length) {
       // lengthen array
-      Object[] tmp = _elems;
-      _elems = (T[]) new Object[tmp.length * 2];
-      System.arraycopy(tmp, 0, _elems, 0, tmp.length);
+      _elems = Arrays.copyOf(_elems, _elems.length * 2);
     }
     _elems[_curIndex] = o;
     _curIndex++;
