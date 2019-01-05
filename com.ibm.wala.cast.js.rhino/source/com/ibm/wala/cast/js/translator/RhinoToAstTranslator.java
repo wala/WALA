@@ -1120,7 +1120,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
 	    String name;
 	    Name x = fn.getFunctionName();
-	    if (x == null || x.getIdentifier() == null || "".equals(x.getIdentifier())) {
+	    if (x == null || x.getIdentifier() == null || x.getIdentifier().isEmpty()) {
 	    	name = scriptName + "@" + fn.getAbsolutePosition();
 	    	String label = getParentName(fn);
 	    	if (label != null) {
