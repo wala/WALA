@@ -726,9 +726,9 @@ public class StringStuff {
       int stop = typeName.length() - 1;
 
       if (typeName.contains(".")) {
-        start = typeName.lastIndexOf(".");
+        start = typeName.lastIndexOf('.');
       } else if (typeName.contains("/")) {
-        start = typeName.lastIndexOf("/");
+        start = typeName.lastIndexOf('/');
       }
 
       if (typeName.endsWith(";")) {

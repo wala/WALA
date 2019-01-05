@@ -236,7 +236,7 @@ public class AppModelMethod {
 		String innerClassName = tr.getName().getClassName().toString();
 		LinkedList<TypeReference> trLL = new LinkedList<> ();
 		trLL.push(tr);
-		int index = innerClassName.lastIndexOf("$");
+		int index = innerClassName.lastIndexOf('$');
 		while (index != -1) {
     		outerClassName = innerClassName.substring(0, index);
     		TypeReference innerTR = TypeReference.findOrCreate(ClassLoaderReference.Application, packageName+outerClassName);
@@ -247,7 +247,7 @@ public class AppModelMethod {
     		}
     		
     		innerClassName = outerClassName;
-    		index = outerClassName.lastIndexOf("$");
+    		index = outerClassName.lastIndexOf('$');
 		}
 		icDependencies.put(tr, trLL);
 	}

@@ -31,7 +31,7 @@ public class UrlManipulator {
         String origHostAndPath = urlFound.substring(2);// removing "//"
         String host;
         String path;
-        int indexOf = origHostAndPath.indexOf("/");
+        int indexOf = origHostAndPath.indexOf('/');
         if (indexOf > 0) {
           host = origHostAndPath.substring(0, indexOf);
           path = origHostAndPath.substring(indexOf);
