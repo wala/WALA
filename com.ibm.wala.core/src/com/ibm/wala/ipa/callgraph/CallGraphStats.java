@@ -92,18 +92,11 @@ public class CallGraphStats {
 
     @Override
     public String toString() {
-      StringBuilder result = new StringBuilder();
-      result.append("Call graph stats:");
-      result.append('\n');
-      result.append("  Nodes: ").append(nNodes);
-      result.append('\n');
-      result.append("  Edges: ").append(nEdges);
-      result.append('\n');
-      result.append("  Methods: ").append(nMethods);
-      result.append('\n');
-      result.append("  Bytecode Bytes: ").append(bytecodeBytes);
-      result.append('\n');
-      return result.toString();
+      return "Call graph stats:\n  Nodes: " + nNodes
+              + "\n  Edges: " + nEdges
+              + "\n  Methods: " + nMethods
+              + "\n  Bytecode Bytes: " + bytecodeBytes
+              + '\n';
 
     }
   }

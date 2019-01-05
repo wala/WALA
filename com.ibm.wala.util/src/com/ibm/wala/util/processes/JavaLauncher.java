@@ -149,15 +149,9 @@ public class JavaLauncher extends Launcher {
 
   @Override
   public String toString() {
-    StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (programArgs: ");
-    result.append(programArgs);
-    result.append(", mainClass: ");
-    result.append(mainClass);
-    result.append(", xtraClasspath: ");
-    result.append(xtraClasspath);
-    result.append(')');
-    return result.toString();
+    return super.toString() + " (programArgs: " + programArgs
+            + ", mainClass: " + mainClass
+            + ", xtraClasspath: " + xtraClasspath + ')';
   }
 
   /**

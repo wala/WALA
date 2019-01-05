@@ -78,29 +78,25 @@ public class GraphDataflowTest extends WalaTestCase {
    * @return the expected dataflow result as a String
    */
   public static String expectedStringNodeOnly() {
-    StringBuilder result = new StringBuilder("------\n");
-    result.append("Node A(0) = { 0 }\n");
-    result.append("Node B(1) = { 0 1 }\n");
-    result.append("Node C(2) = { 0 1 2 }\n");
-    result.append("Node D(3) = { 0 1 3 }\n");
-    result.append("Node E(4) = { 0 1 2 3 4 }\n");
-    result.append("Node F(5) = { 0 1 2 3 4 5 }\n");
-    result.append("Node G(6) = { 6 }\n");
-    result.append("Node H(7) = { 7 }\n");
-    return result.toString();
+    return "------\n" + "Node A(0) = { 0 }\n" +
+            "Node B(1) = { 0 1 }\n" +
+            "Node C(2) = { 0 1 2 }\n" +
+            "Node D(3) = { 0 1 3 }\n" +
+            "Node E(4) = { 0 1 2 3 4 }\n" +
+            "Node F(5) = { 0 1 2 3 4 5 }\n" +
+            "Node G(6) = { 6 }\n" +
+            "Node H(7) = { 7 }\n";
   }
 
   public static String expectedStringNodeEdge() {
-    StringBuilder result = new StringBuilder("------\n");
-    result.append("Node A(0) = { 0 }\n");
-    result.append("Node B(1) = { 0 1 }\n");
-    result.append("Node C(2) = { 0 2 }\n");
-    result.append("Node D(3) = { 1 3 }\n");
-    result.append("Node E(4) = { 0 1 2 3 4 }\n");
-    result.append("Node F(5) = { 0 1 2 3 4 5 }\n");
-    result.append("Node G(6) = { 6 }\n");
-    result.append("Node H(7) = { 7 }\n");
-    return result.toString();
+    return "------\n" + "Node A(0) = { 0 }\n" +
+            "Node B(1) = { 0 1 }\n" +
+            "Node C(2) = { 0 2 }\n" +
+            "Node D(3) = { 1 3 }\n" +
+            "Node E(4) = { 0 1 2 3 4 }\n" +
+            "Node F(5) = { 0 1 2 3 4 5 }\n" +
+            "Node G(6) = { 6 }\n" +
+            "Node H(7) = { 7 }\n";
   }
 
   /**

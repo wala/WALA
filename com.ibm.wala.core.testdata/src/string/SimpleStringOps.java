@@ -13,10 +13,7 @@ package string;
 public class SimpleStringOps {
 
   private static void whatever(String s) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(s.substring(5));
-    sb.append(" and other garbage");
-    System.out.println(sb.toString());
+    System.out.println(s.substring(5) + " and other garbage");
   }
   
   public static void main(String[] args) {
@@ -24,6 +21,7 @@ public class SimpleStringOps {
       @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
       String s = args[0];
       for(int i = 1; i < args.length; i++) {
+        //noinspection StringConcatenationInLoop
         s = s + args[i];
       }
       

@@ -256,11 +256,7 @@ public class DotUtil {
    * @param d decorating master
    */
   private static <T> String decorateNode(T n, NodeDecorator<T> d) throws WalaException {
-    StringBuilder result = new StringBuilder();
-    result.append(" [ label=\"");
-    result.append(getLabel(n, d));
-    result.append("\"]\n");
-    return result.toString();
+    return " [ label=\"" + getLabel(n, d) + "\"]\n";
   }
 
   private static <T> String getLabel(T n, NodeDecorator<T> d) throws WalaException {
