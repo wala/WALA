@@ -177,12 +177,10 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
     }
 
     final String ls = System.getProperty("line.separator");
-    final StringBuilder output = new StringBuilder();
-    output.append(statesOfSsaVars.toString()).append(ls);
-    output.append(valuesOfSsaVars.toString()).append(ls);
-    output.append(numbersOfSsaVarsThatAreParemerters.toString());
 
-    return output.toString();
+    return statesOfSsaVars + ls +
+            valuesOfSsaVars + ls +
+            numbersOfSsaVarsThatAreParemerters;
   }
 
 }

@@ -83,13 +83,7 @@ public abstract class Launcher {
 
   @Override
   public String toString() {
-    StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (workingDir: ");
-    result.append(workingDir);
-    result.append(", env: ");
-    result.append(env);
-    result.append(')');
-    return result.toString();
+    return super.toString() + " (workingDir: " + workingDir + ", env: " + env + ')';
   }
 
   /**

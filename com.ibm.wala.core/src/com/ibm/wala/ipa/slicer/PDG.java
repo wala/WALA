@@ -1037,9 +1037,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
   @Override
   public String toString() {
     populate();
-    StringBuilder result = new StringBuilder("PDG for " + node + ":\n");
-    result.append(super.toString());
-    return result.toString();
+    return "PDG for " + node + ":\n" + super.toString();
   }
 
   public Statement[] getParamCalleeStatements() {

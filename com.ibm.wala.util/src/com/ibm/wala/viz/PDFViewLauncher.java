@@ -56,13 +56,7 @@ class PDFViewLauncher {
 
   @Override
   public String toString() {
-    StringBuilder result = new StringBuilder(super.toString());
-    result.append(", psfile: ");
-    result.append(pdffile);
-    result.append(", gvExe: ");
-    result.append(gvExe);
-    result.append(')');
-    return result.toString();
+    return super.toString() + ", psfile: " + pdffile + ", gvExe: " + gvExe + ')';
   }
 
   private WalaException exception = null;

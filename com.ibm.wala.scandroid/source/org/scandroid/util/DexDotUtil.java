@@ -252,9 +252,7 @@ public class DexDotUtil extends DotUtil {
        * @param d decorating master
        */
       private static <T> String decorateNode(T n, NodeDecorator<T> d) {
-        StringBuilder result = new StringBuilder();
-        result.append(" [ ]\n");
-        return result.toString();
+          return " [ ]\n";
       }
 
       private static <T> String getLabel(T o, NodeDecorator<T> d) throws WalaException {

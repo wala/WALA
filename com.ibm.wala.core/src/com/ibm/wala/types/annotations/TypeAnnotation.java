@@ -62,15 +62,8 @@ public class TypeAnnotation {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TypeAnnotation");
-    sb.append("{ annotation = ");
-    sb.append(annotation);
-    sb.append(", path = ");
-    sb.append(typePath);
-    sb.append(", target = ");
-    sb.append(typeAnnotationTarget);
-    sb.append('}');
-    return sb.toString();
+    return "TypeAnnotation" + "{ annotation = " + annotation + ", path = " + typePath + ", target = "
+            + typeAnnotationTarget + '}';
   }
 
   @Override
@@ -207,11 +200,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("TypeParameterTarget");
-      sb.append("{ type_parameter_index = ");
-      sb.append(type_parameter_index);
-      sb.append('}');
-      return sb.toString();
+      return "TypeParameterTarget" + "{ type_parameter_index = " + type_parameter_index + '}';
     }
 
     @Override
@@ -249,11 +238,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("SuperTypeTarget");
-      sb.append("{ superType = ");
-      sb.append(superType);
-      sb.append('}');
-      return sb.toString();
+      return "SuperTypeTarget{ superType = " + superType + '}';
     }
 
     @Override
@@ -293,13 +278,8 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("TypeParameterBoundTarget");
-      sb.append("{ type_parameter_index = ");
-      sb.append(type_parameter_index);
-      sb.append(", bound_index = ");
-      sb.append(bound_index);
-      sb.append('}');
-      return sb.toString();
+      return "TypeParameterBoundTarget{ type_parameter_index = " + type_parameter_index
+              + ", bound_index = " + bound_index + '}';
     }
 
     public int getParameterIndex() {
@@ -377,11 +357,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("FormalParameterTarget");
-      sb.append("{ formal_parameter_index = ");
-      sb.append(formal_parameter_index);
-      sb.append('}');
-      return sb.toString();
+      return "FormalParameterTarget" + "{ formal_parameter_index = " + formal_parameter_index + '}';
     }
 
     @Override
@@ -419,11 +395,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("ThrowsTarget");
-      sb.append("{ throwType = ");
-      sb.append(throwType);
-      sb.append('}');
-      return sb.toString();
+      return "ThrowsTarget{ throwType = " + throwType + '}';
     }
 
     @Override
@@ -465,13 +437,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("LocalVarTarget");
-      sb.append("{ varIindex = ");
-      sb.append(varIindex);
-      sb.append(", name = ");
-      sb.append(name);
-      sb.append('}');
-      return sb.toString();
+      return "LocalVarTarget{ varIindex = " + varIindex + ", name = " + name + '}';
     }
 
     public int getIndex() {
@@ -547,13 +513,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("CatchTarget");
-      sb.append("{ catchIIndex = ");
-      sb.append(catchIIndex);
-      sb.append(", catchType = ");
-      sb.append(catchType);
-      sb.append('}');
-      return sb.toString();
+      return "CatchTarget{ catchIIndex = " + catchIIndex + ", catchType = " + catchType + '}';
     }
 
     @Override
@@ -602,11 +562,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("OffsetTarget");
-      sb.append("{ iindex = ");
-      sb.append(iindex);
-      sb.append('}');
-      return sb.toString();
+      return "OffsetTarget{ iindex = " + iindex + '}';
     }
 
     @Override
@@ -651,13 +607,7 @@ public class TypeAnnotation {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("TypeArgumentTarget");
-      sb.append("{ iindex = ");
-      sb.append(iindex);
-      sb.append(", type_argument_index = ");
-      sb.append(type_argument_index);
-      sb.append('}');
-      return sb.toString();
+      return "TypeArgumentTarget{ iindex = " + iindex + ", type_argument_index = " + type_argument_index + '}';
     }
 
     @Override
