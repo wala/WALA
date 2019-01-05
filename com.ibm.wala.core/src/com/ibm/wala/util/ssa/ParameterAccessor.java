@@ -1650,8 +1650,10 @@ public class ParameterAccessor {
      *  Extensive output for debugging purposes.
      */
     public String dump() {
-        String ret = "Parameter Accessor for " + ((this.mRef!=null)?"mRef:" + this.mRef.toString():"IMethod: " + this.method.toString()) +
-            "\nContains " + this.numberOfParameters + " Parameters " + this.base + "\n";
+        final StringBuilder ret = new StringBuilder().append("Parameter Accessor for ")
+                .append((this.mRef != null) ? "mRef:" + this.mRef.toString() : "IMethod: " + this.method.toString())
+                .append("\nContains ").append(this.numberOfParameters).append(" Parameters ").append(this.base)
+                .append('\n');
         /*for (int i = 1; i <= this.numberOfParameters; ++i) {
             try {
                 ret += "\t" + getParameter(i).toString() + "\n";
@@ -1659,16 +1661,16 @@ public class ParameterAccessor {
                 ret += "\tNone at " + i + "\n";
             }
         }*/
-        ret += "\nAnd all is:\n";
+        ret.append("\nAnd all is:\n");
         for (Parameter p : all()) {
-            ret += "\t" + p + "\n";
+            ret.append('\t').append(p).append('\n');
         }
         if (hasImplicitThis ()) {
-            ret +="This: " + getThis();
+            ret.append("This: ").append(getThis());
         } else {
-            ret +="Is static";
+            ret.append("Is static");
         }
-        return ret;
+        return ret.toString();
     }
 
     @Override

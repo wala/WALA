@@ -681,6 +681,7 @@ public class Analyzer {
           curStack[0] = curStack[1];
           curStack[1] = s;
         } else {
+          @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
           String pushed = instr.getPushedType(curStack);
           if (instr instanceof NewInstruction && ! pushed.startsWith("[")) {
             pushed = "#" + instToBC[i] + "#" + pushed;

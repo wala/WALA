@@ -116,14 +116,15 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
         BasicBlockInContext bb = (BasicBlockInContext) t;
         if (bb.getDelegate() instanceof IExplodedBasicBlock) {
           IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();
-          String s = delegate.getNumber() + " " + result.getResult(t) + "\\n" + stringify(delegate.getInstruction());
+          final StringBuilder s = new StringBuilder(delegate.getNumber()).append(' ').append(result.getResult(t))
+                  .append("\\n").append(stringify(delegate.getInstruction()));
           for (SSAPhiInstruction phi : Iterator2Iterable.make(delegate.iteratePhis())) {
-            s += " " + phi;
+            s.append(' ').append(phi);
           }
           if (delegate.isCatchBlock()) {
-            s += " " + delegate.getCatchInstruction();
+            s.append(' ').append(delegate.getCatchInstruction());
           }
-          return s;
+          return s.toString();
         }
       }
       return t + " " + result.getResult(t);
@@ -140,14 +141,14 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     if (s instanceof SSAAbstractInvokeInstruction) {
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
       String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
-      String result = def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "."
-          + call.getDeclaredTarget().getName();
-      result += " exc:" + call.getException();
+      final StringBuilder result = new StringBuilder(def).append("call ")
+              .append(call.getDeclaredTarget().getDeclaringClass().getName().getClassName()).append('.')
+              .append(call.getDeclaredTarget().getName());
+      result.append(" exc:").append(call.getException());
       for (int i = 0; i < s.getNumberOfUses(); i++) {
-        result += " ";
-        result += s.getUse(i);
+        result.append(' ').append(s.getUse(i));
       }
-      return result;
+      return result.toString();
     }
     if (s instanceof SSAGetInstruction) {
       SSAGetInstruction g = (SSAGetInstruction) s;

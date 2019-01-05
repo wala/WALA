@@ -362,11 +362,12 @@ public abstract class JavaIRTests extends IRTests {
                   // find enclosing instruction
                   for ( SSAInstruction instr: n.getIR().getInstructions() ) {
                       if ( instr instanceof EnclosingObjectReference ) {
-                          String allIks = "";
+                          StringBuilder allIksBuilder = new StringBuilder();
                           for (InstanceKey ik: pa.getPointsToSet(new LocalPointerKey(n,instr.getDef())))
-                              allIks += ik.getConcreteType().getName() +",";
+                              allIksBuilder.append(ik.getConcreteType().getName()).append(',');
                           // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
                           
+                          final String allIks = allIksBuilder.toString();
                           Assert.assertTrue("assertion failed: expecting ik " + ikConcreteTypeStrings[i] + " in method " + methodSigs[i] +  ", got " + allIks + "\n",
                               allIks.equals(ikConcreteTypeStrings[i]));
                           
@@ -396,9 +397,10 @@ public abstract class JavaIRTests extends IRTests {
         // find enclosing instruction
         for ( SSAInstruction instr: n.getIR().getInstructions() ) {
           if ( instr instanceof EnclosingObjectReference ) {
-            String allIks = "";
+            StringBuilder allIksBuilder = new StringBuilder();
             for (InstanceKey ik: pa.getPointsToSet(new LocalPointerKey(n,instr.getDef())))
-              allIks += ik.getConcreteType().getName() +",";
+              allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+            final String allIks = allIksBuilder.toString();
             Assert.assertTrue("assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n",
                 allIks.equals("LSub,"));
 

@@ -114,17 +114,17 @@ public class FloydWarshall<T> {
 
            @Override
           public String toString() {
-             String s = "";
+             final StringBuilder s = new StringBuilder();
              for(int i = 0; i <= G.getMaxNumber(); i++) {
                for(int j = 0; j <= G.getMaxNumber(); j++) {
                  try {
-                   s += getPath(G.getNode(i), G.getNode(j));
+                   s.append(getPath(G.getNode(i), G.getNode(j)));
                  } catch (UnsupportedOperationException e) {
                    
                  }
                }
              }
-             return s;
+             return s.toString();
            }
 
           @Override

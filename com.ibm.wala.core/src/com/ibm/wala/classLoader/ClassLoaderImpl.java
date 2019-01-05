@@ -234,6 +234,7 @@ public class ClassLoaderImpl implements IClassLoader {
         continue;
       }
 
+      @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
       String className = entry.getClassName().replace('.', '/');
 
       if (DEBUG_LEVEL > 0) {
