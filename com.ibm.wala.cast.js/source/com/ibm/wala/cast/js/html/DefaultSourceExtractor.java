@@ -140,7 +140,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         inputElementCallback();
       }
 
-      assert varName != null && !"".equals(varName);
+      assert varName != null && !varName.isEmpty();
       printlnIndented(varName + " = this;", tag);
       printlnIndented("document." + varName + " = this;", tag);
       printlnIndented("parent.appendChild(this);", tag);
