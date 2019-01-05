@@ -104,7 +104,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
             buffer.append('\n');
           }
           if (length != 0)
-            System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
+            System.err.println("Unexpected problems in " + source.getElementName() + buffer);
         }
       }
     }
