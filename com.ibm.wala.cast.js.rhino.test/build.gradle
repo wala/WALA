@@ -25,13 +25,13 @@ dependencies {
 		)
 }
 
-processTestResources {
+tasks.named('processTestResources').configure {
 	def data = project(':com.ibm.wala.cast.js.test.data')
-	dependsOn data.processTestResources
+	dependsOn data.tasks.named('processTestResources')
 	from data.sourceSets.test.resources
 }
 
-test {
+tasks.named('test').configure {
 	environment 'TRAVIS', 1
 	maxHeapSize = '800M'
 
@@ -39,9 +39,11 @@ test {
 		exclude '**/FieldBasedJQueryTest.class'
 }
 
-task cleanTestExtras(type: Delete) {
+tasks.register('cleanTestExtras', Delete) {
 	delete 'actual.dump'
 	delete 'expected.dump'
 }
 
-cleanTest.dependsOn cleanTestExtras
+tasks.named('cleanTest').configure {
+	dependsOn 'cleanTestExtras'
+}

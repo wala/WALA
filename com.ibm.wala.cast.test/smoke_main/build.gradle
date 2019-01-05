@@ -14,47 +14,48 @@ application {
     addCastLibrary(project, it)
 
     binaries.whenElementFinalized { binary ->
-        def libxlator_test
-        binary.linkTask.get().configure { task ->
-            libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast.test:xlator_test').tasks.getByName(task.name))
-            addRpath(task, libxlator_test)
-        }
+        binary.linkTask.get().configure { linkTask ->
+            final def libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast.test:xlator_test').tasks.getByName(linkTask.name))
+            addRpath(linkTask, libxlator_test)
 
-        if (binary.debuggable && !binary.optimized) {
-            task checkSmoke_main(type: Exec, dependsOn: binary.linkTask) {
-                // main executable to run for test
-                def executableBinary = binary.executableFile.get()
-                executable executableBinary
+            if (binary.debuggable && !binary.optimized) {
+                tasks.register('checkSmoke_main', Exec) {
+                    dependsOn linkTask
 
-                // xlator Java bytecode + implementation of native methods
-                def pathElements = ['../build/classes/java/test', libxlator_test.parent]
+                    // main executable to run for test
+                    def executableBinary = binary.executableFile.get()
+                    executable executableBinary
 
-                // "primordial.txt" resource loaded during test
-                def coreResources = project(':com.ibm.wala.core').processResources
-                dependsOn coreResources
-                pathElements << coreResources.destinationDir
+                    // xlator Java bytecode + implementation of native methods
+                    def pathElements = ['../build/classes/java/test', libxlator_test.parent]
 
-                // additional supporting Java class files
-                ['cast', 'core', 'util'].each {
-                    def compileJava = project(":com.ibm.wala.$it").compileJava
-                    dependsOn compileJava
-                    pathElements << compileJava.destinationDir
+                    // "primordial.txt" resource loaded during test
+                    def coreResources = project(':com.ibm.wala.core').processResources
+                    dependsOn coreResources
+                    pathElements << coreResources.destinationDir
+
+                    // additional supporting Java class files
+                    ['cast', 'core', 'util'].each {
+                        def compileJava = project(":com.ibm.wala.$it").compileJava
+                        dependsOn compileJava
+                        pathElements << compileJava.destinationDir
+                    }
+
+                    // all combined as a colon-delimited path list
+                    args pathElements.join(':')
+
+                    // log output to file, although we don't validate it
+                    final def outFile = file("$temporaryDir/stdout-and-stderr.log")
+                    outputs.file outFile
+                    doFirst {
+                        final def fileStream = new FileOutputStream(outFile)
+                        standardOutput fileStream
+                        errorOutput fileStream
+                    }
                 }
 
-                // all combined as a colon-delimited path list
-                args pathElements.join(':')
-
-                // log output to file, although we don't validate it
-                final def outFile = file("$temporaryDir/stdout-and-stderr.log")
-                outputs.file outFile
-                doFirst {
-                    final def fileStream = new FileOutputStream(outFile)
-                    standardOutput fileStream
-                    errorOutput fileStream
-                }
+                check.dependsOn checkSmoke_main
             }
-
-            check.dependsOn checkSmoke_main
         }
     }
 }

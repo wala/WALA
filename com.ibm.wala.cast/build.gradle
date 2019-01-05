@@ -15,30 +15,33 @@ dependencies {
 		)
 }
 
-javadoc {
-	def js = ':com.ibm.wala.cast.js'
-	evaluationDependsOn(js)
+tasks.named('javadoc').configure {
+	def jsName = ':com.ibm.wala.cast.js'
+	dependsOn "$jsName:compileJava"
+	dependsOn "$jsName:createPackageList"
 
-	dependsOn "$js:compileJava"
-	js = project(js)
 	doFirst {
+		def js = project(jsName)
 		classpath += files js.compileJava
+		options.linksOffline js.javadoc.outputDirectory.path, js.createPackageList.packageList.parent
 	}
-
-	dependsOn js.createPackageList
-	options.linksOffline js.javadoc.outputDirectory.path, js.createPackageList.packageList.parent
 }
 
 // TODO: if we eventually stop supporting Maven, then we may be able
 // to discard the "copyJarsIntoLib" task and the corresponding lines
 // in "META-INF/MANIFEST.MF" and "build.properties"
 
-task copyJarsIntoLib(type: Sync) {
+tasks.register('copyJarsIntoLib', Sync) {
 	def commonsIoJar = configurations.runtimeClasspath.files[0]
 	assert commonsIoJar.name.startsWith('commons-io-')
 	from commonsIoJar
 	into 'lib'
 }
 
-assemble.dependsOn copyJarsIntoLib
-clean.dependsOn cleanCopyJarsIntoLib
+tasks.named('assemble').configure {
+	dependsOn 'copyJarsIntoLib'
+}
+
+tasks.named('clean').configure {
+	dependsOn 'cleanCopyJarsIntoLib'
+}

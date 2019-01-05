@@ -6,11 +6,12 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.main.java.srcDirs = ['src']
 
-javadoc {
-	def coreCompileJava = project(':com.ibm.wala.core').compileJava
-	dependsOn coreCompileJava
+tasks.named('javadoc').configure {
+	def coreName = ':com.ibm.wala.core'
+	dependsOn "$coreName:compileJava"
+
 	doFirst {
-		classpath += files coreCompileJava
+		classpath += files project(coreName).compileJava
 	}
 	options.links 'https://docs.oracle.com/javase/8/docs/api/'
 }

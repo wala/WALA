@@ -4,7 +4,10 @@ plugins {
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
-prepareIntelliJIDEA.dependsOn jarTest
+
+tasks.named('prepareIntelliJIDEA').configure {
+	dependsOn 'jarTest'
+}
 
 sourceSets.test.java.srcDirs = ['harness-src/java']
 
@@ -26,7 +29,7 @@ dependencies {
 		)
 }
 
-test {
+tasks.named('test').configure {
 	final def xlator_project_name = 'xlator_test'
 	final def xlator_link_name = 'linkDebug'
 	dependsOn "$xlator_project_name:$xlator_link_name"

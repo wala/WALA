@@ -12,7 +12,7 @@ sourceSets.test.java.srcDirs = ['src']
 //  download and extract kawa 3.0 "kawa.jar"
 //
 
-task downloadKawa(type: VerifiedDownload) {
+final def downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
 	ext.version = '3.0'
 	final def archive = "kawa-${version}.zip"
 	src "https://ftp.gnu.org/pub/gnu/kawa/$archive"
@@ -20,9 +20,10 @@ task downloadKawa(type: VerifiedDownload) {
 	checksum '2713e6dfb939274ba3b1d36daea68436'
 }
 
-task extractKawa(type: Sync, dependsOn: downloadKawa) {
-	from(zipTree(downloadKawa.dest)) {
-		include "kawa-${downloadKawa.version}/lib/kawa.jar"
+tasks.register('extractKawa', Sync) {
+	dependsOn downloadKawa
+	from(zipTree(downloadKawa.get().dest)) {
+		include "kawa-${downloadKawa.get().version}/lib/kawa.jar"
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)
 		}
@@ -42,7 +43,7 @@ task extractKawa(type: Sync, dependsOn: downloadKawa) {
 class CompileKawaJar extends Jar {
 
 	@Nested final def compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
-		dependsOn(project.extractKawa)
+		dependsOn project.extractKawa
 		final def kawaJar = project.files(project.extractKawa)[0]
 		classpath kawaJar
 		main 'kawa.repl'
@@ -55,7 +56,7 @@ class CompileKawaJar extends Jar {
 	}
 
 	CompileKawaJar() {
-		compile.dependsOn(dependsOn)
+		compile.dependsOn dependsOn
 		from compile
 		archiveVersion.set null
 	}
@@ -76,21 +77,23 @@ class CompileKawaJar extends Jar {
 //  download, unpack, and build kawa chess
 //
 
-task downloadKawaChess(type: VerifiedDownload) {
+final def downloadKawaChess = tasks.register('downloadKawaChess', VerifiedDownload) {
 	ext.commitHash = 'f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8'
 	src "https://github.com/ttu-fpclub/kawa-chess/archive/${commitHash}.zip"
 	dest "$temporaryDir/kawa-chess.zip"
 	checksum 'cf29613d2be5f476a475ee28b4df9d9e'
 }
 
-task unpackKawaChess(type: Sync, dependsOn: downloadKawaChess) {
-	from zipTree(downloadKawaChess.dest)
+final def unpackKawaChess = tasks.register('unpackKawaChess', Sync) {
+	dependsOn downloadKawaChess
+	from zipTree(downloadKawaChess.get().dest)
 	into temporaryDir
-	ext.top = "$destinationDir/kawa-chess-${downloadKawaChess.commitHash}"
+	ext.top = "$destinationDir/kawa-chess-${downloadKawaChess.get().commitHash}"
 }
 
-task buildChessJar(type: CompileKawaJar, dependsOn: unpackKawaChess) {
-	final def schemePath = { "$unpackKawaChess.top/${it}.scm" }
+tasks.register('buildChessJar', CompileKawaJar) {
+	dependsOn unpackKawaChess
+	final def schemePath = { "${unpackKawaChess.get().top}/${it}.scm" }
 	final def schemeFiles = files(['chess', 'gui', 'img', 'main', 'pos'].collect(schemePath))
 	args schemePath('main')
 	inputs.files schemeFiles
@@ -103,7 +106,7 @@ task buildChessJar(type: CompileKawaJar, dependsOn: unpackKawaChess) {
 //  build the kawa test jar
 //
 
-task buildKawaTestJar(type: CompileKawaJar) {
+tasks.register('buildKawaTestJar', CompileKawaJar) {
 	final def schemeFile = file('kawasrc/test.scm')
 	args schemeFile
 	inputs.files schemeFile
@@ -116,7 +119,7 @@ task buildKawaTestJar(type: CompileKawaJar) {
 //  download and extract "bcel-5.2.jar"
 //
 
-task downloadBcel(type: VerifiedDownload) {
+final def downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
 	ext.version = '5.2'
 	def archive = "bcel-${version}.tar.gz"
 	src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
@@ -125,23 +128,26 @@ task downloadBcel(type: VerifiedDownload) {
 	useETag false
 }
 
-task extractBcel(type: Copy, dependsOn: downloadBcel) {
-	from(tarTree(downloadBcel.dest)) {
-		include "bcel-${downloadBcel.version}/bcel-${downloadBcel.version}.jar"
+tasks.register('extractBcel', Copy) {
+	dependsOn downloadBcel
+	from(tarTree(downloadBcel.get().dest)) {
+		include "bcel-${downloadBcel.get().version}/bcel-${downloadBcel.get().version}.jar"
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)
 		}
 	}
 	into projectDir
 	includeEmptyDirs false
-	outputs.file "bcel-${downloadBcel.version}.jar"
+	outputs.file "bcel-${downloadBcel.get().version}.jar"
 }
 
-task cleanExtractBcel(type: Delete) {
+tasks.register('cleanExtractBcel', Delete) {
 	delete files(extractBcel)[0]
 }
 
-clean.dependsOn cleanExtractBcel
+tasks.named('clean').configure {
+	dependsOn 'cleanExtractBcel'
+}
 
 
 
@@ -150,18 +156,20 @@ clean.dependsOn cleanExtractBcel
 //  download "java-cup-11a.jar"
 //
 
-task downloadJavaCup(type: VerifiedDownload) {
+tasks.register('downloadJavaCup', VerifiedDownload) {
 	def archive = 'java-cup-11a.jar'
 	src "http://www2.cs.tum.edu/projects/cup/$archive"
 	dest "$projectDir/$archive"
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
-task cleanDownloadJavaCup(type: Delete) {
+tasks.register('cleanDownloadJavaCup', Delete) {
 	delete downloadJavaCup
 }
 
-clean.dependsOn cleanDownloadJavaCup
+tasks.named('clean').configure {
+	dependsOn 'cleanDownloadJavaCup'
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -169,18 +177,20 @@ clean.dependsOn cleanDownloadJavaCup
 //  collect "JLex.jar"
 //
 
-task collectJLex(type: Jar) {
+tasks.register('collectJLex', Jar) {
 	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
 	include 'JLex/'
 	archiveFileName.set 'JLex.jar'
 	destinationDirectory.set projectDir
 }
 
-task cleanCollectJLex(type: Delete) {
+tasks.register('cleanCollectJLex', Delete) {
 	delete collectJLex
 }
 
-clean.dependsOn cleanCollectJLex
+tasks.named('clean').configure {
+	dependsOn 'cleanCollectJLex'
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -188,7 +198,7 @@ clean.dependsOn cleanCollectJLex
 //  generate "hello_hash.jar"
 //
 
-task downloadOcamlJava(type: VerifiedDownload) {
+final def downloadOcamlJava = tasks.register('downloadOcamlJava', VerifiedDownload) {
 	def version = '2.0-alpha1'
 	ext.basename = "ocamljava-$version"
 	def archive = "${basename}.tar.gz"
@@ -197,12 +207,14 @@ task downloadOcamlJava(type: VerifiedDownload) {
 	checksum '45feec6e3889f5073a39c2c4c84878d1'
 }
 
-task unpackOcamlJava(type: Sync, dependsOn: downloadOcamlJava) {
-	from tarTree(downloadOcamlJava.dest)
+final def unpackOcamlJava = tasks.register('unpackOcamlJava', Sync) {
+	dependsOn downloadOcamlJava
+	from tarTree(downloadOcamlJava.get().dest)
 	into temporaryDir
 }
 
-task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
+tasks.register('generateHelloHashJar', JavaExec) {
+	dependsOn unpackOcamlJava
 	def ocamlSource = file('ocaml/hello_hash.ml')
 	inputs.file ocamlSource
 
@@ -210,7 +222,7 @@ task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
 	outputs.file jarTarget
 	outputs.cacheIf { true }
 
-	def ocamlJavaJar = new File("$unpackOcamlJava.destinationDir/$downloadOcamlJava.basename/lib/ocamljava.jar")
+	def ocamlJavaJar = new File("${unpackOcamlJava.get().destinationDir}/${downloadOcamlJava.get().basename}/lib/ocamljava.jar")
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
@@ -218,7 +230,7 @@ task generateHelloHashJar(type: JavaExec, dependsOn: unpackOcamlJava) {
 	args ocamlSource, '-o', jarTarget
 }
 
-task cleanGenerateHelloHashJar(type: Delete) {
+tasks.register('cleanGenerateHelloHashJar', Delete) {
 	delete generateHelloHashJar
 	delete fileTree('ocaml') {
 		exclude '*.ml'
@@ -226,7 +238,9 @@ task cleanGenerateHelloHashJar(type: Delete) {
 	}
 }
 
-clean.dependsOn cleanGenerateHelloHashJar
+tasks.named('clean').configure {
+	dependsOn 'cleanGenerateHelloHashJar'
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -234,7 +248,7 @@ clean.dependsOn cleanGenerateHelloHashJar
 //  collect "com.ibm.wala.core.testdata_1.0.0.jar"
 //
 
-task collectTestData(type: Jar) {
+tasks.register('collectTestData', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0.jar'
 	from compileTestJava
 	from 'classes'
@@ -242,11 +256,13 @@ task collectTestData(type: Jar) {
 	destinationDirectory.set projectDir
 }
 
-task cleanCollectTestData(type: Delete) {
+tasks.register('cleanCollectTestData', Delete) {
 	delete collectTestData
 }
 
-clean.dependsOn cleanCollectTestData
+tasks.named('clean').configure {
+	dependsOn 'cleanCollectTestData'
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -254,7 +270,7 @@ clean.dependsOn cleanCollectTestData
 //  collect "com.ibm.wala.core.testdata_1.0.0a.jar"
 //
 
-task collectTestDataA(type: Jar) {
+final def collectTestDataA = tasks.register('collectTestDataA', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0a.jar'
 	from compileTestJava
 	from 'classes'
@@ -267,8 +283,10 @@ task collectTestDataA(type: Jar) {
 		)
 }
 
-task cleanColllectTestDataA(type: Delete) {
+tasks.register('cleanColllectTestDataA', Delete) {
 	delete collectTestDataA
 }
 
-clean.dependsOn cleanCollectTestDataA
+tasks.named('clean').configure {
+	dependsOn 'cleanCollectTestDataA'
+}

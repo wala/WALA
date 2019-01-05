@@ -10,14 +10,15 @@ dependencies {
 		)
 }
 
-task downloadNodeJS(type: VerifiedDownload) {
+final def downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 	src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
 	dest "$temporaryDir/nodejs.zip"
 	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
 }
 
-task unpackNodeJSLib(type: Copy, dependsOn: downloadNodeJS) {
-	from(zipTree(downloadNodeJS.dest)) {
+tasks.register('unpackNodeJSLib', Copy) {
+	dependsOn downloadNodeJS
+	from(zipTree(downloadNodeJS.get().dest)) {
 		include 'nodejs-node-0a604e9/lib/*.js'
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.lastName)
@@ -28,12 +29,17 @@ task unpackNodeJSLib(type: Copy, dependsOn: downloadNodeJS) {
 	includeEmptyDirs false
 }
 
-task cleanUnpackNodeJSLib(type: Delete) {
+tasks.register('cleanUnpackNodeJSLib', Delete) {
 	delete fileTree(dir: 'dat/core-modules', include: '*.js')
 }
 
-processResources.dependsOn unpackNodeJSLib
-clean.dependsOn cleanUnpackNodeJSLib
+tasks.named('processResources').configure {
+	dependsOn 'unpackNodeJSLib'
+}
+
+tasks.named('clean').configure {
+	dependsOn 'cleanUnpackNodeJSLib'
+}
 
 sourceSets.main {
 	java.srcDirs = ['src']
