@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -139,14 +140,22 @@ public class SmallMap<K, V> implements Map<K, V> {
   }
 
   private void growByOne() {
-    Object[] old = keysAndValues;
-    int length = (old == null) ? 0 : old.length;
-    keysAndValues = new Object[length + 2];
-    for (int i = 0; i < length / 2; i++) {
-      keysAndValues[i] = old[i];
-    }
-    for (int i = 0; i < length / 2; i++) {
-      keysAndValues[i + 1 + length / 2] = old[length / 2 + i];
+    if (keysAndValues == null)
+      keysAndValues = new Object[2];
+    else {
+      final int oldLength = keysAndValues.length;
+      final int oldEntryCount = oldLength / 2;
+      final int oldLastKeySlot = oldEntryCount - 1;
+      final int oldFirstValueSlot = oldLastKeySlot + 1;
+
+      final int newLength = oldLength + 2;
+      final int newEntryCount = newLength / 2;
+      final int newLastKeySlot = newEntryCount - 1;
+      final int newFirstValueSlot = newLastKeySlot + 1;
+
+      keysAndValues = Arrays.copyOf(keysAndValues, newLength);
+      System.arraycopy(keysAndValues, oldFirstValueSlot, keysAndValues, newFirstValueSlot, oldEntryCount);
+      keysAndValues[newLastKeySlot] = null;
     }
 
   }
