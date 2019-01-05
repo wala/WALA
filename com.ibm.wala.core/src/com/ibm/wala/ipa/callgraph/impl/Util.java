@@ -206,10 +206,10 @@ public class Util {
     }
 
     for (String className : classNames) {
-      if (className.indexOf("L") != 0) {
+      if (className.indexOf('L') != 0) {
         throw new IllegalArgumentException("Expected class name to start with L " + className);
       }
-      if (className.indexOf(".") > 0) {
+      if (className.indexOf('.') > 0) {
         Assertions.productionAssertion(false, "Expected class name formatted with /, not . " + className);
       }
     }

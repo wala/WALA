@@ -208,7 +208,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
         {
             String prefix = type.toString();
             while (prefix.contains("/")) {
-                prefix = prefix.substring(0, prefix.lastIndexOf("/") - 1);
+                prefix = prefix.substring(0, prefix.lastIndexOf('/') - 1);
                 final BehaviorKey<Atom> prefixKey= BehaviorKey.mk(Atom.findOrCreateAsciiAtom(prefix));
                 if (behaviours.containsKey(prefixKey)) {
                     // cache

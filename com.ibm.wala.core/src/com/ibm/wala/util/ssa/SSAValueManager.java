@@ -674,10 +674,10 @@ public class SSAValueManager {
                     @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
                     String autoName = val.getType().getName().toString();
                     if (autoName.contains("/")) {
-                        autoName = autoName.substring(autoName.lastIndexOf("/") + 1);
+                        autoName = autoName.substring(autoName.lastIndexOf('/') + 1);
                     }
                     if (autoName.contains("$")) {
-                        autoName = autoName.substring(autoName.lastIndexOf("$") + 1);
+                        autoName = autoName.substring(autoName.lastIndexOf('$') + 1);
                     }
                     autoName = autoName.replace("[", "Ar");
                     final int mySuffix;
@@ -703,10 +703,10 @@ public class SSAValueManager {
                 @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
                 String autoName = val.getType().getName().toString();
                 if (autoName.contains("/")) {
-                    autoName = autoName.substring(autoName.lastIndexOf("/") + 1);
+                    autoName = autoName.substring(autoName.lastIndexOf('/') + 1);
                 }
                 if (autoName.contains("$")) {
-                    autoName = autoName.substring(autoName.lastIndexOf("$") + 1);
+                    autoName = autoName.substring(autoName.lastIndexOf('$') + 1);
                 }
                 autoName = autoName.replace("[", "Ar");
                 final int mySuffix;

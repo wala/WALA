@@ -194,7 +194,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       char quote;
       if (value.indexOf('"') < 0) {
         quote= '"';
-      } else if (value.indexOf("'") < 0) {
+      } else if (value.indexOf('\'') < 0) {
         quote= '"';
       } else {
         quote= '"';
