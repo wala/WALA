@@ -218,7 +218,7 @@ public class Util {
       }
       i++;
     }
-    Assertions.UNREACHABLE("Invalid: a must be a predecessor of b! " + a + " " + b);
+    Assertions.UNREACHABLE("Invalid: a must be a predecessor of b! " + a + ' ' + b);
     return -1;
   }
 }

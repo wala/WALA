@@ -110,7 +110,7 @@ public class GetMethodContext implements Context {
 
   @Override
   public String toString() {
-    return "GetMethodContext<" + type + ", " + name + ">";
+    return "GetMethodContext<" + type + ", " + name + '>';
   }
 
   @Override

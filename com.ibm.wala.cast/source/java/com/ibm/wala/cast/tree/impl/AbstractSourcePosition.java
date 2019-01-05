@@ -66,13 +66,13 @@ public abstract class AbstractSourcePosition implements Position {
     }
     String pos;
     if (getFirstCol() != -1) {
-      pos = "["+getFirstLine()+":"+getFirstCol()+"] -> ["+getLastLine()+":"+getLastCol()+"]";
+      pos = "["+getFirstLine()+ ':' +getFirstCol()+"] -> ["+getLastLine()+ ':' +getLastCol()+ ']';
     } else if (getFirstOffset() != -1) {
-      pos =  "[" + getFirstOffset() + "->" + getLastOffset() + "] (line " + getFirstLine() +")";
+      pos =  "[" + getFirstOffset() + "->" + getLastOffset() + "] (line " + getFirstLine() + ')';
     } else {
-      pos = "(line " + getFirstLine() +")";
+      pos = "(line " + getFirstLine() + ')';
     }
-    return xf + " " + pos;
+    return xf + ' ' + pos;
   }
 
 }

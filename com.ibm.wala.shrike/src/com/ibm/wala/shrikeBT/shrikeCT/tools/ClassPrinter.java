@@ -151,19 +151,19 @@ public class ClassPrinter {
         }
       }
     }
-    return "0x" + Integer.toString(16, flags) + "(" + buf + ")";
+    return "0x" + Integer.toString(16, flags) + '(' + buf + ')';
   }
 
   private void dumpAttributes(ClassReader cr, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
       InvalidBytecodeException, IOException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();
-      w.write("  " + name + ": @" + Integer.toString(attrs.getRawOffset(), 16) + "\n");
+      w.write("  " + name + ": @" + Integer.toString(attrs.getRawOffset(), 16) + '\n');
       if (name.equals("Code")) {
         CodeReader code = new CodeReader(attrs);
 
-        w.write("    maxstack: " + code.getMaxStack() + "\n");
-        w.write("    maxlocals: " + code.getMaxLocals() + "\n");
+        w.write("    maxstack: " + code.getMaxStack() + '\n');
+        w.write("    maxlocals: " + code.getMaxLocals() + '\n');
 
         w.write("    bytecode:\n");
         int[] rawHandlers = code.getRawHandlers();
@@ -176,14 +176,14 @@ public class ClassPrinter {
         w.write("    exception handlers:\n");
         for (int e = 0; e < rawHandlers.length; e += 4) {
           w.write("      " + rawHandlers[e] + " to " + rawHandlers[e + 1] + " catch " + getClassName(cr, rawHandlers[e + 3])
-              + " at " + rawHandlers[e + 2] + "\n");
+              + " at " + rawHandlers[e + 2] + '\n');
         }
 
         ClassReader.AttrIterator codeAttrs = new ClassReader.AttrIterator();
         code.initAttributeIterator(codeAttrs);
         for (; codeAttrs.isValid(); codeAttrs.advance()) {
           String cName = codeAttrs.getName();
-          w.write("    " + cName + ": " + Integer.toString(codeAttrs.getRawOffset(), 16) + "\n");
+          w.write("    " + cName + ": " + Integer.toString(codeAttrs.getRawOffset(), 16) + '\n');
         }
 
         if (printLineNumberInfo) {
@@ -227,7 +227,7 @@ public class ClassPrinter {
               buf.append("      ").append(j).append(':');
               for (int k = 0; k < vars.length; k += 2) {
                 if (vars[k] != 0) {
-                  String n = cr.getCP().getCPUtf8(vars[k]) + "(" + cr.getCP().getCPUtf8(vars[k + 1]) + ")";
+                  String n = cr.getCP().getCPUtf8(vars[k]) + '(' + cr.getCP().getCPUtf8(vars[k + 1]) + ')';
                   buf.append(' ').append(k / 2).append(':').append(n);
                 }
               }
@@ -257,13 +257,13 @@ public class ClassPrinter {
         }
       } else if (name.equals("ConstantValue")) {
         ConstantValueReader cv = new ConstantValueReader(attrs);
-        w.write("    value: " + getCPItemString(cr.getCP(), cv.getValueCPIndex()) + "\n");
+        w.write("    value: " + getCPItemString(cr.getCP(), cv.getValueCPIndex()) + '\n');
       } else if (name.equals("SourceFile")) {
         SourceFileReader sr = new SourceFileReader(attrs);
-        w.write("    file: " + cr.getCP().getCPUtf8(sr.getSourceFileCPIndex()) + "\n");
+        w.write("    file: " + cr.getCP().getCPUtf8(sr.getSourceFileCPIndex()) + '\n');
       } else if (name.equals("Signature")) {
         SignatureReader sr = new SignatureReader(attrs);
-        w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
+        w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + '\n');
       } else if (AnnotationsReader.isKnownAnnotation(name)) {
         AnnotationsReader r = new AnnotationsReader(attrs, name);
         printAnnotations(r);
@@ -272,7 +272,7 @@ public class ClassPrinter {
         int pos = attrs.getDataOffset();
         while (len > 0) {
           int amount = Math.min(16, len);
-          w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + " " + makeChars(cr.getBytes(), pos, amount) + "\n");
+          w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + ' ' + makeChars(cr.getBytes(), pos, amount) + '\n');
           len -= amount;
           pos += amount;
         }
@@ -283,7 +283,7 @@ public class ClassPrinter {
   private void printAnnotations(AnnotationsReader r)
       throws InvalidClassFileException {
     for (AnnotationAttribute annot : r.getAllAnnotations()) {
-      w.write("    Annotation type: " + annot.type + "\n");      
+      w.write("    Annotation type: " + annot.type + '\n');
     }
   }
 
@@ -305,13 +305,13 @@ public class ClassPrinter {
     case ClassConstants.CONSTANT_Long:
       return "Long " + cp.getCPLong(i);
     case ClassConstants.CONSTANT_MethodRef:
-      return "Method " + cp.getCPRefClass(i) + " " + cp.getCPRefName(i) + " " + cp.getCPRefType(i);
+      return "Method " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
     case ClassConstants.CONSTANT_FieldRef:
-      return "Field " + cp.getCPRefClass(i) + " " + cp.getCPRefName(i) + " " + cp.getCPRefType(i);
+      return "Field " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
     case ClassConstants.CONSTANT_InterfaceMethodRef:
-      return "InterfaceMethod " + cp.getCPRefClass(i) + " " + cp.getCPRefName(i) + " " + cp.getCPRefType(i);
+      return "InterfaceMethod " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
     case ClassConstants.CONSTANT_NameAndType:
-      return "NameAndType " + cp.getCPNATType(i) + " " + cp.getCPNATName(i);
+      return "NameAndType " + cp.getCPNATType(i) + ' ' + cp.getCPNATName(i);
     default:
       return "Unknown type " + t;
     }
@@ -364,7 +364,7 @@ public class ClassPrinter {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
-    w.write("Class: " + cr.getName() + "\n");
+    w.write("Class: " + cr.getName() + '\n');
 
     if (printConstantPool) {
       ConstantPoolParser cp = cr.getCP();
@@ -386,7 +386,7 @@ public class ClassPrinter {
     int fieldCount = cr.getFieldCount();
     w.write(fieldCount + " fields:\n");
     for (int i = 0; i < fieldCount; i++) {
-      w.write(cr.getFieldName(i) + " " + cr.getFieldType(i) + " " + dumpFlags(cr.getFieldAccessFlags(i)) + "\n");
+      w.write(cr.getFieldName(i) + ' ' + cr.getFieldType(i) + ' ' + dumpFlags(cr.getFieldAccessFlags(i)) + '\n');
       cr.initFieldAttributeIterator(i, attrs);
       dumpAttributes(cr, attrs);
     }
@@ -395,7 +395,7 @@ public class ClassPrinter {
     int methodCount = cr.getMethodCount();
     w.write(methodCount + " methods:\n");
     for (int i = 0; i < methodCount; i++) {
-      w.write(cr.getMethodName(i) + " " + cr.getMethodType(i) + " " + dumpFlags(cr.getMethodAccessFlags(i)) + "\n");
+      w.write(cr.getMethodName(i) + ' ' + cr.getMethodType(i) + ' ' + dumpFlags(cr.getMethodAccessFlags(i)) + '\n');
       cr.initMethodAttributeIterator(i, attrs);
       dumpAttributes(cr, attrs);
     }

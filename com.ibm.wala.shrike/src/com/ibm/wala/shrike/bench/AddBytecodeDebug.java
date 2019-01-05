@@ -59,7 +59,7 @@ public class AddBytecodeDebug {
 
   private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {
     final String className = ci.getReader().getName();
-    w.write("Class: " + className + "\n");
+    w.write("Class: " + className + '\n');
     w.flush();
 
     ci.enableFakeLineNumbers(10000);

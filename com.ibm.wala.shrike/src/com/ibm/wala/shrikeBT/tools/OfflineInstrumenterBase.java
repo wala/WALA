@@ -135,7 +135,7 @@ public abstract class OfflineInstrumenterBase {
 
     @Override
     public String toString() {
-      return file.getPath() + "#" + name;
+      return file.getPath() + '#' + name;
     }
 
     @Override

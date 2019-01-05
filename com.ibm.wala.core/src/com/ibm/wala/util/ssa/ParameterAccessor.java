@@ -187,7 +187,7 @@ public class ParameterAccessor {
             if ((disp == ParamerterDisposition.PARAM) && (number + descriptorOffset > mRef.getNumberOfParameters())) {
                 throw new IllegalArgumentException("The SSA-Value " + number + " (with added offset " + descriptorOffset + 
                         ") is beyond the number of Arguments (" + mRef.getNumberOfParameters() + ") of the Method " +
-                        mRef.getName() + "\n" + mRef.getSignature());
+                        mRef.getName() + '\n' + mRef.getSignature());
             }
             if ((disp == ParamerterDisposition.THIS) && (basedOn == BasedOn.METHOD_REFERENCE) && (number != 1)) {
                 throw new IllegalArgumentException("The implicit this-pointer of a MethodReference is located at SSA-Value 1. " +

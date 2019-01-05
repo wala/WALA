@@ -333,7 +333,7 @@ public class ContainerContextSelector implements ContextSelector {
    */
   protected boolean isContainer(IClass C) {
     if (DEBUG) {
-      System.err.println("isContainer? " + C + " " + ContainerUtil.isContainer(C));
+      System.err.println("isContainer? " + C + ' ' + ContainerUtil.isContainer(C));
     }
     return ContainerUtil.isContainer(C);
   }

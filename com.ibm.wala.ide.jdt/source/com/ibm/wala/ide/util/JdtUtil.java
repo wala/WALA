@@ -98,7 +98,7 @@ public class JdtUtil {
     ICompilationUnit cu = (ICompilationUnit) type.getParent();
     String packageName = getPackageName(cu);
     String className = type.getElementName();
-    String fullyQName = packageName + "." + className;
+    String fullyQName = packageName + '.' + className;
     return fullyQName;
   }
 
@@ -445,7 +445,7 @@ public class JdtUtil {
           do {
             c = d.charAt(i++);
           } while (c != ',' && c != ')');
-          sigs.add("L" + d.substring(off, i - 1) + ";");
+          sigs.add('L' + d.substring(off, i - 1) + ';');
 
           if (c == ')') {
             return toArray(sigs);
@@ -506,7 +506,7 @@ public class JdtUtil {
     if (kludge.size() == 1) {
       return (IMethod) kludge.iterator().next();
     } else {
-      System.err.println("RETURNED " + kludge.size() + " " + kludge);
+      System.err.println("RETURNED " + kludge.size() + ' ' + kludge);
       return null;
     }
   }

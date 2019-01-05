@@ -119,7 +119,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
 
         @Override
         public String toString() {
-            return "<BehaviorKey of " + base.toString() + ">";
+            return "<BehaviorKey of " + base.toString() + '>';
         }
     }
 

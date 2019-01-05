@@ -53,7 +53,7 @@ public class EscapeCorrelation extends Correlation {
 	
 	@Override
 	public String pp(SSASourcePositionMap positions) {
-		return get + "@" + positions.getPosition(get) + " [" + getIndexName() + "] ->? " + invoke + "@" + positions.getPosition(invoke);
+		return get + "@" + positions.getPosition(get) + " [" + getIndexName() + "] ->? " + invoke + '@' + positions.getPosition(invoke);
 	}
 	
 	@Override

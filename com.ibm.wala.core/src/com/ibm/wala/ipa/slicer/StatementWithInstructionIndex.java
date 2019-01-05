@@ -58,7 +58,7 @@ public abstract class StatementWithInstructionIndex extends Statement {
 
   @Override
   public String toString() {
-    return super.toString() + "[" + getInstructionIndex() + "]" + getInstruction();
+    return super.toString() + '[' + getInstructionIndex() + ']' + getInstruction();
   }
 
 }

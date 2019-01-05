@@ -76,12 +76,12 @@ public class FieldFlow<E extends ISSABasicBlock> extends FlowType<E> {
 
     @Override
     public String toString() {
-        return "FieldFlow( field=" + field + " "+ super.toString() + ")";
+        return "FieldFlow( field=" + field + ' ' + super.toString() + ')';
     }
 
     @Override
     public String descString() {
-        return field.getDeclaringClass().toString() + "." + field.getName().toString();
+        return field.getDeclaringClass().toString() + '.' + field.getName().toString();
     }
     
     public IField getField() {

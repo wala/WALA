@@ -301,7 +301,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       result = instanceKeys.add(key);
     }
     if (DEBUG) {
-      System.err.println("getIndexForInstanceKey " + key + " " + result);
+      System.err.println("getIndexForInstanceKey " + key + ' ' + result);
     }
     return result;
   }
@@ -323,7 +323,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("rhs null");
     }
     if (DEBUG) {
-      System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs);
+      System.err.println("Add constraint A: " + lhs + ' ' + op + ' ' + rhs);
     }
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R = findOrCreatePointsToSet(rhs);
@@ -333,7 +333,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       // solver if the value of L changes.
       pointsToMap.recordTransitiveRoot(L.getPointerKey());
       if (!(L.getPointerKey() instanceof FilteredPointerKey)) {
-        Assertions.UNREACHABLE("expected filtered lhs " + L.getPointerKey() + " " + L.getPointerKey().getClass() + " " + lhs + " "
+        Assertions.UNREACHABLE("expected filtered lhs " + L.getPointerKey() + ' ' + L.getPointerKey().getClass() + ' ' + lhs + ' '
             + lhs.getClass());
       }
     }
@@ -351,7 +351,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("rhs null");
     }
     if (DEBUG) {
-      System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs);
+      System.err.println("Add constraint A: " + lhs + ' ' + op + ' ' + rhs);
     }
     assert !pointsToMap.isUnified(lhs);
     assert !pointsToMap.isUnified(rhs);
@@ -374,7 +374,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("null rhs2");
     }
     if (DEBUG) {
-      System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs1 + ", " + rhs2);
+      System.err.println("Add constraint A: " + lhs + ' ' + op + ' ' + rhs1 + ", " + rhs2);
     }
     assert !pointsToMap.isUnified(lhs);
     assert !pointsToMap.isUnified(rhs1);
@@ -442,7 +442,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private void registerInstanceOfClass(IClass klass, int index) {
 
     if (DEBUG) {
-      System.err.println("registerInstanceOfClass " + klass + " " + index);
+      System.err.println("registerInstanceOfClass " + klass + ' ' + index);
     }
 
     assert !klass.getReference().equals(TypeReference.JavaLangObject);
@@ -490,7 +490,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       MutableIntSet set = findOrCreateSparseSetForClass(iArrayClass);
       set.add(index);
       if (DEBUG) {
-        System.err.println("dense filter for interface " + iArrayClass + " " + set);
+        System.err.println("dense filter for interface " + iArrayClass + ' ' + set);
       }
     }
   }
@@ -514,7 +514,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       MutableIntSet set = findOrCreateSparseSetForClass(tArrayClass);
       set.add(index);
       if (DEBUG) {
-        System.err.println("dense filter for class " + tArrayClass + " " + set);
+        System.err.println("dense filter for class " + tArrayClass + ' ' + set);
       }
       T = T.getSuperclass();
     }
@@ -531,7 +531,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       MutableIntSet set = findOrCreateSparseSetForClass(I);
       set.add(index);
       if (DEBUG) {
-        System.err.println("dense filter for interface " + I + " " + set);
+        System.err.println("dense filter for interface " + I + ' ' + set);
       }
     }
   }
@@ -546,7 +546,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       MutableIntSet set = findOrCreateSparseSetForClass(T);
       set.add(index);
       if (DEBUG) {
-        System.err.println("dense filter for class " + T + " " + set);
+        System.err.println("dense filter for class " + T + ' ' + set);
       }
       T = T.getSuperclass();
     }
@@ -557,7 +557,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("null arg0");
     }
     if (DEBUG) {
-      System.err.println("add constraint D: " + op + " " + arg0);
+      System.err.println("add constraint D: " + op + ' ' + arg0);
     }
     assert !pointsToMap.isUnified(arg0);
     PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
@@ -569,7 +569,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("null arg0");
     }
     if (DEBUG) {
-      System.err.println("add constraint D: " + op + " " + Arrays.toString(arg0));
+      System.err.println("add constraint D: " + op + ' ' + Arrays.toString(arg0));
     }
     PointsToSetVariable[] vs = new PointsToSetVariable[ arg0.length ];
     for(int i = 0; i < arg0.length; i++) {
@@ -581,7 +581,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   public void newSideEffect(AbstractOperator<PointsToSetVariable> op, PointerKey arg0, PointerKey arg1) {
     if (DEBUG) {
-      System.err.println("add constraint D: " + op + " " + arg0);
+      System.err.println("add constraint D: " + op + ' ' + arg0);
     }
     assert !pointsToMap.isUnified(arg0);
     assert !pointsToMap.isUnified(arg1);

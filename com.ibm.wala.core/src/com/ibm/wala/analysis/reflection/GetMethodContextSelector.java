@@ -82,7 +82,7 @@ public class GetMethodContextSelector implements ContextSelector {
         String sym = symbolTable.getStringValue(use);
         if (DEBUG) {
           System.out.println(invokeInstructions);
-          System.out.println(", with constant := `" + sym + "`");
+          System.out.println(", with constant := `" + sym + '`');
           for (InstanceKey instanceKey:receiver) {
             System.out.println(" " + instanceKey);
           }

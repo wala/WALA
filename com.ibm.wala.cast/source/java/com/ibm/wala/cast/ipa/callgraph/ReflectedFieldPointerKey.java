@@ -47,7 +47,7 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
   }
 
   @Override
-  public String toString() { return "[" + getInstanceKey() + "; " + getFieldIdentifier() + "]"; }
+  public String toString() { return "[" + getInstanceKey() + "; " + getFieldIdentifier() + ']'; }
   
   public static ReflectedFieldPointerKey literal(final String lit, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {

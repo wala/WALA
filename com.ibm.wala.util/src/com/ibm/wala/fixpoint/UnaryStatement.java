@@ -89,7 +89,7 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
     } else {
       result = lhs.toString();
     }
-    result = result + " " + getOperator() + " " + rhs;
+    result = result + ' ' + getOperator() + ' ' + rhs;
     return result;
   }
 

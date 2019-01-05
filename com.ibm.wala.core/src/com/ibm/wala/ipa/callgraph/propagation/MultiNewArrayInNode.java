@@ -65,7 +65,7 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
 
   @Override
   public String toString() {
-    return super.toString() + "<dim:" + dim + ">";
+    return super.toString() + "<dim:" + dim + '>';
   }
 
   public int getDim() {

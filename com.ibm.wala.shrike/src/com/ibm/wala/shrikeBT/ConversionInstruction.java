@@ -110,7 +110,7 @@ public final class ConversionInstruction extends Instruction implements IConvers
 
   @Override
   public String toString() {
-    return "Conversion(" + getFromType() + "," + getToType() + ")";
+    return "Conversion(" + getFromType() + ',' + getToType() + ')';
   }
 
   @Override

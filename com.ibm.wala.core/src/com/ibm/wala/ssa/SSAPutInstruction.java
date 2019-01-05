@@ -42,7 +42,7 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     if (isStatic()) {
       return "putstatic " + getDeclaredField() + " = " + getValueString(symbolTable, val);
     } else {
-      return "putfield " + getValueString(symbolTable, getRef()) + "." + getDeclaredField() + " = " + getValueString(symbolTable, val);
+      return "putfield " + getValueString(symbolTable, getRef()) + '.' + getDeclaredField() + " = " + getValueString(symbolTable, val);
     }
   }
 

@@ -285,7 +285,7 @@ public class Util {
       Set<T> succDiff = setify(subG.getSuccNodes(m));
       succDiff.removeAll(setify(supG.getSuccNodes(m)));
       if (!succDiff.isEmpty()) {
-        Assertions.productionAssertion(succDiff.isEmpty(), "bad superset for successors of " + m + ":" + succDiff);
+        Assertions.productionAssertion(succDiff.isEmpty(), "bad superset for successors of " + m + ':' + succDiff);
       }
 
       Set<T> predDiff = setify(subG.getPredNodes(m));
@@ -299,7 +299,7 @@ public class Util {
         for (T t : predDiff) {
           System.err.println(t.toString());
         }
-        Assertions.UNREACHABLE("bad superset for predecessors of " + m + ":" + predDiff);
+        Assertions.UNREACHABLE("bad superset for predecessors of " + m + ':' + predDiff);
       }
     }
   }

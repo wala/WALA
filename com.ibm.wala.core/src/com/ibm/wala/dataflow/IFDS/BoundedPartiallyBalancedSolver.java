@@ -47,7 +47,7 @@ public class BoundedPartiallyBalancedSolver<T, P, F> extends PartiallyBalancedTa
       return super.propagate(s_p, i, n, j);
     } else {
       if (VERBOSE) {
-        System.err.println("Suppressing propagation; reached bound " + s_p + " " + i + " " + n + " " + j);
+        System.err.println("Suppressing propagation; reached bound " + s_p + ' ' + i + ' ' + n + ' ' + j);
       }
       return false;
     }

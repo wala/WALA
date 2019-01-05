@@ -44,7 +44,7 @@ public class MemoryAccess {
 
   @Override
   public String toString() {
-    return "MemAccess: " + getNode() + ":" + getInstructionIndex();
+    return "MemAccess: " + getNode() + ':' + getInstructionIndex();
   }
 
   /**

@@ -300,7 +300,7 @@ public abstract class Dominators<T> {
       T node = vertex[i];
 
       if (DEBUG) {
-        System.out.println(" Processing: " + node + "\n");
+        System.out.println(" Processing: " + node + '\n');
       }
 
       // visit each predecessor

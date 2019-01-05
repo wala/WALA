@@ -73,7 +73,7 @@ public final class InstanceofInstruction extends Instruction implements IInstanc
 
   @Override
   public String toString() {
-    return "Instanceof(" + type + ")";
+    return "Instanceof(" + type + ')';
   }
 
   @Override

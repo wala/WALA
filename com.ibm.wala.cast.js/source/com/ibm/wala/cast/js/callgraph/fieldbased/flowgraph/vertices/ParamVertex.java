@@ -53,6 +53,6 @@ public class ParamVertex extends Vertex {
 	
 	@Override
 	public String toString() {
-	  return "Param(" + func + ", " + index + ")";
+	  return "Param(" + func + ", " + index + ')';
 	}
 }

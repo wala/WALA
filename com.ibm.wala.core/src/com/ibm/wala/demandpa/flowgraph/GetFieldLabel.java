@@ -91,7 +91,7 @@ public class GetFieldLabel implements IFlowLabel {
 
   @Override
   public String toString() {
-    return "getfield[" + field + "]";
+    return "getfield[" + field + ']';
   }
 
   @Override

@@ -450,7 +450,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public String toString() {
-      return "<JS function " + getName() + ">";
+      return "<JS function " + getName() + '>';
     }
 
     @Override
@@ -1121,17 +1121,17 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 	    String name;
 	    Name x = fn.getFunctionName();
 	    if (x == null || x.getIdentifier() == null || x.getIdentifier().isEmpty()) {
-	    	name = scriptName + "@" + fn.getAbsolutePosition();
+	    	name = scriptName + '@' + fn.getAbsolutePosition();
 	    	String label = getParentName(fn);
 	    	if (label != null) {
-	    	  name = name + ":" + label;
+	    	  name = name + ':' + label;
 	    	}
 	    } else {
 	    	name = fn.getFunctionName().getIdentifier();
 	    }
 
 	    if(DEBUG)
-	      System.err.println(name + "\n" + body);
+	      System.err.println(name + '\n' + body);
 
 		CAstEntity fne = walkEntity(fn, body, name, child);
 
@@ -1238,7 +1238,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       return Ast.makeConstant(null);
     }
     default:
-      throw new RuntimeException("unexpected keyword literal " + node + " (" + node.getType() +")");
+      throw new RuntimeException("unexpected keyword literal " + node + " (" + node.getType() + ')');
 		}
 	}
 
@@ -2500,7 +2500,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
         w.add(new Warning(Warning.SEVERE) {
           @Override
           public String getMsg() {
-            return arg0 + ": " + arg1 + "@" + arg2 + ": " + arg3;
+            return arg0 + ": " + arg1 + '@' + arg2 + ": " + arg3;
           }
         });
       }

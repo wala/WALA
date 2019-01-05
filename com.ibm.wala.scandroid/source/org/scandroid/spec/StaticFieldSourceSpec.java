@@ -152,6 +152,6 @@ public class StaticFieldSourceSpec extends SourceSpec {
 
 	@Override
 	public String toString() {
-		return "StaticFieldSourceSpec [field=" + field + "]";
+		return "StaticFieldSourceSpec [field=" + field + ']';
 	}
 }

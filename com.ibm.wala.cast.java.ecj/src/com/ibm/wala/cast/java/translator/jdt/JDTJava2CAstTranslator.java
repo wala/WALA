@@ -320,7 +320,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public String getSignature() {
-      return "L" + fName.replace('.', '/') + ";";
+      return 'L' + fName.replace('.', '/') + ';';
     }
 
     @Override

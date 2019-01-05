@@ -140,7 +140,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     try {
       String s = reader.get().getSuperName();
       if (s != null) {
-        superName = ImmutableByteArray.make("L" + s);
+        superName = ImmutableByteArray.make('L' + s);
       }
     } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
@@ -158,7 +158,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       String[] s = reader.get().getInterfaceNames();
       interfaceNames = new ImmutableByteArray[s.length];
       for (int i = 0; i < interfaceNames.length; i++) {
-        interfaceNames[i] = ImmutableByteArray.make("L" + s[i]);
+        interfaceNames[i] = ImmutableByteArray.make('L' + s[i]);
       }
     } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
@@ -191,7 +191,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
    *           iff Shrike can't read this class
    */
   private void computeTypeReference() throws InvalidClassFileException {
-    String className = "L" + reader.get().getName();
+    String className = 'L' + reader.get().getName();
     ImmutableByteArray name = ImmutableByteArray.make(className);
 
     typeReference = TypeReference.findOrCreate(getClassLoader().getReference(), TypeName.findOrCreate(name));
@@ -501,7 +501,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       if (s.equals(getName().toString().substring(1))) {
         String outer = r.getOuterClass(s);
         if (outer != null) {
-          return TypeReference.findOrCreate(getClassLoader().getReference(), "L" + outer);
+          return TypeReference.findOrCreate(getClassLoader().getReference(), 'L' + outer);
         }
       }
     }

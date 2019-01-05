@@ -451,7 +451,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> i
 
     @Override
     public String toString() {
-      return "BB[Shrike]" + getNumber() + " - " + method.getDeclaringClass().getReference().getName() + "." + method.getName();
+      return "BB[Shrike]" + getNumber() + " - " + method.getDeclaringClass().getReference().getName() + '.' + method.getName();
     }
 
     /*

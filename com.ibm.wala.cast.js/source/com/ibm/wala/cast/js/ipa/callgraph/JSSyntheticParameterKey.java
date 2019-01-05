@@ -37,7 +37,7 @@ public class JSSyntheticParameterKey extends NodeKey {
 
   @Override
   public String toString() {
-    return "p" + param + ":" +  getNode().getMethod().getName();
+    return "p" + param + ':' +  getNode().getMethod().getName();
   }
 
 }

@@ -84,7 +84,7 @@ public final class LocalElement extends CodeElement {
 	@Override
     public String toString()
     {
-        return "LocalElement("+id+")";
+        return "LocalElement("+id+ ')';
     }
 
 }

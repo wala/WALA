@@ -124,7 +124,7 @@ public abstract class Launcher {
     String[] result = new String[ev.size()];
     int i = 0;
     for (Map.Entry<String, String> e : ev.entrySet()) {
-      result[i++] = e.getKey() + "=" + e.getValue();
+      result[i++] = e.getKey() + '=' + e.getValue();
     }
     return result;
   }

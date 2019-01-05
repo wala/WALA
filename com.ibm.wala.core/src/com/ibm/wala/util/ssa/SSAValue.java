@@ -307,7 +307,7 @@ public class SSAValue {
 
     @Override 
     public String toString() {
-        return "<SSAValue " + this.number + " type=" + this.type + " validIn=" + this.mRef + ">";
+        return "<SSAValue " + this.number + " type=" + this.type + " validIn=" + this.mRef + '>';
     }
 
     @Override

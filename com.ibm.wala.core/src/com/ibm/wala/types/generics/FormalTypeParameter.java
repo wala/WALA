@@ -136,7 +136,7 @@ public class FormalTypeParameter extends Signature {
       case ':':
         break;
       default:
-        assert false : "bad type signature list " + s + " " + (result - 1);
+        assert false : "bad type signature list " + s + ' ' + (result - 1);
       }
     } while (s.charAt(result) == ':');
     return result;

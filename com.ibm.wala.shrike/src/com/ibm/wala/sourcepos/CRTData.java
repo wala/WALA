@@ -202,6 +202,6 @@ public final class CRTData {
 
   @Override
   public String toString() {
-    return "(Range [pc]: " + pc_start_index + "-" + pc_end_index + ") => " + source_positions.toString();
+    return "(Range [pc]: " + pc_start_index + '-' + pc_end_index + ") => " + source_positions.toString();
   }
 }

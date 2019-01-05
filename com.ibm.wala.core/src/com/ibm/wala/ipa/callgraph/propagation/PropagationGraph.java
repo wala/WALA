@@ -241,7 +241,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     int lhs = eq.getLHS().getGraphNodeId();
     int rhs = eq.getRightHandSide().getGraphNodeId();
     if (DEBUG) {
-      System.err.println(("lhs rhs " + lhs + " " + rhs));
+      System.err.println(("lhs rhs " + lhs + ' ' + rhs));
     }
     IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, eq.getOperator());
     boolean b = R.add(lhs, rhs);
@@ -259,7 +259,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     int lhs = eq.getLHS().getGraphNodeId();
     int rhs = eq.getRightHandSide().getGraphNodeId();
     if (DEBUG) {
-      System.err.println(("lhs rhs " + lhs + " " + rhs));
+      System.err.println(("lhs rhs " + lhs + ' ' + rhs));
     }
     IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, eq.getOperator());
     R.remove(lhs, rhs);
@@ -303,7 +303,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       UnaryStatement temp = op.makeEquation(lhs, use);
       if (DEBUG) {
         System.err.print(("XX Return temp: " + temp));
-        System.err.println(("lhs rhs " + l + " " + use.getGraphNodeId()));
+        System.err.println(("lhs rhs " + l + ' ' + use.getGraphNodeId()));
       }
       return temp;
     }

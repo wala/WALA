@@ -59,7 +59,7 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "*" + getValueString(symbolTable, addressVal) + " = " + getValueString(symbolTable, rval);
+    return '*' + getValueString(symbolTable, addressVal) + " = " + getValueString(symbolTable, rval);
   }
 
   @Override

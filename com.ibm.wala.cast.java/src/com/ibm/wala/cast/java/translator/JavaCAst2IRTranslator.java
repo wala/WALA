@@ -279,12 +279,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
     switch (f.getKind()) {
     case CAstEntity.TYPE_ENTITY: {
-      return (parent.getName().length() == 0) ? f.getName() : parent.getName() + "/" + f.getName();
+      return (parent.getName().length() == 0) ? f.getName() : parent.getName() + '/' + f.getName();
     }
     case CAstEntity.FUNCTION_ENTITY: {
       // TODO properly handle types with clashing names/signatures within a
       // given method
-      return parent.getName() + "/" + f.getSignature();
+      return parent.getName() + '/' + f.getSignature();
     }
     default: {
       return parent.getName();

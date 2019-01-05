@@ -109,7 +109,7 @@ public final class Util {
     if (c.startsWith("[")) {
       return c.replace('.', '/');
     } else if (!c.endsWith(";")) {
-      return "L" + c.replace('.', '/') + ";";
+      return 'L' + c.replace('.', '/') + ';';
     } else {
       return c;
     }
@@ -305,7 +305,7 @@ public final class Util {
    * Compute the type "array of t".
    */
   public static String makeArray(String t) {
-    return ("[" + t).intern();
+    return ('[' + t).intern();
   }
 
   /**

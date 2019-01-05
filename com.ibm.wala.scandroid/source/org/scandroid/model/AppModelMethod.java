@@ -231,7 +231,7 @@ public class AppModelMethod {
     }
     
   	private void addDependencies(TypeReference tr) {
-		String packageName = "L"+tr.getName().getPackage().toString()+"/";
+		String packageName = 'L' +tr.getName().getPackage().toString()+ '/';
 		String outerClassName;		
 		String innerClassName = tr.getName().getClassName().toString();
 		LinkedList<TypeReference> trLL = new LinkedList<> ();

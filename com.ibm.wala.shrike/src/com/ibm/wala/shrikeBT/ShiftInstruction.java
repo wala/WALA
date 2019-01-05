@@ -88,7 +88,7 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
 
   @Override
   public String toString() {
-    return "Shift(" + getType() + "," + getOperator() + ")";
+    return "Shift(" + getType() + ',' + getOperator() + ')';
   }
 
   @Override

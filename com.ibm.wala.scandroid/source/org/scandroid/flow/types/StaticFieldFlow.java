@@ -66,12 +66,12 @@ public class StaticFieldFlow <E extends ISSABasicBlock> extends FlowType<E> {
 	
     @Override
     public String toString() {
-        return "StaticFieldFlow( field=" + field + " "+ super.toString() + ")";
+        return "StaticFieldFlow( field=" + field + ' ' + super.toString() + ')';
     }
 
     @Override
     public String descString() {
-        return field.getDeclaringClass().toString() + "." + field.getName().toString();
+        return field.getDeclaringClass().toString() + '.' + field.getName().toString();
     }
     
     public IField getField() {

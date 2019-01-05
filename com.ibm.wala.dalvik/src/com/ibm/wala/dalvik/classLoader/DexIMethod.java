@@ -736,7 +736,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 			DexFileModule m = myClass.getContainer();
 
 			ClassPathResolver path = 
-					new ClassPathResolver(Collections.singletonList(m.getFile().getParent() + "/"),
+					new ClassPathResolver(Collections.singletonList(m.getFile().getParent() + '/'),
 							Collections.<String>emptyList(),
 							m.getDexFile());
 
@@ -2322,7 +2322,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 			}
 			default:
 				throw new RuntimeException("not implemented instruction: 0x"
-						+ inst.getOpcode().toString() + " in " + eMethod.getDefiningClass() + ":" + eMethod.getName());
+						+ inst.getOpcode().toString() + " in " + eMethod.getDefiningClass() + ':' + eMethod.getName());
 
 			}
 			currentCodeAddress += inst.getCodeUnits();

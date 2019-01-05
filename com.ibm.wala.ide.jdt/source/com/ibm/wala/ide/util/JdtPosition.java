@@ -100,7 +100,7 @@ public final class JdtPosition implements Position {
 
     @Override
     public String toString() {
-      return "[offset " + firstOffset + ":" + lastOffset + "]";
+      return "[offset " + firstOffset + ':' + lastOffset + ']';
     }
     
     public IFile getEclipseFile() {

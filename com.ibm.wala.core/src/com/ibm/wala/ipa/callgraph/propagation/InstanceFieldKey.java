@@ -53,7 +53,7 @@ public class InstanceFieldKey extends AbstractFieldPointerKey {
 
   @Override
   public String toString() {
-    return "[" + instance + "," + field + "]";
+    return "[" + instance + ',' + field + ']';
   }
 
   public IField getField() {

@@ -665,7 +665,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public String toString() {
-      return "PreBB" + number + ":" + firstIndex + ".." + lastIndex;
+      return "PreBB" + number + ':' + firstIndex + ".." + lastIndex;
     }
 
     private List<SSAInstruction> instructions() {
@@ -1807,7 +1807,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           @Override
           public String toString() {
-            return nm + ":" + System.identityHashCode(this);
+            return nm + ':' + System.identityHashCode(this);
           }
 
           @Override 
@@ -1977,7 +1977,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           
           @Override
           public String toString() {
-            return nm + ":" + System.identityHashCode(this);
+            return nm + ':' + System.identityHashCode(this);
           }
 
           @Override
@@ -2045,7 +2045,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           @Override
           public String toString() {
-            return nm + ":" + System.identityHashCode(this);
+            return nm + ':' + System.identityHashCode(this);
           }
 
           @Override
@@ -2217,7 +2217,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         globalSymbols.put(name, new AbstractSymbol(this, s.isFinal(), s.defaultInitValue()) {
           @Override
           public String toString() {
-            return name + ":" + System.identityHashCode(this);
+            return name + ':' + System.identityHashCode(this);
           }
 
           @Override
@@ -2347,7 +2347,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         typeSymbols.put(name, new AbstractSymbol(this, s.isFinal(), s.defaultInitValue()) {
           @Override
           public String toString() {
-            return name + ":" + System.identityHashCode(this);
+            return name + ':' + System.identityHashCode(this);
           }
 
           @Override
@@ -3901,7 +3901,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction, -1));            
       if (controlFlowMap.getTarget(n, null) == null) {
         assert controlFlowMap.getTarget(n, null) != null : controlFlowMap + " does not map " + n + " ("
-            + context.getSourceMap().getPosition(n) + ")";
+            + context.getSourceMap().getPosition(n) + ')';
       }
       context.cfg().newBlock(false);
     }
@@ -4900,7 +4900,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         return null;
       } else {
         assert entityNames.containsKey(e);
-        return "L" + entityNames.get(e);
+        return 'L' + entityNames.get(e);
       }
     }
 

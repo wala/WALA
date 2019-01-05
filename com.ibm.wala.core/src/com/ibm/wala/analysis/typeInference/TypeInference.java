@@ -150,7 +150,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       TypeReference t = ir.getParameterType(i);
 
       if (DEBUG) {
-        System.err.println("parameter " + parameterValueNumbers[i] + " " + t);
+        System.err.println("parameter " + parameterValueNumbers[i] + ' ' + t);
       }
 
       if (t.isReferenceType()) {
@@ -298,7 +298,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
 
       if (DEBUG) {
-        System.err.print("PhiOperator.meet " + lhs + " ");
+        System.err.print("PhiOperator.meet " + lhs + ' ');
         for (IVariable v : rhs) {
           System.err.print(v + " ");
         }

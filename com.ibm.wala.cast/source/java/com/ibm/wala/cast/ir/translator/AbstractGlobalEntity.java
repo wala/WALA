@@ -42,7 +42,7 @@ public abstract class AbstractGlobalEntity extends AbstractDataEntity {
     if (type == null) {
       return "global " + name;
     } else {
-      return "global " + name + ":" + type;
+      return "global " + name + ':' + type;
     }
   }
 

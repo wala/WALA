@@ -168,7 +168,7 @@ public class OfflineDynamicCallGraph {
     }
 
     if (disasm) {
-      w.write("Class: " + className + "\n");
+      w.write("Class: " + className + '\n');
       w.flush();
     }
 
@@ -181,12 +181,12 @@ public class OfflineDynamicCallGraph {
 
       // d could be null, e.g., if the method is abstract or native
       if (d != null) {
-        if (filter != null && filter.contains(className + "." + ci.getReader().getMethodName(m))) {
+        if (filter != null && filter.contains(className + '.' + ci.getReader().getMethodName(m))) {
           return null;
         }
 
         if (disasm) {
-          w.write("Instrumenting " + ci.getReader().getMethodName(m) + " " + ci.getReader().getMethodType(m) + ":\n");
+          w.write("Instrumenting " + ci.getReader().getMethodName(m) + ' ' + ci.getReader().getMethodType(m) + ":\n");
           w.write("Initial ShrikeBT code:\n");
           (new Disassembler(d)).disassembleTo(w);
           w.flush();
@@ -260,7 +260,7 @@ public class OfflineDynamicCallGraph {
                     public void emitTo(final Output w) {
                       final String methodSignature = 
                           inv.getInvocationCode().hasImplicitThis() && !(inv instanceof InvokeDynamicInstruction)?
-                              "(" + inv.getClassType() + inv.getMethodSignature().substring(1):
+                                  '(' + inv.getClassType() + inv.getMethodSignature().substring(1):
                               inv.getMethodSignature(); 
                       Object key;
                       if (inv instanceof InvokeDynamicInstruction) {

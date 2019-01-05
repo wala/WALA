@@ -147,7 +147,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
 
   @Override
   public String toString() {
-    return "invoke" + getInvocationString(getInvocationCode()) + " " + declaredTarget + "@" + getProgramCounter();
+    return "invoke" + getInvocationString(getInvocationCode()) + ' ' + declaredTarget + '@' + getProgramCounter();
   }
 
   protected String getInvocationString(IInvokeInstruction.IDispatch invocationCode) {

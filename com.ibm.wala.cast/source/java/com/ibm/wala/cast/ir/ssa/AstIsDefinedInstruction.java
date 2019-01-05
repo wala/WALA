@@ -92,13 +92,13 @@ public class AstIsDefinedInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     if (fieldVal == -1 && fieldRef == null) {
-      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ")";
+      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ')';
     } else if (fieldVal == -1) {
-      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + "," + fieldRef.getName()
-          + ")";
+      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ',' + fieldRef.getName()
+          + ')';
     } else if (fieldRef == null) {
-      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ","
-          + getValueString(symbolTable, fieldVal) + ")";
+      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ','
+          + getValueString(symbolTable, fieldVal) + ')';
     } else {
       Assertions.UNREACHABLE();
       return null;

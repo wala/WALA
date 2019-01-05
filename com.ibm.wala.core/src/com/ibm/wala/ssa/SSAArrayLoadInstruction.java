@@ -37,8 +37,8 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = arrayload " + getValueString(symbolTable, getArrayRef()) + "["
-        + getValueString(symbolTable, getIndex()) + "]";
+    return getValueString(symbolTable, result) + " = arrayload " + getValueString(symbolTable, getArrayRef()) + '['
+        + getValueString(symbolTable, getIndex()) + ']';
   }
 
   /**

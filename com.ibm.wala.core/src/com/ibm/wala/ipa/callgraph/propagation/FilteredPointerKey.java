@@ -168,7 +168,7 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public String toString() {
-      return "SingleInstanceFilter: " + concreteType + " (" + concreteType.getClass() + ")";
+      return "SingleInstanceFilter: " + concreteType + " (" + concreteType.getClass() + ')';
     }
 
     public InstanceKey getInstance() {

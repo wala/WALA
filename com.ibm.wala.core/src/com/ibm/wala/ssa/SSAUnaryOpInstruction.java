@@ -36,7 +36,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = " + operator + " " + getValueString(symbolTable, val);
+    return getValueString(symbolTable, result) + " = " + operator + ' ' + getValueString(symbolTable, val);
   }
 
   /**

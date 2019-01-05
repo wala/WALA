@@ -100,7 +100,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
     }
     this.delegate = cfg;
     if (DEBUG) {
-      System.err.println(("Incoming CFG for " + method + ":"));
+      System.err.println(("Incoming CFG for " + method + ':'));
       System.err.println(cfg.toString());
     }
 
@@ -606,7 +606,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
      */
     @Override
     public String toString() {
-      return "BB[SSA:" + getFirstInstructionIndex() + ".." + getLastInstructionIndex() + "]" + getNumber() + " - "
+      return "BB[SSA:" + getFirstInstructionIndex() + ".." + getLastInstructionIndex() + ']' + getNumber() + " - "
           + method.getSignature();
     }
 
@@ -1155,7 +1155,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + type + " " + method;
+      return getClass().toString() + " : " + type + ' ' + method;
     }
 
     public static ExceptionLoadFailure create(TypeReference type, IMethod method) {

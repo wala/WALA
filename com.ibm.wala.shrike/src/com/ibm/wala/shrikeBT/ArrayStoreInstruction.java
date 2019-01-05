@@ -64,7 +64,7 @@ final public class ArrayStoreInstruction extends Instruction implements IArraySt
 
   @Override
   public String toString() {
-    return "ArrayStore(" + getType() + ")";
+    return "ArrayStore(" + getType() + ')';
   }
 
   @Override

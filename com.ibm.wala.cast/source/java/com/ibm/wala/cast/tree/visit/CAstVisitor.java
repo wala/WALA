@@ -888,7 +888,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 
     default: {
       if (!visitor.doVisit(n, context, visitor)) {
-        System.err.println(("looking at unhandled " + n + "(" + NT + ")" + " of " + n.getClass()));
+        System.err.println(("looking at unhandled " + n + '(' + NT + ')' + " of " + n.getClass()));
         Assertions.UNREACHABLE("cannot handle node of kind " + NT);
       }
     }

@@ -362,7 +362,7 @@ public abstract class Compiler implements Constants {
         int t = element;
         if (t < 0 || t >= visited.length) {
           throw new IllegalArgumentException("Branch target at offset " + i + " is out of bounds: " + t + " (max " + visited.length
-              + ")");
+              + ')');
         }
         if (!visited[t]) {
           computeStackWordsAt(element, stackLen, stackWords.clone(), visited);

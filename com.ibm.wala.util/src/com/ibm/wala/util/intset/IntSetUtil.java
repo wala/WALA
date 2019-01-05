@@ -116,7 +116,7 @@ public class IntSetUtil {
     // TODO: this is slow ... optimize please.
     MutableIntSet result = factory.makeCopy(A);
     if (DEBUG) {
-      System.err.println(("initial result " + result + " " + result.getClass()));
+      System.err.println(("initial result " + result + ' ' + result.getClass()));
     }
     for (IntIterator it = B.intIterator(); it.hasNext();) {
       int I = it.next();
@@ -197,7 +197,7 @@ public class IntSetUtil {
       return -1;
     }
     if (low <= high && (low < 0 || high < 0)) {
-      throw new IllegalArgumentException("can't search negative indices " + low + " " + high);
+      throw new IllegalArgumentException("can't search negative indices " + low + ' ' + high);
     }
     if (high > data.length - 1) {
       high = data.length - 1;

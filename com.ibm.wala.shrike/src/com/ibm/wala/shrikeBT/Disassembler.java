@@ -49,7 +49,7 @@ public class Disassembler {
     for (int j = 0; j < instructions.length; j++) {
       w.write(prefix + j + ": " + instructions[j] + " (" + instructionsToBytecodes[j] + ")\n");
       for (int k = 0; k < handlers[j].length; k++) {
-        w.write(prefix + "    Handles " + handlers[j][k].catchClass + " at " + handlers[j][k].handler + "\n");
+        w.write(prefix + "    Handles " + handlers[j][k].catchClass + " at " + handlers[j][k].handler + '\n');
       }
     }
   }

@@ -73,7 +73,7 @@ public class JarFileEntry implements ModuleEntry {
 
   @Override
   public String toString() {
-    return jarFileModule.getJarFile().getName() + ":" + getName();
+    return jarFileModule.getJarFile().getName() + ':' + getName();
   }
 
   /*

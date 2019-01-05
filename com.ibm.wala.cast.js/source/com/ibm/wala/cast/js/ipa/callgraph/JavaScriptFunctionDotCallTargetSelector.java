@@ -184,7 +184,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
   private static String getKey(int nargs, CGNode caller, CallSiteReference site) {
     if (SEPARATE_SYNTHETIC_METHOD_PER_SITE) {
-      return CAstCallGraphUtil.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
+      return CAstCallGraphUtil.getShortName(caller) + '_' + caller.getGraphNodeId() + '_' + site.getProgramCounter();
     } else {
       return String.valueOf(nargs);
     }

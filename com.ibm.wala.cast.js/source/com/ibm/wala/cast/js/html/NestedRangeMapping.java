@@ -80,6 +80,6 @@ public class NestedRangeMapping implements FileMapping {
 
   @Override
   public String toString() {
-    return range + "(" + innerMapping + ")";
+    return range + "(" + innerMapping + ')';
   }
 }

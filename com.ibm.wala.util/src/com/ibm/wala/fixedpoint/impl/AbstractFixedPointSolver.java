@@ -161,7 +161,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
       }
       if (DEBUG) {
-        System.err.println(("After evaluation  " + s + " " + isChanged(code)));
+        System.err.println(("After evaluation  " + s + ' ' + isChanged(code)));
       }
       if (isChanged(code)) {
         globalChange = true;
@@ -471,13 +471,13 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
   private void orderStatementsInternal() {
     if (verbose) {
       if (nEvaluated > 0) {
-        System.err.println("Reorder " + nEvaluated + " " + nCreated);
+        System.err.println("Reorder " + nEvaluated + ' ' + nCreated);
       }
     }
     reorder();
     if (verbose) {
       if (nEvaluated > 0) {
-        System.err.println("Reorder finished " + nEvaluated + " " + nCreated);
+        System.err.println("Reorder finished " + nEvaluated + ' ' + nCreated);
       }
     }
     topologicalCounter = 0;

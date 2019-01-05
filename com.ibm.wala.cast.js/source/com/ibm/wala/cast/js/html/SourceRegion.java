@@ -66,7 +66,7 @@ public class SourceRegion {
   }
 
   public void println(String text, Position originalPos, URL url, boolean bogusURL){
-    print(text + "\n", originalPos, url, bogusURL);
+    print(text + '\n', originalPos, url, bogusURL);
   }
   
   public void print(String text){
@@ -74,7 +74,7 @@ public class SourceRegion {
   }
 
   public void println(String text){
-    print(text + "\n");
+    print(text + '\n');
   }
   
   public FileMapping writeToFile(PrintWriter ps){

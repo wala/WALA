@@ -78,7 +78,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
       return null;
     }
     if (number < 0) {
-      assert false : "negative number for " + n + " " + n.getClass();
+      assert false : "negative number for " + n + ' ' + n.getClass();
     }
     return pendingChildren[number];
   }

@@ -912,7 +912,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         InstanceKey[] ik = getInvariantContents(instruction.getResult());
         for (InstanceKey element : ik) {
           if (DEBUG) {
-            System.err.println("invariant contents: " + returnValue + " " + element);
+            System.err.println("invariant contents: " + returnValue + ' ' + element);
           }
           system.newConstraint(returnValue, element);
         }
@@ -1089,7 +1089,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         system.newConstraint(fKey, assignOperator, rvalKey);
       }
       if (DEBUG) {
-        System.err.println("visitPut class init " + field.getDeclaringClass() + " " + field);
+        System.err.println("visitPut class init " + field.getDeclaringClass() + ' ' + field);
       }
       // side effect of putstatic: may call class initializer
       IClass klass = getClassHierarchy().lookupClass(field.getDeclaringClass());
@@ -1197,7 +1197,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       IClass klass = iKey.getConcreteType();
 
       if (DEBUG) {
-        System.err.println("visitNew: " + instruction + " i:" + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey));
+        System.err.println("visitNew: " + instruction + " i:" + iKey + ' ' + system.findOrCreateIndexForInstanceKey(iKey));
       }
 
       if (klass == null) {

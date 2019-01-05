@@ -54,7 +54,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
 
     @Override
     public String toString() {
-      return "(local:" + bytecodeLocalNumber + ")";
+      return "(local:" + bytecodeLocalNumber + ')';
     }
   }
 

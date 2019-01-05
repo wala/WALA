@@ -59,7 +59,7 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
 
   @Override
   public String toString() {
-    return "ArrayLoad(" + getType() + ")";
+    return "ArrayLoad(" + getType() + ')';
   }
 
   @Override

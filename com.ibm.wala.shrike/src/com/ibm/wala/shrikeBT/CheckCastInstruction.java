@@ -76,7 +76,7 @@ final public class CheckCastInstruction extends Instruction implements ITypeTest
 
   @Override
   public String toString() {
-    return "CheckCast(" + type + ")";
+    return "CheckCast(" + type + ')';
   }
 
   @Override

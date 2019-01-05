@@ -63,7 +63,7 @@ public abstract class Statement {
 
   @Override
   public String toString() {
-    return getKind().toString() + ":" + getNode();
+    return getKind().toString() + ':' + getNode();
   }
 
 }

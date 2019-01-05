@@ -171,7 +171,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       newMap.map(newSource, newSource);
 
       if (DEBUG) {
-        System.err.println(("\n\nlooking at " + key + ":" + CAstPrinter.print(oldSource)));
+        System.err.println(("\n\nlooking at " + key + ':' + CAstPrinter.print(oldSource)));
       }
 
       if (oldSources.contains(oldSource)) {

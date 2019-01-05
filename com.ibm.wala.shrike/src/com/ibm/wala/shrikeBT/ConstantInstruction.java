@@ -875,7 +875,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   @Override
   final public String toString() {
-    return "Constant(" + getType() + "," + quote(getValue()) + ")";
+    return "Constant(" + getType() + ',' + quote(getValue()) + ')';
   }
 
   @Override

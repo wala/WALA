@@ -60,7 +60,7 @@ public class RangeFileMapping implements FileMapping {
      
     @Override
     public String toString() {
-      return "{"+rangeStart+"->"+rangeEnd+"}";
+      return "{"+rangeStart+"->"+rangeEnd+ '}';
     }
   }
 
@@ -123,7 +123,7 @@ public class RangeFileMapping implements FileMapping {
         }
         @Override
         public String toString() {
-          return "[include:"+includePosition+"]"+super.toString();
+          return "[include:"+includePosition+ ']' +super.toString();
         }
       }
       

@@ -274,7 +274,7 @@ public class DotUtil {
   }
 
   private static <T> String getPort(T n, NodeDecorator<T> d) throws WalaException {
-    return "\"" + getLabel(n, d) + "\"";
+    return '"' + getLabel(n, d) + '"';
 
   }
 

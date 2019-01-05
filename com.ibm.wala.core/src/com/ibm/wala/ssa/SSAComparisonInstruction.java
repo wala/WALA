@@ -45,7 +45,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = compare " + getValueString(symbolTable, val1) + ","
+    return getValueString(symbolTable, result) + " = compare " + getValueString(symbolTable, val1) + ','
         + getValueString(symbolTable, val2) + " opcode=" + operator;
   }
 

@@ -76,7 +76,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
   @Override
   public String toString() {
-    return super.toString() + "(offset:" + offset + ")";
+    return super.toString() + "(offset:" + offset + ')';
   }
 
   void growCapacity(float fraction) {

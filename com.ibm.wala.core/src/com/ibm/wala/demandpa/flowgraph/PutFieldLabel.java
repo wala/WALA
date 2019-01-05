@@ -91,7 +91,7 @@ public class PutFieldLabel implements IFlowLabel {
 
   @Override
   public String toString() {
-    return "putfield[" + field + "]";
+    return "putfield[" + field + ']';
   }
 
   @Override

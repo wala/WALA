@@ -22,7 +22,7 @@ public class ReturnValueKey extends NodeKey {
 
   @Override
   public String toString() {
-    return "[Ret-V:" + getNode() + "]";
+    return "[Ret-V:" + getNode() + ']';
   }
 
   @Override

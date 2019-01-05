@@ -118,7 +118,7 @@ public class ArgumentSpecialization {
 
     @Override
     public String toString() {
-      return base.toString() + "(nargs:" + argumentCount + ")";
+      return base.toString() + "(nargs:" + argumentCount + ')';
     }
   }
 
@@ -304,7 +304,7 @@ public class ArgumentSpecialization {
             @Override
             protected String composeEntityName(WalkContext parent, CAstEntity f) {
               if (f == codeBodyEntity) {
-                return super.composeEntityName(parent, f) + "_" + v.getValue().intValue();                
+                return super.composeEntityName(parent, f) + '_' + v.getValue().intValue();
               } else {
                 return super.composeEntityName(parent, f);
               }

@@ -49,7 +49,7 @@ public class LambdaSummaryClass extends SyntheticClass {
     if (! summaries.containsKey(inst.getBootstrap())) {
       String bootstrapCls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
       int bootstrapIndex = inst.getBootstrap().getIndexInClassFile();
-      TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + "$" + bootstrapCls + "$" + bootstrapIndex);
+      TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + '$' + bootstrapCls + '$' + bootstrapIndex);
       LambdaSummaryClass cls = new LambdaSummaryClass(ref, caller.getClassHierarchy(), inst);
       caller.getClassHierarchy().addClass(cls);
       summaries.put(inst.getBootstrap(), cls);
@@ -218,7 +218,7 @@ public class LambdaSummaryClass extends SyntheticClass {
   
   private String getLambdaCalleeClass() throws IllegalArgumentException, InvalidClassFileException {
     int cpIndex = invoke.getBootstrap().callArgumentIndex(1);
-    return "L" + invoke.getBootstrap().getCP().getCPHandleClass(cpIndex);
+    return 'L' + invoke.getBootstrap().getCP().getCPHandleClass(cpIndex);
   }
 
   private String getLambdaCalleeName() throws IllegalArgumentException, InvalidClassFileException {

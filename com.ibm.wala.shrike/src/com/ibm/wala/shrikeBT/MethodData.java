@@ -238,6 +238,6 @@ public final class MethodData {
 
   @Override
   public String toString() {
-    return getClassType() + "." + getName() + getSignature();
+    return getClassType() + '.' + getName() + getSignature();
   }
 }

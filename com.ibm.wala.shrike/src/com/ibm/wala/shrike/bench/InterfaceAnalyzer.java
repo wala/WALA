@@ -57,8 +57,8 @@ public class InterfaceAnalyzer {
       w.write("Type\t# Total\t# Method\t# Public Method\t# Public Method as Foreign\n");
       for (Map.Entry<String, TypeStats> entry : typeStats.entrySet()) {
         TypeStats t = entry.getValue();
-        w.write(entry.getKey() + "\t" + t.totalOccurrences + "\t" + t.methodOccurrences + "\t" + t.publicMethodOccurrences + "\t"
-            + t.foreignPublicMethodOccurrences + "\n");
+        w.write(entry.getKey() + '\t' + t.totalOccurrences + '\t' + t.methodOccurrences + '\t' + t.publicMethodOccurrences + '\t'
+            + t.foreignPublicMethodOccurrences + '\n');
       }
     }
   }

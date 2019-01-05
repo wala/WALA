@@ -62,7 +62,7 @@ public class ClassSearcher {
     ConstantPoolParser cp = r.getCP();
     for (int i = 1; i < cp.getItemCount(); i++) {
       if (cp.getItemType(i) == ClassConstants.CONSTANT_Class && (cp.getCPClass(i).equals(cl1) || cp.getCPClass(i).equals(cl2))) {
-        w.write(cp.getCPClass(i) + " " + resource + " " + r.getName() + "\n");
+        w.write(cp.getCPClass(i) + ' ' + resource + ' ' + r.getName() + '\n');
       }
     }
   }

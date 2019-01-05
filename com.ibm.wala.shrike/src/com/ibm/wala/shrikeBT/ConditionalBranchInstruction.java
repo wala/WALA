@@ -64,7 +64,7 @@ public final class ConditionalBranchInstruction extends Instruction implements I
 
   @Override
   public String toString() {
-    return "ConditionalBranch(" + getType() + "," + getOperator() + "," + label + ")";
+    return "ConditionalBranch(" + getType() + ',' + getOperator() + ',' + label + ')';
   }
 
   @Override

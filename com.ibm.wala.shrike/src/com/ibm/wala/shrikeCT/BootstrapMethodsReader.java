@@ -59,7 +59,7 @@ public class BootstrapMethodsReader extends AttributeReader {
         
         @Override
         public String toString() {
-          return methodClass + ":" + methodName + methodType;
+          return methodClass + ':' + methodName + methodType;
         }
         
         @Override

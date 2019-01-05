@@ -153,7 +153,7 @@ public class LocalSinkPoint implements ISinkPoint {
 	@Override
 	public String toString() {
 		return "SinkPoint [block=" + block + ", ssaVal=" + ssaVal
-				+ ", sinkFlow=" + sinkFlow + "]";
+				+ ", sinkFlow=" + sinkFlow + ']';
 	}
 
 }

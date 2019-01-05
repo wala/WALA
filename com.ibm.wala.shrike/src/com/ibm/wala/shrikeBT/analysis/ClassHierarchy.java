@@ -378,7 +378,7 @@ public final class ClassHierarchy {
         if (ch2 == '[') {
           char ch1_1 = t1.charAt(1);
           if (ch1_1 == '[' || ch1_1 == 'L') {
-            return "[" + findCommonSupertype(hierarchy, t1.substring(1), t2.substring(1));
+            return '[' + findCommonSupertype(hierarchy, t1.substring(1), t2.substring(1));
           } else {
             return Constants.TYPE_Object;
           }

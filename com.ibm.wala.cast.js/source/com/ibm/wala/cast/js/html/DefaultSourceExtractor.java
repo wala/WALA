@@ -56,7 +56,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         String v = e.getValue().fst;
         if (v != null && v.startsWith("javascript:")) {
           try {
-            writeEntrypoint("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a), true);
+            writeEntrypoint("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + '#' + a), true);
           } catch (MalformedURLException ex) {
             writeEntrypoint(v.substring(11), e.getValue().snd, entrypointUrl, false);
           }
@@ -106,7 +106,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       printlnIndented("function make_" + varName + "(parent) {", tag);
       stack.push(varName);
 
-      printlnIndented("this.temp = " + cons + ";", tag);
+      printlnIndented("this.temp = " + cons + ';', tag);
       printlnIndented("this.temp(\"" + tag.getName() + "\");", tag);
       for (Map.Entry<String, Pair<String, Position>> e : attrs.entrySet()){
         String attr = e.getKey();
@@ -158,8 +158,8 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     protected void writeEventAttribute(ITag tag, String attr, String value, String varName, String varName2){
       //There should probably be more checking to see what the attributes are since we allow things like: ; to be used as attributes now.
       if(attr.length() >= 2 && attr.substring(0,2).equals("on")) {
-        printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
-        writeEntrypoint(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
+        printlnIndented(varName + '.' + attr + " = function " + tag.getName().toLowerCase() + '_' + attr + "(event) {" + value + "};", tag);
+        writeEntrypoint(varName2 + '.' + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
       } else if (value != null) {
         
         Pair<String, Character> x = quotify(value);
@@ -170,7 +170,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
           attr = attr.toLowerCase();
         }
         
-        printlnIndented(varName + "['" + attr + "'] = " + quote + value + quote + ";", tag);
+        printlnIndented(varName + "['" + attr + "'] = " + quote + value + quote + ';', tag);
       }
     }
 

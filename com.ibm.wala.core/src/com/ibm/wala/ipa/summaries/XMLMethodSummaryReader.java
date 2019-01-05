@@ -357,7 +357,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     }
 
     private void startClass(String cname, Attributes atts) {
-      String clName = governingPackage==null? "L" + cname: "L" + governingPackage + "/" + cname;
+      String clName = governingPackage==null? 'L' + cname: "L" + governingPackage + '/' + cname;
       governingClass = className2Ref(clName);
       String allocString = atts.getValue(A_ALLOCATABLE);
       if (allocString != null) {
@@ -473,7 +473,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       for (int i = 0; i < params.length; i++) {
         String argString = atts.getValue(A_ARG + i);
-        Assertions.productionAssertion(argString != null, "unspecified arg in method " + governingMethod + " " + site);
+        Assertions.productionAssertion(argString != null, "unspecified arg in method " + governingMethod + ' ' + site);
         Integer valueNumber = symbolTable.get(argString);
         if (valueNumber == null) {
           if (argString.equals(V_NULL)) {

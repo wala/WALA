@@ -86,7 +86,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
             Object o = t;
             System.err.println(o + " " + o.hashCode());
           }
-          assert false : "bad hc " + arg0.getClass() + " " + arg0;
+          assert false : "bad hc " + arg0.getClass() + ' ' + arg0;
         } else {
           s.add(arg0);
         }

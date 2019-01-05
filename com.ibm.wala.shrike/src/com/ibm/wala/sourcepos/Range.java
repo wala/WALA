@@ -115,6 +115,6 @@ public class Range {
 
   @Override
   public String toString() {
-    return (start.isUndefined() ? "<undefined>" : "(" + getStartPosition() + ") - (" + getEndPosition() + ")");
+    return (start.isUndefined() ? "<undefined>" : "(" + getStartPosition() + ") - (" + getEndPosition() + ')');
   }
 }

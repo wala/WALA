@@ -322,7 +322,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public String toString() {
-      return "<src-method: " + this.getReference() + ">";
+      return "<src-method: " + this.getReference() + '>';
     }
   }
 
@@ -555,7 +555,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
   @Override
   public String toString() {
-    return "Java Source Loader (classes " + loadedClasses.values() + ")";
+    return "Java Source Loader (classes " + loadedClasses.values() + ')';
   }
 
   public static class InstructionFactory extends JavaInstructionFactory implements AstJavaInstructionFactory {

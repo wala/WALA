@@ -550,7 +550,7 @@ public class Analyzer {
         String t = findCommonSupertype(st[j], curStack[j]);
         if (t != st[j]) {
           if (t == null) {
-            throw new FailureException(i, "Stack type mismatch at " + j + " (" + st[j] + " vs " + curStack[j] + ")", path);
+            throw new FailureException(i, "Stack type mismatch at " + j + " (" + st[j] + " vs " + curStack[j] + ')', path);
           }
           st[j] = t;
           changed = true;
@@ -684,7 +684,7 @@ public class Analyzer {
           @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
           String pushed = instr.getPushedType(curStack);
           if (instr instanceof NewInstruction && ! pushed.startsWith("[")) {
-            pushed = "#" + instToBC[i] + "#" + pushed;
+            pushed = "#" + instToBC[i] + '#' + pushed;
           }
           if (pushed != null) {
             System.arraycopy(curStack, popped, curStack, 1, curStackSize - popped);

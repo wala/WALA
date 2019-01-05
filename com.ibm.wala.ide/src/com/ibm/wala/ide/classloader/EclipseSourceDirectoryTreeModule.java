@@ -29,7 +29,7 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
   private final Pattern[] excludePatterns;
   
   private static Pattern interpretPattern(IPath pattern) {
-    return Pattern.compile("^" + pattern.toString().replace(".",  "\\.").replace("**", "~~~").replace("*", "[^/]*").replace("~~~",  ".*") + "$");
+    return Pattern.compile('^' + pattern.toString().replace(".",  "\\.").replace("**", "~~~").replace("*", "[^/]*").replace("~~~",  ".*") + '$');
   }
   
   private static Pattern[] interpretExcludes(IPath[] excludes) {

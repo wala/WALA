@@ -271,7 +271,7 @@ public class DexDotUtil extends DotUtil {
       }
 
       private static <T> String getPort(T o, NodeDecorator<T> d) throws WalaException {
-        return "\"" + getLabel(o, d) + "\"";
+        return '"' + getLabel(o, d) + '"';
 
       }
 

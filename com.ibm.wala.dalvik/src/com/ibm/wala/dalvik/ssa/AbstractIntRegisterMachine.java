@@ -845,7 +845,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             currentSuccessorBlock = null;
             Instruction[] instructions = getInstructions();
             if (DEBUG) {
-                System.err.println("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState);
+                System.err.println("Entry to BB" + cfg.getNumber(basicBlock) + ' ' + workingState);
             }
             for (int i = basicBlock.getFirstInstructionIndex(); i <= basicBlock.getLastInstructionIndex(); i++) {
                 currentInstructionIndex = i;
@@ -865,7 +865,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             currentSuccessorBlock = to;
             Instruction[] instructions = getInstructions();
             if (DEBUG) {
-                System.err.println("Entry to BB" + cfg.getNumber(from) + " " + workingState);
+                System.err.println("Entry to BB" + cfg.getNumber(from) + ' ' + workingState);
             }
             for (int i = from.getFirstInstructionIndex(); i <= from.getLastInstructionIndex(); i++) {
                 currentInstructionIndex = i;

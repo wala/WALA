@@ -128,7 +128,7 @@ public class CAstPrinter {
     case CAstNode.ERROR: return "ERROR";
     case CAstNode.ASSERT: return "ASSERT";
     
-    default: return "UNKNOWN(" + kind + ")";
+    default: return "UNKNOWN(" + kind + ')';
     }
   }
 
@@ -234,7 +234,7 @@ public class CAstPrinter {
 	}
 	if (p != null) {
 	  if (uglyBrackets) 
-	    w.write(" lineNumber=\"" + p + "\"");
+	    w.write(" lineNumber=\"" + p + '"');
 	  else
 	    w.write( " at " + p );
 	}
@@ -245,7 +245,7 @@ public class CAstPrinter {
 	w.write( kindAsString( top.getKind() ) );
 	if (p != null)
 	  if (uglyBrackets)
-	    w.write( " position=\"" + p + "\"");
+	    w.write( " position=\"" + p + '"');
 	  else
 	    w.write( " at " + p );
 	if (uglyBrackets) w.write(">");

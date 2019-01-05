@@ -60,7 +60,7 @@ public final class MonitorInstruction extends Instruction {
 
   @Override
   public String toString() {
-    return "Monitor(" + (isEnter() ? "ENTER" : "EXIT") + ")";
+    return "Monitor(" + (isEnter() ? "ENTER" : "EXIT") + ')';
   }
 
   @Override

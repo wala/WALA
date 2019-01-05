@@ -330,7 +330,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
         PointerKey p = r.getLocation();
         BitVectorVariable v = solver.getIn(cfg.exit());
         if (DEBUG) {
-          System.err.println("computeResult " + cfg.exit() + " " + s + " " + pointerKeyMod.get(p) + " " + v);
+          System.err.println("computeResult " + cfg.exit() + ' ' + s + ' ' + pointerKeyMod.get(p) + ' ' + v);
         }
         if (pointerKeyMod.get(p) == null) {
           return OrdinalSet.empty();
@@ -520,7 +520,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
     @Override
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IExplodedBasicBlock src, IExplodedBasicBlock dst) {
       if (DEBUG) {
-        System.err.println("getEdgeXfer: " + src + " " + dst + " " + src.isEntryBlock());
+        System.err.println("getEdgeXfer: " + src + ' ' + dst + ' ' + src.isEntryBlock());
       }
       if (src.isEntryBlock()) {
         if (DEBUG) {
@@ -586,7 +586,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
       SSAInstruction s = b.getInstruction();
       if (DEBUG) {
-        System.err.println("gen " + b + " " + s);
+        System.err.println("gen " + b + ' ' + s);
       }
       if (s == null) {
         return null;
@@ -597,12 +597,12 @@ public class HeapReachingDefs<T extends InstanceKey> {
           Statement st = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
           if (st == null) {
             System.err.println(ssaInstructionIndex2Statement);
-            Assertions.UNREACHABLE("bang " + b + " " + b.getLastInstructionIndex() + " " + s);
+            Assertions.UNREACHABLE("bang " + b + ' ' + b.getLastInstructionIndex() + ' ' + s);
           }
           int domainIndex = domain.getMappedIndex(st);
           assert (domainIndex != -1);
           if (DEBUG) {
-            System.err.println("GEN FOR " + s + " " + heapReturnCaller.getRelated(domainIndex));
+            System.err.println("GEN FOR " + s + ' ' + heapReturnCaller.getRelated(domainIndex));
           }
           return heapReturnCaller.getRelated(domainIndex);
         } else {

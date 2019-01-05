@@ -62,7 +62,7 @@ public final class PopInstruction extends Instruction {
 
   @Override
   public String toString() {
-    return "Pop(" + size + ")";
+    return "Pop(" + size + ')';
   }
 
   @Override

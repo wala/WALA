@@ -75,7 +75,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
         @Override
         public String toString() {
-            return "<BehaviorValue " + behaviour + " - " + exactness + " = " + cacheFrom + ">";
+            return "<BehaviorValue " + behaviour + " - " + exactness + " = " + cacheFrom + '>';
         }
 
         /**
@@ -122,7 +122,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
         @Override
         public String toString() {
-            return "<BehaviorKey of " + base.getClass() + " " + base.toString() + " hash=" + this.hashCode() + "/>";
+            return "<BehaviorKey of " + base.getClass() + ' ' + base.toString() + " hash=" + this.hashCode() + "/>";
         }
     }
 

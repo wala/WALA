@@ -93,7 +93,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
 
   @Override
   public String getClassType() {
-    return "L" + getBootstrap().methodClass();
+    return 'L' + getBootstrap().methodClass();
   }
 
   @Override

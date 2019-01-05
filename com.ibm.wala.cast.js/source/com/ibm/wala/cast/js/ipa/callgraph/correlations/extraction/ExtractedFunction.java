@@ -184,7 +184,7 @@ class ExtractedFunction implements CAstEntity {
 
   @Override
 	public String toString() {
-		return "<JS function " + name + ">";
+		return "<JS function " + name + '>';
 	}
 
   @Override

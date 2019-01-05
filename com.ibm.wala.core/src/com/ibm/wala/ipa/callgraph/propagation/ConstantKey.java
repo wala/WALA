@@ -53,7 +53,7 @@ public final class ConstantKey<T> implements InstanceKey {
     if (value == null)
       return "[ConstantKey:null]";
     else
-      return "[ConstantKey:" + value + ":" + valueClass.getReference() + "]";
+      return "[ConstantKey:" + value + ':' + valueClass.getReference() + ']';
   }
 
   /*

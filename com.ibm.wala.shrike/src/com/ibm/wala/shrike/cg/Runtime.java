@@ -35,7 +35,7 @@ public class Runtime {
          "<clinit>".equals(stack[1].getMethodName())? "clinit": 
            "finalize".equals(stack[1].getMethodName())? "root":
              "callbacks";
-     String line = root + "\t" + bashToDescriptor(klass) + "\t" + String.valueOf(method) + "\n";
+     String line = root + '\t' + bashToDescriptor(klass) + '\t' + String.valueOf(method) + '\n';
      synchronized (runtime) {
        if (runtime.output != null) {
          runtime.output.printf(line);
@@ -144,7 +144,7 @@ public class Runtime {
             }
           }
         
-          String line = (method.contains("<clinit>")? "clinit": String.valueOf(caller)) + "\t" + bashToDescriptor(klass) + "\t" + String.valueOf(method) + "\n";
+          String line = (method.contains("<clinit>")? "clinit": String.valueOf(caller)) + '\t' + bashToDescriptor(klass) + '\t' + String.valueOf(method) + '\n';
           synchronized (runtime) {
             if (runtime.output != null) {
               runtime.output.printf(line);
@@ -155,7 +155,7 @@ public class Runtime {
       }
     }
 
-    runtime.callStacks.get().push(bashToDescriptor(klass) + "\t" + method);
+    runtime.callStacks.get().push(bashToDescriptor(klass) + '\t' + method);
   }
   
   @SuppressWarnings("unused")
@@ -167,7 +167,7 @@ public class Runtime {
     if (runtime.currentSite.get() != null) {
       synchronized (runtime) {
         if (runtime.output != null) {
-          runtime.output.printf("return from " + runtime.currentSite.get() + "\n");
+          runtime.output.printf("return from " + runtime.currentSite.get() + '\n');
           runtime.output.flush();
         }
       }
@@ -179,11 +179,11 @@ public class Runtime {
   public static void addToCallStack(String klass, String method, Object receiver) {
     String callerClass = runtime.callStacks.get().isEmpty() ? "BLOB" : runtime.callStacks.get().peek().split("\t")[0];
     String callerMethod = runtime.callStacks.get().isEmpty() ? "BLOB" : runtime.callStacks.get().peek().split("\t")[1];
-    runtime.currentSite.set(callerClass + "\t" + callerMethod + "\t" + klass + "\t" + method + "\t" + receiver);
+    runtime.currentSite.set(callerClass + '\t' + callerMethod + '\t' + klass + '\t' + method + '\t' + receiver);
 //	  runtime.currentSite = klass + "\t" + method + "\t" + receiver;
     synchronized (runtime) {
       if (runtime.output != null) {
-        runtime.output.printf("call to " + runtime.currentSite.get() + "\n");
+        runtime.output.printf("call to " + runtime.currentSite.get() + '\n');
         runtime.output.flush();
       }
     }    

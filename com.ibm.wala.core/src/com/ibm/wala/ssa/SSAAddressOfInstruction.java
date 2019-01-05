@@ -113,7 +113,7 @@ public class SSAAddressOfInstruction extends SSAInstruction {
         + " (" + pointeeType.getName() + ") " 
         + " = &"
         + getValueString(symbolTable, addressVal)
-        + ((indexVal != -1) ? "[" + getValueString(symbolTable, indexVal) + "]" : (field != null) ? "."
+        + ((indexVal != -1) ? '[' + getValueString(symbolTable, indexVal) + ']' : (field != null) ? '.'
             + field.getName().toString() : "");
   }
 

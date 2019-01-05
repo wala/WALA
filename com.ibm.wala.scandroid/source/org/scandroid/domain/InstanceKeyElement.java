@@ -73,7 +73,7 @@ public class InstanceKeyElement extends CodeElement {
     @Override
     public String toString()
     {
-        return "InstanceKeyElement("+ik+")";
+        return "InstanceKeyElement("+ik+ ')';
     }
     
     public InstanceKey getInstanceKey() {

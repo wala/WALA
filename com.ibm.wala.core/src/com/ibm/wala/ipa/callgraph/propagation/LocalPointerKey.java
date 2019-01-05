@@ -49,7 +49,7 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
 
   @Override
   public String toString() {
-    return "[" + node + ", v" + valueNumber + "]";
+    return "[" + node + ", v" + valueNumber + ']';
   }
 
   @Override

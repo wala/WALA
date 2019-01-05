@@ -594,7 +594,7 @@ public final class TypeReference implements Serializable {
 
   @Override
   public final String toString() {
-    return "<" + classloader.getName() + "," + name + ">";
+    return "<" + classloader.getName() + ',' + name + '>';
   }
 
   public static TypeReference findOrCreateClass(ClassLoaderReference loader, String packageName, String className) {

@@ -421,7 +421,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public String toString() {
-      return "Nullify(" + varNum + ")";
+      return "Nullify(" + varNum + ')';
     }
     
   }
@@ -475,7 +475,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public String toString() {
-      return "Denullify(" + varNum + ")";
+      return "Denullify(" + varNum + ')';
     }
     
   }

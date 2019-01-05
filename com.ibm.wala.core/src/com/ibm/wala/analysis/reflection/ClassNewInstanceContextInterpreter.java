@@ -86,7 +86,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     
     final Context context = node.getContext();
     final IMethod method = node.getMethod();
-    final String hashKey = method.toString() + "@" + context.toString();
+    final String hashKey = method.toString() + '@' + context.toString();
     
     IR result = cache.get(hashKey);
     

@@ -15,12 +15,12 @@ import com.ibm.wala.types.TypeName;
 public class AstTypeReference {
 
   public static final String rootTypeSourceStr = "Root";
-  public static final String rootTypeDescStr = "L" + rootTypeSourceStr;
+  public static final String rootTypeDescStr = 'L' + rootTypeSourceStr;
   public static final TypeName rootTypeName = 
     TypeName.string2TypeName(rootTypeDescStr);
 
   public static final String functionTypeSourceStr = "CodeBody";
-  public static final String functionTypeDescStr = "L" + functionTypeSourceStr;
+  public static final String functionTypeDescStr = 'L' + functionTypeSourceStr;
   public static final TypeName functionTypeName = 
     TypeName.string2TypeName(functionTypeDescStr);
 

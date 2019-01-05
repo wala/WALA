@@ -81,7 +81,7 @@ public class BatchVerifier {
 
   private static void doClass(final ClassReader cr, PrintWriter w) throws Exception {
     int methodCount = cr.getMethodCount();
-    w.write("Verifying " + cr.getName() + "\n");
+    w.write("Verifying " + cr.getName() + '\n');
     w.flush();
 
     ClassReader.AttrIterator iter = new ClassReader.AttrIterator();
@@ -90,7 +90,7 @@ public class BatchVerifier {
       cr.initMethodAttributeIterator(i, iter);
       for (; iter.isValid(); iter.advance()) {
         if (iter.getName().equals("Code")) {
-          w.write("Verifying " + cr.getName() + "." + cr.getMethodName(i) + " " + cr.getMethodType(i) + ":\n");
+          w.write("Verifying " + cr.getName() + '.' + cr.getMethodName(i) + ' ' + cr.getMethodType(i) + ":\n");
           w.flush();
 
           CodeReader code = new CodeReader(iter);
