@@ -27,8 +27,7 @@ public class NodeOfKind implements NodePattern {
 	public NodeOfKind(int kind, NodePattern... children) {
 		this.kind = kind;
 		this.children = new NodePattern[children.length];
-		for(int i=0;i<children.length;++i)
-			this.children[i] = children[i];
+		System.arraycopy(children, 0, this.children, 0, children.length);
 	}
 	
 	/* (non-Javadoc)

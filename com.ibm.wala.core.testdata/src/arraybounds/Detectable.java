@@ -63,6 +63,7 @@ public class Detectable {
     return result;
   }
 
+  @SuppressWarnings("ManualArrayCopy")
   public void copy(int[] src, int[] dst) {
     int lenSrc = src.length;
     int lenDst = dst.length;

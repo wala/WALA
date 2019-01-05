@@ -2848,26 +2848,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         int[] x = original.instructionLexicalUses[i];
         if (x != null) {
           instructionLexicalUses[i] = new int[x.length];
-          for (int j = 0; j < x.length; j++) {
-            instructionLexicalUses[i][j] = x[j];
-          }
+          System.arraycopy(x, 0, instructionLexicalUses[i], 0, x.length);
         }
       }
 
       if (original.exitLexicalUses != null) {
         exitLexicalUses = new int[original.exitLexicalUses.length];
-        for (int i = 0; i < exitLexicalUses.length; i++) {
-          exitLexicalUses[i] = original.exitLexicalUses[i];
-        }
+        System.arraycopy(original.exitLexicalUses, 0, exitLexicalUses, 0, exitLexicalUses.length);
       } else {
         exitLexicalUses = null;
       }
 
       if (original.scopingParents != null) {
         scopingParents = new String[original.scopingParents.length];
-        for (int i = 0; i < scopingParents.length; i++) {
-          scopingParents[i] = original.scopingParents[i];
-        }
+        System.arraycopy(original.scopingParents, 0, scopingParents, 0, scopingParents.length);
       } else {
         scopingParents = null;
       }
