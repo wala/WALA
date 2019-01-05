@@ -70,11 +70,12 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    String v = getValueString(symbolTable, result) + " = checkcast";
+    final StringBuilder v = new StringBuilder(getValueString(symbolTable, result)).append(" = checkcast");
     for (TypeReference t : declaredResultTypes) {
-        v = v + " " + t;
+        v.append(' ').append(t);
     }
-    return v + getValueString(symbolTable, val);
+    v.append(getValueString(symbolTable, val));
+    return v.toString();
   }
 
   /*
@@ -182,11 +183,11 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
 
   @Override
   public String toString() {
-    String s = super.toString();
+    final StringBuilder s = new StringBuilder(super.toString());
     for (TypeReference t : declaredResultTypes) {
-      s = s + " " + t;
+      s.append(' ').append(t);
     }
-    return s;
+    return s.toString();
   }
 
 }

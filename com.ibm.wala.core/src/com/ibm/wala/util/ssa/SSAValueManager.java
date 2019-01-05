@@ -671,6 +671,7 @@ public class SSAValueManager {
                     final Atom nameAtom = Atom.findOrCreateAsciiAtom(name);
                     names.put(val.getNumber(), nameAtom);
                 } else if (AUTOMAKE_NAMES) {
+                    @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
                     String autoName = val.getType().getName().toString();
                     if (autoName.contains("/")) {
                         autoName = autoName.substring(autoName.lastIndexOf("/") + 1);
@@ -699,6 +700,7 @@ public class SSAValueManager {
                 final Atom nameAtom = Atom.findOrCreateAsciiAtom(name);
                 names.put(val.getNumber(), nameAtom);
             } else if (AUTOMAKE_NAMES) {
+                @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
                 String autoName = val.getType().getName().toString();
                 if (autoName.contains("/")) {
                     autoName = autoName.substring(autoName.lastIndexOf("/") + 1);

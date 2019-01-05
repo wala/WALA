@@ -369,15 +369,17 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   
   public void summarizeByPackage() {
    Map<String, Integer> packages = HashMapFactory.make();
-   for(CGNode n : this) { 
-     String nm = n.getMethod().getDeclaringClass().getName().toString() + "/" + n.getMethod().getName() + "/" + n.getContext().getClass().toString();
-  
+   for(CGNode n : this) {
+     final StringBuilder nmBuilder = new StringBuilder(n.getMethod().getDeclaringClass().getName().toString())
+             .append('/').append(n.getMethod().getName()).append('/').append(n.getContext().getClass().toString());
+
      if (n.getContext().isA(ReceiverInstanceContext.class)) {
-       nm = nm + "/" + ((InstanceKey)n.getContext().get(ContextKey.RECEIVER)).getConcreteType().getName();
+       nmBuilder.append('/').append(((InstanceKey)n.getContext().get(ContextKey.RECEIVER)).getConcreteType().getName());
      } else if (n.getContext() instanceof JavaTypeContext) {
-       nm = nm + "/" + ((TypeAbstraction)n.getContext().get(ContextKey.RECEIVER)).getTypeReference().getName();
+       nmBuilder.append('/').append(((TypeAbstraction) n.getContext().get(ContextKey.RECEIVER)).getTypeReference().getName());
      }
-     
+     String nm = nmBuilder.toString();
+
      do {
        if (packages.containsKey(nm)) {
          packages.put(nm, 1 + packages.get(nm));

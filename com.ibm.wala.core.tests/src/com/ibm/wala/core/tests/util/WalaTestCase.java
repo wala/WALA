@@ -92,7 +92,7 @@ public abstract class WalaTestCase {
   }
 
   protected static String getClasspathEntry(String elt) {
-    String result = null;
+    StringBuilder result = null;
     for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
       if (s.indexOf(elt) >= 0) {
         File e = new File(s);
@@ -101,14 +101,14 @@ public abstract class WalaTestCase {
           s = s + "/";
         }
         if (result == null) {
-          result = s;
+          result = new StringBuilder(s);
         } else {
-          result += File.pathSeparator + s;
+          result.append(File.pathSeparator).append(s);
         }
       }
     }
     Assert.assertFalse("cannot find " + elt, result == null);
-    return result;
+    return result.toString();
   }
 
   protected <T> void assertEquals(T x, T y) {

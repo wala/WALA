@@ -263,15 +263,17 @@ public class JavaLauncher extends Launcher {
    * Compute the classpath for the spawned process
    */
   public String makeClasspath() {
-    String cp = inheritClasspath ? System.getProperty("java.class.path") : "";
+    final StringBuilder cp = inheritClasspath
+            ? new StringBuilder(System.getProperty("java.class.path"))
+            : new StringBuilder();
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
-      return cp.trim();
+      return cp.toString().trim();
     } else {
       for (String p : Iterator2Iterable.make(getXtraClassPath().iterator())) {
-        cp += File.pathSeparatorChar;
-        cp += p;
+        cp.append(File.pathSeparatorChar);
+        cp.append(p);
       }
-      return cp.trim();
+      return cp.toString().trim();
     }
   }
 

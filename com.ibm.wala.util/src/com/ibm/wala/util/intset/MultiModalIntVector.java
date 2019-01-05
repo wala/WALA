@@ -249,15 +249,15 @@ public class MultiModalIntVector implements IntVector {
   }
 
   public void print() {
-    String str = "";
+    final StringBuilder str = new StringBuilder();
     for (byte element : byteStore) {
-      str += element + ",";
+      str.append(element).append(',');
     }
     for (short element : shortStore) {
-      str += element + ",";
+      str.append(element).append(',');
     }
     for (int element : intStore) {
-      str += element + ",";
+      str.append(element).append(',');
     }
     System.out.println(str);
   }
