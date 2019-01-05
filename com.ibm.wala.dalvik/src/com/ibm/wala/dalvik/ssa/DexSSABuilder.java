@@ -1418,7 +1418,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 		void startRange(int pc, int localNumber, int valueNumber) {
             int max = ((DexIMethod)dexCFG.getMethod()).getMaxLocals();
             if (localNumber >= max) {
-                assert false : "invalid local " + localNumber + ">" + max;
+                assert false : "invalid local " + localNumber + '>' + max;
             }
 
             localStoreMap[pc] = new IntPair(valueNumber, localNumber);

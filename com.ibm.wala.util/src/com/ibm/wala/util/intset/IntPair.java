@@ -57,7 +57,7 @@ public class IntPair {
 
   @Override
   public String toString() {
-    return "[" + x + "," + y + "]";
+    return "[" + x + ',' + y + ']';
   }
 
   public static IntPair make(int x, int y) {

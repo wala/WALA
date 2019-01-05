@@ -78,7 +78,7 @@ public class Pair<T,U> implements Serializable {
   
   @Override
   public String toString() {
-    return "[" + fst + "," + snd +"]";
+    return "[" + fst + ',' + snd + ']';
   }
 
   public static <T,U> Pair<T, U> make(T x, U y) {

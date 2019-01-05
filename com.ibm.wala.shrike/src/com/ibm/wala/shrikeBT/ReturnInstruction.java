@@ -81,7 +81,7 @@ public final class ReturnInstruction extends Instruction {
 
   @Override
   public String toString() {
-    return "Return(" + getType() + ")";
+    return "Return(" + getType() + ')';
   }
 
   @Override

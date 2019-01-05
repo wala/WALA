@@ -47,7 +47,7 @@ public class ReadWriteCorrelation extends Correlation {
 	
 	@Override
 	public String pp(SSASourcePositionMap positions) {
-		return get + "@" + positions.getPosition(get) + " [" + getIndexName() + "]-> " + put + "@" + positions.getPosition(put);
+		return get + "@" + positions.getPosition(get) + " [" + getIndexName() + "]-> " + put + '@' + positions.getPosition(put);
 	}
 	
 	@Override

@@ -163,10 +163,10 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     boolean ctor = funName.startsWith("ctor:");
     MethodReference MR;
     if (ctor) {
-      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + funName.substring(5)));
+      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName('L' + funName.substring(5)));
       MR = JavaScriptMethods.makeCtorReference(TR);
     } else {
-      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + funName));
+      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName('L' + funName));
       MR = AstMethodReference.fnReference(TR);
     }
     return MR;
@@ -195,7 +195,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
         protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg, SymbolTable symtab,
             boolean hasCatchBlock, Map<IBasicBlock<SSAInstruction>,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
             DebuggingInformation debugInfo) {
-          String fnName = "L" + composeEntityName(definingContext, N);
+          String fnName = 'L' + composeEntityName(definingContext, N);
           names.add(fnName);
           super.defineFunction(N, definingContext, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo);
         }

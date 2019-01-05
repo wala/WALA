@@ -97,7 +97,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
 
   @Override
   public String toString() {
-    return "LocalLoad(" + getType() + "," + index + ")";
+    return "LocalLoad(" + getType() + ',' + index + ')';
   }
 
   @Override

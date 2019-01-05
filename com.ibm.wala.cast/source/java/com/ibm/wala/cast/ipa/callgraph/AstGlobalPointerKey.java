@@ -35,7 +35,7 @@ public class AstGlobalPointerKey extends AbstractPointerKey {
 
   @Override
   public String toString() {
-    return "[global: " + globalName + "]";
+    return "[global: " + globalName + ']';
   }
 }
     

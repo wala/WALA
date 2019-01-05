@@ -72,7 +72,7 @@ public class ConstantString extends InstanceKeySite {
 
     @Override
     public String toString() {
-        return ("ConstantString(instanceID = " + instanceID + "; value = " + constantValue + ")");
+        return ("ConstantString(instanceID = " + instanceID + "; value = " + constantValue + ')');
     }
 
     @Override

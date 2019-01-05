@@ -62,7 +62,7 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine<In
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
     
     for(Pair<String,Plugin> model : models) {
-      eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("L" + model.fst));
+      eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make('L' + model.fst));
     }
 
     return getFieldBasedCallGraph(eps);

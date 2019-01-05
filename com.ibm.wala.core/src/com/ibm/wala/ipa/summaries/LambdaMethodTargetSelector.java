@@ -51,7 +51,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
         MethodReference ref = 
             MethodReference.findOrCreate(
                 site.getDeclaredTarget().getDeclaringClass(), 
-                Atom.findOrCreateUnicodeAtom(site.getDeclaredTarget().getName().toString() +"$" + cls + "$" + bootstrapIndex),
+                Atom.findOrCreateUnicodeAtom(site.getDeclaredTarget().getName().toString() + '$' + cls + '$' + bootstrapIndex),
                 site.getDeclaredTarget().getDescriptor());
         
         MethodSummary summary = new MethodSummary(ref);

@@ -88,7 +88,7 @@ public class DexIRFactory extends DefaultIRFactory {
                 if (lineNumber == -1) {
                     return "";
                 } else {
-                    return "(line " + lineNumber + ")";
+                    return "(line " + lineNumber + ')';
                 }
             }
 

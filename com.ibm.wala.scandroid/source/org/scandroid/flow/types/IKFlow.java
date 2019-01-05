@@ -87,7 +87,7 @@ public class IKFlow<E extends ISSABasicBlock> extends FlowType<E> {
     
     @Override
     public String toString() {
-        return "IKFlow(ik=" + ik + " " + super.toString() + ")";
+        return "IKFlow(ik=" + ik + ' ' + super.toString() + ')';
     }
 
     public InstanceKey getIK() {

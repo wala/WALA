@@ -591,7 +591,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         }
         @Override
         public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-          System.err.println("dispatch to " + receiverType + "." + fieldKey + " for " + instruction);
+          System.err.println("dispatch to " + receiverType + '.' + fieldKey + " for " + instruction);
         }
       };
 

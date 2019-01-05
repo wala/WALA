@@ -76,7 +76,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     if (DEBUG) {
-      System.err.println(("getInstanceKeyForMultiNewArray " + allocation + " " + dim));
+      System.err.println(("getInstanceKeyForMultiNewArray " + allocation + ' ' + dim));
     }
     ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     assert (type != null);
@@ -92,7 +92,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
       }
       type = (ArrayClass) type.getElementClass();
       if (DEBUG) {
-        System.err.println(("intermediate: " + i + " " + type));
+        System.err.println(("intermediate: " + i + ' ' + type));
       }
     }
     if (DEBUG) {

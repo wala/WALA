@@ -54,7 +54,7 @@ public class JavaTypeContext implements Context {
 
   @Override
   public String toString() {
-    return "JavaTypeContext<" + type + ">";
+    return "JavaTypeContext<" + type + '>';
   }
 
   @Override

@@ -860,7 +860,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
           @Override
           public String toString() {
-            return "[upward:" + getName() + ":" + definingNode + "]";
+            return "[upward:" + getName() + ':' + definingNode + ']';
           }
         }
 
@@ -899,15 +899,15 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       // log field access
       if (DEBUG_PROPERTIES) {
         if (isLoadOperation)
-          System.err.print(("adding read of " + objKey + "." + fieldKey + ":"));
+          System.err.print(("adding read of " + objKey + '.' + fieldKey + ':'));
         else
-          System.err.print(("adding write of " + objKey + "." + fieldKey + ":"));
+          System.err.print(("adding write of " + objKey + '.' + fieldKey + ':'));
 
         if (contentsAreInvariant(symtab, du, objVn)) {
           System.err.print(" constant obj:");
           InstanceKey[] x = getInvariantContents(symtab, du, opNode, objVn);
           for (InstanceKey element : x) {
-            System.err.print((element.toString() + " "));
+            System.err.print((element.toString() + ' '));
           }
         } else {
           System.err.print((" obj:" + system.findOrCreatePointsToSet(objKey)));
@@ -917,7 +917,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           System.err.print(" constant prop:");
           InstanceKey[] x = getInvariantContents(symtab, du, opNode, fieldsVn);
           for (InstanceKey element : x) {
-            System.err.print((element.toString() + " "));
+            System.err.print((element.toString() + ' '));
           }
         } else {
           System.err.print((" props:" + system.findOrCreatePointsToSet(fieldKey)));
@@ -1199,7 +1199,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       @Override
       public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-        System.err.println(("writing fixed rvals to " + fieldKey + " " + constObj + ", " + constProp));
+        System.err.println(("writing fixed rvals to " + fieldKey + ' ' + constObj + ", " + constProp));
         for (InstanceKey rhsFixedValue : rhsFixedValues) {
           System.err.println(("writing " + rhsFixedValue));
         }
@@ -1233,7 +1233,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       @Override
       public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-        System.err.println(("write " + rhs + " to " + fieldKey + " " + constObj + ", " + constProp));
+        System.err.println(("write " + rhs + " to " + fieldKey + ' ' + constObj + ", " + constProp));
       }
 
       @Override
@@ -1260,7 +1260,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       newFieldOperation(opNode, objVn, fieldsVn, true, new ReflectedFieldAction() {
         @Override
         public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-          System.err.println(("read " + lhs + " from " + fieldKey + " " + constObj + ", " + constProp));
+          System.err.println(("read " + lhs + " from " + fieldKey + ' ' + constObj + ", " + constProp));
         }
 
         @Override

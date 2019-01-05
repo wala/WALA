@@ -52,7 +52,7 @@ public class FuncVertex extends Vertex implements ObjectVertex {
 	@Override
 	public String toString() {
 		String methodName = klass.getName().toString();
-    return "Func(" + methodName.substring(methodName.lastIndexOf('/')+1) + ")";
+    return "Func(" + methodName.substring(methodName.lastIndexOf('/')+1) + ')';
 	}
 
   @Override
@@ -79,7 +79,7 @@ public class FuncVertex extends Vertex implements ObjectVertex {
     
     Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, ctor);
     CallSiteReference site = sites.next();
-    assert !sites.hasNext() : caller + " --> " + ctor + " @ " + site + " and " + sites.next() + "\n" + caller.getIR();
+    assert !sites.hasNext() : caller + " --> " + ctor + " @ " + site + " and " + sites.next() + '\n' + caller.getIR();
     
     return NonNullSingletonIterator.make(Pair.make(caller, NewSiteReference.make(site.getProgramCounter(), klass.getReference())));
   }

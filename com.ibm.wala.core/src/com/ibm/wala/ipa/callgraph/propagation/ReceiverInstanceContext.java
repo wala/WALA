@@ -44,7 +44,7 @@ public class ReceiverInstanceContext implements Context {
 
   @Override
   public String toString() {
-    return "ReceiverInstanceContext<" + ik + ">";
+    return "ReceiverInstanceContext<" + ik + '>';
   }
 
   @Override

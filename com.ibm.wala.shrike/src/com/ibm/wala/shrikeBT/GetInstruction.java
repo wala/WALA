@@ -146,8 +146,8 @@ public class GetInstruction extends Instruction implements IGetInstruction {
 
   @Override
   public String toString() {
-    return "Get(" + getFieldType() + "," + (isStatic() ? "STATIC" : "NONSTATIC") + "," + getClassType() + "," + getFieldName()
-        + ")";
+    return "Get(" + getFieldType() + ',' + (isStatic() ? "STATIC" : "NONSTATIC") + ',' + getClassType() + ',' + getFieldName()
+        + ')';
   }
 
   @Override

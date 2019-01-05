@@ -211,7 +211,7 @@ public class SymbolTable implements Cloneable {
         || values[valueNumber] instanceof PhiValue) {
       return "v" + valueNumber;
     } else {
-      return "v" + valueNumber + ":" + values[valueNumber].toString();
+      return "v" + valueNumber + ':' + values[valueNumber].toString();
     }
   }
 

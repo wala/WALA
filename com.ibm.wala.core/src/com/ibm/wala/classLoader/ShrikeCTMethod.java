@@ -220,7 +220,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     
     @Override
     public String toString() {
-      return fileName + "(" + firstLine + "," + firstCol + "-" + lastLine + "," + lastCol + ")";
+      return fileName + '(' + firstLine + ',' + firstCol + '-' + lastLine + ',' + lastCol + ')';
     }
   }
 /** END Custom change: precise positions */
@@ -284,8 +284,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
 
     if (localNumber > getMaxLocals()) {
-      throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getDeclaringClass().getName() + 
-              "." + getName() + " uses at most " + getMaxLocals());
+      throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getDeclaringClass().getName() +
+              '.' + getName() + " uses at most " + getMaxLocals());
     }
 
     if (map == null) {

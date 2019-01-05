@@ -37,6 +37,6 @@ public class RetVertex extends Vertex implements PointerKey {
 	
 	@Override
 	public String toString() {
-	  return "Ret(" + func + ")";
+	  return "Ret(" + func + ')';
 	}
 }

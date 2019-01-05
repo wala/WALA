@@ -305,7 +305,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     MethodReference reference = opNode.getMethod().getReference();
     String selector = reference.getSelector().toString();
     String containingClass = reference.getDeclaringClass().getName().toString();
-    return definingMethod.equals(containingClass + "/" + selector);
+    return definingMethod.equals(containingClass + '/' + selector);
   }
 
   @Override

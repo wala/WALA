@@ -110,7 +110,7 @@ public class CallGraph2JSON {
 
       if(IGNORE_HARNESS) {
         for(String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
-          if(methodName.startsWith("L" + bootstrapFile + "/"))
+          if(methodName.startsWith('L' + bootstrapFile + '/'))
             return false;
       }
  
@@ -124,7 +124,7 @@ public class CallGraph2JSON {
 		file = file.substring(file.lastIndexOf('/')+1);
 		
 		int line = pos.getFirstLine(), start_offset = pos.getFirstOffset(), end_offset = pos.getLastOffset();
-		return file + "@" + line + ":" + start_offset + "-" + end_offset;
+		return file + '@' + line + ':' + start_offset + '-' + end_offset;
 	}
 	
 	public static String toJSON(Map<String, Set<String>> map) {
@@ -134,7 +134,7 @@ public class CallGraph2JSON {
       StringBuilder res1 = new StringBuilder();
       if(e.getValue().size() > 0) {
         res1.append("    \"").append(e.getKey()).append("\": [\n");
-        res1.append(joinWith(Util.mapToSet(e.getValue(), str -> "        \"" + str + "\""), ",\n"));
+        res1.append(joinWith(Util.mapToSet(e.getValue(), str -> "        \"" + str + '"'), ",\n"));
         res1.append("\n    ]");
       }
       return res1.length() == 0 ? null : res1.toString();

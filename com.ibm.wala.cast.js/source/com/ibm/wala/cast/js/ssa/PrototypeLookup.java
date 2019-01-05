@@ -32,7 +32,7 @@ public class PrototypeLookup extends SSAAbstractUnaryInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, getDef(0)) + " = prototype_values(" + getValueString(symbolTable, getUse(0)) + ")";
+    return getValueString(symbolTable, getDef(0)) + " = prototype_values(" + getValueString(symbolTable, getUse(0)) + ')';
   }
 
   @Override

@@ -56,7 +56,7 @@ public class AstAssertInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "assert " + getValueString(symbolTable, value) + " (fromSpec: " + fromSpecification + ")";
+    return "assert " + getValueString(symbolTable, value) + " (fromSpec: " + fromSpecification + ')';
   }
 
   @Override

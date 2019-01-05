@@ -48,6 +48,6 @@ public class NewSiteReference extends ProgramCounter {
 
   @Override
   public String toString() {
-    return "NEW " + declaredType + "@" + getProgramCounter();
+    return "NEW " + declaredType + '@' + getProgramCounter();
   }
 }

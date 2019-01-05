@@ -59,7 +59,7 @@ public final class ConcreteTypeKey implements InstanceKey {
 
   @Override
   public String toString() {
-    return "[" + type + "]";
+    return "[" + type + ']';
   }
 
   public IClass getType() {

@@ -43,7 +43,7 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     if (isStatic()) {
       return getValueString(symbolTable, result) + " = getstatic " + getDeclaredField();
     } else {
-      return getValueString(symbolTable, result) + " = getfield " + getDeclaredField() + " "
+      return getValueString(symbolTable, result) + " = getfield " + getDeclaredField() + ' '
           + getValueString(symbolTable, getRef());
     }
   }

@@ -111,11 +111,11 @@ public class CopyWriter {
     instrumenter.writeUnmodifiedClasses();
 
     Writer w = new OutputStreamWriter(instrumenter.addOutputJarEntry(new ZipEntry("IBM-Copyright")));
-    w.write(copyright + "\n");
+    w.write(copyright + '\n');
     for (ZipEntry ze : entries) {
-      w.write("  " + ze.getName() + "\n");
+      w.write("  " + ze.getName() + '\n');
     }
-    w.write(copyright + "\n");
+    w.write(copyright + '\n');
     w.flush();
     instrumenter.endOutputJarEntry();
 

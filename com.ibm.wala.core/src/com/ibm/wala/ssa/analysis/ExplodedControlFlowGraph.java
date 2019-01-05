@@ -625,12 +625,12 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     @Override
     public String toString() {
       if (isEntryBlock()) {
-        return "ExplodedBlock[" + getNumber() + "](entry:" + getMethod() + ")";
+        return "ExplodedBlock[" + getNumber() + "](entry:" + getMethod() + ')';
       }
       if (isExitBlock()) {
-        return "ExplodedBlock[" + getNumber() + "](exit:" + getMethod() + ")";
+        return "ExplodedBlock[" + getNumber() + "](exit:" + getMethod() + ')';
       }
-      return "ExplodedBlock[" + getNumber() + "](original:" + original + ")";
+      return "ExplodedBlock[" + getNumber() + "](original:" + original + ')';
     }
 
     @Override

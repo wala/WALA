@@ -153,16 +153,16 @@ public class JSAstTranslator extends AstTranslator {
     if (f.getKind() == CAstEntity.SCRIPT_ENTITY)
       return f.getName();
     else
-      return parent.getName() + "/" + f.getName();
+      return parent.getName() + '/' + f.getName();
   }
 
   @Override
   protected void declareFunction(CAstEntity N, WalkContext context) {
     String fnName = composeEntityName(context, N);
     if (N.getKind() == CAstEntity.SCRIPT_ENTITY) {
-      ((JavaScriptLoader) loader).defineScriptType("L" + fnName, N.getPosition(), N, context);
+      ((JavaScriptLoader) loader).defineScriptType('L' + fnName, N.getPosition(), N, context);
     } else if (N.getKind() == CAstEntity.FUNCTION_ENTITY) {
-      ((JavaScriptLoader) loader).defineFunctionType("L" + fnName, N.getPosition(), N, context);
+      ((JavaScriptLoader) loader).defineFunctionType('L' + fnName, N.getPosition(), N, context);
     } else {
       Assertions.UNREACHABLE();
     }
@@ -179,7 +179,7 @@ public class JSAstTranslator extends AstTranslator {
     if (DEBUG)
       System.err.println(cfg);
  
-    ((JavaScriptLoader) loader).defineCodeBodyCode("L" + fnName, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI,
+    ((JavaScriptLoader) loader).defineCodeBodyCode('L' + fnName, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI,
         debugInfo);
   }
 
@@ -222,7 +222,7 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
-    int nm = context.currentScope().getConstantValue("L" + composeEntityName(context, fn));
+    int nm = context.currentScope().getConstantValue('L' + composeEntityName(context, fn));
     // "Function" is the name we use to model the constructor of function values
     int tmp = super.doGlobalRead(n, context, "Function", JavaScriptTypes.Function);
     context.cfg().addInstruction(

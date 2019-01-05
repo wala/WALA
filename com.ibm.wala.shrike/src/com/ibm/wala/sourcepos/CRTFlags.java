@@ -80,7 +80,7 @@ public final class CRTFlags {
         else {
           // assert false
           // because exception was thrown in the constructor.
-          names.add("UNKNOWN (" + Integer.toHexString(2 << index) + ")");
+          names.add("UNKNOWN (" + Integer.toHexString(2 << index) + ')');
         }
       }
       tFlags >>= 1;

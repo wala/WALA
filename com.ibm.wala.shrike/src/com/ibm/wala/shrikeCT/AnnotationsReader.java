@@ -149,7 +149,7 @@ public class AnnotationsReader extends AttributeReader {
 
     @Override
     public String toString() {
-      return "EnumElementValue [type=" + enumType + ", val=" + enumVal + "]";
+      return "EnumElementValue [type=" + enumType + ", val=" + enumVal + ']';
     }
 
   }
@@ -171,7 +171,7 @@ public class AnnotationsReader extends AttributeReader {
 
     @Override
     public String toString() {
-      return "ArrayElementValue [vals=" + Arrays.toString(vals) + "]";
+      return "ArrayElementValue [vals=" + Arrays.toString(vals) + ']';
     }
 
   }
@@ -302,7 +302,7 @@ public class AnnotationsReader extends AttributeReader {
 
     @Override
     public String toString() {
-      return "AnnotationElementValue [type=" + type + ", elementValues=" + elementValues + "]";
+      return "AnnotationElementValue [type=" + type + ", elementValues=" + elementValues + ']';
     }
 
   }

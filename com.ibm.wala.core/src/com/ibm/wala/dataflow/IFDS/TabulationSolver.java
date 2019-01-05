@@ -410,7 +410,7 @@ public class TabulationSolver<T, P, F> {
     // exit block to each return site.
     for (T retSite : Iterator2Iterable.make(supergraph.getReturnSites(c, supergraph.getProcOf(edge.target)))) {
       if (DEBUG_LEVEL > 1) {
-        System.err.println("candidate return site: " + retSite + " " + supergraph.getNumber(retSite));
+        System.err.println("candidate return site: " + retSite + ' ' + supergraph.getNumber(retSite));
       }
       // note: since we might have multiple exit nodes for the callee, (to handle exceptional returns)
       // not every return site might be valid for this exit node (edge.n).
@@ -777,7 +777,7 @@ public class TabulationSolver<T, P, F> {
 
     if (!pLocal.contains(i, number, j)) {
       if (DEBUG_LEVEL > 0) {
-        System.err.println("propagate " + s_p + "  " + i + " " + number + " " + j);
+        System.err.println("propagate " + s_p + "  " + i + ' ' + number + ' ' + j);
       }
       pLocal.addPathEdge(i, number, j);
       addToWorkList(s_p, i, n, j);

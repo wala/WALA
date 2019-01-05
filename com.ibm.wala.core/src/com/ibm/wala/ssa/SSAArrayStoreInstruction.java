@@ -35,7 +35,7 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "arraystore " + getValueString(symbolTable, getArrayRef()) + "[" + getValueString(symbolTable, getIndex())
+    return "arraystore " + getValueString(symbolTable, getArrayRef()) + '[' + getValueString(symbolTable, getIndex())
         + "] = " + getValueString(symbolTable, value);
   }
 

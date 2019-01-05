@@ -77,7 +77,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
               }
               JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, url);
               loadedFiles.add(url);
-              IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
+              IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), 'L' + url.getFile()));
               return script.getMethod(AstMethodReference.fnSelector);
             }
           } catch (MalformedURLException e1) {

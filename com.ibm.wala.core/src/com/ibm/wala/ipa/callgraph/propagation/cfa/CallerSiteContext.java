@@ -53,7 +53,7 @@ public class CallerSiteContext extends CallerContext {
 
   @Override
   public String toString() {
-    return super.toString() + "@" + callSite.getProgramCounter();
+    return super.toString() + '@' + callSite.getProgramCounter();
   }
 
   public CallSiteReference getCallSite() {

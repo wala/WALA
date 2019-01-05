@@ -680,7 +680,7 @@ public class Instantiator implements IInstantiator {
                 final Object o = seen.iterator().next();
                 if (! (o instanceof SSAValue)) {
                     throw new IllegalArgumentException("Argument 2 to createInstance has to be null or an instance of Set<? extends SSAValue>, " +
-                            "got Set<" + o.getClass() + ">");
+                            "got Set<" + o.getClass() + '>');
                 }
             }
         }

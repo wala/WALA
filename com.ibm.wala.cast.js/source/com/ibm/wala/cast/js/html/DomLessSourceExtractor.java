@@ -177,12 +177,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       String attName = a.getKey();
       String attValue = a.getValue().fst;
       if (attName.toLowerCase().startsWith("on") || (attValue != null && attValue.toLowerCase().startsWith("javascript:"))) {
-        String fName = tag.getName().toLowerCase() + "_" + attName + "_" + funcName;
+        String fName = tag.getName().toLowerCase() + '_' + attName + '_' + funcName;
         String signatureLine = "function " + fName + "(event) {";
         // Defines the function  
-        domRegion.println(signatureLine + "\n" + extructJS(attValue) + "\n}", pos, url, true);
+        domRegion.println(signatureLine + '\n' + extructJS(attValue) + "\n}", pos, url, true);
         // Run it
-        writeEntrypoint("\t" + fName + "(null);", pos, url, true);
+        writeEntrypoint('\t' + fName + "(null);", pos, url, true);
       }
     }
 

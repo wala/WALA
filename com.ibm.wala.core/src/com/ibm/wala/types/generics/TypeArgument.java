@@ -180,9 +180,9 @@ public class TypeArgument extends Signature {
     if (w == null) {
       return sig.toString();
     } else if (w.equals(WildcardIndicator.PLUS)) {
-      return "+" + sig.toString();
+      return '+' + sig.toString();
     } else {
-      return "-" + sig.toString();
+      return '-' + sig.toString();
     }
   }
 

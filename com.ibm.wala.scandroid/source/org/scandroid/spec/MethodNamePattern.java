@@ -126,8 +126,8 @@ public class MethodNamePattern {
 		String returnString = "MethodNamePattern (Class: "+className+
 				" - Method: "+memberName; 
 		if (descriptor == null)
-			return returnString+")";
-		return returnString+" - Descriptor: "+descriptor+")";
+			return returnString+ ')';
+		return returnString+" - Descriptor: "+descriptor+ ')';
 
 	}
 	

@@ -135,7 +135,7 @@ public class FlowGraphBuilder {
 	private void addPrimitives(FlowGraph flowgraph) {
 		VertexFactory factory = flowgraph.getVertexFactory();
 		for(String pf : primitiveFunctions) {
-			TypeReference typeref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, "L" + pf);
+			TypeReference typeref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, 'L' + pf);
 			IClass klass = cha.lookupClass(typeref);
 			String prop = pf.endsWith("Object")? pf.substring(0, pf.length() - 6): pf;
 			flowgraph.addEdge(factory.makeFuncVertex(klass), factory.makePropVertex(prop));

@@ -59,7 +59,7 @@ public class ReturnLabel extends CallLabel {
 
   @Override
   public String toString() {
-    return "return[" + callSite + "]";
+    return "return[" + callSite + ']';
   }
 
   @Override

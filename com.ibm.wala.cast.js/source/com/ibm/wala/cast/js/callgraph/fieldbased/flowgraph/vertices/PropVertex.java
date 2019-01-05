@@ -36,6 +36,6 @@ public class PropVertex extends Vertex implements PointerKey {
 	
 	@Override
 	public String toString() {
-		return "Prop(" + propName + ")";
+		return "Prop(" + propName + ')';
 	}
 }

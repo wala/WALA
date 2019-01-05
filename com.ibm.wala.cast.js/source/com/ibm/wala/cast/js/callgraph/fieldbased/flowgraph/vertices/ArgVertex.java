@@ -37,6 +37,6 @@ public class ArgVertex extends Vertex implements PointerKey {
 	
 	@Override
 	public String toString() {
-	  return "Args(" + func + ")";
+	  return "Args(" + func + ')';
 	}
 }

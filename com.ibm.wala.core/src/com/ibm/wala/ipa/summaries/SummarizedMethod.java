@@ -33,7 +33,7 @@ public class SummarizedMethod extends SyntheticMethod {
     this.summary = summary;
     assert declaringClass != null;
     if (DEBUG) {
-      System.err.println(("SummarizedMethod ctor: " + ref + " " + summary));
+      System.err.println(("SummarizedMethod ctor: " + ref + ' ' + summary));
     }
   }
 

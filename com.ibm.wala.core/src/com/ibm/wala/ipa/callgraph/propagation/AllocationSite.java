@@ -42,7 +42,7 @@ public class AllocationSite implements InstanceKey {
 
   @Override
   public String toString() {
-    return "SITE{" + getMethod() + ":" + site + "}";
+    return "SITE{" + getMethod() + ':' + site + '}';
   }
 
   public NewSiteReference getSite() {

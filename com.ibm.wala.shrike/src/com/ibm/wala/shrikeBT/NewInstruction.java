@@ -102,7 +102,7 @@ public final class NewInstruction extends Instruction {
 
   @Override
   public String toString() {
-    return "New(" + type + "," + arrayBoundsCount + ")";
+    return "New(" + type + ',' + arrayBoundsCount + ')';
   }
 
   @Override

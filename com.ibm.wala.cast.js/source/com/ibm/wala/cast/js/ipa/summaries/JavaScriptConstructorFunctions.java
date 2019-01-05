@@ -75,7 +75,7 @@ public class JavaScriptConstructorFunctions {
 
     @Override
     public String toString() {
-      return "<ctor for " + getReference().getDeclaringClass() + toStringExtra + ">";
+      return "<ctor for " + getReference().getDeclaringClass() + toStringExtra + '>';
     }
     
     public IClass constructedType() {
@@ -409,7 +409,7 @@ public class JavaScriptConstructorFunctions {
     //S.addConstant(8, new ConstantValue("__proto__"));
 
     if (receiver != cls)
-      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls, "(" + cls.getReference().getName() + ")"));
+      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls, "(" + cls.getReference().getName() + ')'));
     else
       return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls));
   }

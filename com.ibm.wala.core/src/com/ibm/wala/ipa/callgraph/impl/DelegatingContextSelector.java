@@ -47,7 +47,7 @@ public class DelegatingContextSelector implements ContextSelector {
   @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (DEBUG) {
-      System.err.println(("getCalleeTarget " + caller + " " + site + " " + callee));
+      System.err.println(("getCalleeTarget " + caller + ' ' + site + ' ' + callee));
       System.err.println("Trying with A: " +  A.getClass());
       System.err.println("Trying with B: " +  B.getClass());
     }
@@ -55,7 +55,7 @@ public class DelegatingContextSelector implements ContextSelector {
       Context C = A.getCalleeTarget(caller, site, callee, receiver);
       if (C != null) {
         if (DEBUG) {
-          System.err.println(("Case A " + A.getClass() + " " + C));
+          System.err.println(("Case A " + A.getClass() + ' ' + C));
         }
         Context CB = B.getCalleeTarget(caller, site, callee, receiver);
         if (CB != null) {
@@ -67,7 +67,7 @@ public class DelegatingContextSelector implements ContextSelector {
     }
     Context C = B.getCalleeTarget(caller, site, callee, receiver);
     if (DEBUG) {
-      System.err.println(("Case B " + B.getClass() + " " + C));
+      System.err.println(("Case B " + B.getClass() + ' ' + C));
     }
     return C;
   }

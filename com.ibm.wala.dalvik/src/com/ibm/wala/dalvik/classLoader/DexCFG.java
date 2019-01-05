@@ -593,7 +593,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
         @Override
         public String toString() {
-            return "BB[Dex]" + getNumber() + " - " + dexMethod.getDeclaringClass().getReference().getName() + "." + dexMethod.getName();
+            return "BB[Dex]" + getNumber() + " - " + dexMethod.getDeclaringClass().getReference().getName() + '.' + dexMethod.getName();
         }
 
         /*

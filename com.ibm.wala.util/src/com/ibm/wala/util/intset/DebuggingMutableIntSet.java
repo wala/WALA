@@ -125,7 +125,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       boolean ssr = secondaryImpl.containsAny(db.secondaryImpl);
 
       if (ppr != ssr) {
-        assert ppr == ssr : "containsAny " + this + " " + set + " " + ppr + " " + ssr;
+        assert ppr == ssr : "containsAny " + this + ' ' + set + ' ' + ppr + ' ' + ssr;
       }
       return ppr;
     } else {
@@ -237,7 +237,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
       if (ppr != ssr) {
         System.err.println("ppr was " + ppr + " (should be " + (ps != primaryImpl.size()) + ") but ssr was " + ssr + " (should be "
-            + (ss != secondaryImpl.size()) + ")");
+            + (ss != secondaryImpl.size()) + ')');
         System.err.println("adding " + set + " to " + this + " failed");
         Assertions.UNREACHABLE();
       }

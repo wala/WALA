@@ -846,14 +846,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       currentSuccessorBlock = null;
       IInstruction[] instructions = getInstructions();
       if (DEBUG) {
-        System.err.println(("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState));
+        System.err.println(("Entry to BB" + cfg.getNumber(basicBlock) + ' ' + workingState));
       }
       for (int i = basicBlock.getFirstInstructionIndex(); i <= basicBlock.getLastInstructionIndex(); i++) {
         currentInstructionIndex = i;
         instructions[i].visit(visitor);
 
         if (DEBUG) {
-          System.err.println(("After " + instructions[i] + " " + workingState));
+          System.err.println(("After " + instructions[i] + ' ' + workingState));
         }
       }
       return workingState;
@@ -866,13 +866,13 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       currentSuccessorBlock = to;
       IInstruction[] instructions = getInstructions();
       if (DEBUG) {
-        System.err.println(("Entry to BB" + cfg.getNumber(from) + " " + workingState));
+        System.err.println(("Entry to BB" + cfg.getNumber(from) + ' ' + workingState));
       }
       for (int i = from.getFirstInstructionIndex(); i <= from.getLastInstructionIndex(); i++) {
         currentInstructionIndex = i;
         instructions[i].visit(edgeVisitor);
         if (DEBUG) {
-          System.err.println(("After " + instructions[i] + " " + workingState));
+          System.err.println(("After " + instructions[i] + ' ' + workingState));
         }
       }
       return workingState;

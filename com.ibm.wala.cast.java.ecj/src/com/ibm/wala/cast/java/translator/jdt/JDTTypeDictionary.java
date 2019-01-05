@@ -116,7 +116,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
     @Override
     public String getName() {
-      return "[" + fEltCAstType.getName();
+      return '[' + fEltCAstType.getName();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
     @Override
     public String toString() {
-      return super.toString() + ":" + getName();
+      return super.toString() + ':' + getName();
     }
 
     public JdtJavaType(ITypeBinding type) {

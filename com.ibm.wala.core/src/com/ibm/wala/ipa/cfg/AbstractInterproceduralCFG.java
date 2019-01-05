@@ -269,7 +269,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       assert g.containsNode(call) : "IPCFG does not contain " + call;
     }
     if (DEBUG_LEVEL > 1) {
-      System.err.println("addEdgeFromCallToEntry " + call + " " + entry);
+      System.err.println("addEdgeFromCallToEntry " + call + ' ' + entry);
     }
     g.addEdge(call, entry);
   }

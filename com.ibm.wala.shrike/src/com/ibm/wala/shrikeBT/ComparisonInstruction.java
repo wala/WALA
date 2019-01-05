@@ -123,7 +123,7 @@ final public class ComparisonInstruction extends Instruction implements ICompari
 
   @Override
   public String toString() {
-    return "Comparison(" + getType() + "," + getOperator() + ")";
+    return "Comparison(" + getType() + ',' + getOperator() + ')';
   }
 
   @Override

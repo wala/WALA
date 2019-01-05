@@ -177,7 +177,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     CGNode node = n.getNode();
     PDG<? extends InstanceKey> result = sdg.getPDG(node);
     if (result == null) {
-      Assertions.UNREACHABLE("panic: " + n + " " + node);
+      Assertions.UNREACHABLE("panic: " + n + ' ' + node);
     }
     return result;
   }

@@ -43,6 +43,6 @@ public final class VarVertex extends Vertex implements PointerKey {
 
 	@Override
 	public String toString() {
-	  return "Var(" + func + ", " + valueNumber + ")";
+	  return "Var(" + func + ", " + valueNumber + ')';
 	}
 }

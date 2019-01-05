@@ -639,7 +639,7 @@ public class TypeAnnotation {
   private static TypeReference fromString(ClassLoaderReference clRef, String typeName) {
     // TODO: should we not use some lookup that try to (recursively) find a TypeReference in clRefs parents,
     // and only create a new TypeReference in clRef if this fails? I can't find a such a utility method, though..?!?!
-    return TypeReference.findOrCreate(clRef, "L"+typeName.replaceAll(";", ""));
+    return TypeReference.findOrCreate(clRef, 'L' +typeName.replaceAll(";", ""));
   }
 
   private static boolean mayAppearIn(TargetInfo info, TypeAnnotationLocation location) {

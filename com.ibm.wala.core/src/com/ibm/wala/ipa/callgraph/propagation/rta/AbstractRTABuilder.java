@@ -313,7 +313,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     IClass klass = iKey.getConcreteType();
 
     if (DEBUG) {
-      System.err.println(("iKey: " + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey)));
+      System.err.println(("iKey: " + iKey + ' ' + system.findOrCreateIndexForInstanceKey(iKey)));
     }
 
     if (klass == null) {

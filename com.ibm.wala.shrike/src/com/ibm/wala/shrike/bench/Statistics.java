@@ -58,7 +58,7 @@ public class Statistics {
   private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {
     ClassReader cr = ci.getReader();
     final String className = cr.getName();
-    w.write("Class: " + className + "\n");
+    w.write("Class: " + className + '\n');
 
     boolean allPrivateConstructors = true;
     boolean methodCallsConstructor = false;

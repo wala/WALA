@@ -33,7 +33,7 @@ public final class FieldReference extends MemberReference {
 
   @Override
   public String getSignature() {
-    return getDeclaringClass().getName() + "." + getName() + " " + getFieldType().getName();
+    return getDeclaringClass().getName() + "." + getName() + ' ' + getFieldType().getName();
   }
 
   /**

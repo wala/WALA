@@ -538,7 +538,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public String toString() {
-      return "{ " + base + " type: " + type + "}";
+      return "{ " + base + " type: " + type + '}';
     }
 
     public PointerKey getBase() {
@@ -609,8 +609,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       FilteredPointerKey pk = (FilteredPointerKey) lhs.getPointerKey();
 
       if (DEBUG_FILTER) {
-        String S = "EVAL Filter " + lhs.getPointerKey() + " " + rhs.getPointerKey();
-        S += "\nEVAL      " + lhs + " " + rhs;
+        String S = "EVAL Filter " + lhs.getPointerKey() + ' ' + rhs.getPointerKey();
+        S += "\nEVAL      " + lhs + ' ' + rhs;
         System.err.println(S);
       }
       if (rhs.size() == 0) {
@@ -820,11 +820,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_ARRAY_LOAD) {
         PointsToSetVariable def = getFixedSet();
-        String S = "EVAL ArrayLoad " + rhs.getPointerKey() + " " + def.getPointerKey();
+        String S = "EVAL ArrayLoad " + rhs.getPointerKey() + ' ' + def.getPointerKey();
         System.err.println(S);
-        System.err.println("EVAL ArrayLoad " + def + " " + rhs);
+        System.err.println("EVAL ArrayLoad " + def + ' ' + rhs);
         if (priorInstances != null) {
-          System.err.println("prior instances: " + priorInstances + " " + priorInstances.getClass());
+          System.err.println("prior instances: " + priorInstances + ' ' + priorInstances.getClass());
         }
       }
 
@@ -851,7 +851,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
         }
 
         if (DEBUG_ARRAY_LOAD) {
-          System.err.println("ArrayLoad add assign: " + dVal + " " + p);
+          System.err.println("ArrayLoad add assign: " + dVal + ' ' + p);
         }
         sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
       };
@@ -907,9 +907,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_ARRAY_STORE) {
         PointsToSetVariable val = getFixedSet();
-        String S = "EVAL ArrayStore " + rhs.getPointerKey() + " " + val.getPointerKey();
+        String S = "EVAL ArrayStore " + rhs.getPointerKey() + ' ' + val.getPointerKey();
         System.err.println(S);
-        System.err.println("EVAL ArrayStore " + rhs + " " + getFixedSet());
+        System.err.println("EVAL ArrayStore " + rhs + ' ' + getFixedSet());
       }
 
       if (rhs.size() == 0) {
@@ -934,11 +934,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
         }
         IClass contents = getClassHierarchy().lookupClass(C);
         if (contents == null) {
-          assert false : "null type for " + C + " " + I.getConcreteType();
+          assert false : "null type for " + C + ' ' + I.getConcreteType();
         }
         PointerKey p = getPointerKeyForArrayContents(I);
         if (DEBUG_ARRAY_STORE) {
-          System.err.println("ArrayStore add filtered-assign: " + p + " " + pVal);
+          System.err.println("ArrayStore add filtered-assign: " + p + ' ' + pVal);
         }
 
         // note that the following is idempotent
@@ -989,14 +989,14 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public String toString() {
-      return "GetField " + getField() + "," + getFixedSet().getPointerKey();
+      return "GetField " + getField() + ',' + getFixedSet().getPointerKey();
     }
 
     @Override
     public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_GET) {
-        String S = "EVAL GetField " + getField() + " " + getFixedSet().getPointerKey() + " " + rhs.getPointerKey() + getFixedSet()
-            + " " + rhs;
+        String S = "EVAL GetField " + getField() + ' ' + getFixedSet().getPointerKey() + ' ' + rhs.getPointerKey() + getFixedSet()
+            + ' ' + rhs;
         System.err.println(S);
       }
 
@@ -1009,9 +1009,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
       IntSet value = filterInstances(ref.getValue());
       if (DEBUG_GET) {
-        System.err.println("filtered value: " + value + " " + value.getClass());
+        System.err.println("filtered value: " + value + ' ' + value.getClass());
         if (priorInstances != null) {
-          System.err.println("prior instances: " + priorInstances + " " + priorInstances.getClass());
+          System.err.println("prior instances: " + priorInstances + ' ' + priorInstances.getClass());
         }
       }
       final MutableBoolean sideEffect = new MutableBoolean();
@@ -1022,7 +1022,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
           if (p != null) {
             if (DEBUG_GET) {
-              String S = "Getfield add constraint " + dVal + " " + p;
+              String S = "Getfield add constraint " + dVal + ' ' + p;
               System.err.println(S);
             }
             sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
@@ -1109,8 +1109,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     @Override
     public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_PUT) {
-        String S = "EVAL PutField " + getField() + " " + (getFixedSet()).getPointerKey() + " " + rhs.getPointerKey()
-            + getFixedSet() + " " + rhs;
+        String S = "EVAL PutField " + getField() + ' ' + (getFixedSet()).getPointerKey() + ' ' + rhs.getPointerKey()
+            + getFixedSet() + ' ' + rhs;
         System.err.println(S);
       }
 
@@ -1137,7 +1137,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
           PointerKey p = getPointerKeyForInstanceField(I, getField());
           if (p != null) {
             if (DEBUG_PUT) {
-              String S2 = "Putfield add constraint " + p + " " + pVal;
+              String S2 = "Putfield add constraint " + p + ' ' + pVal;
               System.err.println(S2);
             }
             sideEffect.b |= system.newFieldWrite(p, assign, pVal);
@@ -1312,7 +1312,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
         }
         IClass contents = getClassHierarchy().lookupClass(C);
         if (contents == null) {
-          assert false : "null type for " + C + " " + I.getConcreteType();
+          assert false : "null type for " + C + ' ' + I.getConcreteType();
         }
         PointerKey p = getPointerKeyForArrayContents(I);
         if (contents.isInterface()) {
@@ -1425,8 +1425,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
       boolean debug = false;
       if (DEBUG_FILTER) {
-        String S = "EVAL InverseFilter/" + filter + " " + lhs.getPointerKey() + " " + rhs.getPointerKey();
-        S += "\nEVAL      " + lhs + " " + rhs;
+        String S = "EVAL InverseFilter/" + filter + ' ' + lhs.getPointerKey() + ' ' + rhs.getPointerKey();
+        S += "\nEVAL      " + lhs + ' ' + rhs;
         System.err.println(S);
       }
       if (rhs.size() == 0) {

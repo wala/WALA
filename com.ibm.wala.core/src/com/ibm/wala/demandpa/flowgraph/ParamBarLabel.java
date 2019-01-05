@@ -78,7 +78,7 @@ public class ParamBarLabel extends CallLabel {
 
   @Override
   public String toString() {
-    return "paramBar[" + callSite + "]";
+    return "paramBar[" + callSite + ']';
   }
 
 }

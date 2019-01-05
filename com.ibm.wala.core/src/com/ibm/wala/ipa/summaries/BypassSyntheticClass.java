@@ -166,7 +166,7 @@ public class BypassSyntheticClass extends SyntheticClass {
 
   @Override
   public String toString() {
-    return "<Synthetic " + (realType.isInterface() ? "Implementor" : "Subclass") + " " + realType.toString() + ">";
+    return "<Synthetic " + (realType.isInterface() ? "Implementor" : "Subclass") + ' ' + realType.toString() + '>';
   }
 
   public IClass getRealType() {

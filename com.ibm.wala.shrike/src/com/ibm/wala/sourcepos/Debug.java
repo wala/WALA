@@ -95,36 +95,36 @@ public final class Debug {
   }
 
   public static void error(String str, Object... obj) {
-    log(LogLevel.ERROR, str + "\n", obj);
+    log(LogLevel.ERROR, str + '\n', obj);
   }
 
   public static void warn(String str, Object... obj) {
-    log(LogLevel.WARN, str + "\n", obj);
+    log(LogLevel.WARN, str + '\n', obj);
   }
 
   public static void info(String str, Object... obj) {
-    log(LogLevel.INFO, str + "\n", obj);
+    log(LogLevel.INFO, str + '\n', obj);
   }
 
   public static void debug(String str, Object... obj) {
-    log(LogLevel.DEBUG, str + "\n", obj);
+    log(LogLevel.DEBUG, str + '\n', obj);
   }
 
   public static void error(String str) {
-    log(LogLevel.ERROR, str + "\n");
+    log(LogLevel.ERROR, str + '\n');
   }
 
   public static void warn(String str) {
-    log(LogLevel.WARN, str + "\n");
+    log(LogLevel.WARN, str + '\n');
   }
 
   public static void logTime() {
     Date date = new Date();
-    log(LogLevel.INFO, "Current time: " + date + "\n");
+    log(LogLevel.INFO, "Current time: " + date + '\n');
   }
 
   public static void info(String str) {
-    log(LogLevel.INFO, str + "\n");
+    log(LogLevel.INFO, str + '\n');
   }
 
   public static void appendInfo(String str) {
@@ -134,7 +134,7 @@ public final class Debug {
   }
 
   public static void debug(String str) {
-    log(LogLevel.DEBUG, str + "\n");
+    log(LogLevel.DEBUG, str + '\n');
   }
 
   public static void error(Throwable t) {
@@ -195,7 +195,7 @@ public final class Debug {
 
     @Override
     public void println(String str) {
-      Debug.log(level, str + "\n");
+      Debug.log(level, str + '\n');
     }
   }
 

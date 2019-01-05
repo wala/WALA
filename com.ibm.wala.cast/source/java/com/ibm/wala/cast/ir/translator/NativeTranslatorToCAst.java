@@ -84,10 +84,10 @@ public abstract class NativeTranslatorToCAst
       public String toString() {
         String urlString = sourceURL.toString();
         if (urlString.lastIndexOf(File.separator) == -1)
-          return "[" + fl + ":" + fc + "]->[" + ll + ":" + lc + "]";
+          return "[" + fl + ':' + fc + "]->[" + ll + ':' + lc + ']';
         else
-          return urlString.substring(urlString.lastIndexOf(File.separator) + 1) + "@[" + fl + ":" + fc + "]->[" + ll + ":" + lc
-              + "]";
+          return urlString.substring(urlString.lastIndexOf(File.separator) + 1) + "@[" + fl + ':' + fc + "]->[" + ll + ':' + lc
+              + ']';
       }
 
       @Override

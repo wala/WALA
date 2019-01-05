@@ -94,7 +94,7 @@ public class Bench {
 
   private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {
     final String className = ci.getReader().getName();
-    w.write("Class: " + className + "\n");
+    w.write("Class: " + className + '\n');
     w.flush();
 
     for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
@@ -102,7 +102,7 @@ public class Bench {
 
       // d could be null, e.g., if the method is abstract or native
       if (d != null) {
-        w.write("Instrumenting " + ci.getReader().getMethodName(m) + " " + ci.getReader().getMethodType(m) + ":\n");
+        w.write("Instrumenting " + ci.getReader().getMethodName(m) + ' ' + ci.getReader().getMethodType(m) + ":\n");
         w.flush();
 
         if (disasm) {
@@ -120,7 +120,7 @@ public class Bench {
         me.beginPass();
 
         if (doEntry) {
-          final String msg0 = "Entering call to " + Util.makeClass("L" + ci.getReader().getName() + ";") + "."
+          final String msg0 = "Entering call to " + Util.makeClass('L' + ci.getReader().getName() + ';') + '.'
               + ci.getReader().getMethodName(m);
           final int noTraceLabel = me.allocateLabel();
           me.insertAtStart(new MethodEditor.Patch() {
@@ -137,7 +137,7 @@ public class Bench {
           });
         }
         if (doExit) {
-          final String msg0 = "Exiting call to " + Util.makeClass("L" + ci.getReader().getName() + ";") + "."
+          final String msg0 = "Exiting call to " + Util.makeClass('L' + ci.getReader().getName() + ';') + '.'
               + ci.getReader().getMethodName(m);
           IInstruction[] instr = me.getInstructions();
           for (int i = 0; i < instr.length; i++) {
@@ -160,7 +160,7 @@ public class Bench {
           }
         }
         if (doException) {
-          final String msg0 = "Exception exiting call to " + Util.makeClass("L" + ci.getReader().getName() + ";") + "."
+          final String msg0 = "Exception exiting call to " + Util.makeClass('L' + ci.getReader().getName() + ';') + '.'
               + ci.getReader().getMethodName(m);
           final int noTraceLabel = me.allocateLabel();
           me.addMethodExceptionHandler(null, new MethodEditor.Patch() {

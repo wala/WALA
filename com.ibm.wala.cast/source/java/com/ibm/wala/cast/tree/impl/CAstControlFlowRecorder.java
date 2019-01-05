@@ -82,7 +82,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
     @Override
     public String toString() {
-      return "<key " + label + " : " + from + ">";
+      return "<key " + label + " : " + from + '>';
     }
   }
 

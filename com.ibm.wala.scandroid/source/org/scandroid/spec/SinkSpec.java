@@ -80,7 +80,7 @@ public abstract class SinkSpec implements ISinkSpec {
 	@Override
 	public String toString() {
 		return "SinkSpec [namePattern=" + namePattern + ", argNums="
-				+ Arrays.toString(argNums) + "]";
+				+ Arrays.toString(argNums) + ']';
 	}
 
 	abstract public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(

@@ -83,7 +83,7 @@ public final class GotoInstruction extends Instruction {
 
   @Override
   public String toString() {
-    return "Goto(" + getLabel() + ")";
+    return "Goto(" + getLabel() + ')';
   }
 
   @Override

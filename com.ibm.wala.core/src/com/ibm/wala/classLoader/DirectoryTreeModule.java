@@ -80,7 +80,7 @@ public abstract class DirectoryTreeModule implements Module {
 
   @Override
   public String toString() {
-    return getClass().getName() + ":" + getPath();
+    return getClass().getName() + ':' + getPath();
   }
 
   @Override

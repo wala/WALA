@@ -36,6 +36,6 @@ public class TransitivePrototypeKey extends AbstractFieldPointerKey {
 
   @Override
   public String toString() {
-    return "<proto:" + getName() + ">";
+    return "<proto:" + getName() + '>';
   }
 }

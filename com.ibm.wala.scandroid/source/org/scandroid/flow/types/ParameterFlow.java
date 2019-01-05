@@ -100,15 +100,15 @@ public class ParameterFlow <E extends ISSABasicBlock> extends FlowType<E> {
 
     @Override
     public String toString() {
-        return "ParameterFlow( argNum="+argNum+" "+super.toString()+")";
+        return "ParameterFlow( argNum="+argNum+ ' ' +super.toString()+ ')';
     }
 
     @Override
     public String descString() {
-        String s = "arg(" + argNum + ")";
+        String s = "arg(" + argNum + ')';
         if(!getBlock().isEntryBlock()) {
             SSAInvokeInstruction inv = (SSAInvokeInstruction) ((IExplodedBasicBlock) getBlock().getDelegate()).getInstruction();
-            s = s + ":" + inv.getDeclaredTarget().getSignature();
+            s = s + ':' + inv.getDeclaredTarget().getSignature();
         }
         return s;
     }

@@ -62,6 +62,6 @@ public class CallVertex extends Vertex {
 	
 	@Override
 	public String toString() {
-		return "Callee(" + func + ", " + site + ")";
+		return "Callee(" + func + ", " + site + ')';
 	}
 }

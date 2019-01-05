@@ -114,7 +114,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
     @Override
     public String toString() {
-      return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + "]";
+      return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + ']';
     }
 
   }

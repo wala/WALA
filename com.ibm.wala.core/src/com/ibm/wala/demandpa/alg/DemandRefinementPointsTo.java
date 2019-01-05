@@ -879,7 +879,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       boolean added = findOrCreate(p2setMap, pkAndState).addAll(vals);
       // final boolean added = p2setMap.putAll(pkAndState, vals);
       if (DEBUG && added) {
-        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
+        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ':');
         for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
           System.err.println(ikAndState);
         }

@@ -64,7 +64,7 @@ final class UseDefPair
     }
 	@Override
 	public String toString() {
-		return "UseDefPair [use=" + use + ", def=" + def + "]";
+		return "UseDefPair [use=" + use + ", def=" + def + ']';
 	}
     
 }

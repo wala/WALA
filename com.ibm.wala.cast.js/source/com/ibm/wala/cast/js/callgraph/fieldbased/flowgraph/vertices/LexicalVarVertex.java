@@ -37,6 +37,6 @@ public class LexicalVarVertex extends Vertex {
 	
 	@Override
 	public String toString() {
-		return "LexVar(" + definer.substring(definer.lastIndexOf('/')+1) + ", " + name + ")";
+		return "LexVar(" + definer.substring(definer.lastIndexOf('/')+1) + ", " + name + ')';
 	}
 }

@@ -42,7 +42,7 @@ public class SetPrototype extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "set_prototype(" + getValueString(symbolTable, object) + ", " + getValueString(symbolTable, prototype) + ")";
+    return "set_prototype(" + getValueString(symbolTable, object) + ", " + getValueString(symbolTable, prototype) + ')';
   }
 
   @Override

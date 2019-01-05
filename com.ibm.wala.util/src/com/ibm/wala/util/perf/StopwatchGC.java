@@ -51,7 +51,7 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
   public final String report() {
     String result = "";
     if (getCount() > 0) {
-      result += "Stopwatch: " + name + " " + getElapsedMillis() + " ms" + "\n";
+      result += "Stopwatch: " + name + ' ' + getElapsedMillis() + " ms" + '\n';
 
     }
     if (getCount() == 1) {

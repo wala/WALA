@@ -1068,7 +1068,7 @@ public class ClassWriter implements ClassConstants {
       throw new IllegalArgumentException("buf is null");
     }
     if (offset < 0 || offset + 1 >= buf.length) {
-      throw new IllegalArgumentException("buf is too short " + buf.length + " " + offset);
+      throw new IllegalArgumentException("buf is too short " + buf.length + ' ' + offset);
     }
     try {
       buf[offset] = (byte) (v >> 8);

@@ -187,7 +187,7 @@ public class MethodSummary {
 
   @Override
   public String toString() {
-    return "[Summary: " + method + "]";
+    return "[Summary: " + method + ']';
   }
 
   /**

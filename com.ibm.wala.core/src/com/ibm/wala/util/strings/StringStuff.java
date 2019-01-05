@@ -87,7 +87,7 @@ public class StringStuff {
       if (primitiveClassNames.get(dString) != null) {
         return primitiveClassNames.get(dString);
       } else {
-        return "L" + dString;
+        return 'L' + dString;
       }
     }
   }
@@ -119,7 +119,7 @@ public class StringStuff {
       if (primitiveClassNames.get(dString) != null) {
         return primitiveClassNames.get(dString);
       } else {
-        return "L" + dString + ";";
+        return 'L' + dString + ';';
       }
     }
   }
@@ -394,7 +394,7 @@ public class StringStuff {
         return new ImmutableByteArray(name.b, lastSlash + 1, L);
       }
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Malformed name: " + name + " " + start + " " + length, e);
+      throw new IllegalArgumentException("Malformed name: " + name + ' ' + start + ' ' + length, e);
     }
   }
 

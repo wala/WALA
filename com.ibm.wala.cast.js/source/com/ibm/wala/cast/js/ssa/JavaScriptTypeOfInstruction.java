@@ -31,7 +31,7 @@ public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, getDef(0)) + " = typeof(" + getValueString(symbolTable, getUse(0)) + ")";
+    return getValueString(symbolTable, getDef(0)) + " = typeof(" + getValueString(symbolTable, getUse(0)) + ')';
   }
 
   @Override

@@ -164,7 +164,7 @@ public class StackMapTableWriter extends Element {
     if (type == null) {
       return type;
     } else if (type.startsWith("[")) {
-      return "[" + hackUnknown(type.substring(1));
+      return '[' + hackUnknown(type.substring(1));
     } else if ("L?;".equals(type)) {
       return "Ljava/lang/Object;";
     } else {

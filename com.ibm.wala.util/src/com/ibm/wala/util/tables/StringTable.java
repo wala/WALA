@@ -155,7 +155,7 @@ public class StringTable extends Table<String> implements Cloneable {
     StringTokenizer st = delimiter == null ? new StringTokenizer(line) : new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
     Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
-        + " row " + row + " " + line.length() + " " + line);
+        + " row " + row + ' ' + line.length() + ' ' + line);
     SimpleVector<String> r = new SimpleVector<>();
     rows.add(row, r);
     for (int i = 0; i < nColumns; i++) {

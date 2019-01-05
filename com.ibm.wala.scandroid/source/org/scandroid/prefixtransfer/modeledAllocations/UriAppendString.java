@@ -70,7 +70,7 @@ public class UriAppendString extends InstanceKeySite {
         retVal.copyState(input);
         String prefix = input.getPrefix(uriInstanceID);
         if (input.fullPrefixKnown.contains(uriInstanceID)) {
-            retVal.update(instanceID, prefix + "/" + input.getPrefix(stringInstanceID));
+            retVal.update(instanceID, prefix + '/' + input.getPrefix(stringInstanceID));
             if (input.fullPrefixKnown.contains(stringInstanceID))
                 retVal.include(instanceID);
         }
@@ -80,7 +80,7 @@ public class UriAppendString extends InstanceKeySite {
 
     @Override
     public String toString() {
-        return ("UriAppendString(instanceID = " + instanceID + "; uriInstanceID = " + uriInstanceID + "; stringInstanceID = " + stringInstanceID + ")");
+        return ("UriAppendString(instanceID = " + instanceID + "; uriInstanceID = " + uriInstanceID + "; stringInstanceID = " + stringInstanceID + ')');
     }
 
     @Override

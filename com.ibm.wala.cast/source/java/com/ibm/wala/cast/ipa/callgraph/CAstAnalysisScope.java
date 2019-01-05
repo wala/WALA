@@ -134,6 +134,6 @@ public class CAstAnalysisScope extends AnalysisScope {
 
   @Override
   public String toString() {
-    return super.toString() + "\n" + theLoader + ": " + getModules(theLoader);
+    return super.toString() + '\n' + theLoader + ": " + getModules(theLoader);
   }
 }

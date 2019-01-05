@@ -227,7 +227,7 @@ public class JDT2CAstUtils {
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     String dollarSignNumber = binName.substring(binName.indexOf('$'));
-    return "<anonymous subclass of " + ct.getSuperclass().getBinaryName() + ">" + dollarSignNumber;
+    return "<anonymous subclass of " + ct.getSuperclass().getBinaryName() + '>' + dollarSignNumber;
   }
 
   /**

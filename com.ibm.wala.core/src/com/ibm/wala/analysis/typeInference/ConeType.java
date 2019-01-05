@@ -85,7 +85,7 @@ public class ConeType extends TypeAbstraction {
       return false;
     }
     if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
-      Assertions.UNREACHABLE("different chas " + this + " " + other);
+      Assertions.UNREACHABLE("different chas " + this + ' ' + other);
     }
     return type.equals(other.type);
   }

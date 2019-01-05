@@ -206,7 +206,7 @@ public class StringBuilderUseAnalysis {
 
 		@Override
 		public String toString() {
-			return ("StringBuilderToString(instanceID = " + instanceID + "; concatenatedInstanceKeys = " + concatenatedInstanceKeys + ")");
+			return ("StringBuilderToString(instanceID = " + instanceID + "; concatenatedInstanceKeys = " + concatenatedInstanceKeys + ')');
 		}
 
 		@Override

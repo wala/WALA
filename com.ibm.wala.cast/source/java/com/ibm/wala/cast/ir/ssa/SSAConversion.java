@@ -92,7 +92,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public String toString() {
-      return "[use " + useNumber + " of " + instructionIndex + "]";
+      return "[use " + useNumber + " of " + instructionIndex + ']';
     }
     
     @Override
@@ -134,7 +134,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public String toString() {
-      return "[use " + useNumber + " of " + phiNumber + " of block " + BBnumber + "]";
+      return "[use " + useNumber + " of " + phiNumber + " of block " + BBnumber + ']';
     }
     
     @Override
@@ -203,13 +203,13 @@ public class SSAConversion extends AbstractSSAConversion {
 
     private void addChild(CopyPropagationRecord rec) {
       if (DEBUG_UNDO)
-        System.err.println(("(" + rec.instructionIndex + "," + rec.rhs + ") is a child of (" + instructionIndex + "," + rhs + ")"));
+        System.err.println(("(" + rec.instructionIndex + ',' + rec.rhs + ") is a child of (" + instructionIndex + ',' + rhs + ')'));
       childRecords.add(rec);
     }
 
     private void addUse(int instructionIndex, int use) {
       if (DEBUG_UNDO)
-        System.err.println(("propagated use of (" + this.instructionIndex + "," + this.rhs + ") at use #" + use + " of instruction #"
+        System.err.println(("propagated use of (" + this.instructionIndex + ',' + this.rhs + ") at use #" + use + " of instruction #"
         + instructionIndex));
       UseRecord rec = new UseRecord(instructionIndex, use);
       copyPropagationMap.put(rec, this);
@@ -653,7 +653,7 @@ public class SSAConversion extends AbstractSSAConversion {
           if (lexicalUses != null) {
             System.err.print(("extra uses for " + instructions[i] + ": "));
             for (int lexicalUse : lexicalUses) {
-              System.err.print((Integer.valueOf(lexicalUse).toString() + " "));
+              System.err.print((Integer.valueOf(lexicalUse).toString() + ' '));
             }
             System.err.println("");
           }

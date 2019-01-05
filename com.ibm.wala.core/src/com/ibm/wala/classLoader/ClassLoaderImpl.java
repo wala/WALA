@@ -250,7 +250,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
       ShrikeClassReaderHandle entryReader = new ShrikeClassReaderHandle(entry);
 
-      className = "L" + className;
+      className = 'L' + className;
       if (DEBUG_LEVEL > 0) {
         System.err.println("Load class " + className);
       }
@@ -276,7 +276,7 @@ public class ClassLoaderImpl implements IClassLoader {
             // so we can null out and re-read class file contents
             loadedClasses.put(T, new ShrikeClass(entryReader, this, cha));
             if (DEBUG_LEVEL > 1) {
-              System.err.println("put " + T + " ");
+              System.err.println("put " + T + ' ');
             }
           } else {
             Warnings.add(InvalidClassFile.create(className));
@@ -401,7 +401,7 @@ public class ClassLoaderImpl implements IClassLoader {
     for (ModuleEntry entry : sourceModules) {
       String className = entry.getClassName().replace('.', '/');
       className = className.replace(File.separatorChar, '/');
-      className = "L" + ((className.startsWith("/")) ? className.substring(1) : className);
+      className = 'L' + ((className.startsWith("/")) ? className.substring(1) : className);
       TypeName T = TypeName.string2TypeName(className);
 
       // Note: entry.getClassName() may not return the correct class name, for example, 
@@ -436,7 +436,7 @@ public class ClassLoaderImpl implements IClassLoader {
         // look at substrings starting after '/' characters, in the hope
         // that we find a known class name
         while (className.indexOf('/') > 0) {
-          className = "L" + className.substring(className.indexOf('/') + 1, className.length());
+          className = 'L' + className.substring(className.indexOf('/') + 1, className.length());
           TypeName T2 = TypeName.string2TypeName(className);
           if (loadedClasses.get(T2) != null) {
             if (DEBUG_LEVEL > 0) {

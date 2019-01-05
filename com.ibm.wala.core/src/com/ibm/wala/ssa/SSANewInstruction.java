@@ -75,7 +75,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter()
+    return getValueString(symbolTable, result) + " = new " + site.getDeclaredType() + '@' + site.getProgramCounter()
         + (params == null ? "" : array2String(params, symbolTable));
   }
 

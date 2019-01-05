@@ -65,7 +65,7 @@ public final class ClassReader implements ClassConstants {
       throw new InvalidClassFileException(offset, "bad magic number: " + magic);
     }
     if (majorVersion < 45 || majorVersion > 52) {
-      throw new InvalidClassFileException(offset, "unknown class file version: " + majorVersion + "." + minorVersion);
+      throw new InvalidClassFileException(offset, "unknown class file version: " + majorVersion + '.' + minorVersion);
     }
     
     cpParser = new ConstantPoolParser(bytes, offset, constantPoolCount);

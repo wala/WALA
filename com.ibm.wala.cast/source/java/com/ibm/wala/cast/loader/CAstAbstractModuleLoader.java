@@ -261,7 +261,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
     @Override
     public String toString() {
-      return "<Code body of " + cls + ">";
+      return "<Code body of " + cls + '>';
     }
 
     @Override
@@ -350,7 +350,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
       @Override
       public String toString() {
-        return "Core[" + getReference().getName().toString().substring(1) + "]";
+        return "Core[" + getReference().getName().toString().substring(1) + ']';
       }
 
       @Override

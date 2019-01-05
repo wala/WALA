@@ -41,7 +41,7 @@ public final class StaticFieldKey extends AbstractPointerKey {
   }
   @Override
   public String toString() {
-    return "[" + field + "]";
+    return "[" + field + ']';
   }
   public IField getField() {
     return field;

@@ -119,7 +119,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + T + " " + nImplementors;
+      return getClass().toString() + " : " + T + ' ' + nImplementors;
     }
 
     public static ManySubtypesWarning create(TypeAbstraction T, int n) {

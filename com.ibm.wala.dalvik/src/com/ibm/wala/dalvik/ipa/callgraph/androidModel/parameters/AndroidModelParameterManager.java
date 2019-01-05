@@ -685,6 +685,6 @@ public class AndroidModelParameterManager {
 
     @Override
     public String toString() {
-        return "<AndroidModelParameterManager " + this.description + ">";
+        return "<AndroidModelParameterManager " + this.description + '>';
     }
 }

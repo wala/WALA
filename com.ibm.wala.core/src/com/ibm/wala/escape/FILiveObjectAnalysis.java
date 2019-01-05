@@ -177,7 +177,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
             AbstractLocalPointerKey local = (AbstractLocalPointerKey) node;
             localRootNodes.add(local.getNode());
           } else {
-            Assertions.UNREACHABLE("unexpected base of TypedPointerKey: " + node.getClass() + " " + node);
+            Assertions.UNREACHABLE("unexpected base of TypedPointerKey: " + node.getClass() + ' ' + node);
           }
         }
       }

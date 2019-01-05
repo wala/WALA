@@ -49,7 +49,7 @@ public class PhiStatement extends Statement {
 
   @Override
   public String toString() {
-    return "PHI " + getNode() + ":" + phi;
+    return "PHI " + getNode() + ':' + phi;
   }
 
   public SSAPhiInstruction getPhi() {

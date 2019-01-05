@@ -120,7 +120,7 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
 
   @Override
   public String toString() {
-    return "BinaryOp(" + getType() + "," + getOperator() + ")";
+    return "BinaryOp(" + getType() + ',' + getOperator() + ')';
   }
 
   @Override

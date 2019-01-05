@@ -85,7 +85,7 @@ public class Mangler {
 
   private static void doClass(final ClassInstrumenter ci, Writer w, final Random r) throws Exception {
     final String className = ci.getReader().getName();
-    w.write("Class: " + className + "\n");
+    w.write("Class: " + className + '\n');
     w.flush();
 
     for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
@@ -93,7 +93,7 @@ public class Mangler {
 
       // d could be null, e.g., if the method is abstract or native
       if (d != null) {
-        w.write("Instrumenting " + ci.getReader().getMethodName(m) + " " + ci.getReader().getMethodType(m) + ":\n");
+        w.write("Instrumenting " + ci.getReader().getMethodName(m) + ' ' + ci.getReader().getMethodType(m) + ":\n");
         w.flush();
 
         if (disasm) {

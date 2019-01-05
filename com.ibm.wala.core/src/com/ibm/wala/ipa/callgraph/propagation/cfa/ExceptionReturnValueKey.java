@@ -23,7 +23,7 @@ public final class ExceptionReturnValueKey extends ReturnValueKey {
 
   @Override
   public String toString() {
-    return "[Exc-Ret-V:" + getNode() + "]";
+    return "[Exc-Ret-V:" + getNode() + ']';
   }
 
   @Override

@@ -78,7 +78,7 @@ public class ReturnBarLabel extends CallLabel {
 
   @Override
   public String toString() {
-    return "returnBar[" + callSite + "]";
+    return "returnBar[" + callSite + ']';
   }
 
 }

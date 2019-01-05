@@ -498,7 +498,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
         	
         }
         
-        return pkgName.toUnicodeString() + "/" + className.toUnicodeString();
+        return pkgName.toUnicodeString() + '/' + className.toUnicodeString();
     }
 
 }

@@ -76,7 +76,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     IMethod m = (IMethod) c.getValue();
 /** BEGIN Custom change: caching */
     final IMethod method = node.getMethod();
-    final String hashKey = method.toString() + "@" + recv.toString();
+    final String hashKey = method.toString() + '@' + recv.toString();
     
     IR result = cache.get(hashKey);
     

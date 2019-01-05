@@ -184,7 +184,7 @@ public abstract class DefaultSCanDroidOptions implements ISCanDroidOptions {
 				+ options.getReflectionOptions() + ", getSummariesURI()="
 				+ options.getSummariesURI() + ", classHierarchyWarnings()="
 				+ options.classHierarchyWarnings() + ", cgBuilderWarnings()="
-				+ options.cgBuilderWarnings() + "]";
+				+ options.cgBuilderWarnings() + ']';
 	}
 
 }

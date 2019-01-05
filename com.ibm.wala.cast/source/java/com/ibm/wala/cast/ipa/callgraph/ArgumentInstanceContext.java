@@ -75,7 +75,7 @@ public class ArgumentInstanceContext implements Context {
 
   @Override
   public String toString() {
-    return "ArgumentInstanceContext [base=" + base + ", index=" + index + ", instanceKey=" + instanceKey + "]";
+    return "ArgumentInstanceContext [base=" + base + ", index=" + index + ", instanceKey=" + instanceKey + ']';
   }
   
   

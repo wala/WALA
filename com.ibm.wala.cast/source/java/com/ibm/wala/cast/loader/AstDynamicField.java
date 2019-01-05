@@ -26,7 +26,7 @@ public class AstDynamicField implements IField {
 
   @Override
   public String toString() {
-    return "<field " + name + ">";
+    return "<field " + name + '>';
   }
 
   @Override

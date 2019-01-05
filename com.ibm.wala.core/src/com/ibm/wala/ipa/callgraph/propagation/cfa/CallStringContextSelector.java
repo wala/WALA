@@ -57,7 +57,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
 
     @Override
     public String toString() {
-      return "CallStringContextPair: " + cs.toString() + ":" + base.toString();
+      return "CallStringContextPair: " + cs.toString() + ':' + base.toString();
     }
 
     @Override

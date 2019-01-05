@@ -427,7 +427,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           if (((ConeType) T).isInterface()) {
             Set<IClass> implementors = T.getType().getClassHierarchy().getImplementors(ref);
             if (DEBUG) {
-              System.err.println(("Implementors for " + T + " " + implementors));
+              System.err.println(("Implementors for " + T + ' ' + implementors));
             }
             if (implementors.isEmpty()) {
               if (DEBUG) {
@@ -443,7 +443,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           } else {
             Collection<IClass> subclasses = T.getType().getClassHierarchy().computeSubClasses(ref);
             if (DEBUG) {
-              System.err.println(("Subclasses for " + T + " " + subclasses));
+              System.err.println(("Subclasses for " + T + ' ' + subclasses));
             }
             if (subclasses.isEmpty()) {
               if (DEBUG) {

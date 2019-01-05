@@ -153,7 +153,7 @@ public class AndroidSettingFactory {
             type = Intent.IntentType.INTERNAL_TARGET;   // TODO Ehhh...
         } else if (!(name.contains("."))) {
             if ((pack != null) && (!pack.isEmpty())) {
-                name = pack + "." + name;
+                name = pack + '.' + name;
             }
             type = Intent.IntentType.INTERNAL_TARGET;   // TODO Ehhh...
         } else if ((pack != null) && (name.startsWith(pack))) {

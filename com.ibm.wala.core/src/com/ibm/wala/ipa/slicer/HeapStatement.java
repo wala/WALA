@@ -53,7 +53,7 @@ public abstract class HeapStatement extends Statement {
     
     @Override
     public String toString() {
-      return getKind().toString() + ":" + getNode() + " " + getLocation() + " call:" + getCall();
+      return getKind().toString() + ':' + getNode() + ' ' + getLocation() + " call:" + getCall();
     }
 
     @Override
@@ -101,7 +101,7 @@ public abstract class HeapStatement extends Statement {
     
     @Override
     public String toString() {
-      return getKind().toString() + ":" + getNode() + " " + getLocation();
+      return getKind().toString() + ':' + getNode() + ' ' + getLocation();
     }
   }
 
@@ -130,7 +130,7 @@ public abstract class HeapStatement extends Statement {
 
     @Override
     public String toString() {
-      return getKind().toString() + ":" + getNode() + " " + getLocation() + " call:" + getCall();
+      return getKind().toString() + ':' + getNode() + ' ' + getLocation() + " call:" + getCall();
     }
 
     @Override
@@ -178,7 +178,7 @@ public abstract class HeapStatement extends Statement {
     
     @Override
     public String toString() {
-      return getKind().toString() + ":" + getNode() + " " + getLocation();
+      return getKind().toString() + ':' + getNode() + ' ' + getLocation();
     }
   }
 

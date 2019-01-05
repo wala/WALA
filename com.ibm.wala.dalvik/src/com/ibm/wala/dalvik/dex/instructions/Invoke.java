@@ -98,7 +98,7 @@ public abstract class Invoke extends Instruction {
                 sep=",";
             }
             argString.append(')');
-            return "InvokeVirtual "+clazzName+" "+methodName+" "+descriptor+" "+ argString +" "+pc;
+            return "InvokeVirtual "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
         }
 
     }
@@ -129,7 +129,7 @@ public abstract class Invoke extends Instruction {
                 sep=",";
             }
             argString.append(')');
-            return "InvokeSuper "+clazzName+" "+methodName+" "+descriptor+" "+ argString +" "+pc;
+            return "InvokeSuper "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
         }
 
     }
@@ -159,7 +159,7 @@ public abstract class Invoke extends Instruction {
                 sep=",";
             }
             argString.append(')');
-            return "InvokeDirect "+clazzName+" "+methodName+" "+descriptor+" "+ argString +" "+pc;
+            return "InvokeDirect "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
         }
 
 
@@ -190,7 +190,7 @@ public abstract class Invoke extends Instruction {
                 sep=",";
             }
             argString.append(')');
-            return "InvokeStatic "+clazzName+" "+methodName+" "+descriptor+" "+ argString +" "+pc;
+            return "InvokeStatic "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
         }
 
     }
@@ -219,7 +219,7 @@ public abstract class Invoke extends Instruction {
                 sep=",";
             }
             argString.append(')');
-            return "InvokeInterface "+clazzName+" "+methodName+" "+descriptor+" "+ argString +" "+pc;
+            return "InvokeInterface "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
         }
 
     }

@@ -76,7 +76,7 @@ public abstract class AstLexicalAccess extends SSAInstruction {
 
     @Override
     public String toString() {
-      return "Access(" + variableName + "@" + variableDefiner + ":" + valueNumber + ")";
+      return "Access(" + variableName + '@' + variableDefiner + ':' + valueNumber + ')';
     }
   }
 

@@ -106,10 +106,10 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 						return previouslyRequired.get(sourceModule.getClassName());
 					}
 					
-					String className = "L" + sourceModule.getClassName() + "/nodejsModule";
+					String className = 'L' + sourceModule.getClassName() + "/nodejsModule";
 					if (sourceModule instanceof NodejsRequiredSourceModule
 							&& ((NodejsRequiredSourceModule) sourceModule).getFile().toString().endsWith(".json")) {
-						className = "L" + sourceModule.getClassName() + "/jsonModule";
+						className = 'L' + sourceModule.getClassName() + "/jsonModule";
 					}
 					
 					JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy(), jsLoader, sourceModule);

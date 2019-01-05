@@ -94,6 +94,6 @@ public class FieldElement extends CodeElement {
     @Override
     public String toString()
     {
-        return "FieldElement("+fieldRef.getSignature()+","+object+")";
+        return "FieldElement("+fieldRef.getSignature()+ ',' +object+ ')';
     }
 }

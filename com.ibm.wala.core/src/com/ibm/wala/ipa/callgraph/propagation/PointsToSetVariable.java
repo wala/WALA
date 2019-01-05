@@ -157,6 +157,6 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
 
   @Override
   public String toString() {
-    return pointerKey.toString() + ":" + super.toString();
+    return pointerKey.toString() + ':' + super.toString();
   }
 }

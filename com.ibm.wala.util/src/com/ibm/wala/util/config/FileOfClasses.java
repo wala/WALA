@@ -47,7 +47,7 @@ public class FileOfClasses extends SetOfClasses {
         if (line.startsWith("#")) continue;
   
         if (regex == null) {
-          regex = new StringBuilder("(" + line + ")");
+          regex = new StringBuilder('(' + line + ')');
         } else {
           regex.append("|(").append(line).append(')');
         }
@@ -79,9 +79,9 @@ public class FileOfClasses extends SetOfClasses {
     Matcher m = pattern.matcher(klassName);
     if (DEBUG) {
       if (m.matches()) {
-        System.err.println(klassName + " " + true);
+        System.err.println(klassName + ' ' + true);
       } else {
-        System.err.println(klassName + " " + false);
+        System.err.println(klassName + ' ' + false);
       }
     }
     return m.matches();

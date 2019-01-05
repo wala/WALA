@@ -83,7 +83,7 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
 
   @Override
   public String toString() {
-    return "UnaryOp(" + getType() + "," + getOperator() + ")";
+    return "UnaryOp(" + getType() + ',' + getOperator() + ')';
   }
 
   @Override

@@ -94,7 +94,7 @@ public final class DupInstruction extends Instruction {
 
   @Override
   public String toString() {
-    return "Dup(" + size + "," + delta + ")";
+    return "Dup(" + size + ',' + delta + ')';
   }
 
   @Override

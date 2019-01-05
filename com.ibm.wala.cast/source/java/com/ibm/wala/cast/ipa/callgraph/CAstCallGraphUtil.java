@@ -50,7 +50,7 @@ public class CAstCallGraphUtil {
     // URLs. It seems that, in DOS, URL.getFile() does not return a
     // \-separated file name, but rather one with /'s. Rather makes one
     // wonder why the function is called get_File_ :(
-    return makeSourceModule(script, dir + "/" + name);
+    return makeSourceModule(script, dir + '/' + name);
   }
 
   public static SourceFileModule makeSourceModule(URL script, String scriptName) {
@@ -110,7 +110,7 @@ public class CAstCallGraphUtil {
           if (s.indexOf('(') != -1) {
             String functionName = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
             functionName = functionName.substring(functionName.lastIndexOf('/') + 1);
-            result += " " + functionName;
+            result += ' ' + functionName;
           }
         }
         result = "ctor of " + result;

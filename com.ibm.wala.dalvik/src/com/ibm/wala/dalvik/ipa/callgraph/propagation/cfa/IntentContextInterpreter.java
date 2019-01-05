@@ -112,7 +112,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
      */
     private AndroidComponent fetchTargetComponent(final Intent intent, final IMethod method) {
         assert (method != null);
-        assert (intentStarters.getInfo(method.getReference()) != null) : "No IntentStarter for Method " + method + " " + intent;
+        assert (intentStarters.getInfo(method.getReference()) != null) : "No IntentStarter for Method " + method + ' ' + intent;
         if (intent.getComponent() != null) {
             return intent.getComponent();
         } else if (intent.getType() == Intent.IntentType.SYSTEM_SERVICE) {

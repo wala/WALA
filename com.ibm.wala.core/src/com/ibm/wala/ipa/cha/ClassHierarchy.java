@@ -646,7 +646,7 @@ public class ClassHierarchy implements IClassHierarchy {
         return null;
       } else {
         if (DEBUG) {
-          System.err.println(("Attempt to resolve for " + receiverClass + " in superclass: " + superclass + " " + selector));
+          System.err.println(("Attempt to resolve for " + receiverClass + " in superclass: " + superclass + ' ' + selector));
         }
         return resolveMethod(superclass, selector);
       }
@@ -829,7 +829,7 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       Set<IClass> superA;
       superA = getSuperclasses(a);
-      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + b + ": " + superA + ", " + superB);
+      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + ' ' + b + ": " + superA + ", " + superB);
       return null;
     }
   }
@@ -1268,7 +1268,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + klass + " " + message;
+      return getClass().toString() + " : " + klass + ' ' + message;
     }
 
     public static ClassExclusion create(TypeReference klass, String message) {
