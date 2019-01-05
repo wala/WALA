@@ -14,14 +14,15 @@ dependencies {
 		)
 }
 
-task createPackageList(type: CreatePackageList) {
+tasks.register('createPackageList', CreatePackageList) {
 	sourceSet sourceSets.main.java
 }
 
-javadoc {
-	def rhino = project(':com.ibm.wala.cast.js.rhino').compileJava
-	dependsOn rhino
+tasks.named('javadoc').configure {
+	def rhinoName = ':com.ibm.wala.cast.js.rhino'
+	dependsOn "$rhinoName:compileJava"
+
 	doFirst {
-		classpath += files rhino
+		classpath += files project(rhinoName).compileJava
 	}
 }

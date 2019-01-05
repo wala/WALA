@@ -1,6 +1,6 @@
 sourceSets.test.resources.srcDirs = ['examples-src']
 
-task downloadAjaxslt(type: VerifiedDownload) {
+final def downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) {
 	def version = '0.8.1'
 	def versionedArchive = "ajaxslt-${version}.tar.gz"
 	src "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/$versionedArchive"
@@ -8,8 +8,9 @@ task downloadAjaxslt(type: VerifiedDownload) {
 	checksum 'c995abe3310a401bb4db7f28a6409756'
 }
 
-task unpackAjaxslt(type: Sync, dependsOn: downloadAjaxslt) {
-	from(tarTree(downloadAjaxslt.dest)) {
+tasks.register('unpackAjaxslt', Sync) {
+	dependsOn downloadAjaxslt
+	from(tarTree(downloadAjaxslt.get().dest)) {
 		eachFile {
 			def newSegments = relativePath.segments[1 .. -1] as String[]
 			relativePath new RelativePath(!directory, newSegments)
@@ -18,6 +19,12 @@ task unpackAjaxslt(type: Sync, dependsOn: downloadAjaxslt) {
 	into 'examples-src/ajaxslt'
 }
 
-clean.dependsOn cleanUnpackAjaxslt
+tasks.named('cleanUnpackAjaxslt')
 
-processTestResources.dependsOn(unpackAjaxslt)
+tasks.named('clean').configure {
+	dependsOn 'cleanUnpackAjaxslt'
+}
+
+tasks.named('processTestResources').configure {
+	dependsOn 'unpackAjaxslt'
+}

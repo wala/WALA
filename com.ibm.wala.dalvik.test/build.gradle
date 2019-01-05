@@ -13,14 +13,15 @@ sourceSets.test {
 def osName = System.getProperty('os.name')
 ext.isWindows = osName.startsWith('Windows ')
 
-task downloadDroidBench(type: VerifiedDownload) {
+final def downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest "$temporaryDir/DroidBench_2.0.zip"
 	checksum '16726a48329835140e14f18470a1b4a3'
 }
 
-task unpackDroidBench(type: Sync, dependsOn: downloadDroidBench) {
-	from(zipTree(downloadDroidBench.dest)) {
+tasks.register('unpackDroidBench', Sync) {
+	dependsOn downloadDroidBench
+	from(zipTree(downloadDroidBench.get().dest)) {
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.segments[1..-1] as String[])
 		}
@@ -30,7 +31,7 @@ task unpackDroidBench(type: Sync, dependsOn: downloadDroidBench) {
 	includeEmptyDirs false
 }
 
-task downloadAndroidSdk(type: VerifiedDownload) {
+final def downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDownload) {
 	def sdkOs
 	switch (osName) {
 		case ~/Linux/:
@@ -54,8 +55,9 @@ task downloadAndroidSdk(type: VerifiedDownload) {
 	algorithm 'SHA-256'
 }
 
-task installAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
-	from zipTree(downloadAndroidSdk.dest)
+final def installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
+	dependsOn downloadAndroidSdk
+	from zipTree(downloadAndroidSdk.get().dest)
 	into temporaryDir
 
 	def buildToolsVersion = '26.0.2'
@@ -90,37 +92,59 @@ task installAndroidSdk(type: Sync, dependsOn: downloadAndroidSdk) {
 	outputs.cacheIf { true }
 }
 
-task copyDxJar(type: Sync, dependsOn: installAndroidSdk) {
-	from "${files(installAndroidSdk).singleFile}/build-tools/${installAndroidSdk.components['build-tools']}/lib/dx.jar"
+final def copyDxJar = tasks.register('copyDxJar', Sync) {
+	dependsOn installAndroidSdk
+	from "${files(installAndroidSdk).singleFile}/build-tools/${installAndroidSdk.get().components['build-tools']}/lib/dx.jar"
 	into 'lib'
 }
 
-clean.dependsOn cleanCopyDxJar
+tasks.named('cleanCopyDxJar')
 
-compileTestJava.dependsOn copyDxJar
-afterEclipseBuildshipImport.dependsOn copyDxJar
-prepareIntelliJIDEA.dependsOn copyDxJar
+tasks.named('clean').configure {
+	dependsOn 'cleanCopyDxJar'
+}
 
-task copyAndroidJar(type: Sync, dependsOn: installAndroidSdk) {
-	from "${installAndroidSdk.destinationDir}/platforms/${installAndroidSdk.components['platforms']}/android.jar"
+tasks.named('compileTestJava').configure {
+	dependsOn 'copyDxJar'
+}
+
+tasks.named('afterEclipseBuildshipImport').configure {
+	dependsOn 'copyDxJar'
+}
+
+tasks.named('prepareIntelliJIDEA').configure {
+	dependsOn 'copyDxJar'
+}
+
+tasks.register('copyAndroidJar', Sync) {
+	dependsOn installAndroidSdk
+	from "${installAndroidSdk.get().destinationDir}/platforms/${installAndroidSdk.get().components['platforms']}/android.jar"
 	into temporaryDir
 }
 
-task downloadSampleCup(type: VerifiedDownload) {
+tasks.register('downloadSampleCup', VerifiedDownload) {
 	src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
 	dest 'data/sample.cup'
 	checksum '76b549e7c6e802b811a374248175ecf4'
 }
 
-clean.dependsOn cleanDownloadSampleCup
+tasks.named('cleanDownloadSampleCup')
 
-task downloadSampleLex(type: VerifiedDownload) {
+tasks.named('clean').configure {
+	dependsOn 'cleanDownloadSampleCup'
+}
+
+tasks.register('downloadSampleLex', VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
 	dest 'data/sample.lex'
 	checksum 'ae887758b2657981d023a72a165da830'
 }
 
-clean.dependsOn cleanDownloadSampleLex
+tasks.named('cleanDownloadSampleLex')
+
+tasks.named('clean').configure {
+	dependsOn 'cleanDownloadSampleLex'
+}
 
 publishing.publications {
 	mavenJava(MavenPublication) {
@@ -132,7 +156,7 @@ dependencies {
 	testCompile(
 		'junit:junit:4.12',
 		'org.osgi:org.osgi.core:4.2.0',
-		files("${copyDxJar.destinationDir}/dx.jar"),
+		files("${copyDxJar.get().destinationDir}/dx.jar"),
 		project(':com.ibm.wala.core'),
 		project(':com.ibm.wala.dalvik'),
 		project(':com.ibm.wala.shrike'),
@@ -142,7 +166,7 @@ dependencies {
 	testRuntime files("${copyAndroidJar.destinationDir}/android.jar")
 }
 
-processTestResources {
+tasks.named('processTestResources').configure {
 	from copyAndroidJar
 	from downloadSampleCup
 	from downloadSampleLex
@@ -150,15 +174,19 @@ processTestResources {
 }
 
 if (isWindows)
-	test.exclude '**/droidbench/**'
+	tasks.named('test').configure {
+		exclude '**/droidbench/**'
+	}
 else
-	processTestResources.dependsOn unpackDroidBench
+	tasks.named('processTestResources').configure {
+		dependsOn 'unpackDroidBench'
+	}
 
-test {
+tasks.named('test').configure {
 	maxHeapSize = '800M'
 }
 
-task cleanTestExtras(type: Delete) {
+tasks.register('cleanTestExtras', Delete) {
 	delete(
 			'parser.java',
 			'report',
@@ -166,4 +194,6 @@ task cleanTestExtras(type: Delete) {
 	)
 }
 
-cleanTest.dependsOn cleanTestExtras
+tasks.named('cleanTest').configure {
+	dependsOn 'cleanTestExtras'
+}

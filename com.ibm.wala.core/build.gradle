@@ -19,7 +19,7 @@ dependencies {
 		)
 }
 
-javadoc {
+tasks.named('javadoc').configure {
 	def dalvik = ':com.ibm.wala.dalvik'
 	dependsOn "$dalvik:compileJava"
 

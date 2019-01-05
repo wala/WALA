@@ -87,10 +87,13 @@ subprojects { subproject ->
 		}
 	}
 
-	task afterEclipseBuildshipImport(dependsOn: processTestResources)
-	task prepareIntelliJIDEA
+	tasks.register('afterEclipseBuildshipImport') {
+		dependsOn 'processTestResources'
+	}
 
-	test {
+	tasks.register('prepareIntelliJIDEA')
+
+	tasks.named('test').configure {
 		include '**/*Test.class'
 		include '**/*TestCase.class'
 		include '**/*Tests.class'
@@ -101,7 +104,7 @@ subprojects { subproject ->
 	}
 }
 
-task afterEclipseBuildshipImport(type: Exec) {
+tasks.register('afterEclipseBuildshipImport', Exec) {
 	commandLine './revert-launchers.sh'
 }
 
@@ -166,7 +169,7 @@ allprojects {
 //
 
 allprojects {
-	tasks.withType(Javadoc) {
+	tasks.withType(Javadoc).configureEach {
 		options.addBooleanOption('Xdoclint:all,-missing', true)
 		options.quiet()
 	}
@@ -199,9 +202,10 @@ allprojects {
 @SuppressWarnings("unused")
 final def addCastLibrary(project, recipient) {
 	recipient.binaries.whenElementFinalized { binary ->
-		binary.linkTask.get().configure { task ->
-			final def castTask = project.project(':com.ibm.wala.cast:cast').tasks.getByName(task.name)
-			addRpath(task, getNativeLibraryOutput(castTask))
+		binary.linkTask.get().configure { linkTask ->
+			project.project(':com.ibm.wala.cast:cast').tasks.named(linkTask.name).configure { castTask ->
+				addRpath(linkTask, getNativeLibraryOutput(castTask))
+			}
 		}
 	}
 
