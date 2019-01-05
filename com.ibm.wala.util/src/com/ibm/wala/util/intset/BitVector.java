@@ -40,9 +40,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   void expand(int newCapacity) {
     int[] oldbits = bits;
     bits = new int[subscript(newCapacity) + 1];
-    for (int i = 0; i < oldbits.length; i++) {
-      bits[i] = oldbits[i];
-    }
+    System.arraycopy(oldbits, 0, bits, 0, oldbits.length);
   }
 
   /**

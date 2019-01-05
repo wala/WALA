@@ -20,7 +20,8 @@ public class System {
    * A simple model of object-array copy.
    * This is not completely correct.  TODO: fix it.
    */
-  static void arraycopy(Object src, Object dest) {   
+  @SuppressWarnings("ManualArrayCopy")
+  static void arraycopy(Object src, Object dest) {
     if (src instanceof Object[]) {
       Object[] A = (Object[]) src;
       Object[] B = (Object[]) dest;

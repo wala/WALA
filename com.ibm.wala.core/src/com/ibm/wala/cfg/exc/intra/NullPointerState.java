@@ -123,10 +123,8 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   @Override
   public void copyState(NullPointerState v) {
     assert v.vars.length == vars.length;
-    
-    for (int i = 0; i < v.vars.length; i++) {
-      vars[i] = v.vars[i];
-    }
+
+    System.arraycopy(v.vars, 0, vars, 0, v.vars.length);
   }
 
   /**
