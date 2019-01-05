@@ -104,7 +104,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
             buffer.append('\n');
           }
           if (length != 0)
-            System.err.println("Unexpected problems in " + source + "\n " + buffer.toString());
+            System.err.println("Unexpected problems in " + source + "\n " + buffer);
         }
       }
     }

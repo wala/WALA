@@ -61,7 +61,7 @@ public class UrlManipulator {
           contextPath.append(split[i]);
           contextPath.append('/');
         }
-        absoluteUrl = new URL(context.getProtocol(), context.getHost(), contextPath.toString() + urlFound);
+        absoluteUrl = new URL(context.getProtocol(), context.getHost(), contextPath + urlFound);
       }
     } else{
       absoluteUrl = new URL(urlFound);

@@ -151,7 +151,7 @@ public class ClassPrinter {
         }
       }
     }
-    return "0x" + Integer.toString(16, flags) + "(" + buf.toString() + ")";
+    return "0x" + Integer.toString(16, flags) + "(" + buf + ")";
   }
 
   private void dumpAttributes(ClassReader cr, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
