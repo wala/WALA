@@ -659,7 +659,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     Iterator<INodeWithNumber> result = delegateGraph.getSuccNodes(v);
     for (int i = 0; i < invImplicitUnaryMap.size(); i++) {
       UnaryOperator op = invImplicitUnaryMap.getKey(i);
-      IBinaryNaturalRelation R = (IBinaryNaturalRelation) invImplicitUnaryMap.getValue(i);
+      IBinaryNaturalRelation R = invImplicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result = new CompoundIterator<>(new ImplicitUseIterator(op, v, s), result);
@@ -685,7 +685,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     Iterator<INodeWithNumber> result = delegateGraph.getPredNodes(v);
     for (int i = 0; i < implicitUnaryMap.size(); i++) {
       UnaryOperator op = implicitUnaryMap.getKey(i);
-      IBinaryNaturalRelation R = (IBinaryNaturalRelation) implicitUnaryMap.getValue(i);
+      IBinaryNaturalRelation R = implicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result = new CompoundIterator<>(new ImplicitDefIterator(op, s, v), result);
