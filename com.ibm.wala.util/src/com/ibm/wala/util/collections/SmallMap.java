@@ -67,12 +67,13 @@ public class SmallMap<K, V> implements Map<K, V> {
    * 
    * @return the ith key
    */
-  public Object getValue(int i) throws IllegalStateException {
+  @SuppressWarnings("unchecked")
+  public V getValue(int i) throws IllegalStateException {
     if (keysAndValues == null) {
       throw new IllegalStateException("getValue on empty map");
     }
     try {
-      return keysAndValues[size() + i];
+      return (V) keysAndValues[size() + i];
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal i: " + i, e);
     }
