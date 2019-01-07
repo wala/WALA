@@ -4,11 +4,11 @@
 //
 
 plugins {
-	id 'com.diffplug.gradle.p2.asmaven' version '3.17.0'
+	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'de.undercouch.download'
-	id 'nebula.lint' version '8.3.1'
-	id 'nebula.source-jar' version '7.0.1' apply false
+	id 'nebula.lint' version '9.2.0'
+	id 'nebula.source-jar' version '9.5.0' apply false
 	id 'maven-publish'
 }
 
