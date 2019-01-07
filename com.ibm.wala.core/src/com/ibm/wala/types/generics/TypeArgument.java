@@ -134,10 +134,8 @@ public class TypeArgument extends Signature {
         if (typeArgs.charAt(i++) == TypeReference.ClassTypeCode) {
           while (typeArgs.charAt(i++) != ';')
             ;
-          args.add(typeArgs.substring(off, i - off - 1));
-        } else {
-          args.add(typeArgs.substring(off, i - off));
         }
+        args.add(typeArgs.substring(off, i));
         continue;
       }
       case (byte) '-':
