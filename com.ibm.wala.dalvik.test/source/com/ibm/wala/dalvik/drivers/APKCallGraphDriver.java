@@ -111,7 +111,7 @@ public class APKCallGraphDriver {
 
           System.err.println("reachable methods for " + apk1);
           for(IMethod m2 : code) {
-            System.err.println("" + m2.getDeclaringClass().getName() + " " + m2.getName() + m2.getDescriptor());
+            System.err.println(m2.getDeclaringClass().getName() + " " + m2.getName() + m2.getDescriptor());
 
           }
           System.err.println("end of methods");

@@ -233,7 +233,7 @@ public class PDFSlice {
       if (st instanceof SSAInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) st;
         if (call.getCallSite().getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-          throw new IllegalArgumentException("this driver computes forward slices from the return value of calls.\n" + ""
+          throw new IllegalArgumentException("this driver computes forward slices from the return value of calls.\n"
               + "Method " + call.getCallSite().getDeclaredTarget().getSignature() + " returns void.");
         }
         return new NormalReturnCaller(s.getNode(), n.getInstructionIndex());
