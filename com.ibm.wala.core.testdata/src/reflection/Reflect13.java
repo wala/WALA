@@ -21,7 +21,7 @@ public class Reflect13 {
       IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
     Method[] m = c.getMethods();
-    int length = new Integer(args[0]).intValue();
+    int length = Integer.parseInt(args[0]);
     m[0].invoke(new Helper(), new Object[length]);
   }
 }
