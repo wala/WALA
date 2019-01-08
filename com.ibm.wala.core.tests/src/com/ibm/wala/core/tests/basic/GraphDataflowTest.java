@@ -209,7 +209,7 @@ public class GraphDataflowTest extends WalaTestCase {
       String n = nodes[i];
       BitVectorVariable varI = solver.getOut(n);
       String s = varI.toString();
-      result.append("Node " + n + "(" + i + ") = " + s + "\n");
+      result.append("Node ").append(n).append('(').append(i).append(") = ").append(s).append('\n');
     }
     return result.toString();
   }

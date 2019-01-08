@@ -69,11 +69,11 @@ public class CAstDumper {
 	private void dump(CAstEntity entity, int indent, StringBuilder buf) {
 		Collection<CAstEntity> scopedEntities = Collections.emptySet();
 		if(entity.getKind() == CAstEntity.SCRIPT_ENTITY) {
-			buf.append(indent(indent) + entity.getName() + ":\n");
+			buf.append(indent(indent)).append(entity.getName()).append(":\n");
 			scopedEntities = dumpScopedEntities(entity, indent+2, buf);
 			dump(entity.getAST(), indent, buf, entity.getControlFlow());
 		} else if(entity.getKind() == CAstEntity.FUNCTION_ENTITY) {
-			buf.append(indent(indent) + "function " + entity.getName() + "(");
+			buf.append(indent(indent)).append("function ").append(entity.getName()).append('(');
 			for(int i=0;i<entity.getArgumentCount();++i) {
 				if(i>0)
 					buf.append(", ");
@@ -82,7 +82,7 @@ public class CAstDumper {
 			buf.append(") {\n");
 			scopedEntities = dumpScopedEntities(entity, indent+2, buf);
 			dump(entity.getAST(), indent+2, buf, entity.getControlFlow());
-			buf.append(indent(indent) + "}\n\n");
+			buf.append(indent(indent)).append("}\n\n");
 		} else {
 			throw new Error("Unknown entity kind " + entity.getKind());
 		}
@@ -100,14 +100,14 @@ public class CAstDumper {
 			}
 		Collections.sort(scopedEntities, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		
-		buf.append(indent(indent) + "> ");
+		buf.append(indent(indent)).append("> ");
 		boolean first = true;
 		for(CAstEntity scopedEntity : scopedEntities) {
 			if(first)
 				first = false;
 			else
 				buf.append(", ");
-			buf.append(scopedEntity.getName() + "@" + labeller.addNode(m.get(scopedEntity)));
+			buf.append(scopedEntity.getName()).append('@').append(labeller.addNode(m.get(scopedEntity)));
 		}
 		buf.append('\n');
 		return scopedEntities;
@@ -145,14 +145,14 @@ public class CAstDumper {
 		    if(!isTrivial(node.getChild(i)))
 		      dump(node.getChild(i), indent, buf, cfg);
 		} else {
-			buf.append(indent(indent) + labeller.addNode(node) + ": ");
+			buf.append(indent(indent)).append(labeller.addNode(node)).append(": ");
 			if(node.getKind() == CAstNode.CONSTANT) {
 				if(node.getValue() == null)
 					buf.append("null");
 				else if(node.getValue() instanceof Integer)
 					buf.append(String.valueOf(node.getValue()));
 				else
-					buf.append("\"" + node.getValue() + "\"");
+					buf.append("\"").append(node.getValue()).append("\"");
 			} else if(node.getKind() == CAstNode.OPERATOR) {
 				buf.append(node.getValue().toString());
 			} else {
@@ -170,9 +170,9 @@ public class CAstDumper {
 						buf.append(", ");
 					}
 					if(label instanceof CAstNode)
-						buf.append("CAstNode@" + labeller.addNode((CAstNode)label) + ": ");
+						buf.append("CAstNode@").append(labeller.addNode((CAstNode) label)).append(": ");
 					else
-						buf.append(label + ": ");
+						buf.append(label).append(": ");
 					buf.append(labeller.addNode(target));
 				}
 				buf.append(']');
