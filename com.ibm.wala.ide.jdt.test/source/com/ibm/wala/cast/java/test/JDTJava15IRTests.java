@@ -8,7 +8,7 @@ package com.ibm.wala.cast.java.test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Test;
 
@@ -129,6 +129,6 @@ public class JDTJava15IRTests extends JDTJavaTest {
   public void testTypeInferencePrimAndStringOp() throws IllegalArgumentException, CancelException, IOException {
     String pkgName = "javaonepointfive";
     runTest(singlePkgTestSrc(pkgName), rtJar, simplePkgTestEntryPoint(pkgName),
-        Arrays.asList(new TypeInferenceAssertion(pkgName + File.separator + singleInputForTest())), false, null);
+        Collections.singletonList(new TypeInferenceAssertion(pkgName + File.separator + singleInputForTest())), false, null);
   }
 }
