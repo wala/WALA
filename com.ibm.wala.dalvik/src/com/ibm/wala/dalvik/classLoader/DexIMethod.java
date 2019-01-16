@@ -3194,12 +3194,11 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 					return newArray.newSiteRef.getDeclaredType().getArrayElementType();
 				}
 			} else if (curInst.getOpcode() == Opcode.MOVE_OBJECT || curInst.getOpcode() == Opcode.MOVE_OBJECT_16 || curInst.getOpcode() == Opcode.MOVE_OBJECT_FROM16) {
-				TwoRegisterInstruction tri = (TwoRegisterInstruction) curInst;
-				int regA = tri.getRegisterA();
-				int regB = tri.getRegisterB();
-				if (regA == interestingRegister) {
-					interestingRegister = regB;
-				}
+                UnaryOperation uo = (UnaryOperation) curInst;
+
+                if (uo.destination == interestingRegister) {
+                    interestingRegister = uo.source;
+                }
 			}
 			// all other instructions are ignored
 			curCounter--;
