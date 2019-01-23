@@ -48,9 +48,9 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
+import com.ibm.wala.dalvik.dex.instructions.BinaryOperation.DalvikBinaryOp;
 import org.jf.dexlib2.Opcode;
 
-import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.dalvik.classLoader.Literal;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
@@ -90,21 +90,21 @@ public class BinaryLiteralOperation extends Instruction {
         switch(op)
         {
         case CMPL_FLOAT:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_FLOAT:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case CMPL_DOUBLE:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_DOUBLE:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case CMPL_LONG:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_LONG:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case CMPL_INT:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_INT:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case ADD_INT:
             return IBinaryOpInstruction.Operator.ADD;
         case RSUB_INT:
