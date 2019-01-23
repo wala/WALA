@@ -243,7 +243,9 @@ final def addJvmLibrary(project, recipient) {
 							break
 						case 'macos':
 							osIncludeSubdir = 'darwin'
-							libJVM = file("$currentJavaHome/jre/lib/server/libjvm.dylib")
+							final def subdirs = ['jre/lib/server', 'lib/server']
+							final def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.dylib") }
+							libJVM = candidates.find { it.exists() }
 							break
 						case 'windows':
 							osIncludeSubdir = 'win32'

@@ -13,6 +13,7 @@ package com.ibm.wala.util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -59,9 +60,10 @@ public class PlatformUtil {
             String.join(
                 File.pathSeparator,
                 Files.list(Paths.get(System.getenv("JAVA_HOME"), "jmods"))
-                    .map(x -> x.toString())
+                    .map(Path::toString)
                     .collect(Collectors.toList()));
       } catch (IOException e) {
+        throw new IllegalStateException(e);
       }
     } else {
       classpath = System.getProperty("sun.boot.class.path");

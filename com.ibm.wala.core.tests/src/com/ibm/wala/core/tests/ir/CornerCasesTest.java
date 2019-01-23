@@ -14,6 +14,7 @@ import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -50,7 +51,7 @@ public class CornerCasesTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference t =
@@ -74,7 +75,7 @@ public class CornerCasesTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             MY_CLASSLOADER);
     AnalysisOptions options = new AnalysisOptions();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
