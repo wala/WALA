@@ -18,7 +18,6 @@ publishing.publications {
 
 dependencies {
 	testCompile(
-		'eclipse-deps:org.eclipse.core.runtime:+',
 		'junit:junit:4.12',
 		'org.apache.ant:ant:1.8.2',
 		'org.hamcrest:hamcrest-core:1.3',
@@ -49,6 +48,21 @@ tasks.named('test') {
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
 	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
+        testLogging {
+            exceptionFormat = 'full'
+        }
+        // temporarily turn off some tests on JDK 11
+        if (JavaVersion.current() == JavaVersion.VERSION_11) {
+           exclude '**/callGraph/CallGraphTest.class'
+           exclude '**/callGraph/Java7CallGraphTest.class'
+           exclude '**/callGraph/CloneTest.class'
+           exclude '**/callGraph/DebuggingBitsetCallGraphTest.class'
+           exclude '**/callGraph/KawaCallGraphTest.class'
+           exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
+           exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
+           exclude '**/cha/LibraryVersionTest.class'
+           exclude '**/ir/TypeAnnotationTest.class'
+        }
 }
 
 tasks.register('cleanTestExtras', Delete) {

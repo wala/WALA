@@ -3,16 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java.test
 Bundle-Version: 1.5.3.qualifier
-Bundle-Activator: com.ibm.wala.cast.java.test.TestPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.core.tests,
  com.ibm.wala.cast.java,
  com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.shrike,
- org.eclipse.core.runtime,
  org.junit;bundle-version="4.0.0"
-Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.ibm.wala.cast.java.test
