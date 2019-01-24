@@ -50,7 +50,6 @@ package com.ibm.wala.dalvik.dex.instructions;
 
 import org.jf.dexlib2.Opcode;
 
-import com.ibm.wala.cast.ir.ssa.CAstUnaryOp;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator;
@@ -58,7 +57,20 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class UnaryOperation extends Instruction {
 
-    public static enum OpID {MOVE, MOVE_WIDE, MOVE_EXCEPTION, NOT, NEGINT, NOTINT, NEGLONG, NOTLONG, NEGFLOAT, NEGDOUBLE, DOUBLETOLONG, DOUBLETOFLOAT, INTTOBYTE, INTTOCHAR, INTTOSHORT, DOUBLETOINT, FLOATTODOUBLE, FLOATTOLONG, FLOATTOINT, LONGTODOUBLE, LONGTOFLOAT, LONGTOINT, INTTODOUBLE, INTTOFLOAT, INTTOLONG}
+    public enum OpID {MOVE, MOVE_WIDE, MOVE_EXCEPTION, NOT, NEGINT, NOTINT, NEGLONG, NOTLONG, NEGFLOAT, NEGDOUBLE, DOUBLETOLONG, DOUBLETOFLOAT, INTTOBYTE, INTTOCHAR, INTTOSHORT, DOUBLETOINT, FLOATTODOUBLE, FLOATTOLONG, FLOATTOINT, LONGTODOUBLE, LONGTOFLOAT, LONGTOINT, INTTODOUBLE, INTTOFLOAT, INTTOLONG}
+
+    /**
+     * for unary ops not defined in JVML
+     */
+    public enum DalvikUnaryOp implements IUnaryOpInstruction.IOperator {
+        BITNOT;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
+
+    }
 
     public final OpID op;
     public final int source;
@@ -119,15 +131,15 @@ public class UnaryOperation extends Instruction {
         {
         // SSA unary ops
         case NOT:
-            return CAstUnaryOp.BITNOT;
+            return DalvikUnaryOp.BITNOT;
         case NEGINT:
             return IUnaryOpInstruction.Operator.NEG;
         case NOTINT:
-            return CAstUnaryOp.BITNOT;
+            return DalvikUnaryOp.BITNOT;
         case NEGLONG:
             return IUnaryOpInstruction.Operator.NEG;
         case NOTLONG:
-            return CAstUnaryOp.BITNOT;
+            return DalvikUnaryOp.BITNOT;
         case NEGFLOAT:
             return IUnaryOpInstruction.Operator.NEG;
         case NEGDOUBLE:
