@@ -339,7 +339,7 @@ public abstract class IRTests {
   }
   
   protected String[] simpleTestEntryPoint() {
-    return new String[] { "L" + getTestName().substring(4) };
+    return new String[] { 'L' + getTestName().substring(4) };
   }
 
   protected String[] simplePkgTestEntryPoint(String pkgName) {
@@ -436,7 +436,7 @@ public abstract class IRTests {
 
   static TypeReference findOrCreateTypeReference(String loaderName, String typeStr, IClassHierarchy cha) {
     ClassLoaderReference clr = findLoader(loaderName, cha);
-    TypeName typeName = TypeName.string2TypeName("L" + typeStr);
+    TypeName typeName = TypeName.string2TypeName('L' + typeStr);
     TypeReference typeRef = TypeReference.findOrCreate(clr, typeName);
     return typeRef;
   }

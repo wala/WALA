@@ -363,7 +363,7 @@ public abstract class TestPointerAnalyses {
     return t -> {
       System.err.println(t + "  " + name);
       return t.getSelector().equals(AstMethodReference.fnSelector) &&
-          t.getDeclaringClass().getName().toString().startsWith("L" + name);
+          t.getDeclaringClass().getName().toString().startsWith('L' + name);
     };
   }
   

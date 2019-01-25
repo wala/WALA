@@ -530,7 +530,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   private static MethodReference getSliceRootReference(String className, String methodName, String methodDescriptor) {
-    TypeName clsName = TypeName.string2TypeName("L" + className.replace('.', '/'));
+    TypeName clsName = TypeName.string2TypeName('L' + className.replace('.', '/'));
     TypeReference clsRef = TypeReference.findOrCreate(JavaSourceAnalysisScope.SOURCE, clsName);
 
     Atom nameAtom = Atom.findOrCreateUnicodeAtom(methodName);

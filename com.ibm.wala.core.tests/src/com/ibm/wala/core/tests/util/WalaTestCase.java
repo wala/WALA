@@ -98,7 +98,7 @@ public abstract class WalaTestCase {
         File e = new File(s);
          Assert.assertTrue(elt + " expected to exist", e.exists());
         if (e.isDirectory() && !s.endsWith("/")) {
-          s = s + "/";
+          s += '/';
         }
         if (result == null) {
           result = new StringBuilder(s);

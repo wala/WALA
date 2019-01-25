@@ -136,7 +136,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
  
   private static MethodReference callee(String calleeClass, String calleeMethod) {
-      return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + calleeClass), Selector.make(calleeMethod));
+      return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, 'L' + calleeClass), Selector.make(calleeMethod));
   }
 
   protected void checkEdges(CallGraph staticCG) throws IOException {
@@ -201,7 +201,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           if (callerMethod.startsWith("lambda$")) {
             continue loop;
           }
-          MethodReference callerRef = MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + callerClass), Selector.make(callerMethod));
+          MethodReference callerRef = MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, 'L' + callerClass), Selector.make(callerMethod));
           Set<CGNode> nodes = staticCG.getNodes(callerRef);
           if (! filter.test(callerRef)) {
             continue loop;

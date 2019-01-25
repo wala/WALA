@@ -105,7 +105,7 @@ public class SWTCallGraph {
         if (jar.getManifest() != null) {
           String mainClass = jar.getManifest().getMainAttributes().getValue("Main-Class");
           if (mainClass != null) {
-            entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "L" + mainClass.replace('.', '/'));
+            entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, 'L' + mainClass.replace('.', '/'));
           }
         }
       }
