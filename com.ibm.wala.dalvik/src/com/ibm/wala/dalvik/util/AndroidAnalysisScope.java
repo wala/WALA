@@ -45,6 +45,11 @@ public class AndroidAnalysisScope {
 	 * @throws IOException
 	 */
 	public static AnalysisScope setUpAndroidAnalysisScope(URI codeFileName, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
+		return setUpAndroidAnalysisScope(codeFileName, DexFileModule.AUTO_INFER_API_LEVEL, exclusions, loader, androidLib);
+	}
+
+
+	public static AnalysisScope setUpAndroidAnalysisScope(URI codeFileName, int apiLevel, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		AnalysisScope scope;
 		File exclusionsFile = exclusions != null? new File(exclusions) : null;
 
@@ -74,18 +79,17 @@ public class AndroidAnalysisScope {
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-
 		File codeFile = new File(codeFileName);
 		boolean isContainerFile = codeFile.getName().endsWith(".oat") || codeFile.getName().endsWith(".apk");
 
 		if (isContainerFile) {
-			MultiDexContainer<? extends DexBackedDexFile> multiDex = DexFileFactory.loadDexContainer(codeFile, Opcodes.forApi(DexFileModule.API_LEVEL));
+			MultiDexContainer<? extends DexBackedDexFile> multiDex = DexFileFactory.loadDexContainer(codeFile, apiLevel == DexFileModule.AUTO_INFER_API_LEVEL ? null : Opcodes.forApi(apiLevel));
 
 			for (String dexEntry : multiDex.getDexEntryNames()) {
-				scope.addToScope(ClassLoaderReference.Application, new DexFileModule(codeFile, dexEntry));
+				scope.addToScope(ClassLoaderReference.Application, new DexFileModule(codeFile, dexEntry, apiLevel));
 			}
 		} else {
-			scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(codeFile));
+			scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(codeFile, apiLevel));
 		}
 
 		return scope;
