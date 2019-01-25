@@ -109,7 +109,7 @@ public class CAstDumper {
 				buf.append(", ");
 			buf.append(scopedEntity.getName() + "@" + labeller.addNode(m.get(scopedEntity)));
 		}
-		buf.append("\n");
+		buf.append('\n');
 		return scopedEntities;
 	}
 	
@@ -175,9 +175,9 @@ public class CAstDumper {
 						buf.append(label + ": ");
 					buf.append(labeller.addNode(target));
 				}
-				buf.append("]");
+				buf.append(']');
 			}
-			buf.append("\n");
+			buf.append('\n');
 			for(int i=0;i<node.getChildCount();++i) {
 				CAstNode child = node.getChild(i);
 				// omit empty statements in a block

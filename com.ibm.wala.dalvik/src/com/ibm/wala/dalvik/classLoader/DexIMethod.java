@@ -696,7 +696,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
 
 		for (int i = 0; i < instructions().size(); i++) {
-			handlers[i] = temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
+			handlers[i] = temp_array.get(i).toArray(new ExceptionHandler[0]);
 		
 			/*
 			System.out.println("i: " + i);
@@ -718,7 +718,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 		if (instructions == null)
 			parseBytecode();
 
-		return instructions.toArray(new Instruction[ instructions.size() ]);
+		return instructions.toArray(new Instruction[0]);
 	}
 
 	private boolean odexMethod() {
@@ -3194,12 +3194,11 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 					return newArray.newSiteRef.getDeclaredType().getArrayElementType();
 				}
 			} else if (curInst.getOpcode() == Opcode.MOVE_OBJECT || curInst.getOpcode() == Opcode.MOVE_OBJECT_16 || curInst.getOpcode() == Opcode.MOVE_OBJECT_FROM16) {
-				TwoRegisterInstruction tri = (TwoRegisterInstruction) curInst;
-				int regA = tri.getRegisterA();
-				int regB = tri.getRegisterB();
-				if (regA == interestingRegister) {
-					interestingRegister = regB;
-				}
+                UnaryOperation uo = (UnaryOperation) curInst;
+
+                if (uo.destination == interestingRegister) {
+                    interestingRegister = uo.source;
+                }
 			}
 			// all other instructions are ignored
 			curCounter--;
@@ -3213,7 +3212,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 	}
 
 	public Instruction[] getDexInstructions() {
-		return instructions().toArray(new Instruction[instructions().size()]);
+		return instructions().toArray(new Instruction[0]);
 	}
 
 
@@ -3287,9 +3286,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
      */
 	@Override
 	public Collection<CallSiteReference> getCallSites() {
-        Collection<CallSiteReference> empty = Collections.emptySet();
         if (isNative()) {
-            return empty;
+            return Collections.emptySet();
         }
 
         // assert(false) : "Please review getCallSites-Implementation before use!";        // TODO

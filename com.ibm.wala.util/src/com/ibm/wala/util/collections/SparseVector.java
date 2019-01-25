@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -88,9 +89,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
 
   private void ensureCapacity(int capacity) {
     if (data.length < capacity + 1) {
-      Object[] old = data;
-      data = new Object[1 + (int) (capacity * indices.getExpansionFactor())];
-      System.arraycopy(old, 0, data, 0, old.length);
+      data = Arrays.copyOf(data, 1 + (int) (capacity * indices.getExpansionFactor()));
     }
   }
 

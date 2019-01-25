@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -276,9 +277,7 @@ public class CodeScanner {
       if (statement != null) {
         if (statement instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction c = (SSACheckCastInstruction) statement;
-          for(TypeReference t : c.getDeclaredResultTypes()) {
-            result.add(t);
-          }
+          result.addAll(Arrays.asList(c.getDeclaredResultTypes()));
         }
       }
     }

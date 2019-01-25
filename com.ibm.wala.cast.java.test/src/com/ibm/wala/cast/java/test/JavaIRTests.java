@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -83,7 +84,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testTwoClasses() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
 
     cg -> {
       final String typeStr = singleInputForTest();
@@ -137,7 +138,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testInheritance1() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
     cg -> {
       final String typeStr = "Derived";
 
@@ -159,7 +160,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testArray1() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
     /**
      * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
      * SSAArrayLoadInstruction - 1 SSAArrayStoreInstruction
@@ -189,7 +190,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testArrayLiteral1() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
     cg -> {
 
       MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -202,7 +203,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testArrayLiteral2() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
     cg -> {
 
       MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -256,7 +257,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testQualifiedStatic() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
     cg -> {
 
       MethodReference mref = descriptorToMethodRef("Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -273,7 +274,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testStaticNesting() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
 
     cg -> {
       final String typeStr = singleInputForTest() + "$WhatsIt";
@@ -300,7 +301,7 @@ public abstract class JavaIRTests extends IRTests {
   }
   
   @Test public void testInnerClass() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
 
     cg -> {
       final String typeStr = singleInputForTest();
@@ -411,7 +412,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testLocalClass() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
 
     cg -> {
       final String typeStr = singleInputForTest();
@@ -444,7 +445,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testAnonymousClass() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Collections.singletonList(
 
     cg -> {
       final String typeStr = singleInputForTest();

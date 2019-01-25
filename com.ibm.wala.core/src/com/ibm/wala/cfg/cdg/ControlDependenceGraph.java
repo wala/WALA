@@ -106,10 +106,10 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
           Set<T> s = HashSetFactory.make();
           backwardEdges.put(name, s);
         }
-        for (T p : forwardEdges.keySet()) {
-          for (T t : forwardEdges.get(p)) {
+        for (Map.Entry<T, Set<T>> entry : forwardEdges.entrySet()) {
+          for (T t : entry.getValue()) {
             Object n = t;
-            backwardEdges.get(n).add(p);
+            backwardEdges.get(n).add(entry.getKey());
           }
         }
       }
@@ -202,15 +202,15 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (T n : this) {
-      sb.append(n.toString()).append("\n");
+      sb.append(n.toString()).append('\n');
       for (T s : Iterator2Iterable.make(getSuccNodes(n))) {
         sb.append("  --> ").append(s);
         if (edgeLabels != null)
           for (Object name : edgeLabels.get(Pair.make(n, s)))
             sb.append("\n   label: ").append(name);
-        sb.append("\n");
+        sb.append('\n');
       }
     }
 

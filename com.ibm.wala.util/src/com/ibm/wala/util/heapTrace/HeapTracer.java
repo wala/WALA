@@ -669,7 +669,7 @@ public class HeapTracer {
 
 	@Override
 	public String toString() {
-	    StringBuffer result = new StringBuffer();
+	    StringBuilder result = new StringBuilder();
 	    result.append("Totals: " + totalInstances + " " + totalSize + "\n");
 	    TreeSet<Object> sorted = new TreeSet<>(new SizeComparator());
 	    sorted.addAll(instanceCount.keySet());
@@ -680,7 +680,7 @@ public class HeapTracer {
 			.append("   ");
 		result.append(bytes.intValue() / I.intValue()).append("   ");
 		result.append(key);
-		result.append("\n");
+		result.append('\n');
 	    }
 	    return result.toString();
 	}
@@ -761,7 +761,7 @@ totalSize += d.getTotalSize();
 
 	@Override
 	public String toString() {
-	    StringBuffer result = new StringBuffer();
+	    StringBuilder result = new StringBuilder();
 	    result.append("Assuming " + BYTES_IN_HEADER
 		    + " header bytes per object\n");
 	    int totalInstances = 0;
@@ -779,7 +779,7 @@ totalSize += d.getTotalSize();
 		Object root = field;
 		Demographics d = roots.get(root);
 		if (d.getTotalSize() > 10000) {
-		    result.append(" root: ").append(root).append("\n");
+		    result.append(" root: ").append(root).append('\n');
 		    result.append(d);
 		}
 	    }

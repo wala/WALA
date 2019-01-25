@@ -180,10 +180,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   protected void processClassInitializer(IClass klass) {
 
-    if (clinitProcessed.contains(klass)) {
+    if (!clinitProcessed.add(klass)) {
       return;
     }
-    clinitProcessed.add(klass);
 
     if (klass.getClassInitializer() != null) {
       if (DEBUG) {
@@ -320,10 +319,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     if (klass == null) {
       return;
     }
-    if (allocatedClasses.contains(klass)) {
+    if (!allocatedClasses.add(klass)) {
       return;
     }
-    allocatedClasses.add(klass);
     updateSetsForNewClass(klass, iKey, node, newSite);
 
     // side effect of new: may call class initializer

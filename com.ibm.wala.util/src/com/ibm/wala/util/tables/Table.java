@@ -67,21 +67,21 @@ public class Table<T> {
   @Override
   public String toString() {
     int[] format = computeColumnWidths();
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      StringBuffer heading = new StringBuffer(getColumnHeading(i));
+      StringBuilder heading = new StringBuilder(getColumnHeading(i));
       padWithSpaces(heading, format[i]);
       result.append(heading);
     }
-    result.append("\n");
+    result.append('\n');
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {
         T e = getElement(j, i);
-        StringBuffer element = e == null ? new StringBuffer() : new StringBuffer(e.toString());
+        StringBuilder element = e == null ? new StringBuilder() : new StringBuilder(e.toString());
         padWithSpaces(element, format[i]);
         result.append(element);
       }
-      result.append("\n");
+      result.append('\n');
     }
     return result.toString();
   }
@@ -162,13 +162,13 @@ public class Table<T> {
 
   }
   
-  public static void padWithSpaces(StringBuffer b, int length) {
+  public static void padWithSpaces(StringBuilder b, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     if (b.length() < length) {
       for (int i = b.length(); i < length; i++) {
-        b.append(" ");
+        b.append(' ');
       }
     }
   }

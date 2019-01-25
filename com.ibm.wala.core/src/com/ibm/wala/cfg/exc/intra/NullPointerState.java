@@ -123,10 +123,8 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   @Override
   public void copyState(NullPointerState v) {
     assert v.vars.length == vars.length;
-    
-    for (int i = 0; i < v.vars.length; i++) {
-      vars[i] = v.vars[i];
-    }
+
+    System.arraycopy(v.vars, 0, vars, 0, v.vars.length);
   }
 
   /**
@@ -220,7 +218,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   
   @Override
   public String toString() {
-    StringBuffer buf = new StringBuffer("<");
+    StringBuilder buf = new StringBuilder("<");
     for (State var : vars) {
       switch (var) {
       case BOTH:
@@ -360,7 +358,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public String toString() {
-      StringBuffer str = new StringBuffer("PhiValueMeet(" + varNum + ", [");
+      StringBuilder str = new StringBuilder("PhiValueMeet(" + varNum + ", [");
       
       for (int i = 0; i < fromVars.length; i++) {
         str.append(fromVars[i]);

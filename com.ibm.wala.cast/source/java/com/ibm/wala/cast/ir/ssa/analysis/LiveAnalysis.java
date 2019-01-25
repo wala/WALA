@@ -274,11 +274,11 @@ public class LiveAnalysis {
 
       @Override
       public String toString() {
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         for (int i = 0; i < cfg.getNumberOfNodes(); i++) {
           ISSABasicBlock bb = cfg.getNode(i);
-          s.append("live entering ").append(bb).append(":").append(S.getOut(bb)).append("\n");
-          s.append("live exiting ").append(bb).append(":").append(S.getIn(bb)).append("\n");
+          s.append("live entering ").append(bb).append(':').append(S.getOut(bb)).append('\n');
+          s.append("live exiting ").append(bb).append(':').append(S.getIn(bb)).append('\n');
         }
 
         return s.toString();

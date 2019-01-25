@@ -11,6 +11,7 @@
 package com.ibm.wala.util.strings;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -399,9 +400,7 @@ public final class Atom implements Serializable {
    * return an array of bytes representing the utf8 characters in this
    */
   public byte[] getValArray() {
-    byte[] result = new byte[val.length];
-    System.arraycopy(val, 0, result, 0, val.length);
-    return result;
+    return val.clone();
   }
   
   public byte getVal(int i) throws IllegalArgumentException {
@@ -452,9 +451,7 @@ public final class Atom implements Serializable {
       throw new IllegalArgumentException("argument may not be null!");
     }
 
-    byte[] val = new byte[ma.val.length + mb.val.length];
- 
-    System.arraycopy(ma.val, 0, val, 0, ma.val.length);
+    byte[] val = Arrays.copyOf(ma.val, ma.val.length + mb.val.length);
     System.arraycopy(mb.val, 0, val, ma.val.length, mb.val.length);
 
     return findOrCreate(val);

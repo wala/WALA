@@ -105,7 +105,7 @@ public class PDFViewUtil {
   }
 
   private static String getNodeLabel(IR ir, BasicBlock bb) {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
 
     int start = bb.getFirstInstructionIndex();
     int end = bb.getLastInstructionIndex();
@@ -136,7 +136,7 @@ public class PDFViewUtil {
     SSAInstruction[] instructions = ir.getInstructions();
     for (int j = start; j <= end; j++) {
       if (instructions[j] != null) {
-        StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(ir.getSymbolTable()));
+        StringBuilder x = new StringBuilder(j + "   " + instructions[j].toString(ir.getSymbolTable()));
         StringStuff.padWithSpaces(x, 35);
         result.append(x);
         result.append("\\l");

@@ -78,7 +78,7 @@ public abstract class Warning implements Comparable {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append("[").append(severityString()).append("] ");
     result.append(getMsg());
     return result.toString();

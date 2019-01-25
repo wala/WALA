@@ -203,46 +203,46 @@ public final class Descriptor {
 
     @Override
     public String toString() {
-      StringBuffer result = new StringBuffer();
-      result.append("(");
+      StringBuilder result = new StringBuilder();
+      result.append('(');
       if (parameters != null) {
         for (TypeName p : parameters) {
           result.append(p);
           appendSemicolonIfNeeded(result, p);
         }
       }
-      result.append(")");
+      result.append(')');
       result.append(returnType);
       appendSemicolonIfNeeded(result, returnType);
       return result.toString();
     }
 
     public String toUnicodeString() {
-      StringBuffer result = new StringBuffer();
-      result.append("(");
+      StringBuilder result = new StringBuilder();
+      result.append('(');
       if (parameters != null) {
         for (TypeName p : parameters) {
           result.append(p.toUnicodeString());
           appendSemicolonIfNeeded(result, p);
         }
       }
-      result.append(")");
+      result.append(')');
       result.append(returnType);
       appendSemicolonIfNeeded(result, returnType);
       return result.toString();
     }
 
-    private static void appendSemicolonIfNeeded(StringBuffer result, TypeName p) {
+    private static void appendSemicolonIfNeeded(StringBuilder result, TypeName p) {
       if (p.isArrayType()) {
         TypeName e = p.getInnermostElementType();
         String x = e.toUnicodeString();
         if (x.startsWith("L") || x.startsWith("P")) {
-          result.append(";");
+          result.append(';');
         }
       } else {
         String x = p.toUnicodeString();
         if (x.startsWith("L") || x.startsWith("P")) {
-          result.append(";");
+          result.append(';');
         }
       }
     }

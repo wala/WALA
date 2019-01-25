@@ -45,6 +45,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashSet;
@@ -197,9 +198,7 @@ public class Util {
       throw new IllegalArgumentException("data == null");
     }
     if (data.length < newSize) {
-      int[] newData = new int[newSize];
-      System.arraycopy(data, 0, newData, 0, data.length);
-      return newData;
+      return Arrays.copyOf(data, newSize);
     } else
       return data;
   }
@@ -225,7 +224,7 @@ public class Util {
     });
 
     Class<?> c = obj.getClass();
-    StringBuffer buf = new StringBuffer(FULLY_QUALIFIED_NAMES ? c.getName() : removePackageName(c.getName()));
+    StringBuilder buf = new StringBuilder(FULLY_QUALIFIED_NAMES ? c.getName() : removePackageName(c.getName()));
     while (c != Object.class) {
       Field[] fields = c.getDeclaredFields();
 

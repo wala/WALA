@@ -161,7 +161,7 @@ public class EclipseFileProvider extends FileProvider {
    */
   private static URL fixupFileURLSpaces(URL url) {
     String urlString = url.toExternalForm();
-    StringBuffer fixedUpUrl = new StringBuffer();
+    StringBuilder fixedUpUrl = new StringBuilder();
     int lastIndex = 0;
     while (true) {
       int spaceIndex = urlString.indexOf(' ', lastIndex);

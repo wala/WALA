@@ -4,7 +4,7 @@
 //
 
 plugins {
-	id 'com.diffplug.gradle.p2.asmaven' version '3.10.0'
+	id 'com.diffplug.gradle.p2.asmaven' version '3.17.0'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '8.3.1'

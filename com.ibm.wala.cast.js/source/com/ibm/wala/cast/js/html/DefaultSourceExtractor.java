@@ -126,8 +126,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
           //input tags do not need to be in a form
           if (!forms.isEmpty()) {
              if (type.equalsIgnoreCase("RADIO")) {
-              if (! sets.contains(Pair.make(forms.peek(), prop))) {
-                sets.add(Pair.make(forms.peek(), prop));
+              if (sets.add(Pair.make(forms.peek(), prop))) {
                 printlnIndented("  " + makeRef("currentForm", prop) + " = new Array();", tag);
                 printlnIndented("  " + makeRef("currentForm", prop + "Counter") + " = 0;", tag);
               }

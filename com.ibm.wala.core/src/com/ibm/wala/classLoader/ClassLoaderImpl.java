@@ -180,17 +180,7 @@ public class ClassLoaderImpl implements IClassLoader {
    * Remove from s any class file module entries which already are in t
    */
   private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
-    Set<String> old = HashSetFactory.make();
-    for (ModuleEntry m : t) {
-      old.add(m.getClassName());
-    }
-    HashSet<ModuleEntry> toRemove = HashSetFactory.make();
-    for (ModuleEntry m : s) {
-      if (old.contains(m.getClassName())) {
-        toRemove.add(m);
-      }
-    }
-    s.removeAll(toRemove);
+    s.removeAll(t);
   }
 
   /**
@@ -324,9 +314,10 @@ public class ClassLoaderImpl implements IClassLoader {
           if (nestedResult == null) {
             return null;
           }
-          for (String entryName : nestedResult.keySet()) {
+          for (Map.Entry<String, Object> nestedEntry : nestedResult.entrySet()) {
+            final String entryName = nestedEntry.getKey();
             if (!result.containsKey(entryName)) {
-              result.put(entryName, nestedResult.get(entryName));
+              result.put(entryName, nestedEntry.getValue());
             }
           }
         } else if (FileSuffixes.isClassFile(name) || FileSuffixes.isSourceFile(name)) {
@@ -517,12 +508,8 @@ public class ClassLoaderImpl implements IClassLoader {
       }
       loadAllClasses(classFiles, allClassAndSourceFileContents);
       loadAllSources(sourceFiles);
-      for (ModuleEntry file : classFiles) {
-        classModuleEntries.add(file);
-      }
-      for (ModuleEntry file : sourceFiles) {
-        sourceModuleEntries.add(file);
-      }
+      classModuleEntries.addAll(classFiles);
+      sourceModuleEntries.addAll(sourceFiles);
     }
   }
 
@@ -687,19 +674,14 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
-  @SuppressWarnings("unused")
   @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
     }
-    for (IClass klass : toRemove) {
-      if (DEBUG_LEVEL > 0) {
-        System.err.println("removing " + klass.getName());
-      }
-      loadedClasses.remove(klass.getName());
-      sourceMap.remove(klass.getName());
-    }
+    toRemove.stream().map(IClass::getName)
+            .peek(loadedClasses::remove)
+            .forEach(sourceMap::remove);
   }
 
   @Override

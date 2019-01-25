@@ -56,6 +56,7 @@ package org.scandroid.flow;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -116,8 +117,7 @@ public class InflowAnalysis {
             FlowType taintType,
             CodeElement element) {
         
-        Set<CodeElement> elements = new HashSet<>();
-        elements.add(element);
+        final Set<CodeElement> elements = Collections.singleton(element);
         addDomainElements(taintMap, block, taintType, elements);
     }
 

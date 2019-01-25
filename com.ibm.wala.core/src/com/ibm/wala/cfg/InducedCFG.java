@@ -620,16 +620,16 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer("");
+    StringBuilder s = new StringBuilder("");
     for (BasicBlock bb : this) {
-      s.append("BB").append(getNumber(bb)).append("\n");
+      s.append("BB").append(getNumber(bb)).append('\n');
       for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {
-        s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");
+        s.append("  ").append(j).append("  ").append(getInstructions()[j]).append('\n');
       }
 
       Iterator<BasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
-        s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
+        s.append("    -> BB").append(getNumber(succNodes.next())).append('\n');
       }
     }
     return s.toString();

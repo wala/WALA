@@ -65,9 +65,9 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   protected void dumpCG(JSCallGraph cg) {
   	CallGraph2JSON.IGNORE_HARNESS = false;
   	Map<String, Set<String>> edges = CallGraph2JSON.extractEdges(cg);
-  	for(String callsite : edges.keySet())
-  		for(String callee : edges.get(callsite))
-  			System.out.println(callsite + " -> " + callee);
+  	for(Map.Entry<String, Set<String>> entry : edges.entrySet())
+  		for(String callee : entry.getValue())
+  			System.out.println(entry.getKey() + " -> " + callee);
   }
 
 }

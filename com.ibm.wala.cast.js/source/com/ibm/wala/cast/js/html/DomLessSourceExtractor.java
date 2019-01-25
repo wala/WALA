@@ -265,9 +265,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         final BufferedReader scriptReader = new BufferedReader(scriptInputStream);
         ) {
         String line;
-        StringBuffer x = new StringBuffer();
+        StringBuilder x = new StringBuilder();
         while ((line = scriptReader.readLine()) != null) {
-          x.append(line).append("\n");
+          x.append(line).append('\n');
         }
 
         scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc, false);

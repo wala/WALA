@@ -98,7 +98,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
         IProblem[] problems = ast.getProblems();
         int length = problems.length;
         if (length > 0) {
-          StringBuffer buffer = new StringBuffer();
+          StringBuilder buffer = new StringBuilder();
           for (int i = 0; i < length; i++) {
             buffer.append(problems[i].getMessage());
             buffer.append('\n');
@@ -126,7 +126,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   private static void computeClassPath(AnalysisScope scope) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
 
     ClassLoaderReference cl = scope.getApplicationLoader();
 
@@ -179,7 +179,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       parser.setResolveBindings(true);
  
       Set<ICompilationUnit> units = proj.getValue().keySet();
-      parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new JdtAstToIR(proj), null);
+      parser.createASTs(units.toArray(new ICompilationUnit[0]), new String[0], new JdtAstToIR(proj), null);
 
     }
   }

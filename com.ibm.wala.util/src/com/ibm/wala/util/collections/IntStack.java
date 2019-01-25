@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.Arrays;
+
 /**
  * A stack of integer primitives.  This should be more efficient than a java.util.Stack
  */
@@ -29,9 +31,7 @@ public class IntStack {
    */
   public void push(int i) {
     if (state.length <= (top+1)) {
-      int newState[] = new int[ state.length*2 + 1 ];
-      System.arraycopy(state, 0, newState, 0, state.length);
-      state = newState;
+      state = Arrays.copyOf(state, state.length * 2 + 1);
     }
 
     state[++top] = i;

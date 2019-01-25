@@ -59,7 +59,7 @@ public class UrlManipulator {
 
         for (int i = 0; i < split.length - rightTrimFromPath; i++) {
           contextPath.append(split[i]);
-          contextPath.append("/");
+          contextPath.append('/');
         }
         absoluteUrl = new URL(context.getProtocol(), context.getHost(), contextPath.toString() + urlFound);
       }

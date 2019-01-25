@@ -65,6 +65,9 @@ public class ClassHierarchy implements IClassHierarchy {
 
   private static final boolean DEBUG = false;
 
+  public enum MissingSuperClassHandling { NONE, ROOT, PHANTOM }
+
+
   /**
    * Languages that contribute classes to the set represented in this hierarchy. The languages may for example be related by
    * inheritance (e.g. X10 derives from Java, and shares a common type hierarchy rooted at java.lang.Object).
@@ -137,11 +140,14 @@ public class ClassHierarchy implements IClassHierarchy {
   private Collection<TypeReference> runtimeExceptionTypeRefs;
 
   /**
-   * when a superclass is missing, should we create a phantom superclass and add the subclass to
-   * the hierarchy?  Note that we can only create phantom superclass when the class is a
-   * {@link com.ibm.wala.classLoader.BytecodeClass}
+   * How should we handle missing superclasses?
+   * DEFAULT: no special handling, class will be excluded from class hierarchy
+   *    ROOT: replace the missing superclass with the hierarchy root
+   * PHANTOM: create a phantom superclass and add the subclass to the hierarchy.
+   *          Note that we can only create phantom superclass when the class is a
+   *          {@link com.ibm.wala.classLoader.BytecodeClass}
    */
-  private final boolean createPhantomSuperclasses;
+  private final MissingSuperClassHandling superClassHandling;
 
   /**
    * Return a set of {@link IClass} that holds all superclasses of klass
@@ -176,10 +182,12 @@ public class ClassHierarchy implements IClassHierarchy {
         }
       }
     } catch (NoSuperclassFoundException e) {
-      if (createPhantomSuperclasses && klass instanceof BytecodeClass) {
-        // create a phantom superclass.  add it and the root class to the result
-        IClass phantom = getPhantomSuperclass((BytecodeClass) klass);
-        result.add(phantom);
+      if (!superClassHandling.equals(MissingSuperClassHandling.NONE) && klass instanceof BytecodeClass) {
+        if (superClassHandling.equals(MissingSuperClassHandling.PHANTOM)) {
+          // create a phantom superclass.  add it and the root class to the result
+          IClass phantom = getPhantomSuperclass((BytecodeClass) klass);
+          result.add(phantom);
+        }
         result.add(getRootClass());
       } else {
         throw e;
@@ -189,27 +197,27 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language,
-      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, boolean createPhantomSuperclasses)
+      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, MissingSuperClassHandling superClassHandling)
       throws ClassHierarchyException, IllegalArgumentException {
     this(scope, factory, Collections.singleton(language), progressMonitor, map,
-        createPhantomSuperclasses);
+        superClassHandling);
   }
 
   ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor
-      progressMonitor, Map<TypeReference, Node> map, boolean createPhantomSuperclasses)
+      progressMonitor, Map<TypeReference, Node> map, MissingSuperClassHandling superClassHandling)
       throws ClassHierarchyException, IllegalArgumentException {
-    this(scope, factory, scope.getLanguages(), progressMonitor, map, createPhantomSuperclasses);
+    this(scope, factory, scope.getLanguages(), progressMonitor, map, superClassHandling);
   }
 
   ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages,
-      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, boolean createPhantomSuperclasses) throws
+      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, MissingSuperClassHandling superClassHandling) throws
       ClassHierarchyException, IllegalArgumentException {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.
     Warnings.clear();
 
     this.map = map;
-    this.createPhantomSuperclasses = createPhantomSuperclasses;
+    this.superClassHandling = superClassHandling;
     
     if (factory == null) {
       throw new IllegalArgumentException();
@@ -340,7 +348,7 @@ public class ClassHierarchy implements IClassHierarchy {
       loadedSuperclasses = computeSuperclasses(klass);
       loadedSuperInterfaces = klass.getAllImplementedInterfaces();
     } catch (Exception e) {
-      if (createPhantomSuperclasses && e instanceof NoSuperclassFoundException) {
+      if (!superClassHandling.equals(MissingSuperClassHandling.NONE) && e instanceof NoSuperclassFoundException) {
         // this must have been thrown by the getAllImplementedInterfaces() call.
         // for now, just pretend it implements no interfaces
         loadedSuperInterfaces = Collections.emptySet();
@@ -370,8 +378,12 @@ public class ClassHierarchy implements IClassHierarchy {
       try {
         superclass = c.getSuperclass();
       } catch (NoSuperclassFoundException e) {
-        assert createPhantomSuperclasses;
-        superclass = getPhantomSuperclass((BytecodeClass) c);
+        assert !superClassHandling.equals(MissingSuperClassHandling.NONE);
+
+        if (superClassHandling.equals(MissingSuperClassHandling.ROOT))
+          superclass = getRootClass();
+        else
+          superclass = getPhantomSuperclass((BytecodeClass) c);
       }
       if (superclass != null) {
         workingSuperclasses.remove(superclass);
@@ -686,12 +698,12 @@ public class ClassHierarchy implements IClassHierarchy {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(100);
+    StringBuilder result = new StringBuilder(100);
     recursiveStringify(root, result);
     return result.toString();
   }
 
-  private void recursiveStringify(Node n, StringBuffer buffer) {
+  private void recursiveStringify(Node n, StringBuilder buffer) {
     buffer.append(n.toString()).append("\n");
     for (Node child : Iterator2Iterable.make(n.getChildren())) {
       recursiveStringify(child, buffer);
@@ -759,7 +771,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     @Override
     public String toString() {
-      StringBuffer result = new StringBuffer(100);
+      StringBuilder result = new StringBuilder(100);
       result.append(klass.toString()).append(":");
       for (Iterator<Node> i = children.iterator(); i.hasNext();) {
         Node n = i.next();
@@ -1300,4 +1312,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
 /** END Custom change: remember unresolved classes */
+
+  public MissingSuperClassHandling getSuperClassHandling() {
+    return superClassHandling;
+  }
 }

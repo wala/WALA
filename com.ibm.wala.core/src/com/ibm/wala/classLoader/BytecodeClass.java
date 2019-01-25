@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -296,7 +297,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       computeSuperclass();
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
-      throw new NoSuperclassFoundException("No superclass found for " + this + " Superclass name " + superName);
+      // TODO MissingSuperClassHandling.Phantom needs to be implemented
+      if (cha instanceof ClassHierarchy && ((ClassHierarchy) cha).getSuperClassHandling().equals(ClassHierarchy.MissingSuperClassHandling.ROOT)) {
+        superClass = loader.lookupClass(loader.getLanguage().getRootType().getName());
+      } else
+        throw new NoSuperclassFoundException("No superclass found for " + this + " Superclass name " + superName);
     }
     return superClass;
   }
@@ -392,11 +397,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IMethod> getAllMethods() {
-    Collection<IMethod> result = new LinkedList<>();
-    Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
-    while (declaredMethods.hasNext()) {
-      result.add(declaredMethods.next());
-    }
+    Collection<IMethod> result = new LinkedList<>(getDeclaredMethods());
     if (isInterface()) {
       for (IClass i : getDirectInterfaces()) {
         result.addAll(i.getAllMethods());
@@ -410,10 +411,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     IClass s = getSuperclass();
     while (s != null) {
-      Iterator<? extends IMethod> superDeclaredMethods = s.getDeclaredMethods().iterator();
-      while (superDeclaredMethods.hasNext()) {
-        result.add(superDeclaredMethods.next());
-      }
+      result.addAll(s.getDeclaredMethods());
       s = s.getSuperclass();
     }
     return result;

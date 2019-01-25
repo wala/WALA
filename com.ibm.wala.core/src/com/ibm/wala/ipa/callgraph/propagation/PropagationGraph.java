@@ -659,7 +659,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     Iterator<INodeWithNumber> result = delegateGraph.getSuccNodes(v);
     for (int i = 0; i < invImplicitUnaryMap.size(); i++) {
       UnaryOperator op = invImplicitUnaryMap.getKey(i);
-      IBinaryNaturalRelation R = (IBinaryNaturalRelation) invImplicitUnaryMap.getValue(i);
+      IBinaryNaturalRelation R = invImplicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result = new CompoundIterator<>(new ImplicitUseIterator(op, v, s), result);
@@ -685,7 +685,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     Iterator<INodeWithNumber> result = delegateGraph.getPredNodes(v);
     for (int i = 0; i < implicitUnaryMap.size(); i++) {
       UnaryOperator op = implicitUnaryMap.getKey(i);
-      IBinaryNaturalRelation R = (IBinaryNaturalRelation) implicitUnaryMap.getValue(i);
+      IBinaryNaturalRelation R = implicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result = new CompoundIterator<>(new ImplicitDefIterator(op, s, v), result);
@@ -716,8 +716,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return 0;
     }
     int result = delegateGraph.getSuccNodeCount(v);
-    for (UnaryOperator<PointsToSetVariable> op : invImplicitUnaryMap.keySet()) {
-      IBinaryNaturalRelation R = invImplicitUnaryMap.get(op);
+    for (IBinaryNaturalRelation R : invImplicitUnaryMap.values()) {
       IntSet s = R.getRelated(number);
       if (s != null) {
         result += s.size();
@@ -736,8 +735,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return 0;
     }
     int result = delegateGraph.getPredNodeCount(v);
-    for (UnaryOperator<PointsToSetVariable> op : implicitUnaryMap.keySet()) {
-      IBinaryNaturalRelation R = implicitUnaryMap.get(op);
+    for (IBinaryNaturalRelation R : implicitUnaryMap.values()) {
       IntSet s = R.getRelated(number);
       if (s != null) {
         result += s.size();
@@ -1072,7 +1070,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   public String spaceReport() {
-    StringBuffer result = new StringBuffer("PropagationGraph\n");
+    StringBuilder result = new StringBuilder("PropagationGraph\n");
     result.append("ImplicitEdges:" + countImplicitEdges() + "\n");
     // for (Iterator it = implicitUnaryMap.values().iterator(); it.hasNext(); )
     // {

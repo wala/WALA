@@ -176,11 +176,11 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer("<vn " + rhs + " at " + instructionIndex);
+      StringBuilder sb = new StringBuilder("<vn " + rhs + " at " + instructionIndex);
       for (CopyPropagationRecord c : childRecords) {
         sb.append("\n " + c.toString());
       }
-      sb.append(">");
+      sb.append('>');
       return sb.toString();
     }
     
@@ -316,7 +316,7 @@ public class SSAConversion extends AbstractSSAConversion {
         x.addAll(Arrays.asList(vNames));        
       }
 
-      return computedNames[vn] = x.toArray(new String[x.size()]);
+      return computedNames[vn] = x.toArray(new String[0]);
     }
 
     private void undoCopyPropagation(int instructionIndex, int useNumber) {
@@ -343,7 +343,7 @@ public class SSAConversion extends AbstractSSAConversion {
     
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer( super.toString() );
+      StringBuilder sb = new StringBuilder( super.toString() );
       
       for(Map.Entry<Object, CopyPropagationRecord> x : copyPropagationMap.entrySet()) {
         sb.append(x.getKey().toString() + " --> " + x.getValue().toString() + "\n");

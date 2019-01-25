@@ -125,10 +125,12 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	  }
 	  
 	  Set<Pair<CallVertex, FuncVertex>> res = HashSetFactory.make();
-	  for(Vertex v : reachingFunctions.keySet())
-	    if(v instanceof CallVertex)
-	      for(FuncVertex fv : reachingFunctions.get(v))
-	        res.add(Pair.make((CallVertex)v, fv));
+	  for(Map.Entry<Vertex, Set<FuncVertex>> entry : reachingFunctions.entrySet()) {
+		  final Vertex v = entry.getKey();
+		  if(v instanceof CallVertex)
+			for(FuncVertex fv : entry.getValue())
+			  res.add(Pair.make((CallVertex) v, fv));
+	  }
 	  return res;
 	}
 

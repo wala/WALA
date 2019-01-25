@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,9 +54,7 @@ public final class Debug {
 
   private static Set<LogLevel> allowed = new HashSet<>();
   static {
-    for (int i = 0; i < LogLevel.values().length; i++) {
-      allowed.add(LogLevel.values()[i]);
-    }
+      allowed.addAll(Arrays.asList(LogLevel.values()));
   }
 
   public static void setLogFile(String file) throws FileNotFoundException {

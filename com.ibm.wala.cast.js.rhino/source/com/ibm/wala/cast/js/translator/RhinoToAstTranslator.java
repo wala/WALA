@@ -550,7 +550,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   }
 
   private CAstEntity walkEntity(final AstNode n, List<CAstNode> body, String name, WalkContext child) {
-    CAstNode[] stmts = body.toArray(new CAstNode[body.size()]);
+    CAstNode[] stmts = body.toArray(new CAstNode[0]);
 
     // add variable / constant / function declarations, if any
     if (!child.getNameDecls().isEmpty()) {
@@ -560,7 +560,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       if (child.getNameDecls().size() == 1) {
         newStmts[0] = child.getNameDecls().iterator().next();
       } else {
-        newStmts[0] = Ast.makeNode(CAstNode.BLOCK_STMT, child.getNameDecls().toArray(new CAstNode[child.getNameDecls().size()]));
+        newStmts[0] = Ast.makeNode(CAstNode.BLOCK_STMT, child.getNameDecls().toArray(new CAstNode[0]));
       }
       System.arraycopy(stmts, 0, newStmts, 1, stmts.length);
 
@@ -703,7 +703,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 			}
 		}
 		
-		CAstNode lit = Ast.makeNode(CAstNode.OBJECT_LITERAL, eltNodes.toArray(new CAstNode[eltNodes.size()]));
+		CAstNode lit = Ast.makeNode(CAstNode.OBJECT_LITERAL, eltNodes.toArray(new CAstNode[0]));
 		arg.cfg().map(node, lit);
 		return lit;
 	}
@@ -736,7 +736,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 		if (nodes.isEmpty()) {
 			return Ast.makeNode(CAstNode.EMPTY);
 		} else {
-			return Ast.makeNode(CAstNode.BLOCK_STMT, nodes.toArray(new CAstNode[ nodes.size() ]));
+			return Ast.makeNode(CAstNode.BLOCK_STMT, nodes.toArray(new CAstNode[0]));
 		}
 	}
 
@@ -1368,7 +1368,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 		} else {
 			return 
 				Ast.makeNode(CAstNode.LOCAL_SCOPE,
-					Ast.makeNode(CAstNode.BLOCK_STMT, nodes.toArray(new CAstNode[ nodes.size() ])));
+					Ast.makeNode(CAstNode.BLOCK_STMT, nodes.toArray(new CAstNode[0])));
 		}
 	}
 

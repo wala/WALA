@@ -189,10 +189,7 @@ public interface FilteredPointerKey extends PointerKey {
     public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       int idx = system.findOrCreateIndexForInstanceKey(concreteType);
       if (R.contains(idx)) {
-        if (!L.contains(idx)) {
-          L.add(idx);
-          return true;
-        }
+        return L.add(idx);
       }
 
       return false;
@@ -262,9 +259,8 @@ public interface FilteredPointerKey extends PointerKey {
         InstanceKey I = system.getInstanceKey(i);
         IClass C = I.getConcreteType();
         if ((C.getMethod(targetMethod.getSelector()) == targetMethod) == sense) {
-          if (!L.contains(i)) {
+          if (L.add(i)) {
             result = true;
-            L.add(i);
           }
         }
       }

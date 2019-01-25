@@ -98,7 +98,7 @@ public class IntraprocReachingDefs {
         bv.set(instrNum);
       }
     }
-    return new ObjectArrayMapping<>(putInstrs.toArray(new Integer[putInstrs.size()]));
+    return new ObjectArrayMapping<>(putInstrs.toArray(new Integer[0]));
   }
 
   private class TransferFunctions implements ITransferFunctionProvider<IExplodedBasicBlock, BitVectorVariable> {

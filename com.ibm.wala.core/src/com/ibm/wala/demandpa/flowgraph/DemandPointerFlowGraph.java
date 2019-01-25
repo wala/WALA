@@ -223,7 +223,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         }
       }
       
-      FilteredPointerKey.MultipleClassesFilter filter = new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[ types.size() ]));
+      FilteredPointerKey.MultipleClassesFilter filter = new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0]));
       PointerKey result = heapModel.getPointerKeyForLocal(node, instruction.getResult());
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
       g.addNode(result);

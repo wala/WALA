@@ -149,7 +149,7 @@ public class JavaLauncher extends Launcher {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (programArgs: ");
     result.append(programArgs);
     result.append(", mainClass: ");
@@ -197,9 +197,7 @@ public class JavaLauncher extends Launcher {
       cmd.add("-ea");
     }
     if (vmArgs != null) {
-      for (String s : vmArgs) {
-        cmd.add(s);
-      }
+      cmd.addAll(vmArgs);
     }
     cmd.add(getMainClass());
     if (getProgramArgs() != null) {

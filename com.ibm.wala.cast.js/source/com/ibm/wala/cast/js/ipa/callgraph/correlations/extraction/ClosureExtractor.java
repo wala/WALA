@@ -31,6 +31,7 @@ import static com.ibm.wala.cast.tree.CAstNode.TRY;
 import static com.ibm.wala.cast.tree.CAstNode.VAR;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -243,8 +244,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       for(ExtractionRegion region : regions) {
         for(;next_child<region.getStart();++next_child)
           copied_children.add(copyNodes(root.getChild(next_child), cfg, new ChildPos(root, next_child, context), nodeMap));
-        for(CAstNode stmt : extractRegion(root, cfg, new ExtractionPos(root, region, context), nodeMap))
-          copied_children.add(stmt);
+        copied_children.addAll(extractRegion(root, cfg, new ExtractionPos(root, region, context), nodeMap));
         next_child = region.getEnd();
       }
       for(;next_child<root.getChildCount();++next_child)
@@ -464,18 +464,14 @@ public class ClosureExtractor extends CAstRewriterExt {
           CAstNode[] before = new CAstNode[tler.getStartInner()];
           for(i=0;i<tler.getStartInner();++i)
             before[i] = copyNodes(start.getChild(i), cfg, context, nodeMap);
-          for (CAstNode element : before) {
-            prologue.add(element);
-          }
+          prologue.addAll(Arrays.asList(before));
           if(i+1 == start.getChildCount()) {
             fun_body_stmts.add(addSpuriousExnFlow(start.getChild(i), cfg));            
           } else {
             CAstNode[] after = new CAstNode[start.getChildCount()-i];
             for(int j=0;j+i<start.getChildCount();++j)
               after[j] = addSpuriousExnFlow(start.getChild(j+i), cfg);
-            for (CAstNode element : after) {
-              fun_body_stmts.add(element);
-            }
+            fun_body_stmts.addAll(Arrays.asList(after));
           }
           for(i=context.getStart()+1;i<context.getEnd();++i)
             fun_body_stmts.add(root.getChild(i));

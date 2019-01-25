@@ -63,6 +63,7 @@ public class Detectable {
     return result;
   }
 
+  @SuppressWarnings("ManualArrayCopy")
   public void copy(int[] src, int[] dst) {
     int lenSrc = src.length;
     int lenDst = dst.length;
@@ -177,7 +178,7 @@ public class Detectable {
 
   public String afterLoop(int[] arr) {
     int len = arr.length - 1;
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     int zero = 0;
     if (zero < arr.length) {
       int i = zero;

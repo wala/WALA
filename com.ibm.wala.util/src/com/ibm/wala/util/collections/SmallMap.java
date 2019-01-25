@@ -10,14 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.AbstractMap;
+import java.util.AbstractSet;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not time -- use with care.
@@ -66,12 +68,13 @@ public class SmallMap<K, V> implements Map<K, V> {
    * 
    * @return the ith key
    */
-  public Object getValue(int i) throws IllegalStateException {
+  @SuppressWarnings("unchecked")
+  public V getValue(int i) throws IllegalStateException {
     if (keysAndValues == null) {
       throw new IllegalStateException("getValue on empty map");
     }
     try {
-      return keysAndValues[size() + i];
+      return (V) keysAndValues[size() + i];
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal i: " + i, e);
     }
@@ -139,14 +142,22 @@ public class SmallMap<K, V> implements Map<K, V> {
   }
 
   private void growByOne() {
-    Object[] old = keysAndValues;
-    int length = (old == null) ? 0 : old.length;
-    keysAndValues = new Object[length + 2];
-    for (int i = 0; i < length / 2; i++) {
-      keysAndValues[i] = old[i];
-    }
-    for (int i = 0; i < length / 2; i++) {
-      keysAndValues[i + 1 + length / 2] = old[length / 2 + i];
+    if (keysAndValues == null)
+      keysAndValues = new Object[2];
+    else {
+      final int oldLength = keysAndValues.length;
+      final int oldEntryCount = oldLength / 2;
+      final int oldLastKeySlot = oldEntryCount - 1;
+      final int oldFirstValueSlot = oldLastKeySlot + 1;
+
+      final int newLength = oldLength + 2;
+      final int newEntryCount = newLength / 2;
+      final int newLastKeySlot = newEntryCount - 1;
+      final int newFirstValueSlot = newLastKeySlot + 1;
+
+      keysAndValues = Arrays.copyOf(keysAndValues, newLength);
+      System.arraycopy(keysAndValues, oldFirstValueSlot, keysAndValues, newFirstValueSlot, oldEntryCount);
+      keysAndValues[newLastKeySlot] = null;
     }
 
   }
@@ -200,44 +211,76 @@ public class SmallMap<K, V> implements Map<K, V> {
     keysAndValues = null;
   }
 
-  /*
-   * @see java.util.Map#keySet()
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public Set<K> keySet() {
-    // TODO: use a better set implementation, SOON!!
-    HashSet<K> result = HashSetFactory.make(size());
-    for (int i = 0; i < size(); i++) {
-      result.add((K) keysAndValues[i]);
-    }
-    return result;
+    return new SlotIteratingSet<K>() {
+      @Override
+      protected K getItemInSlot(int slot) {
+        return getKey(slot);
+      }
+    };
   }
 
-  /*
-   * @see java.util.Map#values()
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public Collection<V> values() {
-    int s = size();
-    if (s == 0) {
-      return Collections.emptySet();
-    }
-    HashSet<V> result = HashSetFactory.make(s);
-    for (int i = s; i < keysAndValues.length; i++) {
-      result.add((V) keysAndValues[i]);
-    }
-    return result;
+    return new SlotIteratingSet<V>() {
+      @Override
+      protected V getItemInSlot(int slot) {
+        return getValue(slot);
+      }
+    };
+  }
+
+  @Override
+  public Set<Map.Entry<K, V>> entrySet() {
+    return new SlotIteratingSet<Entry<K, V>>() {
+      @Override
+      protected Entry<K, V> getItemInSlot(int slot) {
+        return new AbstractMap.SimpleEntry<>(getKey(slot), getValue(slot));
+      }
+    };
   }
 
   /**
-   * @throws UnimplementedError 
+   * Minimally functional {@link Set} that iterates over array slots.
+   *
+   * @param <E> the type of elements maintained by this set
    */
-  @Override
-  public Set<Map.Entry<K, V>> entrySet() throws UnimplementedError {
-    Assertions.UNREACHABLE("must implement entrySet");
-    return null;
-  }
+  abstract private class SlotIteratingSet<E> extends AbstractSet<E> {
 
+    @Override
+    public Iterator<E> iterator() {
+      return new SlotIterator();
+    }
+
+    @Override
+    public int size() {
+      return SmallMap.this.size();
+    }
+
+    private class SlotIterator implements Iterator<E> {
+
+      private int nextSlot = 0;
+
+      @Override
+      public boolean hasNext() {
+        return nextSlot < SmallMap.this.size();
+      }
+
+      @Override
+      public E next() {
+        final E result;
+        try {
+          result = getItemInSlot(nextSlot);
+        } catch (IllegalStateException | IllegalArgumentException problem) {
+          throw new NoSuchElementException(problem.getMessage());
+        }
+        ++nextSlot;
+        return result;
+      }
+
+    }
+
+    abstract protected E getItemInSlot(int slot);
+  }
 }

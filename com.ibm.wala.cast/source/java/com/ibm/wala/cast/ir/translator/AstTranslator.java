@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.translator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -1115,12 +1116,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private void ensurePositionSpace(int instruction) {
       if (linePositions.length < (instruction + 1)) {
-        Position[] newData = new Position[instruction * 2 + 1];
-        Position[][] newOperands = new Position[instruction * 2 + 1][];
-        System.arraycopy(linePositions, 0, newData, 0, linePositions.length);
-        linePositions = newData;
-        System.arraycopy(operandPositions, 0, newOperands, 0, operandPositions.length);
-        operandPositions = newOperands;
+        linePositions = Arrays.copyOf(linePositions, instruction * 2 + 1);
+        operandPositions = Arrays.copyOf(operandPositions, instruction * 2 + 1);
       }
     }
 
@@ -1160,7 +1157,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     
     @Override
     public String toString() { 
-      StringBuffer sb = new StringBuffer(super.toString());
+      StringBuilder sb = new StringBuilder(super.toString());
       for(PreBasicBlock b : blocks) {
         if (b.firstIndex > 0) {
           sb.append("\n" + b);
@@ -1405,15 +1402,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public String toString() {
       SSAInstruction[] insts = getInstructions();
-      StringBuffer s = new StringBuffer("CAst CFG of " + functionName);
+      StringBuilder s = new StringBuilder("CAst CFG of " + functionName);
       int params[] = symtab.getParameterValueNumbers();
       for (int param : params)
-        s.append(" ").append(param);
-      s.append("\n");
+        s.append(' ').append(param);
+      s.append('\n');
 
       for (int i = 0; i < getNumberOfNodes(); i++) {
         PreBasicBlock bb = getNode(i);
-        s.append(bb).append("\n");
+        s.append(bb).append('\n');
 
         for (PreBasicBlock pbb : Iterator2Iterable.make(getSuccNodes(bb)))
           s.append("    -->" + pbb + "\n");
@@ -2704,8 +2701,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
         }
 
-        TypeReference[] newData = new TypeReference[data.length + 1];
-        System.arraycopy(data, 0, newData, 0, data.length);
+        TypeReference[] newData = Arrays.copyOf(data, data.length + 1);
         newData[data.length] = catchType;
 
         catchTypes.put(bb, newData);
@@ -2847,27 +2843,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       for (int i = 0; i < instructionLexicalUses.length; i++) {
         int[] x = original.instructionLexicalUses[i];
         if (x != null) {
-          instructionLexicalUses[i] = new int[x.length];
-          for (int j = 0; j < x.length; j++) {
-            instructionLexicalUses[i][j] = x[j];
-          }
+          instructionLexicalUses[i] = x.clone();
         }
       }
 
       if (original.exitLexicalUses != null) {
         exitLexicalUses = new int[original.exitLexicalUses.length];
-        for (int i = 0; i < exitLexicalUses.length; i++) {
-          exitLexicalUses[i] = original.exitLexicalUses[i];
-        }
+        System.arraycopy(original.exitLexicalUses, 0, exitLexicalUses, 0, exitLexicalUses.length);
       } else {
         exitLexicalUses = null;
       }
 
       if (original.scopingParents != null) {
         scopingParents = new String[original.scopingParents.length];
-        for (int i = 0; i < scopingParents.length; i++) {
-          scopingParents[i] = original.scopingParents[i];
-        }
+        System.arraycopy(original.scopingParents, 0, scopingParents, 0, scopingParents.length);
       } else {
         scopingParents = null;
       }
@@ -2920,7 +2909,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (exposedNamesForWriteSet != null) {
           exposedNamesSet.addAll(exposedNamesForWriteSet);
         }
-        EN = exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
+        EN = exposedNamesSet.toArray(new Pair[0]);
       }
 
       if (exposedNamesForReadSet != null) {
@@ -2963,7 +2952,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             parents.add(AC.variableDefiner);
           }
         }
-        scopingParents = parents.toArray(new String[parents.size()]);
+        scopingParents = parents.toArray(new String[0]);
 
         if (DEBUG_LEXICAL) {
           System.err.println(("scoping parents of " + scope.getEntity()));

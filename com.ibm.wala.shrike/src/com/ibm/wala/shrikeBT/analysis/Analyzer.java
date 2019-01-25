@@ -13,6 +13,7 @@ package com.ibm.wala.shrikeBT.analysis;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -136,8 +137,7 @@ public class Analyzer {
       }
       oldEdges[left] = to;
     } else {
-      int[] newEdges = new int[oldEdges.length * 2];
-      System.arraycopy(oldEdges, 0, newEdges, 0, oldEdges.length);
+      int[] newEdges = Arrays.copyOf(oldEdges, oldEdges.length * 2);
       newEdges[oldEdges.length] = to;
       for (int i = oldEdges.length + 1; i < newEdges.length; i++) {
         newEdges[i] = -1;

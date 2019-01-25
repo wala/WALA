@@ -153,7 +153,7 @@ public class DexDotUtil extends DotUtil {
         if (g == null) {
           throw new IllegalArgumentException("g is null");
         }
-        StringBuffer dotStringBuffer = dotOutput(g, labels, title);
+        StringBuilder dotStringBuffer = dotOutput(g, labels, title);
 
         // retrieve the filename parameter to this component, a String
         if (dotfile == null) {
@@ -175,8 +175,8 @@ public class DexDotUtil extends DotUtil {
        * @return StringBuffer holding dot output representing G
        * @throws WalaException
        */
-      public static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
-        StringBuffer result = new StringBuffer("digraph \"DirectedGraph\" {\n");
+      public static <T> StringBuilder dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
+        StringBuilder result = new StringBuilder("digraph \"DirectedGraph\" {\n");
 
         if (title != null) {
           result.append("graph [label = \""+title+"\", labelloc=t, concentrate = true];");
@@ -210,7 +210,7 @@ public class DexDotUtil extends DotUtil {
 
         for (T n : g) {
           for (T s : Iterator2Iterable.make(g.getSuccNodes(n))) {
-            result.append(" ");
+            result.append(' ');
             result.append(getPort(n, labels));
             result.append(" -> ");
             result.append(getPort(s, labels));
@@ -222,17 +222,17 @@ public class DexDotUtil extends DotUtil {
         return result;
       }
 
-      private static <T> void outputNodes(NodeDecorator<T> labels, StringBuffer result, Collection<T> dotNodes) throws WalaException {
+      private static <T> void outputNodes(NodeDecorator<T> labels, StringBuilder result, Collection<T> dotNodes) throws WalaException {
         for (T t : dotNodes) {
           outputNode(labels, result, t);
         }
       }
 
-      private static <T> void outputNode(NodeDecorator<T> labels, StringBuffer result, T n) throws WalaException {
+      private static <T> void outputNode(NodeDecorator<T> labels, StringBuilder result, T n) throws WalaException {
         result.append("   ");
-        result.append("\"");
+        result.append('\"');
         result.append(getLabel(n, labels));
-        result.append("\"");
+        result.append('\"');
         result.append(decorateNode(n, labels));
       }
 
@@ -252,7 +252,7 @@ public class DexDotUtil extends DotUtil {
        * @param d decorating master
        */
       private static <T> String decorateNode(T n, NodeDecorator<T> d) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(" [ ]\n");
         return result.toString();
       }

@@ -84,18 +84,18 @@ public class SourceBuffer {
       }
     }
 
-    this.lines = lines.toArray(new String[ lines.size() ]);
+    this.lines = lines.toArray(new String[0]);
   }
   
      
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for(int i = 0; i < lines.length; i++) {
       if (i == lines.length - 1) {
         result.append(lines[i]);
       } else {
-        result.append(lines[i]).append("\n");
+        result.append(lines[i]).append('\n');
       }
     }
     

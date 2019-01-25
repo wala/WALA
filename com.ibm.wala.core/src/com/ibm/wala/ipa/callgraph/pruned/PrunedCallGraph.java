@@ -251,9 +251,6 @@ public class PrunedCallGraph implements CallGraph {
 		if (!keep.contains(node)){
 			return null;
 		}
-		if (!keep.contains(node)){
-			return null;
-		}
 		IntSet tmp = cg.getPredNodeNumbers(node);
 		BitVectorIntSet kp = new BitVectorIntSet();
 		for (CGNode n : keep) {

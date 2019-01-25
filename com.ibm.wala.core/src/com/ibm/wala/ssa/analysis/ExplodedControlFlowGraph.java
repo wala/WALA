@@ -641,13 +641,13 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
 
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer("");
+    StringBuilder s = new StringBuilder("");
     for (IExplodedBasicBlock bb : this) {
-      s.append("BB").append(getNumber(bb)).append("\n");
+      s.append("BB").append(getNumber(bb)).append('\n');
 
       Iterator<? extends IExplodedBasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
-        s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
+        s.append("    -> BB").append(getNumber(succNodes.next())).append('\n');
       }
     }
     return s.toString();

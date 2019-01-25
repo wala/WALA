@@ -224,7 +224,7 @@ public class ReuseParameters {
      *  @param returnType the return type of the later function
      */
     private Descriptor toDescriptor(TypeName returnType) { // Keep private!
-        final TypeName[] aTypes = reuseParameters.toArray(new TypeName[reuseParameters.size()]);
+        final TypeName[] aTypes = reuseParameters.toArray(new TypeName[0]);
 
         return Descriptor.findOrCreate(aTypes, returnType); 
     }

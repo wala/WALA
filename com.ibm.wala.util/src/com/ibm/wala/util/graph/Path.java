@@ -76,14 +76,14 @@ public class Path extends SimpleIntVector {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("[");
+    StringBuilder result = new StringBuilder("[");
     for (int i = 0; i < size; i++) {
       result.append(get(i));
       if (i < size -1) {
-        result.append(",");
+        result.append(',');
       }
     }
-    result.append("]");
+    result.append(']');
     return result.toString();
   }
 

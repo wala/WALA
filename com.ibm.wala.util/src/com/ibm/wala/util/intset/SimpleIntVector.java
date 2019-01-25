@@ -102,9 +102,8 @@ public class SimpleIntVector implements IntVector, Serializable {
   private void ensureCapacity(int capacity) {
     if (capacity >= store.length) {
       int[] old = store;
-      store = new int[1 + (int) (getGrowthFactor() * capacity)];
-      Arrays.fill(store, defaultValue);
-      System.arraycopy(old, 0, store, 0, old.length);
+      store = Arrays.copyOf(old, 1 + (int) (getGrowthFactor() * capacity));
+      Arrays.fill(store, old.length, store.length, defaultValue);
     }
   }
 

@@ -286,8 +286,7 @@ public class FlatInstantiator implements IInstantiator {
                     selectAndCallCtor(subInstance, seen, currentDepth);
                     assert (subInstance.getNumber() == newInst.getDef()) : "Unexpected: number and def differ: " + subInstance.getNumber() + ", " +
                                     newInst.getDef();
-                    final Set<SSAValue> newSeen = new HashSet<>();  // Narf
-                    newSeen.addAll(seen);
+                    final Set<SSAValue> newSeen = new HashSet<>(seen);  // Narf
                     newSeen.add(subInstance);
                     seen = newSeen;
                     subInstances.add(subInstance);

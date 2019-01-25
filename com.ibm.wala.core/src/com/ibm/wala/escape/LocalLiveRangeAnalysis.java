@@ -45,7 +45,7 @@ public class LocalLiveRangeAnalysis {
     if (du == null) {
       throw new IllegalArgumentException("du is null");
     }
-    if (du.getNumberOfUses(v) == 0) {
+    if (du.isUnused(v)) {
       return false;
     }
     if (instructionIndex < 0) {

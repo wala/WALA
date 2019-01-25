@@ -48,6 +48,7 @@
 package org.scandroid.spec;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -319,14 +320,10 @@ public class AndroidSpecs implements ISpecs {
 		ignoreMethods.add("finalize");
 		ignoreMethods.add("wait");		
 
-		List<MethodNamePattern> moreEntryPointSpecs = new ArrayList<> ();
-		
 		//add default entrypoints from AndroidSpecs.entrypointSpecs
 		//Currently adds methods even if they exist in the ignnoreMethods
 		//set.
-		for (MethodNamePattern mnp: defaultCallbacks) {
-			moreEntryPointSpecs.add(mnp);
-		}
+		List<MethodNamePattern> moreEntryPointSpecs = new ArrayList<>(Arrays.asList(defaultCallbacks));
 
 		for (IClass ic:cha) {
 			if (!LoaderUtils.fromLoader(ic, ClassLoaderReference.Application)) {
@@ -359,7 +356,7 @@ public class AndroidSpecs implements ISpecs {
 
 //		entrypointSpecs =
 		callBacks = 
-				moreEntryPointSpecs.toArray(new MethodNamePattern[moreEntryPointSpecs.size()]);
+				moreEntryPointSpecs.toArray(new MethodNamePattern[0]);
 
 	}
 	

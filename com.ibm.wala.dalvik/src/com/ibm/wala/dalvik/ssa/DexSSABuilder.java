@@ -11,6 +11,7 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.ssa;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.ibm.wala.cfg.IBasicBlock;
@@ -365,9 +366,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             instructions[getCurrentInstructionIndex()] = s;
             for (int i = 0; i < s.getNumberOfDefs(); i++) {
                 if (creators.length < (s.getDef(i) + 1)) {
-                    SSAInstruction[] arr = new SSAInstruction[2 * s.getDef(i)];
-                    System.arraycopy(creators, 0, arr, 0, creators.length);
-                    creators = arr;
+                    creators = Arrays.copyOf(creators, 2 * s.getDef(i));
                 }
 
                 assert s.getDef(i) != -1 : "invalid def " + i + " for " + s;

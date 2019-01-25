@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.util.Arrays;
+
 /**
  */
 public class BitVector extends BitVectorBase<BitVector> {
@@ -38,11 +40,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * Expand this bit vector to size newCapacity.
    */
   void expand(int newCapacity) {
-    int[] oldbits = bits;
-    bits = new int[subscript(newCapacity) + 1];
-    for (int i = 0; i < oldbits.length; i++) {
-      bits[i] = oldbits[i];
-    }
+    bits = Arrays.copyOf(bits, subscript(newCapacity) + 1);
   }
 
   /**
