@@ -11,6 +11,7 @@
 
 package com.ibm.wala.cfg.exc.inter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -114,11 +115,10 @@ public final class InterprocNullPointerAnalysis {
       final IProgressMonitor progress) throws UnsoundGraphException, CancelException, WalaException {
     assert paramState != null;
 
-    if (visited.contains(startNode)) {
+    if (!visited.add(startNode)) {
       return;
     }    
-    visited.add(startNode);
-    
+
     MonitorUtil.throwExceptionIfCanceled(progress);
     
     final Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> firstPass =
@@ -256,26 +256,15 @@ public final class InterprocNullPointerAnalysis {
      * @return the filtered CallGraph
      */
     private CallGraph filter(final CallGraph fullCG) {
+
+      // collect nodes not named for exclusion
       final HashSet<CGNode> nodes = new HashSet<>();
+      fullCG.forEach(node -> {
+        if (!filter.contains(node.getMethod().getName()))
+          nodes.add(node);
+      });
 
-      // fill all nodes into a set
-      for (final CGNode n : fullCG) {
-        nodes.add(n);
-      }
-
-      final HashSet<CGNode> nodesToRemove = new HashSet<>();
-      // collect all nodes that we do not need
-      for (final CGNode node : nodes) {
-        for (final Atom method : filter) {
-          if (node.getMethod().getName().equals(method)) {
-            nodesToRemove.add(node);
-          }
-        }
-      }
-      nodes.removeAll(nodesToRemove);
-
-      final HashSet<CGNode> partialRoots = new HashSet<>();
-      partialRoots.add(fullCG.getFakeRootNode());
+      final Set<CGNode> partialRoots = Collections.singleton(fullCG.getFakeRootNode());
 
       // delete the nodes
       final PartialCallGraph partialCG1 = PartialCallGraph.make(fullCG, partialRoots, nodes);

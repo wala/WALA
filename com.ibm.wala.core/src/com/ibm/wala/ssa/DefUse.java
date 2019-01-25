@@ -187,4 +187,14 @@ public class DefUse {
   public int getNumberOfUses(int v) {
     return uses[v] == null ? 0 : uses[v].size();
   }
+
+  /**
+   * @param v a value number
+   * @return true if the variable with the given value number has no uses
+   */
+  public boolean isUnused(int v) {
+    final MutableIntSet usesSet = uses[v];
+    assert usesSet == null || !usesSet.isEmpty();
+    return usesSet == null;
+  }
 }

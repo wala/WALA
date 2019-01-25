@@ -49,13 +49,13 @@ public class StringStuff {
     primitiveClassNames.put("void", "V");
   }
 
-  public static void padWithSpaces(StringBuffer b, int length) {
+  public static void padWithSpaces(StringBuilder b, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     if (b.length() < length) {
       for (int i = b.length(); i < length; i++) {
-        b.append(" ");
+        b.append(' ');
       }
     }
   }
@@ -77,9 +77,9 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
-      StringBuffer result = new StringBuffer("[");
+      StringBuilder result = new StringBuilder("[");
       for (int i = 1; i < dim; i++) {
-        result.append("[");
+        result.append('[');
       }
       result.append(baseType);
       return result.toString();
@@ -109,9 +109,9 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalDescriptorTypeString(baseType);
-      StringBuffer result = new StringBuffer("[");
+      StringBuilder result = new StringBuilder("[");
       for (int i = 1; i < dim; i++) {
-        result.append("[");
+        result.append('[');
       }
       result.append(baseType);
       return result.toString();
@@ -546,7 +546,7 @@ public class StringStuff {
     if (jvmType == null) {
       throw new IllegalArgumentException("jvmType is null");
     }
-    StringBuffer readable = new StringBuffer(); // human readable version
+    StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
     if (jvmType.length() == 0) {
@@ -586,8 +586,8 @@ public class StringStuff {
           jvmType.length()) // Trim off the trailing ';'
           );
       // Convert to standard Java dot-notation
-      readable = new StringBuffer(slashToDot(readable.toString()));
-      readable = new StringBuffer(dollarToDot(readable.toString()));
+      readable = new StringBuilder(slashToDot(readable.toString()));
+      readable = new StringBuilder(dollarToDot(readable.toString()));
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {
@@ -607,7 +607,7 @@ public class StringStuff {
     if (jvmType == null) {
       throw new IllegalArgumentException("jvmType is null");
     }
-    StringBuffer readable = new StringBuffer(); // human readable version
+    StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
     if (jvmType.length() == 0) {
@@ -647,7 +647,7 @@ public class StringStuff {
           jvmType.length()) // Trim off the trailing ';'
           );
       // Convert to standard Java dot-notation
-      readable = new StringBuffer(slashToDot(readable.toString()));
+      readable = new StringBuilder(slashToDot(readable.toString()));
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {
@@ -666,7 +666,7 @@ public class StringStuff {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }
-    StringBuffer dotForm = new StringBuffer(path);
+    StringBuilder dotForm = new StringBuilder(path);
     // replace all '/' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '/') {
@@ -687,7 +687,7 @@ public class StringStuff {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }
-    StringBuffer dotForm = new StringBuffer(path);
+    StringBuilder dotForm = new StringBuilder(path);
     // replace all '$' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '$') {
@@ -708,7 +708,7 @@ public class StringStuff {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }
-    StringBuffer dotForm = new StringBuffer(path);
+    StringBuilder dotForm = new StringBuilder(path);
     // replace all '.' in the path with '$'
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '.') {

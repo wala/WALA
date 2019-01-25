@@ -95,7 +95,7 @@ public class ClassPrinter {
   private static final char[] hexChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
   private static String makeHex(byte[] bytes, int pos, int len, int padTo) {
-    StringBuffer b = new StringBuffer();
+    StringBuilder b = new StringBuilder();
     for (int i = pos; i < pos + len; i++) {
       byte v = bytes[i];
       b.append(hexChars[(v >> 4) & 0xF]);
@@ -108,7 +108,7 @@ public class ClassPrinter {
   }
 
   private static String makeChars(byte[] bytes, int pos, int len) {
-    StringBuffer b = new StringBuffer();
+    StringBuilder b = new StringBuilder();
     for (int i = pos; i < pos + len; i++) {
       char ch = (char) bytes[i];
       if (ch < 32 || ch > 127) {
@@ -129,7 +129,7 @@ public class ClassPrinter {
   }
 
   private static String dumpFlags(int flags) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     Class<Constants> c = Constants.class;
     Field[] fs = c.getDeclaredFields();
     for (Field element : fs) {
@@ -145,7 +145,7 @@ public class ClassPrinter {
         }
         if ((flags & val) != 0) {
           if (buf.length() > 0) {
-            buf.append(" ");
+            buf.append(' ');
           }
           buf.append(name.substring(4).toLowerCase());
         }
@@ -223,7 +223,7 @@ public class ClassPrinter {
             int[] vars = locals[j];
             String line2 = null;
             if (vars != null) {
-              StringBuffer buf = new StringBuffer();
+              StringBuilder buf = new StringBuilder();
               buf.append("      " + j + ":");
               for (int k = 0; k < vars.length; k += 2) {
                 if (vars[k] != 0) {
@@ -318,7 +318,7 @@ public class ClassPrinter {
   }
 
   private static String quoteString(String string) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append('"');
     for (int i = 0; i < string.length(); i++) {
       char ch = string.charAt(i);

@@ -109,9 +109,8 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     }
     while (nodes.hasNext()) {
       T o = nodes.next();
-      if (!visited.contains(o)) {
+      if (visited.add(o)) {
         Q.add(o);
-        visited.add(o);
       }
     }
     index = 0;
@@ -129,9 +128,8 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
       boundary[currentHops] = Q.size();
     }
     for (T child : Iterator2Iterable.make(getConnected(N))) {
-      if (!visited.contains(child)) {
+      if (visited.add(child)) {
         Q.add(child);
-        visited.add(child);
       }
     }
   }

@@ -242,9 +242,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   @Override
   public Collection<? extends IMethod> getAllMethods() {
     Collection<IMethod> result = HashSetFactory.make();
-    for (IMethod iMethod : getDeclaredMethods()) {
-      result.add(iMethod);
-    }
+    result.addAll(getDeclaredMethods());
     if (getSuperclass() != null) {
       result.addAll(getSuperclass().getAllMethods());
     }

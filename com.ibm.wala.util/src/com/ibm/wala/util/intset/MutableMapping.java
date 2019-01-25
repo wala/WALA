@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,9 +103,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     }
     map.put(o, nextIndex);
     if (nextIndex >= array.length) {
-      Object[] old = array;
-      array = new Object[2 * array.length];
-      System.arraycopy(old, 0, array, 0, old.length);
+      array = Arrays.copyOf(array, 2 * array.length);
     }
     int result = nextIndex++;
     array[result] = o;
@@ -113,9 +112,9 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i = 0; i < nextIndex; i++) {
-      result.append(i).append("  ").append(array[i]).append("\n");
+      result.append(i).append("  ").append(array[i]).append('\n');
     }
     return result.toString();
   }
@@ -174,9 +173,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     Integer I = Integer.valueOf(i);
     map.put(o, I);
     if (i >= array.length) {
-      Object[] old = array;
-      array = new Object[2 * i];
-      System.arraycopy(old, 0, array, 0, old.length);
+      array = Arrays.copyOf(array, 2 * i);
     }
     array[i] = o;
     nextIndex = Math.max(nextIndex, i + 1);

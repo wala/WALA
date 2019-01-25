@@ -466,7 +466,7 @@ public class CallGraphTest extends WalaTestCase {
     return new Graph<MethodReference>() {
       @Override
       public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append("squashed " + name + " call graph\n");
         result.append("Original graph:");
         result.append(cg.toString());

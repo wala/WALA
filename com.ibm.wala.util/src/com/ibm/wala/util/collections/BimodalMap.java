@@ -109,9 +109,8 @@ public class BimodalMap<K, V> implements Map<K, V> {
     assert backingStore instanceof SmallMap;
     SmallMap<K, V> S = (SmallMap<K, V>) backingStore;
     backingStore = HashMapFactory.make(2 * S.size());
-    for (K key : S.keySet()) {
-      V value = S.get(key);
-      backingStore.put(key, value);
+    for (Entry<K, V> entry : S.entrySet()) {
+      backingStore.put(entry.getKey(), entry.getValue());
     }
   }
 

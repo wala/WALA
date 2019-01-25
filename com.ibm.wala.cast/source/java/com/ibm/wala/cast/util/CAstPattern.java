@@ -141,42 +141,42 @@ public class CAstPattern {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     if (name != null) {
-      sb.append("<").append(name).append(">");
+      sb.append('<').append(name).append('>');
     }
 
     if (value != null) {
       if (kind == REFERENCE_PATTERN_KIND) {
         sb.append("ref:").append(value);
       } else if (value instanceof Pattern) {
-        sb.append("/").append(value).append("/");
+        sb.append('/').append(value).append('/');
       } else {
         sb.append("literal:").append(value);
       }
     } else if (kind == CHILD_KIND) {
-      sb.append("*");
+      sb.append('*');
     } else if (kind == CHILDREN_KIND) {
       sb.append("**");
     } else if (kind == REPEATED_PATTERN_KIND) {
-      sb.append("@");
+      sb.append('@');
     } else if (kind == ALTERNATIVE_PATTERN_KIND) {
-      sb.append("|");
+      sb.append('|');
     } else if (kind == OPTIONAL_PATTERN_KIND) {
-      sb.append("?");
+      sb.append('?');
     } else {
       sb.append(CAstPrinter.kindAsString(kind));
     }
 
     if (children != null) {
-      sb.append("(");
+      sb.append('(');
       for (int i = 0; i < children.length; i++) {
         sb.append(children[i].toString());
         if (i == children.length - 1) {
-          sb.append(")");
+          sb.append(')');
         } else {
-          sb.append(",");
+          sb.append(',');
         }
       }
     }
@@ -493,7 +493,7 @@ public class CAstPattern {
         } while (patternString.startsWith("||", end));
         assert patternString.startsWith(")|", end) : patternString;
         end += 2;
-        result = new CAstPattern(name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[alternatives.size()]));
+        result = new CAstPattern(name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[0]));
 
       } else if (patternString.startsWith("@(", start)) {
         start += 2;
@@ -545,7 +545,7 @@ public class CAstPattern {
           assert patternString.charAt(end) == ')';
           end++;
 
-          result = new CAstPattern(name, kind, children.toArray(new CAstPattern[children.size()]));
+          result = new CAstPattern(name, kind, children.toArray(new CAstPattern[0]));
         }
       }
 

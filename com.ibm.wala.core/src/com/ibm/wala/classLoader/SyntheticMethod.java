@@ -217,7 +217,7 @@ public class SyntheticMethod implements IMethod {
 
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer("synthetic ");
+    StringBuilder s = new StringBuilder("synthetic ");
     if (isFactoryMethod()) {
       s.append(" factory ");
     }

@@ -494,12 +494,12 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append("Nodes:\n");
     for (int i = 0; i <= getMaxNumber(); i++) {
       Object node = getNode(i);
       if (node != null) {
-        result.append(i).append("  ").append(node).append("\n");
+        result.append(i).append("  ").append(node).append('\n');
       }
     }
     result.append("Edges:\n");
@@ -508,9 +508,9 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       if (node != null) {
         result.append(i).append(" -> ");
         for (Object s : Iterator2Iterable.make(getSuccNodes(node))) {
-          result.append(getNumber(s)).append(" ");
+          result.append(getNumber(s)).append(' ');
         }
-        result.append("\n");
+        result.append('\n');
       }
     }
 

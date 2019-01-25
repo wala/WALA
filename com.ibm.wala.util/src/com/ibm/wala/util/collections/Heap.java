@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
@@ -78,12 +79,9 @@ public abstract class Heap<T> {
   }
 
 
-  @SuppressWarnings("unchecked")
   final private void ensureCapacity(int min) {
     if (backingStore.length < min) {
-      T newStore[] = (T[])new Object[2 * min];
-      System.arraycopy(backingStore, 0, newStore, 0, backingStore.length);
-      backingStore = newStore;
+      backingStore = Arrays.copyOf(backingStore, 2 * min);
     }
   }
 
@@ -155,16 +153,16 @@ public abstract class Heap<T> {
   
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer();
-    s.append("[");
+    StringBuilder s = new StringBuilder();
+    s.append('[');
     for (int i = 0; i < size(); i++) {
       if (backingStore[i] != null) {
         if (i > 0)
-          s.append(",");
+          s.append(',');
         s.append(backingStore[i].toString());
       }
     }
-    s.append("]");
+    s.append(']');
     return s.toString();
   }
 }

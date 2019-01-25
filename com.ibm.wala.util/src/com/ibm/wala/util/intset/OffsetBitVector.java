@@ -29,9 +29,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
     int[] oldbits = bits;
     bits = new int[subscript(newCapacity) + 1];
-    for (int i = 0; i < oldbits.length; i++) {
-      bits[i - wordDiff] = oldbits[i];
-    }
+    System.arraycopy(oldbits, 0, bits, 0 - wordDiff, oldbits.length);
     offset = newOffset;
   }
 
@@ -73,8 +71,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
       throw new IllegalArgumentException("s is null");
     }
     offset = s.offset;
-    bits = new int[s.bits.length];
-    System.arraycopy(s.bits, 0, bits, 0, s.bits.length);
+    bits = s.bits.clone();
   }
 
   @Override

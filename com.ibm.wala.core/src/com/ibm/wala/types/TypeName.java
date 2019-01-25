@@ -301,7 +301,7 @@ public final class TypeName implements Serializable {
 
     @Override
     public String toString() {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       toStringPrefix(result);
       
       if (packageName != null) {
@@ -313,7 +313,7 @@ public final class TypeName implements Serializable {
       return result.toString();
     }
 
-    private void toStringPrefix(StringBuffer result) {
+    private void toStringPrefix(StringBuilder result) {
       boolean isPrimitive = (dim==-1) || (dim&ElementMask)==PrimitiveMask;
       if (dim != -1) {
         for (int d = (dim&ElementMask) == PrimitiveMask? dim>>ElementBits: dim; d != 0; d>>=ElementBits) {
@@ -342,7 +342,7 @@ public final class TypeName implements Serializable {
 
     public String toUnicodeString() {
       try {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         toStringPrefix(result);
         
         if (packageName != null) {

@@ -720,7 +720,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               final Set<InstanceKey> temp = HashSetFactory.make();
               v.getValue().foreach(keyIndex -> temp.add(system.getInstanceKey(keyIndex)));
 
-              return temp.toArray(new InstanceKey[temp.size()]);
+              return temp.toArray(new InstanceKey[0]);
             }
           }
         }
@@ -731,12 +731,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         private boolean addKey(InstanceKey k) {
           int n = system.findOrCreateIndexForInstanceKey(k);
-          if (!lv.contains(n)) {
-            lv.add(n);
-            return true;
-          } else {
-            return false;
-          }
+          return lv.add(n);
         }
 
         @Override

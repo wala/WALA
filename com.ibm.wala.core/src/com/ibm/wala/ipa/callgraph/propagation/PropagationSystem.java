@@ -413,11 +413,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     // This works since the solver is monotonic with TOP = {}
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     int index = findOrCreateIndexForInstanceKey(value);
-    if (L.contains(index)) {
+    if (!L.add(index)) {
       // a no-op
       return false;
     } else {
-      L.add(index);
 
       // also register that we have an instanceKey for the klass
       assert value.getConcreteType() != null;
@@ -641,17 +640,15 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
       value.foreach(x -> {
-        for (int i = 0; i < 4; i++) {
-          topFive[i] = topFive[i + 1];
-        }
+        System.arraycopy(topFive, 1, topFive, 0, 4);
         topFive[4] = x;
       });
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       for (int i = 0; i < 5; i++) {
         int p = topFive[i];
         if (p != 0) {
           InstanceKey ik = getInstanceKey(p);
-          result.append(p).append("  ").append(ik).append("\n");
+          result.append(p).append("  ").append(ik).append('\n');
         }
       }
       return result.toString();

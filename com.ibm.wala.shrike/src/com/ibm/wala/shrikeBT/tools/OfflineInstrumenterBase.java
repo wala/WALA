@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -339,9 +340,7 @@ public abstract class OfflineInstrumenterBase {
           continue;
         }
       } else if (a.startsWith("--")) {
-        for (int j = i; j < args.length; j++) {
-          leftover.add(args[j]);
-        }
+        leftover.addAll(Arrays.asList(args).subList(i, args.length));
         break;
       }
       leftover.add(a);

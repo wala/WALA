@@ -26,10 +26,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 
@@ -62,31 +59,24 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     this(cha, null);
   }
 
-  public void addMessage(ModuleEntry module, Set<Warning> message) {
-    if (! errors.containsKey(module)) {
-      errors.put(module, new HashSet<Warning>());
-    }
-    
-    errors.get(module).addAll(message);
+  private Set<Warning> messagesFor(ModuleEntry module) {
+    return errors.computeIfAbsent(module, (key) -> new HashSet<>());
+  }
+
+  public void addMessages(ModuleEntry module, Set<Warning> message) {
+    messagesFor(module).addAll(message);
   }
 
   public void addMessage(ModuleEntry module, Warning message) {
-    if (! errors.containsKey(module)) {
-      errors.put(module, new HashSet<Warning>());
-    }
-    
-    errors.get(module).add(message);
+    messagesFor(module).add(message);
   }
 
   private Iterator<ModuleEntry> getMessages(final byte severity) {
-    return new MapIterator<>(new FilterIterator<>(errors.entrySet().iterator(), o -> {
-       for(Warning w : o.getValue()) {
-         if (w.getLevel() == severity) {
-           return true;
-         }
-       }
-       return false;
-    }), Map.Entry::getKey);
+    return errors.entrySet().stream()
+            .filter(entry -> entry.getValue().stream()
+                    .anyMatch(w -> w.getLevel() == severity))
+            .map(Map.Entry::getKey)
+            .iterator();
   }
   
   public Iterator<ModuleEntry> getModulesWithParseErrors() {
@@ -133,12 +123,9 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public int getNumberOfMethods() {
-    int i = 0;
-    for (IClass cls : types.values()) {
-      i += cls.getDeclaredMethods().size();
-    }
-
-    return i;
+    return types.values().stream()
+            .mapToInt(cls -> cls.getDeclaredMethods().size())
+            .sum();
   }
 
   @Override
@@ -184,17 +171,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public void removeAll(Collection<IClass> toRemove) {
-    Set<TypeName> keys = HashSetFactory.make();
-
-    for (Map.Entry<TypeName, IClass> E : types.entrySet()) {
-      if (toRemove.contains(E.getValue())) {
-        keys.add(E.getKey());
-      }
-    }
-
-    for (TypeName key : keys) {
-      types.remove(key);
-    }
+    types.values().removeIf(toRemove::contains);
   }
 
 }

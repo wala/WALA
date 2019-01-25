@@ -59,6 +59,8 @@ import com.ibm.wala.util.graph.dominators.Dominators;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
+import java.util.Arrays;
+
 /**
  * This class constructs an SSA {@link IR} from a backing ShrikeBT instruction stream.
  * 
@@ -329,9 +331,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         instructions[getCurrentInstructionIndex()] = s;
         for (int i = 0; i < s.getNumberOfDefs(); i++) {
           if (creators.length < (s.getDef(i) + 1)) {
-            SSAInstruction[] arr = new SSAInstruction[2 * s.getDef(i)];
-            System.arraycopy(creators, 0, arr, 0, creators.length);
-            creators = arr;
+            creators = Arrays.copyOf(creators, 2 * s.getDef(i));
           }
 
           assert s.getDef(i) != -1 : "invalid def " + i + " for " + s;

@@ -50,6 +50,7 @@ package org.scandroid.prefixtransfer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -312,8 +313,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                 
                 addNode(node);
                 nodeMap.put(ik, node);
-                final HashSet<InstanceKey> iks = new HashSet<>();
-                iks.add(stringKey);
+                final Set<InstanceKey> iks = Collections.singleton(stringKey);
                 unresolvedDependencies.put(node, iks);
             }
     	}

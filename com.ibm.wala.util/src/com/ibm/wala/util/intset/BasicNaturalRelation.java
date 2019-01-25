@@ -440,11 +440,11 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     for (int i = 0; i <= maxX; i++) {
-      result.append(i).append(":");
+      result.append(i).append(':');
       result.append(getRelated(i));
-      result.append("\n");
+      result.append('\n');
     }
     return result.toString();
   }

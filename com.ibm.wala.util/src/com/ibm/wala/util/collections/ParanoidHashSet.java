@@ -44,9 +44,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   public ParanoidHashSet(Collection<T> s) throws NullPointerException {
     super(s.size());
     hcFreq = HashMapFactory.make(s.size());
-    for (T t : s) {
-      add(t);
-    }
+    this.addAll(s);
   }
 
   /**

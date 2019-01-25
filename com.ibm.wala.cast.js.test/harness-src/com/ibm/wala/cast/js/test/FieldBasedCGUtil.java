@@ -142,8 +142,9 @@ public class FieldBasedCGUtil {
 	@SuppressWarnings("unused")
   private static void compareCGs(Map<String, Set<String>> cg1, Map<String, Set<String>> cg2) {
 	  boolean diff = false;
-	  for(String key : cg1.keySet()) {
-	    Set<String> targets1 = cg1.get(key), targets2 = cg2.get(key);
+	  for(Map.Entry<String, Set<String>> entry : cg1.entrySet()) {
+	    final String key = entry.getKey();
+	    Set<String> targets1 = entry.getValue(), targets2 = cg2.get(key);
 	    if(targets2 == null) {
 	      diff = true;
 	      System.err.println("CG2 doesn't have call site" + key);

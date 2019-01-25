@@ -1217,8 +1217,7 @@ public abstract class Compiler implements Constants {
       }
       oldEdges[left] = to;
     } else {
-      int[] newEdges = new int[oldEdges.length * 2];
-      System.arraycopy(oldEdges, 0, newEdges, 0, oldEdges.length);
+      int[] newEdges = Arrays.copyOf(oldEdges, oldEdges.length * 2);
       newEdges[oldEdges.length] = to;
       for (int i = oldEdges.length + 1; i < newEdges.length; i++) {
         newEdges[i] = -1;
@@ -1316,7 +1315,7 @@ public abstract class Compiler implements Constants {
     ArrayList<Instruction> callWrapper = new ArrayList<>();
     int curStackLen = stackTypes[start].length;
 
-    StringBuffer sigBuf = new StringBuffer();
+    StringBuilder sigBuf = new StringBuilder();
     sigBuf.append("(");
     // spill needed stack variables to allocated locals;
     allocateLocals(curStackLen - unreadStack);

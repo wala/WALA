@@ -74,14 +74,14 @@ public class AstLexicalWrite extends AstLexicalAccess {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < getAccessCount(); i++) {
       Access A = getAccess(i);
       if (i != 0)
         sb.append(", ");
       sb.append("lexical:");
       sb.append(A.variableName);
-      sb.append("@");
+      sb.append('@');
       sb.append(A.variableDefiner);
       sb.append(" = ");
       sb.append(getValueString(symbolTable, A.valueNumber));

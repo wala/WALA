@@ -370,12 +370,12 @@ public final class Util {
     if (params == null) {
       throw new IllegalArgumentException("params == null");
     }
-    StringBuffer buf = new StringBuffer();
-    buf.append("(");
+    StringBuilder buf = new StringBuilder();
+    buf.append('(');
     for (Class<?> param : params) {
       buf.append(makeType(param));
     }
-    buf.append(")");
+    buf.append(')');
     buf.append(makeType(result));
     return buf.toString();
   }
@@ -424,15 +424,15 @@ public final class Util {
     if (paramTypes == null) {
       return name;
     } else {
-      StringBuffer buf = new StringBuffer(name);
-      buf.append("(");
+      StringBuilder buf = new StringBuilder(name);
+      buf.append('(');
       for (int i = 0; i < paramTypes.length; i++) {
         if (i > 0) {
-          buf.append(",");
+          buf.append(',');
         }
         buf.append(paramTypes[i].getName());
       }
-      buf.append(")");
+      buf.append(')');
       return buf.toString();
     }
   }
@@ -590,8 +590,7 @@ public final class Util {
     if (b < 0) {
       return bytes;
     } else {
-      byte[] big = new byte[bytes.length * 2 + 1];
-      System.arraycopy(bytes, 0, big, 0, bytes.length);
+      byte[] big = Arrays.copyOf(bytes, bytes.length * 2 + 1);
       big[bytes.length] = (byte) b;
       int offset = bytes.length + 1;
       do {

@@ -212,8 +212,7 @@ public class GraphSlicer {
         while (!newInsts.isEmpty()) {
           Set<E> nextInsts = new HashSet<>();
           for (E s : newInsts) {
-            if (!seenInsts.contains(s)) {
-              seenInsts.add(s);
+            if (seenInsts.add(s)) {
               if (nodeManager.containsNode(s)) {
                 result.add(s);
               } else {

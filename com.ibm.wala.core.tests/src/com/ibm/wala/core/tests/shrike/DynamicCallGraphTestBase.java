@@ -77,16 +77,15 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           rtJar = jar;
         }
       }
-      
-      List<String> args = new ArrayList<>();
-      args.addAll(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation.toString()));
+
+      List<String> args = new ArrayList<>(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation.toString()));
       if (rtJar != null) {
         args.addAll(Arrays.asList("--rt-jar", rtJar));
       }
       if (testPatchCalls) {
         args.add("--patch-calls");
       }
-      OfflineDynamicCallGraph.main(args.toArray(new String[ args.size() ]));
+      OfflineDynamicCallGraph.main(args.toArray(new String[0]));
       Assert.assertTrue("expected to create " + instrumentedJarLocation, Files.exists(instrumentedJarLocation));
       instrumentedJarBuilt = true;
     }
@@ -112,9 +111,9 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     }
     childJvm.setJvmargs(jvmArgs);
     
-    StringBuffer argsStr = new StringBuffer();
+    StringBuilder argsStr = new StringBuilder();
     for(String a : args) {
-      argsStr.append(a).append(" ");
+      argsStr.append(a).append(' ');
     }
     childJvm.setArgs(argsStr.toString());
     
@@ -153,8 +152,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       
         Assert.assertTrue("no edge for " + caller + " --> " + callee, staticCG1.getPossibleSites(caller, callee).hasNext());
         Pair<CGNode,CGNode> x = Pair.make(caller, callee);
-        if (! edges.contains(x)) {
-          edges.add(x);
+        if (edges.add(x)) {
           System.err.println("found expected edge " + caller + " --> " + callee);
         }
     }, filter);

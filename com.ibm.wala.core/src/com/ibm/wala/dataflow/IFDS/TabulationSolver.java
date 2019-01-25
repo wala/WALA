@@ -906,7 +906,7 @@ public class TabulationSolver<T, P, F> {
     @Override
     public String toString() {
 
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       TreeMap<Object, TreeSet<T>> map = new TreeMap<>(ToStringComparator.instance());
 
       Comparator<Object> c = (o1, o2) -> {

@@ -50,14 +50,13 @@ package com.ibm.wala.dalvik.dex.instructions;
 
 import org.jf.dexlib2.Opcode;
 
-import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
 
 public class BinaryOperation extends Instruction {
 
-    public static enum OpID {CMPL_FLOAT,CMPG_FLOAT,
+    public enum OpID {CMPL_FLOAT,CMPG_FLOAT,
         CMPL_DOUBLE,CMPG_DOUBLE,
         CMPL_LONG,CMPG_LONG,
         CMPL_INT,CMPG_INT,
@@ -65,6 +64,18 @@ public class BinaryOperation extends Instruction {
         ADD_LONG,SUB_LONG,MUL_LONG,DIV_LONG,REM_LONG,AND_LONG,OR_LONG,XOR_LONG,SHL_LONG,SHR_LONG,USHR_LONG,
         ADD_FLOAT,SUB_FLOAT,MUL_FLOAT,DIV_FLOAT,REM_FLOAT,
         ADD_DOUBLE,SUB_DOUBLE,MUL_DOUBLE,DIV_DOUBLE,REM_DOUBLE}
+
+    /**
+     * for binary ops not defined in JVML
+     */
+    public enum DalvikBinaryOp implements IBinaryOpInstruction.IOperator {
+        LT, GT;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
+    }
 
     public final OpID op;
     public final int oper1;
@@ -87,21 +98,21 @@ public class BinaryOperation extends Instruction {
     public IBinaryOpInstruction.IOperator getOperator() {
         switch(op) {
         case CMPL_FLOAT:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_FLOAT:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case CMPL_DOUBLE:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_DOUBLE:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case CMPL_LONG:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_LONG:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case CMPL_INT:
-            return CAstBinaryOp.LT;
+            return DalvikBinaryOp.LT;
         case CMPG_INT:
-            return CAstBinaryOp.GT;
+            return DalvikBinaryOp.GT;
         case ADD_INT:
             return IBinaryOpInstruction.Operator.ADD;
         case SUB_INT:

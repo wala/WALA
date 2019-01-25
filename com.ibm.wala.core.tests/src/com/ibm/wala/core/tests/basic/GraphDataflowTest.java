@@ -78,7 +78,7 @@ public class GraphDataflowTest extends WalaTestCase {
    * @return the expected dataflow result as a String
    */
   public static String expectedStringNodeOnly() {
-    StringBuffer result = new StringBuffer("------\n");
+    StringBuilder result = new StringBuilder("------\n");
     result.append("Node A(0) = { 0 }\n");
     result.append("Node B(1) = { 0 1 }\n");
     result.append("Node C(2) = { 0 1 2 }\n");
@@ -91,7 +91,7 @@ public class GraphDataflowTest extends WalaTestCase {
   }
 
   public static String expectedStringNodeEdge() {
-    StringBuffer result = new StringBuffer("------\n");
+    StringBuilder result = new StringBuilder("------\n");
     result.append("Node A(0) = { 0 }\n");
     result.append("Node B(1) = { 0 1 }\n");
     result.append("Node C(2) = { 0 2 }\n");
@@ -208,7 +208,7 @@ public class GraphDataflowTest extends WalaTestCase {
   }
 
   public static String result2String(BitVectorSolver<String> solver) {
-    StringBuffer result = new StringBuffer("------\n");
+    StringBuilder result = new StringBuilder("------\n");
     for (int i = 0; i < nodes.length; i++) {
       String n = nodes[i];
       BitVectorVariable varI = solver.getOut(n);

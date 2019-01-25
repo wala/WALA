@@ -188,7 +188,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer("<src-class: " );
+      StringBuilder sb = new StringBuilder("<src-class: " );
       sb.append(getName().toString());
       if (enclosingClass != null) {
         sb.append(" (within " + enclosingClass.getName() + ")");

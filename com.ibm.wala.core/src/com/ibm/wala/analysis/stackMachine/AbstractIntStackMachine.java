@@ -56,6 +56,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
+import java.util.Arrays;
+
 /**
  * Skeleton of functionality to propagate information through the Java bytecode stack machine using ShrikeBT.
  * <p>
@@ -605,9 +607,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         stack = new int[stackHeight + 1 ];
         this.stackHeight = 0;
       } else {
-        int[] newStack = new int[ Math.max(stack.length, stackHeight) * 2 + 1 ];
-        System.arraycopy(stack, 0, newStack, 0, stack.length);
-        stack = newStack;
+        stack = Arrays.copyOf(stack, Math.max(stack.length, stackHeight) * 2 + 1);
       }
     }
 
@@ -694,47 +694,37 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       if (isTOP()) {
         return "<TOP>@" + System.identityHashCode(this);
       }
-      StringBuffer result = new StringBuffer("<");
-      result.append("S");
+      StringBuilder result = new StringBuilder("<");
+      result.append('S');
       if (stackHeight == 0) {
         result.append("[empty]");
       } else {
         result.append(array2StringBuffer(stack, stackHeight));
       }
-      result.append("L");
+      result.append('L');
       result.append(array2StringBuffer(locals, locals==null?0:locals.length));
-      result.append(">");
+      result.append('>');
       return result.toString();
     }
 
-    private StringBuffer array2StringBuffer(int[] array, int n) {
-      StringBuffer result = new StringBuffer("[");
+    private StringBuilder array2StringBuffer(int[] array, int n) {
+      StringBuilder result = new StringBuilder("[");
       if (array == null) {
         result.append(OPTIMISTIC ? "TOP" : "BOTTOM");
       } else {
         for (int i = 0; i < n - 1; i++) {
-          result.append(array[i]).append(",");
+          result.append(array[i]).append(',');
         }
         result.append(array[n - 1]);
       }
-      result.append("]");
+      result.append(']');
       return result;
     }
 
     @Override
     public void copyState(MachineState other) {
-      if (other.stack == null) {
-        stack = null;
-      } else {
-        stack = new int[other.stack.length];
-        System.arraycopy(other.stack, 0, stack, 0, other.stack.length);
-      }
-      if (other.locals == null) {
-        locals = null;
-      } else {
-        locals = new int[other.locals.length];
-        System.arraycopy(other.locals, 0, locals, 0, other.locals.length);
-      }
+      stack = other.stack == null ? null : other.stack.clone();
+      locals = other.locals == null ? null : other.locals.clone();
       stackHeight = other.stackHeight;
     }
 

@@ -49,7 +49,7 @@ package org.scandroid.spec;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.ParameterFlow;
@@ -75,12 +75,9 @@ public class EntryArgSinkSpec extends SinkSpec {
 	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 			BasicBlockInContext<E> block) {
 
-		HashSet<FlowType<E>> flowSet = new HashSet<>();
-		flowSet.clear();
-		for (int i : argNums) {
-			flowSet.add(new ParameterFlow<>(block, i, false));
-		}
-		return flowSet;
+		return Arrays.stream(argNums)
+				.mapToObj(i -> new ParameterFlow<>(block, i, false))
+				.collect(Collectors.toSet());
 	}
 
 	@Override

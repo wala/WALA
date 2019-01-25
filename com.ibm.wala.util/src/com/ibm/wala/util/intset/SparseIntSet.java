@@ -289,15 +289,15 @@ public class SparseIntSet implements IntSet {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer(6 * size);
+    StringBuilder sb = new StringBuilder(6 * size);
     sb.append("{ ");
     if (elements != null) {
       for (int ii = 0; ii < size; ii++) {
         sb.append(elements[ii]);
-        sb.append(" ");
+        sb.append(' ');
       }
     }
-    sb.append("}");
+    sb.append('}');
     return sb.toString();
   }
 

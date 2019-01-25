@@ -196,7 +196,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
       PointerKey result = heapModel.getFilteredPointerKeyForLocal(node, 
           instruction.getResult(), 
-          new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[ types.size() ])) );
+          new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0])) );
         
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
 

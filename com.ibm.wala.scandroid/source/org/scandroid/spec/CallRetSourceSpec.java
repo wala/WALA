@@ -48,7 +48,7 @@
 package org.scandroid.spec;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -98,10 +98,7 @@ public class CallRetSourceSpec extends SourceSpec {
 	private static <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 																				  BasicBlockInContext<E> block) {
 
-		HashSet<FlowType<E>> flowSet = new HashSet<>();
-		flowSet.clear();
-		flowSet.add(new ReturnFlow<>(block, true));
-		return flowSet;
+		return Collections.singleton(new ReturnFlow<>(block, true));
 	}
 
 	@Override

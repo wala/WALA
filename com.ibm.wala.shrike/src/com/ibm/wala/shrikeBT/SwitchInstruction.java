@@ -129,13 +129,13 @@ public final class SwitchInstruction extends Instruction {
 
   @Override
   public String toString() {
-    StringBuffer b = new StringBuffer("Switch(");
+    StringBuilder b = new StringBuilder("Switch(");
     b.append(defaultLabel);
     for (int casesAndLabel : casesAndLabels) {
       b.append(',');
       b.append(casesAndLabel);
     }
-    b.append(")");
+    b.append(')');
     return b.toString();
   }
 

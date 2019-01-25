@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -378,9 +379,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         stackSlotPhis = new SSAPhiInstruction[initialCapacity];
       }
       if (slot >= stackSlotPhis.length) {
-        SSAPhiInstruction[] temp = stackSlotPhis;
-        stackSlotPhis = new SSAPhiInstruction[slot * 2];
-        System.arraycopy(temp, 0, stackSlotPhis, 0, temp.length);
+        stackSlotPhis = Arrays.copyOf(stackSlotPhis, slot * 2);
       }
       stackSlotPhis[slot] = phi;
     }
@@ -390,9 +389,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         localPhis = new SSAPhiInstruction[initialCapacity];
       }
       if (n >= localPhis.length) {
-        SSAPhiInstruction[] temp = localPhis;
-        localPhis = new SSAPhiInstruction[n * 2];
-        System.arraycopy(temp, 0, localPhis, 0, temp.length);
+        localPhis = Arrays.copyOf(localPhis, n * 2);
       }
       localPhis[n] = phi;
     }
@@ -738,9 +735,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       }
       nExceptionTypes++;
       if (nExceptionTypes > exceptionTypes.length) {
-        TypeReference[] temp = exceptionTypes;
-        exceptionTypes = new TypeReference[nExceptionTypes * 2];
-        System.arraycopy(temp, 0, exceptionTypes, 0, temp.length);
+        exceptionTypes = Arrays.copyOf(exceptionTypes, nExceptionTypes * 2);
       }
       exceptionTypes[nExceptionTypes - 1] = exceptionType;
     }
@@ -762,7 +757,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
   @Override
   public String toString() {
-    StringBuffer s = new StringBuffer("");
+    StringBuilder s = new StringBuilder("");
     for (int i = 0; i <= getNumber(exit()); i++) {
       BasicBlock bb = getNode(i);
       s.append("BB").append(i).append("[").append(bb.getFirstInstructionIndex()).append("..").append(bb.getLastInstructionIndex())
@@ -770,7 +765,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
       Iterator<ISSABasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
-        s.append("    -> BB").append(((BasicBlock) succNodes.next()).getNumber()).append("\n");
+        s.append("    -> BB").append(((BasicBlock) succNodes.next()).getNumber()).append('\n');
       }
     }
     return s.toString();
@@ -838,11 +833,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
    */
   @Override
   public Iterator<ISSABasicBlock> iterator() {
-    ArrayList<ISSABasicBlock> list = new ArrayList<>();
-    for (BasicBlock b : basicBlocks) {
-      list.add(b);
-    }
-    return list.iterator();
+    return Arrays.<ISSABasicBlock>asList(basicBlocks).iterator();
   }
 
   /*

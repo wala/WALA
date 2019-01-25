@@ -175,7 +175,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         	for (Field dexf : encInstFields) {
         		ifs.add(new DexIField(dexf,this));
         	}
-        	instanceFields = ifs.toArray(new IField[ ifs.size() ]);
+        	instanceFields = ifs.toArray(new IField[0]);
         	
             // Set direct static fields
             final Iterable<? extends Field> encStatFields = classDef.getStaticFields();
@@ -183,7 +183,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
             for (Field dexf : encStatFields) {
                 sfs.add(new DexIField(dexf,this));
             }
-            staticFields = sfs.toArray(new IField[ sfs.size() ]);
+            staticFields = sfs.toArray(new IField[0]);
         }
     
 
@@ -378,7 +378,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         }
         
         if (methods == null)
-        	methods = methodsAL.toArray(new IMethod[methodsAL.size()]);
+        	methods = methodsAL.toArray(new IMethod[0]);
         
         return methods;
     }

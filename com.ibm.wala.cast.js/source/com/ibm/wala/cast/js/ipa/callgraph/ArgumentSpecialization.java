@@ -237,7 +237,7 @@ public class ArgumentSpecialization {
                    for (CAstNode c : s.getMultiple("args")) {
                      x.add(copyNodes(c, cfg, context, nodeMap));
                    }
-                   result = Ast.makeNode(CAstNode.CALL, x.toArray(new CAstNode[ x.size() ]));
+                   result = Ast.makeNode(CAstNode.CALL, x.toArray(new CAstNode[0]));
                  }
                 }
                

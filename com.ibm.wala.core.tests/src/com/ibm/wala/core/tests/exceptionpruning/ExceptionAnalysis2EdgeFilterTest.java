@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -159,8 +160,9 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
 
     assertEquals("Number of normal edges deleted wrong:", 0, deletedNormal);
-    for (String key : deletedExceptional.keySet()) {
-      int value = deletedExceptional.get(key);
+    for (Map.Entry<String, Integer> entry : deletedExceptional.entrySet()) {
+      final String key = entry.getKey();
+      final int value = entry.getValue();
       String text = "Number of exceptional edges deleted wrong for " + key + ":";
       if (key.equals("testTryCatchMultipleExceptions")) {
         assertEquals(text, 12, value);

@@ -70,17 +70,18 @@ public class TestCAstPattern extends WalaTestCase {
     } else {
       Segments s = CAstPattern.match(p, n);
       Assert.assertTrue(s != null);
-      for (String nm : names.keySet()) {
-        Object o = names.get(nm);
+      for (Map.Entry<String, Object> entry : names.entrySet()) {
+        Object o = entry.getValue();
+        final String nm = entry.getKey();
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
-          Assert.assertTrue("for name " + nm + ": expected " + names.get(nm) + " but got " + s.getSingle(nm), names.get(nm).equals(
+          Assert.assertTrue("for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm), entry.getValue().equals(
               s.getSingle(nm)));
         } else {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
-          Assert.assertTrue("for name " + nm + ": expected " + names.get(nm) + " but got " + s.getMultiple(nm), names.get(nm)
+          Assert.assertTrue("for name " + nm + ": expected " + entry.getValue() + " but got " + s.getMultiple(nm), entry.getValue()
               .equals(s.getMultiple(nm)));
         }
       }

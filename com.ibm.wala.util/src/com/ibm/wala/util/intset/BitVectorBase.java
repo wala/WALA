@@ -118,7 +118,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
 
   @Override
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     boolean needSeparator = false;
     buffer.append('{');
     int limit = length();

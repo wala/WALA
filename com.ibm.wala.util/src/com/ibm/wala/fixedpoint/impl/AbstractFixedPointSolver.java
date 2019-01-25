@@ -196,7 +196,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
       throw new IllegalArgumentException("string is null");
     }
     if (string.length() > wrap) {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       int start = 0;
       while (start < string.length()) {
         int end = Math.min(start + wrap, string.length());
@@ -216,9 +216,9 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("Fixed Point System:\n");
+    StringBuilder result = new StringBuilder("Fixed Point System:\n");
     for (INodeWithNumber nwn : Iterator2Iterable.make(getStatements())) {
-      result.append(nwn).append("\n");
+      result.append(nwn).append('\n');
     }
     return result.toString();
   }

@@ -95,7 +95,7 @@ public class Util {
         libs.add(f.toURI());
       }
     }
-    return libs.toArray(new URI[ libs.size() ]);
+    return libs.toArray(new URI[0]);
   }
 
   public static AnalysisScope makeDalvikScope(URI[] androidLibs, File androidAPIJar, String dexFileName) throws IOException {

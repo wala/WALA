@@ -50,8 +50,7 @@
 package org.scandroid.spec;
 
 import java.util.Collection;
-import java.util.HashSet;
-
+import java.util.Collections;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.ReturnFlow;
 
@@ -67,10 +66,7 @@ public class EntryRetSinkSpec extends SinkSpec {
 	@Override
 	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 			BasicBlockInContext<E> block) {
-		HashSet<FlowType<E>> flowSet = new HashSet<>();
-		flowSet.clear();
-		flowSet.add(new ReturnFlow<>(block, false));
-		return flowSet;
+		return Collections.singleton(new ReturnFlow<>(block, false));
 	}
 
 	@Override

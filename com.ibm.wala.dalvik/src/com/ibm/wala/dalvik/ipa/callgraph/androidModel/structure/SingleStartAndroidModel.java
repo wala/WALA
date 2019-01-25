@@ -144,8 +144,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
         int phiPC = outerLoopPC + 1;
         boolean oldAllowReserved = body.allowReserved(true);
         logger.info("Setting block-inner Phis");
-        for (TypeReference phiType : outerStartingPhis.keySet()) {
-            final SSAValue oldPhi = outerStartingPhis.get(phiType);
+        for (final SSAValue oldPhi : outerStartingPhis.values()) {
             final List<SSAValue> forPhi = new ArrayList<>(2);
             forPhi.add(paramManager.getSuper(oldPhi.key));
             forPhi.add(paramManager.getCurrent(oldPhi.key));
@@ -171,11 +170,13 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
         
         // Add Phi-Statements at the beginning of this block...
         logger.info("Setting outer-block Phis");
-        for (TypeReference phiType : outerStartingPhis.keySet()) {
-            final VariableKey  phiKey = outerStartingPhis.get(phiType).key;
+        for (Map.Entry<TypeReference, SSAValue> entry : outerStartingPhis.entrySet()) {
+            final SSAValue ssaValue = entry.getValue();
+            final VariableKey  phiKey = ssaValue.key;
             PC = body.getNextProgramCounter();
 
             List<SSAValue> all = paramManager.getAllForPhi(phiKey);
+            final TypeReference phiType = entry.getKey();
             logger.debug("Into phi {} for {}", all, phiType.getName());
             // Narf ... unpacking...
 

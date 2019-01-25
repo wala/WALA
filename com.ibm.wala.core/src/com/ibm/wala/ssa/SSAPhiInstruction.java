@@ -68,7 +68,7 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
 
     s.append(getValueString(symbolTable, result)).append(" = phi ");
     s.append(" ").append(getValueString(symbolTable, params[0]));

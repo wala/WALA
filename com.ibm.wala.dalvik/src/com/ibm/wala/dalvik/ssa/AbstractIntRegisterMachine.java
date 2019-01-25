@@ -685,7 +685,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 //          if (isTOP()) {
 //              return "<TOP>@" + System.identityHashCode(this);
 //          }
-//          StringBuffer result = new StringBuffer("<");
+//          StringBuffer result = new StringBuilder("<");
 //          result.append("S");
 //          if (stackHeight == 0) {
 //              result.append("[empty]");
@@ -699,7 +699,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         }
 
 //      private StringBuffer array2StringBuffer(int[] array, int n) {
-//          StringBuffer result = new StringBuffer("[");
+//          StringBuffer result = new StringBuilder("[");
 //          if (array == null) {
 //              result.append(OPTIMISTIC ? "TOP" : "BOTTOM");
 //          } else {
@@ -714,18 +714,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
         @Override
         public void copyState(MachineState other) {
-            if (other.stack == null) {
-                stack = null;
-            } else {
-                stack = new int[other.stack.length];
-                System.arraycopy(other.stack, 0, stack, 0, other.stack.length);
-            }
-            if (other.locals == null) {
-                locals = null;
-            } else {
-                locals = new int[other.locals.length];
-                System.arraycopy(other.locals, 0, locals, 0, other.locals.length);
-            }
+            stack = other.stack == null ? null : other.stack.clone();
+            locals = other.locals == null ? null : other.locals.clone();
             stackHeight = other.stackHeight;
         }
 

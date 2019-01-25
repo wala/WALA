@@ -58,8 +58,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
 
     }
 
-    int newLvals[] = new int[results.length];
-    System.arraycopy(results, 0, newLvals, 0, results.length);
+    int[] newLvals = results.clone();
     int newExp = exception;
 
     if (defs != null) {
@@ -85,7 +84,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     if (getNumberOfReturnValues() > 0) {
       s.append(getValueString(symbolTable, getReturnValue(0)));
       s.append(" = ");
@@ -99,14 +98,14 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
     s.append(getValueString(symbolTable, function));
 
     if (site != null)
-      s.append("@").append(site.getProgramCounter());
+      s.append('@').append(site.getProgramCounter());
 
     if (params != null) {
       if (params.length > 0) {
-        s.append(" ").append(getValueString(symbolTable, params[0]));
+        s.append(' ').append(getValueString(symbolTable, params[0]));
       }
       for (int i = 1; i < params.length; i++) {
-        s.append(",").append(getValueString(symbolTable, params[i]));
+        s.append(',').append(getValueString(symbolTable, params[i]));
       }
     }
 
