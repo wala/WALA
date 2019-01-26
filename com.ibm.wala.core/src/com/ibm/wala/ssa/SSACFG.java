@@ -757,7 +757,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
   @Override
   public String toString() {
-    StringBuilder s = new StringBuilder("");
+    StringBuilder s = new StringBuilder();
     for (int i = 0; i <= getNumber(exit()); i++) {
       BasicBlock bb = getNode(i);
       s.append("BB").append(i).append('[').append(bb.getFirstInstructionIndex()).append("..").append(bb.getLastInstructionIndex())

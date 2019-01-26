@@ -235,7 +235,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
 
   @Override
   public String toString() {
-    StringBuilder result = new StringBuilder("");
+    StringBuilder result = new StringBuilder();
     for (CGNode n : Iterator2Iterable.make(DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<>(getFakeRootNode())))) {
       result.append(nodeToString(this, n)).append('\n');
     }

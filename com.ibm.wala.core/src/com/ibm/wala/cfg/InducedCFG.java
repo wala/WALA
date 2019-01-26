@@ -620,7 +620,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
   @Override
   public String toString() {
-    StringBuilder s = new StringBuilder("");
+    StringBuilder s = new StringBuilder();
     for (BasicBlock bb : this) {
       s.append("BB").append(getNumber(bb)).append('\n');
       for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {

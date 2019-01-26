@@ -647,7 +647,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         BitVector catches = this.getCatchBlocks();
         for (BasicBlock bb : this) {
             s.append("BB").append(getNumber(bb));
