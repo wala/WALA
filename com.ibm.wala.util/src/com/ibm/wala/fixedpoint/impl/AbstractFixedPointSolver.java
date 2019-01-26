@@ -200,7 +200,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
       int start = 0;
       while (start < string.length()) {
         int end = Math.min(start + wrap, string.length());
-        result.append(string.substring(start, end));
+        result.append(string, start, end);
         result.append("\n  ");
         start = end;
       }

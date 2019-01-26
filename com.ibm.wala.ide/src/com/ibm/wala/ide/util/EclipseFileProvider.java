@@ -171,7 +171,7 @@ public class EclipseFileProvider extends FileProvider {
         break;
       }
 
-      fixedUpUrl.append(urlString.substring(lastIndex, spaceIndex));
+      fixedUpUrl.append(urlString, lastIndex, spaceIndex);
       fixedUpUrl.append("%20");
       lastIndex = spaceIndex + 1;
     }
