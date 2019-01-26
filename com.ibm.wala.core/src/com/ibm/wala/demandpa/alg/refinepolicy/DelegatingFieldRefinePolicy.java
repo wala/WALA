@@ -44,10 +44,10 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
   }
 
   /**
-   * returns <code>true</code> if
-   * <code>A.shouldRefine(field) || B.shouldRefine(field)</code>. Note that
-   * if <code>A.shouldRefine(field)</code> is <code>true</code>,
-   * <code>B.shouldRefine(field)</code> is <em>not</em> called.
+   * returns {@code true} if
+   * {@code A.shouldRefine(field) || B.shouldRefine(field)}. Note that
+   * if {@code A.shouldRefine(field)} is {@code true},
+   * {@code B.shouldRefine(field)} is <em>not</em> called.
    */
   @Override
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {

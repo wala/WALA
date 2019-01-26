@@ -39,7 +39,7 @@ public class WebUtil {
    * 
    * @param url
    * @return a pair (S,F), where S is a set of extracted sources, and F is the
-   *         temp file holding the combined sources (or <code>null</code> if no
+   *         temp file holding the combined sources (or {@code null} if no
    *         such file exists)
    * @throws Error
    */

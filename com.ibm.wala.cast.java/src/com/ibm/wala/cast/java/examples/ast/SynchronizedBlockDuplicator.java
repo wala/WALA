@@ -174,7 +174,7 @@ public class SynchronizedBlockDuplicator extends
 
   /**
    * does root represent a synchronized block? if so, return the variable whose
-   * lock is acquired. otherwise, return <code>null</code>
+   * lock is acquired. otherwise, return {@code null}
    */
   private static String isSynchronizedOnVar(CAstNode root) {
     if (root.getKind() == CAstNode.UNWIND) {

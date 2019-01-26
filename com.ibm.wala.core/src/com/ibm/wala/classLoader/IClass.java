@@ -95,12 +95,12 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * Finds a field.
    * 
-   * @throws IllegalStateException if the class contains multiple fields with name <code>name</code>.
+   * @throws IllegalStateException if the class contains multiple fields with name {@code name}.
    */
   IField getField(Atom name);
 
   /**
-   * Finds a field, given a name and a type.  Returns <code>null</code> if not found.
+   * Finds a field, given a name and a type.  Returns {@code null} if not found.
    */
   IField getField(Atom name, TypeName type);
   

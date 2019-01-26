@@ -34,7 +34,7 @@ import com.ibm.wala.util.io.FileProvider;
 public class EclipseFileProvider extends FileProvider {
 
   /**
-   * the plug-in to use.  If <code>null</code>, {@link CorePlugin#getDefault()} is used.
+   * the plug-in to use.  If {@code null}, {@link CorePlugin#getDefault()} is used.
    */
   private final Plugin plugIn;
   
@@ -118,7 +118,7 @@ public class EclipseFileProvider extends FileProvider {
    * 
    * @param fileName
    *          the file name
-   * @return the URL, or <code>null</code> if the file is not found
+   * @return the URL, or {@code null} if the file is not found
    * @throws IOException
    */
   private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {

@@ -100,7 +100,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   }
 
   /**
-   * if F is a supported constant representing a field, return the corresponding {@link InstanceFieldKey} for I.  Otherwise, return <code>null</code>.
+   * if F is a supported constant representing a field, return the corresponding {@link InstanceFieldKey} for I.  Otherwise, return {@code null}.
    * @param F
    */
   protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {

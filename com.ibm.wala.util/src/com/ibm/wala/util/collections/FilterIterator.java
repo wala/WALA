@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 /**
- * A <code>FilterIterator</code> filters an <code>Iterator</code> to generate a new one.
+ * A {@code FilterIterator} filters an {@code Iterator} to generate a new one.
  */
 public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<? extends T> i;

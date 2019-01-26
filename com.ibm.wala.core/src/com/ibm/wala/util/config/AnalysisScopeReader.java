@@ -43,7 +43,7 @@ public class AnalysisScopeReader {
   /**
    * read in an analysis scope for a Java application from a text file
    * @param scopeFileName the text file specifying the scope
-   * @param exclusionsFile a file specifying code to be excluded from the scope; can be <code>null</code>
+   * @param exclusionsFile a file specifying code to be excluded from the scope; can be {@code null}
    * @param javaLoader the class loader used to read in files referenced in the scope file, via {@link ClassLoader#getResource(String)}
    * @return the analysis scope
    * @throws IOException

@@ -84,11 +84,11 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * 
  * <p>There are four issues to be considered here.</p>
  * <ul>
- * <li><b>References to <code>this</code></b>: 
- *   <p>If the code to extract contains references to <code>this</code>, these references have to be 
+ * <li><b>References to {@code this}</b>:
+ *   <p>If the code to extract contains references to {@code this}, these references have to be
  *   rewritten; otherwise they would refer to the global object in the transformed code.</p>
- *   <p>We do this by giving the extracted function an extra parameter <code>thi$</code>, and rewriting
- *   <code>this</code> to <code>thi$</code> within the extracted code.</p>
+ *   <p>We do this by giving the extracted function an extra parameter {@code thi$}, and rewriting
+ *   {@code this} to {@code thi$} within the extracted code.</p>
  *   <p>For instance,</p>
  *   <pre>
  *   Object.prototype.extend = function(src) {
@@ -112,23 +112,23 @@ import com.ibm.wala.util.debug.UnimplementedError;
  *   <p>This is already taken care of by the translation from Rhino's AST to CAst.</p>
  *   <p>Optionally, the policy can request that one local variable of the surrounding function be turned into 
  *   a local variable of the extracted closure. The rewriter checks that this is possible: the code to extract
- *   must not contain function calls or <code>new</code> expressions, and it must not contain <code>break</code>,
- *   <code>continue</code>, or <code>return</code> statements. The former requirement prevents a called function
+ *   must not contain function calls or {@code new} expressions, and it must not contain {@code break},
+ *   {@code continue}, or {@code return} statements. The former requirement prevents a called function
  *   from observing a different value of the local variable than before. The latter requirement is necessary
  *   because the final value of the localised variable needs to be returned and assigned to its counterpart in
  *   the surrounding function; since non-local jumps are encoded by special return values (see next item),
  *   this would no longer be possible.</p>
  * </li>
- * <li><b><code>break</code>, <code>continue</code>, <code>return</code></b>:
- *   <p>A <code>break</code> or <code>continue</code> statement within the extracted loop body that refers
- *   to the loop itself or an enclosing loop would become invalid in the transformed code. A <code>return</code>
+ * <li><b>{@code break}, {@code continue}, {@code return}</b>:
+ *   <p>A {@code break} or {@code continue} statement within the extracted loop body that refers
+ *   to the loop itself or an enclosing loop would become invalid in the transformed code. A {@code return}
  *   statement would no longer return from the enclosing function, but instead from the extracted function.</p>
- *   <p>We transform all three statements into <code>return</code> statements returning an object literal with a
- *   property <code>type</code> indicating whether this is a 'goto' (i.e., <code>break</code> or <code>return</code>)
+ *   <p>We transform all three statements into {@code return} statements returning an object literal with a
+ *   property {@code type} indicating whether this is a 'goto' (i.e., {@code break} or {@code return})
  *   or a 'return'. In the former case, the 'target' property contains an integer identifying the jump target; in
  *   the latter case, the 'value' property contains the value to return.</p>
  *   <p>The return value of the extracted function is then examined to determine whether it completed normally
- *   (i.e., returned <code>undefined</code>), or whether it returned an object indicating special control flow.</p>
+ *   (i.e., returned {@code undefined}), or whether it returned an object indicating special control flow.</p>
  *   <p>For example, consider this code from MooTools:</p>
  *   <pre>
  *   for(var style in Element.ShortStyles) {
@@ -163,7 +163,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  *     }
  *   }
  *   </pre>
- *   <p>Note that at the CAst level, <code>break</code> and <code>continue</code> are represented as <code>goto</code>
+ *   <p>Note that at the CAst level, {@code break} and {@code continue} are represented as {@code goto}
  *   statements, which simplifies the translation somewhat. The numerical encoding of jump targets does not matter
  *   as long as the extracted function and the fixup code agree on which number represents which label.</p>
  * </li>

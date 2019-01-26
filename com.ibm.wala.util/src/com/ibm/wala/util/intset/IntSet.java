@@ -72,12 +72,12 @@ public interface IntSet extends Serializable {
   public int max();
 
   /**
-   * @return true iff <code>this</code> has the same value as <code>that</code>.
+   * @return true iff {@code this} has the same value as {@code that}.
    */
   public boolean sameValue(IntSet that);
 
   /**
-   * @return true iff <code>this</code> is a subset of <code>that</code>.
+   * @return true iff {@code this} is a subset of {@code that}.
    */
   public boolean isSubset(IntSet that);
 

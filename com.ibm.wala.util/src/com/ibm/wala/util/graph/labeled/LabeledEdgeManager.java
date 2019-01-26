@@ -70,7 +70,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   /**
    * Return an Iterator over the immediate predecessor nodes of this Node in the Graph on edges with some label.
    * 
-   * This method never returns <code>null</code>.
+   * This method never returns {@code null}.
    * 
    * @return an Iterator over the immediate predecessor nodes of this Node.
    */
@@ -93,7 +93,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   /**
    * Return an Iterator over the immediate successor nodes of this Node in the Graph on edges with some label.
    * <p>
-   * This method never returns <code>null</code>.
+   * This method never returns {@code null}.
    * 
    * @return an Iterator over the immediate successor Nodes of this Node.
    */

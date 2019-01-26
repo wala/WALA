@@ -25,7 +25,7 @@ import com.ibm.wala.util.collections.Pair;
  * A special {@link ChildPos} representing the position of a node which is the body of a for-in loop.
  * 
  * <p>This also stores some additional data obtained while rewriting the loop body, such as whether
- * <code>return</code> statements were encountered.</p>
+ * {@code return} statements were encountered.</p>
  * 
  * @author mschaefer
  *

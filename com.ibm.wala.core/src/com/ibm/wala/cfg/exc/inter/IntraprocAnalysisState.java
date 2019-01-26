@@ -67,7 +67,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
    * attributes.
    * 
    * @param intra
-   *          The <code>node</code>'s intraprocedural analysis
+   *          The {@code node}'s intraprocedural analysis
    * @param node
    *          the node itself
    * @throws UnsoundGraphException

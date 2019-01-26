@@ -46,20 +46,20 @@
  *  To model add a lifecycle-model one has to do the following steps:
  *
  *  1.  Scan for the Entrypoints of the application
- *      <code>
+ *      {@code
  *      AndroidEntryPointLocator epl = new AndroidEntryPointLocator(options);
- *      List&lt;AndroidEntryPoint&gt; entrypoints = epl.getEntryPoints(cha);
+ *      List<AndroidEntryPoint> entrypoints = epl.getEntryPoints(cha);
  *      AndroidEntryPointManager.ENTRIES = entrypoints;
- *      </code>
+ *      }
  *  2.  Optionally read in the AndroidManifest.xml
- *      <code>
+ *      {@code
  *      final AndroidManifestXMLReader reader = new AndroidManifestXMLReader(manifestFile);
- *      </code>
+ *      }
  *  3.  Optionally change the order of entrypoints and change the instantiation behaviour
  *  4.  Create the model and use it as the new entrypoint of the analysis 
- *      <code>
+ *      {@code
  *      IMethod model = new AndroidModel(cha, p.options, p.scfg.cache).getMethod();
- *      </code>
+ *      }
  *
  *  The model generated that way will "start" all components of the App. The various start-calls
  *  occurring in these components will not yet call anything useful. To change this there are two
@@ -70,11 +70,11 @@
  *      starting _all_ the Activities is generated.
  *
  *      TODO: This is about to change!
- *      <code>
+ *      {@code
  *      AnalysisOptions options;
  *      ActivityMiniModel activities = new ActivityMiniModel(cha, p.options, p.scfg.cache);
  *      options.setSelector(new DelegatingMethodTargetSelector(activities.overrideAll(), options.getMethodTargetSelector()));
- *      </code>
+ *      }
  *
  * * Resolve the calls context-sensitive:
  *      In Android all calls to different components use an Intent. The IntentContextSelector 
@@ -83,11 +83,11 @@
  *
  *      The IntentContextInterpreter then replaces the IR of the start-calls to start only the
  *      resolved component (or a placeholder like startExternalACTIVITY)
- *      <code>
+ *      {@code
  *          final ContextSelector contextSelector = new IntentContextSelector(new DefaultContextSelector(options, cha))
  *          final SSAContextInterpreter contextInterpreter = new FallbackContextInterpreter(new DelegatingSSAContextInterpreter(
  *              new IntentContextInterpreter(cha, options, cache), new DefaultSSAInterpreter(options, cache)));
- *      </code>
+ *      }
  *
  *  For the context-sensitive stuff to be able to resolve the targets either the AndroidManifest.xml
  *  should have been read or overrides been placed manually (or both).

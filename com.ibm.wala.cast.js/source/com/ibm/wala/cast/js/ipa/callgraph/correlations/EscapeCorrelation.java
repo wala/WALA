@@ -19,9 +19,9 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 /**
  * An escape correlation conservatively captures inter-procedural correlated pairs: for a dynamic property
- * read <i>r</i> of the form <code>e[p]</code>, if both the result of <i>r</i> and the value of <code>p</code>
+ * read <i>r</i> of the form {@code e[p]}, if both the result of <i>r</i> and the value of {@code p}
  * flow into a function call <i>c</i>, we consider <i>r</i> and <i>c</i> to be a correlated pair to account
- * for the fact that the function called by <i>c</i> may perform a write of property <code>p</code>. 
+ * for the fact that the function called by <i>c</i> may perform a write of property {@code p}.
  * 
  * @author mschaefer
  *

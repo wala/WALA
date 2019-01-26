@@ -58,7 +58,7 @@ public interface StateMachine<T> {
    * @param prevState
    * @param label
    * @return the successor state of prevState for the transition labelled label,
-   *         or <code>null</code> if no such transition exists
+   *         or {@code null} if no such transition exists
    * @throws StatesMergedException if merging of states is detected
    * @see StatesMergedException
    */

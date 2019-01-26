@@ -136,7 +136,7 @@ public class FlowGraph implements Iterable<Vertex> {
 	}
 	
 	/**
-	 * Adds an edge from vertex <code>from</code> to vertex <code>to</code>, adding the vertices
+	 * Adds an edge from vertex {@code from} to vertex {@code to}, adding the vertices
 	 * to the graph if they are not in there yet.
 	 */
 	public void addEdge(Vertex from, Vertex to) {
@@ -152,7 +152,7 @@ public class FlowGraph implements Iterable<Vertex> {
 	}
 
 	/**
-	 * Computes the set of vertices that may reach <code>dest</code> along paths not containing an
+	 * Computes the set of vertices that may reach {@code dest} along paths not containing an
 	 * {@link UnknownVertex}.
 	 */
 	public OrdinalSet<FuncVertex> getReachingSet(Vertex dest, IProgressMonitor monitor) throws CancelException {

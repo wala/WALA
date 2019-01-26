@@ -26,7 +26,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDweller {
   /**
    * Return the {@link IMethod method} this CGNode represents.
-   * This value will never be <code>null</code>.
+   * This value will never be {@code null}.
    *
    * @return the target IMethod for this CGNode.
    */
@@ -34,7 +34,7 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
 
   /**
    * Return the {@link Context context} this CGNode represents.
-   * This value will never be <code>null</code>.
+   * This value will never be {@code null}.
    *
    * @return the Context for this CGNode.
    */

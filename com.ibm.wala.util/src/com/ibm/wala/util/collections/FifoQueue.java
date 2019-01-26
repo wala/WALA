@@ -78,8 +78,8 @@ public class FifoQueue<T> {
   /**
    * Returns whether or not this queue is empty (no enqueued elements).
    * 
-   * @return <code>true</code> when there are no enqueued objects.
-   *         <code>false</code> if there are objects remaining in the queue.
+   * @return {@code true} when there are no enqueued objects.
+   *         {@code false} if there are objects remaining in the queue.
    * @see #size
    */
   public boolean isEmpty() {
@@ -91,8 +91,8 @@ public class FifoQueue<T> {
    * 
    * @param element
    *          determine whether this object is in the queue.
-   * @return <code>true</code> if <code>element</code> is in the queue.
-   *         Otherwise <code>false</code> if not currently in the queue.
+   * @return {@code true} if {@code element} is in the queue.
+   *         Otherwise {@code false} if not currently in the queue.
    */
   public boolean contains(T element) {
     return inQueue.contains(element);
@@ -103,8 +103,8 @@ public class FifoQueue<T> {
    * queue. If the Object is already in the queue, the queue remains unmodified.
    * <p>
    * This method determines whether an element is already in the queue using the
-   * element's <code>equals()</code> method. If the element's class does not
-   * implement <code>equals()</code>, the default implementation assumes they
+   * element's {@code equals()} method. If the element's class does not
+   * implement {@code equals()}, the default implementation assumes they
    * are equal only if it is the same object.
    * 
    * @param element
@@ -124,8 +124,8 @@ public class FifoQueue<T> {
    * already in the queue is ignored.
    * <p>
    * This method determines whether an element is already in the queue using the
-   * element's <code>equals()</code> method. If the element's class does not
-   * implement <code>equals()</code>, the default implementation assumes they
+   * element's {@code equals()} method. If the element's class does not
+   * implement {@code equals()}, the default implementation assumes they
    * are equal if it is the same object.
    * 
    * @param elements
@@ -148,7 +148,7 @@ public class FifoQueue<T> {
 
   /**
    * Remove the next Object from the queue and return it to the caller. Throws
-   * <code>IllegalStateException</code> if the queue is empty when this method
+   * {@code IllegalStateException} if the queue is empty when this method
    * is called.
    * 
    * @return the next Object in the queue.
@@ -172,7 +172,7 @@ public class FifoQueue<T> {
 
   /**
    * Returns the next Object in the queue, but leaves it in the queue. Throws
-   * <code>IllegalStateException</code> if the queue is empty when this method
+   * {@code IllegalStateException} if the queue is empty when this method
    * is called.
    * 
    * @return the next Object in the queue.

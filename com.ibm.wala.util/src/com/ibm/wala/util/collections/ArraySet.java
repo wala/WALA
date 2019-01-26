@@ -193,7 +193,7 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /**
-   * @return <code>true</code> (SJF: So why return a value?)
+   * @return {@code true} (SJF: So why return a value?)
    */
   public boolean remove(int ind) {
     try {

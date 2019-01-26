@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * An <code>MapIterator</code> maps an <code>Iterator</code> contents to produce a new Iterator
+ * An {@code MapIterator} maps an {@code Iterator} contents to produce a new Iterator
  */
 public class MapIterator<X, Y> implements Iterator<Y> {
   final Iterator<? extends X> i;

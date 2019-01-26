@@ -109,7 +109,7 @@ public class CAstAnalysisScope extends AnalysisScope {
   }
 
   /**
-   * @return the ClassLoaderReference specified by <code>name</code>.
+   * @return the ClassLoaderReference specified by {@code name}.
    */
   @Override
   public ClassLoaderReference getLoader(Atom name) {

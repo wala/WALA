@@ -26,11 +26,11 @@ import com.ibm.wala.cfg.ControlFlowGraph;
  * normal instruction array returned by IR.getInstructions(); instead these
  * instructions live in {@link ISSABasicBlock}.
  * 
- * <code>getUse(i)</code> corresponds to the value number from the
+ * {@code getUse(i)} corresponds to the value number from the
  * i<sup>th</sup> predecessor of the corresponding {@link ISSABasicBlock}
- * <code>b</code> in {@link ControlFlowGraph} <code>g</code>, where predecessor
+ * {@code b} in {@link ControlFlowGraph} {@code g}, where predecessor
  * order is the order of nodes returned by the {@link Iterator}
- * <code>g.getPredNodes(b)</code>.
+ * {@code g.getPredNodes(b)}.
  * 
  * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1),
  * then that use represents an edge in the CFG which is infeasible in verifiable

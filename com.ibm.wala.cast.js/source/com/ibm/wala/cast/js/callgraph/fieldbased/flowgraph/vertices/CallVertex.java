@@ -15,7 +15,7 @@ import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.classLoader.CallSiteReference;
 
 /**
- * A call vertex represents the possible callees of a function call or <code>new</code> expression.
+ * A call vertex represents the possible callees of a function call or {@code new} expression.
  * 
  * @author mschaefer
  *
@@ -49,7 +49,7 @@ public class CallVertex extends Vertex {
 	}
 	
 	/**
-	 * Does this call vertex correspond to a <code>new</code> instruction? 
+	 * Does this call vertex correspond to a {@code new} instruction?
 	 */
 	public boolean isNew() {
 		return site.getDeclaredTarget() == JavaScriptMethods.ctorReference;

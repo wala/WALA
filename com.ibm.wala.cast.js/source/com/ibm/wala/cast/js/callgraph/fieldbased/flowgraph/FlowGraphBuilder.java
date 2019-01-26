@@ -73,7 +73,7 @@ public class FlowGraphBuilder {
 	 * 
 	 * <p>
 	 * It creates a new, empty flow graph, adds nodes for a small number of special primitive
-	 * functions such as <code>Object</code> and <code>Function</code> and sets up flow
+	 * functions such as {@code Object} and {@code Function} and sets up flow
 	 * edges to make them flow into the corresponding global variables. Then it iterates over
 	 * all functions in the class hierarchy and all their IR instructions, and adds the
 	 * flow edges induced by these instructions.

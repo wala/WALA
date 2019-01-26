@@ -186,9 +186,9 @@ public class AnalysisOptions {
 
   /**
    * This numerical value indicates the maximum number of nodes that any {@link CallGraph} build with this {@link AnalysisOptions}
-   * object is allowed to have. During {@link CallGraph} construction, once <code>maxNumberOfNodes</code> {@link CGNode} objects
+   * object is allowed to have. During {@link CallGraph} construction, once {@code maxNumberOfNodes} {@link CGNode} objects
    * have been added to the {@link CallGraph}, no more {@link CGNode} objects will be added. By default,
-   * <code>maxNumberOfNodes</code> is set to <code>-1</code>, which indicates that no restrictions are in place. See also
+   * {@code maxNumberOfNodes} is set to {@code -1}, which indicates that no restrictions are in place. See also
    * {@link ExplicitCallGraph}.
    */
   private long maxNumberOfNodes = -1;

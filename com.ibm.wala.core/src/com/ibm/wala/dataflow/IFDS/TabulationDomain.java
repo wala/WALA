@@ -21,7 +21,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 public interface TabulationDomain<F,T> extends OrdinalSetMapping<F> {
 
   /**
-   * returns <code>true</code> if p1 should be processed before
+   * returns {@code true} if p1 should be processed before
    * p2 by the {@link TabulationSolver}
    * 
    * For example, if this domain supports a partial order on facts, return true

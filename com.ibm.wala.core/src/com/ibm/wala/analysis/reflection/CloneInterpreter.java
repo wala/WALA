@@ -62,14 +62,14 @@ import com.ibm.wala.util.strings.Atom;
 public class CloneInterpreter implements SSAContextInterpreter {
 
   /**
-   * Comment for <code>cloneAtom</code>
+   * Comment for {@code cloneAtom}
    */
   public final static Atom cloneAtom = Atom.findOrCreateUnicodeAtom("clone");
 
   private final static Descriptor cloneDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
 
   /**
-   * Comment for <code>CLONE</code>
+   * Comment for {@code CLONE}
    */
   public final static MethodReference CLONE = MethodReference.findOrCreate(TypeReference.JavaLangObject, cloneAtom, cloneDesc);
 

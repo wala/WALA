@@ -81,7 +81,7 @@ public class AnnotationsReader extends AttributeReader {
 
   /**
    * Represents a constant argument to an annotation. Class arguments (e.g.,
-   * <code>Foo.class</code>) are also represented with this type, with the value
+   * {@code Foo.class}) are also represented with this type, with the value
    * being the String class name.
    */
   public static class ConstantElementValue implements ElementValue {

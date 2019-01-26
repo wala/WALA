@@ -40,11 +40,11 @@ class ReflectiveInvocationSelector implements ContextSelector {
    * Creates a callee target based on the following criteria:
    * <ol>
    * <li>If the method being invoked through reflection is definitely static, then do not create a callee target for any
-   * <code>callee</code> method that is not static. In this case, return <code>null</code>.
-   * <li>If the method being invoked through reflection takes a constant number of parameters, <code>n</code>, then do not create a
-   * callee target for any <code>callee</code> method that takes a number of parameters different from <code>n</code>. In this case,
-   * return <code>null</code>.
-   * <li>Otherwise, return a new {@link ReceiverInstanceContext} for <code>receiver</code>.
+   * {@code callee} method that is not static. In this case, return {@code null}.
+   * <li>If the method being invoked through reflection takes a constant number of parameters, {@code n}, then do not create a
+   * callee target for any {@code callee} method that takes a number of parameters different from {@code n}. In this case,
+   * return {@code null}.
+   * <li>Otherwise, return a new {@link ReceiverInstanceContext} for {@code receiver}.
    * </ol>
    */
   @Override

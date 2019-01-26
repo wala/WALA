@@ -41,8 +41,8 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    * the queue.
    * <p>
    * This method determines whether an element was ever in the queue using the
-   * element's <code>equals()</code> method. If the element's class does not
-   * implement <code>equals()</code>, the default implementation assumes they
+   * element's {@code equals()} method. If the element's class does not
+   * implement {@code equals()}, the default implementation assumes they
    * are equal if it is the same object.
    * 
    * @param element
@@ -62,8 +62,8 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    * queue if never previously pushed into the queue.
    * <p>
    * This method determines whether an element was ever pushed into the queue
-   * using the element's <code>equals()</code> method. If the element's class
-   * does not implement <code>equals()</code>, the default implementation
+   * using the element's {@code equals()} method. If the element's class
+   * does not implement {@code equals()}, the default implementation
    * assumes that two elements are equal if they are the same object.
    * 
    * @param elements
@@ -90,8 +90,8 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    * 
    * @param element
    *          determine whether this object is in the queue.
-   * @return <code>true</code> if <code>element</code> is in the queue.
-   *         Otherwise <code>false</code>.
+   * @return {@code true} if {@code element} is in the queue.
+   *         Otherwise {@code false}.
    */
   public boolean everContained(T element) {
     return wasInQueue.contains(element);

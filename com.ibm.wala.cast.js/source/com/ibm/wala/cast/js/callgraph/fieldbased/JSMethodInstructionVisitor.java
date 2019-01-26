@@ -38,7 +38,7 @@ public class JSMethodInstructionVisitor extends JSAbstractInstructionVisitor {
 	}
 
 	/**
-	 * Determine whether <code>invk</code> corresponds to a function declaration or function expression.
+	 * Determine whether {@code invk} corresponds to a function declaration or function expression.
 	 * 
 	 * TODO: A bit hackish. Is there a more principled way to do this?
 	 */

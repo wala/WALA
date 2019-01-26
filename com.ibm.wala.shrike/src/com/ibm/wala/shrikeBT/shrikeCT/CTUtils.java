@@ -52,7 +52,7 @@ public class CTUtils {
    * 
    * @param md the method data
    * @param classWriter the target class writer
-   * @param rawLines line number information if available, otherwise <code>null</code>
+   * @param rawLines line number information if available, otherwise {@code null}
    */
   public static void compileAndAddMethodToClassWriter(MethodData md, ClassWriter classWriter, ClassWriter.Element rawLines) {
     if (classWriter == null) {

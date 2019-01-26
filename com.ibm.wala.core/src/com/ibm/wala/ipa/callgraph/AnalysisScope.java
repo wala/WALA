@@ -58,7 +58,7 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
  * 
  * The analysis scope is partitioned by class loader. There are three pre-defined class loader scopes:
  * <ul>
- * <li>Primordial (for <code>rt.jar</code>, the core classes)
+ * <li>Primordial (for {@code rt.jar}, the core classes)
  * <li>Extension (for extension libraries in $JRE/lib/ext)
  * <li>Application (for the classes of the application)
  * </ul>
@@ -283,7 +283,7 @@ public class AnalysisScope {
   }
 
   /**
-   * @return the ClassLoaderReference specified by <code>name</code>.
+   * @return the ClassLoaderReference specified by {@code name}.
    * @throws IllegalArgumentException if name is null
    */
   public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException {

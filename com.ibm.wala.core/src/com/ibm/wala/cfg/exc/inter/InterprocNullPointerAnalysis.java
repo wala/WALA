@@ -99,14 +99,14 @@ public final class InterprocNullPointerAnalysis {
   }
 
   /**
-   * Finds all invokes in a given <code>startNode</code> and traverses als
+   * Finds all invokes in a given {@code startNode} and traverses als
    * successors recursively.
    * 
    * @param startNode
    *          The node to start
    * @param paramState
-   *          The parameter states of the <code>startNode</code>. May be
-   *          <code>null</code>
+   *          The parameter states of the {@code startNode}. May be
+   *          {@code null}
    * @throws UnsoundGraphException
    * @throws CancelException
    * @throws WalaException
