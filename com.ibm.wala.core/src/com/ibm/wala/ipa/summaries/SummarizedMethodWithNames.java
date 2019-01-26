@@ -113,7 +113,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
              */
             @Override
             public String[] getLocalNames(int index, int vn) {
-                if (DEBUG) { System.err.printf("IR.getLocalNames({}, {})", index, vn); }
+                if (DEBUG) { System.err.printf("IR.getLocalNames(%d, %d)\n", index, vn); }
                 if (localNames != null && localNames.containsKey(vn)) {
                     return new String[] { this.localNames.get(vn).toString() };
                 } else {
@@ -143,10 +143,10 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
     public String getLocalVariableName(int bcIndex, int localNumber) {
         if (this.localNames.containsKey(localNumber)) {
             String name = this.localNames.get(localNumber).toString();
-            if (DEBUG) { System.err.printf("getLocalVariableName(bc={}, no={}) = {}", bcIndex, localNumber, name); }
+            if (DEBUG) { System.err.printf("getLocalVariableName(bc=%d, no=%d) = %s\n", bcIndex, localNumber, name); }
             return name;
         } else {
-            if (DEBUG) { System.err.printf("No name for {}", localNumber); }
+            if (DEBUG) { System.err.printf("No name for %d\n", localNumber); }
             return super.getLocalVariableName(bcIndex, localNumber);
         }
     }
