@@ -137,8 +137,8 @@ public class DemandCastChecker {
       e.printStackTrace();
     }
     System.err.println("=*=*=*=*=*=*=*=*=*=*=*=*=*=*");
-    System.err.println("");
-    System.err.println("");
+    System.err.println();
+    System.err.println();
   }
 
   private static DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass, String benchName)

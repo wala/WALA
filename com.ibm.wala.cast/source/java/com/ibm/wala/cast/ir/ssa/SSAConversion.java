@@ -655,7 +655,7 @@ public class SSAConversion extends AbstractSSAConversion {
             for (int lexicalUse : lexicalUses) {
               System.err.print((Integer.valueOf(lexicalUse).toString() + ' '));
             }
-            System.err.println("");
+            System.err.println();
           }
         }
       }
