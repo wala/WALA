@@ -272,7 +272,7 @@ public class VolatileMethodSummary {
 
         boolean didOverwrite = isUsed(statement.iindex);
         while (this.instructions.size() - 1 < statement.iindex) this.instructions.add(null);
-        if (DEBUG) { System.err.printf("Setting {} to {}", statement.iindex, statement); }
+        if (DEBUG) { System.err.printf("Setting %s to %s\n", statement.iindex, statement); }
         this.instructions.set(statement.iindex, statement);
         return didOverwrite;
     }
@@ -296,13 +296,13 @@ public class VolatileMethodSummary {
         for (int i = 0; i < this.instructions.size(); ++i) {
             final SSAInstruction inst = this.instructions.get(i);
             if (inst == null) {
-              if (DEBUG) { System.err.printf("No instruction at iindex {}", i); }
+              if (DEBUG) { System.err.printf("No instruction at iindex %d\n", i); }
               this.summary.addStatement(null);
             } else if (inst == RESERVED) {
               // replace reserved slots by 'goto next' statements
               this.summary.addStatement(new SSAGotoInstruction(i, i+1));
             } else {
-              if (DEBUG) { System.err.printf("Adding @{}: ", inst); }
+              if (DEBUG) { System.err.printf("Adding @%s: ", inst); }
               this.summary.addStatement(inst);
             }
         }
