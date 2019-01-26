@@ -120,7 +120,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
 
     private boolean hasAllCallbacks(Set<Function<Object, Object>> callbacks) {
-      return callbacks != null && callbacks.containsAll(callbacks);
+      return callbacks != null && this.callbacks.containsAll(callbacks);
     }
 
     public void addCallback(Function<Object, Object> callback) {
