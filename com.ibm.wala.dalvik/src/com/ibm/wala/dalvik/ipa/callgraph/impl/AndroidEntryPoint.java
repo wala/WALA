@@ -411,9 +411,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
 
         @Override
         public int compareTo(IExecutionOrder o) {
-            if (this.value == o.getOrderValue()) return 0;
-            if (this.value > o.getOrderValue()) return 1;
-            return -1;
+            return this.value - o.getOrderValue();
         }
 
         @Override
