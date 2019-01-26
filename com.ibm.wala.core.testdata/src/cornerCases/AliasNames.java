@@ -14,6 +14,6 @@ public class AliasNames {
 
   public static void foo(String[] a) {
     @SuppressWarnings("unused")
-    String s = a[0].toString();
+    String s = a[0];
   }
 }

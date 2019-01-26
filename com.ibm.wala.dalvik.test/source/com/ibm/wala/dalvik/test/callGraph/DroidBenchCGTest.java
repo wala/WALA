@@ -168,7 +168,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
         uncalled = Collections.emptySet();
       }
       files.add(new Object[]{ androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled }); 
-    }, t -> (filter == null || t.getAbsolutePath().contains(filter)) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString()), new File(droidBenchRoot + "/apk/"));
+    }, t -> (filter == null || t.getAbsolutePath().contains(filter)) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName()), new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}
 }
