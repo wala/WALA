@@ -131,7 +131,10 @@ public class TypeArgument extends Signature {
         while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
           ++i;
         }
-        if (typeArgs.charAt(i++) == TypeReference.ClassTypeCode) {
+        if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
+          while (typeArgs.charAt(i++) != ';')
+            ;
+        } else if (typeArgs.charAt(i++) == (byte) 'T'){
           while (typeArgs.charAt(i++) != ';')
             ;
         }
