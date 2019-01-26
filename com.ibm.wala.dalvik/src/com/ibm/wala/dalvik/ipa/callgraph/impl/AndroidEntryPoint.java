@@ -163,13 +163,13 @@ public class AndroidEntryPoint extends DexEntryPoint {
      * @return the section of this entrypoint
      */
     public ExecutionOrder getSection() {
-        if (this.order.compareTo(ExecutionOrder.BEFORE_LOOP) == -1) return ExecutionOrder.AT_FIRST;
-        if (this.order.compareTo(ExecutionOrder.START_OF_LOOP) == -1) return ExecutionOrder.BEFORE_LOOP;
-        if (this.order.compareTo(ExecutionOrder.MIDDLE_OF_LOOP) == -1) return ExecutionOrder.START_OF_LOOP;
-        if (this.order.compareTo(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) == -1) return ExecutionOrder.MIDDLE_OF_LOOP;
-        if (this.order.compareTo(ExecutionOrder.END_OF_LOOP) == -1) return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
-        if (this.order.compareTo(ExecutionOrder.AFTER_LOOP) == -1) return ExecutionOrder.END_OF_LOOP;
-        if (this.order.compareTo(ExecutionOrder.AT_LAST) == -1) return ExecutionOrder.AFTER_LOOP;
+        if (this.order.compareTo(ExecutionOrder.BEFORE_LOOP) < 0) return ExecutionOrder.AT_FIRST;
+        if (this.order.compareTo(ExecutionOrder.START_OF_LOOP) < 0) return ExecutionOrder.BEFORE_LOOP;
+        if (this.order.compareTo(ExecutionOrder.MIDDLE_OF_LOOP) < 0) return ExecutionOrder.START_OF_LOOP;
+        if (this.order.compareTo(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) < 0) return ExecutionOrder.MIDDLE_OF_LOOP;
+        if (this.order.compareTo(ExecutionOrder.END_OF_LOOP) < 0) return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
+        if (this.order.compareTo(ExecutionOrder.AFTER_LOOP) < 0) return ExecutionOrder.END_OF_LOOP;
+        if (this.order.compareTo(ExecutionOrder.AT_LAST) < 0) return ExecutionOrder.AFTER_LOOP;
         return ExecutionOrder.AT_LAST;
     }
 
@@ -398,13 +398,13 @@ public class AndroidEntryPoint extends DexEntryPoint {
          */
         @Override
         public ExecutionOrder getSection() {
-            if (this.compareTo(ExecutionOrder.BEFORE_LOOP) == -1) return ExecutionOrder.AT_FIRST;
-            if (this.compareTo(ExecutionOrder.START_OF_LOOP) == -1) return ExecutionOrder.BEFORE_LOOP;
-            if (this.compareTo(ExecutionOrder.MIDDLE_OF_LOOP) == -1) return ExecutionOrder.START_OF_LOOP;
-            if (this.compareTo(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) == -1) return ExecutionOrder.MIDDLE_OF_LOOP;
-            if (this.compareTo(ExecutionOrder.END_OF_LOOP) == -1) return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
-            if (this.compareTo(ExecutionOrder.AFTER_LOOP) == -1) return ExecutionOrder.END_OF_LOOP;
-            if (this.compareTo(ExecutionOrder.AT_LAST) == -1) return ExecutionOrder.AFTER_LOOP;
+            if (this.compareTo(ExecutionOrder.BEFORE_LOOP) < 0) return ExecutionOrder.AT_FIRST;
+            if (this.compareTo(ExecutionOrder.START_OF_LOOP) < 0) return ExecutionOrder.BEFORE_LOOP;
+            if (this.compareTo(ExecutionOrder.MIDDLE_OF_LOOP) < 0) return ExecutionOrder.START_OF_LOOP;
+            if (this.compareTo(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) < 0) return ExecutionOrder.MIDDLE_OF_LOOP;
+            if (this.compareTo(ExecutionOrder.END_OF_LOOP) < 0) return ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
+            if (this.compareTo(ExecutionOrder.AFTER_LOOP) < 0) return ExecutionOrder.END_OF_LOOP;
+            if (this.compareTo(ExecutionOrder.AT_LAST) < 0) return ExecutionOrder.AFTER_LOOP;
             return ExecutionOrder.AT_LAST;
         }
 
@@ -427,13 +427,13 @@ public class AndroidEntryPoint extends DexEntryPoint {
             if (this.compareTo(ExecutionOrder.AFTER_LOOP) == 0) return "ExecutionOrder.AFTER_LOOP";
             if (this.compareTo(ExecutionOrder.AT_LAST) == 0) return "ExecutionOrder.AT_LAST";
 
-            if (this.compareTo(ExecutionOrder.BEFORE_LOOP) == -1) return "in section ExecutionOrder.AT_FIRST";
-            if (this.compareTo(ExecutionOrder.START_OF_LOOP) == -1) return "in section ExecutionOrder.BEFORE_LOOP";
-            if (this.compareTo(ExecutionOrder.MIDDLE_OF_LOOP) == -1) return "in section ExecutionOrder.START_OF_LOOP";
-            if (this.compareTo(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) == -1) return "in section ExecutionOrder.MIDDLE_OF_LOOP";
-            if (this.compareTo(ExecutionOrder.END_OF_LOOP) == -1) return "in section ExecutionOrder.MULTIPLE_TIMES_IN_LOOP";
-            if (this.compareTo(ExecutionOrder.AFTER_LOOP) == -1) return "in section ExecutionOrder.END_OF_LOOP";
-            if (this.compareTo(ExecutionOrder.AT_LAST) == -1) return "in section ExecutionOrder.AFTER_LOOP";
+            if (this.compareTo(ExecutionOrder.BEFORE_LOOP) < 0) return "in section ExecutionOrder.AT_FIRST";
+            if (this.compareTo(ExecutionOrder.START_OF_LOOP) < 0) return "in section ExecutionOrder.BEFORE_LOOP";
+            if (this.compareTo(ExecutionOrder.MIDDLE_OF_LOOP) < 0) return "in section ExecutionOrder.START_OF_LOOP";
+            if (this.compareTo(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) < 0) return "in section ExecutionOrder.MIDDLE_OF_LOOP";
+            if (this.compareTo(ExecutionOrder.END_OF_LOOP) < 0) return "in section ExecutionOrder.MULTIPLE_TIMES_IN_LOOP";
+            if (this.compareTo(ExecutionOrder.AFTER_LOOP) < 0) return "in section ExecutionOrder.END_OF_LOOP";
+            if (this.compareTo(ExecutionOrder.AT_LAST) < 0) return "in section ExecutionOrder.AFTER_LOOP";
             return "in section ExecutionOrder.AT_LAST";
         }
     }
