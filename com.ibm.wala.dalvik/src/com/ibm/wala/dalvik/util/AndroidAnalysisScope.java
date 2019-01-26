@@ -26,12 +26,30 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
+import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.MultiDexContainer;
 
 public class AndroidAnalysisScope {
 
 	private static final String BASIC_FILE = "primordial.txt";
 
-	public static AnalysisScope setUpAndroidAnalysisScope(URI classpath, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
+	/**
+	 * Creates an Android Analysis Scope
+	 * @param codeFileName  the name of a .oat|.apk|.dex file
+	 * @param exclusions  the name of the exclusions file (nullable)
+	 * @param loader  the classloader to use
+	 * @param androidLib  an array of libraries (e.g. the Android SDK jar) to add to the scope
+	 * @return  a {@link AnalysisScope}
+	 * @throws IOException
+	 */
+	public static AnalysisScope setUpAndroidAnalysisScope(URI codeFileName, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
+		return setUpAndroidAnalysisScope(codeFileName, DexFileModule.AUTO_INFER_API_LEVEL, exclusions, loader, androidLib);
+	}
+
+
+	public static AnalysisScope setUpAndroidAnalysisScope(URI codeFileName, int apiLevel, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		AnalysisScope scope;
 		File exclusionsFile = exclusions != null? new File(exclusions) : null;
 
@@ -56,17 +74,28 @@ public class AndroidAnalysisScope {
 					scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(new JarFile(new File(al))));
 				}
 			}
-
 		}
 
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-		scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(new File(classpath)));
-		
+		File codeFile = new File(codeFileName);
+		boolean isContainerFile = codeFile.getName().endsWith(".oat") || codeFile.getName().endsWith(".apk");
+
+		if (isContainerFile) {
+			MultiDexContainer<? extends DexBackedDexFile> multiDex = DexFileFactory.loadDexContainer(codeFile, apiLevel == DexFileModule.AUTO_INFER_API_LEVEL ? null : Opcodes.forApi(apiLevel));
+
+			for (String dexEntry : multiDex.getDexEntryNames()) {
+				scope.addToScope(ClassLoaderReference.Application, new DexFileModule(codeFile, dexEntry, apiLevel));
+			}
+		} else {
+			scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(codeFile, apiLevel));
+		}
+
 		return scope;
 	}
-	
+
+
 	/**
 	 * Handle .apk file.
 	 * 

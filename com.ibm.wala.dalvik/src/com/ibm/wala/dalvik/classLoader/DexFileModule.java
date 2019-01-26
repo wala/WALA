@@ -73,14 +73,19 @@ public class DexFileModule implements Module {
 	private final File f;
     private final DexFile dexfile;
     private final Collection<ModuleEntry> entries;
+    public static final int AUTO_INFER_API_LEVEL = -1;
 
     public static DexFileModule make(File f) throws IllegalArgumentException, IOException {
+        return make(f, AUTO_INFER_API_LEVEL);
+    }
+
+    public static DexFileModule make(File f, int apiLevel) throws IllegalArgumentException, IOException {
     	if (f.getName().endsWith("jar")) {
     		try (final JarFile jar = new JarFile(f)) {
     			return new DexFileModule(jar);
     		}
     	} else {
-    		return new DexFileModule(f);
+    		return new DexFileModule(f, apiLevel);
     	}
     }
     
@@ -98,16 +103,21 @@ public class DexFileModule implements Module {
     private DexFileModule(JarFile f) throws IllegalArgumentException, IOException {    	
     	this(TemporaryFile.streamToFile(tf(f), f.getInputStream(f.getEntry("classes.dex"))));
     }
-    
+
+
+    private DexFileModule(File f) throws IllegalArgumentException {
+        this(f, AUTO_INFER_API_LEVEL);
+    }
+
     /**
      * @param f
      *            the .dex or .apk file
      * @throws IllegalArgumentException
      */
-    private DexFileModule(File f) throws IllegalArgumentException {    	
+    private DexFileModule(File f, int apiLevel) throws IllegalArgumentException {
         try {
-        		this.f = f;
-            dexfile = DexFileFactory.loadDexFile(f, Opcodes.forApi(24));
+        	this.f = f;
+            dexfile = DexFileFactory.loadDexFile(f, apiLevel == AUTO_INFER_API_LEVEL? null : Opcodes.forApi(apiLevel));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -122,9 +132,9 @@ public class DexFileModule implements Module {
 
     /**
      * @param f
-     *            the .dex or .apk file
+     *            the .oat or .apk file
      * @param entry
-     *            the name of the .dex file inside the apk
+     *            the name of the .dex file inside the container file
      * @param apiLevel
      *            the api level wanted
      * @throws IllegalArgumentException
@@ -132,7 +142,7 @@ public class DexFileModule implements Module {
     public DexFileModule(File f, String entry, int apiLevel) throws IllegalArgumentException {
         try {
             this.f = f;
-            dexfile = DexFileFactory.loadDexEntry(f, entry,true, Opcodes.forApi(apiLevel));
+            dexfile = DexFileFactory.loadDexEntry(f, entry,true, apiLevel == AUTO_INFER_API_LEVEL? null : Opcodes.forApi(apiLevel));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -142,6 +152,10 @@ public class DexFileModule implements Module {
         for (ClassDef cdefitems : dexfile.getClasses()) {
             entries.add(new DexModuleEntry(cdefitems, this));
         }
+    }
+
+    public DexFileModule(File f, String entry) throws IllegalArgumentException {
+        this(f, entry, AUTO_INFER_API_LEVEL);
     }
 
     /**

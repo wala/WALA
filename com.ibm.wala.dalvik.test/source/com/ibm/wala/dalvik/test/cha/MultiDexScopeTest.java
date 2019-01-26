@@ -17,9 +17,14 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class MultiDexScopeTest {
 
@@ -83,17 +88,59 @@ public class MultiDexScopeTest {
         ClassHierarchy cha, cha2;
         String multidexApk =  "data/multidex-test.apk";
 
-        scope = setUpTestScope(multidexApk,"", MultiDexScopeTest.class.getClassLoader());
+        scope = AnalysisScopeReader.readJavaScope("primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
+        scope.setLoaderImpl(ClassLoaderReference.Application,
+                "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
+
+        try {
+            // extract dex files to disk and add them manually to scope
+            File dexTmpDir = new File(System.getProperty("java.io.tmpdir"));
+            extractDexFiles(multidexApk, dexTmpDir);
+
+            File dex1 = new File(dexTmpDir + File.separator + "classes.dex");
+            scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(dex1));
+            dex1.delete();
+
+            File dex2 = new File(dexTmpDir + File.separator + "classes2.dex");
+            scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(dex2));
+            dex2.delete();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         cha = ClassHierarchyFactory.make(scope);
 
+        // use setUpAndroidAnalysisScope
         scope2 = Util.makeDalvikScope(null,null, multidexApk);
         cha2 = ClassHierarchyFactory.make(scope2);
 
         Assert.assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)),Integer.valueOf(5));
-        Assert.assertNotEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
+        Assert.assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
 
     }
 
+    private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(new File(apkFileName)))) {
+            ZipEntry entry;
 
+            while ((entry = zis.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
+                    if (entry.getName().startsWith("classes") && entry.getName().endsWith(".dex")) {
+                        extractFile(zis, outDir + File.separator + entry.getName());
+                    }
+                }
+                zis.closeEntry();
+            }
+        }
+    }
 
+    private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(outFileName)))) {
+            byte[] buffer = new byte[4096];
+            int read;
+
+            while ((read = zipIn.read(buffer)) != -1) {
+                bos.write(buffer, 0, read);
+            }
+        }
+    }
 }
