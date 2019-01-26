@@ -80,7 +80,7 @@ public class Util {
   }
   
   /**
-   * Return those elements of <code>c</code> that are assignable to <code>klass</code>.
+   * Return those elements of {@code c} that are assignable to {@code klass}.
    */
   @SuppressWarnings("unchecked")
   public static <S, T> Set<T> filterByType(Iterable<S> c, Class<T> klass) {
@@ -277,7 +277,7 @@ public class Util {
   /**
    * checks if two sets have a non-empty intersection
    * 
-   * @return <code>true</code> if the sets intersect; <code>false</code> otherwise
+   * @return {@code true} if the sets intersect; {@code false} otherwise
    */
   public static <T> boolean intersecting(final Set<T> s1, final Set<T> s2) {
     return forSome(s1, s2::contains);

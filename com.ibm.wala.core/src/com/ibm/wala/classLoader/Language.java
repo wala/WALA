@@ -87,7 +87,7 @@ public interface Language {
 
   /**
    * Is t the type of the language's null value? Should return true if
-   * <code>t == null</code> (?).
+   * {@code t == null} (?).
    */
   boolean isNullType(TypeReference t);
 

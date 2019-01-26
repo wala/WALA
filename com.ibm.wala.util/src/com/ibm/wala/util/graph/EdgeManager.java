@@ -22,7 +22,7 @@ public interface EdgeManager<T> {
   /**
    * Return an {@link Iterator} over the immediate predecessor nodes of n
    * 
-   * This method never returns <code>null</code>.
+   * This method never returns {@code null}.
    * 
    * @return an {@link Iterator} over the immediate predecessor nodes of this Node.
    */
@@ -38,7 +38,7 @@ public interface EdgeManager<T> {
   /**
    * Return an Iterator over the immediate successor nodes of n
    * <p>
-   * This method never returns <code>null</code>.
+   * This method never returns {@code null}.
    * 
    * @return an Iterator over the immediate successor nodes of n
    */

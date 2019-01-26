@@ -35,7 +35,7 @@ public abstract class JSSourceExtractor {
   /**
    * Returns the temporary file created by a call to
    * {@link #extractSources(URL, IHtmlParser, IUrlResolver)} which holds all the
-   * discovered JS source. If no such file exists, returns <code>null</code>
+   * discovered JS source. If no such file exists, returns {@code null}
    */
   public abstract File getTempFile();
   

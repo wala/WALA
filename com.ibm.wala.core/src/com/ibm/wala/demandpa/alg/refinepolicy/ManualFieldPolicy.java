@@ -125,7 +125,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   /**
    * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring class</em> of the field related
    *          to the match edge matches the pattern, the match edge will be refined. For example, the pattern
-   *          <code>Pattern.compile("Ljava/util")</code> will cause all fields of classes in the <code>java.util</code> package to
+   *          {@code Pattern.compile("Ljava/util")} will cause all fields of classes in the {@code java.util} package to
    *          be refined.
    */
   public ManualFieldPolicy(IClassHierarchy cha, Pattern refinePattern) {

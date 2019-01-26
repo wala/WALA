@@ -57,7 +57,7 @@ public interface RefinementPolicy {
    * 
    * @param passNum
    * @return the maximum number of nodes to traverse in pass
-   *         <code>passNum</code>
+   *         {@code passNum}
    */
   public int getBudgetForPass(int passNum);
 
@@ -75,8 +75,8 @@ public interface RefinementPolicy {
 
   /**
    * 
-   * @return <code>true</code> if more refinement can be done, and hence
-   *         another pass can be attempted; <code>false</code> otherwise
+   * @return {@code true} if more refinement can be done, and hence
+   *         another pass can be attempted; {@code false} otherwise
    */
   public boolean nextPass();
 

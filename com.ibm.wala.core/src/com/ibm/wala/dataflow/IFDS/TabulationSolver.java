@@ -152,7 +152,7 @@ public class TabulationSolver<T, P, F> {
   protected final IProgressMonitor progressMonitor;
 
   /**
-   * the path edge currently being processed in the main loop of {@link #forwardTabulateSLRPs()}; <code>null</code> if
+   * the path edge currently being processed in the main loop of {@link #forwardTabulateSLRPs()}; {@code null} if
    * {@link #forwardTabulateSLRPs()} is not currently running. Note that if we are applying a summary edge in
    * {@link #processExit(PathEdge)}, curPathEdge is modified to be the path edge terminating at the call node in the caller, to
    * match the behavior in {@link #processCall(PathEdge)}.
@@ -161,7 +161,7 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * the summary edge currently being applied in {@link #processCall(PathEdge)} or {@link #processExit(PathEdge)}, or
-   * <code>null</code> if summary edges are not currently being processed.
+   * {@code null} if summary edges are not currently being processed.
    */
   private PathEdge<T> curSummaryEdge;
 

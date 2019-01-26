@@ -48,12 +48,12 @@ public final class AnalysisUtil {
   }
   
   /**
-   * Returns an array of <code>int</code> with the parameter's var nums of the
-   * invoked method in <code>invokeInstruction</code>.
+   * Returns an array of {@code int} with the parameter's var nums of the
+   * invoked method in {@code invokeInstruction}.
    * 
    * @param invokeInstruction
    *          The instruction that invokes the method.
-   * @return an array of <code>int</code> with all parameter's var nums
+   * @return an array of {@code int} with all parameter's var nums
    *         including the this pointer.
    */
   public static int[] getParameterNumbers(SSAAbstractInvokeInstruction invokeInstruction) {

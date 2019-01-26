@@ -55,7 +55,7 @@ public interface TranslatorToCAst {
     
     /**
      * get a mapping from CAstNodes to the scoped entities (e.g. functions or
-     * local classes) introduced by those nodes. Also maps <code>null</code> to
+     * local classes) introduced by those nodes. Also maps {@code null} to
      * those entities not corresponding to any node (e.g nested classes)
      */
     default Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {

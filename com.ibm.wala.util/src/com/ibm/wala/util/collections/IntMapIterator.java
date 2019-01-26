@@ -16,7 +16,7 @@ import java.util.function.IntFunction;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
- * An <code>IntMapIterator</code> maps an <code>Iterator</code> contents to produce a new Iterator
+ * An {@code IntMapIterator} maps an {@code Iterator} contents to produce a new Iterator
  */
 public class IntMapIterator<T> implements Iterator<T> {
   final IntIterator i;

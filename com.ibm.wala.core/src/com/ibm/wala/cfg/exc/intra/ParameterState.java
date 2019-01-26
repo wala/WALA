@@ -53,10 +53,10 @@ public class ParameterState extends AbstractVariable<ParameterState> {
   }
   
   /**
-   * Constructor to make a <code>ParameteState</code> out of a regular <code>NullPointerState</code>.
+   * Constructor to make a {@code ParameteState} out of a regular {@code NullPointerState}.
    * 
-   * @param state The <code>NullPointerState</code> to parse.
-   * @param parameterNumbers The numbers of parameters in <code>state</code>
+   * @param state The {@code NullPointerState} to parse.
+   * @param parameterNumbers The numbers of parameters in {@code state}
    */
   public ParameterState(NullPointerState state, int[] parameterNumbers) {
     //by convention the first ssa vars are the parameters
@@ -99,7 +99,7 @@ public class ParameterState extends AbstractVariable<ParameterState> {
    * Returns the state of an specified parameter.
    * 
    * @param varNum The SSA var num of the parameter
-   * @return the state of the parameter defined with <code>varNum</code>
+   * @return the state of the parameter defined with {@code varNum}
    */
   public State getState(int varNum) {
     State state = params.get(varNum);

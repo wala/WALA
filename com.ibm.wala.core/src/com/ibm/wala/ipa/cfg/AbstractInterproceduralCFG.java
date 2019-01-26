@@ -48,7 +48,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private static final boolean FAIL_ON_EAGER_CONSTRUCTION = false;
 
   /**
-   * Should the graph include call-to-return edges? When set to <code>false</code>, the graphs output by {@link IFDSExplorer} look
+   * Should the graph include call-to-return edges? When set to {@code false}, the graphs output by {@link IFDSExplorer} look
    * incorrect
    */
   private final static boolean CALL_TO_RETURN_EDGES = true;

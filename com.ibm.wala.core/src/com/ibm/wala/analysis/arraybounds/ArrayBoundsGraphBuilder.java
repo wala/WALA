@@ -123,7 +123,7 @@ public class ArrayBoundsGraphBuilder {
 	 * Case 2: no restriction is given by the branch (i.e. the operator is not equal)
 	 * {piParent} --&gt; {piVar}
 	 *
-	 * <code>if (piParent op piRestrictor) {piVar = piParent}</code>
+	 * {@code if (piParent op piRestrictor) {piVar = piParent}}
 	 *
 	 * @param piVar
 	 * @param piParent

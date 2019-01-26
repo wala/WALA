@@ -37,14 +37,14 @@ class InvalidCRTDataException extends Exception {
   private LinkedList<Object> data;
 
   /**
-   * Creates a new instance of <code>InvalidCRTDataException</code> without
+   * Creates a new instance of {@code InvalidCRTDataException} without
    * detail message.
    */
   InvalidCRTDataException() {
   }
 
   /**
-   * Constructs an instance of <code>InvalidCRTDataException</code> with the
+   * Constructs an instance of {@code InvalidCRTDataException} with the
    * specified detail message.
    * 
    * @param msg
@@ -55,7 +55,7 @@ class InvalidCRTDataException extends Exception {
   }
 
   /**
-   * Constructs an instance of <code>InvalidCRTDataException</code> with the
+   * Constructs an instance of {@code InvalidCRTDataException} with the
    * specified detail message and additional information.
    * 
    * @param msg

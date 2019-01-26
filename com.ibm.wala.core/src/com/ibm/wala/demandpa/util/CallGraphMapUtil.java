@@ -69,7 +69,7 @@ public class CallGraphMapUtil {
    * map a call graph node from one call graph to the corresponding node in another. Note that the target call graph must be
    * context-insensitive for the method, i.e., the only context for the method should be Everywhere.EVERYWHERE.
    * 
-   * @return the corresponding node, or <code>null</code> if the method is not in the target call graph
+   * @return the corresponding node, or {@code null} if the method is not in the target call graph
    * @throws IllegalArgumentException if fromCG == null
    */
   public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG) throws IllegalArgumentException {

@@ -36,7 +36,7 @@ class InvalidPositionException extends Exception {
   private Cause cause;
 
   /**
-   * Constructs an instance of <code>InvalidRangeException</code> with the
+   * Constructs an instance of {@code InvalidRangeException} with the
    * specified cause.
    * 
    * @param c

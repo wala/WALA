@@ -30,14 +30,14 @@ public class InvalidSourceInfoException extends Exception {
   private static final long serialVersionUID = -5895195422989965097L;
 
   /**
-   * Creates a new instance of <code>InvalidSourceInfoException</code> without
+   * Creates a new instance of {@code InvalidSourceInfoException} without
    * detail message.
    */
   public InvalidSourceInfoException() {
   }
 
   /**
-   * Constructs an instance of <code>InvalidSourceInfoException</code> with the
+   * Constructs an instance of {@code InvalidSourceInfoException} with the
    * specified detail message.
    * 
    * @param msg

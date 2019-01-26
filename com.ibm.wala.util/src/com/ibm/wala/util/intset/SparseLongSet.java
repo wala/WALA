@@ -177,9 +177,9 @@ public class SparseLongSet implements LongSet {
   }
 
   /**
-   * @return true iff <code>this</code> is a subset of <code>that</code>.
+   * @return true iff {@code this} is a subset of {@code that}.
    * 
-   *         Faster than: <code>this.diff(that) == EMPTY</code>.
+   *         Faster than: {@code this.diff(that) == EMPTY}.
    */
   private boolean isSubsetInternal(SparseLongSet that) {
 

@@ -244,9 +244,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * @param pk the pointer key
    * @param ikeyPred the desired predicate that each instance key in the points-to set should ideally satisfy
    * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a points-to set satisfying the predicate was
-   *         computed, and (2) the last computed points-to set for the variable (possibly <code>null</code> if no points-to set
+   *         computed, and (2) the last computed points-to set for the variable (possibly {@code null} if no points-to set
    *         could be computed in the budget)
-   * @throws IllegalArgumentException if <code>pk</code> is not a {@link LocalPointerKey}; to eventually be fixed
+   * @throws IllegalArgumentException if {@code pk} is not a {@link LocalPointerKey}; to eventually be fixed
    */
   public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<InstanceKey> ikeyPred)
       throws IllegalArgumentException {
@@ -396,7 +396,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * @param ikeyPred the desired predicate that each instance key in the points-to set should ideally satisfy
    * @param pa a pre-computed points-to analysis
    * @return a {@link PointsToResult} indicating whether a points-to set satisfying the predicate was computed
-   * @throws IllegalArgumentException if <code>pk</code> is not a {@link LocalPointerKey}; to eventually be fixed
+   * @throws IllegalArgumentException if {@code pk} is not a {@link LocalPointerKey}; to eventually be fixed
    */
   public PointsToResult pointsToPassesPred(PointerKey pk, Predicate<InstanceKey> ikeyPred, PointerAnalysis<InstanceKey> pa)
       throws IllegalArgumentException {
@@ -496,7 +496,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   /**
-   * @return the points-to set of <code>pk</code>, or <code>null</code> if the points-to set can't be computed in the allocated
+   * @return the points-to set of {@code pk}, or {@code null} if the points-to set can't be computed in the allocated
    *         budget
    */
   @Override
@@ -505,8 +505,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   /**
-   * @return the points-to set of <code>pk</code>, including the {@link State}s attached to the {@link InstanceKey}s, or
-   *         <code>null</code> if the points-to set can't be computed in the allocated budget
+   * @return the points-to set of {@code pk}, including the {@link State}s attached to the {@link InstanceKey}s, or
+   *         {@code null} if the points-to set can't be computed in the allocated budget
    */
   public Collection<InstanceKeyAndState> getPointsToWithStates(PointerKey pk) {
     return getPointsToWithStates(pk, k -> { return false; }).snd;
@@ -516,7 +516,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * get all the pointer keys that some instance key can flow to
    * 
    * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a flows-to set was computed, and (2) the last
-   *         computed flows-to set for the instance key (possibly <code>null</code> if no flows-to set could be computed in the
+   *         computed flows-to set for the instance key (possibly {@code null} if no flows-to set could be computed in the
    *         budget)
    */
   public Pair<PointsToResult, Collection<PointerKey>> getFlowsTo(InstanceKey ik) {
@@ -528,7 +528,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * get all the pointer keys that some instance key with state can flow to
    * 
    * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a flows-to set was computed, and (2) the last
-   *         computed flows-to set for the instance key (possibly <code>null</code> if no flows-to set could be computed in the
+   *         computed flows-to set for the instance key (possibly {@code null} if no flows-to set could be computed in the
    *         budget)
    */
   public Pair<PointsToResult, Collection<PointerKey>> getFlowsTo(InstanceKeyAndState ikAndState) {
@@ -977,7 +977,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * @param label the label of the edge from curPk to predPk (must be barred)
      * @return those {@link PointerKeyAndState}s whose points-to sets have been queried, such that the {@link PointerKey} is predPk,
-     *         and transitioning from its state on <code>label.bar()</code> yields the state of <code>curPkAndState</code>
+     *         and transitioning from its state on {@code label.bar()} yields the state of {@code curPkAndState}
      */
     protected Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk,
         IFlowLabel label) {

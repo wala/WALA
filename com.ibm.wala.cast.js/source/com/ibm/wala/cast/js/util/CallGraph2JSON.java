@@ -46,9 +46,9 @@ import com.ibm.wala.util.collections.Util;
  * "&lt;filename&gt;@&lt;lineno&gt;:&lt;beginoff&gt;-&lt;endoff&gt;"
  * </pre>
  * 
- * Here, <code>filename</code> is the name of the containing
+ * Here, {@code filename} is the name of the containing
  * JavaScript file (not including its directory), and
- * <code>lineno</code>, <code>beginoff</code> and <code>endoff</code>
+ * {@code lineno}, {@code beginoff} and {@code endoff}
  * encode the source position of the call expression (for
  * call sites) or the function declaration/expression (for
  * callees) inside the file in terms of its starting line,

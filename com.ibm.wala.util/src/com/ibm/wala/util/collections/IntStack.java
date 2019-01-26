@@ -18,11 +18,11 @@ import java.util.Arrays;
 public class IntStack {
 
   /**
-   * Comment for <code>top</code>
+   * Comment for {@code top}
    */
   private int top = -1;
   /**
-   * Comment for <code>state</code>
+   * Comment for {@code state}
    */
   private int state[] = new int[0];
 

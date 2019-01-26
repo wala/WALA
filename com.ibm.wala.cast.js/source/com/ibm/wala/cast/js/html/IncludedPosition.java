@@ -21,7 +21,7 @@ public interface IncludedPosition extends Position {
   /**
    * get the position of the containing script within the enclosing file. E.g.,
    * for a position in JavaScript code included in an HTML file, returns the
-   * position of the relevant <code>&lt;script&gt;</code> tag in the HTML
+   * position of the relevant {@code <script>} tag in the HTML
    */
   Position getIncludePosition();
   

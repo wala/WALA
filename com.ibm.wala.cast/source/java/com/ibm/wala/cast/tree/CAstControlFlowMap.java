@@ -84,7 +84,7 @@ public interface CAstControlFlowMap {
 
   /**
    * Return a collection of all labels for which the control-flow ast node
-   * <code>from</code> has a target.
+   * {@code from} has a target.
    */
   Collection<Object> getTargetLabels(CAstNode from);
 

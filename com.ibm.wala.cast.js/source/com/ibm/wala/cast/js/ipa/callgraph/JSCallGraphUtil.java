@@ -134,10 +134,10 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
 
   /**
    * Get all the nodes in CG with name funName. If funName is of the form
-   * <code>"ctor:nm"</code>, return nodes corresponding to constructor function
-   * for <code>nm</code>. If funName is of the form <code>"suffix:nm"</code>,
+   * {@code "ctor:nm"}, return nodes corresponding to constructor function
+   * for {@code nm}. If funName is of the form {@code "suffix:nm"},
    * return nodes corresponding to functions whose names end with
-   * <code>nm</code>. Otherwise, return nodes for functions whose name matches
+   * {@code nm}. Otherwise, return nodes for functions whose name matches
    * funName exactly.
    */
   public static Collection<CGNode> getNodes(CallGraph CG, String funName) {
