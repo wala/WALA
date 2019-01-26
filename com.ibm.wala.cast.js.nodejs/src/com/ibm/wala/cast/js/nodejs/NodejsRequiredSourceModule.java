@@ -92,7 +92,7 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 
 		String wrappedModuleSource = wrapperSource
 				.replace(FILENAME_PLACEHOLDER, getFile().getName())
-				.replace(DIRNAME_PLACEHOLDER, getFile().getParent().toString())
+				.replace(DIRNAME_PLACEHOLDER, getFile().getParent())
 				.replace(CODE_PLACEHOLDER, moduleSource);
 
 		return IOUtils.toInputStream(wrappedModuleSource);

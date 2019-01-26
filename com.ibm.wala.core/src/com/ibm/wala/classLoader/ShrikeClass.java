@@ -421,7 +421,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     SignatureReader result = null;
     try {
       for (; attrs.isValid(); attrs.advance()) {
-        if (attrs.getName().toString().equals("Signature")) {
+        if (attrs.getName().equals("Signature")) {
           result = new SignatureReader(attrs);
           break;
         }
