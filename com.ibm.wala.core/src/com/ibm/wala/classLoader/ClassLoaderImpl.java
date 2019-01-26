@@ -436,7 +436,7 @@ public class ClassLoaderImpl implements IClassLoader {
         // look at substrings starting after '/' characters, in the hope
         // that we find a known class name
         while (className.indexOf('/') > 0) {
-          className = 'L' + className.substring(className.indexOf('/') + 1, className.length());
+          className = 'L' + className.substring(className.indexOf('/') + 1);
           TypeName T2 = TypeName.string2TypeName(className);
           if (loadedClasses.get(T2) != null) {
             if (DEBUG_LEVEL > 0) {
