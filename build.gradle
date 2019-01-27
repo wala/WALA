@@ -162,7 +162,8 @@ allprojects {
 
 allprojects {
 	tasks.withType(Javadoc) {
-		options.addStringOption('Xdoclint:none', '-quiet')
+		options.addBooleanOption('Xdoclint:all,-missing', true)
+		options.quiet()
 	}
 }
 
