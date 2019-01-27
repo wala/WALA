@@ -690,6 +690,7 @@ public class TabulationSolver<T, P, F> {
    * @param d1 the entry fact
    * @param gotReuse whether existing summary edges were applied
    */
+  @SuppressWarnings("unused")
   protected void recordCall(T callNode, T callee, int d1, boolean gotReuse) {
   }
 

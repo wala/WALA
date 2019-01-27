@@ -1643,7 +1643,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * 
      * @param addGraphs whether graphs should always be added
      */
-    protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, PointerKeyAndState pkAndState) {
+    protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, @SuppressWarnings("unused") PointerKeyAndState pkAndState) {
       return !addGraphs && !g.hasSubgraphForNode(callee);
     }
 

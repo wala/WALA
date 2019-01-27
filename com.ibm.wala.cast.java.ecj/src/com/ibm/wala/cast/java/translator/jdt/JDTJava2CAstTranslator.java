@@ -455,7 +455,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // process entities. initializers will be folded in here.
     if (enumConstants != null) {
       for (EnumConstantDeclaration decl : enumConstants) {
-        memberEntities.add(visit(decl, context));
+        memberEntities.add(visit(decl));
       }
     }
 
@@ -3327,7 +3327,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * Only called from createClassDeclaration.
    */
-  private CAstEntity visit(EnumConstantDeclaration decl, WalkContext context) {
+  private CAstEntity visit(EnumConstantDeclaration decl) {
     return new FieldEntity(decl.getName().getIdentifier(), decl.resolveVariable().getType(), enumQuals, makePosition(decl
         .getStartPosition(), decl.getStartPosition() + decl.getLength()), null, makePosition(decl.getName()));
   }
