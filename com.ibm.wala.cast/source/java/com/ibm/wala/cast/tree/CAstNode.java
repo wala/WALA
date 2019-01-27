@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.tree;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  *  This interface represents nodes of CAPA Abstract Syntax Trees.  It
@@ -197,14 +196,10 @@ public interface CAstNode {
 
   /**
    *  Return the nth child of this node.  If there is no such child,
-   * this method should throw a NoSuchElementException.
+   * this method should throw an IndexOutOfBoundsException.
    */
   default CAstNode getChild(int n) {
-    try {
-      return getChildren().get(n);
-    } catch (IndexOutOfBoundsException e) {
-      throw new NoSuchElementException(e.getMessage());
-    }
+    return getChildren().get(n);
   }
 
   /**
