@@ -16,7 +16,7 @@ import com.ibm.wala.fixpoint.UnaryStatement;
 /**
  * Corresponds to: "is a superset of". Used for assignment.
  * 
- * Unary op: <lhs>:= Assign( <rhs>)
+ * Unary op: &lt;lhs&gt;:= Assign(&lt;rhs&gt;)
  * 
  * (Technically, it's a binary op, since it includes lhs as an implicit input; this allows it to compose with other ops that define
  * the same lhs, so long as they're all Assign ops)

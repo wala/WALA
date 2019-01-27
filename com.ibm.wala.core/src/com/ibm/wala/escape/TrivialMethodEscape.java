@@ -82,9 +82,9 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   }
 
   /**
-   * @param allocN Set<CGNode> representing the allocation site.
+   * @param allocN {@code Set<CGNode>} representing the allocation site.
    * @param allocPC
-   * @param nodes Set<CGNode>, the nodes of interest
+   * @param nodes {@code Set<CGNode>}, the nodes of interest
    * @return true iff some instance allocated at a site N \in &lt;allocN, allocPC> might escape from some activation of a node m \in
    *         { nodes }
    * @throws WalaException

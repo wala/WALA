@@ -119,9 +119,9 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     /**
-     * Load from an array ref, at specified index, and store in def.
+     * <p>Load from an array ref, at specified index, and store in def.</p>
      * 
-     *   <aaload ref="x" index="0" def="y" />
+     *   {@code <aaload ref="x" index="0" def="y" />}
      */
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
@@ -142,7 +142,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     /**
-     *    <aastore ref="x" value="y" index="0" />
+     *    {@code <aastore ref="x" value="y" index="0" />}
      */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
@@ -208,15 +208,15 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     /**
-     * eg:
+     * <p>eg:</p>
      * 
-     * <getfield class="Ljava/lang/Thread" field="runnable"
-     * fieldType="Ljava/lang/Runnable" def="x" ref="arg0" />
+     * {@code <getfield class="Ljava/lang/Thread" field="runnable"
+     * fieldType="Ljava/lang/Runnable" def="x" ref="arg0" />}
      * 
-     * I think the get statics look like this:
-     * 1007g 9.1g  12m S 237.9  0.9   4:27.32 java
-     * <getstatic class="Ljava/lang/Thread" field="runnable"
-     * fieldType="Ljava/lang/Runnable" def="x" />
+     * <p>I think the get statics look like this:</p>
+     * <p>1007g 9.1g  12m S 237.9  0.9   4:27.32 java</p>
+     * {@code <getstatic class="Ljava/lang/Thread" field="runnable"
+     * fieldType="Ljava/lang/Runnable" def="x" />}
      */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
@@ -256,11 +256,11 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     /**
-     * <putstatic class="Ljava/lang/System" field="security"
-     * fieldType="Ljava/lang/SecurityManager" value="secure" />
+     * <p>{@code <putstatic class="Ljava/lang/System" field="security"
+     * fieldType="Ljava/lang/SecurityManager" value="secure" />}</p>
      * 
-     * <putfield class="Ljava/lang/Thread" field="runnable"
-     * fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+     * <p>{@code <putfield class="Ljava/lang/Thread" field="runnable"
+     * fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />}</p>
      * 
      */
     @Override
@@ -302,10 +302,10 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     /**
-     * 	  <call type="virtual" name="put"
+     * 	  {@code <call type="virtual" name="put"
 	 *          class="Ljava/util/Hashtable"
 	 *          descriptor="(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
-	 *          arg0="x" arg1="key" arg2="value" def="local_def" />
+	 *          arg0="x" arg1="key" arg2="value" def="local_def" />}
      */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
@@ -384,11 +384,11 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     }
 
     /**
-     * Serialiaze a throw to XML.
+     * <p>Serialiaze a throw to XML.</p>
      * 
-     * Something like this?
+     * <p>Something like this?</p>
      * 
-     * <throw value="val_localDef" /> 
+     * {@code <throw value="val_localDef" />}
      */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {

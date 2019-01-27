@@ -11,15 +11,14 @@
 package com.ibm.wala.ssa;
 
 /**
- * A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order
+ * <p>A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order
  * to get a new variable name to associate with some flow-insensitive dataflow fact.
- * You can build an {@link IR} with or without Pi instructions, depending on {@link SSAOptions} selected.
+ * You can build an {@link IR} with or without Pi instructions, depending on {@link SSAOptions} selected.</p>
  * 
- * A Pi instruction is linked to its "cause" instruction, which is usually a conditional 
- * branch.
+ * <p>A Pi instruction is linked to its "cause" instruction, which is usually a conditional
+ * branch.</p>
  * 
- * for example, the following pseudo-code
- * <p>
+ * <p>For example, the following pseudo-code</p>
  * <pre>
  *     boolean condition = (x instanceof Integer);
  *     if (condition) {
@@ -29,7 +28,7 @@ package com.ibm.wala.ssa;
  *     }
  * </pre>
  * 
- * could be translated roughly as follows:
+ * <p>could be translated roughly as follows:</p>
  * 
  * <pre>
  *     boolean condition = (x instanceof Integer);

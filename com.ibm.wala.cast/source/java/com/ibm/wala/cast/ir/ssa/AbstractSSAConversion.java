@@ -39,7 +39,7 @@ import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
  * several integral portions of the traditional algorithm:
  * <UL>
  * <LI> The notion of uses and defs of a given instruction.
- * <LI> Assignments (<def> := <use>) that are be copy-propagated away
+ * <LI> Assignments (&lt;def&gt; := &lt;use&gt;) that are be copy-propagated away
  * <LI> Which values are constants---i.e. have no definition.
  * <LI> Any value numbers to be skipped during SSA construction
  * <LI> Special initialization and exit block processing.

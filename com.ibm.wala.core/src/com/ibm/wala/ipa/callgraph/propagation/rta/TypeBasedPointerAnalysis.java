@@ -53,7 +53,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   private final Map<IClass, OrdinalSet<InstanceKey>> pointsTo = HashMapFactory.make();
 
   /**
-   * @param klasses Collection<IClass>
+   * @param klasses {@code Collection<IClass>}
    * @throws AssertionError if klasses is null
    */
   private TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) throws AssertionError {
@@ -63,7 +63,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   }
 
   /**
-   * @param c Collection<IClass>
+   * @param c {@code Collection<IClass>}
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
     if (c == null) {

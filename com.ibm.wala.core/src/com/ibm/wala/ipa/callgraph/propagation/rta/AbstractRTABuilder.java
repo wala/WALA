@@ -164,7 +164,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /**
-   * Is s is a getstatic or putstatic, then potentially add the relevant <clinit>to the newMethod set.
+   * Is s is a getstatic or putstatic, then potentially add the relevant &lt;clinit&gt; to the newMethod set.
    */
   private void processFieldAccess(FieldReference f) {
     if (DEBUG) {

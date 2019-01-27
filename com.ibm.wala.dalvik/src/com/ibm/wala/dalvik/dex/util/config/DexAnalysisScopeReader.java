@@ -57,7 +57,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 
 /**
- * Create AnalysisScope from java & dalvik file.
+ * Create AnalysisScope from java &amp; dalvik file.
  * 
  * @see com.ibm.wala.ipa.callgraph.AnalysisScope
  */

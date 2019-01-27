@@ -52,15 +52,16 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * <P>
  * The algorithm is not very bright; it is based on the observation that there are only three ways for an object to pass
  * from one thread to another.
+ * </P>
  * <UL>
  * <LI> The object is stored into a static variable.
  * <LI> The object is stored into an instance field of a Thread
  * <LI> The object is reachable from a field of another escaping object.
  * </UL>
- * </P>
- * 
+ *
  * <P>
  * This observation is implemented in the obvious way:
+ * </P>
  * <OL>
  * <LI> All static fields are collected
  * <LI> All Thread constructor parameters are collected
@@ -70,8 +71,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * <LI> The abstract objects in the points-to sets are converted to types
  * <LI> This set of types is returned
  * </OL>
- * </P>
- * 
+ *
  * @author Julian Dolby
  */
 public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {

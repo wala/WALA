@@ -14,10 +14,10 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**
- * @author Igor Peshansky
- * Extend CAstVisitor<C> to delegate unimplemented functionality to another
+ * Extend {@link CAstVisitor}{@code <C>} to delegate unimplemented functionality to another
  * visitor.  Needed to work around Java's retarded multiple inheritance rules.
  * TODO: document me.
+ * @author Igor Peshansky
  */
 public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> extends CAstVisitor<C> {
 
@@ -93,7 +93,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   protected final CAstVisitor<C> delegate() { return delegate; }
 
   /**
-   * Delegating CAstVisitor<C> constructor.
+   * Delegating {@link CAstVisitor}{@code <C>} constructor.
    * Needs to have a valid (non-null) delegate visitor.
    * @param delegate the visitor to delegate to for default implementation
    */
