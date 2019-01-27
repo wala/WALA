@@ -131,13 +131,14 @@ public class TypeArgument extends Signature {
         while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
           ++i;
         }
-        if (typeArgs.charAt(i++) == TypeReference.ClassTypeCode) {
+        if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
           while (typeArgs.charAt(i++) != ';')
             ;
-          args.add(typeArgs.substring(off, i - off - 1));
-        } else {
-          args.add(typeArgs.substring(off, i - off));
+        } else if (typeArgs.charAt(i++) == (byte) 'T'){
+          while (typeArgs.charAt(i++) != ';')
+            ;
         }
+        args.add(typeArgs.substring(off, i));
         continue;
       }
       case (byte) '-':
