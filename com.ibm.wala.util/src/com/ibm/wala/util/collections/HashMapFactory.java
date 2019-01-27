@@ -21,7 +21,6 @@ import java.util.Map;
 public class HashMapFactory {
 
   /**
-   * @param size
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K,V> HashMap<K,V> make(int size) {
@@ -45,7 +44,6 @@ public class HashMapFactory {
 
 
   /**
-   * @param t
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K,V> HashMap<K,V> make(Map<K,V> t) {

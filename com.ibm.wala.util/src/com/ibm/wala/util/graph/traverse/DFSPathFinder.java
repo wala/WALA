@@ -152,9 +152,6 @@ public class DFSPathFinder<T> extends ArrayList<T> {
 
   /**
    * Method setPendingChildren.
-   * 
-   * @param v
-   * @param iterator
    */
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren.put(v, iterator);

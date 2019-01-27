@@ -89,7 +89,6 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   }
 
   /**
-   * @param type
    * @return a TypeAbstraction object representing this type. We just use ConeTypes by default, since we don't propagate
    *         information allowing us to distinguish between points and cones yet.
    */

@@ -46,10 +46,6 @@ public class CFGSanitizerTest extends WalaTestCase {
   /**
    * check that for all synthetic methods coming from the native specifications, the exit block is not disconnected from the rest of
    * the sanitized graph
-   * 
-   * @throws IOException
-   * @throws IllegalArgumentException
-   * @throws WalaException
    */
   @Test
   public void testSyntheticEdgeToExit() throws IOException, IllegalArgumentException, WalaException {

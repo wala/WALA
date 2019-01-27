@@ -17,7 +17,6 @@ public class TestFields {
   /**
    * slice should include a1 and o1, exclude
    * a2 and o2
-   * @param args
    */
   public static void main(String[] args) {
     Object o1 = new Object();

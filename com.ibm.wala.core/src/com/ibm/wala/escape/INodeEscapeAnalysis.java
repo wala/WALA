@@ -22,7 +22,6 @@ public interface INodeEscapeAnalysis extends IMethodEscapeAnalysis {
    * @param allocNode a CGNode which holds an allocation site
    * @param allocPC bytecode index of allocation site
    * @param node method in question
-   * @throws WalaException
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may escape from an activation of node m,
    *          false otherwise
    */

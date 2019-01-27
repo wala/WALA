@@ -35,7 +35,6 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
   }
   /**
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IOException 
    * @throws IllegalStateException if there are problmes reading wala properties
    */
   public static AnalysisScope makePrimordialScopeFromPlugin(File exclusionsFile, @SuppressWarnings("unused") Plugin plugIn) throws IOException {
@@ -50,7 +49,6 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IOException 
    * @throws IllegalStateException if there are problems reading wala properties
    */
   public static AnalysisScope makeJavaBinaryAnalysisScopeFromPlugin(String classPath, File exclusionsFile, Plugin plugIn) throws IOException {

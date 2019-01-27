@@ -17,7 +17,6 @@ package com.ibm.wala.util.intset;
 public interface LongSet {
 
   /**
-   * @param i
    * @return true iff this set contains long i
    */
   public boolean contains(long i);
@@ -68,15 +67,11 @@ public interface LongSet {
 
   /**
    * Invoke an action on each element of the Set
-   * 
-   * @param action
    */
   public void foreach(LongSetAction action);
 
   /**
    * Invoke an action on each element of the Set, excluding elements of Set X
-   * 
-   * @param action
    */
   public void foreachExcluding(LongSet X, LongSetAction action);
 

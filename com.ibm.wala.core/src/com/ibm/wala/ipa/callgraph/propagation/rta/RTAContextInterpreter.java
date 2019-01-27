@@ -44,8 +44,6 @@ public interface RTAContextInterpreter extends CHAContextInterpreter {
    * 
    * TODO: this is a little ugly, is there a better place to move this?
    * 
-   * @param node
-   * @param klass
    * @return true iff a NEW type was recorded, false if the type was previously recorded.
    */
   public boolean recordFactoryType(CGNode node, IClass klass);

@@ -96,8 +96,6 @@ public class SimpleIntVector implements IntVector, Serializable {
 
   /**
    * make sure we can store to a particular index
-   * 
-   * @param capacity
    */
   private void ensureCapacity(int capacity) {
     if (capacity >= store.length) {

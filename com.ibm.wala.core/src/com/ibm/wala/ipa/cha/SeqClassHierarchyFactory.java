@@ -23,7 +23,6 @@ public class SeqClassHierarchyFactory {
 
   /**
    * @return a ClassHierarchy object representing the analysis scope
-   * @throws ClassHierarchyException
    */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {

@@ -80,12 +80,6 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    */
   final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 
-  /**
-   * @param parent
-   * @param methodSummaries
-   * @param ignoredPackages
-   * @param cha
-   */
   public BypassMethodTargetSelector(MethodTargetSelector parent, Map<MethodReference, MethodSummary> methodSummaries,
       Set<Atom> ignoredPackages, IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;
@@ -270,7 +264,6 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   }
 
   /**
-   * @param m
    * @return true iff we can treat m as a no-op method
    */
   protected boolean canIgnore(MemberReference m) {

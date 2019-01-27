@@ -40,9 +40,6 @@ package demandpa;
 
 public class TestHashtableEnum {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     DummyHashMap h1 = new DummyHashMap();
     DummyHashMap h2 = new DummyHashMap();

@@ -39,9 +39,6 @@ package demandpa;
 
 public class TestMultiDim {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object[][][] multi = new Object[10][10][10];
     multi[0] = new Object[10][10];

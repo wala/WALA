@@ -117,7 +117,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * 
    * @param M the module
    * @return the Set of source files in the module
-   * @throws IOException
    */
   @SuppressWarnings("unused")
   private Set<ModuleEntry> getSourceFiles(Module M) throws IOException {
@@ -146,7 +145,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * 
    * @param M the module
    * @return the Set of class Files in the module
-   * @throws IOException
    */
   @SuppressWarnings("unused")
   private Set<ModuleEntry> getClassFiles(Module M) throws IOException {

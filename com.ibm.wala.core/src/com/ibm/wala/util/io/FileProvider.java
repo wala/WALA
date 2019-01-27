@@ -42,7 +42,6 @@ public class FileProvider {
   private final static int DEBUG_LEVEL = Integer.parseInt(System.getProperty("wala.debug.file", "0"));
   
   /**
-   * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    */
@@ -82,9 +81,6 @@ public class FileProvider {
     return getFileFromClassLoader(fileName, loader);
   }
 
-  /**
-   * @throws FileNotFoundException
-   */
   public File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
@@ -140,7 +136,6 @@ public class FileProvider {
   /**
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
-   * @throws IOException
    */
   public Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
     if (fileName == null) {
@@ -187,7 +182,6 @@ public class FileProvider {
    * "http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458"
    * >bug report</a>). For now, fails with an assertion if the url is malformed.
    * 
-   * @param url
    * @return the path name for the url
    * @throws IllegalArgumentException
    *           if url is null

@@ -42,7 +42,6 @@ public class AndroidAnalysisScope {
 	 * @param loader  the classloader to use
 	 * @param androidLib  an array of libraries (e.g. the Android SDK jar) to add to the scope
 	 * @return  a {@link AnalysisScope}
-	 * @throws IOException
 	 */
 	public static AnalysisScope setUpAndroidAnalysisScope(URI codeFileName, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		return setUpAndroidAnalysisScope(codeFileName, DexFileModule.AUTO_INFER_API_LEVEL, exclusions, loader, androidLib);
@@ -98,10 +97,6 @@ public class AndroidAnalysisScope {
 
 	/**
 	 * Handle .apk file.
-	 * 
-	 * @param classPath
-	 * @param scope
-	 * @param loader
 	 */
 	public static void addClassPathToScope(String classPath,
 			AnalysisScope scope, ClassLoaderReference loader) {

@@ -264,7 +264,6 @@ public abstract class FieldBasedCallGraphBuilder {
   /**
    * Given a callVertex that can invoke Function.prototype.call, get the
    * FuncVertex nodes for the reflectively-invoked methods
-   * @throws CancelException 
    */
 	private static OrdinalSet<FuncVertex> getReflectiveTargets(FlowGraph flowGraph, CallVertex callVertex, IProgressMonitor monitor) throws CancelException {
 	  SSAAbstractInvokeInstruction invoke = callVertex.getInstruction();

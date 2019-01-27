@@ -96,7 +96,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   /**
-   * @param value
    * @return true iff this value changes
    */
   @Override
@@ -277,7 +276,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   /**
    * Add all elements from another int set.
    * 
-   * @param that
    * @return true iff this set changes
    */
   public boolean addAll(SparseLongSet that) {

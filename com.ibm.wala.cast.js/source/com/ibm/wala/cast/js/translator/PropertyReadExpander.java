@@ -139,12 +139,6 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
    * create a CAstNode l representing a loop that traverses the prototype chain
    * from receiver searching for the constant property element. update nodeMap
    * to map root to an expression that reads the property from the right node.
-   * 
-   * @param root
-   * @param receiver
-   * @param element
-   * @param context
-   * @param nodeMap
    */
   private CAstNode makeConstRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
       Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {

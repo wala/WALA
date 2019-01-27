@@ -105,12 +105,6 @@ public class DemandCastChecker {
   // maximum number of casts to check
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
-  /**
-   * @param args
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException
-   */
   public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
     try {
       Properties p = new Properties();
@@ -174,12 +168,6 @@ public class DemandCastChecker {
 
   /**
    * builds a call graph, and sets the corresponding heap model for analysis
-   * 
-   * @param scope
-   * @param cha
-   * @param options
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {

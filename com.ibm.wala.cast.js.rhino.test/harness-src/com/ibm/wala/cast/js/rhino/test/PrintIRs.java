@@ -49,9 +49,6 @@ public class PrintIRs {
 
   /**
    * prints the IR of each function in the script
-   * 
-   * @throws IOException
-   * @throws ClassHierarchyException
    */
   public static void printIRsForJS(String filename) throws IOException, ClassHierarchyException {
     // use Rhino to parse JavaScript
@@ -98,15 +95,6 @@ public class PrintIRs {
     printIRsForCHA(cha, t -> t.startsWith("Lprologue.js") || t.startsWith("Lpreamble.js"));
   }
 
-  /**
-   * 
-   * @param args
-   * @throws IOException
-   * @throws WalaException
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws Error
-   */
   public static void main(String[] args) throws IOException, IllegalArgumentException, CancelException, WalaException, Error {
     String filename = args[0];
     if (filename.endsWith(".js")) {

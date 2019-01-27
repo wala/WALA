@@ -281,7 +281,6 @@ public class BimodalMutableIntSet implements MutableIntSet {
   }
   
   /**
-   * @param x
    * @throws IllegalArgumentException if x is null
    */
   public BimodalMutableIntSet(BimodalMutableIntSet x) {

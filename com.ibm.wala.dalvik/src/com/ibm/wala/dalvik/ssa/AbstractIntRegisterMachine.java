@@ -621,9 +621,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
         /**
          * set the value of local i to symbol j
-         *
-         * @param i
-         * @param j
          */
         public void setLocal(int i, int j) {
             if (locals == null) {
@@ -637,7 +634,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         }
 
         /**
-         * @param i
          * @return the number of the symbol corresponding to local i
          */
         public int getLocal(int i) {

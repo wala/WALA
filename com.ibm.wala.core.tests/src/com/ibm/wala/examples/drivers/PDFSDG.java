@@ -67,23 +67,11 @@ public class PDFSDG {
    * 
    * The "jar file name" should be something like
    * "c:/temp/testdata/java_cup.jar"
-   * 
-   * @param args
-   * @throws WalaException
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
-   * @throws IOException 
    */
   public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
-  /**
-   * @throws WalaException
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
-   * @throws IOException 
-   */
   public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
@@ -115,9 +103,6 @@ public class PDFSDG {
   /**
    * @param appJar
    *            something like "c:/temp/testdata/java_cup.jar"
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
-   * @throws IOException 
    */
   public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException, IOException {
     try {

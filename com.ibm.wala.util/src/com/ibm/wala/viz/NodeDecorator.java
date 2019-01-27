@@ -18,7 +18,6 @@ import com.ibm.wala.util.WalaException;
 public interface NodeDecorator<T> {
   
   /**
-   * @param n
    * @return the String label for node n
    */
   String getLabel(T n) throws WalaException;

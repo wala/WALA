@@ -632,9 +632,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     /**
      * set the value of local i to symbol j
-     * 
-     * @param i
-     * @param j
      */
     public void setLocal(int i, int j) {
       if (locals == null || locals.length < i+1) {
@@ -648,7 +645,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     /**
-     * @param i
      * @return the number of the symbol corresponding to local i
      */
     public int getLocal(int i) {

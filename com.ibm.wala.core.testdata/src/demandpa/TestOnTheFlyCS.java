@@ -56,9 +56,6 @@ public class TestOnTheFlyCS {
     c1.doSomething(o);
   }
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     callDoSomething(new C1(), new Object());
     callDoSomething(new C2(), new Object());

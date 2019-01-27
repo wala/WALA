@@ -76,8 +76,6 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
   }
 
   /**
-   * 
-   * @param klass
    * @return the top-level {@link IClass} where klass is declared, or klass itself if klass is top-level or if top-level
    *         class not loaded
    */

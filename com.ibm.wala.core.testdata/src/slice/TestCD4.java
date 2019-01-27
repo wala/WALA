@@ -16,10 +16,6 @@ public class TestCD4 {
 	
   }
 
-  /**
-   * 
-   * @param args
-   */
   public static void main(String[] args) {
     int i = 3;
     int j = 4;

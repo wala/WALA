@@ -185,11 +185,6 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * an ArrayIndexOutOfBoundException and no other exception may be thrown by
    * this instruction.
    * 
-   * @param block
-   * @param cfg
-   * @param prunedCfg
-   * @param method
-   * @param identifyer
    * @return if an edge of block was removed
    */
   private boolean checkExceptionalSuccessors(ISSABasicBlock block, SSACFG cfg, PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg,

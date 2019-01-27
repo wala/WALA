@@ -288,7 +288,6 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 	}
 
 	/**
-	 * @param rootIK
 	 * @return a set of all code elements that might refer to this object or one
 	 *         of its fields (recursively)
 	 */

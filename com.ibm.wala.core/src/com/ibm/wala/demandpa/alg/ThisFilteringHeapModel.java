@@ -115,7 +115,6 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   /**
-   * @param method
    * @return the receiver class for this method.
    */
   private IClass getReceiverClass(IMethod method) {

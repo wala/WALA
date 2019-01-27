@@ -192,7 +192,6 @@ public class BitVector extends BitVectorBase<BitVector> {
    * Logically ORs this bit set with the specified set of bits. This is performance-critical, and so, a little ugly in an attempt to
    * help out the compiler.
    * 
-   * @param set
    * @return the number of bits added to this.
    * @throws IllegalArgumentException if set is null
    */

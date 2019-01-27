@@ -370,7 +370,6 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 		/**
 		 * Determines if the provide method is in the exclusions by checking the supergraph.
-		 * @param method
 		 * @return True if the method can not be found in the supergraph.
 		 */
         private boolean methodExcluded(MethodReference method) {

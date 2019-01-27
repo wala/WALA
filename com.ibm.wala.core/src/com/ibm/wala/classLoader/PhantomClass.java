@@ -15,7 +15,6 @@ public class PhantomClass extends SyntheticClass {
 
   /**
    * @param T type reference describing this class
-   * @param cha
    */
   public PhantomClass(TypeReference T, IClassHierarchy cha) {
     super(T, cha);

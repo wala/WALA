@@ -22,8 +22,7 @@ public class GraphInverter {
     return new InvertedNumberedGraph<>(G);
   }
   
-      /**
-   * @param G
+  /**
    * @return A graph view that reverses the edges in G
    */
   public static <T> Graph<T> invert(final Graph<T> G) {

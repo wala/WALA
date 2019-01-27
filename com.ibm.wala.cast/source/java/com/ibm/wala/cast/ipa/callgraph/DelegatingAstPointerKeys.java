@@ -92,8 +92,6 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
 
   /**
    * get type for F appropriate for use in a field name.
-   * 
-   * @param F
    */
   protected IClass getFieldNameType(InstanceKey F) {
     return F.getConcreteType();
@@ -101,7 +99,6 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
 
   /**
    * if F is a supported constant representing a field, return the corresponding {@link InstanceFieldKey} for I.  Otherwise, return {@code null}.
-   * @param F
    */
   protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
     Object v = F.getValue();

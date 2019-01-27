@@ -183,7 +183,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 
 	 * @param dir Y in the pseudo algorithm
 	 * @param target X in the pseudo algorithm
-	 * @throws IOException
 	 */
 	public static SourceFileModule resolve(File rootDir, File dir, String target) throws IOException {
 		if (NodejsRequiredCoreModule.isCoreModule(target))
@@ -209,9 +208,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 2. If X.js is a file, load X.js as JavaScript text.  STOP
 	 * 3. If X.json is a file, parse X.json to a JavaScript Object.  STOP
 	 * 4. If X.node is a file, load X.node as binary addon.  STOP
-	 * 
-	 * @param f
-	 * @throws IOException
 	 */
 	private static SourceFileModule loadAsFile(File rootDir, File f) throws IOException {
 		// 1.
@@ -242,9 +238,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 2. If X/index.js is a file, load X/index.js as JavaScript text.  STOP
 	 * 3. If X/index.json is a file, parse X/index.json to a JavaScript object. STOP
 	 * 4. If X/index.node is a file, load X/index.node as binary addon.  STOP
-	 * 
-	 * @param d
-	 * @throws IOException
 	 */
 	private static SourceFileModule loadAsDirectory(File rootDir, File d) throws IOException {
 		// 1.
@@ -285,9 +278,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 * 2. for each DIR in DIRS:
 	 *    a. LOAD_AS_FILE(DIR/X)
 	 *    b. LOAD_AS_DIRECTORY(DIR/X)
-	 * 
-	 * @param target
-	 * @throws IOException
 	 */
 	private static SourceFileModule loadNodeModules(File rootDir, File d, String target) throws IOException {
 		List<File> dirs = nodeModulePaths(rootDir, d);
@@ -313,9 +303,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 *    c. DIRS = DIRS + DIR
 	 *    d. let I = I - 1
 	 * 5. return DIRS
-	 * 
-	 * @param d
-	 * @throws IOException
 	 */
 	private static List<File> nodeModulePaths(File rootDir, File d) throws IOException {
 		LinkedList<File> dirs = new LinkedList<>();

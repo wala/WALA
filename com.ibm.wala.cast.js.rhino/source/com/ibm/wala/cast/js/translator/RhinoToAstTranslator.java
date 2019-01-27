@@ -2488,7 +2488,6 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
   /**
    * parse the JavaScript code using Rhino, and then translate the resulting AST
    * to CAst
-   * @throws com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error 
    */
   @Override
   public CAstEntity translateToCAst() throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {

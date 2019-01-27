@@ -55,9 +55,6 @@ public class PDFControlDependenceGraph {
    * Usage: GVControlDependenceGraph -appJar [jar file name] -sig [method signature] The "jar
    * file name" should be something like "c:/temp/testdata/java_cup.jar" The
    * signature should be something like "java_cup.lexer.advance()V"
-   * 
-   * @param args
-   * @throws IOException 
    */
   public static void main(String[] args) throws IOException {
 
@@ -69,7 +66,6 @@ public class PDFControlDependenceGraph {
    *          -appJar [jar file name] -sig [method signature] The "jar file
    *          name" should be something like "c:/temp/testdata/java_cup.jar" The
    *          signature should be something like "java_cup.lexer.advance()V"
-   * @throws IOException 
    */
   public static Process run(String[] args) throws IOException {
     validateCommandLine(args);
@@ -81,7 +77,6 @@ public class PDFControlDependenceGraph {
    *          should be something like "c:/temp/testdata/java_cup.jar"
    * @param methodSig
    *          should be something like "java_cup.lexer.advance()V"
-   * @throws IOException 
    */
   public static Process run(String appJar, String methodSig) throws IOException {
     try {
@@ -147,7 +142,6 @@ public class PDFControlDependenceGraph {
    * <li> args[3] : a method signature like "java_cup.lexer.advance()V"
    * </ul>
    * 
-   * @param args
    * @throws UnsupportedOperationException
    *           if command-line is malformed.
    */

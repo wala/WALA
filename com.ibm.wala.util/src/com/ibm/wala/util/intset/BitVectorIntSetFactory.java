@@ -17,7 +17,6 @@ import java.util.TreeSet;
 public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorIntSet> {
 
   /**
-   * @param set
    * @throws IllegalArgumentException  if set is null
    */
   @Override
@@ -41,9 +40,6 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
     }
   }
 
-  /**
-   * @param string
-   */
   @Override
   public BitVectorIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);

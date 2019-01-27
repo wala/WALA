@@ -51,11 +51,8 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 public interface FieldRefinePolicy {
 
   /**
-   * 
    * @param field the accessed field
    * @param basePtr the base pointer of the access
-   * @param val
-   * @param state
    * @return {@code true} if match edges for the field access should be refined. Otherwise, {@code false}
    *         is returned, indicating that the field can be handled with match edges.
    */

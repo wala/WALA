@@ -62,8 +62,6 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
 
   /**
    * Constructor DFSFinishTimeIterator.
-   * 
-   * @param G
    */
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G) {
     this(G, G.iterator());
@@ -85,9 +83,6 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
 
   /**
    * Method setPendingChildren.
-   * 
-   * @param v
-   * @param iterator
    */
   @Override
   void setPendingChildren(T v, Iterator<T> iterator) {

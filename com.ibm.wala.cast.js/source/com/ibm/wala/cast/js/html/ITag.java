@@ -28,7 +28,6 @@ public interface ITag {
 
 	/**
 	 * Retrieves a specific attribute 
-	 * @param name
 	 * @return null if there is no such attribute
 	 */
 	public Pair<String, Position> getAttributeByName(String name);

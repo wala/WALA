@@ -18,8 +18,6 @@ public class TestMultiTarget {
   /**
    * test a virtual call with multiple targets. slice should include statements
    * assigning to a
-   * 
-   * @param args
    */
   public static void main(String[] args) {
     A a = null;

@@ -499,8 +499,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	/**
 	 * Flow function composition
 	 * 
-	 * @param f
-	 * @param g
 	 * @return { (x, z) | (x, y) \in g, (y, z) \in f }
 	 */
 	private static IUnaryFlowFunction compose(final IUnaryFlowFunction f,

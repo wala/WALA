@@ -39,9 +39,6 @@ package demandpa;
 
 public class TestException {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     try {
       foo(null);

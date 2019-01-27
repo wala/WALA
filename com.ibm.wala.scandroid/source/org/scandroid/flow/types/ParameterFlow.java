@@ -58,8 +58,6 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
  * the invoke instruction.
  *
  * @author atomb
- *
- * @param <E>
  */
 public class ParameterFlow <E extends ISSABasicBlock> extends FlowType<E> {
 

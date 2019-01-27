@@ -37,9 +37,6 @@ public class MissingSuperTest extends WalaTestCase {
   /**
    * Test handling of an invalid class where a non-abstract method has no code.
    * We want to throw an exception rather than crash.
-   * 
-   * @throws IOException
-   * @throws ClassHierarchyException
    */
   @Test
   public void testMissingSuper() throws IOException, ClassHierarchyException {

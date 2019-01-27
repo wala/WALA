@@ -52,7 +52,6 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
     /**
      * Get the dataflow operator induced by an instruction in SSA form.
      * 
-     * @param instruction
      * @return dataflow operator for the instruction, or null if the instruction is not applicable to the dataflow system.
      */
     AbstractOperator<T> get(SSAInstruction instruction);

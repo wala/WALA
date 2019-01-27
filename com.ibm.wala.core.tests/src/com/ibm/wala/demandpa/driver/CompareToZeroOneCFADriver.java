@@ -87,9 +87,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class CompareToZeroOneCFADriver {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     // for (String testCase : TestInfo.ALL_TEST_CASES) {
     // runUnitTestCase(testCase);

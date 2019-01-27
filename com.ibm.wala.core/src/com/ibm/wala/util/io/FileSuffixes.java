@@ -29,8 +29,6 @@ public class FileSuffixes {
   /**
    * Does the URI refer to a .dex file?
    * 
-   * @param uri
-   * @return boolean
    * @throws IllegalArgumentException if uri is null
    */
   public static boolean isDexFile(final URI uri) {

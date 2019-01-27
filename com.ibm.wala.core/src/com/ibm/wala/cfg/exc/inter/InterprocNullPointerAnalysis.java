@@ -107,9 +107,6 @@ public final class InterprocNullPointerAnalysis {
    * @param paramState
    *          The parameter states of the {@code startNode}. May be
    *          {@code null}
-   * @throws UnsoundGraphException
-   * @throws CancelException
-   * @throws WalaException
    */
   private void findAndInjectInvokes(final CGNode startNode, final ParameterState paramState, final Set<CGNode> visited,
       final IProgressMonitor progress) throws UnsoundGraphException, CancelException, WalaException {

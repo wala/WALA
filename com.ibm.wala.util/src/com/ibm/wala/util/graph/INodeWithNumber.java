@@ -27,9 +27,6 @@ public interface INodeWithNumber {
    */
   public int getGraphNodeId();
 
-  /**
-   * @param number
-   */
   void setGraphNodeId(int number);
 
 }

@@ -14,9 +14,6 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
  */
 public class BinaryOpWithConstant {
 	/**
-	 *
-	 * @param instruction
-	 * @param ir
 	 * @return normalized BinaryOpWithConstant or null, if normalization was not
 	 *         successful.
 	 */

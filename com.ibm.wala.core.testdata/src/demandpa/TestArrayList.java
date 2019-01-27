@@ -41,9 +41,6 @@ import java.util.ArrayList;
 
 public class TestArrayList {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     ArrayList<Object> l1 = new ArrayList<Object>();
     ArrayList<Object> l2 = new ArrayList<Object>();

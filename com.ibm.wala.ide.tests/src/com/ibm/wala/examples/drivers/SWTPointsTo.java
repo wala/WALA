@@ -49,9 +49,6 @@ public class SWTPointsTo {
   /**
    * Usage: SWTPointsTo -appJar [jar file name] The "jar file name" should be
    * something like "c:/temp/testdata/java_cup.jar"
-   * 
-   * @param args
-   * @throws WalaException
    */
   public static void main(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);

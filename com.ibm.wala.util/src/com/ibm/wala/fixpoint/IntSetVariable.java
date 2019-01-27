@@ -126,9 +126,6 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
     return V;
   }
 
-  /**
-   * @param i
-   */
   public void remove(int i) {
     if (V != null) {
       V.remove(i);

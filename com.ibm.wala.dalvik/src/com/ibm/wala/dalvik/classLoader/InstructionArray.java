@@ -188,7 +188,6 @@ public class InstructionArray implements Collection<Instruction> {
 
 
     /**
-     * @param id
      * @return The instruction from its id.
      */
     public Instruction getFromId(int id) {
@@ -196,7 +195,6 @@ public class InstructionArray implements Collection<Instruction> {
     }
 
     /**
-     * @param pc
      * @return The instruction from its pc.
      */
     public Instruction getFromPc(int pc) {

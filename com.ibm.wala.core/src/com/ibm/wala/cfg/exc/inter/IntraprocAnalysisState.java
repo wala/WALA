@@ -70,8 +70,6 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
    *          The {@code node}'s intraprocedural analysis
    * @param node
    *          the node itself
-   * @throws UnsoundGraphException
-   * @throws CancelException
    */
   IntraprocAnalysisState(final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra, final CGNode node,
       final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg, final int deletedEdges)

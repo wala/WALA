@@ -17,7 +17,6 @@ import java.util.TreeSet;
 public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<SemiSparseMutableIntSet> {
 
   /**
-   * @param set
    * @throws IllegalArgumentException  if set is null
    */
   @Override
@@ -41,9 +40,6 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
     }
   }
 
-  /**
-   * @param string
-   */
   @Override
   public SemiSparseMutableIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);

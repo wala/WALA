@@ -149,8 +149,6 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
 
   /**
    * Set up the AnalysisScope object
-   * 
-   * @throws IOException
    */
   public void buildAnalysisScope() throws IOException {
     if (j2seLibs == null) {
@@ -293,10 +291,6 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
 
   /**
    * Builds the call graph for the analysis scope in effect, using all of the given entry points.
-   * 
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException
    */
   public CallGraphBuilder<? super I> defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
     buildAnalysisScope();

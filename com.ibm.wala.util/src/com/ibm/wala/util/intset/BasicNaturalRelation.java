@@ -264,7 +264,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
   }
 
   /**
-   * @param x
    * @return true iff there exists pair (x,y) for some y
    */
   @Override

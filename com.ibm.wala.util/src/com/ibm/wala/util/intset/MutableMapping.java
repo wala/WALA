@@ -134,9 +134,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return new OrdinalSet<>(SparseIntSet.singleton(i), this);
   }
 
-  /**
-   * @param n
-   */
   public void deleteMappedObject(T n) {
     int index = getMappedIndex(n);
     if (index != -1) {

@@ -236,7 +236,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   }
   
   /**
-   * @param i
    * @return true iff this set contains integer i
    */
   @Override
@@ -375,8 +374,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Invoke an action on each element of the Set, excluding elements of Set X
-   * 
-   * @param action
    */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
@@ -616,8 +613,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Interset this with another set.
-   * 
-   * @param set
    */
   @Override
   public void intersectWith(IntSet set) {

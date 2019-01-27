@@ -18,7 +18,6 @@ import java.util.TreeSet;
 public class MutableSparseLongSetFactory implements MutableLongSetFactory {
 
   /**
-   * @param set
    * @throws IllegalArgumentException  if set is null
    */
   @Override

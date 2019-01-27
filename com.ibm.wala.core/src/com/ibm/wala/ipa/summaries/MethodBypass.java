@@ -76,9 +76,6 @@ public class MethodBypass {
    * Lookup bypass rules based on a method reference only.
    * 
    * Method getBypass.
-   * 
-   * @param m
-   * @return Object
    */
   private SyntheticMethod getBypass(MethodReference m) {
     if (DEBUG) {
@@ -155,8 +152,6 @@ public class MethodBypass {
   /**
    * Method getBypass. check to see if a call to the receiver 'target' should be redirected to a different receiver.
    * 
-   * @param target
-   * @return Object
    * @throws IllegalArgumentException if target is null
    */
   public SyntheticMethod getBypass(IMethod target) {
@@ -169,7 +164,6 @@ public class MethodBypass {
   /**
    * Method extractPackage.
    * 
-   * @param type
    * @return Atom that represents the package name, or null if this is the unnamed package.
    */
   private static Atom extractPackage(TypeReference type) {

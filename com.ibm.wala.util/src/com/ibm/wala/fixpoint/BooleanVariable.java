@@ -56,7 +56,6 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
   }
 
   /**
-   * @param other
    * @throws IllegalArgumentException if other is null
    */
   public void or(BooleanVariable other) {

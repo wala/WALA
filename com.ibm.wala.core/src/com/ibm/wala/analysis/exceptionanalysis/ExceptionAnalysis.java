@@ -69,9 +69,6 @@ public class ExceptionAnalysis {
   }
 
   /**
-   * @param callgraph
-   * @param pointerAnalysis
-   * @param cha
    * @param filter
    *          a filter to include results of other analysis (like
    *          {@link ArrayOutOfBoundsAnalysis} or
@@ -141,8 +138,6 @@ public class ExceptionAnalysis {
   }
 
   /**
-   * @param node
-   * @param block
    * @return if the block has uncaught exceptions
    */
   public boolean hasUncaughtExceptions(CGNode node, ISSABasicBlock block) {
@@ -183,8 +178,6 @@ public class ExceptionAnalysis {
    * Returns all exceptions, which may be raised by this instruction. This
    * includes exceptions from throw and invoke statements.
    * 
-   * @param node
-   * @param instruction
    * @return all exceptions, which may be raised by this instruction
    */
   public Set<TypeReference> getExceptions(final CGNode node, SSAInstruction instruction) {
@@ -214,8 +207,6 @@ public class ExceptionAnalysis {
   }
 
   /**
-   * 
-   * @param node
    * @return all exceptions, which might be thrown by the method represented
    *         through the call graph node.
    */

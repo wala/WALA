@@ -164,7 +164,6 @@ public class DeadAssignmentElimination {
     }
 
     /**
-     * @param value
      * @return true iff there are no uses of the given value number
      */
     private boolean isDead(int value) {

@@ -248,10 +248,6 @@ public abstract class AbstractPtrTest {
     return fullDemandPointsTo;
   }
 
-  /**
-   * @param scope
-   * @throws ClassHierarchyException
-   */
   private static IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
     if (cachedCHA == null) {
       cachedCHA = ClassHierarchyFactory.make(scope);
@@ -259,9 +255,6 @@ public abstract class AbstractPtrTest {
     return cachedCHA;
   }
 
-  /**
-   * @throws IOException
-   */
   private AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
       cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);

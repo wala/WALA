@@ -17,9 +17,6 @@ import com.ibm.wala.types.TypeReference;
  */
 public class ExceptionMatcher {
 	/**
-	 * @param thrownExceptions
-	 * @param filteredExceptions
-	 * @param cha
 	 * @return true, iff thrownExceptions is part of filteredExceptions
 	 */
 	public static boolean isFiltered(
@@ -32,9 +29,6 @@ public class ExceptionMatcher {
 	
 	/**
 	 * Returns all exceptions of thrownExceptions which are not filtered by filteredExceptions
-	 * @param thrownExceptions
-	 * @param filteredExceptions
-	 * @param cha
 	 * @return all exceptions of thrownExceptions which are not filtered by filteredExceptions
 	 */
 	public static Set<TypeReference> retainedExceptions(Collection<TypeReference> thrownExceptions,
@@ -99,7 +93,6 @@ public class ExceptionMatcher {
 	 * Check if the exception itself is filtered or if it is derived from a
 	 * filtered exception.
 	 *
-	 * @param exception
 	 * @return if the exception is filtered
 	 */
 	private boolean isFiltered(TypeReference exception) {

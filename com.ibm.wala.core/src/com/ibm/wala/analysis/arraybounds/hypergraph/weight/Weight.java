@@ -35,7 +35,6 @@ public class Weight {
 	 * Returns this + other. If this is not Number this will be returned, if
 	 * other is not number other will be returned
 	 *
-	 * @param other
 	 * @return this + other
 	 */
 	public Weight add(Weight other) {

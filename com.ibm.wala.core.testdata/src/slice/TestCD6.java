@@ -12,10 +12,6 @@ package slice;
 
 public class TestCD6 {
 
-  /**
-   * 
-   * @param args
-   */
   public static void main(String[] args) {
     int i = 0;
     if (someBool()) {

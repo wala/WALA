@@ -182,8 +182,6 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   /**
    * For each invocation in the method, add nodes for actual parameters and return values
-   * 
-   * @param node
    */
   protected void addNodesForInvocations(CGNode node, IR ir) {
     for (CallSiteReference site : Iterator2Iterable.make(ir.iterateCallSites())) {

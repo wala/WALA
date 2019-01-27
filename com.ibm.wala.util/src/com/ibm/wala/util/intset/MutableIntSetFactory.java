@@ -14,19 +14,8 @@ package com.ibm.wala.util.intset;
  * An object that creates some flavor of mutable int set.
  */
 public interface MutableIntSetFactory<T extends MutableIntSet> {
-  /**
-  	* @param set
-  	*/
   public T make(int[] set);
-  /**
-  	* @param string
-  	*/
   public T parse(String string);
-  /**
-   * @param x
-   */
   public T makeCopy(IntSet x);
-  /**
-   */
   public T make();
 }

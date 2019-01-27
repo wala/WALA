@@ -94,12 +94,7 @@ public class PDFSlice {
    * <li>the -dir argument tells whether to compute a forwards or backwards slice.
    * </ul>
    * 
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException
-   * 
    * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
-   * 
    */
   public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
     run(args);
@@ -107,10 +102,6 @@ public class PDFSlice {
 
   /**
    * see {@link #main(String[])} for command-line arguments
-   * 
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException
    */
   public static Process run(String[] args) throws IllegalArgumentException, CancelException, IOException {
     // parse the command-line into a Properties object
@@ -141,8 +132,6 @@ public class PDFSlice {
    * @param dOptions options controlling data dependence
    * @param cOptions options controlling control dependence
    * @return a Process running the PDF viewer to visualize the dot'ted representation of the slice
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   public static Process run(String appJar, String mainClass, String srcCaller, String srcCallee, boolean goBackward,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException,

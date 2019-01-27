@@ -177,7 +177,6 @@ public class DotUtil {
 
   /**
    * @return StringBuffer holding dot output representing G
-   * @throws WalaException
    */
   public static <T> StringBuilder dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
     StringBuilder result = new StringBuilder("digraph \"DirectedGraph\" {\n");

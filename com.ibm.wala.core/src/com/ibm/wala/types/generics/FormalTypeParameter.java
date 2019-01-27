@@ -164,9 +164,7 @@ public class FormalTypeParameter extends Signature {
   }
 
   /**
-   * @param klass
    * @return the formal type parameters, or null if none
-   * @throws InvalidClassFileException
    */
   public static FormalTypeParameter[] getTypeParameters(IClass klass) throws InvalidClassFileException {
     if (klass instanceof ShrikeClass) {

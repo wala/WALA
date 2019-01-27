@@ -36,9 +36,6 @@ public interface InstanceKeyFactory {
   public abstract <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S);
 
   /**
-   * @param node
-   * @param instr
-   * @param type
    * @return the instance key that represents the exception of type _type_
    *         thrown by a particular PEI.
    */

@@ -13,15 +13,11 @@ import java.util.Collection;
  */
 public interface ExceptionFilter<Instruction> {
 	/**
-	 *
-	 * @param instruction
 	 * @return if the instruction does always throw an exception
 	 */
 	public boolean alwaysThrowsException(Instruction instruction);
 
 	/**
-	 *
-	 * @param instruction
 	 * @return a list of exceptions, which have to be filtered for the given
 	 *         instruction
 	 */

@@ -43,9 +43,6 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
     }
   }
 
-  /**
-   * @param string
-   */
   @Override
   public MutableSparseIntSet parse(String string) throws NumberFormatException {
     int[] backingStore = SparseIntSet.parseIntArray(string);

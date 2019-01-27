@@ -45,9 +45,6 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
 
   /**
    * Subclasses must call this in the constructor!
-   * 
-   * @param G
-   * @param nodes
    */
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;

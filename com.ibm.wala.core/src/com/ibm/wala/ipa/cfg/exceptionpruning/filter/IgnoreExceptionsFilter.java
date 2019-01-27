@@ -19,8 +19,6 @@ public class IgnoreExceptionsFilter implements ExceptionFilter<SSAInstruction> {
 
 	/**
 	 * All given exceptions and subclasses will be ignored.
-	 * 
-	 * @param toBeIgnored
 	 */
 	public IgnoreExceptionsFilter(Collection<TypeReference> toBeIgnored) {
 		this.toBeIgnored = new LinkedList<>();

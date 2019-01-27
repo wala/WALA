@@ -48,7 +48,6 @@ public class RecursionBoundContextSelector implements ContextSelector {
   private static final int MAX_INTERESTING_PARAM = 5;
 
   /**
-   * @param base
    * @param recursionBound
    *          bound on recursion depth, with the top level of the context
    *          returned by the base selector being depth 0. The

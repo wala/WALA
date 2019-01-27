@@ -23,9 +23,6 @@ public class TestPrimGetterSetter {
   }
  
   public static void doNothing(int i) {}
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     IntWrapper w = new IntWrapper();
     test(w);

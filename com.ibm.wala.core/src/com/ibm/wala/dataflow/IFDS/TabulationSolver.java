@@ -238,8 +238,6 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * See POPL 95 paper for this algorithm, Figure 3
-   *
-   * @throws CancelException
    */
   @SuppressWarnings("unused")
   private void forwardTabulateSLRPs() throws CancelException {
@@ -324,8 +322,6 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * Handle lines [33-37] of the algorithm
-   *
-   * @param edge
    */
   @SuppressWarnings("unused")
   private void processNormal(final PathEdge<T> edge) {
@@ -506,8 +502,6 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * @param s_p
-   * @param n
    * @param d2 note that s_p must be an entry for procof(n)
    * @return set of d1 s.t. {@literal <s_p, d1> -> <n, d2>} is a path edge, or null if none found
    */
@@ -693,8 +687,6 @@ public class TabulationSolver<T, P, F> {
   /**
    * invoked when a callee is processed with a particular entry fact
    *
-   * @param callNode
-   * @param callee
    * @param d1 the entry fact
    * @param gotReuse whether existing summary edges were applied
    */
@@ -962,9 +954,6 @@ public class TabulationSolver<T, P, F> {
     }
 
     /**
-     * @param n1
-     * @param d1
-     * @param n2
      * @return set of d2 s.t. (n1,d1) -&gt; (n2,d2) is recorded as a summary edge, or null if none found
      */
     @Override

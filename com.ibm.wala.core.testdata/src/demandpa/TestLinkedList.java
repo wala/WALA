@@ -40,9 +40,6 @@ package demandpa;
 
 public class TestLinkedList {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     DummyLinkedList l1 = new DummyLinkedList();
     DummyLinkedList l2 = new DummyLinkedList();

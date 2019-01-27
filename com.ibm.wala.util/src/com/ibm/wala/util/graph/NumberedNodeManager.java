@@ -28,7 +28,6 @@ public interface NumberedNodeManager<T> extends NodeManager<T> {
   public abstract int getMaxNumber();
 
   /**
-   * @param s
    * @return iterator of nodes with the numbers in set s
    */
   public abstract Iterator<T> iterateNodes(IntSet s);

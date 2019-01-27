@@ -19,9 +19,6 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
 
   private final MutableSparseIntSetFactory factory = new MutableSparseIntSetFactory();
 
-  /**
-   * @param set
-   */
   @Override
   public BimodalMutableIntSet make(int[] set) {
     BimodalMutableIntSet result = new BimodalMutableIntSet();
@@ -29,9 +26,6 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
     return result;
   }
 
-  /**
-   * @param string
-   */
   @Override
   public BimodalMutableIntSet parse(String string) throws NumberFormatException {
     BimodalMutableIntSet result = new BimodalMutableIntSet();

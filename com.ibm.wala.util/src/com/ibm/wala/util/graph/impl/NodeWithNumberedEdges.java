@@ -69,8 +69,6 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
 
   /**
    * remove the edge that indicates this variable is Succd by a certain equation
-   * 
-   * @param eqNumber
    */
   public void deleteSucc(int eqNumber) {
     if (succNumbers != null) {
@@ -84,8 +82,6 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   /**
    * remove the edge that indicates this variable is Predined by a certain
    * equation
-   * 
-   * @param eqNumber
    */
   public void deletePred(int eqNumber) {
     if (predNumbers != null) {

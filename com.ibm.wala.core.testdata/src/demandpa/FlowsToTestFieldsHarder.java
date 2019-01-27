@@ -16,9 +16,6 @@ package demandpa;
  */
 public class FlowsToTestFieldsHarder {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object o1 = new FlowsToType();
     A a1 = new A();

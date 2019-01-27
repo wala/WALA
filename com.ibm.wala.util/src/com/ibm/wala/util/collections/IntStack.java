@@ -26,9 +26,6 @@ public class IntStack {
    */
   private int state[] = new int[0];
 
-  /**
-   * @param i
-   */
   public void push(int i) {
     if (state.length <= (top+1)) {
       state = Arrays.copyOf(state, state.length * 2 + 1);

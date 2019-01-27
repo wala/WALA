@@ -32,7 +32,6 @@ public interface PointerKeyFactory {
   FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter);
 
   /**
-   * @param node
    * @return the PointerKey that acts as a representative for the class of pointers that includes the return value for a node
    */
   PointerKey getPointerKeyForReturnValue(CGNode node);

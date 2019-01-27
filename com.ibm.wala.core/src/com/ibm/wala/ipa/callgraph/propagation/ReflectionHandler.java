@@ -49,11 +49,8 @@ public class ReflectionHandler {
 
   /**
    * update the pointer analysis solver based on flow of reflective factory results to checkcasts
-   * @param monitor 
-   * 
+   *
    * @return true if anything has changed
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   protected boolean updateForReflection(IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
 

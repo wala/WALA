@@ -23,7 +23,6 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   public static final long serialVersionUID = 909018793791787198L;
 
   /**
-   * @param t
    * @throws NullPointerException if t is null
    */
   public ParanoidHashMap(Map<K, V> t) throws NullPointerException {

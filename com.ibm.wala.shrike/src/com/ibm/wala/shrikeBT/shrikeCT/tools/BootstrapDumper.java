@@ -104,14 +104,8 @@ public class BootstrapDumper {
 
   /**
    * Print a class.
-   * @throws InvocationTargetException 
-   * @throws IllegalAccessException 
-   * @throws SecurityException 
-   * @throws NoSuchMethodException 
-   * @throws ClassNotFoundException 
-   * 
+   *
    * @throws IllegalArgumentException if cr is null
-   * @throws NoSuchFieldException 
    */
   public void doClass(ClassLoader image, final ClassReader cr) throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     if (cr == null) {

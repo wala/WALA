@@ -306,8 +306,6 @@ public abstract class EclipseProjectPath<E, P> {
   
   /**
    * Convert this path to a WALA analysis scope
-   * 
-   * @throws IOException
    */
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) throws IOException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile,

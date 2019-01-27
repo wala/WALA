@@ -312,8 +312,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   /**
    * Add constraints for a node.
-   * @param monitor 
-   * 
+   *
    * @return true iff any new constraints are added.
    */
   protected abstract boolean addConstraintsFromNode(CGNode n, IProgressMonitor monitor) throws CancelException;
@@ -323,7 +322,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * iterative.
    * 
    * @return true iff any new constraints are added.
-   * @throws CancelException 
    */
   protected boolean addConstraintsFromNewNodes(IProgressMonitor monitor) throws CancelException {
     boolean result = false;
@@ -1450,8 +1448,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   /**
    * Add constraints when the interpretation of a node changes (e.g. reflection)
-   * @param monitor 
-   * @throws CancelException 
    */
   public void addConstraintsFromChangedNode(CGNode node, IProgressMonitor monitor) throws CancelException {
     unconditionallyAddConstraintsFromNode(node, monitor);

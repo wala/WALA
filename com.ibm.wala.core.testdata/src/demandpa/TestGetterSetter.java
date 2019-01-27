@@ -39,9 +39,6 @@ package demandpa;
 
 public class TestGetterSetter {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object o1 = new Object();
     Object o2 = new Object();

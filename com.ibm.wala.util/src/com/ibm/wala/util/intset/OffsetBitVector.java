@@ -169,7 +169,6 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   }
 
   /**
-   * @param start
    * @return min j &gt;= start s.t get(j)
    */
   @Override

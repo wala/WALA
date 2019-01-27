@@ -70,7 +70,6 @@ public class ReturnFlowFunction<E extends ISSABasicBlock> implements
 	private final CodeElement ce;
 
 	/**
-	 * @param domain
 	 * @param def
 	 *            of the invoke instruction we're returning to
 	 */

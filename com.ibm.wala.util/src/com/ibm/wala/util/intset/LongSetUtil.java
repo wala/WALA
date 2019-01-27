@@ -48,7 +48,6 @@ public class LongSetUtil {
   /**
    * This method constructs an appropriate mutable copy of set.
    * 
-   * @param set
    * @return a new MutableLongSet object with the same value as set
    * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) ) and (not ( set instanceof
    *           com.ibm.wala.util.intset.BitVectorLongSet ) ) and (not ( set instanceof
