@@ -13,7 +13,6 @@ abstract class PrimitiveWrapper {
   /**
    * Sets the integer representation of the underlying primitive
    * to the given value.
-   * @effects this.intVal' = i
    */
   public abstract void setIntValue(int i);
     
@@ -38,7 +37,6 @@ final class IntWrapper extends PrimitiveWrapper {
 	
   /**
    * Constructs a wrapper for the given int.
-   * @effects this.intVal' = val
    */
   public IntWrapper(int val) { 
     this.val = val;
