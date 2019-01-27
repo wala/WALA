@@ -41,10 +41,6 @@ public class TestGlobal {
 
   static Object g = new Object();
 
-  /**
-   * @param args
-   */
-
   static Object getGlobal() {
     return g;
   }

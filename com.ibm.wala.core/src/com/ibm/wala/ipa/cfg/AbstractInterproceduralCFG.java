@@ -48,9 +48,10 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private static final boolean FAIL_ON_EAGER_CONSTRUCTION = false;
 
   /**
-   * Should the graph include call-to-return edges? When set to {@code false}, the graphs output by {@link IFDSExplorer} look
-   * incorrect
+   * Should the graph include call-to-return edges? When set to {@code false}, the graphs output by
+   * {@link com.ibm.wala.ide.ui.IFDSExplorer} look incorrect
    */
+  @SuppressWarnings("JavadocReference")
   private final static boolean CALL_TO_RETURN_EDGES = true;
 
   /**
@@ -278,7 +279,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * Add the incoming edges to the entry() block and the outgoing edges from the exit() block for a call graph node.
    * 
    * @param n a node in the call graph
-   * @param bb the entry() block for n
    */
   @SuppressWarnings("unused")
   private void addInterproceduralEdgesForEntryAndExitBlocks(CGNode n, ControlFlowGraph<SSAInstruction, ? extends T> cfg) {

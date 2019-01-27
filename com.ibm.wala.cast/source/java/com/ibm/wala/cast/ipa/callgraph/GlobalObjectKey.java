@@ -25,7 +25,7 @@ import com.ibm.wala.util.collections.Pair;
  * 
  * @see com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({"javadoc", "JavadocReference"})
 public class GlobalObjectKey implements InstanceKey {
 
   private final IClass concreteType;

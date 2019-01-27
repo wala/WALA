@@ -408,7 +408,6 @@ public class CallGraphTest extends WalaTestCase {
   /**
    * Check consistency of a callgraph, and check that this call graph is a subset of a super-graph
    * 
-   * @param warnings object to track warnings
    * @param cg
    * @param superCG
    * @param superMethods

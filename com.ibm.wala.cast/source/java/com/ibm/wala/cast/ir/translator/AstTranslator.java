@@ -349,7 +349,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /**
    * we only have this method to avoid having to pass a node parameter at other
    * call sites, as would be required for
-   * {@link #doLexicallyScopedRead(CAstNode, WalkContext, String)}
+   * {@link #doLexicallyScopedRead(CAstNode, WalkContext, String, TypeReference)}
    */
   private static int doLexReadHelper(WalkContext context, final String name, TypeReference type) {
     Symbol S = context.currentScope().lookup(name);

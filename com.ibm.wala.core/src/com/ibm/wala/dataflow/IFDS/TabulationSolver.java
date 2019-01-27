@@ -394,7 +394,6 @@ public class TabulationSolver<T, P, F> {
    * [23] for each d5 s.t. {@literal <s_p,d2> -> <returnSite(c),d5>} ..
    *
    * @param edge the edge being processed
-   * @param succ numbers of the nodes that are successors of edge.n (the return block in the callee) in the call graph.
    * @param c a call site of edge.s_p
    * @param D4 set of d1 s.t. {@literal <c, d1> -> <edge.s_p, edge.d2>} was recorded as call flow
    */

@@ -15,10 +15,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * A test targeting the {@link com.ibm.wala.analysis.reflection.GetMethodContext}.
+ * A test targeting the {@code com.ibm.wala.analysis.reflection.GetMethodContext}.
  * @author Michael Heilmann
  */
-@SuppressWarnings("javadoc")
 public class GetMethodContext {
 
   public static class A {

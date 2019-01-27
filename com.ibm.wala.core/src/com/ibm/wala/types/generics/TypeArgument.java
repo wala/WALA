@@ -103,7 +103,7 @@ public class TypeArgument extends Signature {
   }
 
   /**
-   * @param typeSigs TypeSignature*
+   * @param typeArgs TypeSignature*
    * @return tokenize it
    */
   static String[] parseForTypeArguments(String typeArgs) {

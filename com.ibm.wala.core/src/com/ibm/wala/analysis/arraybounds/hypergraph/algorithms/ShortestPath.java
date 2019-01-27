@@ -133,7 +133,7 @@ public class ShortestPath<T> {
    * weight. For correct updating of the destination weight, we need to consider
    * all incoming edges. (The minimum of in edges is computed per round, not
    * global - see
-   * {@link ShortestPath#updateDestinationsWithMin(HashSet, DirectedHyperEdge, Weight)}
+   * {@link ShortestPath#updateDestinationsWithMin(DirectedHyperEdge, Weight)}
    * )
    *
    * @return A set of edges, that may lead to changes of weights.
