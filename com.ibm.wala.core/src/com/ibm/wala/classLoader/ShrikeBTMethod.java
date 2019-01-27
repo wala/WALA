@@ -552,17 +552,11 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     info.hasMonitorOp = simpleVisitor.hasMonitorOp;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return getReference().toString();
   }
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final.
@@ -575,9 +569,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 9661 * getReference().hashCode();
@@ -765,8 +756,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * Clients should not modify the returned array. TODO: clone to avoid the problem?
    * 
    * @throws InvalidClassFileException
-   * 
-   * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
+   *
    */
   @Override
   public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {

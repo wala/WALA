@@ -66,10 +66,6 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return "conditional branch(" + operator + ", to iindex=" + target + ") " + getValueString(symbolTable, val1) + ',' + getValueString(symbolTable, val2);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException if v is null
-   */
   @Override
   public void visit(IVisitor v) {
     if (v == null) {
@@ -78,17 +74,11 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     v.visitConditionalBranch(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 2;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j <= 1;

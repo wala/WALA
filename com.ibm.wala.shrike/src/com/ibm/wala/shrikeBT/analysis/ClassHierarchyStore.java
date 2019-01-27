@@ -82,9 +82,6 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
     return contents.keySet().iterator();
   }
 
-  /**
-   * @see ClassHierarchyProvider#getSuperClass(String)
-   */
   @Override
   public String getSuperClass(String cl) {
     ClassInfo info = contents.get(cl);

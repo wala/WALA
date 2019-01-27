@@ -78,10 +78,6 @@ public class SSAPhiInstruction extends SSAInstruction {
     return s.toString();
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException if v is null
-   */
   @Override
   public void visit(IVisitor v) {
     if (v == null) {
@@ -111,9 +107,6 @@ public class SSAPhiInstruction extends SSAInstruction {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return params.length;
@@ -124,9 +117,6 @@ public class SSAPhiInstruction extends SSAInstruction {
     return 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) throws IllegalArgumentException {
     if (j >= params.length || j < 0) {
@@ -146,9 +136,6 @@ public class SSAPhiInstruction extends SSAInstruction {
     this.params = i;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getValueString(SymbolTable, int)
-   */
   @Override
   protected String getValueString(SymbolTable symbolTable, int valueNumber) {
     if (valueNumber == AbstractIntStackMachine.TOP) {

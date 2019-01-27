@@ -57,8 +57,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
 
   /**
    * TODO: for now, this is not inverted.
-   * 
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcedureGraph()
+   *
    */
   @Override
   public Graph<? extends P> getProcedureGraph() {
@@ -88,8 +87,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
 
   /**
    * get the "called" (sic) nodes for a return site; i.e., the exit nodes that flow directly to this return site.
-   * 
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
+   *
    */
   @SuppressWarnings("unused")
   @Override

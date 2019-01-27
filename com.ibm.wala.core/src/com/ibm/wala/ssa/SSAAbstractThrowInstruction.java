@@ -28,17 +28,11 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return "throw " + getValueString(symbolTable, exception);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     if (j != 0) {

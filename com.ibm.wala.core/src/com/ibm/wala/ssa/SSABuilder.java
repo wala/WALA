@@ -172,9 +172,6 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
     }
 
-    /**
-     * @see com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine.Meeter#meetLocal(int, int[], BasicBlock)
-     */
     @Override
     public int meetLocal(int n, int[] rhs, BasicBlock bb) {
       if (allTheSame(rhs)) {
@@ -234,9 +231,6 @@ public class SSABuilder extends AbstractIntStackMachine {
       return true;
     }
 
-    /**
-     * @see com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine.Meeter#meetStackAtCatchBlock(BasicBlock)
-     */
     @Override
     public int meetStackAtCatchBlock(BasicBlock bb) {
       int bbNumber = shrikeCFG.getNumber(bb);

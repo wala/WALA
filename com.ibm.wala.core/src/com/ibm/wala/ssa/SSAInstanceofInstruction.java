@@ -46,9 +46,6 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     return getValueString(symbolTable, result) + " = instanceof " + getValueString(symbolTable, ref) + ' ' + checkedType;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitInstanceof(this);
@@ -90,9 +87,6 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     return 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j == 0;

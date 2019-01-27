@@ -49,9 +49,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
         + getValueString(symbolTable, val2) + " opcode=" + operator;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitComparison(this);
@@ -89,9 +86,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
     return 2;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j <= 1;

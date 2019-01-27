@@ -286,8 +286,7 @@ public abstract class SSAInstruction {
    * objects that will not equal old ones. Thus, do not  compare for identity SSAInstructions obtained from 
    * distinct calls that retrieve cached values (e.g. distinct CGNode.getIR() calls).
    * See <a href="https://github.com/wala/WALA/issues/6"> the github issue </a> for details.
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
+   *
    */
   @Override
   public final boolean equals(Object obj) {

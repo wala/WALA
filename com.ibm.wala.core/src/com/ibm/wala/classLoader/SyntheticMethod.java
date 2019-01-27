@@ -71,17 +71,11 @@ public class SyntheticMethod implements IMethod {
     this.isFactory = isFactory;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isClinit()
-   */
   @Override
   public boolean isClinit() {
     return method.getSelector().equals(MethodReference.clinitSelector);
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isInit()
-   */
   @Override
   public boolean isInit() {
     return method.getSelector().equals(MethodReference.initSelector);
@@ -95,25 +89,16 @@ public class SyntheticMethod implements IMethod {
     return isStatic;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isNative()
-   */
   @Override
   public boolean isNative() {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isAbstract()
-   */
   @Override
   public boolean isAbstract() {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isPrivate()
-   */
   @Override
   public boolean isPrivate() {
     return false;
@@ -129,17 +114,11 @@ public class SyntheticMethod implements IMethod {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isFinal()
-   */
   @Override
   public boolean isFinal() {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isBridge()
-   */
   @Override
   public boolean isBridge() {
     return false;
@@ -153,25 +132,16 @@ public class SyntheticMethod implements IMethod {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isWalaSynthetic()
-   */
   @Override
   public boolean isWalaSynthetic() {
     return true;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
-   */
   @Override
   public boolean isSynthetic() {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#getReference()
-   */
   @Override
   public MethodReference getReference() {
     return method;
@@ -309,10 +279,6 @@ public class SyntheticMethod implements IMethod {
     }
   }
 
-  /**
-   * 
-   * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
-   */
   @Override
   public int getNumberOfParameters() {
     int n = method.getNumberOfParameters();

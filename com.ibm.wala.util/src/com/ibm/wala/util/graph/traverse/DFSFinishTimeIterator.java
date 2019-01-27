@@ -141,9 +141,6 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     return G.getSuccNodes(n);
   }
 
-  /**
-   * @see java.util.Iterator#remove()
-   */
   @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();

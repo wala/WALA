@@ -37,9 +37,6 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
     return getValueString(symbolTable, result) + " = conversion(" + toType.getName() + ") " + getValueString(symbolTable, val);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitConversion(this);
@@ -64,9 +61,6 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 1;
@@ -85,9 +79,6 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
     return fromType;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j == 0;

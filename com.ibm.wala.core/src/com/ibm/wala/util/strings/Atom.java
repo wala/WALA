@@ -335,9 +335,6 @@ public final class Atom implements Serializable {
       this.hash = tmp;
     }
 
-    /**
-     * @see java.lang.Object#equals(Object)
-     */
     @Override
     public final boolean equals(Object other) {
 
@@ -368,9 +365,6 @@ public final class Atom implements Serializable {
       return new String(val);
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public final int hashCode() {
       return hash;
@@ -378,9 +372,6 @@ public final class Atom implements Serializable {
 
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return hash;
