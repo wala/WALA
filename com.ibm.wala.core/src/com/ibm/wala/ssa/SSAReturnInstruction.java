@@ -56,10 +56,6 @@ public class SSAReturnInstruction extends SSAInstruction {
     }
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException if v is null
-   */
   @Override
   public void visit(IVisitor v) {
     if (v == null) {
@@ -68,17 +64,11 @@ public class SSAReturnInstruction extends SSAInstruction {
     v.visitReturn(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return (result == -1) ? 0 : 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     if (j != 0) {

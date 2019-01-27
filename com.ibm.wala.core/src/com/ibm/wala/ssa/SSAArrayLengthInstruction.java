@@ -41,17 +41,11 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
     return getValueString(symbolTable, result) + " = arraylength " + getValueString(symbolTable, arrayref);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitArrayLength(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
   @Override
   public int getDef() {
     return result;
@@ -79,17 +73,11 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
     return arrayref;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     if (j != 0) {

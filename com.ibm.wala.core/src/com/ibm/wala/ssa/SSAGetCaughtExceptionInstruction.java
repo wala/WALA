@@ -39,10 +39,6 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
     return getValueString(symbolTable, exceptionValueNumber) + " = getCaughtException ";
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException if v is null
-   */
   @Override
   public void visit(IVisitor v) {
     if (v == null) {

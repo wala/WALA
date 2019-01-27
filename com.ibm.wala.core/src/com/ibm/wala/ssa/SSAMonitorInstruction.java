@@ -46,10 +46,6 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
     return "monitor" + (isEnter ? "enter " : "exit ") + getValueString(symbolTable, ref);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException if v is null
-   */
   @Override
   public void visit(IVisitor v) {
     if (v == null) {
@@ -58,17 +54,11 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
     v.visitMonitor(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j == 0;

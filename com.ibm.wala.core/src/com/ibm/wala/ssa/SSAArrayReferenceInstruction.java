@@ -41,9 +41,6 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     return 2;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j <= 1;

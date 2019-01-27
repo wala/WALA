@@ -601,9 +601,6 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       // TODO Auto-generated method stub
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "BB[SSA:" + getFirstInstructionIndex() + ".." + getLastInstructionIndex() + ']' + getNumber() + " - "
@@ -665,8 +662,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
     /**
      * The {@link ExceptionHandlerBasicBlock} subclass will override this.
-     * 
-     * @see com.ibm.wala.ssa.ISSABasicBlock#getCaughtExceptionTypes()
+     *
      */
     @Override
     public Iterator<TypeReference> getCaughtExceptionTypes() {

@@ -152,9 +152,6 @@ public class BFSIterator<T> implements Iterator<T> {
     return G.getSuccNodes(n);
   }
 
-  /**
-   * @see java.util.Iterator#remove()
-   */
   @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();

@@ -52,8 +52,6 @@ public class ProgramCounter {
    * 
    * Note: must use these objects with extreme care; this only works if you never mix ProgramLocations from different methods in the
    * same collection.
-   * 
-   * @see java.lang.Object#equals(Object)
    */
   @Override
   public boolean equals(Object obj) {

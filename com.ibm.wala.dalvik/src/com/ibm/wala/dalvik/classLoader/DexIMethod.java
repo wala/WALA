@@ -578,9 +578,6 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 		return getReference().toString();
 	}
 
-	/**
-	 * @see java.lang.Object#equals(Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		// instanceof is OK because this class is final.
@@ -593,9 +590,6 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return 9661 * getReference().hashCode();

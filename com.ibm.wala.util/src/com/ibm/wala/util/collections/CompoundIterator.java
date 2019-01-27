@@ -42,9 +42,6 @@ public class CompoundIterator<T> implements Iterator<T> {
     }
   }
 
-  /**
-   * @see java.util.Iterator#remove()
-   */
   @Override
   public void remove() {
   }

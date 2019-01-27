@@ -177,9 +177,6 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     return G.getSuccNodes(n);
   }
 
-  /**
-   * @see java.util.Iterator#remove()
-   */
   @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();

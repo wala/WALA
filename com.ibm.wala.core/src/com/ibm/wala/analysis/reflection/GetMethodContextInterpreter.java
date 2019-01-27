@@ -70,9 +70,6 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
-  /**
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -104,9 +101,6 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     return getIR(node);
   }
 
-  /**
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public int getNumberOfStatements(CGNode node) {
     assert understands(node);

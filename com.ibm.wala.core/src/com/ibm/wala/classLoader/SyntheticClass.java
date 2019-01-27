@@ -72,7 +72,6 @@ public abstract class SyntheticClass implements IClass {
   /**
    * By default, a synthetic class is "loaded" by the primordial loader.
    * Subclasses may override as necessary.
-   * @see com.ibm.wala.classLoader.IClass#getClassLoader()
    */
   @Override
   public IClassLoader getClassLoader() {

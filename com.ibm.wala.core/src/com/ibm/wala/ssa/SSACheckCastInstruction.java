@@ -129,9 +129,6 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j == 0;

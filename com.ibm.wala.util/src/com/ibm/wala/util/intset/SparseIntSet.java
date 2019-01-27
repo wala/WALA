@@ -106,8 +106,7 @@ public class SparseIntSet implements IntSet {
 
   /**
    * Does this set contain value x?
-   * 
-   * @see com.ibm.wala.util.intset.IntSet#contains(int)
+   *
    */
   @Override
   public final boolean contains(int x) {

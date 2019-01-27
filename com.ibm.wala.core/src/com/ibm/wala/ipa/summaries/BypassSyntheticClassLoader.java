@@ -168,9 +168,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     return null;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IClassLoader#getParent()
-   */
   @Override
   public IClassLoader getParent() {
     return parent;
