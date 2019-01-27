@@ -68,10 +68,10 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   }
 
   /**
-   * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForMultiNewArray(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.NewSiteReference, int) dim == 0 represents the first dimension, e.g., the [Object; instances in
-   *      [[Object; e.g., the [[Object; instances in [[[Object; dim == 1 represents the second dimension, e.g., the [Object
-   *      instances in [[[Object;
+   * <p>dim == 0 represents the first dimension, e.g., the [Object; instances in [[Object; e.g., the [[Object; instances in
+   * [[[Object;</p>
+   *
+   * <p>dim == 1 represents the second dimension, e.g., the [Object instances in [[[Object;</p>
    */
   @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
