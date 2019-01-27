@@ -45,8 +45,6 @@ import java.util.Iterator;
 /**
  * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()}
  * operations create new stacks.
- * 
- * @param <T>
  */
 public class ImmutableStack<T> implements Iterable<T> {
 
@@ -260,8 +258,6 @@ public class ImmutableStack<T> implements Iterable<T> {
 
 	/**
 	 * return a new stack with the top replaced with t
-	 * 
-	 * @throws EmptyStackException
 	 */
 	public ImmutableStack<T> replaceTop(T t) {
 		if (isEmpty()) {

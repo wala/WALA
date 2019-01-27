@@ -173,9 +173,6 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	 * other predecessors, this will cause their in edges to be merged to a
 	 * single hyper edge with weight zero. The helper nodes are inserted to keep
 	 * the proper distance from [zero].
-	 *
-	 * @param variable
-	 * @param value
 	 */
 	public void addConstant(Integer variable, Integer value) {
 		final Integer helper1 = this.generateNewVar();
@@ -222,8 +219,6 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	 *
 	 * This is a trap door construct: if [var] is not set to 0 it will get the
 	 * value unlimited, if [var] is set to 0 it will stay 0.
-	 *
-	 * @param var
 	 */
 	public void createSourceVar(Integer var) {
 	  if (this.getNodes().keySet().contains(var)){
@@ -290,9 +285,6 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 
 	/**
 	 * Mark variable as length for array.
-	 *
-	 * @param array
-	 * @param variable
 	 */
 	public void markAsArrayLength(Integer array, Integer variable) {
 		this.addEdge(this.getArrayNode(array), variable);

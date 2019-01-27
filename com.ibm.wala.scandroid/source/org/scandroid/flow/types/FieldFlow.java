@@ -61,8 +61,6 @@ import com.ibm.wala.ssa.ISSABasicBlock;
  * but potentially convenient. In the latter case, it's necessary.
  *
  * @author atomb
- *
- * @param <E>
  */
 public class FieldFlow<E extends ISSABasicBlock> extends FlowType<E> {
 

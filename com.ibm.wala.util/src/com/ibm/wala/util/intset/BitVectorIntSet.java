@@ -113,7 +113,6 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   /**
    * this version of add all will likely be faster if the client doesn't care about the change or the population count.
-   * @param set
    * @throws IllegalArgumentException if set == null
    */
   public void addAllOblivious(IntSet set) throws IllegalArgumentException {
@@ -292,9 +291,6 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   /**
    * internal optimized form
-   * 
-   * @param X
-   * @param action
    */
   private void fastForeachExcluding(BitVectorIntSet X, IntSetAction action) {
     int[] bits = bitVector.bits;
@@ -433,7 +429,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /**
-   * @param set
    * @throws IllegalArgumentException if set is null
    */
   public boolean removeAll(BitVectorIntSet set) {

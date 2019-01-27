@@ -64,7 +64,6 @@ public class PDFWalaIR {
   /**
    * @param appJar should be something like "c:/temp/testdata/java_cup.jar"
    * @param methodSig should be something like "java_cup.lexer.advance()V"
-   * @throws IOException
    */
   public static Process run(String appJar, String methodSig) throws IOException {
     try {
@@ -140,7 +139,6 @@ public class PDFWalaIR {
    * <li> args[3] : a method signature like "java_cup.lexer.advance()V"
    * </ul>
    * 
-   * @param args
    * @throws UnsupportedOperationException if command-line is malformed.
    */
   public static void validateCommandLine(String[] args) {

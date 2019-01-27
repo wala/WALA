@@ -37,11 +37,9 @@ public class WebUtil {
 
   /**
    * 
-   * @param url
    * @return a pair (S,F), where S is a set of extracted sources, and F is the
    *         temp file holding the combined sources (or {@code null} if no
    *         such file exists)
-   * @throws Error
    */
   public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url, Supplier<JSSourceExtractor> fSourceExtractor) throws Error {
     try {

@@ -11,9 +11,6 @@
 package slice;
 
 public class Slice1 {
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     int x = foo(1);
     int y = bar(2);

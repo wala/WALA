@@ -129,7 +129,6 @@ public class RecursionCheckContextSelector implements ContextSelector {
 
   /**
    * is it possible for m to be involved in a recursive cycle?
-   * @param m
    */
   private static boolean recursionPossible(IMethod m) {
     // object or array constructors cannot be involved

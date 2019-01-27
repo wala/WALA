@@ -539,9 +539,6 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     return minSizeForTopSort;
   }
 
-  /**
-   * @param i
-   */
   public void setMinEquationsForTopSort(int i) {
     minSizeForTopSort = i;
   }
@@ -554,16 +551,10 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     return topologicalGrowthFactor;
   }
 
-  /**
-   * @param i
-   */
   public void setMaxEvalBetweenTopo(int i) {
     maxEvalBetweenTopo = i;
   }
 
-  /**
-   * @param d
-   */
   public void setTopologicalGrowthFactor(double d) {
     topologicalGrowthFactor = d;
   }

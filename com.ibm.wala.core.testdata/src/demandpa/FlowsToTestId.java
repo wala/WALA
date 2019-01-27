@@ -20,9 +20,6 @@ public class FlowsToTestId {
     return o;
   }
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object o1 = new FlowsToType();
     Object o2 = new Object();

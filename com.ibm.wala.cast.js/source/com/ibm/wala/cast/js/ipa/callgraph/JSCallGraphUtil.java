@@ -173,12 +173,8 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   }
 
   /**
-   * @param cha
-   * @param cl
-   * @param url
    * @return The set of class names that where defined in the CHA as a result
    *         loading process.
-   * @throws IOException
    */
   public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, URL url)
       throws IOException {

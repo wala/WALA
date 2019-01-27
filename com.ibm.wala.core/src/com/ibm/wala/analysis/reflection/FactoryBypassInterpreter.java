@@ -481,8 +481,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
     /**
      * Set up a method summary which allocates and returns an instance of concrete type T.
-     * 
-     * @param T
      */
     private void addStatementsForConcreteType(final TypeReference T) {
       int alloc = addStatementsForConcreteSimpleType(T);

@@ -48,9 +48,6 @@ public class CornerCasesTest extends WalaTestCase {
   /**
    * test that getMethod() works even if a declared ancestor interface doesn't
    * exist
-   * 
-   * @throws ClassHierarchyException
-   * @throws IOException 
    */
   @Test public void testBug38484() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
@@ -66,9 +63,6 @@ public class CornerCasesTest extends WalaTestCase {
   /**
    * test that type inference works in the presence of a getfield where the
    * field's declared type cannot be loaded
-   * 
-   * @throws ClassHierarchyException
-   * @throws IOException 
    */
   @Test public void testBug38540() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;

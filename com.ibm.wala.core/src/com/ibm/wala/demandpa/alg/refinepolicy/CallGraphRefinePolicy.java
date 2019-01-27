@@ -45,7 +45,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 public interface CallGraphRefinePolicy {
 
   /**
-   * @param callSiteAndCGNode
    * @return {@code true} if the analysis should attempt to determine targets for the virtual call on-the-fly, and
    *         {@code false} otherwise
    */

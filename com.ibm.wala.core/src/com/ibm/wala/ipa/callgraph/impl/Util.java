@@ -140,8 +140,6 @@ public class Util {
   }
   
   /**
-   * @param scope
-   * @param cha
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
    */
@@ -255,8 +253,6 @@ public class Util {
   }
 
   /**
-   * @param supG
-   * @param subG
    * @throws IllegalArgumentException if subG is null
    * @throws IllegalArgumentException if supG is null
    */

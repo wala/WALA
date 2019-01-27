@@ -43,9 +43,6 @@ public class TestFactory {
     return new A();
   }
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     A a1 = makeA();
     A a2 = makeA();

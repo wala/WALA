@@ -49,8 +49,6 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	/**
 	 * @param f
 	 *            Must be a file located below folder workingDir.
-	 * @param clonedFrom
-	 * @throws IOException
 	 */
 	protected NodejsRequiredSourceModule(String className, File f, SourceFileModule clonedFrom) throws IOException {
 		super(f, clonedFrom);
@@ -122,9 +120,6 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	/**
 	 * Generate a className based on the file name and path of the module file.
 	 * The path should be encoded in the className since the file name is not unique.
-	 * 
-	 * @param rootDir
-	 * @param file
 	 */
 	public static String convertFileToClassName(File rootDir, File file) {
 		URI normalizedWorkingDirURI = rootDir.getAbsoluteFile().toURI().normalize();

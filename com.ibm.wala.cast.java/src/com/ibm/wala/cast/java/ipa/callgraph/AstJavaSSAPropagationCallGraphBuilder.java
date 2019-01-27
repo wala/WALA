@@ -154,9 +154,6 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
      * For each of objKey's instance keys ik, adds the constraint lvalKey = EORK(ik,cls),
      * where EORK(ik,cls) will be made equivalent to the actual enclosing class by
      * the handleNew() function below.
-     * @param lvalKey
-     * @param cls
-     * @param objKey
      */
     private void handleEnclosingObject(final PointerKey lvalKey, final IClass cls, final PointerKey objKey) {
       SymbolTable symtab = ir.getSymbolTable();

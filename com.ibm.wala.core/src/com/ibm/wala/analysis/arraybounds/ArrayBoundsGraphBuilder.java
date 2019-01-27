@@ -124,11 +124,6 @@ public class ArrayBoundsGraphBuilder {
 	 * {piParent} --&gt; {piVar}
 	 *
 	 * {@code if (piParent op piRestrictor) {piVar = piParent}}
-	 *
-	 * @param piVar
-	 * @param piParent
-	 * @param piRestrictor
-	 * @param op
 	 */
 	private void addPiStructure(Integer piVar, Integer piParent,
 			Integer piRestrictor, Operator op) {
@@ -184,8 +179,6 @@ public class ArrayBoundsGraphBuilder {
 	/**
 	 * Connect all lose ends to the infinity node. See the description of
 	 * {@link ArrayBoundsGraph} for why this is necessary.
-	 *
-	 * @param graph
 	 */
 	private static void bundleDeadEnds(ArrayBoundsGraph graph) {
 		final Set<HyperNode<Integer>> nodes = new HashSet<>(graph.getNodes().values());
@@ -205,8 +198,6 @@ public class ArrayBoundsGraphBuilder {
 	 * To make construction of the hyper-graph more easy, we always add single
 	 * edges and fuse them into one hyper-edge. Where necessary (Everywhere but
 	 * incoming edges of phi nodes.)
-	 *
-	 * @param graph
 	 */
 	private static void collapseNonPhiEdges(ArrayBoundsGraph graph) {
 		final Map<HyperNode<Integer>, DirectedHyperEdge<Integer>> inEdges = new HashMap<>();
@@ -233,9 +224,6 @@ public class ArrayBoundsGraphBuilder {
 
 	/**
 	 * Discovers predecessors and adds them to the graph.
-	 *
-	 * @param todo
-	 * @param handle
 	 */
 	private void discoverPredecessors(final Stack<Integer> todo, int handle) {
 		final SSAInstruction def = this.defUse.getDef(handle);

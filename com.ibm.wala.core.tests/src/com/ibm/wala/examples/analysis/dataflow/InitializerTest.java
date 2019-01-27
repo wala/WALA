@@ -43,9 +43,6 @@ import com.ibm.wala.util.io.FileProvider;
 
 public class InitializerTest {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     
     AnalysisScope scope = null;

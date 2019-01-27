@@ -25,7 +25,6 @@ public class TestGlobal {
 
   /**
    * make sure global variables are being properly handled
-   * @param args
    */
   public static void main(String[] args) {
     global1 = new Object();

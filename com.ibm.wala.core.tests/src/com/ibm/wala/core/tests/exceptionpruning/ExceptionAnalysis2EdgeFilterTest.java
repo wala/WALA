@@ -196,9 +196,6 @@ public class ExceptionAnalysis2EdgeFilterTest {
    * deleted. They don't have a connection to the exit node anymore.
    * 
    * So, if there is a throw statement as normal successor, evrything is fine.
-   * 
-   * @param cfg
-   * @param normalSucc
    */
   private static void specialCaseThrowFiltered(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
     ISSABasicBlock next = normalSucc;

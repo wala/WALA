@@ -94,10 +94,7 @@ public class LocalPathEdges {
   /**
    * Record that in this procedure we've discovered a same-level realizable path from (s_p,d_i) to (n,d_j)
    * 
-   * @param i
    * @param n local block number of the basic block n
-   * 
-   * @param j
    */
   @SuppressWarnings("unused")
   public void addPathEdge(int i, int n, int j) {
@@ -166,8 +163,6 @@ public class LocalPathEdges {
    * Record that in this procedure we've discovered a same-level realizable path from (s_p,0) to (n,d_j)
    * 
    * @param n local block number of the basic block n
-   * 
-   * @param j
    */
   @SuppressWarnings("unused")
   private void addZeroPathEdge(int n, int j) {
@@ -201,7 +196,6 @@ public class LocalPathEdges {
    * facts that may induce the same flow to the return site(s).
    * 
    * @param n local block number of a basic block n
-   * @param d2
    * @return the sparse int set of d1 s.t. {@literal <s_p, d1> -> <n, d2>} are recorded as path edges. null if none found
    */
   public IntSet getInverse(int n, int d2) {
@@ -276,9 +270,7 @@ public class LocalPathEdges {
   }
 
   /**
-   * @param i
    * @param n local block number of a basic block n
-   * @param j
    * @return true iff we have a path edge {@literal <s_p,i> -> <n, j>}
    */
   public boolean contains(int i, int n, int j) {
@@ -312,8 +304,6 @@ public class LocalPathEdges {
   }
 
   /**
-   * 
-   * @param n
    * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n.
    */
   public IntSet getReachable(int n, int d1) {

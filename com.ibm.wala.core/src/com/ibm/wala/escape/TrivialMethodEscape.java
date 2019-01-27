@@ -83,11 +83,9 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
 
   /**
    * @param allocN {@code Set<CGNode>} representing the allocation site.
-   * @param allocPC
    * @param nodes {@code Set<CGNode>}, the nodes of interest
    * @return true iff some instance allocated at a site N \in &lt;allocN, allocPC> might escape from some activation of a node m \in
    *         { nodes }
-   * @throws WalaException
    */
   private boolean mayEscape(Set<CGNode> allocN, int allocPC, Set nodes) throws WalaException {
     Set<InstanceKey> instances = HashSetFactory.make();
@@ -128,7 +126,6 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @param n a call graph node
    * @param allocPC a bytecode index corresponding to an allocation
    * @return the NewSiteReference for the allocation
-   * @throws WalaException
    */
   static NewSiteReference findAlloc(CGNode n, int allocPC) throws WalaException {
     if (n == null) {

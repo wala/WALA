@@ -15,10 +15,6 @@ public class TestCD3 {
   static void doNothing(Object o) {
   }
 
-  /**
-   * 
-   * @param args
-   */
   public static void main(String[] args) {
     Integer I = (Integer) new A().foo();
     int i = I.intValue();

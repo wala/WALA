@@ -256,10 +256,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return Pair.make(p.fst, finalP2Set);
   }
 
-  /**
-   * @param pk
-   * @param ikeyPred
-   */
   private Pair<PointsToResult, Collection<InstanceKeyAndState>> getPointsToWithStates(PointerKey pk, Predicate<InstanceKey> ikeyPred) {
     if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
       throw new IllegalArgumentException("only locals for now");
@@ -292,8 +288,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * @param cg the underlying call graph for the analysis
    * @param model the heap model to be used for the analysis
    * @param mam indicates what code reads or writes each field
-   * @param cha
-   * @param options
    * @param stateMachineFactory factory for state machines to track additional properties like calling context
    */
   public static DemandRefinementPointsTo makeWithDefaultFlowGraph(CallGraph cg, HeapModel model, MemoryAccessMap mam,
@@ -1143,9 +1137,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     /**
      * handle possible updated flow in both directions for a call parameter
-     * 
-     * @param src
-     * @param dst
      */
     private void repropCallArg(PointerKeyAndState src, PointerKeyAndState dst, IFlowLabel dstToSrcLabel) {
       if (DEBUG) {
@@ -1252,9 +1243,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     /**
      * handle flow from actuals to formals, and from returned values to variables at the caller
-     * 
-     * @param curPkAndState
-     * @param handler
      */
     private void handleForwInterproc(final PointerKeyAndState curPkAndState, final CopyHandler handler) {
       PointerKey curPk = curPkAndState.getPointerKey();
@@ -1371,9 +1359,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     /**
      * track a field of some instance key, as we are interested in statements that read or write to the field
-     * 
-     * @param ikAndState
-     * @param field
+     *
      * @param ikToFields either {@link #forwInstKeyToFields} or {@link #backInstKeyToFields}
      */
     private void trackInstanceField(InstanceKeyAndState ikAndState, IField field, MultiMap<InstanceKeyAndState, IField> ikToFields) {
@@ -1527,9 +1513,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     /**
      * handle flow from return value to callers, or from actual to formals
-     * 
-     * @param curPkAndState
-     * @param handler
      */
     private void handleBackInterproc(final PointerKeyAndState curPkAndState, final CopyHandler handler, final boolean addGraphs) {
       final PointerKey curPk = curPkAndState.getPointerKey();
@@ -1659,8 +1642,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * that the subgraph for the callee is missing?
      * 
      * @param addGraphs whether graphs should always be added
-     * @param callee
-     * @param pkAndState
      */
     protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, PointerKeyAndState pkAndState) {
       return !addGraphs && !g.hasSubgraphForNode(callee);
@@ -1954,10 +1935,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   /**
    * we are looking for an instance key flowing to pk that violates pred.
-   * 
-   * @param pk
-   * @param pred
-   * @param pa
    */
   @SuppressWarnings("unused")
   private boolean doTopLevelTraversal(PointerKey pk, final Predicate<InstanceKey> pred, final PointsToComputer ptoComputer,

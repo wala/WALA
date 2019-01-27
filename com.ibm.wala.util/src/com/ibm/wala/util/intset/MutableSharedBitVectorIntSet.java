@@ -39,7 +39,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /**
-   * @param set
    * @throws IllegalArgumentException if set is null
    */
   public MutableSharedBitVectorIntSet(MutableSharedBitVectorIntSet set) {
@@ -53,7 +52,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /**
-   * @param s
    * @throws IllegalArgumentException if s is null
    */
   public MutableSharedBitVectorIntSet(SparseIntSet s) {
@@ -72,7 +70,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /**
-   * @param s
    * @throws IllegalArgumentException if s is null
    */
   public MutableSharedBitVectorIntSet(BitVectorIntSet s) {
@@ -86,9 +83,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @param s
-   */
   private void copyValue(BitVectorIntSet s) {
     if (s.size() == 0) {
       sharedPart = null;
@@ -653,9 +647,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @param set
-   */
   private boolean addAllInternal(BitVectorIntSet set) {
     // should have hijacked this case before getting here!
     assert sharedPart != set;
@@ -671,9 +662,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return result;
   }
 
-  /**
-   * @param set
-   */
   private boolean addAllInternal(SparseIntSet set) {
     if (privatePart == null) {
       if (sharedPart == null) {
@@ -712,9 +700,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @param set
-   */
   private boolean addAll(MutableSharedBitVectorIntSet set) {
     if (set.isEmpty()) {
       return false;
@@ -876,9 +861,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @param set
-   */
   private void intersectWithInternal(MutableSharedBitVectorIntSet set) {
 
     if (sharedPart != null) {
@@ -1071,10 +1053,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @param other
-   * @param filter
-   */
   private boolean addAllInIntersectionInternal(SparseIntSet other, IntSet filter) {
     if (sharedPart == null) {
       if (privatePart == null) {

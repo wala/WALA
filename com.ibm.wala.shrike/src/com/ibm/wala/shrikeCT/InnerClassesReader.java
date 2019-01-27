@@ -52,8 +52,6 @@ public final class InnerClassesReader extends AttributeReader {
 
   /**
    * return the name of the outer class recorded as the enclosing class for a class named s. return null if not found.
-   * 
-   * @throws InvalidClassFileException
    */
   public String getOuterClass(String s) throws InvalidClassFileException {
     String[] inner = getInnerClasses();
@@ -71,8 +69,6 @@ public final class InnerClassesReader extends AttributeReader {
 
   /**
    * return the mask of flags recorded in the InnerClasses attribute for a class named s. return 0 if not found.
-   * 
-   * @throws InvalidClassFileException
    */
   public int getAccessFlags(String s) throws InvalidClassFileException {
     String[] inner = getInnerClasses();

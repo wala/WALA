@@ -12,10 +12,6 @@ package slice;
 
 public class TestCD5 {
 
-  /**
-   * 
-   * @param args
-   */
   public static void main(String[] args) {
     int i = 0;
     while (someBool()) {

@@ -159,8 +159,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   /**
    * add nodes for parameters and return values
-   * 
-   * @param node
    */
   private void addNodesForParameters(CGNode node) {
     // TODO Auto-generated method stub

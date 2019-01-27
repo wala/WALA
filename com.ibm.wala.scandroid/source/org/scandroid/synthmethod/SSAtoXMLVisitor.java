@@ -443,8 +443,6 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
 
     /**
      * Add a new defNum, creating a name for that defnum.
-     * 
-     * @param defNum
      */
     private String newLocalDef(int defNum) {
         String newName = "localdef_" + defCounter;
@@ -462,10 +460,6 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
      * exception.
      *
      * TODO needs to return 'arg0' -&gt; 'argN' for those value numbers...
-     *
-     * @param defNum
-     *
-     * @throws IllegalStateException
      */
     private String getLocalName(int defNum) throws IllegalStateException {
     	if (0 == defNum) {

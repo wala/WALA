@@ -65,9 +65,6 @@ public class InterfaceAnalyzer {
 
   static int methodUID = 0;
 
-  /**
-   * @param reader
-   */
   private static void doClass(ClassReader reader) throws Exception {
     if ((reader.getAccessFlags() & Constants.ACC_INTERFACE) != 0 && (reader.getAccessFlags() & Constants.ACC_PUBLIC) != 0) {
       String cType = Util.makeType(reader.getName());

@@ -54,8 +54,6 @@ public interface RefinementPolicy {
   public int getNumPasses();
 
   /**
-   * 
-   * @param passNum
    * @return the maximum number of nodes to traverse in pass
    *         {@code passNum}
    */

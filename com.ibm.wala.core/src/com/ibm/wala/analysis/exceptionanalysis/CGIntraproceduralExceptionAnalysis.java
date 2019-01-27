@@ -54,7 +54,6 @@ public class CGIntraproceduralExceptionAnalysis {
   }
 
   /**
-   * @param node
    * @return IntraproceduralExceptionAnalysis for given node.
    */
   public IntraproceduralExceptionAnalysis getAnalysis(CGNode node) {

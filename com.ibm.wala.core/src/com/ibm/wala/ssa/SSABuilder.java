@@ -209,8 +209,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     /**
      * Are all rhs values all the same? Note, we consider TOP (-1) to be same as everything else.
-     * 
-     * @param rhs
+     *
      * @return boolean
      */
     private boolean allTheSame(int[] rhs) {
@@ -811,10 +810,6 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     }
 
-    /**
-     * @param piCause
-     * @param ref
-     */
     private void reuseOrCreatePi(SSAInstruction piCause, int ref) {
       int n = getCurrentInstructionIndex();
       SSACFG.BasicBlock bb = cfg.getBlockForInstruction(n);

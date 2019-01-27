@@ -114,7 +114,6 @@ public interface IClassLoader {
   /**
    * Initialize internal data structures.
    * 
-   * @throws IOException
    * @throws IllegalArgumentException if modules is null
    */
   public void init(List<Module> modules) throws IOException;

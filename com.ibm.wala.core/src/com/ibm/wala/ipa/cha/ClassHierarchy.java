@@ -571,7 +571,6 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Return the unique receiver of an invocation of method on an object of type m.getDeclaredClass
    * 
-   * @param m
    * @return IMethod, or null if no appropriate receiver is found.
    * @throws IllegalArgumentException if m is null
    */
@@ -1191,7 +1190,6 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @param klass
    * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we return array classes B[][]...[]
    *         (same dimensionality) where B is an immediate subclass of A. If A is primitive, we return the empty set.
    */

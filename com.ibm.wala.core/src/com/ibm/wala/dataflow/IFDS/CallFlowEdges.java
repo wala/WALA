@@ -77,8 +77,6 @@ public class CallFlowEdges {
   }
 
   /**
-   * @param c
-   * @param d2
    * @return set of d1 s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow, or null if none found.
    */
   @SuppressWarnings("unused")
@@ -119,8 +117,6 @@ public class CallFlowEdges {
   }
 
   /**
-   * 
-   * @param d2
    * @return set of c s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow (for some d1), or null if none found.
    */
   @SuppressWarnings("unused")

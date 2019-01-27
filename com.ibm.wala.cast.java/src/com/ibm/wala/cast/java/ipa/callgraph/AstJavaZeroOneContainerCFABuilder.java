@@ -62,8 +62,6 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
   }
 
   /**
-   * @param cha
-   * @param keys
    * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
    */
   protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {

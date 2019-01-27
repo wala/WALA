@@ -15,7 +15,6 @@ public class NotDetectable {
    * Member calls are not supported. See {@link Detectable#memberLocalGet(int)}
    * for workaround.
    * 
-   * @param i
    * @return memberArr[i]
    */
   public int memberGet(int i) {
@@ -33,7 +32,6 @@ public class NotDetectable {
   /**
    * Interprocedural analysis is not supported.
    * 
-   * @param i
    * @return memberArr[i]
    */
   public int interproceduralGet(int i) {
@@ -61,9 +59,6 @@ public class NotDetectable {
    * 
    * For a workaround see {@link Detectable#nonFinalConstant(int[])}
    * 
-   * 
-   * 
-   * @param arr
    * @return arr[3]
    */
   public int constants(int[] arr) {
@@ -79,7 +74,6 @@ public class NotDetectable {
    * (See also {@link NotDetectable#constants(int[])}), for a working example
    * see {@link Detectable#nonFinalConstant(int[])}.
    * 
-   * @param arr
    * @return arr[3]
    */
   public int dueToConstantPropagation(int[] arr) {
@@ -107,8 +101,6 @@ public class NotDetectable {
    * Note: Any operation can be performed BEFORE comparing a variable to the
    * array length.
    * 
-   * @param arr
-   * @param i
    * @return arr[i]
    */
   public int modulo(int[] arr, int i) {
@@ -125,8 +117,6 @@ public class NotDetectable {
    * Note: Any operation can be performed BEFORE comparing a variable to the
    * array length.
    * 
-   * @param arr
-   * @param i
    * @return arr[i]
    */
   public int variableSubtraction(int[] arr, int i) {
@@ -146,7 +136,6 @@ public class NotDetectable {
    * smaller than zero. This should result in the lower bound check beeing
    * necessary.
    * 
-   * @param arr
    * @return sum of all elements in arr
    */
   public int nonMonotounous(int arr[]) {

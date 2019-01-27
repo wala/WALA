@@ -76,9 +76,6 @@ public class HTMLCGBuilder {
 	 *          the HTML page to analyse, can either be a path to a local file or a URL
 	 * @param timeout
 	 *          analysis timeout in seconds, -1 means no timeout
-	 * @param fExtractor 
-	 * @throws IOException 
-	 * @throws ClassHierarchyException 
 	 */
 	public static CGBuilderResult buildHTMLCG(String src, int timeout, CGBuilderType builderType, Supplier<JSSourceExtractor> fExtractor) 
 			throws ClassHierarchyException, IOException {
@@ -139,9 +136,6 @@ public class HTMLCGBuilder {
 	 * timeout argument is optional and defaults to {@link #DEFAULT_TIMEOUT}.
 	 * reachable argument is optional.  if provided, and some reachable function name contains function_name,
 	 * will print "REACHABLE"
-	 * @throws IOException 
-	 * @throws ClassHierarchyException 
-	 * 
 	 */
 	public static void main(String[] args) throws ClassHierarchyException, IOException {
 		Properties parsedArgs = CommandLine.parse(args);

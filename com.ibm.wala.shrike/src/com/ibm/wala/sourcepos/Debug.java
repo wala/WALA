@@ -69,8 +69,6 @@ public final class Debug {
 
   /**
    * Set to log all events with the given or higher priority
-   * 
-   * @param level
    */
   public static void setMinLogLevel(LogLevel level) {
     for (LogLevel l : LogLevel.values()) {

@@ -14,7 +14,6 @@ public class Detectable {
   /**
    * Note: This is correct, even if memberArr is not final!
    * 
-   * @param i
    * @return memberArr[i]
    */
   public int memberLocalGet(int i) {
@@ -79,9 +78,6 @@ public class Detectable {
 
   /**
    * swaps elements of a and b for all i: 0 &lt;= i &lt; min(a.length, b.length)
-   * 
-   * @param a
-   * @param b
    */
   public void swapWithMin(int[] a, int[] b) {
     final int l1 = a.length;
@@ -103,10 +99,6 @@ public class Detectable {
   /**
    * Invert the order of all elements of arr with index i: fromIndex &lt;= i <
    * toIndex.
-   * 
-   * @param arr
-   * @param fromIndex
-   * @param toIndex
    */
   public void partialInvert(int[] arr, int fromIndex, int toIndex) {
     if (fromIndex >= 0 && toIndex <= arr.length && fromIndex < toIndex) {
@@ -127,7 +119,6 @@ public class Detectable {
    * 
    * Compare to {@link NotDetectable#dueToConstantPropagation(int[])}
    * 
-   * @param arr
    * @return arr[3]
    */
   public int nonFinalConstant(int[] arr) {
@@ -145,7 +136,6 @@ public class Detectable {
    * Note: It is important, that the variable five, is compared directly to the
    * length, and that further computations are performed with this variable.
    * 
-   * @param arr
    * @return arr[3]
    */
   public int constantsWorkaround(int[] arr) {
@@ -161,8 +151,6 @@ public class Detectable {
    * Actually aliasing is only working, because it is removed during
    * construction by wala.
    * 
-   * @param i
-   * @param arr
    * @return arr[i]
    */
   public int aliasing(int i, int[] arr) {

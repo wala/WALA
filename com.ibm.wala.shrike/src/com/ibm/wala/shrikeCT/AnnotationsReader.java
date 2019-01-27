@@ -36,7 +36,6 @@ public class AnnotationsReader extends AttributeReader {
 
   /**
    * @return number of annotations in this attribute
-   * @throws InvalidClassFileException
    */
   public int getAnnotationCount() throws InvalidClassFileException {
     int offset = beginOffset + 6;
@@ -47,7 +46,6 @@ public class AnnotationsReader extends AttributeReader {
   /**
    * @return total length of this attribute in bytes, <b>including</b> the
    *         first 6 bytes
-   * @throws InvalidClassFileException
    */
   public int getAttributeSize() throws InvalidClassFileException {
     int offset = beginOffset + 2;
@@ -187,7 +185,6 @@ public class AnnotationsReader extends AttributeReader {
    * }
    * </pre>
    * 
-   * @throws InvalidClassFileException
    * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.16"> JLS (SE8), 4.7.16</a>
    */
   public AnnotationAttribute[] getAllAnnotations() throws InvalidClassFileException {
@@ -245,8 +242,6 @@ public class AnnotationsReader extends AttributeReader {
    *     element_value value; 
    *   } element_value_pairs[num_element_value_pairs]
    * </pre>
-   * 
-   * @throws InvalidClassFileException
    */
   protected Pair<AnnotationAttribute, Integer> getAttributeAndSize(int begin) throws InvalidClassFileException {
     String type = getUtf8ConstantPoolValue(begin);
@@ -329,9 +324,6 @@ public class AnnotationsReader extends AttributeReader {
    * {@link EnumElementValue}. An array value is represented by an
    * {@link ArrayElementValue}. Finally, a nested annotation is represented by
    * an {@link AnnotationAttribute}.
-   * 
-   * @throws InvalidClassFileException
-   * @throws IllegalArgumentException
    */
   protected Pair<ElementValue, Integer> readElementValueAndSize(int offset) throws IllegalArgumentException,
       InvalidClassFileException {

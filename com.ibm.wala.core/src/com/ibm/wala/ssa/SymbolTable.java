@@ -431,7 +431,6 @@ public class SymbolTable implements Cloneable {
   }
 
   /**
-   * @param valueNumber
    * @return true iff this valueNumber is a parameter
    */
   public boolean isParameter(int valueNumber) {

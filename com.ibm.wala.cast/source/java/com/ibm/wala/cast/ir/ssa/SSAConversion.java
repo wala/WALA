@@ -546,10 +546,6 @@ public class SSAConversion extends AbstractSSAConversion {
     return true;
   }
 
-  /**
-   * @param ir
-   * @param options
-   */
   @SuppressWarnings("unchecked")
   private SSAConversion(AstMethod M, AstIRFactory.AstIR ir, SSAOptions options) {
     super(ir, options);

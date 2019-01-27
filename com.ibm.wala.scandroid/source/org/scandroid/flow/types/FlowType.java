@@ -121,9 +121,6 @@ public abstract class FlowType<E extends ISSABasicBlock> {
      * custom comparison for BasicBlockInContext.  The WALA .equals() 
      * implementation eventually delegates to pointer equality, which is too 
      * specific for our needs. 
-     * 
-     * @param a
-     * @param b
      */
     @SuppressWarnings("unused")
 	private boolean compareBlocks(BasicBlockInContext<E> a,

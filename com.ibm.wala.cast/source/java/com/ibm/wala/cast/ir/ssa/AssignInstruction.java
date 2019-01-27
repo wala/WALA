@@ -26,9 +26,6 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
 
   /**
    * create the assignment v_result := v_val
-   * 
-   * @param result
-   * @param val
    */
   public AssignInstruction(int iindex, int result, int val) {
     super(iindex, null, result, val);

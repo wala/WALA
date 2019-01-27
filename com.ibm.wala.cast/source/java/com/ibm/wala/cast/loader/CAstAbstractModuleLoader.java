@@ -144,9 +144,6 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
   /**
    * translate moduleEntry to CAst and store result in topLevelEntities
-   * 
-   * @param ast
-   * @param topLevelEntities
    */
   private void translateModuleEntryToCAst(ModuleEntry moduleEntry, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
     try {

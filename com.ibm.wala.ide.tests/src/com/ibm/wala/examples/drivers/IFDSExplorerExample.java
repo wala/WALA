@@ -46,12 +46,6 @@ public class IFDSExplorerExample {
 
   /**
    * Usage: {@code IFDSExplorerExample -dotExe <path_to_dot_exe> -viewerExe <path_to_viewer_exe>}
-   * 
-   * @param args
-   * @throws IOException
-   * @throws CallGraphBuilderCancelException
-   * @throws IllegalArgumentException
-   * @throws WalaException
    */
   public static void main(String[] args) throws IOException, IllegalArgumentException, CallGraphBuilderCancelException,
       WalaException {

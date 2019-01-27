@@ -108,12 +108,6 @@ public class AndroidAnalysisContext {
 		this(options, "Java60RegressionExclusions.txt");
 	}
 
-	/**
-	 * @param exclusions
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 * @throws ClassHierarchyException
-	 */
 	public AndroidAnalysisContext(ISCanDroidOptions options, String exclusions)
 			throws IOException, IllegalArgumentException, ClassHierarchyException {
 		
@@ -299,7 +293,6 @@ public class AndroidAnalysisContext {
 	
 	/**
 	 * Returns all concrete classes implementing the given interface or any subinterfaces
-	 * @param iRoot
 	 */
 	public Collection<IClass> concreteClassesForInterface(IClass iRoot) {
 		Set<IClass> clazzes = HashSetFactory.make();

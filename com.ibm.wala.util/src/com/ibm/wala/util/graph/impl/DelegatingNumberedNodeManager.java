@@ -147,9 +147,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     numberOfNodes++;
   }
 
-  /**
-   * @param number
-   */
   private void ensureCapacity(int number) {
     if (nodes.length < number + 1) {
       int newLength = (int) ((number + 1) * BUFFER_FACTOR);

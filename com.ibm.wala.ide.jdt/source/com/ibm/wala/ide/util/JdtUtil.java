@@ -117,7 +117,6 @@ public class JdtUtil {
    * For example, suppose we have the method 'fooPackage.barPackage.FooClass.fooMethod(int)' which is in the 'FooProject' and source
    * folder 'src' the handle would be '=FooProject/src&lt;fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
    * 
-   * @param javaElt
    * @throws IllegalArgumentException if javaElt is null
    */
   public static String getJdtHandleString(IJavaElement javaElt) {

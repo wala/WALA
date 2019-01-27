@@ -169,9 +169,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   /**
-   * @param node
-   * @param x
-   * @param type
    * @return the instance key that represents the exception of type _type_ thrown by a particular PEI.
    * @throws IllegalArgumentException if ikFactory is null
    */
@@ -184,8 +181,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Visit all instructions in a node, and add dataflow constraints induced by each statement in the SSA form.
-   * @throws CancelException 
-   *
    */
   @Override
   protected boolean addConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException {
@@ -248,7 +243,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Add pointer flow constraints based on instructions in a given node
-   * @throws CancelException 
    */
   protected void addNodeInstructionConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
     this.monitor = monitor;
@@ -266,7 +260,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Hook for aubclasses to add pointer flow constraints based on values in a given node
-   * @throws CancelException 
    */
   @SuppressWarnings("unused")
   protected void addNodeValueConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
@@ -275,7 +268,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   
   /**
    * Add constraints for a particular basic block.
-   * @throws CancelException 
    */
   protected void addBlockInstructionConstraints(CGNode node, IRView ir, BasicBlock b,
       ConstraintVisitor v, IProgressMonitor monitor) throws CancelException {
@@ -342,9 +334,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Add constraints to represent the flow of exceptions to the exceptional return value for this node
-   * 
-   * @param node
-   * @param ir
    */
   protected void addNodePassthruExceptionConstraints(CGNode node, IRView ir, DefUse du) {
     // add constraints relating to thrown exceptions that reach the exit block.
@@ -1560,7 +1549,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * Side effect: add edge to the call graph.
    * 
-   * @param instruction
    * @param constParams if non-null, then constParams[i] holds the set of instance keys that are passed as param i, or null if param
    *          i is not invariant
    * @param uniqueCatchKey if non-null, then this is the unique PointerKey that catches all exceptions from this call site.
@@ -1702,8 +1690,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     final private MutableIntSet[] previousPtrs;
     
     /**
-     * @param call
-     * @param node
      * @param constParams if non-null, then constParams[i] holds the String constant that is passed as param i, or null if param i
      *          is not a String constant
      */
@@ -2134,7 +2120,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * TODO: enhance this logic using type inference
    * 
-   * @param instruction
    * @return true if we need to filter the receiver type to account for virtual dispatch
    */
   @SuppressWarnings("unused")
@@ -2181,7 +2166,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * TODO: enhance this logic using type inference TODO!!!: enhance filtering to consider concrete types, not just cones.
    * precondition: needs Filter
    * 
-   * @param target
    * @return an IClass which represents
    */
   public PointerKey getTargetPointerKey(CGNode target, int index) {
@@ -2216,7 +2200,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   /**
-   * @param method
    * @return the receiver class for this method.
    */
   private IClass getReceiverClass(IMethod method) {
@@ -2234,7 +2217,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * A value is "invariant" if we can figure out the instances it can ever point to locally, without resorting to propagation.
    * 
-   * @param valueNumber
    * @return true iff the contents of the local with this value number can be deduced locally, without propagation
    */
   protected boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int valueNumber) {
@@ -2264,7 +2246,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * precondition:contentsAreInvariant(valueNumber)
    * 
-   * @param valueNumber
    * @return the complete set of instances that the local with vn=valueNumber may point to.
    */
   public InstanceKey[] getInvariantContents(SymbolTable symbolTable, DefUse du, CGNode node, int valueNumber, HeapModel hm) {

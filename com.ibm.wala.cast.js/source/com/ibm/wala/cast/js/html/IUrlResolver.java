@@ -21,13 +21,11 @@ import java.net.URL;
 public interface IUrlResolver {
   /**
    * From Internet to local
-   * @param input
    */
   public URL resolve(URL input);
   
   /**
    * From local to Internet
-   * @param input
    */
   public URL deResolve(URL input);
   

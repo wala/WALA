@@ -417,14 +417,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   /**
-   * 
-   * @param n
-   * @param bodyDecls
-   * @param enumConstants
-   * @param typeBinding
    * @param name Used in creating default constructor, and passed into new ClassEntity()
-   * @param context
- * @param namePos 
    */
   private CAstEntity createClassDeclaration(ASTNode n, List<BodyDeclaration> bodyDecls,
       List<EnumConstantDeclaration> enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
@@ -657,11 +650,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * Setup constructor body. Here we add the initializer code (both initalizer blocks and initializers in field declarations). We
    * may also need to add an implicit super() call.
    * 
-   * @param n
    * @param classBinding Used so we can use this with fake MethodDeclaration nodes, as in the case of creating a default
    *          constructor.
-   * @param context
-   * @param inits
    */
   private CAstNode createConstructorBody(MethodDeclaration n, ITypeBinding classBinding, WalkContext context,
       ArrayList<ASTNode> inits) {
@@ -732,7 +722,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * @param overriding Declaration of the overriding method.
    * @param overridden Binding of the overridden method, in a a superclass or implemented interface.
-   * @param oldContext
    */
   private CAstEntity makeSyntheticCovariantRedirect(MethodDeclaration overriding, IMethodBinding overridingBinding,
       IMethodBinding overridden, WalkContext oldContext) {
@@ -1472,11 +1461,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   /**
-   * 
-   * @param met
    * @param mappedAstNode An AST node or object mapped in the CFG: we will call context.cfg().add() on it. Caller must worry about
    *          mapping it with context.cfg().map().
-   * @param context
    */
   private void handleThrowsFromCall(IMethodBinding met, Object mappedAstNode, WalkContext context) {
     ITypeBinding[] throwTypes = met.getExceptionTypes();
@@ -1617,11 +1603,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * If the number of actuals equals the number of formals and the function is varargs, we have to check the type of the last
    * argument to see if we should "box" it in an array. If the arguments[arguments.length-1] is not an Expression, we cannot get the
    * type, so we do not box it. (Making covariant varargs functions require this behavior)
-   * 
-   * @param children
-   * @param methodBinding
-   * @param arguments
-   * @param context
    */
   private void populateArguments(CAstNode[] children, IMethodBinding methodBinding, List<?/* CAstNode or Expression */> arguments,
       WalkContext context) {
@@ -1712,8 +1693,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * where field 'y' is parameterized to type string. then += is not defined for type 'object'. This function is a hack that expands
    * the code into an assignment and binary operation.
-   * 
-   * @param context
    */
   private CAstNode doFunkyGenericAssignPreOpHack(Assignment assign, WalkContext context) {
     Expression left = assign.getLeftHandSide();
@@ -1796,9 +1775,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   /**
    * SimpleName can be a field access, local, or class name (do nothing case)
-   * 
-   * @param n
-   * @param context
    */
   private CAstNode visit(SimpleName n, WalkContext context) {
     // class name, handled above in either method invocation, qualified name, or qualified this
@@ -1862,9 +1838,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * 
    * Essentially if we have a field/method referenced only by name and we know its type (owningTypeRef), this function will return
    * owningTypeRef or the subtype that the field is accessed thru, for expanding "f = 5" into "TheClass.this.f = 5".
-   * 
-   * @param typeOfThis
-   * @param isPrivate
    */
   private static ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
     // GENERICS
@@ -1909,9 +1882,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * Process a field access. Semantics differ for static and instance fields. Fields can throw null pointer exceptions so we must
    * connect proper exceptional edges in the CFG.
-   * 
-   * @param n
-   * @param context
    */
   private CAstNode visit(FieldAccess n, WalkContext context) {
     CAstNode targetNode = visitNode(n.getExpression(), context);
@@ -1927,7 +1897,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    *          block -- thus it is evaluated for any side effects but thrown away.
    * @param fieldName Name of the field.
    * @param positioningNode Used only for making a JdtPosition.
-   * @param context
    */
   private CAstNode createFieldAccess(CAstNode targetNode, String fieldName, IVariableBinding possiblyParameterizedBinding,
       ASTNode positioningNode, WalkContext context) {
@@ -2019,9 +1988,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * a) field access (QualifiedName) b) method invocation c) qualifier of "this" in these cases we get the binding info in each of
    * these three functions and use them there, thus we return an EMPTY (no-op) here. 3) package names used in the context of a
    * QualifiedName class we return a EMPTY (no-op) here.
-   * 
-   * @param n
-   * @param context
    */
   private CAstNode visit(QualifiedName n, WalkContext context) {
     // "package.Class" is a QualifiedName, but also is "Class.staticField"
@@ -2483,9 +2449,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * iterable.iter(); iter.hasNext(); ) { [final] Type var = (Type) iter.next(); ... } Or, in the case of an array: for ( int idx =
    * 0; i &lt; iterable.length; i++ ) { [final] Type var = iterable[idx]; ... } Except that the expression "iterable" is only evaluate
    * once (or is it?)
-   * 
-   * @param n
-   * @param context
    */
   private CAstNode visit(EnhancedForStatement n, WalkContext context) {
     if (n.getExpression().resolveTypeBinding().isArray())
@@ -2831,8 +2794,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   /**
    * Giant switch statement.
-   * 
-   * @param n
    */
   private CAstEntity visit(AbstractTypeDeclaration n, WalkContext context) {
     // handling of compilationunit in translate()
@@ -2850,8 +2811,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   /**
    * Giant switch statement, part deux
-   * 
-   * @param context
    */
   private CAstNode visitNode(ASTNode n, WalkContext context) {
     if (n == null)
@@ -3367,9 +3326,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   /**
    * Only called from createClassDeclaration.
-   * 
-   * @param decl
-   * @param context
    */
   private CAstEntity visit(EnumConstantDeclaration decl, WalkContext context) {
     return new FieldEntity(decl.getName().getIdentifier(), decl.resolveVariable().getType(), enumQuals, makePosition(decl

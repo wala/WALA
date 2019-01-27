@@ -24,10 +24,6 @@ public interface IHtmlParser {
 
     /**
      * Parses a given HTML, calling the given callback.
-     * @param reader
-     * @param callback
-     * @param fileName
-     * @throws Error 
      */
     public void parse(URL url, Reader reader, IHtmlCallback callback, String fileName) throws Error;
 

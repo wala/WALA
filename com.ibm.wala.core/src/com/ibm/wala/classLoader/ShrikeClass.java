@@ -123,9 +123,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     }
   }
 
-  /**
-   * @throws InvalidClassFileException
-   */
   private void computeModifiers() throws InvalidClassFileException {
     modifiers = reader.get().getAccessFlags();
   }
@@ -167,8 +164,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
 
   /**
    * initialize the declared methods array
-   * 
-   * @throws InvalidClassFileException
    */
   @Override
   protected ShrikeCTMethod[] computeDeclaredMethods() throws InvalidClassFileException {
@@ -449,8 +444,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   /**
    * Does the class file indicate that this class is a member of some other
    * class?
-   * 
-   * @throws InvalidClassFileException
    */
   public boolean isInnerClass() throws InvalidClassFileException {
     InnerClassesReader r = getInnerClassesReader();
@@ -467,8 +460,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
 
   /**
    * Does the class file indicate that this class is a static inner class?
-   * 
-   * @throws InvalidClassFileException
    */
   public boolean isStaticInnerClass() throws InvalidClassFileException {
     InnerClassesReader r = getInnerClassesReader();
@@ -489,8 +480,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
 
   /**
    * If this is an inner class, return the outer class. Else return null.
-   * 
-   * @throws InvalidClassFileException
    */
   public TypeReference getOuterClass() throws InvalidClassFileException {
     if (!isInnerClass()) {

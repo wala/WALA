@@ -140,7 +140,6 @@ public class DFS {
   }
 
   /**
-   * @param G
    * @return iterator of nodes of G in order of DFS discover time
    */
   public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G) {

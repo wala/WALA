@@ -68,7 +68,6 @@ public class GraphReachability<T, S> {
   }
 
   /**
-   * @param n
    * @return the set of interesting nodes reachable from n
    */
   public OrdinalSet<S> getReachableSet(Object n) throws IllegalStateException {

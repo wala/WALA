@@ -39,9 +39,6 @@ package demandpa;
 
 public class TestLocals {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object x = new Object();
     DemandPATestUtil.testThisVar(x);

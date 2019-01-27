@@ -175,7 +175,6 @@ public class Slicer {
   /**
    * @param s a statement of interest
    * @return the backward slice of s.
-   * @throws CancelException
    */
   public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<U> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
@@ -185,7 +184,6 @@ public class Slicer {
   /**
    * @param s a statement of interest
    * @return the forward slice of s.
-   * @throws CancelException
    */
   public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(Statement s, CallGraph cg,
       PointerAnalysis<U> pa,
@@ -195,8 +193,6 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   *
-   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), true);
@@ -204,8 +200,6 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   *
-   * @throws CancelException
    */
   public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), false);
@@ -213,8 +207,6 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   *
-   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss) throws IllegalArgumentException,
       CancelException {
@@ -223,7 +215,6 @@ public class Slicer {
 
   /**
    * @param ss a collection of statements of interest
-   * @throws CancelException
    */
   protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     if (sdg == null) {
@@ -239,7 +230,6 @@ public class Slicer {
    * @param roots set of roots to slice from
    * @param backward do a backwards slice?
    * @return the {@link Statement}s found by the slicer
-   * @throws CancelException
    */
   public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward) throws CancelException {
     return slice(sdg, roots, backward, null);
@@ -253,7 +243,6 @@ public class Slicer {
    * @param backward do a backwards slice?
    * @param monitor to cancel analysis if needed
    * @return the {@link Statement}s found by the slicer
-   * @throws CancelException
    */
   public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
       throws CancelException {
@@ -287,7 +276,6 @@ public class Slicer {
   /**
    * @param s a statement of interest
    * @return the backward slice of s.
-   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis)
       throws IllegalArgumentException, CancelException {

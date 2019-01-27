@@ -62,7 +62,6 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
   /**
    * Constructor SlowDFSDiscoverTimeIterator.
    * 
-   * @param G
    * @throws NullPointerException if G is null
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G) throws NullPointerException {
@@ -79,9 +78,6 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
 
   /**
    * Method setPendingChildren.
-   * 
-   * @param v
-   * @param iterator
    */
   @Override
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {

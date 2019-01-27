@@ -251,10 +251,6 @@ public class SlicerTest {
 
   /**
    * test unreproduced bug reported on mailing list by Sameer Madan, 7/3/2007
-   *
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException
    */
   @Test
   public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -280,10 +276,6 @@ public class SlicerTest {
 
   /**
    * test bug reported on mailing list by Ravi Chandhran, 4/16/2010
-   *
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException
    */
   @Test
   public void testSlice8() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -1068,11 +1060,6 @@ public class SlicerTest {
     return findMethod(cg, d, name);
   }
 
-  /**
-   * @param cg
-   * @param d
-   * @param name
-   */
   private static CGNode findMethod(CallGraph cg, Descriptor d, Atom name) {
     for (CGNode n : Iterator2Iterable.make(cg.getSuccNodes(cg.getFakeRootNode()))) {
       if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {

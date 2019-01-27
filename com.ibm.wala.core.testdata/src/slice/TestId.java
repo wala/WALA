@@ -22,8 +22,6 @@ public class TestId {
   /**
    * check for context-sensitive handling of the identity function.
    * o2 should be excluded
-   * 
-   * @param args
    */
   public static void main(String[] args) {
     Object o1 = new Object(), o2 = new Object();

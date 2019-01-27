@@ -26,7 +26,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 public class MapUtil {
   /**
    * @param M a mapping from Object -&gt; Set
-   * @param key
    * @return the Set corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
    * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
@@ -97,7 +96,6 @@ public class MapUtil {
 
   /**
    * @param M a mapping from Object -&gt; Map
-   * @param key
    * @return the Map corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
    * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
@@ -133,7 +131,6 @@ public class MapUtil {
 
   /**
    * @param M a mapping from Object -&gt; WeakHashMap
-   * @param key
    * @return the WeakHashMap corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
    * @throws ClassCastException if the key is of an inappropriate type for this map (optional)

@@ -130,14 +130,7 @@ public class BootstrapInstrumentor {
 
   /**
    * Print a class.
-   * @throws InvocationTargetException 
-   * @throws IllegalAccessException 
-   * @throws SecurityException 
-   * @throws NoSuchMethodException 
-   * @throws ClassNotFoundException 
-   * 
    * @throws IllegalArgumentException if cr is null
-   * @throws NoSuchFieldException 
    */
   public Set<MethodData> doClass(final ClassInstrumenter ci) throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     ClassReader cr = ci.getReader();

@@ -12,9 +12,6 @@ package demandpa;
 
 public class FlowsToTestLocals {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object x = new FlowsToType();
     DemandPATestUtil.makeVarUsed(x);

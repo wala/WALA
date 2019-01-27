@@ -250,7 +250,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * If key is unified, returns the representative
    * 
-   * @param key
    * @return the dataflow variable that tracks the points-to set for key
    */
   public PointsToSetVariable findOrCreatePointsToSet(PointerKey key) {
@@ -520,11 +519,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  /**
-   * @param klass
-   * @param index
-   * @throws ClassHierarchyException
-   */
   private void registerInstanceWithAllInterfaces(IClass klass, int index) throws ClassHierarchyException {
     Collection<IClass> ifaces = klass.getAllImplementedInterfaces();
     for (IClass I : ifaces) {
@@ -536,11 +530,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  /**
-   * @param index
-   * @param T
-   * @throws ClassHierarchyException
-   */
   private void registerInstanceWithAllSuperclasses(int index, IClass T) throws ClassHierarchyException {
     while (T != null && !T.getReference().equals(TypeReference.JavaLangObject)) {
       MutableIntSet set = findOrCreateSparseSetForClass(T);
@@ -745,9 +734,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return periodicMaintainInterval;
   }
 
-  /**
-   * @param periodicMaintainInteval
-   */
   public void setPeriodicMaintainInterval(int periodicMaintainInteval) {
     this.periodicMaintainInterval = periodicMaintainInteval;
   }

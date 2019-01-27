@@ -75,7 +75,6 @@ implements EdgeFilter<Block> {
 	 * instructions, even if all exceptions returned by
 	 * instruction.getExceptionTypes() are to be filtered.
 	 *
-	 * @param instruction
 	 * @return if we know all exceptions, that can occur at this address from
 	 *         getExceptionTypes()
 	 */

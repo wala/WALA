@@ -112,7 +112,6 @@ public class DexFileModule implements Module {
     /**
      * @param f
      *            the .dex or .apk file
-     * @throws IllegalArgumentException
      */
     private DexFileModule(File f, int apiLevel) throws IllegalArgumentException {
         try {
@@ -137,7 +136,6 @@ public class DexFileModule implements Module {
      *            the name of the .dex file inside the container file
      * @param apiLevel
      *            the api level wanted
-     * @throws IllegalArgumentException
      */
     public DexFileModule(File f, String entry, int apiLevel) throws IllegalArgumentException {
         try {

@@ -76,7 +76,6 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
   /**
    * Constructor DFSFinishTimeIterator.
    * 
-   * @param G
    * @throws NullPointerException if G is null
    */
   public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G) throws NullPointerException {
@@ -95,9 +94,6 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
 
   /**
    * Method setPendingChildren.
-   * 
-   * @param v
-   * @param iterator
    */
   @Override
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {

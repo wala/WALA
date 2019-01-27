@@ -387,9 +387,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     }
   }
 
-  /**
-   * @param n
-   */
   @Override
   public void addNode(T n) {
     nodeManager.addNode(n);

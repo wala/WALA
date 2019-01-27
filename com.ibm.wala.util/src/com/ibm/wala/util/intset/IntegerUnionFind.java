@@ -90,7 +90,6 @@ public class IntegerUnionFind {
   }
 
   /**
-   * @param x
    * @return representative of x's equivalence class
    */
   public int find(int x) {
@@ -106,7 +105,6 @@ public class IntegerUnionFind {
   }
 
   /**
-   * @param x
    * @return representative of x's equivalence class
    */
   private int findInternal(int x) {

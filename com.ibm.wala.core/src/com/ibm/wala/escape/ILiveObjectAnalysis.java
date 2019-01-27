@@ -25,7 +25,6 @@ public interface ILiveObjectAnalysis {
    * @param allocPC bytecode index of allocation site
    * @param m method in question
    * @param instructionIndex index of an instruction in SSA IR. in m. if -1, it is interpreted as a wildcard meaning "any statement"
-   * @throws WalaException
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be live immediately after the
    *          statement &lt;m,instructionIndex&gt;
    */
@@ -35,7 +34,6 @@ public interface ILiveObjectAnalysis {
    * @param ik an instance key
    * @param m method in question
    * @param instructionIndex index of an instruction in SSA IR. in m. if -1, it is interpreted as a wildcard meaning "any statement"
-   * @throws WalaException
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be live immediately after the
    *          statement &lt;m,instructionIndex&gt;
    */

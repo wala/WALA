@@ -101,7 +101,6 @@ public class EclipseFileProvider extends FileProvider {
   }
   
   /**
-   * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    */
@@ -119,7 +118,6 @@ public class EclipseFileProvider extends FileProvider {
    * @param fileName
    *          the file name
    * @return the URL, or {@code null} if the file is not found
-   * @throws IOException
    */
   private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
     try {
@@ -156,7 +154,6 @@ public class EclipseFileProvider extends FileProvider {
    * escape spaces in a URL, primarily to work around a bug in
    * {@link File#toURL()}
    * 
-   * @param url
    * @return an escaped version of the URL
    */
   private static URL fixupFileURLSpaces(URL url) {
@@ -212,7 +209,6 @@ public class EclipseFileProvider extends FileProvider {
   }
   
   /**
-   * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    * @throws IllegalArgumentException

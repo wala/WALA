@@ -173,11 +173,6 @@ public class XMLSummaryWriter {
      * Throws various exceptions if a problem occurred serializing this method.
      * 
      * No guarantees as to the state of the Document if an exception is thrown.
-     * 
-     * @param summary
-     * @throws DOMException
-     * @throws UTFDataFormatException
-     * @throws SSASerializationException
      */
 	public void add(MethodSummary summary) throws UTFDataFormatException {
 		// create a method element, and populate it's attributes:
@@ -265,8 +260,6 @@ public class XMLSummaryWriter {
     /**
      * Generate a method descriptor, such as
      * (I[Ljava/lang/String;)[Ljava/lang/String;
-     * 
-     * @param summary
      */
     private static String getMethodDescriptor(MethodSummary summary) {
         StringBuilder typeSigs = new StringBuilder("(");

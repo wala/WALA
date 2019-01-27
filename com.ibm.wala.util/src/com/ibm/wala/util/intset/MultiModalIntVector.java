@@ -77,7 +77,6 @@ public class MultiModalIntVector implements IntVector {
   /**
    * Will determine a dynamic growth factor that depends on the current size of the array
    * 
-   * @param size
    * @return the new growth factor
    */
 
@@ -207,8 +206,6 @@ public class MultiModalIntVector implements IntVector {
 
   /**
    * make sure we can store to a particular index
-   * 
-   * @param capacity
    */
   private void ensureCapacity(int capacity, int value) {
     int length = getStoreLength();

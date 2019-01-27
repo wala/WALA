@@ -57,9 +57,6 @@ public class DeterministicIRTest extends WalaTestCase {
     justThisTest(DeterministicIRTest.class);
   }
 
-   /**
-   * @param method
-   */
   private IR doMethod(MethodReference method) {
     IAnalysisCacheView cache = makeAnalysisCache();
     Assert.assertNotNull("method not found", method);
@@ -95,9 +92,6 @@ public class DeterministicIRTest extends WalaTestCase {
 
   // The Tests ///////////////////////////////////////////////////////
 
-  /**
-   * @param iterator
-   */
   private static void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
       Assert.assertTrue(iterator.next() != null);
@@ -105,9 +99,6 @@ public class DeterministicIRTest extends WalaTestCase {
 
   }
 
-  /**
-   * @param instructions
-   */
   private static void checkNotAllNull(SSAInstruction[] instructions) {
     for (SSAInstruction instruction : instructions) {
       if (instruction != null) {

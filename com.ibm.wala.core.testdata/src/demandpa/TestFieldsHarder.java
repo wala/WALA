@@ -42,9 +42,6 @@ package demandpa;
 
 public class TestFieldsHarder {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object o1 = new Object();
     A a1 = new A();

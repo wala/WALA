@@ -404,7 +404,6 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
    * TODO: cache?
    * 
    * @return raw "Signature" attribute from the bytecode
-   * @throws InvalidClassFileException
    */
   private String getGenericsSignature() throws InvalidClassFileException {
     return computeGenericsSignature();
@@ -412,8 +411,6 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 
   /**
    * UNDER CONSTRUCTION
-   * 
-   * @throws InvalidClassFileException
    */
   public MethodTypeSignature getMethodTypeSignature() throws InvalidClassFileException {
     String sig = getGenericsSignature();

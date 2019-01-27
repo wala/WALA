@@ -306,9 +306,6 @@ public class CallGraphTest extends WalaTestCase {
 
   /**
    * TODO: refactor this to avoid excessive code bloat.
-   * 
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   public static void doCallGraphs(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAToString) throws IllegalArgumentException, CancelException {
@@ -382,8 +379,6 @@ public class CallGraphTest extends WalaTestCase {
 
   /**
    * Check properties of the InterproceduralCFG
-   * 
-   * @param cg
    */
   private static void checkICFG(CallGraph cg) {
     InterproceduralCFG icfg = new InterproceduralCFG(cg);
@@ -407,11 +402,7 @@ public class CallGraphTest extends WalaTestCase {
 
   /**
    * Check consistency of a callgraph, and check that this call graph is a subset of a super-graph
-   * 
-   * @param cg
-   * @param superCG
-   * @param superMethods
-   * @param thisAlgorithm
+   *
    * @return a squashed version of cg
    */
   private static Graph<MethodReference> checkCallGraph(CallGraph cg, Graph<MethodReference> superCG,
@@ -448,8 +439,6 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   /**
-   * @param name
-   * @param cg
    * @return a graph whose nodes are MethodReferences, and whose edges represent calls between MethodReferences
    * @throws IllegalArgumentException if cg is null
    */

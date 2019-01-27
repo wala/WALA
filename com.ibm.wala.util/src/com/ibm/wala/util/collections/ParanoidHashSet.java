@@ -38,7 +38,6 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   private final int BAD_HC = 3;
 
   /**
-   * @param s
    * @throws NullPointerException if s is null
    */
   public ParanoidHashSet(Collection<T> s) throws NullPointerException {

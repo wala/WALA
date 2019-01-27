@@ -118,7 +118,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	}
 
 	/**
-	 * @param value
 	 * @return true iff this value changes
 	 */
 	@Override
@@ -339,7 +338,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	/**
 	 * Add all elements from another int set.
 	 * 
-	 * @param that
 	 * @return true iff this set changes
 	 */
 	public boolean addAll(SparseIntSet that) {
@@ -461,7 +459,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	/**
 	 * TODO optimize
 	 * 
-	 * @param set
 	 * @throws IllegalArgumentException
 	 *             if set is null
 	 */

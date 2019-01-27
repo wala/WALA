@@ -54,7 +54,6 @@ public class GraphDataflowTest extends WalaTestCase {
 
   /**
    * A simple test of the GraphBitVectorDataflow system
-   * @throws CancelException 
    */
   @Test public void testSolverNodeEdge() throws CancelException {
     Graph<String> G = buildGraph();
@@ -120,7 +119,6 @@ public class GraphDataflowTest extends WalaTestCase {
 
   /**
    * Solve the dataflow system and return the result as a string
-   * @throws CancelException 
    */
   public static String solveNodeOnly(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);

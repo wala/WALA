@@ -135,9 +135,6 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     }
   }
 
-  /**
-   * @throws IllegalStateException
-   */
   public IStructuredSelection getSelection() throws IllegalStateException {
     GraphViewer viewer = (GraphViewer) getApplicationWindow();
     if (viewer == null || viewer.treeViewer == null) {
@@ -163,9 +160,6 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
      */
     private TreeViewer treeViewer;
 
-    /**
-     * @throws WalaException
-     */
     public GraphViewer(Graph<Object> graph) throws WalaException {
       super(null);
       this.graph = graph;

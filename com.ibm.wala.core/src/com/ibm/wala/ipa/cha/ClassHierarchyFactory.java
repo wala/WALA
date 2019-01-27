@@ -23,7 +23,6 @@ public class ClassHierarchyFactory {
 
   /**
    * @return a ClassHierarchy object representing the analysis scope
-   * @throws ClassHierarchyException
    */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {
@@ -35,8 +34,6 @@ public class ClassHierarchyFactory {
   /**
    * @return a ClassHierarchy object representing the analysis scope, where phantom classes are
    * created when superclasses are missing
-   *
-   * @throws ClassHierarchyException
    */
   public static ClassHierarchy makeWithPhantom(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {
@@ -48,8 +45,6 @@ public class ClassHierarchyFactory {
   /**
    * @return a ClassHierarchy object representing the analysis scope, missing superclasses are
    * replaced by the ClassHierarchy root, i.e. java.lang.Object
-   *
-   * @throws ClassHierarchyException
    */
   public static ClassHierarchy makeWithRoot(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {

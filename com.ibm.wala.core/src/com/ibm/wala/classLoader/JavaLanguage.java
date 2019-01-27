@@ -560,7 +560,6 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   /**
    * @return {@link Collection}&lt;{@link TypeReference}&gt;, set of exception types a call to a declared target might throw.
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException if target is null
    * @throws IllegalArgumentException if cha is null
    */

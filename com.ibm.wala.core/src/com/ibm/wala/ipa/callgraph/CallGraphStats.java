@@ -123,7 +123,6 @@ public class CallGraphStats {
   }
 
   /**
-   * @param cg
    * @return the number of bytecode bytes
    * @throws IllegalArgumentException if cg is null
    */
@@ -150,7 +149,6 @@ public class CallGraphStats {
   /**
    * Walk the call graph and return the set of MethodReferences that appear in the graph.
    * 
-   * @param cg
    * @return a set of MethodReferences
    * @throws IllegalArgumentException if cg is null
    */

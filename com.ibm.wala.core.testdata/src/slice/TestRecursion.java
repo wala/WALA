@@ -26,7 +26,6 @@ public class TestRecursion {
   /**
    * test of recursion.  Everything for a1, a2, and a3 should
    * be included
-   * @param args
    */
   public static void main(String[] args) {
     A a1 = new A(), a2 = new A(), a3 = new A();

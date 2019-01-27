@@ -50,7 +50,6 @@ public class AstJavaSlicer extends Slicer {
 
   /**
    * @param ss a collection of statements of interest
-   * @throws CancelException
    */
   public static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     return new AstJavaSlicer().slice(sdg, ss, backward);

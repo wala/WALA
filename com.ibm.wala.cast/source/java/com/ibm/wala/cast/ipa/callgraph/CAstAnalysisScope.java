@@ -99,9 +99,6 @@ public class CAstAnalysisScope extends AnalysisScope {
 
   /**
    * Add a class file to the scope for a loader
-   * 
-   * @param loader
-   * @param file
    */
   @Override
   public void addClassFileToScope(ClassLoaderReference loader, File file) {

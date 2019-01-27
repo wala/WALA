@@ -60,9 +60,6 @@ public class SWTCallGraph {
    * 
    * If it's a directory, then we'll try to find all jar files under that
    * directory.
-   * 
-   * @param args
-   * @throws WalaException
    */
   public static void main(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
@@ -82,8 +79,6 @@ public class SWTCallGraph {
    *            <li> "RTA"
    *            </ul>
    *            </ul>
-   * 
-   * @throws WalaException
    */
   public static ApplicationWindow run(Properties p) throws WalaException {
 

@@ -98,8 +98,6 @@ public class ModRef<T extends InstanceKey> {
   /**
    * For each call graph node, what heap locations (as determined by a heap model) may it write, <b> NOT </b> including its
    * callees transitively
-   * 
-   * @param heapExclude
    */
   private Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, final PointerAnalysis<T> pa, final HeapExclusions heapExclude) {
 
@@ -109,8 +107,6 @@ public class ModRef<T extends InstanceKey> {
   /**
    * For each call graph node, what heap locations (as determined by a heap model) may it read, <b> NOT </b> including its callees
    * transitively
-   * 
-   * @param heapExclude
    */
   private Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, final PointerAnalysis<T> pa, final HeapExclusions heapExclude) {
     return CallGraphTransitiveClosure.collectNodeResults(cg, n -> scanNodeForRef(n, pa, heapExclude));
@@ -128,8 +124,6 @@ public class ModRef<T extends InstanceKey> {
   /**
    * For a call graph node, what heap locations (as determined by a heap model) may it write, <b> NOT </b> including it's callees
    * transitively
-   * 
-   * @param heapExclude
    */
   private Collection<PointerKey> scanNodeForMod(final CGNode n, final PointerAnalysis<T> pa, HeapExclusions heapExclude) {
     Collection<PointerKey> result = HashSetFactory.make();

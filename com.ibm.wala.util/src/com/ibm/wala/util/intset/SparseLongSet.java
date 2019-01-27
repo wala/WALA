@@ -48,9 +48,6 @@ public class SparseLongSet implements LongSet {
    * * * Constructors & Factories *
    ****************************************************************************/
 
-  /**
-   * @param size
-   */
   protected SparseLongSet(int size) {
     elements = new long[size];
     this.size = size;
@@ -58,8 +55,6 @@ public class SparseLongSet implements LongSet {
 
   /**
    * Subclasses should use this with extreme care. Do not allow the backing array to escape elsewhere.
-   * 
-   * @param backingArray
    */
   protected SparseLongSet(long[] backingArray) {
     if (backingArray == null) {
@@ -81,9 +76,6 @@ public class SparseLongSet implements LongSet {
     cloneState(S);
   }
 
-  /**
-   * @param S
-   */
   private void cloneState(SparseLongSet S) {
     elements = S.elements.clone();
     this.size = S.size;
@@ -123,7 +115,6 @@ public class SparseLongSet implements LongSet {
   }
 
   /**
-   * @param x
    * @return index i s.t. elements[i] == x, or -1 if not found.
    */
   public final int getIndex(long x) {

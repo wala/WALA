@@ -207,7 +207,6 @@ public class AnalysisScope {
 
   /**
    * Add a class file to the scope for a loader
-   * @throws InvalidClassFileException 
    */
   public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException, InvalidClassFileException {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
@@ -439,7 +438,6 @@ public class AnalysisScope {
    * Creates a "serializable" version of the analysis scope.
    * 
    * @return a "serializable" version of the analysis scope.
-   * @throws NotSerializableException
    */
   public ShallowAnalysisScope toShallowAnalysisScope() throws NotSerializableException {
 

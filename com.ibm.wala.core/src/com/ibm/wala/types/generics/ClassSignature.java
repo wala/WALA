@@ -119,9 +119,7 @@ public class ClassSignature extends Signature {
   }
   
   /**
-   * @param klass
    * @return the class signature, or null if none
-   * @throws InvalidClassFileException
    */
   public static ClassSignature getClassSignature(IClass klass) throws InvalidClassFileException {
     if (klass instanceof ShrikeClass) {

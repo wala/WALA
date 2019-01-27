@@ -39,9 +39,6 @@ package demandpa;
 
 public class TestArrays {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object[] arr = new Object[10];
     arr[0] = new Object();

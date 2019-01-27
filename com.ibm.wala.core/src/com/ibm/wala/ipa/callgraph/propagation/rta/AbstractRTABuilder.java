@@ -330,8 +330,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   /**
    * Perform needed bookkeeping when a new class is discovered.
-   * 
-   * @param klass
    */
   protected abstract void updateSetsForNewClass(IClass klass, InstanceKey iKey, CGNode node, NewSiteReference ns);
 

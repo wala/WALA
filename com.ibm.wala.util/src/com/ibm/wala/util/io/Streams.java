@@ -20,7 +20,6 @@ import java.io.InputStream;
 public class Streams {
 
   /**
-   * @param in
    * @return byte[] holding the contents of the stream
    * @throws IllegalArgumentException  if in == null
    */

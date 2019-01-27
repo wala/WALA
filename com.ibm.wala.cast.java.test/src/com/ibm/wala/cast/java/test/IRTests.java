@@ -415,10 +415,8 @@ public abstract class IRTests {
   }
 
   /**
-   * 
    * @param srcMethodDescriptor a full method descriptor of the form ldr#type#methName#methSig example:
    *          Source#Simple1#main#([Ljava/lang/String;)V
-   * @param cha
    */
   public static MethodReference descriptorToMethodRef(String srcMethodDescriptor, IClassHierarchy cha) {
     String[] ldrTypeMeth = srcMethodDescriptor.split("\\#");

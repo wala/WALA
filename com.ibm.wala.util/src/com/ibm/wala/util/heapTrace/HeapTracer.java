@@ -129,18 +129,11 @@ public class HeapTracer {
 	this.traceStatics = traceStatics;
     }
 
-    /**
-     * @param c
-     * @param traceStatics
-     */
     public HeapTracer(Collection<?> c, boolean traceStatics) {
 	rootInstances = c;
 	this.traceStatics = traceStatics;
     }
 
-    /**
-     * @param args
-     */
     public static void main(String[] args) {
 	try {
 	    Result r = (new HeapTracer(true)).perform();
@@ -203,7 +196,6 @@ public class HeapTracer {
     }
 
     /**
-     * @param classpath
      * @return set of strings that are names of directories that contain "bin"
      */
     private static Object[] extractBinDirectories(String classpath) {
@@ -248,7 +240,6 @@ public class HeapTracer {
     }
 
     /**
-     * @param o
      * @return the estimated size of the object
      */
     private static int computeSizeOf(Object o) {
@@ -270,7 +261,6 @@ public class HeapTracer {
     }
 
     /**
-     * @param o
      * @return the estimated size of the object
      */
     private int sizeOf(Object o) {
@@ -288,7 +278,6 @@ public class HeapTracer {
     }
 
     /**
-     * @param c
      * @return size of a field of type c, in bytes
      */
     private static int sizeOfSlot(Class<?> c) {
@@ -312,10 +301,6 @@ public class HeapTracer {
 
     /**
      * Traverse the heap starting at a static field
-     * 
-     * @param result
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
     private void traverse(Field root, Result result,
 	    IdentityHashMap<Object, Object> objectsVisited)
@@ -453,16 +438,6 @@ public class HeapTracer {
 	}
     }
 
-    /**
-     * @param root
-     * @param f
-     * @param scalar
-     * @param container
-     * @param objectsVisited
-     * @param result
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
-     */
     private void traverseFieldOfScalar(Field root, Field f, Object scalar,
 	    Object container, IdentityHashMap<Object, Object> objectsVisited,
 	    Result result) throws IllegalArgumentException,
@@ -731,7 +706,6 @@ public class HeapTracer {
 		.make();
 
 	/**
-	 * @param root
 	 * @return the Demographics object tracking objects traced from that
 	 *         root
 	 */

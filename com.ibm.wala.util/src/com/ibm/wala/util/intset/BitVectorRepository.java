@@ -35,7 +35,6 @@ public class BitVectorRepository {
   final private static Map<Integer, LinkedList<WeakReference<BitVectorIntSet>>> buckets = HashMapFactory.make();
 
   /**
-   * @param value
    * @return the BitVector in this repository which is the canonical shared
    *         subset representative of value; the result will have the same bits
    *         as value, except it may exclude up to SUBSET_DELTA bits.

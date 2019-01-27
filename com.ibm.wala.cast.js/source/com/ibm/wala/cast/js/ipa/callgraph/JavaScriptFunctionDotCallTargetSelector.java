@@ -121,10 +121,6 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   /**
    * generate a synthetic method modeling the invocation of Function.call() at
    * the site
-   * 
-   * @param caller
-   * @param site
-   * @param receiver
    */
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     int nargs = getNumberOfArgsPassed(caller, site);

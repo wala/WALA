@@ -40,7 +40,6 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 public class CodeScanner {
 
   /**
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException if m is null
    */
   public static Collection<CallSiteReference> getCallSites(IMethod m) throws InvalidClassFileException {
@@ -56,7 +55,6 @@ public class CodeScanner {
   }
 
   /**
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException if m is null
    */
   public static Collection<FieldReference> getFieldsRead(IMethod m) throws InvalidClassFileException {
@@ -72,7 +70,6 @@ public class CodeScanner {
   }
 
   /**
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException if m is null
    */
   public static Collection<FieldReference> getFieldsWritten(IMethod m) throws InvalidClassFileException {
@@ -89,8 +86,6 @@ public class CodeScanner {
 
   /**
    * get the element types of the arrays that m may update
-   * 
-   * @throws InvalidClassFileException
    */
   public static Collection<TypeReference> getArraysWritten(IMethod m) throws InvalidClassFileException {
     if (m == null) {
@@ -105,7 +100,6 @@ public class CodeScanner {
   }
 
   /**
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException if m is null
    */
   public static Collection<NewSiteReference> getNewSites(IMethod m) throws InvalidClassFileException {
@@ -160,7 +154,6 @@ public class CodeScanner {
    * Return the types this method may cast to
    * 
    * @return iterator of TypeReference
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException if m is null
    */
   public static Iterator<TypeReference> iterateCastTypes(IMethod m) throws InvalidClassFileException {
@@ -197,9 +190,7 @@ public class CodeScanner {
   }
 
   /**
-   * @param M
    * @return Iterator of TypeReference
-   * @throws InvalidClassFileException
    */
   private static Collection<NewSiteReference> getNewSitesFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     return M.getNewSites();

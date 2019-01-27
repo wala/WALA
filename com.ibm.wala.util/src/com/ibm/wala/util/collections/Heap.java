@@ -88,8 +88,6 @@ public abstract class Heap<T> {
   /**
    * SJF: I know this is horribly uglified ... I've attempted to make things as
    * easy as possible on the JIT, since this is performance critical.
-   * 
-   * @param index
    */
   final private void removeElement(int index) {
     int ne = numberOfElements;
@@ -127,9 +125,6 @@ public abstract class Heap<T> {
   /**
    * SJF: I know this is uglified ... I've attempted to make things as easy as
    * possible on the JIT, since this is performance critical.
-   * 
-   * @param elt
-   * @param index
    */
   final private void bubbleUp(T elt, int index) {
     T[] bs = backingStore;

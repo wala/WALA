@@ -74,8 +74,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * to those keys
  * 
  * @author acfoltzer
- * 
- * @param <E>
  */
 public class GlobalReturnToNodeFunction<E extends ISSABasicBlock> implements
 		IUnaryFlowFunction {

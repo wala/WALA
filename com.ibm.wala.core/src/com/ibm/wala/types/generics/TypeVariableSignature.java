@@ -64,8 +64,6 @@ public class TypeVariableSignature extends TypeSignature {
   }
 
   /**
-   * @param v
-   * @param klass
    * @return -1 if there is no match
    */
   public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass) throws IllegalArgumentException {

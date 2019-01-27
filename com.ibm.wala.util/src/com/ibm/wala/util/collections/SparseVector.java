@@ -45,10 +45,6 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     indices = MutableSparseIntSet.makeEmpty();
   }
 
-  /**
-   * @param initialSize
-   * @param expansion
-   */
   public SparseVector(int initialSize, float expansion) {
     data = new Object[DEF_INITIAL_SIZE];
     indices = new TunedMutableSparseIntSet(initialSize, expansion);

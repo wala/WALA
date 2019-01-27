@@ -47,9 +47,6 @@ public class TestOnTheFlySimple {
     return new B();
   }
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     A a2 = new A();
     DemandPATestUtil.makeVarUsed(a2);

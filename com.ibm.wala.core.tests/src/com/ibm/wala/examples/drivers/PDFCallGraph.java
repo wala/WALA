@@ -82,9 +82,6 @@ public class PDFCallGraph {
   /**
    * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file name" should be something like
    * "c:/temp/testdata/java_cup.jar"
-   * 
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   public static void main(String[] args) throws IllegalArgumentException, CancelException {
     run(args);
@@ -93,9 +90,6 @@ public class PDFCallGraph {
   /**
    * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file name" should be something like
    * "c:/temp/testdata/java_cup.jar"
-   * 
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   public static Process run(String[] args) throws IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
@@ -105,8 +99,6 @@ public class PDFCallGraph {
 
   /**
    * @param appJar something like "c:/temp/testdata/java_cup.jar"
-   * @throws CancelException
-   * @throws IllegalArgumentException
    */
   public static Process run(String appJar, String exclusionFile) throws IllegalArgumentException, CancelException {
     try {
@@ -140,9 +132,6 @@ public class PDFCallGraph {
   /**
    * @param appJar something like "c:/temp/testdata/java_cup.jar"
    * @return a call graph
-   * @throws CancelException
-   * @throws IllegalArgumentException
-   * @throws IOException 
    */
   public static Graph<CGNode> buildPrunedCallGraph(String appJar, File exclusionFile) throws WalaException,
       IllegalArgumentException, CancelException, IOException {

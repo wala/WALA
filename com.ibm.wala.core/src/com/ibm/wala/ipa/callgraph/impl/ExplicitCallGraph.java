@@ -91,8 +91,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
   /**
    * subclasses may wish to override!
-   * 
-   * @throws CancelException
    */
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
@@ -101,8 +99,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
   /**
    * subclasses may wish to override!
-   * 
-   * @throws CancelException
    */
   @Override
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
@@ -145,9 +141,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
     private WeakReference<IR> ir = new WeakReference<>(null);
     private WeakReference<DefUse> du = new WeakReference<>(null);
 
-    /**
-     * @param method
-     */
     protected ExplicitNode(IMethod method, Context C) {
       super(method, C);
     }

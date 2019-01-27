@@ -157,8 +157,6 @@ public class FileUtil {
 
   /**
    * read fully the contents of s and return a byte array holding the result
-   * 
-   * @throws IOException
    */
   public static byte[] readBytes(InputStream s) throws IOException {
     if (s == null) {
@@ -178,10 +176,6 @@ public class FileUtil {
 
   /**
    * write string s into file f
-   * 
-   * @param f
-   * @param content
-   * @throws IOException
    */
   public static void writeFile(File f, String content) throws IOException {
     try (final Writer fw = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)) {

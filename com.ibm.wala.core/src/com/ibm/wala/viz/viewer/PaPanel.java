@@ -205,8 +205,6 @@ public class PaPanel extends JSplitPane {
 
   /**
    * expands the given "treeNode" "rec" levels.
-   * @param treeNode
-   * @param rec
    */
   private void expandNodeRec(DefaultMutableTreeNode treeNode, int rec) {
     if (rec == 0){
@@ -228,7 +226,6 @@ public class PaPanel extends JSplitPane {
 
   /**
    * Used for filling the tree dynamically. Override and handle your own nodes / different links.
-   * @param node
    */
   protected List<Object> getChildrenFor(Object node) {
     List<Object> ret = new ArrayList<>();
@@ -251,8 +248,6 @@ public class PaPanel extends JSplitPane {
   /**
    * Get the set of pointer keys that should be presented below an instance key in the heap tree. Override if you have special
    * pointer keys (not just for fields)
-   * 
-   * @param ik
    */
   protected List<? extends PointerKey> getPointerKeysUnderInstanceKey(InstanceKey ik) {
     int ikIndex = pa.getInstanceKeyMapping().getMappedIndex(ik);
@@ -268,10 +263,6 @@ public class PaPanel extends JSplitPane {
 
   /**
    * Utility method for mutable mapping. map[index] U= o
-   * @param <T>
-   * @param map
-   * @param index
-   * @param o
    */
   protected static <T> void mapUsingMutableMapping(MutableMapping<List<T>> map, int index, T o){
     List<T> set;

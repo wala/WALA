@@ -65,10 +65,6 @@ public class IntraproceduralExceptionAnalysis {
    * You can use this method, if you don't have a call graph, but want some
    * exception analysis. But as no pointer analysis is given, we can not
    * consider throw instructions.
-   * 
-   * @param ir
-   * @param filter
-   * @param cha
    */
   @Deprecated
   public IntraproceduralExceptionAnalysis(IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha) {
@@ -78,11 +74,6 @@ public class IntraproceduralExceptionAnalysis {
   /**
    * Create and compute intraprocedural exception analysis. (IR from
    * node.getIR() will be used.)
-   * 
-   * @param node
-   * @param filter
-   * @param cha
-   * @param pointerAnalysis
    */
   public IntraproceduralExceptionAnalysis(CGNode node, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha,
       PointerAnalysis<InstanceKey> pointerAnalysis) {
@@ -91,12 +82,6 @@ public class IntraproceduralExceptionAnalysis {
 
   /**
    * Create and compute intraprocedural exception analysis.
-   * 
-   * @param ir
-   * @param filter
-   * @param cha
-   * @param pointerAnalysis
-   * @param node
    */
   public IntraproceduralExceptionAnalysis(IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha,
       PointerAnalysis<InstanceKey> pointerAnalysis, CGNode node) {
@@ -163,7 +148,6 @@ public class IntraproceduralExceptionAnalysis {
    * Returns the set of exceptions, which are to be filtered for
    * throwingInstruction.
    * 
-   * @param throwingInstruction
    * @return exceptions, which are to be filtered
    */
   private Set<TypeReference> collectFilteredExceptions(SSAInstruction throwingInstruction) {
@@ -192,7 +176,6 @@ public class IntraproceduralExceptionAnalysis {
    * This does include exceptions dispatched by throw instructions, but not
    * exceptions from method calls.
    * 
-   * @param throwingInstruction
    * @return a set of exceptions, which might be thrown from this instruction
    *         within this method
    */
@@ -239,8 +222,6 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * 
-   * @param block
    * @return an instruction which may throw exceptions, or null if this block
    *         can't throw exceptions
    */
@@ -256,7 +237,6 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * @param block
    * @return a set of all exceptions which will be caught, if thrown by the
    *         given block.
    */
@@ -287,7 +267,6 @@ public class IntraproceduralExceptionAnalysis {
    * Returns all exceptions for the given call site in the given call graph
    * node, which will be caught.
    * 
-   * @param callsite
    * @return caught exceptions
    */
   public Set<TypeReference> getCaughtExceptions(CallSiteReference callsite) {

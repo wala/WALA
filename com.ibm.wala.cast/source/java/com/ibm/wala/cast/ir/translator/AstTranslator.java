@@ -331,8 +331,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * 
    * @param node
    *          the AST node representing the read
-   * @param context
-   * @param name
    */
   protected int doLexicallyScopedRead(CAstNode node, WalkContext context, final String name, TypeReference type) {
     return doLexReadHelper(context, name, type);
@@ -370,13 +368,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * entities up to that of the defining scope, since if the name is updated via
    * a call to a nested function, SSA for these entities may need to be updated
    * with the new definition
-   * 
-   * @param context
-   * @param name
-   * @param definingScope
-   * @param E
-   * @param entityName
-   * @param isWrite
    */
   private static void markExposedInEnclosingEntities(WalkContext context, final String name, Scope definingScope, TypeReference type, CAstEntity E,
       final String entityName, boolean isWrite) {

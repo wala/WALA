@@ -144,8 +144,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * If n is relevant and its cfg has not already been added, add nodes and edges for n
-   * 
-   * @param n
    */
   @SuppressWarnings("unused")
   private void addIntraproceduralNodesAndEdgesForCGNodeIfNeeded(CGNode n) {
@@ -446,8 +444,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * add interprocedural edges to nodes in callees of n
-   * 
-   * @param n
    */
   private void addEdgesToCallees(CGNode n) {
     ControlFlowGraph<SSAInstruction, T> cfg = getCFG(n);
@@ -527,8 +523,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * add edges to nodes in callers of n
-   * 
-   * @param n
    */
   private void addCallerEdges(CGNode n) {
     final int num = cg.getNumber(n);
@@ -662,7 +656,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /**
-   * @param B
    * @return true iff basic block B ends in a call instuction
    */
   public boolean hasCall(BasicBlockInContext<T> B) {
@@ -692,7 +685,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /**
-   * @param B
    * @return the set of CGNodes that B may call, according to the governing call graph.
    * @throws IllegalArgumentException if B is null
    */

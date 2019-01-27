@@ -413,8 +413,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * If a method is declared to return a value, be sure the method summary includes a return statement. Throw an assertion if not.
-     * 
-     * @param governingMethod
      */
     private void checkReturnValue(MethodSummary governingMethod) {
       Assertions.productionAssertion(governingMethod != null);
@@ -433,8 +431,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating a call instruction
-     * 
-     * @param atts
      */
     private void processCallSite(Attributes atts) {
       String typeString = atts.getValue(A_TYPE);
@@ -508,8 +504,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating a new allocation site.
-     * 
-     * @param atts
      */
     private void processAllocation(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -555,8 +549,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating an Athrow
-     * 
-     * @param atts
      */
     private void processAthrow(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -578,8 +570,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating a putfield.
-     * 
-     * @param atts
      */
     private void processGetField(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -624,8 +614,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating a putfield.
-     * 
-     * @param atts
      */
     private void processPutField(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -666,8 +654,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating a putstatic.
-     * 
-     * @param atts
      */
     private void processPutStatic(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -700,8 +686,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating an Aastore
-     * 
-     * @param atts
      */
     private void processAastore(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -745,8 +729,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating an Aaload
-     * 
-     * @param atts
      */
     private void processAaload(Attributes atts) {
       //<aaload def="foo" ref="arg1" index="the-answer" />
@@ -792,8 +774,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element indicating a return statement.
-     * 
-     * @param atts
      */
     private void processReturn(Attributes atts) {
       Language lang = scope.getLanguage(governingLoader.getLanguage());
@@ -830,9 +810,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       return valueNumber;
     }
 
-    /**
-     * @param atts
-     */
     private void processConstant(Attributes atts) {
       String var = atts.getValue(A_NAME);
       if (var == null)
@@ -852,8 +829,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Process an element which indicates this method is "poison"
-     * 
-     * @param atts
      */
     private void processPoison(Attributes atts) {
       String reason = atts.getValue(A_REASON);
@@ -872,8 +847,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /**
      * Begin processing of a method. 1. Set the governing method. 2. Initialize the nextLocal variable
-     * 
-     * @param atts
      */
     private void startMethod(Attributes atts) {
 
@@ -962,7 +935,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     /**
      * Method classLoaderName2Ref.
      * 
-     * @param clName
      * @return ClassLoaderReference
      */
     private ClassLoaderReference classLoaderName2Ref(String clName) {
@@ -972,7 +944,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     /**
      * Method classLoaderName2Ref.
      * 
-     * @param clName
      * @return ClassLoaderReference
      */
     private TypeReference className2Ref(String clName) {

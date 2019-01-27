@@ -39,9 +39,6 @@ package demandpa;
 
 public class TestWithinMethodCall {
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
     Object o = new Object();
     testMethod(o);

@@ -77,8 +77,6 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   public Iterator<T> getPredNodes(T N, U label);
 
   /**
-   * 
-   * @param N
    * @return the labels on edges whose destination is N
    */
   public Iterator<? extends U> getPredLabels(T N);

@@ -39,7 +39,6 @@ public class GetLoadedFields {
 
   /**
    * Use the 'GetLoadedFields' launcher to run this program with the appropriate classpath
-   * @throws InvalidClassFileException
    */
   public static void main(String[] args) throws IOException, ClassHierarchyException, InvalidClassFileException {
     // build an analysis scope representing the standard libraries, excluding no classes
