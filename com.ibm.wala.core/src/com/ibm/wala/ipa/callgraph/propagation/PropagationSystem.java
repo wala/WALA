@@ -32,8 +32,6 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder.FilterOperator;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -50,7 +48,6 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.ref.ReferenceCleanser;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * System of constraints that define propagation for call graph construction
@@ -446,24 +443,20 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
     assert !klass.getReference().equals(TypeReference.JavaLangObject);
 
-    try {
-      IClass T = klass;
-      registerInstanceWithAllSuperclasses(index, T);
-      registerInstanceWithAllInterfaces(klass, index);
+    IClass T = klass;
+    registerInstanceWithAllSuperclasses(index, T);
+    registerInstanceWithAllInterfaces(klass, index);
 
-      if (klass.isArrayClass()) {
-        ArrayClass aClass = (ArrayClass) klass;
-        int dim = aClass.getDimensionality();
-        registerMultiDimArraysForArrayOfObjectTypes(dim, index, aClass);
+    if (klass.isArrayClass()) {
+      ArrayClass aClass = (ArrayClass) klass;
+      int dim = aClass.getDimensionality();
+      registerMultiDimArraysForArrayOfObjectTypes(dim, index, aClass);
 
-        IClass elementClass = aClass.getInnermostElementClass();
-        if (elementClass != null) {
-          registerArrayInstanceWithAllSuperclassesOfElement(index, elementClass, dim);
-          registerArrayInstanceWithAllInterfacesOfElement(index, elementClass, dim);
-        }
+      IClass elementClass = aClass.getInnermostElementClass();
+      if (elementClass != null) {
+        registerArrayInstanceWithAllSuperclassesOfElement(index, elementClass, dim);
+        registerArrayInstanceWithAllInterfacesOfElement(index, elementClass, dim);
       }
-    } catch (ClassHierarchyException e) {
-      Warnings.add(ClassHierarchyWarning.create(e.getMessage()));
     }
   }
 
@@ -519,7 +512,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  private void registerInstanceWithAllInterfaces(IClass klass, int index) throws ClassHierarchyException {
+  private void registerInstanceWithAllInterfaces(IClass klass, int index) {
     Collection<IClass> ifaces = klass.getAllImplementedInterfaces();
     for (IClass I : ifaces) {
       MutableIntSet set = findOrCreateSparseSetForClass(I);
@@ -530,7 +523,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  private void registerInstanceWithAllSuperclasses(int index, IClass T) throws ClassHierarchyException {
+  private void registerInstanceWithAllSuperclasses(int index, IClass T) {
     while (T != null && !T.getReference().equals(TypeReference.JavaLangObject)) {
       MutableIntSet set = findOrCreateSparseSetForClass(T);
       set.add(index);

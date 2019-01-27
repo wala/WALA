@@ -68,11 +68,11 @@ public class PDFSDG {
    * The "jar file name" should be something like
    * "c:/temp/testdata/java_cup.jar"
    */
-  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
-  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
+  public static Process run(String[] args) throws IllegalArgumentException, CancelException, IOException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"), p.getProperty("mainClass"), getDataDependenceOptions(p), getControlDependenceOptions(p));
