@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.js.translator;
 
+import java.util.List;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
@@ -300,7 +301,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       return root;
 
     } else {
-      CAstNode[] children = copyChildrenArrayAndTargets(root, cfg, READ, nodeMap);
+      final List<CAstNode> children = copyChildrenArrayAndTargets(root, cfg, READ, nodeMap);
       CAstNode copy = Ast.makeNode(kind, children);
       nodeMap.put(Pair.make(root, context.key()), copy);
       return copy;

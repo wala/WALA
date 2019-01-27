@@ -12,6 +12,8 @@ package com.ibm.wala.cast.tree.impl;
 
 import com.ibm.wala.cast.tree.CAstNode;
 
+import java.util.List;
+
 /**
  * An implementation of CAst, i.e. a simple factory for creating capa
  * ast nodes.  This class simply creates generic nodes with a kind
@@ -26,7 +28,7 @@ public class CAstValueImpl extends CAstImpl {
 
   protected static class CAstNodeValueImpl extends CAstNodeImpl {
       
-    protected CAstNodeValueImpl(int kind, CAstNode cs[]) {
+    protected CAstNodeValueImpl(int kind, List<CAstNode> cs) {
       super(kind, cs);
     }
 
@@ -43,9 +45,9 @@ public class CAstValueImpl extends CAstImpl {
     public boolean equals(Object o) {
       if (! (o instanceof CAstNode)) return false;
       if (kind != ((CAstNode)o).getKind()) return false;
-      if (((CAstNode)o).getChildCount() != cs.length) return false;
-      for(int i = 0; i < cs.length; i++)
-	if (! cs[i].equals(((CAstNode)o).getChild(i)))
+      if (((CAstNode)o).getChildCount() != cs.size()) return false;
+      for(int i = 0; i < cs.size(); i++)
+	if (! cs.get(i).equals(((CAstNode)o).getChild(i)))
 	  return false;
 
       return true;
@@ -53,7 +55,7 @@ public class CAstValueImpl extends CAstImpl {
   }
   
   @Override
-  public CAstNode makeNode(final int kind, final CAstNode[] cs) {
+  public CAstNode makeNode(final int kind, final List<CAstNode> cs) {
     return new CAstNodeValueImpl(kind, cs);
   }
 

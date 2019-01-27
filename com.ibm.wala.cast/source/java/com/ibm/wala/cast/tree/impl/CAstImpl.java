@@ -10,7 +10,8 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
-import java.util.NoSuchElementException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstLeafNode;
@@ -34,16 +35,16 @@ public class CAstImpl implements CAst {
   }
 
   protected static class CAstNodeImpl implements CAstNode {
-    protected final CAstNode[] cs;
+    protected final List<CAstNode> cs;
 
     protected final int kind;
 
-    protected CAstNodeImpl(int kind, CAstNode[] cs) {
+    protected CAstNodeImpl(int kind, List<CAstNode> cs) {
       this.kind = kind;
       this.cs = cs;
 
-      for (int i = 0; i < cs.length; i++)
-        assert cs[i] != null : "argument " + i + " is null for node kind " + kind + " [" + CAstPrinter.entityKindAsString(kind)
+      for (int i = 0; i < cs.size(); i++)
+        assert cs.get(i) != null : "argument " + i + " is null for node kind " + kind + " [" + CAstPrinter.entityKindAsString(kind)
             + ']';
     }
 
@@ -58,17 +59,8 @@ public class CAstImpl implements CAst {
     }
 
     @Override
-    public CAstNode getChild(int n) {
-      try {
-        return cs[n];
-      } catch (ArrayIndexOutOfBoundsException e) {
-        throw new NoSuchElementException(n + " of " + CAstPrinter.print(this));
-      }
-    }
-
-    @Override
-    public int getChildCount() {
-      return cs.length;
+    public List<CAstNode> getChildren() {
+      return cs;
     }
 
     @Override
@@ -90,7 +82,7 @@ public class CAstImpl implements CAst {
   }
 
   @Override
-  public CAstNode makeNode(final int kind, final CAstNode[] cs) {
+  public CAstNode makeNode(final int kind, final List<CAstNode> cs) {
     return new CAstNodeImpl(kind, cs);
   }
 
@@ -135,6 +127,11 @@ public class CAstImpl implements CAst {
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6) {
     return makeNode(kind, new CAstNode[] { c1, c2, c3, c4, c5, c6 });
+  }
+
+  @Override
+  public CAstNode makeNode(int kind, CAstNode... cs) {
+    return makeNode(kind, Arrays.asList(cs));
   }
 
   protected static class CAstValueImpl implements CAstLeafNode {

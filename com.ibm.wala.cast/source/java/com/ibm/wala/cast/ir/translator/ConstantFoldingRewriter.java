@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.ir.translator;
 
+import java.util.List;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAst;
@@ -67,7 +68,7 @@ public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyi
       result = root;
       
     } else {
-      CAstNode[] children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
+      List<CAstNode> children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
       CAstNode copy = Ast.makeNode(root.getKind(), children);
       result = copy;
     }
