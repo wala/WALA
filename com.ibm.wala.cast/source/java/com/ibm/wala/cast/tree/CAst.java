@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree;
 
+import java.util.List;
+
 /**
  *  The main interface for creating CAPA Abstract Syntax Trees.  This
  * interface provides essentially a factory for creating AST nodes in
@@ -46,10 +48,13 @@ public interface CAst {
   CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6);
 
   /** Make a node of type kind specifying an array of children. */
-  CAstNode makeNode(int kind, CAstNode[] cs);
+  CAstNode makeNode(int kind, CAstNode... cs);
 
   /** Make a node of type kind giving a first child and array of the rest. */
   CAstNode makeNode(int kind, CAstNode firstChild, CAstNode[] otherChildren);
+
+  /** Make a node of type kind specifying a list of children. */
+  CAstNode makeNode(int kind, List<CAstNode> cs);
 
   /** Make a boolean constant node. */
   CAstNode makeConstant(boolean value);

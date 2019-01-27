@@ -34,7 +34,7 @@ public class TestCAstPattern extends WalaTestCase {
     private final Map<String, Object> testNameMap = new HashMap<>();
 
     @Override
-    public CAstNode makeNode(int kind, CAstNode children[]) {
+    public CAstNode makeNode(int kind, CAstNode... children) {
       if (kind == NAME_ASSERTION_SINGLE || kind == NAME_ASSERTION_MULTI) {
         assert children.length == 2;
         final Object child0Value = children[0].getValue();

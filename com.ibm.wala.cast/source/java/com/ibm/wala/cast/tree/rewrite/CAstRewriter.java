@@ -15,9 +15,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -132,22 +134,19 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
   }
 
   protected CAstNode copySubtreesIntoNewNode(CAstNode n, CAstControlFlowMap cfg, C c, Map<Pair<CAstNode, K>, CAstNode> nodeMap, Pair<CAstNode, K> pairKey) {
-    CAstNode[] newChildren = copyChildrenArray(n, cfg, c, nodeMap);
+    final List<CAstNode> newChildren = copyChildrenArray(n, cfg, c, nodeMap);
     CAstNode newN = Ast.makeNode(n.getKind(), newChildren);
     assert !nodeMap.containsKey(pairKey);
     nodeMap.put(pairKey, newN);
     return newN;
   }
 
-  protected CAstNode[] copyChildrenArray(CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
-    CAstNode[] newChildren = new CAstNode[n.getChildCount()];
-    for (int i = 0; i < newChildren.length; i++)
-      newChildren[i] = copyNodes(n.getChild(i), cfg, context, nodeMap);
-    return newChildren;
+  protected List<CAstNode> copyChildrenArray(CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
+    return n.getChildren().stream().map(child -> copyNodes(child, cfg, context, nodeMap)).collect(Collectors.toList());
   }
 
-  protected CAstNode[] copyChildrenArrayAndTargets(CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
-    CAstNode[] children = copyChildrenArray(n, cfg, context, nodeMap);
+  protected List<CAstNode> copyChildrenArrayAndTargets(CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
+    final List<CAstNode> children = copyChildrenArray(n, cfg, context, nodeMap);
     if (cfg != null) {
       final Collection<Object> targetLabels = cfg.getTargetLabels(n);
       if (targetLabels != null)

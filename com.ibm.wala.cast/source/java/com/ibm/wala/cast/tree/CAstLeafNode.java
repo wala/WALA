@@ -1,6 +1,7 @@
 package com.ibm.wala.cast.tree;
 
-import java.util.NoSuchElementException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Convenience interface for implementing an AST node with no children
@@ -8,13 +9,8 @@ import java.util.NoSuchElementException;
 public interface CAstLeafNode extends CAstNode {
 
     @Override
-    default CAstNode getChild(int n) {
-        throw new NoSuchElementException("leaf AST node has no children");
-    }
-
-    @Override
-    default int getChildCount() {
-        return 0;
+    default List<CAstNode> getChildren() {
+        return Collections.emptyList();
     }
 
 }

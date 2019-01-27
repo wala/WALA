@@ -249,7 +249,7 @@ public class ArgumentSpecialization {
               } 
               
               if (result == null) {
-                CAstNode[] children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
+                final List<CAstNode> children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
                 CAstNode copy = Ast.makeNode(root.getKind(), children);
                 result = copy;
               }
