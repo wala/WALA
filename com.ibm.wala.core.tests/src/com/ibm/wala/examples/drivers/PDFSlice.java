@@ -90,14 +90,15 @@ public class PDFSlice {
    * <li>"method name" should be the name of a method. This takes a slice from the statement that calls "srcCallee" from "srcCaller"
    * <li>"data dependence options" can be one of "-full", "-no_base_ptrs", "-no_base_no_heap", "-no_heap",
    * "-no_base_no_heap_no_cast", or "-none".
+   * <li>"control dependence options" can be "-full" or "-none"
+   * <li>the -dir argument tells whether to compute a forwards or backwards slice.
    * </ul>
    * 
    * @throws CancelException
    * @throws IllegalArgumentException
    * @throws IOException
    * 
-   * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions <li>"control dependence options" can be "-full" or "-none" <li>the
-   *      -dir argument tells whether to compute a forwards or backwards slice. </ul>
+   * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
    * 
    */
   public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {

@@ -144,7 +144,8 @@ public class PDFControlDependenceGraph {
    * <li> args[0] : "-appJar"
    * <li> args[1] : something like "c:/temp/testdata/java_cup.jar"
    * <li> args[2] : "-sig"
-   * <li> args[3] : a method signature like "java_cup.lexer.advance()V" </ul?
+   * <li> args[3] : a method signature like "java_cup.lexer.advance()V"
+   * </ul>
    * 
    * @param args
    * @throws UnsupportedOperationException

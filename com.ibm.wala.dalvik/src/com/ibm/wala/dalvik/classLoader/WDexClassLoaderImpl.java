@@ -68,7 +68,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * ClassLoader for Java & Dalvik.
+ * ClassLoader for Java &amp; Dalvik.
  *
  */
 public class WDexClassLoaderImpl extends ClassLoaderImpl {

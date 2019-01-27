@@ -25,7 +25,7 @@ public class IntegerUnionFind {
    * 
    * parent[i+1] =
    * <ul>
-   * &lt;li&gt;j &gt; 0 if i is in the same equiv class as j
+   * <li>j &gt; 0 if i is in the same equiv class as j
    * <li>j &lt;= 0 if i is the representative of a class of size -(j)+1
    * </ul>
    * 

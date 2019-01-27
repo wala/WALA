@@ -177,7 +177,8 @@ public class PDFCallGraph {
    * Usage:
    * <ul>
    * <li>args[0] : "-appJar"
-   * <li> args[1] : something like "c:/temp/testdata/java_cup.jar" </ul?
+   * <li> args[1] : something like "c:/temp/testdata/java_cup.jar"
+   * </ul>
    * 
    * @throws UnsupportedOperationException if command-line is malformed.
    */

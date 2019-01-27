@@ -210,6 +210,7 @@ public class PDFSDG {
    * <li> args[1] : something like "c:/temp/testdata/java_cup.jar"
    * <li> args[2] : "-mainClass"
    * <li> args[3] : something like "Lslice/TestRecursion"
+   * </ul>
    * 
    * @throws UnsupportedOperationException
    *             if command-line is malformed.

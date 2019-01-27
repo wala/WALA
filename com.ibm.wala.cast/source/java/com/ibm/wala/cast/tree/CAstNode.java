@@ -46,7 +46,7 @@ public interface CAstNode {
   // statement kinds
   /**
    * Represents a standard case statement. Children:
-   * </ul>
+   * <ul>
    *   <li>condition expression
    *   <li>BLOCK_STMT containing all the cases
    * </ul>

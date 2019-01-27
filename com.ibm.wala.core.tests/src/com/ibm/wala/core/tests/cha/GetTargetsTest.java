@@ -88,7 +88,7 @@ public class GetTargetsTest extends WalaTestCase {
   }
 
   /**
-   * test that calls to <init> methods are treated specially 
+   * test that calls to &lt;init&gt; methods are treated specially
    */
   @Test public void testObjInit() {
     MethodReference m = MethodReference.findOrCreate(TypeReference.JavaLangObject, MethodReference.initSelector);

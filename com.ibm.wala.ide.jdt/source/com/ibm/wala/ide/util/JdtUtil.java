@@ -115,7 +115,7 @@ public class JdtUtil {
    * used as a handle to create JavaElement by 'JavaCore.create(String)'
    * 
    * For example, suppose we have the method 'fooPackage.barPackage.FooClass.fooMethod(int)' which is in the 'FooProject' and source
-   * folder 'src' the handle would be '=FooProject/src<fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
+   * folder 'src' the handle would be '=FooProject/src&lt;fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
    * 
    * @param javaElt
    * @throws IllegalArgumentException if javaElt is null
