@@ -650,9 +650,6 @@
     <inspection_tool class="UnnecessaryInheritDoc" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryInitCause" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryInterfaceModifier" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="UnnecessaryJavaDocLink" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoreInlineLinkToSuper" value="false" />
-    </inspection_tool>
     <inspection_tool class="UnnecessaryLabelJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryLabelOnBreakStatement" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryLabelOnBreakStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
