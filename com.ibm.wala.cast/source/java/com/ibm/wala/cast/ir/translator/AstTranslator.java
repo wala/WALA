@@ -3051,12 +3051,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
  
   /**
    * record that in entity e, the access is performed.
-   * 
-   * If {@link #useLocalValuesForLexicalVars()} is true, the access is performed
-   * using a local variable. in
-   * {@link #patchLexicalAccesses(SSAInstruction[], Set)}, this information is
-   * used to update an instruction that performs all the accesses at the
-   * beginning of the method and defines the locals.
    */
   private static void addAccess(WalkContext context, CAstEntity e, Access access) {
     context.getAccesses(e).add(access);
@@ -3073,9 +3067,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    *          an entity in whose scope name is assigned a value number
    * @param declaration
    *          the declaring entity for name (possibly an enclosing scope of
-   *          entity, in the case where entity
-   *          {@link #useLocalValuesForLexicalVars() accesses the name via a
-   *          local})
+   *          entity)
    * @param name
    *          the accessed name
    * @param valueNumber
