@@ -13,6 +13,7 @@ package com.ibm.wala.cast.tree.impl;
 import java.util.NoSuchElementException;
 
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstLeafNode;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.util.CAstPrinter;
 
@@ -136,7 +137,7 @@ public class CAstImpl implements CAst {
     return makeNode(kind, new CAstNode[] { c1, c2, c3, c4, c5, c6 });
   }
 
-  protected static class CAstValueImpl implements CAstNode {
+  protected static class CAstValueImpl implements CAstLeafNode {
     protected final Object value;
 
     protected CAstValueImpl(Object value) {
@@ -151,16 +152,6 @@ public class CAstImpl implements CAst {
     @Override
     public Object getValue() {
       return value;
-    }
-
-    @Override
-    public CAstNode getChild(int n) {
-      throw new NoSuchElementException();
-    }
-
-    @Override
-    public int getChildCount() {
-      return 0;
     }
 
     @Override
