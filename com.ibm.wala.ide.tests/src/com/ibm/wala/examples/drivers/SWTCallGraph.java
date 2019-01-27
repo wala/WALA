@@ -61,7 +61,7 @@ public class SWTCallGraph {
    * If it's a directory, then we'll try to find all jar files under that
    * directory.
    */
-  public static void main(String[] args) throws WalaException {
+  public static void main(String[] args) {
     Properties p = CommandLine.parse(args);
     PDFCallGraph.validateCommandLine(p);
     run(p);
@@ -80,7 +80,7 @@ public class SWTCallGraph {
    *            </ul>
    *            </ul>
    */
-  public static ApplicationWindow run(Properties p) throws WalaException {
+  public static ApplicationWindow run(Properties p) {
 
     try {
       String appJar = p.getProperty("appJar");

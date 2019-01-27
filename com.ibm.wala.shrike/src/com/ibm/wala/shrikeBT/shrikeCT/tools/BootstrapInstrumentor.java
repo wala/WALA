@@ -13,7 +13,6 @@ package com.ibm.wala.shrikeBT.shrikeCT.tools;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import com.ibm.wala.shrikeBT.ConstantInstruction;
@@ -132,7 +131,7 @@ public class BootstrapInstrumentor {
    * Print a class.
    * @throws IllegalArgumentException if cr is null
    */
-  public Set<MethodData> doClass(final ClassInstrumenter ci) throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+  public Set<MethodData> doClass(final ClassInstrumenter ci) throws InvalidClassFileException, InvalidBytecodeException, SecurityException, IllegalArgumentException {
     ClassReader cr = ci.getReader();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     cr.initClassAttributeIterator(attrs);

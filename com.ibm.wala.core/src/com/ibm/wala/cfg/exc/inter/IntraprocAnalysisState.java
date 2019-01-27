@@ -72,8 +72,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
    *          the node itself
    */
   IntraprocAnalysisState(final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra, final CGNode node,
-      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg, final int deletedEdges)
-      throws UnsoundGraphException, CancelException {
+      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg, final int deletedEdges) {
     this.cfg = cfg;
     this.noAnalysisPossible = false;
     this.deletedEdges = deletedEdges;
