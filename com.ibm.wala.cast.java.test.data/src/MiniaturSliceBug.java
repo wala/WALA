@@ -46,7 +46,6 @@ final class IntWrapper extends PrimitiveWrapper {
   }
 	
   /**
-   * {@inheritDoc}
    * @see com.ibm.miniatur.tests.sequential.PrimitiveWrapper#intValue()
    */
   
@@ -57,7 +56,6 @@ final class IntWrapper extends PrimitiveWrapper {
   }
 
   /**
-   * {@inheritDoc}
    * @see com.ibm.miniatur.tests.sequential.PrimitiveWrapper#setIntValue(int)
    */
   
@@ -68,7 +66,6 @@ final class IntWrapper extends PrimitiveWrapper {
   }
 	
   /**
-   * {@inheritDoc}
    * @see com.ibm.miniatur.tests.sequential.PrimitiveWrapper#equals(java.lang.Object)
    */
   
