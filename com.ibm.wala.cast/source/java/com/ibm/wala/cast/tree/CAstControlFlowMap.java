@@ -12,8 +12,6 @@ package com.ibm.wala.cast.tree;
 
 import java.util.Collection;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  * The control flow information for the CAPA AST of a particular entity. An ast
  * may contain various nodes that pertain to control flow---such as gotos,
@@ -38,7 +36,7 @@ public interface CAstControlFlowMap {
    * A distinguished target that means this control flow is the target of an
    * uncaught exception.
    */
-  public static final CAstNode EXCEPTION_TO_EXIT = new CAstNode() {
+  public static final CAstNode EXCEPTION_TO_EXIT = new CAstLeafNode() {
     @Override
     public int getKind() {
       return CAstNode.CONSTANT;
@@ -47,17 +45,6 @@ public interface CAstControlFlowMap {
     @Override
     public Object getValue() {
       return this;
-    }
-
-    @Override
-    public CAstNode getChild(int n) {
-      Assertions.UNREACHABLE();
-      return null;
-    }
-
-    @Override
-    public int getChildCount() {
-      return 0;
     }
 
     @Override

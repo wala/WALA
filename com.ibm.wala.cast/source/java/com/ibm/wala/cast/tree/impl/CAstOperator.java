@@ -10,8 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import java.util.NoSuchElementException;
-
+import com.ibm.wala.cast.tree.CAstLeafNode;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**
@@ -22,7 +21,7 @@ import com.ibm.wala.cast.tree.CAstNode;
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public class CAstOperator implements CAstNode {
+public class CAstOperator implements CAstLeafNode {
   private final String op;
   
   protected CAstOperator(String op) { 
@@ -42,16 +41,6 @@ public class CAstOperator implements CAstNode {
   @Override
   public Object getValue() { 
     return op;
-  }
-  
-  @Override
-  public CAstNode getChild(int n) {
-    throw new NoSuchElementException(); 
-  }
-    
-  @Override
-  public int getChildCount() { 
-    return 0; 
   }
 
   /*
