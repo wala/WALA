@@ -286,7 +286,6 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
 	 *    a. LOAD_AS_FILE(DIR/X)
 	 *    b. LOAD_AS_DIRECTORY(DIR/X)
 	 * 
-	 * @param dir
 	 * @param target
 	 * @throws IOException
 	 */

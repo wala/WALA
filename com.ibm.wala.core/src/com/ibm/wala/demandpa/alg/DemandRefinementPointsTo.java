@@ -536,9 +536,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return getFlowsToInternal(ikAndState);
   }
 
-  /**
-   * @param ik
-   */
   private Pair<PointsToResult, Collection<PointerKey>> getFlowsToInternal(InstanceKeyAndState ikAndState) {
     InstanceKey ik = ikAndState.getInstanceKey();
     if (!(ik instanceof InstanceKeyWithNode)) {
@@ -1256,7 +1253,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * handle flow from actuals to formals, and from returned values to variables at the caller
      * 
-     * @param curPk
+     * @param curPkAndState
      * @param handler
      */
     private void handleForwInterproc(final PointerKeyAndState curPkAndState, final CopyHandler handler) {

@@ -383,9 +383,6 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
    * Scalar dependences are taken from SSA def-use information.
    * 
    * Heap dependences are computed by a reaching defs analysis.
-   * 
-   * @param pa
-   * @param mod
    */
   private void createScalarDataDependenceEdges(IR ir, Map<SSAInstruction, Integer> instructionIndices) {
     if (dOptions.equals(DataDependenceOptions.NONE)) {
@@ -882,10 +879,6 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * create nodes representing defs of the return values
-   * 
-   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically parameters in the
-   *          SDG.
-   * @param dOptions
    */
   private void createReturnStatements() {
     ArrayList<Statement> list = new ArrayList<>();
@@ -912,8 +905,6 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   /**
    * create nodes representing defs of formal parameters
-   * 
-   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    */
   private void createCalleeParams() {
     if (paramCalleeStatements == null) {

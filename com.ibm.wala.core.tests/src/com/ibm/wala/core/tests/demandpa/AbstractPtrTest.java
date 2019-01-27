@@ -260,7 +260,6 @@ public abstract class AbstractPtrTest {
   }
 
   /**
-   * @param scopeFile
    * @throws IOException
    */
   private AnalysisScope findOrCreateAnalysisScope() throws IOException {

@@ -125,7 +125,6 @@ public class AndroidPreFlightChecks {
      *
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextSelector
-     *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.Overrides.StartComponentMethodTargetSelector
      *
      *  @return if check passed
      *  TODO: this doesn't check anything yet

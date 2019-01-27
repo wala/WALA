@@ -163,7 +163,6 @@ public class IntraproceduralExceptionAnalysis {
    * Returns the set of exceptions, which are to be filtered for
    * throwingInstruction.
    * 
-   * @param node
    * @param throwingInstruction
    * @return exceptions, which are to be filtered
    */
