@@ -94,7 +94,7 @@ public class IFDSExplorer {
   }
 
   /**
-   * Calls {@link #viewIFDS(TabulationResult)} with roots computed by {@link InferGraphRoots}.
+   * Calls {@link #viewIFDS(TabulationResult, Collection)} with roots computed by {@link InferGraphRoots}.
    */
   public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r) throws WalaException {
     if (r == null) {
