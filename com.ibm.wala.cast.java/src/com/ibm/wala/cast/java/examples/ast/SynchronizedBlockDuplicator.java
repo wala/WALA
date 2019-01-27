@@ -51,8 +51,8 @@ public class SynchronizedBlockDuplicator extends
     private CAstNode syncNode;
 
     /**
-     * key associated with the {@link RewriteContext context} of the parent AST
-     * node of the synchronized block
+     * key associated with the {@link com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext context} of the parent
+     * AST node of the synchronized block
      */
     private UnwindKey rest;
 
