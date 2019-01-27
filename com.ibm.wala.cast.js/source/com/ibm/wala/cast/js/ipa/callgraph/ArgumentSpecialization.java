@@ -249,15 +249,7 @@ public class ArgumentSpecialization {
               } 
               
               if (result == null) {
-                CAstNode children[] = new CAstNode[root.getChildCount()];
-                for (int i = 0; i < children.length; i++) {
-                  children[i] = copyNodes(root.getChild(i), cfg, context, nodeMap);
-                }
-                for(Object label: cfg.getTargetLabels(root)) {
-                  if (label instanceof CAstNode) {
-                    copyNodes((CAstNode)label, cfg, context, nodeMap);
-                  }
-                }
+                CAstNode[] children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
                 CAstNode copy = Ast.makeNode(root.getKind(), children);
                 result = copy;
               }

@@ -127,6 +127,37 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    */
   protected abstract CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap);
 
+  protected CAstNode copySubtreesIntoNewNode(CAstNode n, CAstControlFlowMap cfg, C c, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
+    return copySubtreesIntoNewNode(n, cfg, c, nodeMap, Pair.make(n, c.key()));
+  }
+
+  protected CAstNode copySubtreesIntoNewNode(CAstNode n, CAstControlFlowMap cfg, C c, Map<Pair<CAstNode, K>, CAstNode> nodeMap, Pair<CAstNode, K> pairKey) {
+    CAstNode[] newChildren = copyChildrenArray(n, cfg, c, nodeMap);
+    CAstNode newN = Ast.makeNode(n.getKind(), newChildren);
+    assert !nodeMap.containsKey(pairKey);
+    nodeMap.put(pairKey, newN);
+    return newN;
+  }
+
+  protected CAstNode[] copyChildrenArray(CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
+    CAstNode[] newChildren = new CAstNode[n.getChildCount()];
+    for (int i = 0; i < newChildren.length; i++)
+      newChildren[i] = copyNodes(n.getChild(i), cfg, context, nodeMap);
+    return newChildren;
+  }
+
+  protected CAstNode[] copyChildrenArrayAndTargets(CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
+    CAstNode[] children = copyChildrenArray(n, cfg, context, nodeMap);
+    if (cfg != null) {
+      final Collection<Object> targetLabels = cfg.getTargetLabels(n);
+      if (targetLabels != null)
+        for (Object label : targetLabels)
+          if (label instanceof CAstNode)
+            copyNodes((CAstNode) label, cfg, context, nodeMap);
+    }
+    return children;
+  }
+
   /**
    * in {@link #copyFlow(Map, CAstControlFlowMap, CAstSourcePositionMap)}, if
    * the source of some original CFG edge is replicated, but we find no replica

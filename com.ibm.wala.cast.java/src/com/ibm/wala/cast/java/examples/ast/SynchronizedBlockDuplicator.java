@@ -229,15 +229,7 @@ public class SynchronizedBlockDuplicator extends
     } else {
       // invoke copyNodes() on the children with context c, ensuring, e.g., that
       // the body of a synchronized block gets cloned
-      CAstNode[] newChildren = new CAstNode[n.getChildCount()];
-      for (int i = 0; i < newChildren.length; i++)
-        newChildren[i] = copyNodes(n.getChild(i), cfg, c, nodeMap);
-
-      CAstNode newN = Ast.makeNode(n.getKind(), newChildren);
-
-      nodeMap.put(Pair.make(n, c.key()), newN);
-
-      return newN;
+      return copySubtreesIntoNewNode(n, cfg, c, nodeMap);
     }
   }
 }
