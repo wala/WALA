@@ -139,8 +139,6 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
 
     /**
-     *  {@inheritDoc}
-     *
      *  @param  asParameterTo   not considered
      *  @param  inCall          not considered
      *  @param  withName        not considered

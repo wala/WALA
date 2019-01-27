@@ -114,9 +114,6 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     throw new UnsupportedOperationException();
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder("<");

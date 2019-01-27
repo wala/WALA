@@ -136,10 +136,7 @@ public class Overrides {
             this.child = child;
         }
 
-       /**
-         * {@inheritDoc}
-         */
-        @Override
+       @Override
         public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
             /*if (caller == null) {
                 throw new IllegalArgumentException("caller is null");
