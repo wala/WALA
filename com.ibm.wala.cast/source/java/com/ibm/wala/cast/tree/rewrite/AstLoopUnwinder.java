@@ -138,15 +138,7 @@ public class AstLoopUnwinder
 			  
       return code;
     } else {
-	CAstNode[] newChildren = new CAstNode[ n.getChildCount() ];
-	for(int i = 0; i < newChildren.length; i++) 
-	  newChildren[i] = copyNodes(n.getChild(i), cfg, c, nodeMap);
-			  
-	CAstNode newN = Ast.makeNode(n.getKind(), newChildren);
-			  			
-	nodeMap.put(Pair.make(n, c.key()), newN);
-	
-	return newN; 
+        return copySubtreesIntoNewNode(n, cfg, c, nodeMap);
     }
   }	  
 }

@@ -37,8 +37,12 @@ public class CAstCloner extends CAstBasicRewriter<CAstBasicRewriter.NonCopyingCo
   }
 
   @Override
-  protected CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
-    final Pair<CAstNode, NoKey> pairKey = Pair.make(root, c.key());
+  protected CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
+    final Pair<CAstNode, NoKey> pairKey = Pair.make(root, context.key());
+    return copyNodes(root, cfg, context, nodeMap, pairKey);
+  }
+
+  protected CAstNode copyNodes(CAstNode root, CAstControlFlowMap cfg, NonCopyingContext context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap, Pair<CAstNode, NoKey> pairKey) {
     if (root instanceof CAstOperator) {
       nodeMap.put(pairKey, root);
       return root;
@@ -48,16 +52,7 @@ public class CAstCloner extends CAstBasicRewriter<CAstBasicRewriter.NonCopyingCo
       nodeMap.put(pairKey, copy);
       return copy;
     } else {
-      CAstNode newChildren[] = new CAstNode[root.getChildCount()];
-
-      for (int i = 0; i < root.getChildCount(); i++) {
-        newChildren[i] = copyNodes(root.getChild(i), cfg, c, nodeMap);
-      }
-
-      CAstNode copy = Ast.makeNode(root.getKind(), newChildren);
-      assert !nodeMap.containsKey(pairKey);
-      nodeMap.put(pairKey, copy);
-      return copy;
+      return copySubtreesIntoNewNode(root, cfg, context, nodeMap, pairKey);
     }
   }
 

@@ -300,15 +300,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       return root;
 
     } else {
-      CAstNode children[] = new CAstNode[root.getChildCount()];
-      for (int i = 0; i < children.length; i++) {
-        children[i] = copyNodes(root.getChild(i), cfg, READ, nodeMap);
-      }
-      for(Object label: cfg.getTargetLabels(root)) {
-        if (label instanceof CAstNode) {
-          copyNodes((CAstNode)label, cfg, READ, nodeMap);
-        }
-      }
+      CAstNode[] children = copyChildrenArrayAndTargets(root, cfg, READ, nodeMap);
       CAstNode copy = Ast.makeNode(kind, children);
       nodeMap.put(Pair.make(root, context.key()), copy);
       return copy;
