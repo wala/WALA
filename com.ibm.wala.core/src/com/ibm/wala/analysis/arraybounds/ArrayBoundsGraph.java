@@ -56,7 +56,7 @@ import com.ibm.wala.util.collections.Pair;
  * 
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
-@SuppressWarnings("JavadocReference")
+@SuppressWarnings({ "JavadocReference", "javadoc" })
 public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	/**
 	 * We need a ssa variable representing zero. So we just use an integer,

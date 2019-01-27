@@ -156,6 +156,7 @@ public class EclipseFileProvider extends FileProvider {
    * 
    * @return an escaped version of the URL
    */
+  @SuppressWarnings("javadoc")
   private static URL fixupFileURLSpaces(URL url) {
     String urlString = url.toExternalForm();
     StringBuilder fixedUpUrl = new StringBuilder();

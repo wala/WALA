@@ -51,7 +51,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * Should the graph include call-to-return edges? When set to {@code false}, the graphs output by
    * {@link com.ibm.wala.ide.ui.IFDSExplorer} look incorrect
    */
-  @SuppressWarnings("JavadocReference")
+  @SuppressWarnings({ "JavadocReference", "javadoc" })
   private final static boolean CALL_TO_RETURN_EDGES = true;
 
   /**

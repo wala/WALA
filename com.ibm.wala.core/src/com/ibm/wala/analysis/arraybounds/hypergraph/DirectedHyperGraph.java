@@ -12,8 +12,6 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
  * more than one head and more than one tail.
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
- *
- * @param <T>
  */
 public class DirectedHyperGraph<T> {
 	private final Map<T, HyperNode<T>> nodes;

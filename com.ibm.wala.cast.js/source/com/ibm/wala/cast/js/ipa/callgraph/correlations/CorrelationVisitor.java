@@ -15,8 +15,6 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations;
  * Visitor class for performing case analysis on {@link Correlation}s.
  * 
  * @author mschaefer
- *
- * @param <T>
  */
 public interface CorrelationVisitor<T> {
   public T visitReadWriteCorrelation(ReadWriteCorrelation rwc);

@@ -46,8 +46,6 @@ import java.util.NoSuchElementException;
 /**
  * A set implementation backed by an array. This implementation is space-efficient for small sets, but several operations like
  * {@link #contains(Object)} are linear time.
- * 
- * @param <T>
  */
 
 public class ArraySet<T> extends AbstractSet<T> {

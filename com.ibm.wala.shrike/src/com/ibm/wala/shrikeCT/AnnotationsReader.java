@@ -71,9 +71,7 @@ public class AnnotationsReader extends AttributeReader {
    * Marker interface for possible element values in an annotation attribute.
    * 
    * @see AnnotationsReader#readElementValueAndSize(int)
-   * 
    */
-  @SuppressWarnings("javadoc")
   public static interface ElementValue {
   }
 

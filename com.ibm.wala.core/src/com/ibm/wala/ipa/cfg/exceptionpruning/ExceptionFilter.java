@@ -8,8 +8,6 @@ import java.util.Collection;
  * package-info.
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
- *
- * @param <Instruction>
  */
 public interface ExceptionFilter<Instruction> {
 	/**
