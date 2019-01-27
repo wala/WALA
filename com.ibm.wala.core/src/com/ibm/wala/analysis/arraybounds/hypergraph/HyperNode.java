@@ -9,8 +9,6 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
  * A HyperNode is a node of a {@link DirectedHyperGraph}.
  * 
  * @author Stephan Gocht {@code <stephan@gobro.de>}
- *
- * @param <T>
  */
 public class HyperNode<T> {
 	private Weight weight;
