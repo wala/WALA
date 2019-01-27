@@ -111,13 +111,11 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * @return an array TypeAnnotationAttribute[] corresponding to the annotations[num_annotations] table
    * specified as:
    * <pre>
-   * {@code
    * RuntimeVisibleTypeAnnotations_attribute {
    *   u2              attribute_name_index;
    *   u4              attribute_length;
    *   u2              num_annotations;
    *   type_annotation annotations[num_annotations];
-   * }
    * }
    * </pre>
    * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.20"> JLS (SE8), 4.7.20</a>
@@ -140,7 +138,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * @return a Pair (a,i) such that "i" is the number of bytes read in order to construct "a", which is
    * the {@link TypeAnnotationAttribute} that corresponds to the type_annotation structure at offset begin specified as:  
    * <pre>
-   * {@code
    * type_annotation {
    *   u1 target_type;
    *   union {
@@ -161,7 +158,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    *   {   u2            element_name_index;
    *       element_value value;
    *   } element_value_pairs[num_element_value_pairs];
-   * }
    * }
    * </pre> 
    * 
@@ -392,7 +388,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
   /**
    * A {@link TypeAnnotationTarget} represents one of the possible target_info structure 
    * <pre>
-   * {@code
    * union {
    *     type_parameter_target;
    *     supertype_target;
@@ -405,7 +400,6 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    *     offset_target;
    *     type_argument_target;
    * } target_info;
-   * }
    * </pre>
    * @author Martin Hecker martin.hecker@kit.edu  
    */
