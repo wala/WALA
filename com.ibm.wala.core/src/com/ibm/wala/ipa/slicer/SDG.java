@@ -171,7 +171,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     if (!eagerComputed) {
       eagerComputed = true;
       computeAllPDGs();
-      for (PDG pdg : pdgMap.values()) {
+      for (PDG<?> pdg : pdgMap.values()) {
         addPDGStatementNodes(pdg.getCallGraphNode());
       }
     }

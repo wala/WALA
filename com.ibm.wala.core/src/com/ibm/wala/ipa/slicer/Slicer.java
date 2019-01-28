@@ -194,21 +194,21 @@ public class Slicer {
   /**
    * Use the passed-in SDG
    */
-  public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
+  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Statement s) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), true);
   }
 
   /**
    * Use the passed-in SDG
    */
-  public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
+  public static Collection<Statement> computeForwardSlice(SDG<?> sdg, Statement s) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), false);
   }
 
   /**
    * Use the passed-in SDG
    */
-  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss) throws IllegalArgumentException,
+  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Collection<Statement> ss) throws IllegalArgumentException,
       CancelException {
     return computeSlice(sdg, ss, true);
   }
@@ -216,7 +216,7 @@ public class Slicer {
   /**
    * @param ss a collection of statements of interest
    */
-  protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, boolean backward) throws CancelException {
+  protected static Collection<Statement> computeSlice(SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
     }
@@ -231,7 +231,7 @@ public class Slicer {
    * @param backward do a backwards slice?
    * @return the {@link Statement}s found by the slicer
    */
-  public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward) throws CancelException {
+  public Collection<Statement> slice(SDG<?> sdg, Collection<Statement> roots, boolean backward) throws CancelException {
     return slice(sdg, roots, backward, null);
   }
 
@@ -244,7 +244,7 @@ public class Slicer {
    * @param monitor to cancel analysis if needed
    * @return the {@link Statement}s found by the slicer
    */
-  public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
+  public Collection<Statement> slice(SDG<?> sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
       throws CancelException {
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");

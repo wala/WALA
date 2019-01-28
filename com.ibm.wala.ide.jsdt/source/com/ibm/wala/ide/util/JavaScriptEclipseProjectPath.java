@@ -65,8 +65,8 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 
 	
 	@Override
-  public EclipseProjectPath<?, ?> create(IProject project) throws CoreException, IOException {
-    EclipseProjectPath<?, ?> path = super.create(project);
+  public EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> create(IProject project) throws CoreException, IOException {
+    EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> path = super.create(project);
   
     Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
     for(Pair<String,Plugin> model : models) {

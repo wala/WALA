@@ -12,7 +12,6 @@ package com.ibm.wala.classLoader;
 
 import java.util.Collection;
 
-import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -39,7 +38,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
 
   public final static boolean buildLocalMap = true;
 
-  public ControlFlowGraph makeCFG(final IBytecodeMethod<IInstruction> method) {
+  public ShrikeCFG makeCFG(final IBytecodeMethod<IInstruction> method) {
     return ShrikeCFG.make(method);
   }
 
@@ -55,7 +54,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
     } catch (InvalidClassFileException e) {
       throw new WalaRuntimeException("bad method bytecodes", e);
     }
-    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method);
+    final ShrikeCFG shrikeCFG = makeCFG(method);
 
     final SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
     final SSAInstruction[] newInstrs = new SSAInstruction[shrikeInstructions.length];
@@ -161,7 +160,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
   }
 
   @Override
-  public boolean contextIsIrrelevant(IBytecodeMethod method) {
+  public boolean contextIsIrrelevant(IBytecodeMethod<IInstruction> method) {
     // this factory always returns the same IR for a method
     return true;
   }

@@ -118,7 +118,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final BasicBlockInContext other = (BasicBlockInContext) obj;
+    final BasicBlockInContext<?> other = (BasicBlockInContext<?>) obj;
     if (delegate == null) {
       if (other.delegate != null)
         return false;

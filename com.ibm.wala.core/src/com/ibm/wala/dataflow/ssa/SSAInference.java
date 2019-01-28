@@ -11,6 +11,9 @@
 
 package com.ibm.wala.dataflow.ssa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
@@ -46,7 +49,7 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
   /**
    * Dataflow variables, one for each value in the symbol table.
    */
-  private IVariable[] vars;
+  private List<IVariable<T>> vars;
 
   public interface OperatorFactory<T extends IVariable<T>> {
     /**
@@ -57,19 +60,19 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
     AbstractOperator<T> get(SSAInstruction instruction);
   }
 
-  public interface VariableFactory {
+  public interface VariableFactory<T extends IVariable<T>> {
     /**
      * Make the variable for a given value number.
      * 
      * @return a newly created dataflow variable, or null if not applicable.
      */
-    public IVariable makeVariable(int valueNumber);
+    IVariable<T> makeVariable(int valueNumber);
   }
 
   /**
    * initializer for SSA Inference equations.
    */
-  protected void init(IR ir, VariableFactory varFactory, OperatorFactory<T> opFactory) {
+  protected void init(IR ir, VariableFactory<T> varFactory, OperatorFactory<T> opFactory) {
 
     this.ir = ir;
     this.symbolTable = ir.getSymbolTable();
@@ -122,10 +125,13 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
   /**
    * Create a dataflow variable for each value number
    */
-  private void createVariables(VariableFactory factory) {
-    vars = new IVariable[symbolTable.getMaxValueNumber() + 1];
-    for (int i = 1; i < vars.length; i++) {
-      vars[i] = factory.makeVariable(i);
+  private void createVariables(VariableFactory<T> factory) {
+    //noinspection unchecked
+    final int varsCount = symbolTable.getMaxValueNumber() + 1;
+    vars = new ArrayList<>(varsCount);
+    vars.add(null);
+    for (int i = 1; i < varsCount; i++) {
+      vars.add(factory.makeVariable(i));
     }
 
   }
@@ -139,10 +145,10 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
       throw new IllegalArgumentException("Illegal valueNumber " + valueNumber);
     }
     if (DEBUG) {
-      System.err.println(("getVariable for " + valueNumber + " returns " + vars[valueNumber]));
+      System.err.println("getVariable for " + valueNumber + " returns " + vars.get(valueNumber));
     }
     assert vars != null : "null vars array";
-    return (T) vars[valueNumber];
+    return (T) vars.get(valueNumber);
   }
 
   /**
@@ -153,8 +159,8 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder("Type inference : \n");
-    for (int i = 0; i < vars.length; i++) {
-      result.append('v').append(i).append("  ").append(vars[i]).append('\n');
+    for (int i = 0; i < vars.size(); i++) {
+      result.append('v').append(i).append("  ").append(vars.get(i)).append('\n');
     }
     return result.toString();
   }

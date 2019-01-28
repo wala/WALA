@@ -40,7 +40,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
   }
 
   @Override
-  public Graph<PDG<InstanceKey>> getProcedureGraph() {
+  public Graph<PDG<? extends InstanceKey>> getProcedureGraph() {
     Assertions.UNREACHABLE();
     return null;
   }

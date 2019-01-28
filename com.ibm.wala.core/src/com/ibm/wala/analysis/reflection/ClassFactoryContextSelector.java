@@ -104,7 +104,7 @@ class ClassFactoryContextSelector implements ContextSelector {
       int nameVn = callee.isStatic()? 0: 1;
       if (receiver != null && receiver.length > nameVn) {
         if (receiver[nameVn] instanceof ConstantKey) {
-          ConstantKey ik = (ConstantKey) receiver[nameVn];
+          ConstantKey<?> ik = (ConstantKey<?>) receiver[nameVn];
           if (ik.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
             String className = StringStuff.deployment2CanonicalTypeString(ik.getValue().toString());
             for(IClassLoader cl : caller.getClassHierarchy().getLoaders()) {

@@ -54,9 +54,9 @@ public final class CacheReference {
       if (!(reference instanceof java.lang.ref.SoftReference)) {
         throw new IllegalArgumentException("not ( reference instanceof java.lang.ref.SoftReference ) ");
       }
-      return ((SoftReference) reference).get();
+      return ((SoftReference<?>) reference).get();
     case WEAK:
-      return ((WeakReference) reference).get();
+      return ((WeakReference<?>) reference).get();
     case HARD:
       return reference;
     default:

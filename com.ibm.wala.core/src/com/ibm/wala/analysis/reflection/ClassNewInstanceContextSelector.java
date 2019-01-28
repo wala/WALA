@@ -39,7 +39,7 @@ class ClassNewInstanceContextSelector implements ContextSelector {
   @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(receiver[0])) {
-      IClass c = (IClass) ((ConstantKey) receiver[0]).getValue();
+      IClass c = (IClass) ((ConstantKey<?>) receiver[0]).getValue();
       if (!c.isAbstract() && !c.isInterface()) {
         return new JavaTypeContext(new PointType(c));
       }
@@ -49,7 +49,7 @@ class ClassNewInstanceContextSelector implements ContextSelector {
 
   private static boolean isTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
-      ConstantKey c = (ConstantKey) instance;
+      ConstantKey<?> c = (ConstantKey<?>) instance;
       if (c.getValue() instanceof IClass) {
         return true;
       }

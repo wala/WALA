@@ -26,27 +26,27 @@ public class Util {
   /**
    * @return the last instruction in basic block b, as stored in the instruction array for cfg
    */
-  public static SSAInstruction getLastInstruction(ControlFlowGraph cfg, IBasicBlock b) {
+  public static SSAInstruction getLastInstruction(ControlFlowGraph<? extends SSAInstruction, ?> cfg, IBasicBlock<?> b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     if (cfg == null) {
       throw new IllegalArgumentException("G is null");
     }
-    return (SSAInstruction) cfg.getInstructions()[b.getLastInstructionIndex()];
+    return cfg.getInstructions()[b.getLastInstructionIndex()];
   }
 
   /**
    * Does basic block b end with a conditional branch instruction?
    */
-  public static boolean endsWithConditionalBranch(ControlFlowGraph G, IBasicBlock b) {
+  public static boolean endsWithConditionalBranch(ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
     return getLastInstruction(G, b) instanceof SSAConditionalBranchInstruction;
   }
 
   /**
    * Does basic block b end with a switch instruction?
    */
-  public static boolean endsWithSwitch(ControlFlowGraph G, IBasicBlock b) {
+  public static boolean endsWithSwitch(ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
     return getLastInstruction(G, b) instanceof SSASwitchInstruction;
   }
 
@@ -67,7 +67,7 @@ public class Util {
    * Given that b ends with a conditional branch, return the basic block to
    * which control transfers if the branch is not taken.
    */
-  public static <I, T extends IBasicBlock<I>> T getNotTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getNotTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -81,7 +81,7 @@ public class Util {
    * Given that b ends with a conditional branch, return the basic block to
    * which control transfers if the branch is taken.
    */
-  public static <I, T extends IBasicBlock<I>> T getTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -104,7 +104,7 @@ public class Util {
    * When the tested value of the switch statement in b has value c, which basic
    * block does control transfer to.
    */
-  public static <I, T extends IBasicBlock<I>> T resolveSwitch(ControlFlowGraph<I, T> G, T b, int c) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T resolveSwitch(ControlFlowGraph<I, T> G, T b, int c) {
     assert endsWithSwitch(G, b);
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
@@ -118,7 +118,7 @@ public class Util {
   /**
    * Is block s the default case for the switch instruction which is the last instruction of block b?
    */
-  public static <I, T extends IBasicBlock<I>> boolean isSwitchDefault(ControlFlowGraph<I, T> G, T b, T s) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> boolean isSwitchDefault(ControlFlowGraph<I, T> G, T b, T s) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -133,7 +133,7 @@ public class Util {
    * which case was taken? TODO: Is this correct? Can't we have multiple cases
    * that apply? Check on this.
    */
-  public static <I, T extends IBasicBlock<I>> int getSwitchLabel(ControlFlowGraph<I, T> G, T b, T s) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> int getSwitchLabel(ControlFlowGraph<I, T> G, T b, T s) {
     assert endsWithSwitch(G, b);
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = sw.getCasesAndLabels();
@@ -155,7 +155,7 @@ public class Util {
    * Callers must resolve the constant values from the {@link SymbolTable}
    * before calling this method. These integers are <b>not</b> value numbers;
    */
-  public static <I, T extends IBasicBlock<I>> T resolveBranch(ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T resolveBranch(ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
     final ConditionalBranchInstruction.Operator operator = (ConditionalBranchInstruction.Operator) c.getOperator();
     switch (operator) {

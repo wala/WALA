@@ -15,11 +15,11 @@ package com.ibm.wala.dataflow.IFDS;
  */
 public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
 
-  private final static IdentityFlowFunctions SINGLETON = new IdentityFlowFunctions();
+  private final static IdentityFlowFunctions<?> SINGLETON = new IdentityFlowFunctions<>();
 
   @SuppressWarnings("unchecked")
   public static <T> IdentityFlowFunctions<T> singleton() {
-    return SINGLETON;
+    return (IdentityFlowFunctions<T>) SINGLETON;
   }
 
   private IdentityFlowFunctions() {

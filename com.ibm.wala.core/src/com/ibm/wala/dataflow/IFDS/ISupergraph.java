@@ -39,7 +39,7 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
   /**
    * @return the graph of procedures (e.g. a call graph) over which this supergraph is induced.
    */
-  Graph<? extends P> getProcedureGraph();
+  Graph<P> getProcedureGraph();
 
   /**
    * @param n a node in this supergraph

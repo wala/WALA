@@ -16,6 +16,7 @@ import java.util.Collection;
 import com.ibm.wala.classLoader.ShrikeClass.GetReader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
@@ -43,7 +44,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * A wrapper around a Shrike object that represents a method
  */
-public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMethod {
+public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMethod<IInstruction> {
 
   /**
    * The index of this method in the declaring class's method list according to Shrike CT.
@@ -199,9 +200,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
 
     @Override
-    public int compareTo(Object o) {
-      if (o instanceof SourcePosition) {
-        SourcePosition p = (SourcePosition) o;
+    public int compareTo(SourcePosition p) {
+      if (p != null) {
         if (firstLine != p.getFirstLine()) {
           return firstLine - p.getFirstLine();
         } else if (firstCol != p.getFirstCol()) {

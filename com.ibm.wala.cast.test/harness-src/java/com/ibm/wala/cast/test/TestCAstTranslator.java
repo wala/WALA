@@ -98,14 +98,14 @@ public abstract class TestCAstTranslator extends WalaTestCase {
           }
         }
 
-        Pair<?, ?>[] instanceMethods = (Pair[]) entry[4];
+        Pair<?, ?>[] instanceMethods = (Pair<?, ?>[]) entry[4];
         if (instanceMethods != null) {
           for (Pair<?, ?> instanceMethod : instanceMethods) {
             this.instanceMethods.put(Pair.make(clsName, (Object) instanceMethod.fst), instanceMethod.snd);
           }
         }
 
-        Pair<?, ?>[] staticMethods = (Pair[]) entry[5];
+        Pair<?, ?>[] staticMethods = (Pair<?, ?>[]) entry[5];
         if (staticMethods != null) {
           for (Pair<?, ?> staticMethod : staticMethods) {
             this.staticMethods.put(Pair.make(clsName, (Object) staticMethod.fst), staticMethod.snd);

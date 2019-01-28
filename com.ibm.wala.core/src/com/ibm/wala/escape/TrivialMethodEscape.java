@@ -63,7 +63,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
       throw new IllegalArgumentException("null allocMethod");
     }
     // nodes:= set of call graph nodes representing method m
-    Set nodes = cg.getNodes(m);
+    Set<CGNode> nodes = cg.getNodes(m);
     if (nodes.size() == 0) {
       throw new WalaException("could not find call graph node for method " + m);
     }
@@ -87,7 +87,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @return true iff some instance allocated at a site N \in &lt;allocN, allocPC> might escape from some activation of a node m \in
    *         { nodes }
    */
-  private boolean mayEscape(Set<CGNode> allocN, int allocPC, Set nodes) throws WalaException {
+  private boolean mayEscape(Set<CGNode> allocN, int allocPC, Set<CGNode> nodes) throws WalaException {
     Set<InstanceKey> instances = HashSetFactory.make();
     // instances := set of instance key allocated at &lt;allocMethod, allocPC>
     for (CGNode n : allocN) {

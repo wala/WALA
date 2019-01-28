@@ -184,16 +184,14 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         }
       }
       int instructionIndex = handler.getHandler();
-      IBasicBlock b = getBlockForInstruction(instructionIndex);
-      if (!(b instanceof ExceptionHandlerBasicBlock)) {
-        assert b instanceof ExceptionHandlerBasicBlock : "not exception handler " + b + " index " + instructionIndex;
-      }
+      IBasicBlock<?> b = getBlockForInstruction(instructionIndex);
+      assert b instanceof ExceptionHandlerBasicBlock : "not exception handler " + b + " index " + instructionIndex;
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) getBlockForInstruction(instructionIndex);
       bb.addCaughtExceptionType(t);
     }
   }
 
-  private void createBasicBlocks(AbstractCFG G) {
+  private void createBasicBlocks(AbstractCFG<?, ?> G) {
     basicBlocks = new BasicBlock[G.getNumberOfNodes()];
     for (int i = 0; i <= G.getMaxNumber(); i++) {
       if (G.getCatchBlocks().get(i)) {
@@ -287,7 +285,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
      */
     @Override
     public int getFirstInstructionIndex() {
-      IBasicBlock B = delegate.getNode(number);
+      IBasicBlock<?> B = delegate.getNode(number);
       return B.getFirstInstructionIndex();
     }
 
@@ -301,7 +299,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
     @Override
     public int getLastInstructionIndex() {
-      IBasicBlock B = delegate.getNode(number);
+      IBasicBlock<?> B = delegate.getNode(number);
       return B.getLastInstructionIndex();
     }
 
@@ -857,7 +855,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
       @Override
       public BasicBlock next() {
-        IBasicBlock n = i.next();
+        IBasicBlock<?> n = i.next();
         int number = n.getNumber();
         return basicBlocks[number];
       }
@@ -899,7 +897,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
       @Override
       public ISSABasicBlock next() {
-        IBasicBlock n = i.next();
+        IBasicBlock<?> n = i.next();
         int number = n.getNumber();
         return basicBlocks[number];
       }

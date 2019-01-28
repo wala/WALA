@@ -123,7 +123,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
   /**
    * Graph view of flow of pointers between heap abstractions
    */
-  private HeapGraph heapGraph;
+  private HeapGraph<?> heapGraph;
 
   private EntrypointBuilder entrypointBuilder = this::makeDefaultEntrypoints;
 
@@ -253,7 +253,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
     return pointerAnalysis;
   }
 
-  public HeapGraph getHeapGraph() {
+  public HeapGraph<?> getHeapGraph() {
     if (heapGraph == null) {
       heapGraph = new BasicHeapGraph<>(getPointerAnalysis(), cg);
     }

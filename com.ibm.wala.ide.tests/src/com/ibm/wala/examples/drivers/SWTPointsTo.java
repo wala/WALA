@@ -66,7 +66,7 @@ public class SWTPointsTo {
       Graph<Object> g = buildPointsTo(appJar);
 
       // create and run the viewer
-      final SWTTreeViewer v = new SWTTreeViewer();
+      final SWTTreeViewer<Object> v = new SWTTreeViewer<>();
       v.setGraphInput(g);
       v.setRootsInput(InferGraphRoots.inferRoots(g));
       v.run();

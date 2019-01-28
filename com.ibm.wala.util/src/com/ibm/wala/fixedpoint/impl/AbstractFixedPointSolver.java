@@ -181,7 +181,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     System.err.println("Worklist  " + workList.size());
     if (MORE_VERBOSE) {
       if (!workList.isEmpty()) {
-        AbstractStatement s = workList.takeStatement();
+        AbstractStatement<?, ?> s = workList.takeStatement();
         System.err.println("Peek      " + lineBreak(s.toString(), 132));
         if (s instanceof VerboseAction) {
           ((VerboseAction) s).performVerboseAction();

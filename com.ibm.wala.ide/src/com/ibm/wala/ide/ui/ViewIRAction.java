@@ -22,11 +22,11 @@ import com.ibm.wala.viz.PDFViewUtil;
 /**
  * An SWT action that spawns spawns a ghostview to see the IR for a call graph node which is the current selection in a tree viewer.
  */
-public class ViewIRAction extends Action {
+public class ViewIRAction<P> extends Action {
   /**
    * Governing tree viewer
    */
-  private final SWTTreeViewer viewer;
+  private final SWTTreeViewer<P> viewer;
 
   /**
    * Governing call graph
@@ -57,7 +57,7 @@ public class ViewIRAction extends Action {
    * @param viewer Governing tree viewer
    * @param cg Governing call graph
    */
-  public ViewIRAction(SWTTreeViewer viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe) {
+  public ViewIRAction(SWTTreeViewer<P> viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe) {
     if (viewer == null) {
       throw new IllegalArgumentException("null viewer");
     }
@@ -112,7 +112,7 @@ public class ViewIRAction extends Action {
     return first;
   }
 
-  protected SWTTreeViewer getViewer() {
+  protected SWTTreeViewer<P> getViewer() {
     return viewer;
   }
 

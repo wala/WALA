@@ -41,7 +41,7 @@ public class OperatorUtil {
       if (o == null) return false;
       if (getClass() != o.getClass()) return false;
       
-      UnaryOperatorSequence other = (UnaryOperatorSequence) o;
+      UnaryOperatorSequence<?> other = (UnaryOperatorSequence<?>) o;
       return operators.equals(other.operators);
     }
   

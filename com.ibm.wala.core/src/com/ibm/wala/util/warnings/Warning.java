@@ -15,7 +15,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * A warning message. These are ordered first by severity, and then by lexicographic order.
  */
-public abstract class Warning implements Comparable {
+public abstract class Warning implements Comparable<Warning> {
 
   public final static byte MILD = 0;
 
@@ -43,15 +43,12 @@ public abstract class Warning implements Comparable {
 
   /*
    * @see java.lang.Comparable#compareTo(java.lang.Object)
-   * 
-   * @throws ClassCastException if o is not a Warning
    */
   @Override
-  public int compareTo(Object o) throws ClassCastException {
-    if (o == null) {
+  public int compareTo(Warning other) {
+    if (other == null) {
       return -1;
     }
-    Warning other = (Warning) o;
     if (level < other.level) {
       return -1;
     } else if (level > other.level) {

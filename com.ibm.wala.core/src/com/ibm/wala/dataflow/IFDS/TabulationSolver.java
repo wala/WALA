@@ -905,8 +905,8 @@ public class TabulationSolver<T, P, F> {
         if (!(o1 instanceof IBasicBlock)) {
           return -1;
         }
-        IBasicBlock bb1 = (IBasicBlock) o1;
-        IBasicBlock bb2 = (IBasicBlock) o2;
+        IBasicBlock<?> bb1 = (IBasicBlock<?>) o1;
+        IBasicBlock<?> bb2 = (IBasicBlock<?>) o2;
         return bb1.getNumber() - bb2.getNumber();
       };
       for (T n : supergraph) {

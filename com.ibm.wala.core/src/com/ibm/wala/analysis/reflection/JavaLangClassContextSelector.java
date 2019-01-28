@@ -58,7 +58,7 @@ class JavaLangClassContextSelector implements ContextSelector {
 
   private static IClass getTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
-      ConstantKey c = (ConstantKey) instance;
+      ConstantKey<?> c = (ConstantKey<?>) instance;
       if (c.getValue() instanceof IClass) {
         return (IClass) c.getValue();
       }

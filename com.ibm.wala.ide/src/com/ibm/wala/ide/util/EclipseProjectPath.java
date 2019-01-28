@@ -124,7 +124,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
     
-  public EclipseProjectPath create(IProject project) throws CoreException, IOException {
+  public EclipseProjectPath<E, P> create(IProject project) throws CoreException, IOException {
     if (project == null) {
       throw new IllegalArgumentException("null project");
     }
@@ -241,7 +241,9 @@ public abstract class EclipseProjectPath<E, P> {
     // handle the classpath entries for bd
     ArrayList<IClasspathEntry> l = new ArrayList<>();
     ClasspathUtilCore.addLibraries(findModel(bd), l);
-    resolveClasspathEntries(project, l, loader, includeSource, false);
+    @SuppressWarnings("unchecked")
+    List<E> entries = (List<E>) l;
+    resolveClasspathEntries(project, entries, loader, includeSource, false);
 
     // recurse to handle dependencies. put these in the Extension loader
     for (ImportPackageSpecification b : bd.getImportPackages()) {
@@ -284,10 +286,9 @@ public abstract class EclipseProjectPath<E, P> {
     return true;
   }
 
-  @SuppressWarnings("unchecked")
-  protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
-    for (int i = 0; i < l.size(); i++) {
-      resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);
+  protected void resolveClasspathEntries(P project, List<E> l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
+    for (final E entry : l) {
+      resolveClasspathEntry(project, resolve(entry), loader, includeSource, entriesFromTopLevelProject);
     }
   }
 

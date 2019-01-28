@@ -61,7 +61,7 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   }
 
   @Override
-  public Graph<? extends CGNode> getProcedureGraph() {
+  public Graph<CGNode> getProcedureGraph() {
     return icfg.getCallGraph();
   }
 

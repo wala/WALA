@@ -50,7 +50,7 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCallSites(sm.getStatements());
     } else {
-      return getCallSitesFromShrikeBT((IBytecodeMethod) m);
+      return getCallSitesFromShrikeBT((IBytecodeMethod<?>) m);
     }
   }
 
@@ -138,7 +138,7 @@ public class CodeScanner {
     }
   }
 
-  public static Set getCaughtExceptions(IMethod m) throws InvalidClassFileException {
+  public static Set<TypeReference> getCaughtExceptions(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
@@ -172,7 +172,7 @@ public class CodeScanner {
     return wrapper.getCastTypes();
   }
 
-  private static Set getShrikeBTCaughtExceptions(ShrikeCTMethod method) throws InvalidClassFileException {
+  private static Set<TypeReference> getShrikeBTCaughtExceptions(ShrikeCTMethod method) throws InvalidClassFileException {
     return method.getCaughtExceptionTypes();
   }
 

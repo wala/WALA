@@ -60,7 +60,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    *
    */
   @Override
-  public Graph<? extends P> getProcedureGraph() {
+  public Graph<P> getProcedureGraph() {
     return delegate.getProcedureGraph();
   }
 

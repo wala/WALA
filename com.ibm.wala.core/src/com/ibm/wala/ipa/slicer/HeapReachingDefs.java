@@ -650,7 +650,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
             return null;
           } else {
             Predicate<Statement> f = s1 -> {
-              Collection m = getMod(s1, node, heapModel, pa, exclusions);
+              Collection<PointerKey> m = getMod(s1, node, heapModel, pa, exclusions);
               for (PointerKey k : kill) {
                 if (m.contains(k)) {
                   return true;

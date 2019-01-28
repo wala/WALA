@@ -253,7 +253,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       int vn = instruction.getUse(i);
       if (vn != -1) {
         PointerKey lpk = pointerKeys.getPointerKeyForLocal(node, vn);
-        OrdinalSet pointees = getPointsToSet(lpk);
+        OrdinalSet<InstanceKey> pointees = getPointsToSet(lpk);
         IntSet set = pointees.getBackingSet();
         if (set != null) {
           S.addAll(set);
@@ -269,7 +269,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       int vn = instruction.getUse(i);
       if (vn != -1) {
         PointerKey lpk = pointerKeys.getPointerKeyForLocal(node, vn);
-        OrdinalSet pointees = getPointsToSet(lpk);
+        OrdinalSet<InstanceKey> pointees = getPointsToSet(lpk);
         IntSet set = pointees.getBackingSet();
         if (set != null) {
           S.addAll(set);
@@ -285,7 +285,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     OrdinalSet<InstanceKey> refs = getPointsToSet(arrayRef);
     for (InstanceKey ik : refs) {
       PointerKey key = pointerKeys.getPointerKeyForArrayContents(ik);
-      OrdinalSet pointees = getPointsToSet(key);
+      OrdinalSet<InstanceKey> pointees = getPointsToSet(key);
       IntSet set = pointees.getBackingSet();
       if (set != null) {
         S.addAll(set);
@@ -313,7 +313,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       for (InstanceKey ik : refs) {
         PointerKey fkey = pointerKeys.getPointerKeyForInstanceField(ik, f);
         if (fkey != null) {
-          OrdinalSet pointees = getPointsToSet(fkey);
+          OrdinalSet<InstanceKey> pointees = getPointsToSet(fkey);
           IntSet set = pointees.getBackingSet();
           if (set != null) {
             S.addAll(set);

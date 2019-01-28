@@ -38,13 +38,13 @@ import com.ibm.wala.viz.NodeDecorator;
  * A class to view a WALA {@link Graph} with an SWT {@link TreeViewer}
  */
 @SuppressWarnings("unchecked")
-public class SWTTreeViewer extends AbstractJFaceRunner {
+public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
-  protected Graph graphInput;
+  protected Graph<T> graphInput;
 
-  protected Collection<? extends Object> rootsInput = null;
+  protected Collection<?> rootsInput = null;
 
-  protected NodeDecorator nodeDecoratorInput = null;
+  protected NodeDecorator<Object> nodeDecoratorInput = null;
 
   final protected List<IAction> popUpActions = new LinkedList<>();
 
@@ -52,27 +52,27 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     super();
   }
 
-  public Graph getGraphInput() {
+  public Graph<T> getGraphInput() {
     return graphInput;
   }
 
-  public void setGraphInput(Graph newGraphInput) {
+  public void setGraphInput(Graph<T> newGraphInput) {
     graphInput = newGraphInput;
   }
 
-  public Collection<? extends Object> getRootsInput() {
+  public Collection<?> getRootsInput() {
     return rootsInput;
   }
 
-  public void setRootsInput(Collection<? extends Object> newRootsInput) {
+  public void setRootsInput(Collection<?> newRootsInput) {
     rootsInput = newRootsInput;
   }
 
-  public NodeDecorator getNodeDecoratorInput() {
+  public NodeDecorator<Object> getNodeDecoratorInput() {
     return nodeDecoratorInput;
   }
 
-  public void setNodeDecoratorInput(NodeDecorator newNodeDecoratorInput) {
+  public void setNodeDecoratorInput(NodeDecorator<Object> newNodeDecoratorInput) {
     nodeDecoratorInput = newNodeDecoratorInput;
   }
 
@@ -153,14 +153,14 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     /**
      * Graph to visualize
      */
-    private final Graph<Object> graph;
+    private final Graph<T> graph;
 
     /**
      * JFace component implementing the tree viewer
      */
     private TreeViewer treeViewer;
 
-    public GraphViewer(Graph<Object> graph) throws WalaException {
+    public GraphViewer(Graph<T> graph) throws WalaException {
       super(null);
       this.graph = graph;
       if (graph == null) {
@@ -219,9 +219,9 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
       @Override
       public Object[] getChildren(Object parentElement) {
 
-        Object[] result = new Object[graph.getSuccNodeCount(parentElement)];
+        Object[] result = new Object[graph.getSuccNodeCount((T) parentElement)];
         int i = 0;
-        for (Object o : Iterator2Iterable.make(graph.getSuccNodes(parentElement))) {
+        for (Object o : Iterator2Iterable.make(graph.getSuccNodes((T) parentElement))) {
           result[i++] = o;
         }
         return result;
@@ -242,7 +242,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
        */
       @Override
       public boolean hasChildren(Object element) {
-        return graph.getSuccNodeCount(element) > 0;
+        return graph.getSuccNodeCount((T) element) > 0;
       }
 
       /*
@@ -250,7 +250,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
        */
       @Override
       public Object[] getElements(Object inputElement) {
-        Collection<? extends Object> roots = getRootsInput();
+        Collection<?> roots = getRootsInput();
         Assertions.productionAssertion(roots != null);
         Assertions.productionAssertion(roots.size() >= 1);
         return roots.toArray();
@@ -262,7 +262,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
      */
     private class GraphLabelProvider extends LabelProvider {
 
-      final NodeDecorator d = getNodeDecoratorInput();
+      final NodeDecorator<Object> d = getNodeDecoratorInput();
 
       @Override
       public String getText(Object element) {

@@ -299,7 +299,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
       if (DEBUG) {
         System.err.print("PhiOperator.meet " + lhs + ' ');
-        for (IVariable v : rhs) {
+        for (IVariable<?> v : rhs) {
           System.err.print(v + " ");
         }
         System.err.println();
@@ -720,10 +720,10 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
   }
 
-  public class TypeVarFactory implements VariableFactory {
+  public class TypeVarFactory implements VariableFactory<TypeVariable> {
 
     @Override
-    public IVariable makeVariable(int valueNumber) {
+    public TypeVariable makeVariable(int valueNumber) {
       if (doPrimitives) {
         SymbolTable st = ir.getSymbolTable();
         if (st.isConstant(valueNumber)) {

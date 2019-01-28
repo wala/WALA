@@ -18,8 +18,7 @@ import java.util.Iterator;
  *
  * A simple exercise in recursive data structures.
  */
-@SuppressWarnings("rawtypes")
-public class NList implements Collection {
+public class NList implements Collection<Object> {
 
   final int value;
   final NList next;
@@ -69,7 +68,7 @@ public class NList implements Collection {
    * @see java.util.Collection#iterator()
    */
   @Override
-  public Iterator iterator() {
+  public Iterator<Object> iterator() {
     // TODO Auto-generated method stub
     return null;
   }
@@ -106,7 +105,7 @@ public class NList implements Collection {
    * @see java.util.Collection#containsAll(java.util.Collection)
    */
   @Override
-  public boolean containsAll(Collection c) {
+  public boolean containsAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }
@@ -115,7 +114,7 @@ public class NList implements Collection {
    * @see java.util.Collection#addAll(java.util.Collection)
    */
   @Override
-  public boolean addAll(Collection c) {
+  public boolean addAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }
@@ -124,7 +123,7 @@ public class NList implements Collection {
    * @see java.util.Collection#removeAll(java.util.Collection)
    */
   @Override
-  public boolean removeAll(Collection c) {
+  public boolean removeAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }
@@ -133,7 +132,7 @@ public class NList implements Collection {
    * @see java.util.Collection#retainAll(java.util.Collection)
    */
   @Override
-  public boolean retainAll(Collection c) {
+  public boolean retainAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }

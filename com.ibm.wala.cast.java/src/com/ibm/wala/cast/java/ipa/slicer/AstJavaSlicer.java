@@ -43,7 +43,7 @@ public class AstJavaSlicer extends Slicer {
   /*
    * Use the passed-in SDG
    */
-  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss) throws IllegalArgumentException,
+  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Collection<Statement> ss) throws IllegalArgumentException,
       CancelException {
     return computeSlice(sdg, ss, true);
   }
@@ -51,7 +51,7 @@ public class AstJavaSlicer extends Slicer {
   /**
    * @param ss a collection of statements of interest
    */
-  public static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, boolean backward) throws CancelException {
+  public static Collection<Statement> computeSlice(SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     return new AstJavaSlicer().slice(sdg, ss, backward);
   }
 

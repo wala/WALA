@@ -22,7 +22,6 @@ import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
 import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
@@ -84,7 +83,7 @@ public class AstJavaTypeInference extends AstTypeInference {
   public class AstJavaTypeVarFactory extends TypeVarFactory {
 
     @Override
-    public IVariable makeVariable(int valueNumber) {
+    public TypeVariable makeVariable(int valueNumber) {
       SymbolTable st = ir.getSymbolTable();
       if (st.isStringConstant(valueNumber)) {
         IClass klass = cha.lookupClass(TypeReference.JavaLangString);

@@ -88,7 +88,7 @@ public class GetMethodContextSelector implements ContextSelector {
           }
         }
         // ... return an GetMethodContext.
-        ConstantKey ck = makeConstantKey(caller.getClassHierarchy(),sym);
+        ConstantKey<String> ck = makeConstantKey(caller.getClassHierarchy(),sym);
         if (DEBUG) {
           System.out.println(ck);
         }
@@ -116,7 +116,7 @@ public class GetMethodContextSelector implements ContextSelector {
    */
   private static IClass getTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
-      ConstantKey c = (ConstantKey) instance;
+      ConstantKey<?> c = (ConstantKey<?>) instance;
       if (c.getValue() instanceof IClass) {
         return (IClass) c.getValue();
       }

@@ -58,8 +58,8 @@ class ReflectiveInvocationSelector implements ContextSelector {
       return new ReceiverInstanceContext(receiver[0]);
     }
     SymbolTable st = ir.getSymbolTable();
-    ConstantKey receiverConstantKey = (ConstantKey) receiver[0];
-    IMethod m = (IMethod) receiverConstantKey.getValue();
+    @SuppressWarnings("unchecked") ConstantKey<IMethod> receiverConstantKey = (ConstantKey<IMethod>) receiver[0];
+    IMethod m = receiverConstantKey.getValue();
     boolean isStatic = m.isStatic();
     boolean isConstructor = isConstructorConstant(receiver[0]);
 
@@ -118,7 +118,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
 
   private static boolean isConstructorConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
-      ConstantKey c = (ConstantKey) instance;
+      ConstantKey<?> c = (ConstantKey<?>) instance;
       if (c.getConcreteType().getReference().equals(TypeReference.JavaLangReflectConstructor)) {
         return true;
       }

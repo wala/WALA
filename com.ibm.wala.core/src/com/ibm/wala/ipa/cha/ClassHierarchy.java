@@ -185,7 +185,7 @@ public class ClassHierarchy implements IClassHierarchy {
       if (!superClassHandling.equals(MissingSuperClassHandling.NONE) && klass instanceof BytecodeClass) {
         if (superClassHandling.equals(MissingSuperClassHandling.PHANTOM)) {
           // create a phantom superclass.  add it and the root class to the result
-          IClass phantom = getPhantomSuperclass((BytecodeClass) klass);
+          IClass phantom = getPhantomSuperclass((BytecodeClass<?>) klass);
           result.add(phantom);
         }
         result.add(getRootClass());
@@ -371,7 +371,7 @@ public class ClassHierarchy implements IClassHierarchy {
       root = node;
     }
 
-    Set workingSuperclasses = HashSetFactory.make(loadedSuperclasses);
+    HashSet<IClass> workingSuperclasses = HashSetFactory.make(loadedSuperclasses);
     while (node != null) {
       IClass c = node.getJavaClass();
       IClass superclass;
@@ -383,7 +383,7 @@ public class ClassHierarchy implements IClassHierarchy {
         if (superClassHandling.equals(MissingSuperClassHandling.ROOT))
           superclass = getRootClass();
         else
-          superclass = getPhantomSuperclass((BytecodeClass) c);
+          superclass = getPhantomSuperclass((BytecodeClass<?>) c);
       }
       if (superclass != null) {
         workingSuperclasses.remove(superclass);
@@ -431,7 +431,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return true;
   }
 
-  private IClass getPhantomSuperclass(BytecodeClass klass) {
+  private IClass getPhantomSuperclass(BytecodeClass<?> klass) {
     ClassLoaderReference loader = klass.getReference().getClassLoader();
     TypeName superName = klass.getSuperName();
     TypeReference superRef = TypeReference.findOrCreate(loader, superName);
@@ -1032,7 +1032,7 @@ public class ClassHierarchy implements IClassHierarchy {
       // arrays implement Cloneable and Serializable
       return i.equals(lookupClass(TypeReference.JavaLangCloneable)) || i.equals(lookupClass(TypeReference.JavaIoSerializable));
     }
-    Set impls = implementors.get(i);
+    Set<IClass> impls = implementors.get(i);
     if (impls != null && impls.contains(c)) {
       return true;
     }
