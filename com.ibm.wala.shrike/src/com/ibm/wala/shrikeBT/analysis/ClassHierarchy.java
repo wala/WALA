@@ -54,10 +54,12 @@ public final class ClassHierarchy {
           return YES;
         } else {
           int v = checkSuperinterfacesContain(hierarchy, iface, t2, visited);
-          if (v == YES) {
-            return YES;
-          } else if (v == MAYBE) {
-            r = MAYBE;
+          switch (v) {
+            case YES:
+              return YES;
+            case MAYBE:
+              r = MAYBE;
+              break;
           }
         }
       }
@@ -90,10 +92,12 @@ public final class ClassHierarchy {
 
       for (c = t1; c != null; c = hierarchy.getSuperClass(c)) {
         int v = checkSuperinterfacesContain(hierarchy, c, t2, visited);
-        if (v == YES) {
-          return YES;
-        } else if (v == MAYBE) {
-          r = MAYBE;
+        switch (v) {
+          case YES:
+            return YES;
+          case MAYBE:
+            r = MAYBE;
+            break;
         }
       }
     }
@@ -120,10 +124,12 @@ public final class ClassHierarchy {
           return YES;
         } else {
           int v = checkSubtypesContain(hierarchy, subt, t2, visited);
-          if (v == YES) {
-            return YES;
-          } else if (v == MAYBE) {
-            r = MAYBE;
+          switch (v) {
+            case YES:
+              return YES;
+            case MAYBE:
+              r = MAYBE;
+              break;
           }
         }
       }
@@ -375,25 +381,26 @@ public final class ClassHierarchy {
         }
       case '[': {
         char ch2 = t2.charAt(0);
-        if (ch2 == '[') {
-          char ch1_1 = t1.charAt(1);
-          if (ch1_1 == '[' || ch1_1 == 'L') {
-            return '[' + findCommonSupertype(hierarchy, t1.substring(1), t2.substring(1));
-          } else {
-            return Constants.TYPE_Object;
-          }
-        } else if (ch2 == 'L') {
-          switch (t2) {
-            case Constants.TYPE_null:
-              return t1;
-            case "Ljava/io/Serializable;":
-            case "Ljava/lang/Cloneable;":
-              return t2;
-            default:
+        switch (ch2) {
+          case '[':
+            char ch1_1 = t1.charAt(1);
+            if (ch1_1 == '[' || ch1_1 == 'L') {
+              return '[' + findCommonSupertype(hierarchy, t1.substring(1), t2.substring(1));
+            } else {
               return Constants.TYPE_Object;
-          }
-        } else {
-          return null;
+            }
+          case 'L':
+            switch (t2) {
+              case Constants.TYPE_null:
+                return t1;
+              case "Ljava/io/Serializable;":
+              case "Ljava/lang/Cloneable;":
+                return t2;
+              default:
+                return Constants.TYPE_Object;
+            }
+          default:
+            return null;
         }
       }
       default:

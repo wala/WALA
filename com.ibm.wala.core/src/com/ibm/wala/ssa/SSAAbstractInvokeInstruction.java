@@ -103,12 +103,13 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
       assert i == 0;
       return exception;
     } else {
-      if (i == 0) {
-        return getReturnValue(0);
-      } else if (i == 1) {
-        return exception;
-      } else {
-        return getReturnValue(i - 1);
+      switch (i) {
+        case 0:
+          return getReturnValue(0);
+        case 1:
+          return exception;
+        default:
+          return getReturnValue(i - 1);
       }
     }
   }

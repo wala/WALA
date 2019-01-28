@@ -287,28 +287,31 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
         return getDelegate(x);
       } else {
         int ssLength = smallStore.length;
-        if (ssLength == 2) {
-          int ss1 = smallStore[1].get(x);
-          if (ss1 == EMPTY_CODE) {
-            return SparseIntSet.singleton(ss0);
-          } else {
-            return SparseIntSet.pair(ss0, ss1);
-          }
-        } else if (ssLength == 1) {
-          return SparseIntSet.singleton(ss0);
-        } else {
-          int ss1 = smallStore[1].get(x);
-          if (ss1 == EMPTY_CODE) {
-            return SparseIntSet.singleton(ss0);
-          } else {
-            MutableSparseIntSet result = MutableSparseIntSet.createMutableSparseIntSet(ssLength);
-            for (IntVector element : smallStore) {
-              if (element.get(x) == EMPTY_CODE) {
-                break;
-              }
-              result.add(element.get(x));
+        switch (ssLength) {
+          case 2: {
+            int ss1 = smallStore[1].get(x);
+            if (ss1 == EMPTY_CODE) {
+              return SparseIntSet.singleton(ss0);
+            } else {
+              return SparseIntSet.pair(ss0, ss1);
             }
-            return result;
+          }
+          case 1:
+            return SparseIntSet.singleton(ss0);
+          default: {
+            int ss1 = smallStore[1].get(x);
+            if (ss1 == EMPTY_CODE) {
+              return SparseIntSet.singleton(ss0);
+            } else {
+              MutableSparseIntSet result = MutableSparseIntSet.createMutableSparseIntSet(ssLength);
+              for (IntVector element : smallStore) {
+                if (element.get(x) == EMPTY_CODE) {
+                  break;
+                }
+                result.add(element.get(x));
+              }
+              return result;
+            }
           }
         }
       }

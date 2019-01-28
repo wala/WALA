@@ -45,18 +45,22 @@ public final class NewInstruction extends Instruction {
 
       short opcode;
 
-      if (arrayBoundsCount == 0) {
-        opcode = OP_new;
-      } else if (arrayBoundsCount == 1) {
-        char ch = type.charAt(1);
-        if (ch != 'L' && ch != '[') {
-          // array of primitive type
-          opcode = OP_newarray;
-        } else {
-          opcode = OP_anewarray;
-        }
-      } else {
-        opcode = OP_multianewarray;
+      switch (arrayBoundsCount) {
+        case 0:
+          opcode = OP_new;
+          break;
+        case 1:
+          char ch = type.charAt(1);
+          if (ch != 'L' && ch != '[') {
+            // array of primitive type
+            opcode = OP_newarray;
+          } else {
+            opcode = OP_anewarray;
+          }
+          break;
+        default:
+          opcode = OP_multianewarray;
+          break;
       }
       return new NewInstruction(opcode, type, (short) arrayBoundsCount);
     }

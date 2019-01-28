@@ -559,35 +559,46 @@ public class StringStuff {
       numberOfDimensions++;
       prefix = jvmType.charAt(numberOfDimensions);
     }
-    if (prefix == 'V') {
-      readable.append("void");
-    } else if (prefix == 'B') {
-      readable.append("byte");
-    } else if (prefix == 'C') {
-      readable.append("char");
-    } else if (prefix == 'D') {
-      readable.append("double");
-    } else if (prefix == 'F') {
-      readable.append("float");
-    } else if (prefix == 'I') {
-      readable.append("int");
-    } else if (prefix == 'J') {
-      readable.append("long");
-    } else if (prefix == 'S') {
-      readable.append("short");
-    } else if (prefix == 'Z') {
-      readable.append("boolean");
-    } else if (prefix == 'L') {
-      readable.append(jvmType.substring(numberOfDimensions + 1, // strip
-          // all
-          // leading
-          // '[' &
-          // 'L'
-          jvmType.length()) // Trim off the trailing ';'
-          );
-      // Convert to standard Java dot-notation
-      readable = new StringBuilder(slashToDot(readable.toString()));
-      readable = new StringBuilder(dollarToDot(readable.toString()));
+    switch (prefix) {
+      case 'V':
+        readable.append("void");
+        break;
+      case 'B':
+        readable.append("byte");
+        break;
+      case 'C':
+        readable.append("char");
+        break;
+      case 'D':
+        readable.append("double");
+        break;
+      case 'F':
+        readable.append("float");
+        break;
+      case 'I':
+        readable.append("int");
+        break;
+      case 'J':
+        readable.append("long");
+        break;
+      case 'S':
+        readable.append("short");
+        break;
+      case 'Z':
+        readable.append("boolean");
+        break;
+      case 'L':
+        readable.append(jvmType.substring(numberOfDimensions + 1, // strip
+                // all
+                // leading
+                // '[' &
+                // 'L'
+                jvmType.length()) // Trim off the trailing ';'
+        );
+        // Convert to standard Java dot-notation
+        readable = new StringBuilder(slashToDot(readable.toString()));
+        readable = new StringBuilder(dollarToDot(readable.toString()));
+        break;
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {
@@ -620,34 +631,45 @@ public class StringStuff {
       numberOfDimensions++;
       prefix = jvmType.charAt(numberOfDimensions);
     }
-    if (prefix == 'V') {
-      readable.append("void");
-    } else if (prefix == 'B') {
-      readable.append("byte");
-    } else if (prefix == 'C') {
-      readable.append("char");
-    } else if (prefix == 'D') {
-      readable.append("double");
-    } else if (prefix == 'F') {
-      readable.append("float");
-    } else if (prefix == 'I') {
-      readable.append("int");
-    } else if (prefix == 'J') {
-      readable.append("long");
-    } else if (prefix == 'S') {
-      readable.append("short");
-    } else if (prefix == 'Z') {
-      readable.append("boolean");
-    } else if (prefix == 'L') {
-      readable.append(jvmType.substring(numberOfDimensions + 1, // strip
-          // all
-          // leading
-          // '[' &
-          // 'L'
-          jvmType.length()) // Trim off the trailing ';'
-          );
-      // Convert to standard Java dot-notation
-      readable = new StringBuilder(slashToDot(readable.toString()));
+    switch (prefix) {
+      case 'V':
+        readable.append("void");
+        break;
+      case 'B':
+        readable.append("byte");
+        break;
+      case 'C':
+        readable.append("char");
+        break;
+      case 'D':
+        readable.append("double");
+        break;
+      case 'F':
+        readable.append("float");
+        break;
+      case 'I':
+        readable.append("int");
+        break;
+      case 'J':
+        readable.append("long");
+        break;
+      case 'S':
+        readable.append("short");
+        break;
+      case 'Z':
+        readable.append("boolean");
+        break;
+      case 'L':
+        readable.append(jvmType.substring(numberOfDimensions + 1, // strip
+                // all
+                // leading
+                // '[' &
+                // 'L'
+                jvmType.length()) // Trim off the trailing ';'
+        );
+        // Convert to standard Java dot-notation
+        readable = new StringBuilder(slashToDot(readable.toString()));
+        break;
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {

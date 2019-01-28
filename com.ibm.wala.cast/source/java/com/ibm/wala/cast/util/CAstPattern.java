@@ -200,85 +200,86 @@ public class CAstPattern {
         return false;
       }
     } else {
-      if (cs[j].kind == CHILD_KIND) {
-
-        if (DEBUG_MATCH) {
-          System.err.println(("* matches " + CAstPrinter.print(tree.getChild(i))));
-        }
-
-        if (s != null && cs[j].name != null) {
-          s.add(cs[j].name, tree.getChild(i));
-        }
-        return matchChildren(tree, i + 1, cs, j + 1, s);
-
-      } else if (cs[j].kind == CHILDREN_KIND) {
-        if (tryMatchChildren(tree, i, cs, j + 1, s)) {
+      switch (cs[j].kind) {
+        case CHILD_KIND:
 
           if (DEBUG_MATCH) {
-            System.err.println("** matches nothing");
-          }
-
-          return true;
-
-        } else {
-
-          if (DEBUG_MATCH) {
-            System.err.println(("** matches " + CAstPrinter.print(tree.getChild(i))));
+            System.err.println(("* matches " + CAstPrinter.print(tree.getChild(i))));
           }
 
           if (s != null && cs[j].name != null) {
             s.add(cs[j].name, tree.getChild(i));
           }
+          return matchChildren(tree, i + 1, cs, j + 1, s);
 
-          return matchChildren(tree, i + 1, cs, j, s);
-        }
+        case CHILDREN_KIND:
+          if (tryMatchChildren(tree, i, cs, j + 1, s)) {
 
-      } else if (cs[j].kind == REPEATED_PATTERN_KIND) {
-        CAstPattern repeatedPattern = cs[j].children[0];
-        if (repeatedPattern.tryMatch(tree.getChild(i), s)) {
-          if (s != null && cs[j].name != null) {
-            s.add(cs[j].name, tree.getChild(i));
+            if (DEBUG_MATCH) {
+              System.err.println("** matches nothing");
+            }
+
+            return true;
+
+          } else {
+
+            if (DEBUG_MATCH) {
+              System.err.println(("** matches " + CAstPrinter.print(tree.getChild(i))));
+            }
+
+            if (s != null && cs[j].name != null) {
+              s.add(cs[j].name, tree.getChild(i));
+            }
+
+            return matchChildren(tree, i + 1, cs, j, s);
           }
 
-          if (DEBUG_MATCH) {
-            System.err.println((cs[j] + " matches " + CAstPrinter.print(tree.getChild(i))));
-          }
-
-          return matchChildren(tree, i + 1, cs, j, s);
-
-        } else {
-
-          if (DEBUG_MATCH) {
-            System.err.println((cs[j] + " matches nothing"));
-          }
-
-          return matchChildren(tree, i, cs, j + 1, s);
-        }
-
-      } else if (cs[j].kind == OPTIONAL_PATTERN_KIND) {
-        if (tryMatchChildren(tree, i, cs, j + 1, s)) {
-
-          if (DEBUG_MATCH) {
-            System.err.println((cs[j] + " matches nothing"));
-          }
-
-          return true;
-        } else {
-          CAstPattern optionalPattern = cs[j].children[0];
-          if (optionalPattern.tryMatch(tree.getChild(i), s)) {
+        case REPEATED_PATTERN_KIND:
+          CAstPattern repeatedPattern = cs[j].children[0];
+          if (repeatedPattern.tryMatch(tree.getChild(i), s)) {
+            if (s != null && cs[j].name != null) {
+              s.add(cs[j].name, tree.getChild(i));
+            }
 
             if (DEBUG_MATCH) {
               System.err.println((cs[j] + " matches " + CAstPrinter.print(tree.getChild(i))));
             }
 
-            return matchChildren(tree, i + 1, cs, j + 1, s);
-          } else {
-            return false;
-          }
-        }
+            return matchChildren(tree, i + 1, cs, j, s);
 
-      } else {
-        return cs[j].match(tree.getChild(i), s) && matchChildren(tree, i + 1, cs, j + 1, s);
+          } else {
+
+            if (DEBUG_MATCH) {
+              System.err.println((cs[j] + " matches nothing"));
+            }
+
+            return matchChildren(tree, i, cs, j + 1, s);
+          }
+
+        case OPTIONAL_PATTERN_KIND:
+          if (tryMatchChildren(tree, i, cs, j + 1, s)) {
+
+            if (DEBUG_MATCH) {
+              System.err.println((cs[j] + " matches nothing"));
+            }
+
+            return true;
+          } else {
+            CAstPattern optionalPattern = cs[j].children[0];
+            if (optionalPattern.tryMatch(tree.getChild(i), s)) {
+
+              if (DEBUG_MATCH) {
+                System.err.println((cs[j] + " matches " + CAstPrinter.print(tree.getChild(i))));
+              }
+
+              return matchChildren(tree, i + 1, cs, j + 1, s);
+            } else {
+              return false;
+            }
+          }
+
+        default:
+          return cs[j].match(tree.getChild(i), s) && matchChildren(tree, i + 1, cs, j + 1, s);
       }
     }
   }
@@ -288,50 +289,50 @@ public class CAstPattern {
       System.err.println(("matching " + this + " against " + CAstPrinter.print(tree)));
     }
 
-    if (kind == REFERENCE_PATTERN_KIND) {
-      return references.get(value).match(tree, s);
+    switch (kind) {
+      case REFERENCE_PATTERN_KIND:
+        return references.get(value).match(tree, s);
 
-    } else if (kind == ALTERNATIVE_PATTERN_KIND) {
-      for (CAstPattern element : children) {
-        if (element.tryMatch(tree, s)) {
+      case ALTERNATIVE_PATTERN_KIND:
+        for (CAstPattern element : children) {
+          if (element.tryMatch(tree, s)) {
 
-          if (s != null && name != null)
-            s.add(name, tree);
+            if (s != null && name != null)
+              s.add(name, tree);
 
-          return true;
+            return true;
+          }
         }
-      }
 
-      if (DEBUG_MATCH) {
-        System.err.println("match failed (a)");
-      }
-      return false;
-
-    } else {
-      if ((value == null) ? tree.getKind() != kind : 
-          (tree.getKind() != CAstNode.CONSTANT || 
-           (value instanceof Pattern 
-               ? !((Pattern)value).matcher(tree.getValue().toString()).matches()
-               : !value.equals(tree.getValue().toString())))) 
-      {
         if (DEBUG_MATCH) {
-          System.err.println("match failed (b)");
+          System.err.println("match failed (a)");
         }
-
         return false;
-      }
 
-      if (s != null && name != null)
-        s.add(name, tree);
+      default:
+        if ((value == null) ? tree.getKind() != kind :
+                (tree.getKind() != CAstNode.CONSTANT ||
+                        (value instanceof Pattern
+                                ? !((Pattern) value).matcher(tree.getValue().toString()).matches()
+                                : !value.equals(tree.getValue().toString())))) {
+          if (DEBUG_MATCH) {
+            System.err.println("match failed (b)");
+          }
 
-      if (children == null || children.length == 0) {
-        if (DEBUG_MATCH && tree.getChildCount() != 0) {
-          System.err.println("match failed (c)");
+          return false;
         }
-        return tree.getChildCount() == 0;
-      } else {
-        return matchChildren(tree, 0, children, 0, s);
-      }
+
+        if (s != null && name != null)
+          s.add(name, tree);
+
+        if (children == null || children.length == 0) {
+          if (DEBUG_MATCH && tree.getChildCount() != 0) {
+            System.err.println("match failed (c)");
+          }
+          return tree.getChildCount() == 0;
+        } else {
+          return matchChildren(tree, 0, children, 0, s);
+        }
     }
   }
 

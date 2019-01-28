@@ -173,24 +173,28 @@ public class AndroidSettingFactory {
         if (uri != null) {
             mUri = Atom.findOrCreateAsciiAtom(uri);
         }
-        if (type == Intent.IntentType.INTERNAL_TARGET) {
-            if (uri != null) {
-                ret = new InternalIntent(action, mUri);
-            } else {
-                ret = new InternalIntent(action);
-            }
-        } else if (type == Intent.IntentType.STANDARD_ACTION) {
-            if (uri != null) {
-                ret = new StandardIntent(action, mUri);
-            } else {
-                ret = new StandardIntent(action);
-            }
-        } else {
-            if (uri != null) {
-                ret = new StandardIntent(action, mUri);
-            } else {
-                ret = new StandardIntent(action);
-            }
+        switch (type) {
+            case INTERNAL_TARGET:
+                if (uri != null) {
+                    ret = new InternalIntent(action, mUri);
+                } else {
+                    ret = new InternalIntent(action);
+                }
+                break;
+            case STANDARD_ACTION:
+                if (uri != null) {
+                    ret = new StandardIntent(action, mUri);
+                } else {
+                    ret = new StandardIntent(action);
+                }
+                break;
+            default:
+                if (uri != null) {
+                    ret = new StandardIntent(action, mUri);
+                } else {
+                    ret = new StandardIntent(action);
+                }
+                break;
         }
 
         return ret;
