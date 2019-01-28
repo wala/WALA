@@ -445,19 +445,25 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       MethodReference ref = MethodReference.findOrCreate(type, nm, D);
       CallSiteReference site = null;
       int nParams = ref.getNumberOfParameters();
-      if (typeString.equals("virtual")) {
-        site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.VIRTUAL);
-        nParams++;
-      } else if (typeString.equals("special")) {
-        site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.SPECIAL);
-        nParams++;
-      } else if (typeString.equals("interface")) {
-        site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.INTERFACE);
-        nParams++;
-      } else if (typeString.equals("static")) {
-        site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.STATIC);
-      } else {
-        Assertions.UNREACHABLE("Invalid call type " + typeString);
+      switch (typeString) {
+        case "virtual":
+          site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.VIRTUAL);
+          nParams++;
+          break;
+        case "special":
+          site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.SPECIAL);
+          nParams++;
+          break;
+        case "interface":
+          site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.INTERFACE);
+          nParams++;
+          break;
+        case "static":
+          site = CallSiteReference.make(governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.STATIC);
+          break;
+        default:
+          Assertions.UNREACHABLE("Invalid call type " + typeString);
+          break;
       }
 
       String paramCount = atts.getValue(A_NUM_ARGS);
@@ -834,14 +840,19 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String reason = atts.getValue(A_REASON);
       governingMethod.addPoison(reason);
       String level = atts.getValue(A_LEVEL);
-      if (level.equals("severe")) {
-        governingMethod.setPoisonLevel(Warning.SEVERE);
-      } else if (level.equals("moderate")) {
-        governingMethod.setPoisonLevel(Warning.MODERATE);
-      } else if (level.equals("mild")) {
-        governingMethod.setPoisonLevel(Warning.MILD);
-      } else {
-        Assertions.UNREACHABLE("Unexpected level: " + level);
+      switch (level) {
+        case "severe":
+          governingMethod.setPoisonLevel(Warning.SEVERE);
+          break;
+        case "moderate":
+          governingMethod.setPoisonLevel(Warning.MODERATE);
+          break;
+        case "mild":
+          governingMethod.setPoisonLevel(Warning.MILD);
+          break;
+        default:
+          Assertions.UNREACHABLE("Unexpected level: " + level);
+          break;
       }
     }
 
@@ -868,25 +879,33 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       boolean isStatic = false;
       String staticString = atts.getValue(A_STATIC);
       if (staticString != null) {
-        if (staticString.equals("true")) {
-          isStatic = true;
-          governingMethod.setStatic(true);
-        } else if (staticString.equals("false")) {
-          isStatic = false;
-          governingMethod.setStatic(false);
-        } else {
-          Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
+        switch (staticString) {
+          case "true":
+            isStatic = true;
+            governingMethod.setStatic(true);
+            break;
+          case "false":
+            isStatic = false;
+            governingMethod.setStatic(false);
+            break;
+          default:
+            Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
+            break;
         }
       }
 
       String factoryString = atts.getValue(A_FACTORY);
       if (factoryString != null) {
-        if (factoryString.equals("true")) {
-          governingMethod.setFactory(true);
-        } else if (factoryString.equals("false")) {
-          governingMethod.setFactory(false);
-        } else {
-          Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
+        switch (factoryString) {
+          case "true":
+            governingMethod.setFactory(true);
+            break;
+          case "false":
+            governingMethod.setFactory(false);
+            break;
+          default:
+            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
+            break;
         }
       }
 

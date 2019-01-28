@@ -712,18 +712,25 @@ public abstract class Compiler implements Constants {
             cpIndex = ci.getCPIndex();
           } else {
             String t = instr.getPushedType(null);
-            if (t.equals(TYPE_int)) {
-              cpIndex = allocateConstantPoolInteger(((ConstantInstruction.ConstInt) instr).getIntValue());
-            } else if (t.equals(TYPE_String)) {
-              cpIndex = allocateConstantPoolString((String) ((ConstantInstruction.ConstString) instr).getValue());
-            } else if (t.equals(TYPE_Class)) {
-              cpIndex = allocateConstantPoolClassType(((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue()).getTypeName());
-            } else if (t.equals(TYPE_MethodType)) {
-              cpIndex = allocateConstantPoolMethodType(((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
-            } else if (t.equals(TYPE_MethodHandle)) {
-              cpIndex = allocateConstantPoolMethodHandle(((ReferenceToken) ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
-            } else {
-              cpIndex = allocateConstantPoolFloat(((ConstantInstruction.ConstFloat) instr).getFloatValue());
+            switch (t) {
+              case TYPE_int:
+                cpIndex = allocateConstantPoolInteger(((ConstantInstruction.ConstInt) instr).getIntValue());
+                break;
+              case TYPE_String:
+                cpIndex = allocateConstantPoolString((String) ((ConstantInstruction.ConstString) instr).getValue());
+                break;
+              case TYPE_Class:
+                cpIndex = allocateConstantPoolClassType(((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue()).getTypeName());
+                break;
+              case TYPE_MethodType:
+                cpIndex = allocateConstantPoolMethodType(((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
+                break;
+              case TYPE_MethodHandle:
+                cpIndex = allocateConstantPoolMethodHandle(((ReferenceToken) ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
+                break;
+              default:
+                cpIndex = allocateConstantPoolFloat(((ConstantInstruction.ConstFloat) instr).getFloatValue());
+                break;
             }
           }
 

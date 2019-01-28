@@ -155,66 +155,73 @@ public class CopyWriter {
       return new ClassWriter.RawElement(cr.getBytes(), offset, end - offset);
     }
 
-    if (name.equals("Code")) {
-      CodeReader r = new CodeReader(iter);
-      CTDecoder decoder = new CTDecoder(r);
-      decoder.decode();
-      MethodData md = new MethodData(decoder, cr.getMethodAccessFlags(m), CTDecoder.convertClassToType(cr.getName()), cr
-          .getMethodName(m), cr.getMethodType(m));
-      CTCompiler compiler = CTCompiler.make(w, md);
-      compiler.compile();
-      if (compiler.getAuxiliaryMethods().length > 0)
-        throw new Error("Where did this auxiliary method come from?");
-      Compiler.Output out = compiler.getOutput();
-      CodeWriter cw = new CodeWriter(w);
-      cw.setMaxLocals(out.getMaxLocals());
-      cw.setMaxStack(out.getMaxStack());
-      cw.setCode(out.getCode());
-      cw.setRawHandlers(out.getRawHandlers());
-      ClassReader.AttrIterator iterator = new ClassReader.AttrIterator();
-      r.initAttributeIterator(iterator);
-      cw.setAttributes(collectAttributes(cr, m, w, iterator));
-      return cw;
-    } else if (name.equals("ConstantValue")) {
-      ConstantValueReader r = new ConstantValueReader(iter);
-      ConstantValueWriter cw = new ConstantValueWriter(w);
-      cw.setValueCPIndex(transformCPIndex(r.getValueCPIndex()));
-      return cw;
-    } else if (name.equals("SourceFile")) {
-      SourceFileReader r = new SourceFileReader(iter);
-      SourceFileWriter cw = new SourceFileWriter(w);
-      cw.setSourceFileCPIndex(transformCPIndex(r.getSourceFileCPIndex()));
-      return cw;
-    } else if (name.equals("LocalVariableTableReader")) {
-      LocalVariableTableReader lr = new LocalVariableTableReader(iter);
-      LocalVariableTableWriter lw = new LocalVariableTableWriter(w);
-      int[] table = lr.getRawTable();
-      for (int i = 0; i < table.length; i += 5) {
-        table[i + 2] = transformCPIndex(table[i + 2]);
-        table[i + 3] = transformCPIndex(table[i + 3]);
+    switch (name) {
+      case "Code": {
+        CodeReader r = new CodeReader(iter);
+        CTDecoder decoder = new CTDecoder(r);
+        decoder.decode();
+        MethodData md = new MethodData(decoder, cr.getMethodAccessFlags(m), CTDecoder.convertClassToType(cr.getName()), cr
+                .getMethodName(m), cr.getMethodType(m));
+        CTCompiler compiler = CTCompiler.make(w, md);
+        compiler.compile();
+        if (compiler.getAuxiliaryMethods().length > 0)
+          throw new Error("Where did this auxiliary method come from?");
+        Compiler.Output out = compiler.getOutput();
+        CodeWriter cw = new CodeWriter(w);
+        cw.setMaxLocals(out.getMaxLocals());
+        cw.setMaxStack(out.getMaxStack());
+        cw.setCode(out.getCode());
+        cw.setRawHandlers(out.getRawHandlers());
+        AttrIterator iterator = new AttrIterator();
+        r.initAttributeIterator(iterator);
+        cw.setAttributes(collectAttributes(cr, m, w, iterator));
+        return cw;
       }
-      lw.setRawTable(table);
-      return lw;
-    } else if (name.equals("Exceptions")) {
-      ExceptionsReader lr = new ExceptionsReader(iter);
-      ExceptionsWriter lw = new ExceptionsWriter(w);
-      int[] table = lr.getRawTable();
-      for (int i = 0; i < table.length; i++) {
-        table[i] = transformCPIndex(table[i]);
+      case "ConstantValue": {
+        ConstantValueReader r = new ConstantValueReader(iter);
+        ConstantValueWriter cw = new ConstantValueWriter(w);
+        cw.setValueCPIndex(transformCPIndex(r.getValueCPIndex()));
+        return cw;
       }
-      lw.setRawTable(table);
-      return lw;
-    } else if (name.equals("InnerClasses")) {
-      InnerClassesReader lr = new InnerClassesReader(iter);
-      InnerClassesWriter lw = new InnerClassesWriter(w);
-      int[] table = lr.getRawTable();
-      for (int i = 0; i < table.length; i += 4) {
-        table[i] = transformCPIndex(table[i]);
-        table[i + 1] = transformCPIndex(table[i + 1]);
-        table[i + 2] = transformCPIndex(table[i + 2]);
+      case "SourceFile": {
+        SourceFileReader r = new SourceFileReader(iter);
+        SourceFileWriter cw = new SourceFileWriter(w);
+        cw.setSourceFileCPIndex(transformCPIndex(r.getSourceFileCPIndex()));
+        return cw;
       }
-      lw.setRawTable(table);
-      return lw;
+      case "LocalVariableTableReader": {
+        LocalVariableTableReader lr = new LocalVariableTableReader(iter);
+        LocalVariableTableWriter lw = new LocalVariableTableWriter(w);
+        int[] table = lr.getRawTable();
+        for (int i = 0; i < table.length; i += 5) {
+          table[i + 2] = transformCPIndex(table[i + 2]);
+          table[i + 3] = transformCPIndex(table[i + 3]);
+        }
+        lw.setRawTable(table);
+        return lw;
+      }
+      case "Exceptions": {
+        ExceptionsReader lr = new ExceptionsReader(iter);
+        ExceptionsWriter lw = new ExceptionsWriter(w);
+        int[] table = lr.getRawTable();
+        for (int i = 0; i < table.length; i++) {
+          table[i] = transformCPIndex(table[i]);
+        }
+        lw.setRawTable(table);
+        return lw;
+      }
+      case "InnerClasses": {
+        InnerClassesReader lr = new InnerClassesReader(iter);
+        InnerClassesWriter lw = new InnerClassesWriter(w);
+        int[] table = lr.getRawTable();
+        for (int i = 0; i < table.length; i += 4) {
+          table[i] = transformCPIndex(table[i]);
+          table[i + 1] = transformCPIndex(table[i + 1]);
+          table[i + 2] = transformCPIndex(table[i + 2]);
+        }
+        lw.setRawTable(table);
+        return lw;
+      }
     }
 
     throw new UnknownAttributeException(name);
