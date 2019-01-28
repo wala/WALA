@@ -14,13 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.ref.CacheReference;
@@ -62,12 +61,20 @@ public class JarFileModule implements Module {
    */
   @Override
   public Iterator<ModuleEntry> getEntries() {
-    HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (Enumeration e = file.entries(); e.hasMoreElements();) {
-      ZipEntry Z = (ZipEntry) e.nextElement();
-      result.add(createEntry(Z));
-    }
-    return result.iterator();
+    return new Iterator<ModuleEntry>() {
+
+      private Enumeration<JarEntry> zipEntryEnumerator = file.entries();
+
+      @Override
+      public boolean hasNext() {
+        return zipEntryEnumerator.hasMoreElements();
+      }
+
+      @Override
+      public ModuleEntry next() {
+        return createEntry(zipEntryEnumerator.nextElement());
+      }
+    };
   }
 
   // need to do equals() and hashCode() based on file name, since JarFile
