@@ -3211,8 +3211,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (map.getPosition(n) != null) {
       return map.getPosition(n);
     } else {
-      for (int i = 0; i < n.getChildCount(); i++) {
-        Position p = getPosition(map, n.getChild(i));
+      for (CAstNode child : n.getChildren()) {
+        Position p = getPosition(map, child);
         if (p != null) {
           return p;
         }
@@ -3845,22 +3845,25 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveIfgoto(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
     int currentInstruction = context.cfg().currentInstruction;
-    if (n.getChildCount() == 1) {
-      CAstNode arg = n.getChild(0);
-      context.cfg().addInstruction(
-          insts.ConditionalBranchInstruction(currentInstruction, translateConditionOpcode(CAstOperator.OP_NE), null, c.getValue(arg), context
-              .currentScope().getConstantValue(Integer.valueOf(0)), -1));
-      context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
-    } else if (n.getChildCount() == 3) {
-      CAstNode op = n.getChild(0);
-      CAstNode leftExpr = n.getChild(1);
-      CAstNode rightExpr = n.getChild(2);
-      context.cfg().addInstruction(
-          insts.ConditionalBranchInstruction(currentInstruction, translateConditionOpcode(op), null, c.getValue(leftExpr),
-              c.getValue(rightExpr), -1));
-      context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(leftExpr), context.getSourceMap().getPosition(rightExpr));
-    } else {
-      Assertions.UNREACHABLE();
+    switch (n.getChildCount()) {
+      case 1:
+        CAstNode arg = n.getChild(0);
+        context.cfg().addInstruction(
+            insts.ConditionalBranchInstruction(currentInstruction, translateConditionOpcode(CAstOperator.OP_NE), null, c.getValue(arg), context
+                .currentScope().getConstantValue(Integer.valueOf(0)), -1));
+        context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
+        break;
+      case 3:
+        CAstNode op = n.getChild(0);
+        CAstNode leftExpr = n.getChild(1);
+        CAstNode rightExpr = n.getChild(2);
+        context.cfg().addInstruction(
+            insts.ConditionalBranchInstruction(currentInstruction, translateConditionOpcode(op), null, c.getValue(leftExpr),
+                c.getValue(rightExpr), -1));
+        context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(leftExpr), context.getSourceMap().getPosition(rightExpr));
+        break;
+      default:
+        Assertions.UNREACHABLE();
     }
 
     context.cfg().addPreNode(n, context.getUnwindState());
@@ -4487,8 +4490,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (context.cfg().hasDelayedEdges(n)) {
       return true;
     } else {
-      for (int i = 0; i < n.getChildCount(); i++) {
-        if (hasIncomingEdges(n.getChild(i), context)) {
+      for (CAstNode child : n.getChildren()) {
+        if (hasIncomingEdges(child, context)) {
           return true;
         }
       }
@@ -4684,9 +4687,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     int rvals[] = new int[n.getChildCount()];
     Position rposs[] = new Position[n.getChildCount()];
-    for (int i = 0; i < n.getChildCount(); i++) {
-      rvals[i] = c.getValue(n.getChild(i));
-      rposs[i] = c.getSourceMap().getPosition(n.getChild(i));
+    int i = 0;
+    for (CAstNode child : n.getChildren()) {
+      rvals[i] = c.getValue(child);
+      rposs[i] = c.getSourceMap().getPosition(child);
+      ++i;
     }
 
     int currentInstruction = wc.cfg().getCurrentInstruction();
@@ -4705,9 +4710,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     int rvals[] = new int[n.getChildCount()];
     Position rposs[] = new Position[n.getChildCount()];
-    for (int i = 0; i < n.getChildCount(); i++) {
-      rvals[i] = c.getValue(n.getChild(i));
-      rposs[i] = c.getSourceMap().getPosition(n.getChild(i));
+    int i = 0;
+    for (CAstNode child : n.getChildren()) {
+      rvals[i] = c.getValue(child);
+      rposs[i] = c.getSourceMap().getPosition(child);
+      ++i;
     }
 
     int currentInstruction = wc.cfg().getCurrentInstruction();
@@ -4746,10 +4753,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           } else if (expr instanceof CAstOperator) {
             return expr;
           } else {
-            CAstNode nc[] = new CAstNode[expr.getChildCount()];
+            List<CAstNode> nc = new ArrayList<>(expr.getChildCount());
 
-            for (int i = 0; i < expr.getChildCount(); i++) {
-              nc[i] = copyIncludeExpr(expr.getChild(i));
+            for (CAstNode child : expr.getChildren()) {
+              nc.add(copyIncludeExpr(child));
             }
 
             return Ast.makeNode(expr.getKind(), nc);

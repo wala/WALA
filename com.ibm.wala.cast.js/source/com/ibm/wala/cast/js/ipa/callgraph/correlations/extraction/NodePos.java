@@ -43,8 +43,8 @@ public abstract class NodePos implements CAstRewriter.RewriteContext<CAstBasicRe
 			return true;
 		if(tree == null)
 			return false;
-		for(int i=0;i<tree.getChildCount();++i)
-			if(inSubtree(node, tree.getChild(i)))
+		for(CAstNode child : tree.getChildren())
+			if(inSubtree(node, child))
 				return true;
 		return false;
 	}

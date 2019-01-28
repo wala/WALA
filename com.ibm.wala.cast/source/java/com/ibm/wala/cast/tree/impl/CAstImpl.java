@@ -10,7 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.ibm.wala.cast.tree.CAst;
@@ -88,45 +90,45 @@ public class CAstImpl implements CAst {
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode[] cs) {
-    CAstNode[] children = new CAstNode[cs.length + 1];
-    children[0] = c1;
-    System.arraycopy(cs, 0, children, 1, cs.length);
+    List<CAstNode> children = new ArrayList<>(cs.length + 1);
+    children.add(c1);
+    children.addAll(Arrays.asList(cs));
     return makeNode(kind, children);
   }
 
   @Override
   public CAstNode makeNode(int kind) {
-    return makeNode(kind, new CAstNode[0]);
+    return makeNode(kind, Collections.emptyList());
   }
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1) {
-    return makeNode(kind, new CAstNode[] { c1 });
+    return makeNode(kind, Collections.singletonList(c1));
   }
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2) {
-    return makeNode(kind, new CAstNode[] { c1, c2 });
+    return makeNode(kind, Arrays.asList(c1, c2));
   }
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
-    return makeNode(kind, new CAstNode[] { c1, c2, c3 });
+    return makeNode(kind, Arrays.asList(c1, c2, c3));
   }
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4) {
-    return makeNode(kind, new CAstNode[] { c1, c2, c3, c4 });
+    return makeNode(kind, Arrays.asList(c1, c2, c3, c4));
   }
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5) {
-    return makeNode(kind, new CAstNode[] { c1, c2, c3, c4, c5 });
+    return makeNode(kind, Arrays.asList(c1, c2, c3, c4, c5));
   }
 
   @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6) {
-    return makeNode(kind, new CAstNode[] { c1, c2, c3, c4, c5, c6 });
+    return makeNode(kind, Arrays.asList(c1, c2, c3, c4, c5, c6));
   }
 
   @Override

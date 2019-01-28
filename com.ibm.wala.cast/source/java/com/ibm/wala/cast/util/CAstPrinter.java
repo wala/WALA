@@ -250,8 +250,8 @@ public class CAstPrinter {
 	    w.write( " at " + p );
 	if (uglyBrackets) w.write(">");
 	w.write("\n");
-	for(int i = 0; i < top.getChildCount(); i++) {
-	  doPrintTo( top.getChild(i), pos, w, depth+1, uglyBrackets );
+	for(CAstNode child : top.getChildren()) {
+	  doPrintTo( child, pos, w, depth+1, uglyBrackets );
 	}
 	if (uglyBrackets) {
 	  for(int i = 0; i < depth; i++) w.write("  ");

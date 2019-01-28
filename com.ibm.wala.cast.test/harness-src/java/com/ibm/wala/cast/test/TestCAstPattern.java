@@ -12,6 +12,7 @@ package com.ibm.wala.cast.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -34,16 +35,16 @@ public class TestCAstPattern extends WalaTestCase {
     private final Map<String, Object> testNameMap = new HashMap<>();
 
     @Override
-    public CAstNode makeNode(int kind, CAstNode... children) {
+    public CAstNode makeNode(int kind, List<CAstNode> children) {
       if (kind == NAME_ASSERTION_SINGLE || kind == NAME_ASSERTION_MULTI) {
-        assert children.length == 2;
-        final Object child0Value = children[0].getValue();
+        assert children.size() == 2;
+        final Object child0Value = children.get(0).getValue();
         assert child0Value instanceof String;
         final String name = (String) child0Value;
         @SuppressWarnings("unused")
-        CAstNode result = children[1];
+        CAstNode result = children.get(1);
         if (kind == NAME_ASSERTION_SINGLE) {
-          testNameMap.put(name, children[1]);
+          testNameMap.put(name, children.get(1));
         } else {
           @SuppressWarnings("unchecked")
           ArrayList<CAstNode> nodeList = (ArrayList<CAstNode>) testNameMap.get(name);
@@ -51,9 +52,9 @@ public class TestCAstPattern extends WalaTestCase {
             nodeList = new ArrayList<>();
             testNameMap.put(name, nodeList);
           }
-          nodeList.add(children[1]);
+          nodeList.add(children.get(1));
         }
-        return children[1];
+        return children.get(1);
       } else {
         return super.makeNode(kind, children);
       }

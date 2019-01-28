@@ -25,8 +25,8 @@ public class CAstFunctions {
     if (f.test(tree)) {
       return tree;
     } else {
-      for (int i = 0; i < tree.getChildCount(); i++) {
-        CAstNode result = findIf(tree.getChild(i), f);
+      for (final CAstNode child : tree.getChildren()) {
+        CAstNode result = findIf(child, f);
         if (result != null) {
           return result;
         }

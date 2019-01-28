@@ -44,12 +44,9 @@ public class CAstValueImpl extends CAstImpl {
     @Override
     public boolean equals(Object o) {
       if (! (o instanceof CAstNode)) return false;
-      if (kind != ((CAstNode)o).getKind()) return false;
-      if (((CAstNode)o).getChildCount() != cs.size()) return false;
-      for(int i = 0; i < cs.size(); i++)
-	if (! cs.get(i).equals(((CAstNode)o).getChild(i)))
-	  return false;
-
+      final CAstNode otherNode = (CAstNode) o;
+      if (kind != otherNode.getKind()) return false;
+      if (!getChildren().equals(otherNode.getChildren())) return false;
       return true;
     }
   }
