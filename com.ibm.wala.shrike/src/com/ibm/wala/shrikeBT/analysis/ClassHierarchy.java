@@ -383,12 +383,14 @@ public final class ClassHierarchy {
             return Constants.TYPE_Object;
           }
         } else if (ch2 == 'L') {
-          if (t2.equals(Constants.TYPE_null)) {
-            return t1;
-          } else if (t2.equals("Ljava/io/Serializable;") || t2.equals("Ljava/lang/Cloneable;")) {
-            return t2;
-          } else {
-            return Constants.TYPE_Object;
+          switch (t2) {
+            case Constants.TYPE_null:
+              return t1;
+            case "Ljava/io/Serializable;":
+            case "Ljava/lang/Cloneable;":
+              return t2;
+            default:
+              return Constants.TYPE_Object;
           }
         } else {
           return null;

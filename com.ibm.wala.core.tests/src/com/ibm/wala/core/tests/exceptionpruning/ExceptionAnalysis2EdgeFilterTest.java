@@ -164,18 +164,25 @@ public class ExceptionAnalysis2EdgeFilterTest {
       final String key = entry.getKey();
       final int value = entry.getValue();
       String text = "Number of exceptional edges deleted wrong for " + key + ":";
-      if (key.equals("testTryCatchMultipleExceptions")) {
-        assertEquals(text, 12, value);
-      } else if (key.equals("testTryCatchOwnException")) {
-        assertEquals(text, 5, value);
-      } else if (key.equals("testTryCatchSuper")) {
-        assertEquals(text, 3, value);
-      } else if (key.equals("testTryCatchImplicitException")) {
-        assertEquals(text, 5, value);
-      } else if (key.equals("main")) {
-        assertEquals(text, 4, value);
-      } else {
-        assertEquals(text, 0, value);
+      switch (key) {
+        case "testTryCatchMultipleExceptions":
+          assertEquals(text, 12, value);
+          break;
+        case "testTryCatchOwnException":
+          assertEquals(text, 5, value);
+          break;
+        case "testTryCatchSuper":
+          assertEquals(text, 3, value);
+          break;
+        case "testTryCatchImplicitException":
+          assertEquals(text, 5, value);
+          break;
+        case "main":
+          assertEquals(text, 4, value);
+          break;
+        default:
+          assertEquals(text, 0, value);
+          break;
       }
     }
   }

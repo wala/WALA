@@ -344,14 +344,15 @@ public class EntryPoints {
     }
 
     private ArrayList<String[]> chooseIntentList(String name) {
-        if (name.equals("activity"))
-            return ActivityIntentList;
-        else if (name.equals("receiver"))
-            return ReceiverIntentList;
-        else if (name.equals("service"))
-            return ServiceIntentList;
-        else {
-            return ActivityIntentList;
+        switch (name) {
+            case "activity":
+                return ActivityIntentList;
+            case "receiver":
+                return ReceiverIntentList;
+            case "service":
+                return ServiceIntentList;
+            default:
+                return ActivityIntentList;
 //          throw new UnimplementedError("EntryPoints intent category not yet covered: " + name);
         }
     }

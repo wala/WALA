@@ -157,21 +157,22 @@ public class FileProvider {
         throw new IOException("Could not find file: " + fileName, e);
       }
     }
-    if (url.getProtocol().equals("jar")) {
-      JarURLConnection jc = (JarURLConnection) url.openConnection();
-      JarFile f = jc.getJarFile();
-      JarEntry entry = jc.getJarEntry();
-      JarFileModule parent = new JarFileModule(f);
-      return new NestedJarFileModule(parent, entry);
-    } else if (url.getProtocol().equals("rsrc")) {
-      return new ResourceJarFileModule(url);
-    } else if (url.getProtocol().equals("file")) {
-      String filePath = filePathFromURL(url);
-      return new JarFileModule(new JarFile(filePath, false));
-    } else {
-      final URLConnection in = url.openConnection();
-      final JarInputStream jarIn = new JarInputStream(in.getInputStream(), false);
-      return new JarStreamModule(jarIn);
+    switch (url.getProtocol()) {
+      case "jar":
+        JarURLConnection jc = (JarURLConnection) url.openConnection();
+        JarFile f = jc.getJarFile();
+        JarEntry entry = jc.getJarEntry();
+        JarFileModule parent = new JarFileModule(f);
+        return new NestedJarFileModule(parent, entry);
+      case "rsrc":
+        return new ResourceJarFileModule(url);
+      case "file":
+        String filePath = filePathFromURL(url);
+        return new JarFileModule(new JarFile(filePath, false));
+      default:
+        final URLConnection in = url.openConnection();
+        final JarInputStream jarIn = new JarInputStream(in.getInputStream(), false);
+        return new JarStreamModule(jarIn);
     }
   }
 

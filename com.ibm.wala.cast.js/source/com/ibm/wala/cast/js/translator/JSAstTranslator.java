@@ -319,63 +319,73 @@ public class JSAstTranslator extends AstTranslator {
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
     try {
       String name = (String) primitiveCall.getChild(0).getValue();
-      if (name.equals("GlobalNaN")) {
-	context.cfg().addInstruction(
-	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-	    resultVal, context.currentScope().getConstantValue(Float.valueOf(Float.NaN))));
-      } else if (name.equals("GlobalInfinity")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Float.valueOf(Float.POSITIVE_INFINITY))));
-      } else if (name.equals("MathE")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.E))));
-      } else if (name.equals("MathPI")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.PI))));
-      } else if (name.equals("MathSQRT1_2")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(.5)))));
-      } else if (name.equals("MathSQRT2")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(2)))));
-      } else if (name.equals("MathLN2")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.log(2)))));
-      } else if (name.equals("MathLN10")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.log(10)))));
-      } else if (name.equals("NewObject")) {
-        doNewObject(context, null, resultVal, "Object", null);
-
-      } else if (name.equals("NewArray")) {
-        doNewObject(context, null, resultVal, "Array", null);
-
-      } else if (name.equals("NewString")) {
-        doPrimitiveNew(context, resultVal, "String");
-
-      } else if (name.equals("NewNumber")) {
-        doPrimitiveNew(context, resultVal, "Number");
-
-      } else if (name.equals("NewRegExp")) {
-        doPrimitiveNew(context, resultVal, "RegExp");
-
-      } else if (name.equals("NewFunction")) {
-        doNewObject(context, null, resultVal, "Function", null);
-
-      } else if (name.equals("NewUndefined")) {
-        doNewObject(context, null, resultVal, "Undefined", null);
-
-      } else {
-	context.cfg().addInstruction(
-	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, context.currentScope().getConstantValue( null )));
+      switch (name) {
+        case "GlobalNaN":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Float.valueOf(Float.NaN))));
+          break;
+        case "GlobalInfinity":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Float.valueOf(Float.POSITIVE_INFINITY))));
+          break;
+        case "MathE":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.E))));
+          break;
+        case "MathPI":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.PI))));
+          break;
+        case "MathSQRT1_2":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(.5)))));
+          break;
+        case "MathSQRT2":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(2)))));
+          break;
+        case "MathLN2":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.log(2)))));
+          break;
+        case "MathLN10":
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(Double.valueOf(Math.log(10)))));
+          break;
+        case "NewObject":
+          doNewObject(context, null, resultVal, "Object", null);
+          break;
+        case "NewArray":
+          doNewObject(context, null, resultVal, "Array", null);
+          break;
+        case "NewString":
+          doPrimitiveNew(context, resultVal, "String");
+          break;
+        case "NewNumber":
+          doPrimitiveNew(context, resultVal, "Number");
+          break;
+        case "NewRegExp":
+          doPrimitiveNew(context, resultVal, "RegExp");
+          break;
+        case "NewFunction":
+          doNewObject(context, null, resultVal, "Function", null);
+          break;
+        case "NewUndefined":
+          doNewObject(context, null, resultVal, "Undefined", null);
+          break;
+        default:
+          context.cfg().addInstruction(
+                  ((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(),
+                          resultVal, context.currentScope().getConstantValue(null)));
+          break;
       }
     } catch (ClassCastException e) {
       throw new RuntimeException("Cannot translate primitive " + primitiveCall.getChild(0).getValue(), e);
