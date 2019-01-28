@@ -419,133 +419,135 @@ public class JavaScriptConstructorFunctions {
   private IMethod makeFunctionConstructor(IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass cls, int nargs) {
     SymbolTable ST = callerIR.getSymbolTable();
 
-    if (nargs == 0) {
-      return makeFunctionConstructor(cls, cls);
-    } else if (nargs == 1) {
-      if (ST.isStringConstant(callStmt.getUse(1))) {
-        TypeReference ref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(ST
-            .getStringValue(callStmt.getUse(1))));
+    switch (nargs) {
+      case 0:
+        return makeFunctionConstructor(cls, cls);
+      case 1:
+        if (ST.isStringConstant(callStmt.getUse(1))) {
+          TypeReference ref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(ST
+              .getStringValue(callStmt.getUse(1))));
 
-        IClass cls2 = cha.lookupClass(ref);
-        if (cls2 != null) {
-          return makeFunctionConstructor(cls, cls2);
+          IClass cls2 = cha.lookupClass(ref);
+          if (cls2 != null) {
+            return makeFunctionConstructor(cls, cls2);
+          }
         }
-      }
 
-      return makeFunctionConstructor(cls, cls);
-    } else {
-      assert nargs > 1;
-      JavaScriptLoader cl = (JavaScriptLoader) cha.getLoader(JavaScriptTypes.jsLoader);
+        return makeFunctionConstructor(cls, cls);
+      default:
+        assert nargs > 1;
+        JavaScriptLoader cl = (JavaScriptLoader) cha.getLoader(JavaScriptTypes.jsLoader);
 
-      for (int i = 1; i < callStmt.getNumberOfUses(); i++)
-        if (!ST.isStringConstant(callStmt.getUse(i)))
-          return makeFunctionConstructor(cls, cls);
+        for (int i = 1; i < callStmt.getNumberOfUses(); i++)
+          if (!ST.isStringConstant(callStmt.getUse(i)))
+            return makeFunctionConstructor(cls, cls);
 
-      final StringBuilder fun = new StringBuilder("function _fromctor (");
-      for (int j = 1; j < callStmt.getNumberOfUses() - 1; j++) {
-        if (j != 1)
-          fun.append(',');
-        fun.append(ST.getStringValue(callStmt.getUse(j)));
-      }
+        final StringBuilder fun = new StringBuilder("function _fromctor (");
+        for (int j = 1; j < callStmt.getNumberOfUses() - 1; j++) {
+          if (j != 1)
+            fun.append(',');
+          fun.append(ST.getStringValue(callStmt.getUse(j)));
+        }
 
-      fun.append(") {");
-      fun.append(ST.getStringValue(callStmt.getUse(callStmt.getNumberOfUses() - 1)));
-      fun.append('}');
+        fun.append(") {");
+        fun.append(ST.getStringValue(callStmt.getUse(callStmt.getNumberOfUses() - 1)));
+        fun.append('}');
 
-      try {
-        final String fileName = "ctor$" + ++ctorCount;
-        ModuleEntry ME = new SourceModule() {
+        try {
+          final String fileName = "ctor$" + ++ctorCount;
+          ModuleEntry ME = new SourceModule() {
 
-          @Override
-          public String getName() {
-            return fileName;
-          }
+            @Override
+            public String getName() {
+              return fileName;
+            }
 
-          @Override
-          public boolean isClassFile() {
-            return false;
-          }
+            @Override
+            public boolean isClassFile() {
+              return false;
+            }
 
-          @Override
-          public boolean isSourceFile() {
-            return true;
-          }
+            @Override
+            public boolean isSourceFile() {
+              return true;
+            }
 
-          @Override
-          public InputStream getInputStream() {
-            return new InputStream() {
-              private int i = 0;
-              @Override
-              public int read() throws IOException {
-                if (i >= fun.length()) {
-                  return -1;
-                } else {
-                  return fun.codePointAt(i++);
+            @Override
+            public InputStream getInputStream() {
+              return new InputStream() {
+                private int i = 0;
+
+                @Override
+                public int read() throws IOException {
+                  if (i >= fun.length()) {
+                    return -1;
+                  } else {
+                    return fun.codePointAt(i++);
+                  }
                 }
-              }
-              
-            };
-          }
 
-          @Override
-          public boolean isModuleFile() {
-            return false;
-          }
+              };
+            }
 
-          @Override
-          public Module asModule() {
-            return null;
-          }
+            @Override
+            public boolean isModuleFile() {
+              return false;
+            }
 
-          @Override
-          public String getClassName() {
-            return fileName;
-          }
-
-          @Override
-          public Module getContainer() {
-             return null;
-          }
-
-          @Override
-          public Iterator<? extends ModuleEntry> getEntries() {
-            return new NonNullSingletonIterator<ModuleEntry>(this);
-          }
-
-          @Override
-          public Reader getInputReader() {
-             return new StringReader(fun.toString());
-          }
-
-          @Override
-          public URL getURL() {
-            try {
-              return new URL("file://" + fileName);
-            } catch (MalformedURLException e) {
-              assert false;
+            @Override
+            public Module asModule() {
               return null;
             }
+
+            @Override
+            public String getClassName() {
+              return fileName;
+            }
+
+            @Override
+            public Module getContainer() {
+              return null;
+            }
+
+            @Override
+            public Iterator<? extends ModuleEntry> getEntries() {
+              return new NonNullSingletonIterator<ModuleEntry>(this);
+            }
+
+            @Override
+            public Reader getInputReader() {
+              return new StringReader(fun.toString());
+            }
+
+            @Override
+            public URL getURL() {
+              try {
+                return new URL("file://" + fileName);
+              } catch (MalformedURLException e) {
+                assert false;
+                return null;
+              }
+            }
+
+          };
+
+          Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, ME);
+          IClass fcls = null;
+          for (String nm : fnNames) {
+            if (nm.endsWith("_fromctor")) {
+              fcls = cl.lookupClass(nm, cha);
+            }
           }
-          
-        };
-         
-        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, ME);
-        IClass fcls = null;
-        for(String nm : fnNames) {
-          if (nm.endsWith("_fromctor")) {
-            fcls = cl.lookupClass(nm, cha);
-          }
+
+          assert fcls != null : "cannot find class for " + fileName;
+
+          return makeFunctionConstructor(cls, fcls);
+
+        } catch (IOException e) {
+
         }
 
-        assert fcls != null : "cannot find class for " + fileName;
-        
-        return makeFunctionConstructor(cls, fcls);
-
-      } catch (IOException e) {
-
-      }
-
-      return makeFunctionConstructor(cls, cls);
+        return makeFunctionConstructor(cls, cls);
     }
   }
 

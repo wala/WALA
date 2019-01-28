@@ -255,13 +255,17 @@ public class AndroidModelParameterManager {
                         }
                         continue;
                     }
-                    
-                    if (param.status == ValueStatus.FREE) {
-                        param.status = ValueStatus.ALLOCATED;
-                    } else if (param.status == ValueStatus.FREE_INVALIDATED) {
-                        param.status = ValueStatus.INVALIDATED;
-                    } else if (param.status == ValueStatus.FREE_CLOSED) {
-                        param.status = ValueStatus.CLOSED;
+
+                    switch (param.status) {
+                        case FREE:
+                            param.status = ValueStatus.ALLOCATED;
+                            break;
+                        case FREE_INVALIDATED:
+                            param.status = ValueStatus.INVALIDATED;
+                            break;
+                        case FREE_CLOSED:
+                            param.status = ValueStatus.CLOSED;
+                            break;
                     }
                     param.setInScope = currentScope;
 //                    param.setBy = setBy;

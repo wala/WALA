@@ -3537,12 +3537,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       fakeCtor.parameters().add(svd);
 
       // the type
-      if (i == 1)
-        paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
-      else if (i == 2)
-        paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")));
-      else
-        paramTypes.add(fTypeDict.getCAstTypeFor(ctor.getParameterTypes()[i - 3]));
+      switch (i) {
+        case 1:
+          paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
+          break;
+        case 2:
+          paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")));
+          break;
+        default:
+          paramTypes.add(fTypeDict.getCAstTypeFor(ctor.getParameterTypes()[i - 3]));
+          break;
+      }
     }
 
     // PART IIb: create the statements in the constructor

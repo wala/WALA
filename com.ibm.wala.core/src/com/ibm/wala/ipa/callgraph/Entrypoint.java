@@ -95,51 +95,52 @@ public abstract class Entrypoint implements BytecodeConstants {
    */
   protected int makeArgument(AbstractRootMethod m, int i) {
     TypeReference[] p = getParameterTypes(i);
-    if (p.length == 0) {
-      return -1;
-    } else if (p.length == 1) {
-      if (p[0].isPrimitiveType()) {
-        return m.addLocal();
-      } else {
-        SSANewInstruction n = m.addAllocation(p[0]);
-        return (n == null) ? -1 : n.getDef();
-      }
-    } else {
-      int[] values = new int[p.length];
-      int countErrors = 0;
-      for (int j = 0; j < p.length; j++) {
-        SSANewInstruction n = m.addAllocation(p[j]);
-        int value = (n == null) ? -1 : n.getDef();
-        if (value == -1) {
-          countErrors++;
+    switch (p.length) {
+      case 0:
+        return -1;
+      case 1:
+        if (p[0].isPrimitiveType()) {
+          return m.addLocal();
         } else {
-          values[j - countErrors] = value;
+          SSANewInstruction n = m.addAllocation(p[0]);
+          return (n == null) ? -1 : n.getDef();
         }
-      }
-      if (countErrors > 0) {
-        int[] oldValues = values;
-        values = new int[oldValues.length - countErrors];
-        System.arraycopy(oldValues, 0, values, 0, values.length);
-      }
+      default:
+        int[] values = new int[p.length];
+        int countErrors = 0;
+        for (int j = 0; j < p.length; j++) {
+          SSANewInstruction n = m.addAllocation(p[j]);
+          int value = (n == null) ? -1 : n.getDef();
+          if (value == -1) {
+            countErrors++;
+          } else {
+            values[j - countErrors] = value;
+          }
+        }
+        if (countErrors > 0) {
+          int[] oldValues = values;
+          values = new int[oldValues.length - countErrors];
+          System.arraycopy(oldValues, 0, values, 0, values.length);
+        }
 
-      TypeAbstraction a;
-      if (p[0].isPrimitiveType()) {
-        a = PrimitiveType.getPrimitive(p[0]);
-        for (i = 1; i < p.length; i++) {
-          a = a.meet(PrimitiveType.getPrimitive(p[i]));
+        TypeAbstraction a;
+        if (p[0].isPrimitiveType()) {
+          a = PrimitiveType.getPrimitive(p[0]);
+          for (i = 1; i < p.length; i++) {
+            a = a.meet(PrimitiveType.getPrimitive(p[i]));
+          }
+        } else {
+          IClassHierarchy cha = m.getClassHierarchy();
+          IClass p0 = cha.lookupClass(p[0]);
+          a = new ConeType(p0);
+          for (i = 1; i < p.length; i++) {
+            IClass pi = cha.lookupClass(p[i]);
+            a = a.meet(new ConeType(pi));
+          }
         }
-      } else {
-        IClassHierarchy cha = m.getClassHierarchy();
-        IClass p0 = cha.lookupClass(p[0]);
-        a = new ConeType(p0);
-        for (i = 1; i < p.length; i++) {
-          IClass pi = cha.lookupClass(p[i]);
-          a = a.meet(new ConeType(pi));
-        }
-      }
 
-      return m.addPhi(values);
-    }
+        return m.addPhi(values);
+      }
   }
 
   @Override
