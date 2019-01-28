@@ -52,8 +52,8 @@ public class CAstToDOM extends CAstPrinter {
     Element nodeElt = doc.createElement(kindAsString(astNode.getKind()));
 
     if (astNode.getValue() == null) {
-      for(int i = 0; i < astNode.getChildCount(); i++) {
-	nodeToDOM(doc, nodeElt, astNode.getChild(i));
+      for(CAstNode child : astNode.getChildren()) {
+	nodeToDOM(doc, nodeElt, child);
       }
 
     } else {

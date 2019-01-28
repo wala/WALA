@@ -226,8 +226,9 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     
     // special hack to handle "var p = ..., x = y[p];", where startNode = "y[p]"
     if(block.getChild(0).getKind() == CAstNode.BLOCK_STMT && start == 0) {
+      final Iterator<CAstNode> blockChild = block.getChild(0).getChildren().iterator();
       for(start_inner=0;start_inner<block.getChild(0).getChildCount();++start_inner)
-        if(NodePos.inSubtree(startNode.getChild(), block.getChild(0).getChild(start_inner)))
+        if(NodePos.inSubtree(startNode.getChild(), blockChild.next()))
           return Pair.make(block, new TwoLevelExtractionRegion(start, end, start_inner, end_inner, Collections.singletonList(parmName), locals));
     }
     // special hack to handle the case where we're extracting the body of a local scope

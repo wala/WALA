@@ -129,8 +129,8 @@ public class CAstDumper {
 	
 	private int getNonTrivialChildCount(CAstNode node) {
 	  int cnt = 0;
-	  for(int i=0;i<node.getChildCount();++i)
-	    if(!isTrivial(node.getChild(i)))
+	  for (CAstNode child : node.getChildren())
+	    if (!isTrivial(child))
 	      ++cnt;
 	  return cnt;
 	}
@@ -141,9 +141,9 @@ public class CAstDumper {
 	    return;
 		// normalise away single-child block expressions
 		if(NORMALISE && node.getKind() == CAstNode.BLOCK_EXPR && getNonTrivialChildCount(node) == 1) {
-		  for(int i=0;i<node.getChildCount();++i)
-		    if(!isTrivial(node.getChild(i)))
-		      dump(node.getChild(i), indent, buf, cfg);
+		  for (CAstNode child : node.getChildren())
+		    if (!isTrivial(child))
+		      dump(child, indent, buf, cfg);
 		} else {
 			buf.append(indent(indent)).append(labeller.addNode(node)).append(": ");
 			if(node.getKind() == CAstNode.CONSTANT) {
@@ -178,8 +178,7 @@ public class CAstDumper {
 				buf.append(']');
 			}
 			buf.append('\n');
-			for(int i=0;i<node.getChildCount();++i) {
-				CAstNode child = node.getChild(i);
+			for (CAstNode child : node.getChildren()) {
 				// omit empty statements in a block
 				if(NORMALISE && node.getKind() == CAstNode.BLOCK_STMT && child != null && child.getKind() == CAstNode.EMPTY)
 					continue;

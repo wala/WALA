@@ -662,9 +662,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       if (visitor.visitNew(n, context, visitor))
         break;
 
-      for(int i = 1; i < n.getChildCount(); i++) {
-	visitor.visit(n.getChild(i), context, visitor);
-      }	  
+      visitChildren(n, 1, context, visitor);
 
       visitor.leaveNew(n, context, visitor);
       break;
@@ -868,9 +866,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       if (visitor.visitEcho(n, context, visitor)) {
 	break;
       }
-      for(int i = 0; i < n.getChildCount(); i++) {
-	visitor.visit(n.getChild(i), context, visitor);
-      }
+      visitAllChildren(n, context, visitor);
       visitor.leaveEcho(n, context, visitor);
       break;
     }
@@ -879,9 +875,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       if (visitor.visitYield(n, context, visitor)) {
   break;
       }
-      for(int i = 0; i < n.getChildCount(); i++) {
-  visitor.visit(n.getChild(i), context, visitor);
-      }
+      visitAllChildren(n, context, visitor);
       visitor.leaveYield(n, context, visitor);
       break;
     }

@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.cast.js.translator;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -41,7 +41,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       getParent().addNameDecl(n);
     }
 
-    default Collection<CAstNode> getNameDecls() {
+    default List<CAstNode> getNameDecls() {
       return getParent().getNameDecls();
     }
 
@@ -81,7 +81,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
     }
 
     @Override
-    public Collection<CAstNode> getNameDecls() {
+    public List<CAstNode> getNameDecls() {
       Assertions.UNREACHABLE();
       return null;
     }
@@ -127,7 +127,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
     public void addNameDecl(CAstNode v) { initializers.add(v); }
 
     @Override
-    public Collection<CAstNode> getNameDecls() { return initializers; }
+    public List<CAstNode> getNameDecls() { return initializers; }
 
     @Override
     public String script() {

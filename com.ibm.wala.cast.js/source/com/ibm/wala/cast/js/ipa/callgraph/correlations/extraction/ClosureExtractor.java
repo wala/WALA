@@ -31,7 +31,6 @@ import static com.ibm.wala.cast.tree.CAstNode.TRY;
 import static com.ibm.wala.cast.tree.CAstNode.VAR;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -249,7 +248,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       }
       for(;next_child<root.getChildCount();++next_child)
         copied_children.add(copyNodes(root.getChild(next_child), cfg, new ChildPos(root, next_child, context), nodeMap));
-      CAstNode newNode = Ast.makeNode(root.getKind(), copied_children.toArray(new CAstNode[0]));
+      CAstNode newNode = Ast.makeNode(root.getKind(), copied_children);
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
     }
@@ -371,13 +370,13 @@ public class ClosureExtractor extends CAstRewriterExt {
 
   /* Recursively copy child nodes. */
   private CAstNode copyNode(CAstNode node, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
-    CAstNode children[] = new CAstNode[node.getChildCount()];
+    List<CAstNode> children = new ArrayList<>(node.getChildCount());
     
     // copy children
-    for (int i = 0; i < children.length; i++) {
-      children[i] = copyNodes(node.getChild(i), cfg, new ChildPos(node, i, context), nodeMap);
-    }
-    
+    int i = 0;
+    for (CAstNode child : node.getChildren())
+      children.add(copyNodes(child, cfg, new ChildPos(node, i++, context), nodeMap));
+
     // for non-constant case labels, the case expressions appear as labels on CFG edges; rewrite those as well
     for(Object label: cfg.getTargetLabels(node)) {
       if (label instanceof CAstNode) {
@@ -451,8 +450,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     // if we are extracting a block, unwrap it
     if(extractingBlock) {
       CAstNode block = root.getChild(context.getStart());
-      for(int i=0;i<block.getChildCount();++i)
-        fun_body_stmts.add(block.getChild(i));
+      fun_body_stmts.addAll(block.getChildren());
     } else {
       if(context.getRegion() instanceof TwoLevelExtractionRegion) {
         CAstNode start = root.getChild(context.getStart());
@@ -461,17 +459,13 @@ public class ClosureExtractor extends CAstRewriterExt {
           throw new UnimplementedError("Two-level extraction not fully implemented.");
         int i;
         if(start.getKind() == CAstNode.BLOCK_STMT) {
-          CAstNode[] before = new CAstNode[tler.getStartInner()];
           for(i=0;i<tler.getStartInner();++i)
-            before[i] = copyNodes(start.getChild(i), cfg, context, nodeMap);
-          prologue.addAll(Arrays.asList(before));
+            prologue.add(copyNodes(start.getChild(i), cfg, context, nodeMap));
           if(i+1 == start.getChildCount()) {
             fun_body_stmts.add(addSpuriousExnFlow(start.getChild(i), cfg));            
           } else {
-            CAstNode[] after = new CAstNode[start.getChildCount()-i];
             for(int j=0;j+i<start.getChildCount();++j)
-              after[j] = addSpuriousExnFlow(start.getChild(j+i), cfg);
-            fun_body_stmts.addAll(Arrays.asList(after));
+              fun_body_stmts.add(addSpuriousExnFlow(start.getChild(j+i), cfg));
           }
           for(i=context.getStart()+1;i<context.getEnd();++i)
             fun_body_stmts.add(root.getChild(i));
@@ -485,9 +479,9 @@ public class ClosureExtractor extends CAstRewriterExt {
         }
       } else {
         if(context.getEnd() > context.getStart()+1) {
-          CAstNode[] stmts = new CAstNode[context.getEnd()-context.getStart()];
+          List<CAstNode> stmts = new ArrayList<>(context.getEnd()-context.getStart());
           for(int i=context.getStart();i<context.getEnd();++i)
-            stmts[i-context.getStart()] = root.getChild(i);
+            stmts.add(root.getChild(i));
           fun_body_stmts.add(Ast.makeNode(root.getKind(), stmts));
         } else {
           CAstNode node_to_extract = root.getChild(context.getStart());
@@ -509,10 +503,9 @@ public class ClosureExtractor extends CAstRewriterExt {
       markSynthetic(retLocal);
       // insert as last stmt if fun_body_stmts is a single block, otherwise append
       if(fun_body_stmts.size() == 1 && fun_body_stmts.get(0).getKind() == BLOCK_STMT) {
-        CAstNode[] stmts = new CAstNode[fun_body_stmts.get(0).getChildCount()+1];
-        for(int i=0;i<stmts.length-1;++i)
-          stmts[i] = fun_body_stmts.get(0).getChild(i);
-        stmts[stmts.length-1] = retLocal;
+        List<CAstNode> stmts = new ArrayList<>(fun_body_stmts.get(0).getChildCount()+1);
+        stmts.addAll(fun_body_stmts.get(0).getChildren());
+        stmts.add(retLocal);
         fun_body_stmts.set(0, Ast.makeNode(BLOCK_STMT, stmts));
       } else {
         fun_body_stmts.add(retLocal);
@@ -523,7 +516,7 @@ public class ClosureExtractor extends CAstRewriterExt {
                                            addExnFlow(makeVarRef("$$undefined"), JavaScriptTypes.ReferenceError, entity, context));
       
       if(fun_body_stmts.size() > 1) {
-        CAstNode newBlock = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
+        CAstNode newBlock = Ast.makeNode(BLOCK_STMT, new ArrayList<>(fun_body_stmts));
         fun_body_stmts.clear();
         fun_body_stmts.add(newBlock);
       }
@@ -533,7 +526,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       fun_body_stmts.add(0, theLocalDecl);
     }
 
-    CAstNode fun_body = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
+    CAstNode fun_body = Ast.makeNode(BLOCK_STMT, fun_body_stmts);
 
     /*
      * Now we rewrite the body and construct a Rewrite object.
@@ -605,7 +598,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       args.add(addExnFlow(makeVarRef(parmName), JavaScriptTypes.ReferenceError, entity, context));
     if(context.containsThis())
       args.add(inFunction() ? Ast.makeNode(VAR, Ast.makeConstant("this")) : Ast.makeConstant(null));
-    CAstNode call = Ast.makeNode(CALL, args.toArray(new CAstNode[0])); 
+    CAstNode call = Ast.makeNode(CALL, args);
     addExnFlow(call, null, entity, context);
 
     // if the extracted code contains jumps, we need to insert some fix-up code
@@ -652,14 +645,14 @@ public class ClosureExtractor extends CAstRewriterExt {
 
     if(extractingBlock) {
       // put the call and the fixup code together
-      CAstNode newNode = Ast.makeNode(BLOCK_STMT, stmts.toArray(new CAstNode[0]));
+      CAstNode newNode = Ast.makeNode(BLOCK_STMT, stmts);
       nodeMap.put(Pair.make(root, context.key()), newNode);
       deleteFlow(root, getCurrentEntity());
       stmts = Collections.singletonList(newNode);
     }
     
     if(extractingLocalScope || extractingEmpty) {
-      CAstNode newNode = Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, stmts.toArray(new CAstNode[0])));
+      CAstNode newNode = Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, stmts));
       stmts = Collections.singletonList(newNode);
     }
     
@@ -727,10 +720,15 @@ public class ClosureExtractor extends CAstRewriterExt {
             Ast.makeConstant("goto")),
         Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup)));
   }
-  
+
   // wrap given nodes into a node of the given kind, unless there is only a single node which is itself of the same kind
-  private CAstNode wrapIn(int kind, CAstNode... nodes) {
-    return nodes.length == 1 && nodes[0].getKind() == kind ? nodes[0] : Ast.makeNode(kind, nodes);
+  private CAstNode wrapIn(int kind, List<CAstNode> nodes) {
+    return nodes.size() == 1 ? wrapIn(kind, nodes.get(0)) : Ast.makeNode(kind, nodes);
+  }
+
+  // wrap given node into a node of the given kind, unless it is already of the same kind
+  private CAstNode wrapIn(int kind, CAstNode node) {
+    return node.getKind() == kind ? node : Ast.makeNode(kind, node);
   }
 
   // helper functions for adding exceptional CFG edges
@@ -819,8 +817,8 @@ public class ClosureExtractor extends CAstRewriterExt {
     default:
       // fall through to generic handlers below
     }
-    for(int i=0;i<node.getChildCount();++i)
-      if(!noJumpsAndNoCalls(node.getChild(i)))
+    for (CAstNode child : node.getChildren())
+      if (!noJumpsAndNoCalls(child))
         return false;
     return true;
   }
@@ -830,8 +828,8 @@ public class ClosureExtractor extends CAstRewriterExt {
     if(node.getKind() == CAstNode.VAR) {
         return node.getChild(0).getValue().equals("arguments");
     } else {
-      for(int i=0;i<node.getChildCount();++i)
-        if(usesArguments(node.getChild(i)))
+      for(CAstNode child : node.getChildren())
+        if(usesArguments(child))
           return true;
       return false;      
     }
