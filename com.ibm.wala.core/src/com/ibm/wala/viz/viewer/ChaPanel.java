@@ -41,7 +41,7 @@ public class ChaPanel extends JSplitPane {
     this.setLeftComponent(new JScrollPane(tree));
     
     final DefaultListModel<String> methodListModel = new DefaultListModel<>();
-    JList methodList = new JList<>(methodListModel);
+    JList<String> methodList = new JList<>(methodListModel);
     this.setRightComponent(methodList);
     
     tree.addTreeSelectionListener(new TreeSelectionListener() {

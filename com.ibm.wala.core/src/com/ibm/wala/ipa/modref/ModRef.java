@@ -325,11 +325,11 @@ public class ModRef<T extends InstanceKey> {
     }
   }
 
-  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
+  protected ModVisitor<T, ?> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
     return makeModVisitor(n, result, pa, h, false);
   }
 
-  protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h,
+  protected ModVisitor<T, ?> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h,
       boolean ignoreAllocHeapDefs) {
     return n.getMethod().getDeclaringClass().getClassLoader().getLanguage().makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
     //return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
@@ -351,7 +351,7 @@ public class ModRef<T extends InstanceKey> {
       throw new IllegalArgumentException("s is null");
     }
     Set<PointerKey> result = HashSetFactory.make(2);
-    ModVisitor v = makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
+    ModVisitor<T, ?> v = makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
   }
@@ -368,7 +368,7 @@ public class ModRef<T extends InstanceKey> {
       throw new IllegalArgumentException("s is null");
     }
     Set<PointerKey> result = HashSetFactory.make(2);
-    RefVisitor v = makeRefVisitor(n, result, pa, h);
+    RefVisitor<T, ?> v = makeRefVisitor(n, result, pa, h);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
   }

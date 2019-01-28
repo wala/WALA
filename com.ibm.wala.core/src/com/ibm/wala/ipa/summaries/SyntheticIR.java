@@ -42,7 +42,7 @@ public class SyntheticIR extends IR {
    * @param constants a Map giving information on constant values for the symbol table
    * @throws AssertionError if method is null
    */
-  public SyntheticIR(IMethod method, Context context, AbstractCFG cfg, SSAInstruction[] instructions, SSAOptions options,
+  public SyntheticIR(IMethod method, Context context, AbstractCFG<?, ?> cfg, SSAInstruction[] instructions, SSAOptions options,
       Map<Integer, ConstantValue> constants) throws AssertionError {
     super(method, instructions, makeSymbolTable(method, instructions, constants, cfg), new SSACFG(method, cfg, instructions),
         options);
@@ -73,7 +73,7 @@ public class SyntheticIR extends IR {
    * @param constants Map: value number (Integer) -&gt; ConstantValue
    */
   private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants,
-      AbstractCFG cfg) {
+      AbstractCFG<?, ?> cfg) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }

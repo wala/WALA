@@ -4,7 +4,6 @@ import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.analysis.typeInference.TypeVariable;
 import com.ibm.wala.fixpoint.AbstractOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -33,7 +32,7 @@ public class DalvikTypeInference extends TypeInference {
 	public class DalvikTypeVarFactory extends TypeInference.TypeVarFactory {
 
 		@Override
-		public IVariable makeVariable(int valueNumber) {
+		public TypeVariable makeVariable(int valueNumber) {
 			SymbolTable st = ir.getSymbolTable();
 			if (st.isIntegerConstant(valueNumber) && st.isZero(valueNumber)) {
 				return new DalvikTypeVariable(language.getPrimitive(language.getConstantType(Integer.valueOf(0))), true);

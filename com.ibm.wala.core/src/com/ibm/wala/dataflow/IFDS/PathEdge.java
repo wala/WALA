@@ -64,7 +64,7 @@ public final class PathEdge<T> {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final PathEdge other = (PathEdge) obj;
+    final PathEdge<?> other = (PathEdge<?>) obj;
     if (d1 != other.d1)
       return false;
     if (d2 != other.d2)

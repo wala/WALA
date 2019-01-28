@@ -21,7 +21,6 @@ import java.util.Set;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -500,7 +499,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
       int n = 0;
       // set n to be whichPred(this, sb);
-      for (IBasicBlock back : Iterator2Iterable.make(cfg.getPredNodes(sb))) {
+      for (ISSABasicBlock back : Iterator2Iterable.make(cfg.getPredNodes(sb))) {
         if (back == b) {
           break;
         }

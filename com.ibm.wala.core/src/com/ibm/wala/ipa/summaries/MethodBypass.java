@@ -44,12 +44,12 @@ public class MethodBypass {
    * <li>Atom (package name)
    * </ul>
    */
-  private final Map methodSummaries;
+  private final Map<Object, MethodSummary> methodSummaries;
 
   /**
    * Set of TypeReferences which are marked "allocatable"
    */
-  private final Set allocatable;
+  private final Set<TypeReference> allocatable;
 
   /**
    * Governing class hierarchy.
@@ -66,7 +66,7 @@ public class MethodBypass {
    */
   final private HashSet<MethodReference> considered = HashSetFactory.make();
 
-  public MethodBypass(Map methodSummaries, Set allocatable, IClassHierarchy cha) {
+  public MethodBypass(Map<Object, MethodSummary> methodSummaries, Set<TypeReference> allocatable, IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;
     this.allocatable = allocatable;
     this.cha = cha;
@@ -113,7 +113,7 @@ public class MethodBypass {
   }
 
   private MethodSummary findSummary(MemberReference m) {
-    MethodSummary result = (MethodSummary) methodSummaries.get(m);
+    MethodSummary result = methodSummaries.get(m);
     if (result != null) {
       if (DEBUG) {
         System.err.println(("findSummary succeeded: " + m));
@@ -123,7 +123,7 @@ public class MethodBypass {
 
     // try the class instead.
     TypeReference t = m.getDeclaringClass();
-    result = (MethodSummary) methodSummaries.get(t);
+    result = methodSummaries.get(t);
     if (result != null) {
       if (DEBUG) {
         System.err.println(("findSummary succeeded: " + t));
@@ -135,7 +135,7 @@ public class MethodBypass {
 
     // finally try the package.
     Atom p = extractPackage(t);
-    result = (MethodSummary) methodSummaries.get(p);
+    result = methodSummaries.get(p);
     if (result != null) {
       if (DEBUG) {
         System.err.println(("findSummary succeeded: " + p));

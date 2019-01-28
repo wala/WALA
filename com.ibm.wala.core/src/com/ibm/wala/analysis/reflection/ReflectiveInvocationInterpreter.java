@@ -72,8 +72,8 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       System.err.println("generating IR for " + node);
     }
     Context recv = node.getContext();
-    ConstantKey c = (ConstantKey) recv.get(ContextKey.RECEIVER);
-    IMethod m = (IMethod) c.getValue();
+    @SuppressWarnings("unchecked") ConstantKey<IMethod> c = (ConstantKey<IMethod>) recv.get(ContextKey.RECEIVER);
+    IMethod m = c.getValue();
 /** BEGIN Custom change: caching */
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + recv.toString();

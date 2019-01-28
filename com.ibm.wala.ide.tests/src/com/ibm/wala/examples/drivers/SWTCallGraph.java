@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -138,10 +139,10 @@ public class SWTCallGraph {
       String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
 
       // create and run the viewer
-      final SWTTreeViewer v = new SWTTreeViewer();
+      final SWTTreeViewer<CGNode> v = new SWTTreeViewer<>();
       v.setGraphInput(cg);
       v.setRootsInput(InferGraphRoots.inferRoots(cg));
-      v.getPopUpActions().add(new ViewIRAction(v, cg, psFile, dotFile, dotExe, gvExe));
+      v.getPopUpActions().add(new ViewIRAction<>(v, cg, psFile, dotFile, dotExe, gvExe));
       v.run();
       return v.getApplicationWindow();
 

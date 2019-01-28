@@ -31,7 +31,7 @@ public class InstructionByIIndexWrapper<T extends SSAInstruction> {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    InstructionByIIndexWrapper other = (InstructionByIIndexWrapper) obj;
+    InstructionByIIndexWrapper<?> other = (InstructionByIIndexWrapper<?>) obj;
     if (getInstruction().iindex != other.getInstruction().iindex)
       return false;
     return true;

@@ -161,12 +161,12 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     }
   }
 
-  private static class FilteredNodes<T extends IBasicBlock> implements NumberedNodeManager<T> {
+  private static class FilteredNodes<T> implements NumberedNodeManager<T> {
     private final NumberedNodeManager<T> nodes;
 
-    private final Set subset;
+    private final Set<T> subset;
 
-    FilteredNodes(NumberedNodeManager<T> nodes, Set subset) {
+    FilteredNodes(NumberedNodeManager<T> nodes, Set<T> subset) {
       this.nodes = nodes;
       this.subset = subset;
     }

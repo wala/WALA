@@ -20,7 +20,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
-public class PointerKeyComparator implements Comparator {
+public class PointerKeyComparator implements Comparator<PointerKey> {
 
   private final IClassHierarchy cha;
 
@@ -181,7 +181,7 @@ public class PointerKeyComparator implements Comparator {
   }
 
   @Override
-  public int compare(Object key1, Object key2) {
+  public int compare(PointerKey key1, PointerKey key2) {
     if (key1 == key2) return 0;
 
     else if (key1 instanceof LocalPointerKey) {
@@ -193,21 +193,21 @@ public class PointerKeyComparator implements Comparator {
     }
 
     // at this point, neither key is local
-    else if (key1 instanceof ReturnValueKey) {
-      return compareReturnValueKey((ReturnValueKey)key1, key2);
-    }
-
-    else if (key2 instanceof ReturnValueKey) {
-      return -1*compareReturnValueKey((ReturnValueKey)key2, key1);
-    }
-
-    // at this point, neither key is local or retval
     else if (key1 instanceof ExceptionReturnValueKey) {
       return compareExceptionKey((ExceptionReturnValueKey)key1, key2);
     }
 
     else if (key2 instanceof ExceptionReturnValueKey) {
       return -1*compareExceptionKey((ExceptionReturnValueKey)key2, key1);
+    }
+
+    // at this point, neither key is local or expretval
+    else if (key1 instanceof ReturnValueKey) {
+      return compareReturnValueKey((ReturnValueKey)key1, key2);
+    }
+
+    else if (key2 instanceof ReturnValueKey) {
+      return -1*compareReturnValueKey((ReturnValueKey)key2, key1);
     }
 
     // at this point, neither key is local or retval, expretval

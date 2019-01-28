@@ -46,6 +46,7 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -334,7 +335,7 @@ public class ArgumentSpecialization {
     }
 
     @Override
-    public ControlFlowGraph makeCFG(IMethod method, Context context) {
+    public ControlFlowGraph<SSAInstruction, ISSABasicBlock> makeCFG(IMethod method, Context context) {
       return makeIR(method, context, defaultOptions).getControlFlowGraph();
     }
   }

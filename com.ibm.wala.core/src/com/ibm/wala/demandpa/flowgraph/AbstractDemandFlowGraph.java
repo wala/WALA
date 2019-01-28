@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -293,8 +292,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
-    for (IBasicBlock ibb : Iterator2Iterable.make(cfg.getSuccNodes(b))) {
-      ISSABasicBlock sb = (ISSABasicBlock) ibb;
+    for (ISSABasicBlock sb : Iterator2Iterable.make(cfg.getSuccNodes(b))) {
       if (sb.isExitBlock()) {
         // an optimization based on invariant that exit blocks should
         // have no
@@ -303,7 +301,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       }
       int n = 0;
       // set n to be whichPred(this, sb);
-      for (IBasicBlock back : Iterator2Iterable.make(cfg.getPredNodes(sb))) {
+      for (ISSABasicBlock back : Iterator2Iterable.make(cfg.getPredNodes(sb))) {
         if (back == b) {
           break;
         }

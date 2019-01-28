@@ -120,7 +120,7 @@ public interface IMethod extends IMember, ContextItem {
   int getLineNumber(int bcIndex);
 /** BEGIN Custom change: precise positions */
   
-  public interface SourcePosition extends Comparable {
+  public interface SourcePosition extends Comparable<SourcePosition> {
     int getFirstLine();
     int getLastLine();
     int getFirstCol();

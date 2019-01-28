@@ -15,7 +15,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -115,7 +114,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     @SuppressWarnings("unused")
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-      IntSetVariable receivers = rhs;
+      PointsToSetVariable receivers = rhs;
 
       // compute the set of pointers that were not previously handled
       IntSet value = receivers.getValue();

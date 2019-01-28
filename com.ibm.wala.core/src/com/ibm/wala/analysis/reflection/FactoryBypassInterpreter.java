@@ -270,7 +270,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return m;
   }
 
-  public Set getCaughtExceptions(CGNode node) {
+  public Set<TypeReference> getCaughtExceptions(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }

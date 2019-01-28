@@ -71,9 +71,9 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
   }
 
   private TypeReference chooseAnImplementor(IClass iface) {
-    Set implementors = cha.getImplementors(iface.getReference());
+    Set<IClass> implementors = cha.getImplementors(iface.getReference());
     if (!implementors.isEmpty()) {
-      return ((IClass) implementors.iterator().next()).getReference();
+      return implementors.iterator().next().getReference();
     } else {
       return null;
     }

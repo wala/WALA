@@ -29,7 +29,7 @@ public class DexIRFactory extends DefaultIRFactory {
     public final static boolean buildLocalMap = false;
 
 	@Override
-    public ControlFlowGraph makeCFG(IMethod method, Context C) throws IllegalArgumentException {
+    public ControlFlowGraph<?, ?> makeCFG(IMethod method, Context C) throws IllegalArgumentException {
     	if (method == null) {
     	      throw new IllegalArgumentException("null method");
     	}

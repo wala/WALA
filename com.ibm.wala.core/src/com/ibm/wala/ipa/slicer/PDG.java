@@ -1057,7 +1057,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       return false;
     }
     if (getClass().equals(obj.getClass())) {
-      return node.equals(((PDG) obj).node);
+      return node.equals(((PDG<?>) obj).node);
     } else {
       return false;
     }

@@ -62,7 +62,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     }
 
     @Override
-    public ControlFlowGraph makeCFG(IMethod method, Context context) {
+    public ControlFlowGraph<?, ?> makeCFG(IMethod method, Context context) {
       if (method instanceof AstMethod) {
         return astFactory.makeCFG(method);
       } else {

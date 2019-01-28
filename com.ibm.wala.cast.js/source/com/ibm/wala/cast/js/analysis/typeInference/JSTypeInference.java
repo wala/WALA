@@ -23,7 +23,6 @@ import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SymbolTable;
@@ -78,7 +77,7 @@ public class JSTypeInference extends AstTypeInference {
       }
 
       @Override
-      public IVariable makeVariable(int vn) {
+      public TypeVariable makeVariable(int vn) {
         if (ir.getSymbolTable().isStringConstant(vn)) {
           return new TypeVariable(make(JavaScriptTypes.String));
         } else if (ir.getSymbolTable().isBooleanConstant(vn)) {

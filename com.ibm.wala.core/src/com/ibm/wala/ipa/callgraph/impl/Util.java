@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
@@ -307,7 +308,8 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
-  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
+  public static CallGraphBuilder<InstanceKey> makeRTABuilder(
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
       AnalysisScope scope) {
 
     addDefaultSelectors(options, cha);

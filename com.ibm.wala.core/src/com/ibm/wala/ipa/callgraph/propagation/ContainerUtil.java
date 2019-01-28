@@ -53,7 +53,7 @@ public class ContainerUtil {
       if (c.isInterface()) {
         assert collection != null;
         assert map != null;
-        Collection s;
+        Collection<IClass> s;
         s = c.getAllImplementedInterfaces();
         if (s.contains(collection) || s.contains(map)) {
           return true;

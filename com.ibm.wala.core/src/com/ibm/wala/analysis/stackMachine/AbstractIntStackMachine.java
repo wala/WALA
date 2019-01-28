@@ -20,7 +20,6 @@ import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.AbstractVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
@@ -218,7 +217,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
          * Add only the entry variable to the work list.
          */
         for (INodeWithNumber s : Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(entry))) {
-          addToWorkList((AbstractStatement) s);
+          addToWorkList((AbstractStatement<?, ?>) s);
         }
       }
 
@@ -347,7 +346,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meet(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meet(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = meetStacks(lhs, rhs, bb, meeter);
 
@@ -363,7 +362,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetForCatchBlock(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetForCatchBlock(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = meetStacksAtCatchBlock(lhs, bb, meeter);
     changed |= meetLocals(lhs, rhs, bb, meeter);
@@ -378,29 +377,28 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetStacksAtCatchBlock(IVariable lhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetStacksAtCatchBlock(MachineState lhs, BasicBlock bb, Meeter meeter) {
     boolean changed = false;
-    MachineState L = (MachineState) lhs;
 
     // evaluate the meet of the stack of height 1, which holds the exception
     // object.
 
     // allocate lhs.stack if it's
     // not already allocated.
-    if (L.stack == null) {
-      L.allocateStack(1);
-      L.stackHeight = 1;
+    if (lhs.stack == null) {
+      lhs.allocateStack(1);
+      lhs.stackHeight = 1;
     }
 
     int meet = meeter.meetStackAtCatchBlock(bb);
-    if (L.stack[0] == TOP) {
+    if (lhs.stack[0] == TOP) {
       if (meet != TOP) {
         changed = true;
-        L.stack[0] = meet;
+        lhs.stack[0] = meet;
       }
-    } else if (meet != L.stack[0]) {
+    } else if (meet != lhs.stack[0]) {
       changed = true;
-      L.stack[0] = meet;
+      lhs.stack[0] = meet;
     }
     return changed;
   }
@@ -413,9 +411,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetStacks(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetStacks(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
     boolean changed = false;
-    MachineState L = (MachineState) lhs;
 
     // evaluate the element-wise meet over the stacks
 
@@ -424,9 +421,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     // if there's any stack height to meet, allocate lhs.stack if it's
     // not already allocated.
-    if (height > -1 && (L.stack == null || L.stack.length < height)) {
-      L.allocateStack(height);
-      L.stackHeight = height;
+    if (height > -1 && (lhs.stack == null || lhs.stack.length < height)) {
+      lhs.allocateStack(height);
+      lhs.stackHeight = height;
       changed = true;
     }
 
@@ -434,7 +431,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     for (int i = 0; i < height; i++) {
       int[] R = new int[rhs.length];
       for (int j = 0; j < R.length; j++) {
-        MachineState m = (MachineState) rhs[j];
+        MachineState m = rhs[j];
         if (m.stack == null || m.stack.length < i+1) {
           R[j] = TOP;
         } else {
@@ -445,14 +442,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         }
       }
       int meet = meeter.meetStack(i, R, bb);
-      if (L.stack[i] == TOP) {
+      if (lhs.stack[i] == TOP) {
         if (meet != TOP) {
           changed = true;
-          L.stack[i] = meet;
+          lhs.stack[i] = meet;
         }
-      } else if (meet != L.stack[i]) {
+      } else if (meet != lhs.stack[i]) {
         changed = true;
-        L.stack[i] = meet;
+        lhs.stack[i] = meet;
       }
     }
     return changed;
@@ -466,31 +463,30 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetLocals(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetLocals(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = false;
-    MachineState L = (MachineState) lhs;
     // need we allocate lhs.locals?
     int nLocals = computeMeetNLocals(rhs);
-    if (nLocals > -1 && (L.locals == null || L.locals.length < nLocals)) {
-      L.allocateLocals(nLocals);
+    if (nLocals > -1 && (lhs.locals == null || lhs.locals.length < nLocals)) {
+      lhs.allocateLocals(nLocals);
     }
 
     // evaluate the element-wise meet over the locals.
     for (int i = 0; i < nLocals; i++) {
       int[] R = new int[rhs.length];
       for (int j = 0; j < rhs.length; j++) {
-        R[j] = ((MachineState) rhs[j]).getLocal(i);
+        R[j] = rhs[j].getLocal(i);
       }
       int meet = meeter.meetLocal(i, R, bb);
-      if (L.locals[i] == TOP) {
+      if (lhs.locals[i] == TOP) {
         if (meet != TOP) {
           changed = true;
-          L.locals[i] = meet;
+          lhs.locals[i] = meet;
         }
-      } else if (meet != L.locals[i]) {
+      } else if (meet != lhs.locals[i]) {
         changed = true;
-        L.locals[i] = meet;
+        lhs.locals[i] = meet;
       }
     }
     return changed;
@@ -500,14 +496,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @return the number of locals to meet. Return -1 if there is no local meet necessary.
    * @param operands The operands for this operator. operands[0] is the left-hand side.
    */
-  private static int computeMeetNLocals(IVariable[] operands) {
-    MachineState lhs = (MachineState) operands[0];
+  private static int computeMeetNLocals(MachineState[] operands) {
+    MachineState lhs = operands[0];
     int nLocals = -1;
     if (lhs.locals != null) {
       nLocals = lhs.locals.length;
     } else {
       for (int i = 1; i < operands.length; i++) {
-        MachineState rhs = (MachineState) operands[i];
+        MachineState rhs = operands[i];
         if (rhs.locals != null) {
           nLocals = rhs.locals.length;
           break;
@@ -521,14 +517,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * @return the height of stacks that are being meeted. Return -1 if there is no stack meet necessary.
    * @param operands The operands for this operator. operands[0] is the left-hand side.
    */
-  private static int computeMeetStackHeight(IVariable[] operands) {
-    MachineState lhs = (MachineState) operands[0];
+  private static int computeMeetStackHeight(MachineState[] operands) {
+    MachineState lhs = operands[0];
     int height = -1;
     if (lhs.stack != null) {
       height = lhs.stackHeight;
     } else {
       for (int i = 1; i < operands.length; i++) {
-        MachineState rhs = (MachineState) operands[i];
+        MachineState rhs = operands[i];
         if (rhs.stack != null) {
           height = rhs.stackHeight;
           break;

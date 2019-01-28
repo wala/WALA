@@ -63,7 +63,7 @@ public class LocalLiveRangeAnalysis {
       // for now, conservatively say it's live. fix this later if necessary.
       return true;
     } else {
-      Collection reached = DFS.getReachableNodes(ir.getControlFlowGraph(), Collections.singleton(queryBlock), notDef);
+      Collection<ISSABasicBlock> reached = DFS.getReachableNodes(ir.getControlFlowGraph(), Collections.singleton(queryBlock), notDef);
       uses.retainAll(reached);
       if (uses.isEmpty()) {
         return false;

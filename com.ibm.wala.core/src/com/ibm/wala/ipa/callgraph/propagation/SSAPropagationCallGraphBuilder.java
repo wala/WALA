@@ -297,7 +297,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         continue;
       }
       int n = 0;
-      for (IBasicBlock back : Iterator2Iterable.make(controlFlowGraph.getPredNodes(sb))) {
+      for (IBasicBlock<?> back : Iterator2Iterable.make(controlFlowGraph.getPredNodes(sb))) {
         if (back == b) {
           break;
         }

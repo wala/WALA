@@ -42,7 +42,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
   /**
    * Governing tree viewer
    */
-  private final SWTTreeViewer viewer;
+  private final SWTTreeViewer<P> viewer;
 
   /**
    * Governing supergraph
@@ -71,7 +71,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
 
   private final NodeDecorator<T> labels;
 
-  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String pdfFile, String dotFile, String dotExe,
+  public ViewIFDSLocalAction(SWTTreeViewer<P> viewer, TabulationResult<T, P, F> result, String pdfFile, String dotFile, String dotExe,
       String pdfViewExe, NodeDecorator<T> labels) {
     if (result == null) {
       throw new IllegalArgumentException("null result");
@@ -86,7 +86,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     setText("View Local Supergraph");
   }
 
-  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
+  public ViewIFDSLocalAction(SWTTreeViewer<P> viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
       String gvExe) {
     if (result == null) {
       throw new IllegalArgumentException("null result");
@@ -113,7 +113,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     public String getLabel(Object o) throws WalaException {
       T t = (T) o;
       if (t instanceof BasicBlockInContext) {
-        BasicBlockInContext bb = (BasicBlockInContext) t;
+        BasicBlockInContext<?> bb = (BasicBlockInContext<?>) t;
         if (bb.getDelegate() instanceof IExplodedBasicBlock) {
           IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();
           final StringBuilder s = new StringBuilder(delegate.getNumber()).append(' ').append(result.getResult(t))
@@ -204,7 +204,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     return first;
   }
 
-  protected SWTTreeViewer getViewer() {
+  protected SWTTreeViewer<P> getViewer() {
     return viewer;
   }
 

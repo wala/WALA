@@ -107,7 +107,7 @@ public class MethodHandles {
         return false;
       if (getClass() != obj.getClass())
         return false;
-      HandlesItem other = (HandlesItem) obj;
+      HandlesItem<?> other = (HandlesItem<?>) obj;
       if (item == null) {
         if (other.item != null)
           return false;
@@ -248,8 +248,8 @@ public class MethodHandles {
       if ((isInvoke(callee) || isType(callee)) && callee.getReference().getDeclaringClass().getName().equals(TypeReference.JavaLangInvokeMethodHandle.getName())) {
         if (actualParameters != null && actualParameters.length > 0) {
           InstanceKey selfKey = actualParameters[0];
-          if (selfKey instanceof ConstantKey && ((ConstantKey)selfKey).getConcreteType().getReference().equals(TypeReference.JavaLangInvokeMethodHandle)) {
-            MethodReference ref = ((IMethod) ((ConstantKey)selfKey).getValue()).getReference();
+          if (selfKey instanceof ConstantKey && ((ConstantKey<?>)selfKey).getConcreteType().getReference().equals(TypeReference.JavaLangInvokeMethodHandle)) {
+            MethodReference ref = ((IMethod) ((ConstantKey<?>)selfKey).getValue()).getReference();
             return new MethodContext(baseContext, ref);
           }
         }
@@ -259,9 +259,9 @@ public class MethodHandles {
         if (actualParameters != null && actualParameters.length > 2) {
           InstanceKey classKey = actualParameters[1];
           InstanceKey nameKey = actualParameters[2];
-          if (classKey instanceof ConstantKey && ((ConstantKey)classKey).getConcreteType().getReference().equals(TypeReference.JavaLangClass) &&
-              nameKey instanceof ConstantKey && ((ConstantKey)nameKey).getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
-            return new FindContext(baseContext, ((IClass)((ConstantKey)classKey).getValue()).getReference(), (String)((ConstantKey)nameKey).getValue());
+          if (classKey instanceof ConstantKey && ((ConstantKey<?>)classKey).getConcreteType().getReference().equals(TypeReference.JavaLangClass) &&
+              nameKey instanceof ConstantKey && ((ConstantKey<?>)nameKey).getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
+            return new FindContext(baseContext, ((IClass)((ConstantKey<?>)classKey).getValue()).getReference(), (String)((ConstantKey<?>)nameKey).getValue());
           }
         }
       }

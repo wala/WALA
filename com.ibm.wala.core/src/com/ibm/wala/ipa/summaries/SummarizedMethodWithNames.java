@@ -122,7 +122,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
             }
         }
 
-        public SyntheticIRWithNames(IMethod method, Context context, AbstractCFG cfg, SSAInstruction[] instructions, 
+        public SyntheticIRWithNames(IMethod method, Context context, AbstractCFG<?, ?> cfg, SSAInstruction[] instructions, 
                 SSAOptions options, Map< Integer, ConstantValue > constants, Map<Integer, Atom> localNames) throws AssertionError {
             super(method, context, cfg, instructions, options, constants);
             this.localMap = new SyntheticSSA2LocalMap(localNames);

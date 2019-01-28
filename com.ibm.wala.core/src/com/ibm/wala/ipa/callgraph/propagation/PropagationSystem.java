@@ -617,7 +617,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   private String printRHSInstances(AbstractStatement s) {
     if (s instanceof UnaryStatement) {
-      UnaryStatement u = (UnaryStatement) s;
+      UnaryStatement<?> u = (UnaryStatement<?>) s;
       PointsToSetVariable rhs = (PointsToSetVariable) u.getRightHandSide();
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
@@ -669,7 +669,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return flowGraph.getStatementsThatUse(v);
   }
 
-  public Iterator<AbstractStatement> getStatementsThatDef(PointsToSetVariable v) {
+  public Iterator<AbstractStatement<PointsToSetVariable, ?>> getStatementsThatDef(PointsToSetVariable v) {
     return flowGraph.getStatementsThatDef(v);
   }
 

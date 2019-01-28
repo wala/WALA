@@ -70,7 +70,7 @@ import java.util.Arrays;
  */
 public class SSABuilder extends AbstractIntStackMachine {
 
-  public static SSABuilder make(IBytecodeMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
+  public static SSABuilder make(IBytecodeMethod<?> method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
       SymbolTable symbolTable, boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) throws IllegalArgumentException {
     if (scfg == null) {
       throw new IllegalArgumentException("scfg == null");
@@ -81,7 +81,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   /**
    * A wrapper around the method being analyzed.
    */
-  final private IBytecodeMethod method;
+  final private IBytecodeMethod<?> method;
 
   /**
    * Governing symbol table
@@ -105,7 +105,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   
   private final ShrikeIndirectionData ssaIndirections;
   
-  private SSABuilder(IBytecodeMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
+  private SSABuilder(IBytecodeMethod<?> method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
       boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes()) : null;
@@ -973,7 +973,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           if (localNumbers == null) {
             return null;
           } else {
-            IBytecodeMethod m = shrikeCFG.getMethod();
+            IBytecodeMethod<?> m = shrikeCFG.getMethod();
             String[] result = new String[localNumbers.length];
             for (int i = 0; i < localNumbers.length; i++) {
               result[i] = m.getLocalVariableName(m.getBytecodeIndex(index), localNumbers[i]);
@@ -1019,7 +1019,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       if (vn < 0) {
         return null;
       }
-      IBasicBlock bb = shrikeCFG.getBlockForInstruction(pc);
+      IBasicBlock<?> bb = shrikeCFG.getBlockForInstruction(pc);
       int firstInstruction = bb.getFirstInstructionIndex();
       // walk forward from the first instruction to reconstruct the
       // state of the locals at this pc

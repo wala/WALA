@@ -15,7 +15,7 @@ import com.ibm.wala.cfg.IBasicBlock;
 /**
  * This class is used by the PrunedCFG to determine which edges in a given CFG should be kept in the pruned version.
  */
-public interface EdgeFilter<T extends IBasicBlock> {
+public interface EdgeFilter<T extends IBasicBlock<?>> {
 
   /**
    * This method must return true if and only if a normal edge from src to dst exists in the original CFG and should be kept for the

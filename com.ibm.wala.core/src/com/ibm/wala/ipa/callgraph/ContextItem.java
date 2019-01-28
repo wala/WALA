@@ -27,7 +27,7 @@ public interface ContextItem {
       return v;
     }
 
-    public static <T> Value make(T v) {
+    public static <T> Value<T> make(T v) {
       return new Value<>(v);
     }
 
@@ -44,7 +44,7 @@ public interface ContextItem {
         return false;
       if (getClass() != obj.getClass())
         return false;
-      Value other = (Value) obj;
+      Value<?> other = (Value<?>) obj;
       if (v == null) {
         if (other.v != null)
           return false;

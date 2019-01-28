@@ -249,7 +249,6 @@ public class CorrelationFinder {
 
     Collections.sort(correlations, new Comparator<Pair<Position, String>>() {
       @Override
-      @SuppressWarnings("unchecked")
       public int compare(Pair<Position, String> o1, Pair<Position, String> o2) {
         return o1.fst.compareTo(o2.fst);
       }		

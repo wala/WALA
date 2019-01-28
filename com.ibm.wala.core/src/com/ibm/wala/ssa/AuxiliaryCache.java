@@ -90,7 +90,7 @@ public class AuxiliaryCache implements IAuxiliaryCache {
   public synchronized Object find(IMethod m, Context c, SSAOptions options) {
     // methodMap: SSAOptions -> SoftReference
     Pair<IMethod, Context> p = Pair.make(m, c);
-    Map methodMap = MapUtil.findOrCreateMap(dictionary, p);
+    Map<SSAOptions, Object> methodMap = MapUtil.findOrCreateMap(dictionary, p);
     Object ref = methodMap.get(options);
     if (ref == null || CacheReference.get(ref) == null) {
       return null;

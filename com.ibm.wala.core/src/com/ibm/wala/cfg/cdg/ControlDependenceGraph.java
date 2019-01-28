@@ -136,7 +136,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
       @Override
       public int getPredNodeCount(T N) {
         if (backwardEdges.containsKey(N))
-          return ((Set) backwardEdges.get(N)).size();
+          return backwardEdges.get(N).size();
         else
           return 0;
       }
@@ -163,14 +163,14 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
       @Override
       public int getSuccNodeCount(T N) {
         if (forwardEdges.containsKey(N))
-          return ((Set) forwardEdges.get(N)).size();
+          return forwardEdges.get(N).size();
         else
           return 0;
       }
 
       @Override
       public boolean hasEdge(T src, T dst) {
-        return forwardEdges.containsKey(src) && ((Set) forwardEdges.get(src)).contains(dst);
+        return forwardEdges.containsKey(src) && forwardEdges.get(src).contains(dst);
       }
 
       @Override
@@ -236,7 +236,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     this(cfg, false);
   }
 
-  public MinimalCFG getControlFlowGraph() {
+  public MinimalCFG<T> getControlFlowGraph() {
     return cfg;
   }
 

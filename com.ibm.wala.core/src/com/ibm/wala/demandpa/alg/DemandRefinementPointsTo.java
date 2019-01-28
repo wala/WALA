@@ -132,6 +132,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableIntSetFactory;
 import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
@@ -798,7 +799,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     protected final OrdinalSetMapping<InstanceKeyAndState> ikAndStates = MutableMapping.make();
 
-    private final MutableIntSetFactory intSetFactory = new MutableSparseIntSetFactory(); // new
+    private final MutableIntSetFactory<MutableSparseIntSet> intSetFactory = new MutableSparseIntSetFactory(); // new
 
     // BitVectorIntSetFactory();
 
