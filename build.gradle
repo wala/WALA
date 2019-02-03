@@ -10,8 +10,13 @@ plugins {
 	id 'nebula.lint' version '8.3.1'
 	id 'nebula.source-jar' version '7.0.1' apply false
 	id 'maven-publish'
+        id 'com.github.sherter.google-java-format' version '0.8'
 }
 
+repositories {
+  // to get the google-java-format jar and dependencies
+  mavenCentral()
+}
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -102,6 +107,10 @@ task afterEclipseBuildshipImport(type: Exec) {
 	commandLine './revert-launchers.sh'
 }
 
+
+googleJavaFormat {
+  toolVersion = '1.7'
+}
 
 ////////////////////////////////////////////////////////////////////////
 //
