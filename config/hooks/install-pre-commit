@@ -7,4 +7,3 @@ if [ ! -f .git/hooks/pre-commit ]; then
     cp config/hooks/pre-commit-stub .git/hooks/pre-commit
     chmod +x .git/hooks/pre-commit
 fi
-
