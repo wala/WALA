@@ -6,6 +6,7 @@
 plugins {
 	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
+	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '9.2.0'
 	id 'nebula.source-jar' version '9.5.0' apply false
@@ -14,9 +15,10 @@ plugins {
 }
 
 repositories {
-  // to get the google-java-format jar and dependencies
-  mavenCentral()
+	// to get the google-java-format jar and dependencies
+	mavenCentral()
 }
+
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -113,10 +115,10 @@ tasks.register('afterEclipseBuildshipImport', Exec) {
 	commandLine './revert-launchers.sh'
 }
 
-
 googleJavaFormat {
   toolVersion = '1.7'
 }
+
 
 ////////////////////////////////////////////////////////////////////////
 //
