@@ -57,12 +57,17 @@ class CompileKawaJar extends Jar {
 	CompileKawaJar() {
 		compile.dependsOn(dependsOn)
 		from compile
-		version null
+		archiveVersion.set null
 	}
 
 	void setArgs(Object... args) {
 		compile.args args
 	}
+
+	void setBaseName(String name) {
+		archiveFileName.set "${name}.jar"
+	}
+
 }
 
 
@@ -167,9 +172,8 @@ clean.dependsOn cleanDownloadJavaCup
 task collectJLex(type: Jar) {
 	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
 	include 'JLex/'
-	baseName 'JLex'
-	version null
-	destinationDir projectDir
+	archiveFileName.set 'JLex.jar'
+	destinationDirectory.set projectDir
 }
 
 task cleanCollectJLex(type: Delete) {
@@ -231,12 +235,11 @@ clean.dependsOn cleanGenerateHelloHashJar
 //
 
 task collectTestData(type: Jar) {
-	version '1.0.0'
-	archiveName "${baseName}_${version}.${extension}"
+	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0.jar'
 	from compileTestJava
 	from 'classes'
 	includeEmptyDirs false
-	destinationDir projectDir
+	destinationDirectory.set projectDir
 }
 
 task cleanCollectTestData(type: Delete) {
@@ -252,12 +255,11 @@ clean.dependsOn cleanCollectTestData
 //
 
 task collectTestDataA(type: Jar) {
-	version '1.0.0a'
-	archiveName "${baseName}_${version}.${extension}"
+	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0a.jar'
 	from compileTestJava
 	from 'classes'
 	includeEmptyDirs false
-	destinationDir projectDir
+	destinationDirectory.set projectDir
 	exclude (
 		'**/CodeDeleted.class',
 		'**/SortingExample.class',
