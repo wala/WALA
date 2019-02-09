@@ -157,7 +157,7 @@ allprojects {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  disable Javadoc linter until documentation is in better shape
+//  Javadoc linter
 //
 
 allprojects {
