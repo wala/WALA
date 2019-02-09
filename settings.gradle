@@ -3,6 +3,7 @@ rootProject.name = 'com.ibm.wala'
 include(
 	'com.ibm.wala-repository',
 	'com.ibm.wala.cast',
+	'com.ibm.wala.cast:cast',
 	'com.ibm.wala.cast.java',
 	'com.ibm.wala.cast.java.ecj',
 	'com.ibm.wala.cast.java.test',
@@ -16,6 +17,8 @@ include(
 	'com.ibm.wala.cast.js.test',
 	'com.ibm.wala.cast.js.test.data',
 	'com.ibm.wala.cast.test',
+	'com.ibm.wala.cast.test:smoke_main',
+	'com.ibm.wala.cast.test:xlator_test',
 	'com.ibm.wala.core',
 	'com.ibm.wala.core.testdata',
 	'com.ibm.wala.core.tests',

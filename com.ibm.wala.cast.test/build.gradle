@@ -1,16 +1,14 @@
 plugins {
 	id 'com.github.hauner.jarTest'
-	id 'cpp'
 	id 'eclipse'
-	id 'edu.wpi.first.GradleJni' version '0.2.1'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 prepareIntelliJIDEA.dependsOn jarTest
 
-apply plugin: 'java'
-
 sourceSets.test.java.srcDirs = ['harness-src/java']
+
+compileTestJava.options.headerOutputDirectory.set file('build/headers')
 
 publishing.publications {
 	mavenJava(MavenPublication) {
@@ -28,108 +26,15 @@ dependencies {
 		)
 }
 
-def currentJvm = org.gradle.internal.jvm.Jvm.current()
+test {
+	final def xlator_project_name = 'xlator_test'
+	final def xlator_link_name = 'linkDebug'
+	dependsOn "$xlator_project_name:$xlator_link_name"
 
-def addCastRpath(currentJvm, targetPlatform, linker) {
-	switch (targetPlatform.operatingSystem.name) {
-		case 'linux':
-		case 'osx':
-			[
-				// TODO: compute path on following line from 'cast' library properties somehow
-				"${project(':com.ibm.wala.cast').buildDir}/libs/cast/shared",
-				// TODO: compute paths on following lines from 'jdk' library properties somehow
-				"${currentJvm.javaHome}/jre/lib/amd64/server",
-				"${currentJvm.javaHome}/jre/lib/server",
-			].each { linker.args "-Wl,-rpath,$it" }
-	}
-}
-
-model {
-	components {
-		xlator_test(JniNativeLibrarySpec) {
-			javaCompileTasks << compileTestJava
-
-			sources.cpp {
-				source {
-					srcDirs = ['harness-src/c']
-					include 'smoke.cpp'
-				}
-				['cast', 'jdk'].each {
-					lib project: ':com.ibm.wala.cast', library: it
-				}
-			}
-
-			binaries {
-				withType(StaticLibraryBinarySpec) {
-					buildable = false
-				}
-				withType(SharedLibraryBinarySpec) {
-					addCastRpath(currentJvm, targetPlatform, linker)
-				}
-			}
-		}
-
-		smoke_main(NativeExecutableSpec) {
-			sources.cpp {
-				source {
-					srcDirs = ['harness-src/c']
-					include 'smoke_main.cpp'
-				}
-				['cast', 'jdk'].each {
-					lib project: ':com.ibm.wala.cast', library: it
-				}
-			}
-
-			binaries.all {
-				addCastRpath(currentJvm, targetPlatform, linker)
-			}
-		}
-	}
-
-	tasks {
-		test {
-			def lib = linkXlator_testSharedLibrary
-			dependsOn lib
-			systemProperty 'java.library.path', lib.destinationDirectory.get().asFile
-		}
-
-		checkSmoke_main(Exec) {
-			// main executable to run for test
-			def executableBinary = $.binaries.smoke_mainExecutable
-			executable executableBinary.executableFile
-			dependsOn executableBinary
-			def pathElements = [$.binaries.test.getClassesDir()]
-
-			// implementations of native methods
-			def library = $.binaries.xlator_testSharedLibrary
-			dependsOn library
-			pathElements << library.sharedLibraryFile.parent
-
-			// "primordial.txt" resource loaded during test
-			def coreResources = project(':com.ibm.wala.core').processResources
-			dependsOn coreResources
-			pathElements << coreResources.destinationDir
-
-			// additional supporting Java class files
-			['cast', 'core', 'util'].each {
-				def compileJava = project(":com.ibm.wala.$it").compileJava
-				dependsOn compileJava
-				pathElements << compileJava.destinationDir
-			}
-
-			// all combined as a colon-delimited path list
-			args pathElements.join(':')
-
-			// log output to file, although we don't validate it
-			final def outFile = file("$temporaryDir/stdout-and-stderr.log")
-			outputs.file outFile
-			doFirst {
-				final def fileStream = new FileOutputStream(outFile)
-				standardOutput fileStream
-				errorOutput fileStream
-			}
-		}
-
-		check.dependsOn checkSmoke_main
+	doFirst {
+		final def xlator_project = project(xlator_project_name)
+		final def xlator_link = xlator_project.tasks.getByName(xlator_link_name)
+		final def xlator_lib = getNativeLibraryOutput(xlator_link)
+		systemProperty 'java.library.path', xlator_lib.parent
 	}
 }

@@ -4,16 +4,12 @@
 *.swp
 */bin/
 */bin/*
-*/build/
 *~
 .classpath
 .metadata/
 .project
-/*/.settings/org.eclipse.buildship.core.prefs
 /.gradle/
-/.settings/org.eclipse.buildship.core.prefs
 /.vscode/settings.json
-/build/
 /com.ibm.wala.*/out/
 /com.ibm.wala.cast.java.jdt.test/
 /com.ibm.wala.cast.java.polyglot/lib/
@@ -47,5 +43,7 @@
 /com.ibm.wala.dalvik.test/sym.java
 /com.ibm.wala.ide.jdt.test/testdata/
 /edu.kit.wala.smali.test/out/
+build/
+org.eclipse.buildship.core.prefs
 results
 target/

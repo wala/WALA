@@ -44,6 +44,11 @@ matrix:
       jdk: oraclejdk8
       if: type = cron
     - os: linux
+      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
+      language: java
+      jdk: oraclejdk8
+      if: type = cron
+    - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
       language: java
       jdk: oraclejdk8
@@ -105,6 +110,16 @@ matrix:
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
+      language: java
+      jdk: oraclejdk8
+      if: type = cron
+    - os: linux
+      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
+      language: java
+      jdk: oraclejdk8
+      if: type = cron
+    - os: linux
+      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
       language: java
       jdk: oraclejdk8
       if: type = cron
@@ -185,6 +200,11 @@ matrix:
       if: type = cron
     - os: osx
       osx_image: xcode8.3
+      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
+      language: java
+      if: type = cron
+    - os: osx
+      osx_image: xcode8.3
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
       language: java
       if: type = cron
@@ -246,6 +266,16 @@ matrix:
     - os: osx
       osx_image: xcode8.3
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
+      language: java
+      if: type = cron
+    - os: osx
+      osx_image: xcode8.3
+      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
+      language: java
+      if: type = cron
+    - os: osx
+      osx_image: xcode8.3
+      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
       language: java
       if: type = cron
     - os: osx
