@@ -45,6 +45,8 @@ task downloadAndroidSdk(type: VerifiedDownload) {
 			sdkOs = 'windows'
 			checksum '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
 			break
+		default:
+			throw new GradleException("unrecognized operating system name \"$osName\"")
 	}
 	def archive = "sdk-tools-$sdkOs-3859397.zip"
 	src "https://dl.google.com/android/repository/$archive"

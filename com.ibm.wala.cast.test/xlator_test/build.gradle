@@ -1,0 +1,18 @@
+plugins {
+    id 'cpp-library'
+}
+
+library {
+    privateHeaders.from '../build/headers'
+    source.from '../harness-src/c/smoke.cpp'
+
+    dependencies {
+        api project(':com.ibm.wala.cast:cast')
+    }
+
+    addCastLibrary(project, it)
+
+    binaries.whenElementFinalized { binary ->
+        binary.compileTask.get().dependsOn(':com.ibm.wala.cast.test:compileTestJava')
+    }
+}

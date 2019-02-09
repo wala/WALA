@@ -1,5 +1,4 @@
 plugins {
-	id 'cpp'
 	id 'eclipse'
 }
 
@@ -28,67 +27,6 @@ javadoc {
 
 	dependsOn js.createPackageList
 	options.linksOffline js.javadoc.outputDirectory.path, js.createPackageList.packageList.parent
-}
-
-def currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome
-
-model {
-	repositories {
-		libs(PrebuiltLibraries) {
-			jdk {
-				def jniIncludeDir = "$currentJavaHome/include"
-				headers.srcDir jniIncludeDir
-				binaries.withType(SharedLibraryBinary) {
-					switch (targetPlatform.operatingSystem.name) {
-						case 'linux':
-							headers.srcDirs "$jniIncludeDir/linux"
-							def subdirs = ['jre/lib/amd64/server', 'lib/amd64/server', 'lib/server']
-							def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.so") }
-							sharedLibraryLinkFile = candidates.find { it.exists() }
-							break
-						case 'osx':
-							headers.srcDirs "$jniIncludeDir/darwin"
-							sharedLibraryLinkFile = file("$currentJavaHome/jre/lib/server/libjvm.dylib")
-							break
-						case 'windows':
-							headers.srcDirs "$jniIncludeDir/win32"
-							sharedLibraryLinkFile = file("$currentJavaHome/lib/jvm.lib")
-							break
-					}
-				}
-			}
-		}
-	}
-
-	components {
-		cast(NativeLibrarySpec) {
-			sources.cpp {
-				def cSourceDir = 'source/c'
-				source {
-					srcDirs = ["$cSourceDir/jni"]
-					include '*.cpp'
-				}
-				exportedHeaders.srcDirs = ["$cSourceDir/include"]
-				lib library: 'jdk'
-			}
-
-			binaries {
-				withType(StaticLibraryBinarySpec) {
-					buildable = false
-				}
-				withType(SharedLibraryBinarySpec) {
-					def libDir = $.repositories['libs'].resolveLibrary('jdk')
-						.binaries.withType(SharedLibraryBinary)
-						.find { it.targetPlatform.name == targetPlatform.name }
-						.sharedLibraryLinkFile.parent
-					linker.args "-Wl,-rpath,$libDir"
-					if (targetPlatform.operatingSystem.name == 'osx') {
-						linker.args "-Wl,-install_name,@rpath/$sharedLibraryFile.name"
-					}
-				}
-			}
-		}
-	}
 }
 
 // TODO: if we eventually stop supporting Maven, then we may be able

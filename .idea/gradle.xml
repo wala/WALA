@@ -24,6 +24,9 @@
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.js.test" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.js.test.data" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.test" />
+            <option value="$PROJECT_DIR$/com.ibm.wala.cast.test/smoke_main" />
+            <option value="$PROJECT_DIR$/com.ibm.wala.cast.test/xlator_test" />
+            <option value="$PROJECT_DIR$/com.ibm.wala.cast/cast" />
             <option value="$PROJECT_DIR$/com.ibm.wala.core" />
             <option value="$PROJECT_DIR$/com.ibm.wala.core.testdata" />
             <option value="$PROJECT_DIR$/com.ibm.wala.core.tests" />

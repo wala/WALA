@@ -1,0 +1,20 @@
+plugins {
+    id 'cpp-library'
+}
+
+library {
+    final def cSourceDir = '../source/c'
+    publicHeaders.from "$cSourceDir/include"
+    source.from "$cSourceDir/jni"
+
+    binaries.whenElementFinalized {
+        if (targetMachine.operatingSystemFamily.macOs) {
+            linkTask.get().configure {
+                final def library = getNativeLibraryOutput(it)
+                linkerArgs.add "-Wl,-install_name,@rpath/$library.name"
+            }
+        }
+    }
+
+    addJvmLibrary(project, it)
+}
