@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2002 - 2006 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ */
 package com.ibm.wala.types;
 
 import static com.ibm.wala.types.TypeName.ArrayMask;
@@ -50,9 +50,9 @@ public final class TypeReference implements Serializable {
    */
   private final static Map<Key, TypeReference> dictionary = HashMapFactory.make();
 
-  /*********************************************************************************************************************
+  /*
    * Primitive Dispatch *
-   ********************************************************************************************************************/
+   */
 
   public final static TypeName BooleanName = TypeName.string2TypeName("Z");
 
@@ -110,9 +110,9 @@ public final class TypeReference implements Serializable {
 
   public final static byte OtherPrimitiveTypeCode = 'P';
   
-  /*********************************************************************************************************************
+  /*
    * Primitive Array Dispatch *
-   ********************************************************************************************************************/
+   */
 
   public final static TypeReference BooleanArray = findOrCreateArrayOf(Boolean);
 
@@ -130,9 +130,9 @@ public final class TypeReference implements Serializable {
 
   public final static TypeReference ShortArray = findOrCreateArrayOf(Short);
 
-  /*********************************************************************************************************************
+  /*
    * Special object types *
-   ********************************************************************************************************************/
+   */
 
   private final static TypeName JavaLangArithmeticExceptionName = TypeName.string2TypeName("Ljava/lang/ArithmeticException");
 

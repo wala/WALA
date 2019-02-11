@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2016 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Martin Hecker, KIT - initial implementation
- *******************************************************************************/
+ */
 package com.ibm.wala.types.annotations;
 
 import java.util.ArrayList;

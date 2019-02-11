@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2016 Joana IFC project,
  * Programming Paradigms Group,
  * Karlsruhe Institute of Technology (KIT).
@@ -10,7 +10,7 @@
  *
  * Contributors:
  *    martin.hecker@kit.edu, KIT - 
- *******************************************************************************/
+ */
 package annotations;
 
 import java.lang.annotation.ElementType;
