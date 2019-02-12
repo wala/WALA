@@ -31,6 +31,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Set;
+import java.util.function.Function;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -134,5 +135,44 @@ public class LambdaTest extends WalaTestCase {
     }
     Assert.assertEquals("expected one call to compareTo", expected, count);
     System.err.println("found " + count + " compareTo calls in " + sfnode);
+  }
+
+  @Test
+  public void testMethodRefs()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Llambda/MethodRefs");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraph cg =
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+
+    Function<String, MethodReference> getTargetRef =
+        (klass) -> {
+          return MethodReference.findOrCreate(
+              TypeReference.findOrCreate(
+                  ClassLoaderReference.Application, "Llambda/MethodRefs$" + klass),
+              Atom.findOrCreateUnicodeAtom("target"),
+              Descriptor.findOrCreateUTF8("()V"));
+        };
+
+    System.out.println(cg);
+    Assert.assertEquals(
+        "expected C1.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C2")).size());
+    Assert.assertEquals(
+        "expected C2.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C2")).size());
+    Assert.assertEquals(
+        "expected C3.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C3")).size());
+    Assert.assertEquals(
+        "expected C4.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C4")).size());
+    Assert.assertEquals(
+        "expected C5.target() to *not* be reachable",
+        0,
+        cg.getNodes(getTargetRef.apply("C5")).size());
   }
 }
