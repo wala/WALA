@@ -30,7 +30,7 @@ import com.ibm.wala.util.strings.Atom;
 
 public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
-  private final Map<BootstrapMethod, SummarizedMethod> methodSummaries = new WeakHashMap<>();
+  private final Map<BootstrapMethod, SummarizedMethod> methodSummaries = HashMapFactory.make();
 
   private final Map<BootstrapMethod, LambdaSummaryClass> classSummaries = HashMapFactory.make();
 
