@@ -28,7 +28,10 @@ import com.ibm.wala.util.strings.Atom;
 
 public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
-  private final WeakHashMap<BootstrapMethod, SummarizedMethod> summaries = new WeakHashMap<>();
+  private final WeakHashMap<BootstrapMethod, SummarizedMethod> methodSummaries = new WeakHashMap<>();
+
+  private final WeakHashMap<BootstrapMethod, LambdaSummaryClass> classSummaries = new WeakHashMap<>();
+
 
   private final MethodTargetSelector base;
   
@@ -45,7 +48,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     {
       SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction)caller.getIR().getCalls(site)[0];
       
-      if (!summaries.containsKey(invoke.getBootstrap())) {
+      if (!methodSummaries.containsKey(invoke.getBootstrap())) {
         String cls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
         int bootstrapIndex = invoke.getBootstrap().getIndexInClassFile();
         MethodReference ref = 
@@ -62,7 +65,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
         
         int index = 0;
         int v = site.getDeclaredTarget().getNumberOfParameters() + 2;
-        IClass lambda = LambdaSummaryClass.findOrCreate(caller, invoke);
+        IClass lambda = getLambdaSummaryClass(caller, invoke);
         SSAInstructionFactory insts = Language.JAVA.instructionFactory();
         summary.addStatement(insts.NewInstruction(index, v, NewSiteReference.make(index, lambda.getReference())));
         index++;
@@ -72,14 +75,23 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
         }
         summary.addStatement(insts.ReturnInstruction(index++, v, false));
         
-        summaries.put(invoke.getBootstrap(), new SummarizedMethod(ref, summary, caller.getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass())));
+        methodSummaries.put(invoke.getBootstrap(), new SummarizedMethod(ref, summary, caller.getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass())));
       }
-      
-      return summaries.get(invoke.getBootstrap());
+      return methodSummaries.get(invoke.getBootstrap());
       
     } else {
       return base.getCalleeTarget(caller, site, receiver);
     }
+  }
+
+  private LambdaSummaryClass getLambdaSummaryClass(CGNode caller, SSAInvokeDynamicInstruction invoke) {
+    BootstrapMethod bootstrap = invoke.getBootstrap();
+    LambdaSummaryClass result = classSummaries.get(bootstrap);
+    if (result == null) {
+      result = LambdaSummaryClass.findOrCreate(caller, invoke);
+      classSummaries.put(bootstrap, result);
+    }
+    return result;
   }
 
 }

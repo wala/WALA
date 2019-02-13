@@ -43,19 +43,13 @@ import com.ibm.wala.util.strings.Atom;
 
 public class LambdaSummaryClass extends SyntheticClass {
 
-  private static WeakHashMap<BootstrapMethod, LambdaSummaryClass> summaries = new WeakHashMap<>();
-  
   public static LambdaSummaryClass findOrCreate(CGNode caller, SSAInvokeDynamicInstruction inst) {
-    if (! summaries.containsKey(inst.getBootstrap())) {
-      String bootstrapCls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
-      int bootstrapIndex = inst.getBootstrap().getIndexInClassFile();
-      TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + '$' + bootstrapCls + '$' + bootstrapIndex);
-      LambdaSummaryClass cls = new LambdaSummaryClass(ref, caller.getClassHierarchy(), inst);
-      caller.getClassHierarchy().addClass(cls);
-      summaries.put(inst.getBootstrap(), cls);
-    }
-    
-    return summaries.get(inst.getBootstrap());
+    String bootstrapCls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
+    int bootstrapIndex = inst.getBootstrap().getIndexInClassFile();
+    TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + '$' + bootstrapCls + '$' + bootstrapIndex);
+    LambdaSummaryClass cls = new LambdaSummaryClass(ref, caller.getClassHierarchy(), inst);
+    caller.getClassHierarchy().addClass(cls);
+    return cls;
   }
   
   private final SSAInvokeDynamicInstruction invoke;
