@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -27,6 +24,8 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
+
+import java.util.Map;
 
 public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
