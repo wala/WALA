@@ -41,7 +41,7 @@ import java.util.Set;
 
 public class LambdaSummaryClass extends SyntheticClass {
 
-  public static LambdaSummaryClass findOrCreate(CGNode caller, SSAInvokeDynamicInstruction inst) {
+  public static LambdaSummaryClass create(CGNode caller, SSAInvokeDynamicInstruction inst) {
     String bootstrapCls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
     int bootstrapIndex = inst.getBootstrap().getIndexInClassFile();
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + '$' + bootstrapCls + '$' + bootstrapIndex);

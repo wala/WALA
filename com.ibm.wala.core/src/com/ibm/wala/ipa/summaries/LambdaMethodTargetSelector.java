@@ -89,7 +89,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     BootstrapMethod bootstrap = invoke.getBootstrap();
     LambdaSummaryClass result = classSummaries.get(bootstrap);
     if (result == null) {
-      result = LambdaSummaryClass.findOrCreate(caller, invoke);
+      result = LambdaSummaryClass.create(caller, invoke);
       classSummaries.put(bootstrap, result);
     }
     return result;
