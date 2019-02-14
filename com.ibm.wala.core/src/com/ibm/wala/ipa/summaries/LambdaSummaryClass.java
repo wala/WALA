@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -26,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
@@ -41,21 +34,20 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 public class LambdaSummaryClass extends SyntheticClass {
 
-  private static WeakHashMap<BootstrapMethod, LambdaSummaryClass> summaries = new WeakHashMap<>();
-  
-  public static LambdaSummaryClass findOrCreate(CGNode caller, SSAInvokeDynamicInstruction inst) {
-    if (! summaries.containsKey(inst.getBootstrap())) {
-      String bootstrapCls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
-      int bootstrapIndex = inst.getBootstrap().getIndexInClassFile();
-      TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + '$' + bootstrapCls + '$' + bootstrapIndex);
-      LambdaSummaryClass cls = new LambdaSummaryClass(ref, caller.getClassHierarchy(), inst);
-      caller.getClassHierarchy().addClass(cls);
-      summaries.put(inst.getBootstrap(), cls);
-    }
-    
-    return summaries.get(inst.getBootstrap());
+  public static LambdaSummaryClass create(CGNode caller, SSAInvokeDynamicInstruction inst) {
+    String bootstrapCls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
+    int bootstrapIndex = inst.getBootstrap().getIndexInClassFile();
+    TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Lwala/lambda" + '$' + bootstrapCls + '$' + bootstrapIndex);
+    LambdaSummaryClass cls = new LambdaSummaryClass(ref, caller.getClassHierarchy(), inst);
+    caller.getClassHierarchy().addClass(cls);
+    return cls;
   }
   
   private final SSAInvokeDynamicInstruction invoke;

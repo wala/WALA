@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.WeakHashMap;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -24,11 +22,17 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
+
+import java.util.Map;
 
 public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
-  private final WeakHashMap<BootstrapMethod, SummarizedMethod> summaries = new WeakHashMap<>();
+  private final Map<BootstrapMethod, SummarizedMethod> methodSummaries = HashMapFactory.make();
+
+  private final Map<BootstrapMethod, LambdaSummaryClass> classSummaries = HashMapFactory.make();
+
 
   private final MethodTargetSelector base;
   
@@ -45,7 +49,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     {
       SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction)caller.getIR().getCalls(site)[0];
       
-      if (!summaries.containsKey(invoke.getBootstrap())) {
+      if (!methodSummaries.containsKey(invoke.getBootstrap())) {
         String cls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
         int bootstrapIndex = invoke.getBootstrap().getIndexInClassFile();
         MethodReference ref = 
@@ -62,7 +66,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
         
         int index = 0;
         int v = site.getDeclaredTarget().getNumberOfParameters() + 2;
-        IClass lambda = LambdaSummaryClass.findOrCreate(caller, invoke);
+        IClass lambda = getLambdaSummaryClass(caller, invoke);
         SSAInstructionFactory insts = Language.JAVA.instructionFactory();
         summary.addStatement(insts.NewInstruction(index, v, NewSiteReference.make(index, lambda.getReference())));
         index++;
@@ -72,14 +76,23 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
         }
         summary.addStatement(insts.ReturnInstruction(index++, v, false));
         
-        summaries.put(invoke.getBootstrap(), new SummarizedMethod(ref, summary, caller.getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass())));
+        methodSummaries.put(invoke.getBootstrap(), new SummarizedMethod(ref, summary, caller.getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass())));
       }
-      
-      return summaries.get(invoke.getBootstrap());
+      return methodSummaries.get(invoke.getBootstrap());
       
     } else {
       return base.getCalleeTarget(caller, site, receiver);
     }
+  }
+
+  private LambdaSummaryClass getLambdaSummaryClass(CGNode caller, SSAInvokeDynamicInstruction invoke) {
+    BootstrapMethod bootstrap = invoke.getBootstrap();
+    LambdaSummaryClass result = classSummaries.get(bootstrap);
+    if (result == null) {
+      result = LambdaSummaryClass.create(caller, invoke);
+      classSummaries.put(bootstrap, result);
+    }
+    return result;
   }
 
 }
