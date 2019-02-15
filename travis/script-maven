@@ -1,7 +1,23 @@
-# -*- mode: sh; sh-shell: sh -*-
+#!/bin/sh -ex
 
 xvfb-run mvn clean install -B -q
-bash ./dependent-projects-trigger.sh "$AUTH_TOKEN"
+
+{
+  set +x
+  if [ -n "$AUTH_TOKEN" ]; then
+    bash ./dependent-projects-trigger.sh "$AUTH_TOKEN"
+  fi
+  set -x
+}
+
 mvn javadoc:aggregate -B -q
-bash ./upload-javascript.sh "$GH_TOKEN"
-./build-maven-jars.py "install -Dgpg.skip"
+
+{
+  set +x
+  if [ -n "$GH_TOKEN" ]; then
+    bash ./upload-javascript.sh "$GH_TOKEN"
+  fi
+  set -x
+}
+
+./build-maven-jars.py 'install -Dgpg.skip'
