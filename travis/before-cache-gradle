@@ -1,4 +1,4 @@
-# -*- mode: sh; sh-shell: sh -*-
+#!/bin/sh -eux
 
 caches="$HOME/.gradle/caches"
 

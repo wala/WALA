@@ -1,8 +1,3 @@
-# -*- mode: sh; sh-shell: sh -*-
-
-# initial p2AsMaven downloads are sometimes slow
-travis_wait 30 ./gradlew --dry-run
-
-submodule=${BUILD_ONLY_SUBMODULE:+:$BUILD_ONLY_SUBMODULE:}
+#!/bin/sh -eux
 
 ./gradlew --continue --no-build-cache "$submodule"assemble

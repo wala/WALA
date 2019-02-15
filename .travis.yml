@@ -7,11 +7,17 @@ addons:
     - realpath
     - xvfb
 before_install:
-  - set -e
-  - source "travis/before-install-$BUILD_SYSTEM"
-install: source "travis/install-$BUILD_SYSTEM"
-script: source "travis/script-$BUILD_SYSTEM"
-before_cache: source "travis/before-cache-$BUILD_SYSTEM"
+  - export M2_HOME=$HOME/apache-maven-3.5.0
+  - "travis/before-install-$BUILD_SYSTEM"
+  - export PATH=$M2_HOME/bin:$PATH
+install:
+  - export submodule=${BUILD_ONLY_SUBMODULE:+:$BUILD_ONLY_SUBMODULE:}
+  - "travis/install-$BUILD_SYSTEM"
+script:
+  - export AUTH_TOKEN
+  - export GH_TOKEN
+  - "travis/script-$BUILD_SYSTEM"
+before_cache: "travis/before-cache-$BUILD_SYSTEM"
 cache:
   directories:
   - "$HOME/.goomph"

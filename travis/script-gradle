@@ -1,4 +1,4 @@
-# -*- mode: sh; sh-shell: sh -*-
+#!/bin/sh -eux
 
 case "$TRAVIS_OS_NAME" in
   (linux) headless=xvfb-run ;;
