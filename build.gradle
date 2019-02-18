@@ -53,7 +53,7 @@ p2AsMaven {
 //
 
 group name
-version '1.5.2'
+version '1.5.3-SNAPSHOT'
 
 subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever
