@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.js.rhino
-Bundle-Version: 1.5.2.qualifier
+Bundle-Version: 1.5.2
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: com.ibm.wala.cast;bundle-version="1.5.2.qualifier",
- com.ibm.wala.cast.js;bundle-version="1.5.2.qualifier",
- com.ibm.wala.core;bundle-version="1.5.2.qualifier",
- com.ibm.wala.util;bundle-version="1.5.2.qualifier"
+Require-Bundle: com.ibm.wala.cast;bundle-version="1.5.2",
+ com.ibm.wala.cast.js;bundle-version="1.5.2",
+ com.ibm.wala.core;bundle-version="1.5.2",
+ com.ibm.wala.util;bundle-version="1.5.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.js.translator,
