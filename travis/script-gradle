@@ -2,10 +2,21 @@
 
 case "$TRAVIS_OS_NAME" in
   (linux) headless=xvfb-run ;;
-  (osx) headless='' ;;
+  (osx) headless= ;;
+esac
+
+case "$SUBMODULE_PREFIX" in
+  (:*:*:)
+    # native subsubcomponent: no Java code, so no Javadoc
+    documentation=
+    ;;
+  (*)
+    # Java subcomponent
+    documentation=javadoc
+    ;;
 esac
 
 $headless ./gradlew --continue --no-build-cache --stacktrace \
-	  "$submodule"build \
-	  "$submodule"javadoc \
+	  "$SUBMODULE_PREFIX"build \
+	  ${documentation:+$SUBMODULE_PREFIX$documentation} \
 	  lintGradle
