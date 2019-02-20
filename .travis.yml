@@ -11,7 +11,7 @@ before_install:
   - "travis/before-install-$BUILD_SYSTEM"
   - export PATH=$M2_HOME/bin:$PATH
 install:
-  - export submodule=${BUILD_ONLY_SUBMODULE:+:$BUILD_ONLY_SUBMODULE:}
+  - export SUBMODULE_PREFIX=${BUILD_ONLY_SUBMODULE:+:$BUILD_ONLY_SUBMODULE:}
   - "travis/install-$BUILD_SYSTEM"
 script:
   - export AUTH_TOKEN
