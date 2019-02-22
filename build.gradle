@@ -275,3 +275,16 @@ final def getNativeLibraryOutput(task) {
 	assert parent as String == library.parent
 	return library
 }
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Install Google Java Format pre-commit hook
+//
+
+task installGitHooks(type: Copy) {
+    from new File(rootProject.rootDir, 'config/hooks/pre-commit-stub')
+    into { new File(rootProject.rootDir, '.git/hooks/pre-commit') }
+    fileMode 0777
+}
+
+build.dependsOn installGitHooks
