@@ -52,7 +52,6 @@ p2AsMaven {
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////////////
 //
 //  common Java setup shared by multiple projects
@@ -108,6 +107,7 @@ subprojects { subproject ->
 
 		maxParallelForks = Integer.MAX_VALUE
 	}
+
 }
 
 tasks.register('afterEclipseBuildshipImport', Exec) {
@@ -278,13 +278,19 @@ final def getNativeLibraryOutput(task) {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  Install Google Java Format pre-commit hook
+//  Google Java Format pre-commit hook installation
 //
 
 task installGitHooks(type: Copy) {
-    from new File(rootProject.rootDir, 'config/hooks/pre-commit-stub')
-    into { new File(rootProject.rootDir, '.git/hooks/pre-commit') }
+    from(new File(rootProject.rootDir, 'config/hooks/pre-commit-stub')) {
+      rename 'pre-commit-stub', 'pre-commit'
+    }
+    into { new File(rootProject.rootDir, '.git/hooks') }
     fileMode 0777
 }
 
-build.dependsOn installGitHooks
+subprojects { subproject ->
+  tasks.all { Task task ->
+    task.dependsOn installGitHooks
+  }
+}
