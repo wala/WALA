@@ -52,6 +52,7 @@ p2AsMaven {
 	}
 }
 
+
 ////////////////////////////////////////////////////////////////////////
 //
 //  common Java setup shared by multiple projects
@@ -107,7 +108,6 @@ subprojects { subproject ->
 
 		maxParallelForks = Integer.MAX_VALUE
 	}
-
 }
 
 tasks.register('afterEclipseBuildshipImport', Exec) {
@@ -282,15 +282,15 @@ final def getNativeLibraryOutput(task) {
 //
 
 task installGitHooks(type: Copy) {
-    from(new File(rootProject.rootDir, 'config/hooks/pre-commit-stub')) {
-      rename 'pre-commit-stub', 'pre-commit'
-    }
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0777
+	from(new File(rootProject.rootDir, 'config/hooks/pre-commit-stub')) {
+		rename 'pre-commit-stub', 'pre-commit'
+	}
+	into { new File(rootProject.rootDir, '.git/hooks') }
+	fileMode 0777
 }
 
 subprojects { subproject ->
-  tasks.all { Task task ->
-    task.dependsOn installGitHooks
-  }
+	tasks.all { Task task ->
+		task.dependsOn installGitHooks
+	}
 }
