@@ -402,13 +402,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   @Override
   public Iterator<BasicBlockInContext<T>> iterator() {
-    if (WARN_ON_EAGER_CONSTRUCTION) {
-      System.err.println("WARNING: forcing full ICFG construction by calling iterator()");
-    }
-    if (FAIL_ON_EAGER_CONSTRUCTION) {
-      throw new UnimplementedError();
-    }
-    constructFullGraph();
+    constructFullGraph("iterator");
     return g.iterator();
   }
 
@@ -417,13 +411,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   @Override
   public Stream<BasicBlockInContext<T>> stream() {
-    if (WARN_ON_EAGER_CONSTRUCTION) {
-      System.err.println("WARNING: forcing full ICFG construction by calling stream()");
-    }
-    if (FAIL_ON_EAGER_CONSTRUCTION) {
-      throw new UnimplementedError();
-    }
-    constructFullGraph();
+    constructFullGraph("stream");
     return g.stream();
   }
 
@@ -432,19 +420,20 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   @Override
   public int getNumberOfNodes() {
-    if (WARN_ON_EAGER_CONSTRUCTION) {
-      System.err.println("WARNING: forcing full ICFG construction by calling getNumberOfNodes()");
-    }
-    if (FAIL_ON_EAGER_CONSTRUCTION) {
-      throw new UnimplementedError();
-    }
-    constructFullGraph();
+    constructFullGraph("getNumberOfNodes");
     return g.getNumberOfNodes();
   }
 
   private boolean constructedFullGraph = false;
 
-  private void constructFullGraph() {
+  private void constructFullGraph(String onBehalfOf) {
+    if (WARN_ON_EAGER_CONSTRUCTION) {
+      System.err.format("WARNING: forcing full ICFG construction by calling %s()\n", onBehalfOf);
+    }
+    if (FAIL_ON_EAGER_CONSTRUCTION) {
+      throw new UnimplementedError();
+    }
+
     if (!constructedFullGraph) {
       for (CGNode n : cg) {
         addIntraproceduralNodesAndEdgesForCGNodeIfNeeded(n);
@@ -787,13 +776,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   @Override
   public int getMaxNumber() {
-    if (WARN_ON_EAGER_CONSTRUCTION) {
-      System.err.println("WARNING: forcing full ICFG construction by calling getMaxNumber()");
-    }
-    if (FAIL_ON_EAGER_CONSTRUCTION) {
-      throw new UnimplementedError();
-    }
-    constructFullGraph();
+    constructFullGraph("getMaxNumber");
     return g.getMaxNumber();
   }
 
