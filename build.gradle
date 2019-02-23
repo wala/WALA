@@ -276,6 +276,7 @@ final def getNativeLibraryOutput(task) {
 	return library
 }
 
+
 ////////////////////////////////////////////////////////////////////////
 //
 //  Google Java Format pre-commit hook installation
