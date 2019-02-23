@@ -282,9 +282,9 @@ final def getNativeLibraryOutput(task) {
 //
 
 task installGitHooks(type: Copy) {
-	from(new File(rootProject.rootDir, 'config/hooks/pre-commit-stub')) {
+	from(file('config/hooks/pre-commit-stub')) {
 		rename 'pre-commit-stub', 'pre-commit'
 	}
-	into { new File(rootProject.rootDir, '.git/hooks') }
+	into file('.git/hooks')
 	fileMode 0777
 }
