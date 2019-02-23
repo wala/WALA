@@ -98,8 +98,6 @@ final def copyDxJar = tasks.register('copyDxJar', Sync) {
 	into 'lib'
 }
 
-tasks.named('cleanCopyDxJar')
-
 tasks.named('clean').configure {
 	dependsOn 'cleanCopyDxJar'
 }
@@ -128,8 +126,6 @@ tasks.register('downloadSampleCup', VerifiedDownload) {
 	checksum '76b549e7c6e802b811a374248175ecf4'
 }
 
-tasks.named('cleanDownloadSampleCup')
-
 tasks.named('clean').configure {
 	dependsOn 'cleanDownloadSampleCup'
 }
@@ -139,8 +135,6 @@ tasks.register('downloadSampleLex', VerifiedDownload) {
 	dest 'data/sample.lex'
 	checksum 'ae887758b2657981d023a72a165da830'
 }
-
-tasks.named('cleanDownloadSampleLex')
 
 tasks.named('clean').configure {
 	dependsOn 'cleanDownloadSampleLex'
