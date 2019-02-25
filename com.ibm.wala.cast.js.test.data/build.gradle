@@ -19,10 +19,10 @@ tasks.register('unpackAjaxslt', Sync) {
 	into 'examples-src/ajaxslt'
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanUnpackAjaxslt'
 }
 
-tasks.named('processTestResources').configure {
+tasks.named('processTestResources') {
 	dependsOn 'unpackAjaxslt'
 }

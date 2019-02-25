@@ -145,7 +145,7 @@ tasks.register('cleanExtractBcel', Delete) {
 	delete files(extractBcel)[0]
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanExtractBcel'
 }
 
@@ -167,7 +167,7 @@ tasks.register('cleanDownloadJavaCup', Delete) {
 	delete downloadJavaCup
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanDownloadJavaCup'
 }
 
@@ -188,7 +188,7 @@ tasks.register('cleanCollectJLex', Delete) {
 	delete collectJLex
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanCollectJLex'
 }
 
@@ -238,7 +238,7 @@ tasks.register('cleanGenerateHelloHashJar', Delete) {
 	}
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanGenerateHelloHashJar'
 }
 
@@ -260,7 +260,7 @@ tasks.register('cleanCollectTestData', Delete) {
 	delete collectTestData
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanCollectTestData'
 }
 
@@ -287,6 +287,6 @@ tasks.register('cleanColllectTestDataA', Delete) {
 	delete collectTestDataA
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanCollectTestDataA'
 }

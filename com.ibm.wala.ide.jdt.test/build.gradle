@@ -28,7 +28,7 @@ dependencies {
 		)
 }
 
-tasks.named('test').configure {
+tasks.named('test') {
 	maxHeapSize = '1200M'
 
 	// https://github.com/liblit/WALA/issues/5

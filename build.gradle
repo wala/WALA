@@ -93,7 +93,7 @@ subprojects { subproject ->
 
 	tasks.register('prepareIntelliJIDEA')
 
-	tasks.named('test').configure {
+	tasks.named('test') {
 		include '**/*Test.class'
 		include '**/*TestCase.class'
 		include '**/*Tests.class'
@@ -203,7 +203,7 @@ allprojects {
 final def addCastLibrary(project, recipient) {
 	recipient.binaries.whenElementFinalized { binary ->
 		binary.linkTask.get().configure { linkTask ->
-			project.project(':com.ibm.wala.cast:cast').tasks.named(linkTask.name).configure { castTask ->
+			project.project(':com.ibm.wala.cast:cast').tasks.named(linkTask.name) { castTask ->
 				addRpath(linkTask, getNativeLibraryOutput(castTask))
 			}
 		}

@@ -5,7 +5,7 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-tasks.named('prepareIntelliJIDEA').configure {
+tasks.named('prepareIntelliJIDEA') {
 	dependsOn 'jarTest'
 }
 
@@ -29,7 +29,7 @@ dependencies {
 		)
 }
 
-tasks.named('test').configure {
+tasks.named('test') {
 	final def xlator_project_name = 'xlator_test'
 	final def xlator_link_name = 'linkDebug'
 	dependsOn "$xlator_project_name:$xlator_link_name"

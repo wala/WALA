@@ -11,7 +11,7 @@ dependencies {
 		)
 }
 
-tasks.named('test').configure {
+tasks.named('test') {
 	maxHeapSize = '800M'
 
 	// fails with java.lang.OutOfMemoryError for unknown reasons
