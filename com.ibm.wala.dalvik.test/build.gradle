@@ -98,19 +98,19 @@ final def copyDxJar = tasks.register('copyDxJar', Sync) {
 	into 'lib'
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanCopyDxJar'
 }
 
-tasks.named('compileTestJava').configure {
+tasks.named('compileTestJava') {
 	dependsOn 'copyDxJar'
 }
 
-tasks.named('afterEclipseBuildshipImport').configure {
+tasks.named('afterEclipseBuildshipImport') {
 	dependsOn 'copyDxJar'
 }
 
-tasks.named('prepareIntelliJIDEA').configure {
+tasks.named('prepareIntelliJIDEA') {
 	dependsOn 'copyDxJar'
 }
 
@@ -126,7 +126,7 @@ tasks.register('downloadSampleCup', VerifiedDownload) {
 	checksum '76b549e7c6e802b811a374248175ecf4'
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanDownloadSampleCup'
 }
 
@@ -136,7 +136,7 @@ tasks.register('downloadSampleLex', VerifiedDownload) {
 	checksum 'ae887758b2657981d023a72a165da830'
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanDownloadSampleLex'
 }
 
@@ -160,7 +160,7 @@ dependencies {
 	testRuntime files("${copyAndroidJar.destinationDir}/android.jar")
 }
 
-tasks.named('processTestResources').configure {
+tasks.named('processTestResources') {
 	from copyAndroidJar
 	from downloadSampleCup
 	from downloadSampleLex
@@ -168,15 +168,15 @@ tasks.named('processTestResources').configure {
 }
 
 if (isWindows)
-	tasks.named('test').configure {
+	tasks.named('test') {
 		exclude '**/droidbench/**'
 	}
 else
-	tasks.named('processTestResources').configure {
+	tasks.named('processTestResources') {
 		dependsOn 'unpackDroidBench'
 	}
 
-tasks.named('test').configure {
+tasks.named('test') {
 	maxHeapSize = '800M'
 }
 
@@ -188,6 +188,6 @@ tasks.register('cleanTestExtras', Delete) {
 	)
 }
 
-tasks.named('cleanTest').configure {
+tasks.named('cleanTest') {
 	dependsOn 'cleanTestExtras'
 }

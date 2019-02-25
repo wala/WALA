@@ -29,7 +29,7 @@ dependencies {
 		)
 }
 
-tasks.named('processTestResources').configure {
+tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.tasks.named('compileTestJava')
 	dependsOn testdata.tasks.named('extractBcel')
@@ -44,7 +44,7 @@ tasks.named('processTestResources').configure {
 	from testdata.buildKawaTestJar
 }
 
-tasks.named('test').configure {
+tasks.named('test') {
 	maxHeapSize = '1500M'
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
@@ -55,6 +55,6 @@ tasks.register('cleanTestExtras', Delete) {
 	delete 'report'
 }
 
-tasks.named('cleanTest').configure {
+tasks.named('cleanTest') {
 	dependsOn 'cleanTestExtras'
 }

@@ -14,7 +14,7 @@ tasks.register('createPackageList', CreatePackageList) {
 	sourceSet sourceSets.main.java
 }
 
-tasks.named('javadoc').configure {
+tasks.named('javadoc') {
 	dependsOn 'createPackageList'
 	doFirst {
 		options.linksOffline outputDirectory.path, createPackageList.packageList.parent

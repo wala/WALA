@@ -20,11 +20,11 @@ tasks.register('cleanDownloadJLex', Delete) {
 	delete downloadJLex.get().dest.parent
 }
 
-tasks.named('compileTestJava').configure {
+tasks.named('compileTestJava') {
 	dependsOn 'downloadJLex'
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanDownloadJLex'
 }
 

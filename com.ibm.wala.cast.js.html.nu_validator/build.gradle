@@ -18,12 +18,12 @@ dependencies {
 		)
 }
 
-tasks.named('processTestResources').configure {
+tasks.named('processTestResources') {
 	def data = project(':com.ibm.wala.cast.js.test.data')
 	dependsOn data.tasks.named('processTestResources')
 	from data.sourceSets.test.resources
 }
 
-tasks.named('test').configure {
+tasks.named('test') {
 	maxHeapSize = '800M'
 }

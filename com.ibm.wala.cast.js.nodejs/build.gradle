@@ -33,11 +33,11 @@ tasks.register('cleanUnpackNodeJSLib', Delete) {
 	delete fileTree(dir: 'dat/core-modules', include: '*.js')
 }
 
-tasks.named('processResources').configure {
+tasks.named('processResources') {
 	dependsOn 'unpackNodeJSLib'
 }
 
-tasks.named('clean').configure {
+tasks.named('clean') {
 	dependsOn 'cleanUnpackNodeJSLib'
 }
 
