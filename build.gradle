@@ -6,10 +6,16 @@
 plugins {
 	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
+	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '9.2.0'
 	id 'nebula.source-jar' version '9.5.0' apply false
 	id 'maven-publish'
+}
+
+repositories {
+	// to get the google-java-format jar and dependencies
+	mavenCentral()
 }
 
 
@@ -106,6 +112,10 @@ subprojects { subproject ->
 
 tasks.register('afterEclipseBuildshipImport', Exec) {
 	commandLine './revert-launchers.sh'
+}
+
+googleJavaFormat {
+	toolVersion = '1.7'
 }
 
 
@@ -264,4 +274,18 @@ final def getNativeLibraryOutput(task) {
 	final def (parent, library) = outputsFiles
 	assert parent as String == library.parent
 	return library
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Google Java Format pre-commit hook installation
+//
+
+task installGitHooks(type: Copy) {
+	from(file('config/hooks/pre-commit-stub')) {
+		rename 'pre-commit-stub', 'pre-commit'
+	}
+	into file('.git/hooks')
+	fileMode 0777
 }
