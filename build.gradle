@@ -288,9 +288,3 @@ task installGitHooks(type: Copy) {
 	into { new File(rootProject.rootDir, '.git/hooks') }
 	fileMode 0777
 }
-
-subprojects { subproject ->
-	tasks.all { Task task ->
-		task.dependsOn installGitHooks
-	}
-}
