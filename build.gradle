@@ -116,6 +116,7 @@ tasks.register('afterEclipseBuildshipImport', Exec) {
 
 googleJavaFormat {
 	toolVersion = '1.7'
+	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
 }
 
 
