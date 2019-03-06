@@ -116,6 +116,9 @@ tasks.register('afterEclipseBuildshipImport', Exec) {
 
 googleJavaFormat {
 	toolVersion = '1.7'
+	// exclude since various tests make assertions based on
+	// source positions in the test inputs.  to auto-format
+	// we also need to update the test assertions
 	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
 }
 
