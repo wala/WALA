@@ -36,9 +36,24 @@ public class PrunedCallGraph implements CallGraph {
 	private Set<CGNode> keep;
 	private Map<CGNode,Set<CGNode>> remove = Collections.emptyMap();
 	
+	/**
+	 * Create a pruned (filtered) view of an existing call graph.
+	 *
+	 * <p>Note: the created instance retains references to {@code cg} and {@code keep} without making private copies
+	 * thereof.  Be cautious if subsequently modifying {@code cg} or {@code keep} outside of this class's control.  In
+	 * particular, {@code keep} must always be a subset of the nodes in {@code cg} or else unexpected behavior may
+	 * arise.</p>
+	 *
+	 * @param cg   Underlying call graph to prune
+	 * @param keep Subset of {@code cg} nodes to include in the pruned graph
+	 * @throws IllegalArgumentException if any {@code keep} node is not a node in {@code cg}
+	 */
 	public PrunedCallGraph(CallGraph cg, Set<CGNode> keep) {
 		this.cg = cg;
 		this.keep = keep;
+		for (CGNode keptNode : keep)
+			if (!cg.containsNode(keptNode))
+				throw new IllegalArgumentException(String.format("%s does not contain %s", cg, keptNode));
 	}
 
   public PrunedCallGraph(CallGraph cg, Set<CGNode> keep, Map<CGNode,Set<CGNode>> remove) {
@@ -55,21 +70,11 @@ public class PrunedCallGraph implements CallGraph {
 
 	@Override
 	public Iterator<CGNode> iterator() {
-		Iterator<CGNode> tmp = cg.iterator();
-		Collection<CGNode> col = new LinkedList<>();
-		while (tmp.hasNext()) {
-			CGNode n = tmp.next();
-			if (keep.contains(n)) {
-				col.add(n);
-			}
-		}
-		
-		return col.iterator();
+		return keep.iterator();
 	}
 
 	@Override
 	public Stream<CGNode> stream() {
-		assert keep.stream().allMatch(cg::containsNode);
 		return keep.stream();
 	}
 
