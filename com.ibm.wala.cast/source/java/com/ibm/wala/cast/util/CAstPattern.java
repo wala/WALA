@@ -412,6 +412,10 @@ public class CAstPattern {
 
     @Override
     protected boolean doVisit(CAstNode n, Context context, CAstVisitor<Context> visitor) {
+      Segments s = match(CAstPattern.this, n);
+      if (s != null) {
+        result.add(s);
+      }
       return true;
     }
 

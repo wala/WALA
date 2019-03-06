@@ -292,7 +292,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
   /**
    * Builds the call graph for the analysis scope in effect, using all of the given entry points.
    */
-  public CallGraphBuilder<? super I> defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
+  public CallGraphBuilder<? super I> defaultCallGraphBuilder() throws IllegalArgumentException, IOException {
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
