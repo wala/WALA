@@ -2036,8 +2036,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     int start = leftStartPosition;
     int end = right.getStartPosition() + right.getLength();
     T pos = makePosition(start, end);
-    T rightPos = makePosition(leftStartPosition, leftStartPosition + leftLength);
-    T leftPos = makePosition(right.getStartPosition(), right.getStartPosition() + right.getLength());
+    T leftPos = makePosition(leftStartPosition, leftStartPosition + leftLength);
+    T rightPos = makePosition(right.getStartPosition(), right.getStartPosition() + right.getLength());
 
     if (op == InfixExpression.Operator.CONDITIONAL_AND) {
       return makeNode(context, fFactory, pos, CAstNode.IF_EXPR, leftNode, rightNode, fFactory.makeConstant(false));
@@ -2343,7 +2343,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private CAstNode visit(SwitchCase n, WalkContext context) {
-    CAstNode label = makeNode(context, fFactory, n, CAstNode.LABEL_STMT, getSwitchCaseConstant(n, context));
+    CAstNode label = makeNode(context, fFactory, n, CAstNode.LABEL_STMT, 
+    		getSwitchCaseConstant(n, context), 
+    		makeNode(context, fFactory, n, CAstNode.EMPTY));
 
     context.cfg().map(n, label);
     return label;

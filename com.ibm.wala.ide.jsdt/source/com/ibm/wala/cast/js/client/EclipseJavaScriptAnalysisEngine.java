@@ -59,7 +59,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject, I> {
+public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject, InstanceKey> {
 
   public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
   
@@ -113,7 +113,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   }
 
   @Override
-  protected CallGraphBuilder<? super I> getCallGraphBuilder(IClassHierarchy cha,
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha,
 		AnalysisOptions options, IAnalysisCacheView cache) {
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha);
   }

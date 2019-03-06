@@ -139,6 +139,11 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       visitor.visitEntities(child, context, visitor);
     }
   }
+  
+  protected C getCodeContext(C context) {
+    return context;
+  }
+  
   /**
    * Recursively visit an entity.
    * @param n the entity to process
@@ -185,7 +190,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     }
     case CAstEntity.FUNCTION_ENTITY: {
       for(CAstNode dflt : n.getArgumentDefaults()) {
-        visitor.visit(dflt, context, visitor);
+        visitor.visit(dflt, getCodeContext(context), visitor);
         visitor.visitScopedEntities(context.top(), context.top().getScopedEntities(dflt), context, visitor);
       }
       C codeContext = visitor.makeCodeContext(context, n);

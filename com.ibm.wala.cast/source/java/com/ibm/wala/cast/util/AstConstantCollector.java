@@ -16,6 +16,8 @@ public class AstConstantCollector {
 
   public static final CAstPattern simplePostUpdatePattern = CAstPattern.parse("ASSIGN_POST_OP(VAR(<name>CONSTANT()),**)");
 
+  public static final CAstPattern simpleGlobalPattern = CAstPattern.parse("GLOBAL_DECL(@(VAR(<name>CONSTANT()))@)");
+
   public static final CAstPattern simpleValuePattern = CAstPattern.parse("ASSIGN(VAR(<name>CONSTANT()),<value>*)");
  
   public static Map<String,Object> collectConstants(CAstEntity function, Map<String,Object> values) {
@@ -23,6 +25,11 @@ public class AstConstantCollector {
     Set<String> bad = HashSetFactory.make();
     for(Segments s : CAstPattern.findAll(simplePreUpdatePattern, function)) {
       bad.add((String) s.getSingle("name").getValue());
+    }
+    for(Segments s : CAstPattern.findAll(simpleGlobalPattern, function)) {
+      s.getMultiple("name").iterator().forEachRemaining((name) -> {
+        bad.add((String) name.getValue());
+      });
     }
     for(Segments s : CAstPattern.findAll(simplePostUpdatePattern, function)) {
       bad.add((String) s.getSingle("name").getValue());

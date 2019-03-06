@@ -53,6 +53,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
@@ -346,18 +347,18 @@ public abstract class IRTests {
     return new String[] { "L" + pkgName + "/" + getTestName().substring(4) };
   }
 
-  protected abstract <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
+  protected abstract AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
-  public <I extends InstanceKey> Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> runTest(Collection<String> sources, List<String> libs,
+  public Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> runTest(Collection<String> sources, List<String> libs,
         String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable, String exclusionsFile) throws IllegalArgumentException, CancelException, IOException {
-      AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
+      AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
 
       if (exclusionsFile != null) {
         engine.setExclusionsFile(exclusionsFile);
       }
       
-      CallGraph callGraph;
-        callGraph = engine.buildDefaultCallGraph();
+      CallGraphBuilder<? super InstanceKey> builder = engine.defaultCallGraphBuilder();
+      CallGraph callGraph = builder.makeCallGraph(engine.getOptions(), new NullProgressMonitor());
         //System.err.println(callGraph.toString());
 
         // If we've gotten this far, IR has been produced.
@@ -370,7 +371,7 @@ public abstract class IRTests {
           IRAssertion.check(callGraph);
         }
 
-        return Pair.make(callGraph, engine.getPointerAnalysis());
+        return Pair.make(callGraph, builder.getPointerAnalysis());
   }
 
   protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) {
@@ -451,7 +452,7 @@ public abstract class IRTests {
     return null;
   }
 
-  public static void populateScope(JavaSourceAnalysisEngine<?> engine, Collection<String> sources, List<String> libs) {
+  public static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);

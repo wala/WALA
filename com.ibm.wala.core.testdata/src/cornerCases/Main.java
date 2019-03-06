@@ -11,7 +11,7 @@
 
 package cornerCases;
 
-import sun.java2d.FontSupport;
+import javax.swing.tree.RowMapper;
 
 /**
  * @author sfink
@@ -36,7 +36,7 @@ public class Main {
   }
 
   public static class YuckyField {
-    FontSupport f;
+    RowMapper f;
   }
   
   /**
@@ -44,11 +44,11 @@ public class Main {
    * FontSupport was not found
    */
   public static Object foo() {
-    getFontSupport();
+    getRowMapper();
     return new YuckyField().f;
   }
   
-  public static FontSupport getFontSupport() {
+  public static RowMapper getRowMapper() {
     return null;
   }
 }

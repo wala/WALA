@@ -15,8 +15,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
@@ -25,7 +27,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 
 public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
  
-  private final HashMap<CAstNode, Position> positions = HashMapFactory.make();
+  private final Map<CAstNode, Position> positions = HashMapFactory.make();
 
   @Override
   public Position getPosition(CAstNode n) {
@@ -102,5 +104,10 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
     for(CAstNode node : Iterator2Iterable.make(other.getMappedNodes())) {
       setPosition(node, other.getPosition(node));
     }
+  }
+
+  @Override
+  public SortedSet<Position> positions() {
+    return new TreeSet<>(positions.values());
   }
 }

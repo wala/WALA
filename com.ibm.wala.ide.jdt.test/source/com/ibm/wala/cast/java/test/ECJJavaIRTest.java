@@ -28,8 +28,8 @@ public class ECJJavaIRTest extends JavaIRTests {
   }
 
   @Override
-  protected <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    JavaSourceAnalysisEngine<I> engine = new ECJJavaSourceAnalysisEngine<I>() {
+  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+    JavaSourceAnalysisEngine engine = new ECJJavaSourceAnalysisEngine() {
       @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);

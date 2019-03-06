@@ -7,8 +7,9 @@
         <artifactId>WALA</artifactId>
         <version>1.5.3-SNAPSHOT</version>
     </parent>
-    <packaging>eclipse-plugin</packaging>
+    <groupId>com.ibm.wala</groupId>
     <artifactId>com.ibm.wala.cast.js.nodejs</artifactId>
+    <packaging>eclipse-plugin</packaging>
     <build>
       <plugins>
 	<plugin>

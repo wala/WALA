@@ -10,16 +10,15 @@
  */
 package cornerCases;
 
-import sun.java2d.FontSupport;
+import javax.swing.tree.RowMapper;
 
 /**
  * @author sfink
  *
- * When analyzed with J2EEClassHierarchy exclusions, the superinterface
- * FontSupport should not be found because we exclude sun.java2d.*
+ * When analyzed with Java60RegressionExclusions exclusions, the superinterface
+ * RowMapper should not be found because we exclude javax.swing.*
  */
-@SuppressWarnings("restriction")
-public interface YuckyInterface extends FontSupport {
+public interface YuckyInterface extends RowMapper {
 
 
 }

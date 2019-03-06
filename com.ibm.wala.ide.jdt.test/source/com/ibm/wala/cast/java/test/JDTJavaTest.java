@@ -45,13 +45,13 @@ public abstract class JDTJavaTest extends IRTests {
    }
 
   @Override
-  protected <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     return makeAnalysisEngine(mainClassDescriptors, project);
   }
   
-  static <I extends InstanceKey> AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> makeAnalysisEngine(final String[] mainClassDescriptors, ZippedProjectData project) {
-    AbstractAnalysisEngine<I, CallGraphBuilder<I>, ?> engine;
-    engine = new JDTJavaSourceAnalysisEngine<I>(project.projectName) {
+  static AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> makeAnalysisEngine(final String[] mainClassDescriptors, ZippedProjectData project) {
+    AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> engine;
+    engine = new JDTJavaSourceAnalysisEngine(project.projectName) {
       {
         setDump(Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false")));
       }

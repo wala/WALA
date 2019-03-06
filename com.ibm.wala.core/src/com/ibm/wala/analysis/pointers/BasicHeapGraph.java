@@ -278,7 +278,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
           return new int[] { nodeManager.getNumber(p) };
         }
       } else {
-        IClass klass = getHeapModel().getClassHierarchy().lookupClass(T);
+        IClass klass = I.getConcreteType();
         assert klass != null : "null klass for type " + T;
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
         for (IField f : klass.getAllInstanceFields()) {

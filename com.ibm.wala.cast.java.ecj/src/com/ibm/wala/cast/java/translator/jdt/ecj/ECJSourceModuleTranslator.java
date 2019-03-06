@@ -39,6 +39,8 @@ package com.ibm.wala.cast.java.translator.jdt.ecj;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
@@ -59,7 +61,7 @@ import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.cast.java.translator.jdt.JDTJava2CAstTranslator;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.RangePosition;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 import com.ibm.wala.classLoader.DirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.JarStreamModule;
@@ -202,13 +204,54 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     return new JDTJava2CAstTranslator<Position>(sourceLoader, cu, fullPath, false, dump) {
       @Override
       public Position makePosition(int start, int end) {
-        try {
-          return new RangePosition(new URL("file://" + fullPath), this.cu.getLineNumber(start), start, end);
-        } catch (MalformedURLException e) {
-          throw new RuntimeException("bad file: " + fullPath, e);
-        }
-      }
+    	  return new AbstractSourcePosition() {
+
+			@Override
+			public URL getURL() {
+				try {
+					return new URL("file://" + fullPath);
+				} catch (MalformedURLException e) {
+					assert false : fullPath;
+					return null;
+				}
+			}
+
+			@Override
+			public Reader getReader() throws IOException {
+				return new InputStreamReader(getURL().openConnection().getInputStream());
+			}
+
+			@Override
+			public int getFirstLine() {
+				return cu.getLineNumber(start);
+			}
+
+			@Override
+			public int getLastLine() {
+				return cu.getLineNumber(end);
+			}
+
+			@Override
+			public int getFirstCol() {
+				return cu.getColumnNumber(start);
+			}
+
+			@Override
+			public int getLastCol() {
+				return cu.getColumnNumber(end);
+			}
+
+			@Override
+			public int getFirstOffset() {
+				return start;
+			}
+
+			@Override
+			public int getLastOffset() {
+				return end;
+			}
+    	  };
+       }
     };
   }
-
 }

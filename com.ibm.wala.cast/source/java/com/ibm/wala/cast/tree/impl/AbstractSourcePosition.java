@@ -13,7 +13,7 @@ package com.ibm.wala.cast.tree.impl;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
 
 public abstract class AbstractSourcePosition implements Position {
     
@@ -41,7 +41,7 @@ public abstract class AbstractSourcePosition implements Position {
   }
 
   @Override
-  public int compareTo(IMethod.SourcePosition o) {
+  public int compareTo(SourcePosition o) {
     if (o instanceof Position) {
       Position p = (Position)o;
       if (getFirstLine() != p.getFirstLine()) {

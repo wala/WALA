@@ -5,7 +5,10 @@ plugins {
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.main {
-	java.srcDirs = ['src']
+	java {
+	     srcDir 'src'
+	     exclude 'wala.properties'
+	}
 	resources.srcDirs = [
 		'dat',
 		'lib',

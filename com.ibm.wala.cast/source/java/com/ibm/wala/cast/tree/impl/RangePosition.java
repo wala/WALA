@@ -16,7 +16,7 @@ import java.io.Reader;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
 
 public class RangePosition extends AbstractSourcePosition {
   private final URL url;
@@ -39,7 +39,7 @@ public class RangePosition extends AbstractSourcePosition {
   }
   
   @Override
-  public int compareTo(IMethod.SourcePosition o) {
+  public int compareTo(SourcePosition o) {
     Position other = (Position) o;
     if (startOffset != other.getFirstOffset()) {
       return startOffset - other.getFirstOffset();

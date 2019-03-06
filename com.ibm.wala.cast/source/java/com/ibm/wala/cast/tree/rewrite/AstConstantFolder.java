@@ -20,11 +20,15 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 
 public class AstConstantFolder {
-  static class AssignSkipContext extends NonCopyingContext {
+  protected boolean skip(@SuppressWarnings("unused") CAstNode n) {
+    return false;
+  }
+  
+  class AssignSkipContext extends NonCopyingContext {
     private Set<CAstNode> skip = HashSetFactory.make();
   }
   
-  public static CAstEntity fold(CAstEntity ce) {
+  public CAstEntity fold(CAstEntity ce) {
     Map<String,Object> constants = AstConstantCollector.collectConstants(ce);
     if (constants.isEmpty()) {
       return ce;
@@ -38,8 +42,14 @@ public class AstConstantFolder {
           if (root.getKind() == CAstNode.ASSIGN) {
             ((AssignSkipContext)c).skip.add(root.getChild(0));
           }
-          
-          if (root.getKind() == CAstNode.VAR && constants.containsKey(root.getChild(0).getValue()) && ! ((AssignSkipContext)c).skip.contains(root)) {
+
+          if (root.getKind() == CAstNode.GLOBAL_DECL) {
+            for(int i = 0; i < root.getChildCount(); i++) {
+              ((AssignSkipContext)c).skip.add(root.getChild(i));
+            }
+          }
+
+          if (root.getKind() == CAstNode.VAR && !skip(root) && constants.containsKey(root.getChild(0).getValue()) && ! ((AssignSkipContext)c).skip.contains(root)) {
             return Ast.makeConstant(constants.get(root.getChild(0).getValue()));
           } else {
             return super.copyNodes(root, cfg, c, nodeMap);

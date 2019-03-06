@@ -118,7 +118,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
   /**
    * Results of pointer analysis
    */
-  protected PointerAnalysis<? super I> pointerAnalysis;
+  protected PointerAnalysis<I> pointerAnalysis;
 
   /**
    * Graph view of flow of pointers between heap abstractions
@@ -127,11 +127,11 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
 
   private EntrypointBuilder entrypointBuilder = this::makeDefaultEntrypoints;
 
-  protected abstract CallGraphBuilder<? super I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
+  protected abstract CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 
-  protected CallGraphBuilder<? super I> buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
+  protected CallGraphBuilder<I> buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
       IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
-    CallGraphBuilder<? super I> builder = getCallGraphBuilder(cha, options, cache);
+    CallGraphBuilder<I> builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options, monitor);
 
@@ -299,7 +299,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey, X extends Ca
     Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
     cache = makeDefaultCache();
-    return buildCallGraph(cha, options, true, null);
+    return getCallGraphBuilder(cha, options, cache);
   }
 
   public CallGraph buildDefaultCallGraph() throws IllegalArgumentException, CancelException, IOException {

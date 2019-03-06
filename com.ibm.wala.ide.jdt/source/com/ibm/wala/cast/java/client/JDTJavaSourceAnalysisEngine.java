@@ -63,7 +63,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class JDTJavaSourceAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaProject, I> {
+public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaProject, InstanceKey> {
   private boolean dump;
   
   public JDTJavaSourceAnalysisEngine(IJavaProject project) {
@@ -106,7 +106,7 @@ public class JDTJavaSourceAnalysisEngine<I extends InstanceKey> extends EclipseP
   }
 
   @Override
-  protected CallGraphBuilder<? super I> getCallGraphBuilder(IClassHierarchy cha,
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha,
 		  AnalysisOptions options, IAnalysisCacheView cache) {
 	    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
   }

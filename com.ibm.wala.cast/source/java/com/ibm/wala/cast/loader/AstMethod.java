@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.loader;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -55,6 +56,10 @@ public abstract class AstMethod implements IMethod {
     Position getOperandPosition(int instructionOffset, int operand);
 
     Position getParameterPosition(int param);
+    
+    String getLeadingComment(int instructionOffset) throws IOException;
+    
+    String getFollowingComment(int instructionOffset) throws IOException;
     
   }
 

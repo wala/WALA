@@ -43,7 +43,7 @@ import com.ibm.wala.util.io.FileProvider;
 
 /**
  */
-public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I, CallGraphBuilder<I>, Void> {
+public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {
 
   /**
    * Modules which are user-space code
@@ -167,7 +167,7 @@ public abstract class JavaSourceAnalysisEngine<I extends InstanceKey> extends Ab
   }
 
   @Override
-  protected CallGraphBuilder<? super I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
   }
 }

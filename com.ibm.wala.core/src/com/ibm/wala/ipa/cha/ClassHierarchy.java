@@ -284,7 +284,7 @@ public class ClassHierarchy implements IClassHierarchy {
         }
       }
 
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new ClassHierarchyException("factory.getLoader failed " + e);
     } finally {
       if (progressMonitor != null) {

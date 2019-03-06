@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.cast.ir.translator;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +24,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.function.Function;
 
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
@@ -48,6 +53,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
@@ -57,6 +63,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cast.util.CAstPrinter;
+import com.ibm.wala.cast.util.SourceBuffer;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -506,7 +513,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private Position[] parameterPositions;
     
-    AstDebuggingInformation(Position codeBodyNamePosition, Position codeBodyPosition, Position[] instructionPositions, Position[][] operandPositions, Position[] parameterPositions, String[] names) {
+    private SortedSet<Position> codePositions;
+    
+    AstDebuggingInformation(Position codeBodyNamePosition, Position codeBodyPosition, Position[] instructionPositions, Position[][] operandPositions, Position[] parameterPositions, String[] names, SortedSet<Position> codePositions) {
+      this.codePositions = codePositions;
+      
       this.codeBodyNamePosition = codeBodyNamePosition;
       
       this.codeBodyPosition = codeBodyPosition;
@@ -559,6 +570,100 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public Position getParameterPosition(int param) {
       return parameterPositions[param];
+    }
+
+    private static boolean disjoint(Position a, Position b) {
+      return 
+         (a.getLastLine() < b.getFirstLine() ||
+          (a.getLastLine() == b.getFirstLine() &&
+           a.getLastCol() < b.getFirstCol())) ||
+         (b.getLastLine() < a.getFirstLine() ||
+             (b.getLastLine() == a.getFirstLine() &&
+              b.getLastCol() < a.getFirstCol()));
+    }
+    
+    private String getComment(int instructionOffset, Function<Position,SortedSet<Position>> set) throws IOException {
+      Position pos = getInstructionPosition(instructionOffset);
+      if (pos == null) {
+        return null;
+      } else {
+        SortedSet<Position> prevSet = set.apply(pos);
+        if (prevSet != null && !prevSet.isEmpty()) {
+          Position ppos = null;
+          for(Position other : prevSet) {
+            if (disjoint(other, pos) ) {
+              ppos = other;
+              break;
+            }
+          }
+          if (ppos == null) {
+            return null;
+          }
+          Position first, second;
+          if (ppos.compareTo(pos) < 0) {
+            first = ppos;
+            second = pos;
+          } else {
+            first = pos;
+            second = ppos;
+          }
+          
+          Position intermediate = new AbstractSourcePosition() {
+            @Override
+            public URL getURL() {
+              return pos.getURL();
+            }
+
+            @Override
+            public Reader getReader() throws IOException {
+              return pos.getReader();
+            }
+
+            @Override
+            public int getFirstLine() {
+              return first.getLastLine();
+            }
+
+            @Override
+            public int getLastLine() {
+              return second.getFirstLine();
+            }
+
+            @Override
+            public int getFirstCol() {
+              return first.getLastCol();
+            }
+
+            @Override
+            public int getLastCol() {
+              return second.getFirstCol();
+            }
+
+            @Override
+            public int getFirstOffset() {
+              return first.getLastOffset();
+            }
+
+            @Override
+            public int getLastOffset() {
+              return second.getFirstOffset();
+            }
+          };
+
+          return new SourceBuffer(intermediate).toString();
+        }
+      }
+      return null;
+    }
+
+    @Override
+    public String getFollowingComment(int instructionOffset) throws IOException {
+      return getComment(instructionOffset, (p) -> { return codePositions.tailSet(p); });
+    }
+
+    @Override
+    public String getLeadingComment(int instructionOffset) throws IOException {
+      return getComment(instructionOffset, (p) -> { return codePositions.headSet(p); });
     }
   }
 
@@ -2372,6 +2477,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   public interface WalkContext extends CAstVisitor.Context {
 
+    WalkContext codeContext();
+    
     ModuleEntry getModule();
 
     String getName();
@@ -2420,6 +2527,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     DelegatingContext(WalkContext parent) {
       this.parent = parent;
+    }
+
+    @Override
+    public WalkContext codeContext() {
+      return parent.codeContext();
     }
 
     @Override
@@ -2618,6 +2730,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     @Override
+    public WalkContext codeContext() {
+      return this;
+    }
+
+    @Override
     public Set<Access> getAccesses(CAstEntity e) {
       if (e == topNode) {
         if (accesses == null) {
@@ -2729,7 +2846,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   }
 
-  private final class TypeContext extends EntityContext {
+  protected final class TypeContext extends EntityContext {
 
     private TypeContext(WalkContext parent, CAstEntity n) {
       super(parent, n);
@@ -2890,7 +3007,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet, Set<Access> accesses) {
       this.functionLexicalName = entityName;
-
+      
       Pair<Pair<String, String>, Integer>[] EN = null;
       if (exposedNamesForReadSet != null || exposedNamesForWriteSet != null) {
         Set<Pair<Pair<String, String>, Integer>> exposedNamesSet = new HashSet<>();
@@ -3069,6 +3186,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     context.exposeNameSet(entity, isWrite).add(newVal);
   }
 
+  @Override
+  protected WalkContext getCodeContext(WalkContext context) {
+    return context.codeContext();
+  }
+  
   public void setDefaultValue(SymbolTable symtab, int vn, Object value) {
     if (value == CAstSymbol.NULL_DEFAULT_VALUE) {
       symtab.setDefaultValue(vn, null);
@@ -3371,10 +3493,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         functionContext.exposeNameSet(n, false), 
         functionContext.exposeNameSet(n, true), 
         functionContext.getAccesses(n));
+      
 
     Position[] parameterPositions = getParameterPositions(n);
     
-    DebuggingInformation DBG = new AstDebuggingInformation(n.getNamePosition(), n.getPosition(), line, operand, parameterPositions, nms);
+    DebuggingInformation DBG = new AstDebuggingInformation(n.getNamePosition(), n.getPosition(), line, operand, parameterPositions, nms,
+        n.getSourceMap().positions());
 
     // actually make code body
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, monitor, LI, DBG);
@@ -4317,19 +4441,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       cases--;
     int[] casesAndLabels = new int[cases * 2];
 
-    int defaultBlock = context.cfg().getCurrentBlock().getGraphNodeId() + 1;
-
-    int currentInstruction = context.cfg().getCurrentInstruction();
-    context.cfg().addInstruction(insts.SwitchInstruction(currentInstruction, v, defaultBlock, casesAndLabels));
+     int currentInstruction = context.cfg().getCurrentInstruction();
+    context.cfg().addInstruction(insts.SwitchInstruction(currentInstruction, v, currentInstruction+1, casesAndLabels));
     context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(switchValue));
     context.cfg().addPreNode(n, context.getUnwindState());
-    // PreBasicBlock switchB = context.cfg().getCurrentBlock();
-    context.cfg().newBlock(true);
+    context.cfg().newBlock(false);
 
     context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction, -1));
     defaultHackBlock = context.cfg().getCurrentBlock();
     context.cfg().newBlock(false);
-
+    
     CAstNode switchBody = n.getChild(1);
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
@@ -4346,7 +4467,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       } else {
         Number caseLabel = (Number) context.currentScope().getConstantObject(context.getValue((CAstNode) x));
         casesAndLabels[2 * cn] = caseLabel.intValue();
-        casesAndLabels[2 * cn + 1] = context.cfg().getBlock(target).getGraphNodeId();
+        casesAndLabels[2 * cn + 1] = context.cfg().getBlock(target).firstIndex;
         cn++;
 
         context.cfg().addPreEdge(n, target, false);
@@ -4815,6 +4936,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       this.module = module;
       this.globalScope = makeGlobalScope();
     }
+
+     @Override
+    public WalkContext codeContext() {
+       assert false;
+       return null;
+     }
 
     @Override
     public ModuleEntry getModule() {

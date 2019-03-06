@@ -20,6 +20,7 @@ import com.ibm.wala.cast.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
+import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.cast.ir.ssa.CAstUnaryOp;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.js.analysis.typeInference.JSTypeInference;
@@ -64,6 +65,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -742,7 +744,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           InstanceKey[] iks1 = getInstancesArray(arg1);
           InstanceKey[] iks2 = getInstancesArray(arg2);
 
-          if ((instruction.getOperator() == BinaryOpInstruction.Operator.ADD) && (getOptions().getTraceStringConstants())) {
+          IOperator op = instruction.getOperator();
+          if ((op == BinaryOpInstruction.Operator.ADD) && (getOptions().getTraceStringConstants())) {
             for (InstanceKey element : iks1) {
               if (isStringConstant(element)) {
                 for (InstanceKey element2 : iks2) {
@@ -806,6 +809,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
             }
             
             System.err.println(instruction);
+          }
+    
+         if (op == CAstBinaryOp.STRICT_EQ || op == CAstBinaryOp.STRICT_NE) {
+        	  IClass bc = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
+        	  InstanceKey bk = new ConcreteTypeKey(bc);
+        	  if (addKey(bk)) {
+        		  changed = CHANGED;
+        	  }
           }
           
           return changed;

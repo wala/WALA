@@ -568,6 +568,10 @@ public abstract class JavaIRTests extends IRTests {
     runTest(singleTestSrc("bugfixes"), rtJar, simplePkgTestEntryPoint("bugfixes"), emptyList, true, null); 
   }
 
+  @Test public void testVarDeclInSwitch() throws IllegalArgumentException, CancelException, IOException {
+    runTest(singleTestSrc("bugfixes"), rtJar, simplePkgTestEntryPoint("bugfixes"), emptyList, true, null); 
+  }
+  
   @Test public void testExclusions() throws IllegalArgumentException, CancelException, IOException {
     File exclusions = TemporaryFile.stringToFile(File.createTempFile("exl", "txt"), "Exclusions.Excluded\n");
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, exclusions.getAbsolutePath());

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.SortedSet;
 
 import com.ibm.wala.classLoader.IMethod.SourcePosition;
 
@@ -54,4 +55,8 @@ public interface CAstSourcePositionMap {
    */
   Iterator<CAstNode> getMappedNodes();
 
+  /**
+   * Returns an ordered set of all positions in this map.
+   */
+  SortedSet<Position> positions();
 }

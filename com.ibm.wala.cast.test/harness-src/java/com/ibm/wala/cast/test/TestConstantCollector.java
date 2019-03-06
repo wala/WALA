@@ -175,12 +175,6 @@ public class TestConstantCollector {
     assert x.size() == 2;
   }
 
-  @Test
-  public void testRoot2() {
-    Map<String,Object> x = AstConstantCollector.collectConstants(fakeEntity(root2));
-    assert x.size() == 0;
-  }
-
   private CAstNode root3 =
       ast.makeNode(CAstNode.BLOCK_EXPR,
           ast.makeNode(CAstNode.ASSIGN,
@@ -197,8 +191,35 @@ public class TestConstantCollector {
   @Test
   public void testRoot3() {
     CAstEntity ce = fakeEntity(root3);
-    CAstEntity nce = AstConstantFolder.fold(ce);
+    CAstEntity nce = new AstConstantFolder().fold(ce);
     Collection<Segments> matches = CAstPattern.findAll(toCodePattern3, nce);
     assert matches.size() == 1;
   }
+  
+  private CAstNode root4 =
+      ast.makeNode(CAstNode.BLOCK_STMT,
+          ast.makeNode(CAstNode.GLOBAL_DECL,
+              ast.makeNode(CAstNode.VAR,
+                  ast.makeConstant("var1")),
+              ast.makeNode(CAstNode.VAR,
+                  ast.makeConstant("var2"))),
+          ast.makeNode(CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR,
+                  ast.makeConstant("var1")),
+              ast.makeConstant(14)),
+          ast.makeNode(CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR,
+                  ast.makeConstant("var2")),
+              ast.makeConstant(15)),
+          ast.makeNode(CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR,
+                  ast.makeConstant("var3")),
+              ast.makeConstant(16)));
+
+  @Test
+  public void testRoot4() {
+    Map<String,Object> x = AstConstantCollector.collectConstants(fakeEntity(root4));
+    assert x.size() == 1 : x;
+  }
+
 }

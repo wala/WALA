@@ -15,10 +15,10 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.ibm.wala.classLoader.IMethod;
 import org.eclipse.core.resources.IFile;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
 import com.ibm.wala.util.debug.Assertions;
 
 public final class JdtPosition implements Position {
@@ -77,7 +77,7 @@ public final class JdtPosition implements Position {
     }
 
     @Override
-    public int compareTo(IMethod.SourcePosition arg0) {
+    public int compareTo(SourcePosition arg0) {
     	if (arg0 instanceof JdtPosition) {
     		if (firstOffset != ((JdtPosition)arg0).firstOffset) {
     			return firstOffset - ((JdtPosition)arg0).firstOffset;
