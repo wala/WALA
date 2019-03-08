@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.SetType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -22,15 +18,14 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Reflection summary information for a method.
- */
+/** Reflection summary information for a method. */
 public class ReflectionSummary {
 
-
   private final Map<Integer, Set<TypeReference>> map = HashMapFactory.make();
-
 
   public void addType(int bcIndex, TypeReference T) {
     Set<TypeReference> S = findOrCreateSetForBCIndex(bcIndex);

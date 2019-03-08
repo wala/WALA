@@ -16,17 +16,14 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 
 /**
- * A simple assignment statement. Only appears in the IR before SSA conversion, and temporarily when needed to undo copy propagation
- * during processing of new lexical definitions and uses.
- * 
+ * A simple assignment statement. Only appears in the IR before SSA conversion, and temporarily when
+ * needed to undo copy propagation during processing of new lexical definitions and uses.
+ *
  * @author Julian Dolby (dolby@us.ibm.com)
- * 
  */
 public class AssignInstruction extends SSAUnaryOpInstruction {
 
-  /**
-   * create the assignment v_result := v_val
-   */
+  /** create the assignment v_result := v_val */
   public AssignInstruction(int iindex, int result, int val) {
     super(iindex, null, result, val);
     assert result != val;
@@ -40,7 +37,8 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
-        .AssignInstruction(iindex, defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
+        .AssignInstruction(
+            iindex, defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
   }
 
   /*

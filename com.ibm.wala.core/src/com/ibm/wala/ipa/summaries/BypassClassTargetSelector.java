@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.Set;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -20,35 +18,33 @@ import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import java.util.Set;
 
 /**
- * A {@link ClassTargetSelector} that looks up the declared type of a {@link NewSiteReference} based on bypass rules.
+ * A {@link ClassTargetSelector} that looks up the declared type of a {@link NewSiteReference} based
+ * on bypass rules.
  */
 public class BypassClassTargetSelector implements ClassTargetSelector {
   private static final boolean DEBUG = false;
 
-  /**
-   * Set of {@link TypeReference} that should be considered allocatable
-   */
+  /** Set of {@link TypeReference} that should be considered allocatable */
   private final Set<TypeReference> allocatableTypes;
 
-  /**
-   * Governing class hierarchy
-   */
+  /** Governing class hierarchy */
   private final IClassHierarchy cha;
 
-  /**
-   * Delegate
-   */
+  /** Delegate */
   private final ClassTargetSelector parent;
 
-  /**
-   * class loader used for synthetic classes
-   */
+  /** class loader used for synthetic classes */
   private final BypassSyntheticClassLoader bypassLoader;
 
-  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, IClassHierarchy cha,
-      IClassLoader bypassLoader) throws IllegalArgumentException {
+  public BypassClassTargetSelector(
+      ClassTargetSelector parent,
+      Set<TypeReference> allocatableTypes,
+      IClassHierarchy cha,
+      IClassLoader bypassLoader)
+      throws IllegalArgumentException {
     if (bypassLoader == null) {
       throw new IllegalArgumentException("bypassLoader == null");
     }

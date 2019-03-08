@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,24 +48,21 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
+import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import org.jf.dexlib2.Opcode;
 
-import com.ibm.wala.dalvik.classLoader.DexIMethod;
-
 public class ArrayLength extends Instruction {
-    public final int destination;
-    public final int source;
+  public final int destination;
+  public final int source;
 
-    public ArrayLength(int instLoc, int destination, int source, Opcode op, DexIMethod method)
-    {
-        super(instLoc, op, method);
-        this.destination = destination;
-        this.source = source;
-    }
+  public ArrayLength(int instLoc, int destination, int source, Opcode op, DexIMethod method) {
+    super(instLoc, op, method);
+    this.destination = destination;
+    this.source = source;
+  }
 
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitArrayLength(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitArrayLength(this);
+  }
 }

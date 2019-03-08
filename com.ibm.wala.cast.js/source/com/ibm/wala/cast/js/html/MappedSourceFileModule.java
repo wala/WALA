@@ -10,13 +10,12 @@
  */
 package com.ibm.wala.cast.js.html;
 
-import java.io.File;
-
 import com.ibm.wala.classLoader.SourceFileModule;
+import java.io.File;
 
 public class MappedSourceFileModule extends SourceFileModule implements MappedSourceModule {
   private final FileMapping fileMapping;
-  
+
   public MappedSourceFileModule(File f, String fileName, FileMapping fileMapping) {
     super(f, fileName, null);
     this.fileMapping = fileMapping;
@@ -31,5 +30,4 @@ public class MappedSourceFileModule extends SourceFileModule implements MappedSo
   public FileMapping getMapping() {
     return fileMapping;
   }
-
 }

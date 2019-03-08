@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,42 +47,38 @@
 
 package org.scandroid.spec;
 
+import com.ibm.wala.ipa.cfg.BasicBlockInContext;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.ParameterFlow;
 
-import com.ibm.wala.ipa.cfg.BasicBlockInContext;
-import com.ibm.wala.ssa.ISSABasicBlock;
-
 public class EntryArgSinkSpec extends SinkSpec {
 
-	/**
-	 * @param name
-	 *            of the method
-	 * @param args
-	 *            to be tainted. These are zero-based; zero refers to `this` for
-	 *            a non-static method, or the first parameter of a static method
-	 */
-	public EntryArgSinkSpec(MethodNamePattern name, int[] args) {
-		namePattern = name;
-		argNums = args;
-	}
+  /**
+   * @param name of the method
+   * @param args to be tainted. These are zero-based; zero refers to `this` for a non-static method,
+   *     or the first parameter of a static method
+   */
+  public EntryArgSinkSpec(MethodNamePattern name, int[] args) {
+    namePattern = name;
+    argNums = args;
+  }
 
-	@Override
-	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
-			BasicBlockInContext<E> block) {
+  @Override
+  public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
+      BasicBlockInContext<E> block) {
 
-		return Arrays.stream(argNums)
-				.mapToObj(i -> new ParameterFlow<>(block, i, false))
-				.collect(Collectors.toSet());
-	}
+    return Arrays.stream(argNums)
+        .mapToObj(i -> new ParameterFlow<>(block, i, false))
+        .collect(Collectors.toSet());
+  }
 
-	@Override
-	public String toString() {
-		return String.format("EntryArgSinkSpec(%s,%s)",
-				namePattern.getDescriptor(), Arrays.toString(argNums));
-	}
+  @Override
+  public String toString() {
+    return String.format(
+        "EntryArgSinkSpec(%s,%s)", namePattern.getDescriptor(), Arrays.toString(argNums));
+  }
 }

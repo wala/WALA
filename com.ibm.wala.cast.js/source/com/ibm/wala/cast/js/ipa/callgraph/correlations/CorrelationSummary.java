@@ -11,10 +11,6 @@
 
 package com.ibm.wala.cast.js.ipa.callgraph.correlations;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IMethod;
@@ -22,19 +18,21 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A utility class holding information about correlations identified by a {@link CorrelationFinder}.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public final class CorrelationSummary {
   private final SSASourcePositionMap positions;
   private final Set<Correlation> correlations = HashSetFactory.make();
 
   public CorrelationSummary(IMethod method, OrdinalSetMapping<SSAInstruction> instrIndices) {
-    positions = new SSASourcePositionMap((AstMethod)method, instrIndices);
+    positions = new SSASourcePositionMap((AstMethod) method, instrIndices);
   }
 
   public void addCorrelation(Correlation correlation) {
@@ -43,7 +41,7 @@ public final class CorrelationSummary {
 
   public List<Pair<Position, String>> pp() {
     List<Pair<Position, String>> res = new ArrayList<>();
-    for(Correlation correlation : correlations) {
+    for (Correlation correlation : correlations) {
       res.add(Pair.make(correlation.getStartPosition(positions), correlation.pp(positions)));
     }
     return res;
@@ -52,7 +50,7 @@ public final class CorrelationSummary {
   public Set<Correlation> getCorrelations() {
     return correlations;
   }
-  
+
   public boolean isEmpty() {
     return correlations.isEmpty();
   }

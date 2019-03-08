@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.core.tests.typeInference;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -39,13 +34,16 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.UTF8Convert;
 import com.ibm.wala.util.warnings.Warnings;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Test that the SSA-numbering of variables in the IR is deterministic.
- * 
- * Introduced 05-AUG-03; the default implementation of hashCode was being
- * invoked. Object.hashCode is a source of random numbers and has no place in a
- * deterministic program.
+ *
+ * <p>Introduced 05-AUG-03; the default implementation of hashCode was being invoked.
+ * Object.hashCode is a source of random numbers and has no place in a deterministic program.
  */
 public class TypeInferenceTest extends WalaTestCase {
 
@@ -66,7 +64,11 @@ public class TypeInferenceTest extends WalaTestCase {
   @BeforeClass
   public static void beforeClass() throws Exception {
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
     cache = new AnalysisCacheImpl();
@@ -88,9 +90,14 @@ public class TypeInferenceTest extends WalaTestCase {
     cache = null;
   }
 
-  @Test public void test1() {
-    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("foo"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
+  @Test
+  public void test1() {
+    MethodReference method =
+        scope.findMethod(
+            AnalysisScope.APPLICATION,
+            "LtypeInference/TI",
+            Atom.findOrCreateUnicodeAtom("foo"),
+            new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
     Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     Assert.assertNotNull("imethod not found", imethod);
@@ -103,9 +110,14 @@ public class TypeInferenceTest extends WalaTestCase {
     }
   }
 
-  @Test public void test2() {
-    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("bar"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
+  @Test
+  public void test2() {
+    MethodReference method =
+        scope.findMethod(
+            AnalysisScope.APPLICATION,
+            "LtypeInference/TI",
+            Atom.findOrCreateUnicodeAtom("bar"),
+            new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
     Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     Assert.assertNotNull("imethod not found", imethod);
@@ -116,9 +128,14 @@ public class TypeInferenceTest extends WalaTestCase {
     Assert.assertNotNull("null type abstraction for parameter", ti.getType(2));
   }
 
-  @Test public void test3() {
-    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("inferInt"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
+  @Test
+  public void test3() {
+    MethodReference method =
+        scope.findMethod(
+            AnalysisScope.APPLICATION,
+            "LtypeInference/TI",
+            Atom.findOrCreateUnicodeAtom("inferInt"),
+            new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
     Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     Assert.assertNotNull("imethod not found", imethod);
@@ -131,9 +148,14 @@ public class TypeInferenceTest extends WalaTestCase {
     Assert.assertTrue("inferred wrong type", type.toString().equals("int"));
   }
 
-  @Test public void test4() {
-    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("useCast"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));
+  @Test
+  public void test4() {
+    MethodReference method =
+        scope.findMethod(
+            AnalysisScope.APPLICATION,
+            "LtypeInference/TI",
+            Atom.findOrCreateUnicodeAtom("useCast"),
+            new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));
     Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     Assert.assertNotNull("imethod not found", imethod);
@@ -143,8 +165,13 @@ public class TypeInferenceTest extends WalaTestCase {
     TypeInference ti = TypeInference.make(ir, false);
     TypeAbstraction type = ti.getType(4);
     Assert.assertNotNull("null type abstraction", type);
-    Assert.assertTrue("inferred wrong type " + type, type instanceof ConeType && ((ConeType)type).getTypeReference().getName().toString().equals("Ljava/lang/String"));
+    Assert.assertTrue(
+        "inferred wrong type " + type,
+        type instanceof ConeType
+            && ((ConeType) type)
+                .getTypeReference()
+                .getName()
+                .toString()
+                .equals("Ljava/lang/String"));
   }
-
-
 }

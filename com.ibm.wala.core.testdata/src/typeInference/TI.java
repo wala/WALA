@@ -32,10 +32,9 @@ public class TI {
   private static long time() {
     return System.currentTimeMillis();
   }
-  
+
   public void useCast(Object o) {
-    String s = (String)o;
+    String s = (String) o;
     System.out.println(s);
   }
-
 }

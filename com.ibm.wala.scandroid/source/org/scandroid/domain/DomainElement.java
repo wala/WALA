@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -51,81 +51,66 @@ import org.scandroid.flow.types.FlowType;
 
 @SuppressWarnings("rawtypes")
 public class DomainElement {
-	// the code element in question
-	// alternate framing: the /current/ fact about the element
-	public final CodeElement codeElement;
-	// the taint (probably from some other point in the code) that affects the
-	// code element in question
-	// alternate framing: the /initial/ fact about the element
-	public final FlowType taintSource;
+  // the code element in question
+  // alternate framing: the /current/ fact about the element
+  public final CodeElement codeElement;
+  // the taint (probably from some other point in the code) that affects the
+  // code element in question
+  // alternate framing: the /initial/ fact about the element
+  public final FlowType taintSource;
 
-	public DomainElement(CodeElement codeElement, FlowType taintSource) {
-		this.codeElement = codeElement;
-		this.taintSource = taintSource;
-	}
-/*
-	@Override
-	public boolean equals(Object other) {
-		if (other == null || !(other instanceof DomainElement))
-			return false;
-		DomainElement otherDE = (DomainElement) other;
-		if (taintSource != null) {
-			return codeElement.equals(otherDE.codeElement)
-					&& taintSource.equals(otherDE.taintSource);
-		}
-		return codeElement.equals(otherDE.codeElement)
-				&& otherDE.taintSource == null;
-	}	
-	
-	@Override
-	public int hashCode() {
-		if (taintSource == null)
-			return codeElement.hashCode();
-		return codeElement.hashCode() ^ taintSource.hashCode();
-	}
- */
-	
-	
-	
-	@Override
-	public String toString() {
-		return codeElement.toString() + ", " + taintSource;
-	}
+  public DomainElement(CodeElement codeElement, FlowType taintSource) {
+    this.codeElement = codeElement;
+    this.taintSource = taintSource;
+  }
+  /*
+  @Override
+  public boolean equals(Object other) {
+  	if (other == null || !(other instanceof DomainElement))
+  		return false;
+  	DomainElement otherDE = (DomainElement) other;
+  	if (taintSource != null) {
+  		return codeElement.equals(otherDE.codeElement)
+  				&& taintSource.equals(otherDE.taintSource);
+  	}
+  	return codeElement.equals(otherDE.codeElement)
+  			&& otherDE.taintSource == null;
+  }
 
+  @Override
+  public int hashCode() {
+  	if (taintSource == null)
+  		return codeElement.hashCode();
+  	return codeElement.hashCode() ^ taintSource.hashCode();
+  }
+  */
 
+  @Override
+  public String toString() {
+    return codeElement.toString() + ", " + taintSource;
+  }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((codeElement == null) ? 0 : codeElement.hashCode());
-		result = prime * result
-				+ ((taintSource == null) ? 0 : taintSource.hashCode());
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((codeElement == null) ? 0 : codeElement.hashCode());
+    result = prime * result + ((taintSource == null) ? 0 : taintSource.hashCode());
+    return result;
+  }
 
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DomainElement other = (DomainElement) obj;
-		if (codeElement == null) {
-			if (other.codeElement != null)
-				return false;
-		} else if (!codeElement.equals(other.codeElement))
-			return false;
-		if (taintSource == null) {
-			if (other.taintSource != null)
-				return false;
-		} else if (!taintSource.equals(other.taintSource))
-			return false;
-		return true;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    DomainElement other = (DomainElement) obj;
+    if (codeElement == null) {
+      if (other.codeElement != null) return false;
+    } else if (!codeElement.equals(other.codeElement)) return false;
+    if (taintSource == null) {
+      if (other.taintSource != null) return false;
+    } else if (!taintSource.equals(other.taintSource)) return false;
+    return true;
+  }
 }

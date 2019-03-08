@@ -14,19 +14,16 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
 
-/**
- * An operator of the form lhs = op
- */
+/** An operator of the form lhs = op */
 public abstract class NullaryOperator<T extends IVariable<T>> extends AbstractOperator<T> {
 
   @Override
   public byte evaluate(T lhs, T[] rhs) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
-  /** 
-   * Evaluate this equation, setting a new value for the
-   * left-hand side. 
-   * 
+  /**
+   * Evaluate this equation, setting a new value for the left-hand side.
+   *
    * @return true if the lhs value changes. false otherwise.
    */
   public abstract byte evaluate(T lhs);

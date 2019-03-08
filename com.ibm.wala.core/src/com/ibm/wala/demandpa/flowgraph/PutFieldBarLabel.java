@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -39,10 +39,7 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.classLoader.IField;
 
-/**
- * @author Manu Sridharan
- * 
- */
+/** @author Manu Sridharan */
 public class PutFieldBarLabel implements IFlowLabel {
 
   private final IField field;
@@ -57,18 +54,13 @@ public class PutFieldBarLabel implements IFlowLabel {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final PutFieldBarLabel other = (PutFieldBarLabel) obj;
     if (field == null) {
-      if (other.field != null)
-        return false;
-    } else if (!field.equals(other.field))
-      return false;
+      if (other.field != null) return false;
+    } else if (!field.equals(other.field)) return false;
     return true;
   }
 
@@ -114,5 +106,4 @@ public class PutFieldBarLabel implements IFlowLabel {
   public String toString() {
     return "putfield_bar[" + field + ']';
   }
-
 }

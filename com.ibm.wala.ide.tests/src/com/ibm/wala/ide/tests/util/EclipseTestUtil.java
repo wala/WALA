@@ -16,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -40,24 +39,27 @@ public class EclipseTestUtil {
     public final Plugin sourcePlugin;
     public final String projectName;
     public final String zipFileName;
- 
-    public ZippedProjectData(Plugin sourcePlugin, String projectName, String zipFileName) throws IOException {
+
+    public ZippedProjectData(Plugin sourcePlugin, String projectName, String zipFileName)
+        throws IOException {
       this.sourcePlugin = sourcePlugin;
       this.projectName = projectName;
       this.zipFileName = zipFileName;
       open();
     }
-    
+
     private void open() throws IOException {
       importZippedProject(sourcePlugin, projectName, zipFileName, new NullProgressMonitor());
     }
-    
+
     public void close() {
       destroyProject(projectName);
     }
   }
-  
-  public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) throws IOException {
+
+  public static void importZippedProject(
+      Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor)
+      throws IOException {
     try (final ZipFile zipFile = getZipFile(plugin, zipFileName)) {
       createOpenProject(projectName);
       importZipfile(projectName, zipFile, monitor);
@@ -85,11 +87,12 @@ public class EclipseTestUtil {
     }
   }
 
-  public static void importProjectFromFilesystem(String projectName, File root, IProgressMonitor monitor) {
+  public static void importProjectFromFilesystem(
+      String projectName, File root, IProgressMonitor monitor) {
     FileSystemStructureProvider fs = FileSystemStructureProvider.INSTANCE;
     importProject(fs, monitor, projectName, root);
   }
-  
+
   public static void importZipfile(String projectName, ZipFile zipFile, IProgressMonitor monitor) {
     ZipFileStructureProvider provider = new ZipFileStructureProvider(zipFile);
 
@@ -102,10 +105,12 @@ public class EclipseTestUtil {
     }
   }
 
-  protected static <T> void importProject(IImportStructureProvider provider, IProgressMonitor monitor, String projectName, T root) {
+  protected static <T> void importProject(
+      IImportStructureProvider provider, IProgressMonitor monitor, String projectName, T root) {
     IPath containerPath = getWorkspacePath().append(projectName).addTrailingSeparator();
 
-    ImportOperation importOp = new ImportOperation(containerPath, root, provider, pathString -> IOverwriteQuery.ALL);
+    ImportOperation importOp =
+        new ImportOperation(containerPath, root, provider, pathString -> IOverwriteQuery.ALL);
 
     importOp.setCreateContainerStructure(false);
     importOp.setOverwriteResources(true);
@@ -162,5 +167,4 @@ public class EclipseTestUtil {
     // TODO: add to appropriate error log? Report differently ??
     e.printStackTrace();
   }
-
 }

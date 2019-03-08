@@ -13,9 +13,7 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAPiInstruction;
 
-/**
- * identifier of a Pi instruction
- */
+/** identifier of a Pi instruction */
 public class PiStatement extends Statement {
   private final SSAPiInstruction pi;
 
@@ -55,5 +53,4 @@ public class PiStatement extends Statement {
   public SSAPiInstruction getPi() {
     return pi;
   }
-
 }

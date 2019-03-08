@@ -10,19 +10,18 @@
  */
 package com.ibm.wala.shrikeBT.analysis;
 
+import com.ibm.wala.shrikeBT.Constants;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.ibm.wala.shrikeBT.Constants;
-
 /**
- * This implementation of ClassHierarchyProvider is a simple writable data structure representing a class hierarchy. You call
- * setClassInfo to record information about a class.
+ * This implementation of ClassHierarchyProvider is a simple writable data structure representing a
+ * class hierarchy. You call setClassInfo to record information about a class.
  */
 public final class ClassHierarchyStore implements ClassHierarchyProvider {
   private static final String[] noClasses = new String[0];
 
-  final static class ClassInfo {
+  static final class ClassInfo {
     final boolean isInterface;
 
     final boolean isFinal;
@@ -39,28 +38,26 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
     }
   }
 
-  final private HashMap<String, ClassInfo> contents = new HashMap<>();
+  private final HashMap<String, ClassInfo> contents = new HashMap<>();
 
-  /**
-   * Create an empty store.
-   */
-  public ClassHierarchyStore() {
-  }
+  /** Create an empty store. */
+  public ClassHierarchyStore() {}
 
   public boolean containsClass(String cl) {
     return contents.containsKey(cl);
   }
-  
+
   /**
    * Append some class information to the store.
-   * 
+   *
    * @param cl the JVM type of the class being added (e.g., Ljava/lang/Object;)
    * @param isInterface true iff it's an interface
    * @param isFinal true iff it's final
    * @param superClass the JVM type of the superclass, or null if this is Object
    * @param superInterfaces the JVM types of its implemented interfaces
    */
-  public void setClassInfo(String cl, boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces)
+  public void setClassInfo(
+      String cl, boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces)
       throws IllegalArgumentException {
     if (superClass != null && superClass.equals(cl)) {
       throw new IllegalArgumentException("Class " + cl + " cannot be its own superclass");
@@ -68,16 +65,12 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
     contents.put(cl, new ClassInfo(isInterface, isFinal, superClass, superInterfaces));
   }
 
-  /**
-   * Delete the class information from the store.
-   */
+  /** Delete the class information from the store. */
   public void removeClassInfo(String cl) {
     contents.remove(cl);
   }
 
-  /**
-   * Iterate through all classes in the store.
-   */
+  /** Iterate through all classes in the store. */
   public Iterator<String> iterateOverClasses() {
     return contents.keySet().iterator();
   }

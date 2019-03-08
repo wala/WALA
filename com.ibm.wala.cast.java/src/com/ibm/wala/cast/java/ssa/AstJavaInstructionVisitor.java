@@ -17,5 +17,4 @@ public interface AstJavaInstructionVisitor extends AstInstructionVisitor {
   public void visitJavaInvoke(AstJavaInvokeInstruction instruction);
 
   public void visitEnclosingObjectReference(EnclosingObjectReference inst);
-
 }

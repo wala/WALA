@@ -12,14 +12,13 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
 
-/**
- * SSA instruction representing an array store.
- */
+/** SSA instruction representing an array store. */
 public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
   private final int value;
 
-  protected SSAArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference elementType) {
+  protected SSAArrayStoreInstruction(
+      int iindex, int arrayref, int index, int value, TypeReference elementType) {
     super(iindex, arrayref, index, elementType);
     this.value = value;
   }
@@ -29,20 +28,27 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     if (uses != null && uses.length < 3) {
       throw new IllegalArgumentException("uses.length < 3");
     }
-    return insts.ArrayStoreInstruction(iindex, uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
-        uses == null ? value : uses[2], getElementType());
+    return insts.ArrayStoreInstruction(
+        iindex,
+        uses == null ? getArrayRef() : uses[0],
+        uses == null ? getIndex() : uses[1],
+        uses == null ? value : uses[2],
+        getElementType());
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "arraystore " + getValueString(symbolTable, getArrayRef()) + '[' + getValueString(symbolTable, getIndex())
-        + "] = " + getValueString(symbolTable, value);
+    return "arraystore "
+        + getValueString(symbolTable, getArrayRef())
+        + '['
+        + getValueString(symbolTable, getIndex())
+        + "] = "
+        + getValueString(symbolTable, value);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -52,9 +58,7 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     v.visitArrayStore(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfUses() {
     return 3;
@@ -69,20 +73,15 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     return value;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */
   @Override
   public int getUse(int j) {
-    if (j == 2)
-      return value;
-    else
-      return super.getUse(j);
+    if (j == 2) return value;
+    else return super.getUse(j);
   }
 
   @Override
   public int hashCode() {
     return 6311 * value ^ 2371 * getArrayRef() + getIndex();
   }
-
 }

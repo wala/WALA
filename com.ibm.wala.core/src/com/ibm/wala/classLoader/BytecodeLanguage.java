@@ -10,18 +10,17 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.Collection;
-
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
 
 public interface BytecodeLanguage extends Language {
 
   Collection<TypeReference> getImplicitExceptionTypes(IInstruction pei);
 
-  MethodReference getInvokeMethodReference(ClassLoaderReference loader, IInvokeInstruction instruction);
-  
+  MethodReference getInvokeMethodReference(
+      ClassLoaderReference loader, IInvokeInstruction instruction);
 }

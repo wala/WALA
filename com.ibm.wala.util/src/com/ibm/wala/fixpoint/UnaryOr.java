@@ -10,10 +10,7 @@
  */
 package com.ibm.wala.fixpoint;
 
-
-/**
- * Operator U(n) = U(n) | U(j)
- */
+/** Operator U(n) = U(n) | U(j) */
 public final class UnaryOr extends UnaryOperator<BooleanVariable> {
 
   private static final UnaryOr SINGLETON = new UnaryOr();
@@ -22,8 +19,7 @@ public final class UnaryOr extends UnaryOperator<BooleanVariable> {
     return UnaryOr.SINGLETON;
   }
 
-  private UnaryOr() {
-  }
+  private UnaryOr() {}
 
   @Override
   public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {

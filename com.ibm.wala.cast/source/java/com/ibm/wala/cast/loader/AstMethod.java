@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.cast.loader;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -35,14 +31,18 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 
 public abstract class AstMethod implements IMethod {
 
   public interface Retranslatable {
     void retranslate(AstTranslator xlator);
+
     CAstEntity getEntity();
   }
-  
+
   public interface DebuggingInformation {
 
     Position getCodeBodyPosition();
@@ -56,16 +56,15 @@ public abstract class AstMethod implements IMethod {
     Position getOperandPosition(int instructionOffset, int operand);
 
     Position getParameterPosition(int param);
-    
+
     String getLeadingComment(int instructionOffset) throws IOException;
-    
+
     String getFollowingComment(int instructionOffset) throws IOException;
-    
   }
 
   /**
-   * lexical access information for some entity scope. used during call graph
-   * construction to handle lexical accesses.
+   * lexical access information for some entity scope. used during call graph construction to handle
+   * lexical accesses.
    */
   public interface LexicalInformation {
 
@@ -76,41 +75,34 @@ public abstract class AstMethod implements IMethod {
     public Pair<String, String>[] getExposedNames();
 
     /**
-     * maps each exposed name (via its index in {@link #getExposedNames()}) to
-     * its value number at method exit.
+     * maps each exposed name (via its index in {@link #getExposedNames()}) to its value number at
+     * method exit.
      */
     public int[] getExitExposedUses();
 
     /**
-     * get a map from exposed name (via its index in {@link #getExposedNames()})
-     * to its value number at the instruction at offset instructionOffset.
+     * get a map from exposed name (via its index in {@link #getExposedNames()}) to its value number
+     * at the instruction at offset instructionOffset.
      */
     public int[] getExposedUses(int instructionOffset);
 
     /**
-     * return all value numbers appearing as entries in either
-     * {@link #getExposedUses(int)} or {@link #getExitExposedUses()}
+     * return all value numbers appearing as entries in either {@link #getExposedUses(int)} or
+     * {@link #getExitExposedUses()}
      */
     public IntSet getAllExposedUses();
 
     /**
-     * return the names of the enclosing methods declaring names that are
-     * lexically accessed by the entity
+     * return the names of the enclosing methods declaring names that are lexically accessed by the
+     * entity
      */
     public String[] getScopingParents();
 
-    /**
-     * returns true if name may be read in nested lexical scopes but cannot be
-     * written
-     */
+    /** returns true if name may be read in nested lexical scopes but cannot be written */
     public boolean isReadOnly(String name);
 
-    /**
-     * get the name of this entity, as it appears in the definer portion of a
-     * lexical name
-     */
+    /** get the name of this entity, as it appears in the definer portion of a lexical name */
     public String getScopingName();
-
   }
 
   protected final IClass cls;
@@ -125,9 +117,18 @@ public abstract class AstMethod implements IMethod {
   private final DebuggingInformation debugInfo;
   private final Collection<Annotation> annotations;
 
-  protected AstMethod(IClass cls, Collection<CAstQualifier> qualifiers, AbstractCFG<?, ?> cfg, SymbolTable symtab, MethodReference ref,
-      boolean hasCatchBlock, Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
-      DebuggingInformation debugInfo, Collection<Annotation> annotations) {
+  protected AstMethod(
+      IClass cls,
+      Collection<CAstQualifier> qualifiers,
+      AbstractCFG<?, ?> cfg,
+      SymbolTable symtab,
+      MethodReference ref,
+      boolean hasCatchBlock,
+      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      boolean hasMonitorOp,
+      AstLexicalInformation lexicalInfo,
+      DebuggingInformation debugInfo,
+      Collection<Annotation> annotations) {
     this.cls = cls;
     this.cfg = cfg;
     this.ref = ref;
@@ -141,7 +142,11 @@ public abstract class AstMethod implements IMethod {
     this.annotations = annotations;
   }
 
-  protected AstMethod(IClass cls, Collection<CAstQualifier> qualifiers, MethodReference ref, Collection<Annotation> annotations) {
+  protected AstMethod(
+      IClass cls,
+      Collection<CAstQualifier> qualifiers,
+      MethodReference ref,
+      Collection<Annotation> annotations) {
     this.cls = cls;
     this.qualifiers = qualifiers;
     this.ref = ref;
@@ -192,10 +197,10 @@ public abstract class AstMethod implements IMethod {
   }
 
   /**
-   * Parents of this method with respect to lexical scoping, that is, methods
-   * containing state possibly referenced lexically in this method
+   * Parents of this method with respect to lexical scoping, that is, methods containing state
+   * possibly referenced lexically in this method
    */
-  public static abstract class LexicalParent {
+  public abstract static class LexicalParent {
     public abstract String getName();
 
     public abstract AstMethod getMethod();
@@ -207,7 +212,8 @@ public abstract class AstMethod implements IMethod {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof LexicalParent) && getName().equals(((LexicalParent) o).getName())
+      return (o instanceof LexicalParent)
+          && getName().equals(((LexicalParent) o).getName())
           && getMethod().equals(((LexicalParent) o).getMethod());
     }
   }
@@ -331,8 +337,8 @@ public abstract class AstMethod implements IMethod {
   public int getNumberOfParameters() {
     return symtab.getParameterValueNumbers().length;
   }
-/** BEGIN Custom change: precise bytecode positions */
-  
+  /** BEGIN Custom change: precise bytecode positions */
+
   /*
    * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
    */
@@ -340,8 +346,7 @@ public abstract class AstMethod implements IMethod {
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }
-/** END Custom change: precise bytecode positions */
-
+  /** END Custom change: precise bytecode positions */
   @Override
   public int getLineNumber(int instructionIndex) {
     Position pos = debugInfo.getInstructionPosition(instructionIndex);

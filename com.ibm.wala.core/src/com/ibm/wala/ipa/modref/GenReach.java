@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.ipa.modref;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
@@ -25,10 +22,10 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.Collection;
+import java.util.Map;
 
-/**
- * Generic dataflow framework to accumulate reachable gen'ned values in a graph.
- */
+/** Generic dataflow framework to accumulate reachable gen'ned values in a graph. */
 public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
   @SuppressWarnings("unchecked")
@@ -100,6 +97,5 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
       Assertions.UNREACHABLE();
       return null;
     }
-
   }
 }

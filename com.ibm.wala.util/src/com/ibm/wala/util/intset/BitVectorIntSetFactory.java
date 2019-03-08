@@ -12,13 +12,10 @@ package com.ibm.wala.util.intset;
 
 import java.util.TreeSet;
 
-/**
- */
+/** */
 public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorIntSet> {
 
-  /**
-   * @throws IllegalArgumentException  if set is null
-   */
+  /** @throws IllegalArgumentException if set is null */
   @Override
   public BitVectorIntSet make(int[] set) {
     if (set == null) {
@@ -68,5 +65,4 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
   public BitVectorIntSet make() {
     return new BitVectorIntSet();
   }
-
 }

@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.ipa.slicer;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.IPartiallyBalancedFlowFunctions;
@@ -30,53 +27,63 @@ import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A demand-driven context-sensitive slicer.
  *
- * This computes a context-sensitive slice, building an SDG and finding realizable paths to a statement using tabulation.
+ * <p>This computes a context-sensitive slice, building an SDG and finding realizable paths to a
+ * statement using tabulation.
  *
- * This implementation uses a preliminary pointer analysis to compute data dependence between heap locations in the SDG.
+ * <p>This implementation uses a preliminary pointer analysis to compute data dependence between
+ * heap locations in the SDG.
  */
 public class Slicer {
 
-  public final static boolean DEBUG = false;
+  public static final boolean DEBUG = false;
 
-  public final static boolean VERBOSE = false;
+  public static final boolean VERBOSE = false;
 
-  /**
-   * options to control data dependence edges in the SDG
-   */
+  /** options to control data dependence edges in the SDG */
   public static enum DataDependenceOptions {
-    FULL("full", false, false, false, false), NO_BASE_PTRS("no_base_ptrs", true, false, false, false), NO_BASE_NO_HEAP(
-        "no_base_no_heap", true, true, false, false), NO_BASE_NO_EXCEPTIONS("no_base_no_exceptions", true, false, false, true), NO_BASE_NO_HEAP_NO_EXCEPTIONS(
-        "no_base_no_heap_no_exceptions", true, true, false, true), NO_HEAP("no_heap", false, true, false, false), NO_HEAP_NO_EXCEPTIONS(
-        "no_heap_no_exceptions", false, true, false, true), NO_EXCEPTIONS("no_exceptions", false, false, false, true), NONE("none",
-        true, true, true, true), REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
+    FULL("full", false, false, false, false),
+    NO_BASE_PTRS("no_base_ptrs", true, false, false, false),
+    NO_BASE_NO_HEAP("no_base_no_heap", true, true, false, false),
+    NO_BASE_NO_EXCEPTIONS("no_base_no_exceptions", true, false, false, true),
+    NO_BASE_NO_HEAP_NO_EXCEPTIONS("no_base_no_heap_no_exceptions", true, true, false, true),
+    NO_HEAP("no_heap", false, true, false, false),
+    NO_HEAP_NO_EXCEPTIONS("no_heap_no_exceptions", false, true, false, true),
+    NO_EXCEPTIONS("no_exceptions", false, false, false, true),
+    NONE("none", true, true, true, true),
+    REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
 
     private final String name;
 
     /**
-     * Ignore data dependence edges representing base pointers? e.g for a statement y = x.f, ignore the data dependence edges for x
+     * Ignore data dependence edges representing base pointers? e.g for a statement y = x.f, ignore
+     * the data dependence edges for x
      */
     private final boolean ignoreBasePtrs;
 
-    /**
-     * Ignore all data dependence edges to or from the heap?
-     */
+    /** Ignore all data dependence edges to or from the heap? */
     private final boolean ignoreHeap;
 
     /**
-     * Ignore outgoing data dependence edges from a cast statements? [This is a special case option used for reflection processing]
+     * Ignore outgoing data dependence edges from a cast statements? [This is a special case option
+     * used for reflection processing]
      */
     private final boolean terminateAtCast;
 
-    /**
-     * Ignore data dependence manifesting throw exception objects?
-     */
+    /** Ignore data dependence manifesting throw exception objects? */
     private final boolean ignoreExceptions;
 
-    DataDependenceOptions(String name, boolean ignoreBasePtrs, boolean ignoreHeap, boolean terminateAtCast, boolean ignoreExceptions) {
+    DataDependenceOptions(
+        String name,
+        boolean ignoreBasePtrs,
+        boolean ignoreHeap,
+        boolean terminateAtCast,
+        boolean ignoreExceptions) {
       this.name = name;
       this.ignoreBasePtrs = ignoreBasePtrs;
       this.ignoreHeap = ignoreHeap;
@@ -97,8 +104,8 @@ public class Slicer {
     }
 
     /**
-     * Should data dependence chains terminate at casts? This is used for reflection processing ... we only track flow into casts
-     * ... but not out.
+     * Should data dependence chains terminate at casts? This is used for reflection processing ...
+     * we only track flow into casts ... but not out.
      */
     public final boolean isTerminateAtCast() {
       return terminateAtCast;
@@ -109,50 +116,33 @@ public class Slicer {
     }
   }
 
-  /**
-   * options to control control dependence edges in the sdg
-   */
+  /** options to control control dependence edges in the sdg */
   public static enum ControlDependenceOptions {
-    /**
-     * track all control dependencies
-     */
+    /** track all control dependencies */
     FULL("full", false, false),
 
-    /**
-     * track no control dependencies
-     */
+    /** track no control dependencies */
     NONE("none", true, true),
 
-    /**
-     * don't track control dependence due to exceptional control flow
-     */
+    /** don't track control dependence due to exceptional control flow */
     NO_EXCEPTIONAL_EDGES("no_exceptional_edges", true, false),
 
-    /**
-     * don't track control dependence from caller to callee
-     */
+    /** don't track control dependence from caller to callee */
     NO_INTERPROC_EDGES("no_interproc_edges", false, true),
 
-    /**
-     * don't track interprocedural or exceptional control dependence
-     */
+    /** don't track interprocedural or exceptional control dependence */
     NO_INTERPROC_NO_EXCEPTION("no_interproc_no_exception", true, true);
-
 
     private final String name;
 
-    /**
-     * ignore control dependence due to exceptional control flow?
-     */
+    /** ignore control dependence due to exceptional control flow? */
     private final boolean ignoreExceptionalEdges;
 
-    /**
-     * ignore interprocedural control dependence, i.e., from caller to callee or the reverse?
-     */
+    /** ignore interprocedural control dependence, i.e., from caller to callee or the reverse? */
     private final boolean ignoreInterprocEdges;
 
-
-    ControlDependenceOptions(String name, boolean ignoreExceptionalEdges, boolean ignoreInterprocEdges) {
+    ControlDependenceOptions(
+        String name, boolean ignoreExceptionalEdges, boolean ignoreInterprocEdges) {
       this.name = name;
       this.ignoreExceptionalEdges = ignoreExceptionalEdges;
       this.ignoreInterprocEdges = ignoreInterprocEdges;
@@ -169,54 +159,59 @@ public class Slicer {
     public final boolean isIgnoreInterproc() {
       return ignoreInterprocEdges;
     }
-
   }
 
   /**
    * @param s a statement of interest
    * @return the backward slice of s.
    */
-  public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<U> pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
+  public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(
+      Statement s,
+      CallGraph cg,
+      PointerAnalysis<U> pa,
+      DataDependenceOptions dOptions,
+      ControlDependenceOptions cOptions)
+      throws IllegalArgumentException, CancelException {
+    return computeSlice(
+        new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
   }
 
   /**
    * @param s a statement of interest
    * @return the forward slice of s.
    */
-  public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(Statement s, CallGraph cg,
+  public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(
+      Statement s,
+      CallGraph cg,
       PointerAnalysis<U> pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
+      DataDependenceOptions dOptions,
+      ControlDependenceOptions cOptions)
+      throws IllegalArgumentException, CancelException {
+    return computeSlice(
+        new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
   }
 
-  /**
-   * Use the passed-in SDG
-   */
-  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Statement s) throws IllegalArgumentException, CancelException {
+  /** Use the passed-in SDG */
+  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Statement s)
+      throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), true);
   }
 
-  /**
-   * Use the passed-in SDG
-   */
-  public static Collection<Statement> computeForwardSlice(SDG<?> sdg, Statement s) throws IllegalArgumentException, CancelException {
+  /** Use the passed-in SDG */
+  public static Collection<Statement> computeForwardSlice(SDG<?> sdg, Statement s)
+      throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), false);
   }
 
-  /**
-   * Use the passed-in SDG
-   */
-  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Collection<Statement> ss) throws IllegalArgumentException,
-      CancelException {
+  /** Use the passed-in SDG */
+  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Collection<Statement> ss)
+      throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, ss, true);
   }
 
-  /**
-   * @param ss a collection of statements of interest
-   */
-  protected static Collection<Statement> computeSlice(SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
+  /** @param ss a collection of statements of interest */
+  protected static Collection<Statement> computeSlice(
+      SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
     }
@@ -231,7 +226,8 @@ public class Slicer {
    * @param backward do a backwards slice?
    * @return the {@link Statement}s found by the slicer
    */
-  public Collection<Statement> slice(SDG<?> sdg, Collection<Statement> roots, boolean backward) throws CancelException {
+  public Collection<Statement> slice(SDG<?> sdg, Collection<Statement> roots, boolean backward)
+      throws CancelException {
     return slice(sdg, roots, backward, null);
   }
 
@@ -244,7 +240,8 @@ public class Slicer {
    * @param monitor to cancel analysis if needed
    * @return the {@link Statement}s found by the slicer
    */
-  public Collection<Statement> slice(SDG<?> sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
+  public Collection<Statement> slice(
+      SDG<?> sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
       throws CancelException {
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
@@ -252,8 +249,8 @@ public class Slicer {
 
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
 
-    PartiallyBalancedTabulationSolver<Statement, PDG<?>, Object> solver = PartiallyBalancedTabulationSolver
-        .createPartiallyBalancedTabulationSolver(p, monitor);
+    PartiallyBalancedTabulationSolver<Statement, PDG<?>, Object> solver =
+        PartiallyBalancedTabulationSolver.createPartiallyBalancedTabulationSolver(p, monitor);
     TabulationResult<Statement, PDG<?>, Object> tr = solver.solve();
 
     Collection<Statement> slice = tr.getSupergraphNodesReached();
@@ -266,10 +263,11 @@ public class Slicer {
   }
 
   /**
-   * Return an object which encapsulates the tabulation logic for the slice problem. Subclasses can override this method to
-   * implement special semantics.
+   * Return an object which encapsulates the tabulation logic for the slice problem. Subclasses can
+   * override this method to implement special semantics.
    */
-  protected SliceProblem makeSliceProblem(Collection<Statement> roots, ISDG sdgView, boolean backward) {
+  protected SliceProblem makeSliceProblem(
+      Collection<Statement> roots, ISDG sdgView, boolean backward) {
     return new SliceProblem(roots, sdgView, backward);
   }
 
@@ -277,16 +275,16 @@ public class Slicer {
    * @param s a statement of interest
    * @return the backward slice of s.
    */
-  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis)
+  public static Collection<Statement> computeBackwardSlice(
+      Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis)
       throws IllegalArgumentException, CancelException {
-    return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    return computeBackwardSlice(
+        s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
   }
 
-  /**
-   * Tabulation problem representing slicing
-   *
-   */
-  public static class SliceProblem implements PartiallyBalancedTabulationProblem<Statement, PDG<?>, Object> {
+  /** Tabulation problem representing slicing */
+  public static class SliceProblem
+      implements PartiallyBalancedTabulationProblem<Statement, PDG<?>, Object> {
 
     private final Collection<Statement> roots;
 
@@ -342,14 +340,16 @@ public class Slicer {
       if (backward) {
         Collection<PathEdge<Statement>> result = HashSetFactory.make();
         for (Statement st : roots) {
-          PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodExitStatement(st.getNode()), 0, st, 0);
+          PathEdge<Statement> seed =
+              PathEdge.createPathEdge(new MethodExitStatement(st.getNode()), 0, st, 0);
           result.add(seed);
         }
         return result;
       } else {
         Collection<PathEdge<Statement>> result = HashSetFactory.make();
         for (Statement st : roots) {
-          PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodEntryStatement(st.getNode()), 0, st, 0);
+          PathEdge<Statement> seed =
+              PathEdge.createPathEdge(new MethodEntryStatement(st.getNode()), 0, st, 0);
           result.add(seed);
         }
         return result;
@@ -358,9 +358,9 @@ public class Slicer {
 
     @Override
     public Statement getFakeEntry(Statement node) {
-      return backward ? new MethodExitStatement(node.getNode()) : new MethodEntryStatement(node.getNode());
+      return backward
+          ? new MethodExitStatement(node.getNode())
+          : new MethodEntryStatement(node.getNode());
     }
-
   }
-
 }

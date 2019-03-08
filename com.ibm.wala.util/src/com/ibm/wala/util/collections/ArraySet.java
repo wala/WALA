@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -44,22 +44,22 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A set implementation backed by an array. This implementation is space-efficient for small sets, but several operations like
- * {@link #contains(Object)} are linear time.
+ * A set implementation backed by an array. This implementation is space-efficient for small sets,
+ * but several operations like {@link #contains(Object)} are linear time.
  */
-
 public class ArraySet<T> extends AbstractSet<T> {
 
   @SuppressWarnings("rawtypes")
-  private static final ArraySet EMPTY = new ArraySet<Object>(0, true) {
-    @Override
-    /*
-     * @throws UnsupportedOperationException unconditionally
-     */
-    public boolean add(Object obj_) {
-      throw new UnsupportedOperationException();
-    }
-  };
+  private static final ArraySet EMPTY =
+      new ArraySet<Object>(0, true) {
+        @Override
+        /*
+         * @throws UnsupportedOperationException unconditionally
+         */
+        public boolean add(Object obj_) {
+          throw new UnsupportedOperationException();
+        }
+      };
 
   @SuppressWarnings("all")
   public static final <T> ArraySet<T> empty() {
@@ -102,9 +102,7 @@ public class ArraySet<T> extends AbstractSet<T> {
     addAll(other);
   }
 
-  /**
-   * @throws UnsupportedOperationException if this {@link ArraySet} is immutable (optional)
-   */
+  /** @throws UnsupportedOperationException if this {@link ArraySet} is immutable (optional) */
   @Override
   @SuppressWarnings("all")
   public boolean add(T o) {
@@ -141,8 +139,7 @@ public class ArraySet<T> extends AbstractSet<T> {
   @Override
   public boolean contains(Object obj_) {
     for (int i = 0; i < _curIndex; i++) {
-      if (_elems[i].equals(obj_))
-        return true;
+      if (_elems[i].equals(obj_)) return true;
     }
     return false;
   }
@@ -152,8 +149,7 @@ public class ArraySet<T> extends AbstractSet<T> {
       throw new IllegalArgumentException("other == null");
     }
     for (int i = 0; i < other.size(); i++) {
-      if (contains(other.get(i)))
-        return true;
+      if (contains(other.get(i))) return true;
     }
     return false;
   }
@@ -173,7 +169,8 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /**
-   * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size()).
+   * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;=
+   *     size()).
    */
   public T get(int i) {
     return _elems[i];
@@ -182,17 +179,13 @@ public class ArraySet<T> extends AbstractSet<T> {
   @Override
   public boolean remove(Object obj_) {
     int ind;
-    for (ind = 0; ind < _curIndex && !_elems[ind].equals(obj_); ind++) {
-    }
+    for (ind = 0; ind < _curIndex && !_elems[ind].equals(obj_); ind++) {}
     // check if object was never there
-    if (ind == _curIndex)
-      return false;
+    if (ind == _curIndex) return false;
     return remove(ind);
   }
 
-  /**
-   * @return {@code true} (SJF: So why return a value?)
-   */
+  /** @return {@code true} (SJF: So why return a value?) */
   public boolean remove(int ind) {
     try {
       // hope i got this right...
@@ -223,8 +216,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 
     final int setSize = size();
 
-    public ArraySetIterator() {
-    }
+    public ArraySetIterator() {}
 
     @Override
     public void remove() {
@@ -243,7 +235,6 @@ public class ArraySet<T> extends AbstractSet<T> {
       }
       return get(ind++);
     }
-
   }
 
   public static <T> ArraySet<T> make() {
@@ -256,5 +247,4 @@ public class ArraySet<T> extends AbstractSet<T> {
     }
     return new ArraySet<>(other);
   }
-
 }

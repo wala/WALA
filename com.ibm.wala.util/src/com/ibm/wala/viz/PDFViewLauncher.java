@@ -10,28 +10,23 @@
  */
 package com.ibm.wala.viz;
 
+import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.ibm.wala.util.WalaException;
-
 /**
  * Launch gsview on a postscript file
- * 
- * TODO: inherit from a launcher?
+ *
+ * <p>TODO: inherit from a launcher?
  */
 class PDFViewLauncher {
 
   private Process process;
 
-  /**
-   * Name of the postscript file to view
-   */
+  /** Name of the postscript file to view */
   protected String pdffile = null;
 
-  /**
-   * Path to ghostview executable
-   */
+  /** Path to ghostview executable */
   protected String gvExe = null;
 
   PDFViewLauncher() {
@@ -65,7 +60,7 @@ class PDFViewLauncher {
    * @see java.lang.Runnable#run()
    */
   public void run() {
-    String[] cmdarray = { getGvExe(), getPDFFile() };
+    String[] cmdarray = {getGvExe(), getPDFFile()};
     try {
       Process p = Runtime.getRuntime().exec(cmdarray);
       setProcess(p);

@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -39,34 +34,47 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ZeroLengthArrayTest {
 
   @Test
-  public void testZeroLengthArray() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+  public void testZeroLengthArray()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.ZERO_LENGTH_ARRAY_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.ZERO_LENGTH_ARRAY_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeVanillaZeroOneCFABuilder(
+            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
-//    System.err.println(pa);
+    //    System.err.println(pa);
 
     HeapModel heapModel = pa.getHeapModel();
-    CGNode mainNode = cg.getNode(
-        cha.resolveMethod(MethodReference.findOrCreate(
-            TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.ZERO_LENGTH_ARRAY_MAIN),
-            Selector.make("main([Ljava/lang/String;)V"))), Everywhere.EVERYWHERE);
-    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
+    CGNode mainNode =
+        cg.getNode(
+            cha.resolveMethod(
+                MethodReference.findOrCreate(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, TestConstants.ZERO_LENGTH_ARRAY_MAIN),
+                    Selector.make("main([Ljava/lang/String;)V"))),
+            Everywhere.EVERYWHERE);
+    OrdinalSet<InstanceKey> pointsToSet =
+        pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
     Assert.assertEquals(1, pointsToSet.size());
     InstanceKey arrayKey = pointsToSet.iterator().next();
-    OrdinalSet<InstanceKey> arrayContents = pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
+    OrdinalSet<InstanceKey> arrayContents =
+        pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
     System.err.println(arrayContents);
     Assert.assertEquals(0, arrayContents.size());
-    
   }
 }

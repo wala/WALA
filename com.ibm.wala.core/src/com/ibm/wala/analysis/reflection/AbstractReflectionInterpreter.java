@@ -14,12 +14,6 @@ import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementMask;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -43,30 +37,31 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
- * An abstract superclass of various {@link SSAContextInterpreter}s that deal with reflection methods.
+ * An abstract superclass of various {@link SSAContextInterpreter}s that deal with reflection
+ * methods.
  */
 public abstract class AbstractReflectionInterpreter implements SSAContextInterpreter {
 
   protected static final boolean DEBUG = false;
 
-  protected final static int CONE_BOUND = 10;
+  protected static final int CONE_BOUND = 10;
 
   protected int indexLocal = 100;
 
   protected final Map<TypeReference, Integer> typeIndexMap = HashMapFactory.make();
 
-  /**
-   * Governing analysis options
-   */
+  /** Governing analysis options */
   protected AnalysisOptions options;
 
-  /**
-   * cache of analysis information
-   */
+  /** cache of analysis information */
   protected IAnalysisCacheView cache;
-
 
   protected int getLocalForType(TypeReference T) {
     Integer I = typeIndexMap.get(T);
@@ -89,8 +84,9 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   }
 
   /**
-   * @return a TypeAbstraction object representing this type. We just use ConeTypes by default, since we don't propagate
-   *         information allowing us to distinguish between points and cones yet.
+   * @return a TypeAbstraction object representing this type. We just use ConeTypes by default,
+   *     since we don't propagate information allowing us to distinguish between points and cones
+   *     yet.
    */
   protected TypeAbstraction typeRef2TypeAbstraction(IClassHierarchy cha, TypeReference type) {
     IClass klass = cha.lookupClass(type);
@@ -101,9 +97,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     return null;
   }
 
-  /**
-   * A warning when we expect excessive pollution from a factory method
-   */
+  /** A warning when we expect excessive pollution from a factory method */
   protected static class ManySubtypesWarning extends Warning {
 
     final int nImplementors;
@@ -126,9 +120,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     }
   }
 
-  /**
-   * A warning when we fail to find subtypes for a factory method
-   */
+  /** A warning when we fail to find subtypes for a factory method */
   protected static class NoSubtypesWarning extends Warning {
 
     final TypeAbstraction T;
@@ -148,12 +140,10 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     }
   }
 
-  /**
-   * A warning when we find flow of a factory allocation to a cast to {@link Serializable}
-   */
+  /** A warning when we find flow of a factory allocation to a cast to {@link Serializable} */
   protected static class IgnoreSerializableWarning extends Warning {
 
-    final private static IgnoreSerializableWarning instance = new IgnoreSerializableWarning();
+    private static final IgnoreSerializableWarning instance = new IgnoreSerializableWarning();
 
     @Override
     public String getMsg() {
@@ -167,40 +157,34 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
 
   protected class SpecializedMethod extends SyntheticMethod {
 
-    /**
-     * Set of types that we have already inserted an allocation for.
-     */
+    /** Set of types that we have already inserted an allocation for. */
     protected final HashSet<TypeReference> typesAllocated = HashSetFactory.make(5);
 
-    /**
-     * List of synthetic allocation statements we model for this specialized instance
-     */
-    final protected ArrayList<SSAInstruction> allocations = new ArrayList<>();
+    /** List of synthetic allocation statements we model for this specialized instance */
+    protected final ArrayList<SSAInstruction> allocations = new ArrayList<>();
 
-    /**
-     * List of synthetic invoke instructions we model for this specialized instance.
-     */
-    final protected ArrayList<SSAInstruction> calls = new ArrayList<>();
+    /** List of synthetic invoke instructions we model for this specialized instance. */
+    protected final ArrayList<SSAInstruction> calls = new ArrayList<>();
 
-    /**
-     * List of all instructions
-     */
+    /** List of all instructions */
     protected final ArrayList<SSAInstruction> allInstructions = new ArrayList<>();
 
-    private final SSAInstructionFactory insts = declaringClass.getClassLoader().getInstructionFactory();
-    
-    public SpecializedMethod(MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
+    private final SSAInstructionFactory insts =
+        declaringClass.getClassLoader().getInstructionFactory();
+
+    public SpecializedMethod(
+        MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
       super(method, declaringClass, isStatic, isFactory);
     }
 
-    public SpecializedMethod(IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
+    public SpecializedMethod(
+        IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
       super(method, declaringClass, isStatic, isFactory);
     }
 
-    /**
-     * @param T type allocated by the instruction.   
-     */
-    protected void addInstruction(final TypeReference T, SSAInstruction instr, boolean isAllocation) {
+    /** @param T type allocated by the instruction. */
+    protected void addInstruction(
+        final TypeReference T, SSAInstruction instr, boolean isAllocation) {
       if (isAllocation) {
         if (typesAllocated.contains(T)) {
           return;
@@ -232,14 +216,14 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
         // for now, just allocate an array of size 1 in each dimension.
         int dims = 0;
         int dim = t.getDerivedMask();
-        if ((dim&ElementMask) == PrimitiveMask) {
+        if ((dim & ElementMask) == PrimitiveMask) {
           dim >>= 2;
         }
-        while ((dim&ElementMask) == ArrayMask) {
+        while ((dim & ElementMask) == ArrayMask) {
           dims++;
-          dim >>=2;
+          dim >>= 2;
         }
-        
+
         int[] extents = new int[dims];
         Arrays.fill(extents, 1);
         SSANewInstruction a = insts.NewInstruction(allInstructions.size(), alloc, ref, extents);
@@ -256,15 +240,20 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     }
 
     /**
-     * Add an instruction to invoke the default constructor on the object of value number alloc of type t.
+     * Add an instruction to invoke the default constructor on the object of value number alloc of
+     * type t.
      */
     protected void addCtorInvokeInstruction(final TypeReference t, int alloc) {
-      MethodReference init = MethodReference.findOrCreate(t, MethodReference.initAtom, MethodReference.defaultInitDesc);
-      CallSiteReference site = CallSiteReference.make(getCallSiteForType(t), init, IInvokeInstruction.Dispatch.SPECIAL);
+      MethodReference init =
+          MethodReference.findOrCreate(
+              t, MethodReference.initAtom, MethodReference.defaultInitDesc);
+      CallSiteReference site =
+          CallSiteReference.make(getCallSiteForType(t), init, IInvokeInstruction.Dispatch.SPECIAL);
       int[] params = new int[1];
       params[0] = alloc;
       int exc = getExceptionsForType(t);
-      SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
+      SSAInvokeInstruction s =
+          insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
       calls.add(s);
       allInstructions.add(s);
     }

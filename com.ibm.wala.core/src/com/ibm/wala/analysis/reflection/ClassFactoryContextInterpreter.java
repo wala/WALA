@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.analysis.reflection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -41,19 +37,23 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret reflective class factories (e.g. Class.forName()) in a
- * {@link JavaTypeContext} which represents the point-type of the class object created by the call.
+ * An {@link SSAContextInterpreter} specialized to interpret reflective class factories (e.g.
+ * Class.forName()) in a {@link JavaTypeContext} which represents the point-type of the class object
+ * created by the call.
  */
 public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
-/** BEGIN Custom change: caching */
+  /** BEGIN Custom change: caching */
   private final Map<String, IR> cache = HashMapFactory.make();
-  
-/** END Custom change: caching */
+
+  /** END Custom change: caching */
   @Override
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -63,21 +63,19 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-/** BEGIN Custom change: caching */
-    
-    
+    /** BEGIN Custom change: caching */
     final Context context = node.getContext();
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + context.toString();
-    
+
     IR result = cache.get(hashKey);
-    
+
     if (result == null) {
       result = makeIR(method, context);
       cache.put(hashKey, result);
     }
-    
-/** END Custom change: caching */
+
+    /** END Custom change: caching */
     return result;
   }
 
@@ -115,7 +113,8 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     assert understands(node);
-    TypeReference tr = ((TypeAbstraction)node.getContext().get(ContextKey.RECEIVER)).getTypeReference();
+    TypeReference tr =
+        ((TypeAbstraction) node.getContext().get(ContextKey.RECEIVER)).getTypeReference();
     if (tr != null) {
       return new NonNullSingletonIterator<>(NewSiteReference.make(0, tr));
     }
@@ -132,13 +131,19 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
   }
 
   private static SSAInstruction[] makeStatements(Context context) {
-    SSAInstructionFactory insts = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType().getClassLoader().getInstructionFactory();
+    SSAInstructionFactory insts =
+        ((TypeAbstraction) context.get(ContextKey.RECEIVER))
+            .getType()
+            .getClassLoader()
+            .getInstructionFactory();
     ArrayList<SSAInstruction> statements = new ArrayList<>();
     // vn1 is the string parameter
     int retValue = 2;
-    TypeReference tr = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getTypeReference();
+    TypeReference tr = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getTypeReference();
     if (tr != null) {
-      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(statements.size(), retValue, TypeReference.JavaLangClass, tr);
+      SSALoadMetadataInstruction l =
+          insts.LoadMetadataInstruction(
+              statements.size(), retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
       SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
@@ -153,7 +158,13 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static IR makeIR(IMethod method, Context context) {
     SSAInstruction instrs[] = makeStatements(context);
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
+    return new SyntheticIR(
+        method,
+        context,
+        new InducedCFG(instrs, method, context),
+        instrs,
+        SSAOptions.defaultOptions(),
+        null);
   }
 
   @Override

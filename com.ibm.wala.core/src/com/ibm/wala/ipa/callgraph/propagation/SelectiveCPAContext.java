@@ -11,36 +11,35 @@
 
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Map;
-
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.util.Map;
 
 /**
- * A selective Cartesian product context that enforces object sensitivity on some set
- * of parameter positions.
+ * A selective Cartesian product context that enforces object sensitivity on some set of parameter
+ * positions.
  */
 public class SelectiveCPAContext implements Context {
   // base context
   protected final Context base;
-  
+
   // maps parameters to their abstract objects
   private final Map<ContextKey, InstanceKey> parameterObjs;
-  
+
   // cached hash code
   private final int hashCode;
 
   // helper method for constructing the parameterObjs map
   private static Map<ContextKey, InstanceKey> makeMap(InstanceKey[] x) {
     Map<ContextKey, InstanceKey> result = HashMapFactory.make();
-    for(int i = 0; i < x.length; i++) {
+    for (int i = 0; i < x.length; i++) {
       if (x[i] != null) {
         result.put(ContextKey.PARAMETERS[i], x[i]);
       }
     }
-    
+
     return result;
   }
 
@@ -56,7 +55,7 @@ public class SelectiveCPAContext implements Context {
 
   @Override
   public String toString() {
-     return "cpa:" + parameterObjs;
+    return "cpa:" + parameterObjs;
   }
 
   @Override
@@ -78,10 +77,9 @@ public class SelectiveCPAContext implements Context {
     if (this == other) {
       return true;
     }
-    return other != null &&
-        getClass().equals(other.getClass()) &&
-        base.equals(((SelectiveCPAContext)other).base) &&
-        parameterObjs.equals(((SelectiveCPAContext)other).parameterObjs);
-  }     
-
+    return other != null
+        && getClass().equals(other.getClass())
+        && base.equals(((SelectiveCPAContext) other).base)
+        && parameterObjs.equals(((SelectiveCPAContext) other).parameterObjs);
+  }
 }

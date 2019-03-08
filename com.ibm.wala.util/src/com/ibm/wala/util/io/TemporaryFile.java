@@ -28,7 +28,7 @@ public class TemporaryFile {
       throw new NullPointerException("input == null");
     }
     if (outputDir == null) {
-      outputDir = Files.createTempDirectory("wala");      
+      outputDir = Files.createTempDirectory("wala");
     }
     Path filePath = outputDir.resolve(fileName);
     return urlToFile(filePath.toFile(), input);
@@ -37,14 +37,14 @@ public class TemporaryFile {
   public static File urlToFile(File F, URL input) throws IOException {
     return streamToFile(F, input.openStream());
   }
-  
+
   public static File streamToFile(File F, InputStream... inputs) throws IOException {
     try (final FileOutputStream output = new FileOutputStream(F)) {
-      
+
       int read;
-      byte[] buffer = new byte[ 1024 ];
-      for(InputStream input : inputs) {
-        while ( (read = input.read(buffer)) != -1 ) {
+      byte[] buffer = new byte[1024];
+      for (InputStream input : inputs) {
+        while ((read = input.read(buffer)) != -1) {
           output.write(buffer, 0, read);
         }
         input.close();
@@ -52,11 +52,11 @@ public class TemporaryFile {
     }
     return F;
   }
-  
+
   public static File stringToFile(File F, String... inputs) throws IOException {
     try (final FileOutputStream output = new FileOutputStream(F)) {
 
-      for(String input : inputs) {
+      for (String input : inputs) {
         output.write(input.getBytes(StandardCharsets.UTF_8));
       }
     }

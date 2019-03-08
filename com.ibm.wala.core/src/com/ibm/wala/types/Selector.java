@@ -15,15 +15,15 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * A method selector; something like: foo(Ljava/lang/String;)Ljava/lang/Class;
- * 
- * TODO: Canonicalize these?
+ *
+ * <p>TODO: Canonicalize these?
  */
 public final class Selector {
 
   private final Atom name;
 
   private final Descriptor descriptor;
-  
+
   public static Selector make(String selectorStr) {
     return make(Language.JAVA, selectorStr);
   }
@@ -35,7 +35,8 @@ public final class Selector {
     try {
       String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
       String desc = selectorStr.substring(selectorStr.indexOf('('));
-      return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(l, desc));
+      return new Selector(
+          Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(l, desc));
     } catch (StringIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid selectorStr: " + selectorStr, e);
     }
@@ -80,5 +81,4 @@ public final class Selector {
   public Atom getName() {
     return name;
   }
-
 }

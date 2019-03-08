@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,28 +48,31 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
+import org.jf.dexlib2.Opcode;
 
 public class NewArray extends Instruction {
 
-    public final int destination;
-    public final NewSiteReference newSiteRef;
-    public final int[] sizes;
+  public final int destination;
+  public final NewSiteReference newSiteRef;
+  public final int[] sizes;
 
-    public NewArray(int pc, int destination, NewSiteReference newSiteRef, int[] sizes, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.destination = destination;
-        this.newSiteRef = newSiteRef;
-        this.sizes = sizes.clone();
-    }
+  public NewArray(
+      int pc,
+      int destination,
+      NewSiteReference newSiteRef,
+      int[] sizes,
+      Opcode opcode,
+      DexIMethod method) {
+    super(pc, opcode, method);
+    this.destination = destination;
+    this.newSiteRef = newSiteRef;
+    this.sizes = sizes.clone();
+  }
 
-    @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitNewArray(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitNewArray(this);
+  }
 }

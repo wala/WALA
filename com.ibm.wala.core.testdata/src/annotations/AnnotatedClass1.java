@@ -17,8 +17,5 @@ public class AnnotatedClass1 {
 
   @RuntimeVisableAnnotationForMethod
   @RuntimeInvisableAnnotationForMethod
-  public void m1(){
-    
-  }
-  
+  public void m1() {}
 }

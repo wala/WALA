@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -23,21 +18,26 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.CPAContextSelector;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import java.io.IOException;
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestCPA {
 
   @Before
   public void setUp() {
-    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
+        new CAstRhinoTranslatorFactory());
   }
 
   @SuppressWarnings("static-access")
-  @Test public void testCPA() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test
+  public void testCPA()
+      throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "cpa.js");
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     JSCallGraphUtil.AVOID_DUMP = false;
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
-
 }

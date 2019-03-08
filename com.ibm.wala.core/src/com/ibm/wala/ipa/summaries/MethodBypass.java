@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
@@ -25,48 +20,50 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * "Non-standard" bypass rules to use during call graph construction.
- * 
- * Normally, the method bypass rules replace the IMethod that is resolved by other means, via the getBypass() method. However, the
- * bypass rules can be invoked even before resolving the target of a call, by checking the intercept rules.
+ *
+ * <p>Normally, the method bypass rules replace the IMethod that is resolved by other means, via the
+ * getBypass() method. However, the bypass rules can be invoked even before resolving the target of
+ * a call, by checking the intercept rules.
  */
 public class MethodBypass {
 
   static final boolean DEBUG = false;
 
   /**
-   * Method summaries collected for methods. Mapping Object -&gt; MethodSummary where Object is either a
+   * Method summaries collected for methods. Mapping Object -&gt; MethodSummary where Object is
+   * either a
+   *
    * <ul>
-   * <li>MethodReference
-   * <li>TypeReference
-   * <li>Atom (package name)
+   *   <li>MethodReference
+   *   <li>TypeReference
+   *   <li>Atom (package name)
    * </ul>
    */
   private final Map<Object, MethodSummary> methodSummaries;
 
-  /**
-   * Set of TypeReferences which are marked "allocatable"
-   */
+  /** Set of TypeReferences which are marked "allocatable" */
   private final Set<TypeReference> allocatable;
 
-  /**
-   * Governing class hierarchy.
-   */
+  /** Governing class hierarchy. */
   private final IClassHierarchy cha;
 
-  /**
-   * Mapping from MethodReference -&gt; SyntheticMethod
-   */
-  final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
+  /** Mapping from MethodReference -&gt; SyntheticMethod */
+  private final HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 
-  /**
-   * Set of method references that have been considered already.
-   */
-  final private HashSet<MethodReference> considered = HashSetFactory.make();
+  /** Set of method references that have been considered already. */
+  private final HashSet<MethodReference> considered = HashSetFactory.make();
 
-  public MethodBypass(Map<Object, MethodSummary> methodSummaries, Set<TypeReference> allocatable, IClassHierarchy cha) {
+  public MethodBypass(
+      Map<Object, MethodSummary> methodSummaries,
+      Set<TypeReference> allocatable,
+      IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;
     this.allocatable = allocatable;
     this.cha = cha;
@@ -74,8 +71,8 @@ public class MethodBypass {
 
   /**
    * Lookup bypass rules based on a method reference only.
-   * 
-   * Method getBypass.
+   *
+   * <p>Method getBypass.
    */
   private SyntheticMethod getBypass(MethodReference m) {
     if (DEBUG) {
@@ -130,8 +127,7 @@ public class MethodBypass {
       }
       return result;
     }
-    if (t.isArrayType())
-      return null;
+    if (t.isArrayType()) return null;
 
     // finally try the package.
     Atom p = extractPackage(t);
@@ -150,8 +146,9 @@ public class MethodBypass {
   }
 
   /**
-   * Method getBypass. check to see if a call to the receiver 'target' should be redirected to a different receiver.
-   * 
+   * Method getBypass. check to see if a call to the receiver 'target' should be redirected to a
+   * different receiver.
+   *
    * @throws IllegalArgumentException if target is null
    */
   public SyntheticMethod getBypass(IMethod target) {
@@ -163,7 +160,7 @@ public class MethodBypass {
 
   /**
    * Method extractPackage.
-   * 
+   *
    * @return Atom that represents the package name, or null if this is the unnamed package.
    */
   private static Atom extractPackage(TypeReference type) {
@@ -193,11 +190,11 @@ public class MethodBypass {
   }
 
   /**
-   * Are we allowed to allocate (for analysis purposes) an instance of a given type? By default, the answer is yes iff T is not
-   * abstract. However, subclasses and summaries can override this to allow "special" abstract classes to be allocatable as well.
-   * 
+   * Are we allowed to allocate (for analysis purposes) an instance of a given type? By default, the
+   * answer is yes iff T is not abstract. However, subclasses and summaries can override this to
+   * allow "special" abstract classes to be allocatable as well.
+   *
    * @throws IllegalArgumentException if klass is null
-   * 
    */
   public boolean isAllocatable(IClass klass) {
     if (klass == null) {

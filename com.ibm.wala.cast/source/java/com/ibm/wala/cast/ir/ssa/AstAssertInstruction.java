@@ -10,20 +10,17 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.Collection;
-
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
 
 /**
- *  An assert statement, as found in a variety of languages.  It has a
- * use which is the value being asserted to be true.  Additionally,
- * there is flag which denotes whether the assertion is from a
- * specification (the usual case) or is an assertion introduced by
- * "compilation" of whatever sort (e.g. to add assertions regarding
- * loop conditions needed by bounded model checking).
+ * An assert statement, as found in a variety of languages. It has a use which is the value being
+ * asserted to be true. Additionally, there is flag which denotes whether the assertion is from a
+ * specification (the usual case) or is an assertion introduced by "compilation" of whatever sort
+ * (e.g. to add assertions regarding loop conditions needed by bounded model checking).
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
@@ -51,12 +48,17 @@ public class AstAssertInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).AssertInstruction(iindex, uses == null ? value : uses[0], fromSpecification);
+    return ((AstInstructionFactory) insts)
+        .AssertInstruction(iindex, uses == null ? value : uses[0], fromSpecification);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "assert " + getValueString(symbolTable, value) + " (fromSpec: " + fromSpecification + ')';
+    return "assert "
+        + getValueString(symbolTable, value)
+        + " (fromSpec: "
+        + fromSpecification
+        + ')';
   }
 
   @Override

@@ -16,9 +16,7 @@ import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
-/**
- * Simple implementation of {@link INodeWithNumberedEdges}
- */
+/** Simple implementation of {@link INodeWithNumberedEdges} */
 public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNumberedEdges {
 
   private BimodalMutableIntSet predNumbers;
@@ -37,9 +35,8 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
 
   /**
    * Note that this variable appears on the RHS of an equation.
-   * 
-   * @param eqNumber
-   *          the equation number
+   *
+   * @param eqNumber the equation number
    */
   @Override
   public void addSucc(int eqNumber) {
@@ -53,9 +50,8 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
 
   /**
    * Note that this variable appears on the LHS of an equation.
-   * 
-   * @param eqNumber
-   *          the equation number
+   *
+   * @param eqNumber the equation number
    */
   @Override
   public void addPred(int eqNumber) {
@@ -67,9 +63,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
     }
   }
 
-  /**
-   * remove the edge that indicates this variable is Succd by a certain equation
-   */
+  /** remove the edge that indicates this variable is Succd by a certain equation */
   public void deleteSucc(int eqNumber) {
     if (succNumbers != null) {
       succNumbers.remove(eqNumber);
@@ -79,10 +73,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
     }
   }
 
-  /**
-   * remove the edge that indicates this variable is Predined by a certain
-   * equation
-   */
+  /** remove the edge that indicates this variable is Predined by a certain equation */
   public void deletePred(int eqNumber) {
     if (predNumbers != null) {
       predNumbers.remove(eqNumber);
@@ -103,12 +94,10 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   @Override
   public void removeIncomingEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
-
   }
 
   @Override
   public void removeOutgoingEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
-
   }
 }

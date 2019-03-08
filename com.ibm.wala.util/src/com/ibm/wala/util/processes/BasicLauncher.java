@@ -14,9 +14,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-/**
- * A generic process launcher
- */
+/** A generic process launcher */
 public class BasicLauncher extends Launcher {
 
   protected String cmd;
@@ -38,10 +36,8 @@ public class BasicLauncher extends Launcher {
     return super.toString() + " (cmd: " + cmd;
   }
 
-  /**
-   * Launch the process and wait until it is finished.  Returns the exit value of the process.
-   */
-  public int launch() throws  IllegalArgumentException, IOException {
+  /** Launch the process and wait until it is finished. Returns the exit value of the process. */
+  public int launch() throws IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
     Thread d1 = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);

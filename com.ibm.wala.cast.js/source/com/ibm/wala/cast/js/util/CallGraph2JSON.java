@@ -9,9 +9,6 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.cast.js.util;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
@@ -26,138 +23,143 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Util;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility class to serialize call graphs as JSON objects.
- * 
- * The serialised objects have the form
- * 
+ *
+ * <p>The serialised objects have the form
+ *
  * <pre>
  * {
  *   "&lt;callsite1&gt;": [ "&lt;callee1&gt;", "&lt;callee2&gt;", ... ],
- *   "&lt;callsite2&gt;": ... 
+ *   "&lt;callsite2&gt;": ...
  * }
  * </pre>
- * 
- * where both call sites and callees are encoded as strings
- * of the form
- * 
+ *
+ * where both call sites and callees are encoded as strings of the form
+ *
  * <pre>
  * "&lt;filename&gt;@&lt;lineno&gt;:&lt;beginoff&gt;-&lt;endoff&gt;"
  * </pre>
- * 
- * Here, {@code filename} is the name of the containing
- * JavaScript file (not including its directory), and
- * {@code lineno}, {@code beginoff} and {@code endoff}
- * encode the source position of the call expression (for
- * call sites) or the function declaration/expression (for
- * callees) inside the file in terms of its starting line,
- * its starting offset (in characters from the beginning of the
- * file), and its end offset.
- * 
+ *
+ * Here, {@code filename} is the name of the containing JavaScript file (not including its
+ * directory), and {@code lineno}, {@code beginoff} and {@code endoff} encode the source position of
+ * the call expression (for call sites) or the function declaration/expression (for callees) inside
+ * the file in terms of its starting line, its starting offset (in characters from the beginning of
+ * the file), and its end offset.
+ *
  * @author mschaefer
  */
 public class CallGraph2JSON {
   public static boolean IGNORE_HARNESS = true;
-  
-	public static String serialize(CallGraph cg) {
-		Map<String, Set<String>> edges = extractEdges(cg);
-		return toJSON(edges);
-	}
+
+  public static String serialize(CallGraph cg) {
+    Map<String, Set<String>> edges = extractEdges(cg);
+    return toJSON(edges);
+  }
 
   public static Map<String, Set<String>> extractEdges(CallGraph cg) {
     Map<String, Set<String>> edges = HashMapFactory.make();
-		for(CGNode nd : cg) {
-			if(!isRealFunction(nd.getMethod()))
-				continue;
-			AstMethod method = (AstMethod)nd.getMethod();
+    for (CGNode nd : cg) {
+      if (!isRealFunction(nd.getMethod())) continue;
+      AstMethod method = (AstMethod) nd.getMethod();
 
-			for(CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
-        Set<IMethod> targets = Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
-				serializeCallSite(method, callsite, targets, edges);
-			}
-		}
+      for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
+        Set<IMethod> targets =
+            Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
+        serializeCallSite(method, callsite, targets, edges);
+      }
+    }
     return edges;
   }
-	
-  public static void serializeCallSite(AstMethod method, CallSiteReference callsite, Set<IMethod> targets,
+
+  public static void serializeCallSite(
+      AstMethod method,
+      CallSiteReference callsite,
+      Set<IMethod> targets,
       Map<String, Set<String>> edges) {
-    Set<String> targetNames = MapUtil.findOrCreateSet(edges, ppPos(method.getSourcePosition(callsite.getProgramCounter())));
-    for(IMethod target : targets) {
+    Set<String> targetNames =
+        MapUtil.findOrCreateSet(
+            edges, ppPos(method.getSourcePosition(callsite.getProgramCounter())));
+    for (IMethod target : targets) {
       target = getCallTargetMethod(target);
-    	if(!isRealFunction(target))
-    		continue;
-    	targetNames.add(ppPos(((AstMethod)target).getSourcePosition()));
+      if (!isRealFunction(target)) continue;
+      targetNames.add(ppPos(((AstMethod) target).getSourcePosition()));
     }
   }
-	
-	private static IMethod getCallTargetMethod(IMethod method) {
-    if(method.getName().equals(JavaScriptMethods.ctorAtom)) {
+
+  private static IMethod getCallTargetMethod(IMethod method) {
+    if (method.getName().equals(JavaScriptMethods.ctorAtom)) {
       method = method.getDeclaringClass().getMethod(AstMethodReference.fnSelector);
-      if(method != null)
-        return method;
+      if (method != null) return method;
     }
-	  return method;
-	}
+    return method;
+  }
 
-	public static boolean isRealFunction(IMethod method) {
-		if(method instanceof AstMethod) {
-		  String methodName = method.getDeclaringClass().getName().toString();
-	    
-		  // exclude synthetic DOM modelling functions
-	    if(methodName.contains("/make_node"))
-	      return false;
+  public static boolean isRealFunction(IMethod method) {
+    if (method instanceof AstMethod) {
+      String methodName = method.getDeclaringClass().getName().toString();
 
-      if(IGNORE_HARNESS) {
-        for(String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
-          if(methodName.startsWith('L' + bootstrapFile + '/'))
-            return false;
+      // exclude synthetic DOM modelling functions
+      if (methodName.contains("/make_node")) return false;
+
+      if (IGNORE_HARNESS) {
+        for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
+          if (methodName.startsWith('L' + bootstrapFile + '/')) return false;
       }
- 
-	    return method.getName().equals(AstMethodReference.fnAtom);
-		}
-		return false;
-	}
-	
-	private static String ppPos(Position pos) {
-		String file = pos.getURL().getFile();
-		file = file.substring(file.lastIndexOf('/')+1);
-		
-		int line = pos.getFirstLine(), start_offset = pos.getFirstOffset(), end_offset = pos.getLastOffset();
-		return file + '@' + line + ':' + start_offset + '-' + end_offset;
-	}
-	
-	public static String toJSON(Map<String, Set<String>> map) {
-		StringBuilder res = new StringBuilder();
-		res.append("{\n");
-		res.append(joinWith(Util.mapToSet(map.entrySet(), e -> {
-      StringBuilder res1 = new StringBuilder();
-      if(e.getValue().size() > 0) {
-        res1.append("    \"").append(e.getKey()).append("\": [\n");
-        res1.append(joinWith(Util.mapToSet(e.getValue(), str -> "        \"" + str + '"'), ",\n"));
-        res1.append("\n    ]");
-      }
-      return res1.length() == 0 ? null : res1.toString();
-    }), ",\n"));
-		res.append("\n}");
-		return res.toString();
-	}
-	
-	private static String joinWith(Iterable<String> lst, String sep) {
-	  StringBuilder res = new StringBuilder();
-	  ArrayList<String> strings = new ArrayList<>();
-	  for(String s : lst)
-	    if(s != null)
-	      strings.add(s);
-	      
-	  boolean fst = true;
-	  for(String s : strings) {
-	    if(fst)
-	      fst = false;
-	    else
-	      res.append(sep);
-	    res.append(s);
-	  }
-	  return res.toString();
-	}
+
+      return method.getName().equals(AstMethodReference.fnAtom);
+    }
+    return false;
+  }
+
+  private static String ppPos(Position pos) {
+    String file = pos.getURL().getFile();
+    file = file.substring(file.lastIndexOf('/') + 1);
+
+    int line = pos.getFirstLine(),
+        start_offset = pos.getFirstOffset(),
+        end_offset = pos.getLastOffset();
+    return file + '@' + line + ':' + start_offset + '-' + end_offset;
+  }
+
+  public static String toJSON(Map<String, Set<String>> map) {
+    StringBuilder res = new StringBuilder();
+    res.append("{\n");
+    res.append(
+        joinWith(
+            Util.mapToSet(
+                map.entrySet(),
+                e -> {
+                  StringBuilder res1 = new StringBuilder();
+                  if (e.getValue().size() > 0) {
+                    res1.append("    \"").append(e.getKey()).append("\": [\n");
+                    res1.append(
+                        joinWith(
+                            Util.mapToSet(e.getValue(), str -> "        \"" + str + '"'), ",\n"));
+                    res1.append("\n    ]");
+                  }
+                  return res1.length() == 0 ? null : res1.toString();
+                }),
+            ",\n"));
+    res.append("\n}");
+    return res.toString();
+  }
+
+  private static String joinWith(Iterable<String> lst, String sep) {
+    StringBuilder res = new StringBuilder();
+    ArrayList<String> strings = new ArrayList<>();
+    for (String s : lst) if (s != null) strings.add(s);
+
+    boolean fst = true;
+    for (String s : strings) {
+      if (fst) fst = false;
+      else res.append(sep);
+      res.append(s);
+    }
+    return res.toString();
+  }
 }

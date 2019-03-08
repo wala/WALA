@@ -10,13 +10,11 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents instructions that convert from one primitive type to another.
- */
+/** This class represents instructions that convert from one primitive type to another. */
 public final class ConversionInstruction extends Instruction implements IConversionInstruction {
-  final private String fromType;
+  private final String fromType;
 
-  final private String toType;
+  private final String toType;
 
   protected ConversionInstruction(short opcode) {
     super(opcode);
@@ -35,7 +33,7 @@ public final class ConversionInstruction extends Instruction implements IConvers
     }
   }
 
-  private final static ConversionInstruction[] preallocated = preallocate();
+  private static final ConversionInstruction[] preallocated = preallocate();
 
   private static ConversionInstruction[] preallocate() {
     ConversionInstruction[] r = new ConversionInstruction[OP_i2s - OP_i2l + 1];
@@ -45,7 +43,8 @@ public final class ConversionInstruction extends Instruction implements IConvers
     return r;
   }
 
-  public static ConversionInstruction make(String fromType, String toType) throws IllegalArgumentException {
+  public static ConversionInstruction make(String fromType, String toType)
+      throws IllegalArgumentException {
     int from = Util.getTypeIndex(fromType);
     int to = Util.getTypeIndex(toType);
     if (from < 0 || from > TYPE_double_index) {
@@ -55,10 +54,12 @@ public final class ConversionInstruction extends Instruction implements IConvers
       return preallocated[(OP_i2b - OP_i2l) + (to - TYPE_byte_index)];
     } else {
       if (to < 0 || to > TYPE_double_index) {
-        throw new IllegalArgumentException("Cannot convert from type " + fromType + " to type " + toType);
+        throw new IllegalArgumentException(
+            "Cannot convert from type " + fromType + " to type " + toType);
       }
       if (to == from) {
-        throw new IllegalArgumentException("Cannot convert from type " + fromType + " to same type");
+        throw new IllegalArgumentException(
+            "Cannot convert from type " + fromType + " to same type");
       }
       return preallocated[from * 3 + (to > from ? to - 1 : to)];
     }

@@ -10,48 +10,45 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
-import java.net.URL;
-
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IMethod.SourcePosition;
+import java.net.URL;
 
 public abstract class AbstractSourcePosition implements Position {
-    
+
   @Override
-  public boolean equals(Object o){
+  public boolean equals(Object o) {
     if (o instanceof Position) {
-      Position p = (Position)o;
-      return getFirstLine() == p.getFirstLine() &&
-             getLastLine() == p.getLastLine() &&
-	     getFirstCol() == p.getFirstCol() &&
-	     getLastCol() == p.getLastCol() &&
-	     getFirstOffset() == p.getFirstOffset() &&
-	     getLastOffset() == p.getLastOffset() && 
-	     ( (getURL() != null)?
-	       getURL().equals(p.getURL()):
-	       p.getURL() == null);
+      Position p = (Position) o;
+      return getFirstLine() == p.getFirstLine()
+          && getLastLine() == p.getLastLine()
+          && getFirstCol() == p.getFirstCol()
+          && getLastCol() == p.getLastCol()
+          && getFirstOffset() == p.getFirstOffset()
+          && getLastOffset() == p.getLastOffset()
+          && ((getURL() != null) ? getURL().equals(p.getURL()) : p.getURL() == null);
     } else {
       return false;
     }
   }
 
   @Override
-  public int hashCode() { 
-    return getFirstLine()*getLastLine()*getFirstCol()*getLastCol();
+  public int hashCode() {
+    return getFirstLine() * getLastLine() * getFirstCol() * getLastCol();
   }
 
   @Override
   public int compareTo(SourcePosition o) {
     if (o instanceof Position) {
-      Position p = (Position)o;
+      Position p = (Position) o;
       if (getFirstLine() != p.getFirstLine()) {
-	return getFirstLine() - p.getFirstLine();
+        return getFirstLine() - p.getFirstLine();
       } else if (getFirstCol() != p.getFirstCol()) {
-	return getFirstCol() - p.getFirstCol();
+        return getFirstCol() - p.getFirstCol();
       } else if (getLastLine() != p.getLastLine()) {
-	return getLastLine() - p.getLastLine();
+        return getLastLine() - p.getLastLine();
       } else {
-	return getLastCol() - p.getLastCol();
+        return getLastCol() - p.getLastCol();
       }
     } else {
       return 0;
@@ -63,17 +60,25 @@ public abstract class AbstractSourcePosition implements Position {
     URL x = getURL();
     String xf = x.toString();
     if (xf.indexOf('/') >= 0) {
-      xf = xf.substring(xf.lastIndexOf('/')+1);
+      xf = xf.substring(xf.lastIndexOf('/') + 1);
     }
     String pos;
     if (getFirstCol() != -1) {
-      pos = "["+getFirstLine()+ ':' +getFirstCol()+"] -> ["+getLastLine()+ ':' +getLastCol()+ ']';
+      pos =
+          "["
+              + getFirstLine()
+              + ':'
+              + getFirstCol()
+              + "] -> ["
+              + getLastLine()
+              + ':'
+              + getLastCol()
+              + ']';
     } else if (getFirstOffset() != -1) {
-      pos =  "[" + getFirstOffset() + "->" + getLastOffset() + "] (line " + getFirstLine() + ')';
+      pos = "[" + getFirstOffset() + "->" + getLastOffset() + "] (line " + getFirstLine() + ')';
     } else {
       pos = "(line " + getFirstLine() + ')';
     }
     return xf + ' ' + pos;
   }
-
 }

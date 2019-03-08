@@ -15,22 +15,21 @@ public class SimpleStringOps {
   private static void whatever(String s) {
     System.out.println(s.substring(5) + " and other garbage");
   }
-  
+
   public static void main(String[] args) {
     if (args.length > 0) {
       @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
       String s = args[0];
-      for(int i = 1; i < args.length; i++) {
+      for (int i = 1; i < args.length; i++) {
         //noinspection StringConcatenationInLoop
         s = s + args[i];
       }
-      
+
       if (s.length() < 6) {
         s = "a silly prefix " + s;
       }
-      
+
       whatever(s);
     }
   }
-
 }

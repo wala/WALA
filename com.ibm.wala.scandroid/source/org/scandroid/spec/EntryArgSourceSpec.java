@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,16 +47,6 @@
 
 package org.scandroid.spec;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-
-import org.scandroid.domain.CodeElement;
-import org.scandroid.flow.InflowAnalysis;
-import org.scandroid.flow.types.FlowType;
-import org.scandroid.flow.types.ParameterFlow;
-import org.scandroid.util.CGAnalysisContext;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
@@ -71,66 +61,76 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.intset.OrdinalSet;
-
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import org.scandroid.domain.CodeElement;
+import org.scandroid.flow.InflowAnalysis;
+import org.scandroid.flow.types.FlowType;
+import org.scandroid.flow.types.ParameterFlow;
+import org.scandroid.util.CGAnalysisContext;
 
 /**
- * Entry arg source specs represent sources that are arguments to methods 
- * that are entry points.
- * 
- * For example, the command line arguments to a {@code main(String[] args)}
- * are entry arg sources.
- * 
+ * Entry arg source specs represent sources that are arguments to methods that are entry points.
+ *
+ * <p>For example, the command line arguments to a {@code main(String[] args)} are entry arg
+ * sources.
  */
 public class EntryArgSourceSpec extends SourceSpec {
-	
-	public EntryArgSourceSpec(MethodNamePattern name, int[] args) {
-        namePattern = name;
-        argNums = args;
-    }    
-	@Override
-	public<E extends ISSABasicBlock> void addDomainElements(CGAnalysisContext<E> ctx,
-			Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
-			IMethod im, BasicBlockInContext<E> block, SSAInvokeInstruction invInst,
-			int[] newArgNums, 
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis<InstanceKey> pa, CallGraph cg) {
 
-		for(CGNode node: cg.getNodes(im.getReference())) {
-		    for(int i: newArgNums) {
-		        FlowType<E> flow = new ParameterFlow<>(block, i, true);
-		        final int ssaVal = node.getIR().getParameter(i);
-				final Set<CodeElement> valueElements = CodeElement.valueElements(ssaVal);
-				
-				PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, ssaVal);
-				final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
-				
-				if (pointsToSet.isEmpty()) {
-					TypeReference typeRef = node.getMethod().getParameterType(i);
-					IClass clazz = node.getMethod().getClassHierarchy().lookupClass(typeRef);
-					if (null == clazz) {
-						
-					} else if (clazz.isInterface()) {						
-						for (IClass impl : pa.getClassHierarchy().getImplementors(typeRef)) {
-							
-							InstanceKey ik = new ConcreteTypeKey(impl);
-							valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
-						}
-					} else {
-						InstanceKey ik = new ConcreteTypeKey(clazz);
-						valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
-					}					
-				}
-				
-				for (InstanceKey ik : pointsToSet) {
-					valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
-				}
-				InflowAnalysis.addDomainElements(taintMap, block, flow, valueElements);
-				
-		    }
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("EntryArgSourceSpec(%s, %s)", namePattern, Arrays.toString(argNums));
-	}
+  public EntryArgSourceSpec(MethodNamePattern name, int[] args) {
+    namePattern = name;
+    argNums = args;
+  }
+
+  @Override
+  public <E extends ISSABasicBlock> void addDomainElements(
+      CGAnalysisContext<E> ctx,
+      Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
+      IMethod im,
+      BasicBlockInContext<E> block,
+      SSAInvokeInstruction invInst,
+      int[] newArgNums,
+      ISupergraph<BasicBlockInContext<E>, CGNode> graph,
+      PointerAnalysis<InstanceKey> pa,
+      CallGraph cg) {
+
+    for (CGNode node : cg.getNodes(im.getReference())) {
+      for (int i : newArgNums) {
+        FlowType<E> flow = new ParameterFlow<>(block, i, true);
+        final int ssaVal = node.getIR().getParameter(i);
+        final Set<CodeElement> valueElements = CodeElement.valueElements(ssaVal);
+
+        PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, ssaVal);
+        final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
+
+        if (pointsToSet.isEmpty()) {
+          TypeReference typeRef = node.getMethod().getParameterType(i);
+          IClass clazz = node.getMethod().getClassHierarchy().lookupClass(typeRef);
+          if (null == clazz) {
+
+          } else if (clazz.isInterface()) {
+            for (IClass impl : pa.getClassHierarchy().getImplementors(typeRef)) {
+
+              InstanceKey ik = new ConcreteTypeKey(impl);
+              valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
+            }
+          } else {
+            InstanceKey ik = new ConcreteTypeKey(clazz);
+            valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
+          }
+        }
+
+        for (InstanceKey ik : pointsToSet) {
+          valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
+        }
+        InflowAnalysis.addDomainElements(taintMap, block, flow, valueElements);
+      }
+    }
+  }
+
+  @Override
+  public String toString() {
+    return String.format("EntryArgSourceSpec(%s, %s)", namePattern, Arrays.toString(argNums));
+  }
 }

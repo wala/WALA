@@ -13,18 +13,15 @@ package com.ibm.wala.escape;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.WalaException;
 
-/**
- * Basic interface from which to execute and get the results of escape analysis.
- */
+/** Basic interface from which to execute and get the results of escape analysis. */
 public interface INodeEscapeAnalysis extends IMethodEscapeAnalysis {
 
   /**
    * @param allocNode a CGNode which holds an allocation site
    * @param allocPC bytecode index of allocation site
    * @param node method in question
-   * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may escape from an activation of node m,
-   *          false otherwise
+   * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may
+   *     escape from an activation of node m, false otherwise
    */
   public boolean mayEscape(CGNode allocNode, int allocPC, CGNode node) throws WalaException;
-
 }

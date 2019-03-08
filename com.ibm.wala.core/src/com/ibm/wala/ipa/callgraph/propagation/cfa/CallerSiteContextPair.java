@@ -18,16 +18,14 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
  * This is a context which is defined by a pair consisting of &lt;caller node, base context&gt;.
- * 
- * The base context is typically some special case; e.g., a JavaTypeContext used for reflection.
+ *
+ * <p>The base context is typically some special case; e.g., a JavaTypeContext used for reflection.
  */
 public class CallerSiteContextPair extends CallerSiteContext {
 
   private final Context baseContext;
 
-  /**
-   * @param caller the node which defines this context.
-   */
+  /** @param caller the node which defines this context. */
   public CallerSiteContextPair(CGNode caller, CallSiteReference callSite, Context baseContext) {
     super(caller, callSite);
     if (caller == null) {
@@ -57,7 +55,8 @@ public class CallerSiteContextPair extends CallerSiteContext {
     }
     if (getClass().equals(obj.getClass())) {
       CallerSiteContextPair other = (CallerSiteContextPair) obj;
-      return getCaller().equals(other.getCaller()) && getCallSite().equals(other.getCallSite())
+      return getCaller().equals(other.getCaller())
+          && getCallSite().equals(other.getCallSite())
           && baseContext.equals(other.baseContext);
     } else {
       return false;
@@ -73,5 +72,4 @@ public class CallerSiteContextPair extends CallerSiteContext {
   public String toString() {
     return super.toString() + ",Base:" + baseContext;
   }
-
 }

@@ -13,8 +13,6 @@
  */
 package com.ibm.wala.cast.java.translator;
 
-import java.io.PrintWriter;
-
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -24,6 +22,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.util.config.SetOfClasses;
+import java.io.PrintWriter;
 
 public class Java2IRTranslator {
   private final boolean DEBUG;
@@ -31,21 +30,25 @@ public class Java2IRTranslator {
   protected final JavaSourceLoaderImpl fLoader;
 
   protected final SetOfClasses exclusions;
-  
-  CAstRewriterFactory<?, ?> castRewriterFactory = null;
 
+  CAstRewriterFactory<?, ?> castRewriterFactory = null;
 
   public Java2IRTranslator(JavaSourceLoaderImpl srcLoader, SetOfClasses exclusions) {
     this(srcLoader, null, exclusions);
   }
 
-  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader,
-      CAstRewriterFactory<?, ?> castRewriterFactory, SetOfClasses exclusions) {
+  public Java2IRTranslator(
+      JavaSourceLoaderImpl srcLoader,
+      CAstRewriterFactory<?, ?> castRewriterFactory,
+      SetOfClasses exclusions) {
     this(srcLoader, castRewriterFactory, false, exclusions);
   }
 
-  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader,
-      CAstRewriterFactory<?, ?> castRewriterFactory, boolean debug, SetOfClasses exclusions) {
+  public Java2IRTranslator(
+      JavaSourceLoaderImpl srcLoader,
+      CAstRewriterFactory<?, ?> castRewriterFactory,
+      boolean debug,
+      SetOfClasses exclusions) {
     DEBUG = debug;
     fLoader = srcLoader;
     this.castRewriterFactory = castRewriterFactory;

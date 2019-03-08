@@ -10,11 +10,7 @@
  */
 package demandpa;
 
-
-/**
- * @author manu
- *
- */
+/** @author manu */
 public class FlowsToTestHashSet {
 
   public static void main(String[] args) {

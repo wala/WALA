@@ -14,14 +14,11 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 
-/**
- * An interface that is common to the Shrike and SSA CFG implementations.
- */
-public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedGraph<T>, MinimalCFG<T> {
+/** An interface that is common to the Shrike and SSA CFG implementations. */
+public interface ControlFlowGraph<I, T extends IBasicBlock<I>>
+    extends NumberedGraph<T>, MinimalCFG<T> {
 
-  /**
-   * @return the indices of the catch blocks, as a bit vector
-   */
+  /** @return the indices of the catch blocks, as a bit vector */
   public BitVector getCatchBlocks();
 
   /**
@@ -30,21 +27,17 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
    */
   public T getBlockForInstruction(int index);
 
-  /**
-   * @return the instructions of this CFG, as an array.
-   */
+  /** @return the instructions of this CFG, as an array. */
   I[] getInstructions();
 
   /**
    * TODO: move this into IR?
-   * 
+   *
    * @param index an instruction index
    * @return the program counter (bytecode index) corresponding to that instruction
    */
   public int getProgramCounter(int index);
 
-  /**
-   * @return the Method this CFG represents
-   */
+  /** @return the Method this CFG represents */
   public IMethod getMethod();
 }

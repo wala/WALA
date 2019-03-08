@@ -14,10 +14,10 @@ import org.eclipse.jface.window.ApplicationWindow;
 
 /**
  * abstract base class for launching a JFace application
- * 
- * TODO: unify with other launchers?
+ *
+ * <p>TODO: unify with other launchers?
  */
-public abstract class AbstractJFaceRunner  {
+public abstract class AbstractJFaceRunner {
 
   protected ApplicationWindow applicationWindow = null;
 
@@ -43,9 +43,13 @@ public abstract class AbstractJFaceRunner  {
     blockInput = newBlockInput;
   }
 
-
   @Override
   public String toString() {
-    return super.toString() + " (applicationWindow: " + applicationWindow + ", blockInput: " + blockInput + ')';
+    return super.toString()
+        + " (applicationWindow: "
+        + applicationWindow
+        + ", blockInput: "
+        + blockInput
+        + ')';
   }
-} 
+}

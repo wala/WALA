@@ -16,52 +16,49 @@ import com.ibm.wala.classLoader.CallSiteReference;
 
 /**
  * A call vertex represents the possible callees of a function call or {@code new} expression.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public class CallVertex extends Vertex {
-	// method containing the call
-	private final FuncVertex func;
-	
-	// PC of the call site
-	private final CallSiteReference site;
-	
-	// the call instruction itself
-	private final JavaScriptInvoke invk;
+  // method containing the call
+  private final FuncVertex func;
 
-	CallVertex(FuncVertex func, CallSiteReference site, JavaScriptInvoke invk) {
-		this.func = func;
-		this.site = site;
-		this.invk = invk;
-	}
+  // PC of the call site
+  private final CallSiteReference site;
 
-	public FuncVertex getCaller() {
-		return func;
-	}
+  // the call instruction itself
+  private final JavaScriptInvoke invk;
 
-	public CallSiteReference getSite() {
-		return site;
-	}
-	
-	public JavaScriptInvoke getInstruction() {
-		return invk;
-	}
-	
-	/**
-	 * Does this call vertex correspond to a {@code new} instruction?
-	 */
-	public boolean isNew() {
-		return site.getDeclaredTarget() == JavaScriptMethods.ctorReference;
-	}
+  CallVertex(FuncVertex func, CallSiteReference site, JavaScriptInvoke invk) {
+    this.func = func;
+    this.site = site;
+    this.invk = invk;
+  }
 
-	@Override
-	public <T> T accept(VertexVisitor<T> visitor) {
-		return visitor.visitCalleeVertex(this);
-	}
-	
-	@Override
-	public String toString() {
-		return "Callee(" + func + ", " + site + ')';
-	}
+  public FuncVertex getCaller() {
+    return func;
+  }
+
+  public CallSiteReference getSite() {
+    return site;
+  }
+
+  public JavaScriptInvoke getInstruction() {
+    return invk;
+  }
+
+  /** Does this call vertex correspond to a {@code new} instruction? */
+  public boolean isNew() {
+    return site.getDeclaredTarget() == JavaScriptMethods.ctorReference;
+  }
+
+  @Override
+  public <T> T accept(VertexVisitor<T> visitor) {
+    return visitor.visitCalleeVertex(this);
+  }
+
+  @Override
+  public String toString() {
+    return "Callee(" + func + ", " + site + ')';
+  }
 }

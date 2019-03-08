@@ -10,26 +10,26 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.Writer;
-
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ConstantPoolParser;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.Writer;
 
 /**
  * This is a demo class.
- * 
- * Class files are taken as input arguments (or if there are none, from standard input). We search those class files for all
- * references to the Java library classes "SoftReference" or "WeakReference". This is just a demo to show how to write a simple tool
- * like this. Here we're using the OfflineInstrumenter class to manage loading a set of class files and JARs for analysis; we don't
- * actually modify any code.
- * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.ClassSearcher test.jar -o
- * output.jar
+ *
+ * <p>Class files are taken as input arguments (or if there are none, from standard input). We
+ * search those class files for all references to the Java library classes "SoftReference" or
+ * "WeakReference". This is just a demo to show how to write a simple tool like this. Here we're
+ * using the OfflineInstrumenter class to manage loading a set of class files and JARs for analysis;
+ * we don't actually modify any code.
+ *
+ * <p>In Unix, I run it like this: java -cp ~/dev/shrike/shrike
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassSearcher test.jar -o output.jar
  */
 public class ClassSearcher {
   private static OfflineInstrumenter instrumenter;
@@ -53,7 +53,8 @@ public class ClassSearcher {
     System.out.println("Classes scanned: " + scanned);
   }
 
-  private static void doClass(final ClassInstrumenter ci, Writer w, String resource) throws Exception {
+  private static void doClass(final ClassInstrumenter ci, Writer w, String resource)
+      throws Exception {
     scanned++;
 
     String cl1 = "java/lang/ref/WeakReference";
@@ -61,7 +62,8 @@ public class ClassSearcher {
     ClassReader r = ci.getReader();
     ConstantPoolParser cp = r.getCP();
     for (int i = 1; i < cp.getItemCount(); i++) {
-      if (cp.getItemType(i) == ClassConstants.CONSTANT_Class && (cp.getCPClass(i).equals(cl1) || cp.getCPClass(i).equals(cl2))) {
+      if (cp.getItemType(i) == ClassConstants.CONSTANT_Class
+          && (cp.getCPClass(i).equals(cl1) || cp.getCPClass(i).equals(cl2))) {
         w.write(cp.getCPClass(i) + ' ' + resource + ' ' + r.getName() + '\n');
       }
     }

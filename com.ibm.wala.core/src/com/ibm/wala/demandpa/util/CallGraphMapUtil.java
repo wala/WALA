@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,8 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.util;
-
-import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -56,23 +54,26 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.util.Set;
 
 /**
- * utility methods for mapping various program entities from one call graph to the corresponding entity in another one
- * 
+ * utility methods for mapping various program entities from one call graph to the corresponding
+ * entity in another one
+ *
  * @author Manu Sridharan
- * 
  */
 public class CallGraphMapUtil {
 
   /**
-   * map a call graph node from one call graph to the corresponding node in another. Note that the target call graph must be
-   * context-insensitive for the method, i.e., the only context for the method should be Everywhere.EVERYWHERE.
-   * 
+   * map a call graph node from one call graph to the corresponding node in another. Note that the
+   * target call graph must be context-insensitive for the method, i.e., the only context for the
+   * method should be Everywhere.EVERYWHERE.
+   *
    * @return the corresponding node, or {@code null} if the method is not in the target call graph
    * @throws IllegalArgumentException if fromCG == null
    */
-  public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG) throws IllegalArgumentException {
+  public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG)
+      throws IllegalArgumentException {
     if (fromCG == null) {
       throw new IllegalArgumentException("fromCG == null");
     }
@@ -80,7 +81,9 @@ public class CallGraphMapUtil {
       return toCG.getFakeRootNode();
     } else {
       MethodReference methodRef = orig.getMethod().getReference();
-      if (methodRef.toString().equals("< Primordial, Ljava/lang/Object, clone()Ljava/lang/Object; >")) {
+      if (methodRef
+          .toString()
+          .equals("< Primordial, Ljava/lang/Object, clone()Ljava/lang/Object; >")) {
         // NOTE: clone() is cloned one level, even by RTA, so we need to handle it
         CGNode ret = toCG.getNode(orig.getMethod(), orig.getContext());
         if (ret == null) {
@@ -96,7 +99,8 @@ public class CallGraphMapUtil {
     }
   }
 
-  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
+  public static InstanceKey mapInstKey(
+      InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
       throws UnimplementedError, NullPointerException {
     InstanceKey ret = null;
     if (ik instanceof InstanceKeyWithNode) {
@@ -107,7 +111,9 @@ public class CallGraphMapUtil {
       }
       if (ik instanceof AllocationSiteInNode) {
         if (ik instanceof NormalAllocationInNode) {
-          ret = heapModel.getInstanceKeyForAllocation(newCGNode, ((AllocationSiteInNode) ik).getSite());
+          ret =
+              heapModel.getInstanceKeyForAllocation(
+                  newCGNode, ((AllocationSiteInNode) ik).getSite());
         } else if (ik instanceof MultiNewArrayInNode) {
           MultiNewArrayInNode mnik = (MultiNewArrayInNode) ik;
 
@@ -128,7 +134,8 @@ public class CallGraphMapUtil {
     return ret;
   }
 
-  public static PointerKey mapPointerKey(PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
+  public static PointerKey mapPointerKey(
+      PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
       throws UnimplementedError {
     PointerKey ret = null;
     if (pk instanceof AbstractLocalPointerKey) {

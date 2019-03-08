@@ -42,7 +42,6 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,101 +56,86 @@ import java.util.function.Function;
 
 /**
  * Simple implementation of a class hierarchy.
- * 
- * Note that this class hierarchy implementation is mutable. You can add classes via addClass(). You can add a class even if
- * c.getClassLoader() does not appear in getLoaders().
+ *
+ * <p>Note that this class hierarchy implementation is mutable. You can add classes via addClass().
+ * You can add a class even if c.getClassLoader() does not appear in getLoaders().
  */
 public class ClassHierarchy implements IClassHierarchy {
 
   private static final boolean DEBUG = false;
 
-  public enum MissingSuperClassHandling { NONE, ROOT, PHANTOM }
-
+  public enum MissingSuperClassHandling {
+    NONE,
+    ROOT,
+    PHANTOM
+  }
 
   /**
-   * Languages that contribute classes to the set represented in this hierarchy. The languages may for example be related by
-   * inheritance (e.g. X10 derives from Java, and shares a common type hierarchy rooted at java.lang.Object).
+   * Languages that contribute classes to the set represented in this hierarchy. The languages may
+   * for example be related by inheritance (e.g. X10 derives from Java, and shares a common type
+   * hierarchy rooted at java.lang.Object).
    */
   private final Set<Language> languages = HashSetFactory.make();
 
   /**
-   * For each {@link IClass} c in this class hierarchy, this map maps c.getReference() to the {@link Node}
-   * 
-   * Note that this class provides an iterator() over this map, and that some WALA utilities (e.g. ReferenceCleanser) must iterate
-   * over all classes. But also note that the class hierarchy is mutable (addClass()). So, when trying to run multiple threads, we
-   * could see a race condition between iterator() and addClass(). With a normal {@link HashMap}, this would result in a
-   * {@link ConcurrentModificationException}. But with a {@link ConcurrentHashMap}, at least the code merrily chugs along,
-   * tolerating the race.
+   * For each {@link IClass} c in this class hierarchy, this map maps c.getReference() to the {@link
+   * Node}
+   *
+   * <p>Note that this class provides an iterator() over this map, and that some WALA utilities
+   * (e.g. ReferenceCleanser) must iterate over all classes. But also note that the class hierarchy
+   * is mutable (addClass()). So, when trying to run multiple threads, we could see a race condition
+   * between iterator() and addClass(). With a normal {@link HashMap}, this would result in a {@link
+   * ConcurrentModificationException}. But with a {@link ConcurrentHashMap}, at least the code
+   * merrily chugs along, tolerating the race.
    */
-  final private Map<TypeReference, Node> map; 
-  /**
-   * {@link TypeReference} for the root type
-   */
+  private final Map<TypeReference, Node> map;
+  /** {@link TypeReference} for the root type */
   private TypeReference rootTypeRef;
 
-  /**
-   * root node of the class hierarchy
-   */
+  /** root node of the class hierarchy */
   private Node root;
 
-  /**
-   * An object which defines class loaders.
-   */
-  final private ClassLoaderFactory factory;
+  /** An object which defines class loaders. */
+  private final ClassLoaderFactory factory;
 
-  /**
-   * The loaders used to define this class hierarchy.
-   */
-  final private IClassLoader[] loaders;
+  /** The loaders used to define this class hierarchy. */
+  private final IClassLoader[] loaders;
 
-  /**
-   * A mapping from IClass -&gt; Selector -&gt; Set of IMethod
-   */
-  final private HashMap<IClass, Object> targetCache = HashMapFactory.make();
+  /** A mapping from IClass -&gt; Selector -&gt; Set of IMethod */
+  private final HashMap<IClass, Object> targetCache = HashMapFactory.make();
 
-  /**
-   * Governing analysis scope
-   */
+  /** Governing analysis scope */
   private final AnalysisScope scope;
 
   /**
-   * A mapping from IClass (representing an interface) -&gt; Set of IClass that implement that interface
+   * A mapping from IClass (representing an interface) -&gt; Set of IClass that implement that
+   * interface
    */
   private final Map<IClass, Set<IClass>> implementors = HashMapFactory.make();
 
-  /**
-   * A temporary hack : TODO: do intelligent caching somehow
-   */
+  /** A temporary hack : TODO: do intelligent caching somehow */
   private Collection<IClass> subclassesOfError;
 
-  /**
-   * A temporary hack : TODO: do intelligent caching somehow
-   */
+  /** A temporary hack : TODO: do intelligent caching somehow */
   private Collection<TypeReference> subTypeRefsOfError;
 
-  /**
-   * A temporary hack : TODO: do intelligent caching somehow
-   */
+  /** A temporary hack : TODO: do intelligent caching somehow */
   private Collection<IClass> runtimeExceptionClasses;
 
-  /**
-   * A temporary hack : TODO: do intelligent caching somehow
-   */
+  /** A temporary hack : TODO: do intelligent caching somehow */
   private Collection<TypeReference> runtimeExceptionTypeRefs;
 
   /**
-   * How should we handle missing superclasses?
-   * DEFAULT: no special handling, class will be excluded from class hierarchy
-   *    ROOT: replace the missing superclass with the hierarchy root
-   * PHANTOM: create a phantom superclass and add the subclass to the hierarchy.
-   *          Note that we can only create phantom superclass when the class is a
-   *          {@link com.ibm.wala.classLoader.BytecodeClass}
+   * How should we handle missing superclasses? DEFAULT: no special handling, class will be excluded
+   * from class hierarchy ROOT: replace the missing superclass with the hierarchy root PHANTOM:
+   * create a phantom superclass and add the subclass to the hierarchy. Note that we can only create
+   * phantom superclass when the class is a {@link com.ibm.wala.classLoader.BytecodeClass}
    */
   private final MissingSuperClassHandling superClassHandling;
 
   /**
    * Return a set of {@link IClass} that holds all superclasses of klass
-   * 
+   *
    * @param klass class in question
    * @return Set the result set
    */
@@ -177,12 +161,14 @@ public class ClassHierarchy implements IClassHierarchy {
         klass = klass.getSuperclass();
         if (klass != null && klass.getReference().getName().equals(rootTypeRef.getName())) {
           if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
-            throw new IllegalStateException("class " + klass + " is invalid, unexpected classloader");
+            throw new IllegalStateException(
+                "class " + klass + " is invalid, unexpected classloader");
           }
         }
       }
     } catch (NoSuperclassFoundException e) {
-      if (!superClassHandling.equals(MissingSuperClassHandling.NONE) && klass instanceof BytecodeClass) {
+      if (!superClassHandling.equals(MissingSuperClassHandling.NONE)
+          && klass instanceof BytecodeClass) {
         if (superClassHandling.equals(MissingSuperClassHandling.PHANTOM)) {
           // create a phantom superclass.  add it and the root class to the result
           IClass phantom = getPhantomSuperclass((BytecodeClass<?>) klass);
@@ -196,29 +182,42 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language,
-      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, MissingSuperClassHandling superClassHandling)
+  ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      Language language,
+      IProgressMonitor progressMonitor,
+      Map<TypeReference, Node> map,
+      MissingSuperClassHandling superClassHandling)
       throws ClassHierarchyException, IllegalArgumentException {
-    this(scope, factory, Collections.singleton(language), progressMonitor, map,
-        superClassHandling);
+    this(scope, factory, Collections.singleton(language), progressMonitor, map, superClassHandling);
   }
 
-  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor
-      progressMonitor, Map<TypeReference, Node> map, MissingSuperClassHandling superClassHandling)
+  ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      IProgressMonitor progressMonitor,
+      Map<TypeReference, Node> map,
+      MissingSuperClassHandling superClassHandling)
       throws ClassHierarchyException, IllegalArgumentException {
     this(scope, factory, scope.getLanguages(), progressMonitor, map, superClassHandling);
   }
 
-  ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages,
-      IProgressMonitor progressMonitor, Map<TypeReference, Node> map, MissingSuperClassHandling superClassHandling) throws
-      ClassHierarchyException, IllegalArgumentException {
+  ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      Collection<Language> languages,
+      IProgressMonitor progressMonitor,
+      Map<TypeReference, Node> map,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.
     Warnings.clear();
 
     this.map = map;
     this.superClassHandling = superClassHandling;
-    
+
     if (factory == null) {
       throw new IllegalArgumentException();
     }
@@ -236,7 +235,11 @@ public class ClassHierarchy implements IClassHierarchy {
     for (Language lang : this.languages) {
       if (lang.getRootType() != null && lang.getRootType() != this.rootTypeRef) {
         if (this.rootTypeRef != null) {
-          throw new IllegalArgumentException("AnalysisScope must have only 1 root type: " + lang.getRootType() + ", " + rootTypeRef);
+          throw new IllegalArgumentException(
+              "AnalysisScope must have only 1 root type: "
+                  + lang.getRootType()
+                  + ", "
+                  + rootTypeRef);
         } else {
           this.rootTypeRef = lang.getRootType();
         }
@@ -293,7 +296,8 @@ public class ClassHierarchy implements IClassHierarchy {
     }
 
     if (root == null) {
-      throw new ClassHierarchyException("failed to load root " + rootTypeRef + " of class hierarchy");
+      throw new ClassHierarchyException(
+          "failed to load root " + rootTypeRef + " of class hierarchy");
     }
 
     // perform numbering for subclass tests.
@@ -301,10 +305,9 @@ public class ClassHierarchy implements IClassHierarchy {
     ReferenceCleanser.registerClassHierarchy(this);
   }
 
-  /**
-   * Add all classes in a class loader to the hierarchy.
-   */
-  private void addAllClasses(IClassLoader loader, IProgressMonitor progressMonitor) throws CancelCHAConstructionException {
+  /** Add all classes in a class loader to the hierarchy. */
+  private void addAllClasses(IClassLoader loader, IProgressMonitor progressMonitor)
+      throws CancelCHAConstructionException {
     if (DEBUG) {
       System.err.println(("Add all classes from loader " + loader));
     }
@@ -321,7 +324,6 @@ public class ClassHierarchy implements IClassHierarchy {
       }
     }
     loader.removeAll(toRemove);
-
   }
 
   /**
@@ -330,13 +332,14 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public boolean addClass(IClass klass) {
-   
+
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
     if (klass.getReference().getName().equals(rootTypeRef.getName())) {
       if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
-        throw new IllegalArgumentException("class " + klass + " is invalid, unexpected classloader");
+        throw new IllegalArgumentException(
+            "class " + klass + " is invalid, unexpected classloader");
       }
     }
     if (DEBUG) {
@@ -348,7 +351,8 @@ public class ClassHierarchy implements IClassHierarchy {
       loadedSuperclasses = computeSuperclasses(klass);
       loadedSuperInterfaces = klass.getAllImplementedInterfaces();
     } catch (Exception e) {
-      if (!superClassHandling.equals(MissingSuperClassHandling.NONE) && e instanceof NoSuperclassFoundException) {
+      if (!superClassHandling.equals(MissingSuperClassHandling.NONE)
+          && e instanceof NoSuperclassFoundException) {
         // this must have been thrown by the getAllImplementedInterfaces() call.
         // for now, just pretend it implements no interfaces
         loadedSuperInterfaces = Collections.emptySet();
@@ -380,20 +384,19 @@ public class ClassHierarchy implements IClassHierarchy {
       } catch (NoSuperclassFoundException e) {
         assert !superClassHandling.equals(MissingSuperClassHandling.NONE);
 
-        if (superClassHandling.equals(MissingSuperClassHandling.ROOT))
-          superclass = getRootClass();
-        else
-          superclass = getPhantomSuperclass((BytecodeClass<?>) c);
+        if (superClassHandling.equals(MissingSuperClassHandling.ROOT)) superclass = getRootClass();
+        else superclass = getPhantomSuperclass((BytecodeClass<?>) c);
       }
       if (superclass != null) {
         workingSuperclasses.remove(superclass);
         Node supernode = findOrCreateNode(superclass);
         if (DEBUG) {
-          System.err.println(("addChild " + node.getJavaClass() + " to " + supernode.getJavaClass()));
+          System.err.println(
+              ("addChild " + node.getJavaClass() + " to " + supernode.getJavaClass()));
         }
         supernode.addChild(node);
         if (supernode.getJavaClass().getReference().equals(rootTypeRef)) {
-          
+
           assert root == null || root == supernode;
           root = supernode;
 
@@ -416,13 +419,16 @@ public class ClassHierarchy implements IClassHierarchy {
           continue;
         }
         if (!iface.isInterface()) {
-          Warnings.add(new Warning() {
-            
-            @Override
-            public String getMsg() {
-              return "class implements non-interface " + iface.getReference() + " as an interface";
-            }
-          });
+          Warnings.add(
+              new Warning() {
+
+                @Override
+                public String getMsg() {
+                  return "class implements non-interface "
+                      + iface.getReference()
+                      + " as an interface";
+                }
+              });
           continue;
         }
         recordImplements(klass, iface);
@@ -443,18 +449,17 @@ public class ClassHierarchy implements IClassHierarchy {
     return superClass;
   }
 
-  /**
-   * Record that a klass implements a particular interface
-   */
+  /** Record that a klass implements a particular interface */
   private void recordImplements(IClass klass, IClass iface) {
     Set<IClass> impls = MapUtil.findOrCreateSet(implementors, iface);
     impls.add(klass);
   }
 
   /**
-   * Find the possible targets of a call to a method reference. Note that if the reference is to an instance initialization method,
-   * we assume the method was called with invokespecial rather than invokevirtual.
-   * 
+   * Find the possible targets of a call to a method reference. Note that if the reference is to an
+   * instance initialization method, we assume the method was called with invokespecial rather than
+   * invokevirtual.
+   *
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
@@ -482,14 +487,14 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Find the possible targets of a call to a method reference
-   * 
+   *
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    */
   @SuppressWarnings("unchecked")
   private Set<IMethod> findOrCreateTargetSet(IClass declaredClass, MethodReference ref) {
-    Map<MethodReference, Set<IMethod>> classCache = (Map<MethodReference, Set<IMethod>>) CacheReference.get(targetCache
-        .get(declaredClass));
+    Map<MethodReference, Set<IMethod>> classCache =
+        (Map<MethodReference, Set<IMethod>>) CacheReference.get(targetCache.get(declaredClass));
     if (classCache == null) {
       classCache = HashMapFactory.make(3);
       targetCache.put(declaredClass, CacheReference.make(classCache));
@@ -504,7 +509,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Find the possible receivers of a call to a method reference
-   * 
+   *
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    */
@@ -534,12 +539,12 @@ public class ClassHierarchy implements IClassHierarchy {
     } else {
       return computeTargetsNotInterface(ref, declaredClass);
     }
-
   }
 
   /**
-   * Get the targets for a method ref invoked on a class klass. The klass had better not be an interface.
-   * 
+   * Get the targets for a method ref invoked on a class klass. The klass had better not be an
+   * interface.
+   *
    * @param ref method to invoke
    * @param klass declaringClass of receiver
    * @return Set the set of method implementations that might receive the message
@@ -550,8 +555,7 @@ public class ClassHierarchy implements IClassHierarchy {
     HashSet<IMethod> result = HashSetFactory.make(3);
     // if n is null, then for some reason this class is excluded
     // from the analysis. Return a result of no targets.
-    if (n == null)
-      return result;
+    if (n == null) return result;
 
     Selector selector = ref.getSelector();
 
@@ -570,7 +574,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Return the unique receiver of an invocation of method on an object of type m.getDeclaredClass
-   * 
+   *
    * @return IMethod, or null if no appropriate receiver is found.
    * @throws IllegalArgumentException if m is null
    */
@@ -621,7 +625,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Return the unique target of an invocation of method on an object of type declaringClass
-   * 
+   *
    * @param receiverClass type of receiver
    * @param selector method signature
    * @return Method resolved method abstraction
@@ -645,7 +649,13 @@ public class ClassHierarchy implements IClassHierarchy {
         return null;
       } else {
         if (DEBUG) {
-          System.err.println(("Attempt to resolve for " + receiverClass + " in superclass: " + superclass + ' ' + selector));
+          System.err.println(
+              ("Attempt to resolve for "
+                  + receiverClass
+                  + " in superclass: "
+                  + superclass
+                  + ' '
+                  + selector));
         }
         return resolveMethod(superclass, selector);
       }
@@ -654,7 +664,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Does a particular class contain (implement) a particular method?
-   * 
+   *
    * @param clazz class in question
    * @param selector method selector
    * @return the method if found, else null
@@ -665,7 +675,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Get the set of subclasses of a class that provide implementations of a method
-   * 
+   *
    * @param node abstraction of class in question
    * @param selector method signature
    * @return Set set of IMethods that override the method
@@ -710,10 +720,11 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2 iff n2.left
-   * &lt;= n1.left ^ n1.left &lt;= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall, OOPSLA 97
-   * 
-   * TODO: this implementation is recursive; un-recursify if needed
+   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree,
+   * n1 is a child of n2 iff n2.left &lt;= n1.left ^ n1.left &lt;= n2.right. Described as "relative
+   * numbering" by Vitek, Horspool, and Krall, OOPSLA 97
+   *
+   * <p>TODO: this implementation is recursive; un-recursify if needed
    */
   private int nextNumber = 1;
 
@@ -730,14 +741,12 @@ public class ClassHierarchy implements IClassHierarchy {
     N.right = nextNumber++;
   }
 
-  /**
-   * internal representation of a node in the class hiearachy, representing one java class.
-   */
+  /** internal representation of a node in the class hiearachy, representing one java class. */
   static final class Node {
 
     private final IClass klass;
 
-    final private Set<Node> children = HashSetFactory.make(3);
+    private final Set<Node> children = HashSetFactory.make(3);
 
     // the following two fields are used for efficient subclass tests.
     // After numbering the tree, n1 is a child of n2 iff
@@ -772,11 +781,10 @@ public class ClassHierarchy implements IClassHierarchy {
     public String toString() {
       StringBuilder result = new StringBuilder(100);
       result.append(klass.toString()).append(':');
-      for (Iterator<Node> i = children.iterator(); i.hasNext();) {
+      for (Iterator<Node> i = children.iterator(); i.hasNext(); ) {
         Node n = i.next();
         result.append(n.klass.toString());
-        if (i.hasNext())
-          result.append(',');
+        if (i.hasNext()) result.append(',');
       }
       return result.toString();
     }
@@ -790,7 +798,6 @@ public class ClassHierarchy implements IClassHierarchy {
     public boolean equals(Object obj) {
       return this == obj;
     }
-
   }
 
   @Override
@@ -798,9 +805,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return factory;
   }
 
-  /**
-   * @throws IllegalArgumentException if A is null
-   */
+  /** @throws IllegalArgumentException if A is null */
   @Override
   public IClass getLeastCommonSuperclass(IClass a, IClass b) {
     assert (a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage()));
@@ -828,7 +833,8 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       Set<IClass> superA;
       superA = getSuperclasses(a);
-      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + ' ' + b + ": " + superA + ", " + superB);
+      Assertions.UNREACHABLE(
+          "getLeastCommonSuperclass " + tempA + ' ' + b + ": " + superA + ", " + superB);
       return null;
     }
   }
@@ -851,8 +857,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
-    if (a.equals(b))
-      return a;
+    if (a.equals(b)) return a;
     IClass aClass = lookupClass(a);
     IClass bClass = lookupClass(b);
     if (aClass == null || bClass == null) {
@@ -870,7 +875,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Find a class in this class hierarchy.
-   * 
+   *
    * @return the {@link IClass} for a if found; null if can't find the class.
    * @throws IllegalArgumentException if A is null
    */
@@ -879,19 +884,18 @@ public class ClassHierarchy implements IClassHierarchy {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
-/** BEGIN Custom change: remember unresolved classes */
-    
+    /** BEGIN Custom change: remember unresolved classes */
     final IClass cls = lookupClassRecursive(a);
-    
+
     if (cls == null) {
       unresolved.add(a);
     }
-    
+
     return cls;
   }
-  
+
   private IClass lookupClassRecursive(TypeReference a) {
-/** END Custom change: remember unresolved classes */
+    /** END Custom change: remember unresolved classes */
     ClassLoaderReference loader = a.getClassLoader();
 
     ClassLoaderReference parent = loader.getParent();
@@ -945,7 +949,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Is c a subclass of T?
-   * 
+   *
    * @throws IllegalArgumentException if c is null
    */
   @Override
@@ -1011,8 +1015,9 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Does c implement i?
-   * 
-   * @return true iff i is an interface and c is a class that implements i, or c is an interface that extends i.
+   *
+   * @return true iff i is an interface and c is a class that implements i, or c is an interface
+   *     that extends i.
    */
   @Override
   public boolean implementsInterface(IClass c, IClass i) {
@@ -1030,7 +1035,8 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     if (c.isArrayClass()) {
       // arrays implement Cloneable and Serializable
-      return i.equals(lookupClass(TypeReference.JavaLangCloneable)) || i.equals(lookupClass(TypeReference.JavaIoSerializable));
+      return i.equals(lookupClass(TypeReference.JavaLangCloneable))
+          || i.equals(lookupClass(TypeReference.JavaIoSerializable));
     }
     Set<IClass> impls = implementors.get(i);
     if (impls != null && impls.contains(c)) {
@@ -1040,7 +1046,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if necessary.
+   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation.
+   * Consider caching if necessary.
    */
   @Override
   public Collection<IClass> computeSubClasses(TypeReference type) {
@@ -1065,9 +1072,10 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of Error
-   * 
-   * kind of ugly. a better scheme?
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses
+   * of Error
+   *
+   * <p>kind of ugly. a better scheme?
    */
   @Override
   public Collection<TypeReference> getJavaLangErrorTypes() {
@@ -1082,9 +1090,10 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of RuntimeException
-   * 
-   * kind of ugly. a better scheme?
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses
+   * of RuntimeException
+   *
+   * <p>kind of ugly. a better scheme?
    */
   @Override
   public Collection<TypeReference> getJavaLangRuntimeExceptionTypes() {
@@ -1099,8 +1108,9 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if necessary.
-   * 
+   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation.
+   * Consider caching if necessary.
+   *
    * @return Set of IClasses
    */
   private Set<IClass> computeSubClassesInternal(IClass T) {
@@ -1126,7 +1136,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * TODO: tune this if necessary
-   * 
+   *
    * @param type an interface
    * @return Set of IClass that represent implementors of the interface
    */
@@ -1146,9 +1156,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return new MapIterator<>(map.values().iterator(), toClass);
   }
 
-  /**
-   * @return The number of classes present in the class hierarchy.
-   */
+  /** @return The number of classes present in the class hierarchy. */
   @Override
   public int getNumberOfClasses() {
     return map.keySet().size();
@@ -1176,8 +1184,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the number of classes that immediately extend klass. if klass is an array class A[][]...[], we return number of
-   *         immediate subclasses of A. If A is primitive, we return 0.
+   * @return the number of classes that immediately extend klass. if klass is an array class
+   *     A[][]...[], we return number of immediate subclasses of A. If A is primitive, we return 0.
    */
   @Override
   public int getNumberOfImmediateSubclasses(IClass klass) {
@@ -1190,16 +1198,18 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we return array classes B[][]...[]
-   *         (same dimensionality) where B is an immediate subclass of A. If A is primitive, we return the empty set.
+   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we
+   *     return array classes B[][]...[] (same dimensionality) where B is an immediate subclass of
+   *     A. If A is primitive, we return the empty set.
    */
   @Override
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
     if (klass.isArrayClass()) {
-      return getImmediateArraySubclasses((ArrayClass)klass);
+      return getImmediateArraySubclasses((ArrayClass) klass);
     }
     Function<Node, IClass> node2Class = n -> n.klass;
-    return Iterator2Collection.toSet(new MapIterator<>(findNode(klass).children.iterator(), node2Class));
+    return Iterator2Collection.toSet(
+        new MapIterator<>(findNode(klass).children.iterator(), node2Class));
   }
 
   private Collection<IClass> getImmediateArraySubclasses(ArrayClass klass) {
@@ -1220,9 +1230,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  /**
-   * for an array class, get the innermost type, or null if it's primitive
-   */
+  /** for an array class, get the innermost type, or null if it's primitive */
   private IClass getInnermostTypeOfArrayClass(IClass klass) {
     TypeReference result = klass.getReference();
     while (result.isArrayType()) {
@@ -1249,9 +1257,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return map.get(c.getReference()).left;
   }
 
-  /**
-   * A warning for when we fail to resolve the type for a checkcast
-   */
+  /** A warning for when we fail to resolve the type for a checkcast */
   private static class ClassExclusion extends Warning {
 
     final TypeReference klass;
@@ -1276,9 +1282,9 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Does an expression c1 x := c2 y typecheck?
-   * 
-   * i.e. is c2 a subtype of c1?
-   * 
+   *
+   * <p>i.e. is c2 a subtype of c1?
+   *
    * @throws IllegalArgumentException if c1 is null
    * @throws IllegalArgumentException if c2 is null
    */
@@ -1301,7 +1307,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
-/** BEGIN Custom change: remember unresolved classes */
+  /** BEGIN Custom change: remember unresolved classes */
   private final Set<TypeReference> unresolved = HashSetFactory.make();
 
   @Override
@@ -1309,8 +1315,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return unresolved;
   }
 
-/** END Custom change: remember unresolved classes */
-
+  /** END Custom change: remember unresolved classes */
   public MissingSuperClassHandling getSuperClassHandling() {
     return superClassHandling;
   }

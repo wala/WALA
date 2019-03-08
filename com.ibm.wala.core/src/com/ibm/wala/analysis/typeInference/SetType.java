@@ -10,16 +10,16 @@
  */
 package com.ibm.wala.analysis.typeInference;
 
-import java.util.HashSet;
-import java.util.Iterator;
-
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
- * Abstraction of a set of {@link PointType}. These are immutable. TODO: fix for efficiency if needed.
+ * Abstraction of a set of {@link PointType}. These are immutable. TODO: fix for efficiency if
+ * needed.
  */
 public class SetType extends TypeAbstraction {
 
@@ -92,9 +92,7 @@ public class SetType extends TypeAbstraction {
     return hashCode;
   }
 
-  /**
-   * @return Iterator of the TypeReferences which compose this Set.
-   */
+  /** @return Iterator of the TypeReferences which compose this Set. */
   public Iterator<TypeReference> iteratePoints() {
     return types.iterator();
   }

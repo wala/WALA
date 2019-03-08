@@ -10,6 +10,13 @@
  */
 package com.ibm.wala.util.graph;
 
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.IteratorUtil;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.impl.GraphInverter;
+import com.ibm.wala.util.graph.traverse.DFS;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,28 +28,19 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.IteratorUtil;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.impl.GraphInverter;
-import com.ibm.wala.util.graph.traverse.DFS;
-
-/**
- * Utilities related to simple graph subset operations.
- */
+/** Utilities related to simple graph subset operations. */
 public class GraphSlicer {
 
   /**
    * Performs a backward slice.
-   * 
+   *
    * @param <T> type for nodes
    * @param g the graph to slice
    * @param p identifies targets for the backward slice
-   * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is reachable.
+   * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is
+   *     reachable.
    */
-  public static <T> Set<T> slice(Graph<T> g, Predicate<T> p){
+  public static <T> Set<T> slice(Graph<T> g, Predicate<T> p) {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
@@ -58,263 +56,263 @@ public class GraphSlicer {
     return result;
   }
 
-  /**
-   * Prune a graph to only the nodes accepted by the {@link Predicate} p
-   */
+  /** Prune a graph to only the nodes accepted by the {@link Predicate} p */
   public static <T> Graph<T> prune(final Graph<T> g, final Predicate<T> p) {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    final NodeManager<T> n = new NodeManager<T>() {
-      int nodeCount = -1;
+    final NodeManager<T> n =
+        new NodeManager<T>() {
+          int nodeCount = -1;
 
-      @Override
-      public Iterator<T> iterator() {
-        return new FilterIterator<>(g.iterator(), p);
-      }
+          @Override
+          public Iterator<T> iterator() {
+            return new FilterIterator<>(g.iterator(), p);
+          }
 
-      @Override
-      public Stream<T> stream() {
-        return g.stream().filter(p);
-      }
+          @Override
+          public Stream<T> stream() {
+            return g.stream().filter(p);
+          }
 
-      @Override
-      public int getNumberOfNodes() {
-        if (nodeCount == -1) {
-          nodeCount = IteratorUtil.count(iterator());
-        }
-        return nodeCount;
-      }
+          @Override
+          public int getNumberOfNodes() {
+            if (nodeCount == -1) {
+              nodeCount = IteratorUtil.count(iterator());
+            }
+            return nodeCount;
+          }
 
-      @Override
-      public void addNode(T n) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public void addNode(T n) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public void removeNode(T n) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public void removeNode(T n) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public boolean containsNode(T n) {
-        return p.test(n) && g.containsNode(n);
-      }
+          @Override
+          public boolean containsNode(T n) {
+            return p.test(n) && g.containsNode(n);
+          }
+        };
+    final EdgeManager<T> e =
+        new EdgeManager<T>() {
 
-    };
-    final EdgeManager<T> e = new EdgeManager<T>() {
+          @Override
+          public Iterator<T> getPredNodes(T n) {
+            return new FilterIterator<>(g.getPredNodes(n), p);
+          }
 
-      @Override
-      public Iterator<T> getPredNodes(T n) {
-        return new FilterIterator<>(g.getPredNodes(n), p);
-      }
+          @Override
+          public int getPredNodeCount(T n) {
+            return IteratorUtil.count(getPredNodes(n));
+          }
 
-      @Override
-      public int getPredNodeCount(T n) {
-        return IteratorUtil.count(getPredNodes(n));
-      }
+          @Override
+          public Iterator<T> getSuccNodes(T n) {
+            return new FilterIterator<>(g.getSuccNodes(n), p);
+          }
 
-      @Override
-      public Iterator<T> getSuccNodes(T n) {
-        return new FilterIterator<>(g.getSuccNodes(n), p);
-      }
+          @Override
+          public int getSuccNodeCount(T N) {
+            return IteratorUtil.count(getSuccNodes(N));
+          }
 
-      @Override
-      public int getSuccNodeCount(T N) {
-        return IteratorUtil.count(getSuccNodes(N));
-      }
+          @Override
+          public void addEdge(T src, T dst) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public void addEdge(T src, T dst) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public void removeEdge(T src, T dst) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public void removeEdge(T src, T dst) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public void removeAllIncidentEdges(T node) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public void removeAllIncidentEdges(T node) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public void removeIncomingEdges(T node) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public void removeIncomingEdges(T node) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public void removeOutgoingEdges(T node) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public void removeOutgoingEdges(T node) {
-        Assertions.UNREACHABLE();
-      }
+          @Override
+          public boolean hasEdge(T src, T dst) {
+            return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
+          }
+        };
+    AbstractGraph<T> output =
+        new AbstractGraph<T>() {
 
-      @Override
-      public boolean hasEdge(T src, T dst) {
-        return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
-      }
+          @Override
+          protected NodeManager<T> getNodeManager() {
+            return n;
+          }
 
-    };
-    AbstractGraph<T> output = new AbstractGraph<T>() {
-
-      @Override
-      protected NodeManager<T> getNodeManager() {
-        return n;
-      }
-
-      @Override
-      protected EdgeManager<T> getEdgeManager() {
-        return e;
-      }
-
-    };
+          @Override
+          protected EdgeManager<T> getEdgeManager() {
+            return e;
+          }
+        };
 
     return output;
   }
-  
+
   public static <E> AbstractGraph<E> project(final Graph<E> G, final Predicate<E> fmember) {
-    final NodeManager<E> nodeManager = new NodeManager<E>() {
-      private int count = -1;
+    final NodeManager<E> nodeManager =
+        new NodeManager<E>() {
+          private int count = -1;
 
-      @Override
-      public void addNode(E n) {
-        throw new UnsupportedOperationException();
-      }
+          @Override
+          public void addNode(E n) {
+            throw new UnsupportedOperationException();
+          }
 
-      @Override
-      public boolean containsNode(E N) {
-        return G.containsNode(N) && fmember.test(N);
-      }
+          @Override
+          public boolean containsNode(E N) {
+            return G.containsNode(N) && fmember.test(N);
+          }
 
-      @Override
-      public int getNumberOfNodes() {
-        if (count == -1) {
-          count = IteratorUtil.count(iterator());
-        }
-        return count;
-      }
+          @Override
+          public int getNumberOfNodes() {
+            if (count == -1) {
+              count = IteratorUtil.count(iterator());
+            }
+            return count;
+          }
 
-      @Override
-      public Iterator<E> iterator() {
-        return new FilterIterator<>(G.iterator(), fmember);
-      }
+          @Override
+          public Iterator<E> iterator() {
+            return new FilterIterator<>(G.iterator(), fmember);
+          }
 
-      @Override
-      public Stream<E> stream() {
-        return G.stream().filter(fmember);
-      }
+          @Override
+          public Stream<E> stream() {
+            return G.stream().filter(fmember);
+          }
 
-      @Override
-      public void removeNode(E n) {
-        throw new UnsupportedOperationException();
-      }
-    };
+          @Override
+          public void removeNode(E n) {
+            throw new UnsupportedOperationException();
+          }
+        };
 
-    final EdgeManager<E> edgeManager = new EdgeManager<E>() {
+    final EdgeManager<E> edgeManager =
+        new EdgeManager<E>() {
 
-      private Map<E, Collection<E>> succs = new HashMap<>();
+          private Map<E, Collection<E>> succs = new HashMap<>();
 
-      private Map<E, Collection<E>> preds = new HashMap<>();
+          private Map<E, Collection<E>> preds = new HashMap<>();
 
-      private Set<E> getConnected(E inst, Function<E, Iterator<? extends E>> fconnected) {
-        Set<E> result = new LinkedHashSet<>();
-        Set<E> seenInsts = new HashSet<>();
-        Set<E> newInsts = Iterator2Collection.toSet(fconnected.apply(inst));
-        while (!newInsts.isEmpty()) {
-          Set<E> nextInsts = new HashSet<>();
-          for (E s : newInsts) {
-            if (seenInsts.add(s)) {
-              if (nodeManager.containsNode(s)) {
-                result.add(s);
-              } else {
-                Iterator<? extends E> ss = fconnected.apply(s);
-                while (ss.hasNext()) {
-                  E n = ss.next();
-                  if (!seenInsts.contains(n)) {
-                    nextInsts.add(n);
+          private Set<E> getConnected(E inst, Function<E, Iterator<? extends E>> fconnected) {
+            Set<E> result = new LinkedHashSet<>();
+            Set<E> seenInsts = new HashSet<>();
+            Set<E> newInsts = Iterator2Collection.toSet(fconnected.apply(inst));
+            while (!newInsts.isEmpty()) {
+              Set<E> nextInsts = new HashSet<>();
+              for (E s : newInsts) {
+                if (seenInsts.add(s)) {
+                  if (nodeManager.containsNode(s)) {
+                    result.add(s);
+                  } else {
+                    Iterator<? extends E> ss = fconnected.apply(s);
+                    while (ss.hasNext()) {
+                      E n = ss.next();
+                      if (!seenInsts.contains(n)) {
+                        nextInsts.add(n);
+                      }
+                    }
                   }
                 }
               }
+              newInsts = nextInsts;
             }
+            return result;
           }
-          newInsts = nextInsts;
-        }
-        return result;
-      }
 
-      private void setPredNodes(E N) {
-        preds.put(N, getConnected(N, G::getPredNodes));
-      }
+          private void setPredNodes(E N) {
+            preds.put(N, getConnected(N, G::getPredNodes));
+          }
 
-      private void setSuccNodes(E N) {
-        succs.put(N, getConnected(N, G::getSuccNodes));
-      }
+          private void setSuccNodes(E N) {
+            succs.put(N, getConnected(N, G::getSuccNodes));
+          }
 
-      @Override
-      public int getPredNodeCount(E N) {
-        if (!preds.containsKey(N)) {
-          setPredNodes(N);
-        }
-        return preds.get(N).size();
-      }
+          @Override
+          public int getPredNodeCount(E N) {
+            if (!preds.containsKey(N)) {
+              setPredNodes(N);
+            }
+            return preds.get(N).size();
+          }
 
-      @Override
-      public Iterator<E> getPredNodes(E N) {
-        if (!preds.containsKey(N)) {
-          setPredNodes(N);
-        }
-        return preds.get(N).iterator();
-      }
+          @Override
+          public Iterator<E> getPredNodes(E N) {
+            if (!preds.containsKey(N)) {
+              setPredNodes(N);
+            }
+            return preds.get(N).iterator();
+          }
 
-      @Override
-      public int getSuccNodeCount(E N) {
-        if (!succs.containsKey(N)) {
-          setSuccNodes(N);
-        }
-        return succs.get(N).size();
-      }
+          @Override
+          public int getSuccNodeCount(E N) {
+            if (!succs.containsKey(N)) {
+              setSuccNodes(N);
+            }
+            return succs.get(N).size();
+          }
 
-      @Override
-      public Iterator<E> getSuccNodes(E N) {
-        if (!succs.containsKey(N)) {
-          setSuccNodes(N);
-        }
-        return succs.get(N).iterator();
-      }
+          @Override
+          public Iterator<E> getSuccNodes(E N) {
+            if (!succs.containsKey(N)) {
+              setSuccNodes(N);
+            }
+            return succs.get(N).iterator();
+          }
 
-      @Override
-      public boolean hasEdge(E src, E dst) {
-        if (!preds.containsKey(dst)) {
-          setPredNodes(dst);
-        }
-        return preds.get(dst).contains(src);
-      }
+          @Override
+          public boolean hasEdge(E src, E dst) {
+            if (!preds.containsKey(dst)) {
+              setPredNodes(dst);
+            }
+            return preds.get(dst).contains(src);
+          }
 
-      @Override
-      public void addEdge(E src, E dst) {
-        throw new UnsupportedOperationException();
-      }
+          @Override
+          public void addEdge(E src, E dst) {
+            throw new UnsupportedOperationException();
+          }
 
-      @Override
-      public void removeAllIncidentEdges(E node) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-      }
+          @Override
+          public void removeAllIncidentEdges(E node) throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+          }
 
-      @Override
-      public void removeEdge(E src, E dst) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-      }
+          @Override
+          public void removeEdge(E src, E dst) throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+          }
 
-      @Override
-      public void removeIncomingEdges(E node) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-      }
+          @Override
+          public void removeIncomingEdges(E node) throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+          }
 
-      @Override
-      public void removeOutgoingEdges(E node) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-      }
-    };
+          @Override
+          public void removeOutgoingEdges(E node) throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+          }
+        };
 
     return new AbstractGraph<E>() {
 
@@ -327,9 +325,6 @@ public class GraphSlicer {
       protected NodeManager<E> getNodeManager() {
         return nodeManager;
       }
-
     };
-
   }
-
 }

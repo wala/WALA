@@ -11,9 +11,9 @@
 package com.ibm.wala.shrikeBT;
 
 public final class NewInstruction extends Instruction {
-  final private String type;
+  private final String type;
 
-  final private short arrayBoundsCount;
+  private final short arrayBoundsCount;
 
   protected NewInstruction(short opcode, String type, short arrayBoundsCount) {
     super(opcode);
@@ -22,12 +22,14 @@ public final class NewInstruction extends Instruction {
   }
 
   /**
-   * @param type the type of the object that will be returned (in JVM format, e.g., [Ljava/lang/String;)
-   * @param arrayBoundsCount the number of array dimensions to preconstruct (equal to the number of integer parameters this
-   *          instruction expects)
+   * @param type the type of the object that will be returned (in JVM format, e.g.,
+   *     [Ljava/lang/String;)
+   * @param arrayBoundsCount the number of array dimensions to preconstruct (equal to the number of
+   *     integer parameters this instruction expects)
    * @throws IllegalArgumentException if type is null
    */
-  public static NewInstruction make(String type, int arrayBoundsCount) throws IllegalArgumentException {
+  public static NewInstruction make(String type, int arrayBoundsCount)
+      throws IllegalArgumentException {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
@@ -35,11 +37,13 @@ public final class NewInstruction extends Instruction {
       throw new IllegalArgumentException("Too many array bounds: " + arrayBoundsCount);
     } else {
       if (type.length() < arrayBoundsCount + 1) {
-        throw new IllegalArgumentException("Not enough array nesting in " + type + " for bounds count " + arrayBoundsCount);
+        throw new IllegalArgumentException(
+            "Not enough array nesting in " + type + " for bounds count " + arrayBoundsCount);
       }
       for (int i = 0; i < arrayBoundsCount; i++) {
         if (type.charAt(i) != '[') {
-          throw new IllegalArgumentException("Not enough array nesting in " + type + " for bounds count " + arrayBoundsCount);
+          throw new IllegalArgumentException(
+              "Not enough array nesting in " + type + " for bounds count " + arrayBoundsCount);
         }
       }
 

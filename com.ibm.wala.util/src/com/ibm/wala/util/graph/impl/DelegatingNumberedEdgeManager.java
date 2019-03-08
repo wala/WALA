@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.util.graph.impl;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -20,11 +18,11 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
+import java.util.Iterator;
 
-/**
- * An object that delegates edge management to the nodes, {@link INodeWithNumberedEdges}
- */
-public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> implements NumberedEdgeManager<T> {
+/** An object that delegates edge management to the nodes, {@link INodeWithNumberedEdges} */
+public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
+    implements NumberedEdgeManager<T> {
 
   private final DelegatingNumberedNodeManager<T> nodeManager;
 
@@ -199,5 +197,4 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     IntSet succ = en.getSuccNumbers();
     return (succ == null) ? new SparseIntSet() : succ;
   }
-
 }

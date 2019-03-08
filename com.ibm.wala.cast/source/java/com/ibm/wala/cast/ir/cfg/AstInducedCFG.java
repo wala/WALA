@@ -40,55 +40,39 @@ public class AstInducedCFG extends InducedCFG {
     }
 
     @Override
-    public void visitPropertyRead(AstPropertyRead inst) {
-    }
+    public void visitPropertyRead(AstPropertyRead inst) {}
 
     @Override
-    public void visitPropertyWrite(AstPropertyWrite inst) {
-    }
+    public void visitPropertyWrite(AstPropertyWrite inst) {}
 
     @Override
-    public void visitAstLexicalRead(AstLexicalRead inst) {
-    }
+    public void visitAstLexicalRead(AstLexicalRead inst) {}
 
     @Override
-    public void visitAstLexicalWrite(AstLexicalWrite inst) {
-    }
+    public void visitAstLexicalWrite(AstLexicalWrite inst) {}
 
     @Override
-    public void visitAstGlobalRead(AstGlobalRead instruction) {
-    }
+    public void visitAstGlobalRead(AstGlobalRead instruction) {}
 
     @Override
-    public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-    }
+    public void visitAstGlobalWrite(AstGlobalWrite instruction) {}
 
     @Override
-    public void visitAssert(AstAssertInstruction instruction) {
-	
-    }
+    public void visitAssert(AstAssertInstruction instruction) {}
 
     @Override
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-
-    }
+    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
 
     @Override
-    public void visitEachElementGet(EachElementGetInstruction inst) {
-
-    }
+    public void visitEachElementGet(EachElementGetInstruction inst) {}
 
     @Override
-    public void visitIsDefined(AstIsDefinedInstruction inst) {
-
-    }
+    public void visitIsDefined(AstIsDefinedInstruction inst) {}
 
     @Override
-    public void visitEcho(AstEchoInstruction inst) {
-
-    }
+    public void visitEcho(AstEchoInstruction inst) {}
   }
-    
+
   protected class AstBranchVisitor extends BranchVisitor implements AstInstructionVisitor {
 
     protected AstBranchVisitor(boolean[] r) {
@@ -96,50 +80,39 @@ public class AstInducedCFG extends InducedCFG {
     }
 
     @Override
-    public void visitPropertyRead(AstPropertyRead inst) {
-    }
+    public void visitPropertyRead(AstPropertyRead inst) {}
 
     @Override
-    public void visitPropertyWrite(AstPropertyWrite inst) {
-    }
+    public void visitPropertyWrite(AstPropertyWrite inst) {}
 
     @Override
-    public void visitAstLexicalRead(AstLexicalRead inst) {
-    }
+    public void visitAstLexicalRead(AstLexicalRead inst) {}
 
     @Override
-    public void visitAstLexicalWrite(AstLexicalWrite inst) {
-    }
+    public void visitAstLexicalWrite(AstLexicalWrite inst) {}
 
     @Override
-    public void visitAstGlobalRead(AstGlobalRead instruction) {
-    }
-    
-    @Override
-    public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-    }
+    public void visitAstGlobalRead(AstGlobalRead instruction) {}
 
     @Override
-    public void visitAssert(AstAssertInstruction instruction) {
-    }
+    public void visitAstGlobalWrite(AstGlobalWrite instruction) {}
 
     @Override
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-    }
+    public void visitAssert(AstAssertInstruction instruction) {}
 
     @Override
-    public void visitEachElementGet(EachElementGetInstruction inst) {
-    }
+    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
 
     @Override
-    public void visitIsDefined(AstIsDefinedInstruction inst) {
-    }
+    public void visitEachElementGet(EachElementGetInstruction inst) {}
 
     @Override
-    public void visitEcho(AstEchoInstruction inst) {
-    }
+    public void visitIsDefined(AstIsDefinedInstruction inst) {}
+
+    @Override
+    public void visitEcho(AstEchoInstruction inst) {}
   }
-    
+
   @Override
   protected BranchVisitor makeBranchVisitor(boolean[] r) {
     return new AstBranchVisitor(r);
@@ -149,5 +122,4 @@ public class AstInducedCFG extends InducedCFG {
   protected PEIVisitor makePEIVisitor(boolean[] r) {
     return new AstPEIVisitor(r);
   }
-
 }

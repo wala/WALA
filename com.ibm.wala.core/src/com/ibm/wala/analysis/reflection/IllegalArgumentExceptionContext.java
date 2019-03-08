@@ -14,7 +14,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
-
 public class IllegalArgumentExceptionContext implements Context {
 
   @Override

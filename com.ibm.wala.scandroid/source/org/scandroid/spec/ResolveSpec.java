@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,14 +48,14 @@
 package org.scandroid.spec;
 
 class ResolvedSpec {
-    ResolvedSpec() {
-//        AndroidSpecs spec = new AndroidSpecs();
-//        
-//        for(MethodNamePattern m: spec.getEntrypointSpecs()) {
-//        }
-//        for(SourceSpec s: spec.getSourceSpecs()) {
-//        }
-//        for(ISinkSpec s: spec.getSinkSpecs()) {
-//        }
-    }
+  ResolvedSpec() {
+    //        AndroidSpecs spec = new AndroidSpecs();
+    //
+    //        for(MethodNamePattern m: spec.getEntrypointSpecs()) {
+    //        }
+    //        for(SourceSpec s: spec.getSourceSpecs()) {
+    //        }
+    //        for(ISinkSpec s: spec.getSinkSpecs()) {
+    //        }
+  }
 }

@@ -10,14 +10,10 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
-/**
- * @param <T> represents type of nodes in the supergraph.
- */
+/** @param <T> represents type of nodes in the supergraph. */
 public interface ITabulationWorklist<T> {
 
-  /**
-   * @return the first object in the priority queue
-   */
+  /** @return the first object in the priority queue */
   PathEdge<T> take();
 
   public void insert(PathEdge<T> elt);

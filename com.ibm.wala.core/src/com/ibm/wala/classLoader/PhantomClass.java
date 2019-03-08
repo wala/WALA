@@ -4,18 +4,13 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
-
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * dummy class representing a missing superclass
- */
+/** dummy class representing a missing superclass */
 public class PhantomClass extends SyntheticClass {
 
-  /**
-   * @param T type reference describing this class
-   */
+  /** @param T type reference describing this class */
   public PhantomClass(TypeReference T, IClassHierarchy cha) {
     super(T, cha);
   }

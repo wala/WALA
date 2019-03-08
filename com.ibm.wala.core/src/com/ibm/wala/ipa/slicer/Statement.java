@@ -12,12 +12,25 @@ package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/**
- * Identifier of a statement in an SDG.
- */
+/** Identifier of a statement in an SDG. */
 public abstract class Statement {
   public static enum Kind {
-    NORMAL, PHI, PI, CATCH, PARAM_CALLER, PARAM_CALLEE, NORMAL_RET_CALLER, NORMAL_RET_CALLEE, EXC_RET_CALLER, EXC_RET_CALLEE, HEAP_PARAM_CALLER, HEAP_PARAM_CALLEE, HEAP_RET_CALLER, HEAP_RET_CALLEE, METHOD_ENTRY, METHOD_EXIT
+    NORMAL,
+    PHI,
+    PI,
+    CATCH,
+    PARAM_CALLER,
+    PARAM_CALLEE,
+    NORMAL_RET_CALLER,
+    NORMAL_RET_CALLEE,
+    EXC_RET_CALLER,
+    EXC_RET_CALLEE,
+    HEAP_PARAM_CALLER,
+    HEAP_PARAM_CALLEE,
+    HEAP_RET_CALLER,
+    HEAP_RET_CALLEE,
+    METHOD_ENTRY,
+    METHOD_EXIT
   }
 
   private final CGNode node;
@@ -46,18 +59,13 @@ public abstract class Statement {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final Statement other = (Statement) obj;
     if (node == null) {
-      if (other.node != null)
-        return false;
-    } else if (!node.equals(other.node))
-      return false;
+      if (other.node != null) return false;
+    } else if (!node.equals(other.node)) return false;
     return true;
   }
 
@@ -65,5 +73,4 @@ public abstract class Statement {
   public String toString() {
     return getKind().toString() + ':' + getNode();
   }
-
 }

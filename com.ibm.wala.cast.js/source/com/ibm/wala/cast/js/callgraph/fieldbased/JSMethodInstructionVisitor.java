@@ -20,50 +20,48 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 
 /**
- * A {@link JSAbstractInstructionVisitor} that is used to only visit instructions of a single method.
- * 
- * @author mschaefer
+ * A {@link JSAbstractInstructionVisitor} that is used to only visit instructions of a single
+ * method.
  *
+ * @author mschaefer
  */
 public class JSMethodInstructionVisitor extends JSAbstractInstructionVisitor {
 
-	protected final IMethod method;
-	protected final SymbolTable symtab;
-	protected final DefUse du;
+  protected final IMethod method;
+  protected final SymbolTable symtab;
+  protected final DefUse du;
 
-	public JSMethodInstructionVisitor(IMethod method, SymbolTable symtab, DefUse du) {
-		this.method = method;
-		this.symtab = symtab;
-		this.du = du;
-	}
+  public JSMethodInstructionVisitor(IMethod method, SymbolTable symtab, DefUse du) {
+    this.method = method;
+    this.symtab = symtab;
+    this.du = du;
+  }
 
-	/**
-	 * Determine whether {@code invk} corresponds to a function declaration or function expression.
-	 * 
-	 * TODO: A bit hackish. Is there a more principled way to do this?
-	 */
-	protected boolean isFunctionConstructorInvoke(JavaScriptInvoke invk) {
-	    /*
-	     * Function objects are allocated by explicit constructor invocations like this:
-	     * 
-	     *   v8 = global:global Function
-	     *   v4 = construct v8@2 v6:#L<fullFunctionName> exception:<nd>
-	     */
-		if(invk.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
-			int fn = invk.getFunction();
-			SSAInstruction fndef = du.getDef(fn);
-			if(fndef instanceof AstGlobalRead) {
-				AstGlobalRead agr = (AstGlobalRead)fndef;
-				if(agr.getGlobalName().equals("global Function")) {
-					if(invk.getNumberOfPositionalParameters() != 2)
-						return false;
-					// this may be a genuine use of "new Function()", not a declaration/expression
-					if(!symtab.isStringConstant(invk.getUse(1)))
-						return false;
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+  /**
+   * Determine whether {@code invk} corresponds to a function declaration or function expression.
+   *
+   * <p>TODO: A bit hackish. Is there a more principled way to do this?
+   */
+  protected boolean isFunctionConstructorInvoke(JavaScriptInvoke invk) {
+    /*
+     * Function objects are allocated by explicit constructor invocations like this:
+     *
+     *   v8 = global:global Function
+     *   v4 = construct v8@2 v6:#L<fullFunctionName> exception:<nd>
+     */
+    if (invk.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
+      int fn = invk.getFunction();
+      SSAInstruction fndef = du.getDef(fn);
+      if (fndef instanceof AstGlobalRead) {
+        AstGlobalRead agr = (AstGlobalRead) fndef;
+        if (agr.getGlobalName().equals("global Function")) {
+          if (invk.getNumberOfPositionalParameters() != 2) return false;
+          // this may be a genuine use of "new Function()", not a declaration/expression
+          if (!symtab.isStringConstant(invk.getUse(1))) return false;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }

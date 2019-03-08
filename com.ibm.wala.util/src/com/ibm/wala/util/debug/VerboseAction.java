@@ -11,12 +11,9 @@
 package com.ibm.wala.util.debug;
 
 /**
- * An optional interface for data structures that provide a 
- * verbose option for debugging purposes.
+ * An optional interface for data structures that provide a verbose option for debugging purposes.
  */
 public interface VerboseAction {
-  /**
-   * optional method used for performance debugging
-   */
+  /** optional method used for performance debugging */
   void performVerboseAction();
 }

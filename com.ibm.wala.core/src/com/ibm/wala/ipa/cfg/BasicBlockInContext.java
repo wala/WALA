@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.cfg;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -20,11 +18,11 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
+import java.util.Iterator;
 
-/**
- * A helper class to make the ipcfg work correctly with context-sensitive call graphs.
- */
-public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber implements ISSABasicBlock {
+/** A helper class to make the ipcfg work correctly with context-sensitive call graphs. */
+public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber
+    implements ISSABasicBlock {
   private final T delegate;
 
   private final CGNode node;
@@ -112,23 +110,16 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final BasicBlockInContext<?> other = (BasicBlockInContext<?>) obj;
     if (delegate == null) {
-      if (other.delegate != null)
-        return false;
-    } else if (!delegate.equals(other.delegate))
-      return false;
+      if (other.delegate != null) return false;
+    } else if (!delegate.equals(other.delegate)) return false;
     if (node == null) {
-      if (other.node != null)
-        return false;
-    } else if (!node.equals(other.node))
-      return false;
+      if (other.node != null) return false;
+    } else if (!node.equals(other.node)) return false;
     return true;
   }
 
@@ -164,5 +155,4 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   public Iterator<SSAPiInstruction> iteratePis() {
     return delegate.iteratePis();
   }
-
 }

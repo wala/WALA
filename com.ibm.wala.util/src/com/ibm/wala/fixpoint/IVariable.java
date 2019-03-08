@@ -12,35 +12,29 @@ package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.INodeWithNumber;
 
-
-/**
- * Represents a single variable in a fixed-point iterative system.
- */
+/** Represents a single variable in a fixed-point iterative system. */
 public interface IVariable<T extends IVariable<T>> extends INodeWithNumber {
-  
+
   /**
-   * Variables must allow the solver implementation to get/set an order number,
-   * which the solver uses to control evaluation order.
-   * 
-   * It might be cleaner to hold this on the side, but we cannot tolerate any
-   * extra space.  TODO: consider moving this functionality to a subinterface?
-   * 
+   * Variables must allow the solver implementation to get/set an order number, which the solver
+   * uses to control evaluation order.
+   *
+   * <p>It might be cleaner to hold this on the side, but we cannot tolerate any extra space. TODO:
+   * consider moving this functionality to a subinterface?
+   *
    * @return a number used to order equation evaluation
    */
   int getOrderNumber();
 
   /**
-   * Variables must allow the solver implementation to get/set an order number,
-   * which the solver uses to control evaluation order.
-   * 
-   * It might be cleaner to hold this on the side, but we cannot tolerate any
-   * extra space.  TODO: consider moving this functionality to a subinterface?
+   * Variables must allow the solver implementation to get/set an order number, which the solver
+   * uses to control evaluation order.
+   *
+   * <p>It might be cleaner to hold this on the side, but we cannot tolerate any extra space. TODO:
+   * consider moving this functionality to a subinterface?
    */
   public abstract void setOrderNumber(int i);
 
-  /**
-    * Set this variable to have the same state as another one
-    */
+  /** Set this variable to have the same state as another one */
   public void copyState(T v);
-
 }

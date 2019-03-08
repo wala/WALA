@@ -20,13 +20,12 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
-/**
- * A basic context selector that ignores context.
- */
+/** A basic context selector that ignores context. */
 public class ContextInsensitiveSelector implements ContextSelector {
 
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     return Everywhere.EVERYWHERE;
   }
 
@@ -34,5 +33,4 @@ public class ContextInsensitiveSelector implements ContextSelector {
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return EmptyIntSet.instance;
   }
-
 }

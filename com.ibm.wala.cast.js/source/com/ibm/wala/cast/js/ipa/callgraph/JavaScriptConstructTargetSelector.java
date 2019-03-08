@@ -21,21 +21,19 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
-/**
- * generates instructions to simulate the semantics of JS constructor invocations
- *
- */
+/** generates instructions to simulate the semantics of JS constructor invocations */
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private final MethodTargetSelector base;
 
   private final JavaScriptConstructorFunctions constructors;
-  
+
   public JavaScriptConstructTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
     this.constructors = new JavaScriptConstructorFunctions(cha);
     this.base = base;
   }
 
-  public JavaScriptConstructTargetSelector(JavaScriptConstructorFunctions constructors, MethodTargetSelector base) {
+  public JavaScriptConstructTargetSelector(
+      JavaScriptConstructorFunctions constructors, MethodTargetSelector base) {
     this.constructors = constructors;
     this.base = base;
   }
@@ -47,7 +45,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
       SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
       assert callStmts.length == 1;
       int nargs = callStmts[0].getNumberOfPositionalParameters();
-      return constructors.findOrCreateConstructorMethod(callerIR, callStmts[0], receiver, nargs - 1);
+      return constructors.findOrCreateConstructorMethod(
+          callerIR, callStmts[0], receiver, nargs - 1);
     } else {
       return base.getCalleeTarget(caller, site, receiver);
     }

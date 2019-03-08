@@ -13,7 +13,7 @@ package dynamicCG;
 
 public class MainClass {
   private final Object x;
-    
+
   private MainClass(Object x) {
     this.x = x;
   }
@@ -21,11 +21,11 @@ public class MainClass {
   private final String printNull() {
     return "*null*";
   }
-  
+
   private String callSomething(Object x) {
-    return "mc:" + (x==null? printNull(): x.toString());
+    return "mc:" + (x == null ? printNull() : x.toString());
   }
-  
+
   private String toStringImpl() {
     try {
       return "mc:" + x.toString();
@@ -33,12 +33,12 @@ public class MainClass {
       return callSomething(x);
     }
   }
-  
+
   @Override
   public String toString() {
     return toStringImpl();
   }
-  
+
   public static void main(String[] args) {
     MainClass mc = new MainClass(new ExtraClass("ExtraClass"));
     System.err.println(mc.toString());

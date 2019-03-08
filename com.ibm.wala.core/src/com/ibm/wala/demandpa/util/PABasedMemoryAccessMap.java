@@ -11,11 +11,6 @@
 
 package com.ibm.wala.demandpa.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -31,13 +26,16 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.thin.CISlicer;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * A {@link MemoryAccessMap} that makes use of a pre-computed
- * {@link PointerAnalysis} to reduce the number of considered accesses.
- * 
+ * A {@link MemoryAccessMap} that makes use of a pre-computed {@link PointerAnalysis} to reduce the
+ * number of considered accesses.
+ *
  * @author manu
- * 
  */
 public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
@@ -52,14 +50,23 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   private final Map<PointerKey, Set<Statement>> invRef;
 
   public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    this(pa, new SDG<>(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
+    this(
+        pa,
+        new SDG<>(
+            cg,
+            pa,
+            DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS,
+            ControlDependenceOptions.NONE));
   }
 
   public PABasedMemoryAccessMap(PointerAnalysis<InstanceKey> pa, SDG<InstanceKey> sdg) {
     this(pa, CISlicer.scanForMod(sdg, pa, true, ModRef.make()), CISlicer.scanForRef(sdg, pa));
   }
-  
-  public PABasedMemoryAccessMap(PointerAnalysis<InstanceKey> pa, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
+
+  public PABasedMemoryAccessMap(
+      PointerAnalysis<InstanceKey> pa,
+      Map<Statement, Set<PointerKey>> mod,
+      Map<Statement, Set<PointerKey>> ref) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }
@@ -132,7 +139,8 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     return result;
   }
 
-  private static void convertStmtsToMemoryAccess(Collection<Statement> stmts, Collection<MemoryAccess> result) {
+  private static void convertStmtsToMemoryAccess(
+      Collection<Statement> stmts, Collection<MemoryAccess> result) {
     if (stmts == null) {
       return;
     }
@@ -141,12 +149,12 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     }
     for (Statement s : stmts) {
       switch (s.getKind()) {
-      case NORMAL:
-        NormalStatement normStmt = (NormalStatement) s;
-        result.add(new MemoryAccess(normStmt.getInstructionIndex(), normStmt.getNode()));
-        break;
-      default:
-        Assertions.UNREACHABLE();
+        case NORMAL:
+          NormalStatement normStmt = (NormalStatement) s;
+          result.add(new MemoryAccess(normStmt.getInstructionIndex(), normStmt.getNode()));
+          break;
+        default:
+          Assertions.UNREACHABLE();
       }
     }
   }
@@ -155,5 +163,4 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   public HeapModel getHeapModel() {
     return heapModel;
   }
-
 }

@@ -22,8 +22,8 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
- * This context selector selects a context based on whether the receiver type
- * dispatches to a given method.
+ * This context selector selects a context based on whether the receiver type dispatches to a given
+ * method.
  */
 public class TargetMethodContextSelector implements ContextSelector {
 
@@ -34,7 +34,8 @@ public class TargetMethodContextSelector implements ContextSelector {
   }
 
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] R) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] R) {
     if (R == null || R[0] == null) {
       throw new IllegalArgumentException("R is null");
     }
@@ -66,20 +67,19 @@ public class TargetMethodContextSelector implements ContextSelector {
 
       @Override
       public boolean equals(Object o) {
-        return (o instanceof Context) && 
-            ((Context)o).isA(MethodDispatchContext.class) && 
-            ((Context)o).get(ContextKey.TARGET).equals(M);
+        return (o instanceof Context)
+            && ((Context) o).isA(MethodDispatchContext.class)
+            && ((Context) o).get(ContextKey.TARGET).equals(M);
       }
     }
 
     return new MethodDispatchContext();
   }
 
-  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+  private static final IntSet thisParameter = IntSetUtil.make(new int[] {0});
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return thisParameter;
   }
-
 }

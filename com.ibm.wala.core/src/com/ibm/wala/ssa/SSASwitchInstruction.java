@@ -13,9 +13,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.util.intset.IntIterator;
 
-/**
- * SSA instruction representing a switch statement.
- */
+/** SSA instruction representing a switch statement. */
 public class SSASwitchInstruction extends SSAInstruction {
   private final int val;
 
@@ -24,7 +22,8 @@ public class SSASwitchInstruction extends SSAInstruction {
   private final int[] casesAndLabels;
 
   /**
-   * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each switch case branches to.
+   * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each switch
+   * case branches to.
    */
   public SSASwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels) {
     super(iindex);
@@ -36,10 +35,11 @@ public class SSASwitchInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert uses == null || uses.length == 1;
-    for(int i = 1; i < casesAndLabels.length; i += 2) {
+    for (int i = 1; i < casesAndLabels.length; i += 2) {
       assert casesAndLabels[i] != iindex : "do not branch to self: " + this;
     }
-    return insts.SwitchInstruction(iindex, uses == null ? val : uses[0], defaultLabel, casesAndLabels);
+    return insts.SwitchInstruction(
+        iindex, uses == null ? val : uses[0], defaultLabel, casesAndLabels);
   }
 
   @Override
@@ -87,8 +87,7 @@ public class SSASwitchInstruction extends SSAInstruction {
 
   public int getTarget(int caseValue) {
     for (int i = 0; i < casesAndLabels.length; i += 2)
-      if (caseValue == casesAndLabels[i])
-        return casesAndLabels[i + 1];
+      if (caseValue == casesAndLabels[i]) return casesAndLabels[i + 1];
 
     return defaultLabel;
   }
@@ -131,5 +130,4 @@ public class SSASwitchInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return false;
   }
-
 }

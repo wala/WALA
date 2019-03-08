@@ -13,23 +13,17 @@ package com.ibm.wala.util.collections;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-/**
- * Simple Heap data structure.
- */
+/** Simple Heap data structure. */
 public abstract class Heap<T> {
 
-  /**
-   * @return true iff elt1 is considered &lt; elt2
-   */
-  abstract protected boolean compareElements(T elt1, T elt2);
+  /** @return true iff elt1 is considered &lt; elt2 */
+  protected abstract boolean compareElements(T elt1, T elt2);
 
   private int numberOfElements;
 
   private T[] backingStore;
 
-  /**
-   * @return number of elements in this heap
-   */
+  /** @return number of elements in this heap */
   public int size() {
     return numberOfElements;
   }
@@ -37,16 +31,13 @@ public abstract class Heap<T> {
   @SuppressWarnings("unchecked")
   public Heap(int initialCapacity) {
     numberOfElements = 0;
-    backingStore = (T[])new Object[initialCapacity];
+    backingStore = (T[]) new Object[initialCapacity];
   }
 
-  /**
-   * @return true iff this heap is non-empty
-   */
-  final public boolean isEmpty() {
+  /** @return true iff this heap is non-empty */
+  public final boolean isEmpty() {
     return numberOfElements == 0;
   }
-
 
   public void insert(T elt) {
     ensureCapacity(numberOfElements + 1);
@@ -54,9 +45,7 @@ public abstract class Heap<T> {
     numberOfElements++;
   }
 
-  /**
-   * @return the first object in the priority queue
-   */
+  /** @return the first object in the priority queue */
   public T take() throws NoSuchElementException {
     if (numberOfElements == 0) {
       throw new NoSuchElementException();
@@ -78,18 +67,17 @@ public abstract class Heap<T> {
     return index * 2 + 2;
   }
 
-
-  final private void ensureCapacity(int min) {
+  private final void ensureCapacity(int min) {
     if (backingStore.length < min) {
       backingStore = Arrays.copyOf(backingStore, 2 * min);
     }
   }
 
   /**
-   * SJF: I know this is horribly uglified ... I've attempted to make things as
-   * easy as possible on the JIT, since this is performance critical.
+   * SJF: I know this is horribly uglified ... I've attempted to make things as easy as possible on
+   * the JIT, since this is performance critical.
    */
-  final private void removeElement(int index) {
+  private final void removeElement(int index) {
     int ne = numberOfElements;
     T[] bs = backingStore;
     while (true) {
@@ -123,10 +111,10 @@ public abstract class Heap<T> {
   }
 
   /**
-   * SJF: I know this is uglified ... I've attempted to make things as easy as
-   * possible on the JIT, since this is performance critical.
+   * SJF: I know this is uglified ... I've attempted to make things as easy as possible on the JIT,
+   * since this is performance critical.
    */
-  final private void bubbleUp(T elt, int index) {
+  private final void bubbleUp(T elt, int index) {
     T[] bs = backingStore;
     while (true) {
       if (index == 0) {
@@ -145,15 +133,14 @@ public abstract class Heap<T> {
       }
     }
   }
-  
+
   @Override
   public String toString() {
     StringBuilder s = new StringBuilder();
     s.append('[');
     for (int i = 0; i < size(); i++) {
       if (backingStore[i] != null) {
-        if (i > 0)
-          s.append(',');
+        if (i > 0) s.append(',');
         s.append(backingStore[i].toString());
       }
     }

@@ -10,14 +10,11 @@
  */
 package com.ibm.wala.model.java.lang;
 
-
-/**
- * A synthetic model of single-threaded behavior
- */
+/** A synthetic model of single-threaded behavior */
 public class Thread {
 
   static final java.lang.Thread singleThread = new java.lang.Thread();
-  
+
   public static java.lang.Thread currentThread() {
     return singleThread;
   }

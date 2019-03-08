@@ -10,15 +10,13 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents the ?aload instructions.
- */
-final public class ArrayLoadInstruction extends Instruction implements IArrayLoadInstruction {
+/** This class represents the ?aload instructions. */
+public final class ArrayLoadInstruction extends Instruction implements IArrayLoadInstruction {
   protected ArrayLoadInstruction(short opcode) {
     super(opcode);
   }
 
-  private final static ArrayLoadInstruction[] preallocated = preallocate();
+  private static final ArrayLoadInstruction[] preallocated = preallocate();
 
   private static ArrayLoadInstruction[] preallocate() {
     ArrayLoadInstruction[] r = new ArrayLoadInstruction[OP_saload - OP_iaload + 2];
@@ -106,12 +104,12 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
   }
 
   /**
-   * Java bytecode does not permit this. 
+   * Java bytecode does not permit this.
+   *
    * @see com.ibm.wala.shrikeBT.IMemoryOperation#isAddressOf()
    */
   @Override
   public boolean isAddressOf() {
     return false;
   }
-
 }

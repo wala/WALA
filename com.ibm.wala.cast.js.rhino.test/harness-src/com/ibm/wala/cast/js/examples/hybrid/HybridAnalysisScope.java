@@ -1,13 +1,12 @@
 package com.ibm.wala.cast.js.examples.hybrid;
 
-import java.util.Set;
-
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Set;
 
 public class HybridAnalysisScope extends AnalysisScope {
 
@@ -23,13 +22,12 @@ public class HybridAnalysisScope extends AnalysisScope {
   public HybridAnalysisScope() {
     super(languages);
     this.initForJava();
-    
-    ClassLoaderReference jsLoader = JavaScriptTypes.jsLoader;        
+
+    ClassLoaderReference jsLoader = JavaScriptTypes.jsLoader;
     loadersByName.put(JavaScriptTypes.jsLoaderName, jsLoader);
   }
 
   public ClassLoaderReference getJavaScriptLoader() {
     return getLoader(JavaScriptTypes.jsLoaderName);
   }
-
 }

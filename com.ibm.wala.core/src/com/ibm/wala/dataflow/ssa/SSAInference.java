@@ -11,9 +11,6 @@
 
 package com.ibm.wala.dataflow.ssa;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
@@ -23,39 +20,37 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class performs intra-procedural propagation over an SSA form.
- * 
- * A client will subclass an {@link SSAInference} by providing factories that generate {@link IVariable}s corresponding to SSA value
- * numbers, and {@link AbstractOperator}s corresponding to SSA instructions. This class will set up a dataflow system induced by the
- * SSA def-use graph, and solve the system by iterating to a fixed point.
- * 
+ *
+ * <p>A client will subclass an {@link SSAInference} by providing factories that generate {@link
+ * IVariable}s corresponding to SSA value numbers, and {@link AbstractOperator}s corresponding to
+ * SSA instructions. This class will set up a dataflow system induced by the SSA def-use graph, and
+ * solve the system by iterating to a fixed point.
+ *
  * @see TypeInference for the canonical client of this machinery.
  */
 public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedPointSolver<T> {
   static final boolean DEBUG = false;
 
-  /**
-   * The governing SSA form
-   */
+  /** The governing SSA form */
   private IR ir;
 
-  /**
-   * The governing symbol table
-   */
+  /** The governing symbol table */
   private SymbolTable symbolTable;
 
-  /**
-   * Dataflow variables, one for each value in the symbol table.
-   */
+  /** Dataflow variables, one for each value in the symbol table. */
   private List<IVariable<T>> vars;
 
   public interface OperatorFactory<T extends IVariable<T>> {
     /**
      * Get the dataflow operator induced by an instruction in SSA form.
-     * 
-     * @return dataflow operator for the instruction, or null if the instruction is not applicable to the dataflow system.
+     *
+     * @return dataflow operator for the instruction, or null if the instruction is not applicable
+     *     to the dataflow system.
      */
     AbstractOperator<T> get(SSAInstruction instruction);
   }
@@ -63,15 +58,13 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
   public interface VariableFactory<T extends IVariable<T>> {
     /**
      * Make the variable for a given value number.
-     * 
+     *
      * @return a newly created dataflow variable, or null if not applicable.
      */
     IVariable<T> makeVariable(int valueNumber);
   }
 
-  /**
-   * initializer for SSA Inference equations.
-   */
+  /** initializer for SSA Inference equations. */
   protected void init(IR ir, VariableFactory<T> varFactory, OperatorFactory<T> opFactory) {
 
     this.ir = ir;
@@ -97,9 +90,7 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
     }
   }
 
-  /**
-   * Create a dataflow equation induced by a given instruction
-   */
+  /** Create a dataflow equation induced by a given instruction */
   private void makeEquationForInstruction(OperatorFactory<T> opFactory, SSAInstruction s) {
     if (s != null && s.hasDef()) {
       AbstractOperator<T> op = opFactory.get(s);
@@ -122,9 +113,7 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
     }
   }
 
-  /**
-   * Create a dataflow variable for each value number
-   */
+  /** Create a dataflow variable for each value number */
   private void createVariables(VariableFactory<T> factory) {
     //noinspection unchecked
     final int varsCount = symbolTable.getMaxValueNumber() + 1;
@@ -133,12 +122,9 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
     for (int i = 1; i < varsCount; i++) {
       vars.add(factory.makeVariable(i));
     }
-
   }
 
-  /**
-   * @return the dataflow variable representing the value number, or null if none found.
-   */
+  /** @return the dataflow variable representing the value number, or null if none found. */
   @SuppressWarnings("unchecked")
   protected T getVariable(int valueNumber) {
     if (valueNumber < 0) {
@@ -153,7 +139,7 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
 
   /**
    * Return a string representation of the system
-   * 
+   *
    * @return a string representation of the system
    */
   @Override

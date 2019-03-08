@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -51,26 +51,26 @@ import java.util.Collections;
 import java.util.Set;
 
 public abstract class CodeElement {
-    /* For a given value number, and enclosing call graph node, yield
-     * the set of all CodeElements that that it may refer to (i.e., the
-     * associated local variable and any instances it may refer to). */
-    public static Set<CodeElement> valueElements(int valueNumber) {
-    	//System.out.println("ValueNumber: " + valueNumber + ", Node: " + node.getMethod().getSignature());
-        Set<CodeElement> elements = Collections.singleton(new LocalElement(valueNumber));
-//        PointerKey pk = new LocalPointerKey(node, valueNumber);
-//        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
-//        if(m != null) {
-//            for(Iterator<InstanceKey> keyIter = m.iterator();keyIter.hasNext();) {
-//                elements.add(new InstanceKeyElement(keyIter.next()));
-//            }
-//        }
-        return elements;
-    }
-    
-    @Override
-    public abstract boolean equals(Object obj);
-    
-    @Override
-    public abstract int hashCode();
-    
+  /* For a given value number, and enclosing call graph node, yield
+   * the set of all CodeElements that that it may refer to (i.e., the
+   * associated local variable and any instances it may refer to). */
+  public static Set<CodeElement> valueElements(int valueNumber) {
+    // System.out.println("ValueNumber: " + valueNumber + ", Node: " +
+    // node.getMethod().getSignature());
+    Set<CodeElement> elements = Collections.singleton(new LocalElement(valueNumber));
+    //        PointerKey pk = new LocalPointerKey(node, valueNumber);
+    //        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
+    //        if(m != null) {
+    //            for(Iterator<InstanceKey> keyIter = m.iterator();keyIter.hasNext();) {
+    //                elements.add(new InstanceKeyElement(keyIter.next()));
+    //            }
+    //        }
+    return elements;
+  }
+
+  @Override
+  public abstract boolean equals(Object obj);
+
+  @Override
+  public abstract int hashCode();
 }

@@ -16,44 +16,32 @@ import java.util.stream.Stream;
 
 /**
  * An object which tracks graph nodes.
- * 
- * This is effectively a stripped-down collection interface. We choose to avoid using the full {@link Collection} interface, so that
- * it takes less code to implement a new {@link NodeManager}.
- * 
+ *
+ * <p>This is effectively a stripped-down collection interface. We choose to avoid using the full
+ * {@link Collection} interface, so that it takes less code to implement a new {@link NodeManager}.
+ *
  * @param <T> the type of nodes this {@link NodeManager} tracks.
  */
 public interface NodeManager<T> extends Iterable<T> {
 
-  /**
-   * @return an {@link Iterator} of the nodes in this graph
-   */
+  /** @return an {@link Iterator} of the nodes in this graph */
   @Override
   default Iterator<T> iterator() {
     return stream().iterator();
   }
 
-  /**
-   * @return a {@link Stream} of the nodes in this graph
-   */
+  /** @return a {@link Stream} of the nodes in this graph */
   Stream<T> stream();
 
-  /**
-   * @return the number of nodes in this graph
-   */
+  /** @return the number of nodes in this graph */
   public int getNumberOfNodes();
 
-  /**
-   * add a node to this graph
-   */
+  /** add a node to this graph */
   public void addNode(T n);
 
-  /**
-   * remove a node from this graph
-   */
+  /** remove a node from this graph */
   public void removeNode(T n) throws UnsupportedOperationException;
 
-  /**
-   * @return true iff the graph contains the specified node
-   */
+  /** @return true iff the graph contains the specified node */
   public boolean containsNode(T n);
 }

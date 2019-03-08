@@ -15,5 +15,4 @@ public interface ILoadInstruction extends IInstruction, IMemoryOperation {
   int getVarIndex();
 
   String getType();
-
 }

@@ -11,15 +11,12 @@
 
 package com.ibm.wala.classLoader;
 
-import java.io.File;
-
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.ImmutableByteArray;
+import java.io.File;
 
-/**
- * A module which is a wrapper around a .class file
- */
+/** A module which is a wrapper around a .class file */
 public class ClassFileModule extends FileModule {
 
   private final String className;
@@ -30,7 +27,6 @@ public class ClassFileModule extends FileModule {
     ImmutableByteArray name = ImmutableByteArray.make(reader.get().getName());
     className = name.toString();
   }
-
 
   @Override
   public String toString() {

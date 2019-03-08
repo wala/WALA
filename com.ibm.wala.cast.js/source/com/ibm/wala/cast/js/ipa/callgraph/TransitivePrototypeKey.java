@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 public class TransitivePrototypeKey extends AbstractFieldPointerKey {
 
   public String getName() {
-      return "transitive prototype of "+getInstanceKey().toString();
+    return "transitive prototype of " + getInstanceKey().toString();
   }
 
   public TransitivePrototypeKey(InstanceKey object) {
@@ -25,8 +25,8 @@ public class TransitivePrototypeKey extends AbstractFieldPointerKey {
 
   @Override
   public boolean equals(Object x) {
-    return (x instanceof TransitivePrototypeKey) &&
-      ((TransitivePrototypeKey)x).getInstanceKey().equals(getInstanceKey());
+    return (x instanceof TransitivePrototypeKey)
+        && ((TransitivePrototypeKey) x).getInstanceKey().equals(getInstanceKey());
   }
 
   @Override

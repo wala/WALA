@@ -15,13 +15,11 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 
-/**
- * A graph view that reverses the edges in a graph
- */
+/** A graph view that reverses the edges in a graph */
 public class InvertedNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
-  final private NumberedNodeManager<T> nodes;
-  final private NumberedEdgeManager<T> edges;
+  private final NumberedNodeManager<T> nodes;
+  private final NumberedEdgeManager<T> edges;
 
   @Override
   protected NumberedNodeManager<T> getNodeManager() {
@@ -37,5 +35,4 @@ public class InvertedNumberedGraph<T> extends AbstractNumberedGraph<T> {
     nodes = G;
     edges = new InvertingNumberedEdgeManager<>(G);
   }
-
 }

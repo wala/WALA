@@ -15,13 +15,12 @@ import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  * A node pattern that matches any AST node.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public class AnyNode implements NodePattern {
-	@Override
+  @Override
   public boolean matches(CAstNode node) {
-		return true;
-	}
+    return true;
+  }
 }

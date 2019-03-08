@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * WALA JDT Frontend is Copyright (c) 2008 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -40,9 +40,7 @@ package com.ibm.wala.ide.test;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
+/** The activator class controls the plug-in life cycle */
 public class Activator extends Plugin {
 
   // The plug-in ID
@@ -51,15 +49,12 @@ public class Activator extends Plugin {
   // The shared instance
   private static Activator plugin;
 
-  /**
-   * The constructor
-   */
-  public Activator() {
-  }
+  /** The constructor */
+  public Activator() {}
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
    */
   @Override
@@ -70,7 +65,7 @@ public class Activator extends Plugin {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
@@ -81,11 +76,10 @@ public class Activator extends Plugin {
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static Activator getDefault() {
     return plugin;
   }
-
 }

@@ -11,8 +11,7 @@
 
 package com.ibm.wala.ssa;
 
-/**
- */
+/** */
 public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
   protected final int result;
@@ -25,9 +24,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
     this.val = val;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public boolean hasDef() {
     return true;
@@ -44,9 +41,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfDefs() {
     return 1;
@@ -75,5 +70,4 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return true;
   }
-
 }

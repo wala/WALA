@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -52,35 +52,36 @@ import org.scandroid.prefixtransfer.PrefixVariable;
 
 public class UriParseString extends InstanceKeySite {
 
-    final int stringInstanceID;
-    final int instanceID;
+  final int stringInstanceID;
+  final int instanceID;
 
-    public UriParseString(int instanceID, int stringInstanceID)
-    {
-        this.stringInstanceID = stringInstanceID;
-        this.instanceID = instanceID;
-    }
+  public UriParseString(int instanceID, int stringInstanceID) {
+    this.stringInstanceID = stringInstanceID;
+    this.instanceID = instanceID;
+  }
 
-    @Override
-    public PrefixVariable propagate(PrefixVariable input) {
-//      System.out.println("Propagating at: " + instanceID + " (" + constantValue + ")");
-        PrefixVariable retVal = new PrefixVariable();
-        retVal.copyState(input);
-        String prefix = input.getPrefix(stringInstanceID);
-        retVal.update(instanceID, prefix);
-        if (input.fullPrefixKnown.contains(stringInstanceID))
-            retVal.include(instanceID);
-        return retVal;
-    }
+  @Override
+  public PrefixVariable propagate(PrefixVariable input) {
+    //      System.out.println("Propagating at: " + instanceID + " (" + constantValue + ")");
+    PrefixVariable retVal = new PrefixVariable();
+    retVal.copyState(input);
+    String prefix = input.getPrefix(stringInstanceID);
+    retVal.update(instanceID, prefix);
+    if (input.fullPrefixKnown.contains(stringInstanceID)) retVal.include(instanceID);
+    return retVal;
+  }
 
-    @Override
-    public String toString() {
-        return ("UriParseString(instanceID = " + instanceID + "; stringInstanceID = " + stringInstanceID + ')');
-    }
+  @Override
+  public String toString() {
+    return ("UriParseString(instanceID = "
+        + instanceID
+        + "; stringInstanceID = "
+        + stringInstanceID
+        + ')');
+  }
 
-    @Override
-    public int instanceID() {
-        return instanceID;
-    }
-
+  @Override
+  public int instanceID() {
+    return instanceID;
+  }
 }

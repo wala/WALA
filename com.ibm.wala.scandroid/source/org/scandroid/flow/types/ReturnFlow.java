@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -52,35 +52,32 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 
 /**
- * 
- * A return flow represents either a flow from a method that was just invoked
- * if this points to an invoke instruction (in which case this is a source) or
- * a method return, if this points to a return instruction (in which case it is
- * a sink).
- *
+ * A return flow represents either a flow from a method that was just invoked if this points to an
+ * invoke instruction (in which case this is a source) or a method return, if this points to a
+ * return instruction (in which case it is a sink).
  */
-public class ReturnFlow <E extends ISSABasicBlock> extends FlowType<E> {
-    public ReturnFlow(BasicBlockInContext<E> block, boolean source) {
-        super(block, source);
-    }
+public class ReturnFlow<E extends ISSABasicBlock> extends FlowType<E> {
+  public ReturnFlow(BasicBlockInContext<E> block, boolean source) {
+    super(block, source);
+  }
 
-    @Override
-    public String toString() {
-        return "ReturnFlow( " + super.toString() + ')';
-    }
+  @Override
+  public String toString() {
+    return "ReturnFlow( " + super.toString() + ')';
+  }
 
-    @Override
-    public String descString() {
-        if(isSource()) {
-            SSAInvokeInstruction inv = (SSAInvokeInstruction)getBlock().getLastInstruction();
-            return "ret:" + inv.getDeclaredTarget().getSignature();
-        } else {
-            return "ret";
-        }
+  @Override
+  public String descString() {
+    if (isSource()) {
+      SSAInvokeInstruction inv = (SSAInvokeInstruction) getBlock().getLastInstruction();
+      return "ret:" + inv.getDeclaredTarget().getSignature();
+    } else {
+      return "ret";
     }
+  }
 
-	@Override
-	public <R> R visit(FlowTypeVisitor<E, R> v) {
-		return v.visitReturnFlow(this);
-	}
+  @Override
+  public <R> R visit(FlowTypeVisitor<E, R> v) {
+    return v.visitReturnFlow(this);
+  }
 }

@@ -14,9 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
-/**
- * An ordinal set mapping, backed a delegate, but adding an offset to each index.
- */
+/** An ordinal set mapping, backed a delegate, but adding an offset to each index. */
 public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
 
   private final OrdinalSetMapping<T> delegate;
@@ -82,5 +80,4 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   public Stream<T> stream() {
     return delegate.stream();
   }
-
 }

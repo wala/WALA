@@ -12,9 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-/**
- * A utility to efficiently compose an iterator and a singleton
- */
+/** A utility to efficiently compose an iterator and a singleton */
 public class IteratorPlusOne<T> implements Iterator<T> {
   public static <T> IteratorPlusOne<T> make(Iterator<? extends T> it, T xtra) {
     if (it == null) {
@@ -32,7 +30,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     this.it = it;
     this.xtra = xtra;
   }
-    
+
   @Override
   public boolean hasNext() {
     return it.hasNext() || (xtra != null);
@@ -48,7 +46,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
       return result;
     }
   }
-  
+
   @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();

@@ -13,13 +13,12 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * An iterator which provides a logical concatenation of the lists from two other iterators
- */
+/** An iterator which provides a logical concatenation of the lists from two other iterators */
 public class CompoundIterator<T> implements Iterator<T> {
 
   final Iterator<? extends T> A;
   final Iterator<? extends T> B;
+
   public CompoundIterator(Iterator<? extends T> A, Iterator<? extends T> B) {
     if (A == null) {
       throw new IllegalArgumentException("null A");
@@ -43,7 +42,5 @@ public class CompoundIterator<T> implements Iterator<T> {
   }
 
   @Override
-  public void remove() {
-  }
-
+  public void remove() {}
 }

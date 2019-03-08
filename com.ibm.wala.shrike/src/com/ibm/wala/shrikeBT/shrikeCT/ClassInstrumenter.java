@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.ConstantPoolReader;
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
@@ -37,48 +33,48 @@ import com.ibm.wala.shrikeCT.LocalVariableTableWriter;
 import com.ibm.wala.shrikeCT.StackMapConstants.StackMapFrame;
 import com.ibm.wala.shrikeCT.StackMapTableReader;
 import com.ibm.wala.shrikeCT.StackMapTableWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * This class provides a convenient way to instrument every method in a class. It assumes you are using ShrikeCT to read and write
- * classes. It's stateful; initially every method is set to the original code read from the class, but you can then go in and modify
- * the methods.
+ * This class provides a convenient way to instrument every method in a class. It assumes you are
+ * using ShrikeCT to read and write classes. It's stateful; initially every method is set to the
+ * original code read from the class, but you can then go in and modify the methods.
  */
-final public class ClassInstrumenter {
-  final private boolean[] deletedMethods;
+public final class ClassInstrumenter {
+  private final boolean[] deletedMethods;
 
-  final private MethodData[] methods;
+  private final MethodData[] methods;
 
-  final private CodeReader[] oldCode;
+  private final CodeReader[] oldCode;
 
-  final private ClassReader cr;
+  private final ClassReader cr;
 
-  final private ConstantPoolReader cpr;
+  private final ConstantPoolReader cpr;
 
   private boolean createFakeLineNumbers = false;
 
   private int fakeLineOffset;
 
   private final String inputName;
-  
+
   private final ClassHierarchyProvider cha;
-  
-  /**
-   * Create a class instrumenter from raw bytes.
-   */
-  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha) throws InvalidClassFileException {
+
+  /** Create a class instrumenter from raw bytes. */
+  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha)
+      throws InvalidClassFileException {
     this(inputName, new ClassReader(bytes), cha);
   }
 
-  /**
-   * @return name of resource from which this class was read
-   */
+  /** @return name of resource from which this class was read */
   public String getInputName() {
     return inputName;
   }
-  
+
   /**
-   * Calling this means that methods without line numbers get fake line numbers added: each bytecode instruction is treated as at
-   * line 'offset' + the offset of the instruction.
+   * Calling this means that methods without line numbers get fake line numbers added: each bytecode
+   * instruction is treated as at line 'offset' + the offset of the instruction.
    */
   public void enableFakeLineNumbers(int offset) {
     createFakeLineNumbers = true;
@@ -87,7 +83,7 @@ final public class ClassInstrumenter {
 
   /**
    * Create a class instrumenter from a preinitialized class reader.
-   * 
+   *
    * @throws IllegalArgumentException if cr is null
    */
   public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha) {
@@ -103,20 +99,14 @@ final public class ClassInstrumenter {
     this.inputName = inputName;
   }
 
-  /**
-   * @return the reader for the class
-   */
+  /** @return the reader for the class */
   public ClassReader getReader() {
     return cr;
   }
 
-  /**
-   * Implement this interface to instrument every method of a class using visitMethods() below.
-   */
+  /** Implement this interface to instrument every method of a class using visitMethods() below. */
   public static interface MethodExaminer {
-    /**
-     * Do something to the method.
-     */
+    /** Do something to the method. */
     public void examineCode(MethodData data);
   }
 
@@ -135,8 +125,13 @@ final public class ClassInstrumenter {
           } catch (InvalidBytecodeException e) {
             throw new InvalidClassFileException(code.getRawOffset(), e.getMessage());
           }
-          MethodData md = new MethodData(d, cr.getMethodAccessFlags(i), CTDecoder.convertClassToType(cr.getName()), cr
-              .getMethodName(i), cr.getMethodType(i));
+          MethodData md =
+              new MethodData(
+                  d,
+                  cr.getMethodAccessFlags(i),
+                  CTDecoder.convertClassToType(cr.getName()),
+                  cr.getMethodName(i),
+                  cr.getMethodType(i));
           methods[i] = md;
           oldCode[i] = code;
           return;
@@ -147,14 +142,14 @@ final public class ClassInstrumenter {
 
   /**
    * Indicate that the method should be deleted from the class.
-   * 
+   *
    * @param i the index of the method to delete
    */
   public void deleteMethod(int i) {
     deletedMethods[i] = true;
   }
 
-  private final static ExceptionHandler[] noHandlers = new ExceptionHandler[0];
+  private static final ExceptionHandler[] noHandlers = new ExceptionHandler[0];
 
   // Xiangyu
   // create a empty method body and then user can apply patches later on
@@ -174,18 +169,20 @@ final public class ClassInstrumenter {
     }
     MethodData md = null;
     try {
-      md = new MethodData(access, Util.makeType(cr.getName()), name, sig, instructions, handlers, i2b);
+      md =
+          new MethodData(
+              access, Util.makeType(cr.getName()), name, sig, instructions, handlers, i2b);
 
     } catch (InvalidClassFileException ex) {
       ex.printStackTrace();
     }
     return md;
-
   }
 
   /**
-   * Do something to every method in the class. This will visit all methods, including those already marked for deletion.
-   * 
+   * Do something to every method in the class. This will visit all methods, including those already
+   * marked for deletion.
+   *
    * @param me the visitor to apply to each method
    */
   public void visitMethods(MethodExaminer me) throws InvalidClassFileException {
@@ -199,7 +196,7 @@ final public class ClassInstrumenter {
 
   /**
    * Get the current state of method i. This can be edited using a MethodEditor.
-   * 
+   *
    * @param i the index of the method to inspect
    */
   public MethodData visitMethod(int i) throws InvalidClassFileException {
@@ -209,7 +206,7 @@ final public class ClassInstrumenter {
 
   /**
    * Get the original code resource for the method.
-   * 
+   *
    * @param i the index of the method to inspect
    */
   public CodeReader getMethodCode(int i) throws InvalidClassFileException {
@@ -218,8 +215,9 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Reset method i back to the code from the original class, and "undelete" it if it was marked for deletion.
-   * 
+   * Reset method i back to the code from the original class, and "undelete" it if it was marked for
+   * deletion.
+   *
    * @param i the index of the method to reset
    */
   public void resetMethod(int i) {
@@ -228,8 +226,9 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Replace the code for method i with new code. This also "undeletes" the method if it was marked for deletion.
-   * 
+   * Replace the code for method i with new code. This also "undeletes" the method if it was marked
+   * for deletion.
+   *
    * @param i the index of the method to replace
    * @throws IllegalArgumentException if md is null
    */
@@ -243,9 +242,7 @@ final public class ClassInstrumenter {
     md.setHasChanged();
   }
 
-  /**
-   * Check whether any methods in the class have actually been changed.
-   */
+  /** Check whether any methods in the class have actually been changed. */
   public boolean isChanged() {
     for (int i = 0; i < methods.length; i++) {
       if (deletedMethods[i] || (methods[i] != null && methods[i].getHasChanged())) {
@@ -256,10 +253,10 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Create a class which is a copy of the original class but with the new method code. We return the ClassWriter used, so more
-   * methods and fields (and other changes) can still be added.
-   * 
-   * We fix up any debug information to be consistent with the changes to the code.
+   * Create a class which is a copy of the original class but with the new method code. We return
+   * the ClassWriter used, so more methods and fields (and other changes) can still be added.
+   *
+   * <p>We fix up any debug information to be consistent with the changes to the code.
    */
   public ClassWriter emitClass() throws InvalidClassFileException {
     return emitClass(new ClassWriter());
@@ -271,8 +268,9 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Copy the contents of the old class, plus any method modifications, into a new ClassWriter. The ClassWriter must be empty!
-   * 
+   * Copy the contents of the old class, plus any method modifications, into a new ClassWriter. The
+   * ClassWriter must be empty!
+   *
    * @param w the classwriter to copy into.
    */
   private void emitClassInto(ClassWriter w) throws InvalidClassFileException {
@@ -286,14 +284,18 @@ final public class ClassInstrumenter {
 
     int fieldCount = cr.getFieldCount();
     for (int i = 0; i < fieldCount; i++) {
-      w.addRawField(new ClassWriter.RawElement(cr.getBytes(), cr.getFieldRawOffset(i), cr.getFieldRawSize(i)));
+      w.addRawField(
+          new ClassWriter.RawElement(
+              cr.getBytes(), cr.getFieldRawOffset(i), cr.getFieldRawSize(i)));
     }
 
     for (int i = 0; i < methods.length; i++) {
       MethodData md = methods[i];
       if (!deletedMethods[i]) {
         if (md == null || !md.getHasChanged()) {
-          w.addRawMethod(new ClassWriter.RawElement(cr.getBytes(), cr.getMethodRawOffset(i), cr.getMethodRawSize(i)));
+          w.addRawMethod(
+              new ClassWriter.RawElement(
+                  cr.getBytes(), cr.getMethodRawOffset(i), cr.getMethodRawSize(i)));
         } else {
           CTCompiler comp = CTCompiler.make(w, md);
           comp.setPresetConstants(cpr);
@@ -312,11 +314,19 @@ final public class ClassInstrumenter {
           int flags = cr.getMethodAccessFlags(i);
           // we're not installing a native method here
           flags &= ~ClassConstants.ACC_NATIVE;
-          w.addMethod(flags, cr.getMethodNameIndex(i), cr.getMethodTypeIndex(i), makeMethodAttributes(i, w, oc, comp.getOutput(), md));
+          w.addMethod(
+              flags,
+              cr.getMethodNameIndex(i),
+              cr.getMethodTypeIndex(i),
+              makeMethodAttributes(i, w, oc, comp.getOutput(), md));
           Compiler.Output[] aux = comp.getAuxiliaryMethods();
           if (aux != null) {
             for (Compiler.Output a : aux) {
-              w.addMethod(a.getAccessFlags(), a.getMethodName(), a.getMethodSignature(), makeMethodAttributes(i, w, oc, a, md));
+              w.addMethod(
+                  a.getAccessFlags(),
+                  a.getMethodName(),
+                  a.getMethodSignature(),
+                  makeMethodAttributes(i, w, oc, a, md));
             }
           }
         }
@@ -326,7 +336,8 @@ final public class ClassInstrumenter {
     ClassReader.AttrIterator iter = new ClassReader.AttrIterator();
     cr.initClassAttributeIterator(iter);
     for (; iter.isValid(); iter.advance()) {
-      w.addClassAttribute(new ClassWriter.RawElement(cr.getBytes(), iter.getRawOffset(), iter.getRawSize()));
+      w.addClassAttribute(
+          new ClassWriter.RawElement(cr.getBytes(), iter.getRawOffset(), iter.getRawSize()));
     }
   }
 
@@ -339,8 +350,8 @@ final public class ClassInstrumenter {
     return code;
   }
 
-  private LineNumberTableWriter makeNewLines(ClassWriter w, CodeReader oldCode, Compiler.Output output)
-      throws InvalidClassFileException {
+  private LineNumberTableWriter makeNewLines(
+      ClassWriter w, CodeReader oldCode, Compiler.Output output) throws InvalidClassFileException {
     int[] newLineMap = null;
     int[] oldLineMap = LineNumberTableReader.makeBytecodeToSourceMap(oldCode);
     if (oldLineMap != null) {
@@ -373,8 +384,8 @@ final public class ClassInstrumenter {
     }
   }
 
-  private static LocalVariableTableWriter makeNewLocals(ClassWriter w, CodeReader oldCode, Compiler.Output output)
-      throws InvalidClassFileException {
+  private static LocalVariableTableWriter makeNewLocals(
+      ClassWriter w, CodeReader oldCode, Compiler.Output output) throws InvalidClassFileException {
     int[][] oldMap = LocalVariableTableReader.makeVarMap(oldCode);
     if (oldMap != null) {
       // Map the old map onto the new bytecodes
@@ -404,7 +415,8 @@ final public class ClassInstrumenter {
     }
   }
 
-  private ClassWriter.Element[] makeMethodAttributes(int m, ClassWriter w, CodeReader oldCode, Compiler.Output output, MethodData md)
+  private ClassWriter.Element[] makeMethodAttributes(
+      int m, ClassWriter w, CodeReader oldCode, Compiler.Output output, MethodData md)
       throws InvalidClassFileException {
     CodeWriter code = makeNewCode(w, output);
 
@@ -422,7 +434,7 @@ final public class ClassInstrumenter {
         codeAttrCount++;
       }
       if (oldCode.getClassReader().getMajorVersion() > 50) {
-        try { 
+        try {
           List<StackMapFrame> sm = StackMapTableReader.readStackMap(oldCode);
 
           String[][] varTypes = null;
@@ -430,19 +442,20 @@ final public class ClassInstrumenter {
           int[][] vars = LocalVariableTableReader.makeVarMap(oldCode);
           if (vars != null) {
             varTypes = new String[newToOld.length][];
-            for(int i = 0; i < newToOld.length; i++) {
+            for (int i = 0; i < newToOld.length; i++) {
               int idx = newToOld[i];
               if (idx != -1 && vars[idx] != null) {
                 varTypes[i] = new String[vars[idx].length / 2];
-                for(int j = 1; j < vars[idx].length; j += 2) {
+                for (int j = 1; j < vars[idx].length; j += 2) {
                   int type = vars[idx][j];
-                  varTypes[i][j/2] = type==0? null: oldCode.getClassReader().getCP().getCPUtf8(type);
+                  varTypes[i][j / 2] =
+                      type == 0 ? null : oldCode.getClassReader().getCP().getCPUtf8(type);
                 }
               }
             }
           }
-          
-          stacks = new StackMapTableWriter(w, md, output, cha, varTypes , sm);
+
+          stacks = new StackMapTableWriter(w, md, output, cha, varTypes, sm);
           codeAttrCount++;
         } catch (IOException | FailureException e) {
           // TODO Auto-generated catch block
@@ -459,7 +472,7 @@ final public class ClassInstrumenter {
       codeAttributes[codeAttrIndex++] = locals;
     }
     if (stacks != null) {
-      codeAttributes[codeAttrIndex++] = stacks;      
+      codeAttributes[codeAttrIndex++] = stacks;
     }
     code.setAttributes(codeAttributes);
 
@@ -478,7 +491,8 @@ final public class ClassInstrumenter {
           throw new Error("No old code provided, but Code attribute found");
         }
       } else {
-        methodAttributes[i] = new ClassWriter.RawElement(cr.getBytes(), iter.getRawOffset(), iter.getRawSize());
+        methodAttributes[i] =
+            new ClassWriter.RawElement(cr.getBytes(), iter.getRawOffset(), iter.getRawSize());
       }
       i++;
     }

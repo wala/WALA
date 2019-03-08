@@ -12,9 +12,7 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 
-/**
- * A {@link DataflowSolver} specialized for {@link BitVectorVariable}s
- */
+/** A {@link DataflowSolver} specialized for {@link BitVectorVariable}s */
 public class BitVectorSolver<T> extends DataflowSolver<T, BitVectorVariable> {
 
   public BitVectorSolver(IKilldallFramework<T, BitVectorVariable> problem) {
@@ -29,7 +27,6 @@ public class BitVectorSolver<T> extends DataflowSolver<T, BitVectorVariable> {
   @Override
   protected BitVectorVariable makeEdgeVariable(T src, T dst) {
     return new BitVectorVariable();
-
   }
 
   @Override

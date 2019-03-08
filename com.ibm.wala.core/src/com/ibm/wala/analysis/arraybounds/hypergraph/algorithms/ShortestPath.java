@@ -1,35 +1,31 @@
 package com.ibm.wala.analysis.arraybounds.hypergraph.algorithms;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperEdge;
 import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperGraph;
 import com.ibm.wala.analysis.arraybounds.hypergraph.HyperNode;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeight;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
- *
- * @param <T>
- *          NodeValueType
+ * @param <T> NodeValueType
  * @see ShortestPath#compute(DirectedHyperGraph, HyperNode, Comparator)
  */
 public class ShortestPath<T> {
   /**
-   * Computes all shortest paths from source. The result is stored in
-   * {@link HyperNode#getWeight()}.
+   * Computes all shortest paths from source. The result is stored in {@link HyperNode#getWeight()}.
    *
-   * This is using a variation of Bellman-Ford for hyper graphs.
+   * <p>This is using a variation of Bellman-Ford for hyper graphs.
    *
-   * @param comparator
-   *          defines order on weights.
+   * @param comparator defines order on weights.
    */
-  public static <NodeValueType> void compute(DirectedHyperGraph<NodeValueType> graph, HyperNode<NodeValueType> source,
+  public static <NodeValueType> void compute(
+      DirectedHyperGraph<NodeValueType> graph,
+      HyperNode<NodeValueType> source,
       Comparator<Weight> comparator) {
     graph.reset();
     source.setWeight(Weight.ZERO);
@@ -44,11 +40,9 @@ public class ShortestPath<T> {
   private boolean hasNegativeCycle = false;
 
   /**
-   * @param graph
-   *          Source nodes for shortest path computation should be set to 0,
-   *          other nodes should be set to {@link Weight#NOT_SET}.
-   * @param comparator
-   *          defines order on weights.
+   * @param graph Source nodes for shortest path computation should be set to 0, other nodes should
+   *     be set to {@link Weight#NOT_SET}.
+   * @param comparator defines order on weights.
    */
   private ShortestPath(DirectedHyperGraph<T> graph, Comparator<Weight> comparator) {
     this.comparator = comparator;
@@ -76,29 +70,25 @@ public class ShortestPath<T> {
     }
   }
 
-  /**
-   * @return weight &gt; otherWeight
-   */
+  /** @return weight &gt; otherWeight */
   private boolean greaterThen(Weight weight, Weight otherWeight) {
-    return otherWeight.getType() == Type.NOT_SET || this.comparator.compare(weight, otherWeight) > 0;
+    return otherWeight.getType() == Type.NOT_SET
+        || this.comparator.compare(weight, otherWeight) > 0;
   }
 
-  /**
-   * @return weight &lt; otherWeight
-   */
+  /** @return weight &lt; otherWeight */
   private boolean lessThen(Weight weight, Weight otherWeight) {
-    return otherWeight.getType() == Type.NOT_SET || this.comparator.compare(weight, otherWeight) < 0;
+    return otherWeight.getType() == Type.NOT_SET
+        || this.comparator.compare(weight, otherWeight) < 0;
   }
 
   /**
-   * Maximum of source weights, modified by the value of the edge. Note that
-   * every weight is larger than {@link Weight#NOT_SET} for max computation.
-   * This allows distances to propagate, even if not all nodes are connected to
-   * the source of the shortest path computation. Otherwise (source,
+   * Maximum of source weights, modified by the value of the edge. Note that every weight is larger
+   * than {@link Weight#NOT_SET} for max computation. This allows distances to propagate, even if
+   * not all nodes are connected to the source of the shortest path computation. Otherwise (source,
    * other)->(sink) would not have a path from source to sink.
    *
-   * @return max{edgeValue.newValue(sourceWeight) | sourceWeight \in
-   *         edge.getSources()}
+   * @return max{edgeValue.newValue(sourceWeight) | sourceWeight \in edge.getSources()}
    */
   private Weight maxOfSources(final DirectedHyperEdge<T> edge) {
     final EdgeWeight edgeValue = edge.getWeight();
@@ -121,13 +111,11 @@ public class ShortestPath<T> {
   }
 
   /**
-   * We do not need to iterate all edges, but edges of which the source weight
-   * was changed, other edges will not lead to a change of the destination
-   * weight. For correct updating of the destination weight, we need to consider
-   * all incoming edges. (The minimum of in edges is computed per round, not
-   * global - see
-   * {@link ShortestPath#updateDestinationsWithMin(DirectedHyperEdge, Weight)}
-   * )
+   * We do not need to iterate all edges, but edges of which the source weight was changed, other
+   * edges will not lead to a change of the destination weight. For correct updating of the
+   * destination weight, we need to consider all incoming edges. (The minimum of in edges is
+   * computed per round, not global - see {@link
+   * ShortestPath#updateDestinationsWithMin(DirectedHyperEdge, Weight)} )
    *
    * @return A set of edges, that may lead to changes of weights.
    */
@@ -155,13 +143,12 @@ public class ShortestPath<T> {
   }
 
   /**
-   * Updates Nodes with the minimum of all incoming edges. The minimum is
-   * computed over the minimum of all edges that were processed in this round (
-   * {@link ShortestPath#selectEdgesToIterate()}).
+   * Updates Nodes with the minimum of all incoming edges. The minimum is computed over the minimum
+   * of all edges that were processed in this round ( {@link ShortestPath#selectEdgesToIterate()}).
    *
-   * This is necessary for the feature described in
-   * {@link ShortestPath#maxOfSources(DirectedHyperEdge)} to work properly: The
-   * result of different rounds is not always monotonous, p.a.:
+   * <p>This is necessary for the feature described in {@link
+   * ShortestPath#maxOfSources(DirectedHyperEdge)} to work properly: The result of different rounds
+   * is not always monotonous, p.a.:
    *
    * <pre>
    * (n1, n2)->(n3)
@@ -169,14 +156,12 @@ public class ShortestPath<T> {
    * Round 2: n1 = 1, n2 = -3 -&gt; n3 = max(1,-3) = 1
    * </pre>
    *
-   * Would we compute the minimum of n3 over all rounds, it would be -3, but 1
-   * is correct.
+   * Would we compute the minimum of n3 over all rounds, it would be -3, but 1 is correct.
    *
-   * Note: that every weight is smaller than {@link Weight#NOT_SET} for min
-   * computation. This allows distances to propagate, even if not all nodes are
-   * connected to the source of the shortest path computation. Otherwise
-   * (source)->(sink), (other)->(sink), would not have a path from source to
-   * sink.
+   * <p>Note: that every weight is smaller than {@link Weight#NOT_SET} for min computation. This
+   * allows distances to propagate, even if not all nodes are connected to the source of the
+   * shortest path computation. Otherwise (source)->(sink), (other)->(sink), would not have a path
+   * from source to sink.
    */
   private void updateDestinationsWithMin(final DirectedHyperEdge<T> edge, Weight newWeight) {
     if (!newWeight.equals(Weight.NOT_SET)) {
@@ -189,8 +174,8 @@ public class ShortestPath<T> {
   }
 
   /**
-   * This method is necessary, as the min is updated per round. (See
-   * {@link ShortestPath#updateDestinationsWithMin(DirectedHyperEdge, Weight)} )
+   * This method is necessary, as the min is updated per round. (See {@link
+   * ShortestPath#updateDestinationsWithMin(DirectedHyperEdge, Weight)} )
    */
   private void writeChanges() {
     final HashSet<DirectedHyperEdge<T>> newUpdatedEdges = new HashSet<>();

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,11 +47,6 @@
 
 package org.scandroid.spec;
 
-import java.io.UTFDataFormatException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -61,93 +56,90 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
+import java.io.UTFDataFormatException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class MethodNamePattern {
-	final private String className;
+  private final String className;
 
-	final private String memberName;
+  private final String memberName;
 
-	final private String descriptor;  // null = match any types
+  private final String descriptor; // null = match any types
 
-	public MethodNamePattern(String c, String m, String d) {
-		className = c;
-		memberName = m;
-		descriptor = d;
-	}
+  public MethodNamePattern(String c, String m, String d) {
+    className = c;
+    memberName = m;
+    descriptor = d;
+  }
 
-	public MethodNamePattern(String c, String m) {
-		className = c;
-		memberName = m;
-		descriptor = null;
-	}
+  public MethodNamePattern(String c, String m) {
+    className = c;
+    memberName = m;
+    descriptor = null;
+  }
 
-	private Collection<IMethod> lookupMethods(IClass c) {
-		Collection<IMethod> matching = new LinkedList<>();
-		Atom atom = Atom.findOrCreateUnicodeAtom(memberName);
-		Descriptor desc = descriptor == null ? null : Descriptor.findOrCreateUTF8(descriptor);
-		Collection<? extends IMethod> allMethods = c.getAllMethods();
-		for(IMethod m: allMethods) {
-			if(m.getName().equals(atom) && (desc == null || m.getDescriptor().equals(desc))) {
-				matching.add(m);
-			}
-		}
-		return matching;
-	}
+  private Collection<IMethod> lookupMethods(IClass c) {
+    Collection<IMethod> matching = new LinkedList<>();
+    Atom atom = Atom.findOrCreateUnicodeAtom(memberName);
+    Descriptor desc = descriptor == null ? null : Descriptor.findOrCreateUTF8(descriptor);
+    Collection<? extends IMethod> allMethods = c.getAllMethods();
+    for (IMethod m : allMethods) {
+      if (m.getName().equals(atom) && (desc == null || m.getDescriptor().equals(desc))) {
+        matching.add(m);
+      }
+    }
+    return matching;
+  }
 
-	/**
-	 * Returns a Collection of IMethods which are found in the following 
-	 * ClassLoaders: Application, Primordial, Extension
-	 */
-	public Collection<IMethod> getPossibleTargets(IClassHierarchy cha) {
-		Collection<IMethod> matching = new LinkedList<>();
-		IClass c;
-		c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, className));
-		if (c != null)
-			matching.addAll(lookupMethods(c));
-		c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Primordial, className));
-		if (c != null)
-			matching.addAll(lookupMethods(c));
-		c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Extension, className));
-		if (c != null)
-			matching.addAll(lookupMethods(c));
+  /**
+   * Returns a Collection of IMethods which are found in the following ClassLoaders: Application,
+   * Primordial, Extension
+   */
+  public Collection<IMethod> getPossibleTargets(IClassHierarchy cha) {
+    Collection<IMethod> matching = new LinkedList<>();
+    IClass c;
+    c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, className));
+    if (c != null) matching.addAll(lookupMethods(c));
+    c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Primordial, className));
+    if (c != null) matching.addAll(lookupMethods(c));
+    c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Extension, className));
+    if (c != null) matching.addAll(lookupMethods(c));
 
+    Set<IMethod> targets = HashSetFactory.make();
+    for (IMethod im : matching) {
+      targets.addAll(cha.getPossibleTargets(im.getReference()));
+    }
 
-		Set<IMethod> targets = HashSetFactory.make();
-		for(IMethod im:matching) {
-			targets.addAll(cha.getPossibleTargets(im.getReference()));
-		}
+    return targets;
+  }
 
-		return targets;
-	}
+  @Override
+  public String toString() {
+    String returnString = "MethodNamePattern (Class: " + className + " - Method: " + memberName;
+    if (descriptor == null) return returnString + ')';
+    return returnString + " - Descriptor: " + descriptor + ')';
+  }
 
-	@Override
-	public String toString() {
-		String returnString = "MethodNamePattern (Class: "+className+
-				" - Method: "+memberName; 
-		if (descriptor == null)
-			return returnString+ ')';
-		return returnString+" - Descriptor: "+descriptor+ ')';
+  public String getDescriptor() {
+    return String.format("%s.%s%s", className, memberName, descriptor == null ? "" : descriptor);
+  }
 
-	}
-	
-	public String getDescriptor() {
-		return String.format("%s.%s%s", className, memberName, descriptor == null ? "" : descriptor);
-	}
+  public String getClassName() {
+    return className;
+  }
 
-	public String getClassName() {
-		return className;
-	}
+  public String getMemberName() {
+    return memberName;
+  }
 
-	public String getMemberName() {
-		return memberName;
-	}
-
-	public static MethodNamePattern patternForReference(MethodReference methodRef)
-			throws UTFDataFormatException {
-		String className = methodRef.getDeclaringClass().getName().toUnicodeString();
-		String methodName = methodRef.getName().toUnicodeString();
-		String descriptor = methodRef.getDescriptor().toUnicodeString();
-		MethodNamePattern pattern = new MethodNamePattern(className, methodName, descriptor);
-		return pattern;
-	}
+  public static MethodNamePattern patternForReference(MethodReference methodRef)
+      throws UTFDataFormatException {
+    String className = methodRef.getDeclaringClass().getName().toUnicodeString();
+    String methodName = methodRef.getName().toUnicodeString();
+    String descriptor = methodRef.getDescriptor().toUnicodeString();
+    MethodNamePattern pattern = new MethodNamePattern(className, methodName, descriptor);
+    return pattern;
+  }
 }

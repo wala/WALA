@@ -10,40 +10,46 @@
  */
 package com.ibm.wala.ide.classloader;
 
+import com.ibm.wala.classLoader.FileModule;
+import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.ide.util.EclipseProjectPath;
 import java.io.File;
 import java.util.regex.Pattern;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 
-import com.ibm.wala.classLoader.FileModule;
-import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
-import com.ibm.wala.ide.util.EclipseProjectPath;
-
 public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule {
 
   private final IPath rootIPath;
   private final Pattern[] excludePatterns;
-  
+
   private static Pattern interpretPattern(IPath pattern) {
-    return Pattern.compile('^' + pattern.toString().replace(".",  "\\.").replace("**", "~~~").replace("*", "[^/]*").replace("~~~",  ".*") + '$');
+    return Pattern.compile(
+        '^'
+            + pattern
+                .toString()
+                .replace(".", "\\.")
+                .replace("**", "~~~")
+                .replace("*", "[^/]*")
+                .replace("~~~", ".*")
+            + '$');
   }
-  
+
   private static Pattern[] interpretExcludes(IPath[] excludes) {
     if (excludes == null) {
       return null;
     } else {
-      Pattern[] stuff = new Pattern[ excludes.length ];
-      for(int i = 0; i < excludes.length; i++) {
+      Pattern[] stuff = new Pattern[excludes.length];
+      for (int i = 0; i < excludes.length; i++) {
         stuff[i] = interpretPattern(excludes[i]);
       }
       return stuff;
-      }
+    }
   }
-  
+
   public EclipseSourceDirectoryTreeModule(IPath root, IPath[] excludePaths) {
     super(EclipseProjectPath.makeAbsolute(root).toFile());
     this.rootIPath = root;
@@ -54,7 +60,7 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
     super(EclipseProjectPath.makeAbsolute(root).toFile(), fileExt);
     this.rootIPath = root;
     this.excludePatterns = interpretExcludes(excludePaths);
-}
+  }
 
   @Override
   protected FileModule makeFile(File file) {
@@ -65,7 +71,7 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
     assert ifile.exists();
     return EclipseSourceFileModule.createEclipseSourceFileModule(ifile);
   }
-  
+
   @Override
   protected boolean includeFile(File file) {
     if (!super.includeFile(file)) {
@@ -73,7 +79,7 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
     } else {
       if (excludePatterns != null) {
         IPath p = rootIPath.append(file.getPath().substring(root.getPath().length()));
-        for(Pattern exclude : excludePatterns) {
+        for (Pattern exclude : excludePatterns) {
           if (exclude.matcher(p.toOSString()).matches()) {
             return false;
           }
@@ -87,5 +93,4 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
   public String toString() {
     return "EclipseSourceDirectoryTreeModule:" + rootIPath;
   }
-
 }

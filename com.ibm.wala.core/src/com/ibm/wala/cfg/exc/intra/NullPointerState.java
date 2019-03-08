@@ -11,42 +11,46 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
-import java.util.Collection;
-
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.fixpoint.AbstractVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ssa.SymbolTable;
+import java.util.Collection;
 
 /**
  * States for the ssa variables.
- * 
- * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  */
 public class NullPointerState extends AbstractVariable<NullPointerState> {
-  
+
   /*
    * Inital state is UNKNOWN.
    * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN
    */
-  public enum State { UNKNOWN, BOTH, NULL, NOT_NULL }
-  
+  public enum State {
+    UNKNOWN,
+    BOTH,
+    NULL,
+    NOT_NULL
+  }
+
   // maps ssa variable number -> State
   private final State[] vars;
-  
+
   NullPointerState(int maxVarNum, SymbolTable symbolTable, ParameterState parameterState) {
     this(maxVarNum, symbolTable, parameterState, State.UNKNOWN);
   }
 
-  NullPointerState(int maxVarNum, SymbolTable symbolTable, ParameterState parameterState, State defaultState) {
+  NullPointerState(
+      int maxVarNum, SymbolTable symbolTable, ParameterState parameterState, State defaultState) {
     this.vars = new State[maxVarNum + 1];
-    
+
     // Initialize the states
     for (int i = 0; i < vars.length; i++) {
-      if (symbolTable.isConstant(i)){
-        if (symbolTable.isNullConstant(i)){
+      if (symbolTable.isConstant(i)) {
+        if (symbolTable.isNullConstant(i)) {
           vars[i] = State.NULL;
         } else {
           vars[i] = State.NOT_NULL;
@@ -55,11 +59,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
         vars[i] = defaultState;
       }
     }
-    
-    // Add what we know about the parameters (if we know anything about them). 
+
+    // Add what we know about the parameters (if we know anything about them).
     // They are the first vars by convention.
     if (parameterState != null) {
-      for (int i = 0; i < parameterState.getStates().size(); i++){
+      for (int i = 0; i < parameterState.getStates().size(); i++) {
         assert parameterState.getState(i) != null;
         vars[i + 1] = parameterState.getState(i);
         assert vars[i + 1] != null;
@@ -70,53 +74,55 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   static AbstractMeetOperator<NullPointerState> meetOperator() {
     return StateMeet.INSTANCE;
   }
-  
+
   /**
    * This function is not distributive, therefore we cannot use the kildall framework.
+   *
    * <pre>
    * v3 = phi v1, v2
    * ^ := Meet-operator
    * f := phiValueMeetFunction(3, {1, 2}) = v1,v2,v3 -&gt; v1,v2,[v1 ^ v2]
-   * 
+   *
    * f(1,?,?) ^ f(?,1,?) = 1,?,? ^ ?,1,? = 1,1,?
-   * 
+   *
    * f(1,?,? ^ ?,1,?) = f(1,1,?) = 1,1,1
-   * 
+   *
    * => f(1,?,? ^ ?,1,?) != f(1,?,?) ^ f(?,1,?)
-   * </pre> 
+   * </pre>
    */
   static UnaryOperator<NullPointerState> phiValueMeetFunction(int varNum, int[] fromVars) {
     return new PhiValueMeet(varNum, fromVars);
   }
-  
+
   static UnaryOperator<NullPointerState> nullifyFunction(int varNum) {
     return new NullifyFunction(varNum);
   }
-  
+
   static UnaryOperator<NullPointerState> denullifyFunction(int varNum) {
     return new DenullifyFunction(varNum);
   }
-  
+
   static UnaryOperator<NullPointerState> identityFunction() {
     return IndentityFunction.INSTANCE;
   }
-  
-  static UnaryOperator<NullPointerState> phisFunction(Collection<UnaryOperator<NullPointerState>> phiFunctions) {
+
+  static UnaryOperator<NullPointerState> phisFunction(
+      Collection<UnaryOperator<NullPointerState>> phiFunctions) {
     return new OperatorUtil.UnaryOperatorSequence<>(phiFunctions);
   }
 
   boolean isNeverNull(int varNum) {
     assert varNum > 0 && varNum < vars.length;
-    
+
     return vars[varNum] == State.NOT_NULL;
   }
-  
+
   boolean isAlwaysNull(int varNum) {
     assert varNum > 0 && varNum < vars.length;
-    
+
     return vars[varNum] == State.NULL;
   }
-  
+
   /* (non-Javadoc)
    * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
    */
@@ -129,9 +135,10 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
   /**
    * This is the meet operator for the NullPointerState variables.
+   *
    * <pre>
    * ? == unknown, 1 == not null, 0 == null, * == both
-   * 
+   *
    * meet | ? | 0 | 1 | * |  &lt;- rhs
    * -----|---|---|---|---|
    *    ? | ? | 0 | 1 | * |
@@ -145,7 +152,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
    *    ^
    *    |
    *   lhs
-   * </pre> 
+   * </pre>
    */
   boolean meet(final int varNum, final State rhs) {
     final State lhs = vars[varNum];
@@ -165,89 +172,88 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
   boolean meet(NullPointerState other) {
     assert other.vars.length == vars.length;
-    
+
     boolean changed = false;
-    
+
     for (int i = 0; i < vars.length; i++) {
       changed |= meet(i, other.vars[i]);
     }
-    
+
     return changed;
   }
-  
 
   boolean nullify(int varNum) {
     if (vars[varNum] != State.NULL) {
       vars[varNum] = State.NULL;
       return true;
     }
-    
+
     return false;
   }
-  
+
   boolean denullify(int varNum) {
     if (vars[varNum] != State.NOT_NULL) {
       vars[varNum] = State.NOT_NULL;
       return true;
     }
-    
+
     return false;
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof NullPointerState) {
       NullPointerState other = (NullPointerState) obj;
       assert vars.length == other.vars.length;
-      
+
       for (int i = 0; i < vars.length; i++) {
         if (vars[i] != other.vars[i]) {
           return false;
         }
       }
-      
+
       return true;
     }
-    
+
     return false;
   }
-  
-  public State getState(int ssaVarNum){
+
+  public State getState(int ssaVarNum) {
     return vars[ssaVarNum];
   }
-  
+
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder("<");
     for (State var : vars) {
       switch (var) {
-      case BOTH:
-        buf.append('*');
-        break;
-      case NOT_NULL:
-        buf.append('1');
-        break;
-      case NULL:
-        buf.append('0');
-        break;
-      case UNKNOWN:
-        buf.append('?');
-        break;
-      default:
-        throw new IllegalStateException();
+        case BOTH:
+          buf.append('*');
+          break;
+        case NOT_NULL:
+          buf.append('1');
+          break;
+        case NULL:
+          buf.append('0');
+          break;
+        case UNKNOWN:
+          buf.append('?');
+          break;
+        default:
+          throw new IllegalStateException();
       }
     }
     buf.append('>');
-    
+
     return buf.toString();
   }
-  
+
   private static class StateMeet extends AbstractMeetOperator<NullPointerState> {
 
-    private final static StateMeet INSTANCE = new StateMeet();
-    
+    private static final StateMeet INSTANCE = new StateMeet();
+
     private StateMeet() {}
-    
+
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
      */
@@ -262,7 +268,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState[] rhs) {
       boolean changed = false;
-      
+
       // meet rhs first
       for (NullPointerState state : rhs) {
         changed |= lhs.meet(state);
@@ -286,17 +292,17 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     public String toString() {
       return "NullPointerStateMeet";
     }
-
   }
-  
+
   private static class PhiValueMeet extends UnaryOperator<NullPointerState> {
 
     private final int varNum;
     private final int[] fromVars;
-    
+
     /**
-     * Creates an operator that merges the states of the given variables
-     * fromVars into the state of the phi varaiable varNum
+     * Creates an operator that merges the states of the given variables fromVars into the state of
+     * the phi varaiable varNum
+     *
      * @param varNum Variable number of a phi value
      * @param fromVars Array of variable numbers the phi value refers to.
      */
@@ -304,7 +310,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       this.varNum = varNum;
       this.fromVars = fromVars;
     }
-    
+
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       boolean changed = false;
@@ -314,9 +320,9 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       }
       lhs.vars[varNum] = State.UNKNOWN;
       for (int from : fromVars) {
-          changed |= lhs.meet(varNum, rhs.vars[from]);
+        changed |= lhs.meet(varNum, rhs.vars[from]);
       }
-      
+
       return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
     }
 
@@ -328,7 +334,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       if (o == this) {
         return true;
       }
-      
+
       if (o instanceof PhiValueMeet) {
         PhiValueMeet other = (PhiValueMeet) o;
         if (varNum == other.varNum && fromVars.length == other.fromVars.length) {
@@ -337,11 +343,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
               return false;
             }
           }
-          
+
           return true;
         }
       }
-      
+
       return false;
     }
 
@@ -359,44 +365,42 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     @Override
     public String toString() {
       StringBuilder str = new StringBuilder("PhiValueMeet(" + varNum + ", [");
-      
+
       for (int i = 0; i < fromVars.length; i++) {
         str.append(fromVars[i]);
         str.append(i == fromVars.length - 1 ? "" : ",");
       }
-      
+
       str.append("])");
-      
+
       return str.toString();
     }
-
   }
-  
-  
+
   private static class NullifyFunction extends UnaryOperator<NullPointerState> {
 
     private final int varNum;
-    
+
     private NullifyFunction(int varNum) {
       this.varNum = varNum;
     }
-    
+
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
      */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       byte state = FixedPointConstants.NOT_CHANGED;
-      
+
       if (!lhs.equals(rhs)) {
         lhs.copyState(rhs);
         state = FixedPointConstants.CHANGED;
       }
-      
+
       if (lhs.nullify(varNum)) {
         state = FixedPointConstants.CHANGED;
       }
-        
+
       return state;
     }
 
@@ -423,34 +427,33 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     public String toString() {
       return "Nullify(" + varNum + ')';
     }
-    
   }
 
   private static class DenullifyFunction extends UnaryOperator<NullPointerState> {
 
     private final int varNum;
-    
+
     private DenullifyFunction(int varNum) {
       assert varNum >= 0;
       this.varNum = varNum;
     }
-    
+
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
      */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       byte state = FixedPointConstants.NOT_CHANGED;
-      
+
       if (!lhs.equals(rhs)) {
         lhs.copyState(rhs);
         state = FixedPointConstants.CHANGED;
       }
-      
+
       if (lhs.denullify(varNum)) {
         state = FixedPointConstants.CHANGED;
       }
-        
+
       return state;
     }
 
@@ -477,15 +480,13 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     public String toString() {
       return "Denullify(" + varNum + ')';
     }
-    
   }
-  
+
   private static class IndentityFunction extends UnaryOperator<NullPointerState> {
 
     private static final IndentityFunction INSTANCE = new IndentityFunction();
-    
-    private IndentityFunction() {
-    }
+
+    private IndentityFunction() {}
 
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)

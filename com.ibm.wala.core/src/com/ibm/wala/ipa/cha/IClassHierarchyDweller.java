@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.ipa.cha;
 
-/**
- * Something that lives in a class hierarchy
- */
+/** Something that lives in a class hierarchy */
 public interface IClassHierarchyDweller {
   public IClassHierarchy getClassHierarchy();
 }

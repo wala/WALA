@@ -12,13 +12,12 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-/**
- * A 2-level iterator.  has not been tested yet!
- */
-public abstract class ComposedIterator<O,I> implements Iterator<I> {
+/** A 2-level iterator. has not been tested yet! */
+public abstract class ComposedIterator<O, I> implements Iterator<I> {
 
   private final Iterator<O> outer;
   private Iterator<? extends I> inner;
+
   public ComposedIterator(Iterator<O> outer) {
     this.outer = outer;
     advanceOuter();
@@ -35,11 +34,11 @@ public abstract class ComposedIterator<O,I> implements Iterator<I> {
       inner = null;
     }
   }
-  
+
   public abstract Iterator<? extends I> makeInner(O outer);
-  
+
   @Override
-  public void remove() throws UnsupportedOperationException{
+  public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -56,5 +55,4 @@ public abstract class ComposedIterator<O,I> implements Iterator<I> {
     }
     return result;
   }
-  
 }

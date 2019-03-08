@@ -10,10 +10,9 @@
  */
 package com.ibm.wala.cast.js.ssa;
 
-import java.util.Collection;
-
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
 
 public class JavaScriptPropertyWrite extends AstPropertyWrite {
 
@@ -29,5 +28,4 @@ public class JavaScriptPropertyWrite extends AstPropertyWrite {
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
-
 }

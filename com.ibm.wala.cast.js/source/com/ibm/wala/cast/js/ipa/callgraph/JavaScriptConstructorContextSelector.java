@@ -26,13 +26,13 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
   private final ContextSelector base;
 
   /**
-   * for generating contexts with one-level of call strings, to match standard
-   * Andersen's heap abstraction
+   * for generating contexts with one-level of call strings, to match standard Andersen's heap
+   * abstraction
    */
   private final nCFAContextSelector oneLevelCallStrings;
 
   private final OneLevelSiteContextSelector oneLevelCallerSite;
-  
+
   public JavaScriptConstructorContextSelector(ContextSelector base) {
     this.base = base;
     this.oneLevelCallStrings = new nCFAContextSelector(1, base);
@@ -45,9 +45,11 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
   }
 
   @Override
-  public Context getCalleeTarget(final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee instanceof JavaScriptConstructor) {
-      final Context oneLevelCallStringContext = oneLevelCallStrings.getCalleeTarget(caller, site, callee, receiver);
+      final Context oneLevelCallStringContext =
+          oneLevelCallStrings.getCalleeTarget(caller, site, callee, receiver);
       if (AstLexicalInformation.hasExposedUses(caller, site)) {
         // use a caller-site context, to enable lexical scoping lookups (via caller CGNode)
         return oneLevelCallerSite.getCalleeTarget(caller, site, callee, receiver);
@@ -60,5 +62,4 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
       return base.getCalleeTarget(caller, site, callee, receiver);
     }
   }
-
 }

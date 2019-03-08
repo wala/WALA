@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.cast.js.client;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.jar.JarFile;
-
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
@@ -50,8 +46,12 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collections;
+import java.util.Set;
+import java.util.jar.JarFile;
 
-public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends AbstractAnalysisEngine<I, CallGraphBuilder<I>, Void> {
+public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
+    extends AbstractAnalysisEngine<I, CallGraphBuilder<I>, Void> {
   protected JavaScriptLoaderFactory loaderFactory;
 
   protected JavaScriptTranslatorFactory translatorFactory;
@@ -68,7 +68,8 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   @Override
   public IClassHierarchy buildClassHierarchy() {
     try {
-      return setClassHierarchy(SeqClassHierarchyFactory.make(getScope(), loaderFactory, JavaScriptLoader.JS));
+      return setClassHierarchy(
+          SeqClassHierarchyFactory.make(getScope(), loaderFactory, JavaScriptLoader.JS));
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE(e.toString());
       return null;
@@ -110,21 +111,22 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
     return options;
   }
 
-  public static class FieldBasedJavaScriptAnalysisEngine extends JavaScriptAnalysisEngine<ObjectVertex> {
-    public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
-    
+  public static class FieldBasedJavaScriptAnalysisEngine
+      extends JavaScriptAnalysisEngine<ObjectVertex> {
+    public enum BuilderType {
+      PESSIMISTIC,
+      OPTIMISTIC,
+      REFLECTIVE
+    }
+
     private BuilderType builderType = BuilderType.OPTIMISTIC;
-    
-    /**
-     * @return the builderType
-     */
+
+    /** @return the builderType */
     public BuilderType getBuilderType() {
       return builderType;
     }
 
-    /**
-     * @param builderType the builderType to set
-     */
+    /** @param builderType the builderType to set */
     public void setBuilderType(BuilderType builderType) {
       this.builderType = builderType;
     }
@@ -134,63 +136,67 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
       return JSCallGraphUtil.makeOptions(scope, getClassHierarchy(), roots);
     }
 
-
-  @Override
-  protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(final IClassHierarchy cha, AnalysisOptions options, final IAnalysisCacheView cache) {
-    Set<Entrypoint> roots = HashSetFactory.make();
-    for(Entrypoint e : options.getEntrypoints()) {
-      roots.add(e);
-    }
-    
-    if (builderType.equals(BuilderType.OPTIMISTIC)) {
-      ((JSAnalysisOptions)options).setHandleCallApply(false);
-    }
-
-    final FieldBasedCallGraphBuilder builder = 
-      builderType.equals(BuilderType.PESSIMISTIC)? 
-          new PessimisticCallGraphBuilder(getClassHierarchy(), options, makeDefaultCache(), true) 
-        : new OptimisticCallgraphBuilder(getClassHierarchy(), options, makeDefaultCache(), true);
-  
-     return new CallGraphBuilder<ObjectVertex>() {
-      private PointerAnalysis<ObjectVertex> ptr;
-      
-      @Override
-      public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CallGraphBuilderCancelException {
-        Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> dat;
-        try {
-          dat = builder.buildCallGraph(options.getEntrypoints(), monitor);
-        } catch (CancelException e) {
-          throw CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, null, null);
-        }
-        ptr = dat.snd;
-        return dat.fst;
-      }
-
-      @Override
-      public PointerAnalysis<ObjectVertex> getPointerAnalysis() {
-        return ptr;
-      }
-
-      @Override
-      public IAnalysisCacheView getAnalysisCache() {
-        return cache;
-      }
-
-      @Override
-      public IClassHierarchy getClassHierarchy() {
-        return cha;
-      }
-       
-     };
-  }
-  }
-  
-  public static class PropagationJavaScriptAnalysisEngine extends JavaScriptAnalysisEngine<InstanceKey> {
-  
     @Override
-    protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+    protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(
+        final IClassHierarchy cha, AnalysisOptions options, final IAnalysisCacheView cache) {
+      Set<Entrypoint> roots = HashSetFactory.make();
+      for (Entrypoint e : options.getEntrypoints()) {
+        roots.add(e);
+      }
+
+      if (builderType.equals(BuilderType.OPTIMISTIC)) {
+        ((JSAnalysisOptions) options).setHandleCallApply(false);
+      }
+
+      final FieldBasedCallGraphBuilder builder =
+          builderType.equals(BuilderType.PESSIMISTIC)
+              ? new PessimisticCallGraphBuilder(
+                  getClassHierarchy(), options, makeDefaultCache(), true)
+              : new OptimisticCallgraphBuilder(
+                  getClassHierarchy(), options, makeDefaultCache(), true);
+
+      return new CallGraphBuilder<ObjectVertex>() {
+        private PointerAnalysis<ObjectVertex> ptr;
+
+        @Override
+        public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor)
+            throws IllegalArgumentException, CallGraphBuilderCancelException {
+          Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> dat;
+          try {
+            dat = builder.buildCallGraph(options.getEntrypoints(), monitor);
+          } catch (CancelException e) {
+            throw CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
+                e, null, null);
+          }
+          ptr = dat.snd;
+          return dat.fst;
+        }
+
+        @Override
+        public PointerAnalysis<ObjectVertex> getPointerAnalysis() {
+          return ptr;
+        }
+
+        @Override
+        public IAnalysisCacheView getAnalysisCache() {
+          return cache;
+        }
+
+        @Override
+        public IClassHierarchy getClassHierarchy() {
+          return cha;
+        }
+      };
+    }
+  }
+
+  public static class PropagationJavaScriptAnalysisEngine
+      extends JavaScriptAnalysisEngine<InstanceKey> {
+
+    @Override
+    protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
+        IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha);
     }
   }
-  
 }

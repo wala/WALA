@@ -1,15 +1,14 @@
 package com.ibm.wala.util.graph.impl;
 
+import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
 
-import com.ibm.wala.util.graph.EdgeManager;
-
 public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
-  private class PrependItterator implements Iterator<T>{
+  private class PrependItterator implements Iterator<T> {
     private boolean usedFirst = false;
     private Iterator<T> original;
     private T first;
-    
+
     public PrependItterator(Iterator<T> original, T first) {
       super();
       this.original = original;
@@ -21,8 +20,8 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
       if (!usedFirst) {
         return true;
       } else {
-        return original.hasNext();  
-      }      
+        return original.hasNext();
+      }
     }
 
     @Override
@@ -33,17 +32,16 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
         usedFirst = true;
         return tmp;
       } else {
-        return original.next();  
-      }      
+        return original.next();
+      }
     }
 
     @Override
     public void remove() {
       assert false;
     }
-    
   }
- 
+
   private final EdgeManager<T> original;
 
   public SelfLoopAddedEdgeManager(EdgeManager<T> original) {

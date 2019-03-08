@@ -10,17 +10,15 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import com.ibm.wala.util.graph.AbstractNumberedGraph;
+import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.intset.IntSet;
+public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumberedGraph<T>
+    implements LabeledGraph<T, U>, NumberedLabeledGraph<T, U> {
 
-public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumberedGraph<T> implements LabeledGraph<T, U>, NumberedLabeledGraph<T, U> {
-
-  /**
-   * @return the object which manages edges in the graph
-   */
+  /** @return the object which manages edges in the graph */
   @Override
   protected abstract NumberedLabeledEdgeManager<T, U> getEdgeManager();
 
@@ -68,7 +66,7 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
   public IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodeNumbers(node, label);
   }
-  
+
   @Override
   public boolean hasEdge(T src, T dst, U label) {
     return getEdgeManager().hasEdge(src, dst, label);
@@ -88,14 +86,14 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
   public U getDefaultLabel() {
     return getEdgeManager().getDefaultLabel();
   }
-  
+
   @Override
   protected String edgeString(T from, T to) {
-      Set<? extends U> labels = getEdgeLabels(from, to);
-      if (labels != null && !labels.isEmpty()) {
-        return "-" + labels + "->";
-      } else {
-        return super.edgeString(from, to);
-      }
+    Set<? extends U> labels = getEdgeLabels(from, to);
+    if (labels != null && !labels.isEmpty()) {
+      return "-" + labels + "->";
+    } else {
+      return super.edgeString(from, to);
+    }
   }
 }

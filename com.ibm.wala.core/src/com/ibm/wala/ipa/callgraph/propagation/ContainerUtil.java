@@ -10,29 +10,31 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Collection;
-
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Collection;
 
-/**
- * Utilities for container class analysis
- */
+/** Utilities for container class analysis */
 public class ContainerUtil {
 
-  private final static TypeName FreezableListName = TypeName.string2TypeName("Lcom/sun/corba/se/internal/ior/FreezableList");
+  private static final TypeName FreezableListName =
+      TypeName.string2TypeName("Lcom/sun/corba/se/internal/ior/FreezableList");
 
-  public final static TypeReference FreezableList = TypeReference.findOrCreate(ClassLoaderReference.Primordial, FreezableListName);
+  public static final TypeReference FreezableList =
+      TypeReference.findOrCreate(ClassLoaderReference.Primordial, FreezableListName);
 
-  private final static TypeName JarAttributesName = TypeName.string2TypeName("Ljava/util/jar/Attributes");
+  private static final TypeName JarAttributesName =
+      TypeName.string2TypeName("Ljava/util/jar/Attributes");
 
-  public final static TypeReference JarAttributes = TypeReference.findOrCreate(ClassLoaderReference.Primordial, JarAttributesName);
+  public static final TypeReference JarAttributes =
+      TypeReference.findOrCreate(ClassLoaderReference.Primordial, JarAttributesName);
 
-  private final static Collection<TypeReference> miscContainers = HashSetFactory.make();
+  private static final Collection<TypeReference> miscContainers = HashSetFactory.make();
+
   static {
     miscContainers.add(FreezableList);
     miscContainers.add(JarAttributes);
@@ -47,7 +49,9 @@ public class ContainerUtil {
       throw new IllegalArgumentException("c is null");
     }
     if (ClassLoaderReference.Primordial.equals(c.getClassLoader().getReference())
-        && TypeReference.JavaUtilCollection.getName().getPackage().equals(c.getReference().getName().getPackage())) {
+        && TypeReference.JavaUtilCollection.getName()
+            .getPackage()
+            .equals(c.getReference().getName().getPackage())) {
       IClass collection = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilCollection);
       IClass map = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilMap);
       if (c.isInterface()) {
@@ -59,7 +63,8 @@ public class ContainerUtil {
           return true;
         }
       } else {
-        if (c.getClassHierarchy().implementsInterface(c, collection) || c.getClassHierarchy().implementsInterface(c, map)) {
+        if (c.getClassHierarchy().implementsInterface(c, collection)
+            || c.getClassHierarchy().implementsInterface(c, map)) {
           return true;
         }
       }
@@ -68,7 +73,8 @@ public class ContainerUtil {
       return true;
     }
 
-    if (c.isArrayClass() && ((ArrayClass) c).getElementClass() != null
+    if (c.isArrayClass()
+        && ((ArrayClass) c).getElementClass() != null
         && ((ArrayClass) c).getElementClass().getReference().isReferenceType()) {
       return true;
     }

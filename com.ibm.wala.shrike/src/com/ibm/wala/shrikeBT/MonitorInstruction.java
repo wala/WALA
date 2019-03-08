@@ -10,17 +10,15 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents monitorenter and monitorexit instructions.
- */
+/** This class represents monitorenter and monitorexit instructions. */
 public final class MonitorInstruction extends Instruction {
   protected MonitorInstruction(short opcode) {
     super(opcode);
   }
 
-  private final static MonitorInstruction enter = new MonitorInstruction(OP_monitorenter);
+  private static final MonitorInstruction enter = new MonitorInstruction(OP_monitorenter);
 
-  private final static MonitorInstruction exit = new MonitorInstruction(OP_monitorexit);
+  private static final MonitorInstruction exit = new MonitorInstruction(OP_monitorexit);
 
   public static MonitorInstruction make(boolean entering) {
     return entering ? enter : exit;

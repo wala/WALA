@@ -21,8 +21,8 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * A place to hold onto caches of various analysis artifacts.
- * 
- * Someday this should maybe go away?
+ *
+ * <p>Someday this should maybe go away?
  */
 public class AnalysisCache implements IAnalysisCacheView {
   private final IRFactory<IMethod> irFactory;
@@ -30,7 +30,7 @@ public class AnalysisCache implements IAnalysisCacheView {
   private final SSACache ssaCache;
 
   private final SSAOptions ssaOptions;
-  
+
   public AnalysisCache(IRFactory<IMethod> irFactory, SSAOptions ssaOptions, SSACache cache) {
     super();
     this.ssaOptions = ssaOptions;
@@ -39,7 +39,7 @@ public class AnalysisCache implements IAnalysisCacheView {
     ReferenceCleanser.registerCache(this);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#invalidate(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context)
    */
   @Override
@@ -55,7 +55,7 @@ public class AnalysisCache implements IAnalysisCacheView {
     return ssaOptions;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIRFactory()
    */
   @Override
@@ -63,7 +63,7 @@ public class AnalysisCache implements IAnalysisCacheView {
     return irFactory;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIR(com.ibm.wala.classLoader.IMethod)
    */
   @Override
@@ -78,8 +78,8 @@ public class AnalysisCache implements IAnalysisCacheView {
   public IR getIR(IMethod m) {
     return getIR(m, Everywhere.EVERYWHERE);
   }
-  
-  /* 
+
+  /*
    * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getDefUse(com.ibm.wala.ssa.IR)
    */
   @Override
@@ -92,6 +92,6 @@ public class AnalysisCache implements IAnalysisCacheView {
 
   @Override
   public void clear() {
-    ssaCache.wipe();   
+    ssaCache.wipe();
   }
 }

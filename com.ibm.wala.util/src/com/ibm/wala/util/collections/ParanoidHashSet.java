@@ -10,45 +10,37 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.util.debug.UnimplementedError;
-
 /**
- * a debugging aid. This implementation complains if you stick an object in here which appears to use System.identityHashCode(), or
- * if it detects more than BAD_HC collisions in the Set (possibly indicated a bad hash function)
+ * a debugging aid. This implementation complains if you stick an object in here which appears to
+ * use System.identityHashCode(), or if it detects more than BAD_HC collisions in the Set (possibly
+ * indicated a bad hash function)
  */
 public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   public static final long serialVersionUID = 30919839181133333L;
 
-  /**
-   * A mapping from Integer (hashcode) -&gt; Set of objects
-   */
+  /** A mapping from Integer (hashcode) -&gt; Set of objects */
   private final Map<Integer, Set<T>> hcFreq;
 
   private int nAdded = 0;
 
-  /**
-   * If a hash set contains more than this number of items with the same hash code, complain.
-   */
+  /** If a hash set contains more than this number of items with the same hash code, complain. */
   private final int BAD_HC = 3;
 
-  /**
-   * @throws NullPointerException if s is null
-   */
+  /** @throws NullPointerException if s is null */
   public ParanoidHashSet(Collection<T> s) throws NullPointerException {
     super(s.size());
     hcFreq = HashMapFactory.make(s.size());
     this.addAll(s);
   }
 
-  /**
-   * 
-   */
+  /** */
   public ParanoidHashSet() {
     super();
     hcFreq = HashMapFactory.make();

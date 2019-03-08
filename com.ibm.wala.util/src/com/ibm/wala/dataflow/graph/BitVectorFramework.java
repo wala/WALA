@@ -14,17 +14,18 @@ import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
-/**
- * a basic implementation of the dataflow framework
- */
-public class BitVectorFramework<T,L> extends BasicFramework<T, BitVectorVariable> {
+/** a basic implementation of the dataflow framework */
+public class BitVectorFramework<T, L> extends BasicFramework<T, BitVectorVariable> {
 
   private final OrdinalSetMapping<L> latticeValues;
 
-  public BitVectorFramework(Graph<T> flowGraph, ITransferFunctionProvider<T, BitVectorVariable> transferFunctionProvider, OrdinalSetMapping<L> latticeValues) {
-    super(flowGraph,transferFunctionProvider);
+  public BitVectorFramework(
+      Graph<T> flowGraph,
+      ITransferFunctionProvider<T, BitVectorVariable> transferFunctionProvider,
+      OrdinalSetMapping<L> latticeValues) {
+    super(flowGraph, transferFunctionProvider);
     this.latticeValues = latticeValues;
-  } 
+  }
 
   /*
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getLatticeValues()
@@ -32,5 +33,4 @@ public class BitVectorFramework<T,L> extends BasicFramework<T, BitVectorVariable
   public OrdinalSetMapping<L> getLatticeValues() {
     return latticeValues;
   }
-
 }

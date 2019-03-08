@@ -16,15 +16,15 @@ public class Slice5 {
     int x = baz();
     bar(x);
   }
-  
+
   static int baz() {
     return foo(1);
   }
-  
+
   static int foo(int x) {
     return x + 2;
   }
-  
+
   static void bar(int x) {
     return;
   }

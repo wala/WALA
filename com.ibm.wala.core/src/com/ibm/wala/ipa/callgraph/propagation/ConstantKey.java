@@ -10,18 +10,15 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
+import java.util.Iterator;
 
-/**
- * An instance key which represents a unique, constant object.
- */
+/** An instance key which represents a unique, constant object. */
 public final class ConstantKey<T> implements InstanceKey {
   private final T value;
 
@@ -37,7 +34,9 @@ public final class ConstantKey<T> implements InstanceKey {
   public boolean equals(Object obj) {
     if (obj instanceof ConstantKey) {
       ConstantKey<?> other = (ConstantKey<?>) obj;
-      return valueClass.equals(other.valueClass) ? (value == null ? other.value == null : value.equals(other.value)) : false;
+      return valueClass.equals(other.valueClass)
+          ? (value == null ? other.value == null : value.equals(other.value))
+          : false;
     } else {
       return false;
     }
@@ -50,10 +49,8 @@ public final class ConstantKey<T> implements InstanceKey {
 
   @Override
   public String toString() {
-    if (value == null)
-      return "[ConstantKey:null]";
-    else
-      return "[ConstantKey:" + value + ':' + valueClass.getReference() + ']';
+    if (value == null) return "[ConstantKey:null]";
+    else return "[ConstantKey:" + value + ':' + valueClass.getReference() + ']';
   }
 
   /*

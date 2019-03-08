@@ -15,5 +15,4 @@ public interface IStoreInstruction extends IInstruction {
   int getVarIndex();
 
   String getType();
-
 }

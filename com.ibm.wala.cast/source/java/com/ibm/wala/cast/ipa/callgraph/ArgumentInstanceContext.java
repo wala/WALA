@@ -33,8 +33,8 @@ public class ArgumentInstanceContext implements Context {
   @Override
   public ContextItem get(ContextKey name) {
     /*if(name == ContextKey.RECEIVER && index == 1)
-      return instanceKey;*/
-    if(name.equals(ContextKey.PARAMETERS[index]) || name.equals(ID_KEY))
+    return instanceKey;*/
+    if (name.equals(ContextKey.PARAMETERS[index]) || name.equals(ID_KEY))
       return new FilteredPointerKey.SingleInstanceFilter(instanceKey);
     return base.get(name);
   }
@@ -51,32 +51,28 @@ public class ArgumentInstanceContext implements Context {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     ArgumentInstanceContext other = (ArgumentInstanceContext) obj;
     if (base == null) {
-      if (other.base != null)
-        return false;
-    } else if (!base.equals(other.base))
-      return false;
-    if (index != other.index)
-      return false;
+      if (other.base != null) return false;
+    } else if (!base.equals(other.base)) return false;
+    if (index != other.index) return false;
     if (instanceKey == null) {
-      if (other.instanceKey != null)
-        return false;
-    } else if (!instanceKey.equals(other.instanceKey))
-      return false;
+      if (other.instanceKey != null) return false;
+    } else if (!instanceKey.equals(other.instanceKey)) return false;
     return true;
   }
 
   @Override
   public String toString() {
-    return "ArgumentInstanceContext [base=" + base + ", index=" + index + ", instanceKey=" + instanceKey + ']';
+    return "ArgumentInstanceContext [base="
+        + base
+        + ", index="
+        + index
+        + ", instanceKey="
+        + instanceKey
+        + ']';
   }
-  
-  
 }

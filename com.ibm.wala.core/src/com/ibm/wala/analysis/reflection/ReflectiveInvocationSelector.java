@@ -29,26 +29,29 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
- * A {@link ContextSelector} to intercept calls to reflective method invocations such as Constructor.newInstance and Method.invoke
+ * A {@link ContextSelector} to intercept calls to reflective method invocations such as
+ * Constructor.newInstance and Method.invoke
  */
 class ReflectiveInvocationSelector implements ContextSelector {
 
-  public ReflectiveInvocationSelector() {
-  }
+  public ReflectiveInvocationSelector() {}
 
   /**
    * Creates a callee target based on the following criteria:
+   *
    * <ol>
-   * <li>If the method being invoked through reflection is definitely static, then do not create a callee target for any
-   * {@code callee} method that is not static. In this case, return {@code null}.
-   * <li>If the method being invoked through reflection takes a constant number of parameters, {@code n}, then do not create a
-   * callee target for any {@code callee} method that takes a number of parameters different from {@code n}. In this case,
-   * return {@code null}.
-   * <li>Otherwise, return a new {@link ReceiverInstanceContext} for {@code receiver}.
+   *   <li>If the method being invoked through reflection is definitely static, then do not create a
+   *       callee target for any {@code callee} method that is not static. In this case, return
+   *       {@code null}.
+   *   <li>If the method being invoked through reflection takes a constant number of parameters,
+   *       {@code n}, then do not create a callee target for any {@code callee} method that takes a
+   *       number of parameters different from {@code n}. In this case, return {@code null}.
+   *   <li>Otherwise, return a new {@link ReceiverInstanceContext} for {@code receiver}.
    * </ol>
    */
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver == null || receiver.length == 0 || !mayUnderstand(callee, receiver[0])) {
       return null;
     }
@@ -58,12 +61,14 @@ class ReflectiveInvocationSelector implements ContextSelector {
       return new ReceiverInstanceContext(receiver[0]);
     }
     SymbolTable st = ir.getSymbolTable();
-    @SuppressWarnings("unchecked") ConstantKey<IMethod> receiverConstantKey = (ConstantKey<IMethod>) receiver[0];
+    @SuppressWarnings("unchecked")
+    ConstantKey<IMethod> receiverConstantKey = (ConstantKey<IMethod>) receiver[0];
     IMethod m = receiverConstantKey.getValue();
     boolean isStatic = m.isStatic();
     boolean isConstructor = isConstructorConstant(receiver[0]);
 
-    // If the method being invoked through reflection is not a constructor and is definitely static, then
+    // If the method being invoked through reflection is not a constructor and is definitely static,
+    // then
     // we should not create a callee target for any method that is not static
     if (!isConstructor) {
       int recvUse = invokeInstructions[0].getUse(1);
@@ -102,14 +107,14 @@ class ReflectiveInvocationSelector implements ContextSelector {
     }
   }
 
-  /**
-   * This object may understand a dispatch to Constructor.newInstance().
-   */
+  /** This object may understand a dispatch to Constructor.newInstance(). */
   private static boolean mayUnderstand(IMethod targetMethod, InstanceKey instance) {
     if (instance instanceof ConstantKey) {
-      if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || 
-          isConstructorConstant(instance)
-          && targetMethod.getReference().equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
+      if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE)
+          || isConstructorConstant(instance)
+              && targetMethod
+                  .getReference()
+                  .equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
         return true;
       }
     }
@@ -126,12 +131,12 @@ class ReflectiveInvocationSelector implements ContextSelector {
     return false;
   }
 
-  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+  private static final IntSet thisParameter = IntSetUtil.make(new int[] {0});
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (site.getDeclaredTarget().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || 
-        site.getDeclaredTarget().equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
+    if (site.getDeclaredTarget().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE)
+        || site.getDeclaredTarget().equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
       return thisParameter;
     } else {
       return EmptyIntSet.instance;

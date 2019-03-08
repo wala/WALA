@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,6 +47,7 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
+import com.ibm.wala.dalvik.dex.instructions.Instruction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,151 +55,139 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.ibm.wala.dalvik.dex.instructions.Instruction;
-
 /**
- * Collection of Instruction wich allow to get an instruction from its table
- * index id or from its bytecode index.
- * It's not allowed to remove an element.
- *
+ * Collection of Instruction wich allow to get an instruction from its table index id or from its
+ * bytecode index. It's not allowed to remove an element.
  */
 public class InstructionArray implements Collection<Instruction> {
-    List<Instruction> instructions;
-    Map<Integer, Integer> pc2index;
-    List<Integer> index2pc;
+  List<Instruction> instructions;
+  Map<Integer, Integer> pc2index;
+  List<Integer> index2pc;
 
-    public InstructionArray() {
-        instructions = new ArrayList<>();
-        pc2index = new HashMap<>();
-        index2pc = new ArrayList<>();
+  public InstructionArray() {
+    instructions = new ArrayList<>();
+    pc2index = new HashMap<>();
+    index2pc = new ArrayList<>();
+  }
+
+  @Override
+  public boolean add(Instruction e) {
+    boolean ret = instructions.add(e);
+
+    if (ret) {
+      pc2index.put(e.pc, size() - 1);
+      index2pc.add(e.pc);
     }
 
-    @Override
-    public boolean add(Instruction e) {
-        boolean ret = instructions.add(e);
+    return ret;
+  }
 
-        if (ret) {
-            pc2index.put(e.pc, size() - 1);
-            index2pc.add(e.pc);
-        }
+  @Override
+  public boolean addAll(Collection<? extends Instruction> c) {
+    boolean ret = false;
 
-        return ret;
+    for (Instruction instruction : c) {
+      ret |= add(instruction);
     }
 
-    @Override
-    public boolean addAll(Collection<? extends Instruction> c) {
-        boolean ret = false;
+    return ret;
+  }
 
-        for (Instruction instruction : c) {
-            ret |= add(instruction);
-        }
+  @Override
+  public boolean contains(Object o) {
+    return instructions.contains(o);
+  }
 
-        return ret;
+  @Override
+  public boolean containsAll(Collection<?> c) {
+    return instructions.containsAll(c);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return instructions.equals(o);
+  }
+
+  @Override
+  public int hashCode() {
+    return instructions.hashCode();
+  }
+
+  public int indexOf(Object o) {
+    return instructions.indexOf(o);
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return instructions.isEmpty();
+  }
+
+  @Override
+  public Iterator<Instruction> iterator() {
+    return instructions.iterator();
+  }
+
+  @Override
+  public void clear() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean remove(Object o) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean removeAll(Collection<?> c) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean retainAll(Collection<?> c) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int size() {
+    return instructions.size();
+  }
+
+  @Override
+  public Object[] toArray() {
+    return instructions.toArray();
+  }
+
+  @Override
+  public <T> T[] toArray(T[] a) {
+    return instructions.toArray(a);
+  }
+
+  /**
+   * @param pc the byte code index.
+   * @return The index of the instruction of given byte code index
+   */
+  public int getIndexFromPc(int pc) {
+    if (!pc2index.containsKey(pc) && pc2index.containsKey(pc + 1)) {
+      pc++;
     }
+    return pc2index.get(pc);
+  }
 
-    @Override
-    public boolean contains(Object o) {
-        return instructions.contains(o);
-    }
+  /**
+   * @param index the instruction index.
+   * @return The byte code address of the instruction index
+   */
+  public int getPcFromIndex(int index) {
+    return index2pc.get(index);
+  }
 
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        return instructions.containsAll(c);
-    }
+  /** @return The instruction from its id. */
+  public Instruction getFromId(int id) {
+    return instructions.get(id);
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        return instructions.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return instructions.hashCode();
-    }
-
-    public int indexOf(Object o) {
-        return instructions.indexOf(o);
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return instructions.isEmpty();
-    }
-
-    @Override
-    public Iterator<Instruction> iterator() {
-        return instructions.iterator();
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int size() {
-        return instructions.size();
-    }
-
-    @Override
-    public Object[] toArray() {
-        return instructions.toArray();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return instructions.toArray(a);
-    }
-
-    /**
-     * @param pc
-     *            the byte code index.
-     * @return The index of the instruction of given byte code index
-     */
-    public int getIndexFromPc(int pc) {
-    	if (!pc2index.containsKey(pc) && pc2index.containsKey(pc+1)) {
-    		pc++;
-    	}
-        return pc2index.get(pc);
-    }
-
-    /**
-     * @param index
-     *            the instruction index.
-     * @return The byte code address of the instruction index
-     */
-    public int getPcFromIndex(int index) {
-        return index2pc.get(index);
-    }
-
-
-    /**
-     * @return The instruction from its id.
-     */
-    public Instruction getFromId(int id) {
-        return instructions.get(id);
-    }
-
-    /**
-     * @return The instruction from its pc.
-     */
-    public Instruction getFromPc(int pc) {
-        return instructions.get(pc2index.get(pc));
-
-    }
+  /** @return The instruction from its pc. */
+  public Instruction getFromPc(int pc) {
+    return instructions.get(pc2index.get(pc));
+  }
 }

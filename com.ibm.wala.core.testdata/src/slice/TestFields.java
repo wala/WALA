@@ -13,11 +13,8 @@ package slice;
 public class TestFields {
 
   private static void doNothing(Object o) {}
-  
-  /**
-   * slice should include a1 and o1, exclude
-   * a2 and o2
-   */
+
+  /** slice should include a1 and o1, exclude a2 and o2 */
   public static void main(String[] args) {
     Object o1 = new Object();
     Object o2 = new Object();
@@ -28,5 +25,4 @@ public class TestFields {
     Object o3 = a1.f;
     doNothing(o3);
   }
-
 }

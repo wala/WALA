@@ -10,12 +10,10 @@
  */
 package com.ibm.wala.cfg;
 
-import java.util.Set;
-
 import com.ibm.wala.shrikeBT.ExceptionHandler;
+import java.util.Set;
 
 public interface BytecodeCFG {
 
   public Set<ExceptionHandler> getExceptionHandlers();
-
 }

@@ -24,7 +24,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
-
 import java.util.Map;
 
 public class LambdaMethodTargetSelector implements MethodTargetSelector {
@@ -33,59 +32,88 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
   private final Map<BootstrapMethod, LambdaSummaryClass> classSummaries = HashMapFactory.make();
 
-
   private final MethodTargetSelector base;
-  
+
   public LambdaMethodTargetSelector(MethodTargetSelector base) {
     this.base = base;
   }
 
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-    if (! site.getDeclaredTarget().getName().equals(MethodReference.clinitName) && 
-        caller.getClassHierarchy().lookupClass(TypeReference.LambdaMetaFactory) != null &&
-        caller.getClassHierarchy().lookupClass(TypeReference.LambdaMetaFactory).equals(
-            caller.getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass()))) 
-    {
-      SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction)caller.getIR().getCalls(site)[0];
-      
+    if (!site.getDeclaredTarget().getName().equals(MethodReference.clinitName)
+        && caller.getClassHierarchy().lookupClass(TypeReference.LambdaMetaFactory) != null
+        && caller
+            .getClassHierarchy()
+            .lookupClass(TypeReference.LambdaMetaFactory)
+            .equals(
+                caller
+                    .getClassHierarchy()
+                    .lookupClass(site.getDeclaredTarget().getDeclaringClass()))) {
+      SSAInvokeDynamicInstruction invoke =
+          (SSAInvokeDynamicInstruction) caller.getIR().getCalls(site)[0];
+
       if (!methodSummaries.containsKey(invoke.getBootstrap())) {
-        String cls = caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
+        String cls =
+            caller
+                .getMethod()
+                .getDeclaringClass()
+                .getName()
+                .toString()
+                .replace("/", "$")
+                .substring(1);
         int bootstrapIndex = invoke.getBootstrap().getIndexInClassFile();
-        MethodReference ref = 
+        MethodReference ref =
             MethodReference.findOrCreate(
-                site.getDeclaredTarget().getDeclaringClass(), 
-                Atom.findOrCreateUnicodeAtom(site.getDeclaredTarget().getName().toString() + '$' + cls + '$' + bootstrapIndex),
+                site.getDeclaredTarget().getDeclaringClass(),
+                Atom.findOrCreateUnicodeAtom(
+                    site.getDeclaredTarget().getName().toString()
+                        + '$'
+                        + cls
+                        + '$'
+                        + bootstrapIndex),
                 site.getDeclaredTarget().getDescriptor());
-        
+
         MethodSummary summary = new MethodSummary(ref);
-        
+
         if (site.isStatic()) {
           summary.setStatic(true);
         }
-        
+
         int index = 0;
         int v = site.getDeclaredTarget().getNumberOfParameters() + 2;
         IClass lambda = getLambdaSummaryClass(caller, invoke);
         SSAInstructionFactory insts = Language.JAVA.instructionFactory();
-        summary.addStatement(insts.NewInstruction(index, v, NewSiteReference.make(index, lambda.getReference())));
+        summary.addStatement(
+            insts.NewInstruction(index, v, NewSiteReference.make(index, lambda.getReference())));
         index++;
-        for(int i = 0; i < site.getDeclaredTarget().getNumberOfParameters(); i++) {
+        for (int i = 0; i < site.getDeclaredTarget().getNumberOfParameters(); i++) {
           summary.addStatement(
-              insts.PutInstruction(index++, v, i+1, lambda.getField(Atom.findOrCreateUnicodeAtom("c" + i)).getReference()));
+              insts.PutInstruction(
+                  index++,
+                  v,
+                  i + 1,
+                  lambda.getField(Atom.findOrCreateUnicodeAtom("c" + i)).getReference()));
         }
         summary.addStatement(insts.ReturnInstruction(index++, v, false));
-        
-        methodSummaries.put(invoke.getBootstrap(), new SummarizedMethod(ref, summary, caller.getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass())));
+
+        methodSummaries.put(
+            invoke.getBootstrap(),
+            new SummarizedMethod(
+                ref,
+                summary,
+                caller
+                    .getClassHierarchy()
+                    .lookupClass(site.getDeclaredTarget().getDeclaringClass())));
       }
       return methodSummaries.get(invoke.getBootstrap());
-      
+
     } else {
       return base.getCalleeTarget(caller, site, receiver);
     }
   }
 
-  private LambdaSummaryClass getLambdaSummaryClass(CGNode caller, SSAInvokeDynamicInstruction invoke) {
+  private LambdaSummaryClass getLambdaSummaryClass(
+      CGNode caller, SSAInvokeDynamicInstruction invoke) {
     BootstrapMethod bootstrap = invoke.getBootstrap();
     LambdaSummaryClass result = classSummaries.get(bootstrap);
     if (result == null) {
@@ -94,5 +122,4 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     }
     return result;
   }
-
 }

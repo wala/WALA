@@ -8,7 +8,7 @@
  */
 /*
  * This file includes material derived from code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -23,13 +23,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -43,14 +43,10 @@ package com.ibm.wala.util.math;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.Bits;
 
-/**
- * simple utilities with logarithms
- */
+/** simple utilities with logarithms */
 public class Logs {
 
-  /**
-   * @return true iff x == 2^n for some integer n
-   */
+  /** @return true iff x == 2^n for some integer n */
   public static boolean isPowerOf2(int x) {
     if (x < 0) {
       return false;
@@ -59,9 +55,7 @@ public class Logs {
     }
   }
 
-  /**
-   * @param x where x == 2^n for some integer n
-   */
+  /** @param x where x == 2^n for some integer n */
   public static int log2(int x) throws IllegalArgumentException {
     if (!isPowerOf2(x)) {
       throw new IllegalArgumentException();
@@ -94,5 +88,4 @@ public class Logs {
     }
     return k;
   }
-
 }

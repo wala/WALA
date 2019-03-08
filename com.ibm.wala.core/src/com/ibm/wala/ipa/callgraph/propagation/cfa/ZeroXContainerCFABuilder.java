@@ -19,7 +19,8 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-X-CFA Call graph builder which analyzes calls to "container methods" in a context which is defined by the receiver instance.
+ * 0-X-CFA Call graph builder which analyzes calls to "container methods" in a context which is
+ * defined by the receiver instance.
  */
 public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
 
@@ -30,10 +31,22 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
    * @param appContextInterpreter application-specific logic to interpret a method in context
    * @throws IllegalArgumentException if options is null
    */
-  public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
+  public ZeroXContainerCFABuilder(
+      IClassHierarchy cha,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      ContextSelector appContextSelector,
+      SSAContextInterpreter appContextInterpreter,
+      int instancePolicy) {
 
-    super(Language.JAVA, cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
+    super(
+        Language.JAVA,
+        cha,
+        options,
+        cache,
+        appContextSelector,
+        appContextInterpreter,
+        instancePolicy);
 
     ContextSelector CCS = makeContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);
@@ -41,10 +54,11 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
   }
 
   /**
-   * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
+   * @return an object which creates contexts for call graph nodes based on the container
+   *     disambiguation policy
    */
-  protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
+  protected ContextSelector makeContainerContextSelector(
+      IClassHierarchy cha, ZeroXInstanceKeys keys) {
     return new ContainerContextSelector(cha, keys);
   }
-
 }

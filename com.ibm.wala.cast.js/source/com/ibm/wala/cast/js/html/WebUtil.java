@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.cast.js.html;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
+import com.ibm.wala.util.collections.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,48 +23,49 @@ import java.net.URLConnection;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
-import com.ibm.wala.util.collections.Pair;
-
-public class WebUtil { 
+public class WebUtil {
 
   public static final String preamble = "preamble.js";
 
-  private static IHtmlParserFactory factory = () -> { return new JerichoHtmlParser(); };
-  
-  
+  private static IHtmlParserFactory factory =
+      () -> {
+        return new JerichoHtmlParser();
+      };
+
   public static void setFactory(IHtmlParserFactory factory) {
     WebUtil.factory = factory;
   }
 
   /**
-   * 
-   * @return a pair (S,F), where S is a set of extracted sources, and F is the
-   *         temp file holding the combined sources (or {@code null} if no
-   *         such file exists)
+   * @return a pair (S,F), where S is a set of extracted sources, and F is the temp file holding the
+   *     combined sources (or {@code null} if no such file exists)
    */
-  public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url, Supplier<JSSourceExtractor> fSourceExtractor) throws Error {
+  public static Pair<Set<MappedSourceModule>, File> extractScriptFromHTML(
+      URL url, Supplier<JSSourceExtractor> fSourceExtractor) throws Error {
     try {
       JSSourceExtractor extractor = fSourceExtractor.get();
-      Set<MappedSourceModule> sources = extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
+      Set<MappedSourceModule> sources =
+          extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
       return Pair.make(sources, extractor.getTempFile());
     } catch (IOException e) {
       throw new RuntimeException("trouble with " + url, e);
     }
   }
-  
+
   public static void main(String[] args) throws MalformedURLException, Error {
-    System.err.println(extractScriptFromHTML(new URL(args[0]), Boolean.parseBoolean(args[1])? DefaultSourceExtractor.factory: DomLessSourceExtractor.factory));
+    System.err.println(
+        extractScriptFromHTML(
+            new URL(args[0]),
+            Boolean.parseBoolean(args[1])
+                ? DefaultSourceExtractor.factory
+                : DomLessSourceExtractor.factory));
   }
 
   public static Reader getStream(URL url) throws IOException {
     URLConnection conn = url.openConnection();
     conn.setDefaultUseCaches(false);
     conn.setUseCaches(false);
-  
+
     return new InputStreamReader(conn.getInputStream());
   }
 }
-	
-      

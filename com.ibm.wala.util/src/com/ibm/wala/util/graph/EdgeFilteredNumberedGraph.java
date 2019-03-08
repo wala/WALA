@@ -10,18 +10,15 @@
  */
 package com.ibm.wala.util.graph;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import java.util.Iterator;
 
-/**
- * View of a {@link NumberedGraph} in which some edges have been filtered out
- */
+/** View of a {@link NumberedGraph} in which some edges have been filtered out */
 public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
   private final NumberedGraph<T> delegate;
@@ -31,7 +28,6 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
   private final Edges edges;
 
   /**
-   * 
    * @param delegate the underlying graph
    * @param ignoreEdges relation specifying which edges should be filtered out
    */
@@ -51,7 +47,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     private final class NodeIterator implements Iterator<T> {
       private final IntIterator nodeNumbers;
-      
+
       private NodeIterator(IntSet nodeNumbers) {
         this.nodeNumbers = nodeNumbers.intIterator();
       }
@@ -71,7 +67,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
         throw new UnsupportedOperationException();
       }
     }
-    
+
     @Override
     public int getPredNodeCount(T N) {
       return getPredNodeNumbers(N).size();
@@ -104,7 +100,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     private IntSet getFilteredNodeNumbers(T node, IntSet s) {
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
-      for (IntIterator it = s.intIterator(); it.hasNext();) {
+      for (IntIterator it = s.intIterator(); it.hasNext(); ) {
         int y = it.next();
         if (!ignoreEdges.contains(y, getNumber(node))) {
           result.add(y);

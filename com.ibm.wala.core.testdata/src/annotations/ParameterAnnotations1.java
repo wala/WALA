@@ -12,20 +12,22 @@ package annotations;
 
 public class ParameterAnnotations1 {
 
-  public static void foo(@RuntimeVisableAnnotation String s) {
-  }
-  
-  public static void bar(@AnnotationWithParams(enumParam=AnnotationEnum.VAL1,strArrParam={"biz","boz"},annotParam=@AnnotationWithSingleParam("sdfevs"),strParam="sdfsevs",intParam=25,klassParam=Integer.class) Integer i) {
-    
-  }
+  public static void foo(@RuntimeVisableAnnotation String s) {}
 
-  public static void foo2(@RuntimeVisableAnnotation String s, @RuntimeInvisableAnnotation Integer i) {
-  }
+  public static void bar(
+      @AnnotationWithParams(
+              enumParam = AnnotationEnum.VAL1,
+              strArrParam = {"biz", "boz"},
+              annotParam = @AnnotationWithSingleParam("sdfevs"),
+              strParam = "sdfsevs",
+              intParam = 25,
+              klassParam = Integer.class)
+          Integer i) {}
 
-  public void foo3(@RuntimeVisableAnnotation String s, @RuntimeInvisableAnnotation Integer i) {
-  }
+  public static void foo2(
+      @RuntimeVisableAnnotation String s, @RuntimeInvisableAnnotation Integer i) {}
 
-  public void foo4(@RuntimeInvisableAnnotation @RuntimeVisableAnnotation String s, Integer i) {
-    
-  }
+  public void foo3(@RuntimeVisableAnnotation String s, @RuntimeInvisableAnnotation Integer i) {}
+
+  public void foo4(@RuntimeInvisableAnnotation @RuntimeVisableAnnotation String s, Integer i) {}
 }

@@ -10,22 +10,19 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
-/**
- * A silly debugging aid that always returns the identity flow function 
- */
+/** A silly debugging aid that always returns the identity flow function */
 public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
 
-  private final static IdentityFlowFunctions<?> SINGLETON = new IdentityFlowFunctions<>();
+  private static final IdentityFlowFunctions<?> SINGLETON = new IdentityFlowFunctions<>();
 
   @SuppressWarnings("unchecked")
   public static <T> IdentityFlowFunctions<T> singleton() {
     return (IdentityFlowFunctions<T>) SINGLETON;
   }
 
-  private IdentityFlowFunctions() {
-  }
+  private IdentityFlowFunctions() {}
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getNormalFlowFunction(java.lang.Object, java.lang.Object)
    */
   @Override
@@ -33,15 +30,15 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
     return IdentityFlowFunction.identity();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
    */
   @Override
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
     return IdentityFlowFunction.identity();
   }
-  
-  /* 
+
+  /*
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
   @Override
@@ -49,7 +46,7 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
     return IdentityFlowFunction.identity();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
   @Override
@@ -61,5 +58,4 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   public IUnaryFlowFunction getCallFlowFunction(T src, T dest, T ret) {
     return IdentityFlowFunction.identity();
   }
-
 }

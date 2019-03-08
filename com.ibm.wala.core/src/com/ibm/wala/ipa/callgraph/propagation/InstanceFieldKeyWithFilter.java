@@ -15,9 +15,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
-/**
- * an instance field pointer key key that carries a type filter
- */
+/** an instance field pointer key key that carries a type filter */
 public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements FilteredPointerKey {
 
   private final IClass filter;
@@ -47,5 +45,4 @@ public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements Filt
   public TypeFilter getTypeFilter() {
     return new SingleClassFilter(filter);
   }
-
 }

@@ -18,5 +18,4 @@ public class JVMLTestAssertions extends TestAssertions {
   public void assertTrue(String x, boolean b) {
     Assert.assertTrue(x, b);
   }
-
 }

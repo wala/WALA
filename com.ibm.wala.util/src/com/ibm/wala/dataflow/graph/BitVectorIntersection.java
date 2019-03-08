@@ -14,9 +14,7 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.util.intset.IntSet;
 
-/**
- * Operator U(n) = U(n) n U(j)
- */
+/** Operator U(n) = U(n) n U(j) */
 public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorVariable> {
 
   private static final BitVectorIntersection INSTANCE = new BitVectorIntersection();
@@ -24,9 +22,8 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
   public static BitVectorIntersection instance() {
     return INSTANCE;
   }
-  
-  private BitVectorIntersection() {
-  }
+
+  private BitVectorIntersection() {}
 
   @Override
   public byte evaluate(final BitVectorVariable lhs, final BitVectorVariable[] rhs) {
@@ -36,9 +33,11 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
     if (intersect == null) {
       for (BitVectorVariable r : rhs) {
         intersect = r.getValue();
-        if (intersect != null) { break; }
+        if (intersect != null) {
+          break;
+        }
       }
-      
+
       if (intersect == null) {
         // still null - so all rhs is null -> no change
         return NOT_CHANGED;
@@ -46,7 +45,7 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
     } else if (intersect.isEmpty()) {
       return NOT_CHANGED_AND_FIXED;
     }
-    
+
     for (final BitVectorVariable bv : rhs) {
       final IntSet vlhs = bv.getValue();
       if (vlhs != null) {
@@ -79,5 +78,4 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
   public String toString() {
     return "INTERSECTION";
   }
-
 }

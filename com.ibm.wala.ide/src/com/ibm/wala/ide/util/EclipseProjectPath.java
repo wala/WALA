@@ -10,6 +10,17 @@
  */
 package com.ibm.wala.ide.util;
 
+import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
+import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.ide.classloader.EclipseSourceDirectoryTreeModule;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -36,51 +46,40 @@ import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.internal.core.ClasspathUtilCore;
 import org.eclipse.pde.internal.core.PDECore;
 
-import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
-import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.ide.classloader.EclipseSourceDirectoryTreeModule;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  * Representation of an analysis scope from an Eclipse project.
- * 
- * We set up classloaders as follows:
+ *
+ * <p>We set up classloaders as follows:
+ *
  * <ul>
- * <li>The project being analyzed is in the Application Loader
- * <li>Frameworks, application libraries, and linked projects on which the main project depends are in the Extension loader
- * <li>System libraries are in the primordial loader.
- * <li>All source modules go in a special Source loader. This includes source from linked projects if
- * SOURCE_FOR_PROJ_AND_LINKED_PROJS is specified.
+ *   <li>The project being analyzed is in the Application Loader
+ *   <li>Frameworks, application libraries, and linked projects on which the main project depends
+ *       are in the Extension loader
+ *   <li>System libraries are in the primordial loader.
+ *   <li>All source modules go in a special Source loader. This includes source from linked projects
+ *       if SOURCE_FOR_PROJ_AND_LINKED_PROJS is specified.
  * </ul>
  */
 public abstract class EclipseProjectPath<E, P> {
 
   protected abstract P makeProject(IProject p);
-  
+
   protected abstract E resolve(E entry);
-  
-  protected abstract void resolveClasspathEntry(P project, E entry, ILoader loader, boolean includeSource, boolean cpeFromMainProject);
+
+  protected abstract void resolveClasspathEntry(
+      P project, E entry, ILoader loader, boolean includeSource, boolean cpeFromMainProject);
 
   protected abstract void resolveProjectClasspathEntries(P project, boolean includeSource);
-
 
   public interface ILoader {
     ClassLoaderReference ref();
   }
-  
-  /**
-   * Eclipse projects are modeled with 3 loaders, as described above.
-   */
+
+  /** Eclipse projects are modeled with 3 loaders, as described above. */
   public enum Loader implements ILoader {
-    APPLICATION(ClassLoaderReference.Application), EXTENSION(ClassLoaderReference.Extension), PRIMORDIAL(
-        ClassLoaderReference.Primordial);
+    APPLICATION(ClassLoaderReference.Application),
+    EXTENSION(ClassLoaderReference.Extension),
+    PRIMORDIAL(ClassLoaderReference.Primordial);
 
     private ClassLoaderReference ref;
 
@@ -95,26 +94,22 @@ public abstract class EclipseProjectPath<E, P> {
   }
 
   public enum AnalysisScopeType {
-    NO_SOURCE, SOURCE_FOR_PROJ, SOURCE_FOR_PROJ_AND_LINKED_PROJS
+    NO_SOURCE,
+    SOURCE_FOR_PROJ,
+    SOURCE_FOR_PROJ_AND_LINKED_PROJS
   }
 
-  /**
-   * names of OSGi bundles already processed.
-   */
+  /** names of OSGi bundles already processed. */
   private final Set<String> bundlesProcessed = HashSetFactory.make();
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
   protected final Map<ILoader, List<Module>> modules = new HashMap<>();
 
-  /**
-   * Classpath entries that have already been resolved and added to the scope.
-   */
+  /** Classpath entries that have already been resolved and added to the scope. */
   protected final Collection<E> alreadyResolved = HashSetFactory.make();
 
-  /**
-   * Which source files, if any, should be included in the analysis scope.
-   */
+  /** Which source files, if any, should be included in the analysis scope. */
   private final AnalysisScopeType scopeType;
 
   protected EclipseProjectPath(AnalysisScopeType scopeType) {
@@ -123,22 +118,21 @@ public abstract class EclipseProjectPath<E, P> {
       MapUtil.findOrCreateList(modules, loader);
     }
   }
-    
+
   public EclipseProjectPath<E, P> create(IProject project) throws CoreException, IOException {
     if (project == null) {
       throw new IllegalArgumentException("null project");
     }
 
     boolean includeSource = (scopeType != AnalysisScopeType.NO_SOURCE);
-    
+
     resolveProjectClasspathEntries(makeProject(project), includeSource);
     if (isPluginProject(project)) {
       resolvePluginClassPath(project, includeSource);
     }
-    
+
     return this;
   }
-
 
   protected void resolveLibraryPathEntry(ILoader loader, IPath p) {
     File file = makeAbsolute(p).toFile();
@@ -154,17 +148,28 @@ public abstract class EclipseProjectPath<E, P> {
     }
     if (isPrimordialJarFile()) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
-      s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
+      s.add(
+          file.isDirectory()
+              ? (Module) new BinaryDirectoryTreeModule(file)
+              : (Module) new JarFileModule(j));
     }
   }
 
-  protected void resolveSourcePathEntry(ILoader loader, boolean includeSource, boolean cpeFromMainProject, IPath p, IPath o, IPath[] excludePaths, String fileExtension) {
+  protected void resolveSourcePathEntry(
+      ILoader loader,
+      boolean includeSource,
+      boolean cpeFromMainProject,
+      IPath p,
+      IPath o,
+      IPath[] excludePaths,
+      String fileExtension) {
     if (includeSource) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
       s.add(new EclipseSourceDirectoryTreeModule(p, excludePaths, fileExtension));
     } else if (o != null) {
       File output = makeAbsolute(o).toFile();
-      List<Module> s = MapUtil.findOrCreateList(modules, cpeFromMainProject ? Loader.APPLICATION : loader);
+      List<Module> s =
+          MapUtil.findOrCreateList(modules, cpeFromMainProject ? Loader.APPLICATION : loader);
       s.add(new BinaryDirectoryTreeModule(output));
     }
   }
@@ -180,7 +185,11 @@ public abstract class EclipseProjectPath<E, P> {
         if (isPluginProject(project)) {
           resolvePluginClassPath(project, includeSource);
         }
-        resolveProjectClasspathEntries(javaProject, scopeType == AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS ? includeSource : false);
+        resolveProjectClasspathEntries(
+            javaProject,
+            scopeType == AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS
+                ? includeSource
+                : false);
       }
     } catch (CoreException e1) {
       e1.printStackTrace();
@@ -192,9 +201,11 @@ public abstract class EclipseProjectPath<E, P> {
   }
 
   /**
-   * traverse the bundle description for an Eclipse project and populate the analysis scope accordingly
+   * traverse the bundle description for an Eclipse project and populate the analysis scope
+   * accordingly
    */
-  private void resolvePluginClassPath(IProject p, boolean includeSource) throws CoreException, IOException {
+  private void resolvePluginClassPath(IProject p, boolean includeSource)
+      throws CoreException, IOException {
     IPluginModelBase model = findModel(p);
     if (!model.isInSync() || model.isDisposed()) {
       model.load();
@@ -227,11 +238,10 @@ public abstract class EclipseProjectPath<E, P> {
     resolveBundleDescriptionClassPath(makeProject(p), bd, Loader.APPLICATION, includeSource);
   }
 
-  /**
-   * traverse a bundle description and populate the analysis scope accordingly
-   */
-  private void resolveBundleDescriptionClassPath(P project, BundleDescription bd, Loader loader, boolean includeSource) throws CoreException,
-      IOException {
+  /** traverse a bundle description and populate the analysis scope accordingly */
+  private void resolveBundleDescriptionClassPath(
+      P project, BundleDescription bd, Loader loader, boolean includeSource)
+      throws CoreException, IOException {
     assert bd != null;
     if (alreadyProcessed(bd)) {
       return;
@@ -257,16 +267,12 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  /**
-   * have we already processed a particular bundle description?
-   */
+  /** have we already processed a particular bundle description? */
   private boolean alreadyProcessed(BundleDescription bd) {
     return bundlesProcessed.contains(bd.getName());
   }
 
-  /**
-   * Is javaProject a plugin project?
-   */
+  /** Is javaProject a plugin project? */
   private static boolean isPluginProject(IProject project) {
     IPluginModelBase model = findModel(project);
     if (model == null) {
@@ -279,16 +285,23 @@ public abstract class EclipseProjectPath<E, P> {
   }
 
   /**
-   * @return true if the given jar file should be handled by the Primordial loader. If false, other provisions should be made to add
-   *         the jar file to the appropriate component of the AnalysisScope. Subclasses can override this method.
+   * @return true if the given jar file should be handled by the Primordial loader. If false, other
+   *     provisions should be made to add the jar file to the appropriate component of the
+   *     AnalysisScope. Subclasses can override this method.
    */
   protected boolean isPrimordialJarFile() {
     return true;
   }
 
-  protected void resolveClasspathEntries(P project, List<E> l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
+  protected void resolveClasspathEntries(
+      P project,
+      List<E> l,
+      ILoader loader,
+      boolean includeSource,
+      boolean entriesFromTopLevelProject) {
     for (final E entry : l) {
-      resolveClasspathEntry(project, resolve(entry), loader, includeSource, entriesFromTopLevelProject);
+      resolveClasspathEntry(
+          project, resolve(entry), loader, includeSource, entriesFromTopLevelProject);
     }
   }
 
@@ -304,13 +317,13 @@ public abstract class EclipseProjectPath<E, P> {
     }
     return absolutePath;
   }
-  
-  /**
-   * Convert this path to a WALA analysis scope
-   */
-  public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) throws IOException {
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile,
-        classLoader);
+
+  /** Convert this path to a WALA analysis scope */
+  public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile)
+      throws IOException {
+    AnalysisScope scope =
+        AnalysisScopeReader.readJavaScope(
+            AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
     return toAnalysisScope(scope);
   }
 
@@ -322,7 +335,6 @@ public abstract class EclipseProjectPath<E, P> {
       }
     }
     return scope;
-
   }
 
   public AnalysisScope toAnalysisScope(final File exclusionsFile) throws IOException {

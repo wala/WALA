@@ -12,12 +12,10 @@ package com.ibm.wala.util.io;
 
 import static org.junit.Assert.assertEquals;
 
+import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.junit.Test;
-
-import com.ibm.wala.util.PlatformUtil;
 
 public class FileProviderTest {
 
@@ -31,8 +29,7 @@ public class FileProviderTest {
     // verify:
     assertEquals(expected, actual);
   }
-  
-  
+
   @Test
   public void testURLWithInvalidURIChars() throws MalformedURLException {
     // setup:
@@ -53,5 +50,4 @@ public class FileProviderTest {
     // verify:
     assertEquals(expected, actual);
   }
-  
 }

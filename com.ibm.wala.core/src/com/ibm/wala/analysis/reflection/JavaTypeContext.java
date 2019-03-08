@@ -19,11 +19,9 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 
 /**
- *  Implements a Context which corresponds to a given type abstraction.
- *  Thus, this maps the name "TYPE" to a JavaTypeAbstraction.
- * TODO
- *  This context maps
- *  {@link com.ibm.wala.ipa.callgraph.ContextKey#RECEIVER} to a {@link TypeAbstraction}.
+ * Implements a Context which corresponds to a given type abstraction. Thus, this maps the name
+ * "TYPE" to a JavaTypeAbstraction. TODO This context maps {@link
+ * com.ibm.wala.ipa.callgraph.ContextKey#RECEIVER} to a {@link TypeAbstraction}.
  */
 public class JavaTypeContext implements Context {
 
@@ -78,5 +76,4 @@ public class JavaTypeContext implements Context {
   public TypeAbstraction getType() {
     return type;
   }
-
 }

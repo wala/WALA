@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
-/**
- * A pair of ints. Note that an IntPair has value semantics.
- */
+/** A pair of ints. Note that an IntPair has value semantics. */
 public class IntPair {
   final int x;
 
@@ -23,16 +21,12 @@ public class IntPair {
     this.y = y;
   }
 
-  /**
-   * @return Returns the x.
-   */
+  /** @return Returns the x. */
   public int getX() {
     return x;
   }
 
-  /**
-   * @return Returns the y.
-   */
+  /** @return Returns the y. */
   public int getY() {
     return y;
   }

@@ -15,10 +15,9 @@ import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  * Interface for lightweight AST patterns.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public interface NodePattern {
-	public abstract boolean matches(CAstNode node);
+  public abstract boolean matches(CAstNode node);
 }

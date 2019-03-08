@@ -21,10 +21,13 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
 
   public abstract Object getFieldIdentifier();
 
-  private static final Object arrayStateKey = new Object() {
-    @Override
-    public String toString() { return "ArrayStateKey"; }
-  };
+  private static final Object arrayStateKey =
+      new Object() {
+        @Override
+        public String toString() {
+          return "ArrayStateKey";
+        }
+      };
 
   @Override
   public boolean equals(Object obj) {
@@ -33,9 +36,8 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
     }
     if (obj instanceof ReflectedFieldPointerKey) {
       ReflectedFieldPointerKey other = (ReflectedFieldPointerKey) obj;
-      return
-	getFieldIdentifier().equals(other.getFieldIdentifier()) &&
-	getInstanceKey().equals(other.getInstanceKey());
+      return getFieldIdentifier().equals(other.getFieldIdentifier())
+          && getInstanceKey().equals(other.getInstanceKey());
     } else {
       return false;
     }
@@ -47,33 +49,34 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
   }
 
   @Override
-  public String toString() { return "[" + getInstanceKey() + "; " + getFieldIdentifier() + ']'; }
-  
+  public String toString() {
+    return "[" + getInstanceKey() + "; " + getFieldIdentifier() + ']';
+  }
+
   public static ReflectedFieldPointerKey literal(final String lit, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
       @Override
       public Object getFieldIdentifier() {
-	return lit;
+        return lit;
       }
-    };   
+    };
   }
 
   public static ReflectedFieldPointerKey mapped(final InstanceKey mapFrom, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
       @Override
       public Object getFieldIdentifier() {
-	return mapFrom;
+        return mapFrom;
       }
-    };   
+    };
   }
 
   public static ReflectedFieldPointerKey index(InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
       @Override
       public Object getFieldIdentifier() {
-	return arrayStateKey;
+        return arrayStateKey;
       }
-    };   
+    };
   }
-
 }

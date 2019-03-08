@@ -23,16 +23,13 @@ import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
-/**
- * A {@link ContextSelector} to intercept calls to Object.getClass()
- */
+/** A {@link ContextSelector} to intercept calls to Object.getClass() */
 public class GetClassContextSelector implements ContextSelector {
 
-  public final static MethodReference GET_CLASS = MethodReference.findOrCreate(TypeReference.JavaLangObject, "getClass",
-      "()Ljava/lang/Class;");
+  public static final MethodReference GET_CLASS =
+      MethodReference.findOrCreate(TypeReference.JavaLangObject, "getClass", "()Ljava/lang/Class;");
 
-  public GetClassContextSelector() {
-  }
+  public GetClassContextSelector() {}
 
   /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
@@ -40,14 +37,15 @@ public class GetClassContextSelector implements ContextSelector {
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(GET_CLASS)) {
       return new JavaTypeContext(new PointType(receiver[0].getConcreteType()));
     }
     return null;
   }
-  
-  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  private static final IntSet thisParameter = IntSetUtil.make(new int[] {0});
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -57,5 +55,4 @@ public class GetClassContextSelector implements ContextSelector {
       return EmptyIntSet.instance;
     }
   }
-
 }

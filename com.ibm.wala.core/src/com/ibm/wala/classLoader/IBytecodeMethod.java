@@ -10,50 +10,41 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.Collection;
-
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.annotations.Annotation;
+import java.util.Collection;
 
-/**
- * A method which originated in bytecode, decoded by Shrike
- */
-public interface IBytecodeMethod<I>extends IMethod {
+/** A method which originated in bytecode, decoded by Shrike */
+public interface IBytecodeMethod<I> extends IMethod {
 
-  /**
-   * @return the bytecode index corresponding to instruction i in the getInstructions() array
-   */
+  /** @return the bytecode index corresponding to instruction i in the getInstructions() array */
   int getBytecodeIndex(int i) throws InvalidClassFileException;
 
   /**
-   * @return the instuction index i in the getInstructions() array corresponding to the bytecode index bcIndex
+   * @return the instuction index i in the getInstructions() array corresponding to the bytecode
+   *     index bcIndex
    */
   int getInstructionIndex(int bcIndex) throws InvalidClassFileException;
 
-  /**
-   * @return the Shrike representation of the exception handlers
-   */
+  /** @return the Shrike representation of the exception handlers */
   ExceptionHandler[][] getHandlers() throws InvalidClassFileException;
 
-  /**
-   * @return the Shrike instructions decoded from the bytecode
-   */
+  /** @return the Shrike instructions decoded from the bytecode */
   I[] getInstructions() throws InvalidClassFileException;
 
-  /**there 
+  /**
+   * there
+   *
    * @return the call sites declared in the bytecode for this method
    */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException;
 
-  /**
-   * @return information about any indirect uses of local variables
-   */
+  /** @return information about any indirect uses of local variables */
   IndirectionData getIndirectionData();
-  
+
   Collection<Annotation>[] getParameterAnnotations();
 
   Collection<Annotation> getAnnotations(boolean runtimeVisible) throws InvalidClassFileException;
-
 }

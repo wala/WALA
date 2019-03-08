@@ -10,15 +10,13 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents unary operators where the result is the same type as the operand.
- */
+/** This class represents unary operators where the result is the same type as the operand. */
 public final class UnaryOpInstruction extends Instruction implements IUnaryOpInstruction {
   protected UnaryOpInstruction(short opcode) {
     super(opcode);
   }
 
-  private final static UnaryOpInstruction[] preallocated = preallocate();
+  private static final UnaryOpInstruction[] preallocated = preallocate();
 
   private static UnaryOpInstruction[] preallocate() {
     UnaryOpInstruction[] r = new UnaryOpInstruction[OP_dneg - OP_ineg + 1];

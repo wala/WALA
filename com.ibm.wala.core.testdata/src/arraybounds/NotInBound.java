@@ -1,12 +1,10 @@
 package arraybounds;
 
 /**
- * 
- * All array accesses in the following class are necessary and they will be
- * detected correctly by the array bounds analysis.
- * 
- * @author Stephan Gocht {@code <stephan@gobro.de>}
+ * All array accesses in the following class are necessary and they will be detected correctly by
+ * the array bounds analysis.
  *
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class NotInBound {
   public int phiOverwrite(int[] arr, boolean condition) {
@@ -64,12 +62,12 @@ public class NotInBound {
 
   public int nonTrackedOperationIsSafe(int[] arr, int index) {
     if (index > 0 && index > arr.length) {
-      return arr[2*index];
+      return arr[2 * index];
     } else {
       throw new IllegalArgumentException();
     }
   }
-  
+
   public int unboundNegativeLoop(int[] arr, int index) {
     int sum = 0;
     for (int i = 5; i < arr.length; i--) {

@@ -13,9 +13,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.function.Predicate;
 
-/**
- * A filter that accepts everything.
- */
+/** A filter that accepts everything. */
 public class IndiscriminateFilter<T> implements Predicate<T> {
 
   public static <T> IndiscriminateFilter<T> singleton() {
@@ -25,8 +23,8 @@ public class IndiscriminateFilter<T> implements Predicate<T> {
   /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
-  @Override public boolean test(Object o) {
+  @Override
+  public boolean test(Object o) {
     return true;
   }
-
 }

@@ -14,6 +14,4 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.CLASS)
-public @interface RuntimeInvisableAnnotation2 {
-
-}
+public @interface RuntimeInvisableAnnotation2 {}

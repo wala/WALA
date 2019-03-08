@@ -10,17 +10,6 @@
  */
 package com.ibm.wala.ssa;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -47,53 +36,58 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * A control-flow graph for ssa form.
- * 
- * This implementation is uglified in the name of performance. This implementation does not directly track the graph structure, but
- * instead delegates to a prebuilt {@link ControlFlowGraph} which stores the structure. This decision from 2004 may have been
- * premature optimization, left over from a world where {@link IR}s and related structures were long-lived. In today's system, they
- * are cached and reconstituted by {@link SSACache}. Perhaps we should just extend {@link AbstractCFG} and not worry so much about
- * space.
- * 
- * As the current implementation stands, the delegate graph stores the graph structure, and this class additionally stores
- * {@link BasicBlock}s and the {@link SSAInstruction} array.
+ *
+ * <p>This implementation is uglified in the name of performance. This implementation does not
+ * directly track the graph structure, but instead delegates to a prebuilt {@link ControlFlowGraph}
+ * which stores the structure. This decision from 2004 may have been premature optimization, left
+ * over from a world where {@link IR}s and related structures were long-lived. In today's system,
+ * they are cached and reconstituted by {@link SSACache}. Perhaps we should just extend {@link
+ * AbstractCFG} and not worry so much about space.
+ *
+ * <p>As the current implementation stands, the delegate graph stores the graph structure, and this
+ * class additionally stores {@link BasicBlock}s and the {@link SSAInstruction} array.
  */
-public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>, MinimalCFG<ISSABasicBlock> {
+public class SSACFG
+    implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>, MinimalCFG<ISSABasicBlock> {
 
   private static final boolean DEBUG = false;
 
   /**
-   * The {@link ISSABasicBlock}s which live in this graph. These {@link BasicBlock}s must have the same numbers as the corresponding
-   * {@link IBasicBlock}s in the delegate {@link AbstractCFG}. This array is additionally co-indexed by these numbers.
+   * The {@link ISSABasicBlock}s which live in this graph. These {@link BasicBlock}s must have the
+   * same numbers as the corresponding {@link IBasicBlock}s in the delegate {@link AbstractCFG}.
+   * This array is additionally co-indexed by these numbers.
    */
   private BasicBlock[] basicBlocks;
 
   /**
-   * The "normal" instructions which constitute the SSA form. This does not include {@link SSAPhiInstruction}s, which dwell in
-   * {@link BasicBlock}s instead.
+   * The "normal" instructions which constitute the SSA form. This does not include {@link
+   * SSAPhiInstruction}s, which dwell in {@link BasicBlock}s instead.
    */
-  final protected SSAInstruction[] instructions;
+  protected final SSAInstruction[] instructions;
 
-  /**
-   * The {@link IMethod} this {@link ControlFlowGraph} represents
-   */
-  final protected IMethod method;
+  /** The {@link IMethod} this {@link ControlFlowGraph} represents */
+  protected final IMethod method;
 
-  /**
-   * A delegate CFG, pre-built, which stores the graph structure of this CFG.
-   */
-  final protected AbstractCFG<IInstruction, IBasicBlock<IInstruction>> delegate;
+  /** A delegate CFG, pre-built, which stores the graph structure of this CFG. */
+  protected final AbstractCFG<IInstruction, IBasicBlock<IInstruction>> delegate;
 
-  /**
-   * cache a ref to the exit block for efficient access
-   */
+  /** cache a ref to the exit block for efficient access */
   private BasicBlock exit;
 
-  /**
-   * @throws IllegalArgumentException if method is null
-   */
+  /** @throws IllegalArgumentException if method is null */
   @SuppressWarnings("unchecked")
   public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions) {
     if (method == null) {
@@ -113,19 +107,20 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       addPisFromInducedCFG((InducedCFG) cfg);
     }
     if (cfg instanceof BytecodeCFG) {
-      recordExceptionTypes(((BytecodeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
+      recordExceptionTypes(
+          ((BytecodeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
     }
     this.instructions = instructions;
-
   }
 
   /**
-   * This is ugly. Clean it up someday. {@link InducedCFG}s carry around pii instructions. add these pii instructions to the
-   * SSABasicBlocks
+   * This is ugly. Clean it up someday. {@link InducedCFG}s carry around pii instructions. add these
+   * pii instructions to the SSABasicBlocks
    */
   private void addPisFromInducedCFG(InducedCFG cfg) {
     for (com.ibm.wala.cfg.InducedCFG.BasicBlock ib : cfg) {
-      // we rely on the invariant that basic blocks in this cfg are numbered identically as in the source
+      // we rely on the invariant that basic blocks in this cfg are numbered identically as in the
+      // source
       // InducedCFG
       BasicBlock b = getBasicBlock(ib.getNumber());
       for (SSAPiInstruction pi : ib.getPis()) {
@@ -136,12 +131,13 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   /**
-   * This is ugly. Clean it up someday. {@link InducedCFG}s carry around phi instructions. add these phi instructions to the
-   * SSABasicBlocks
+   * This is ugly. Clean it up someday. {@link InducedCFG}s carry around phi instructions. add these
+   * phi instructions to the SSABasicBlocks
    */
   private void addPhisFromInducedCFG(InducedCFG cfg) {
     for (com.ibm.wala.cfg.InducedCFG.BasicBlock ib : cfg) {
-      // we rely on the invariant that basic blocks in this cfg are numbered identically as in the source
+      // we rely on the invariant that basic blocks in this cfg are numbered identically as in the
+      // source
       // InducedCFG
       BasicBlock b = getBasicBlock(ib.getNumber());
       // this is really ugly. we pretend that each successively phi in the basic block defs a
@@ -152,7 +148,6 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         b.addPhiForLocal(local++, phi);
       }
     }
-
   }
 
   @Override
@@ -172,9 +167,12 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
         // by convention, in ShrikeCT this means catch everything
         t = TypeReference.JavaLangThrowable;
       } else if (handler.getCatchClassLoader() instanceof ClassLoaderReference) {
-        t = ShrikeUtil.makeTypeReference((ClassLoaderReference)handler.getCatchClassLoader(), handler.getCatchClass());
+        t =
+            ShrikeUtil.makeTypeReference(
+                (ClassLoaderReference) handler.getCatchClassLoader(), handler.getCatchClass());
       } else {
-        TypeReference exceptionType = ShrikeUtil.makeTypeReference(loader.getReference(), handler.getCatchClass());
+        TypeReference exceptionType =
+            ShrikeUtil.makeTypeReference(loader.getReference(), handler.getCatchClass());
         IClass klass = null;
         klass = loader.lookupClass(exceptionType.getName());
         if (klass == null) {
@@ -186,8 +184,10 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       }
       int instructionIndex = handler.getHandler();
       IBasicBlock<?> b = getBlockForInstruction(instructionIndex);
-      assert b instanceof ExceptionHandlerBasicBlock : "not exception handler " + b + " index " + instructionIndex;
-      ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) getBlockForInstruction(instructionIndex);
+      assert b instanceof ExceptionHandlerBasicBlock
+          : "not exception handler " + b + " index " + instructionIndex;
+      ExceptionHandlerBasicBlock bb =
+          (ExceptionHandlerBasicBlock) getBlockForInstruction(instructionIndex);
       bb.addCaughtExceptionType(t);
     }
   }
@@ -205,8 +205,9 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   /**
-   * Get the basic block an instruction belongs to. Note: the instruction2Block array is filled in lazily. During initialization,
-   * the mapping is set up only for the first instruction of each basic block.
+   * Get the basic block an instruction belongs to. Note: the instruction2Block array is filled in
+   * lazily. During initialization, the mapping is set up only for the first instruction of each
+   * basic block.
    */
   @Override
   public SSACFG.BasicBlock getBlockForInstruction(int instructionIndex) {
@@ -216,10 +217,12 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   /**
-   * NB: Use iterators such as IR.iterateAllInstructions() instead of this method. This will probably be deprecated someday.
-   * 
-   * Return the instructions. Note that the CFG is created from the Shrike CFG prior to creating the SSA instructions.
-   * 
+   * NB: Use iterators such as IR.iterateAllInstructions() instead of this method. This will
+   * probably be deprecated someday.
+   *
+   * <p>Return the instructions. Note that the CFG is created from the Shrike CFG prior to creating
+   * the SSA instructions.
+   *
    * @return an array containing the SSA instructions.
    */
   @Override
@@ -249,28 +252,25 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
     @Override
     public boolean equals(Object x) {
-      return (x instanceof RefPathKey) && n == ((RefPathKey) x).n && src == ((RefPathKey) x).src && path == ((RefPathKey) x).path;
+      return (x instanceof RefPathKey)
+          && n == ((RefPathKey) x).n
+          && src == ((RefPathKey) x).src
+          && path == ((RefPathKey) x).path;
     }
   }
 
-  /**
-   * A Basic Block in an SSA IR
-   */
+  /** A Basic Block in an SSA IR */
   public class BasicBlock implements ISSABasicBlock {
 
-    /**
-     * state needed for the numbered graph.
-     */
+    /** state needed for the numbered graph. */
     private final int number;
 
-    /**
-     * List of PhiInstructions associated with the entry of this block.
-     */
+    /** List of PhiInstructions associated with the entry of this block. */
     private SSAPhiInstruction stackSlotPhis[];
 
     private SSAPhiInstruction localPhis[];
 
-    private final static int initialCapacity = 10;
+    private static final int initialCapacity = 10;
 
     public BasicBlock(int number) {
       this.number = number;
@@ -281,18 +281,14 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       return number;
     }
 
-    /**
-     * Method getFirstInstructionIndex.
-     */
+    /** Method getFirstInstructionIndex. */
     @Override
     public int getFirstInstructionIndex() {
       IBasicBlock<?> B = delegate.getNode(number);
       return B.getFirstInstructionIndex();
     }
 
-    /**
-     * Is this block marked as a catch block?
-     */
+    /** Is this block marked as a catch block? */
     @Override
     public boolean isCatchBlock() {
       return delegate.getCatchBlocks().get(getNumber());
@@ -343,9 +339,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       }
     }
 
-    /**
-     * This method is used during SSA construction.
-     */
+    /** This method is used during SSA construction. */
     public SSAPhiInstruction getPhiForStackSlot(int slot) {
       if (stackSlotPhis == null) {
         return null;
@@ -358,9 +352,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       }
     }
 
-    /**
-     * This method is used during SSA construction.
-     */
+    /** This method is used during SSA construction. */
     public SSAPhiInstruction getPhiForLocal(int n) {
       if (localPhis == null) {
         return null;
@@ -393,9 +385,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       localPhis[n] = phi;
     }
 
-    /**
-     * Remove any phis in the set.
-     */
+    /** Remove any phis in the set. */
     public void removePhis(Set<SSAPhiInstruction> toRemove) {
       int nRemoved = 0;
       if (stackSlotPhis != null) {
@@ -454,7 +444,6 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
     private final LinkedList<SSAPiInstruction> blockPiInstructions = new LinkedList<>();
 
     /**
-     * 
      * @param n can be the val in the pi instruction
      * @param path can be the successor block in the pi instruction
      */
@@ -501,9 +490,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       };
     }
 
-    /**
-     * TODO: make this more efficient if needed
-     */
+    /** TODO: make this more efficient if needed */
     public List<SSAInstruction> getAllInstructions() {
       compressPhis();
 
@@ -525,9 +512,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       return result;
     }
 
-    /**
-     * rewrite the phi arrays so they have no null entries.
-     */
+    /** rewrite the phi arrays so they have no null entries. */
     private void compressPhis() {
       if (stackSlotPhis != null && stackSlotPhis[stackSlotPhis.length - 1] == null) {
         int size = countNonNull(stackSlotPhis);
@@ -576,9 +561,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       return getAllInstructions().iterator();
     }
 
-    /**
-     * @return true iff this basic block has at least one phi
-     */
+    /** @return true iff this basic block has at least one phi */
     public boolean hasPhi() {
       return stackSlotPhis != null || localPhis != null;
     }
@@ -601,7 +584,13 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
     @Override
     public String toString() {
-      return "BB[SSA:" + getFirstInstructionIndex() + ".." + getLastInstructionIndex() + ']' + getNumber() + " - "
+      return "BB[SSA:"
+          + getFirstInstructionIndex()
+          + ".."
+          + getLastInstructionIndex()
+          + ']'
+          + getNumber()
+          + " - "
           + method.getSignature();
     }
 
@@ -658,10 +647,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       return instructions[getLastInstructionIndex()];
     }
 
-    /**
-     * The {@link ExceptionHandlerBasicBlock} subclass will override this.
-     *
-     */
+    /** The {@link ExceptionHandlerBasicBlock} subclass will override this. */
     @Override
     public Iterator<TypeReference> getCaughtExceptionTypes() {
       return EmptyIterator.instance();
@@ -670,18 +656,14 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
   public class ExceptionHandlerBasicBlock extends BasicBlock {
 
-    /**
-     * The type of the exception caught by this block.
-     */
+    /** The type of the exception caught by this block. */
     private TypeReference[] exceptionTypes;
 
-    private final static int initialCapacity = 3;
+    private static final int initialCapacity = 3;
 
     private int nExceptionTypes = 0;
 
-    /**
-     * Instruction that defines the exception value this block catches
-     */
+    /** Instruction that defines the exception value this block catches */
     private SSAGetCaughtExceptionInstruction catchInstruction;
 
     public ExceptionHandlerBasicBlock(int number) {
@@ -746,7 +728,6 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       }
       return result;
     }
-
   }
 
   @Override
@@ -754,7 +735,12 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
     StringBuilder s = new StringBuilder();
     for (int i = 0; i <= getNumber(exit()); i++) {
       BasicBlock bb = getNode(i);
-      s.append("BB").append(i).append('[').append(bb.getFirstInstructionIndex()).append("..").append(bb.getLastInstructionIndex())
+      s.append("BB")
+          .append(i)
+          .append('[')
+          .append(bb.getFirstInstructionIndex())
+          .append("..")
+          .append(bb.getLastInstructionIndex())
           .append("]\n");
 
       Iterator<ISSABasicBlock> succNodes = getSuccNodes(bb);
@@ -772,7 +758,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
   /**
    * is the given i a catch block?
-   * 
+   *
    * @return true if catch block, false otherwise
    */
   public boolean isCatchBlock(int i) {
@@ -941,7 +927,8 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
   }
 
   @Override
-  public void removeEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnsupportedOperationException {
+  public void removeEdge(ISSABasicBlock src, ISSABasicBlock dst)
+      throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -1024,9 +1011,10 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
       throw new IllegalArgumentException("b is null");
     }
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
-    Function<IBasicBlock<IInstruction>, ISSABasicBlock> f = object -> basicBlocks[delegate.getNumber(object)];
-    return Iterator2Collection.toSet(new MapIterator<>(delegate
-        .getExceptionalPredecessors(n).iterator(), f));
+    Function<IBasicBlock<IInstruction>, ISSABasicBlock> f =
+        object -> basicBlocks[delegate.getNumber(object)];
+    return Iterator2Collection.toSet(
+        new MapIterator<>(delegate.getExceptionalPredecessors(n).iterator(), f));
   }
 
   private IBasicBlock<IInstruction> getUnderlyingBlock(SSACFG.BasicBlock block) {
@@ -1035,7 +1023,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
   /**
    * has exceptional edge src -&gt; dest
-   * 
+   *
    * @throws IllegalArgumentException if dest is null
    */
   public boolean hasExceptionalEdge(BasicBlock src, BasicBlock dest) {
@@ -1051,7 +1039,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
 
   /**
    * has normal edge src -&gt; dest
-   * 
+   *
    * @throws IllegalArgumentException if dest is null
    */
   public boolean hasNormalEdge(BasicBlock src, BasicBlock dest) {
@@ -1137,9 +1125,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
     return null;
   }
 
-  /**
-   * A warning for when we fail to resolve the type for a checkcast
-   */
+  /** A warning for when we fail to resolve the type for a checkcast */
   private static class ExceptionLoadFailure extends Warning {
 
     final TypeReference type;
@@ -1162,11 +1148,8 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock>,
     }
   }
 
-  /**
-   * @return the basic block with a particular number
-   */
+  /** @return the basic block with a particular number */
   public BasicBlock getBasicBlock(int bb) {
     return basicBlocks[bb];
   }
-
 }

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.ssa;
 
+import com.ibm.wala.ssa.SSAInstruction;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -17,9 +18,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.ssa.SSAInstruction;
-
-public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> implements Map<Instruction, T> {
+public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
+    implements Map<Instruction, T> {
   private Map<InstructionByIIndexWrapper<Instruction>, T> map;
 
   public InstructionByIIndexMap(Map<InstructionByIIndexWrapper<Instruction>, T> map) {
@@ -85,7 +85,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
 
   @Override
   public void putAll(Map<? extends Instruction, ? extends T> m) {
-    for (java.util.Map.Entry<? extends Instruction, ? extends T> entry:m.entrySet()) {
+    for (java.util.Map.Entry<? extends Instruction, ? extends T> entry : m.entrySet()) {
       this.put(entry.getKey(), entry.getValue());
     }
   }
@@ -113,8 +113,10 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T> imple
   @Override
   public Set<java.util.Map.Entry<Instruction, T>> entrySet() {
     Set<java.util.Map.Entry<Instruction, T>> result = new LinkedHashSet<>();
-    for (java.util.Map.Entry<InstructionByIIndexWrapper<Instruction>, T> entry:map.entrySet()) {
-      result.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey().getInstruction(), entry.getValue()));
+    for (java.util.Map.Entry<InstructionByIIndexWrapper<Instruction>, T> entry : map.entrySet()) {
+      result.add(
+          new AbstractMap.SimpleImmutableEntry<>(
+              entry.getKey().getInstruction(), entry.getValue()));
     }
 
     return result;

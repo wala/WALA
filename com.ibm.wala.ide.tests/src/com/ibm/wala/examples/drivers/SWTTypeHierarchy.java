@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import java.util.Collection;
-import java.util.function.Predicate;
-
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.window.ApplicationWindow;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
@@ -31,20 +25,22 @@ import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.io.FileProvider;
+import java.util.Collection;
+import java.util.function.Predicate;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.ApplicationWindow;
 
 /**
- * This is a simple example WALA application. It's neither efficient nor concise, but is intended to demonstrate some basic
- * framework concepts.
- * 
- * This application builds a type hierarchy visualizes it with an SWT {@link TreeViewer}.
+ * This is a simple example WALA application. It's neither efficient nor concise, but is intended to
+ * demonstrate some basic framework concepts.
+ *
+ * <p>This application builds a type hierarchy visualizes it with an SWT {@link TreeViewer}.
  */
 public class SWTTypeHierarchy {
   // This example takes one command-line argument, so args[1] should be the "-classpath" parameter
-  final static int CLASSPATH_INDEX = 1;
+  static final int CLASSPATH_INDEX = 1;
 
-  /**
-   * Usage: SWTTypeHierarchy -classpath [classpath]
-   */
+  /** Usage: SWTTypeHierarchy -classpath [classpath] */
   public static void main(String[] args) {
     // check that the command-line is kosher
     validateCommandLine(args);
@@ -54,8 +50,9 @@ public class SWTTypeHierarchy {
   public static ApplicationWindow run(String classpath) {
 
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, (new FileProvider())
-          .getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope =
+          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+              classpath, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -82,7 +79,8 @@ public class SWTTypeHierarchy {
   }
 
   /**
-   * Return a view of an {@link IClassHierarchy} as a {@link Graph}, with edges from classes to immediate subtypes
+   * Return a view of an {@link IClassHierarchy} as a {@link Graph}, with edges from classes to
+   * immediate subtypes
    */
   public static Graph<IClass> typeHierarchy2Graph(IClassHierarchy cha) {
     Graph<IClass> result = SlowSparseNumberedGraph.make();
@@ -102,17 +100,14 @@ public class SWTTypeHierarchy {
     return result;
   }
 
-  /**
-   * Restrict g to nodes from the Application loader
-   */
+  /** Restrict g to nodes from the Application loader */
   static Graph<IClass> pruneForAppLoader(Graph<IClass> g) {
-    Predicate<IClass> f = c -> (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
+    Predicate<IClass> f =
+        c -> (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
     return pruneGraph(g, f);
   }
 
-  /**
-   * Remove from a graph g any nodes that are not accepted by a {@link Predicate}
-   */
+  /** Remove from a graph g any nodes that are not accepted by a {@link Predicate} */
   public static <T> Graph<T> pruneGraph(Graph<T> g, Predicate<T> f) {
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<>(slice));
@@ -120,9 +115,9 @@ public class SWTTypeHierarchy {
 
   /**
    * Validate that the command-line arguments obey the expected usage.
-   * 
-   * Usage: args[0] : "-classpath" args[1] : String, a ";"-delimited class path
-   * 
+   *
+   * <p>Usage: args[0] : "-classpath" args[1] : String, a ";"-delimited class path
+   *
    * @throws UnsupportedOperationException if command-line is malformed.
    */
   static void validateCommandLine(String[] args) {
@@ -130,7 +125,8 @@ public class SWTTypeHierarchy {
       throw new UnsupportedOperationException("must have at least 2 command-line arguments");
     }
     if (!args[0].equals("-classpath")) {
-      throw new UnsupportedOperationException("invalid command-line, args[0] should be -classpath, but is " + args[0]);
+      throw new UnsupportedOperationException(
+          "invalid command-line, args[0] should be -classpath, but is " + args[0]);
     }
   }
 }

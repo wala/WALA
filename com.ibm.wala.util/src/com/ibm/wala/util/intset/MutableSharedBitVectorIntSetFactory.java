@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.util.intset;
 
-
-/**
- * A factory for mutable shared bit vector int sets
- */
-public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory<MutableSharedBitVectorIntSet> {
+/** A factory for mutable shared bit vector int sets */
+public class MutableSharedBitVectorIntSetFactory
+    implements MutableIntSetFactory<MutableSharedBitVectorIntSet> {
 
   private final MutableSparseIntSetFactory sparseFactory = new MutableSparseIntSetFactory();
 
@@ -69,5 +67,4 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
   public MutableSharedBitVectorIntSet make() {
     return new MutableSharedBitVectorIntSet();
   }
-
 }

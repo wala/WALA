@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.examples.analysis;
 
-import java.io.IOException;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -25,45 +23,40 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.perf.Stopwatch;
 import com.ibm.wala.util.ref.ReferenceCleanser;
+import java.io.IOException;
 
 /**
- * An analysis skeleton that simply constructs IRs for all methods in a class hierarchy. Illustrates the use of
- * {@link ReferenceCleanser} to improve running time / reduce memory usage.
+ * An analysis skeleton that simply constructs IRs for all methods in a class hierarchy. Illustrates
+ * the use of {@link ReferenceCleanser} to improve running time / reduce memory usage.
  */
 public class ConstructAllIRs {
 
-  /**
-   * Should we periodically clear out soft reference caches in an attempt to help the GC?
-   */
-  private final static boolean PERIODIC_WIPE_SOFT_CACHES = true;
+  /** Should we periodically clear out soft reference caches in an attempt to help the GC? */
+  private static final boolean PERIODIC_WIPE_SOFT_CACHES = true;
 
-  /**
-   * Interval which defines the period to clear soft reference caches
-   */
-  private final static int WIPE_SOFT_CACHE_INTERVAL = 2500;
+  /** Interval which defines the period to clear soft reference caches */
+  private static final int WIPE_SOFT_CACHE_INTERVAL = 2500;
 
-  /**
-   * Counter for wiping soft caches
-   */
+  /** Counter for wiping soft caches */
   private static int wipeCount = 0;
 
-  /**
-   * First command-line argument should be location of scope file for application to analyze
-   */
+  /** First command-line argument should be location of scope file for application to analyze */
   public static void main(String[] args) throws IOException, ClassHierarchyException {
     String scopeFile = args[0];
 
     // measure running time
     Stopwatch s = new Stopwatch();
     s.start();
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(scopeFile, null, ConstructAllIRs.class.getClassLoader());
+    AnalysisScope scope =
+        AnalysisScopeReader.readJavaScope(scopeFile, null, ConstructAllIRs.class.getClassLoader());
 
     // build a type hierarchy
     System.out.print("building class hierarchy...");
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     System.out.println("done");
 
-    // register class hierarchy and AnalysisCache with the reference cleanser, so that their soft references are appropriately wiped
+    // register class hierarchy and AnalysisCache with the reference cleanser, so that their soft
+    // references are appropriately wiped
     ReferenceCleanser.registerClassHierarchy(cha);
     AnalysisOptions options = new AnalysisOptions();
     IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
@@ -80,7 +73,6 @@ public class ConstructAllIRs {
     System.out.println("done");
     s.stop();
     System.out.println("RUNNING TIME: " + s.getElapsedMillis());
-
   }
 
   private static void wipeSoftCaches() {
@@ -92,5 +84,4 @@ public class ConstructAllIRs {
       }
     }
   }
-
 }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,63 +47,52 @@
 
 package org.scandroid.prefixtransfer;
 
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSACFG;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSACFG;
-
 public class BlockSearch {
 
-    private ArrayList<ISSABasicBlock> blockQueue = new ArrayList<>();
-    private int location = 0;
+  private ArrayList<ISSABasicBlock> blockQueue = new ArrayList<>();
+  private int location = 0;
 
-    private final SSACFG cfg;
+  private final SSACFG cfg;
 
-    BlockSearch(IR ir)
-    {
-        cfg = ir.getControlFlowGraph();
+  BlockSearch(IR ir) {
+    cfg = ir.getControlFlowGraph();
+  }
+
+  public ISSABasicBlock searchFromBlock(ISSABasicBlock b, Set<ISSABasicBlock> targets) {
+    blockQueue.clear();
+    location = 0;
+    Iterator<ISSABasicBlock> startNodes = cfg.getPredNodes(b);
+    while (startNodes.hasNext()) {
+      blockQueue.add(startNodes.next());
     }
 
-    public ISSABasicBlock searchFromBlock(ISSABasicBlock b, Set<ISSABasicBlock> targets)
-    {
-        blockQueue.clear();
-        location = 0;
-        Iterator<ISSABasicBlock> startNodes = cfg.getPredNodes(b);
-        while(startNodes.hasNext())
-        {
-            blockQueue.add(startNodes.next());
+    ISSABasicBlock candidate = null;
+    while (location < blockQueue.size()) {
+      ISSABasicBlock current = blockQueue.get(location);
+      location++;
+      // TODO: inspect current for function calls or other instructions that could confuse the
+      // analysis
+      if (targets.contains(current)) {
+        if (candidate == null) {
+          candidate = current;
+        } else if (candidate != current) {
+          return null;
         }
-
-        ISSABasicBlock candidate = null;
-        while(location < blockQueue.size())
-        {
-            ISSABasicBlock current = blockQueue.get(location);
-            location++;
-            // TODO: inspect current for function calls or other instructions that could confuse the analysis
-            if(targets.contains(current))
-            {
-                if(candidate == null)
-                {
-                    candidate = current;
-                }
-                else if(candidate != current)
-                {
-                    return null;
-                }
-                continue;
-            }
-            else
-            {
-                Iterator<ISSABasicBlock> predNodes = cfg.getPredNodes(current);
-                while(predNodes.hasNext())
-                {
-                    blockQueue.add(predNodes.next());
-                }
-            }
+        continue;
+      } else {
+        Iterator<ISSABasicBlock> predNodes = cfg.getPredNodes(current);
+        while (predNodes.hasNext()) {
+          blockQueue.add(predNodes.next());
         }
-        return candidate;
+      }
     }
+    return candidate;
+  }
 }

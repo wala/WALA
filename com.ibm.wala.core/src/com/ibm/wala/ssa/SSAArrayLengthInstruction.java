@@ -10,10 +10,7 @@
  */
 package com.ibm.wala.ssa;
 
-
-/**
- * SSA instruction representing v_x := arraylength v_y
- */
+/** SSA instruction representing v_x := arraylength v_y */
 public abstract class SSAArrayLengthInstruction extends SSAInstruction {
   private final int result;
 
@@ -26,19 +23,23 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
+      throws IllegalArgumentException {
     if (defs != null && defs.length != 1) {
       throw new IllegalArgumentException();
     }
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException();
     }
-    return insts.ArrayLengthInstruction(iindex, defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
+    return insts.ArrayLengthInstruction(
+        iindex, defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = arraylength " + getValueString(symbolTable, arrayref);
+    return getValueString(symbolTable, result)
+        + " = arraylength "
+        + getValueString(symbolTable, arrayref);
   }
 
   @Override
@@ -106,5 +107,4 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return true;
   }
-
 }

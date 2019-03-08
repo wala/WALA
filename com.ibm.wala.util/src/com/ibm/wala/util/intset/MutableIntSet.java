@@ -11,26 +11,22 @@
 
 package com.ibm.wala.util.intset;
 
-/**
- * An {@link IntSet} that can be changed.
- */
+/** An {@link IntSet} that can be changed. */
 public interface MutableIntSet extends IntSet {
 
-  /**
-   * Set the value of this to be the same as the value of set
-   */
+  /** Set the value of this to be the same as the value of set */
   void copySet(IntSet set);
 
   /**
    * Add all members of set to this.
-   * 
+   *
    * @return true iff the value of this changes.
    */
   boolean addAll(IntSet set);
 
   /**
    * Add an integer value to this set.
-   * 
+   *
    * @param i integer to add
    * @return true iff the value of this changes.
    */
@@ -38,24 +34,18 @@ public interface MutableIntSet extends IntSet {
 
   /**
    * Remove an integer from this set.
-   * 
+   *
    * @param i integer to remove
    * @return true iff the value of this changes.
    */
   boolean remove(int i);
 
-  /**
-   * remove all elements from this set
-   */
+  /** remove all elements from this set */
   void clear();
-  
-  /**
-   * Intersect this with another set.
-   */
+
+  /** Intersect this with another set. */
   void intersectWith(IntSet set);
 
-  /**
-   */
+  /** */
   boolean addAllInIntersection(IntSet other, IntSet filter);
-
 }

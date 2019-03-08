@@ -10,35 +10,30 @@
  */
 package com.ibm.wala.util.graph.dominators;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.DFS;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * An object that computes the dominance frontiers of a graph
- */
+/** An object that computes the dominance frontiers of a graph */
 public class DominanceFrontiers<T> {
 
-  final private Map<T, Set<T>> DF = HashMapFactory.make();
+  private final Map<T, Set<T>> DF = HashMapFactory.make();
 
-  final private Dominators<T> dom;
+  private final Dominators<T> dom;
 
-  final private Graph<T> G;
+  private final Graph<T> G;
 
-  final private T root;
+  private final T root;
 
   /**
-   * @param G
-   *          The graph
-   * @param root
-   *          The root from which to compute dominators
+   * @param G The graph
+   * @param root The root from which to compute dominators
    */
   public DominanceFrontiers(Graph<T> G, T root) {
     this.root = root;
@@ -86,8 +81,7 @@ public class DominanceFrontiers<T> {
       // DF_up
       for (T Z : Iterator2Iterable.make(DT.getSuccNodes(X))) {
         for (T Y2 : Iterator2Iterable.make(getDominanceFrontier(Z))) {
-          if (dom.getIdom(Y2) != X)
-            DF_X.add(Y2);
+          if (dom.getIdom(Y2) != X) DF_X.add(Y2);
         }
       }
     }

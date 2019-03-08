@@ -15,8 +15,8 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.CancelException;
 
 /**
- * An exception to throw when call graph construction is canceled. This exception allows clients to retrieve the partially-built
- * call graph and pointer analysis
+ * An exception to throw when call graph construction is canceled. This exception allows clients to
+ * retrieve the partially-built call graph and pointer analysis
  */
 public class CallGraphBuilderCancelException extends CancelException {
 
@@ -26,19 +26,17 @@ public class CallGraphBuilderCancelException extends CancelException {
 
   private final PointerAnalysis<InstanceKey> pointerAnalysis;
 
-  public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(Exception cause, CallGraph cg,
-      PointerAnalysis<InstanceKey> pointerAnalysis) {
+  public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(
+      Exception cause, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
     return new CallGraphBuilderCancelException(cause, cg, pointerAnalysis);
   }
 
-  public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(String msg, CallGraph cg,
-      PointerAnalysis<InstanceKey> pointerAnalysis) {
+  public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(
+      String msg, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
     return new CallGraphBuilderCancelException(msg, cg, pointerAnalysis);
   }
 
-  /**
-   * @return the {@link CallGraph} in whatever state it was left when computation was canceled
-   */
+  /** @return the {@link CallGraph} in whatever state it was left when computation was canceled */
   public CallGraph getPartialCallGraph() {
     return cg;
   }
@@ -50,16 +48,17 @@ public class CallGraphBuilderCancelException extends CancelException {
     return pointerAnalysis;
   }
 
-  private CallGraphBuilderCancelException(String msg, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
+  private CallGraphBuilderCancelException(
+      String msg, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
     super(msg);
     this.cg = cg;
     this.pointerAnalysis = pointerAnalysis;
   }
 
-  private CallGraphBuilderCancelException(Exception cause, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
+  private CallGraphBuilderCancelException(
+      Exception cause, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
     super(cause);
     this.cg = cg;
     this.pointerAnalysis = pointerAnalysis;
   }
-
 }

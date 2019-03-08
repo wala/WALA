@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.analysis.typeInference;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -53,10 +50,10 @@ import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Iterator;
 
-/**
- * This class performs intraprocedural type propagation on an SSA IR.
- */
+/** This class performs intraprocedural type propagation on an SSA IR. */
 public class TypeInference extends SSAInference<TypeVariable> implements FixedPointConstants {
 
   private static final boolean DEBUG = false;
@@ -65,38 +62,27 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     return new TypeInference(ir, doPrimitives);
   }
 
-  /**
-   * The governing SSA form
-   */
-  final protected IR ir;
+  /** The governing SSA form */
+  protected final IR ir;
 
-  /**
-   * The governing class hierarchy
-   */
-  final protected IClassHierarchy cha;
-  
-  final protected Language language;
+  /** The governing class hierarchy */
+  protected final IClassHierarchy cha;
 
-  /**
-   * A singleton instance of the phi operator.
-   */
-  private final static AbstractOperator<TypeVariable> phiOp = new PhiOperator();
+  protected final Language language;
 
-  private final static AbstractOperator<TypeVariable> primitivePropagateOp = new PrimitivePropagateOperator();
+  /** A singleton instance of the phi operator. */
+  private static final AbstractOperator<TypeVariable> phiOp = new PhiOperator();
 
-  /**
-   * A cone type for java.lang.Object
-   */
+  private static final AbstractOperator<TypeVariable> primitivePropagateOp =
+      new PrimitivePropagateOperator();
+
+  /** A cone type for java.lang.Object */
   protected final TypeAbstraction BOTTOM;
 
-  /**
-   * A singleton instance of the pi operator.
-   */
-  private final static PiOperator piOp = new PiOperator();
+  /** A singleton instance of the pi operator. */
+  private static final PiOperator piOp = new PiOperator();
 
-  /**
-   * should type inference track primitive types?
-   */
+  /** should type inference track primitive types? */
   protected final boolean doPrimitives;
 
   private boolean solved = false;
@@ -196,13 +182,13 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         } else {
           v.setType(new PointType(klass));
         }
-        
-        while(types.hasNext()) {
+
+        while (types.hasNext()) {
           t = types.next();
           klass = cha.lookupClass(t);
           if (klass != null) {
             v.setType(v.getType().meet(new PointType(klass)));
-          }        
+          }
         }
 
         IMethod m = cha.resolveMethod(call.getDeclaredTarget());
@@ -214,7 +200,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
             e.printStackTrace();
             Assertions.UNREACHABLE();
           } catch (UnsupportedOperationException e) {
-            x = new TypeReference[]{ language.getThrowableType() };
+            x = new TypeReference[] {language.getThrowableType()};
           }
           if (x != null) {
             for (TypeReference tx : x) {
@@ -234,9 +220,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     addAllStatementsToWorkList();
   }
 
-  /**
-   * An operator which initializes a type to a declared type.
-   */
+  /** An operator which initializes a type to a declared type. */
   protected static final class DeclaredTypeOperator extends NullaryOperator<TypeVariable> {
     private final TypeAbstraction type;
 
@@ -245,9 +229,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       this.type = type;
     }
 
-    /**
-     * Note that we need evaluate this operator at most once
-     */
+    /** Note that we need evaluate this operator at most once */
     @Override
     public byte evaluate(TypeVariable lhs) {
       if (lhs.type.equals(type)) {
@@ -258,9 +240,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       }
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
+    /** @see java.lang.Object#toString() */
     @Override
     public String toString() {
       return "delared type := " + type;
@@ -288,12 +268,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   private static final class PhiOperator extends AbstractOperator<TypeVariable> {
 
-    private PhiOperator() {
-    }
+    private PhiOperator() {}
 
-    /**
-     * TODO: work on efficiency shortcuts for this.
-     */
+    /** TODO: work on efficiency shortcuts for this. */
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
 
@@ -338,12 +315,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   private static final class PiOperator extends AbstractOperator<TypeVariable> {
 
-    private PiOperator() {
-    }
+    private PiOperator() {}
 
-    /**
-     * TODO: work on efficiency shortcuts for this.
-     */
+    /** TODO: work on efficiency shortcuts for this. */
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhsOperands) {
       TypeAbstraction lhsType = lhs.getType();
@@ -377,15 +351,14 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   protected static class PrimitivePropagateOperator extends AbstractOperator<TypeVariable> {
 
-    protected PrimitivePropagateOperator() {
-    }
+    protected PrimitivePropagateOperator() {}
 
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (TypeVariable r : rhs) {
-        if (r != null  && r.getType() != null) {
+        if (r != null && r.getType() != null) {
           meet = meet.meet(r.getType());
         }
       }
@@ -415,8 +388,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   /**
    * This operator will extract the element type from an arrayref in an array access instruction
-   * 
-   * TODO: why isn't this a nullary operator?
+   *
+   * <p>TODO: why isn't this a nullary operator?
    */
   private final class GetElementType extends AbstractOperator<TypeVariable> {
     private final SSAArrayLoadInstruction load;
@@ -498,7 +471,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
   }
 
-  protected class TypeOperatorFactory extends SSAInstruction.Visitor implements IVisitorWithAddresses, OperatorFactory<TypeVariable> {
+  protected class TypeOperatorFactory extends SSAInstruction.Visitor
+      implements IVisitorWithAddresses, OperatorFactory<TypeVariable> {
 
     protected AbstractOperator<TypeVariable> result = null;
 
@@ -520,7 +494,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (!doPrimitives) {
         result = null;
       } else {
-        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Integer.valueOf(1))));
+        result =
+            new DeclaredTypeOperator(
+                language.getPrimitive(language.getConstantType(Integer.valueOf(1))));
       }
     }
 
@@ -603,12 +579,12 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
             if (typeAbs == null) {
               typeAbs = x;
             } else {
-              typeAbs = typeAbs.meet(x);           
+              typeAbs = typeAbs.meet(x);
             }
           }
         }
       }
-      
+
       result = new DeclaredTypeOperator(typeAbs);
     }
 
@@ -622,7 +598,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
       if (doPrimitives) {
-        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Integer.valueOf(0))));
+        result =
+            new DeclaredTypeOperator(
+                language.getPrimitive(language.getConstantType(Integer.valueOf(0))));
       }
     }
 
@@ -643,7 +621,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitInstanceof(SSAInstanceofInstruction instruction) {
       if (doPrimitives) {
-        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
+        result =
+            new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
       }
     }
 
@@ -664,7 +643,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
 
     private TypeAbstraction meetDeclaredExceptionTypes(SSAGetCaughtExceptionInstruction s) {
-      ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(s.getBasicBlockNumber());
+      ExceptionHandlerBasicBlock bb =
+          (ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(s.getBasicBlockNumber());
       Iterator<TypeReference> it = bb.getCaughtExceptionTypes();
       TypeReference t = it.next();
       IClass klass = cha.lookupClass(t);
@@ -702,12 +682,12 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         }
       }
     }
-    
+
     @Override
     public void visitAddressOf(SSAAddressOfInstruction instruction) {
       TypeReference type = language.getPointerType(instruction.getType());
       result = getPointerTypeOperator(type);
-     }
+    }
 
     @Override
     public void visitLoadIndirect(SSALoadIndirectInstruction instruction) {
@@ -735,16 +715,13 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
       return new TypeVariable(TypeAbstraction.TOP);
     }
-
   }
 
   public IR getIR() {
     return ir;
   }
 
-  /**
-   * Return the type computed for a particular value number
-   */
+  /** Return the type computed for a particular value number */
   public TypeAbstraction getType(int valueNumber) {
     if (valueNumber < 0) {
       throw new IllegalArgumentException("bad value number " + valueNumber);
@@ -785,7 +762,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   /**
    * Extract all results of the type inference analysis.
-   * 
+   *
    * @return an array, where the i'th variable holds the type abstraction of the i'th value number.
    */
   public TypeAbstraction[] extractAllResults() {

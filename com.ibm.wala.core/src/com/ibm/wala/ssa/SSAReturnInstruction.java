@@ -11,14 +11,10 @@
 
 package com.ibm.wala.ssa;
 
-/**
- * A return instruction.
- */
+/** A return instruction. */
 public class SSAReturnInstruction extends SSAInstruction {
 
-  /**
-   * value number of the result. By convention result == -1 means returns void.
-   */
+  /** value number of the result. By convention result == -1 means returns void. */
   private final int result;
 
   private final boolean isPrimitive;
@@ -37,8 +33,7 @@ public class SSAReturnInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    if (result == -1)
-      return insts.ReturnInstruction(iindex);
+    if (result == -1) return insts.ReturnInstruction(iindex);
     else {
       if (uses != null && uses.length != 1) {
         throw new IllegalArgumentException("invalid uses.  must have exactly one use.");
@@ -77,9 +72,7 @@ public class SSAReturnInstruction extends SSAInstruction {
     return result;
   }
 
-  /**
-   * @return true iff this return instruction returns a primitive value
-   */
+  /** @return true iff this return instruction returns a primitive value */
   public boolean returnsPrimitiveType() {
     return isPrimitive;
   }
@@ -104,5 +97,4 @@ public class SSAReturnInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return false;
   }
-
- }
+}

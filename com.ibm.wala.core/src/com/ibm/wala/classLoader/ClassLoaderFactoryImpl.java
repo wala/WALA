@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -21,40 +17,36 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 
-/**
- * An implementation of the class loader factory that produces ClassLoaderImpls
- */
+/** An implementation of the class loader factory that produces ClassLoaderImpls */
 public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
 
   /**
-   * Set of classes that class loaders should ignore; classloaders should
-   * pretend these classes don't exit.
+   * Set of classes that class loaders should ignore; classloaders should pretend these classes
+   * don't exit.
    */
-  final private SetOfClasses exclusions;
+  private final SetOfClasses exclusions;
 
-  /**
-   * A Mapping from ClassLoaderReference to IClassLoader
-   */
-  final private HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
+  /** A Mapping from ClassLoaderReference to IClassLoader */
+  private final HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
 
-  /**
-   * @param exclusions
-   *          A set of classes that class loaders should pretend don't exist.
-   */
+  /** @param exclusions A set of classes that class loaders should pretend don't exist. */
   public ClassLoaderFactoryImpl(SetOfClasses exclusions) {
     this.exclusions = exclusions;
   }
 
   /**
-   * Return a class loader corresponding to a given class loader identifier.
-   * Create one if necessary.
-   * 
-   * @param classLoaderReference
-   *          identifier for the desired class loader
+   * Return a class loader corresponding to a given class loader identifier. Create one if
+   * necessary.
+   *
+   * @param classLoaderReference identifier for the desired class loader
    */
   @Override
-  public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope)
+  public IClassLoader getLoader(
+      ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope)
       throws IOException {
     if (classLoaderReference == null) {
       throw new IllegalArgumentException("null classLoaderReference");
@@ -75,50 +67,72 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
 
   /**
    * Create a new class loader for a given key
-   * 
-   * @param classLoaderReference
-   *          the key
-   * @param parent
-   *          parent classloader to be used for delegation
+   *
+   * @param classLoaderReference the key
+   * @param parent parent classloader to be used for delegation
    * @return a new ClassLoaderImpl
-   * @throws IOException
-   *           if the desired loader cannot be instantiated, usually because the
-   *           specified module can't be found.
+   * @throws IOException if the desired loader cannot be instantiated, usually because the specified
+   *     module can't be found.
    */
-  protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
-      AnalysisScope scope) throws IOException {
+  protected IClassLoader makeNewClassLoader(
+      ClassLoaderReference classLoaderReference,
+      IClassHierarchy cha,
+      IClassLoader parent,
+      AnalysisScope scope)
+      throws IOException {
     String implClass = scope.getLoaderImpl(classLoaderReference);
     IClassLoader cl;
     if (implClass == null) {
-      cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
+      cl =
+          new ClassLoaderImpl(
+              classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
     } else
       try {
         // this is fragile. why are we doing things this way again?
         Class<?> impl = Class.forName(implClass);
-        Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
-            SetOfClasses.class, IClassHierarchy.class });
-        cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha });
+        Constructor<?> ctor =
+            impl.getDeclaredConstructor(
+                new Class[] {
+                  ClassLoaderReference.class,
+                  IClassLoader.class,
+                  SetOfClasses.class,
+                  IClassHierarchy.class
+                });
+        cl =
+            (IClassLoader)
+                ctor.newInstance(new Object[] {classLoaderReference, parent, exclusions, cha});
       } catch (Exception e) {
         try {
           Class<?> impl = Class.forName(implClass);
-          Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, ArrayClassLoader.class,
-              IClassLoader.class, SetOfClasses.class, IClassHierarchy.class });
-          cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, scope.getArrayClassLoader(), parent,
-              exclusions, cha });
+          Constructor<?> ctor =
+              impl.getDeclaredConstructor(
+                  new Class[] {
+                    ClassLoaderReference.class,
+                    ArrayClassLoader.class,
+                    IClassLoader.class,
+                    SetOfClasses.class,
+                    IClassHierarchy.class
+                  });
+          cl =
+              (IClassLoader)
+                  ctor.newInstance(
+                      new Object[] {
+                        classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha
+                      });
         } catch (Exception e2) {
           System.err.println("failed to load impl class " + implClass);
           e2.printStackTrace(System.err);
           Warnings.add(InvalidClassLoaderImplementation.create(implClass));
-          cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
+          cl =
+              new ClassLoaderImpl(
+                  classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
         }
       }
     cl.init(scope.getModules(classLoaderReference));
     return cl;
   }
 
-  /**
-   * A waring when we fail to load an appropriate class loader implementation
-   */
+  /** A waring when we fail to load an appropriate class loader implementation */
   private static class InvalidClassLoaderImplementation extends Warning {
 
     final String impl;
@@ -138,9 +152,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
     }
   }
 
-  /**
-   * @return the set of classes that will be ignored.
-   */
+  /** @return the set of classes that will be ignored. */
   public SetOfClasses getExclusions() {
     return exclusions;
   }

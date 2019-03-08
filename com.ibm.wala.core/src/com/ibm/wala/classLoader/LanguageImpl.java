@@ -10,26 +10,23 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.Set;
-
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Set;
 
-/**
- * Common functionality for most {@link Language} implementations.
- */
+/** Common functionality for most {@link Language} implementations. */
 public abstract class LanguageImpl implements Language {
 
   private Language baseLang;
 
-  private Set<Language> derivedLangs= HashSetFactory.make();
+  private Set<Language> derivedLangs = HashSetFactory.make();
 
-  public LanguageImpl() { }
+  public LanguageImpl() {}
 
   public LanguageImpl(Language base) {
-    baseLang= base;
+    baseLang = base;
     base.registerDerivedLanguage(this);
   }
 
@@ -46,8 +43,7 @@ public abstract class LanguageImpl implements Language {
   @Override
   public void registerDerivedLanguage(Language l) {
     derivedLangs.add(l);
-    if (baseLang != null)
-      baseLang.registerDerivedLanguage(l);
+    if (baseLang != null) baseLang.registerDerivedLanguage(l);
   }
 
   @Override
@@ -57,9 +53,8 @@ public abstract class LanguageImpl implements Language {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof LanguageImpl))
-      return false;
-    LanguageImpl other= (LanguageImpl) o;
+    if (!(o instanceof LanguageImpl)) return false;
+    LanguageImpl other = (LanguageImpl) o;
 
     return getName().equals(other.getName());
   }
@@ -68,10 +63,9 @@ public abstract class LanguageImpl implements Language {
   public String toString() {
     return getName().toString();
   }
-  
+
   @Override
-  public
-  InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
+  public InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
     return new InducedCFG(instructions, method, context);
   }
 
@@ -79,6 +73,4 @@ public abstract class LanguageImpl implements Language {
   public boolean modelConstant(Object o) {
     return o instanceof String;
   }
-  
-  
 }

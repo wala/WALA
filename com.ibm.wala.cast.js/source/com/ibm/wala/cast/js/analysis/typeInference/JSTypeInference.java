@@ -36,7 +36,8 @@ public class JSTypeInference extends AstTypeInference {
 
   @Override
   protected void initialize() {
-    class JSTypeOperatorFactory extends AstTypeOperatorFactory implements com.ibm.wala.cast.js.ssa.JSInstructionVisitor {
+    class JSTypeOperatorFactory extends AstTypeOperatorFactory
+        implements com.ibm.wala.cast.js.ssa.JSInstructionVisitor {
       @Override
       public void visitJavaScriptInvoke(JavaScriptInvoke inst) {
         result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
@@ -53,16 +54,13 @@ public class JSTypeInference extends AstTypeInference {
       }
 
       @Override
-      public void visitCheckRef(JavaScriptCheckReference instruction) {
-      }
+      public void visitCheckRef(JavaScriptCheckReference instruction) {}
 
       @Override
-      public void visitWithRegion(JavaScriptWithRegion instruction) {
-      }
+      public void visitWithRegion(JavaScriptWithRegion instruction) {}
 
       @Override
-      public void visitSetPrototype(SetPrototype instruction) {
-      }
+      public void visitSetPrototype(SetPrototype instruction) {}
 
       @Override
       public void visitPrototypeLookup(PrototypeLookup instruction) {

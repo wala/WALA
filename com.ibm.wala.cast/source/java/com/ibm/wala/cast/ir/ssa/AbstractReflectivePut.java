@@ -14,10 +14,10 @@ import com.ibm.wala.ssa.ReflectiveMemberAccess;
 import com.ibm.wala.ssa.SymbolTable;
 
 /**
- * This abstract class represents field (a.k.a property) writes in which the field name is not a constant, but rather a
- * computed value. This is common in scripting languages, and so this base class is shared across all languages that
- * need such accesses.
- * 
+ * This abstract class represents field (a.k.a property) writes in which the field name is not a
+ * constant, but rather a computed value. This is common in scripting languages, and so this base
+ * class is shared across all languages that need such accesses.
+ *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
@@ -33,17 +33,13 @@ public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
     return super.toString(symbolTable) + " = " + getValueString(symbolTable, value);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public int getDef() {
     return -1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfUses() {
     return 3;
@@ -55,10 +51,7 @@ public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
 
   @Override
   public int getUse(int index) {
-    if (index == 2)
-      return value;
-    else
-      return super.getUse(index);
+    if (index == 2) return value;
+    else return super.getUse(index);
   }
-
 }

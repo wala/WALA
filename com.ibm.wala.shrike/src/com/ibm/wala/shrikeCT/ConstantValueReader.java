@@ -10,22 +10,16 @@
  */
 package com.ibm.wala.shrikeCT;
 
-/**
- * This class reads ConstantValue attributes.
- */
+/** This class reads ConstantValue attributes. */
 public final class ConstantValueReader extends AttributeReader {
-  /**
-   * Build a reader for the attribute 'iter'.
-   */
+  /** Build a reader for the attribute 'iter'. */
   public ConstantValueReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, "ConstantValue");
 
     checkSizeEquals(attr + 6, 2);
   }
 
-  /**
-   * @return the index of the constant pool item holding the value
-   */
+  /** @return the index of the constant pool item holding the value */
   public int getValueCPIndex() {
     return cr.getUShort(attr + 6);
   }

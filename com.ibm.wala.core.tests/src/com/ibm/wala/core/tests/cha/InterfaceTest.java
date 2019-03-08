@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -29,10 +24,12 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-/**
- * Test interface subtype stuff
- */
+/** Test interface subtype stuff */
 public class InterfaceTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = InterfaceTest.class.getClassLoader();
@@ -46,9 +43,13 @@ public class InterfaceTest extends WalaTestCase {
 
   @BeforeClass
   public static void beforeClass() throws Exception {
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            MY_CLASSLOADER);
 
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
       cha = ClassHierarchyFactory.make(scope, factory);
@@ -63,40 +64,41 @@ public class InterfaceTest extends WalaTestCase {
     cha = null;
   }
 
-
-  /**
-   * Test for subtype tests with interfaces; bug reported by Bruno Dufour
-   */
-  @Test public void test1() {
-    TypeReference prep_stmt_type = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
-        .string2TypeName("Ljava/sql/PreparedStatement"));
-    TypeReference stmt_type = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
-        .string2TypeName("Ljava/sql/Statement"));
+  /** Test for subtype tests with interfaces; bug reported by Bruno Dufour */
+  @Test
+  public void test1() {
+    TypeReference prep_stmt_type =
+        TypeReference.findOrCreate(
+            ClassLoaderReference.Primordial,
+            TypeName.string2TypeName("Ljava/sql/PreparedStatement"));
+    TypeReference stmt_type =
+        TypeReference.findOrCreate(
+            ClassLoaderReference.Primordial, TypeName.string2TypeName("Ljava/sql/Statement"));
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
-    
+
     Assert.assertTrue("did not find PreparedStatement", prep_stmt != null);
     Assert.assertTrue("did not find Statement", stmt != null);
-    
+
     Assert.assertTrue(cha.implementsInterface(prep_stmt, stmt));
     Assert.assertFalse(cha.implementsInterface(stmt, prep_stmt));
     Assert.assertTrue(cha.isAssignableFrom(stmt, prep_stmt));
     Assert.assertFalse(cha.isAssignableFrom(prep_stmt, stmt));
   }
-  
-  /**
-   * check that arrays implement Cloneable and Serializable
-   */
-  @Test public void test2() {
-    IClass objArrayClass = cha.lookupClass(TypeReference.JavaLangObject.getArrayTypeForElementType());
-    IClass stringArrayClass = cha.lookupClass(TypeReference.JavaLangString.getArrayTypeForElementType());
+
+  /** check that arrays implement Cloneable and Serializable */
+  @Test
+  public void test2() {
+    IClass objArrayClass =
+        cha.lookupClass(TypeReference.JavaLangObject.getArrayTypeForElementType());
+    IClass stringArrayClass =
+        cha.lookupClass(TypeReference.JavaLangString.getArrayTypeForElementType());
     IClass cloneableClass = cha.lookupClass(TypeReference.JavaLangCloneable);
     IClass serializableClass = cha.lookupClass(TypeReference.JavaIoSerializable);
-    
+
     Assert.assertTrue(cha.implementsInterface(objArrayClass, cloneableClass));
     Assert.assertTrue(cha.implementsInterface(objArrayClass, serializableClass));
     Assert.assertTrue(cha.implementsInterface(stringArrayClass, cloneableClass));
     Assert.assertTrue(cha.implementsInterface(stringArrayClass, serializableClass));
   }
-
 }

@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -29,13 +26,16 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
- * An implementation of {@link IMethod}, usually for a synthesized method that is not read directly from any source {@link Module}.
+ * An implementation of {@link IMethod}, usually for a synthesized method that is not read directly
+ * from any source {@link Module}.
  */
 public class SyntheticMethod implements IMethod {
 
-  public final static SSAInstruction[] NO_STATEMENTS = new SSAInstruction[0];
+  public static final SSAInstruction[] NO_STATEMENTS = new SSAInstruction[0];
 
   private final MethodReference method;
 
@@ -47,7 +47,8 @@ public class SyntheticMethod implements IMethod {
 
   private final boolean isFactory;
 
-  public SyntheticMethod(MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
+  public SyntheticMethod(
+      MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
     super();
     if (method == null) {
       throw new IllegalArgumentException("null method");
@@ -59,7 +60,8 @@ public class SyntheticMethod implements IMethod {
     this.isFactory = isFactory;
   }
 
-  public SyntheticMethod(IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
+  public SyntheticMethod(
+      IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
     super();
     if (method == null) {
       throw new IllegalArgumentException("null method");
@@ -81,9 +83,7 @@ public class SyntheticMethod implements IMethod {
     return method.getSelector().equals(MethodReference.initSelector);
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isStatic()
-   */
+  /** @see com.ibm.wala.classLoader.IMethod#isStatic() */
   @Override
   public boolean isStatic() {
     return isStatic;
@@ -124,9 +124,7 @@ public class SyntheticMethod implements IMethod {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isAbstract()
-   */
+  /** @see com.ibm.wala.classLoader.IMethod#isAbstract() */
   @Override
   public boolean isSynchronized() {
     return false;
@@ -149,11 +147,14 @@ public class SyntheticMethod implements IMethod {
 
   /**
    * Create an {@link InducedCFG} from an instruction array.
-   * 
-   * NOTE: SIDE EFFECT!!! ... nulls out phi instructions in the instruction array!
+   *
+   * <p>NOTE: SIDE EFFECT!!! ... nulls out phi instructions in the instruction array!
    */
   public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
-    return this.getDeclaringClass().getClassLoader().getLanguage().makeInducedCFG(instructions, this, Everywhere.EVERYWHERE);
+    return this.getDeclaringClass()
+        .getClassLoader()
+        .getLanguage()
+        .makeInducedCFG(instructions, this, Everywhere.EVERYWHERE);
   }
 
   public BytecodeStream getBytecodeStream() throws UnsupportedOperationException {
@@ -162,9 +163,9 @@ public class SyntheticMethod implements IMethod {
 
   /*
    * TODO: why isn't this abstract?
-   * 
+   *
    * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
-   * 
+   *
    * @throws UnsupportedOperationException unconditionally
    */
   public int getMaxLocals() throws UnsupportedOperationException {
@@ -173,7 +174,7 @@ public class SyntheticMethod implements IMethod {
 
   /*
    * TODO: why isn't this abstract?
-   * 
+   *
    * @see com.ibm.wala.classLoader.IMethod#getMaxStackHeight()
    */
   public int getMaxStackHeight() throws UnsupportedOperationException {
@@ -206,23 +207,16 @@ public class SyntheticMethod implements IMethod {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final SyntheticMethod other = (SyntheticMethod) obj;
     if (declaringClass == null) {
-      if (other.declaringClass != null)
-        return false;
-    } else if (!declaringClass.equals(other.declaringClass))
-      return false;
+      if (other.declaringClass != null) return false;
+    } else if (!declaringClass.equals(other.declaringClass)) return false;
     if (method == null) {
-      if (other.method != null)
-        return false;
-    } else if (!method.equals(other.method))
-      return false;
+      if (other.method != null) return false;
+    } else if (!method.equals(other.method)) return false;
     return true;
   }
 
@@ -245,7 +239,7 @@ public class SyntheticMethod implements IMethod {
 
   /*
    * TODO: why isn't this abstract?
-   * 
+   *
    * @param options options governing SSA construction
    */
   @Deprecated
@@ -255,7 +249,7 @@ public class SyntheticMethod implements IMethod {
 
   /**
    * Most subclasses should override this.
-   * 
+   *
    * @param context TODO
    * @param options options governing IR conversion
    */
@@ -306,8 +300,8 @@ public class SyntheticMethod implements IMethod {
   public Descriptor getDescriptor() {
     return method.getSelector().getDescriptor();
   }
-/** BEGIN Custom change: : precise bytecode positions */
-  
+  /** BEGIN Custom change: : precise bytecode positions */
+
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
    */
@@ -323,7 +317,7 @@ public class SyntheticMethod implements IMethod {
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }
-/** END Custom change: precise bytecode positions */
+  /** END Custom change: precise bytecode positions */
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
@@ -389,7 +383,6 @@ public class SyntheticMethod implements IMethod {
 
   @Override
   public Collection<Annotation> getAnnotations() {
-     return Collections.emptySet();
+    return Collections.emptySet();
   }
-
 }

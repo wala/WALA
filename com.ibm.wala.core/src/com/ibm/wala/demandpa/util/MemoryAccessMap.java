@@ -10,24 +10,19 @@
  */
 package com.ibm.wala.demandpa.util;
 
-import java.util.Collection;
-
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import java.util.Collection;
 
 public interface MemoryAccessMap {
 
-  /**
-   * @return {@link Collection}&lt;{@link MemoryAccess}&gt;
-   */
+  /** @return {@link Collection}&lt;{@link MemoryAccess}&gt; */
   public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
 
-  /**
-   * @return {@link Collection}&lt;{@link MemoryAccess}&gt;
-   */
+  /** @return {@link Collection}&lt;{@link MemoryAccess}&gt; */
   public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
-  
+
   public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef);
 
   public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef);
@@ -35,9 +30,7 @@ public interface MemoryAccessMap {
   public Collection<MemoryAccess> getStaticFieldReads(IField field);
 
   public Collection<MemoryAccess> getStaticFieldWrites(IField field);
-  
-  /**
-   * get the heap model used in this memory access map
-   */
-  public HeapModel getHeapModel();  
+
+  /** get the heap model used in this memory access map */
+  public HeapModel getHeapModel();
 }

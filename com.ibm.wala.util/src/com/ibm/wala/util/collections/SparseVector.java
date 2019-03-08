@@ -10,32 +10,28 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.IntIterator;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.IntIterator;
-import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
-
 /**
- * An {@link IVector} implementation designed for low occupancy. Note that get() from this
- * vector is a binary search.
- * 
- * This should only be used for small sets ... insertion and deletion are linear
- * in size of set.
+ * An {@link IVector} implementation designed for low occupancy. Note that get() from this vector is
+ * a binary search.
+ *
+ * <p>This should only be used for small sets ... insertion and deletion are linear in size of set.
  */
 public class SparseVector<T> implements IVector<T>, Serializable {
 
   private static final long serialVersionUID = -6220164684358954867L;
 
-  private final static int DEF_INITIAL_SIZE = 5;
+  private static final int DEF_INITIAL_SIZE = 5;
 
-  /**
-   * if indices[i] = x, then data[i] == get(x)
-   */
+  /** if indices[i] = x, then data[i] == get(x) */
   private MutableSparseIntSet indices = MutableSparseIntSet.makeEmpty();
 
   private Object[] data;
@@ -66,7 +62,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
 
   /**
    * TODO: this can be optimized
-   * 
+   *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
@@ -97,7 +93,6 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     System.err.println((getClass() + " stats: "));
     System.err.println(("data.length " + data.length));
     System.err.println(("indices.size() " + indices.size()));
-
   }
 
   /*
@@ -128,13 +123,10 @@ public class SparseVector<T> implements IVector<T>, Serializable {
         // TODO Auto-generated method stub
         Assertions.UNREACHABLE();
       }
-
     };
   }
 
-  /**
-   * @return max i s.t get(i) != null
-   */
+  /** @return max i s.t get(i) != null */
   @Override
   public int getMaxIndex() throws IllegalStateException {
     return indices.max();
@@ -149,8 +141,8 @@ public class SparseVector<T> implements IVector<T>, Serializable {
   }
 
   /**
-   * This iteration _will_ cover all indices even when remove is called while
-   * the iterator is active.
+   * This iteration _will_ cover all indices even when remove is called while the iterator is
+   * active.
    */
   public IntIterator safeIterateIndices() {
     return MutableSparseIntSet.make(indices).intIterator();

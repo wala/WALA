@@ -23,19 +23,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
- * 
- */
+/** @author Juergen Graf &lt;juergen.graf@gmail.com&gt; */
 public final class Debug {
 
   public static final boolean PRINT_CHARACTER_RANGE_TABLE = false;
 
-  private Debug() {
-  }
+  private Debug() {}
 
   public enum LogLevel {
-    DEBUG(0), INFO(1), WARN(2), ERROR(3);
+    DEBUG(0),
+    INFO(1),
+    WARN(2),
+    ERROR(3);
 
     private final Integer priority;
 
@@ -53,8 +52,9 @@ public final class Debug {
   private static final Map<LogLevel, LogStream> logStreams = new HashMap<>();
 
   private static Set<LogLevel> allowed = new HashSet<>();
+
   static {
-      allowed.addAll(Arrays.asList(LogLevel.values()));
+    allowed.addAll(Arrays.asList(LogLevel.values()));
   }
 
   public static void setLogFile(String file) throws FileNotFoundException {
@@ -67,9 +67,7 @@ public final class Debug {
     }
   }
 
-  /**
-   * Set to log all events with the given or higher priority
-   */
+  /** Set to log all events with the given or higher priority */
   public static void setMinLogLevel(LogLevel level) {
     for (LogLevel l : LogLevel.values()) {
       if (l == level || l.isHigherPriority(level)) {

@@ -10,21 +10,20 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import java.util.ArrayList;
 
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
-
 /**
- * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an array of Instruction objects and an array of lists of
- * ExceptionHandlers.
- * 
- * This class implements basic decoding functionality. A toolkit for reading class files must specialize this class with particular
- * constant pool reader implementation.
- * 
- * Normal usage of this class looks like this:
- * 
+ * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an array of Instruction
+ * objects and an array of lists of ExceptionHandlers.
+ *
+ * <p>This class implements basic decoding functionality. A toolkit for reading class files must
+ * specialize this class with particular constant pool reader implementation.
+ *
+ * <p>Normal usage of this class looks like this:
+ *
  * <pre>
- * 
+ *
  *    Decoder d = new MyToolkitDecoder(...);
  *    try {
  *      d.decode();
@@ -33,7 +32,7 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
  *    }
  *    Instruction[] myInstructions = d.getInstructions();
  *    ExceptionHandler[][] exnHandlers = d.getHandlers();
- * 
+ *
  * </pre>
  */
 public abstract class Decoder implements Constants {
@@ -45,10 +44,10 @@ public abstract class Decoder implements Constants {
     return a < b ? a : a + 1;
   }
 
-  private final static ExceptionHandler[] noHandlers = new ExceptionHandler[0];
+  private static final ExceptionHandler[] noHandlers = new ExceptionHandler[0];
 
   /** This holds predecoded instructions for the single-byte instructions. */
-  private final static Instruction[] simpleInstructions = makeSimpleInstructions();
+  private static final Instruction[] simpleInstructions = makeSimpleInstructions();
 
   private static Instruction[] makeSimpleInstructions() {
     Instruction[] table = new Instruction[256];
@@ -86,22 +85,33 @@ public abstract class Decoder implements Constants {
     table[OP_swap] = SwapInstruction.make();
 
     for (int i = OP_iadd; i <= OP_drem; i++) {
-      table[i] = BinaryOpInstruction
-          .make(indexedTypes[(i - OP_iadd) % 4], BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
+      table[i] =
+          BinaryOpInstruction.make(
+              indexedTypes[(i - OP_iadd) % 4],
+              BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
     }
     for (int i = OP_ineg; i <= OP_dneg; i++) {
       table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg]);
     }
     for (int i = OP_ishl; i <= OP_lushr; i++) {
-      table[i] = ShiftInstruction.make(indexedTypes[(i - OP_ishl) % 2], ShiftInstruction.Operator.values()[(i - OP_ishl) / 2]);
+      table[i] =
+          ShiftInstruction.make(
+              indexedTypes[(i - OP_ishl) % 2],
+              ShiftInstruction.Operator.values()[(i - OP_ishl) / 2]);
     }
     for (int i = OP_iand; i <= OP_lxor; i++) {
-      table[i] = BinaryOpInstruction.make(indexedTypes[(i - OP_iand) % 2],
-          BinaryOpInstruction.Operator.values()[BinaryOpInstruction.Operator.AND.ordinal() + (i - OP_iand) / 2]);
+      table[i] =
+          BinaryOpInstruction.make(
+              indexedTypes[(i - OP_iand) % 2],
+              BinaryOpInstruction.Operator.values()[
+                  BinaryOpInstruction.Operator.AND.ordinal() + (i - OP_iand) / 2]);
     }
 
     for (int i = OP_i2l; i <= OP_d2f; i++) {
-      table[i] = ConversionInstruction.make(indexedTypes[(i - OP_i2l) / 3], indexedTypes[skip((i - OP_i2l) % 3, (i - OP_i2l) / 3)]);
+      table[i] =
+          ConversionInstruction.make(
+              indexedTypes[(i - OP_i2l) / 3],
+              indexedTypes[skip((i - OP_i2l) % 3, (i - OP_i2l) / 3)]);
     }
     for (int i = OP_i2b; i <= OP_i2s; i++) {
       table[i] = ConversionInstruction.make(TYPE_int, indexedTypes[5 + (i - OP_i2b)]);
@@ -109,8 +119,11 @@ public abstract class Decoder implements Constants {
 
     table[OP_lcmp] = ComparisonInstruction.make(TYPE_long, ComparisonInstruction.Operator.CMP);
     for (int i = OP_fcmpl; i <= OP_dcmpg; i++) {
-      table[i] = ComparisonInstruction.make(indexedTypes[2 + (i - OP_fcmpl) / 2],
-          ComparisonInstruction.Operator.values()[ComparisonInstruction.Operator.CMPL.ordinal() + (i - OP_fcmpl) % 2]);
+      table[i] =
+          ComparisonInstruction.make(
+              indexedTypes[2 + (i - OP_fcmpl) / 2],
+              ComparisonInstruction.Operator.values()[
+                  ComparisonInstruction.Operator.CMPL.ordinal() + (i - OP_fcmpl) % 2]);
     }
 
     for (int i = OP_ireturn; i <= OP_areturn; i++) {
@@ -137,7 +150,7 @@ public abstract class Decoder implements Constants {
 
   private int[] instructionsToBytecodes;
 
-  final private ConstantPoolReader constantPool;
+  private final ConstantPoolReader constantPool;
 
   // Holds the input to decode
   private final byte[] code;
@@ -159,9 +172,10 @@ public abstract class Decoder implements Constants {
 
   /**
    * This constructor is only supposed to be used by subclasses.
-   * 
+   *
    * @param code the bytecodes for a method as per JVM spec
-   * @param rawHandlers flattened array of (startPC, endPC, targetPC, classIndex) tuples defined as per the JVM spec
+   * @param rawHandlers flattened array of (startPC, endPC, targetPC, classIndex) tuples defined as
+   *     per the JVM spec
    */
   protected Decoder(byte[] code, int[] rawHandlers, ConstantPoolReader cp) {
     this.code = code;
@@ -182,14 +196,21 @@ public abstract class Decoder implements Constants {
   }
 
   private int decodeInt(int index) {
-    return (code[index] << 24) | ((code[index + 1] & 0xFF) << 16) | ((code[index + 2] & 0xFF) << 8) | (code[index + 3] & 0xFF);
+    return (code[index] << 24)
+        | ((code[index + 1] & 0xFF) << 16)
+        | ((code[index + 2] & 0xFF) << 8)
+        | (code[index + 3] & 0xFF);
   }
 
   private Instruction makeConstantPoolLoad(int index) throws InvalidBytecodeException {
     ConstantInstruction ci = ConstantInstruction.make(constantPool, index);
     if (ci == null) {
-      throw new InvalidBytecodeException("Constant pool item at index " + index + " (type "
-          + constantPool.getConstantPoolItemType(index) + ") cannot be loaded");
+      throw new InvalidBytecodeException(
+          "Constant pool item at index "
+              + index
+              + " (type "
+              + constantPool.getConstantPoolItemType(index)
+              + ") cannot be loaded");
     }
     return ci;
   }
@@ -207,7 +228,8 @@ public abstract class Decoder implements Constants {
       }
 
       if (stack[stackPtr - 1] != 1) {
-        throw new InvalidBytecodeException("Trying to manipulate a pair of " + "one-word items but one of them is two words");
+        throw new InvalidBytecodeException(
+            "Trying to manipulate a pair of " + "one-word items but one of them is two words");
       }
 
       return 2;
@@ -216,24 +238,24 @@ public abstract class Decoder implements Constants {
 
   private static String getPrimitiveType(int t) throws InvalidBytecodeException {
     switch (t) {
-    case T_BOOLEAN:
-      return TYPE_boolean;
-    case T_CHAR:
-      return TYPE_char;
-    case T_FLOAT:
-      return TYPE_float;
-    case T_DOUBLE:
-      return TYPE_double;
-    case T_BYTE:
-      return TYPE_byte;
-    case T_SHORT:
-      return TYPE_short;
-    case T_INT:
-      return TYPE_int;
-    case T_LONG:
-      return TYPE_long;
-    default:
-      throw new InvalidBytecodeException("Unknown primitive type " + t);
+      case T_BOOLEAN:
+        return TYPE_boolean;
+      case T_CHAR:
+        return TYPE_char;
+      case T_FLOAT:
+        return TYPE_float;
+      case T_DOUBLE:
+        return TYPE_double;
+      case T_BYTE:
+        return TYPE_byte;
+      case T_SHORT:
+        return TYPE_short;
+      case T_INT:
+        return TYPE_int;
+      case T_LONG:
+        return TYPE_long;
+      default:
+        throw new InvalidBytecodeException("Unknown primitive type " + t);
     }
   }
 
@@ -309,7 +331,8 @@ public abstract class Decoder implements Constants {
         } else {
           for (int j = 0; j < size; j++) {
             instr = decoded.get(offset + j);
-            if (instr instanceof StoreInstruction && ((StoreInstruction) instr).getVarIndex() == v) {
+            if (instr instanceof StoreInstruction
+                && ((StoreInstruction) instr).getVarIndex() == v) {
               return 0;
             }
 
@@ -336,12 +359,11 @@ public abstract class Decoder implements Constants {
     }
   }
 
-  /**
-   * Locate an instruction that returns from this subroutine; return 0 if one cannot be found.
-   */
+  /** Locate an instruction that returns from this subroutine; return 0 if one cannot be found. */
   private int findReturn(int subAddr) throws InvalidBytecodeException {
     if (decodedSize[subAddr] < 1) {
-      throw new InvalidBytecodeException("Subroutine at " + subAddr + " does not start with an astore or pop instruction");
+      throw new InvalidBytecodeException(
+          "Subroutine at " + subAddr + " does not start with an astore or pop instruction");
     }
     Instruction instr = decoded.get(decodedOffset[subAddr]);
 
@@ -351,7 +373,8 @@ public abstract class Decoder implements Constants {
     }
 
     if (!(instr instanceof StoreInstruction)) {
-      throw new InvalidBytecodeException("Subroutine at " + subAddr + " does not start with an astore or pop instruction");
+      throw new InvalidBytecodeException(
+          "Subroutine at " + subAddr + " does not start with an astore or pop instruction");
     }
 
     int localIndex = ((StoreInstruction) instr).getVarIndex();
@@ -363,7 +386,8 @@ public abstract class Decoder implements Constants {
     return findReturnToVar(localIndex, subAddr, new boolean[code.length]);
   }
 
-  private void decodeSubroutine(int jsrAddr, int retToAddr, int subAddr, int stackLen, byte[] stackWords)
+  private void decodeSubroutine(
+      int jsrAddr, int retToAddr, int subAddr, int stackLen, byte[] stackWords)
       throws InvalidBytecodeException {
     if (JSRs == null) {
       JSRs = new int[code.length];
@@ -448,7 +472,8 @@ public abstract class Decoder implements Constants {
     assignSubroutine(0);
   }
 
-  private int decodeBytecodeInstruction(int index, int stackLen, byte[] stackWords) throws InvalidBytecodeException {
+  private int decodeBytecodeInstruction(int index, int stackLen, byte[] stackWords)
+      throws InvalidBytecodeException {
     int opcode = code[index] & 0xFF;
 
     Instruction i = simpleInstructions[opcode];
@@ -463,230 +488,264 @@ public abstract class Decoder implements Constants {
       index++;
 
       switch (opcode) {
-      case OP_nop:
-        break;
-      case OP_bipush:
-        i = ConstantInstruction.make(code[index]);
-        index++;
-        break;
-      case OP_sipush:
-        i = ConstantInstruction.make(decodeShort(index));
-        index += 2;
-        break;
-      case OP_ldc:
-        i = makeConstantPoolLoad(code[index] & 0xFF);
-        index++;
-        break;
-      case OP_ldc_w:
-        i = makeConstantPoolLoad(decodeShort(index));
-        index += 2;
-        break;
-      case OP_ldc2_w:
-        i = makeConstantPoolLoad(decodeShort(index));
-        index += 2;
-        break;
-      case OP_iload:
-      case OP_lload:
-      case OP_fload:
-      case OP_dload:
-      case OP_aload:
-        i = LoadInstruction.make(indexedTypes[opcode - OP_iload], wide ? decodeUShort(index) : (code[index] & 0xFF));
-        index += wide ? 2 : 1;
-        break;
-      case OP_istore:
-      case OP_lstore:
-      case OP_fstore:
-      case OP_dstore:
-      case OP_astore:
-        i = StoreInstruction.make(indexedTypes[opcode - OP_istore], wide ? decodeUShort(index) : (code[index] & 0xFF));
-        index += wide ? 2 : 1;
-        break;
-      case OP_pop2:
-        i = PopInstruction.make(elemCount(stackWords, stackLen - 1));
-        break;
-      case OP_dup_x2:
-        i = DupInstruction.make(1, elemCount(stackWords, stackLen - 2));
-        break;
-      case OP_dup2:
-        i = DupInstruction.make(elemCount(stackWords, stackLen - 1), 0);
-        break;
-      case OP_dup2_x1:
-        i = DupInstruction.make(elemCount(stackWords, stackLen - 1), 1);
-        break;
-      case OP_dup2_x2: {
-        int twoDown = elemCount(stackWords, stackLen - 1);
-        i = DupInstruction.make(twoDown, elemCount(stackWords, stackLen - twoDown - 1));
-        break;
-      } case OP_iinc: {
-        int v = wide ? decodeUShort(index) : (code[index] & 0xFF);
-        int c = wide ? decodeShort(index + 2) : code[index + 1];
-
-        decoded.add(LoadInstruction.make(TYPE_int, v));
-        decoded.add(ConstantInstruction.make(c));
-        decoded.add(BinaryOpInstruction.make(TYPE_int, Operator.ADD));
-        i = StoreInstruction.make(TYPE_int, v);
-        index += wide ? 4 : 2;
-        break;
-      }
-      case OP_ifeq:
-      case OP_ifne:
-      case OP_iflt:
-      case OP_ifle:
-      case OP_ifgt:
-      case OP_ifge:
-        decoded.add(makeZero);
-        i = ConditionalBranchInstruction.make(TYPE_int, ConditionalBranchInstruction.Operator.values()[opcode - OP_ifeq],
-            (index - 1) + decodeShort(index));
-        index += 2;
-        break;
-      case OP_if_icmpeq:
-      case OP_if_icmpne:
-      case OP_if_icmplt:
-      case OP_if_icmple:
-      case OP_if_icmpgt:
-      case OP_if_icmpge:
-        i = ConditionalBranchInstruction.make((short) opcode, (index - 1) + decodeShort(index));
-        index += 2;
-        break;
-      case OP_if_acmpeq:
-      case OP_if_acmpne:
-        i = ConditionalBranchInstruction.make(TYPE_Object, ConditionalBranchInstruction.Operator.values()[opcode - OP_if_acmpeq],
-            (index - 1) + decodeShort(index));
-        index += 2;
-        break;
-      case OP_goto:
-        i = GotoInstruction.make((index - 1) + decodeShort(index));
-        index += 2;
-        break;
-      case OP_jsr: {
-        index += 2;
-        break;
-      }
-      case OP_jsr_w: {
-        index += 4;
-        break;
-      }
-      case OP_ret:
-        int v = wide ? decodeUShort(index) : (code[index] & 0xFF);
-        i = GotoInstruction.make(-1 - v);
-
-        if (retInfo == null) {
-          throw new InvalidBytecodeException("'ret' outside of subroutine");
-        }
-        retInfo[index - (wide ? 2 : 1)] = new RetInfo(-1, v, stackLen, stackWords);
-
-        index += wide ? 2 : 1;
-        break;
-      case OP_tableswitch: {
-        int start = index - 1;
-        while ((index & 3) != 0) {
+        case OP_nop:
+          break;
+        case OP_bipush:
+          i = ConstantInstruction.make(code[index]);
           index++;
-        }
-        int def = start + decodeInt(index);
-        int low = decodeInt(index + 4);
-        int high = decodeInt(index + 8);
-        int[] t = new int[(high - low + 1) * 2];
-
-        for (int j = 0; j < t.length; j += 2) {
-          t[j] = j / 2 + low;
-          t[j + 1] = start + decodeInt(index + 12 + j * 2);
-        }
-        i = SwitchInstruction.make(t, def);
-        index += 12 + (high - low + 1) * 4;
-        break;
-      }
-      case OP_lookupswitch: {
-        int start = index - 1;
-        while ((index & 3) != 0) {
+          break;
+        case OP_sipush:
+          i = ConstantInstruction.make(decodeShort(index));
+          index += 2;
+          break;
+        case OP_ldc:
+          i = makeConstantPoolLoad(code[index] & 0xFF);
           index++;
-        }
-        int def = start + decodeInt(index);
-        int n = decodeInt(index + 4);
-        int[] t = new int[n * 2];
+          break;
+        case OP_ldc_w:
+          i = makeConstantPoolLoad(decodeShort(index));
+          index += 2;
+          break;
+        case OP_ldc2_w:
+          i = makeConstantPoolLoad(decodeShort(index));
+          index += 2;
+          break;
+        case OP_iload:
+        case OP_lload:
+        case OP_fload:
+        case OP_dload:
+        case OP_aload:
+          i =
+              LoadInstruction.make(
+                  indexedTypes[opcode - OP_iload],
+                  wide ? decodeUShort(index) : (code[index] & 0xFF));
+          index += wide ? 2 : 1;
+          break;
+        case OP_istore:
+        case OP_lstore:
+        case OP_fstore:
+        case OP_dstore:
+        case OP_astore:
+          i =
+              StoreInstruction.make(
+                  indexedTypes[opcode - OP_istore],
+                  wide ? decodeUShort(index) : (code[index] & 0xFF));
+          index += wide ? 2 : 1;
+          break;
+        case OP_pop2:
+          i = PopInstruction.make(elemCount(stackWords, stackLen - 1));
+          break;
+        case OP_dup_x2:
+          i = DupInstruction.make(1, elemCount(stackWords, stackLen - 2));
+          break;
+        case OP_dup2:
+          i = DupInstruction.make(elemCount(stackWords, stackLen - 1), 0);
+          break;
+        case OP_dup2_x1:
+          i = DupInstruction.make(elemCount(stackWords, stackLen - 1), 1);
+          break;
+        case OP_dup2_x2:
+          {
+            int twoDown = elemCount(stackWords, stackLen - 1);
+            i = DupInstruction.make(twoDown, elemCount(stackWords, stackLen - twoDown - 1));
+            break;
+          }
+        case OP_iinc:
+          {
+            int v = wide ? decodeUShort(index) : (code[index] & 0xFF);
+            int c = wide ? decodeShort(index + 2) : code[index + 1];
 
-        for (int j = 0; j < t.length; j += 2) {
-          t[j] = decodeInt(index + 8 + j * 4);
-          t[j + 1] = start + decodeInt(index + 12 + j * 4);
-        }
-        i = SwitchInstruction.make(t, def);
-        index += 8 + n * 8;
-        break;
-      }
-      case OP_getstatic:
-      case OP_getfield: {
-        int f = decodeUShort(index);
-        i = GetInstruction.make(constantPool, f, opcode == OP_getstatic);
-        index += 2;
-        break;
-      }
-      case OP_putstatic:
-      case OP_putfield: {
-        int f = decodeUShort(index);
-        i = PutInstruction.make(constantPool, f, opcode == OP_putstatic);
-        index += 2;
-        break;
-      }
-      case OP_invokevirtual:
-      case OP_invokespecial:
-      case OP_invokestatic: {
-        int m = decodeUShort(index);
-        i = InvokeInstruction.make(constantPool, m, opcode);
-        index += 2;
-        break;
-      }
-      case OP_invokeinterface: {
-        int m = decodeUShort(index);
-        i = InvokeInstruction.make(constantPool, m, opcode);
-        index += 4;
-        break;
-      }
-      case OP_invokedynamic: {
-        int m = decodeUShort(index);
-        i = InvokeDynamicInstruction.make(constantPool, m, opcode);
-        index += 4;
-        break;
-      }
-      case OP_new:
-        i = NewInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)), 0);
-        index += 2;
-        break;
-      case OP_newarray:
-        i = NewInstruction.make(Util.makeArray(getPrimitiveType(code[index])), 1);
-        index++;
-        break;
-      case OP_anewarray:
-        i = NewInstruction.make(Util.makeArray(constantPool.getConstantPoolClassType(decodeUShort(index))), 1);
-        index += 2;
-        break;
-      case OP_checkcast:
-        i = CheckCastInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)));
-        index += 2;
-        break;
-      case OP_instanceof:
-        i = InstanceofInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)));
-        index += 2;
-        break;
-      case OP_wide:
-        wide = true;
-        opcode = code[index] & 0xFF;
-        continue;
-      case OP_multianewarray:
-        i = NewInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)), code[index + 2] & 0xFF);
-        index += 3;
-        break;
-      case OP_ifnull:
-      case OP_ifnonnull:
-        decoded.add(ConstantInstruction.make(TYPE_Object, null));
-        i = ConditionalBranchInstruction.make(TYPE_Object, ConditionalBranchInstruction.Operator.values()[opcode - OP_ifnull],
-            (index - 1) + decodeShort(index));
-        index += 2;
-        break;
-      case OP_goto_w:
-        i = GotoInstruction.make((index - 1) + decodeInt(index));
-        index += 4;
-        break;
-      default:
-        throw new InvalidBytecodeException("Unknown opcode " + opcode);
+            decoded.add(LoadInstruction.make(TYPE_int, v));
+            decoded.add(ConstantInstruction.make(c));
+            decoded.add(BinaryOpInstruction.make(TYPE_int, Operator.ADD));
+            i = StoreInstruction.make(TYPE_int, v);
+            index += wide ? 4 : 2;
+            break;
+          }
+        case OP_ifeq:
+        case OP_ifne:
+        case OP_iflt:
+        case OP_ifle:
+        case OP_ifgt:
+        case OP_ifge:
+          decoded.add(makeZero);
+          i =
+              ConditionalBranchInstruction.make(
+                  TYPE_int,
+                  ConditionalBranchInstruction.Operator.values()[opcode - OP_ifeq],
+                  (index - 1) + decodeShort(index));
+          index += 2;
+          break;
+        case OP_if_icmpeq:
+        case OP_if_icmpne:
+        case OP_if_icmplt:
+        case OP_if_icmple:
+        case OP_if_icmpgt:
+        case OP_if_icmpge:
+          i = ConditionalBranchInstruction.make((short) opcode, (index - 1) + decodeShort(index));
+          index += 2;
+          break;
+        case OP_if_acmpeq:
+        case OP_if_acmpne:
+          i =
+              ConditionalBranchInstruction.make(
+                  TYPE_Object,
+                  ConditionalBranchInstruction.Operator.values()[opcode - OP_if_acmpeq],
+                  (index - 1) + decodeShort(index));
+          index += 2;
+          break;
+        case OP_goto:
+          i = GotoInstruction.make((index - 1) + decodeShort(index));
+          index += 2;
+          break;
+        case OP_jsr:
+          {
+            index += 2;
+            break;
+          }
+        case OP_jsr_w:
+          {
+            index += 4;
+            break;
+          }
+        case OP_ret:
+          int v = wide ? decodeUShort(index) : (code[index] & 0xFF);
+          i = GotoInstruction.make(-1 - v);
+
+          if (retInfo == null) {
+            throw new InvalidBytecodeException("'ret' outside of subroutine");
+          }
+          retInfo[index - (wide ? 2 : 1)] = new RetInfo(-1, v, stackLen, stackWords);
+
+          index += wide ? 2 : 1;
+          break;
+        case OP_tableswitch:
+          {
+            int start = index - 1;
+            while ((index & 3) != 0) {
+              index++;
+            }
+            int def = start + decodeInt(index);
+            int low = decodeInt(index + 4);
+            int high = decodeInt(index + 8);
+            int[] t = new int[(high - low + 1) * 2];
+
+            for (int j = 0; j < t.length; j += 2) {
+              t[j] = j / 2 + low;
+              t[j + 1] = start + decodeInt(index + 12 + j * 2);
+            }
+            i = SwitchInstruction.make(t, def);
+            index += 12 + (high - low + 1) * 4;
+            break;
+          }
+        case OP_lookupswitch:
+          {
+            int start = index - 1;
+            while ((index & 3) != 0) {
+              index++;
+            }
+            int def = start + decodeInt(index);
+            int n = decodeInt(index + 4);
+            int[] t = new int[n * 2];
+
+            for (int j = 0; j < t.length; j += 2) {
+              t[j] = decodeInt(index + 8 + j * 4);
+              t[j + 1] = start + decodeInt(index + 12 + j * 4);
+            }
+            i = SwitchInstruction.make(t, def);
+            index += 8 + n * 8;
+            break;
+          }
+        case OP_getstatic:
+        case OP_getfield:
+          {
+            int f = decodeUShort(index);
+            i = GetInstruction.make(constantPool, f, opcode == OP_getstatic);
+            index += 2;
+            break;
+          }
+        case OP_putstatic:
+        case OP_putfield:
+          {
+            int f = decodeUShort(index);
+            i = PutInstruction.make(constantPool, f, opcode == OP_putstatic);
+            index += 2;
+            break;
+          }
+        case OP_invokevirtual:
+        case OP_invokespecial:
+        case OP_invokestatic:
+          {
+            int m = decodeUShort(index);
+            i = InvokeInstruction.make(constantPool, m, opcode);
+            index += 2;
+            break;
+          }
+        case OP_invokeinterface:
+          {
+            int m = decodeUShort(index);
+            i = InvokeInstruction.make(constantPool, m, opcode);
+            index += 4;
+            break;
+          }
+        case OP_invokedynamic:
+          {
+            int m = decodeUShort(index);
+            i = InvokeDynamicInstruction.make(constantPool, m, opcode);
+            index += 4;
+            break;
+          }
+        case OP_new:
+          i = NewInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)), 0);
+          index += 2;
+          break;
+        case OP_newarray:
+          i = NewInstruction.make(Util.makeArray(getPrimitiveType(code[index])), 1);
+          index++;
+          break;
+        case OP_anewarray:
+          i =
+              NewInstruction.make(
+                  Util.makeArray(constantPool.getConstantPoolClassType(decodeUShort(index))), 1);
+          index += 2;
+          break;
+        case OP_checkcast:
+          i = CheckCastInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)));
+          index += 2;
+          break;
+        case OP_instanceof:
+          i =
+              InstanceofInstruction.make(
+                  constantPool.getConstantPoolClassType(decodeUShort(index)));
+          index += 2;
+          break;
+        case OP_wide:
+          wide = true;
+          opcode = code[index] & 0xFF;
+          continue;
+        case OP_multianewarray:
+          i =
+              NewInstruction.make(
+                  constantPool.getConstantPoolClassType(decodeUShort(index)),
+                  code[index + 2] & 0xFF);
+          index += 3;
+          break;
+        case OP_ifnull:
+        case OP_ifnonnull:
+          decoded.add(ConstantInstruction.make(TYPE_Object, null));
+          i =
+              ConditionalBranchInstruction.make(
+                  TYPE_Object,
+                  ConditionalBranchInstruction.Operator.values()[opcode - OP_ifnull],
+                  (index - 1) + decodeShort(index));
+          index += 2;
+          break;
+        case OP_goto_w:
+          i = GotoInstruction.make((index - 1) + decodeInt(index));
+          index += 4;
+          break;
+        default:
+          throw new InvalidBytecodeException("Unknown opcode " + opcode);
       }
 
       break;
@@ -699,7 +758,8 @@ public abstract class Decoder implements Constants {
     return index;
   }
 
-  private static int applyInstructionToStack(Instruction i, int stackLen, byte[] stackWords) throws InvalidBytecodeException {
+  private static int applyInstructionToStack(Instruction i, int stackLen, byte[] stackWords)
+      throws InvalidBytecodeException {
     stackLen -= i.getPoppedCount();
 
     if (stackLen < 0) {
@@ -731,7 +791,8 @@ public abstract class Decoder implements Constants {
     return stackLen;
   }
 
-  private void decodeAt(int index, int stackLen, byte[] stackWords) throws InvalidBytecodeException {
+  private void decodeAt(int index, int stackLen, byte[] stackWords)
+      throws InvalidBytecodeException {
     if (index < 0 || index >= decodedOffset.length) {
       throw new InvalidBytecodeException(index, "Branch index " + index + " out of range");
     }
@@ -810,8 +871,9 @@ public abstract class Decoder implements Constants {
   }
 
   /**
-   * This exception is thrown when the Decoder detects invalid incoming bytecode (code that would not pass the Java verifier). We
-   * don't guarantee to perform full verification in the Decoder, however.
+   * This exception is thrown when the Decoder detects invalid incoming bytecode (code that would
+   * not pass the Java verifier). We don't guarantee to perform full verification in the Decoder,
+   * however.
    */
   public static class InvalidBytecodeException extends Exception {
 
@@ -835,9 +897,7 @@ public abstract class Decoder implements Constants {
       }
     }
 
-    /**
-     * @return the offset of the bytecode instruction deemed to be invalid
-     */
+    /** @return the offset of the bytecode instruction deemed to be invalid */
     public int getIndex() {
       return index;
     }
@@ -863,7 +923,8 @@ public abstract class Decoder implements Constants {
       for (int j = 0; j < rawHandlers.length; j += 4) {
         if (rawHandlers[j] <= i && i < rawHandlers[j + 1]) {
           int classIndex = rawHandlers[j + 3];
-          String catchClass = classIndex == 0 ? null : constantPool.getConstantPoolClassType(classIndex);
+          String catchClass =
+              classIndex == 0 ? null : constantPool.getConstantPoolClassType(classIndex);
 
           hs[numHandlers] = new ExceptionHandler(addrMap[rawHandlers[j + 2]], catchClass);
           numHandlers++;
@@ -942,10 +1003,11 @@ public abstract class Decoder implements Constants {
 
   /**
    * Perform the decoding.
-   * 
-   * @throws InvalidBytecodeException the incoming code is invalid and would fail Java bytecode verification
+   *
+   * @throws InvalidBytecodeException the incoming code is invalid and would fail Java bytecode
+   *     verification
    */
-  final public void decode() throws InvalidBytecodeException {
+  public final void decode() throws InvalidBytecodeException {
     byte[] stackWords = new byte[code.length * 2];
 
     decoded = new ArrayList<>();
@@ -1066,10 +1128,10 @@ public abstract class Decoder implements Constants {
 
   /**
    * Get the decoded instructions.
-   * 
+   *
    * @return array of decoded instructions
    */
-  final public IInstruction[] getInstructions() {
+  public final IInstruction[] getInstructions() {
     if (instructions == null) {
       throw new Error("Call decode() before calling getInstructions()");
     }
@@ -1078,10 +1140,10 @@ public abstract class Decoder implements Constants {
 
   /**
    * Get the decoded exception handlers.
-   * 
+   *
    * @return array of exception handler lists
    */
-  final public ExceptionHandler[][] getHandlers() {
+  public final ExceptionHandler[][] getHandlers() {
     if (handlers == null) {
       throw new Error("Call decode() before calling getHandlers()");
     }
@@ -1090,21 +1152,19 @@ public abstract class Decoder implements Constants {
 
   /**
    * Get the mapping between instructions and input bytecodes.
-   * 
-   * @return an array m such that m[i] is the offset of the bytecode instruction which gave rise to the Instruction referenced in
-   *         the instructions array at offset i
+   *
+   * @return an array m such that m[i] is the offset of the bytecode instruction which gave rise to
+   *     the Instruction referenced in the instructions array at offset i
    */
-  final public int[] getInstructionsToBytecodes() {
+  public final int[] getInstructionsToBytecodes() {
     if (instructionsToBytecodes == null) {
       throw new Error("Call decode() before calling getInstructionsToBytecodes()");
     }
     return instructionsToBytecodes;
   }
 
-  /**
-   * @return true iff the method decoded by this Decoder contains subroutines (JSRs)
-   */
-  final public boolean containsSubroutines() {
+  /** @return true iff the method decoded by this Decoder contains subroutines (JSRs) */
+  public final boolean containsSubroutines() {
     if (instructions == null) {
       throw new Error("Call decode() before calling containsSubroutines()");
     }

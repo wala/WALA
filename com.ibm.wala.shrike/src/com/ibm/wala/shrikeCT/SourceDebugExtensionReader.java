@@ -11,11 +11,10 @@
 package com.ibm.wala.shrikeCT;
 
 public class SourceDebugExtensionReader extends AttributeReader {
-  public SourceDebugExtensionReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
+  public SourceDebugExtensionReader(ClassReader.AttrIterator iter)
+      throws InvalidClassFileException {
     super(iter, "SourceDebugExtension");
 
     checkSize(attr, 6);
-
   }
-
 }

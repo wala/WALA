@@ -13,9 +13,7 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 
-/**
- * identifier of a GetCaughtException instruction
- */
+/** identifier of a GetCaughtException instruction */
 public class GetCaughtExceptionStatement extends Statement {
   private final SSAGetCaughtExceptionInstruction st;
 
@@ -28,7 +26,7 @@ public class GetCaughtExceptionStatement extends Statement {
   public Kind getKind() {
     return Kind.CATCH;
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -55,5 +53,4 @@ public class GetCaughtExceptionStatement extends Statement {
   public SSAGetCaughtExceptionInstruction getInstruction() {
     return st;
   }
-
 }

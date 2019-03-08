@@ -13,8 +13,8 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * a helper class which can modify a PropagationCallGraphBuilder to deal with
- * reflective factory methods.
+ * a helper class which can modify a PropagationCallGraphBuilder to deal with reflective factory
+ * methods.
  */
 public class ReturnValueKeyWithFilter extends ReturnValueKey implements FilteredPointerKey {
 
@@ -32,5 +32,4 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
   public TypeFilter getTypeFilter() {
     return typeFilter;
   }
-
 }

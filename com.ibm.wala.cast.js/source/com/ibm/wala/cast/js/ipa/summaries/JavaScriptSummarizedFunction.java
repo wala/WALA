@@ -21,7 +21,8 @@ import com.ibm.wala.types.MethodReference;
 
 public class JavaScriptSummarizedFunction extends SummarizedMethod {
 
-  public JavaScriptSummarizedFunction(MethodReference ref, MethodSummary summary, IClass declaringClass) {
+  public JavaScriptSummarizedFunction(
+      MethodReference ref, MethodSummary summary, IClass declaringClass) {
     super(ref, summary, declaringClass);
   }
 
@@ -34,5 +35,4 @@ public class JavaScriptSummarizedFunction extends SummarizedMethod {
   public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
     return new JSInducedCFG(instructions, this, Everywhere.EVERYWHERE);
   }
-
 }

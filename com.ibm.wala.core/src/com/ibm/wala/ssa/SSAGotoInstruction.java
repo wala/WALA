@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.ssa;
 
-/**
- * Unconditional branch instruction for SSA form.
- */
+/** Unconditional branch instruction for SSA form. */
 public class SSAGotoInstruction extends SSAInstruction {
   private final int target;
 
@@ -22,8 +20,8 @@ public class SSAGotoInstruction extends SSAInstruction {
   }
 
   /**
-   *    getTarget returns the IIndex for the Goto-target. Not to be confused with
-   *    the array-index in InducedCFG.getStatements()
+   * getTarget returns the IIndex for the Goto-target. Not to be confused with the array-index in
+   * InducedCFG.getStatements()
    */
   public int getTarget() {
     return this.target;
@@ -36,7 +34,7 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "goto (from iindex= " + this.iindex + " to iindex = " + this.target  + ')';
+    return "goto (from iindex= " + this.iindex + " to iindex = " + this.target + ')';
   }
 
   @Override

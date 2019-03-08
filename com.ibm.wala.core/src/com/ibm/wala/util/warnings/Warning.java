@@ -12,24 +12,22 @@ package com.ibm.wala.util.warnings;
 
 import com.ibm.wala.util.debug.Assertions;
 
-/**
- * A warning message. These are ordered first by severity, and then by lexicographic order.
- */
+/** A warning message. These are ordered first by severity, and then by lexicographic order. */
 public abstract class Warning implements Comparable<Warning> {
 
-  public final static byte MILD = 0;
+  public static final byte MILD = 0;
 
-  public final static byte MODERATE = 1;
+  public static final byte MODERATE = 1;
 
-  public final static byte SEVERE = 2;
+  public static final byte SEVERE = 2;
 
-  public final static byte CLIENT_MILD = 3;
+  public static final byte CLIENT_MILD = 3;
 
-  public final static byte CLIENT_MODERATE = 4;
+  public static final byte CLIENT_MODERATE = 4;
 
-  public final static byte CLIENT_SEVERE = 5;
+  public static final byte CLIENT_SEVERE = 5;
 
-  public final static byte N_LEVELS = 6;
+  public static final byte N_LEVELS = 6;
 
   private byte level;
 
@@ -80,21 +78,21 @@ public abstract class Warning implements Comparable<Warning> {
 
   protected String severityString() {
     switch (level) {
-    case MILD:
-      return ("mild");
-    case MODERATE:
-      return ("Moderate");
-    case SEVERE:
-      return ("SEVERE");
-    case CLIENT_MILD:
-      return ("Client mild");
-    case CLIENT_MODERATE:
-      return ("Client moderate");
-    case CLIENT_SEVERE:
-      return ("Client severe");
-    default:
-      Assertions.UNREACHABLE();
-      return null;
+      case MILD:
+        return ("mild");
+      case MODERATE:
+        return ("Moderate");
+      case SEVERE:
+        return ("SEVERE");
+      case CLIENT_MILD:
+        return ("Client mild");
+      case CLIENT_MODERATE:
+        return ("Client moderate");
+      case CLIENT_SEVERE:
+        return ("Client severe");
+      default:
+        Assertions.UNREACHABLE();
+        return null;
     }
   }
 
@@ -102,9 +100,7 @@ public abstract class Warning implements Comparable<Warning> {
     return level;
   }
 
-  /**
-   * Must return the same String always -- this is required by the implementation of hashCode.
-   */
+  /** Must return the same String always -- this is required by the implementation of hashCode. */
   public abstract String getMsg();
 
   public void setLevel(byte b) {

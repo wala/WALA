@@ -12,13 +12,11 @@ package com.ibm.wala.shrikeBT;
 
 import java.util.Arrays;
 
-/**
- * This instruction represents all forms of switch instructions.
- */
+/** This instruction represents all forms of switch instructions. */
 public final class SwitchInstruction extends Instruction {
-  final private int[] casesAndLabels;
+  private final int[] casesAndLabels;
 
-  final private int defaultLabel;
+  private final int defaultLabel;
 
   protected SwitchInstruction(short opcode, int[] casesAndLabels, int defaultLabel) {
     super(opcode);
@@ -26,24 +24,21 @@ public final class SwitchInstruction extends Instruction {
     this.defaultLabel = defaultLabel;
   }
 
-  /**
-   * @return the label which is branched to if none of the cases match
-   */
+  /** @return the label which is branched to if none of the cases match */
   public int getDefaultLabel() {
     return defaultLabel;
   }
 
-  /**
-   * @return an array of flattened (case, label) pairs, sorted in increasing order by case
-   */
+  /** @return an array of flattened (case, label) pairs, sorted in increasing order by case */
   public int[] getCasesAndLabels() {
     return casesAndLabels;
   }
 
   /**
    * Make a switch instruction.
-   * 
-   * @param casesAndLabels an array of flattened (case, label) pairs, sorted in increasing order by case
+   *
+   * @param casesAndLabels an array of flattened (case, label) pairs, sorted in increasing order by
+   *     case
    * @param defaultLabel the default label to branch to if no cases match
    * @throws IllegalArgumentException if casesAndLabels is null
    */

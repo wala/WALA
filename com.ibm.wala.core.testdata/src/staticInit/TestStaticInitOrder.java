@@ -16,7 +16,7 @@ public class TestStaticInitOrder {
 
     @SuppressWarnings("unused")
     static int f;
-    
+
     static {
       doNothing();
     }
@@ -29,27 +29,24 @@ public class TestStaticInitOrder {
   private static class B {
     @SuppressWarnings("unused")
     static int b;
-    
+
     static {
       foo();
     }
-    
-    private static void foo() {
 
-    }
+    private static void foo() {}
   }
-  
+
   private static class C extends B {
-    
+
     @SuppressWarnings("unused")
     static int c = 5;
-    
+
     public static void dostuff() {
       c++;
     }
-    
   }
-  
+
   public static void main(String[] args) {
     A.f = 3;
     A.f++;

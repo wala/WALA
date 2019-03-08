@@ -20,7 +20,8 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 public interface ExtendedHeapModel extends HeapModel {
   /**
    * @param I an InstanceKey representing an abstract array
-   * @return the PointerKey that acts as a representation for the arraylength field of this abstract array
+   * @return the PointerKey that acts as a representation for the arraylength field of this abstract
+   *     array
    */
   PointerKey getPointerKeyForArrayLength(InstanceKey I);
 }

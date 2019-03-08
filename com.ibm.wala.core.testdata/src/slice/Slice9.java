@@ -20,9 +20,9 @@ public class Slice9 {
     int i = 42;
     i = r.nextInt();
     int j;
-    j = 42*i;
+    j = 42 * i;
     doNothing(j);
   }
-  
+
   static void doNothing(int x) {}
 }

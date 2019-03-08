@@ -10,23 +10,18 @@
  */
 package com.ibm.wala.fixpoint;
 
+/** Represents a single step, restricted to a unary operator. */
+public abstract class UnaryStatement<T extends IVariable<T>>
+    extends AbstractStatement<T, UnaryOperator<T>> {
 
+  /** The operands */
+  protected final T lhs;
 
-/**
- * Represents a single step, restricted to a unary operator.
- */
-public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractStatement<T, UnaryOperator<T>> {
+  protected final T rhs;
 
   /**
-   * The operands
-   */
-  final protected T lhs;
-  final protected T rhs;
-
-  /** 
-   * Evaluate this equation, setting a new value for the
-   * left-hand side. 
-   * 
+   * Evaluate this equation, setting a new value for the left-hand side.
+   *
    * @return true if the lhs value changed. false otherwise
    */
   @Override
@@ -35,9 +30,9 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
     return op.evaluate(lhs, rhs);
   }
 
-  /** 
+  /**
    * Return the left-hand side of this equation.
-   * 
+   *
    * @return the lattice cell this equation computes
    */
   @Override
@@ -45,16 +40,12 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
     return lhs;
   }
 
-  /** 
-   * @return the right-hand side of this equation.
-   */
+  /** @return the right-hand side of this equation. */
   public T getRightHandSide() {
     return rhs;
   }
 
-  /** 
-   * Return the operands in this equation.
-   */
+  /** Return the operands in this equation. */
   public IVariable<T>[] getOperands() {
     @SuppressWarnings("unchecked")
     IVariable<T>[] result = new IVariable[2];
@@ -63,23 +54,23 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
     return result;
   }
 
-  /** 
+  /**
    * Does this equation contain an appearance of a given cell?
+   *
    * @param cell the cell in question
    * @return true or false
    */
   @Override
   public boolean hasVariable(T cell) {
-    if (lhs == cell)
-      return true;
-    if (rhs == cell)
-      return true;
+    if (lhs == cell) return true;
+    if (rhs == cell) return true;
     return false;
   }
 
-  /** 
-   * Return a string representation of this object 
-   * @return a string representation of this object 
+  /**
+   * Return a string representation of this object
+   *
+   * @return a string representation of this object
    */
   @Override
   public String toString() {
@@ -93,7 +84,7 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
     return result;
   }
 
-  /** 
+  /**
    * Constructor for case of one operand on the right-hand side.
    *
    * @param lhs the lattice cell set by this equation
@@ -154,7 +145,7 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
     }
     return result;
   }
-  
+
   @Override
   public T[] getRHS() throws UnsupportedOperationException {
     // This should never be called ...use the more efficient getRightHandSide instead

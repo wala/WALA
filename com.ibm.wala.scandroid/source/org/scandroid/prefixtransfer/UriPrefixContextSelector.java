@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -65,66 +65,86 @@ import com.ibm.wala.util.intset.IntSet;
 
 public class UriPrefixContextSelector extends DefaultContextSelector {
 
-	//private final ContextSelector delegate;
-	
-    public UriPrefixContextSelector(AnalysisOptions options, IClassHierarchy cha) {
-		super(options, cha);		
-	}
+  // private final ContextSelector delegate;
 
-	/* TODO: fix receivers[0] references. */
-    @Override
-    public Context getCalleeTarget(CGNode caller, CallSiteReference site,
-            IMethod callee, InstanceKey[] receivers) {
-        if(callee.getSignature().equals("java.lang.StringBuilder.toString()Ljava/lang/String;") ||
-                callee.getSignature().equals("java.lang.StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;") ||
-                callee.getSignature().equals("java.lang.String.valueOf(Ljava/lang/Object;)Ljava/lang/String;") ||
-                callee.getSignature().equals("java.lang.String.toString()Ljava/lang/String;") ||
-                callee.getSignature().equals("android.net.Uri.parse(Ljava/lang/String;)Landroid/net/Uri;") ||
-                callee.getSignature().equals("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;") ||
-//                callee.getSignature().equals("android.net.Uri$StringUri.buildUpon()Landroid/net/Uri$Builder;") ||
-//                callee.getSignature().equals("android.net.Uri$OpaqueUri.buildUpon()Landroid/net/Uri$Builder;") ||
-                callee.getSignature().equals("android.net.Uri$Builder.build()Landroid/net/Uri;")
-                )
-        {
-//            System.out.println("Adding context to "+callee.getSignature());
-//            for (int i = 0; i < receivers.length; i++)
-//            	System.out.println("\t#"+i+" "+receivers[i]);
-            if(receivers[0] instanceof NormalAllocationInNode)
-            {
-//                System.out.println("\t\tNormalAllocationInNode "+callee.getSignature());
-                if(((NormalAllocationInNode)receivers[0]).getSite().getDeclaredType().getClassLoader().equals(ClassLoaderReference.Application))
-                    // create a context based on the site and the receiver
-                    return new CallerSiteContextPair(caller,site,new ReceiverInstanceContext(receivers[0]));
-//                if (callee.getSignature().equals("android.net.Uri$StringUri.buildUpon()Landroid/net/Uri$Builder;") ||
-//                		callee.getSignature().equals("android.net.Uri$OpaqueUri.buildUpon()Landroid/net/Uri$Builder;") ||
-//                		callee.getSignature().equals("android.net.Uri$Builder.build()Landroid/net/Uri;"))
-//                	return new CallerSiteContextPair(caller,site,new ReceiverInstanceContext(receivers[0]));
-                if (callee.getSignature().equals("android.net.Uri$Builder.build()Landroid/net/Uri;"))
-                	return new CallerSiteContextPair(caller,site,new ReceiverInstanceContext(receivers[0]));
-                    //return new CallerSiteContext(caller,site);                	
-            }
-            else if(callee.getSignature().equals("java.lang.String.valueOf(Ljava/lang/Object;)Ljava/lang/String;") ||
-                    callee.getSignature().equals("java.lang.String.toString()Ljava/lang/String;") ||
-                    callee.getSignature().equals("android.net.Uri.parse(Ljava/lang/String;)Landroid/net/Uri;") ||
-                    callee.getSignature().equals("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")
-                    )
-            {
-                return new CallerSiteContext(caller,site);
-            }
-        }
-        else //if(callee.getSignature().contains("value"))
-        {
-//          System.out.println("Found signature: "+callee.getSignature());
-        }
-        if(!caller.getContext().equals(Everywhere.EVERYWHERE))
-        {
-            //System.out.println("Call to "+callee+" from caller "+caller+" in context "+caller.getContext());
-        }
-        return super.getCalleeTarget(caller, site, callee, receivers);
-    }
+  public UriPrefixContextSelector(AnalysisOptions options, IClassHierarchy cha) {
+    super(options, cha);
+  }
 
-    @Override
-    public IntSet getRelevantParameters(CGNode node, CallSiteReference call) {
-    	return super.getRelevantParameters(node,call);
+  /* TODO: fix receivers[0] references. */
+  @Override
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receivers) {
+    if (callee.getSignature().equals("java.lang.StringBuilder.toString()Ljava/lang/String;")
+        || callee
+            .getSignature()
+            .equals("java.lang.StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;")
+        || callee
+            .getSignature()
+            .equals("java.lang.String.valueOf(Ljava/lang/Object;)Ljava/lang/String;")
+        || callee.getSignature().equals("java.lang.String.toString()Ljava/lang/String;")
+        || callee
+            .getSignature()
+            .equals("android.net.Uri.parse(Ljava/lang/String;)Landroid/net/Uri;")
+        || callee
+            .getSignature()
+            .equals(
+                "android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")
+        ||
+        //
+        // callee.getSignature().equals("android.net.Uri$StringUri.buildUpon()Landroid/net/Uri$Builder;") ||
+        //
+        // callee.getSignature().equals("android.net.Uri$OpaqueUri.buildUpon()Landroid/net/Uri$Builder;") ||
+        callee.getSignature().equals("android.net.Uri$Builder.build()Landroid/net/Uri;")) {
+      //            System.out.println("Adding context to "+callee.getSignature());
+      //            for (int i = 0; i < receivers.length; i++)
+      //            	System.out.println("\t#"+i+" "+receivers[i]);
+      if (receivers[0] instanceof NormalAllocationInNode) {
+        //                System.out.println("\t\tNormalAllocationInNode "+callee.getSignature());
+        if (((NormalAllocationInNode) receivers[0])
+            .getSite()
+            .getDeclaredType()
+            .getClassLoader()
+            .equals(ClassLoaderReference.Application))
+          // create a context based on the site and the receiver
+          return new CallerSiteContextPair(caller, site, new ReceiverInstanceContext(receivers[0]));
+        //                if
+        // (callee.getSignature().equals("android.net.Uri$StringUri.buildUpon()Landroid/net/Uri$Builder;") ||
+        //
+        //	callee.getSignature().equals("android.net.Uri$OpaqueUri.buildUpon()Landroid/net/Uri$Builder;") ||
+        //
+        //	callee.getSignature().equals("android.net.Uri$Builder.build()Landroid/net/Uri;"))
+        //                	return new CallerSiteContextPair(caller,site,new
+        // ReceiverInstanceContext(receivers[0]));
+        if (callee.getSignature().equals("android.net.Uri$Builder.build()Landroid/net/Uri;"))
+          return new CallerSiteContextPair(caller, site, new ReceiverInstanceContext(receivers[0]));
+        // return new CallerSiteContext(caller,site);
+      } else if (callee
+              .getSignature()
+              .equals("java.lang.String.valueOf(Ljava/lang/Object;)Ljava/lang/String;")
+          || callee.getSignature().equals("java.lang.String.toString()Ljava/lang/String;")
+          || callee
+              .getSignature()
+              .equals("android.net.Uri.parse(Ljava/lang/String;)Landroid/net/Uri;")
+          || callee
+              .getSignature()
+              .equals(
+                  "android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")) {
+        return new CallerSiteContext(caller, site);
+      }
+    } else // if(callee.getSignature().contains("value"))
+    {
+      //          System.out.println("Found signature: "+callee.getSignature());
     }
+    if (!caller.getContext().equals(Everywhere.EVERYWHERE)) {
+      // System.out.println("Call to "+callee+" from caller "+caller+" in context
+      // "+caller.getContext());
+    }
+    return super.getCalleeTarget(caller, site, callee, receivers);
+  }
+
+  @Override
+  public IntSet getRelevantParameters(CGNode node, CallSiteReference call) {
+    return super.getRelevantParameters(node, call);
+  }
 }

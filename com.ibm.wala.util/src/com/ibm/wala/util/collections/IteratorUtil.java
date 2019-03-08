@@ -11,14 +11,11 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
-/**
- * utilities dealing with Iterators
- */
+
+/** utilities dealing with Iterators */
 public class IteratorUtil {
 
-  /**
-   * @return true iff the Iterator returns some elements which equals() the object o
-   */
+  /** @return true iff the Iterator returns some elements which equals() the object o */
   public static <T> boolean contains(Iterator<? extends T> it, T o) {
     if (it == null) {
       throw new IllegalArgumentException("null it");
@@ -31,7 +28,7 @@ public class IteratorUtil {
     return false;
   }
 
-  public final static <T> int count(Iterator<T> it) throws IllegalArgumentException {
+  public static final <T> int count(Iterator<T> it) throws IllegalArgumentException {
     if (it == null) {
       throw new IllegalArgumentException("it == null");
     }

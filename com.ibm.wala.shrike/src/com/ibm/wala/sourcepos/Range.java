@@ -19,7 +19,7 @@ package com.ibm.wala.sourcepos;
 
 /**
  * This class represents a range in the source file.
- * 
+ *
  * @author Siegfried Weber
  * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
@@ -30,9 +30,7 @@ public class Range {
   /** stores the end position */
   private Position end;
 
-  /**
-   * Creates an empty range.
-   */
+  /** Creates an empty range. */
   Range() {
     start = new Position();
     end = new Position();
@@ -40,20 +38,15 @@ public class Range {
 
   /**
    * Creates a new instance of Range with the given start and end position.
-   * 
-   * @param start
-   *          the start position
-   * @param end
-   *          the end position
-   * @throws InvalidRangeException
-   *           if end is before start or if the range is not undefined and start
-   *           or end is undefined.
+   *
+   * @param start the start position
+   * @param end the end position
+   * @throws InvalidRangeException if end is before start or if the range is not undefined and start
+   *     or end is undefined.
    */
   Range(Position start, Position end) throws InvalidRangeException {
-    if (start == null)
-      throw new InvalidRangeException(InvalidRangeException.Cause.START_UNDEFINED);
-    if (end == null)
-      throw new InvalidRangeException(InvalidRangeException.Cause.END_UNDEFINED);
+    if (start == null) throw new InvalidRangeException(InvalidRangeException.Cause.START_UNDEFINED);
+    if (end == null) throw new InvalidRangeException(InvalidRangeException.Cause.END_UNDEFINED);
     if (end.isBefore(start))
       throw new InvalidRangeException(InvalidRangeException.Cause.END_BEFORE_START);
     else if (start.isUndefined() && !end.isUndefined())
@@ -66,7 +59,7 @@ public class Range {
 
   /**
    * Returns whether this range is undefined.
-   * 
+   *
    * @return whether this range is undefined
    */
   boolean isUndefined() {
@@ -74,11 +67,10 @@ public class Range {
   }
 
   /**
-   * Tests whether this range is within the given range. Returns false if a
-   * range is undefined or {@code r} is null.
-   * 
-   * @param r
-   *          the range to test with
+   * Tests whether this range is within the given range. Returns false if a range is undefined or
+   * {@code r} is null.
+   *
+   * @param r the range to test with
    * @return {@code true} if this range is within the given range
    */
   boolean isWithin(Range r) {
@@ -87,17 +79,17 @@ public class Range {
 
   /**
    * Returns this range as an array of integers.
-   * 
-   * @return an array with the following entries: start line number, start
-   *         column number, end line number, end column number
+   *
+   * @return an array with the following entries: start line number, start column number, end line
+   *     number, end column number
    */
   int[] toArray() {
-    return new int[] { start.getLine(), start.getColumn(), end.getLine(), end.getColumn() };
+    return new int[] {start.getLine(), start.getColumn(), end.getLine(), end.getColumn()};
   }
 
   /**
    * Returns the start position.
-   * 
+   *
    * @return the start position
    */
   public Position getStartPosition() {
@@ -106,7 +98,7 @@ public class Range {
 
   /**
    * Returns the end position.
-   * 
+   *
    * @return the end position
    */
   public Position getEndPosition() {
@@ -115,6 +107,8 @@ public class Range {
 
   @Override
   public String toString() {
-    return (start.isUndefined() ? "<undefined>" : "(" + getStartPosition() + ") - (" + getEndPosition() + ')');
+    return (start.isUndefined()
+        ? "<undefined>"
+        : "(" + getStartPosition() + ") - (" + getEndPosition() + ')');
   }
 }

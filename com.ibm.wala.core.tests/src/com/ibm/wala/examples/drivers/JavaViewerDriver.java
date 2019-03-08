@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -32,45 +28,57 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.viz.viewer.WalaViewer;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Allows viewing the ClassHeirarcy, CallGraph and Pointer Analysis built from a given classpath.
- * @author yinnonh
  *
+ * @author yinnonh
  */
 public class JavaViewerDriver {
-  public static void main(String[] args) throws ClassHierarchyException, IOException, CallGraphBuilderCancelException {
+  public static void main(String[] args)
+      throws ClassHierarchyException, IOException, CallGraphBuilderCancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
-    run(p.getProperty("appClassPath"), p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+    run(
+        p.getProperty("appClassPath"),
+        p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
-  
+
   public static void validateCommandLine(Properties p) {
     if (p.get("appClassPath") == null) {
       throw new UnsupportedOperationException("expected command-line to include -appClassPath");
     }
   }
 
-  private static void run(String classPath, String exclusionFilePath) throws IOException, ClassHierarchyException, CallGraphBuilderCancelException{
+  private static void run(String classPath, String exclusionFilePath)
+      throws IOException, ClassHierarchyException, CallGraphBuilderCancelException {
 
     File exclusionFile = (new FileProvider()).getFile(exclusionFilePath);
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classPath, exclusionFile != null ? exclusionFile
-        : new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+    AnalysisScope scope =
+        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+            classPath,
+            exclusionFile != null
+                ? exclusionFile
+                : new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     @SuppressWarnings("unused")
     WalaViewer walaViewer = new WalaViewer(cg, pa);
-    
   }
 }

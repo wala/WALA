@@ -10,23 +10,22 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstLeafNode;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.util.CAstPrinter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstLeafNode;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.util.CAstPrinter;
-
 /**
- * An implementation of CAst, i.e. a simple factory for creating capa ast nodes. This class simply creates generic nodes with a kind
- * field, and either an array of children or a constant values. Note that there is no easy way to mutate these trees; do not change
- * this (see CAstNode for the rationale for this rule).
- * 
+ * An implementation of CAst, i.e. a simple factory for creating capa ast nodes. This class simply
+ * creates generic nodes with a kind field, and either an array of children or a constant values.
+ * Note that there is no easy way to mutate these trees; do not change this (see CAstNode for the
+ * rationale for this rule).
+ *
  * @author Julian Dolby (dolby@us.ibm.com)
- * 
  */
 public class CAstImpl implements CAst {
   private int nextID = 0;
@@ -46,8 +45,14 @@ public class CAstImpl implements CAst {
       this.cs = cs;
 
       for (int i = 0; i < cs.size(); i++)
-        assert cs.get(i) != null : "argument " + i + " is null for node kind " + kind + " [" + CAstPrinter.entityKindAsString(kind)
-            + ']';
+        assert cs.get(i) != null
+            : "argument "
+                + i
+                + " is null for node kind "
+                + kind
+                + " ["
+                + CAstPrinter.entityKindAsString(kind)
+                + ']';
     }
 
     @Override
@@ -122,12 +127,14 @@ public class CAstImpl implements CAst {
   }
 
   @Override
-  public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5) {
+  public CAstNode makeNode(
+      int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5) {
     return makeNode(kind, Arrays.asList(c1, c2, c3, c4, c5));
   }
 
   @Override
-  public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6) {
+  public CAstNode makeNode(
+      int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6) {
     return makeNode(kind, Arrays.asList(c1, c2, c3, c4, c5, c6));
   }
 
@@ -203,5 +210,4 @@ public class CAstImpl implements CAst {
   public CAstNode makeConstant(double value) {
     return makeConstant(Double.valueOf(value));
   }
-
 }

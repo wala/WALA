@@ -13,9 +13,7 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 
-/**
- * identifier of a phi instruction
- */
+/** identifier of a phi instruction */
 public class PhiStatement extends Statement {
   private final SSAPhiInstruction phi;
 
@@ -28,7 +26,7 @@ public class PhiStatement extends Statement {
   public Kind getKind() {
     return Kind.PHI;
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -55,5 +53,4 @@ public class PhiStatement extends Statement {
   public SSAPhiInstruction getPhi() {
     return phi;
   }
-
 }

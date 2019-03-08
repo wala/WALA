@@ -20,9 +20,10 @@ import com.ibm.wala.ssa.SSAOptions;
 public class AnalysisCacheImpl extends AnalysisCache {
 
   public AnalysisCacheImpl(IRFactory<IMethod> irFactory, SSAOptions ssaOptions) {
-    super(irFactory, ssaOptions, new SSACache(irFactory, new AuxiliaryCache(), new AuxiliaryCache()));
+    super(
+        irFactory, ssaOptions, new SSACache(irFactory, new AuxiliaryCache(), new AuxiliaryCache()));
   }
-  
+
   public AnalysisCacheImpl(SSAOptions ssaOptions) {
     this(new DefaultIRFactory(), ssaOptions);
   }
@@ -30,9 +31,8 @@ public class AnalysisCacheImpl extends AnalysisCache {
   public AnalysisCacheImpl(IRFactory<IMethod> irFactory) {
     this(irFactory, new AnalysisOptions().getSSAOptions());
   }
-  
+
   public AnalysisCacheImpl() {
     this(new DefaultIRFactory());
   }
-
 }

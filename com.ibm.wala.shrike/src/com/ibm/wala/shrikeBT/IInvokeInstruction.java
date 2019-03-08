@@ -12,14 +12,11 @@ package com.ibm.wala.shrikeBT;
 
 /**
  * @author sfink
- * 
- *         Basic functionality any invoke instruction should provide
+ *     <p>Basic functionality any invoke instruction should provide
  */
 public interface IInvokeInstruction extends IInstruction {
 
-  /**
-   * @return one of BytecodeConstants.INVOKE[SPECIAL|VIRTUAL|STATIC|INTERFACE]
-   */
+  /** @return one of BytecodeConstants.INVOKE[SPECIAL|VIRTUAL|STATIC|INTERFACE] */
   IDispatch getInvocationCode();
 
   String getMethodSignature();
@@ -31,11 +28,13 @@ public interface IInvokeInstruction extends IInstruction {
   public interface IDispatch {
 
     boolean hasImplicitThis();
-
   }
 
   public static enum Dispatch implements IDispatch {
-    VIRTUAL, SPECIAL, INTERFACE, STATIC {
+    VIRTUAL,
+    SPECIAL,
+    INTERFACE,
+    STATIC {
       @Override
       public boolean hasImplicitThis() {
         return false;
@@ -47,5 +46,4 @@ public interface IInvokeInstruction extends IInstruction {
       return true;
     }
   }
-
 }

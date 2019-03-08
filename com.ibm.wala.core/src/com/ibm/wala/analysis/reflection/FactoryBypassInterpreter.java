@@ -10,15 +10,6 @@
  */
 package com.ibm.wala.analysis.reflection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.SetType;
@@ -60,25 +51,28 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warnings;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Logic to interpret "factory" methods in context.
- */
+/** Logic to interpret "factory" methods in context. */
 public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /**
-   * A Map from CallerSiteContext -&gt; Set &lt;TypeReference&gt;represents the types a factory method might create in a particular context
+   * A Map from CallerSiteContext -&gt; Set &lt;TypeReference&gt;represents the types a factory
+   * method might create in a particular context
    */
   private final Map<Context, Set<TypeReference>> map = HashMapFactory.make();
 
-  /**
-   * A cache of synthetic method implementations, indexed by Context
-   */
+  /** A cache of synthetic method implementations, indexed by Context */
   private final Map<Context, SpecializedFactoryMethod> syntheticMethodCache = HashMapFactory.make();
 
-  /**
-   * @param options governing analysis options
-   */
+  /** @param options governing analysis options */
   public FactoryBypassInterpreter(AnalysisOptions options, IAnalysisCacheView iAnalysisCacheView) {
     this.options = options;
     this.cache = iAnalysisCacheView;
@@ -109,7 +103,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     // MemberReference m = site.getCaller().getMethod().getReference();
     // ReflectionSummary summary = spec.getSummary(m);
     // if (summary != null) {
-    // Set<TypeReference> types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
+    // Set<TypeReference> types =
+    // summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
     // if (types != null) {
     // return types;
     // }
@@ -148,7 +143,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
     }
     return false;
-
   }
 
   @Override
@@ -227,7 +221,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
+    return recordType(
+        node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
   }
 
   @Override
@@ -264,7 +259,9 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     SpecializedFactoryMethod m = syntheticMethodCache.get(node.getContext());
     if (m == null) {
       Set<TypeReference> types = getTypesForContext(node.getContext());
-      m = new SpecializedFactoryMethod((SummarizedMethod) node.getMethod(), node.getContext(), types);
+      m =
+          new SpecializedFactoryMethod(
+              (SummarizedMethod) node.getMethod(), node.getContext(), types);
       syntheticMethodCache.put(node.getContext(), m);
     }
     return m;
@@ -345,32 +342,23 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   protected class SpecializedFactoryMethod extends SpecializedMethod {
 
-    /**
-     * List of synthetic invoke instructions we model for this specialized instance.
-     */
-    final private ArrayList<SSAInstruction> calls = new ArrayList<>();
+    /** List of synthetic invoke instructions we model for this specialized instance. */
+    private final ArrayList<SSAInstruction> calls = new ArrayList<>();
 
-    /**
-     * The method being modelled
-     */
+    /** The method being modelled */
     private final IMethod method;
 
-    /**
-     * Context being modelled
-     */
+    /** Context being modelled */
     private final Context context;
 
-    /**
-     * next free local value number;
-     */
+    /** next free local value number; */
     private int nextLocal;
 
-    /**
-     * value number for integer constant 1
-     */
+    /** value number for integer constant 1 */
     private int valueNumberForConstantOne = -1;
 
-    private final SSAInstructionFactory insts = declaringClass.getClassLoader().getInstructionFactory();
+    private final SSAInstructionFactory insts =
+        declaringClass.getClassLoader().getInstructionFactory();
 
     private void initValueNumberForConstantOne() {
       if (valueNumberForConstantOne == -1) {
@@ -378,7 +366,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
     }
 
-    protected SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set<TypeReference> S) {
+    protected SpecializedFactoryMethod(
+        final SummarizedMethod m, Context context, final Set<TypeReference> S) {
       super(m, m.getDeclaringClass(), m.isStatic(), true);
 
       this.context = context;
@@ -479,21 +468,24 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
     }
 
-    /**
-     * Set up a method summary which allocates and returns an instance of concrete type T.
-     */
+    /** Set up a method summary which allocates and returns an instance of concrete type T. */
     private void addStatementsForConcreteType(final TypeReference T) {
       int alloc = addStatementsForConcreteSimpleType(T);
       if (alloc == -1) {
         return;
       }
       if (T.isArrayType()) {
-        MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
-        CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
+        MethodReference init =
+            MethodReference.findOrCreate(
+                T, MethodReference.initAtom, MethodReference.defaultInitDesc);
+        CallSiteReference site =
+            CallSiteReference.make(
+                getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
         int[] params = new int[1];
         params[0] = alloc;
         int exc = getExceptionsForType(T);
-        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
+        SSAInvokeInstruction s =
+            insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
         calls.add(s);
         allInstructions.add(s);
       }
@@ -543,7 +535,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
         SSANewInstruction a = null;
         if (T.isArrayType()) {
-          int[] sizes = new int[((ArrayClass)klass).getDimensionality()];
+          int[] sizes = new int[((ArrayClass) klass).getDimensionality()];
           initValueNumberForConstantOne();
           Arrays.fill(sizes, valueNumberForConstantOne);
           a = insts.NewInstruction(allInstructions.size(), i, ref, sizes);
@@ -555,11 +547,17 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         allInstructions.add(a);
         SSAReturnInstruction r = insts.ReturnInstruction(allInstructions.size(), i, false);
         allInstructions.add(r);
-        MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
-        CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
+        MethodReference init =
+            MethodReference.findOrCreate(
+                T, MethodReference.initAtom, MethodReference.defaultInitDesc);
+        CallSiteReference site =
+            CallSiteReference.make(
+                getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
         int[] params = new int[1];
         params[0] = i;
-        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, getExceptionsForType(T), site, null);
+        SSAInvokeInstruction s =
+            insts.InvokeInstruction(
+                allInstructions.size(), params, getExceptionsForType(T), site, null);
         calls.add(s);
         allInstructions.add(s);
       }
@@ -574,9 +572,10 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     /**
-     * Two specialized methods can be different, even if they represent the same source method. So, revert to object identity for
-     * testing equality. TODO: this is non-optimal; could try to re-use specialized methods that have the same context.
-     * 
+     * Two specialized methods can be different, even if they represent the same source method. So,
+     * revert to object identity for testing equality. TODO: this is non-optimal; could try to
+     * re-use specialized methods that have the same context.
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -606,7 +605,8 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
     @Override
     public IClass getDeclaringClass() {
-      assert method.getDeclaringClass() != null : "null declaring class for original method " + method;
+      assert method.getDeclaringClass() != null
+          : "null declaring class for original method " + method;
       return method.getDeclaringClass();
     }
 
@@ -629,10 +629,12 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       Map<Integer, ConstantValue> constants = null;
       if (valueNumberForConstantOne > -1) {
         constants = HashMapFactory.make(1);
-        constants.put(Integer.valueOf(valueNumberForConstantOne), new ConstantValue(Integer.valueOf(1)));
+        constants.put(
+            Integer.valueOf(valueNumberForConstantOne), new ConstantValue(Integer.valueOf(1)));
       }
 
-      return new SyntheticIR(this, context, new InducedCFG(instrs, this, context), instrs, options, constants);
+      return new SyntheticIR(
+          this, context, new InducedCFG(instrs, this, context), instrs, options, constants);
     }
   }
 }

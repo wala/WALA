@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -35,48 +30,69 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * tests for weird corner cases, such as when the input program doesn't verify
- * 
+ *
  * @author sfink
  */
 public class CornerCasesTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = CornerCasesTest.class.getClassLoader();
 
-  /**
-   * test that getMethod() works even if a declared ancestor interface doesn't
-   * exist
-   */
-  @Test public void testBug38484() throws ClassHierarchyException, IOException {
+  /** test that getMethod() works even if a declared ancestor interface doesn't exist */
+  @Test
+  public void testBug38484() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
+    TypeReference t =
+        TypeReference.findOrCreateClass(
+            scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
     Assert.assertTrue(klass != null);
-    IMethod m = klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
+    IMethod m =
+        klass.getMethod(
+            new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
     Assert.assertTrue(m == null);
   }
 
   /**
-   * test that type inference works in the presence of a getfield where the
-   * field's declared type cannot be loaded
+   * test that type inference works in the presence of a getfield where the field's declared type
+   * cannot be loaded
    */
-  @Test public void testBug38540() throws ClassHierarchyException, IOException {
+  @Test
+  public void testBug38540() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            MY_CLASSLOADER);
     AnalysisOptions options = new AnalysisOptions();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
+    TypeReference t =
+        TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
     Assert.assertTrue(klass != null);
-    ShrikeCTMethod m = (ShrikeCTMethod) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
-        .findOrCreateUTF8("()Ljava/lang/Object;")));
+    ShrikeCTMethod m =
+        (ShrikeCTMethod)
+            klass.getMethod(
+                new Selector(
+                    Atom.findOrCreateAsciiAtom("foo"),
+                    Descriptor.findOrCreateUTF8("()Ljava/lang/Object;")));
     Assert.assertTrue(m != null);
-    IR ir = new AnalysisCacheImpl().getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
+    IR ir =
+        new AnalysisCacheImpl()
+            .getSSACache()
+            .findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
     TypeInference.make(ir, false);
   }
-
 }

@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.cast.loader;
 
-import java.io.Reader;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cast.types.AstTypeReference;
@@ -27,9 +22,13 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
+import java.io.Reader;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 
-abstract public class AstFunctionClass implements IClass, ClassConstants {
-  
+public abstract class AstFunctionClass implements IClass, ClassConstants {
+
   private final IClassLoader loader;
 
   protected AstMethod functionBody;
@@ -40,7 +39,10 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
 
   private final TypeReference superReference;
 
-  protected AstFunctionClass(TypeReference reference, TypeReference superReference, IClassLoader loader,
+  protected AstFunctionClass(
+      TypeReference reference,
+      TypeReference superReference,
+      IClassLoader loader,
       CAstSourcePositionMap.Position sourcePosition) {
     this.superReference = superReference;
     this.sourcePosition = sourcePosition;
@@ -48,8 +50,12 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     this.loader = loader;
   }
 
-  protected AstFunctionClass(TypeReference reference, IClassLoader loader, CAstSourcePositionMap.Position sourcePosition) {
-    this(reference, TypeReference.findOrCreate(reference.getClassLoader(), AstTypeReference.functionTypeName), loader,
+  protected AstFunctionClass(
+      TypeReference reference, IClassLoader loader, CAstSourcePositionMap.Position sourcePosition) {
+    this(
+        reference,
+        TypeReference.findOrCreate(reference.getClassLoader(), AstTypeReference.functionTypeName),
+        loader,
         sourcePosition);
   }
 
@@ -81,12 +87,12 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   public boolean isPublic() {
     return true;
   }
-  
+
   @Override
   public boolean isPrivate() {
     return false;
   }
-  
+
   public boolean isStatic() {
     return false;
   }
@@ -136,7 +142,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
 
   @Override
   public IField getField(Atom name, TypeName type) {
-    // assume that for AST classes, you can't have multiple fields with the same name    
+    // assume that for AST classes, you can't have multiple fields with the same name
     return loader.lookupClass(superReference.getName()).getField(name);
   }
 
@@ -157,7 +163,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   public String getSourceFileName() {
     return sourcePosition.getURL().getFile();
   }
-  
+
   @Override
   public Reader getSource() {
     return null;
@@ -221,7 +227,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   public boolean isReferenceType() {
     return true;
   }
-  
+
   public AstMethod getCodeBody() {
     return functionBody;
   }

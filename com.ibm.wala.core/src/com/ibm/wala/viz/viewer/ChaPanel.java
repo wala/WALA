@@ -10,8 +10,10 @@
  */
 package com.ibm.wala.viz.viewer;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import java.util.Collection;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -24,10 +26,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-
 public class ChaPanel extends JSplitPane {
 
   private static final long serialVersionUID = -9058908127737757320L;
@@ -35,30 +33,32 @@ public class ChaPanel extends JSplitPane {
 
   public ChaPanel(IClassHierarchy cha) {
     this.cha = cha;
-  
+
     this.setDividerLocation(250);
     JTree tree = buildTree();
     this.setLeftComponent(new JScrollPane(tree));
-    
+
     final DefaultListModel<String> methodListModel = new DefaultListModel<>();
     JList<String> methodList = new JList<>(methodListModel);
     this.setRightComponent(methodList);
-    
-    tree.addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-      TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
-      if (null == newLeadSelectionPath){
-        return;
-      }
-      DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
-      IClass klass = (IClass) treeNode.getUserObject();
-      methodListModel.clear();
-      for (IMethod m : klass.getDeclaredMethods()){
-        methodListModel.addElement(m.toString());
-      }
-    }   
-  });
+
+    tree.addTreeSelectionListener(
+        new TreeSelectionListener() {
+          @Override
+          public void valueChanged(TreeSelectionEvent e) {
+            TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
+            if (null == newLeadSelectionPath) {
+              return;
+            }
+            DefaultMutableTreeNode treeNode =
+                (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
+            IClass klass = (IClass) treeNode.getUserObject();
+            methodListModel.clear();
+            for (IMethod m : klass.getDeclaredMethods()) {
+              methodListModel.addElement(m.toString());
+            }
+          }
+        });
   }
 
   private JTree buildTree() {
@@ -68,23 +68,22 @@ public class ChaPanel extends JSplitPane {
     expandNode(root);
     JTree tree = new JTree(root);
 
-    tree.addTreeExpansionListener(new TreeExpansionListener() {
+    tree.addTreeExpansionListener(
+        new TreeExpansionListener() {
 
-      @Override
-      public void treeExpanded(TreeExpansionEvent event) {
-        TreePath path = event.getPath();
-        if (path == null) {
-          return;
-        }
-        DefaultMutableTreeNode lastNode = (DefaultMutableTreeNode) path.getLastPathComponent();
-        expandNode(lastNode);
-      }
+          @Override
+          public void treeExpanded(TreeExpansionEvent event) {
+            TreePath path = event.getPath();
+            if (path == null) {
+              return;
+            }
+            DefaultMutableTreeNode lastNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+            expandNode(lastNode);
+          }
 
-      @Override
-      public void treeCollapsed(TreeExpansionEvent event) {
-
-      }
-    });
+          @Override
+          public void treeCollapsed(TreeExpansionEvent event) {}
+        });
 
     return tree;
   }
@@ -101,7 +100,7 @@ public class ChaPanel extends JSplitPane {
     if (treeNode.getChildCount() == 0) {
       IClass klass = (IClass) treeNode.getUserObject();
       Collection<IClass> immediateSubclasses = cha.getImmediateSubclasses(klass);
-      for (IClass immediateSubclass : immediateSubclasses){
+      for (IClass immediateSubclass : immediateSubclasses) {
         treeNode.add(new DefaultMutableTreeNode(immediateSubclass));
       }
     }
@@ -111,7 +110,4 @@ public class ChaPanel extends JSplitPane {
       expandNode(child, rec - 1);
     }
   }
-
-  
-  
 }

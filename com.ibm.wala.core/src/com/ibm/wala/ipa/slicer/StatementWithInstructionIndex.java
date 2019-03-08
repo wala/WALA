@@ -14,8 +14,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAInstruction;
 
 /**
- * A {@link Statement} which carries an instruction index, representing the index of an {@link SSAInstruction} in the IR instruction
- * array.
+ * A {@link Statement} which carries an instruction index, representing the index of an {@link
+ * SSAInstruction} in the IR instruction array.
  */
 public abstract class StatementWithInstructionIndex extends Statement {
 
@@ -44,15 +44,11 @@ public abstract class StatementWithInstructionIndex extends Statement {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
     final StatementWithInstructionIndex other = (StatementWithInstructionIndex) obj;
-    if (instructionIndex != other.instructionIndex)
-      return false;
+    if (instructionIndex != other.instructionIndex) return false;
     return true;
   }
 
@@ -60,5 +56,4 @@ public abstract class StatementWithInstructionIndex extends Statement {
   public String toString() {
     return super.toString() + '[' + getInstructionIndex() + ']' + getInstruction();
   }
-
 }

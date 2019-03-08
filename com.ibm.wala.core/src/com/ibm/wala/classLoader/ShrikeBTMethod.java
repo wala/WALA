@@ -10,15 +10,6 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.lang.ref.SoftReference;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Decoder;
@@ -47,27 +38,27 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
+import java.lang.ref.SoftReference;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-/**
- * A wrapper around a Shrike object that represents a method
- */
+/** A wrapper around a Shrike object that represents a method */
 public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
-  /**
-   * Some verbose progress output?
-   */
-  private final static boolean verbose = false;
+  /** Some verbose progress output? */
+  private static final boolean verbose = false;
 
   private static int methodsParsed = 0;
 
-  /**
-   * A wrapper around the declaring class.
-   */
+  /** A wrapper around the declaring class. */
   protected final IClass declaringClass;
 
-  /**
-   * Canonical reference for this method
-   */
+  /** Canonical reference for this method */
   private MethodReference methodReference;
 
   // break these out to save some space; they're computed lazily.
@@ -92,46 +83,37 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     boolean hasMonitorOp;
 
-    /**
-     * Mapping from instruction index to program counter.
-     */
+    /** Mapping from instruction index to program counter. */
     private int[] pcMap;
-/** BEGIN Custom change: precise positions */
-    
-    /**
-     * Cached map representing position information for bytecode instruction
-     * at given index
-     */
+    /** BEGIN Custom change: precise positions */
+
+    /** Cached map representing position information for bytecode instruction at given index */
     protected SourcePosition[] positionMap;
-    
-    /**
-     * Sourcecode positions for method parameters
-     */
+
+    /** Sourcecode positions for method parameters */
     protected SourcePosition[] paramPositionMap;
-    
-/** END Custom change: precise positions */
-    
+
+    /** END Custom change: precise positions */
+
     /**
-     * Cached map representing line number information in ShrikeCT format TODO: do more careful caching than just soft references
+     * Cached map representing line number information in ShrikeCT format TODO: do more careful
+     * caching than just soft references
      */
     protected int[] lineNumberMap;
 
     /**
-     * an array mapping bytecode offsets to arrays representing the local variable maps for each offset; a local variable map is
-     * represented as an array of localVars*2 elements, containing a pair (nameIndex, typeIndex) for each local variable; a pair
-     * (0,0) indicates there is no information for that local variable at that offset
+     * an array mapping bytecode offsets to arrays representing the local variable maps for each
+     * offset; a local variable map is represented as an array of localVars*2 elements, containing a
+     * pair (nameIndex, typeIndex) for each local variable; a pair (0,0) indicates there is no
+     * information for that local variable at that offset
      */
     protected int[][] localVariableMap;
 
-    /**
-     * Exception types this method might throw. Computed on demand.
-     */
+    /** Exception types this method might throw. Computed on demand. */
     private TypeReference[] exceptionTypes;
   }
 
-  /**
-   * Cache the information about the method statements.
-   */
+  /** Cache the information about the method statements. */
   private SoftReference<BytecodeInfo> bcInfo;
 
   public ShrikeBTMethod(IClass klass) {
@@ -150,22 +132,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return result;
   }
 
-  /**
-   * Return the program counter (bytecode index) for a particular Shrike instruction index.
-   */
+  /** Return the program counter (bytecode index) for a particular Shrike instruction index. */
   public int getBytecodeIndex(int instructionIndex) throws InvalidClassFileException {
     return getBCInfo().pcMap[instructionIndex];
   }
 
   /**
-   * Return the Shrike instruction index for a particular valid program counter (bytecode index), or -1 if 
-   * the Shrike instriction index could not be determined. 
-   * 
-   * This ShrikeBTMethod must not be native.
+   * Return the Shrike instruction index for a particular valid program counter (bytecode index), or
+   * -1 if the Shrike instriction index could not be determined.
+   *
+   * <p>This ShrikeBTMethod must not be native.
    */
   public int getInstructionIndex(int bcIndex) throws InvalidClassFileException {
     if (isNative()) {
-      throw new UnsupportedOperationException("getInstructionIndex(int bcIndex) is only supported for non-native bytecode");
+      throw new UnsupportedOperationException(
+          "getInstructionIndex(int bcIndex) is only supported for non-native bytecode");
     }
 
     final BytecodeInfo info = getBCInfo();
@@ -177,7 +158,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     int iindex = Arrays.binarySearch(pcMap, bcIndex);
     if (iindex < 0) return -1;
 
-    // Unfortunately, pcMap is not always *strictly* sorted: given bcIndex, there may be multiple adjacent indices
+    // Unfortunately, pcMap is not always *strictly* sorted: given bcIndex, there may be multiple
+    // adjacent indices
     // i,j such that pcMap[i] == bcIndex == pcMap[j]. We pick the least such index.
     while (iindex > 0 && pcMap[iindex - 1] == bcIndex) iindex--;
     return iindex;
@@ -185,44 +167,44 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   private static boolean isSorted(int[] a) {
     for (int i = 0; i < a.length - 1; i++) {
-      if (a[i+1] < a[i]) return false;
+      if (a[i + 1] < a[i]) return false;
     }
     return true;
   }
 
-  /**
-   * Return the number of Shrike instructions for this method.
-   */
+  /** Return the number of Shrike instructions for this method. */
   public int getNumShrikeInstructions() throws InvalidClassFileException {
     return getBCInfo().pcMap.length;
   }
 
   public Collection<CallSiteReference> getCallSites() throws InvalidClassFileException {
     return isNative() || getBCInfo().callSites == null
-            ? Collections.emptySet()
-            : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().callSites));
+        ? Collections.emptySet()
+        : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().callSites));
   }
 
   Collection<NewSiteReference> getNewSites() throws InvalidClassFileException {
     return (isNative() || getBCInfo().newSites == null)
-            ? Collections.emptySet()
-            : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().newSites));
+        ? Collections.emptySet()
+        : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().newSites));
   }
 
   /**
-   * @return {@link Set}&lt;{@link TypeReference}&gt;, the exceptions that statements in this method may throw,
+   * @return {@link Set}&lt;{@link TypeReference}&gt;, the exceptions that statements in this method
+   *     may throw,
    */
   public Collection<TypeReference> getImplicitExceptionTypes() throws InvalidClassFileException {
     if (isNative()) {
       return Collections.emptySet();
     }
-    return (getBCInfo().implicitExceptions == null) ? Collections.emptyList() : Arrays
-        .asList(getBCInfo().implicitExceptions);
+    return (getBCInfo().implicitExceptions == null)
+        ? Collections.emptyList()
+        : Arrays.asList(getBCInfo().implicitExceptions);
   }
 
   /**
-   * Do a cheap pass over the bytecodes to collect some mapping information. Some methods require this as a pre-req to accessing
-   * ShrikeCT information.
+   * Do a cheap pass over the bytecodes to collect some mapping information. Some methods require
+   * this as a pre-req to accessing ShrikeCT information.
    */
   private BytecodeInfo computeBCInfo() throws InvalidClassFileException {
     BytecodeInfo result = new BytecodeInfo();
@@ -242,9 +224,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return result;
   }
 
-  /**
-   * @return true iff this method has a monitorenter or monitorexit
-   */
+  /** @return true iff this method has a monitorenter or monitorexit */
   public boolean hasMonitorOp() throws InvalidClassFileException {
     if (isNative()) {
       return false;
@@ -252,9 +232,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return getBCInfo().hasMonitorOp;
   }
 
-  /**
-   * @return Set of FieldReference
-   */
+  /** @return Set of FieldReference */
   public Iterator<FieldReference> getFieldsWritten() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -267,9 +245,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * @return Iterator of FieldReference
-   */
+  /** @return Iterator of FieldReference */
   public Iterator<FieldReference> getFieldsRead() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -282,19 +258,17 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * @return Iterator of TypeReference
-   */
+  /** @return Iterator of TypeReference */
   public Iterator<TypeReference> getArraysRead() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
     }
-    return (getBCInfo().arraysRead == null) ? EmptyIterator.instance() : Arrays.asList(getBCInfo().arraysRead).iterator();
+    return (getBCInfo().arraysRead == null)
+        ? EmptyIterator.instance()
+        : Arrays.asList(getBCInfo().arraysRead).iterator();
   }
 
-  /**
-   * @return Iterator of TypeReference
-   */
+  /** @return Iterator of TypeReference */
   public Iterator<TypeReference> getArraysWritten() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -307,21 +281,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * @return Iterator of TypeReference
-   */
+  /** @return Iterator of TypeReference */
   public Iterator<TypeReference> getCastTypes() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
     }
-    return (getBCInfo().castTypes == null) ? EmptyIterator.instance() : Arrays.asList(getBCInfo().castTypes).iterator();
+    return (getBCInfo().castTypes == null)
+        ? EmptyIterator.instance()
+        : Arrays.asList(getBCInfo().castTypes).iterator();
   }
 
   protected abstract byte[] getBytecodes();
 
   /**
    * Method getBytecodeStream.
-   * 
+   *
    * @return the bytecode stream for this method, or null if no bytecodes.
    */
   public BytecodeStream getBytecodeStream() {
@@ -415,7 +389,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   @Override
-  public boolean isSynthetic() { return ((getModifiers() & Constants.ACC_SYNTHETIC) != 0); }
+  public boolean isSynthetic() {
+    return ((getModifiers() & Constants.ACC_SYNTHETIC) != 0);
+  }
 
   @Override
   public boolean isWalaSynthetic() {
@@ -429,20 +405,19 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   /**
    * Find the decoder object for this method, or create one if necessary.
-   * 
+   *
    * @return null if the method has no code.
    */
   protected abstract Decoder makeDecoder();
 
-  /**
-   * Walk through the bytecodes and collect trivial information.
-   */
+  /** Walk through the bytecodes and collect trivial information. */
   protected abstract void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException;
 
   private void processBytecodesWithShrikeBT(BytecodeInfo info) throws InvalidClassFileException {
     info.decoder = makeDecoder();
     if (!isAbstract() && info.decoder == null) {
-      throw new InvalidClassFileException(-1, "non-abstract method " + getReference() + " has no bytecodes");
+      throw new InvalidClassFileException(
+          -1, "non-abstract method " + getReference() + " has no bytecodes");
     }
     if (info.decoder == null) {
       return;
@@ -540,7 +515,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     // if (this.getClass().equals(obj.getClass())) {
     if (obj instanceof ShrikeBTMethod) {
       ShrikeBTMethod that = (ShrikeBTMethod) obj;
-      return (getDeclaringClass().equals(that.getDeclaringClass()) && getReference().equals(that.getReference()));
+      return (getDeclaringClass().equals(that.getDeclaringClass())
+          && getReference().equals(that.getReference()));
     } else {
       return false;
     }
@@ -569,11 +545,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return getReference().getDescriptor();
   }
 
-  /**
-   * 
-   * A visitor used to process bytecodes
-   * 
-   */
+  /** A visitor used to process bytecodes */
   private class SimpleVisitor extends IInstruction.Visitor {
 
     private final BytecodeInfo info;
@@ -626,24 +598,37 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     @Override
     public void visitGet(IGetInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
-          .getFieldType());
+      FieldReference f =
+          FieldReference.findOrCreate(
+              loader,
+              instruction.getClassType(),
+              instruction.getFieldName(),
+              instruction.getFieldType());
       fieldsRead.add(f);
     }
 
     @Override
     public void visitPut(IPutInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
-          .getFieldType());
+      FieldReference f =
+          FieldReference.findOrCreate(
+              loader,
+              instruction.getClassType(),
+              instruction.getFieldName(),
+              instruction.getFieldType());
       fieldsWritten.add(f);
     }
 
     @Override
     public void visitInvoke(IInvokeInstruction instruction) {
       IClassLoader loader = getDeclaringClass().getClassLoader();
-      MethodReference m = MethodReference.findOrCreate(loader.getLanguage(), loader.getReference(), instruction.getClassType(),
-          instruction.getMethodName(), instruction.getMethodSignature());
+      MethodReference m =
+          MethodReference.findOrCreate(
+              loader.getLanguage(),
+              loader.getReference(),
+              instruction.getClassType(),
+              instruction.getMethodName(),
+              instruction.getMethodSignature());
       int programCounter = 0;
       programCounter = getProgramCounter();
       CallSiteReference site = null;
@@ -656,7 +641,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      */
     @Override
     public void visitArrayLoad(IArrayLoadInstruction instruction) {
-      arraysRead.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
+      arraysRead.add(
+          ShrikeUtil.makeTypeReference(
+              getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
 
     /*
@@ -664,19 +651,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      */
     @Override
     public void visitArrayStore(IArrayStoreInstruction instruction) {
-      arraysWritten.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
+      arraysWritten.add(
+          ShrikeUtil.makeTypeReference(
+              getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
 
     @Override
     public void visitCheckCast(ITypeTestInstruction instruction) {
-      for(String t : instruction.getTypes()) {
-        castTypes.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), t));
+      for (String t : instruction.getTypes()) {
+        castTypes.add(
+            ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), t));
       }
     }
   }
 
-  /**
-   */
+  /** */
   public IInstruction[] getInstructions() throws InvalidClassFileException {
     if (getBCInfo().decoder == null) {
       return null;
@@ -693,9 +682,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * By convention, for a non-static method, getParameterType(0) is the this pointer
-   */
+  /** By convention, for a non-static method, getParameterType(0) is the this pointer */
   @Override
   public TypeReference getParameterType(int i) {
     if (!isStatic()) {
@@ -711,7 +698,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   /**
    * Method getNumberOfParameters. This result includes the "this" pointer if applicable
-   * 
+   *
    * @return int
    */
   @Override
@@ -729,9 +716,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   @Override
   public abstract boolean hasExceptionHandler();
 
-  /**
-   * Clients should not modify the returned array. TODO: clone to avoid the problem?
-   */
+  /** Clients should not modify the returned array. TODO: clone to avoid the problem? */
   @Override
   public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {
     return (getBCInfo().exceptionTypes == null) ? new TypeReference[0] : getBCInfo().exceptionTypes;
@@ -739,21 +724,19 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   protected abstract String[] getDeclaredExceptionTypeNames() throws InvalidClassFileException;
 
-  /**
-   * 
-   * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
-   */
+  /** @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions() */
   private TypeReference[] computeDeclaredExceptions() {
     try {
       String[] strings = getDeclaredExceptionTypeNames();
-      if (strings == null)
-        return null;
+      if (strings == null) return null;
 
       ClassLoaderReference loader = getDeclaringClass().getClassLoader().getReference();
 
       TypeReference[] result = new TypeReference[strings.length];
       for (int i = 0; i < result.length; i++) {
-        result[i] = TypeReference.findOrCreate(loader, TypeName.findOrCreate(ImmutableByteArray.make('L' + strings[i])));
+        result[i] =
+            TypeReference.findOrCreate(
+                loader, TypeName.findOrCreate(ImmutableByteArray.make('L' + strings[i])));
       }
       return result;
     } catch (InvalidClassFileException e) {
@@ -761,8 +744,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return null;
     }
   }
-/** BEGIN Custom change: precise bytecode positions */
-  
+  /** BEGIN Custom change: precise bytecode positions */
+
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
    */
@@ -778,7 +761,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return (getBCInfo().paramPositionMap == null) ? null : getBCInfo().paramPositionMap[paramNum];
   }
-/** END Custom change: precise bytecode positions */
+  /** END Custom change: precise bytecode positions */
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
@@ -792,9 +775,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * @return {@link Set}&lt;{@link TypeReference}&gt;
-   */
+  /** @return {@link Set}&lt;{@link TypeReference}&gt; */
   public Set<TypeReference> getCaughtExceptionTypes() throws InvalidClassFileException {
 
     ExceptionHandler[][] handlers = getHandlers();
@@ -839,15 +820,13 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   /*
    * TODO: cache for efficiency?
-   * 
+   *
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
   @Override
   public abstract boolean hasLocalVariableTable();
 
-  /**
-   * Clear all optional cached data associated with this class.
-   */
+  /** Clear all optional cached data associated with this class. */
   public void clearCaches() {
     bcInfo = null;
   }

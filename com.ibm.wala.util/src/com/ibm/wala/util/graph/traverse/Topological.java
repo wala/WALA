@@ -10,23 +10,22 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.ReverseIterator;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.GraphInverter;
+import java.util.Iterator;
 
-/**
- * Utilities for iterating over graphs in topological order.
- */
+/** Utilities for iterating over graphs in topological order. */
 public class Topological {
 
   /**
-   * Build an Iterator over all the nodes in the graph, in an order such that SCCs are visited in topological order.
-   * 
+   * Build an Iterator over all the nodes in the graph, in an order such that SCCs are visited in
+   * topological order.
+   *
    * @throws IllegalArgumentException if graph == null
    */
-  public static <T> Iterable<T> makeTopologicalIter(final Graph<T> graph) throws IllegalArgumentException {
+  public static <T> Iterable<T> makeTopologicalIter(final Graph<T> graph)
+      throws IllegalArgumentException {
     if (graph == null) {
       throw new IllegalArgumentException("graph == null");
     }

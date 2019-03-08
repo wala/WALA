@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.shrike.bench;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.Writer;
-
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
@@ -22,17 +18,22 @@ import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.Writer;
 
 /**
  * This is a demo class.
- * 
- * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
- * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
- * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
- * 
- * The instrumented classes are placed in the directory "output" under the current directory. Disassembled code is written to the
- * file "report" under the current directory.
+ *
+ * <p>Class files are taken as input arguments (or if there are none, from standard input). The
+ * methods in those files are instrumented: we insert a System.err.println() at ever method call,
+ * and a System.err.println() at every method entry.
+ *
+ * <p>In Unix, I run it like this: java -cp ~/dev/shrike/shrike
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
+ *
+ * <p>The instrumented classes are placed in the directory "output" under the current directory.
+ * Disassembled code is written to the file "report" under the current directory.
  */
 public class Statistics {
   private static OfflineInstrumenter instrumenter;
@@ -72,7 +73,8 @@ public class Statistics {
         if (d.getName().equals("<init>")) {
           int f = cr.getMethodAccessFlags(m);
           if ((f & Constants.ACC_PRIVATE) == 0
-              && ((f & Constants.ACC_PROTECTED) == 0 || (cr.getAccessFlags() & Constants.ACC_FINAL) == 0)) {
+              && ((f & Constants.ACC_PROTECTED) == 0
+                  || (cr.getAccessFlags() & Constants.ACC_FINAL) == 0)) {
             allPrivateConstructors = false;
           }
         }
@@ -82,7 +84,8 @@ public class Statistics {
         for (IInstruction instr : instrs) {
           if (instr instanceof InvokeInstruction) {
             InvokeInstruction invoke = (InvokeInstruction) instr;
-            if (invoke.getMethodName().equals("<init>") && invoke.getClassType().equals(Util.makeType(className))) {
+            if (invoke.getMethodName().equals("<init>")
+                && invoke.getClassType().equals(Util.makeType(className))) {
               constructorCalls++;
             }
           }

@@ -15,8 +15,8 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A store from a pointer.
- * 
- * *p = v
+ *
+ * <p>*p = v
  */
 public class SSAStoreIndirectInstruction extends SSAInstruction {
 
@@ -25,12 +25,13 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
   private final int rval;
 
   private final TypeReference pointeeType;
-  
+
   /**
    * @param addressVal the value number holding the pointer p deferenced (*p)
    * @param rval the value number which is stored into the pointer location
    */
-  public SSAStoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference pointeeType) {
+  public SSAStoreIndirectInstruction(
+      int iindex, int addressVal, int rval, TypeReference pointeeType) {
     super(iindex);
     this.addressVal = addressVal;
     this.rval = rval;
@@ -40,7 +41,7 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
   public TypeReference getPointeeType() {
     return pointeeType;
   }
-  
+
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     Assertions.UNREACHABLE("unimplemented");
@@ -59,12 +60,14 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return '*' + getValueString(symbolTable, addressVal) + " = " + getValueString(symbolTable, rval);
+    return '*'
+        + getValueString(symbolTable, addressVal)
+        + " = "
+        + getValueString(symbolTable, rval);
   }
 
   @Override
   public void visit(IVisitor v) {
-    ((IVisitorWithAddresses)v).visitStoreIndirect(this);
+    ((IVisitorWithAddresses) v).visitStoreIndirect(this);
   }
-
 }

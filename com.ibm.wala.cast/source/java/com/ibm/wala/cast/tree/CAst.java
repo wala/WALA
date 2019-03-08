@@ -13,17 +13,14 @@ package com.ibm.wala.cast.tree;
 import java.util.List;
 
 /**
- *  The main interface for creating CAPA Abstract Syntax Trees.  This
- * interface provides essentially a factory for creating AST nodes in
- * a tree structure.  There is no strong assumption about the meaning
- * of specific nodes; however, the `kind' argument to a makeNode call
- * should be a value from the constants in the CAstNode interface.
- * The other arguments to makeNode calls are child nodes.  The
- * structure of the tree is a matter of agreement between providers and
- * consumers of specific trees.
+ * The main interface for creating CAPA Abstract Syntax Trees. This interface provides essentially a
+ * factory for creating AST nodes in a tree structure. There is no strong assumption about the
+ * meaning of specific nodes; however, the `kind' argument to a makeNode call should be a value from
+ * the constants in the CAstNode interface. The other arguments to makeNode calls are child nodes.
+ * The structure of the tree is a matter of agreement between providers and consumers of specific
+ * trees.
  *
  * @author Julian Dolby (dolby@us.ibm.com)
- *
  */
 public interface CAst {
 
@@ -45,7 +42,8 @@ public interface CAst {
   CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5);
 
   /** Make a node of type kind with six children. */
-  CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6);
+  CAstNode makeNode(
+      int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6);
 
   /** Make a node of type kind specifying an array of children. */
   CAstNode makeNode(int kind, CAstNode... cs);

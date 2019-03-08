@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.fixedpoint.impl;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -27,87 +24,78 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.VerboseAction;
 import com.ibm.wala.util.graph.INodeWithNumber;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Represents a set of {@link IFixedPointStatement}s to be solved by a {@link IFixedPointSolver}
- * 
- * <p>
- * Implementation Note:
- * 
- * The set of steps and variables is internally represented as a graph. Each step and each variable is a node in the graph. If a
- * step produces a variable that is used by another step, the graph has a directed edge from the producer to the consumer.
- * Fixed-point iteration proceeds in a topological order according to these edges.
+ *
+ * <p>Implementation Note:
+ *
+ * <p>The set of steps and variables is internally represented as a graph. Each step and each
+ * variable is a node in the graph. If a step produces a variable that is used by another step, the
+ * graph has a directed edge from the producer to the consumer. Fixed-point iteration proceeds in a
+ * topological order according to these edges.
  */
 @SuppressWarnings("rawtypes")
-public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implements IFixedPointSolver<T>, FixedPointConstants,
-    VerboseAction {
+public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
+    implements IFixedPointSolver<T>, FixedPointConstants, VerboseAction {
 
   static final boolean DEBUG = false;
 
-  static public final boolean verbose = "true".equals(System.getProperty("com.ibm.wala.fixedpoint.impl.verbose"));
+  public static final boolean verbose =
+      "true".equals(System.getProperty("com.ibm.wala.fixedpoint.impl.verbose"));
 
-  static public final int DEFAULT_VERBOSE_INTERVAL = 100000;
+  public static final int DEFAULT_VERBOSE_INTERVAL = 100000;
 
   static final boolean MORE_VERBOSE = true;
 
-  static public final int DEFAULT_PERIODIC_MAINTENANCE_INTERVAL = 100000;
+  public static final int DEFAULT_PERIODIC_MAINTENANCE_INTERVAL = 100000;
 
   /**
-   * A tuning parameter; how may new IStatementDefinitionss must be added before doing a new topological sort? TODO: Tune this
-   * empirically.
+   * A tuning parameter; how may new IStatementDefinitionss must be added before doing a new
+   * topological sort? TODO: Tune this empirically.
    */
   private int minSizeForTopSort = 0;
 
   /**
-   * A tuning parameter; by what percentage must the number of equations grow before we perform a topological sort?
+   * A tuning parameter; by what percentage must the number of equations grow before we perform a
+   * topological sort?
    */
   private double topologicalGrowthFactor = 0.1;
 
   /**
-   * A tuning parameter: how many evaluations are allowed to take place between topological re-orderings. The idea is that many
-   * evaluations may be a sign of a bad ordering, even when few new equations are being added.
-   * 
-   * A number less than zero mean infinite.
+   * A tuning parameter: how many evaluations are allowed to take place between topological
+   * re-orderings. The idea is that many evaluations may be a sign of a bad ordering, even when few
+   * new equations are being added.
+   *
+   * <p>A number less than zero mean infinite.
    */
   private int maxEvalBetweenTopo = 500000;
 
   private int evaluationsAtLastOrdering = 0;
 
-  /**
-   * How many equations have been added since the last topological sort?
-   */
+  /** How many equations have been added since the last topological sort? */
   int topologicalCounter = 0;
 
-  /**
-   * The next order number to assign to a new equation
-   */
+  /** The next order number to assign to a new equation */
   int nextOrderNumber = 1;
 
-  /**
-   * During verbose evaluation, holds the number of dataflow equations evaluated
-   */
+  /** During verbose evaluation, holds the number of dataflow equations evaluated */
   private int nEvaluated = 0;
 
-  /**
-   * During verbose evaluation, holds the number of dataflow equations created
-   */
+  /** During verbose evaluation, holds the number of dataflow equations created */
   private int nCreated = 0;
 
-  /**
-   * worklist for the iterative solver
-   */
+  /** worklist for the iterative solver */
   protected Worklist workList = new Worklist();
 
-  /**
-   * A boolean which is initially true, but set to false after the first call to solve();
-   */
+  /** A boolean which is initially true, but set to false after the first call to solve(); */
   private boolean firstSolve = true;
 
   protected abstract T[] makeStmtRHS(int size);
-  
-  /**
-   * Some setup which occurs only before the first solve
-   */
+
+  /** Some setup which occurs only before the first solve */
   public void initForFirstSolve() {
     orderStatements();
     initializeVariables();
@@ -115,18 +103,16 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     firstSolve = false;
   }
 
-  /**
-   * @return true iff work list is empty
-   */
+  /** @return true iff work list is empty */
   public boolean emptyWorkList() {
     return workList.isEmpty();
   }
 
   /**
    * Solve the set of dataflow graph.
-   * <p>
-   * PRECONDITION: graph is set up
-   * 
+   *
+   * <p>PRECONDITION: graph is set up
+   *
    * @return true iff the evaluation of some equation caused a change in the value of some variable.
    */
   @Override
@@ -158,7 +144,6 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
         if (nEvaluated % getPeriodicMaintainInterval() == 0) {
           periodicMaintenance();
         }
-
       }
       if (DEBUG) {
         System.err.println(("After evaluation  " + s + ' ' + isChanged(code)));
@@ -229,16 +214,14 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
   /**
    * Add a step to the work list.
-   * 
+   *
    * @param s the step to add
    */
   public void addToWorkList(AbstractStatement s) {
     workList.insertStatement(s);
   }
 
-  /**
-   * Add all to the work list.
-   */
+  /** Add all to the work list. */
   public void addAllStatementsToWorkList() {
     for (INodeWithNumber nwn : Iterator2Iterable.make(getStatements())) {
       AbstractStatement eq = (AbstractStatement) nwn;
@@ -247,13 +230,14 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
   }
 
   /**
-   * Call this method when the contents of a variable changes. This routine adds all graph using this variable to the set of new
-   * graph.
-   * 
+   * Call this method when the contents of a variable changes. This routine adds all graph using
+   * this variable to the set of new graph.
+   *
    * @param v the variable that has changed
    */
   public void changedVariable(T v) {
-    for (INodeWithNumber nwn : Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(v))) {
+    for (INodeWithNumber nwn :
+        Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(v))) {
       AbstractStatement s = (AbstractStatement) nwn;
       addToWorkList(s);
     }
@@ -261,15 +245,19 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
   /**
    * Add a step with zero operands on the right-hand side.
-   * 
-   * TODO: this is a little odd, in that this equation will never fire unless explicitly added to a work list. I think in most cases
-   * we shouldn't be creating this nullary form.
-   * 
+   *
+   * <p>TODO: this is a little odd, in that this equation will never fire unless explicitly added to
+   * a work list. I think in most cases we shouldn't be creating this nullary form.
+   *
    * @param lhs the variable set by this equation
    * @param operator the step operator
    * @throws IllegalArgumentException if lhs is null
    */
-  public boolean newStatement(final T lhs, final NullaryOperator<T> operator, final boolean toWorkList, final boolean eager) {
+  public boolean newStatement(
+      final T lhs,
+      final NullaryOperator<T> operator,
+      final boolean toWorkList,
+      final boolean eager) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs is null");
     }
@@ -312,14 +300,15 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
   /**
    * Add a step with one operand on the right-hand side.
-   * 
+   *
    * @param lhs the lattice variable set by this equation
    * @param operator the step's operator
    * @param rhs first operand on the rhs
    * @return true iff the system changes
    * @throws IllegalArgumentException if operator is null
    */
-  public boolean newStatement(T lhs, UnaryOperator<T> operator, T rhs, boolean toWorkList, boolean eager) {
+  public boolean newStatement(
+      T lhs, UnaryOperator<T> operator, T rhs, boolean toWorkList, boolean eager) {
     if (operator == null) {
       throw new IllegalArgumentException("operator is null");
     }
@@ -360,18 +349,18 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     protected T[] makeRHS(int size) {
       return makeStmtRHS(size);
     }
-    
   }
-  
+
   /**
    * Add an equation with two operands on the right-hand side.
-   * 
+   *
    * @param lhs the lattice variable set by this equation
    * @param operator the equation operator
    * @param op1 first operand on the rhs
    * @param op2 second operand on the rhs
    */
-  public boolean newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, boolean toWorkList, boolean eager) {
+  public boolean newStatement(
+      T lhs, AbstractOperator<T> operator, T op1, T op2, boolean toWorkList, boolean eager) {
     // add to the list of graph
 
     GeneralStatement<T> s = new Statement(lhs, operator, op1, op2);
@@ -390,7 +379,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
   /**
    * Add a step with three operands on the right-hand side.
-   * 
+   *
    * @param lhs the lattice variable set by this equation
    * @param operator the equation operator
    * @param op1 first operand on the rhs
@@ -398,7 +387,8 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
    * @param op3 third operand on the rhs
    * @throws IllegalArgumentException if lhs is null
    */
-  public boolean newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3, boolean toWorkList, boolean eager) {
+  public boolean newStatement(
+      T lhs, AbstractOperator<T> operator, T op1, T op2, T op3, boolean toWorkList, boolean eager) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs is null");
     }
@@ -419,15 +409,15 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
 
   /**
    * Add a step to the system with an arbitrary number of operands on the right-hand side.
-   * 
+   *
    * @param lhs lattice variable set by this equation
    * @param operator the operator
    * @param rhs the operands on the rhs
    */
-  public boolean newStatement(T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
+  public boolean newStatement(
+      T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
     // add to the list of graph
-    if (lhs != null)
-      lhs.setOrderNumber(nextOrderNumber++);
+    if (lhs != null) lhs.setOrderNumber(nextOrderNumber++);
     GeneralStatement<T> s = new Statement(lhs, operator, rhs);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
@@ -440,19 +430,15 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     return true;
   }
 
-  /**
-   * Initialize all lattice vars in the system.
-   */
-  abstract protected void initializeVariables();
+  /** Initialize all lattice vars in the system. */
+  protected abstract void initializeVariables();
 
-  /**
-   * Initialize the work list for iteration.j
-   */
-  abstract protected void initializeWorkList();
+  /** Initialize the work list for iteration.j */
+  protected abstract void initializeWorkList();
 
   /**
    * Update the worklist, assuming that a particular equation has been re-evaluated
-   * 
+   *
    * @param s the equation that has been re-evaluated.
    */
   private void updateWorkList(AbstractStatement<T, ?> s) {
@@ -465,9 +451,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     changedVariable(v);
   }
 
-  /**
-   * Number the graph in topological order.
-   */
+  /** Number the graph in topological order. */
   private void orderStatementsInternal() {
     if (verbose) {
       if (nEvaluated > 0) {
@@ -484,9 +468,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     evaluationsAtLastOrdering = nEvaluated;
   }
 
-  /**
-   * 
-   */
+  /** */
   public void orderStatements() {
 
     if (nextOrderNumber > minSizeForTopSort) {
@@ -502,9 +484,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     }
   }
 
-  /**
-   * Re-order the step definitions.
-   */
+  /** Re-order the step definitions. */
   private void reorder() {
     // drain the worklist
     LinkedList<AbstractStatement> temp = new LinkedList<>();
@@ -567,22 +547,15 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>> implement
     nEvaluated++;
   }
 
-  /**
-   * a method that will be called every N evaluations. subclasses should override as desired.
-   */
-  protected void periodicMaintenance() {
-  }
+  /** a method that will be called every N evaluations. subclasses should override as desired. */
+  protected void periodicMaintenance() {}
 
-  /**
-   * subclasses should override as desired.
-   */
+  /** subclasses should override as desired. */
   protected int getVerboseInterval() {
     return DEFAULT_VERBOSE_INTERVAL;
   }
 
-  /**
-   * subclasses should override as desired.
-   */
+  /** subclasses should override as desired. */
   protected int getPeriodicMaintainInterval() {
     return DEFAULT_PERIODIC_MAINTENANCE_INTERVAL;
   }

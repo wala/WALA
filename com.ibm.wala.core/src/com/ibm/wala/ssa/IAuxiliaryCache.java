@@ -15,9 +15,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 
 interface IAuxiliaryCache {
 
-  /**
-   * The existence of this is unfortunate.
-   */
+  /** The existence of this is unfortunate. */
   void wipe();
 
   /**
@@ -29,15 +27,12 @@ interface IAuxiliaryCache {
 
   /**
    * cache new auxiliary information for an &lt;m,options&gt; pair
-   * 
+   *
    * @param m a method
    * @param options options governing ssa construction
    */
   void cache(IMethod m, Context c, SSAOptions options, Object aux);
 
-  /**
-   * invalidate all cached information about a method
-   */
+  /** invalidate all cached information about a method */
   void invalidate(IMethod method, Context c);
-
 }

@@ -10,17 +10,16 @@
  */
 package com.ibm.wala.util.collections;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.util.Iterator;
 
 public class IteratorPlusTwo<T> implements Iterator<T> {
   private final Iterator<T> it;
-  
+
   // the following fields will be nulled out after visiting xtra.
   private T xtra1;
   private T xtra2;
-  
+
   public IteratorPlusTwo(Iterator<T> it, T xtra1, T xtra2) {
     if (it == null) {
       throw new IllegalArgumentException("it null");
@@ -29,7 +28,7 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
     this.xtra1 = xtra1;
     this.xtra2 = xtra2;
   }
-  
+
   @Override
   public boolean hasNext() {
     return it.hasNext() || (xtra1 != null) || (xtra2 != null);
@@ -49,10 +48,9 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
       return result;
     }
   }
-   
+
   @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }
-
 }

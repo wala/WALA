@@ -15,15 +15,12 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassHierarchyFactory {
 
-  /**
-   * @return a ClassHierarchy object representing the analysis scope
-   */
+  /** @return a ClassHierarchy object representing the analysis scope */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {
       throw new IllegalArgumentException("null scope");
@@ -33,7 +30,7 @@ public class ClassHierarchyFactory {
 
   /**
    * @return a ClassHierarchy object representing the analysis scope, where phantom classes are
-   * created when superclasses are missing
+   *     created when superclasses are missing
    */
   public static ClassHierarchy makeWithPhantom(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {
@@ -44,7 +41,7 @@ public class ClassHierarchyFactory {
 
   /**
    * @return a ClassHierarchy object representing the analysis scope, missing superclasses are
-   * replaced by the ClassHierarchy root, i.e. java.lang.Object
+   *     replaced by the ClassHierarchy root, i.e. java.lang.Object
    */
   public static ClassHierarchy makeWithRoot(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {
@@ -54,29 +51,34 @@ public class ClassHierarchyFactory {
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor.
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen
+   * IProgressMonitor.
    */
-  public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor) throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor)
+      throws ClassHierarchyException {
     if (scope == null) {
       throw new IllegalArgumentException("null scope");
     }
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()), monitor);
   }
 
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory) throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory)
+      throws ClassHierarchyException {
     return make(scope, factory, ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
-  private static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, ClassHierarchy.MissingSuperClassHandling
-      superClassHandling) throws ClassHierarchyException {
+  private static ClassHierarchy make(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      ClassHierarchy.MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException {
     if (scope == null) {
       throw new IllegalArgumentException("null scope");
     }
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
-    return new ClassHierarchy(scope, factory, null, new ConcurrentHashMap<>(),
-        superClassHandling);
+    return new ClassHierarchy(scope, factory, null, new ConcurrentHashMap<>(), superClassHandling);
   }
 
   public static ClassHierarchy makeWithPhantom(AnalysisScope scope, ClassLoaderFactory factory)
@@ -85,37 +87,65 @@ public class ClassHierarchyFactory {
   }
 
   public static ClassHierarchy makeWithRoot(AnalysisScope scope, ClassLoaderFactory factory)
-          throws ClassHierarchyException {
+      throws ClassHierarchyException {
     return make(scope, factory, ClassHierarchy.MissingSuperClassHandling.ROOT);
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor.
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen
+   * IProgressMonitor.
    */
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
+  public static ClassHierarchy make(
+      AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, monitor, new ConcurrentHashMap<>(), ClassHierarchy.MissingSuperClassHandling.NONE);
+    return new ClassHierarchy(
+        scope,
+        factory,
+        monitor,
+        new ConcurrentHashMap<>(),
+        ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages)
+  public static ClassHierarchy make(
+      AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, languages, null, new ConcurrentHashMap<>(), ClassHierarchy.MissingSuperClassHandling.NONE);
+    return new ClassHierarchy(
+        scope,
+        factory,
+        languages,
+        null,
+        new ConcurrentHashMap<>(),
+        ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language)
+  public static ClassHierarchy make(
+      AnalysisScope scope, ClassLoaderFactory factory, Language language)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, language, null, new ConcurrentHashMap<>(), ClassHierarchy.MissingSuperClassHandling.NONE);
+    return new ClassHierarchy(
+        scope,
+        factory,
+        language,
+        null,
+        new ConcurrentHashMap<>(),
+        ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor. TODO: nanny for testgen
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen
+   * IProgressMonitor. TODO: nanny for testgen
    */
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
+  public static ClassHierarchy make(
+      AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
       throws ClassHierarchyException {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
-    return new ClassHierarchy(scope, factory, language, monitor, new ConcurrentHashMap<>(), ClassHierarchy.MissingSuperClassHandling.NONE);
+    return new ClassHierarchy(
+        scope,
+        factory,
+        language,
+        monitor,
+        new ConcurrentHashMap<>(),
+        ClassHierarchy.MissingSuperClassHandling.NONE);
   }
-
 }

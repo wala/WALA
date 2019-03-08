@@ -13,7 +13,7 @@ package demandpa;
 public class DummyHashSet {
 
   private final DummyHashMap hashMap = new DummyHashMap();
-  
+
   public void add(Object object) {
     hashMap.put(object, object);
   }
@@ -21,5 +21,4 @@ public class DummyHashSet {
   public Iter iterator() {
     return hashMap.keyIter();
   }
-
 }

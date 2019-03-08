@@ -10,13 +10,20 @@
  */
 package com.ibm.wala.ide;
 
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.ide.util.EclipseProjectPath;
+import com.ibm.wala.ide.util.JavaEclipseProjectPath;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,23 +41,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.ide.util.EclipseProjectPath;
-import com.ibm.wala.ide.util.JavaEclipseProjectPath;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.debug.Assertions;
+/** An Eclipse action that analyzes a Java selection */
+public abstract class AbstractJavaAnalysisAction
+    implements IObjectActionDelegate, IRunnableWithProgress {
 
-/**
- * An Eclipse action that analyzes a Java selection
- */
-public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegate, IRunnableWithProgress {
-
-  /**
-   * The current {@link ISelection} highlighted in the Eclipse workspace
-   */
+  /** The current {@link ISelection} highlighted in the Eclipse workspace */
   private ISelection currentSelection;
 
   public AbstractJavaAnalysisAction() {
@@ -61,53 +56,51 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
    */
   @Override
-  public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-  }
+  public void setActivePart(IAction action, IWorkbenchPart targetPart) {}
 
-  /**
-   * Compute an analysis scope for the current selection
-   */
+  /** Compute an analysis scope for the current selection */
   public static AnalysisScope computeScope(IStructuredSelection selection) throws IOException {
     return computeScope(selection, EclipseProjectPath.AnalysisScopeType.NO_SOURCE);
   }
 
   /**
    * Compute an analysis scope for the current selection
-   * 
-   * @param scopeType should analysis use the source files in the Eclipse projects rather than the class files.
+   *
+   * @param scopeType should analysis use the source files in the Eclipse projects rather than the
+   *     class files.
    */
-  public static AnalysisScope computeScope(final IStructuredSelection selection, 
-		  final EclipseProjectPath.AnalysisScopeType scopeType) throws IOException 
-  {
+  public static AnalysisScope computeScope(
+      final IStructuredSelection selection, final EclipseProjectPath.AnalysisScopeType scopeType)
+      throws IOException {
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
     final Collection<EclipseProjectPath<?, ?>> projectPaths = new LinkedList<>();
-    Job job = new Job("Compute project paths") {
+    Job job =
+        new Job("Compute project paths") {
 
-      @Override
-      protected IStatus run(IProgressMonitor monitor) {
-        for (Object object : Iterator2Iterable.make((Iterator<?>) selection.iterator())) {
-          if (object instanceof IJavaElement) {
-            IJavaElement e = (IJavaElement) object;
-            IJavaProject jp = e.getJavaProject();
-            try {
-              projectPaths.add(JavaEclipseProjectPath.make(jp, scopeType));
-            } catch (CoreException e1) {
-              e1.printStackTrace();
-              // skip and continue
-            } catch (IOException e2) {
-              e2.printStackTrace();
-              return new Status(IStatus.ERROR, "", 0, "", e2);
+          @Override
+          protected IStatus run(IProgressMonitor monitor) {
+            for (Object object : Iterator2Iterable.make((Iterator<?>) selection.iterator())) {
+              if (object instanceof IJavaElement) {
+                IJavaElement e = (IJavaElement) object;
+                IJavaProject jp = e.getJavaProject();
+                try {
+                  projectPaths.add(JavaEclipseProjectPath.make(jp, scopeType));
+                } catch (CoreException e1) {
+                  e1.printStackTrace();
+                  // skip and continue
+                } catch (IOException e2) {
+                  e2.printStackTrace();
+                  return new Status(IStatus.ERROR, "", 0, "", e2);
+                }
+              } else {
+                Assertions.UNREACHABLE(object.getClass());
+              }
             }
-          } else {
-            Assertions.UNREACHABLE(object.getClass());
+            return Status.OK_STATUS;
           }
-        }
-        return Status.OK_STATUS;
-      }
-
-    };
+        };
     // lock the whole workspace
     job.setRule(ResourcesPlugin.getWorkspace().getRoot());
     job.schedule();
@@ -130,9 +123,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     return scope;
   }
 
-  /**
-   * compute the java projects represented by the current selection
-   */
+  /** compute the java projects represented by the current selection */
   protected Collection<IJavaProject> computeJavaProjects() {
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<IJavaProject> projects = HashSetFactory.make();
@@ -148,10 +139,9 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     return projects;
   }
 
-  /**
-   * create an analysis scope as the union of a bunch of EclipseProjectPath
-   */
-  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath<?, ?>> projectPaths) throws IOException {
+  /** create an analysis scope as the union of a bunch of EclipseProjectPath */
+  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath<?, ?>> projectPaths)
+      throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
     Collection<Module> seen = HashSetFactory.make();
@@ -165,15 +155,21 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   }
 
   /**
-   * Enhance an {@link AnalysisScope} to include in a particular loader, elements from a set of Eclipse projects
-   * 
+   * Enhance an {@link AnalysisScope} to include in a particular loader, elements from a set of
+   * Eclipse projects
+   *
    * @param loader the class loader in which new {@link Module}s will live
    * @param projectPaths Eclipse project paths to add to the analysis scope
    * @param scope the {@link AnalysisScope} under construction. This will be mutated.
-   * @param seen set of {@link Module}s which have already been seen, and should not be added to the analysis scope
+   * @param seen set of {@link Module}s which have already been seen, and should not be added to the
+   *     analysis scope
    */
-  private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath<?, ?>> projectPaths, AnalysisScope scope,
-      Collection<Module> seen) throws IOException {
+  private static void buildScope(
+      ClassLoaderReference loader,
+      Collection<EclipseProjectPath<?, ?>> projectPaths,
+      AnalysisScope scope,
+      Collection<Module> seen)
+      throws IOException {
     for (EclipseProjectPath<?, ?> path : projectPaths) {
       AnalysisScope pScope = path.toAnalysisScope((File) null);
       for (Module m : pScope.getModules(loader)) {
@@ -198,7 +194,6 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-
   }
 
   /*
@@ -209,9 +204,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     currentSelection = selection;
   }
 
-  /**
-   * @return The current {@link ISelection} highlighted in the Eclipse workspace
-   */
+  /** @return The current {@link ISelection} highlighted in the Eclipse workspace */
   public ISelection getCurrentSelection() {
     return currentSelection;
   }

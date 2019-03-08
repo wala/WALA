@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,12 +47,6 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -66,131 +60,127 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-/**
- * ClassLoader for Java &amp; Dalvik.
- *
- */
+/** ClassLoader for Java &amp; Dalvik. */
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
-    private IClassLoader lParent;
+  private IClassLoader lParent;
 
-    private final SetOfClasses exclusions;
-    
-    //Commented out until IBM fixes ClassLoaderFactoryImpl "protected IClassLoader makeNewClassLoader"
-    
-//    public WDexClassLoaderImpl(ClassLoaderReference loader,
-//            ArrayClassLoader arrayClassLoader, IClassLoader parent,
-//            SetOfClasses exclusions, IClassHierarchy cha) {
-//        super(loader, arrayClassLoader, parent, exclusions, cha);
-//        lParent = parent;
-//        lExclusions = exclusions;
-//        //DEBUG_LEVEL = 0;
-//    }
-    
-    public WDexClassLoaderImpl(ClassLoaderReference loader,IClassLoader parent,
-            SetOfClasses exclusions, IClassHierarchy cha) {
-        super(loader, cha.getScope().getArrayClassLoader(), parent, exclusions, cha);
-        lParent = parent;
-        this.exclusions = exclusions;
-        //DEBUG_LEVEL = 0;
+  private final SetOfClasses exclusions;
+
+  // Commented out until IBM fixes ClassLoaderFactoryImpl "protected IClassLoader
+  // makeNewClassLoader"
+
+  //    public WDexClassLoaderImpl(ClassLoaderReference loader,
+  //            ArrayClassLoader arrayClassLoader, IClassLoader parent,
+  //            SetOfClasses exclusions, IClassHierarchy cha) {
+  //        super(loader, arrayClassLoader, parent, exclusions, cha);
+  //        lParent = parent;
+  //        lExclusions = exclusions;
+  //        //DEBUG_LEVEL = 0;
+  //    }
+
+  public WDexClassLoaderImpl(
+      ClassLoaderReference loader,
+      IClassLoader parent,
+      SetOfClasses exclusions,
+      IClassHierarchy cha) {
+    super(loader, cha.getScope().getArrayClassLoader(), parent, exclusions, cha);
+    lParent = parent;
+    this.exclusions = exclusions;
+    // DEBUG_LEVEL = 0;
+  }
+
+  @Override
+  public void init(List<Module> modules) throws IOException {
+    super.init(modules);
+    // module are loaded according to the given order (same as in Java VM)
+    Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
+
+    for (Module archive : modules) {
+      Set<ModuleEntry> classFiles = getDexFiles(archive);
+
+      removeClassFiles(classFiles, classModuleEntries);
+      loadAllDexClasses(classFiles);
+
+      classModuleEntries.addAll(classFiles);
     }
-    
-    @Override
-    public void init(List<Module> modules) throws IOException {
-    	super.init(modules);
-        // module are loaded according to the given order (same as in Java VM)
-        Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
-        
-        for (Module archive : modules) {
-            Set<ModuleEntry> classFiles = getDexFiles(archive);
-            
-            removeClassFiles(classFiles, classModuleEntries);
-            loadAllDexClasses(classFiles);
+  }
 
-            classModuleEntries.addAll(classFiles);
-        }                       
+  /** Remove from s any class file module entries which already are in t */
+  private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
+    s.removeAll(t);
+  }
+
+  private static Set<ModuleEntry> getDexFiles(Module M) {
+    HashSet<ModuleEntry> result = HashSetFactory.make();
+    for (ModuleEntry entry : Iterator2Iterable.make(M.getEntries())) {
+      if (entry instanceof DexModuleEntry) {
+        result.add(entry);
+      }
     }
-    
+    return result;
+  }
 
-    /**
-     * Remove from s any class file module entries which already are in t
-     */
-    private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
-	    s.removeAll(t);
+  @SuppressWarnings("unused")
+  private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
+
+    for (ModuleEntry entry : moduleEntries) {
+      // Dalvik class
+      if (entry instanceof DexModuleEntry) {
+        DexModuleEntry dexEntry = ((DexModuleEntry) entry);
+        String className = dexEntry.getClassName();
+        TypeName tName = TypeName.string2TypeName(className);
+
+        // if (DEBUG_LEVEL > 0) {
+        //  System.err.println("Consider dex class: " + tName);
+        // }
+
+        // System.out.println("Typename: " + tName.toString());
+        // System.out.println(tName.getClassName());
+        if (loadedClasses.get(tName) != null) {
+          Warnings.add(MultipleDexImplementationsWarning.create(className));
+        } else if (lParent != null && lParent.lookupClass(tName) != null) {
+          Warnings.add(MultipleDexImplementationsWarning.create(className));
+        }
+        // if the class is empty, ie an interface
+        //                  else if (dexEntry.getClassDefItem().getClassData() == null) {
+        //                      System.out.println("Jumping over (classdata null):
+        // "+dexEntry.getClassName());
+        //                      Warnings.add(MultipleDexImplementationsWarning
+        //                              .create(dexEntry.getClassName()));
+        //                  }
+        else {
+          IClass iClass = new DexIClass(this, cha, dexEntry);
+          if (iClass.getReference().getName().equals(tName)) {
+
+            // className is a descriptor, so strip the 'L'
+            if (exclusions != null && exclusions.contains(className.substring(1))) {
+              if (DEBUG_LEVEL > 0) {
+                System.err.println("Excluding " + className);
+              }
+              continue;
+            }
+
+            loadedClasses.put(tName, iClass);
+          } else {
+            Warnings.add(InvalidDexFile.create(className));
+          }
+        }
+      }
     }
-    
-    private static Set<ModuleEntry> getDexFiles(Module M) {
-    	HashSet<ModuleEntry> result = HashSetFactory.make();
-    	for (ModuleEntry entry : Iterator2Iterable.make(M.getEntries())) {
-    		if (entry instanceof DexModuleEntry) {    		
-    			result.add(entry);
-    		} 
-    	}
-    	return result;
-    }
-    
-    
-    @SuppressWarnings("unused")
-	private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
-    	
-    	for (ModuleEntry entry : moduleEntries) {
-    		// Dalvik class
-    		if (entry instanceof DexModuleEntry) {
-    			DexModuleEntry dexEntry = ((DexModuleEntry) entry);
-    			String className = dexEntry.getClassName();
-				TypeName tName = TypeName.string2TypeName(className);
+  }
 
-    			//if (DEBUG_LEVEL > 0) {
-    			//  System.err.println("Consider dex class: " + tName);
-    			//}
+  /** @return the IClassHierarchy of this classLoader. */
+  public IClassHierarchy getClassHierarcy() {
+    return cha;
+  }
 
-    			//System.out.println("Typename: " + tName.toString());
-    			//System.out.println(tName.getClassName());
-    			if (loadedClasses.get(tName) != null) {
-    				Warnings.add(MultipleDexImplementationsWarning
-    						.create(className));
-    			} else if (lParent != null && lParent.lookupClass(tName) != null) {
-    				Warnings.add(MultipleDexImplementationsWarning
-    						.create(className));
-    			}
-    			//if the class is empty, ie an interface
-    			//                  else if (dexEntry.getClassDefItem().getClassData() == null) {
-    			//                      System.out.println("Jumping over (classdata null): "+dexEntry.getClassName());
-    			//                      Warnings.add(MultipleDexImplementationsWarning
-    			//                              .create(dexEntry.getClassName()));
-    			//                  }
-    			else {
-    				IClass iClass = new DexIClass(this, cha, dexEntry);
-    				if (iClass.getReference().getName().equals(tName)) {
-    					
-    					// className is a descriptor, so strip the 'L'
-    					if (exclusions != null && exclusions.contains(className.substring(1))) {
-    						if (DEBUG_LEVEL > 0) {
-    							System.err.println("Excluding " + className);
-    						}
-    						continue;
-    					}
- 
-    					loadedClasses.put(tName, iClass);
-    				} else {
-    					Warnings.add(InvalidDexFile.create(className));
-    				}
-    			}
-    		}
-    	}
-    }
-
-
-    /**
-     * @return the IClassHierarchy of this classLoader.
-     */
-    public IClassHierarchy getClassHierarcy() {
-        return cha;
-    }
-
-  /**
-   * A warning when we find more than one implementation of a given class name
-   */
+  /** A warning when we find more than one implementation of a given class name */
   private static class MultipleDexImplementationsWarning extends Warning {
 
     final String className;
@@ -210,9 +200,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     }
   }
 
-  /**
-   * A warning when we encounter InvalidClassFileException
-   */
+  /** A warning when we encounter InvalidClassFileException */
   private static class InvalidDexFile extends Warning {
 
     final String className;
@@ -226,6 +214,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     public String getMsg() {
       return getClass().toString() + " : " + className;
     }
+
     public static InvalidDexFile create(String className) {
       return new InvalidDexFile(className);
     }

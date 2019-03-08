@@ -13,20 +13,16 @@ package com.ibm.wala.cast.js.html;
 import java.net.URL;
 
 /**
- * Used for handling resources that were copied from the web to local files (and still contain references to the web)
+ * Used for handling resources that were copied from the web to local files (and still contain
+ * references to the web)
+ *
  * @author yinnonh
  * @author danielk
- *
  */
 public interface IUrlResolver {
-  /**
-   * From Internet to local
-   */
+  /** From Internet to local */
   public URL resolve(URL input);
-  
-  /**
-   * From local to Internet
-   */
+
+  /** From local to Internet */
   public URL deResolve(URL input);
-  
 }

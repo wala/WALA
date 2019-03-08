@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -37,20 +37,18 @@
  */
 package com.ibm.wala.demandpa.util;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SymbolTable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * Iterates over the value numbers of the pointer parameters of
- * a method.
+ * Iterates over the value numbers of the pointer parameters of a method.
+ *
  * @author Manu Sridharan
- * 
  */
 public class PointerParamValueNumIterator implements Iterator<Integer> {
 
@@ -59,11 +57,11 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   final SymbolTable symbolTable;
 
   final int numParams;
-  
+
   int paramInd;
 
   int nextParameter;
-  
+
   public PointerParamValueNumIterator(CGNode node) throws IllegalArgumentException {
     if (node == null) {
       throw new IllegalArgumentException("node == null");
@@ -78,13 +76,13 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
 
   private void setNextParameter() {
     int i = paramInd;
-    for ( ; i < numParams; i++) {
+    for (; i < numParams; i++) {
       int parameter = symbolTable.getParameter(i);
       TypeAbstraction t = ti.getType(parameter);
       if (t != null) {
         nextParameter = parameter;
         break;
-      }      
+      }
     }
     paramInd = ++i;
   }
@@ -117,5 +115,4 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
-
 }

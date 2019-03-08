@@ -10,13 +10,6 @@
  */
 package com.ibm.wala.cast.ir.translator;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -32,31 +25,37 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.warnings.Warning;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public interface TranslatorToCAst {
-  public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend);
+  public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(
+      CAstRewriterFactory<C, K> factory, boolean prepend);
 
   public class Error extends WalaException {
     private static final long serialVersionUID = -8440950320425119751L;
     public final Set<Warning> warning;
-    
+
     public Error(Set<Warning> message) {
       super(message.iterator().next().getMsg());
       warning = message;
     }
-    
   }
-  
+
   public CAstEntity translateToCAst() throws Error, IOException;
 
   public interface WalkContext<C extends WalkContext<C, T>, T> {
 
     WalkContext<C, T> getParent();
-    
+
     /**
-     * get a mapping from CAstNodes to the scoped entities (e.g. functions or
-     * local classes) introduced by those nodes. Also maps {@code null} to
-     * those entities not corresponding to any node (e.g nested classes)
+     * get a mapping from CAstNodes to the scoped entities (e.g. functions or local classes)
+     * introduced by those nodes. Also maps {@code null} to those entities not corresponding to any
+     * node (e.g nested classes)
      */
     default Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       return getParent().getScopedEntities();
@@ -74,51 +73,38 @@ public interface TranslatorToCAst {
       return getParent().top();
     }
 
-    /**
-     *   associate a child entity with a given CAstNode, e.g. for a function declaration
-     */
+    /** associate a child entity with a given CAstNode, e.g. for a function declaration */
     default void addScopedEntity(CAstNode newNode, CAstEntity visit) {
       getParent().addScopedEntity(newNode, visit);
     }
 
-    /**
-     * for recording control-flow relationships among the CAst nodes
-     */
+    /** for recording control-flow relationships among the CAst nodes */
     default CAstControlFlowRecorder cfg() {
       return getParent().cfg();
     }
 
-    /**
-     * for recording source positions
-     */
-    default CAstSourcePositionRecorder pos()  {
+    /** for recording source positions */
+    default CAstSourcePositionRecorder pos() {
       return getParent().pos();
     }
 
-    /**
-     * for recording types of nodes
-     */
+    /** for recording types of nodes */
     default CAstNodeTypeMapRecorder getNodeTypeMap() {
       return getParent().getNodeTypeMap();
     }
 
-    /**
-     * for a 'continue' style goto, return the control flow target
-     */
+    /** for a 'continue' style goto, return the control flow target */
     default T getContinueFor(String label) {
       return getParent().getContinueFor(label);
     }
-    
-    /**
-     * for a 'break' style goto, return the control flow target
-     */
+
+    /** for a 'break' style goto, return the control flow target */
     default T getBreakFor(String label) {
       return getParent().getBreakFor(label);
     }
-
   }
-  
-  public class RootContext <C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
+
+  public class RootContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
     @Override
     public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       assert false;
@@ -171,16 +157,15 @@ public interface TranslatorToCAst {
       assert false;
       return null;
     }
-   
   }
-  
+
   public class DelegatingContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
     protected final C parent;
-    
+
     protected DelegatingContext(C parent) {
       this.parent = parent;
     }
-    
+
     @Override
     public T top() {
       return parent.top();
@@ -190,10 +175,9 @@ public interface TranslatorToCAst {
     public WalkContext<C, T> getParent() {
       return parent;
     }
-    
   }
-  
-  class BreakContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C,T> {
+
+  class BreakContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C, T> {
     private final T breakTarget;
     protected final String label;
 
@@ -205,11 +189,11 @@ public interface TranslatorToCAst {
 
     @Override
     public T getBreakFor(String l) {
-      return (l == null || l.equals(label))? breakTarget: super.getBreakFor(l);
+      return (l == null || l.equals(label)) ? breakTarget : super.getBreakFor(l);
     }
   }
 
-  public class LoopContext<C extends WalkContext<C, T>, T> extends BreakContext<C,T> {
+  public class LoopContext<C extends WalkContext<C, T>, T> extends BreakContext<C, T> {
     private final T continueTo;
 
     protected LoopContext(C parent, T breakTo, T continueTo, String label) {
@@ -219,36 +203,41 @@ public interface TranslatorToCAst {
 
     @Override
     public T getContinueFor(String l) {
-      return (l == null || l.equals(label))? continueTo: super.getContinueFor(l);
+      return (l == null || l.equals(label)) ? continueTo : super.getContinueFor(l);
     }
   }
-  
-  public static class TryCatchContext<C extends WalkContext<C, T>, T> implements WalkContext<C,T> {
-    private final Map<String,CAstNode> catchNode;
-    private final WalkContext<C,T> parent;
-    
+
+  public static class TryCatchContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
+    private final Map<String, CAstNode> catchNode;
+    private final WalkContext<C, T> parent;
+
     protected TryCatchContext(C parent, CAstNode catchNode) {
       this(parent, Collections.singletonMap(null, catchNode));
     }
 
-    protected TryCatchContext(C parent, Map<String,CAstNode> catchNode) {
+    protected TryCatchContext(C parent, Map<String, CAstNode> catchNode) {
       this.parent = parent;
       this.catchNode = catchNode;
     }
 
     @Override
-    public CAstNode getCatchTarget() { return getCatchTarget(null); }
+    public CAstNode getCatchTarget() {
+      return getCatchTarget(null);
+    }
 
     @Override
-    public CAstNode getCatchTarget(String s) { return catchNode.get(s); }
+    public CAstNode getCatchTarget(String s) {
+      return catchNode.get(s);
+    }
 
     @Override
     public WalkContext<C, T> getParent() {
-       return parent;
+      return parent;
     }
   }
- 
-  public static class FunctionContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C,T> {
+
+  public static class FunctionContext<C extends WalkContext<C, T>, T>
+      extends DelegatingContext<C, T> {
     private final T topNode;
     private final CAstSourcePositionRecorder pos = new CAstSourcePositionRecorder();
     private final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder(pos);
@@ -260,11 +249,13 @@ public interface TranslatorToCAst {
     }
 
     @Override
-    public T top() { return topNode; }
+    public T top() {
+      return topNode;
+    }
 
     @Override
     public void addScopedEntity(CAstNode construct, CAstEntity e) {
-      if (! scopedEntities.containsKey(construct)) {
+      if (!scopedEntities.containsKey(construct)) {
         scopedEntities.put(construct, new HashSet<CAstEntity>(1));
       }
       scopedEntities.get(construct).add(e);
@@ -276,62 +267,78 @@ public interface TranslatorToCAst {
     }
 
     @Override
-    public CAstControlFlowRecorder cfg() { return cfg; }
+    public CAstControlFlowRecorder cfg() {
+      return cfg;
+    }
 
     @Override
-    public CAstSourcePositionRecorder pos() { return pos; }
+    public CAstSourcePositionRecorder pos() {
+      return pos;
+    }
   }
 
   public static class DoLoopTranslator {
     private final boolean replicateForDoLoops;
-    
+
     private final CAst Ast;
-    
+
     public DoLoopTranslator(boolean replicateForDoLoops, CAst ast) {
       this.replicateForDoLoops = replicateForDoLoops;
       Ast = ast;
     }
 
-    public CAstNode translateDoLoop(CAstNode loopTest, CAstNode loopBody, CAstNode continueNode, CAstNode breakNode, WalkContext<?,?> wc) {      
+    public CAstNode translateDoLoop(
+        CAstNode loopTest,
+        CAstNode loopBody,
+        CAstNode continueNode,
+        CAstNode breakNode,
+        WalkContext<?, ?> wc) {
       if (replicateForDoLoops) {
         loopBody = Ast.makeNode(CAstNode.BLOCK_STMT, loopBody, continueNode);
-        
-        CAstRewriter.Rewrite x = (new CAstCloner(Ast, false)).copy(loopBody, wc.cfg(), wc.pos(), wc.getNodeTypeMap(), null, null);
+
+        CAstRewriter.Rewrite x =
+            (new CAstCloner(Ast, false))
+                .copy(loopBody, wc.cfg(), wc.pos(), wc.getNodeTypeMap(), null, null);
         CAstNode otherBody = x.newRoot();
-        
+
         wc.cfg().addAll(x.newCfg());
         wc.pos().addAll(x.newPos());
         wc.getNodeTypeMap().addAll(x.newTypes());
- 
-        return Ast.makeNode(CAstNode.BLOCK_STMT, 
+
+        return Ast.makeNode(
+            CAstNode.BLOCK_STMT,
             loopBody,
             Ast.makeNode(CAstNode.LOOP, loopTest, otherBody),
             breakNode);
-        
+
       } else {
-        CAstNode header = Ast.makeNode(CAstNode.LABEL_STMT, Ast.makeConstant("_do_label"), Ast.makeNode(CAstNode.EMPTY));
+        CAstNode header =
+            Ast.makeNode(
+                CAstNode.LABEL_STMT, Ast.makeConstant("_do_label"), Ast.makeNode(CAstNode.EMPTY));
         CAstNode loopGoto = Ast.makeNode(CAstNode.IFGOTO, loopTest);
 
         wc.cfg().map(header, header);
         wc.cfg().map(loopGoto, loopGoto);
         wc.cfg().add(loopGoto, header, Boolean.TRUE);
 
-        return Ast.makeNode(CAstNode.BLOCK_STMT, 
-            header, 
-            Ast.makeNode(CAstNode.BLOCK_STMT, loopBody, continueNode), 
-            loopGoto, 
+        return Ast.makeNode(
+            CAstNode.BLOCK_STMT,
+            header,
+            Ast.makeNode(CAstNode.BLOCK_STMT, loopBody, continueNode),
+            loopGoto,
             breakNode);
       }
     }
-    }
-
-  default <X extends WalkContext<X,Y>, Y> void pushSourcePosition(WalkContext<X, Y> context, CAstNode n, Position p) {
-    if (context.pos().getPosition(n) == null && !(n.getKind()==CAstNode.FUNCTION_EXPR || n.getKind()==CAstNode.FUNCTION_STMT)) {
-        context.pos().setPosition(n, p);
-        for(CAstNode child : n.getChildren()) {
-          pushSourcePosition(context, child, p);
-        }
-    }
   }
 
+  default <X extends WalkContext<X, Y>, Y> void pushSourcePosition(
+      WalkContext<X, Y> context, CAstNode n, Position p) {
+    if (context.pos().getPosition(n) == null
+        && !(n.getKind() == CAstNode.FUNCTION_EXPR || n.getKind() == CAstNode.FUNCTION_STMT)) {
+      context.pos().setPosition(n, p);
+      for (CAstNode child : n.getChildren()) {
+        pushSourcePosition(context, child, p);
+      }
+    }
+  }
 }

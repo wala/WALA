@@ -10,13 +10,6 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
@@ -30,6 +23,11 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import java.util.Collection;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class TunedRefinementTest extends AbstractPtrTest {
 
@@ -39,22 +37,26 @@ public class TunedRefinementTest extends AbstractPtrTest {
   }
 
   @Test
-  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testArraySet()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET, 1);
   }
 
   @Test
-  public void testClone() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testClone()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_CLONE, 1);
   }
 
   @Test
-  public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFooId()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ID, 1);
   }
 
   @Test
-  public void testHashtableEnum() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testHashtableEnum()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     // 3 because
     // can't tell between key and value enumerators in Hashtable
     doPointsToSizeTest(TestInfo.TEST_HASHTABLE_ENUM, 2);
@@ -82,12 +84,16 @@ public class TunedRefinementTest extends AbstractPtrTest {
   // }
 
   @Test
-  public void testWithinMethodCall() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testWithinMethodCall()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     String mainClass = TestInfo.TEST_WITHIN_METHOD_CALL;
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(mainClass);
 
-    CGNode testMethod = AbstractPtrTest.findStaticMethod(dmp.getBaseCallGraph(), Atom.findOrCreateUnicodeAtom("testMethod"),
-        Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
+    CGNode testMethod =
+        AbstractPtrTest.findStaticMethod(
+            dmp.getBaseCallGraph(),
+            Atom.findOrCreateUnicodeAtom("testMethod"),
+            Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
     PointerKey keyToQuery = AbstractPtrTest.getParam(testMethod, "testThisVar", dmp.getHeapModel());
     Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
     if (debug) {
@@ -97,43 +103,51 @@ public class TunedRefinementTest extends AbstractPtrTest {
   }
 
   @Test
-  public void testLinkedListIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testLinkedListIter()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_LINKEDLIST_ITER, 1);
   }
 
   @Test
-  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testGlobal()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_GLOBAL, 1);
   }
 
   @Test
-  public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testHashSet()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_HASH_SET, 1);
   }
 
   @Test
-  public void testHashMapGet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testHashMapGet()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_HASHMAP_GET, 1);
   }
 
   @Test
-  public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testMethodRecursion()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_METHOD_RECURSION, 2);
   }
 
   @Test
-  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testArraySetIter()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 1);
   }
 
   @Ignore
   @Test
-  public void testArrayList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testArrayList()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_LIST, 1);
   }
 
   @Test
-  public void testLinkedList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testLinkedList()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_LINKED_LIST, 1);
   }
 
@@ -143,11 +157,10 @@ public class TunedRefinementTest extends AbstractPtrTest {
   }
 
   @Override
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass) throws ClassHierarchyException,
-      IllegalArgumentException, CancelException, IOException {
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass)
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     DemandRefinementPointsTo dmp = super.makeDemandPointerAnalysis(mainClass);
     dmp.setRefinementPolicyFactory(new TunedRefinementPolicy.Factory(dmp.getClassHierarchy()));
     return dmp;
   }
-
 }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,23 +48,20 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
+import org.jf.dexlib2.Opcode;
 
 public class Throw extends Instruction {
 
-    public final int throwable;
+  public final int throwable;
 
-    public Throw(int pc, int throwable, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.throwable = throwable;
-    }
+  public Throw(int pc, int throwable, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+    this.throwable = throwable;
+  }
 
-    @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitThrow(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitThrow(this);
+  }
 }

@@ -14,18 +14,15 @@ import java.io.FilePermission;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * 
- * @author pistoia
- * 
- */
+/** @author pistoia */
 public class Reflect7 {
-  public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException,
-      IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+  public static void main(String[] args)
+      throws ClassNotFoundException, NoSuchMethodException, IllegalArgumentException,
+          InstantiationException, IllegalAccessException, InvocationTargetException {
     Class<FilePermission> c = (Class<FilePermission>) Class.forName("java.io.FilePermission");
-    Class<?>[] paramTypes = new Class[] { "".getClass(), "".getClass() };
+    Class<?>[] paramTypes = new Class[] {"".getClass(), "".getClass()};
     Constructor<FilePermission> constr = c.getConstructor(paramTypes);
-    Object[] params = new String[] { "log.txt", "read" };
+    Object[] params = new String[] {"log.txt", "read"};
     FilePermission fp = constr.newInstance(params);
     fp.toString();
   }

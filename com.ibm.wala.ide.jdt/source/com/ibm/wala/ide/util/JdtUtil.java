@@ -10,12 +10,13 @@
  */
 package com.ibm.wala.ide.util;
 
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -48,12 +49,7 @@ import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jface.viewers.StructuredSelection;
 
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.HashSetFactory;
-
-/**
- * Convenience methods to get information from JDT {@link IJavaElement} model.
- */
+/** Convenience methods to get information from JDT {@link IJavaElement} model. */
 public class JdtUtil {
 
   public static String getFilePath(IJavaElement javaElt) {
@@ -88,7 +84,6 @@ public class JdtUtil {
 
     }
     return "";
-
   }
 
   public static String getFullyQualifiedClassName(IType type) {
@@ -111,12 +106,14 @@ public class JdtUtil {
   }
 
   /**
-   * Return a unique string representing the specified Java element across projects in the workspace. The returned string can be
-   * used as a handle to create JavaElement by 'JavaCore.create(String)'
-   * 
-   * For example, suppose we have the method 'fooPackage.barPackage.FooClass.fooMethod(int)' which is in the 'FooProject' and source
-   * folder 'src' the handle would be '=FooProject/src&lt;fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
-   * 
+   * Return a unique string representing the specified Java element across projects in the
+   * workspace. The returned string can be used as a handle to create JavaElement by
+   * 'JavaCore.create(String)'
+   *
+   * <p>For example, suppose we have the method 'fooPackage.barPackage.FooClass.fooMethod(int)'
+   * which is in the 'FooProject' and source folder 'src' the handle would be
+   * '=FooProject/src&lt;fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
+   *
    * @throws IllegalArgumentException if javaElt is null
    */
   public static String getJdtHandleString(IJavaElement javaElt) {
@@ -158,9 +155,10 @@ public class JdtUtil {
   }
 
   /**
-   * @param typeSignature Some of the type signatures examples are "QString;" (String) and "I" (int) The type signatures may be
-   *          either unresolved (for source types) or resolved (for binary types), and either basic (for basic types) or rich (for
-   *          parameterized types). See {@link Signature} for details.
+   * @param typeSignature Some of the type signatures examples are "QString;" (String) and "I" (int)
+   *     The type signatures may be either unresolved (for source types) or resolved (for binary
+   *     types), and either basic (for basic types) or rich (for parameterized types). See {@link
+   *     Signature} for details.
    */
   public static String getHumanReadableType(String typeSignature) {
     String simpleName = Signature.getSignatureSimpleName(typeSignature);
@@ -185,9 +183,7 @@ public class JdtUtil {
     return javaProject;
   }
 
-  /**
-   * compute the java projects in the active workspace
-   */
+  /** compute the java projects in the active workspace */
   public static Collection<IJavaProject> getWorkspaceJavaProjects() {
     Collection<IJavaProject> result = HashSetFactory.make();
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -209,11 +205,12 @@ public class JdtUtil {
 
   /**
    * Find the {@link IType} in the workspace corresponding to a class name.
-   * 
+   *
    * @return null if not found
    * @throws IllegalArgumentException if projects == null
    */
-  public static IType findJavaClassInProjects(String fullyQualifiedName, Collection<IJavaProject> projects)
+  public static IType findJavaClassInProjects(
+      String fullyQualifiedName, Collection<IJavaProject> projects)
       throws IllegalArgumentException {
     if (projects == null) {
       throw new IllegalArgumentException("projects == null");
@@ -249,7 +246,8 @@ public class JdtUtil {
   }
 
   // private static IType searchForJavaClass(String className, IJavaSearchScope scope) {
-  // SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE,
+  // SearchPattern p = SearchPattern.createPattern(className,
+  // IJavaSearchConstants.CLASS_AND_INTERFACE,
   // IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
   // SearchEngine engine = new SearchEngine();
   // final Collection<IJavaElement> kludge = HashSetFactory.make();
@@ -262,7 +260,8 @@ public class JdtUtil {
   //
   // };
   // try {
-  // engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
+  // engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
+  // requestor, null);
   // } catch (CoreException e) {
   // e.printStackTrace();
   // }
@@ -277,12 +276,13 @@ public class JdtUtil {
 
   /**
    * Find the IMethod in the workspace corresponding to a method selector.
-   * 
-   * TODO: this is way too slow. figure out something better.
-   * 
+   *
+   * <p>TODO: this is way too slow. figure out something better.
+   *
    * @return null if not found
    */
-  public static IMethod findJavaMethodInProjects(String klass, String selector, Collection<IJavaProject> projects) {
+  public static IMethod findJavaMethodInProjects(
+      String klass, String selector, Collection<IJavaProject> projects) {
 
     if (klass == null) {
       throw new IllegalArgumentException("null klass");
@@ -313,12 +313,16 @@ public class JdtUtil {
       try {
         List<IMethod> matches = new ArrayList<>();
         Collection<String> typeParameterNames = getTypeParameterNames(type);
-        METHODS: for (IMethod x : type.getMethods()) {
+        METHODS:
+        for (IMethod x : type.getMethods()) {
           if (x.getElementName().equals(name)) {
             if (x.getParameterTypes().length == paramTypes.length) {
               for (int i = 0; i < x.getParameterTypes().length; i++) {
-                String s1 = Signature.getTypeErasure(Signature.getSignatureSimpleName(x.getParameterTypes()[i]));
-                String s2 = Signature.getTypeErasure(Signature.getSignatureSimpleName(paramTypes[i]));
+                String s1 =
+                    Signature.getTypeErasure(
+                        Signature.getSignatureSimpleName(x.getParameterTypes()[i]));
+                String s2 =
+                    Signature.getTypeErasure(Signature.getSignatureSimpleName(paramTypes[i]));
                 if (typeParameterNames.contains(s1)) {
                   // s1 is a type parameter to the class. optimistically assume
                   // the types match.
@@ -346,7 +350,8 @@ public class JdtUtil {
     }
   }
 
-  public static Collection<String> getTypeParameterNames(IType type) throws IllegalArgumentException, JavaModelException {
+  public static Collection<String> getTypeParameterNames(IType type)
+      throws IllegalArgumentException, JavaModelException {
     if (type == null) {
       throw new IllegalArgumentException("type == null");
     }
@@ -374,7 +379,8 @@ public class JdtUtil {
     }
   }
 
-  public static final String[] parseForParameterTypes(String selector) throws IllegalArgumentException {
+  public static final String[] parseForParameterTypes(String selector)
+      throws IllegalArgumentException {
 
     try {
       if (selector == null) {
@@ -383,7 +389,6 @@ public class JdtUtil {
       String d = selector.substring(selector.indexOf('('));
       if (d.length() <= 2) {
         throw new IllegalArgumentException("invalid descriptor: " + d);
-
       }
       if (d.charAt(0) != '(') {
         throw new IllegalArgumentException("invalid descriptor: " + d);
@@ -394,64 +399,65 @@ public class JdtUtil {
       int i = 1;
       while (true) {
         switch (d.charAt(i++)) {
-        case TypeReference.VoidTypeCode:
-          sigs.add(TypeReference.VoidName.toString());
-          continue;
-        case TypeReference.BooleanTypeCode:
-          sigs.add(TypeReference.BooleanName.toString());
-          continue;
-        case TypeReference.ByteTypeCode:
-          sigs.add(TypeReference.ByteName.toString());
-          continue;
-        case TypeReference.ShortTypeCode:
-          sigs.add(TypeReference.ShortName.toString());
-          continue;
-        case TypeReference.IntTypeCode:
-          sigs.add(TypeReference.IntName.toString());
-          continue;
-        case TypeReference.LongTypeCode:
-          sigs.add(TypeReference.LongName.toString());
-          continue;
-        case TypeReference.FloatTypeCode:
-          sigs.add(TypeReference.FloatName.toString());
-          continue;
-        case TypeReference.DoubleTypeCode:
-          sigs.add(TypeReference.DoubleName.toString());
-          continue;
-        case TypeReference.CharTypeCode:
-          sigs.add(TypeReference.CharName.toString());
-          continue;
-        case TypeReference.ArrayTypeCode: {
-          int off = i - 1;
-          while (d.charAt(i) == TypeReference.ArrayTypeCode) {
-            ++i;
-          }
-          if (d.charAt(i++) == TypeReference.ClassTypeCode) {
-            while (d.charAt(i++) != ';')
-              ;
-            sigs.add(d.substring(off, i).replaceAll("/", "."));
-          } else {
-            sigs.add(d.substring(off, i));
-          }
-          continue;
-        }
-        case (byte) ')': // end of parameter list
-          return toArray(sigs);
-        default: {
-          // a class
-          int off = i - 1;
-          char c;
-          do {
-            c = d.charAt(i++);
-          } while (c != ',' && c != ')');
-          sigs.add('L' + d.substring(off, i - 1) + ';');
-
-          if (c == ')') {
+          case TypeReference.VoidTypeCode:
+            sigs.add(TypeReference.VoidName.toString());
+            continue;
+          case TypeReference.BooleanTypeCode:
+            sigs.add(TypeReference.BooleanName.toString());
+            continue;
+          case TypeReference.ByteTypeCode:
+            sigs.add(TypeReference.ByteName.toString());
+            continue;
+          case TypeReference.ShortTypeCode:
+            sigs.add(TypeReference.ShortName.toString());
+            continue;
+          case TypeReference.IntTypeCode:
+            sigs.add(TypeReference.IntName.toString());
+            continue;
+          case TypeReference.LongTypeCode:
+            sigs.add(TypeReference.LongName.toString());
+            continue;
+          case TypeReference.FloatTypeCode:
+            sigs.add(TypeReference.FloatName.toString());
+            continue;
+          case TypeReference.DoubleTypeCode:
+            sigs.add(TypeReference.DoubleName.toString());
+            continue;
+          case TypeReference.CharTypeCode:
+            sigs.add(TypeReference.CharName.toString());
+            continue;
+          case TypeReference.ArrayTypeCode:
+            {
+              int off = i - 1;
+              while (d.charAt(i) == TypeReference.ArrayTypeCode) {
+                ++i;
+              }
+              if (d.charAt(i++) == TypeReference.ClassTypeCode) {
+                while (d.charAt(i++) != ';') ;
+                sigs.add(d.substring(off, i).replaceAll("/", "."));
+              } else {
+                sigs.add(d.substring(off, i));
+              }
+              continue;
+            }
+          case (byte) ')': // end of parameter list
             return toArray(sigs);
-          }
+          default:
+            {
+              // a class
+              int off = i - 1;
+              char c;
+              do {
+                c = d.charAt(i++);
+              } while (c != ',' && c != ')');
+              sigs.add('L' + d.substring(off, i - 1) + ';');
 
-          continue;
-        }
+              if (c == ')') {
+                return toArray(sigs);
+              }
+
+              continue;
+            }
         }
       }
     } catch (StringIndexOutOfBoundsException e) {
@@ -474,9 +480,10 @@ public class JdtUtil {
 
   /**
    * Find the IMethod in the workspace corresponding to a method signature.
-   * 
-   * This doesn't work for elements declared in inner classes. It's possible this is a 3.2 bug fixed in 3.3
-   * 
+   *
+   * <p>This doesn't work for elements declared in inner classes. It's possible this is a 3.2 bug
+   * fixed in 3.3
+   *
    * @return null if not found
    */
   @Deprecated
@@ -484,21 +491,30 @@ public class JdtUtil {
     // dammit ... this doesn't work for inner classes.
 
     System.err.println("Search for " + methodSig);
-    SearchPattern p = SearchPattern.createPattern(methodSig, IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS,
-        SearchPattern.R_EXACT_MATCH);
+    SearchPattern p =
+        SearchPattern.createPattern(
+            methodSig,
+            IJavaSearchConstants.METHOD,
+            IJavaSearchConstants.DECLARATIONS,
+            SearchPattern.R_EXACT_MATCH);
     IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
     SearchEngine engine = new SearchEngine();
     final Collection<IJavaElement> kludge = HashSetFactory.make();
-    SearchRequestor requestor = new SearchRequestor() {
+    SearchRequestor requestor =
+        new SearchRequestor() {
 
-      @Override
-      public void acceptSearchMatch(SearchMatch match) throws CoreException {
-        kludge.add((IJavaElement) match.getElement());
-      }
-
-    };
+          @Override
+          public void acceptSearchMatch(SearchMatch match) throws CoreException {
+            kludge.add((IJavaElement) match.getElement());
+          }
+        };
     try {
-      engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
+      engine.search(
+          p,
+          new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
+          scope,
+          requestor,
+          null);
     } catch (CoreException e) {
       e.printStackTrace();
     }
@@ -510,9 +526,7 @@ public class JdtUtil {
     }
   }
 
-  /**
-   * Use the search engine to find all methods in a java element
-   */
+  /** Use the search engine to find all methods in a java element */
   public static Collection<IMethod> findMethods(IJavaElement elt) {
 
     if (elt instanceof ICompilationUnit) {
@@ -527,23 +541,43 @@ public class JdtUtil {
       return result;
     } else {
       final Collection<IMethod> result = HashSetFactory.make();
-      SearchPattern p = SearchPattern.createPattern("*", IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS,
-          SearchPattern.R_PATTERN_MATCH);
-      SearchPattern p2 = SearchPattern.createPattern("*", IJavaSearchConstants.CONSTRUCTOR, IJavaSearchConstants.DECLARATIONS,
-          SearchPattern.R_PATTERN_MATCH);
-      IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] { elt }, IJavaSearchScope.SOURCES);
+      SearchPattern p =
+          SearchPattern.createPattern(
+              "*",
+              IJavaSearchConstants.METHOD,
+              IJavaSearchConstants.DECLARATIONS,
+              SearchPattern.R_PATTERN_MATCH);
+      SearchPattern p2 =
+          SearchPattern.createPattern(
+              "*",
+              IJavaSearchConstants.CONSTRUCTOR,
+              IJavaSearchConstants.DECLARATIONS,
+              SearchPattern.R_PATTERN_MATCH);
+      IJavaSearchScope scope =
+          SearchEngine.createJavaSearchScope(new IJavaElement[] {elt}, IJavaSearchScope.SOURCES);
       SearchEngine engine = new SearchEngine();
-      SearchRequestor requestor = new SearchRequestor() {
-        @Override
-        public void acceptSearchMatch(SearchMatch match) throws CoreException {
-          if (match.getElement() instanceof IMethod) {
-            result.add((IMethod) match.getElement());
-          }
-        }
-      };
+      SearchRequestor requestor =
+          new SearchRequestor() {
+            @Override
+            public void acceptSearchMatch(SearchMatch match) throws CoreException {
+              if (match.getElement() instanceof IMethod) {
+                result.add((IMethod) match.getElement());
+              }
+            }
+          };
       try {
-        engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
-        engine.search(p2, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
+        engine.search(
+            p,
+            new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
+            scope,
+            requestor,
+            null);
+        engine.search(
+            p2,
+            new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
+            scope,
+            requestor,
+            null);
       } catch (CoreException e) {
         e.printStackTrace();
       }
@@ -552,10 +586,9 @@ public class JdtUtil {
     }
   }
 
-  /**
-   * get a {@link StructuredSelection} corresponding to the named projects
-   */
-  public static StructuredSelection getStructuredSelectionForProjectNames(Collection<String> projectNames) {
+  /** get a {@link StructuredSelection} corresponding to the named projects */
+  public static StructuredSelection getStructuredSelectionForProjectNames(
+      Collection<String> projectNames) {
     if (projectNames == null) {
       throw new IllegalArgumentException("null projectNames");
     }
@@ -576,20 +609,21 @@ public class JdtUtil {
   }
 
   public static ASTNode getAST(IFile javaSourceFile) {
-	  @SuppressWarnings("deprecation") ASTParser parser = ASTParser.newParser(AST.JLS3);
-	  parser.setSource(JavaCore.createCompilationUnitFrom(javaSourceFile));
-	  parser.setProject(JavaCore.create(javaSourceFile.getProject()));
-	  parser.setResolveBindings(true);
-	  return parser.createAST(new NullProgressMonitor());
+    @SuppressWarnings("deprecation")
+    ASTParser parser = ASTParser.newParser(AST.JLS3);
+    parser.setSource(JavaCore.createCompilationUnitFrom(javaSourceFile));
+    parser.setProject(JavaCore.create(javaSourceFile.getProject()));
+    parser.setResolveBindings(true);
+    return parser.createAST(new NullProgressMonitor());
   }
-  
+
   public static ASTNode getOriginalNode(JdtPosition pos) {
-	  ASTNode root = getAST(pos.getEclipseFile());
-	  return getOriginalNode(root, pos);
+    ASTNode root = getAST(pos.getEclipseFile());
+    return getOriginalNode(root, pos);
   }
 
   public static ASTNode getOriginalNode(ASTNode root, JdtPosition pos) {
-	  	return NodeFinder.perform(root, pos.getFirstOffset(), pos.getLastOffset()-pos.getFirstOffset());
+    return NodeFinder.perform(
+        root, pos.getFirstOffset(), pos.getLastOffset() - pos.getFirstOffset());
   }
-  
 }

@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -19,19 +17,19 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
+import java.util.Iterator;
 
 /**
- * An {@link InstanceKey} which represents the constant char[] contents
- * of a string constant object.
+ * An {@link InstanceKey} which represents the constant char[] contents of a string constant object.
  */
 public class StringConstantCharArray implements InstanceKey {
-  
+
   private final ConstantKey<String> constant;
-  
+
   private StringConstantCharArray(ConstantKey<String> constant) {
     this.constant = constant;
   }
-  
+
   public static StringConstantCharArray make(ConstantKey<String> constant) {
     if (constant == null) {
       throw new IllegalArgumentException("null constant");
@@ -49,18 +47,13 @@ public class StringConstantCharArray implements InstanceKey {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final StringConstantCharArray other = (StringConstantCharArray) obj;
     if (constant == null) {
-      if (other.constant != null)
-        return false;
-    } else if (!constant.equals(other.constant))
-      return false;
+      if (other.constant != null) return false;
+    } else if (!constant.equals(other.constant)) return false;
     return true;
   }
 

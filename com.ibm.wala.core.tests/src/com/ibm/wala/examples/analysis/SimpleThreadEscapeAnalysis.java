@@ -10,13 +10,6 @@
  */
 package com.ibm.wala.examples.analysis;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.Set;
-import java.util.jar.JarFile;
-
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -42,46 +35,50 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.Set;
+import java.util.jar.JarFile;
 
 /**
- * <P>
- * A simple thread-level escape analysis: this code computes the set of classes of which some instance may be accessed
- * by some thread other than the one that created it.
- * </P>
- * 
- * <P>
- * The algorithm is not very bright; it is based on the observation that there are only three ways for an object to pass
- * from one thread to another.
- * </P>
+ * A simple thread-level escape analysis: this code computes the set of classes of which some
+ * instance may be accessed by some thread other than the one that created it.
+ *
+ * <p>The algorithm is not very bright; it is based on the observation that there are only three
+ * ways for an object to pass from one thread to another.
+ *
  * <UL>
- * <LI> The object is stored into a static variable.
- * <LI> The object is stored into an instance field of a Thread
- * <LI> The object is reachable from a field of another escaping object.
+ *   <LI>The object is stored into a static variable.
+ *   <LI>The object is stored into an instance field of a Thread
+ *   <LI>The object is reachable from a field of another escaping object.
  * </UL>
  *
- * <P>
- * This observation is implemented in the obvious way:
- * </P>
+ * <p>This observation is implemented in the obvious way:
+ *
  * <OL>
- * <LI> All static fields are collected
- * <LI> All Thread constructor parameters are collected
- * <LI> The points-to sets of these values represent the base set of escapees.
- * <LI> All object reachable from fields of these objects are added
- * <LI> This process continues until a fixpoint is reached
- * <LI> The abstract objects in the points-to sets are converted to types
- * <LI> This set of types is returned
+ *   <LI>All static fields are collected
+ *   <LI>All Thread constructor parameters are collected
+ *   <LI>The points-to sets of these values represent the base set of escapees.
+ *   <LI>All object reachable from fields of these objects are added
+ *   <LI>This process continues until a fixpoint is reached
+ *   <LI>The abstract objects in the points-to sets are converted to types
+ *   <LI>This set of types is returned
  * </OL>
  *
  * @author Julian Dolby
  */
-public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {
+public class SimpleThreadEscapeAnalysis
+    extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {
 
   private final Set<JarFile> applicationJarFiles;
 
   private final String applicationMainClass;
 
   /**
-   * The two input parameters define the program to analyze: the jars of .class files and the main class to start from.
+   * The two input parameters define the program to analyze: the jars of .class files and the main
+   * class to start from.
    */
   public SimpleThreadEscapeAnalysis(Set<JarFile> applicationJarFiles, String applicationMainClass) {
     this.applicationJarFiles = applicationJarFiles;
@@ -89,12 +86,14 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
   }
 
   @Override
-  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
+      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
   }
 
   /**
-   * Given a root path, add it to the set if it is a jar, or traverse it recursively if it is a directory.
+   * Given a root path, add it to the set if it is a jar, or traverse it recursively if it is a
+   * directory.
    */
   private void collectJars(File f, Set<JarFile> result) throws IOException {
     if (f.isDirectory()) {
@@ -109,9 +108,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
     }
   }
 
-  /**
-   * Collect the set of JarFiles that constitute the system libraries of the running JRE.
-   */
+  /** Collect the set of JarFiles that constitute the system libraries of the running JRE. */
   private JarFile[] getSystemJars() throws IOException {
     String javaHomePath = "garbage";
     Set<JarFile> jarFiles = HashSetFactory.make();
@@ -143,8 +140,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
   }
 
   /**
-   * Take the given set of JarFiles that constitute the program, and return a set of Module files as expected by the
-   * WALA machinery.
+   * Take the given set of JarFiles that constitute the program, and return a set of Module files as
+   * expected by the WALA machinery.
    */
   private Set<JarFileModule> getModuleFiles() {
     Set<JarFileModule> result = HashSetFactory.make();
@@ -155,11 +152,9 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
     return result;
   }
 
-  /**
-   * The heart of the analysis.
-   */
-  public Set<IClass> gatherThreadEscapingClasses() throws IOException, IllegalArgumentException,
-      CancelException {
+  /** The heart of the analysis. */
+  public Set<IClass> gatherThreadEscapingClasses()
+      throws IOException, IllegalArgumentException, CancelException {
 
     //
     // set the application to analyze
@@ -240,7 +235,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
       }
     }
 
-    // 
+    //
     // compute escaping types: all types flowing to escaping roots and
     // all types transitively reachable through their fields.
     //
@@ -306,12 +301,14 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
   }
 
   /**
-   * This main program shows one example use of thread escape analysis: producing a set of fields to be monitored for a
-   * dynamic race detector. The idea is that any field might have a race with two exceptions: final fields do not have
-   * races since there are no writes to them, and volatile fields have atomic read and write semantics provided by the
-   * VM. Hence, this piece of code produces a list of all other fields.
+   * This main program shows one example use of thread escape analysis: producing a set of fields to
+   * be monitored for a dynamic race detector. The idea is that any field might have a race with two
+   * exceptions: final fields do not have races since there are no writes to them, and volatile
+   * fields have atomic read and write semantics provided by the VM. Hence, this piece of code
+   * produces a list of all other fields.
    */
-  public static void main(String[] args) throws IOException, IllegalArgumentException, CancelException {
+  public static void main(String[] args)
+      throws IOException, IllegalArgumentException, CancelException {
     String mainClassName = args[0];
 
     Set<JarFile> jars = HashSetFactory.make();
@@ -319,7 +316,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceK
       jars.add(new JarFile(args[i], false));
     }
 
-    Set<IClass> escapingTypes = (new SimpleThreadEscapeAnalysis(jars, mainClassName)).gatherThreadEscapingClasses();
+    Set<IClass> escapingTypes =
+        (new SimpleThreadEscapeAnalysis(jars, mainClassName)).gatherThreadEscapingClasses();
 
     for (IClass cls : escapingTypes) {
       if (!cls.isArrayClass()) {

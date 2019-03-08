@@ -11,8 +11,6 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
-import java.util.List;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.ssa.IR;
@@ -22,22 +20,26 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import java.util.List;
 
-public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> {
+public class SSACFGNullPointerAnalysis
+    implements ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> {
 
   private final TypeReference[] ignoredExceptions;
   private IntraprocNullPointerAnalysis<ISSABasicBlock> intra = null;
   private final IR ir;
   private final ParameterState initialState;
   private final MethodState mState;
-  
-  public SSACFGNullPointerAnalysis(TypeReference[] ignoredExceptions, IR ir, ParameterState paramState, MethodState mState) {
+
+  public SSACFGNullPointerAnalysis(
+      TypeReference[] ignoredExceptions, IR ir, ParameterState paramState, MethodState mState) {
     this.ignoredExceptions = (ignoredExceptions != null ? ignoredExceptions.clone() : null);
     this.ir = ir;
-    this.initialState = (paramState == null ? ParameterState.createDefault(ir.getMethod()) : paramState);
+    this.initialState =
+        (paramState == null ? ParameterState.createDefault(ir.getMethod()) : paramState);
     this.mState = (mState == null ? MethodState.DEFAULT : mState);
   }
-  
+
   /*
    * @see com.ibm.wala.cfg.exc.ExceptionPruningAnalysis#compute(com.ibm.wala.util.MonitorUtil.IProgressMonitor)
    */
@@ -59,7 +61,7 @@ public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAIn
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
-    
+
     return intra.getPrunedCFG();
   }
 
@@ -71,9 +73,9 @@ public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAIn
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
-    
+
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = intra.getPrunedCFG();
-    
+
     boolean hasException = false;
     for (ISSABasicBlock bb : cfg) {
       if (bb.getLastInstruction() == null) continue;
@@ -83,7 +85,7 @@ public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAIn
         break;
       }
     }
-    
+
     return hasException;
   }
 
@@ -92,8 +94,7 @@ public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAIn
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
-    
+
     return intra.getState(bb);
   }
-  
 }

@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.Set;
-
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.ConstantPoolReader;
 import com.ibm.wala.shrikeBT.Constants;
@@ -35,15 +30,17 @@ import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Set;
 
 public class BootstrapInstrumentor {
-  final private PrintWriter w;
+  private final PrintWriter w;
 
   private int idx;
-  
-  /**
-   * Get ready to print a class to the given output stream.
-   */
+
+  /** Get ready to print a class to the given output stream. */
   public BootstrapInstrumentor(PrintWriter w) {
     this.w = w;
   }
@@ -57,9 +54,9 @@ public class BootstrapInstrumentor {
   public void doit(String[] args) throws Exception {
     OfflineInstrumenter oi = new OfflineInstrumenter();
     oi.parseStandardArgs(args);
-   
+
     oi.setPassUnmodifiedClasses(true);
-    
+
     ClassInstrumenter ci;
     oi.beginTraversal();
     while ((ci = oi.nextClass()) != null) {
@@ -67,7 +64,7 @@ public class BootstrapInstrumentor {
         idx = 0;
         Set<MethodData> bss = doClass(ci);
         ClassWriter cw = ci.emitClass();
-        for(MethodData md : bss) {
+        for (MethodData md : bss) {
           CTUtils.compileAndAddMethodToClassWriter(md, cw, null);
         }
         oi.outputModifiedClass(ci, cw);
@@ -79,8 +76,9 @@ public class BootstrapInstrumentor {
     oi.close();
   }
 
-  private Set<MethodData> dumpAttributes(ClassInstrumenter ci, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
-      InvalidBytecodeException, SecurityException, IllegalArgumentException {
+  private Set<MethodData> dumpAttributes(ClassInstrumenter ci, ClassReader.AttrIterator attrs)
+      throws InvalidClassFileException, InvalidBytecodeException, SecurityException,
+          IllegalArgumentException {
     Set<MethodData> result = HashSetFactory.make();
     ClassReader cr = ci.getReader();
     for (; attrs.isValid(); attrs.advance()) {
@@ -92,57 +90,84 @@ public class BootstrapInstrumentor {
         decoder.decode();
         ConstantPoolReader cpr = decoder.getConstantPool();
         IInstruction[] origInsts = decoder.getInstructions();
-        for(IInstruction inst : origInsts) {
+        for (IInstruction inst : origInsts) {
           if (inst instanceof InvokeDynamicInstruction) {
             InvokeDynamicInstruction x = (InvokeDynamicInstruction) inst;
             BootstrapMethod m = x.getBootstrap();
 
-            IInstruction insts[] = new IInstruction[ m.callArgumentCount() + 8];
+            IInstruction insts[] = new IInstruction[m.callArgumentCount() + 8];
             int arg = 0;
 
-            insts[arg++] = InvokeInstruction.make("()Ljava/lang/invoke/MethodHandles$Lookup;", "java/lang/invoke/MethodHandles", "lookup", Dispatch.STATIC);
+            insts[arg++] =
+                InvokeInstruction.make(
+                    "()Ljava/lang/invoke/MethodHandles$Lookup;",
+                    "java/lang/invoke/MethodHandles",
+                    "lookup",
+                    Dispatch.STATIC);
 
             insts[arg++] = ConstantInstruction.makeString(x.getMethodName());
-            
+
             insts[arg++] = ConstantInstruction.makeString(x.getMethodSignature());
             insts[arg++] = ConstantInstruction.makeClass(cr.getName());
-            insts[arg++] = InvokeInstruction.make("()Ljava/lang/ClassLoader;", "java/lang/Class", "getClassLoader", Dispatch.VIRTUAL);
-            insts[arg++] = InvokeInstruction.make("(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/invoke/MethodType;", "java/lang/invoke/MethodType", "fromMethodDescriptorString", Dispatch.STATIC);
-            
-            for(int an = 0; an < m.callArgumentCount(); an++) {
+            insts[arg++] =
+                InvokeInstruction.make(
+                    "()Ljava/lang/ClassLoader;",
+                    "java/lang/Class",
+                    "getClassLoader",
+                    Dispatch.VIRTUAL);
+            insts[arg++] =
+                InvokeInstruction.make(
+                    "(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/invoke/MethodType;",
+                    "java/lang/invoke/MethodType",
+                    "fromMethodDescriptorString",
+                    Dispatch.STATIC);
+
+            for (int an = 0; an < m.callArgumentCount(); an++) {
               insts[arg++] = ConstantInstruction.make(cpr, m.callArgumentIndex(an));
             }
-            
-            insts[arg++] = InvokeInstruction.make(m.methodType(), m.methodClass(), m.methodName(), ((InvokeDynamicInstruction) inst).getInvocationCode());
+
+            insts[arg++] =
+                InvokeInstruction.make(
+                    m.methodType(),
+                    m.methodClass(),
+                    m.methodName(),
+                    ((InvokeDynamicInstruction) inst).getInvocationCode());
             insts[arg++] = ReturnInstruction.make("Ljava/lang/invoke/CallSite;");
-            
-            result.add(MethodData.makeWithDefaultHandlersAndInstToBytecodes(Constants.ACC_PUBLIC|Constants.ACC_STATIC, cr.getName(), "bs" + (idx++), "()Ljava/lang/invoke/CallSite;", insts));
+
+            result.add(
+                MethodData.makeWithDefaultHandlersAndInstToBytecodes(
+                    Constants.ACC_PUBLIC | Constants.ACC_STATIC,
+                    cr.getName(),
+                    "bs" + (idx++),
+                    "()Ljava/lang/invoke/CallSite;",
+                    insts));
           }
         }
       }
     }
-    
+
     return result;
   }
 
-
-
   /**
    * Print a class.
+   *
    * @throws IllegalArgumentException if cr is null
    */
-  public Set<MethodData> doClass(final ClassInstrumenter ci) throws InvalidClassFileException, InvalidBytecodeException, SecurityException, IllegalArgumentException {
+  public Set<MethodData> doClass(final ClassInstrumenter ci)
+      throws InvalidClassFileException, InvalidBytecodeException, SecurityException,
+          IllegalArgumentException {
     ClassReader cr = ci.getReader();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     cr.initClassAttributeIterator(attrs);
     int methodCount = cr.getMethodCount();
-    
+
     Set<MethodData> result = HashSetFactory.make();
     for (int i = 0; i < methodCount; i++) {
       cr.initMethodAttributeIterator(i, attrs);
       result.addAll(dumpAttributes(ci, attrs));
     }
-    
+
     return result;
   }
 }

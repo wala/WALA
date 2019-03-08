@@ -16,9 +16,7 @@ import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IdentityFlowFunction;
 import com.ibm.wala.util.debug.Assertions;
 
-/**
- * flow functions for flow-sensitive context-sensitive slicer
- */
+/** flow functions for flow-sensitive context-sensitive slicer */
 public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement> {
 
   @Override
@@ -33,39 +31,40 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
     }
     Statement s = src;
     switch (s.getKind()) {
-    case NORMAL_RET_CALLER:
-    case PARAM_CALLER:
-    case EXC_RET_CALLER:
-      // uh oh. anything that flows into the missing function will be killed.
-      return ReachabilityFunctions.KILL_FLOW;
-    case HEAP_PARAM_CALLEE:
-    case HEAP_PARAM_CALLER:
-    case HEAP_RET_CALLEE:
-    case HEAP_RET_CALLER:
-      if (dest instanceof HeapStatement) {
-        HeapStatement hd = (HeapStatement) dest;
-        HeapStatement hs = (HeapStatement) src;
-        if (hs.getLocation().equals(hd.getLocation())) {
-          return IdentityFlowFunction.identity();
+      case NORMAL_RET_CALLER:
+      case PARAM_CALLER:
+      case EXC_RET_CALLER:
+        // uh oh. anything that flows into the missing function will be killed.
+        return ReachabilityFunctions.KILL_FLOW;
+      case HEAP_PARAM_CALLEE:
+      case HEAP_PARAM_CALLER:
+      case HEAP_RET_CALLEE:
+      case HEAP_RET_CALLER:
+        if (dest instanceof HeapStatement) {
+          HeapStatement hd = (HeapStatement) dest;
+          HeapStatement hs = (HeapStatement) src;
+          if (hs.getLocation().equals(hd.getLocation())) {
+            return IdentityFlowFunction.identity();
+          } else {
+            return ReachabilityFunctions.KILL_FLOW;
+          }
         } else {
           return ReachabilityFunctions.KILL_FLOW;
         }
-      } else {
+      case NORMAL:
+        // only control dependence flows into the missing function.
+        // this control dependence does not flow back to the caller.
         return ReachabilityFunctions.KILL_FLOW;
-      }
-    case NORMAL:
-      // only control dependence flows into the missing function.
-      // this control dependence does not flow back to the caller.
-      return ReachabilityFunctions.KILL_FLOW;
-    default:
-      Assertions.UNREACHABLE(s.getKind().toString());
-      return null;
+      default:
+        Assertions.UNREACHABLE(s.getKind().toString());
+        return null;
     }
   }
 
   @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(Statement src, Statement dest) {
-    return ReachabilityFunctions.createReachabilityFunctions().getCallToReturnFlowFunction(src, dest);
+    return ReachabilityFunctions.createReachabilityFunctions()
+        .getCallToReturnFlowFunction(src, dest);
   }
 
   @Override
@@ -75,7 +74,8 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
 
   @Override
   public IFlowFunction getReturnFlowFunction(Statement call, Statement src, Statement dest) {
-    return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(call, src, dest);
+    return ReachabilityFunctions.createReachabilityFunctions()
+        .getReturnFlowFunction(call, src, dest);
   }
 
   public IFlowFunction getReturnFlowFunction(Statement src, Statement dest) {
@@ -86,5 +86,4 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
   public IFlowFunction getUnbalancedReturnFlowFunction(Statement src, Statement dest) {
     return getReturnFlowFunction(src, dest);
   }
-
 }

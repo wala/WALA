@@ -14,20 +14,20 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * This is a very simple component to disassemble a ShrikeBT method. The disassembly is just the list of ShrikeBT instructions,
- * annotated with exception handler blocks and the mapping back to the original bytecodes.
+ * This is a very simple component to disassemble a ShrikeBT method. The disassembly is just the
+ * list of ShrikeBT instructions, annotated with exception handler blocks and the mapping back to
+ * the original bytecodes.
  */
 public class Disassembler {
-  final private IInstruction[] instructions;
+  private final IInstruction[] instructions;
 
-  final private ExceptionHandler[][] handlers;
+  private final ExceptionHandler[][] handlers;
 
-  final private int[] instructionsToBytecodes;
+  private final int[] instructionsToBytecodes;
 
-  /**
-   * Create a disassembler for a method.
-   */
-  public Disassembler(IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
+  /** Create a disassembler for a method. */
+  public Disassembler(
+      IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
     this.instructions = instructions;
     this.handlers = handlers;
     this.instructionsToBytecodes = instructionsToBytecodes;
@@ -35,28 +35,30 @@ public class Disassembler {
 
   /**
    * Create a disassembler for a method.
-   * 
+   *
    * @throws NullPointerException if data is null
    */
   public Disassembler(MethodData data) throws NullPointerException {
     this(data.getInstructions(), data.getHandlers(), data.getInstructionsToBytecodes());
   }
 
-  /**
-   * Write the disassembly to a stream. Each line is prefixed with 'prefix'.
-   */
+  /** Write the disassembly to a stream. Each line is prefixed with 'prefix'. */
   public void disassembleTo(String prefix, Writer w) throws IOException {
     for (int j = 0; j < instructions.length; j++) {
       w.write(prefix + j + ": " + instructions[j] + " (" + instructionsToBytecodes[j] + ")\n");
       for (int k = 0; k < handlers[j].length; k++) {
-        w.write(prefix + "    Handles " + handlers[j][k].catchClass + " at " + handlers[j][k].handler + '\n');
+        w.write(
+            prefix
+                + "    Handles "
+                + handlers[j][k].catchClass
+                + " at "
+                + handlers[j][k].handler
+                + '\n');
       }
     }
   }
 
-  /**
-   * Write the disassembly to a stream.
-   */
+  /** Write the disassembly to a stream. */
   public void disassembleTo(Writer w) throws IOException {
     disassembleTo("", w);
   }

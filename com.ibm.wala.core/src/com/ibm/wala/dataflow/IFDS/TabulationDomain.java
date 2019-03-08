@@ -18,17 +18,15 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @param <F> factoid type
  * @param <T> type of nodes in the supergraph
  */
-public interface TabulationDomain<F,T> extends OrdinalSetMapping<F> {
+public interface TabulationDomain<F, T> extends OrdinalSetMapping<F> {
 
   /**
-   * returns {@code true} if p1 should be processed before
-   * p2 by the {@link TabulationSolver}
-   * 
-   * For example, if this domain supports a partial order on facts, return true
-   * if p1.d2 is weaker than p2.d2 (intuitively p1.d2 meet p2.d2 = p1.d2)
-   * 
-   * return false otherwise
+   * returns {@code true} if p1 should be processed before p2 by the {@link TabulationSolver}
+   *
+   * <p>For example, if this domain supports a partial order on facts, return true if p1.d2 is
+   * weaker than p2.d2 (intuitively p1.d2 meet p2.d2 = p1.d2)
+   *
+   * <p>return false otherwise
    */
   boolean hasPriorityOver(PathEdge<T> p1, PathEdge<T> p2);
-
 }

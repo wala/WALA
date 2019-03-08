@@ -15,16 +15,15 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 
 public class AstEchoInstruction extends AstConsumeInstruction {
-  
+
   public AstEchoInstruction(int iindex, int[] rvals) {
     super(iindex, rvals);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).EchoInstruction(iindex, uses==null? rvals: uses);
+    return ((AstInstructionFactory) insts).EchoInstruction(iindex, uses == null ? rvals : uses);
   }
-
 
   @Override
   public String toString(SymbolTable symbolTable) {
@@ -38,8 +37,6 @@ public class AstEchoInstruction extends AstConsumeInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    ((AstInstructionVisitor)v).visitEcho(this);
+    ((AstInstructionVisitor) v).visitEcho(this);
   }
-
-
 }

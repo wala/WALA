@@ -10,10 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents arraylength instructions.
- */
-final public class ArrayLengthInstruction extends Instruction {
+/** This class represents arraylength instructions. */
+public final class ArrayLengthInstruction extends Instruction {
   protected ArrayLengthInstruction() {
     super(OP_arraylength);
   }

@@ -23,7 +23,7 @@ import java.util.LinkedList;
 
 /**
  * This class represents the CharacterRangeTable attribute.
- * 
+ *
  * @see CRTData
  * @see CRTFlags
  * @author Siegfried Weber
@@ -34,7 +34,8 @@ public final class CRTable extends PositionsAttribute {
   /** Stores the attribute name of this attribute */
   public static final String ATTRIBUTE_NAME = "CharacterRangeTable";
 
-  private static final String WARN_CRT_ENTRIES_CONTRADICTORY = "CRT entries %1$s and %2$s are contradictory.";
+  private static final String WARN_CRT_ENTRIES_CONTRADICTORY =
+      "CRT entries %1$s and %2$s are contradictory.";
 
   private static final String ERR_NO_CRT_ENTRY = "No CRT entry found for program counter %1$s.";
 
@@ -43,11 +44,9 @@ public final class CRTable extends PositionsAttribute {
 
   /**
    * Creates a new instance of CRTable.
-   * 
-   * @param data
-   *          the byte array containing the attribute
-   * @throws IOException
-   *           An IOException is thrown if the attribute can't be read.
+   *
+   * @param data the byte array containing the attribute
+   * @throws IOException An IOException is thrown if the attribute can't be read.
    */
   public CRTable(byte[] data) throws IOException {
     super(data);
@@ -68,11 +67,12 @@ public final class CRTable extends PositionsAttribute {
       int source_end_position = in.readInt();
       short flags = in.readShort();
       try {
-        crt[i] = new CRTData(pc_start_index, pc_end_index, source_start_position, source_end_position, flags);
+        crt[i] =
+            new CRTData(
+                pc_start_index, pc_end_index, source_start_position, source_end_position, flags);
       } catch (InvalidCRTDataException e) {
         LinkedList<Object> l = e.getData();
-        if (l == null)
-          l = new LinkedList<>();
+        if (l == null) l = new LinkedList<>();
         l.addFirst(i);
         Debug.warn(e.getMessage(), l.toArray());
       }
@@ -80,11 +80,9 @@ public final class CRTable extends PositionsAttribute {
   }
 
   /**
-   * Returns the source positions for the given index in the code array of the
-   * code attribute.
-   * 
-   * @param pc
-   *          the index in the code array of the code attribute
+   * Returns the source positions for the given index in the code array of the code attribute.
+   *
+   * @param pc the index in the code array of the code attribute
    * @return the most precise source position range
    */
   public final Range getSourceInfo(int pc) {
@@ -93,7 +91,7 @@ public final class CRTable extends PositionsAttribute {
     for (int i = 0; i < crt.length; i++) {
       if ((crt[i] != null) && (crt[i].isInRange(pc))) {
         if ((sourceInfo != null) && !sourceInfo.matches(crt[i]))
-          Debug.warn(WARN_CRT_ENTRIES_CONTRADICTORY, new Object[] { sourceInfoIndex, i });
+          Debug.warn(WARN_CRT_ENTRIES_CONTRADICTORY, new Object[] {sourceInfoIndex, i});
         if ((sourceInfo == null) || crt[i].isMorePrecise(sourceInfo)) {
           sourceInfo = crt[i];
           sourceInfoIndex = i;
@@ -128,5 +126,4 @@ public final class CRTable extends PositionsAttribute {
 
     return sb.toString();
   }
-
 }

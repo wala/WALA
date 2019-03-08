@@ -10,16 +10,15 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Collections;
 
 public abstract class AstConsumeInstruction extends SSAInstruction {
   protected final int[] rvals;
-  
+
   public AstConsumeInstruction(int iindex, int[] rvals) {
     super(iindex);
     this.rvals = rvals;
@@ -65,5 +64,4 @@ public abstract class AstConsumeInstruction extends SSAInstruction {
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
   }
-
 }

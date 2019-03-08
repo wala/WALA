@@ -12,8 +12,12 @@ public abstract class AstPropertyWrite extends AbstractReflectivePut {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).PropertyWrite(iindex, uses == null ? getObjectRef() : uses[0], uses == null ? getMemberRef() : uses[1],
-        uses == null ? getValue() : uses[2]);
+    return ((AstInstructionFactory) insts)
+        .PropertyWrite(
+            iindex,
+            uses == null ? getObjectRef() : uses[0],
+            uses == null ? getMemberRef() : uses[1],
+            uses == null ? getValue() : uses[2]);
   }
 
   @Override
@@ -21,9 +25,7 @@ public abstract class AstPropertyWrite extends AbstractReflectivePut {
     return super.toString(symbolTable) + " = " + getValueString(symbolTable, getValue());
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
   @Override
   public void visit(IVisitor v) {
     assert v instanceof AstInstructionVisitor;
@@ -34,5 +36,4 @@ public abstract class AstPropertyWrite extends AbstractReflectivePut {
   public boolean isPEI() {
     return true;
   }
-
 }

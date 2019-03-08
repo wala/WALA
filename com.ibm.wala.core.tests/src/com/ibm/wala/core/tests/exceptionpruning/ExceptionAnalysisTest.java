@@ -4,16 +4,6 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis;
 import com.ibm.wala.analysis.exceptionanalysis.IntraproceduralExceptionAnalysis;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -42,14 +32,20 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.ref.ReferenceCleanser;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
 /**
- * This class checks, if the number of exceptions which might occur intra and
- * interprocedural is right. As well as the number of caught exceptions for each
- * call site.
- * 
- * @author Stephan Gocht {@code <stephan@gobro.de>}
+ * This class checks, if the number of exceptions which might occur intra and interprocedural is
+ * right. As well as the number of caught exceptions for each call site.
  *
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysisTest {
   private static ClassLoader CLASS_LOADER = ExceptionAnalysisTest.class.getClassLoader();
@@ -60,25 +56,30 @@ public class ExceptionAnalysisTest {
   private static PointerAnalysis<InstanceKey> pointerAnalysis;
   private static CombinedInterproceduralExceptionFilter<SSAInstruction> filter;
 
-  @Rule
-  public ErrorCollector collector = new ErrorCollector();
+  @Rule public ErrorCollector collector = new ErrorCollector();
 
   @BeforeClass
-  public static void init() throws IOException, ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException {
+  public static void init()
+      throws IOException, ClassHierarchyException, IllegalArgumentException,
+          CallGraphBuilderCancelException {
     AnalysisOptions options;
     AnalysisScope scope;
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
     cha = ClassHierarchyFactory.make(scope);
 
-    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
+    Iterable<Entrypoint> entrypoints =
+        Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
     options = new AnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
     ReferenceCleanser.registerClassHierarchy(cha);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
     cg = builder.makeCallGraph(options, null);
     pointerAnalysis = builder.getPointerAnalysis();
 
@@ -87,24 +88,35 @@ public class ExceptionAnalysisTest {
      * raise (OwnException, ArrayIndexOutOfBoundException)
      */
     filter = new CombinedInterproceduralExceptionFilter<>();
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangNullPointerException)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangExceptionInInitializerError)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangExceptionInInitializerError)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangNegativeArraySizeException)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangNullPointerException)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangExceptionInInitializerError)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangExceptionInInitializerError)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangNegativeArraySizeException)));
   }
 
   @Test
   public void testIntra() {
     for (CGNode node : cg) {
-      IntraproceduralExceptionAnalysis analysis = new IntraproceduralExceptionAnalysis(node, filter.getFilter(node), cha,
-          pointerAnalysis);
+      IntraproceduralExceptionAnalysis analysis =
+          new IntraproceduralExceptionAnalysis(node, filter.getFilter(node), cha, pointerAnalysis);
 
-      if (node.getMethod().getDeclaringClass().getName().getClassName().toString().equals("TestPruning")) {
+      if (node.getMethod()
+          .getDeclaringClass()
+          .getName()
+          .getClassName()
+          .toString()
+          .equals("TestPruning")) {
         checkThrownExceptions(node, analysis);
         checkCaughtExceptions(node, analysis);
       }
@@ -112,8 +124,10 @@ public class ExceptionAnalysisTest {
   }
 
   private void checkCaughtExceptions(CGNode node, IntraproceduralExceptionAnalysis analysis) {
-    String text = "Number of caught exceptions did not match in " + node.getMethod().getName().toString()
-        + ". The follwoing exceptions were caught: ";
+    String text =
+        "Number of caught exceptions did not match in "
+            + node.getMethod().getName().toString()
+            + ". The follwoing exceptions were caught: ";
     Iterator<CallSiteReference> it = node.iterateCallSites();
     while (it.hasNext()) {
       Set<TypeReference> caught = analysis.getCaughtExceptions(it.next());
@@ -121,7 +135,10 @@ public class ExceptionAnalysisTest {
         if (node.getMethod().getName().toString().equals("testTryCatchMultipleExceptions")) {
           collector.checkThat(text + caught.toString(), caught.size(), equalTo(2));
         } else if (node.getMethod().getName().toString().equals("testTryCatchSuper")) {
-          collector.checkThat(text + caught.toString(), caught.size(), not(anyOf(equalTo(0), equalTo(1), equalTo(2), equalTo(3))));
+          collector.checkThat(
+              text + caught.toString(),
+              caught.size(),
+              not(anyOf(equalTo(0), equalTo(1), equalTo(2), equalTo(3))));
         } else {
           collector.checkThat(text + caught.toString(), caught.size(), equalTo(1));
         }
@@ -133,8 +150,11 @@ public class ExceptionAnalysisTest {
 
   private void checkThrownExceptions(CGNode node, IntraproceduralExceptionAnalysis analysis) {
     Set<TypeReference> exceptions = analysis.getExceptions();
-    String text = "Number of thrown exceptions did not match in " + node.getMethod().getName().toString()
-        + ". The follwoing exceptions were thrown: " + exceptions.toString();
+    String text =
+        "Number of thrown exceptions did not match in "
+            + node.getMethod().getName().toString()
+            + ". The follwoing exceptions were thrown: "
+            + exceptions.toString();
 
     if (node.getMethod().getName().toString().matches("invokeSingle.*")
         && (!node.getMethod().getName().toString().equals("invokeSingleRecursive2Helper"))
@@ -151,10 +171,18 @@ public class ExceptionAnalysisTest {
     analysis.solve();
 
     for (CGNode node : cg) {
-      if (node.getMethod().getDeclaringClass().getName().getClassName().toString().equals("TestPruning")) {
+      if (node.getMethod()
+          .getDeclaringClass()
+          .getName()
+          .getClassName()
+          .toString()
+          .equals("TestPruning")) {
         Set<TypeReference> exceptions = analysis.getCGNodeExceptions(node);
-        String text = "Number of thrown exceptions did not match in " + node.getMethod().getName().toString()
-            + ". The follwoing exceptions were thrown: " + exceptions.toString();
+        String text =
+            "Number of thrown exceptions did not match in "
+                + node.getMethod().getName().toString()
+                + ". The follwoing exceptions were thrown: "
+                + exceptions.toString();
         if (node.getMethod().getName().toString().matches("invokeSingle.*")) {
           collector.checkThat(text, exceptions.size(), equalTo(1));
         } else if (node.getMethod().getName().toString().matches("testTryCatch.*")) {
@@ -164,9 +192,13 @@ public class ExceptionAnalysisTest {
         } else if (node.getMethod().getName().toString().equals("main")) {
           collector.checkThat(text, exceptions.size(), equalTo(0));
         } else {
-          String text2 = "Found method, i didn't know the expected number of exceptions for: "
-              + node.getMethod().getName().toString();
-          collector.checkThat(text2, node.getMethod().getName().toString(), anyOf(equalTo("main"), equalTo("<init>")));
+          String text2 =
+              "Found method, i didn't know the expected number of exceptions for: "
+                  + node.getMethod().getName().toString();
+          collector.checkThat(
+              text2,
+              node.getMethod().getName().toString(),
+              anyOf(equalTo("main"), equalTo("<init>")));
         }
 
         analysis.getCGNodeExceptions(node);

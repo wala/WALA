@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -43,12 +43,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-
 abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
-  /**
-   * 
-   */
+  /** */
   private static final long serialVersionUID = 4064901973301954076L;
 
   protected final Map<K, Set<V>> map = HashMapFactory.make();
@@ -62,9 +59,8 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
   protected abstract Set<V> createSet();
 
   protected Set<V> emptySet() {
-    return Collections.<V> emptySet();
+    return Collections.<V>emptySet();
   }
-
 
   @Override
   public Set<V> get(K key) {
@@ -82,7 +78,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#put(K, V)
    */
   @Override
@@ -97,14 +93,13 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#remove(K, V)
    */
   @Override
   public boolean remove(K key, V val) {
     Set<V> elems = map.get(key);
-    if (elems == null)
-      return false;
+    if (elems == null) return false;
     boolean ret = elems.remove(val);
     if (elems.isEmpty()) {
       map.remove(key);
@@ -119,7 +114,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#keys()
    */
   @Override
@@ -129,7 +124,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#containsKey(java.lang.Object)
    */
   @Override
@@ -139,7 +134,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#size()
    */
   @Override
@@ -153,7 +148,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#toString()
    */
   @Override
@@ -163,7 +158,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see AAA.util.MultiMap#putAll(K, java.util.Set)
    */
   @Override

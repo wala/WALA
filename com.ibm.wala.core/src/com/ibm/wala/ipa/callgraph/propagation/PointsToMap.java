@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -22,73 +20,67 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 import com.ibm.wala.util.intset.MutableMapping;
+import java.util.Iterator;
 
-/**
- * An object that tracks the mapping between pointer keys and points-to set variables
- */
+/** An object that tracks the mapping between pointer keys and points-to set variables */
 public class PointsToMap {
 
-  /**
-   * An object that manages the numbering of pointer keys
-   */
+  /** An object that manages the numbering of pointer keys */
   private final MutableMapping<PointerKey> pointerKeys = MutableMapping.make();
 
   /**
-   * pointsToSets[i] says something about the representation of the points-to set for the ith {@link PointerKey}, as determined by
-   * the pointerKeys mapping. pointsToSets[i] can be one of the following:
+   * pointsToSets[i] says something about the representation of the points-to set for the ith {@link
+   * PointerKey}, as determined by the pointerKeys mapping. pointsToSets[i] can be one of the
+   * following:
+   *
    * <ul>
-   * <li>a PointsToSetVariable
-   * <li>IMPLICIT
-   * <li>UNIFIED
+   *   <li>a PointsToSetVariable
+   *   <li>IMPLICIT
+   *   <li>UNIFIED
    * </ul>
    */
   private final IVector<Object> pointsToSets = new SimpleVector<>();
 
   private final IntegerUnionFind uf = new IntegerUnionFind();
 
-  /**
-   * A hack: used to represent points-to-sets that are represented implicitly
-   */
-  final static Object IMPLICIT = new Object() {
-    @Override
-    public String toString() {
-      return "IMPLICIT points-to set";
-    }
-  };
+  /** A hack: used to represent points-to-sets that are represented implicitly */
+  static final Object IMPLICIT =
+      new Object() {
+        @Override
+        public String toString() {
+          return "IMPLICIT points-to set";
+        }
+      };
+
+  /** A hack: used to represent points-to-sets that are unified with another */
+  static final Object UNIFIED =
+      new Object() {
+        @Override
+        public String toString() {
+          return "UNIFIED points-to set";
+        }
+      };
 
   /**
-   * A hack: used to represent points-to-sets that are unified with another
-   */
-  final static Object UNIFIED = new Object() {
-    @Override
-    public String toString() {
-      return "UNIFIED points-to set";
-    }
-  };
-
-  /**
-   * Numbers of pointer keys (non locals) that are roots of transitive closure. A "root" is a points-to-set whose contents do not
-   * result from flow from other points-to-sets; these points-to-sets are the primordial assignments from which the transitive
-   * closure flows.
+   * Numbers of pointer keys (non locals) that are roots of transitive closure. A "root" is a
+   * points-to-set whose contents do not result from flow from other points-to-sets; these
+   * points-to-sets are the primordial assignments from which the transitive closure flows.
    */
   private final BitVector transitiveRoots = new BitVector();
 
-  /**
-   * @return iterator of all PointerKeys tracked
-   */
+  /** @return iterator of all PointerKeys tracked */
   public Iterator<PointerKey> iterateKeys() {
     return pointerKeys.iterator();
   }
 
-  /**
-   * If p is unified, returns the representative for p.
-   */
+  /** If p is unified, returns the representative for p. */
   public PointsToSetVariable getPointsToSet(PointerKey p) {
     if (p == null) {
       throw new IllegalArgumentException("null p");
     }
     if (isImplicit(p)) {
-      throw new IllegalArgumentException("unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
+      throw new IllegalArgumentException(
+          "unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
     }
     int i = pointerKeys.getMappedIndex(p);
     if (i == -1) {
@@ -96,23 +88,21 @@ public class PointsToMap {
     }
     int repI = uf.find(i);
     PointsToSetVariable result = (PointsToSetVariable) pointsToSets.get(repI);
-    if (result != null && p instanceof FilteredPointerKey && (!(result.getPointerKey() instanceof FilteredPointerKey))) {
+    if (result != null
+        && p instanceof FilteredPointerKey
+        && (!(result.getPointerKey() instanceof FilteredPointerKey))) {
       upgradeToFilter(result, ((FilteredPointerKey) p).getTypeFilter());
     }
     return result;
   }
 
-  /**
-   * @return the {@link PointsToSetVariable} recorded for a particular id
-   */
+  /** @return the {@link PointsToSetVariable} recorded for a particular id */
   public PointsToSetVariable getPointsToSet(int id) {
     int repI = uf.find(id);
     return (PointsToSetVariable) pointsToSets.get(repI);
   }
 
-  /**
-   * record that a particular points-to-set is represented implicitly
-   */
+  /** record that a particular points-to-set is represented implicitly */
   public void recordImplicit(PointerKey key) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
@@ -134,9 +124,7 @@ public class PointsToMap {
     return result;
   }
 
-  /**
-   * record that a particular points-to-set has been unioned with another
-   */
+  /** record that a particular points-to-set has been unioned with another */
   public void recordUnified(PointerKey key) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
@@ -146,9 +134,10 @@ public class PointsToMap {
   }
 
   /**
-   * record points-to-sets that are "roots" of the transitive closure. These points-to-sets can't be thrown away for a
-   * pre-transitive solver. A "root" is a points-to-set whose contents do not result from flow from other points-to-sets; there
-   * points-to-sets are the primordial assignments from which the transitive closure flows.
+   * record points-to-sets that are "roots" of the transitive closure. These points-to-sets can't be
+   * thrown away for a pre-transitive solver. A "root" is a points-to-set whose contents do not
+   * result from flow from other points-to-sets; there points-to-sets are the primordial assignments
+   * from which the transitive closure flows.
    */
   public void recordTransitiveRoot(PointerKey key) {
     if (key == null) {
@@ -159,8 +148,8 @@ public class PointsToMap {
   }
 
   /**
-   * A "root" is a points-to-set whose contents do not result from flow from other points-to-sets; there points-to-sets are the
-   * primordial assignments from which the transitive closure flows.
+   * A "root" is a points-to-set whose contents do not result from flow from other points-to-sets;
+   * there points-to-sets are the primordial assignments from which the transitive closure flows.
    */
   boolean isTransitiveRoot(PointerKey key) {
     int i = findOrCreateIndex(key);
@@ -184,9 +173,7 @@ public class PointsToMap {
     return pointerKeys.getSize();
   }
 
-  /**
-   * Wipe out the cached transitive closure information
-   */
+  /** Wipe out the cached transitive closure information */
   public void revertToPreTransitive() {
     for (PointerKey key : Iterator2Iterable.make(iterateKeys())) {
       if (!isTransitiveRoot(key) && !isImplicit(key) && !isUnified(key)) {
@@ -196,16 +183,14 @@ public class PointsToMap {
     }
   }
 
-  /**
-   * @return {@link Iterator}&lt;{@link PointerKey}&gt;
-   */
+  /** @return {@link Iterator}&lt;{@link PointerKey}&gt; */
   public Iterator<PointerKey> getTransitiveRoots() {
     return new FilterIterator<>(iterateKeys(), this::isTransitiveRoot);
   }
 
   /**
    * Unify the points-to-sets for the variables identified by the set s
-   * 
+   *
    * @param s numbers of points-to-set variables
    * @throws IllegalArgumentException if s is null
    */
@@ -223,9 +208,7 @@ public class PointsToMap {
     }
   }
 
-  /**
-   * Unify the points-to-sets for the variables with numbers i and j
-   */
+  /** Unify the points-to-sets for the variables with numbers i and j */
   public void unify(int i, int j) {
     int repI = uf.find(i);
     int repJ = uf.find(j);
@@ -278,7 +261,8 @@ public class PointsToMap {
   private void upgradeToFilter(PointsToSetVariable p, FilteredPointerKey.TypeFilter typeFilter) {
     if (p.getPointerKey() instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) p.getPointerKey();
-      LocalPointerKeyWithFilter f = new LocalPointerKeyWithFilter(lpk.getNode(), lpk.getValueNumber(), typeFilter);
+      LocalPointerKeyWithFilter f =
+          new LocalPointerKeyWithFilter(lpk.getNode(), lpk.getValueNumber(), typeFilter);
       p.setPointerKey(f);
       pointerKeys.replace(lpk, f);
     } else if (p.getPointerKey() instanceof ReturnValueKey) {
@@ -291,9 +275,7 @@ public class PointsToMap {
     }
   }
 
-  /**
-   * @return the unique integer that identifies this pointer key
-   */
+  /** @return the unique integer that identifies this pointer key */
   public int getIndex(PointerKey p) {
     return pointerKeys.getMappedIndex(p);
   }
@@ -301,5 +283,4 @@ public class PointsToMap {
   public int getRepresentative(int i) {
     return uf.find(i);
   }
-
 }

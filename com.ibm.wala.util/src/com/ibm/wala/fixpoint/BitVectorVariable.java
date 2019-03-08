@@ -15,17 +15,14 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 
-/**
- * A bit vector variable for dataflow analysis.
- */
+/** A bit vector variable for dataflow analysis. */
 public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   private MutableSharedBitVectorIntSet V;
 
-  public BitVectorVariable() {
-  }
+  public BitVectorVariable() {}
 
-  /* 
+  /*
    * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
    */
   @Override
@@ -48,9 +45,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
   }
 
-  /**
-   * Add all the bits in B to this bit vector
-   */
+  /** Add all the bits in B to this bit vector */
   public void addAll(BitVector B) {
     if (B == null) {
       throw new IllegalArgumentException("null B");
@@ -63,9 +58,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
   }
 
-  /**
-   * Add all the bits from other to this bit vector
-   */
+  /** Add all the bits from other to this bit vector */
   public void addAll(BitVectorVariable other) {
     if (other == null) {
       throw new IllegalArgumentException("null other");
@@ -79,9 +72,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
   }
 
-  /**
-   * Does this variable have the same value as another?
-   */
+  /** Does this variable have the same value as another? */
   public boolean sameValue(BitVectorVariable other) {
     if (other == null) {
       throw new IllegalArgumentException("null other");
@@ -107,6 +98,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   /**
    * Set a particular bit
+   *
    * @param b the bit to set
    */
   public void set(int b) {
@@ -118,9 +110,10 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
     V.add(b);
   }
-  
+
   /**
    * Is a particular bit set?
+   *
    * @param b the bit to check
    */
   public boolean get(int b) {
@@ -131,10 +124,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
   }
 
-  /**
-   * @return the value of this variable as a bit vector ... null if the 
-   * bit vector is empty.
-   */
+  /** @return the value of this variable as a bit vector ... null if the bit vector is empty. */
   public IntSet getValue() {
     return V;
   }
@@ -157,5 +147,4 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
       return V.size();
     }
   }
-
 }

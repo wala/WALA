@@ -15,8 +15,8 @@ import java.util.Set;
 
 /**
  * Logically, a set of {@link Class}.
- * 
- * TODO: why does this not extend {@link Set}? Is there a good reason anymore?
+ *
+ * <p>TODO: why does this not extend {@link Set}? Is there a good reason anymore?
  */
 public abstract class SetOfClasses implements Serializable {
 
@@ -25,5 +25,4 @@ public abstract class SetOfClasses implements Serializable {
   public abstract boolean contains(String klassName);
 
   public abstract void add(String klass);
-
 }

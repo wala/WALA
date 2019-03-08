@@ -12,32 +12,30 @@ package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.ssa.SSAInstruction;
 
-@SuppressWarnings("unused") 
+@SuppressWarnings("unused")
 public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
 
-  default void visitAstLexicalRead(AstLexicalRead instruction){ }
-    
-  default void visitAstLexicalWrite(AstLexicalWrite instruction){ }
-    
-  default void visitAstGlobalRead(AstGlobalRead instruction){ }
-    
-  default void visitAstGlobalWrite(AstGlobalWrite instruction){ }
+  default void visitAstLexicalRead(AstLexicalRead instruction) {}
 
-  default void visitAssert(AstAssertInstruction instruction){ }    
+  default void visitAstLexicalWrite(AstLexicalWrite instruction) {}
 
-  default void visitEachElementGet(EachElementGetInstruction inst){ }
+  default void visitAstGlobalRead(AstGlobalRead instruction) {}
 
-  default void visitEachElementHasNext(EachElementHasNextInstruction inst){ }
+  default void visitAstGlobalWrite(AstGlobalWrite instruction) {}
 
-  default void visitIsDefined(AstIsDefinedInstruction inst){ }
+  default void visitAssert(AstAssertInstruction instruction) {}
 
-  default void visitEcho(AstEchoInstruction inst){ }
-  
-  default void visitYield(AstYieldInstruction inst){ }
-  
-  default void visitPropertyRead(AstPropertyRead instruction){ }
-  
-  default void visitPropertyWrite(AstPropertyWrite instruction){ }
-  
+  default void visitEachElementGet(EachElementGetInstruction inst) {}
+
+  default void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
+
+  default void visitIsDefined(AstIsDefinedInstruction inst) {}
+
+  default void visitEcho(AstEchoInstruction inst) {}
+
+  default void visitYield(AstYieldInstruction inst) {}
+
+  default void visitPropertyRead(AstPropertyRead instruction) {}
+
+  default void visitPropertyWrite(AstPropertyWrite instruction) {}
 }
-

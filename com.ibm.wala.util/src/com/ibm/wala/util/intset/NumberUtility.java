@@ -11,20 +11,18 @@
 package com.ibm.wala.util.intset;
 
 public class NumberUtility {
-  
-  static boolean isByte(int number){
-    if (number>=Byte.MIN_VALUE && number<=Byte.MAX_VALUE){
-      return true;
-    }
-    return false;
-  }
-  
-  static boolean isShort(int number){
-    if (!isByte(number) && number>=Short.MIN_VALUE && number<=Short.MAX_VALUE){
-      return true;
-    }
-    return false;
-  }
-  
 
+  static boolean isByte(int number) {
+    if (number >= Byte.MIN_VALUE && number <= Byte.MAX_VALUE) {
+      return true;
+    }
+    return false;
+  }
+
+  static boolean isShort(int number) {
+    if (!isByte(number) && number >= Short.MIN_VALUE && number <= Short.MAX_VALUE) {
+      return true;
+    }
+    return false;
+  }
 }

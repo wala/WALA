@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,25 +48,23 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.types.TypeReference;
+import org.jf.dexlib2.Opcode;
 
 public class CheckCast extends Instruction {
 
-    public final TypeReference type;
-    public final int object;
+  public final TypeReference type;
+  public final int object;
 
-    public CheckCast(int pc, TypeReference type, int object, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.type = type;
-        this.object = object;
-    }
+  public CheckCast(int pc, TypeReference type, int object, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+    this.type = type;
+    this.object = object;
+  }
 
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitCheckCast(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitCheckCast(this);
+  }
 }

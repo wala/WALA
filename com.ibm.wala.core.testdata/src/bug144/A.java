@@ -9,9 +9,10 @@ class A {
   void m() {
     Set<Object> set = new HashSet<>();
     Stream<Object> stream = set.parallelStream();
-    stream.sorted(); 
+    stream.sorted();
     stream.collect(Collectors.toList()); // this call forces the error.
   }
+
   public static void main(String[] args) {
     new A().m();
   }

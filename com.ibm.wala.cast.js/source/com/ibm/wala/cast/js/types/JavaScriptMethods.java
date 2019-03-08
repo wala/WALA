@@ -19,22 +19,23 @@ import com.ibm.wala.util.strings.Atom;
 
 public class JavaScriptMethods extends AstMethodReference {
 
-  public final static String ctorAtomStr = "ctor";
-  public final static Atom ctorAtom = Atom.findOrCreateUnicodeAtom(ctorAtomStr);
-  public final static String ctorDescStr = "()LRoot;";
-  public final static Descriptor ctorDesc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, ctorDescStr);
-  public final static MethodReference ctorReference =
-    MethodReference.findOrCreate(JavaScriptTypes.CodeBody, ctorAtom, ctorDesc);
+  public static final String ctorAtomStr = "ctor";
+  public static final Atom ctorAtom = Atom.findOrCreateUnicodeAtom(ctorAtomStr);
+  public static final String ctorDescStr = "()LRoot;";
+  public static final Descriptor ctorDesc =
+      Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, ctorDescStr);
+  public static final MethodReference ctorReference =
+      MethodReference.findOrCreate(JavaScriptTypes.CodeBody, ctorAtom, ctorDesc);
 
   public static MethodReference makeCtorReference(TypeReference cls) {
     return MethodReference.findOrCreate(cls, ctorAtom, ctorDesc);
   }
 
-  public final static String dispatchAtomStr = "dispatch";
-  public final static Atom dispatchAtom = Atom.findOrCreateUnicodeAtom(dispatchAtomStr);
-  public final static String dispatchDescStr = "()LRoot;";
-  public final static Descriptor dispatchDesc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, dispatchDescStr);
-  public final static MethodReference dispatchReference =
-    MethodReference.findOrCreate(JavaScriptTypes.CodeBody, dispatchAtom, dispatchDesc);
-
+  public static final String dispatchAtomStr = "dispatch";
+  public static final Atom dispatchAtom = Atom.findOrCreateUnicodeAtom(dispatchAtomStr);
+  public static final String dispatchDescStr = "()LRoot;";
+  public static final Descriptor dispatchDesc =
+      Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, dispatchDescStr);
+  public static final MethodReference dispatchReference =
+      MethodReference.findOrCreate(JavaScriptTypes.CodeBody, dispatchAtom, dispatchDesc);
 }

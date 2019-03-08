@@ -14,9 +14,7 @@ import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
-/**
- * A {@link PointerKey} that represents an array length location
- */
+/** A {@link PointerKey} that represents an array length location */
 public class ArrayLengthKey extends AbstractFieldPointerKey {
 
   public ArrayLengthKey(InstanceKey i) {
@@ -29,7 +27,7 @@ public class ArrayLengthKey extends AbstractFieldPointerKey {
       return false;
     }
     if (getClass().equals(obj.getClass())) {
-      ArrayLengthKey other = (ArrayLengthKey)obj;
+      ArrayLengthKey other = (ArrayLengthKey) obj;
       return getInstanceKey().equals(other.getInstanceKey());
     } else {
       return false;
@@ -45,5 +43,4 @@ public class ArrayLengthKey extends AbstractFieldPointerKey {
   public String toString() {
     return "arraylength:" + getInstanceKey();
   }
-
 }

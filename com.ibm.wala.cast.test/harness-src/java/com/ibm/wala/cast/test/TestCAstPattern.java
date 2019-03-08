@@ -10,20 +10,18 @@
  */
 package com.ibm.wala.cast.test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TestCAstPattern extends WalaTestCase {
 
@@ -59,7 +57,6 @@ public class TestCAstPattern extends WalaTestCase {
         return super.makeNode(kind, children);
       }
     }
-
   }
 
   private static void test(CAstPattern p, CAstNode n, Map<String, Object> names) {
@@ -76,20 +73,23 @@ public class TestCAstPattern extends WalaTestCase {
         final String nm = entry.getKey();
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
-          Assert.assertTrue("for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm), entry.getValue().equals(
-              s.getSingle(nm)));
+          Assert.assertTrue(
+              "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm),
+              entry.getValue().equals(s.getSingle(nm)));
         } else {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
-          Assert.assertTrue("for name " + nm + ": expected " + entry.getValue() + " but got " + s.getMultiple(nm), entry.getValue()
-              .equals(s.getMultiple(nm)));
+          Assert.assertTrue(
+              "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getMultiple(nm),
+              entry.getValue().equals(s.getMultiple(nm)));
         }
       }
     }
   }
 
-  private final CAstPattern simpleNamePattern = CAstPattern.parse("<top>BINARY_EXPR(\"+\",<left>\"prefix\",\"suffix\")");
+  private final CAstPattern simpleNamePattern =
+      CAstPattern.parse("<top>BINARY_EXPR(\"+\",<left>\"prefix\",\"suffix\")");
 
   private final CAstNode simpleNameAst;
 
@@ -98,18 +98,27 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleNameAst = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("left"), Ast.makeConstant("prefix")), Ast
-        .makeConstant("suffix")));
+    simpleNameAst =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_SINGLE, Ast.makeConstant("left"), Ast.makeConstant("prefix")),
+                Ast.makeConstant("suffix")));
 
     simpleNameMap = Ast.testNameMap;
   }
 
-  @Test public void testSimpleName() {
+  @Test
+  public void testSimpleName() {
     test(simpleNamePattern, simpleNameAst, simpleNameMap);
   }
 
-  private final CAstPattern simpleStarNamePattern = CAstPattern.parse("<top>BINARY_EXPR(\"+\",*,<right>\"suffix\")");
+  private final CAstPattern simpleStarNamePattern =
+      CAstPattern.parse("<top>BINARY_EXPR(\"+\",*,<right>\"suffix\")");
 
   private final CAstNode simpleStarNameAst;
 
@@ -118,18 +127,27 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleStarNameAst = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeConstant("prefix"), Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("right"), Ast
-        .makeConstant("suffix"))));
+    simpleStarNameAst =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeConstant("prefix"),
+                Ast.makeNode(
+                    NAME_ASSERTION_SINGLE, Ast.makeConstant("right"), Ast.makeConstant("suffix"))));
 
     simpleStarNameMap = Ast.testNameMap;
   }
 
-  @Test public void testSimpleStarName() {
+  @Test
+  public void testSimpleStarName() {
     test(simpleStarNamePattern, simpleStarNameAst, simpleStarNameMap);
   }
 
-  private final CAstPattern simpleRepeatedPattern = CAstPattern.parse("<top>BINARY_EXPR(\"+\",<children>@(VAR(*))@)");
+  private final CAstPattern simpleRepeatedPattern =
+      CAstPattern.parse("<top>BINARY_EXPR(\"+\",<children>@(VAR(*))@)");
 
   private final CAstNode simpleRepeatedAstOne;
 
@@ -138,14 +156,23 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleRepeatedAstOne = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("suffix")))));
+    simpleRepeatedAstOne =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_SINGLE,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
 
     simpleRepeatedMapOne = Ast.testNameMap;
   }
 
-  @Test public void testSimpleRepeatedOne() {
+  @Test
+  public void testSimpleRepeatedOne() {
     test(simpleRepeatedPattern, simpleRepeatedAstOne, simpleRepeatedMapOne);
   }
 
@@ -156,15 +183,27 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleRepeatedAstTwo = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("prefix"))), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("suffix")))));
+    simpleRepeatedAstTwo =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix"))),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
 
     simpleRepeatedMapTwo = Ast.testNameMap;
   }
 
-  @Test public void testSimpleRepeatedTwo() {
+  @Test
+  public void testSimpleRepeatedTwo() {
     test(simpleRepeatedPattern, simpleRepeatedAstTwo, simpleRepeatedMapTwo);
   }
 
@@ -175,20 +214,36 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleRepeatedAstThree = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("prefix"))), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("middle"))), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("suffix")))));
+    simpleRepeatedAstThree =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix"))),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("middle"))),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
 
     simpleRepeatedMapThree = Ast.testNameMap;
   }
 
-  @Test public void testSimpleRepeatedThree() {
+  @Test
+  public void testSimpleRepeatedThree() {
     test(simpleRepeatedPattern, simpleRepeatedAstThree, simpleRepeatedMapThree);
   }
 
-  private final CAstPattern simpleDoubleStarPattern = CAstPattern.parse("<top>BINARY_EXPR(\"+\",<children>**)");
+  private final CAstPattern simpleDoubleStarPattern =
+      CAstPattern.parse("<top>BINARY_EXPR(\"+\",<children>**)");
 
   private final CAstNode simpleDoubleStarAst;
 
@@ -197,20 +252,33 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleDoubleStarAst = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("prefix"))), Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("children"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("suffix")))));
+    simpleDoubleStarAst =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix"))),
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI,
+                    Ast.makeConstant("children"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
 
     simpleDoubleStarMap = Ast.testNameMap;
   }
 
-  @Test public void testSimpleDoubleStar() {
+  @Test
+  public void testSimpleDoubleStar() {
     test(simpleDoubleStarPattern, simpleDoubleStarAst, simpleDoubleStarMap);
   }
 
-  private final CAstPattern simpleAlternativePattern = CAstPattern
-      .parse("<top>BINARY_EXPR(\"+\",<firstchild>|(VAR(\"suffix\")||VAR(\"prefix\"))|,*)");
+  private final CAstPattern simpleAlternativePattern =
+      CAstPattern.parse(
+          "<top>BINARY_EXPR(\"+\",<firstchild>|(VAR(\"suffix\")||VAR(\"prefix\"))|,*)");
 
   private final CAstNode simpleAlternativeAst;
 
@@ -219,19 +287,29 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleAlternativeAst = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("firstchild"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("prefix"))), Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix"))));
+    simpleAlternativeAst =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_SINGLE,
+                    Ast.makeConstant("firstchild"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix"))),
+                Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix"))));
 
     simpleAlternativeMap = Ast.testNameMap;
   }
 
-  @Test public void testSimpleAlternative() {
+  @Test
+  public void testSimpleAlternative() {
     test(simpleAlternativePattern, simpleAlternativeAst, simpleAlternativeMap);
   }
 
-  private final CAstPattern simpleOptionalPattern = CAstPattern
-      .parse("<top>BINARY_EXPR(\"+\",?(VAR(\"prefix\"))?,<child>VAR(\"suffix\"))");
+  private final CAstPattern simpleOptionalPattern =
+      CAstPattern.parse("<top>BINARY_EXPR(\"+\",?(VAR(\"prefix\"))?,<child>VAR(\"suffix\"))");
 
   private final CAstNode simpleOptionalAstWith;
 
@@ -240,14 +318,24 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleOptionalAstWith = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix")), Ast.makeNode(NAME_ASSERTION_SINGLE, Ast
-        .makeConstant("child"), Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
+    simpleOptionalAstWith =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix")),
+                Ast.makeNode(
+                    NAME_ASSERTION_SINGLE,
+                    Ast.makeConstant("child"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
 
     simpleOptionalMapWith = Ast.testNameMap;
   }
 
-  @Test public void testSimpleOptionalWith() {
+  @Test
+  public void testSimpleOptionalWith() {
     test(simpleOptionalPattern, simpleOptionalAstWith, simpleOptionalMapWith);
   }
 
@@ -258,18 +346,28 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    simpleOptionalAstNot = Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("top"), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(NAME_ASSERTION_SINGLE, Ast.makeConstant("child"), Ast.makeNode(CAstNode.VAR, Ast
-        .makeConstant("suffix")))));
+    simpleOptionalAstNot =
+        Ast.makeNode(
+            NAME_ASSERTION_SINGLE,
+            Ast.makeConstant("top"),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    NAME_ASSERTION_SINGLE,
+                    Ast.makeConstant("child"),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix")))));
 
     simpleOptionalMapNot = Ast.testNameMap;
   }
 
-  @Test public void testSimpleOptionalNot() {
+  @Test
+  public void testSimpleOptionalNot() {
     test(simpleOptionalPattern, simpleOptionalAstNot, simpleOptionalMapNot);
   }
 
-  private final String recursiveTreeStr = "|({leaf}|(<const>CONSTANT()||VAR(<vars>*))|||{node}BINARY_EXPR(\"+\",`leaf`,|(`leaf`||`node`)|))|";
+  private final String recursiveTreeStr =
+      "|({leaf}|(<const>CONSTANT()||VAR(<vars>*))|||{node}BINARY_EXPR(\"+\",`leaf`,|(`leaf`||`node`)|))|";
 
   private final CAstPattern recursiveTreePattern = CAstPattern.parse(recursiveTreeStr);
 
@@ -280,14 +378,24 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    recursiveTreeOneAst = Ast.makeNode(CAstNode.BINARY_EXPR, Ast.makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("x"))), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("y"))));
+    recursiveTreeOneAst =
+        Ast.makeNode(
+            CAstNode.BINARY_EXPR,
+            Ast.makeConstant("+"),
+            Ast.makeNode(
+                CAstNode.VAR,
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("x"))),
+            Ast.makeNode(
+                CAstNode.VAR,
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("y"))));
 
     recursiveTreeOneMap = Ast.testNameMap;
   }
 
-  @Test public void testRecursiveTreeOne() {
+  @Test
+  public void testRecursiveTreeOne() {
     test(recursiveTreePattern, recursiveTreeOneAst, recursiveTreeOneMap);
   }
 
@@ -298,16 +406,31 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    recursiveTreeTwoAst = Ast.makeNode(CAstNode.BINARY_EXPR, Ast.makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("x"))), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast
-        .makeConstant("y"))), Ast.makeNode(CAstNode.VAR, Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast
-        .makeConstant("z")))));
+    recursiveTreeTwoAst =
+        Ast.makeNode(
+            CAstNode.BINARY_EXPR,
+            Ast.makeConstant("+"),
+            Ast.makeNode(
+                CAstNode.VAR,
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("x"))),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    CAstNode.VAR,
+                    Ast.makeNode(
+                        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("y"))),
+                Ast.makeNode(
+                    CAstNode.VAR,
+                    Ast.makeNode(
+                        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("z")))));
 
     recursiveTreeTwoMap = Ast.testNameMap;
   }
 
-  @Test public void testRecursiveTreeTwo() {
+  @Test
+  public void testRecursiveTreeTwo() {
     test(recursiveTreePattern, recursiveTreeTwoAst, recursiveTreeTwoMap);
   }
 
@@ -318,52 +441,99 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    recursiveTreeFiveAst = Ast.makeNode(CAstNode.BINARY_EXPR, Ast.makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("u"))), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast
-        .makeConstant("v"))), Ast.makeNode(CAstNode.BINARY_EXPR, Ast.makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("w"))), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast
-        .makeConstant("x"))), Ast.makeNode(CAstNode.BINARY_EXPR, Ast.makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("y"))), Ast.makeNode(CAstNode.VAR, Ast.makeNode(
-        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("z"))))))));
+    recursiveTreeFiveAst =
+        Ast.makeNode(
+            CAstNode.BINARY_EXPR,
+            Ast.makeConstant("+"),
+            Ast.makeNode(
+                CAstNode.VAR,
+                Ast.makeNode(
+                    NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("u"))),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    CAstNode.VAR,
+                    Ast.makeNode(
+                        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("v"))),
+                Ast.makeNode(
+                    CAstNode.BINARY_EXPR,
+                    Ast.makeConstant("+"),
+                    Ast.makeNode(
+                        CAstNode.VAR,
+                        Ast.makeNode(
+                            NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("w"))),
+                    Ast.makeNode(
+                        CAstNode.BINARY_EXPR,
+                        Ast.makeConstant("+"),
+                        Ast.makeNode(
+                            CAstNode.VAR,
+                            Ast.makeNode(
+                                NAME_ASSERTION_MULTI,
+                                Ast.makeConstant("vars"),
+                                Ast.makeConstant("x"))),
+                        Ast.makeNode(
+                            CAstNode.BINARY_EXPR,
+                            Ast.makeConstant("+"),
+                            Ast.makeNode(
+                                CAstNode.VAR,
+                                Ast.makeNode(
+                                    NAME_ASSERTION_MULTI,
+                                    Ast.makeConstant("vars"),
+                                    Ast.makeConstant("y"))),
+                            Ast.makeNode(
+                                CAstNode.VAR,
+                                Ast.makeNode(
+                                    NAME_ASSERTION_MULTI,
+                                    Ast.makeConstant("vars"),
+                                    Ast.makeConstant("z"))))))));
 
     recursiveTreeFiveMap = Ast.testNameMap;
   }
 
-  @Test public void testRecursiveTreeFive() {
+  @Test
+  public void testRecursiveTreeFive() {
     test(recursiveTreePattern, recursiveTreeFiveAst, recursiveTreeFiveMap);
   }
 
-  private final CAstPattern buggyRecursiveTreePattern = CAstPattern
-      .parse("|({leaf}|(<const>CONSTANT()||VAR(<vars>*))|||{node}BINARY_EXPR(\"+\",`leaf`,`node`))|");
+  private final CAstPattern buggyRecursiveTreePattern =
+      CAstPattern.parse(
+          "|({leaf}|(<const>CONSTANT()||VAR(<vars>*))|||{node}BINARY_EXPR(\"+\",`leaf`,`node`))|");
 
-  @Test public void testBuggyRecursiveTreeOne() {
+  @Test
+  public void testBuggyRecursiveTreeOne() {
     test(buggyRecursiveTreePattern, recursiveTreeOneAst, null);
   }
 
-  @Test public void testBuggyRecursiveTreeTwo() {
+  @Test
+  public void testBuggyRecursiveTreeTwo() {
     test(buggyRecursiveTreePattern, recursiveTreeTwoAst, null);
   }
 
-  @Test public void testBuggyRecursiveTreeFive() {
+  @Test
+  public void testBuggyRecursiveTreeFive() {
     test(buggyRecursiveTreePattern, recursiveTreeFiveAst, null);
   }
 
-  private static final String extraTestsStr = "BINARY_EXPR(|(\"==\"||\"\\==\")|,|(CONSTANT()||VAR(CONSTANT()))|,|(CONSTANT()||VAR(CONSTANT()))|)";
+  private static final String extraTestsStr =
+      "BINARY_EXPR(|(\"==\"||\"\\==\")|,|(CONSTANT()||VAR(CONSTANT()))|,|(CONSTANT()||VAR(CONSTANT()))|)";
 
-  private final CAstPattern testedTreePattern = CAstPattern.parse("{top}|(" + recursiveTreeStr + "||BINARY_EXPR(\",\","
-      + extraTestsStr + ",`top`))|");
+  private final CAstPattern testedTreePattern =
+      CAstPattern.parse(
+          "{top}|(" + recursiveTreeStr + "||BINARY_EXPR(\",\"," + extraTestsStr + ",`top`))|");
 
-  @Test public void testTestedTreeOne() {
+  @Test
+  public void testTestedTreeOne() {
     test(testedTreePattern, recursiveTreeOneAst, recursiveTreeOneMap);
   }
 
-  @Test public void testTestedTreeTwo() {
+  @Test
+  public void testTestedTreeTwo() {
     test(testedTreePattern, recursiveTreeTwoAst, recursiveTreeTwoMap);
   }
 
-  @Test public void testTestedTreeFive() {
+  @Test
+  public void testTestedTreeFive() {
     test(testedTreePattern, recursiveTreeFiveAst, recursiveTreeFiveMap);
   }
 
@@ -374,17 +544,32 @@ public class TestCAstPattern extends WalaTestCase {
   {
     TestingCAstImpl Ast = new TestingCAstImpl();
 
-    testedTreeOneAst = Ast.makeNode(CAstNode.BINARY_EXPR, Ast.makeConstant(","), Ast.makeNode(CAstNode.BINARY_EXPR, Ast
-        .makeConstant("=="), Ast.makeNode(CAstNode.VAR, Ast.makeConstant("x")), Ast.makeConstant(7)), Ast.makeNode(
-        CAstNode.BINARY_EXPR, Ast.makeConstant("+"), Ast.makeNode(CAstNode.VAR, Ast.makeNode(NAME_ASSERTION_MULTI, Ast
-            .makeConstant("vars"), Ast.makeConstant("x"))), Ast.makeNode(CAstNode.VAR, Ast.makeNode(NAME_ASSERTION_MULTI, Ast
-            .makeConstant("vars"), Ast.makeConstant("y")))));
+    testedTreeOneAst =
+        Ast.makeNode(
+            CAstNode.BINARY_EXPR,
+            Ast.makeConstant(","),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("=="),
+                Ast.makeNode(CAstNode.VAR, Ast.makeConstant("x")),
+                Ast.makeConstant(7)),
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                Ast.makeConstant("+"),
+                Ast.makeNode(
+                    CAstNode.VAR,
+                    Ast.makeNode(
+                        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("x"))),
+                Ast.makeNode(
+                    CAstNode.VAR,
+                    Ast.makeNode(
+                        NAME_ASSERTION_MULTI, Ast.makeConstant("vars"), Ast.makeConstant("y")))));
 
     testedTreeOneMap = Ast.testNameMap;
   }
 
-  @Test public void testTestedTreeOneWithTest() {
+  @Test
+  public void testTestedTreeOneWithTest() {
     test(testedTreePattern, testedTreeOneAst, testedTreeOneMap);
   }
-
 }

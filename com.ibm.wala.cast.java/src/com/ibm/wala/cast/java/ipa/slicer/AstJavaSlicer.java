@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.cast.java.ipa.slicer;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -37,35 +31,40 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.traverse.DFS;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class AstJavaSlicer extends Slicer {
 
   /*
    * Use the passed-in SDG
    */
-  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Collection<Statement> ss) throws IllegalArgumentException,
-      CancelException {
+  public static Collection<Statement> computeBackwardSlice(SDG<?> sdg, Collection<Statement> ss)
+      throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, ss, true);
   }
 
-  /**
-   * @param ss a collection of statements of interest
-   */
-  public static Collection<Statement> computeSlice(SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
+  /** @param ss a collection of statements of interest */
+  public static Collection<Statement> computeSlice(
+      SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     return new AstJavaSlicer().slice(sdg, ss, backward);
   }
 
-  public static Set<Statement> gatherStatements(CallGraph CG, Collection<CGNode> partialRoots, Predicate<SSAInstruction> filter) {
+  public static Set<Statement> gatherStatements(
+      CallGraph CG, Collection<CGNode> partialRoots, Predicate<SSAInstruction> filter) {
     Set<Statement> result = new HashSet<>();
     for (CGNode n : DFS.getReachableNodes(CG, partialRoots)) {
       IR nir = n.getIR();
       if (nir != null) {
-	SSAInstruction insts[] = nir.getInstructions();
-	for (int i = 0; i < insts.length; i++) {
+        SSAInstruction insts[] = nir.getInstructions();
+        for (int i = 0; i < insts.length; i++) {
           if (filter.test(insts[i])) {
             result.add(new NormalStatement(n, i));
-	  }
-	}
+          }
+        }
       }
     }
 
@@ -81,18 +80,34 @@ public class AstJavaSlicer extends Slicer {
   }
 
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, o -> (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction));
+    return gatherStatements(
+        CG,
+        partialRoots,
+        o -> (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction));
   }
 
   public static Set<Statement> gatherReads(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, o -> (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction));
+    return gatherStatements(
+        CG,
+        partialRoots,
+        o -> (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction));
   }
 
-  public static Pair<Collection<Statement>, SDG<? extends InstanceKey>> computeAssertionSlice(CallGraph CG, PointerAnalysis<? extends InstanceKey> pa,
-      Collection<CGNode> partialRoots, boolean multiThreadedCode) throws IllegalArgumentException, CancelException {
+  public static Pair<Collection<Statement>, SDG<? extends InstanceKey>> computeAssertionSlice(
+      CallGraph CG,
+      PointerAnalysis<? extends InstanceKey> pa,
+      Collection<CGNode> partialRoots,
+      boolean multiThreadedCode)
+      throws IllegalArgumentException, CancelException {
     CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<>(partialRoots));
-    SDG<? extends InstanceKey> sdg = new SDG<>(pcg, pa, new AstJavaModRef<>(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
-    //System.err.println(("SDG:\n" + sdg));
+    SDG<? extends InstanceKey> sdg =
+        new SDG<>(
+            pcg,
+            pa,
+            new AstJavaModRef<>(),
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.FULL);
+    // System.err.println(("SDG:\n" + sdg));
     Set<Statement> stmts = gatherAssertions(CG, partialRoots);
     if (multiThreadedCode) {
       // Grab anything that has "side effects" under JMM
@@ -102,5 +117,4 @@ public class AstJavaSlicer extends Slicer {
     }
     return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, stmts), sdg);
   }
-
 }

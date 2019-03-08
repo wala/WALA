@@ -10,15 +10,13 @@
  */
 package com.ibm.wala.model;
 
-/**
- * A bogus class to support returning "unknown" objects
- */
+/** A bogus class to support returning "unknown" objects */
 public class SyntheticFactory {
 
   /**
    * This method should be hijacked.
+   *
    * @return some object by reflection
    */
   public static native Object getObject();
-
 }

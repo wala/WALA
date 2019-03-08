@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,10 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.flowgraph;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
@@ -82,20 +78,23 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
- * A graph representation of statements flowing pointer values, but <em>not</em> primitive values. Nodes are variables, and edges
- * are <em>against</em> value flow; assignment x = y yields edge from x to y with label {@link AssignLabel#noFilter()}
+ * A graph representation of statements flowing pointer values, but <em>not</em> primitive values.
+ * Nodes are variables, and edges are <em>against</em> value flow; assignment x = y yields edge from
+ * x to y with label {@link AssignLabel#noFilter()}
  */
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
-  public DemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, IClassHierarchy cha) {
+  public DemandPointerFlowGraph(
+      CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, IClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
   }
 
-  /**
-   * add nodes for parameters and return values
-   */
+  /** add nodes for parameters and return values */
   @Override
   protected void addNodesForParameters(CGNode node, IR ir) {
     for (int parameter : Iterator2Iterable.make(new PointerParamValueNumIterator(node))) {
@@ -118,12 +117,14 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
   /**
    * A visitor that generates graph nodes and edges for an IR.
-   * 
-   * strategy: when visiting a statement, for each use of that statement, add a graph edge from def to use.
-   * 
-   * TODO: special treatment for parameter passing, etc.
+   *
+   * <p>strategy: when visiting a statement, for each use of that statement, add a graph edge from
+   * def to use.
+   *
+   * <p>TODO: special treatment for parameter passing, etc.
    */
-  public static class StatementVisitor extends SSAInstruction.Visitor implements FlowStatementVisitor {
+  public static class StatementVisitor extends SSAInstruction.Visitor
+      implements FlowStatementVisitor {
 
     private final HeapModel heapModel;
 
@@ -133,32 +134,23 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
     private final CallGraph cg;
 
-    /**
-     * The node whose statements we are currently traversing
-     */
+    /** The node whose statements we are currently traversing */
     protected final CGNode node;
 
-    /**
-     * The governing IR
-     */
+    /** The governing IR */
     protected final IR ir;
 
-    /**
-     * The basic block currently being processed
-     */
+    /** The basic block currently being processed */
     private ISSABasicBlock basicBlock;
 
-    /**
-     * Governing symbol table
-     */
+    /** Governing symbol table */
     protected final SymbolTable symbolTable;
 
-    /**
-     * Def-use information
-     */
+    /** Def-use information */
     protected final DefUse du;
 
-    public StatementVisitor(HeapModel heapModel, IFlowGraph g, IClassHierarchy cha, CallGraph cg, CGNode node) {
+    public StatementVisitor(
+        HeapModel heapModel, IFlowGraph g, IClassHierarchy cha, CallGraph cg, CGNode node) {
       super();
       this.heapModel = heapModel;
       this.g = g;
@@ -213,8 +205,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       Set<IClass> types = HashSetFactory.make();
-      
-      for(TypeReference t : instruction.getDeclaredResultTypes()) {
+
+      for (TypeReference t : instruction.getDeclaredResultTypes()) {
         IClass cls = cha.lookupClass(t);
         if (cls == null) {
           return;
@@ -222,8 +214,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
           types.add(cls);
         }
       }
-      
-      FilteredPointerKey.MultipleClassesFilter filter = new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0]));
+
+      FilteredPointerKey.MultipleClassesFilter filter =
+          new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0]));
       PointerKey result = heapModel.getPointerKeyForLocal(node, instruction.getResult());
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
       g.addNode(result);
@@ -254,7 +247,11 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
-      visitGetInternal(instruction.getDef(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
+      visitGetInternal(
+          instruction.getDef(),
+          instruction.getRef(),
+          instruction.isStatic(),
+          instruction.getDeclaredField());
     }
 
     protected void visitGetInternal(int lval, int ref, boolean isStatic, FieldReference field) {
@@ -289,7 +286,11 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
-      visitPutInternal(instruction.getVal(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
+      visitPutInternal(
+          instruction.getVal(),
+          instruction.getRef(),
+          instruction.isStatic(),
+          instruction.getDeclaredField());
     }
 
     public void visitPutInternal(int rval, int ref, boolean isStatic, FieldReference field) {
@@ -315,7 +316,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         g.addNode(refKey);
         g.addEdge(refKey, use, PutFieldLabel.make(f));
       }
-
     }
 
     /*
@@ -391,7 +391,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
-      List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
+      List<ProgramCounter> peis =
+          SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
 
       Set<IClass> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
@@ -400,13 +401,17 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
     /**
      * Generate constraints which assign exception values into an exception pointer
-     * 
+     *
      * @param node governing node
      * @param peis list of PEI instructions
      * @param exceptionVar PointerKey representing a pointer to an exception value
      * @param catchClasses the types "caught" by the exceptionVar
      */
-    protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
+    protected void addExceptionDefConstraints(
+        IR ir,
+        CGNode node,
+        List<ProgramCounter> peis,
+        PointerKey exceptionVar,
         Set<IClass> catchClasses) {
       for (ProgramCounter peiLoc : peis) {
         SSAInstruction pei = ir.getPEI(peiLoc);
@@ -438,7 +443,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
                 // probably due to exclusions
                 continue;
               }
-              assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
+              assert ik instanceof ConcreteTypeKey
+                  : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               ConcreteTypeKey ck = (ConcreteTypeKey) ik;
               IClass klass = ck.getType();
               if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
@@ -454,7 +460,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitPi(com.ibm.domo.ssa.SSAPiInstruction)
      */
     @Override
@@ -471,9 +477,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       return basicBlock;
     }
 
-    /**
-     * The calling loop must call this in each iteration!
-     */
+    /** The calling loop must call this in each iteration! */
     @Override
     public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
@@ -483,7 +487,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       assert instruction.getType() == TypeReference.JavaLangClass;
-      InstanceKey iKey = heapModel.getInstanceKeyForMetadataObject(instruction.getToken(), (TypeReference) instruction.getToken());
+      InstanceKey iKey =
+          heapModel.getInstanceKeyForMetadataObject(
+              instruction.getToken(), (TypeReference) instruction.getToken());
 
       g.addNode(iKey);
       g.addNode(def);
@@ -498,19 +504,21 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     // pairs of (base pointer, stored val)
     public final Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs;
 
-    public NewMultiDimInfo(Collection<Pair<PointerKey, InstanceKey>> newInstrs,
+    public NewMultiDimInfo(
+        Collection<Pair<PointerKey, InstanceKey>> newInstrs,
         Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs) {
       this.newInstrs = newInstrs;
       this.arrStoreInstrs = arrStoreInstrs;
     }
-
   }
 
   /**
-   * collect information about the new instructions and putfield instructions used to model an allocation of a multi-dimensional
-   * array. excludes the new instruction itself (i.e., the allocation of the top-level multi-dim array).
+   * collect information about the new instructions and putfield instructions used to model an
+   * allocation of a multi-dimensional array. excludes the new instruction itself (i.e., the
+   * allocation of the top-level multi-dim array).
    */
-  public static NewMultiDimInfo getInfoForNewMultiDim(SSANewInstruction instruction, HeapModel heapModel, CGNode node) {
+  public static NewMultiDimInfo getInfoForNewMultiDim(
+      SSANewInstruction instruction, HeapModel heapModel, CGNode node) {
     if (heapModel == null) {
       throw new IllegalArgumentException("null heapModel");
     }
@@ -523,7 +531,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
     IClass klass = iKey.getConcreteType();
     // if not a multi-dim array allocation, return null
-    if (!klass.isArrayClass() || ((ArrayClass) klass).getElementClass() == null
+    if (!klass.isArrayClass()
+        || ((ArrayClass) klass).getElementClass() == null
         || !((ArrayClass) klass).getElementClass().isArrayClass()) {
       return null;
     }
@@ -536,7 +545,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       klass = ((ArrayClass) klass).getElementClass();
       // klass == null means it's a primitive
       if (klass != null && klass.isArrayClass()) {
-        InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
+        InstanceKey ik =
+            heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
         PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
         // if (DEBUG_MULTINEWARRAY) {
         // Trace.println("multinewarray constraint: ");

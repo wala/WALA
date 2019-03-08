@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * WALA JDT Frontend is Copyright (c) 2008 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,12 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.cast.java.client;
-
-import java.io.IOException;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IJavaProject;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
@@ -62,10 +56,15 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
+import java.io.IOException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
 
-public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaProject, InstanceKey> {
+public class JDTJavaSourceAnalysisEngine
+    extends EclipseProjectSourceAnalysisEngine<IJavaProject, InstanceKey> {
   private boolean dump;
-  
+
   public JDTJavaSourceAnalysisEngine(IJavaProject project) {
     super(project);
   }
@@ -77,20 +76,20 @@ public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEng
   public void setDump(boolean dump) {
     this.dump = dump;
   }
-  
+
   @Override
   protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
-	  return new JDTClassLoaderFactory(exclusions, dump);	
+    return new JDTClassLoaderFactory(exclusions, dump);
   }
 
   @Override
   protected AnalysisScope makeAnalysisScope() {
-	  return new JavaSourceAnalysisScope();
+    return new JavaSourceAnalysisScope();
   }
-  
+
   @Override
   protected ClassLoaderReference getSourceLoader() {
-	  return JavaSourceAnalysisScope.SOURCE;
+    return JavaSourceAnalysisScope.SOURCE;
   }
 
   @Override
@@ -99,16 +98,15 @@ public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEng
   }
 
   @Override
-  protected EclipseProjectPath<?, IJavaProject> createProjectPath(
-		  IJavaProject project) throws IOException, CoreException {
+  protected EclipseProjectPath<?, IJavaProject> createProjectPath(IJavaProject project)
+      throws IOException, CoreException {
     project.open(new NullProgressMonitor());
-	  return JavaEclipseProjectPath.make(project, AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);	
+    return JavaEclipseProjectPath.make(project, AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
   }
 
   @Override
-  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha,
-		  AnalysisOptions options, IAnalysisCacheView cache) {
-	    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
+      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
   }
-
 }

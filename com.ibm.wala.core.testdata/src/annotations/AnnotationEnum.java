@@ -11,6 +11,6 @@
 package annotations;
 
 public enum AnnotationEnum {
-
-  VAL1, VAL2
+  VAL1,
+  VAL2
 }

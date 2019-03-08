@@ -11,17 +11,14 @@
 
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.util.Arrays;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import java.util.Arrays;
 
-/**
- * An entrypoint whose parameter types are the declared types.
- */
+/** An entrypoint whose parameter types are the declared types. */
 public class DefaultEntrypoint extends Entrypoint {
   private final TypeReference[][] paramTypes;
 
@@ -58,7 +55,7 @@ public class DefaultEntrypoint extends Entrypoint {
   }
 
   protected TypeReference[] makeParameterTypes(IMethod method, int i) {
-    return new TypeReference[] { method.getParameterType(i) };
+    return new TypeReference[] {method.getParameterType(i)};
   }
 
   /*
@@ -95,15 +92,11 @@ public class DefaultEntrypoint extends Entrypoint {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
     final DefaultEntrypoint other = (DefaultEntrypoint) obj;
-    if (!Arrays.equals(paramTypes, other.paramTypes))
-      return false;
+    if (!Arrays.equals(paramTypes, other.paramTypes)) return false;
     return true;
   }
 }

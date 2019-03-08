@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,25 +48,22 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
+import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import org.jf.dexlib2.Opcode;
 
-import com.ibm.wala.dalvik.classLoader.DexIMethod;
+public class Monitor extends Instruction {
 
-public class Monitor extends Instruction{
+  public Monitor(int pc, boolean enter, int object, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+    this.enter = enter;
+    this.object = object;
+  }
 
-    public Monitor(int pc, boolean enter, int object, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.enter = enter;
-        this.object = object;
-    }
+  public final boolean enter;
+  public final int object;
 
-    public final boolean enter;
-    public final int object;
-
-    @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitMonitor(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitMonitor(this);
+  }
 }

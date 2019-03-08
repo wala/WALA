@@ -12,9 +12,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
 
-/**
- * An instruction which converts a value of one primitive type into another primitive type.
- */
+/** An instruction which converts a value of one primitive type into another primitive type. */
 public abstract class SSAConversionInstruction extends SSAInstruction {
   private final int result;
 
@@ -24,7 +22,8 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
 
   private final TypeReference toType;
 
-  protected SSAConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType) {
+  protected SSAConversionInstruction(
+      int iindex, int result, int val, TypeReference fromType, TypeReference toType) {
     super(iindex);
     this.result = result;
     this.val = val;
@@ -34,7 +33,11 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = conversion(" + toType.getName() + ") " + getValueString(symbolTable, val);
+    return getValueString(symbolTable, result)
+        + " = conversion("
+        + toType.getName()
+        + ") "
+        + getValueString(symbolTable, val);
   }
 
   @Override
@@ -42,9 +45,7 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
     v.visitConversion(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public boolean hasDef() {
     return true;

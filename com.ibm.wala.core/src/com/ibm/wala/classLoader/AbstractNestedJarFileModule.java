@@ -10,6 +10,11 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.util.warnings.Warning;
+import com.ibm.wala.util.warnings.Warnings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,24 +24,16 @@ import java.util.Iterator;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
-
-/**
- * A Jar file nested in a parent jar file
- */
+/** A Jar file nested in a parent jar file */
 public abstract class AbstractNestedJarFileModule implements Module {
 
   private static final boolean DEBUG = false;
 
   private final Module container;
-  
+
   /**
-   * For efficiency, we cache the byte[] holding each ZipEntry's contents; this will help avoid multiple unzipping TODO: use a soft
-   * reference?
+   * For efficiency, we cache the byte[] holding each ZipEntry's contents; this will help avoid
+   * multiple unzipping TODO: use a soft reference?
    */
   private HashMap<String, byte[]> cache = null;
 
@@ -45,7 +42,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
   protected AbstractNestedJarFileModule(Module container) {
     this.container = container;
   }
-  
+
   public InputStream getInputStream(String name) {
     populateCache();
     byte[] b = cache.get(name);
@@ -57,7 +54,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
       return;
     }
     cache = HashMapFactory.make();
-     try (final JarInputStream stream = new JarInputStream(getNestedContents(), false)) {
+    try (final JarInputStream stream = new JarInputStream(getNestedContents(), false)) {
       for (ZipEntry z = stream.getNextEntry(); z != null; z = stream.getNextEntry()) {
         final String name = z.getName();
         if (DEBUG) {
@@ -77,15 +74,16 @@ public abstract class AbstractNestedJarFileModule implements Module {
       }
     } catch (IOException e) {
       // just go with what we have
-      Warnings.add(new Warning() {
+      Warnings.add(
+          new Warning() {
 
-        @Override
-        public String getMsg() {
-          return "could not read contents of nested jar file " + AbstractNestedJarFileModule.this.toString();
-        }
-      });
+            @Override
+            public String getMsg() {
+              return "could not read contents of nested jar file "
+                  + AbstractNestedJarFileModule.this.toString();
+            }
+          });
     }
-
   }
 
   protected long getEntrySize(String name) {
@@ -103,6 +101,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
     final Iterator<String> it = cache.keySet().iterator();
     return new Iterator<ModuleEntry>() {
       String next = null;
+
       {
         advance();
       }
@@ -134,9 +133,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
     };
   }
 
-  /**
-   * @author sfink an entry in a nested jar file.
-   */
+  /** @author sfink an entry in a nested jar file. */
   private class Entry implements ModuleEntry {
 
     private final String name;
@@ -153,7 +150,6 @@ public abstract class AbstractNestedJarFileModule implements Module {
       return name;
     }
 
-    
     @Override
     public Module getContainer() {
       return container;
@@ -224,27 +220,19 @@ public abstract class AbstractNestedJarFileModule implements Module {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       Entry other = (Entry) obj;
-      if (!getOuterType().equals(other.getOuterType()))
-        return false;
+      if (!getOuterType().equals(other.getOuterType())) return false;
       if (name == null) {
-        if (other.name != null)
-          return false;
-      } else if (!name.equals(other.name))
-        return false;
+        if (other.name != null) return false;
+      } else if (!name.equals(other.name)) return false;
       return true;
     }
 
     private AbstractNestedJarFileModule getOuterType() {
       return AbstractNestedJarFileModule.this;
     }
-
   }
-
 }

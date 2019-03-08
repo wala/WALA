@@ -10,14 +10,14 @@
  */
 package com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.filter.CombinedExceptionFilter;
+import java.util.Collection;
+import java.util.LinkedList;
 
-public class CombinedInterproceduralExceptionFilter<Instruction> implements InterproceduralExceptionFilter<Instruction> {
+public class CombinedInterproceduralExceptionFilter<Instruction>
+    implements InterproceduralExceptionFilter<Instruction> {
   private final Collection<InterproceduralExceptionFilter<Instruction>> filter;
 
   public CombinedInterproceduralExceptionFilter() {
@@ -33,19 +33,17 @@ public class CombinedInterproceduralExceptionFilter<Instruction> implements Inte
     return this.filter.add(e);
   }
 
-  public boolean addAll(
-      Collection<? extends InterproceduralExceptionFilter<Instruction>> c) {
+  public boolean addAll(Collection<? extends InterproceduralExceptionFilter<Instruction>> c) {
     return this.filter.addAll(c);
-  }  
-  
+  }
+
   @Override
   public ExceptionFilter<Instruction> getFilter(CGNode node) {
     CombinedExceptionFilter<Instruction> result = new CombinedExceptionFilter<>();
-    for (InterproceduralExceptionFilter<Instruction> exceptionFilter:filter) {
+    for (InterproceduralExceptionFilter<Instruction> exceptionFilter : filter) {
       result.add(exceptionFilter.getFilter(node));
-    }    
-    
+    }
+
     return result;
   }
-
 }

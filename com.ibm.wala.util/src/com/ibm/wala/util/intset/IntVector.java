@@ -10,19 +10,13 @@
  */
 package com.ibm.wala.util.intset;
 
-
-/**
- * interface for array of integer
- */
-public interface IntVector{
+/** interface for array of integer */
+public interface IntVector {
 
   int get(int x);
 
   void set(int x, int value);
-  
-  /**
-   * @return max i s.t set(i) was called.
-   */
-  public abstract int getMaxIndex();
 
+  /** @return max i s.t set(i) was called. */
+  public abstract int getMaxIndex();
 }

@@ -19,5 +19,4 @@ public interface IGetInstruction extends IInstruction, IMemoryOperation {
   public String getFieldType();
 
   public boolean isStatic();
-  
 }

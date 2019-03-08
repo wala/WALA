@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,54 +48,49 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
+import org.jf.dexlib2.Opcode;
 
 public abstract class Return extends Instruction {
 
-    protected Return(int pc, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
+  protected Return(int pc, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+  }
+
+  public static class ReturnVoid extends Return {
+    public ReturnVoid(int pc, Opcode opcode, DexIMethod method) {
+      super(pc, opcode, method);
+    }
+  }
+
+  public static class ReturnSingle extends Return {
+    public ReturnSingle(int pc, int source, boolean primitive, Opcode opcode, DexIMethod method) {
+      super(pc, opcode, method);
+      this.source = source;
+      this.primitive = primitive;
     }
 
-    public static class ReturnVoid extends Return
-    {
-        public ReturnVoid(int pc, Opcode opcode, DexIMethod method) {
-            super(pc, opcode, method);
-        }
+    public boolean isPrimitive() {
+      return primitive;
     }
 
-    public static class ReturnSingle extends Return
-    {
-        public ReturnSingle(int pc, int source, boolean primitive, Opcode opcode, DexIMethod method) {
-            super(pc, opcode, method);
-            this.source = source;
-            this.primitive = primitive;
-        }
+    public final int source;
+    public boolean primitive;
+  }
 
-        public boolean isPrimitive() {
-            return primitive;
-        }
-        public final int source;
-        public boolean primitive;
+  public static class ReturnDouble extends Return {
+    public ReturnDouble(int pc, int source1, int source2, Opcode opcode, DexIMethod method) {
+      super(pc, opcode, method);
+      this.source1 = source1;
+      this.source2 = source2;
     }
 
-    public static class ReturnDouble extends Return
-    {
-        public ReturnDouble(int pc, int source1, int source2, Opcode opcode, DexIMethod method) {
-            super(pc, opcode, method);
-            this.source1 = source1;
-            this.source2 = source2;
-        }
-        public final int source1;
-        public final int source2;
+    public final int source1;
+    public final int source2;
+  }
 
-    }
-
-    @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitReturn(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitReturn(this);
+  }
 }

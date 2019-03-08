@@ -28,7 +28,7 @@ public abstract class CAstSymbolImplBase implements CAstSymbol {
     this(name, type, isFinal, false);
   }
 
-  public CAstSymbolImplBase(String name,  CAstType type, boolean isFinal, boolean isCaseSensitive) {
+  public CAstSymbolImplBase(String name, CAstType type, boolean isFinal, boolean isCaseSensitive) {
     this(name, type, isFinal, isCaseSensitive, null);
   }
 
@@ -40,13 +40,18 @@ public abstract class CAstSymbolImplBase implements CAstSymbol {
     this(name, type, isFinal, false, defaultInitValue);
   }
 
-  public CAstSymbolImplBase(String name, CAstType type, boolean isFinal, boolean isCaseSensitive, Object defaultInitValue) {
-    this._name= name;
+  public CAstSymbolImplBase(
+      String name,
+      CAstType type,
+      boolean isFinal,
+      boolean isCaseSensitive,
+      Object defaultInitValue) {
+    this._name = name;
     this.type = type;
-    this._isFinal= isFinal;
-    this._isCaseInsensitive= isCaseSensitive;
-    this._defaultInitValue= defaultInitValue;
-    
+    this._isFinal = isFinal;
+    this._isCaseInsensitive = isCaseSensitive;
+    this._defaultInitValue = defaultInitValue;
+
     assert name != null;
     assert type != null;
   }
@@ -55,7 +60,7 @@ public abstract class CAstSymbolImplBase implements CAstSymbol {
   public CAstType type() {
     return type;
   }
-  
+
   @Override
   public String name() {
     return _name;

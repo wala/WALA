@@ -16,8 +16,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * An {@link SSAAddressOfInstruction} represents storing the address of some "source" level entity (@see {@link Name}) into an SSA
- * value number.
+ * An {@link SSAAddressOfInstruction} represents storing the address of some "source" level entity
+ * (@see {@link Name}) into an SSA value number.
  */
 public class SSAAddressOfInstruction extends SSAInstruction {
 
@@ -28,16 +28,18 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   /**
    * The SSA value number that represents the entity whose address is being taken.
-   * 
-   * If we're taking the address of a local variable, this is the value number representing that local variable immediately before
-   * this instruction.
-   * 
-   * If we're taking the address of an array element or a field of an object, then this is the base pointer.
+   *
+   * <p>If we're taking the address of a local variable, this is the value number representing that
+   * local variable immediately before this instruction.
+   *
+   * <p>If we're taking the address of an array element or a field of an object, then this is the
+   * base pointer.
    */
   private final int addressVal;
 
   /**
-   * If we're taking the address of an array element, this is the array index. Otherwise, this is -1.
+   * If we're taking the address of an array element, this is the array index. Otherwise, this is
+   * -1.
    */
   private final int indexVal;
 
@@ -47,10 +49,8 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   private final FieldReference field;
 
   private final TypeReference pointeeType;
-  
-  /**
-   * Use this constructor when taking the address of a local variable.
-   */
+
+  /** Use this constructor when taking the address of a local variable. */
   public SSAAddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType) {
     super(iindex);
     if (local <= 0) {
@@ -63,10 +63,9 @@ public class SSAAddressOfInstruction extends SSAInstruction {
     this.pointeeType = pointeeType;
   }
 
-  /**
-   * Use this constructor when taking the address of an array element.
-   */
-  public SSAAddressOfInstruction(int iindex, int lval, int basePointer, int indexVal, TypeReference pointeeType) {
+  /** Use this constructor when taking the address of an array element. */
+  public SSAAddressOfInstruction(
+      int iindex, int lval, int basePointer, int indexVal, TypeReference pointeeType) {
     super(iindex);
     this.lval = lval;
     this.addressVal = basePointer;
@@ -75,10 +74,9 @@ public class SSAAddressOfInstruction extends SSAInstruction {
     this.pointeeType = pointeeType;
   }
 
-  /**
-   * Use this constructor when taking the address of a field in an object.
-   */
-  public SSAAddressOfInstruction(int iindex, int lval, int basePointer, FieldReference field, TypeReference pointeeType) {
+  /** Use this constructor when taking the address of a field in an object. */
+  public SSAAddressOfInstruction(
+      int iindex, int lval, int basePointer, FieldReference field, TypeReference pointeeType) {
     super(iindex);
     this.lval = lval;
     this.addressVal = basePointer;
@@ -90,7 +88,7 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   public TypeReference getType() {
     return pointeeType;
   }
-  
+
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     Assertions.UNREACHABLE("not yet implemented.  to be nuked");
@@ -110,11 +108,14 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, lval)
-        + " (" + pointeeType.getName() + ") " 
+        + " ("
+        + pointeeType.getName()
+        + ") "
         + " = &"
         + getValueString(symbolTable, addressVal)
-        + ((indexVal != -1) ? '[' + getValueString(symbolTable, indexVal) + ']' : (field != null) ? '.'
-            + field.getName().toString() : "");
+        + ((indexVal != -1)
+            ? '[' + getValueString(symbolTable, indexVal) + ']'
+            : (field != null) ? '.' + field.getName().toString() : "");
   }
 
   @Override

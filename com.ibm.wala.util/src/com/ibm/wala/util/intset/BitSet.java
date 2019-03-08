@@ -10,28 +10,21 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.debug.Assertions;
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
-
-/**
- * A bit set is a set of elements, each of which corresponds to a unique integer from [0,MAX].
- */
+/** A bit set is a set of elements, each of which corresponds to a unique integer from [0,MAX]. */
 public final class BitSet<T> {
 
-  /**
-   * The backing bit vector that determines set membership.
-   */
-  final private BitVector vector;
+  /** The backing bit vector that determines set membership. */
+  private final BitVector vector;
 
-  /**
-   * The bijection between integer to object.
-   */
+  /** The bijection between integer to object. */
   private OrdinalSetMapping<T> map;
 
   /**
    * Constructor: create an empty set corresponding to a given mapping
-   * 
+   *
    * @throws IllegalArgumentException if map is null
    */
   public BitSet(OrdinalSetMapping<T> map) {
@@ -57,7 +50,7 @@ public final class BitSet<T> {
 
   /**
    * Add all elements in bitset B to this bit set
-   * 
+   *
    * @throws IllegalArgumentException if B is null
    */
   public void addAll(BitSet<?> B) {
@@ -67,16 +60,12 @@ public final class BitSet<T> {
     vector.or(B.vector);
   }
 
-  /**
-   * Add all bits in BitVector B to this bit set
-   */
+  /** Add all bits in BitVector B to this bit set */
   public void addAll(BitVector B) {
     vector.or(B);
   }
 
-  /**
-   * Add an object to this bit set.
-   */
+  /** Add an object to this bit set. */
   public void add(T o) {
     int n = map.getMappedIndex(o);
     vector.set(n);
@@ -84,7 +73,7 @@ public final class BitSet<T> {
 
   /**
    * Remove an object from this bit set.
-   * 
+   *
    * @param o the object to remove
    */
   public void clear(T o) {
@@ -95,9 +84,7 @@ public final class BitSet<T> {
     vector.clear(n);
   }
 
-  /**
-   * Does this set contain a certain object?
-   */
+  /** Does this set contain a certain object? */
   public boolean contains(T o) {
     int n = map.getMappedIndex(o);
     if (n == -1) {
@@ -106,18 +93,16 @@ public final class BitSet<T> {
     return vector.get(n);
   }
 
-  /**
-   * @return a String representation
-   */
+  /** @return a String representation */
   @Override
   public String toString() {
     return vector.toString();
   }
 
   /**
-   * Method copy. Copies the bits in the bit vector, but only assigns the object map. No need to create a new object/bit bijection
-   * object.
-   * 
+   * Method copy. Copies the bits in the bit vector, but only assigns the object map. No need to
+   * create a new object/bit bijection object.
+   *
    * @throws IllegalArgumentException if other is null
    */
   public void copyBits(BitSet<T> other) {
@@ -130,7 +115,7 @@ public final class BitSet<T> {
 
   /**
    * Does this object hold the same bits as other?
-   * 
+   *
    * @throws IllegalArgumentException if other is null
    */
   public boolean sameBits(BitSet<?> other) {
@@ -140,12 +125,11 @@ public final class BitSet<T> {
     return vector.equals(other.vector);
   }
 
-  /**
-   * Not very efficient.
-   */
+  /** Not very efficient. */
   public Iterator<T> iterator() {
     return new Iterator<T>() {
       private int nextCounter = -1;
+
       {
         for (int i = 0; i < vector.length(); i++) {
           if (vector.get(i)) {
@@ -189,23 +173,19 @@ public final class BitSet<T> {
     return vector.length();
   }
 
-  /**
-   * Set all the bits to 0.
-   */
+  /** Set all the bits to 0. */
   public void clearAll() {
     vector.clearAll();
   }
 
-  /**
-   * Set all the bits to 1.
-   */
+  /** Set all the bits to 1. */
   public void setAll() {
     vector.setAll();
   }
 
   /**
    * Perform intersection of two bitsets
-   * 
+   *
    * @param other the other bitset in the operation
    * @throws IllegalArgumentException if other is null
    */
@@ -218,7 +198,7 @@ public final class BitSet<T> {
 
   /**
    * Perform the difference of two bit sets
-   * 
+   *
    * @param other the other bitset in the operation
    * @throws IllegalArgumentException if other is null
    */
@@ -229,10 +209,8 @@ public final class BitSet<T> {
     vector.and(BitVector.not(other.vector));
   }
 
-  /**
-   */
+  /** */
   public boolean isEmpty() {
     return size() == 0;
   }
-
 }

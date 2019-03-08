@@ -20,18 +20,15 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
 
-
-/**
- * Abstract base class for a process launcher
- */
+/** Abstract base class for a process launcher */
 public abstract class Launcher {
-  
+
   // use a fairly big buffer size to avoid performance problems with the default
-  private final static int BUFFER_SIZE = 32 * 1024;
+  private static final int BUFFER_SIZE = 32 * 1024;
 
   protected File workingDir = null;
 
-  protected Map<String,String> env = null;
+  protected Map<String, String> env = null;
 
   protected byte[] stdOut = null;
 
@@ -39,14 +36,10 @@ public abstract class Launcher {
 
   private byte[] input = null;
 
-  /**
-   * capture the contents of stdout?
-   */
+  /** capture the contents of stdout? */
   private final boolean captureOutput;
 
-  /**
-   * capture the contents of stderr?
-   */
+  /** capture the contents of stderr? */
   private final boolean captureErr;
 
   private final Logger logger;
@@ -73,11 +66,11 @@ public abstract class Launcher {
     workingDir = newWorkingDir;
   }
 
-  public Map<String,String> getEnv() {
+  public Map<String, String> getEnv() {
     return env;
   }
 
-  public void setEnv(Map<String,String> newEnv) {
+  public void setEnv(Map<String, String> newEnv) {
     env = newEnv;
   }
 
@@ -88,7 +81,7 @@ public abstract class Launcher {
 
   /**
    * Spawn a process to execute the given command
-   * 
+   *
    * @return an object representing the process
    */
   protected Process spawnProcess(String cmd) throws IllegalArgumentException, IOException {
@@ -102,10 +95,10 @@ public abstract class Launcher {
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
     return p;
   }
-  
+
   /**
    * Spawn a process to execute the given command
-   * 
+   *
    * @return an object representing the process
    */
   protected Process spawnProcess(String[] cmd) throws IllegalArgumentException, IOException {
@@ -120,7 +113,7 @@ public abstract class Launcher {
     return p;
   }
 
-  private static String[] buildEnv(Map<String,String> ev) {
+  private static String[] buildEnv(Map<String, String> ev) {
     String[] result = new String[ev.size()];
     int i = 0;
     for (Map.Entry<String, String> e : ev.entrySet()) {
@@ -131,16 +124,18 @@ public abstract class Launcher {
 
   protected Thread drainStdOut(Process p) {
     final BufferedInputStream out = new BufferedInputStream(p.getInputStream(), BUFFER_SIZE);
-    Thread result = new Drainer(p) {
-      @Override
-      void drain() throws IOException {
-        drainAndPrint(out, System.out);
-      }
-      @Override
-      void blockingDrain() throws IOException {
-        blockingDrainAndPrint(out, System.out);
-      }
-    };
+    Thread result =
+        new Drainer(p) {
+          @Override
+          void drain() throws IOException {
+            drainAndPrint(out, System.out);
+          }
+
+          @Override
+          void blockingDrain() throws IOException {
+            blockingDrainAndPrint(out, System.out);
+          }
+        };
     result.start();
     return result;
   }
@@ -148,17 +143,18 @@ public abstract class Launcher {
   protected Drainer captureStdOut(Process p) {
     final BufferedInputStream out = new BufferedInputStream(p.getInputStream(), BUFFER_SIZE);
     final ByteArrayOutputStream b = new ByteArrayOutputStream(BUFFER_SIZE);
-    Drainer result = new Drainer(p) {
-      @Override
-      void drain() throws IOException {
-        drainAndCatch(out, b);
-      }
+    Drainer result =
+        new Drainer(p) {
+          @Override
+          void drain() throws IOException {
+            drainAndCatch(out, b);
+          }
 
-      @Override
-      void blockingDrain() throws IOException {
-        blockingDrainAndCatch(out, b);
-      }
-    };
+          @Override
+          void blockingDrain() throws IOException {
+            blockingDrainAndCatch(out, b);
+          }
+        };
     result.setCapture(b);
     result.start();
     return result;
@@ -166,16 +162,18 @@ public abstract class Launcher {
 
   protected Thread drainStdErr(Process p) {
     final BufferedInputStream err = new BufferedInputStream(p.getErrorStream(), BUFFER_SIZE);
-    Thread result = new Drainer(p) {
-      @Override
-      void drain() throws IOException {
-        drainAndPrint(err, System.err);
-      }
-      @Override
-      void blockingDrain() throws IOException {
-        blockingDrainAndPrint(err, System.err);
-      }
-    };
+    Thread result =
+        new Drainer(p) {
+          @Override
+          void drain() throws IOException {
+            drainAndPrint(err, System.err);
+          }
+
+          @Override
+          void blockingDrain() throws IOException {
+            blockingDrainAndPrint(err, System.err);
+          }
+        };
     result.start();
     return result;
   }
@@ -183,24 +181,24 @@ public abstract class Launcher {
   protected Drainer captureStdErr(Process p) {
     final BufferedInputStream out = new BufferedInputStream(p.getErrorStream(), BUFFER_SIZE);
     final ByteArrayOutputStream b = new ByteArrayOutputStream(BUFFER_SIZE);
-    Drainer result = new Drainer(p) {
-      @Override
-      void drain() throws IOException {
-        drainAndCatch(out, b);
-      }
-      @Override
-      void blockingDrain() throws IOException {
-        blockingDrainAndCatch(out, b);
-      }
-    };
+    Drainer result =
+        new Drainer(p) {
+          @Override
+          void drain() throws IOException {
+            drainAndCatch(out, b);
+          }
+
+          @Override
+          void blockingDrain() throws IOException {
+            blockingDrainAndCatch(out, b);
+          }
+        };
     result.setCapture(b);
     result.start();
     return result;
   }
 
-  /**
-   * A thread that runs in a loop, performing the drain() action until a process terminates
-   */
+  /** A thread that runs in a loop, performing the drain() action until a process terminates */
   protected abstract class Drainer extends Thread {
 
     // how many ms to sleep before waking up to check the streams?
@@ -210,14 +208,10 @@ public abstract class Launcher {
 
     private ByteArrayOutputStream capture;
 
-    /**
-     * Drain data from the stream, but don't block.
-     */
+    /** Drain data from the stream, but don't block. */
     abstract void drain() throws IOException;
-    
-    /**
-     * Drain data from the stream until it is finished.  Block if necessary.
-     */
+
+    /** Drain data from the stream until it is finished. Block if necessary. */
     abstract void blockingDrain() throws IOException;
 
     Drainer(Process p) {
@@ -263,9 +257,7 @@ public abstract class Launcher {
     }
   }
 
-  /**
-   * Drain some data from the input stream, and print said data to p.  Do not block.
-   */
+  /** Drain some data from the input stream, and print said data to p. Do not block. */
   private static void drainAndPrint(BufferedInputStream s, PrintStream p) {
     try {
       while (s.available() > 0) {
@@ -278,10 +270,8 @@ public abstract class Launcher {
       // so, just exit
     }
   }
-  
-  /**
-   * Drain all data from the input stream, and print said data to p.  Block if necessary.
-   */
+
+  /** Drain all data from the input stream, and print said data to p. Block if necessary. */
   private static void blockingDrainAndPrint(BufferedInputStream s, PrintStream p) {
     ByteArrayOutputStream b = new ByteArrayOutputStream();
     try {
@@ -295,14 +285,12 @@ public abstract class Launcher {
       // assume the stream has been closed (e.g. the process died)
       // so, just print the data and then leave
     }
-    
+
     // print the data.
     p.print(b.toString());
   }
 
-  /**
-   * Drain some data from the input stream, and append said data to b.  Do not block.
-   */
+  /** Drain some data from the input stream, and append said data to b. Do not block. */
   private static void drainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) {
     try {
       while (s.available() > 0) {
@@ -315,10 +303,8 @@ public abstract class Launcher {
       // so, just exit
     }
   }
-  
-  /**
-   * Drain all data from the input stream, and append said data to p.  Block if necessary.
-   */
+
+  /** Drain all data from the input stream, and append said data to p. Block if necessary. */
   private static void blockingDrainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) {
     try {
       int next = s.read();
@@ -360,9 +346,7 @@ public abstract class Launcher {
     return input;
   }
 
-  /**
-   * Set input which will be fed to the launched process's stdin
-   */
+  /** Set input which will be fed to the launched process's stdin */
   public void setInput(byte[] input) {
     this.input = input;
   }

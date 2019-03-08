@@ -16,10 +16,11 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 
 /**
- * This method annotation checks to see whether "this" is assigned to by the method. The result is cached in an annotation.
+ * This method annotation checks to see whether "this" is assigned to by the method. The result is
+ * cached in an annotation.
  */
 public class ThisAssignmentChecker implements MethodData.Results {
-  private final static String key = ThisAssignmentChecker.class.getName();
+  private static final String key = ThisAssignmentChecker.class.getName();
 
   private boolean assignmentToThis;
 
@@ -44,19 +45,18 @@ public class ThisAssignmentChecker implements MethodData.Results {
     }
   }
 
-  /**
-   * This should not be called by any client.
-   */
+  /** This should not be called by any client. */
   @Override
-  public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
+  public boolean notifyUpdate(
+      MethodData info,
+      IInstruction[] newInstructions,
+      ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     // just throw this away and we'll recalculate from scratch if necessary
     return true;
   }
 
-  /**
-   * @return true iff 'this' is assigned to by the method
-   */
+  /** @return true iff 'this' is assigned to by the method */
   public static boolean isThisAssigned(MethodData info) throws IllegalArgumentException {
     if (info == null) {
       throw new IllegalArgumentException();

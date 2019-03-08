@@ -13,25 +13,22 @@ package com.ibm.wala.util.intset;
 import java.io.Serializable;
 import java.util.Arrays;
 
-
 /**
- * an int vector implementation designed for low occupancy. Note that get() from
- * this vector is a binary search.
- * 
- * This should only be used for small sets ... insertion and deletion are linear
- * in size of set.
+ * an int vector implementation designed for low occupancy. Note that get() from this vector is a
+ * binary search.
+ *
+ * <p>This should only be used for small sets ... insertion and deletion are linear in size of set.
  */
 public class SparseIntVector implements IntVector, Serializable {
 
   private static final long serialVersionUID = -2428993854689991888L;
-  private final static int INITIAL_SIZE = 5;
+  private static final int INITIAL_SIZE = 5;
   private final double EXPANSION = 1.5;
   int maxIndex = -1;
 
-  /**
-   * if indices[i] = x, then data[i] == get(x)
-   */
-  final private MutableSparseIntSet indices = MutableSparseIntSet.makeEmpty();
+  /** if indices[i] = x, then data[i] == get(x) */
+  private final MutableSparseIntSet indices = MutableSparseIntSet.makeEmpty();
+
   private int[] data = new int[INITIAL_SIZE];
 
   private final int defaultValue;
@@ -54,13 +51,13 @@ public class SparseIntVector implements IntVector, Serializable {
   }
 
   /*
-   * TODO: this can be optimized 
-   * 
+   * TODO: this can be optimized
+   *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
   public void set(int x, int value) {
-    maxIndex = Math.max(maxIndex,x);
+    maxIndex = Math.max(maxIndex, x);
     int index = indices.getIndex(x);
     if (index == -1) {
       indices.add(x);
@@ -74,7 +71,7 @@ public class SparseIntVector implements IntVector, Serializable {
   }
 
   private void ensureCapacity(int capacity) {
-    if (data.length  < capacity + 1) {
+    if (data.length < capacity + 1) {
       data = Arrays.copyOf(data, 1 + (int) (capacity * EXPANSION));
     }
   }
@@ -87,8 +84,7 @@ public class SparseIntVector implements IntVector, Serializable {
     System.err.println(("data.length " + data.length));
     System.err.println(("indices.size() " + indices.size()));
   }
-  
-  
+
   @Override
   public int getMaxIndex() {
     return maxIndex;

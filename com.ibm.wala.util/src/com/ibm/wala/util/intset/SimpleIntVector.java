@@ -13,25 +13,23 @@ package com.ibm.wala.util.intset;
 import java.io.Serializable;
 import java.util.Arrays;
 
-/**
- * simple implementation of IntVector
- */
+/** simple implementation of IntVector */
 public class SimpleIntVector implements IntVector, Serializable {
-  
+
   private static final long serialVersionUID = -7909547846468543777L;
 
-  private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
+  private static final int MAX_SIZE = Integer.MAX_VALUE / 4;
 
-  private final static float GROWTH_FACTOR = 1.5f;
+  private static final float GROWTH_FACTOR = 1.5f;
 
-  private final static int INITIAL_SIZE = 1;
-  
+  private static final int INITIAL_SIZE = 1;
+
   int maxIndex = -1;
 
   int[] store;
 
   final int defaultValue;
-  
+
   public SimpleIntVector(int defaultValue) {
     this.defaultValue = defaultValue;
     store = new int[getInitialSize()];
@@ -81,7 +79,7 @@ public class SimpleIntVector implements IntVector, Serializable {
     if (x > MAX_SIZE) {
       throw new IllegalArgumentException("x is too big: " + x);
     }
-    maxIndex = Math.max(maxIndex,x);
+    maxIndex = Math.max(maxIndex, x);
     if (value == defaultValue) {
       if (x >= store.length) {
         return;
@@ -94,9 +92,7 @@ public class SimpleIntVector implements IntVector, Serializable {
     }
   }
 
-  /**
-   * make sure we can store to a particular index
-   */
+  /** make sure we can store to a particular index */
   private void ensureCapacity(int capacity) {
     if (capacity >= store.length) {
       int[] old = store;
@@ -113,9 +109,7 @@ public class SimpleIntVector implements IntVector, Serializable {
     System.err.println(("occupancy:  " + computeOccupancy()));
   }
 
-  /**
-   * @return the percentage of entries in delegateStore that are non-null
-   */
+  /** @return the percentage of entries in delegateStore that are non-null */
   private double computeOccupancy() {
     int count1 = 0;
     for (int element : store) {
@@ -126,10 +120,9 @@ public class SimpleIntVector implements IntVector, Serializable {
     int count = count1;
     return (double) count / (double) store.length;
   }
-  
+
   @Override
   public int getMaxIndex() {
     return maxIndex;
   }
-
 }

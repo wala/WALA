@@ -15,18 +15,16 @@ import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 public interface JSInstructionVisitor extends AstInstructionVisitor {
 
   public void visitJavaScriptInvoke(JavaScriptInvoke instruction);
-    
-  public void visitTypeOf(JavaScriptTypeOfInstruction instruction);
-      
-  public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction);
-  
-  public void visitWithRegion(JavaScriptWithRegion instruction);
-  
-  public void visitCheckRef(JavaScriptCheckReference instruction);
-  
-  public void visitSetPrototype(SetPrototype instruction);
-  
-  public void visitPrototypeLookup(PrototypeLookup instruction);
-  
-}
 
+  public void visitTypeOf(JavaScriptTypeOfInstruction instruction);
+
+  public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction);
+
+  public void visitWithRegion(JavaScriptWithRegion instruction);
+
+  public void visitCheckRef(JavaScriptCheckReference instruction);
+
+  public void visitSetPrototype(SetPrototype instruction);
+
+  public void visitPrototypeLookup(PrototypeLookup instruction);
+}

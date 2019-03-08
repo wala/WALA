@@ -11,8 +11,6 @@
 
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -23,11 +21,12 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Iterator;
 
-/**
- * Default implementation of MethodContextInterpreter for context-insensitive analysis
- */
-public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiveCHAContextInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
+/** Default implementation of MethodContextInterpreter for context-insensitive analysis */
+public abstract class ContextInsensitiveRTAInterpreter
+    extends ContextInsensitiveCHAContextInterpreter
+    implements RTAContextInterpreter, SSAContextInterpreter {
 
   private final IAnalysisCacheView analysisCache;
 

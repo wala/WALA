@@ -8,5 +8,4 @@ public class TestPointerAnalysisRhino extends TestPointerAnalyses {
   public TestPointerAnalysisRhino() {
     super(new CAstRhinoTranslatorFactory());
   }
-
 }

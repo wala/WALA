@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents instanceof instructions.
- */
+/** This class represents instanceof instructions. */
 public final class InstanceofInstruction extends Instruction implements IInstanceofInstruction {
-  final private String type;
+  private final String type;
 
   protected InstanceofInstruction(String type) {
     super(OP_instanceof);

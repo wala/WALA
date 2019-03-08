@@ -10,34 +10,29 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.HashMap;
-
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.util.HashMap;
 
 /**
- * Pseudo-classloader for all array classes; all other IClassLoader
- * implementations should delegate to this one for array classes only.
+ * Pseudo-classloader for all array classes; all other IClassLoader implementations should delegate
+ * to this one for array classes only.
  */
 public class ArrayClassLoader {
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
+
+  /** map: TypeReference -&gt; ArrayClass */
+  private final HashMap<TypeReference, ArrayClass> arrayClasses = HashMapFactory.make();
 
   /**
-   * map: TypeReference -&gt; ArrayClass
+   * @param className name of the array class
+   * @param delegator class loader to look up element type with
    */
-  final private HashMap<TypeReference, ArrayClass> arrayClasses = HashMapFactory.make();
-
-
-  /**
-   * @param className
-   *          name of the array class
-   * @param delegator
-   *          class loader to look up element type with
-   */
-  public IClass lookupClass(TypeName className, IClassLoader delegator, IClassHierarchy cha) throws IllegalArgumentException {
+  public IClass lookupClass(TypeName className, IClassLoader delegator, IClassHierarchy cha)
+      throws IllegalArgumentException {
     ArrayClass arrayClass;
     if (DEBUG) {
       assert className.toString().startsWith("[");
@@ -53,23 +48,23 @@ public class ArrayClassLoader {
       arrayClass = arrayClasses.get(aRef);
       IClassLoader primordial = getRootClassLoader(delegator);
       if (arrayClass == null) {
-        arrayClasses.put(aRef, arrayClass=new ArrayClass(aRef,primordial,cha));
+        arrayClasses.put(aRef, arrayClass = new ArrayClass(aRef, primordial, cha));
       }
     } else {
       arrayClass = arrayClasses.get(type);
       if (arrayClass == null) {
-	// check that the element class is loadable. If not, return null.
-	IClass elementCls = delegator.lookupClass(elementType.getName());
+        // check that the element class is loadable. If not, return null.
+        IClass elementCls = delegator.lookupClass(elementType.getName());
         if (elementCls == null) {
           return null;
         }
-	
-	TypeReference realType = TypeReference.findOrCreateArrayOf(elementCls.getReference());
-	arrayClass = arrayClasses.get(realType);
-	
-	if (arrayClass == null) {
-	  arrayClass = new ArrayClass(realType, elementCls.getClassLoader(), cha);
-	}
+
+        TypeReference realType = TypeReference.findOrCreateArrayOf(elementCls.getReference());
+        arrayClass = arrayClasses.get(realType);
+
+        if (arrayClass == null) {
+          arrayClass = new ArrayClass(realType, elementCls.getClassLoader(), cha);
+        }
       }
       arrayClasses.put(type, arrayClass);
     }
@@ -82,7 +77,7 @@ public class ArrayClassLoader {
     }
     return l;
   }
-  
+
   public int getNumberOfClasses() {
     return arrayClasses.size();
   }

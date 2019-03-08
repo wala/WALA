@@ -10,19 +10,23 @@
  */
 package com.ibm.wala.cast.js.html;
 
+import com.ibm.wala.cast.js.html.RangeFileMapping.Range;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import com.ibm.wala.cast.js.html.RangeFileMapping.Range;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
-
 public class NestedRangeMapping implements FileMapping {
   private final Range range;
   private final FileMapping innerMapping;
-  
-  public NestedRangeMapping(int rangeStart, int rangeEnd, int rangeStartingLine,  int rangeEndingLine, FileMapping innerMapping) {
+
+  public NestedRangeMapping(
+      int rangeStart,
+      int rangeEnd,
+      int rangeStartingLine,
+      int rangeEndingLine,
+      FileMapping innerMapping) {
     assert innerMapping != null;
     this.range = new Range(rangeStart, rangeEnd, rangeStartingLine, rangeEndingLine);
     this.innerMapping = innerMapping;
@@ -35,17 +39,19 @@ public class NestedRangeMapping implements FileMapping {
           new AbstractSourcePosition() {
             @Override
             public int getFirstLine() {
-              return pos.getFirstLine()-range.getStartingLine()+1;
+              return pos.getFirstLine() - range.getStartingLine() + 1;
             }
 
             @Override
             public int getLastLine() {
-              return pos.getLastLine()==-1? -1: (pos.getLastLine()-range.getStartingLine()+1);
+              return pos.getLastLine() == -1
+                  ? -1
+                  : (pos.getLastLine() - range.getStartingLine() + 1);
             }
 
             @Override
             public int getFirstCol() {
-               return pos.getFirstCol();
+              return pos.getFirstCol();
             }
 
             @Override
@@ -55,12 +61,12 @@ public class NestedRangeMapping implements FileMapping {
 
             @Override
             public int getFirstOffset() {
-              return pos.getFirstOffset()==-1? -1: (pos.getFirstOffset()-range.getStart());
+              return pos.getFirstOffset() == -1 ? -1 : (pos.getFirstOffset() - range.getStart());
             }
 
             @Override
             public int getLastOffset() {
-              return pos.getLastOffset()==-1? -1: (pos.getLastOffset()-range.getStart());
+              return pos.getLastOffset() == -1 ? -1 : (pos.getLastOffset() - range.getStart());
             }
 
             @Override

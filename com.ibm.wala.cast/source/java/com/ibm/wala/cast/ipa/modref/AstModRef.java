@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.modref;
 
-import java.util.Collection;
-
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
@@ -32,17 +30,20 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import java.util.Collection;
 
 public class AstModRef<T extends InstanceKey> extends ModRef<T> {
 
   @Override
   public ExtendedHeapModel makeHeapModel(PointerAnalysis<T> pa) {
-    return (AstHeapModel)pa.getHeapModel();
+    return (AstHeapModel) pa.getHeapModel();
   }
 
-  protected static class AstRefVisitor<T extends InstanceKey> extends RefVisitor<T, AstHeapModel> implements AstInstructionVisitor {
-      
-    protected AstRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, AstHeapModel h) {
+  protected static class AstRefVisitor<T extends InstanceKey> extends RefVisitor<T, AstHeapModel>
+      implements AstInstructionVisitor {
+
+    protected AstRefVisitor(
+        CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, AstHeapModel h) {
       super(n, result, pa, h);
     }
 
@@ -50,9 +51,9 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
     public void visitPropertyRead(AstPropertyRead instruction) {
       PointerKey obj = h.getPointerKeyForLocal(n, instruction.getObjectRef());
       PointerKey prop = h.getPointerKeyForLocal(n, instruction.getMemberRef());
-      for(InstanceKey o : pa.getPointsToSet(obj)) {
-        for(InstanceKey p : pa.getPointsToSet(prop)) {
-          for(PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldRead(o, p))) {
+      for (InstanceKey o : pa.getPointsToSet(obj)) {
+        for (InstanceKey p : pa.getPointsToSet(prop)) {
+          for (PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldRead(o, p))) {
             assert x != null : instruction;
             result.add(x);
           }
@@ -66,110 +67,74 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
     }
 
     @Override
-    public void visitAstLexicalRead(AstLexicalRead instruction) {
-
-    }
-    
-    @Override
-    public void visitAstLexicalWrite(AstLexicalWrite instruction) {
-    
-    }
-    
-    @Override
-    public void visitAstGlobalRead(AstGlobalRead instruction) {
-
-    }
-    
-    @Override
-    public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-    
-    }
-    
-    @Override
-    public void visitAssert(AstAssertInstruction instruction) {
-
-    }    
+    public void visitAstLexicalRead(AstLexicalRead instruction) {}
 
     @Override
-    public void visitEachElementGet(EachElementGetInstruction inst) {
-
-    }
+    public void visitAstLexicalWrite(AstLexicalWrite instruction) {}
 
     @Override
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-    
-    }
+    public void visitAstGlobalRead(AstGlobalRead instruction) {}
 
     @Override
-    public void visitIsDefined(AstIsDefinedInstruction inst) {
-
-    }
+    public void visitAstGlobalWrite(AstGlobalWrite instruction) {}
 
     @Override
-    public void visitEcho(AstEchoInstruction inst) {
+    public void visitAssert(AstAssertInstruction instruction) {}
 
-    }
+    @Override
+    public void visitEachElementGet(EachElementGetInstruction inst) {}
+
+    @Override
+    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
+
+    @Override
+    public void visitIsDefined(AstIsDefinedInstruction inst) {}
+
+    @Override
+    public void visitEcho(AstEchoInstruction inst) {}
   }
 
   @Override
-  protected RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
-    return new AstRefVisitor<>(n, result, pa, (AstHeapModel)h);
+  protected RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(
+      CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
+    return new AstRefVisitor<>(n, result, pa, (AstHeapModel) h);
   }
 
-  protected static class AstModVisitor<T extends InstanceKey> 
-      extends ModVisitor<T, AstHeapModel>
-      implements AstInstructionVisitor
-  {
-      
-    protected AstModVisitor(CGNode n, Collection<PointerKey> result, AstHeapModel h, PointerAnalysis<T> pa) {
+  protected static class AstModVisitor<T extends InstanceKey> extends ModVisitor<T, AstHeapModel>
+      implements AstInstructionVisitor {
+
+    protected AstModVisitor(
+        CGNode n, Collection<PointerKey> result, AstHeapModel h, PointerAnalysis<T> pa) {
       super(n, result, h, pa, true);
     }
 
     @Override
-    public void visitAstLexicalRead(AstLexicalRead instruction) {
-
-    }
-    
-    @Override
-    public void visitAstLexicalWrite(AstLexicalWrite instruction) {
-    
-    }
-    
-    @Override
-    public void visitAstGlobalRead(AstGlobalRead instruction) {
-
-    }
-    
-    @Override
-    public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-    
-    }
-    
-    @Override
-    public void visitAssert(AstAssertInstruction instruction) {
-
-    }    
+    public void visitAstLexicalRead(AstLexicalRead instruction) {}
 
     @Override
-    public void visitEachElementGet(EachElementGetInstruction inst) {
-
-    }
+    public void visitAstLexicalWrite(AstLexicalWrite instruction) {}
 
     @Override
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-    
-    }
+    public void visitAstGlobalRead(AstGlobalRead instruction) {}
 
     @Override
-    public void visitIsDefined(AstIsDefinedInstruction inst) {
-
-    }
+    public void visitAstGlobalWrite(AstGlobalWrite instruction) {}
 
     @Override
-    public void visitEcho(AstEchoInstruction inst) {
+    public void visitAssert(AstAssertInstruction instruction) {}
 
-    }
-    
+    @Override
+    public void visitEachElementGet(EachElementGetInstruction inst) {}
+
+    @Override
+    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
+
+    @Override
+    public void visitIsDefined(AstIsDefinedInstruction inst) {}
+
+    @Override
+    public void visitEcho(AstEchoInstruction inst) {}
+
     @Override
     public void visitPropertyRead(AstPropertyRead instruction) {
       // do nothing
@@ -179,9 +144,10 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
     public void visitPropertyWrite(AstPropertyWrite instruction) {
       PointerKey obj = h.getPointerKeyForLocal(n, instruction.getObjectRef());
       PointerKey prop = h.getPointerKeyForLocal(n, instruction.getMemberRef());
-      for(T o : pa.getPointsToSet(obj)) {
-        for(T p : pa.getPointsToSet(prop)) {
-          for(PointerKey x : Iterator2Iterable.make(h.getPointerKeysForReflectedFieldWrite(o, p))) {
+      for (T o : pa.getPointsToSet(obj)) {
+        for (T p : pa.getPointsToSet(prop)) {
+          for (PointerKey x :
+              Iterator2Iterable.make(h.getPointerKeysForReflectedFieldWrite(o, p))) {
             assert x != null : instruction;
             result.add(x);
           }
@@ -191,9 +157,12 @@ public class AstModRef<T extends InstanceKey> extends ModRef<T> {
   }
 
   @Override
-  protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
-    return new AstModVisitor<>(n, result, (AstHeapModel)h, pa);
+  protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(
+      CGNode n,
+      Collection<PointerKey> result,
+      PointerAnalysis<T> pa,
+      ExtendedHeapModel h,
+      boolean ignoreAllocHeapDefs) {
+    return new AstModVisitor<>(n, result, (AstHeapModel) h, pa);
   }
-
 }
-

@@ -13,22 +13,22 @@ package com.ibm.wala.util.intset;
 import java.util.Arrays;
 
 /**
- * an implementation of {@link IntVector} that uses a mix of backing arrays of type int, char, and byte array, in an attempt to save
- * space for common data structures.
+ * an implementation of {@link IntVector} that uses a mix of backing arrays of type int, char, and
+ * byte array, in an attempt to save space for common data structures.
  */
 public class MultiModalIntVector implements IntVector {
 
-  private final static float INITIAL_GROWTH_FACTOR = 1.5f;
+  private static final float INITIAL_GROWTH_FACTOR = 1.5f;
 
-  private final static float MINIMUM_GROWTH_FACTOR = 1.1f;
+  private static final float MINIMUM_GROWTH_FACTOR = 1.1f;
 
-  private final static float DIFF_GROWTH_FACTOR = INITIAL_GROWTH_FACTOR - MINIMUM_GROWTH_FACTOR;
+  private static final float DIFF_GROWTH_FACTOR = INITIAL_GROWTH_FACTOR - MINIMUM_GROWTH_FACTOR;
 
   private float CURRENT_GROWTH_RATE = INITIAL_GROWTH_FACTOR;
 
-  private final static int MAX_SIZE = 10000;
+  private static final int MAX_SIZE = 10000;
 
-  private final static int INITIAL_SIZE = 1;
+  private static final int INITIAL_SIZE = 1;
 
   int maxIndex = -1;
 
@@ -76,10 +76,9 @@ public class MultiModalIntVector implements IntVector {
 
   /**
    * Will determine a dynamic growth factor that depends on the current size of the array
-   * 
+   *
    * @return the new growth factor
    */
-
   float getGrowthFactor(int size) {
     if (CURRENT_GROWTH_RATE >= MINIMUM_GROWTH_FACTOR) {
 
@@ -127,7 +126,8 @@ public class MultiModalIntVector implements IntVector {
     if (x > MAX_SIZE) {
       throw new IllegalArgumentException("x is too big: " + x);
     }
-    maxIndex = Math.max(maxIndex, x); // Find out if the new position is bigger than size of the array
+    maxIndex =
+        Math.max(maxIndex, x); // Find out if the new position is bigger than size of the array
     handleMorph(x, value);
     if (value == defaultValue) {
       int length = getStoreLength();
@@ -182,7 +182,12 @@ public class MultiModalIntVector implements IntVector {
         for (int i = 0; i < shortStore.length; i++) {
           newIntStore[byteStore.length - 1 + i] = shortStore[i];
         }
-        System.arraycopy(intStore, 0, newIntStore, byteStore.length + shortStore.length - index, intStore.length);
+        System.arraycopy(
+            intStore,
+            0,
+            newIntStore,
+            byteStore.length + shortStore.length - index,
+            intStore.length);
         intStore = newIntStore;
         byteStore = newByteStore;
         shortStore = new short[0];
@@ -204,9 +209,7 @@ public class MultiModalIntVector implements IntVector {
     }
   }
 
-  /**
-   * make sure we can store to a particular index
-   */
+  /** make sure we can store to a particular index */
   private void ensureCapacity(int capacity, int value) {
     int length = getStoreLength();
     // Value is an int
@@ -216,7 +219,8 @@ public class MultiModalIntVector implements IntVector {
         // Current array size
         int[] old = intStore;
         // New array size
-        int newSize = 1 + (int) (getGrowthFactor(length) * capacity) - byteStore.length - shortStore.length;
+        int newSize =
+            1 + (int) (getGrowthFactor(length) * capacity) - byteStore.length - shortStore.length;
         int[] newData = Arrays.copyOf(old, newSize);
         Arrays.fill(newData, old.length, newSize, defaultValue);
         intStore = newData;
@@ -258,5 +262,4 @@ public class MultiModalIntVector implements IntVector {
     }
     System.out.println(str);
   }
-
 }

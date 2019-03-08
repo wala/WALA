@@ -15,28 +15,29 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.intset.IntSet;
 
-/**
- * An interface to an object which helps control context-sensitivity.
- */
+/** An interface to an object which helps control context-sensitivity. */
 public interface ContextSelector {
   /**
-   * Given a calling node and a call site, returns the Context in which the callee should be evaluated.
-   * 
+   * Given a calling node and a call site, returns the Context in which the callee should be
+   * evaluated.
+   *
    * @param caller the node containing the call site
    * @param site description of the call site
-   * @param actualParameters the abstract objects (InstanceKeys) of parameters of interest to the selector
-   * @return the Context in which the callee should be evaluated, or null if no information is available.
+   * @param actualParameters the abstract objects (InstanceKeys) of parameters of interest to the
+   *     selector
+   * @return the Context in which the callee should be evaluated, or null if no information is
+   *     available.
    */
-  Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters);
+  Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters);
 
   /**
-   * Given a calling node and a call site, return the set of parameters based
-   * on which this selector may choose to specialize contexts.
-   * 
+   * Given a calling node and a call site, return the set of parameters based on which this selector
+   * may choose to specialize contexts.
+   *
    * @param caller the calling node
    * @param site the specific call site
    * @return the set of parameters of interest
    */
   IntSet getRelevantParameters(CGNode caller, CallSiteReference site);
-
 }

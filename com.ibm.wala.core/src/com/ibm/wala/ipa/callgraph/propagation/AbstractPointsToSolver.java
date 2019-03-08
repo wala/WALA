@@ -10,22 +10,18 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
-
-/**
- * Abstract base class for solver for pointer analysis.
- */
+/** Abstract base class for solver for pointer analysis. */
 public abstract class AbstractPointsToSolver implements IPointsToSolver {
 
-  protected final static boolean DEBUG = false;
+  protected static final boolean DEBUG = false;
 
   private final PropagationSystem system;
 
   private final PropagationCallGraphBuilder builder;
-  
+
   private final ReflectionHandler reflectionHandler;
 
   public AbstractPointsToSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
@@ -41,7 +37,8 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override
-  public abstract void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException;
+  public abstract void solve(IProgressMonitor monitor)
+      throws IllegalArgumentException, CancelException;
 
   protected PropagationCallGraphBuilder getBuilder() {
     return builder;

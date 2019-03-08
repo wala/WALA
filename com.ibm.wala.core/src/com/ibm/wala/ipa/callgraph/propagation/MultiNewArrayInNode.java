@@ -16,9 +16,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/**
- * An {@link InstanceKey} which represents a multinewarray allocation site in a {@link CGNode}.
- */
+/** An {@link InstanceKey} which represents a multinewarray allocation site in a {@link CGNode}. */
 public final class MultiNewArrayInNode extends AllocationSiteInNode {
   private final int dim;
 
@@ -26,7 +24,8 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
    * @return null if the element type is a primitive
    * @throws IllegalArgumentException if T == null
    */
-  private static IClass myElementType(ArrayClass T, int d) throws IllegalArgumentException, IllegalArgumentException {
+  private static IClass myElementType(ArrayClass T, int d)
+      throws IllegalArgumentException, IllegalArgumentException {
     if (T == null) {
       throw new IllegalArgumentException("T == null");
     }
@@ -52,7 +51,9 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
     // instanceof is OK because this class is final
     if (obj instanceof MultiNewArrayInNode) {
       MultiNewArrayInNode other = (MultiNewArrayInNode) obj;
-      return (dim == other.dim && getNode().equals(other.getNode()) && getSite().equals(other.getSite()));
+      return (dim == other.dim
+          && getNode().equals(other.getNode())
+          && getSite().equals(other.getSite()));
     } else {
       return false;
     }

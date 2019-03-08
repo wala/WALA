@@ -10,49 +10,48 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFSAllPathsFinder;
+import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class PathFinderTest {
-  
+
   private static Graph<String> createGraph(String edges) {
     Graph<String> g = SlowSparseNumberedGraph.make();
-    for(int i = 0; i < edges.length(); i+= 2) {
-      String from = edges.substring(i, i+1);
-      if (! g.containsNode(from)) {
+    for (int i = 0; i < edges.length(); i += 2) {
+      String from = edges.substring(i, i + 1);
+      if (!g.containsNode(from)) {
         g.addNode(from);
       }
-      
-      String to = edges.substring(i+1, i+2);
-      if (! g.containsNode(to)) {
+
+      String to = edges.substring(i + 1, i + 2);
+      if (!g.containsNode(to)) {
         g.addNode(to);
       }
-      
+
       g.addEdge(from, to);
     }
     return g;
   }
 
-  private static DFSAllPathsFinder<String> makeFinder(Graph<String> g, String start, final String end) {
+  private static DFSAllPathsFinder<String> makeFinder(
+      Graph<String> g, String start, final String end) {
     return new DFSAllPathsFinder<>(g, start, end::equals);
   }
 
   private static void checkPaths(DFSAllPathsFinder<String> paths, int expectedCount) {
     int count = 0;
     List<String> path;
-    while ((path = paths.find()) != null) {  
+    while ((path = paths.find()) != null) {
       System.err.println(path);
       count++;
     }
     Assert.assertEquals(expectedCount, count);
   }
-  
+
   private static final String edges1 = "ABBCBDCECFDGDHEIFIGJHJJKIKKL";
 
   @Test

@@ -3,21 +3,20 @@ package com.ibm.wala.shrikeCT;
 import static com.ibm.wala.shrikeCT.StackMapTableWriter.writeUByte;
 import static com.ibm.wala.shrikeCT.StackMapTableWriter.writeUShort;
 
+import com.ibm.wala.shrikeBT.analysis.Analyzer;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import com.ibm.wala.shrikeBT.analysis.Analyzer;
 
 public class StackMapConstants {
 
   interface StackMapType {
-      void write(OutputStream s, ClassWriter writer) throws IOException;
-      
-      int size();
-      
-      boolean isObject();
+    void write(OutputStream s, ClassWriter writer) throws IOException;
+
+    int size();
+
+    boolean isObject();
   }
-    
+
   public enum Item implements StackMapType {
     ITEM_Top(0),
     ITEM_Integer(1),
@@ -52,19 +51,19 @@ public class StackMapConstants {
     private final byte code;
 
     Item(int code) {
-      this.code = (byte)code;
+      this.code = (byte) code;
     }
 
     @Override
     public boolean isObject() {
       return false;
     }
-    
+
     @Override
     public int size() {
       return 1;
     }
-    
+
     @Override
     public void write(OutputStream s, ClassWriter writer) throws IOException {
       writeUByte(s, code);
@@ -74,7 +73,7 @@ public class StackMapConstants {
   public static class UninitializedType implements StackMapType {
     private final String type;
     private final int offset;
-    
+
     public UninitializedType(String type) {
       assert type.startsWith("#");
       this.type = Analyzer.stripSharp(type);
@@ -91,25 +90,26 @@ public class StackMapConstants {
     public int size() {
       return Item.ITEM_Uninitalized.size();
     }
-    
+
     @Override
     public boolean isObject() {
       return true;
     }
-    
+
     @Override
     public String toString() {
       return "uninit:" + type;
     }
   }
-  
+
   public static class ObjectType implements StackMapType {
     private final String type;
-     
-    ObjectType(ClassReader cr, int typeIndex) throws IllegalArgumentException, InvalidClassFileException {
+
+    ObjectType(ClassReader cr, int typeIndex)
+        throws IllegalArgumentException, InvalidClassFileException {
       this(cr.getCP().getCPString(typeIndex));
     }
-    
+
     ObjectType(String type) {
       this.type = type;
     }
@@ -118,7 +118,7 @@ public class StackMapConstants {
     public int size() {
       return Item.ITEM_Object.size();
     }
-    
+
     @Override
     public boolean isObject() {
       return true;
@@ -128,14 +128,14 @@ public class StackMapConstants {
     public String toString() {
       return "obj:" + type;
     }
-    
+
     @Override
     public void write(OutputStream s, ClassWriter writer) throws IOException {
       Item.ITEM_Object.write(s, writer);
       if ("L;".equals(type)) {
-        writeUShort(s, writer.addCPClass("java/lang/Object"));        
+        writeUShort(s, writer.addCPClass("java/lang/Object"));
       } else if (type.startsWith("L")) {
-        writeUShort(s, writer.addCPClass(type.substring(1, type.length()-1)));
+        writeUShort(s, writer.addCPClass(type.substring(1, type.length() - 1)));
       } else {
         writeUShort(s, writer.addCPClass(type));
       }
@@ -143,35 +143,36 @@ public class StackMapConstants {
   }
 
   public static Item items[] = {
-      Item.ITEM_Top,
-      Item.ITEM_Integer,
-      Item.ITEM_Float,
-      Item.ITEM_Double,
-      Item.ITEM_Long,
-      Item.ITEM_Null,
-      Item.ITEM_UninitializedThis,
-      Item.ITEM_Object,
-      Item.ITEM_Uninitalized
+    Item.ITEM_Top,
+    Item.ITEM_Integer,
+    Item.ITEM_Float,
+    Item.ITEM_Double,
+    Item.ITEM_Long,
+    Item.ITEM_Null,
+    Item.ITEM_UninitializedThis,
+    Item.ITEM_Object,
+    Item.ITEM_Uninitalized
   };
-  
+
   public static class StackMapFrame {
 
     public StackMapFrame(StackMapFrame frame, int newOffset) {
       this(frame.frameType, newOffset, frame.localTypes, frame.stackTypes);
     }
 
-    public StackMapFrame(int frameType, int offset, StackMapType[] localTypes, StackMapType[] stackTypes) {
+    public StackMapFrame(
+        int frameType, int offset, StackMapType[] localTypes, StackMapType[] stackTypes) {
       this.frameType = frameType;
       this.offset = offset;
       this.localTypes = localTypes;
       this.stackTypes = stackTypes;
     }
-    
+
     private final int frameType;
     private final int offset;
-    private final StackMapType[] localTypes;    
+    private final StackMapType[] localTypes;
     private final StackMapType[] stackTypes;
-    
+
     public int getFrameType() {
       return frameType;
     }
@@ -193,7 +194,7 @@ public class StackMapConstants {
       StringBuilder sb = new StringBuilder();
       sb.append("frame type: ").append(frameType).append('\n');
       sb.append("  offset: ").append(offset).append('\n');
-      
+
       sb.append("  locals\n");
       for (StackMapType localType : localTypes) {
         sb.append("  ").append(localType).append('\n');
@@ -206,32 +207,32 @@ public class StackMapConstants {
 
       return sb.toString();
     }
-    
+
     public void write(OutputStream out, ClassWriter writer) throws IOException {
       // frame type
       writeUByte(out, frameType);
-      
+
       // offset delta
       writeUShort(out, offset);
-      
+
       // locals
       if (localTypes != null) {
-        writeUShort(out, localTypes.length);          
-        for(StackMapType type : localTypes) {
+        writeUShort(out, localTypes.length);
+        for (StackMapType type : localTypes) {
           type.write(out, writer);
-        } 
+        }
       } else {
-        writeUShort(out, 0);          
+        writeUShort(out, 0);
       }
-      
+
       // stack
       if (stackTypes != null) {
-        writeUShort(out, stackTypes.length);          
-        for(int j = stackTypes.length; j > 0; ) {
+        writeUShort(out, stackTypes.length);
+        for (int j = stackTypes.length; j > 0; ) {
           stackTypes[--j].write(out, writer);
-        }  
+        }
       } else {
-        writeUShort(out, 0);          
+        writeUShort(out, 0);
       }
     }
   }

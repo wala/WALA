@@ -13,9 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
 
-/**
- * A specialized equation class introduced for efficiency.
- */
+/** A specialized equation class introduced for efficiency. */
 public final class AssignEquation extends UnaryStatement<PointsToSetVariable> {
 
   AssignEquation(PointsToSetVariable lhs, PointsToSetVariable rhs) {

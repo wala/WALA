@@ -10,31 +10,27 @@
  */
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
+import com.ibm.wala.cfg.ControlFlowGraph;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
-import com.ibm.wala.cfg.ControlFlowGraph;
-
 /**
  * A phi instruction in SSA form.
- * 
- * See any modern compiler textbook for the definition of phi and the nature of
- * SSA.
- * 
- * Note: In SSA {@link IR}s, these instructions do <em>not</em> appear in the
- * normal instruction array returned by IR.getInstructions(); instead these
- * instructions live in {@link ISSABasicBlock}.
- * 
- * {@code getUse(i)} corresponds to the value number from the
- * i<sup>th</sup> predecessor of the corresponding {@link ISSABasicBlock}
- * {@code b} in {@link ControlFlowGraph} {@code g}, where predecessor
- * order is the order of nodes returned by the {@link Iterator}
- * {@code g.getPredNodes(b)}.
- * 
- * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1),
- * then that use represents an edge in the CFG which is infeasible in verifiable
- * bytecode.
+ *
+ * <p>See any modern compiler textbook for the definition of phi and the nature of SSA.
+ *
+ * <p>Note: In SSA {@link IR}s, these instructions do <em>not</em> appear in the normal instruction
+ * array returned by IR.getInstructions(); instead these instructions live in {@link
+ * ISSABasicBlock}.
+ *
+ * <p>{@code getUse(i)} corresponds to the value number from the i<sup>th</sup> predecessor of the
+ * corresponding {@link ISSABasicBlock} {@code b} in {@link ControlFlowGraph} {@code g}, where
+ * predecessor order is the order of nodes returned by the {@link Iterator} {@code
+ * g.getPredNodes(b)}.
+ *
+ * <p>Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use
+ * represents an edge in the CFG which is infeasible in verifiable bytecode.
  */
 public class SSAPhiInstruction extends SSAInstruction {
   private final int result;
@@ -53,17 +49,20 @@ public class SSAPhiInstruction extends SSAInstruction {
     }
     for (int p : params) {
       if (p == 0) {
-        throw new IllegalArgumentException("zero is an invalid value number for a parameter to phi");
+        throw new IllegalArgumentException(
+            "zero is an invalid value number for a parameter to phi");
       }
     }
   }
 
   @Override
-  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
+      throws IllegalArgumentException {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException();
     }
-    return insts.PhiInstruction(iindex, defs == null ? result : defs[0], uses == null ? params : uses);
+    return insts.PhiInstruction(
+        iindex, defs == null ? result : defs[0], uses == null ? params : uses);
   }
 
   @Override
@@ -86,9 +85,7 @@ public class SSAPhiInstruction extends SSAInstruction {
     v.visitPhi(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public boolean hasDef() {
     return true;
@@ -125,10 +122,7 @@ public class SSAPhiInstruction extends SSAInstruction {
     return params[j];
   }
 
-  /**
-   * Clients should not call this.  only for SSA builders.
-   * I hate this. Nuke it someday.
-   */
+  /** Clients should not call this. only for SSA builders. I hate this. Nuke it someday. */
   public void setValues(int[] i) {
     if (i == null || i.length < 1) {
       throw new IllegalArgumentException("illegal i: " + Arrays.toString(i));
@@ -157,5 +151,4 @@ public class SSAPhiInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return true;
   }
-
- }
+}

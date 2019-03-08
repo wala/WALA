@@ -17,11 +17,11 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 
 /**
  * Intraprocedural dataflow analysis to detect impossible NullPointerExceptions.
- * 
- * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  */
-public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<B, NullPointerState> {
+public class NullPointerSolver<B extends ISSABasicBlock>
+    extends DataflowSolver<B, NullPointerState> {
 
   private final int maxVarNum;
   private final ParameterState parameterState;
@@ -31,15 +31,16 @@ public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<
   public NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, IR ir, B entry) {
     this(problem, maxVarNum, entry, ir, ParameterState.createDefault(ir.getMethod()));
   }
-  
-  public NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, B entry, IR ir, ParameterState initialState) {
+
+  public NullPointerSolver(
+      NullPointerFrameWork<B> problem, int maxVarNum, B entry, IR ir, ParameterState initialState) {
     super(problem);
     this.maxVarNum = maxVarNum;
     this.parameterState = initialState;
     this.entry = entry;
     this.ir = ir;
   }
-  
+
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.graph.DataflowSolver#makeEdgeVariable(java.lang.Object, java.lang.Object)
    */
@@ -64,5 +65,4 @@ public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<
   protected NullPointerState[] makeStmtRHS(int size) {
     return new NullPointerState[size];
   }
-  
 }

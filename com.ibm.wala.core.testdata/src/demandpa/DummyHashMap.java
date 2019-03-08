@@ -10,9 +10,7 @@
  */
 package demandpa;
 
-/**
- * doesn't actually work; just for testing pointer analysis
- */
+/** doesn't actually work; just for testing pointer analysis */
 public class DummyHashMap {
 
   Object[] keys = new Object[10];

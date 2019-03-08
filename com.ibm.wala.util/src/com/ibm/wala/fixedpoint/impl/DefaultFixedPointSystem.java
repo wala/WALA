@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.fixedpoint.impl;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
@@ -28,49 +25,42 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.Topological;
+import java.util.Iterator;
+import java.util.Set;
 
-/**
- * Default implementation of a dataflow graph
- */
-public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPointSystem<T>  {
+/** Default implementation of a dataflow graph */
+public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPointSystem<T> {
   static final boolean DEBUG = false;
 
-  /**
-   * A graph which defines the underlying system of statements and variables
-   */
+  /** A graph which defines the underlying system of statements and variables */
   private final NumberedGraph<INodeWithNumber> graph;
 
   /**
-   * We maintain a hash set of equations in order to check for equality with
-   * equals() ... the NumberedGraph does not support this. TODO: use a custom
-   * NumberedNodeManager to save space
+   * We maintain a hash set of equations in order to check for equality with equals() ... the
+   * NumberedGraph does not support this. TODO: use a custom NumberedNodeManager to save space
    */
-  final private Set<IFixedPointStatement<?>> equations = HashSetFactory.make();
+  private final Set<IFixedPointStatement<?>> equations = HashSetFactory.make();
 
   /**
-   * We maintain a hash set of variables in order to check for equality with
-   * equals() ... the NumberedGraph does not support this. TODO: use a custom
-   * NumberedNodeManager to save space
+   * We maintain a hash set of variables in order to check for equality with equals() ... the
+   * NumberedGraph does not support this. TODO: use a custom NumberedNodeManager to save space
    */
-  final private Set<IVariable<?>> variables = HashSetFactory.make();
+  private final Set<IVariable<?>> variables = HashSetFactory.make();
 
   /**
-   * @param expectedOut number of expected out edges in the "usual" case
-   * for constraints .. used to tune graph representation
+   * @param expectedOut number of expected out edges in the "usual" case for constraints .. used to
+   *     tune graph representation
    */
   public DefaultFixedPointSystem(int expectedOut) {
     super();
     graph = new SparseNumberedGraph<>(expectedOut);
   }
-  
-  /**
-   * default constructor ... tuned for one use for each def in
-   * dataflow graph.
-   */
+
+  /** default constructor ... tuned for one use for each def in dataflow graph. */
   public DefaultFixedPointSystem() {
     this(1);
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     return graph.equals(obj);
@@ -92,14 +82,15 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public Iterator<AbstractStatement> getStatements() {
     return new FilterIterator(graph.iterator(), AbstractStatement.class::isInstance);
   }
 
   @Override
   @SuppressWarnings("rawtypes")
-  public void addStatement(IFixedPointStatement statement) throws IllegalArgumentException, UnimplementedError {
+  public void addStatement(IFixedPointStatement statement)
+      throws IllegalArgumentException, UnimplementedError {
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
     }
@@ -192,8 +183,8 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
     }
   }
 
-  public AbstractStatement<?,?> getStep(int number) {
-    return (AbstractStatement<?,?>) graph.getNode(number);
+  public AbstractStatement<?, ?> getStep(int number) {
+    return (AbstractStatement<?, ?>) graph.getNode(number);
   }
 
   @Override
@@ -214,9 +205,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
     }
   }
 
-  /**
-   * check that this graph is well-formed
-   */
+  /** check that this graph is well-formed */
   private void checkGraph() {
     try {
       GraphIntegrity.check(graph);
@@ -228,7 +217,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
 
   @Override
   public Iterator<? extends INodeWithNumber> getStatementsThatUse(T v) {
-	  return (graph.containsNode(v) ? graph.getSuccNodes(v) : EmptyIterator.instance());
+    return (graph.containsNode(v) ? graph.getSuccNodes(v) : EmptyIterator.instance());
   }
 
   @Override
@@ -264,7 +253,6 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
     return graph.getPredNodes(n);
   }
 
-
   public int getPredNodeCount(INodeWithNumber n) {
     return graph.getPredNodeCount(n);
   }
@@ -278,5 +266,4 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   public boolean containsVariable(T v) {
     return variables.contains(v);
   }
-
 }

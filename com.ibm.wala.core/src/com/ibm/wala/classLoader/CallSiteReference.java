@@ -20,15 +20,17 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Simple object that represents a static call site (ie., an invoke instruction in the bytecode)
- * 
- * Note that the identity of a call site reference depends on two things: the program counter, and the containing IR. Thus, it
- * suffices to define equals() and hashCode() from {@link ProgramCounter}, since this class does not maintain a pointer to the
- * containing {@link IR} (or {@link CGNode}) anyway. If using a hashtable of CallSiteReference from different IRs, you probably want
- * to use a wrapper which also holds a pointer to the governing CGNode.
+ *
+ * <p>Note that the identity of a call site reference depends on two things: the program counter,
+ * and the containing IR. Thus, it suffices to define equals() and hashCode() from {@link
+ * ProgramCounter}, since this class does not maintain a pointer to the containing {@link IR} (or
+ * {@link CGNode}) anyway. If using a hashtable of CallSiteReference from different IRs, you
+ * probably want to use a wrapper which also holds a pointer to the governing CGNode.
  */
-public abstract class CallSiteReference extends ProgramCounter implements BytecodeConstants, ContextItem {
+public abstract class CallSiteReference extends ProgramCounter
+    implements BytecodeConstants, ContextItem {
 
-  final private MethodReference declaredTarget;
+  private final MethodReference declaredTarget;
 
   /**
    * @param programCounter Index into bytecode describing this instruction
@@ -49,18 +51,13 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
     CallSiteReference other = (CallSiteReference) obj;
     if (declaredTarget == null) {
-      if (other.declaredTarget != null)
-        return false;
-    } else if (!declaredTarget.equals(other.declaredTarget))
-      return false;
+      if (other.declaredTarget != null) return false;
+    } else if (!declaredTarget.equals(other.declaredTarget)) return false;
     return true;
   }
 
@@ -113,12 +110,14 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   }
 
   /**
-   * This factory method plays a little game to avoid storing the invocation code in the object; this saves a byte (probably
-   * actually a whole word) in each created object.
-   * 
-   * TODO: Consider canonicalization?
+   * This factory method plays a little game to avoid storing the invocation code in the object;
+   * this saves a byte (probably actually a whole word) in each created object.
+   *
+   * <p>TODO: Consider canonicalization?
    */
-  public static CallSiteReference make(int programCounter, MethodReference declaredTarget,
+  public static CallSiteReference make(
+      int programCounter,
+      MethodReference declaredTarget,
       IInvokeInstruction.IDispatch invocationCode) {
 
     if (invocationCode == IInvokeInstruction.Dispatch.SPECIAL)
@@ -134,31 +133,31 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   }
 
   /**
-   * Return the Method that this call site calls. This represents the method declared in the invoke instruction only.
+   * Return the Method that this call site calls. This represents the method declared in the invoke
+   * instruction only.
    */
   public MethodReference getDeclaredTarget() {
     return declaredTarget;
   }
 
-  /**
-   * Return one of INVOKESPECIAL, INVOKESTATIC, INVOKEVIRTUAL, or INVOKEINTERFACE
-   */
-  abstract public IInvokeInstruction.IDispatch getInvocationCode();
+  /** Return one of INVOKESPECIAL, INVOKESTATIC, INVOKEVIRTUAL, or INVOKEINTERFACE */
+  public abstract IInvokeInstruction.IDispatch getInvocationCode();
 
   @Override
   public String toString() {
-    return "invoke" + getInvocationString(getInvocationCode()) + ' ' + declaredTarget + '@' + getProgramCounter();
+    return "invoke"
+        + getInvocationString(getInvocationCode())
+        + ' '
+        + declaredTarget
+        + '@'
+        + getProgramCounter();
   }
 
   protected String getInvocationString(IInvokeInstruction.IDispatch invocationCode) {
-    if (invocationCode == IInvokeInstruction.Dispatch.STATIC)
-      return "static";
-    if (invocationCode == IInvokeInstruction.Dispatch.SPECIAL)
-      return "special";
-    if (invocationCode == IInvokeInstruction.Dispatch.VIRTUAL)
-      return "virtual";
-    if (invocationCode == IInvokeInstruction.Dispatch.INTERFACE)
-      return "interface";
+    if (invocationCode == IInvokeInstruction.Dispatch.STATIC) return "static";
+    if (invocationCode == IInvokeInstruction.Dispatch.SPECIAL) return "special";
+    if (invocationCode == IInvokeInstruction.Dispatch.VIRTUAL) return "virtual";
+    if (invocationCode == IInvokeInstruction.Dispatch.INTERFACE) return "interface";
 
     Assertions.UNREACHABLE();
     return null;
@@ -168,30 +167,22 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
     return getInvocationString(getInvocationCode());
   }
 
-  /**
-   * Is this an invokeinterface call site?
-   */
+  /** Is this an invokeinterface call site? */
   public final boolean isInterface() {
     return (getInvocationCode() == IInvokeInstruction.Dispatch.INTERFACE);
   }
 
-  /**
-   * Is this an invokevirtual call site?
-   */
+  /** Is this an invokevirtual call site? */
   public final boolean isVirtual() {
     return (getInvocationCode() == IInvokeInstruction.Dispatch.VIRTUAL);
   }
 
-  /**
-   * Is this an invokespecial call site?
-   */
+  /** Is this an invokespecial call site? */
   public final boolean isSpecial() {
     return (getInvocationCode() == IInvokeInstruction.Dispatch.SPECIAL);
   }
 
-  /**
-   * Is this an invokestatic call site?
-   */
+  /** Is this an invokestatic call site? */
   public boolean isStatic() {
     return (getInvocationCode() == IInvokeInstruction.Dispatch.STATIC);
   }
@@ -203,5 +194,4 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   public boolean isDispatch() {
     return isVirtual() || isInterface();
   }
-
 }

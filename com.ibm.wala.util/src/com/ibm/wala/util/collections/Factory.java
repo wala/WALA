@@ -10,6 +10,6 @@
  */
 package com.ibm.wala.util.collections;
 
-public interface Factory<T>{
+public interface Factory<T> {
   T make();
 }

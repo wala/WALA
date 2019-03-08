@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.ipa.cha;
 
-import java.util.Collection;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -24,10 +21,10 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
+import java.util.Set;
 
-/**
- * General interface for a type hierarchy
- */
+/** General interface for a type hierarchy */
 public interface IClassHierarchy extends Iterable<IClass> {
 
   public ClassLoaderFactory getFactory();
@@ -44,9 +41,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    */
   public boolean addClass(IClass klass);
 
-  /**
-   * @return The number of classes present in the class hierarchy.
-   */
+  /** @return The number of classes present in the class hierarchy. */
   public int getNumberOfClasses();
 
   public boolean isRootClass(IClass c);
@@ -55,13 +50,13 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   public int getNumber(IClass c);
 
-/** BEGIN Custom change: remember unresolved classes */
+  /** BEGIN Custom change: remember unresolved classes */
   public Set<TypeReference> getUnresolvedClasses();
-  
-/** END Custom change: remember unresolved classes */
+
+  /** END Custom change: remember unresolved classes */
   /**
    * Find the possible targets of a call to a method reference
-   * 
+   *
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
@@ -69,8 +64,9 @@ public interface IClassHierarchy extends Iterable<IClass> {
   public Set<IMethod> getPossibleTargets(MethodReference ref);
 
   /**
-   * Find the possible targets of a call to a method reference where the receiver is of a certain type
-   * 
+   * Find the possible targets of a call to a method reference where the receiver is of a certain
+   * type
+   *
    * @param receiverClass the class of the receiver
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
@@ -79,7 +75,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   /**
    * Return the unique receiver of an invocation of method on an object of type m.getDeclaredClass
-   * 
+   *
    * @return IMethod, or null if no appropriate receiver is found.
    * @throws IllegalArgumentException if m is null
    */
@@ -100,7 +96,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   /**
    * Return the unique receiver of an invocation of method on an object of type declaringClass
-   * 
+   *
    * @param receiverClass type of receiver
    * @param selector method signature
    * @return Method resolved method abstraction
@@ -110,7 +106,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   /**
    * Load a class using one of the loaders specified for this class hierarchy
-   * 
+   *
    * @return null if can't find the class.
    * @throws IllegalArgumentException if A is null
    */
@@ -126,34 +122,35 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   /**
    * Is c a subclass of T?
-   * 
+   *
    * @throws IllegalArgumentException if c is null
    */
   public boolean isSubclassOf(IClass c, IClass T);
 
   /**
    * Does c implement i?
-   * 
-   * @return true iff i is an interface and c is a class that implements i, or c is an interface that extends i.
+   *
+   * @return true iff i is an interface and c is a class that implements i, or c is an interface
+   *     that extends i.
    */
   public boolean implementsInterface(IClass c, IClass i);
 
-  /**
-   * Return set of all subclasses of type in the Class Hierarchy
-   */
+  /** Return set of all subclasses of type in the Class Hierarchy */
   public Collection<IClass> computeSubClasses(TypeReference type);
 
   /**
-   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of Error
-   * 
-   * kind of ugly. a better scheme?
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses
+   * of Error
+   *
+   * <p>kind of ugly. a better scheme?
    */
   public Collection<TypeReference> getJavaLangErrorTypes();
 
   /**
-   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses of {@link RuntimeException}
-   * 
-   * kind of ugly. a better scheme?
+   * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses
+   * of {@link RuntimeException}
+   *
+   * <p>kind of ugly. a better scheme?
    */
   public Collection<TypeReference> getJavaLangRuntimeExceptionTypes();
 
@@ -163,24 +160,19 @@ public interface IClassHierarchy extends Iterable<IClass> {
    */
   public Set<IClass> getImplementors(TypeReference type);
 
-  /**
-   * @return the number of classes that immediately extend klass.
-   */
+  /** @return the number of classes that immediately extend klass. */
   public int getNumberOfImmediateSubclasses(IClass klass);
 
-  /**
-   * @return the classes that immediately extend klass.
-   */
+  /** @return the classes that immediately extend klass. */
   public Collection<IClass> getImmediateSubclasses(IClass klass);
 
   /**
    * Does an expression c1 x := c2 y typecheck?
-   * 
-   * i.e. is c2 a subtype of c1?
-   * 
+   *
+   * <p>i.e. is c2 a subtype of c1?
+   *
    * @throws IllegalArgumentException if c1 is null
    * @throws IllegalArgumentException if c2 is null
    */
   public boolean isAssignableFrom(IClass c1, IClass c2);
-
 }

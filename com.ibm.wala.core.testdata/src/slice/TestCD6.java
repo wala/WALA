@@ -22,8 +22,7 @@ public class TestCD6 {
     doNothing(i);
   }
 
-  public static void doNothing(int i) {
-  }
+  public static void doNothing(int i) {}
 
   public static boolean someBool() {
     return false;

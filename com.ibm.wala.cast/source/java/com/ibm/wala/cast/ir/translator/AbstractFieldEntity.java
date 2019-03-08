@@ -9,19 +9,16 @@
  *     IBM Corporation - initial API and implementation
  */
 
-/**
- * 
- */
+/** */
 package com.ibm.wala.cast.ir.translator;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class AbstractFieldEntity extends AbstractDataEntity {
   private final String name;
@@ -30,7 +27,8 @@ public abstract class AbstractFieldEntity extends AbstractDataEntity {
 
   private final CAstEntity declaringClass;
 
-  public AbstractFieldEntity(String name, Set<CAstQualifier> modifiers, boolean isStatic, CAstEntity declaringClass) {
+  public AbstractFieldEntity(
+      String name, Set<CAstQualifier> modifiers, boolean isStatic, CAstEntity declaringClass) {
     this.name = name;
     this.declaringClass = declaringClass;
 

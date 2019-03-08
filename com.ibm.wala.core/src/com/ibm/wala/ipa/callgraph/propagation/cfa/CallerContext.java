@@ -15,16 +15,12 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
-/**
- * This is a context which is defined by the caller node.
- */
+/** This is a context which is defined by the caller node. */
 public class CallerContext implements Context {
 
   private final CGNode caller;
 
-  /**
-   * @param caller the node which defines this context.
-   */
+  /** @param caller the node which defines this context. */
   public CallerContext(CGNode caller) {
     if (caller == null) {
       throw new IllegalArgumentException("null caller");
@@ -50,7 +46,7 @@ public class CallerContext implements Context {
       return false;
     }
     if (getClass().equals(obj.getClass())) {
-      CallerContext other = (CallerContext)obj;
+      CallerContext other = (CallerContext) obj;
       return caller.equals(other.caller);
     } else {
       return false;
@@ -70,5 +66,4 @@ public class CallerContext implements Context {
   public CGNode getCaller() {
     return caller;
   }
-
 }

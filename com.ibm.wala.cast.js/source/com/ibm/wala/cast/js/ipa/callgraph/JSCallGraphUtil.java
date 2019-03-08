@@ -10,18 +10,6 @@
  */
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
@@ -63,20 +51,31 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil {
 
   private static final boolean DEBUG = false;
 
   /**
-   * the translator factory to be used for analysis TODO: pass the factory where
-   * needed instead of using a global?
+   * the translator factory to be used for analysis TODO: pass the factory where needed instead of
+   * using a global?
    */
   public static JavaScriptTranslatorFactory translatorFactory;
-  
+
   /**
-   * Set up the translator factory. This method should be called before invoking
-   * {@link #makeLoaders()}.
+   * Set up the translator factory. This method should be called before invoking {@link
+   * #makeLoaders()}.
    */
   public static void setTranslatorFactory(JavaScriptTranslatorFactory translatorFactory) {
     JSCallGraphUtil.translatorFactory = translatorFactory;
@@ -85,13 +84,14 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   public static JavaScriptTranslatorFactory getTranslatorFactory() {
     return translatorFactory;
   }
-  
-  public static JSAnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
+
+  public static JSAnalysisOptions makeOptions(
+      AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
     final JSAnalysisOptions options = new JSAnalysisOptions(scope, /*
                                                                 * AstIRFactory.
                                                                 * makeDefaultFactory
                                                                 * (keepIRs),
-                                                                */roots);
+                                                                */ roots);
 
     options.setSelector(new ClassHierarchyMethodTargetSelector(cha));
     options.setSelector(new ClassHierarchyClassTargetSelector(cha));
@@ -110,21 +110,25 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
    */
   public static JavaScriptLoaderFactory makeLoaders(CAstRewriterFactory<?, ?> preprocessor) {
     if (translatorFactory == null) {
-      throw new IllegalStateException("com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
+      throw new IllegalStateException(
+          "com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
     return new JavaScriptLoaderFactory(translatorFactory, preprocessor);
   }
-  
+
   public static JavaScriptLoaderFactory makeLoaders() {
     return makeLoaders(null);
   }
 
-  public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles) throws ClassHierarchyException {
+  public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles)
+      throws ClassHierarchyException {
     JavaScriptLoaderFactory loaders = makeLoaders();
     AnalysisScope scope = CAstCallGraphUtil.makeScope(scriptFiles, loaders, JavaScriptLoader.JS);
     return makeHierarchy(scope, loaders);
   }
-  public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders) throws ClassHierarchyException {
+
+  public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders)
+      throws ClassHierarchyException {
     return ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
   }
 
@@ -133,16 +137,14 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   }
 
   /**
-   * Get all the nodes in CG with name funName. If funName is of the form
-   * {@code "ctor:nm"}, return nodes corresponding to constructor function
-   * for {@code nm}. If funName is of the form {@code "suffix:nm"},
-   * return nodes corresponding to functions whose names end with
-   * {@code nm}. Otherwise, return nodes for functions whose name matches
-   * funName exactly.
+   * Get all the nodes in CG with name funName. If funName is of the form {@code "ctor:nm"}, return
+   * nodes corresponding to constructor function for {@code nm}. If funName is of the form {@code
+   * "suffix:nm"}, return nodes corresponding to functions whose names end with {@code nm}.
+   * Otherwise, return nodes for functions whose name matches funName exactly.
    */
   public static Collection<CGNode> getNodes(CallGraph CG, String funName) {
     boolean suffix = funName.startsWith("suffix:");
-    
+
     if (suffix) {
       Set<CGNode> nodes = new HashSet<>();
       String tail = funName.substring(7);
@@ -153,7 +155,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       }
       return nodes;
     }
-    
+
     MethodReference MR = getMethodReference(funName);
 
     return CG.getNodes(MR);
@@ -163,52 +165,72 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     boolean ctor = funName.startsWith("ctor:");
     MethodReference MR;
     if (ctor) {
-      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName('L' + funName.substring(5)));
+      TypeReference TR =
+          TypeReference.findOrCreate(
+              JavaScriptTypes.jsLoader, TypeName.string2TypeName('L' + funName.substring(5)));
       MR = JavaScriptMethods.makeCtorReference(TR);
     } else {
-      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName('L' + funName));
+      TypeReference TR =
+          TypeReference.findOrCreate(
+              JavaScriptTypes.jsLoader, TypeName.string2TypeName('L' + funName));
       MR = AstMethodReference.fnReference(TR);
     }
     return MR;
   }
 
-  /**
-   * @return The set of class names that where defined in the CHA as a result
-   *         loading process.
-   */
+  /** @return The set of class names that where defined in the CHA as a result loading process. */
   public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, URL url)
       throws IOException {
     return loadAdditionalFile(cha, cl, new SourceURLModule(url));
   }
-  
-  public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, ModuleEntry M)
-      throws IOException {
+
+  public static Set<String> loadAdditionalFile(
+      IClassHierarchy cha, JavaScriptLoader cl, ModuleEntry M) throws IOException {
     try {
       TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
       final Set<String> names = new HashSet<>();
-      JSAstTranslator toIR = new JSAstTranslator(cl) {
-        @Override
-        protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg, SymbolTable symtab,
-            boolean hasCatchBlock, Map<IBasicBlock<SSAInstruction>,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
-            DebuggingInformation debugInfo) {
-          String fnName = 'L' + composeEntityName(definingContext, N);
-          names.add(fnName);
-          super.defineFunction(N, definingContext, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo);
-        }
+      JSAstTranslator toIR =
+          new JSAstTranslator(cl) {
+            @Override
+            protected void defineFunction(
+                CAstEntity N,
+                WalkContext definingContext,
+                AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
+                SymbolTable symtab,
+                boolean hasCatchBlock,
+                Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+                boolean hasMonitorOp,
+                AstLexicalInformation LI,
+                DebuggingInformation debugInfo) {
+              String fnName = 'L' + composeEntityName(definingContext, N);
+              names.add(fnName);
+              super.defineFunction(
+                  N,
+                  definingContext,
+                  cfg,
+                  symtab,
+                  hasCatchBlock,
+                  caughtTypes,
+                  hasMonitorOp,
+                  LI,
+                  debugInfo);
+            }
 
-        @Override
-        protected void leaveFunctionStmt(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
-          CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
-          Scope cs = c.currentScope();
-          if (!cs.contains(fn.getName())
-              || cs.lookup(fn.getName()).getDefiningScope().getEntity().getKind() == CAstEntity.SCRIPT_ENTITY) {
-            int result = processFunctionExpr(n, c);
-            assignValue(n, c, cs.lookup(fn.getName()), fn.getName(), result);
-          } else {
-            super.leaveFunctionStmt(n, c, visitor);
-          }
-        }
-      };
+            @Override
+            protected void leaveFunctionStmt(
+                CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
+              CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
+              Scope cs = c.currentScope();
+              if (!cs.contains(fn.getName())
+                  || cs.lookup(fn.getName()).getDefiningScope().getEntity().getKind()
+                      == CAstEntity.SCRIPT_ENTITY) {
+                int result = processFunctionExpr(n, c);
+                assignValue(n, c, cs.lookup(fn.getName()), fn.getName(), result);
+              } else {
+                super.leaveFunctionStmt(n, c, visitor);
+              }
+            }
+          };
       CAstEntity tree;
       try {
         tree = toCAst.translateToCAst();
@@ -224,23 +246,23 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       } catch (Error e) {
         return Collections.emptySet();
       }
-     } catch (RuntimeException e) {
+    } catch (RuntimeException e) {
       return Collections.emptySet();
     }
   }
-  
+
   public static String simulateToStringForPropertyNames(Object v) {
     // TODO this is very incomplete  --MS
     if (v instanceof String) {
-      return (String)v;
+      return (String) v;
     } else if (v instanceof Double) {
       String result = v.toString();
-      if ((Math.round((Double)v)) == ((Double)v).doubleValue()) {
-        result = Long.toString(Math.round((Double)v));
+      if ((Math.round((Double) v)) == ((Double) v).doubleValue()) {
+        result = Long.toString(Math.round((Double) v));
       }
       return result;
     } else if (v instanceof Boolean) {
-      if (((Boolean)v).booleanValue()) {
+      if (((Boolean) v).booleanValue()) {
         return "true";
       } else {
         return "false";
@@ -254,11 +276,11 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     private String name;
     private InputStream stream;
     private final URL url;
-    
+
     public Bootstrap(String name, InputStream stream, URL url) {
-       this.name = name;
-       this.stream = stream;
-       this.url = url;
+      this.name = name;
+      this.stream = stream;
+      this.url = url;
     }
 
     @Override
@@ -315,11 +337,13 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     @Override
     public URL getURL() {
       return url;
-    }      
-  }
-  
-  public static Module getPrologueFile(final String name) {
-    return new Bootstrap(name, JSCallGraphUtil.class.getClassLoader().getResourceAsStream(name), JSCallGraphUtil.class.getClassLoader().getResource(name));
+    }
   }
 
+  public static Module getPrologueFile(final String name) {
+    return new Bootstrap(
+        name,
+        JSCallGraphUtil.class.getClassLoader().getResourceAsStream(name),
+        JSCallGraphUtil.class.getClassLoader().getResource(name));
+  }
 }

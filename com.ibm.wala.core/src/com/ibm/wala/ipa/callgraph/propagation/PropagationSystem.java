@@ -10,16 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
@@ -48,91 +38,86 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.ref.ReferenceCleanser;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * System of constraints that define propagation for call graph construction
- */
+/** System of constraints that define propagation for call graph construction */
 public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariable> {
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
-  private final static boolean DEBUG_MEMORY = false;
+  private static final boolean DEBUG_MEMORY = false;
 
   private static int DEBUG_MEM_COUNTER = 0;
 
-  private final static int DEBUG_MEM_INTERVAL = 5;
+  private static final int DEBUG_MEM_INTERVAL = 5;
 
-  /**
-   * object that tracks points-to sets
-   */
+  /** object that tracks points-to sets */
   protected final PointsToMap pointsToMap = new PointsToMap();
 
-  /**
-   * Implementation of the underlying dataflow graph
-   */
+  /** Implementation of the underlying dataflow graph */
   private final PropagationGraph flowGraph = new PropagationGraph();
 
-  /**
-   * bijection from InstanceKey &lt;=&gt; Integer
-   */
+  /** bijection from InstanceKey &lt;=&gt; Integer */
   protected final MutableMapping<InstanceKey> instanceKeys = MutableMapping.make();
 
   /**
-   * A mapping from IClass -&gt; MutableSharedBitVectorIntSet The range represents the instance keys that correspond to a given class.
-   * This mapping is used to filter sets based on declared types; e.g., in cast constraints
+   * A mapping from IClass -&gt; MutableSharedBitVectorIntSet The range represents the instance keys
+   * that correspond to a given class. This mapping is used to filter sets based on declared types;
+   * e.g., in cast constraints
    */
-  final private Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
+  private final Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
 
-  /**
-   * An abstraction of the pointer analysis result
-   */
+  /** An abstraction of the pointer analysis result */
   private PointerAnalysis<InstanceKey> pointerAnalysis;
 
-  /**
-   * Meta-data regarding how pointers are modelled.
-   */
+  /** Meta-data regarding how pointers are modelled. */
   private final PointerKeyFactory pointerKeyFactory;
 
-  /**
-   * Meta-data regarding how instances are modelled.
-   */
+  /** Meta-data regarding how instances are modelled. */
   private final InstanceKeyFactory instanceKeyFactory;
 
   /**
    * When doing unification, we must also updated the fixed sets in unary side effects.
-   * 
-   * This maintains a map from PointsToSetVariable -&gt; Set&lt;UnarySideEffect&gt;
+   *
+   * <p>This maintains a map from PointsToSetVariable -&gt; Set&lt;UnarySideEffect&gt;
    */
-  final private Map<PointsToSetVariable, Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
+  private final Map<PointsToSetVariable, Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
 
-  /**
-   * Governing call graph;
-   */
+  /** Governing call graph; */
   protected final CallGraph cg;
 
   private int verboseInterval = DEFAULT_VERBOSE_INTERVAL;
 
   private int periodicMaintainInterval = DEFAULT_PERIODIC_MAINTENANCE_INTERVAL;
 
-  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory) {
+  public PropagationSystem(
+      CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory) {
     if (cg == null) {
       throw new IllegalArgumentException("null cg");
     }
     this.cg = cg;
     this.pointerKeyFactory = pointerKeyFactory;
     this.instanceKeyFactory = instanceKeyFactory;
-    // when doing paranoid checking of points-to sets, code in PointsToSetVariable needs to know about the instance key
+    // when doing paranoid checking of points-to sets, code in PointsToSetVariable needs to know
+    // about the instance key
     // mapping
     if (PointsToSetVariable.PARANOID) {
       PointsToSetVariable.instanceKeys = instanceKeys;
     }
   }
 
-  /**
-   * @return an object which encapsulates the pointer analysis result
-   */
+  /** @return an object which encapsulates the pointer analysis result */
   public PointerAnalysis<InstanceKey> makePointerAnalysis(PropagationCallGraphBuilder builder) {
-    return new PointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
+    return new PointerAnalysisImpl(
+        builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
   }
 
   protected void registerFixedSet(PointsToSetVariable p, UnarySideEffect s) {
@@ -153,7 +138,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * Keep this method private .. this returns the actual backing set for the class, which we do not want to expose to clients.
+   * Keep this method private .. this returns the actual backing set for the class, which we do not
+   * want to expose to clients.
    */
   private MutableIntSet findOrCreateSparseSetForClass(IClass klass) {
     assert klass.getReference() != TypeReference.JavaLangObject;
@@ -166,8 +152,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @return a set of integers representing the instance keys that correspond to a given class. This method creates a new set, which
-   *         the caller may bash at will.
+   * @return a set of integers representing the instance keys that correspond to a given class. This
+   *     method creates a new set, which the caller may bash at will.
    */
   MutableIntSet cloneInstanceKeysForClass(IClass klass) {
     assert klass.getReference() != TypeReference.JavaLangObject;
@@ -181,7 +167,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @return a set of integers representing the instance keys that correspond to a given class, or null if there are none.
+   * @return a set of integers representing the instance keys that correspond to a given class, or
+   *     null if there are none.
    * @throws IllegalArgumentException if klass is null
    */
   public IntSet getInstanceKeysForClass(IClass klass) {
@@ -192,9 +179,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return class2InstanceKey.get(klass);
   }
 
-  /**
-   * @return the instance key numbered with index i
-   */
+  /** @return the instance key numbered with index i */
   public InstanceKey getInstanceKey(int i) {
     return instanceKeys.getMappedObject(i);
   }
@@ -205,12 +190,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * TODO: optimize; this may be inefficient;
-   * 
+   *
    * @return an List of instance keys corresponding to the integers in a set
    */
   List<InstanceKey> getInstances(IntSet set) {
     LinkedList<InstanceKey> result = new LinkedList<>();
-    for (IntIterator it = set.intIterator(); it.hasNext();) {
+    for (IntIterator it = set.intIterator(); it.hasNext(); ) {
       int j = it.next();
       result.add(getInstanceKey(j));
     }
@@ -223,9 +208,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     // by default to TOP (the empty set);
   }
 
-  /**
-   * record that a particular points-to-set is represented implicitly.
-   */
+  /** record that a particular points-to-set is represented implicitly. */
   public void recordImplicitPointsToSet(PointerKey key) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
@@ -235,7 +218,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       if (lpk.isParameter()) {
         System.err.println("------------------ ERROR:");
         System.err.println("LocalPointerKey: " + lpk);
-        System.err.println("Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
+        System.err.println(
+            "Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
         System.err.println("   -- IR:");
         System.err.println(lpk.getNode().getIR());
         Assertions.UNREACHABLE("How can parameter be implicit?");
@@ -246,7 +230,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * If key is unified, returns the representative
-   * 
+   *
    * @return the dataflow variable that tracks the points-to set for key
    */
   public PointsToSetVariable findOrCreatePointsToSet(PointerKey key) {
@@ -256,7 +240,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
 
     if (pointsToMap.isImplicit(key)) {
-      System.err.println("Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
+      System.err.println(
+          "Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
       System.err.println(key);
       Assertions.UNREACHABLE();
     }
@@ -283,8 +268,13 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
           Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
         }
         if (!fpk.getTypeFilter().equals(((FilteredPointerKey) key).getTypeFilter())) {
-          Assertions.UNREACHABLE("Cannot use filter " + ((FilteredPointerKey) key).getTypeFilter() + " for " + key
-              + ": previously created different filter " + fpk.getTypeFilter());
+          Assertions.UNREACHABLE(
+              "Cannot use filter "
+                  + ((FilteredPointerKey) key).getTypeFilter()
+                  + " for "
+                  + key
+                  + ": previously created different filter "
+                  + fpk.getTypeFilter());
         }
       }
     }
@@ -303,12 +293,13 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * NB: this is idempotent ... if the given constraint exists, it will not be added to the system; however, this will be more
-   * expensive since it must check if the constraint pre-exits.
-   * 
+   * NB: this is idempotent ... if the given constraint exists, it will not be added to the system;
+   * however, this will be more expensive since it must check if the constraint pre-exits.
+   *
    * @return true iff the system changes
    */
-  public boolean newConstraint(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
+  public boolean newConstraint(
+      PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     if (lhs == null) {
       throw new IllegalArgumentException("null lhs");
     }
@@ -329,14 +320,22 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       // solver if the value of L changes.
       pointsToMap.recordTransitiveRoot(L.getPointerKey());
       if (!(L.getPointerKey() instanceof FilteredPointerKey)) {
-        Assertions.UNREACHABLE("expected filtered lhs " + L.getPointerKey() + ' ' + L.getPointerKey().getClass() + ' ' + lhs + ' '
-            + lhs.getClass());
+        Assertions.UNREACHABLE(
+            "expected filtered lhs "
+                + L.getPointerKey()
+                + ' '
+                + L.getPointerKey().getClass()
+                + ' '
+                + lhs
+                + ' '
+                + lhs.getClass());
       }
     }
     return newStatement(L, op, R, true, true);
   }
 
-  public boolean newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
+  public boolean newConstraint(
+      PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs null");
     }
@@ -353,10 +352,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     assert !pointsToMap.isUnified(rhs);
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R = findOrCreatePointsToSet(rhs);
-    return newStatement(L, op, new PointsToSetVariable[] { R }, true, true);
+    return newStatement(L, op, new PointsToSetVariable[] {R}, true, true);
   }
 
-  public boolean newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs1, PointerKey rhs2) {
+  public boolean newConstraint(
+      PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs1, PointerKey rhs2) {
     if (lhs == null) {
       throw new IllegalArgumentException("null lhs");
     }
@@ -381,23 +381,19 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return newStatement(L, op, R1, R2, true, true);
   }
 
-  /**
-   * @return true iff the system changes
-   */
-  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
+  /** @return true iff the system changes */
+  public boolean newFieldWrite(
+      PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
-  /**
-   * @return true iff the system changes
-   */
-  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
+  /** @return true iff the system changes */
+  public boolean newFieldRead(
+      PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
-  /**
-   * @return true iff the system changes
-   */
+  /** @return true iff the system changes */
   public boolean newConstraint(PointerKey lhs, InstanceKey value) {
     if (DEBUG) {
       System.err.println("Add constraint B: " + lhs + " U= " + value);
@@ -429,12 +425,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       }
       return true;
     }
-
   }
 
-  /**
-   * Record that we have a new instanceKey for a given declared type.
-   */
+  /** Record that we have a new instanceKey for a given declared type. */
   private void registerInstanceOfClass(IClass klass, int index) {
 
     if (DEBUG) {
@@ -472,7 +465,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return dim;
   }
 
-  private void registerArrayInstanceWithAllInterfacesOfElement(int index, IClass elementClass, int dim) {
+  private void registerArrayInstanceWithAllInterfacesOfElement(
+      int index, IClass elementClass, int dim) {
     Collection<IClass> ifaces = null;
     ifaces = elementClass.getAllImplementedInterfaces();
     for (IClass I : ifaces) {
@@ -495,7 +489,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return iArrayRef;
   }
 
-  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim) {
+  private void registerArrayInstanceWithAllSuperclassesOfElement(
+      int index, IClass elementClass, int dim) {
     IClass T;
     // register the array with each supertype of the element class
     T = elementClass.getSuperclass();
@@ -553,15 +548,16 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (DEBUG) {
       System.err.println("add constraint D: " + op + ' ' + Arrays.toString(arg0));
     }
-    PointsToSetVariable[] vs = new PointsToSetVariable[ arg0.length ];
-    for(int i = 0; i < arg0.length; i++) {
+    PointsToSetVariable[] vs = new PointsToSetVariable[arg0.length];
+    for (int i = 0; i < arg0.length; i++) {
       assert !pointsToMap.isUnified(arg0[i]);
       vs[i] = findOrCreatePointsToSet(arg0[i]);
     }
     newStatement(null, op, vs, true, true);
   }
 
-  public void newSideEffect(AbstractOperator<PointsToSetVariable> op, PointerKey arg0, PointerKey arg1) {
+  public void newSideEffect(
+      AbstractOperator<PointsToSetVariable> op, PointerKey arg0, PointerKey arg1) {
     if (DEBUG) {
       System.err.println("add constraint D: " + op + ' ' + arg0);
     }
@@ -577,9 +573,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     addAllStatementsToWorkList();
   }
 
-  /**
-   * @return an object that encapsulates the pointer analysis results
-   */
+  /** @return an object that encapsulates the pointer analysis results */
   public PointerAnalysis<InstanceKey> extractPointerAnalysis(PropagationCallGraphBuilder builder) {
     if (pointerAnalysis == null) {
       pointerAnalysis = makePointerAnalysis(builder);
@@ -612,7 +606,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       workList.insertStatement(s);
       System.err.println("CGNodes: " + cg.getNumberOfNodes());
     }
-
   }
 
   private String printRHSInstances(AbstractStatement s) {
@@ -621,10 +614,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       PointsToSetVariable rhs = (PointsToSetVariable) u.getRightHandSide();
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
-      value.foreach(x -> {
-        System.arraycopy(topFive, 1, topFive, 0, 4);
-        topFive[4] = x;
-      });
+      value.foreach(
+          x -> {
+            System.arraycopy(topFive, 1, topFive, 0, 4);
+            topFive[4] = x;
+          });
       StringBuilder result = new StringBuilder();
       for (int i = 0; i < 5; i++) {
         int p = topFive[i];
@@ -651,16 +645,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return pointsToMap.iterateKeys();
   }
 
-  /**
-   * warning: this is _real_ slow; don't use it anywhere performance critical
-   */
+  /** warning: this is _real_ slow; don't use it anywhere performance critical */
   public int getNumberOfPointerKeys() {
     return pointsToMap.getNumberOfPointerKeys();
   }
 
-  /**
-   * Use with care.
-   */
+  /** Use with care. */
   Worklist getWorklist() {
     return workList;
   }
@@ -669,7 +659,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return flowGraph.getStatementsThatUse(v);
   }
 
-  public Iterator<AbstractStatement<PointsToSetVariable, ?>> getStatementsThatDef(PointsToSetVariable v) {
+  public Iterator<AbstractStatement<PointsToSetVariable, ?>> getStatementsThatDef(
+      PointsToSetVariable v) {
     return flowGraph.getStatementsThatDef(v);
   }
 
@@ -682,16 +673,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * NOTE: do not use this method unless you really know what you are doing. Functionality is fragile and may not work in the
-   * future.
+   * NOTE: do not use this method unless you really know what you are doing. Functionality is
+   * fragile and may not work in the future.
    */
   public Graph<PointsToSetVariable> getFlowGraphIncludingImplicitConstraints() {
     return flowGraph.getFlowGraphIncludingImplicitConstraints();
   }
 
-  /**
-   * 
-   */
+  /** */
   public void revertToPreTransitive() {
     pointsToMap.revertToPreTransitive();
   }
@@ -715,9 +704,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return verboseInterval;
   }
 
-  /**
-   * @param verboseInterval The verboseInterval to set.
-   */
+  /** @param verboseInterval The verboseInterval to set. */
   public void setVerboseInterval(int verboseInterval) {
     this.verboseInterval = verboseInterval;
   }
@@ -733,7 +720,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * Unify the points-to-sets for the variables identified by the set s
-   * 
+   *
    * @param s numbers of points-to-set variables
    * @throws IllegalArgumentException if s is null
    */
@@ -743,7 +730,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
     // cache the variables represented
     HashSet<PointsToSetVariable> cache = HashSetFactory.make(s.size());
-    for (IntIterator it = s.intIterator(); it.hasNext();) {
+    for (IntIterator it = s.intIterator(); it.hasNext(); ) {
       int i = it.next();
       cache.add(pointsToMap.getPointsToSet(i));
     }
@@ -761,7 +748,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * Update side effect after unification
-   * 
+   *
    * @param s set of PointsToSetVariables that have been unified
    * @param rep number of the representative variable for the unified set.
    */
@@ -774,7 +761,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * Update equation def/uses after unification
-   * 
+   *
    * @param s set of PointsToSetVariables that have been unified
    * @param rep number of the representative variable for the unified set.
    */
@@ -814,7 +801,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
             replaceRHS(pRef, p, as);
           }
         }
-        if (flowGraph.getNumberOfStatementsThatDef(p) == 0 && flowGraph.getNumberOfStatementsThatUse(p) == 0) {
+        if (flowGraph.getNumberOfStatementsThatDef(p) == 0
+            && flowGraph.getNumberOfStatementsThatUse(p) == 0) {
           flowGraph.removeVariable(p);
         }
       }
@@ -823,14 +811,17 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * replace all occurrences of p on the rhs of a statement with pRef
-   * 
+   *
    * @param as a statement that uses p in it's right-hand side
    */
-  private void replaceRHS(PointsToSetVariable pRef, PointsToSetVariable p,
+  private void replaceRHS(
+      PointsToSetVariable pRef,
+      PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     if (as instanceof UnaryStatement) {
       assert ((UnaryStatement) as).getRightHandSide() == p;
-      newStatement(as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
+      newStatement(
+          as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {
       IVariable[] rhs = as.getRHS();
       PointsToSetVariable[] newRHS = new PointsToSetVariable[rhs.length];
@@ -848,15 +839,21 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * replace all occurences of p on the lhs of a statement with pRef
-   * 
+   *
    * @param as a statement that defs p
    */
-  private void replaceLHS(PointsToSetVariable pRef, PointsToSetVariable p,
+  private void replaceLHS(
+      PointsToSetVariable pRef,
+      PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     assert as.getLHS() == p;
     if (as instanceof UnaryStatement) {
-      newStatement(pRef, (UnaryOperator<PointsToSetVariable>) as.getOperator(), (PointsToSetVariable) ((UnaryStatement) as)
-          .getRightHandSide(), false, false);
+      newStatement(
+          pRef,
+          (UnaryOperator<PointsToSetVariable>) as.getOperator(),
+          (PointsToSetVariable) ((UnaryStatement) as).getRightHandSide(),
+          false,
+          false);
     } else {
       newStatement(pRef, as.getOperator(), as.getRHS(), false, false);
     }

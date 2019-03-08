@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.io.Reader;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
@@ -29,10 +24,12 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
-/**
- * A synthetic implementation of a class
- */
+/** A synthetic implementation of a class */
 public class BypassSyntheticClass extends SyntheticClass {
 
   /**
@@ -48,15 +45,13 @@ public class BypassSyntheticClass extends SyntheticClass {
     return TypeName.string2TypeName(s);
   }
 
-  /**
-   * The original "real" type corresponding to this synthetic type.
-   */
+  /** The original "real" type corresponding to this synthetic type. */
   private final IClass realType;
 
   private final IClassLoader loader;
 
-  public BypassSyntheticClass(IClass realType, IClassLoader loader, IClassHierarchy cha) throws NullPointerException,
-      NullPointerException {
+  public BypassSyntheticClass(IClass realType, IClassLoader loader, IClassHierarchy cha)
+      throws NullPointerException, NullPointerException {
     super(TypeReference.findOrCreate(loader.getReference(), getName(realType.getReference())), cha);
     this.loader = loader;
     this.realType = realType;
@@ -74,7 +69,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
   @Override
-  public IClass getSuperclass()  {
+  public IClass getSuperclass() {
     if (realType.isInterface()) {
       IClass result = loader.lookupClass(TypeReference.JavaLangObject.getName());
       if (result != null) {
@@ -82,8 +77,7 @@ public class BypassSyntheticClass extends SyntheticClass {
       } else {
         throw new IllegalStateException("could not find java.lang.Object");
       }
-    } else
-      return realType;
+    } else return realType;
   }
 
   /*
@@ -166,7 +160,11 @@ public class BypassSyntheticClass extends SyntheticClass {
 
   @Override
   public String toString() {
-    return "<Synthetic " + (realType.isInterface() ? "Implementor" : "Subclass") + ' ' + realType.toString() + '>';
+    return "<Synthetic "
+        + (realType.isInterface() ? "Implementor" : "Subclass")
+        + ' '
+        + realType.toString()
+        + '>';
   }
 
   public IClass getRealType() {
@@ -228,7 +226,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
   @Override
-  public Collection<IField> getAllStaticFields(){
+  public Collection<IField> getAllStaticFields() {
     return realType.getAllStaticFields();
   }
 
@@ -244,7 +242,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   @Override
-  public Collection<IField> getAllFields()  {
+  public Collection<IField> getAllFields() {
     return realType.getAllFields();
   }
 
@@ -252,7 +250,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   public boolean isPublic() {
     return realType.isPublic();
   }
-  
+
   @Override
   public boolean isPrivate() {
     return realType.isPrivate();
@@ -267,5 +265,4 @@ public class BypassSyntheticClass extends SyntheticClass {
   public Collection<Annotation> getAnnotations() {
     return Collections.emptySet();
   }
-
 }

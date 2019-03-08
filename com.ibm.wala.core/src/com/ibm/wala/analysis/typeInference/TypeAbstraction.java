@@ -17,45 +17,44 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * Abstraction of a Java type. These are immutable.
- * 
+ *
  * @see TypeInference
  */
 public abstract class TypeAbstraction implements ContextItem {
 
-  /**
-   * Canonical element representing TOP for a dataflow lattice
-   */
-  public final static TypeAbstraction TOP = new TypeAbstraction() {
-    @Override
-    public TypeAbstraction meet(TypeAbstraction rhs) {
-      return rhs;
-    }
+  /** Canonical element representing TOP for a dataflow lattice */
+  public static final TypeAbstraction TOP =
+      new TypeAbstraction() {
+        @Override
+        public TypeAbstraction meet(TypeAbstraction rhs) {
+          return rhs;
+        }
 
-    @Override
-    public String toString() {
-      return "WalaTypeAbstraction.TOP";
-    }
+        @Override
+        public String toString() {
+          return "WalaTypeAbstraction.TOP";
+        }
 
-    @Override
-    public int hashCode() {
-      return 17;
-    }
+        @Override
+        public int hashCode() {
+          return 17;
+        }
 
-    @Override
-    public boolean equals(Object other) {
-      return this == other;
-    }
+        @Override
+        public boolean equals(Object other) {
+          return this == other;
+        }
 
-    @Override
-    public IClass getType() {
-      return null;
-    }
+        @Override
+        public IClass getType() {
+          return null;
+        }
 
-    @Override
-    public TypeReference getTypeReference() {
-      return null;
-    }
-  };
+        @Override
+        public TypeReference getTypeReference() {
+          return null;
+        }
+      };
 
   public abstract TypeAbstraction meet(TypeAbstraction rhs);
 
@@ -65,18 +64,16 @@ public abstract class TypeAbstraction implements ContextItem {
   @Override
   public abstract int hashCode();
 
-  /**
-   * A TypeReference representing the types of this abstraction
-   */
+  /** A TypeReference representing the types of this abstraction */
   public abstract TypeReference getTypeReference();
 
   /**
-   * This is here for convenience; it makes sense for Point and Cone Dispatch.
-   * TODO: probably should get rid of it.
-   * @throws UnsupportedOperationException  unconditionally
+   * This is here for convenience; it makes sense for Point and Cone Dispatch. TODO: probably should
+   * get rid of it.
+   *
+   * @throws UnsupportedOperationException unconditionally
    */
   public IClass getType() throws UnsupportedOperationException {
     throw new UnsupportedOperationException("getType not implemented for " + getClass());
   }
-
 }

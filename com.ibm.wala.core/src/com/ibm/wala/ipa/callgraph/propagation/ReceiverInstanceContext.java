@@ -14,16 +14,12 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
-/**
- * This is a context which is customized for the {@link InstanceKey} of the receiver.
- */
+/** This is a context which is customized for the {@link InstanceKey} of the receiver. */
 public class ReceiverInstanceContext implements Context {
 
   private final InstanceKey ik;
 
-  /**
-   * @param I the instance key that represents the receiver
-   */
+  /** @param I the instance key that represents the receiver */
   public ReceiverInstanceContext(InstanceKey I) {
     if (I == null) {
       throw new IllegalArgumentException("null I");
@@ -33,8 +29,7 @@ public class ReceiverInstanceContext implements Context {
 
   @Override
   public ContextItem get(ContextKey name) {
-    if (name == ContextKey.RECEIVER)
-      return ik;
+    if (name == ContextKey.RECEIVER) return ik;
     else if (name == ContextKey.PARAMETERS[0])
       return new FilteredPointerKey.SingleInstanceFilter(ik);
     else {
@@ -57,18 +52,13 @@ public class ReceiverInstanceContext implements Context {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final ReceiverInstanceContext other = (ReceiverInstanceContext) obj;
     if (ik == null) {
-      if (other.ik != null)
-        return false;
-    } else if (!ik.equals(other.ik))
-      return false;
+      if (other.ik != null) return false;
+    } else if (!ik.equals(other.ik)) return false;
     return true;
   }
 

@@ -10,23 +10,21 @@
  */
 package com.ibm.wala.types.generics;
 
+import com.ibm.wala.types.TypeReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.ibm.wala.types.TypeReference;
-
 /**
  * UNDER CONSTRUCTION
- * 
+ *
  * <pre> TypeArgument: WildcardIndicator? FieldTypeSignature *
- * 
+ *
  * WildcardIndicator: + -
- * 
- * 
+ *
+ *
  * </pre>
- * 
+ *
  * @author sjfink
- * 
  */
 public class TypeArgument extends Signature {
 
@@ -35,20 +33,22 @@ public class TypeArgument extends Signature {
   private final WildcardIndicator w;
 
   private static enum WildcardIndicator {
-    PLUS, MINUS
+    PLUS,
+    MINUS
   }
 
-  private final static TypeArgument WILDCARD = new TypeArgument("*") {
-    @Override
-    public boolean isWildcard() {
-      return true;
-    }
+  private static final TypeArgument WILDCARD =
+      new TypeArgument("*") {
+        @Override
+        public boolean isWildcard() {
+          return true;
+        }
 
-    @Override
-    public String toString() {
-      return "*";
-    }
-  };
+        @Override
+        public String toString() {
+          return "*";
+        }
+      };
 
   private TypeArgument(String s) {
     super(s);
@@ -86,19 +86,21 @@ public class TypeArgument extends Signature {
 
   private static TypeArgument makeTypeArgument(String s) {
     switch (s.charAt(0)) {
-    case '*':
-      return WILDCARD;
-    case '+': {
-      TypeSignature sig = TypeSignature.make(s.substring(1));
-      return new TypeArgument(sig, WildcardIndicator.PLUS);
-    }
-    case '-': {
-      TypeSignature sig = TypeSignature.make(s.substring(1));
-      return new TypeArgument(sig, WildcardIndicator.MINUS);
-    }
-    default:
-      TypeSignature sig = TypeSignature.make(s);
-      return new TypeArgument(sig, null);
+      case '*':
+        return WILDCARD;
+      case '+':
+        {
+          TypeSignature sig = TypeSignature.make(s.substring(1));
+          return new TypeArgument(sig, WildcardIndicator.PLUS);
+        }
+      case '-':
+        {
+          TypeSignature sig = TypeSignature.make(s.substring(1));
+          return new TypeArgument(sig, WildcardIndicator.MINUS);
+        }
+      default:
+        TypeSignature sig = TypeSignature.make(s);
+        return new TypeArgument(sig, null);
     }
   }
 
@@ -112,62 +114,63 @@ public class TypeArgument extends Signature {
     int i = 1;
     while (true) {
       switch (typeArgs.charAt(i++)) {
-      case TypeReference.ClassTypeCode: {
-        int off = i - 1;
-        int depth = 0;
-        while (typeArgs.charAt(i++) != ';' || depth > 0) {
-          if (typeArgs.charAt(i - 1) == '<') {
-            depth++;
+        case TypeReference.ClassTypeCode:
+          {
+            int off = i - 1;
+            int depth = 0;
+            while (typeArgs.charAt(i++) != ';' || depth > 0) {
+              if (typeArgs.charAt(i - 1) == '<') {
+                depth++;
+              }
+              if (typeArgs.charAt(i - 1) == '>') {
+                depth--;
+              }
+            }
+            args.add(typeArgs.substring(off, i));
+            continue;
           }
-          if (typeArgs.charAt(i - 1) == '>') {
-            depth--;
+        case TypeReference.ArrayTypeCode:
+          {
+            int off = i - 1;
+            while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
+              ++i;
+            }
+            if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
+              while (typeArgs.charAt(i++) != ';') ;
+            } else if (typeArgs.charAt(i++) == (byte) 'T') {
+              while (typeArgs.charAt(i++) != ';') ;
+            }
+            args.add(typeArgs.substring(off, i));
+            continue;
           }
-        }
-        args.add(typeArgs.substring(off, i));
-        continue;
-      }
-      case TypeReference.ArrayTypeCode: {
-        int off = i - 1;
-        while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
-          ++i;
-        }
-        if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
-          while (typeArgs.charAt(i++) != ';')
-            ;
-        } else if (typeArgs.charAt(i++) == (byte) 'T'){
-          while (typeArgs.charAt(i++) != ';')
-            ;
-        }
-        args.add(typeArgs.substring(off, i));
-        continue;
-      }
-      case (byte) '-':
-      case (byte) '+':
-      case (byte) 'T': { // type variable
-        int off = i - 1;
-        while (typeArgs.charAt(i++) != ';')
-          ;
-        args.add(typeArgs.substring(off, i));
-        continue;
-      }
-      case (byte) '*': {
-        // a wildcard
-        args.add("*");
-        continue;
-      }
-      case (byte) '>': // end of argument list
-        int size = args.size();
-        if (size == 0) {
-          return null;
-        }
-        Iterator<String> it = args.iterator();
-        String[] result = new String[size];
-        for (int j = 0; j < size; j++) {
-          result[j] = it.next();
-        }
-        return result;
-      default:
-        assert false : "bad type argument list " + typeArgs;
+        case (byte) '-':
+        case (byte) '+':
+        case (byte) 'T':
+          { // type variable
+            int off = i - 1;
+            while (typeArgs.charAt(i++) != ';') ;
+            args.add(typeArgs.substring(off, i));
+            continue;
+          }
+        case (byte) '*':
+          {
+            // a wildcard
+            args.add("*");
+            continue;
+          }
+        case (byte) '>': // end of argument list
+          int size = args.size();
+          if (size == 0) {
+            return null;
+          }
+          Iterator<String> it = args.iterator();
+          String[] result = new String[size];
+          for (int j = 0; j < size; j++) {
+            result[j] = it.next();
+          }
+          return result;
+        default:
+          assert false : "bad type argument list " + typeArgs;
       }
     }
   }
@@ -186,5 +189,4 @@ public class TypeArgument extends Signature {
       return '-' + sig.toString();
     }
   }
-
 }

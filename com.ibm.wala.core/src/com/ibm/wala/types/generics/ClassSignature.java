@@ -10,26 +10,21 @@
  */
 package com.ibm.wala.types.generics;
 
-import java.util.ArrayList;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import java.util.ArrayList;
 
 /**
  * Under construction.
- * 
- * ClassSignature: 
- *    (&lt;FormalTypeParameter+&gt;)? SuperclassSignature SuperinterfaceSignature*
- * 
- * SuperclassSignature:
- *    ClassTypeSignature
- *    
- * SuperinterfaceSignature:
- *    ClassTypeSignature
- * 
+ *
+ * <p>ClassSignature: (&lt;FormalTypeParameter+&gt;)? SuperclassSignature SuperinterfaceSignature*
+ *
+ * <p>SuperclassSignature: ClassTypeSignature
+ *
+ * <p>SuperinterfaceSignature: ClassTypeSignature
+ *
  * @author sjfink
- * 
  */
 public class ClassSignature extends Signature {
 
@@ -44,27 +39,29 @@ public class ClassSignature extends Signature {
     return new ClassSignature(sig);
   }
 
-  /**
-   * @return the formal type parameters, or null if none
-   */
+  /** @return the formal type parameters, or null if none */
   public FormalTypeParameter[] getFormalTypeParameters() {
     if (rawString().charAt(0) != '<') {
       // no formal type parameters
       return null;
     }
     int index = endOfFormalTypeParameters();
-    String[] args = FormalTypeParameter.parseForFormalTypeParameters(rawString().substring(0,index));
+    String[] args =
+        FormalTypeParameter.parseForFormalTypeParameters(rawString().substring(0, index));
     FormalTypeParameter[] result = new FormalTypeParameter[args.length];
     for (int i = 0; i < args.length; i++) {
       result[i] = FormalTypeParameter.make(args[i]);
     }
     return result;
   }
-  
+
   public ClassTypeSignature getSuperclassSignature() throws IllegalArgumentException {
-    return ClassTypeSignature.makeClassTypeSig(rawString().substring(endOfFormalTypeParameters(),endOfClassTypeSig(endOfFormalTypeParameters())));
+    return ClassTypeSignature.makeClassTypeSig(
+        rawString()
+            .substring(
+                endOfFormalTypeParameters(), endOfClassTypeSig(endOfFormalTypeParameters())));
   }
-  
+
   private int endOfClassTypeSig(int start) throws IllegalArgumentException {
     String s = rawString().substring(start);
     if (s.charAt(0) != 'L') {
@@ -83,13 +80,13 @@ public class ClassSignature extends Signature {
     }
     return start + i + 1;
   }
-  
+
   public ClassTypeSignature[] getSuperinterfaceSignatures() throws IllegalArgumentException {
     int start = endOfClassTypeSig(endOfFormalTypeParameters());
     ArrayList<ClassTypeSignature> result = new ArrayList<>();
     while (start < rawString().length() - 1) {
       int end = endOfClassTypeSig(start);
-      result.add(ClassTypeSignature.makeClassTypeSig(rawString().substring(start,end)));
+      result.add(ClassTypeSignature.makeClassTypeSig(rawString().substring(start, end)));
       start = end;
     }
     if (result.size() == 0) {
@@ -97,9 +94,8 @@ public class ClassSignature extends Signature {
     }
     ClassTypeSignature[] arr = new ClassTypeSignature[result.size()];
     return result.toArray(arr);
-    
   }
-  
+
   private int endOfFormalTypeParameters() {
     if (rawString().charAt(0) != '<') {
       return 0;
@@ -117,10 +113,8 @@ public class ClassSignature extends Signature {
     }
     return i;
   }
-  
-  /**
-   * @return the class signature, or null if none
-   */
+
+  /** @return the class signature, or null if none */
   public static ClassSignature getClassSignature(IClass klass) throws InvalidClassFileException {
     if (klass instanceof ShrikeClass) {
       ShrikeClass sc = (ShrikeClass) klass;

@@ -48,18 +48,23 @@ final class TypeInferenceAssertion implements IRAssertion {
         inference.getType(ssaVariable);
       }
     }
-
   }
 
-  private static IR getIR(CallGraph cg, String fullyQualifiedTypeName, String methodName, String methodParameter, String methodReturnType) {
+  private static IR getIR(
+      CallGraph cg,
+      String fullyQualifiedTypeName,
+      String methodName,
+      String methodParameter,
+      String methodReturnType) {
     IClassHierarchy classHierarchy = cg.getClassHierarchy();
-    MethodReference methodRef = IRTests
-        .descriptorToMethodRef(
-            String.format("Source#%s#%s#(%s)%s", fullyQualifiedTypeName, methodName, methodParameter, methodReturnType),
+    MethodReference methodRef =
+        IRTests.descriptorToMethodRef(
+            String.format(
+                "Source#%s#%s#(%s)%s",
+                fullyQualifiedTypeName, methodName, methodParameter, methodReturnType),
             classHierarchy);
     IMethod method = classHierarchy.resolveMethod(methodRef);
     CGNode node = cg.getNode(method, Everywhere.EVERYWHERE);
     return node.getIR();
   }
-
 }

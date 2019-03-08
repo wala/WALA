@@ -13,8 +13,8 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.intset.SimpleIntVector;
 
 /**
- * We represent a path in a numbered graph as a vector of integers &lt;i_1, ...,
- * i_n&gt; where node i_1 is the src and node i_n is the sink
+ * We represent a path in a numbered graph as a vector of integers &lt;i_1, ..., i_n&gt; where node
+ * i_1 is the src and node i_n is the sink
  */
 public class Path extends SimpleIntVector {
 
@@ -79,12 +79,11 @@ public class Path extends SimpleIntVector {
     StringBuilder result = new StringBuilder("[");
     for (int i = 0; i < size; i++) {
       result.append(get(i));
-      if (i < size -1) {
+      if (i < size - 1) {
         result.append(',');
       }
     }
     result.append(']');
     return result.toString();
   }
-
 }

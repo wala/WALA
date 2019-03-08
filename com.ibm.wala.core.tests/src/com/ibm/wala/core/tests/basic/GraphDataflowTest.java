@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFilter;
@@ -31,14 +28,14 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * Simple Regression test for a graph-based dataflow problem.
- */
+/** Simple Regression test for a graph-based dataflow problem. */
 public class GraphDataflowTest extends WalaTestCase {
 
   public static final String nodeNames = "ABCDEFGH";
-  protected final static String[] nodes = new String[nodeNames.length()];
+  protected static final String[] nodes = new String[nodeNames.length()];
 
   private static BitVector zero() {
     BitVector b = new BitVector();
@@ -52,10 +49,9 @@ public class GraphDataflowTest extends WalaTestCase {
     return b;
   }
 
-  /**
-   * A simple test of the GraphBitVectorDataflow system
-   */
-  @Test public void testSolverNodeEdge() throws CancelException {
+  /** A simple test of the GraphBitVectorDataflow system */
+  @Test
+  public void testSolverNodeEdge() throws CancelException {
     Graph<String> G = buildGraph();
     String result = solveNodeEdge(G);
     System.err.println(result);
@@ -66,41 +62,40 @@ public class GraphDataflowTest extends WalaTestCase {
     Assert.assertEquals(expectedStringNodeEdge(), result);
   }
 
-  @Test public void testSolverNodeOnly() throws CancelException {
+  @Test
+  public void testSolverNodeOnly() throws CancelException {
     Graph<String> G = buildGraph();
     String result = solveNodeOnly(G);
     System.err.println(result);
     Assert.assertEquals(expectedStringNodeOnly(), result);
   }
 
-  /**
-   * @return the expected dataflow result as a String
-   */
+  /** @return the expected dataflow result as a String */
   public static String expectedStringNodeOnly() {
-    return "------\n" + "Node A(0) = { 0 }\n" +
-            "Node B(1) = { 0 1 }\n" +
-            "Node C(2) = { 0 1 2 }\n" +
-            "Node D(3) = { 0 1 3 }\n" +
-            "Node E(4) = { 0 1 2 3 4 }\n" +
-            "Node F(5) = { 0 1 2 3 4 5 }\n" +
-            "Node G(6) = { 6 }\n" +
-            "Node H(7) = { 7 }\n";
+    return "------\n"
+        + "Node A(0) = { 0 }\n"
+        + "Node B(1) = { 0 1 }\n"
+        + "Node C(2) = { 0 1 2 }\n"
+        + "Node D(3) = { 0 1 3 }\n"
+        + "Node E(4) = { 0 1 2 3 4 }\n"
+        + "Node F(5) = { 0 1 2 3 4 5 }\n"
+        + "Node G(6) = { 6 }\n"
+        + "Node H(7) = { 7 }\n";
   }
 
   public static String expectedStringNodeEdge() {
-    return "------\n" + "Node A(0) = { 0 }\n" +
-            "Node B(1) = { 0 1 }\n" +
-            "Node C(2) = { 0 2 }\n" +
-            "Node D(3) = { 1 3 }\n" +
-            "Node E(4) = { 0 1 2 3 4 }\n" +
-            "Node F(5) = { 0 1 2 3 4 5 }\n" +
-            "Node G(6) = { 6 }\n" +
-            "Node H(7) = { 7 }\n";
+    return "------\n"
+        + "Node A(0) = { 0 }\n"
+        + "Node B(1) = { 0 1 }\n"
+        + "Node C(2) = { 0 2 }\n"
+        + "Node D(3) = { 1 3 }\n"
+        + "Node E(4) = { 0 1 2 3 4 }\n"
+        + "Node F(5) = { 0 1 2 3 4 5 }\n"
+        + "Node G(6) = { 6 }\n"
+        + "Node H(7) = { 7 }\n";
   }
 
-  /**
-   * @return a graph with the expected structure
-   */
+  /** @return a graph with the expected structure */
   public static Graph<String> buildGraph() {
     Graph<String> G = SlowSparseNumberedGraph.make();
     for (int i = 0; i < nodeNames.length(); i++) {
@@ -117,42 +112,40 @@ public class GraphDataflowTest extends WalaTestCase {
     return G;
   }
 
-  /**
-   * Solve the dataflow system and return the result as a string
-   */
+  /** Solve the dataflow system and return the result as a string */
   public static String solveNodeOnly(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);
-    ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
-      
-      @Override
-      public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
-        return new BitVectorUnionConstant(values.getMappedIndex(node));
-      }
+    ITransferFunctionProvider<String, BitVectorVariable> functions =
+        new ITransferFunctionProvider<String, BitVectorVariable>() {
 
-      @Override
-      public boolean hasNodeTransferFunctions() {
-        return true;
-      }
+          @Override
+          public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
+            return new BitVectorUnionConstant(values.getMappedIndex(node));
+          }
 
-      @Override
-      public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
-        Assertions.UNREACHABLE();
-        return null;
-      }
+          @Override
+          public boolean hasNodeTransferFunctions() {
+            return true;
+          }
 
-      @Override
-      public boolean hasEdgeTransferFunctions() {
-        return false;
-      }
+          @Override
+          public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
+            Assertions.UNREACHABLE();
+            return null;
+          }
 
-      @Override
-      public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
-        return BitVectorUnion.instance();
-      }
+          @Override
+          public boolean hasEdgeTransferFunctions() {
+            return false;
+          }
 
-    };
+          @Override
+          public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
+            return BitVectorUnion.instance();
+          }
+        };
 
-    BitVectorFramework<String,String> F = new BitVectorFramework<>(G, functions, values);
+    BitVectorFramework<String, String> F = new BitVectorFramework<>(G, functions, values);
     BitVectorSolver<String> s = new BitVectorSolver<>(F);
     s.solve(null);
     return result2String(s);
@@ -160,42 +153,40 @@ public class GraphDataflowTest extends WalaTestCase {
 
   public static String solveNodeEdge(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);
-    ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
+    ITransferFunctionProvider<String, BitVectorVariable> functions =
+        new ITransferFunctionProvider<String, BitVectorVariable>() {
 
-      @Override
-      public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
-        return new BitVectorUnionConstant(values.getMappedIndex(node));
-      }
+          @Override
+          public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
+            return new BitVectorUnionConstant(values.getMappedIndex(node));
+          }
 
-      @Override
-      public boolean hasNodeTransferFunctions() {
-        return true;
-      }
+          @Override
+          public boolean hasNodeTransferFunctions() {
+            return true;
+          }
 
-      @Override
-      public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
-        if (from == nodes[1] && to == nodes[3])
-          return new BitVectorFilter(zero());
-        else if (from == nodes[1] && to == nodes[2])
-          return new BitVectorFilter(one());
-        else {
-          return BitVectorIdentity.instance();
-        }
-      }
+          @Override
+          public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
+            if (from == nodes[1] && to == nodes[3]) return new BitVectorFilter(zero());
+            else if (from == nodes[1] && to == nodes[2]) return new BitVectorFilter(one());
+            else {
+              return BitVectorIdentity.instance();
+            }
+          }
 
-      @Override
-      public boolean hasEdgeTransferFunctions() {
-        return true;
-      }
+          @Override
+          public boolean hasEdgeTransferFunctions() {
+            return true;
+          }
 
-      @Override
-      public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
-        return BitVectorUnion.instance();
-      }
+          @Override
+          public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
+            return BitVectorUnion.instance();
+          }
+        };
 
-    };
-
-    BitVectorFramework<String,String> F = new BitVectorFramework<>(G, functions, values);
+    BitVectorFramework<String, String> F = new BitVectorFramework<>(G, functions, values);
     BitVectorSolver<String> s = new BitVectorSolver<>(F);
     s.solve(null);
     return result2String(s);

@@ -14,14 +14,10 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.types.MethodReference;
 
-/**
- * Utilities for querying a class hierarchy
- */
+/** Utilities for querying a class hierarchy */
 public class ClassHierarchyUtil {
 
-  /**
-   * find the root of the inheritance tree for method m.
-   */
+  /** find the root of the inheritance tree for method m. */
   public static IMethod getRootOfInheritanceTree(IMethod m) {
     IClass c = m.getDeclaringClass();
     IClass parent = c.getSuperclass();
@@ -37,9 +33,7 @@ public class ClassHierarchyUtil {
     }
   }
 
-  /**
-   * Return the method that m overrides, or null if none
-   */
+  /** Return the method that m overrides, or null if none */
   public static IMethod getOverriden(IMethod m) {
     IClass c = m.getDeclaringClass();
     IClass parent = c.getSuperclass();
@@ -54,5 +48,4 @@ public class ClassHierarchyUtil {
       return null;
     }
   }
-
 }

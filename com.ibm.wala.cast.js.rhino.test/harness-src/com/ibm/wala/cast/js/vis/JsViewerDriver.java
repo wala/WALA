@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.cast.js.vis;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Set;
-
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
@@ -37,50 +33,59 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Set;
 
 public class JsViewerDriver extends JSCallGraphBuilderUtil {
-	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, Error, WalaException {
+  public static void main(String args[])
+      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, Error,
+          WalaException {
 
-		if (args.length != 1){
-			System.out.println("Usage: <URL of html page to analyze>");
-			System.exit(1);
-		}
-		boolean domless = false;
-		
-		URL url = new URL(args[0]); 
-		
-		// computing CG + PA
-		JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-		JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
+    if (args.length != 1) {
+      System.out.println("Usage: <URL of html page to analyze>");
+      System.exit(1);
+    }
+    boolean domless = false;
 
-		SourceModule[] sources = getSources(domless, url);
-		
-		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, CGBuilderType.ZERO_ONE_CFA, AstIRFactory.makeDefaultFactory());
-		builder.setBaseURL(url);
+    URL url = new URL(args[0]);
 
-		CallGraph cg = builder.makeCallGraph(builder.getOptions());
-		PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
+    // computing CG + PA
+    JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+    JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
 
-		@SuppressWarnings("unused")
-		JsViewer jsViewer = new JsViewer(cg, pa);
-	}
+    SourceModule[] sources = getSources(domless, url);
 
-	private static SourceModule[] getSources(boolean domless, URL url)
-			throws IOException, Error {
-		JSSourceExtractor sourceExtractor;
-		if (domless ){
-			sourceExtractor = new DomLessSourceExtractor(); 
-		} else {
-			sourceExtractor = new DefaultSourceExtractor();
-		}
+    JSCFABuilder builder =
+        makeCGBuilder(
+            new WebPageLoaderFactory(translatorFactory),
+            sources,
+            CGBuilderType.ZERO_ONE_CFA,
+            AstIRFactory.makeDefaultFactory());
+    builder.setBaseURL(url);
 
-		Set<MappedSourceModule> sourcesMap = sourceExtractor.extractSources(url, new JerichoHtmlParser(), new IdentityUrlResolver());
-		SourceModule[] sources = new SourceFileModule[sourcesMap.size()];
-		int i = 0;
-		for (SourceModule m : sourcesMap){
-			sources[i++] = m;
-		}
-		return sources;
-	}
+    CallGraph cg = builder.makeCallGraph(builder.getOptions());
+    PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
+    @SuppressWarnings("unused")
+    JsViewer jsViewer = new JsViewer(cg, pa);
+  }
+
+  private static SourceModule[] getSources(boolean domless, URL url) throws IOException, Error {
+    JSSourceExtractor sourceExtractor;
+    if (domless) {
+      sourceExtractor = new DomLessSourceExtractor();
+    } else {
+      sourceExtractor = new DefaultSourceExtractor();
+    }
+
+    Set<MappedSourceModule> sourcesMap =
+        sourceExtractor.extractSources(url, new JerichoHtmlParser(), new IdentityUrlResolver());
+    SourceModule[] sources = new SourceFileModule[sourcesMap.size()];
+    int i = 0;
+    for (SourceModule m : sourcesMap) {
+      sources[i++] = m;
+    }
+    return sources;
+  }
 }

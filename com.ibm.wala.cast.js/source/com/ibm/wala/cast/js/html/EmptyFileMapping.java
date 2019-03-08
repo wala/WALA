@@ -18,5 +18,4 @@ public class EmptyFileMapping implements FileMapping {
   public IncludedPosition getIncludedPosition(Position line) {
     return null;
   }
-
 }

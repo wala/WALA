@@ -10,13 +10,6 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.function.Predicate;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
@@ -45,9 +38,16 @@ import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.PDFViewUtil;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.function.Predicate;
 
 /**
- * This simple example WALA application builds a call graph and fires off ghostview to visualize a DOT representation.
+ * This simple example WALA application builds a call graph and fires off ghostview to visualize a
+ * DOT representation.
  */
 public class PDFCallGraph {
   public static boolean isDirectory(String appJar) {
@@ -63,7 +63,7 @@ public class PDFCallGraph {
     }
     return composeString(result);
   }
-  
+
   private static String composeString(Collection<String> s) {
     StringBuilder result = new StringBuilder();
     Iterator<String> it = s.iterator();
@@ -75,32 +75,33 @@ public class PDFCallGraph {
       result.append(it.next());
     }
     return result.toString();
-  }  
-  
-  private final static String PDF_FILE = "cg.pdf";
+  }
+
+  private static final String PDF_FILE = "cg.pdf";
 
   /**
-   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file name" should be something like
-   * "c:/temp/testdata/java_cup.jar"
+   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file
+   * name" should be something like "c:/temp/testdata/java_cup.jar"
    */
   public static void main(String[] args) throws IllegalArgumentException, CancelException {
     run(args);
   }
 
   /**
-   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file name" should be something like
-   * "c:/temp/testdata/java_cup.jar"
+   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file
+   * name" should be something like "c:/temp/testdata/java_cup.jar"
    */
   public static Process run(String[] args) throws IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
-    return run(p.getProperty("appJar"), p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+    return run(
+        p.getProperty("appJar"),
+        p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
 
-  /**
-   * @param appJar something like "c:/temp/testdata/java_cup.jar"
-   */
-  public static Process run(String appJar, String exclusionFile) throws IllegalArgumentException, CancelException {
+  /** @param appJar something like "c:/temp/testdata/java_cup.jar" */
+  public static Process run(String appJar, String exclusionFile)
+      throws IllegalArgumentException, CancelException {
     try {
       Graph<CGNode> g = buildPrunedCallGraph(appJar, (new FileProvider()).getFile(exclusionFile));
 
@@ -133,20 +134,26 @@ public class PDFCallGraph {
    * @param appJar something like "c:/temp/testdata/java_cup.jar"
    * @return a call graph
    */
-  public static Graph<CGNode> buildPrunedCallGraph(String appJar, File exclusionFile) throws WalaException,
-      IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, exclusionFile != null ? exclusionFile : new File(
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+  public static Graph<CGNode> buildPrunedCallGraph(String appJar, File exclusionFile)
+      throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope =
+        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+            appJar,
+            exclusionFile != null
+                ? exclusionFile
+                : new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     System.err.println(CallGraphStats.getStats(cg));
@@ -162,13 +169,14 @@ public class PDFCallGraph {
 
   /**
    * Validate that the command-line arguments obey the expected usage.
-   * 
-   * Usage:
+   *
+   * <p>Usage:
+   *
    * <ul>
-   * <li>args[0] : "-appJar"
-   * <li> args[1] : something like "c:/temp/testdata/java_cup.jar"
+   *   <li>args[0] : "-appJar"
+   *   <li>args[1] : something like "c:/temp/testdata/java_cup.jar"
    * </ul>
-   * 
+   *
    * @throws UnsupportedOperationException if command-line is malformed.
    */
   public static void validateCommandLine(Properties p) {
@@ -179,19 +187,24 @@ public class PDFCallGraph {
 
   /**
    * A filter that accepts WALA objects that "belong" to the application loader.
-   * 
-   * Currently supported WALA types include
+   *
+   * <p>Currently supported WALA types include
+   *
    * <ul>
-   * <li> {@link CGNode}
-   * <li> {@link LocalPointerKey}
+   *   <li>{@link CGNode}
+   *   <li>{@link LocalPointerKey}
    * </ul>
    */
   private static class ApplicationLoaderFilter implements Predicate<CGNode> {
 
-    @Override public boolean test(CGNode o) {
-      if (o == null)
-        return false;
-      return o.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
+    @Override
+    public boolean test(CGNode o) {
+      if (o == null) return false;
+      return o.getMethod()
+          .getDeclaringClass()
+          .getClassLoader()
+          .getReference()
+          .equals(ClassLoaderReference.Application);
     }
   }
 }

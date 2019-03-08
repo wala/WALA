@@ -16,31 +16,27 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * The shared bit vector implementation described by [Heintze 1999] TODO: much optimization possible.
+ * The shared bit vector implementation described by [Heintze 1999] TODO: much optimization
+ * possible.
  */
 public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   private static final long serialVersionUID = -6630888692508092370L;
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
-  private final static boolean PARANOID = false;
+  private static final boolean PARANOID = false;
 
-  private final static int OVERFLOW = 20;
+  private static final int OVERFLOW = 20;
 
   private MutableSparseIntSet privatePart;
 
   private BitVectorIntSet sharedPart;
 
-  /**
-   * 
-   */
-  public MutableSharedBitVectorIntSet() {
-  }
+  /** */
+  public MutableSharedBitVectorIntSet() {}
 
-  /**
-   * @throws IllegalArgumentException if set is null
-   */
+  /** @throws IllegalArgumentException if set is null */
   public MutableSharedBitVectorIntSet(MutableSharedBitVectorIntSet set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -51,9 +47,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     this.sharedPart = set.sharedPart;
   }
 
-  /**
-   * @throws IllegalArgumentException if s is null
-   */
+  /** @throws IllegalArgumentException if s is null */
   public MutableSharedBitVectorIntSet(SparseIntSet s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -69,9 +63,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @throws IllegalArgumentException if s is null
-   */
+  /** @throws IllegalArgumentException if s is null */
   public MutableSharedBitVectorIntSet(BitVectorIntSet s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -109,9 +101,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * 
-   */
+  /** */
   private void checkIntegrity() {
     assert privatePart == null || !privatePart.isEmpty();
     assert sharedPart == null || !sharedPart.isEmpty();
@@ -120,9 +110,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * 
-   */
+  /** */
   private void checkOverflow() {
 
     if (PARANOID) {
@@ -133,10 +121,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         BitVectorIntSet temp = new BitVectorIntSet(privatePart);
         sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
         temp.removeAll(sharedPart);
-        if (!temp.isEmpty())
-          privatePart = MutableSparseIntSet.make(temp);
-        else
-          privatePart = null;
+        if (!temp.isEmpty()) privatePart = MutableSparseIntSet.make(temp);
+        else privatePart = null;
       } else {
         BitVectorIntSet temp = new BitVectorIntSet(sharedPart);
         // when we call findOrCreateSharedSubset, we will ask size() on temp.
@@ -145,10 +131,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         temp.addAll(privatePart);
         sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
         temp.removeAll(sharedPart);
-        if (!temp.isEmpty())
-          privatePart = MutableSparseIntSet.make(temp);
-        else
-          privatePart = null;
+        if (!temp.isEmpty()) privatePart = MutableSparseIntSet.make(temp);
+        else privatePart = null;
       }
     }
     if (PARANOID) {
@@ -189,7 +173,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else {
       // really slow. optimize as needed.
       BitVectorIntSet result = new BitVectorIntSet();
-      for (IntIterator it = intIterator(); it.hasNext();) {
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
         int x = it.next();
         if (that.contains(x)) {
           result.add(x);
@@ -251,8 +235,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (privatePart == null) {
       return (sharedPart == null) ? EmptyIntIterator.instance() : sharedPart.intIterator();
     } else {
-      return (sharedPart == null) ? privatePart.intIterator() : new CompoundIntIterator(privatePart.intIterator(), sharedPart
-          .intIterator());
+      return (sharedPart == null)
+          ? privatePart.intIterator()
+          : new CompoundIntIterator(privatePart.intIterator(), sharedPart.intIterator());
     }
   }
 
@@ -366,8 +351,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       if (privatePart == null)
         /* both parts empty, and that has same (i.e. 0) size */
         return true;
-      else
-        return privatePart.sameValue(that);
+      else return privatePart.sameValue(that);
     } else {
       /* sharedPart != null */
       return makeSparseCopy().sameValue(that);
@@ -386,8 +370,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         // shared part is null and size is same, so number of bits is low
         return that.makeSparseCopy().sameValue(privatePart);
     } else {
-      if (privatePart == null)
-        return sharedPart.sameValue(that);
+      if (privatePart == null) return sharedPart.sameValue(that);
       else
         /* sharedPart != null */
         return makeDenseCopy().sameValue(that);
@@ -476,7 +459,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       return isSubset((MutableSharedBitVectorIntSet) that);
     } else {
       // really slow. optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext();) {
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
         if (!that.contains(it.next())) {
           return false;
         }
@@ -636,7 +619,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else {
       // really slow. optimize as needed.
       boolean result = false;
-      for (IntIterator it = set.intIterator(); it.hasNext();) {
+      for (IntIterator it = set.intIterator(); it.hasNext(); ) {
         int x = it.next();
         if (!contains(x)) {
           result = true;
@@ -684,7 +667,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
           return true;
         }
       }
-    } else { /* privatePart != null */
+    } else {
+      /* privatePart != null */
       if (sharedPart == null) {
         boolean result = privatePart.addAll(set);
         checkOverflow();
@@ -848,7 +832,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       intersectWithInternal(new MutableSharedBitVectorIntSet((BitVectorIntSet) set));
     } else {
       // this is really slow. optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext();) {
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
         int x = it.next();
         if (!set.contains(x)) {
           remove(x);
@@ -911,10 +895,10 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (PARANOID) {
       checkIntegrity();
     }
-
   }
 
-  public static boolean sameSharedPart(MutableSharedBitVectorIntSet a, MutableSharedBitVectorIntSet b) {
+  public static boolean sameSharedPart(
+      MutableSharedBitVectorIntSet a, MutableSharedBitVectorIntSet b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -929,9 +913,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return makeSparseCopy().toString();
   }
 
-  /**
-   * Warning: inefficient; this should not be called often.
-   */
+  /** Warning: inefficient; this should not be called often. */
   MutableSparseIntSet makeSparseCopy() {
     if (privatePart == null) {
       if (sharedPart == null) {
@@ -951,8 +933,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   */
+  /** */
   BitVectorIntSet makeDenseCopy() {
     if (privatePart == null) {
       if (sharedPart == null) {
@@ -1018,16 +999,14 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return addAllInIntersectionGeneral(other, filter);
   }
 
-  /**
-   */
+  /** */
   private boolean addAllInIntersectionGeneral(IntSet other, IntSet filter) {
     BitVectorIntSet o = new BitVectorIntSet(other);
     o.intersectWith(filter);
     return addAll(o);
   }
 
-  /**
-   */
+  /** */
   private boolean addAllInIntersectionInternal(MutableSharedBitVectorIntSet other, IntSet filter) {
     if (other.sharedPart == null) {
       if (other.privatePart == null) {

@@ -14,15 +14,17 @@ import java.util.Collection;
 
 /**
  * Representation of a Dyck-language graph reachability problem for the tabulation solver.
- * 
- * Special case: if supportsMerge(), then the problem is not really IFDS anymore. (TODO: rename it?). Instead, we perform a merge
- * operation before propagating at every program point. This way, we can implement standard interprocedural dataflow and ESP-style
- * property simulation, and various other things.
- * 
- * Note that at the moment, the data structures in the TabulationSolver are not set up to do merge efficiently. TODO.
- * 
- * See Reps, Horwitz, Sagiv POPL 95
- * 
+ *
+ * <p>Special case: if supportsMerge(), then the problem is not really IFDS anymore. (TODO: rename
+ * it?). Instead, we perform a merge operation before propagating at every program point. This way,
+ * we can implement standard interprocedural dataflow and ESP-style property simulation, and various
+ * other things.
+ *
+ * <p>Note that at the moment, the data structures in the TabulationSolver are not set up to do
+ * merge efficiently. TODO.
+ *
+ * <p>See Reps, Horwitz, Sagiv POPL 95
+ *
  * @param <T> type of node in the supergraph
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
@@ -35,16 +37,15 @@ public interface TabulationProblem<T, P, F> {
 
   public IFlowFunctionMap<T> getFunctionMap();
 
-  /**
-   * Define the set of path edges to start propagation with.
-   */
+  /** Define the set of path edges to start propagation with. */
   public Collection<PathEdge<T>> initialSeeds();
 
   /**
-   * Special case: if supportsMerge(), then the problem is not really IFDS anymore. (TODO: rename it?). Instead, we perform a merge
-   * operation before propagating at every program point. This way, we can implement standard interprocedural dataflow and ESP-style
-   * property simulation, and various other things.
-   * 
+   * Special case: if supportsMerge(), then the problem is not really IFDS anymore. (TODO: rename
+   * it?). Instead, we perform a merge operation before propagating at every program point. This
+   * way, we can implement standard interprocedural dataflow and ESP-style property simulation, and
+   * various other things.
+   *
    * @return the merge function, or null if !supportsMerge()
    */
   public IMergeFunction getMergeFunction();

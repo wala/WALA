@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -49,39 +49,37 @@
 package com.ibm.wala.dalvik.classLoader;
 
 public abstract class Literal {
-    public int value;
+  public int value;
 
-    public static class IntLiteral extends Literal
-    {
-        public final int value;
-        public IntLiteral(int value)
-        {
-            this.value = value;
-        }
-    }
-    public static class LongLiteral extends Literal
-    {
-        public final long value;
-        public LongLiteral(long value)
-        {
-            this.value = value;
-        }
-    }
-    public static class FloatLiteral extends Literal
-    {
-        public final float value;
-        public FloatLiteral(float value)
-        {
-            this.value = value;
-        }
-    }
-    public static class DoubleLiteral extends Literal
-    {
-        public final double value;
-        public DoubleLiteral(double value)
-        {
-            this.value = value;
-        }
-    }
+  public static class IntLiteral extends Literal {
+    public final int value;
 
+    public IntLiteral(int value) {
+      this.value = value;
+    }
+  }
+
+  public static class LongLiteral extends Literal {
+    public final long value;
+
+    public LongLiteral(long value) {
+      this.value = value;
+    }
+  }
+
+  public static class FloatLiteral extends Literal {
+    public final float value;
+
+    public FloatLiteral(float value) {
+      this.value = value;
+    }
+  }
+
+  public static class DoubleLiteral extends Literal {
+    public final double value;
+
+    public DoubleLiteral(double value) {
+      this.value = value;
+    }
+  }
 }

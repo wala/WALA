@@ -14,25 +14,26 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 /**
- * A {@link Statement} representing the normal return value in a caller,
- * immediately after returning to the caller.
+ * A {@link Statement} representing the normal return value in a caller, immediately after returning
+ * to the caller.
  */
-public class NormalReturnCaller extends StatementWithInstructionIndex implements ValueNumberCarrier {
+public class NormalReturnCaller extends StatementWithInstructionIndex
+    implements ValueNumberCarrier {
 
   public NormalReturnCaller(CGNode node, int callIndex) {
     super(node, callIndex);
   }
-  
+
   @Override
   public int getValueNumber() {
     return getInstruction().getReturnValue(0);
   }
-  
+
   @Override
   public SSAAbstractInvokeInstruction getInstruction() {
-    return (SSAAbstractInvokeInstruction)super.getInstruction();
+    return (SSAAbstractInvokeInstruction) super.getInstruction();
   }
-  
+
   @Override
   public Kind getKind() {
     return Kind.NORMAL_RET_CALLER;

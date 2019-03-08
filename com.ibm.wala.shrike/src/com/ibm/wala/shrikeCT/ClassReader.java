@@ -12,8 +12,9 @@ package com.ibm.wala.shrikeCT;
 
 /**
  * This is the core class for reading class file data.
- * 
- * ClassReader performs lazy parsing, and thus most of the methods can throw an InvalidClassFileException.
+ *
+ * <p>ClassReader performs lazy parsing, and thus most of the methods can throw an
+ * InvalidClassFileException.
  */
 public final class ClassReader implements ClassConstants {
   private final byte[] bytes;
@@ -32,10 +33,11 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * Build a reader.
-   * 
-   * If the class file data is corrupt an exception might not be thrown immediately. Instead an exception might be thrown later,
-   * during the execution of some access method. This is a consequence of the 'lazy parsing' performed by ClassReader.
-   * 
+   *
+   * <p>If the class file data is corrupt an exception might not be thrown immediately. Instead an
+   * exception might be thrown later, during the execution of some access method. This is a
+   * consequence of the 'lazy parsing' performed by ClassReader.
+   *
    * @param bytes the class file data
    * @throws InvalidClassFileException the class file data is corrupt
    */
@@ -46,8 +48,9 @@ public final class ClassReader implements ClassConstants {
 
   private void checkLength(int offset, int required) throws InvalidClassFileException {
     if (bytes.length < offset + required) {
-      throw new InvalidClassFileException(offset, "file truncated, expected " + required + " bytes, saw only "
-          + (bytes.length - offset));
+      throw new InvalidClassFileException(
+          offset,
+          "file truncated, expected " + required + " bytes, saw only " + (bytes.length - offset));
     }
   }
 
@@ -65,9 +68,10 @@ public final class ClassReader implements ClassConstants {
       throw new InvalidClassFileException(offset, "bad magic number: " + magic);
     }
     if (majorVersion < 45 || majorVersion > 52) {
-      throw new InvalidClassFileException(offset, "unknown class file version: " + majorVersion + '.' + minorVersion);
+      throw new InvalidClassFileException(
+          offset, "unknown class file version: " + majorVersion + '.' + minorVersion);
     }
-    
+
     cpParser = new ConstantPoolParser(bytes, offset, constantPoolCount);
     offset += cpParser.getRawSize();
 
@@ -148,44 +152,32 @@ public final class ClassReader implements ClassConstants {
     return offset;
   }
 
-  /**
-   * @return the raw class data bytes
-   */
+  /** @return the raw class data bytes */
   public byte[] getBytes() {
     return bytes;
   }
 
-  /**
-   * @return the magic number at the start of the class file.
-   */
+  /** @return the magic number at the start of the class file. */
   public int getMagic() {
     return getInt(0);
   }
 
-  /**
-   * @return the minor version of the class file
-   */
+  /** @return the minor version of the class file */
   public int getMinorVersion() {
     return getUShort(4);
   }
 
-  /**
-   * @return the major version of the class file
-   */
+  /** @return the major version of the class file */
   public int getMajorVersion() {
     return getUShort(6);
   }
 
-  /**
-   * @return the access flags for the class
-   */
+  /** @return the access flags for the class */
   public int getAccessFlags() {
     return getUShort(classInfoOffset);
   }
 
-  /**
-   * @return the index of the constant pool entry for the class name
-   */
+  /** @return the index of the constant pool entry for the class name */
   public int getNameIndex() {
     return getUShort(classInfoOffset + 2);
   }
@@ -203,9 +195,7 @@ public final class ClassReader implements ClassConstants {
     }
   }
 
-  /**
-   * @return the name of the class in JVM format (e.g., java/lang/Object)
-   */
+  /** @return the name of the class in JVM format (e.g., java/lang/Object) */
   public String getName() throws InvalidClassFileException {
     String s = getClassFromAddress(classInfoOffset + 2);
     if (s == null) {
@@ -215,23 +205,20 @@ public final class ClassReader implements ClassConstants {
     }
   }
 
-  /**
-   * @return the constant pool index of the superclass name, or 0 if this is java.lang.Object
-   */
+  /** @return the constant pool index of the superclass name, or 0 if this is java.lang.Object */
   public int getSuperNameIndex() {
     return getUShort(classInfoOffset + 4);
   }
 
   /**
-   * @return the superclass name in JVM format (e.g., java/lang/Object), or null if this class is java.lang.Object
+   * @return the superclass name in JVM format (e.g., java/lang/Object), or null if this class is
+   *     java.lang.Object
    */
   public String getSuperName() throws InvalidClassFileException {
     return getClassFromAddress(classInfoOffset + 4);
   }
 
-  /**
-   * @return the number of interfaces this class implements
-   */
+  /** @return the number of interfaces this class implements */
   public int getInterfaceCount() {
     return interfaceCount;
   }
@@ -242,17 +229,13 @@ public final class ClassReader implements ClassConstants {
     }
   }
 
-  /**
-   * @return the constant pool index of the name of the i'th implemented interface
-   */
+  /** @return the constant pool index of the name of the i'th implemented interface */
   public int getInterfaceNameIndex(int i) {
     verifyInterfaceIndex(i);
     return getUShort(classInfoOffset + 8 + 2 * i);
   }
 
-  /**
-   * @return an array of the constant pool indices for the names of the implemented interfaces
-   */
+  /** @return an array of the constant pool indices for the names of the implemented interfaces */
   public int[] getInterfaceNameIndices() {
     int[] indices = new int[interfaceCount];
     for (int i = 0; i < interfaceCount; i++) {
@@ -261,28 +244,26 @@ public final class ClassReader implements ClassConstants {
     return indices;
   }
 
-  /**
-   * @return the name of the i'th implemented interface
-   */
+  /** @return the name of the i'th implemented interface */
   public String getInterfaceName(int i) throws InvalidClassFileException {
     verifyInterfaceIndex(i);
     String s = getClassFromAddress(classInfoOffset + 8 + 2 * i);
     if (s == null) {
-      throw new InvalidClassFileException(classInfoOffset + 8 + 2 * i, "Null interface name not allowed");
+      throw new InvalidClassFileException(
+          classInfoOffset + 8 + 2 * i, "Null interface name not allowed");
     } else {
       return s;
     }
   }
 
-  /**
-   * @return an array of the names of the implemented interfaces
-   */
+  /** @return an array of the names of the implemented interfaces */
   public String[] getInterfaceNames() throws InvalidClassFileException {
     String[] names = new String[interfaceCount];
     for (int i = 0; i < interfaceCount; i++) {
       String s = getClassFromAddress(classInfoOffset + 8 + 2 * i);
       if (s == null) {
-        throw new InvalidClassFileException(classInfoOffset + 8 + 2 * i, "Null interface name not allowed");
+        throw new InvalidClassFileException(
+            classInfoOffset + 8 + 2 * i, "Null interface name not allowed");
       }
       names[i] = s;
     }
@@ -291,51 +272,42 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * This method allows direct read-only access to the constant pool for the class.
-   * 
+   *
    * @return the constant pool for the class
    */
   public ConstantPoolParser getCP() {
     return cpParser;
   }
 
-  /**
-   * @return the signed 32-bit value at offset i in the class data
-   */
+  /** @return the signed 32-bit value at offset i in the class data */
   public int getInt(int i) {
-    return (bytes[i] << 24) + ((bytes[i + 1] & 0xFF) << 16) + ((bytes[i + 2] & 0xFF) << 8) + (bytes[i + 3] & 0xFF);
+    return (bytes[i] << 24)
+        + ((bytes[i + 1] & 0xFF) << 16)
+        + ((bytes[i + 2] & 0xFF) << 8)
+        + (bytes[i + 3] & 0xFF);
   }
 
-  /**
-   * @return the unsigned 16-bit value at offset i in the class data
-   */
+  /** @return the unsigned 16-bit value at offset i in the class data */
   public int getUShort(int i) {
     return ((bytes[i] & 0xFF) << 8) + (bytes[i + 1] & 0xFF);
   }
 
-  /**
-   * @return the signed 16-bit value at offset i in the class data
-   */
+  /** @return the signed 16-bit value at offset i in the class data */
   public int getShort(int i) {
     return (bytes[i] << 8) + (bytes[i + 1] & 0xFF);
   }
 
-  /**
-   * @return the signed 8-bit value at offset i in the class data
-   */
+  /** @return the signed 8-bit value at offset i in the class data */
   public byte getByte(int i) {
     return bytes[i];
   }
-  
-  /**
-   * @return the unsigned 8-bit value at offset i in the class data
-   */
+
+  /** @return the unsigned 8-bit value at offset i in the class data */
   public int getUnsignedByte(int i) {
     return bytes[i] & 0xff;
   }
 
-  /**
-   * @return the number of fields in the class
-   */
+  /** @return the number of fields in the class */
   public int getFieldCount() {
     return fieldOffsets.length - 1;
   }
@@ -346,9 +318,7 @@ public final class ClassReader implements ClassConstants {
     }
   }
 
-  /**
-   * @return the access flags for the f'th field
-   */
+  /** @return the access flags for the f'th field */
   public int getFieldAccessFlags(int f) {
     verifyFieldIndex(f);
     return getUShort(fieldOffsets[f]);
@@ -367,24 +337,21 @@ public final class ClassReader implements ClassConstants {
     }
   }
 
-  /**
-   * @return the name of the f'th field
-   */
+  /** @return the name of the f'th field */
   public String getFieldName(int f) throws InvalidClassFileException {
     verifyFieldIndex(f);
     return getUtf8FromAddress(fieldOffsets[f] + 2);
   }
 
-  /**
-   * @return the type of the f'th field, in JVM format (e.g., I, Z, java/lang/Object)
-   */
+  /** @return the type of the f'th field, in JVM format (e.g., I, Z, java/lang/Object) */
   public String getFieldType(int f) throws InvalidClassFileException {
     verifyFieldIndex(f);
     return getUtf8FromAddress(fieldOffsets[f] + 4);
   }
 
   /**
-   * @return the index of the constant pool entry for the name of the f'th field, in JVM format (e.g., I, Z, Ljava/lang/Object;)
+   * @return the index of the constant pool entry for the name of the f'th field, in JVM format
+   *     (e.g., I, Z, Ljava/lang/Object;)
    */
   public int getFieldNameIndex(int f) {
     verifyFieldIndex(f);
@@ -392,7 +359,8 @@ public final class ClassReader implements ClassConstants {
   }
 
   /**
-   * @return the index of the constant pool entry for the type of the f'th field, in JVM format (e.g., I, Z, Ljava/lang/Object;)
+   * @return the index of the constant pool entry for the type of the f'th field, in JVM format
+   *     (e.g., I, Z, Ljava/lang/Object;)
    */
   public int getFieldTypeIndex(int f) {
     verifyFieldIndex(f);
@@ -401,9 +369,9 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * AttrIterator provides access to attributes in the class file.
-   * 
-   * AttrIterators can be reused for many different iterations, like this:
-   * 
+   *
+   * <p>AttrIterators can be reused for many different iterations, like this:
+   *
    * <pre>
    *   AttrIterator iter = new AttrIterator();
    *    int fieldCount = reader.getFieldCount();
@@ -428,10 +396,10 @@ public final class ClassReader implements ClassConstants {
     private int remaining;
 
     /**
-     * Create a blank iterator. The iterator is not valid until it is initialized by some other class.
+     * Create a blank iterator. The iterator is not valid until it is initialized by some other
+     * class.
      */
-    public AttrIterator() {
-    }
+    public AttrIterator() {}
 
     private void setSize() {
       if (remaining > 0) {
@@ -459,8 +427,9 @@ public final class ClassReader implements ClassConstants {
 
     /**
      * The attribute iterator must be valid.
-     * 
-     * @return the offset of the raw attribute data (including attribute header) in the class file data
+     *
+     * @return the offset of the raw attribute data (including attribute header) in the class file
+     *     data
      */
     public int getRawOffset() {
       verifyValid();
@@ -469,8 +438,9 @@ public final class ClassReader implements ClassConstants {
 
     /**
      * The attribute iterator must be valid.
-     * 
-     * @return the size of the raw attribute data (including attribute header) in the class file data
+     *
+     * @return the size of the raw attribute data (including attribute header) in the class file
+     *     data
      */
     public int getRawSize() {
       verifyValid();
@@ -479,7 +449,7 @@ public final class ClassReader implements ClassConstants {
 
     /**
      * The attribute iterator must be valid.
-     * 
+     *
      * @return the offset of the attribute data (excluding attribute header) in the class file data
      */
     public int getDataOffset() {
@@ -489,7 +459,7 @@ public final class ClassReader implements ClassConstants {
 
     /**
      * The attribute iterator must be valid.
-     * 
+     *
      * @return the size of the attribute data (excluding attribute header) in the class file data
      */
     public int getDataSize() {
@@ -497,16 +467,14 @@ public final class ClassReader implements ClassConstants {
       return size - 6;
     }
 
-    /**
-     * @return the number of attributes left in the list, including this attribute (if valid)
-     */
+    /** @return the number of attributes left in the list, including this attribute (if valid) */
     public int getRemainingAttributesCount() {
       return remaining;
     }
 
     /**
      * The attribute iterator must be valid.
-     * 
+     *
      * @return the constant pool index of the name of the attribute
      */
     public int getNameIndex() {
@@ -516,7 +484,7 @@ public final class ClassReader implements ClassConstants {
 
     /**
      * The attribute iterator must be valid.
-     * 
+     *
      * @return the name of the attribute
      */
     public String getName() throws InvalidClassFileException {
@@ -529,17 +497,16 @@ public final class ClassReader implements ClassConstants {
       }
     }
 
-    /**
-     * @return whether this iterator is valid
-     */
+    /** @return whether this iterator is valid */
     public boolean isValid() {
       return remaining > 0;
     }
 
     /**
      * The attribute iterator must be valid.
-     * 
-     * The iterator is advanced to the next attribute (which might not exist, so the iterator might become invalid).
+     *
+     * <p>The iterator is advanced to the next attribute (which might not exist, so the iterator
+     * might become invalid).
      */
     public void advance() {
       verifyValid();
@@ -551,7 +518,7 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * Point iter at the list of attributes for field f.
-   * 
+   *
    * @throws IllegalArgumentException if iter is null
    */
   public void initFieldAttributeIterator(int f, AttrIterator iter) {
@@ -562,25 +529,19 @@ public final class ClassReader implements ClassConstants {
     iter.init(this, fieldOffsets[f] + 6);
   }
 
-  /**
-   * @return the offset of the raw class data for field f
-   */
+  /** @return the offset of the raw class data for field f */
   public int getFieldRawOffset(int f) {
     verifyFieldIndex(f);
     return fieldOffsets[f];
   }
 
-  /**
-   * @return the size of the raw class data for field f
-   */
+  /** @return the size of the raw class data for field f */
   public int getFieldRawSize(int f) {
     verifyFieldIndex(f);
     return fieldOffsets[f + 1] - fieldOffsets[f];
   }
 
-  /**
-   * @return the number of methods in the class
-   */
+  /** @return the number of methods in the class */
   public int getMethodCount() {
     return methodOffsets.length - 1;
   }
@@ -591,57 +552,43 @@ public final class ClassReader implements ClassConstants {
     }
   }
 
-  /**
-   * @return the offset of the raw class data for method m
-   */
+  /** @return the offset of the raw class data for method m */
   public int getMethodRawOffset(int m) {
     verifyMethodIndex(m);
     return methodOffsets[m];
   }
 
-  /**
-   * @return the size of the raw class data for method m
-   */
+  /** @return the size of the raw class data for method m */
   public int getMethodRawSize(int m) {
     verifyMethodIndex(m);
     return methodOffsets[m + 1] - methodOffsets[m];
   }
 
-  /**
-   * @return the access flags for method m
-   */
+  /** @return the access flags for method m */
   public int getMethodAccessFlags(int m) {
     verifyMethodIndex(m);
     return getUShort(methodOffsets[m]);
   }
 
-  /**
-   * @return the name of method m
-   */
+  /** @return the name of method m */
   public String getMethodName(int m) throws InvalidClassFileException {
     verifyMethodIndex(m);
     return getUtf8FromAddress(methodOffsets[m] + 2);
   }
 
-  /**
-   * @return the method descriptor of method m in JVM format (e.g., (ILjava/lang/Object;)V )
-   */
+  /** @return the method descriptor of method m in JVM format (e.g., (ILjava/lang/Object;)V ) */
   public String getMethodType(int m) throws InvalidClassFileException {
     verifyMethodIndex(m);
     return getUtf8FromAddress(methodOffsets[m] + 4);
   }
 
-  /**
-   * @return the constant pool index of the name of method m
-   */
+  /** @return the constant pool index of the name of method m */
   public int getMethodNameIndex(int m) {
     verifyMethodIndex(m);
     return getUShort(methodOffsets[m] + 2);
   }
 
-  /**
-   * @return the constant pool index of the method descriptor of method m
-   */
+  /** @return the constant pool index of the method descriptor of method m */
   public int getMethodTypeIndex(int m) {
     verifyMethodIndex(m);
     return getUShort(methodOffsets[m] + 4);
@@ -649,7 +596,7 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * Point iter at the list of attributes for method m.
-   * 
+   *
    * @throws IllegalArgumentException if iter is null
    */
   public void initMethodAttributeIterator(int m, AttrIterator iter) {
@@ -662,7 +609,7 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * Point iter at the list of attributes for the class.
-   * 
+   *
    * @throws IllegalArgumentException if iter is null
    */
   public void initClassAttributeIterator(AttrIterator iter) {

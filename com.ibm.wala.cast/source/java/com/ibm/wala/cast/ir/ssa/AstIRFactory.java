@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.ibm.wala.cast.ir.ssa.SSAConversion.SSAInformation;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -34,6 +31,8 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
@@ -47,7 +46,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     public AstDefaultIRFactory() {
       this(new AstIRFactory<T>());
     }
-    
+
     public AstDefaultIRFactory(AstIRFactory<T> astFactory) {
       this.astFactory = astFactory;
     }
@@ -73,26 +72,29 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
   public static class AstIR extends IR {
     private final LexicalInformation lexicalInfo;
-    
+
     private final SSAConversion.SSAInformation localMap;
 
     public LexicalInformation lexicalInfo() {
       return lexicalInfo;
     }
-    
+
     private void setCatchInstructions(SSACFG ssacfg, AbstractCFG<?, ?> oldcfg) {
       for (int i = 0; i < oldcfg.getNumberOfNodes(); i++)
         if (oldcfg.isCatchBlock(i)) {
           ExceptionHandlerBasicBlock B = (ExceptionHandlerBasicBlock) ssacfg.getNode(i);
-          B.setCatchInstruction((SSAGetCaughtExceptionInstruction) getInstructions()[B.getFirstInstructionIndex()]);
+          B.setCatchInstruction(
+              (SSAGetCaughtExceptionInstruction) getInstructions()[B.getFirstInstructionIndex()]);
           getInstructions()[B.getFirstInstructionIndex()] = null;
         }
     }
 
-    private static void setupCatchTypes(SSACFG cfg, Map<IBasicBlock<SSAInstruction>, TypeReference[]> map) {
-      for(Entry<IBasicBlock<SSAInstruction>, TypeReference[]> e : map.entrySet()) {
+    private static void setupCatchTypes(
+        SSACFG cfg, Map<IBasicBlock<SSAInstruction>, TypeReference[]> map) {
+      for (Entry<IBasicBlock<SSAInstruction>, TypeReference[]> e : map.entrySet()) {
         if (e.getKey().getNumber() != -1) {
-          ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(e.getKey().getNumber());
+          ExceptionHandlerBasicBlock bb =
+              (ExceptionHandlerBasicBlock) cfg.getNode(e.getKey().getNumber());
           for (int j = 0; j < e.getValue().length; j++) {
             bb.addCaughtExceptionType(e.getValue()[j]);
           }
@@ -117,14 +119,19 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
     @Override
     public AstMethod getMethod() {
-      return (AstMethod)super.getMethod();
+      return (AstMethod) super.getMethod();
     }
 
-    private AstIR(AstMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
+    private AstIR(
+        AstMethod method,
+        SSAInstruction[] instructions,
+        SymbolTable symbolTable,
+        SSACFG cfg,
+        SSAOptions options) {
       super(method, instructions, symbolTable, cfg, options);
 
       lexicalInfo = method.cloneLexicalInfo();
-      
+
       localMap = SSAConversion.convert(method, this, options);
 
       setCatchInstructions(getControlFlowGraph(), method.cfg());
@@ -144,13 +151,18 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
   @Override
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     assert method instanceof AstMethod : method.toString();
-  
+
     AbstractCFG<?, ?> oldCfg = ((AstMethod) method).cfg();
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
     SSAInstruction[] instrs = oldInstrs.clone();
-    
-    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symbolTable().copy(), new SSACFG(method, oldCfg, instrs),
-        options);
+
+    IR newIR =
+        new AstIR(
+            (AstMethod) method,
+            instrs,
+            ((AstMethod) method).symbolTable().copy(),
+            new SSACFG(method, oldCfg, instrs),
+            options);
 
     return newIR;
   }

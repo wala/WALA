@@ -10,29 +10,26 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * This class implements depth-first search over a Graph, return an enumeration of the nodes of the graph in order of increasing
- * finishing time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by
- * overriding the getConnected method.
+ * This class implements depth-first search over a Graph, return an enumeration of the nodes of the
+ * graph in order of increasing finishing time. This class follows the outNodes of the graph nodes
+ * to define the graph, but this behavior can be changed by overriding the getConnected method.
  */
 public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   public static final long serialVersionUID = 3903190104743762628L;
 
-  /**
-   * An iterator of child nodes for each node being searched
-   */
-  final private Map<T, Iterator<T>> pendingChildren = HashMapFactory.make(25);
+  /** An iterator of child nodes for each node being searched */
+  private final Map<T, Iterator<T>> pendingChildren = HashMapFactory.make(25);
 
   /**
    * Construct a depth-first enumerator starting with a particular node in a directed graph.
-   * 
+   *
    * @param G the graph whose nodes to enumerate
    * @throws IllegalArgumentException if G is null
    */
@@ -47,9 +44,9 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   }
 
   /**
-   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
-   * enumeration.
-   * 
+   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable
+   * from the nodes in the given enumeration.
+   *
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
@@ -63,9 +60,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     init(G, nodes);
   }
 
-  /**
-   * @throws NullPointerException if G is null
-   */
+  /** @throws NullPointerException if G is null */
   public SlowDFSFinishTimeIterator(Graph<T> G) throws NullPointerException {
     this(G, G == null ? null : G.iterator());
   }
@@ -79,5 +74,4 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   void setPendingChildren(T v, Iterator<T> iterator) {
     pendingChildren.put(v, iterator);
   }
-
 }

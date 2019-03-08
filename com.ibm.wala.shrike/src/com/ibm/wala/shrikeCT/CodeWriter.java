@@ -12,11 +12,12 @@ package com.ibm.wala.shrikeCT;
 
 /**
  * This class helps emit Code elements.
- * 
- * After constructing a CodeWriter, at least the max stack, max locals and bytecode bytes must be set before it can be used.
+ *
+ * <p>After constructing a CodeWriter, at least the max stack, max locals and bytecode bytes must be
+ * set before it can be used.
  */
 public final class CodeWriter extends ClassWriter.Element {
-  final private int attrID;
+  private final int attrID;
 
   private int maxLocals = -1;
 
@@ -30,7 +31,7 @@ public final class CodeWriter extends ClassWriter.Element {
 
   /**
    * Build an empty serializable Code attribute.
-   * 
+   *
    * @throws IllegalArgumentException if w is null
    */
   public CodeWriter(ClassWriter w) {
@@ -106,7 +107,7 @@ public final class CodeWriter extends ClassWriter.Element {
 
   /**
    * Set the bytecodes for this Code attribute.
-   * 
+   *
    * @throws IllegalArgumentException if code is null
    */
   public void setCode(byte[] code) throws IllegalArgumentException {
@@ -125,7 +126,7 @@ public final class CodeWriter extends ClassWriter.Element {
 
   /**
    * Set the raw handler data for this Code attribute.
-   * 
+   *
    * @param exnHandlers a flattened sequence of (startPC, endPC, catchClassIndex, catchPC) tuples
    * @throws IllegalArgumentException if exnHandlers is null
    */
@@ -134,7 +135,8 @@ public final class CodeWriter extends ClassWriter.Element {
       throw new IllegalArgumentException("exnHandlers is null");
     }
     if (exnHandlers.length % 4 != 0) {
-      throw new IllegalArgumentException("Exception handlers array has bad length: " + exnHandlers.length);
+      throw new IllegalArgumentException(
+          "Exception handlers array has bad length: " + exnHandlers.length);
     }
     if (exnHandlers.length / 4 > 0xFFFF) {
       throw new IllegalArgumentException("Too many exception handlers: " + exnHandlers.length / 4);
@@ -149,23 +151,17 @@ public final class CodeWriter extends ClassWriter.Element {
     this.exnHandlers = exnHandlers;
   }
 
-  /**
-   * Set the maximum number of local variable space used, in words, by this Code.
-   */
+  /** Set the maximum number of local variable space used, in words, by this Code. */
   public void setMaxLocals(int maxLocals) {
     this.maxLocals = maxLocals;
   }
 
-  /**
-   * Set the maximum stack size, in words, in this Code.
-   */
+  /** Set the maximum stack size, in words, in this Code. */
   public void setMaxStack(int maxStack) {
     this.maxStack = maxStack;
   }
 
-  /**
-   * Set the attributes of this Code.
-   */
+  /** Set the attributes of this Code. */
   public void setAttributes(ClassWriter.Element[] attributes) {
     this.attributes = attributes;
   }

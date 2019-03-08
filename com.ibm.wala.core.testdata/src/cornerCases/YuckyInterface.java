@@ -14,11 +14,7 @@ import javax.swing.tree.RowMapper;
 
 /**
  * @author sfink
- *
- * When analyzed with Java60RegressionExclusions exclusions, the superinterface
- * RowMapper should not be found because we exclude javax.swing.*
+ *     <p>When analyzed with Java60RegressionExclusions exclusions, the superinterface RowMapper
+ *     should not be found because we exclude javax.swing.*
  */
-public interface YuckyInterface extends RowMapper {
-
-
-}
+public interface YuckyInterface extends RowMapper {}

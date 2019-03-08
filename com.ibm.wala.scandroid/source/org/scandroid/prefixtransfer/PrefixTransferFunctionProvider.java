@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -46,70 +46,67 @@
  */
 
 package org.scandroid.prefixtransfer;
+
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixpoint.UnaryOperator;
 
+public class PrefixTransferFunctionProvider
+    implements ITransferFunctionProvider<InstanceKeySite, PrefixVariable> {
 
-public class PrefixTransferFunctionProvider implements ITransferFunctionProvider<InstanceKeySite, PrefixVariable> {
+  public PrefixTransferFunctionProvider() {}
 
-    public PrefixTransferFunctionProvider()
-    {}
+  @Override
+  public UnaryOperator<PrefixVariable> getEdgeTransferFunction(
+      InstanceKeySite src, InstanceKeySite dst) {
+    return null;
+  }
 
-    @Override
-    public UnaryOperator<PrefixVariable> getEdgeTransferFunction(
-            InstanceKeySite src, InstanceKeySite dst) {
-        return null;
-    }
+  @Override
+  public AbstractMeetOperator<PrefixVariable> getMeetOperator() {
+    return new AbstractMeetOperator<PrefixVariable>() {
 
-    @Override
-    public AbstractMeetOperator<PrefixVariable> getMeetOperator() {
-        return new AbstractMeetOperator<PrefixVariable>()
-        {
+      @Override
+      public boolean equals(Object o) {
+        return o != null && o.toString().equals(toString());
+      }
 
-            @Override
-            public boolean equals(Object o) {
-                return o != null && o.toString().equals(toString());
-            }
+      @Override
+      public byte evaluate(PrefixVariable lhs, PrefixVariable[] rhs) {
+        //              System.out.println("Evaluating meet");
+        boolean changed = false;
 
-            @Override
-            public byte evaluate(PrefixVariable lhs, PrefixVariable[] rhs) {
-//              System.out.println("Evaluating meet");
-                boolean changed = false;
-                
-                for (final PrefixVariable rhsTPV : rhs) {
-                    changed = lhs.updateAll(rhsTPV) || changed;
-                }
-                
-                return (changed ? (byte) 1 : (byte) 0);
-            }
+        for (final PrefixVariable rhsTPV : rhs) {
+          changed = lhs.updateAll(rhsTPV) || changed;
+        }
 
-            @Override
-            public int hashCode() {
-                return toString().hashCode();
-            }
+        return (changed ? (byte) 1 : (byte) 0);
+      }
 
-            @Override
-            public String toString() {
-                return "TaintPropagationVariable union";
-            }
+      @Override
+      public int hashCode() {
+        return toString().hashCode();
+      }
 
-        };
-    }
+      @Override
+      public String toString() {
+        return "TaintPropagationVariable union";
+      }
+    };
+  }
 
-    @Override
-    public UnaryOperator<PrefixVariable> getNodeTransferFunction(InstanceKeySite node) {
-        return new PrefixTransferFunction(node);
-    }
+  @Override
+  public UnaryOperator<PrefixVariable> getNodeTransferFunction(InstanceKeySite node) {
+    return new PrefixTransferFunction(node);
+  }
 
-    @Override
-    public boolean hasEdgeTransferFunctions() {
-        return false;
-    }
+  @Override
+  public boolean hasEdgeTransferFunctions() {
+    return false;
+  }
 
-    @Override
-    public boolean hasNodeTransferFunctions() {
-        return true;
-    }
-
+  @Override
+  public boolean hasNodeTransferFunctions() {
+    return true;
+  }
 }

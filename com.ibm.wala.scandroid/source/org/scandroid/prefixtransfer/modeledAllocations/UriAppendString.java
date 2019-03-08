@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -52,40 +52,42 @@ import org.scandroid.prefixtransfer.PrefixVariable;
 
 public class UriAppendString extends InstanceKeySite {
 
-    final int uriInstanceID;
-    final int stringInstanceID;
-    final int instanceID;
+  final int uriInstanceID;
+  final int stringInstanceID;
+  final int instanceID;
 
-    public UriAppendString(int instanceID, int uriInstanceID, int stringInstanceID)
-    {
-        this.uriInstanceID = uriInstanceID;
-        this.stringInstanceID = stringInstanceID;
-        this.instanceID = instanceID;
-    }
+  public UriAppendString(int instanceID, int uriInstanceID, int stringInstanceID) {
+    this.uriInstanceID = uriInstanceID;
+    this.stringInstanceID = stringInstanceID;
+    this.instanceID = instanceID;
+  }
 
-    @Override
-    public PrefixVariable propagate(PrefixVariable input) {
-//      System.out.println("Propagating at: " + instanceID + " (" + constantValue + ")");
-        PrefixVariable retVal = new PrefixVariable();
-        retVal.copyState(input);
-        String prefix = input.getPrefix(uriInstanceID);
-        if (input.fullPrefixKnown.contains(uriInstanceID)) {
-            retVal.update(instanceID, prefix + '/' + input.getPrefix(stringInstanceID));
-            if (input.fullPrefixKnown.contains(stringInstanceID))
-                retVal.include(instanceID);
-        }
-        else retVal.update(instanceID, prefix);
-        return retVal;
-    }
+  @Override
+  public PrefixVariable propagate(PrefixVariable input) {
+    //      System.out.println("Propagating at: " + instanceID + " (" + constantValue + ")");
+    PrefixVariable retVal = new PrefixVariable();
+    retVal.copyState(input);
+    String prefix = input.getPrefix(uriInstanceID);
+    if (input.fullPrefixKnown.contains(uriInstanceID)) {
+      retVal.update(instanceID, prefix + '/' + input.getPrefix(stringInstanceID));
+      if (input.fullPrefixKnown.contains(stringInstanceID)) retVal.include(instanceID);
+    } else retVal.update(instanceID, prefix);
+    return retVal;
+  }
 
-    @Override
-    public String toString() {
-        return ("UriAppendString(instanceID = " + instanceID + "; uriInstanceID = " + uriInstanceID + "; stringInstanceID = " + stringInstanceID + ')');
-    }
+  @Override
+  public String toString() {
+    return ("UriAppendString(instanceID = "
+        + instanceID
+        + "; uriInstanceID = "
+        + uriInstanceID
+        + "; stringInstanceID = "
+        + stringInstanceID
+        + ')');
+  }
 
-    @Override
-    public int instanceID() {
-        return instanceID;
-    }
-
+  @Override
+  public int instanceID() {
+    return instanceID;
+  }
 }

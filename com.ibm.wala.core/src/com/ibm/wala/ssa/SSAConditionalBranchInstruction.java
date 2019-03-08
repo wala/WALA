@@ -14,9 +14,7 @@ import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator;
 import com.ibm.wala.types.TypeReference;
 
-/**
- * A conditional branch instruction, which tests two values according to some {@link IOperator}.
- */
+/** A conditional branch instruction, which tests two values according to some {@link IOperator}. */
 public class SSAConditionalBranchInstruction extends SSAInstruction {
   private final IConditionalBranchInstruction.IOperator operator;
 
@@ -26,9 +24,15 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   private final TypeReference type;
 
-  final private int target;
+  private final int target;
 
-  public SSAConditionalBranchInstruction(int iindex, IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2, int target)
+  public SSAConditionalBranchInstruction(
+      int iindex,
+      IConditionalBranchInstruction.IOperator operator,
+      TypeReference type,
+      int val1,
+      int val2,
+      int target)
       throws IllegalArgumentException {
     super(iindex);
     this.target = target;
@@ -49,21 +53,34 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
+      throws IllegalArgumentException {
     if (uses != null && uses.length < 2) {
       throw new IllegalArgumentException("(uses != null) and (uses.length < 2)");
     }
-    return insts.ConditionalBranchInstruction(iindex, operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1], target);
+    return insts.ConditionalBranchInstruction(
+        iindex,
+        operator,
+        type,
+        uses == null ? val1 : uses[0],
+        uses == null ? val2 : uses[1],
+        target);
   }
 
   public IConditionalBranchInstruction.IOperator getOperator() {
     return operator;
   }
 
-
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "conditional branch(" + operator + ", to iindex=" + target + ") " + getValueString(symbolTable, val1) + ',' + getValueString(symbolTable, val2);
+    return "conditional branch("
+        + operator
+        + ", to iindex="
+        + target
+        + ") "
+        + getValueString(symbolTable, val1)
+        + ','
+        + getValueString(symbolTable, val2);
   }
 
   @Override
@@ -109,5 +126,4 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return true;
   }
-
 }

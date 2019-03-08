@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,21 +47,6 @@
  */
 
 package org.scandroid.flow.functions;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.scandroid.domain.CodeElement;
-import org.scandroid.domain.DomainElement;
-import org.scandroid.domain.FieldElement;
-import org.scandroid.domain.IFDSTaintDomain;
-import org.scandroid.domain.InstanceKeyElement;
-import org.scandroid.domain.LocalElement;
-import org.scandroid.domain.ReturnElement;
-import org.scandroid.flow.types.FlowType;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -96,512 +81,487 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.scandroid.domain.CodeElement;
+import org.scandroid.domain.DomainElement;
+import org.scandroid.domain.FieldElement;
+import org.scandroid.domain.IFDSTaintDomain;
+import org.scandroid.domain.InstanceKeyElement;
+import org.scandroid.domain.LocalElement;
+import org.scandroid.domain.ReturnElement;
+import org.scandroid.flow.types.FlowType;
 
-
-/**
- * @deprecated Replaced by TaintTransferFunctions.
- */
+/** @deprecated Replaced by TaintTransferFunctions. */
 @Deprecated
 public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
-implements IFlowFunctionMap<BasicBlockInContext<E>> {
+    implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
-	private final IFDSTaintDomain<E> domain;
-	private final ISupergraph<BasicBlockInContext<E>,CGNode> graph;
-	private final PointerAnalysis<InstanceKey> pa;
+  private final IFDSTaintDomain<E> domain;
+  private final ISupergraph<BasicBlockInContext<E>, CGNode> graph;
+  private final PointerAnalysis<InstanceKey> pa;
 
-	public IFDSTaintFlowFunctionProvider(IFDSTaintDomain<E> domain,
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
-			PointerAnalysis<InstanceKey> pa)
-	{
-		this.domain = domain;
-		this.graph = graph;
-		this.pa = pa;
-	}
+  public IFDSTaintFlowFunctionProvider(
+      IFDSTaintDomain<E> domain,
+      ISupergraph<BasicBlockInContext<E>, CGNode> graph,
+      PointerAnalysis<InstanceKey> pa) {
+    this.domain = domain;
+    this.graph = graph;
+    this.pa = pa;
+  }
 
-	// instruction has a valid def set
-	private static boolean inFlow(SSAInstruction instruction) {
-		return  (instruction instanceof SSAArrayLoadInstruction) ||
-				(instruction instanceof SSAGetInstruction);
-	}
+  // instruction has a valid def set
+  private static boolean inFlow(SSAInstruction instruction) {
+    return (instruction instanceof SSAArrayLoadInstruction)
+        || (instruction instanceof SSAGetInstruction);
+  }
 
-	// instruction's def is getUse(0)
-	private static boolean outFlow(SSAInstruction instruction) {
-		return (instruction instanceof SSAArrayStoreInstruction) ||
-			   (instruction instanceof SSAPutInstruction) ||
-			   (instruction instanceof SSAInvokeInstruction);
-	}
+  // instruction's def is getUse(0)
+  private static boolean outFlow(SSAInstruction instruction) {
+    return (instruction instanceof SSAArrayStoreInstruction)
+        || (instruction instanceof SSAPutInstruction)
+        || (instruction instanceof SSAInvokeInstruction);
+  }
 
-	// instruction is a return instruction
-	private static boolean returnFlow(SSAInstruction instruction) {
-		return (instruction instanceof SSAReturnInstruction);
-	}
+  // instruction is a return instruction
+  private static boolean returnFlow(SSAInstruction instruction) {
+    return (instruction instanceof SSAReturnInstruction);
+  }
 
-	private static class UseDefSetPair
-	{
-		public Set<CodeElement> uses = HashSetFactory.make();
-		public Set<CodeElement> defs = HashSetFactory.make();
-	}
+  private static class UseDefSetPair {
+    public Set<CodeElement> uses = HashSetFactory.make();
+    public Set<CodeElement> defs = HashSetFactory.make();
+  }
 
-	private class DefUse implements IUnaryFlowFunction {
-	
-		private final List<UseDefSetPair> useToDefList = new ArrayList<>();
+  private class DefUse implements IUnaryFlowFunction {
 
-		private final BasicBlockInContext<E> bb;
+    private final List<UseDefSetPair> useToDefList = new ArrayList<>();
 
-		public DefUse(final BasicBlockInContext<E> inBlock) {
-			
-			this.bb = inBlock;
+    private final BasicBlockInContext<E> bb;
 
-			for (SSAInstruction instruction : bb) {				
-				handleInstruction(instruction);
-			}
-		}
+    public DefUse(final BasicBlockInContext<E> inBlock) {
 
-		private void handleInstruction(SSAInstruction instruction) {
-//			System.out.println("handle instruction: "+instruction);
-			
-			UseDefSetPair p = new UseDefSetPair();
-			boolean thisToResult = false;
-			if(instruction instanceof SSAInvokeInstruction)
-			{
-				thisToResult = handleInvokeInstruction(instruction, p);
-			}
-			if (thisToResult) {
-				useToDefList.add(p);
-				p = new UseDefSetPair();
-			}
-				
-			IClassHierarchy ch = bb.getNode().getClassHierarchy();
+      this.bb = inBlock;
 
-			if (inFlow(instruction)) {
-				handleInflowInstruction(instruction, p, ch);
-			}
-			else if (outFlow(instruction)) {
-				handleOutflowInstruction(instruction, p, ch);
-			}
-			else if(returnFlow(instruction))
-			{
-				handleReturnFlowInstruction(instruction, p);
-			}
-			else
-			{
-				for (int i = 0; i < instruction.getNumberOfUses(); i++) {
-					p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
-				}
-				for (int j = 0; j < instruction.getNumberOfDefs(); j++) {
-					p.defs.addAll(CodeElement.valueElements(instruction.getDef(j)));
-				}
-			}
-			
-			useToDefList.add(p);
-		}
+      for (SSAInstruction instruction : bb) {
+        handleInstruction(instruction);
+      }
+    }
 
-		private void handleReturnFlowInstruction(SSAInstruction instruction,
-				UseDefSetPair p) {
-			SSAReturnInstruction retInst = (SSAReturnInstruction)instruction;
-			if(retInst.getNumberOfUses() > 0)
-			{
-				/* TODO: why not add instance keys, too? */
-				for(int i = 0; i < instruction.getNumberOfUses(); i++)
-				{
-					//p.uses.add(new LocalElement(instruction.getUse(i)));
-					p.uses.addAll(
-						CodeElement.valueElements(instruction.getUse(i)));
-					
-				}
-				p.defs.add(new ReturnElement());
-			}
-		}
+    private void handleInstruction(SSAInstruction instruction) {
+      //			System.out.println("handle instruction: "+instruction);
 
-		private boolean handleInvokeInstruction(SSAInstruction instruction,
-				UseDefSetPair p) {
-			boolean thisToResult;
-			SSAInvokeInstruction invInst = (SSAInvokeInstruction)instruction;
-			if(!invInst.isSpecial() && !invInst.isStatic() && instruction.getNumberOfDefs() > 0)
-			{
-				//System.out.println("adding receiver flow in "+this+" for "+invInst);
-				//System.out.println("\tadding local element "+invInst.getReceiver());
-				//getReceiver() == getUse(0) == param[0] == this
-				p.uses.addAll(CodeElement.valueElements(invInst.getReceiver()));
-				for(int i = 0; i < invInst.getNumberOfDefs(); i++)
-				{
-					//System.out.println("\tadding def local element "+invInst.getDef(i));
-					//return valuenumber of invoke instruction
-					p.defs.addAll(CodeElement.valueElements(invInst.getDef(i)));
-				}
-			}
-			thisToResult = true;
-			return thisToResult;
-		}
+      UseDefSetPair p = new UseDefSetPair();
+      boolean thisToResult = false;
+      if (instruction instanceof SSAInvokeInstruction) {
+        thisToResult = handleInvokeInstruction(instruction, p);
+      }
+      if (thisToResult) {
+        useToDefList.add(p);
+        p = new UseDefSetPair();
+      }
 
-		private void handleInflowInstruction(SSAInstruction instruction,
-				UseDefSetPair p, IClassHierarchy ch) {
-			if (instruction instanceof SSAGetInstruction) {
-				handleInflowGetInstruction(instruction, p, ch);
-			}
-			else if (instruction instanceof SSAArrayLoadInstruction){
-				handleInflowArrayLoadInstruction(instruction, p);
-			}
-		}
+      IClassHierarchy ch = bb.getNode().getClassHierarchy();
 
-		private void handleOutflowInstruction(SSAInstruction instruction,
-				UseDefSetPair p, IClassHierarchy ch) {
-			if (instruction instanceof SSAPutInstruction) {
-				handleOutflowPutInstruction(instruction, p, ch);
-			}
-			else if (instruction instanceof SSAArrayStoreInstruction){						
-				handleOutflowArrayStoreInstruction(instruction, p);
-			}
-			else if (instruction instanceof SSAInvokeInstruction){
-				
-				handleOutflowInvokeInstruction(instruction, p);
-			}
-		}
-
-		private void handleOutflowInvokeInstruction(SSAInstruction instruction,
-				UseDefSetPair p) {
-			MethodReference targetMethod = ((SSAInvokeInstruction) instruction).getCallSite().getDeclaredTarget();
-			if (methodExcluded(targetMethod)) {
-				// TODO make all parameters flow into all other 
-				// parameters, which could happen in the static case as well.
-				if (!((SSAInvokeInstruction) instruction).isStatic()) {
-					// These loops cause all parameters flow into the 
-					// 'this' param (due to instruction.getUse(0))
-					for (int i = 1; i < instruction.getNumberOfUses(); i++) {
-						p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
-					}
-				
-
-					if (instruction.getNumberOfUses() > 0) {
-						p.defs.addAll(CodeElement.valueElements(instruction.getUse(0)));
-					}
-				}
-			}
-		}
-
-		private void handleOutflowArrayStoreInstruction(
-				SSAInstruction instruction, UseDefSetPair p) {
-			p.uses.addAll(CodeElement.valueElements(instruction.getUse(2)));
-			p.defs.addAll(CodeElement.valueElements(instruction.getUse(0)));
-		}
-
-		private void handleOutflowPutInstruction(SSAInstruction instruction,
-				UseDefSetPair p, IClassHierarchy ch) {
-			SSAPutInstruction pi = (SSAPutInstruction)instruction;
-			PointerKey pk;
-			Set<CodeElement> elements = HashSetFactory.make();
-			if (pi.isStatic()) {
-			    p.uses.addAll(CodeElement.valueElements(instruction.getUse(0)));
-			    FieldReference declaredField = pi.getDeclaredField();
-			    IField staticField = getStaticIField(ch, declaredField);
-			    if (staticField == null) {
-			    	pk = null;
-			    } else {
-			    	pk = new StaticFieldKey(staticField);
-			    }
-			} else {
-			    p.uses.addAll(
-			    		CodeElement.valueElements(instruction.getUse(1)));
-
-			    // this value number seems to be the object referenced in this instruction (?)
-				int valueNumber = instruction.getUse(0);
-				pk = new LocalPointerKey(bb.getNode(), valueNumber);
-				
-				//MyLogger.log(LogLevel.DEBUG, " instruction: "+instruction);
-				
-				// add the object that holds the field that was modified
-				// to the list of things tainted by this flow:
-				p.defs.addAll(CodeElement.valueElements(valueNumber));
-			}	
-			// now add the field keys to the defs list so that they
-			// are also tainted:
-			if (pk!=null) {
-				OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
-				if (m != null) {
-					for (InstanceKey instanceKey : m) {
-						elements.add(new FieldElement(instanceKey, pi.getDeclaredField()));
-						elements.add(new InstanceKeyElement(instanceKey));
-					}
-				}
-				p.defs.addAll(elements);
-			}
-		}
-
-		private void handleInflowArrayLoadInstruction(
-				SSAInstruction instruction, UseDefSetPair p) {
-			p.uses.addAll(CodeElement.valueElements(instruction.getUse(0)));
-			p.defs.addAll(CodeElement.valueElements(instruction.getDef()));
-		}
-
-		private void handleInflowGetInstruction(SSAInstruction instruction,
-				UseDefSetPair p, IClassHierarchy ch) {
-			SSAGetInstruction gi = (SSAGetInstruction)instruction;
-			
-			PointerKey pk;
-			FieldReference declaredField = gi.getDeclaredField();
-			if ( gi.isStatic()) {
-			    IField staticField =
-			            getStaticIField(ch, declaredField);
-			    
-			    if (staticField == null) {
-			    	pk = null;
-			    } else {
-			    	pk = new StaticFieldKey(staticField);
-			    }
-			} else {
-			    int valueNumber = instruction.getUse(0);
-			    pk = new LocalPointerKey(bb.getNode(), valueNumber);
-			}
-			
-			if (pk!=null) {
-				Set<CodeElement> elements = HashSetFactory.make();
-				OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
-				if(m != null) {
-					for (InstanceKey instanceKey : m) {
-						elements.add(new FieldElement(instanceKey, declaredField));
-						elements.add(new InstanceKeyElement(instanceKey));
-					}
-				}
-				p.uses.addAll(elements);
-				//getinstruction only has 1 def
-				p.defs.add(new LocalElement(instruction.getDef(0)));
-			}
-		}
-
-		/**
-		 * Determines if the provide method is in the exclusions by checking the supergraph.
-		 * @return True if the method can not be found in the supergraph.
-		 */
-        private boolean methodExcluded(MethodReference method) {
-        	Collection<IMethod> iMethods = pa.getClassHierarchy().getPossibleTargets(method);
-			return 0 == iMethods.size();
-		}
-
-		private IField getStaticIField(IClassHierarchy ch,
-                FieldReference declaredField) {
-            TypeReference staticTypeRef = declaredField.getDeclaringClass();
-            
-            IClass staticClass = ch.lookupClass(staticTypeRef);
-            
-            //referring to a static field which we don't have loaded in the class hierarchy
-            //possibly ignored in the exclusions file or just not included in the scope
-            if (staticClass == null)
-            	return null;
-
-            IField staticField = 
-                    staticClass.getField(declaredField.getName());
-            return staticField;
+      if (inFlow(instruction)) {
+        handleInflowInstruction(instruction, p, ch);
+      } else if (outFlow(instruction)) {
+        handleOutflowInstruction(instruction, p, ch);
+      } else if (returnFlow(instruction)) {
+        handleReturnFlowInstruction(instruction, p);
+      } else {
+        for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+          p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
         }
+        for (int j = 0; j < instruction.getNumberOfDefs(); j++) {
+          p.defs.addAll(CodeElement.valueElements(instruction.getDef(j)));
+        }
+      }
 
-		private void addTargets(CodeElement d1, MutableIntSet set, FlowType<E> taintType)
-		{
-			//System.out.println(this.toString()+".addTargets("+d1+"...)");
-			for(UseDefSetPair p: useToDefList)
-			{
-				if(p.uses.contains(d1))
-				{
-					//System.out.println("\t\tfound pair that uses "+d1);
-					for(CodeElement i:p.defs)
-					{
-						//System.out.println("\t\tadding outflow "+i);
-						set.add(domain.getMappedIndex(new DomainElement(i,taintType)));
-					}
-				}
-			}
-		}	
+      useToDefList.add(p);
+    }
 
-		@Override
-		@SuppressWarnings("unchecked")
-		public IntSet getTargets(int d1) {
-			//System.out.println(this.toString()+".getTargets("+d1+") "+bb);
-			//BitVectorIntSet set = new BitVectorIntSet();
-			MutableSparseIntSet set = MutableSparseIntSet.makeEmpty();
-			set.add(d1);
-			DomainElement de = domain.getMappedObject(d1);
-			if (de != null) {
-				addTargets(de.codeElement, set, de.taintSource);
-			}
-			return set;
-		}
-	}
+    private void handleReturnFlowInstruction(SSAInstruction instruction, UseDefSetPair p) {
+      SSAReturnInstruction retInst = (SSAReturnInstruction) instruction;
+      if (retInst.getNumberOfUses() > 0) {
+        /* TODO: why not add instance keys, too? */
+        for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+          // p.uses.add(new LocalElement(instruction.getUse(i)));
+          p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
+        }
+        p.defs.add(new ReturnElement());
+      }
+    }
 
-	@Override
-	public IUnaryFlowFunction getCallFlowFunction(
-			BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest,
-			BasicBlockInContext<E> ret) {
-		assert graph.isCall(src);
+    private boolean handleInvokeInstruction(SSAInstruction instruction, UseDefSetPair p) {
+      boolean thisToResult;
+      SSAInvokeInstruction invInst = (SSAInvokeInstruction) instruction;
+      if (!invInst.isSpecial() && !invInst.isStatic() && instruction.getNumberOfDefs() > 0) {
+        // System.out.println("adding receiver flow in "+this+" for "+invInst);
+        // System.out.println("\tadding local element "+invInst.getReceiver());
+        // getReceiver() == getUse(0) == param[0] == this
+        p.uses.addAll(CodeElement.valueElements(invInst.getReceiver()));
+        for (int i = 0; i < invInst.getNumberOfDefs(); i++) {
+          // System.out.println("\tadding def local element "+invInst.getDef(i));
+          // return valuenumber of invoke instruction
+          p.defs.addAll(CodeElement.valueElements(invInst.getDef(i)));
+        }
+      }
+      thisToResult = true;
+      return thisToResult;
+    }
 
-		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
-		
-//		String signature = dest.getMethod().getSignature();
-//		if ( dest.getMethod().isWalaSynthetic() ) {
-//			System.out.println("Synthetic: "+signature);
-//		} else {
-//			System.err.println(signature);
-//		}
-		
-		
-//		if ( LoaderUtils.fromLoader(src.getNode(), ClassLoaderReference.Application)
-//		  && LoaderUtils.fromLoader(dest.getNode(), ClassLoaderReference.Primordial)) {
-//			System.out.println("Call to system: "+signature);
-//		}
-		
-//		if (! dest.getMethod().isWalaSynthetic()
-//		    && LoaderUtils.fromLoader(dest.getNode(), ClassLoaderReference.Primordial)) {
-//		    
-//            MyLogger.log(DEBUG,"Primordial and No Summary! (getCallFlowFunction) - " + dest.getMethod().getReference());
-//		}
+    private void handleInflowInstruction(
+        SSAInstruction instruction, UseDefSetPair p, IClassHierarchy ch) {
+      if (instruction instanceof SSAGetInstruction) {
+        handleInflowGetInstruction(instruction, p, ch);
+      } else if (instruction instanceof SSAArrayLoadInstruction) {
+        handleInflowArrayLoadInstruction(instruction, p);
+      }
+    }
 
-		final Map<CodeElement,CodeElement> parameterMap = HashMapFactory.make();
-		for (int i = 0; i < instruction.getNumberOfPositionalParameters(); i++) {
-			Set<CodeElement> elements = CodeElement.valueElements(instruction.getUse(i));
-			for(CodeElement e: elements) {
-				parameterMap.put(e, new LocalElement(i+1));
-			}
-		}
+    private void handleOutflowInstruction(
+        SSAInstruction instruction, UseDefSetPair p, IClassHierarchy ch) {
+      if (instruction instanceof SSAPutInstruction) {
+        handleOutflowPutInstruction(instruction, p, ch);
+      } else if (instruction instanceof SSAArrayStoreInstruction) {
+        handleOutflowArrayStoreInstruction(instruction, p);
+      } else if (instruction instanceof SSAInvokeInstruction) {
 
-		return d1 -> {
-			BitVectorIntSet set = new BitVectorIntSet();
-			if(d1 == 0 || !(domain.getMappedObject(d1).codeElement instanceof LocalElement)) {
-				set.add(d1);
-			}
-			DomainElement de = domain.getMappedObject(d1);
-			if(de!=null && parameterMap.containsKey(de.codeElement))
-				set.add(domain.getMappedIndex(new DomainElement(parameterMap.get(de.codeElement),de.taintSource)));
-			return set;
-		};
-	}
+        handleOutflowInvokeInstruction(instruction, p);
+      }
+    }
 
-	@Override
-	public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
-			BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest) {
-		//I Believe this method is called only if there are no callees of src in the supergraph
-		//if supergraph included all primordials, this method can still be called if it calls a 		
-		//method that wasn't included in the scope
-		
-		//Assertions.UNREACHABLE();
-		// TODO: Look up summary for this method, or warn if it doesn't exist.
-		assert (src.getNode().equals(dest.getNode()));
-		
-//		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
+    private void handleOutflowInvokeInstruction(SSAInstruction instruction, UseDefSetPair p) {
+      MethodReference targetMethod =
+          ((SSAInvokeInstruction) instruction).getCallSite().getDeclaredTarget();
+      if (methodExcluded(targetMethod)) {
+        // TODO make all parameters flow into all other
+        // parameters, which could happen in the static case as well.
+        if (!((SSAInvokeInstruction) instruction).isStatic()) {
+          // These loops cause all parameters flow into the
+          // 'this' param (due to instruction.getUse(0))
+          for (int i = 1; i < instruction.getNumberOfUses(); i++) {
+            p.uses.addAll(CodeElement.valueElements(instruction.getUse(i)));
+          }
 
-//		System.out.println("call to return(no callee) method inside call graph: " + src.getNode()+"--" + instruction.getDeclaredTarget());
-		// System.out.println("call to system: " + instruction.getDeclaredTarget());
-		return new DefUse(dest);
-	}
+          if (instruction.getNumberOfUses() > 0) {
+            p.defs.addAll(CodeElement.valueElements(instruction.getUse(0)));
+          }
+        }
+      }
+    }
 
-	@Override
-	public IUnaryFlowFunction getCallToReturnFlowFunction(
-			BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest) {
-		assert (src.getNode().equals(dest.getNode()));
-		//final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
-		//System.out.println("call to return method inside call graph: " + instruction.getDeclaredTarget());
+    private void handleOutflowArrayStoreInstruction(SSAInstruction instruction, UseDefSetPair p) {
+      p.uses.addAll(CodeElement.valueElements(instruction.getUse(2)));
+      p.defs.addAll(CodeElement.valueElements(instruction.getUse(0)));
+    }
 
-		return new DefUse(dest);
-	}
+    private void handleOutflowPutInstruction(
+        SSAInstruction instruction, UseDefSetPair p, IClassHierarchy ch) {
+      SSAPutInstruction pi = (SSAPutInstruction) instruction;
+      PointerKey pk;
+      Set<CodeElement> elements = HashSetFactory.make();
+      if (pi.isStatic()) {
+        p.uses.addAll(CodeElement.valueElements(instruction.getUse(0)));
+        FieldReference declaredField = pi.getDeclaredField();
+        IField staticField = getStaticIField(ch, declaredField);
+        if (staticField == null) {
+          pk = null;
+        } else {
+          pk = new StaticFieldKey(staticField);
+        }
+      } else {
+        p.uses.addAll(CodeElement.valueElements(instruction.getUse(1)));
 
-	@Override
-	public IUnaryFlowFunction getNormalFlowFunction(
-			BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest) {
-		assert (src.getNode().equals(dest.getNode()));
-		//System.out.println("getNormalFlowFuntion");
-		//System.out.println("\tSrc " + src.getLastInstruction());
-		//System.out.println("\tDest " + dest.getLastInstruction());
-		return new DefUse(dest);
-	}
+        // this value number seems to be the object referenced in this instruction (?)
+        int valueNumber = instruction.getUse(0);
+        pk = new LocalPointerKey(bb.getNode(), valueNumber);
 
-	public class ReturnDefUse extends DefUse
-	{
-		CodeElement callSet;
-		Set<CodeElement> receivers = new HashSet<>();
+        // MyLogger.log(LogLevel.DEBUG, " instruction: "+instruction);
 
-		public ReturnDefUse(BasicBlockInContext<E> dest,
-				BasicBlockInContext<E> call) {
-			super(dest);
-			
-			// TODO: look into exception handling through getDef(1)
-			if(call.getLastInstruction() instanceof SSAInvokeInstruction) {
-				SSAInvokeInstruction invInst = (SSAInvokeInstruction) call.getLastInstruction();
-				if(!invInst.isSpecial()) {// && !invInst.isStatic()) {
-//					for (int i = 0; i < invInst.getNumberOfReturnValues(); i++) {
-//						
-//					}
-					if (invInst.hasDef()) {
-						callSet = new LocalElement(invInst.getReturnValue(0));
+        // add the object that holds the field that was modified
+        // to the list of things tainted by this flow:
+        p.defs.addAll(CodeElement.valueElements(valueNumber));
+      }
+      // now add the field keys to the defs list so that they
+      // are also tainted:
+      if (pk != null) {
+        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
+        if (m != null) {
+          for (InstanceKey instanceKey : m) {
+            elements.add(new FieldElement(instanceKey, pi.getDeclaredField()));
+            elements.add(new InstanceKeyElement(instanceKey));
+          }
+        }
+        p.defs.addAll(elements);
+      }
+    }
 
-						if ( !invInst.isStatic() ) {
-							//used to be invInst.getReceiver(), but I believe that was incorrect.
-							receivers.addAll(CodeElement.valueElements(invInst.getReceiver()));
-							//receivers.addAll(CodeElement.valueElements(pa, call.getNode(), invInst.getReturnValue(0)));
-						}
-					}
-				}				
-			}
-			else {
-				callSet = null;
-			}
-//			// TODO: look into exception handling through getDef(1)
-//			if(call.getLastInstruction().getNumberOfDefs() == 1)
-//			{
-//				//System.out.println("\treturn defines something: "+call.getLastInstruction());
-//				callSet = new LocalElement(call.getLastInstruction().getDef(0));
-//				if(call.getLastInstruction() instanceof SSAInvokeInstruction)
-//				{
-//					SSAInvokeInstruction invInst = (SSAInvokeInstruction) call.getLastInstruction();
-//					if(!invInst.isSpecial() && !invInst.isStatic()) {
-//						receivers.addAll(CodeElement.valueElements(pa, call.getNode(), invInst.getReceiver()));
-//					}
-//				}
-//			}
-//			else
-//				callSet = null;
-		}
+    private void handleInflowArrayLoadInstruction(SSAInstruction instruction, UseDefSetPair p) {
+      p.uses.addAll(CodeElement.valueElements(instruction.getUse(0)));
+      p.defs.addAll(CodeElement.valueElements(instruction.getDef()));
+    }
 
-		@Override
-		public IntSet getTargets(int d1)
-		{
-			if(d1 != 0 && domain.getMappedObject(d1).codeElement instanceof ReturnElement)
-			{
-				BitVectorIntSet set = new BitVectorIntSet();
-				if(callSet != null) {
-//					System.out.println("callset: " + callSet);
-					set.add(domain.getMappedIndex(new DomainElement(callSet,domain.getMappedObject(d1).taintSource)));
-				}
-				return set;
-			}
-			else if(d1 != 0 && domain.getMappedObject(d1).codeElement instanceof LocalElement)
-			{
-				return new BitVectorIntSet();
-			}
-			else if(d1 != 0 && receivers.contains(domain.getMappedObject(d1).codeElement))
-			{
-				BitVectorIntSet set = new BitVectorIntSet();
-				if(callSet != null)
-					set.add(domain.getMappedIndex(new DomainElement(callSet,domain.getMappedObject(d1).taintSource)));
-				set.addAll(super.getTargets(d1));
-				return set;
-			}
-			else
-			{
-				return super.getTargets(d1);
-			}
-		}
-	}
+    private void handleInflowGetInstruction(
+        SSAInstruction instruction, UseDefSetPair p, IClassHierarchy ch) {
+      SSAGetInstruction gi = (SSAGetInstruction) instruction;
 
-	@Override
-	public IFlowFunction getReturnFlowFunction(BasicBlockInContext<E> call,
-			BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest) {
-		assert (graph.isCall(call) && graph.isReturn(dest) && call.getNode().equals(dest.getNode()));
-		//final SSAInvokeInstruction instruction = (SSAInvokeInstruction) call.getLastInstruction();
+      PointerKey pk;
+      FieldReference declaredField = gi.getDeclaredField();
+      if (gi.isStatic()) {
+        IField staticField = getStaticIField(ch, declaredField);
 
-		//System.out.println("Return from call to method inside call graph: " + instruction.getDeclaredTarget());
+        if (staticField == null) {
+          pk = null;
+        } else {
+          pk = new StaticFieldKey(staticField);
+        }
+      } else {
+        int valueNumber = instruction.getUse(0);
+        pk = new LocalPointerKey(bb.getNode(), valueNumber);
+      }
 
-		return new ReturnDefUse(dest,call);
-	}
+      if (pk != null) {
+        Set<CodeElement> elements = HashSetFactory.make();
+        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
+        if (m != null) {
+          for (InstanceKey instanceKey : m) {
+            elements.add(new FieldElement(instanceKey, declaredField));
+            elements.add(new InstanceKeyElement(instanceKey));
+          }
+        }
+        p.uses.addAll(elements);
+        // getinstruction only has 1 def
+        p.defs.add(new LocalElement(instruction.getDef(0)));
+      }
+    }
 
+    /**
+     * Determines if the provide method is in the exclusions by checking the supergraph.
+     *
+     * @return True if the method can not be found in the supergraph.
+     */
+    private boolean methodExcluded(MethodReference method) {
+      Collection<IMethod> iMethods = pa.getClassHierarchy().getPossibleTargets(method);
+      return 0 == iMethods.size();
+    }
+
+    private IField getStaticIField(IClassHierarchy ch, FieldReference declaredField) {
+      TypeReference staticTypeRef = declaredField.getDeclaringClass();
+
+      IClass staticClass = ch.lookupClass(staticTypeRef);
+
+      // referring to a static field which we don't have loaded in the class hierarchy
+      // possibly ignored in the exclusions file or just not included in the scope
+      if (staticClass == null) return null;
+
+      IField staticField = staticClass.getField(declaredField.getName());
+      return staticField;
+    }
+
+    private void addTargets(CodeElement d1, MutableIntSet set, FlowType<E> taintType) {
+      // System.out.println(this.toString()+".addTargets("+d1+"...)");
+      for (UseDefSetPair p : useToDefList) {
+        if (p.uses.contains(d1)) {
+          // System.out.println("\t\tfound pair that uses "+d1);
+          for (CodeElement i : p.defs) {
+            // System.out.println("\t\tadding outflow "+i);
+            set.add(domain.getMappedIndex(new DomainElement(i, taintType)));
+          }
+        }
+      }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public IntSet getTargets(int d1) {
+      // System.out.println(this.toString()+".getTargets("+d1+") "+bb);
+      // BitVectorIntSet set = new BitVectorIntSet();
+      MutableSparseIntSet set = MutableSparseIntSet.makeEmpty();
+      set.add(d1);
+      DomainElement de = domain.getMappedObject(d1);
+      if (de != null) {
+        addTargets(de.codeElement, set, de.taintSource);
+      }
+      return set;
+    }
+  }
+
+  @Override
+  public IUnaryFlowFunction getCallFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
+    assert graph.isCall(src);
+
+    final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
+
+    //		String signature = dest.getMethod().getSignature();
+    //		if ( dest.getMethod().isWalaSynthetic() ) {
+    //			System.out.println("Synthetic: "+signature);
+    //		} else {
+    //			System.err.println(signature);
+    //		}
+
+    //		if ( LoaderUtils.fromLoader(src.getNode(), ClassLoaderReference.Application)
+    //		  && LoaderUtils.fromLoader(dest.getNode(), ClassLoaderReference.Primordial)) {
+    //			System.out.println("Call to system: "+signature);
+    //		}
+
+    //		if (! dest.getMethod().isWalaSynthetic()
+    //		    && LoaderUtils.fromLoader(dest.getNode(), ClassLoaderReference.Primordial)) {
+    //
+    //            MyLogger.log(DEBUG,"Primordial and No Summary! (getCallFlowFunction) - " +
+    // dest.getMethod().getReference());
+    //		}
+
+    final Map<CodeElement, CodeElement> parameterMap = HashMapFactory.make();
+    for (int i = 0; i < instruction.getNumberOfPositionalParameters(); i++) {
+      Set<CodeElement> elements = CodeElement.valueElements(instruction.getUse(i));
+      for (CodeElement e : elements) {
+        parameterMap.put(e, new LocalElement(i + 1));
+      }
+    }
+
+    return d1 -> {
+      BitVectorIntSet set = new BitVectorIntSet();
+      if (d1 == 0 || !(domain.getMappedObject(d1).codeElement instanceof LocalElement)) {
+        set.add(d1);
+      }
+      DomainElement de = domain.getMappedObject(d1);
+      if (de != null && parameterMap.containsKey(de.codeElement))
+        set.add(
+            domain.getMappedIndex(
+                new DomainElement(parameterMap.get(de.codeElement), de.taintSource)));
+      return set;
+    };
+  }
+
+  @Override
+  public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    // I Believe this method is called only if there are no callees of src in the supergraph
+    // if supergraph included all primordials, this method can still be called if it calls a
+    // method that wasn't included in the scope
+
+    // Assertions.UNREACHABLE();
+    // TODO: Look up summary for this method, or warn if it doesn't exist.
+    assert (src.getNode().equals(dest.getNode()));
+
+    //		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
+
+    //		System.out.println("call to return(no callee) method inside call graph: " +
+    // src.getNode()+"--" + instruction.getDeclaredTarget());
+    // System.out.println("call to system: " + instruction.getDeclaredTarget());
+    return new DefUse(dest);
+  }
+
+  @Override
+  public IUnaryFlowFunction getCallToReturnFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    assert (src.getNode().equals(dest.getNode()));
+    // final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
+    // System.out.println("call to return method inside call graph: " +
+    // instruction.getDeclaredTarget());
+
+    return new DefUse(dest);
+  }
+
+  @Override
+  public IUnaryFlowFunction getNormalFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    assert (src.getNode().equals(dest.getNode()));
+    // System.out.println("getNormalFlowFuntion");
+    // System.out.println("\tSrc " + src.getLastInstruction());
+    // System.out.println("\tDest " + dest.getLastInstruction());
+    return new DefUse(dest);
+  }
+
+  public class ReturnDefUse extends DefUse {
+    CodeElement callSet;
+    Set<CodeElement> receivers = new HashSet<>();
+
+    public ReturnDefUse(BasicBlockInContext<E> dest, BasicBlockInContext<E> call) {
+      super(dest);
+
+      // TODO: look into exception handling through getDef(1)
+      if (call.getLastInstruction() instanceof SSAInvokeInstruction) {
+        SSAInvokeInstruction invInst = (SSAInvokeInstruction) call.getLastInstruction();
+        if (!invInst.isSpecial()) { // && !invInst.isStatic()) {
+          //					for (int i = 0; i < invInst.getNumberOfReturnValues(); i++) {
+          //
+          //					}
+          if (invInst.hasDef()) {
+            callSet = new LocalElement(invInst.getReturnValue(0));
+
+            if (!invInst.isStatic()) {
+              // used to be invInst.getReceiver(), but I believe that was incorrect.
+              receivers.addAll(CodeElement.valueElements(invInst.getReceiver()));
+              // receivers.addAll(CodeElement.valueElements(pa, call.getNode(),
+              // invInst.getReturnValue(0)));
+            }
+          }
+        }
+      } else {
+        callSet = null;
+      }
+      //			// TODO: look into exception handling through getDef(1)
+      //			if(call.getLastInstruction().getNumberOfDefs() == 1)
+      //			{
+      //				//System.out.println("\treturn defines something: "+call.getLastInstruction());
+      //				callSet = new LocalElement(call.getLastInstruction().getDef(0));
+      //				if(call.getLastInstruction() instanceof SSAInvokeInstruction)
+      //				{
+      //					SSAInvokeInstruction invInst = (SSAInvokeInstruction) call.getLastInstruction();
+      //					if(!invInst.isSpecial() && !invInst.isStatic()) {
+      //						receivers.addAll(CodeElement.valueElements(pa, call.getNode(),
+      // invInst.getReceiver()));
+      //					}
+      //				}
+      //			}
+      //			else
+      //				callSet = null;
+    }
+
+    @Override
+    public IntSet getTargets(int d1) {
+      if (d1 != 0 && domain.getMappedObject(d1).codeElement instanceof ReturnElement) {
+        BitVectorIntSet set = new BitVectorIntSet();
+        if (callSet != null) {
+          //					System.out.println("callset: " + callSet);
+          set.add(
+              domain.getMappedIndex(
+                  new DomainElement(callSet, domain.getMappedObject(d1).taintSource)));
+        }
+        return set;
+      } else if (d1 != 0 && domain.getMappedObject(d1).codeElement instanceof LocalElement) {
+        return new BitVectorIntSet();
+      } else if (d1 != 0 && receivers.contains(domain.getMappedObject(d1).codeElement)) {
+        BitVectorIntSet set = new BitVectorIntSet();
+        if (callSet != null)
+          set.add(
+              domain.getMappedIndex(
+                  new DomainElement(callSet, domain.getMappedObject(d1).taintSource)));
+        set.addAll(super.getTargets(d1));
+        return set;
+      } else {
+        return super.getTargets(d1);
+      }
+    }
+  }
+
+  @Override
+  public IFlowFunction getReturnFlowFunction(
+      BasicBlockInContext<E> call, BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    assert (graph.isCall(call) && graph.isReturn(dest) && call.getNode().equals(dest.getNode()));
+    // final SSAInvokeInstruction instruction = (SSAInvokeInstruction) call.getLastInstruction();
+
+    // System.out.println("Return from call to method inside call graph: " +
+    // instruction.getDeclaredTarget());
+
+    return new ReturnDefUse(dest, call);
+  }
 }

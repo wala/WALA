@@ -12,16 +12,13 @@ package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
-/**
- * Represents a single step in an iterative solver
- */
-public abstract class AbstractStatement<T extends IVariable<T>, O extends AbstractOperator<T>> extends NodeWithNumber implements IFixedPointStatement<T>{
+/** Represents a single step in an iterative solver */
+public abstract class AbstractStatement<T extends IVariable<T>, O extends AbstractOperator<T>>
+    extends NodeWithNumber implements IFixedPointStatement<T> {
 
   public abstract O getOperator();
 
-  /**
-   * Subclasses must implement this, to prevent non-determinism.
-   */
+  /** Subclasses must implement this, to prevent non-determinism. */
   @Override
   public abstract int hashCode();
 
@@ -49,10 +46,9 @@ public abstract class AbstractStatement<T extends IVariable<T>, O extends Abstra
     }
     return result.toString();
   }
-  
+
   public final int getOrderNumber() {
     T lhs = getLHS();
     return (lhs == null) ? 0 : lhs.getOrderNumber();
   }
-
 }

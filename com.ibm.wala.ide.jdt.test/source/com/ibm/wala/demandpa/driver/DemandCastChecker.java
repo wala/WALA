@@ -10,42 +10,27 @@
  */
 
 /**
- * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
- * University of California (Regents). Provided that this notice and
- * the following two paragraphs are included in any distribution of
- * Refinement Analysis Tools or its derivative work, Regents agrees
- * not to assert any of Regents' copyright rights in Refinement
- * Analysis Tools against recipient for recipient's reproduction,
- * preparation of derivative works, public display, public
- * performance, distribution or sublicensing of Refinement Analysis
- * Tools and derivative works, in source code and object code form.
- * This agreement not to assert does not confer, by implication,
- * estoppel, or otherwise any license or rights in any intellectual
- * property of Regents, including, but not limited to, any patents
- * of Regents or Regents' employees.
- * 
- * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
- * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
- * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
- * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *   
- * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
- * WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE AND ACCOMPANYING
- * DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS
- * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
- * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the University of California
+ * (Regents). Provided that this notice and the following two paragraphs are included in any
+ * distribution of Refinement Analysis Tools or its derivative work, Regents agrees not to assert
+ * any of Regents' copyright rights in Refinement Analysis Tools against recipient for recipient's
+ * reproduction, preparation of derivative works, public display, public performance, distribution
+ * or sublicensing of Refinement Analysis Tools and derivative works, in source code and object code
+ * form. This agreement not to assert does not confer, by implication, estoppel, or otherwise any
+ * license or rights in any intellectual property of Regents, including, but not limited to, any
+ * patents of Regents or Regents' employees.
+ *
+ * <p>IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+ * CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+ * DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * <p>REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY
+ * STATUTORY WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY,
+ * PROVIDED HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE,
+ * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.driver;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-import java.util.function.Predicate;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -93,19 +78,25 @@ import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
+import java.util.function.Predicate;
 
 /**
  * Uses a demand-driven points-to analysis to check the safety of downcasts.
- * 
+ *
  * @author Manu Sridharan
- * 
  */
 public class DemandCastChecker {
 
   // maximum number of casts to check
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
-  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
+  public static void main(String[] args)
+      throws IllegalArgumentException, CancelException, IOException {
     try {
       Properties p = new Properties();
       p.putAll(WalaProperties.loadProperties());
@@ -119,8 +110,8 @@ public class DemandCastChecker {
 
   }
 
-  public static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException,
-      CancelException, IOException {
+  public static void runTestCase(String mainClass, String scopeFile, String benchName)
+      throws IllegalArgumentException, CancelException, IOException {
     System.err.println("=====BENCHMARK " + benchName + "=====");
     System.err.println("analyzing " + benchName);
     DemandRefinementPointsTo dmp = null;
@@ -135,24 +126,30 @@ public class DemandCastChecker {
     System.err.println();
   }
 
-  private static DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass, String benchName)
+  private static DemandRefinementPointsTo makeDemandPointerAnalysis(
+      String scopeFile, String mainClass, String benchName)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, getExclusions(benchName));
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, getExclusions(benchName));
     // build a type hierarchy
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA = buildCallGraph(scope, cha, options);
-    CallGraph cg = cgAndPA.fst;    
+    final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA =
+        buildCallGraph(scope, cha, options);
+    CallGraph cg = cgAndPA.fst;
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
     MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, cgAndPA.snd.getHeapModel(), false);
-    DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, heapModel, fam, cha, options, makeStateMachineFactory());
+    DemandRefinementPointsTo fullDemandPointsTo =
+        DemandRefinementPointsTo.makeWithDefaultFlowGraph(
+            cg, heapModel, fam, cha, options, makeStateMachineFactory());
     fullDemandPointsTo.setRefinementPolicyFactory(chooseRefinePolicyFactory(cha));
     return fullDemandPointsTo;
   }
@@ -166,10 +163,9 @@ public class DemandCastChecker {
 
   private static HeapModel heapModel;
 
-  /**
-   * builds a call graph, and sets the corresponding heap model for analysis
-   */
-  private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
+  /** builds a call graph, and sets the corresponding heap model for analysis */
+  private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(
+      AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     CallGraph retCG = null;
     PointerAnalysis<InstanceKey> retPA = null;
@@ -208,81 +204,90 @@ public class DemandCastChecker {
     return new ContextSensitiveStateMachine.Factory();
   }
 
-  private static List<Pair<CGNode, SSACheckCastInstruction>> findFailingCasts(CallGraph cg, DemandRefinementPointsTo dmp) {
+  private static List<Pair<CGNode, SSACheckCastInstruction>> findFailingCasts(
+      CallGraph cg, DemandRefinementPointsTo dmp) {
     final IClassHierarchy cha = dmp.getClassHierarchy();
     List<Pair<CGNode, SSACheckCastInstruction>> failing = new ArrayList<>();
 
     int numSafe = 0, numMightFail = 0;
-    outer: for (CGNode node : cg) {
+    outer:
+    for (CGNode node : cg) {
       TypeReference declaringClass = node.getMethod().getReference().getDeclaringClass();
       // skip library classes
       if (declaringClass.getClassLoader().equals(ClassLoaderReference.Primordial)) {
         continue;
       }
       IR ir = node.getIR();
-      if (ir == null)
-        continue;
+      if (ir == null) continue;
       SSAInstruction[] instrs = ir.getInstructions();
       for (int i = 0; i < instrs.length; i++) {
-        if (numSafe + numMightFail > MAX_CASTS)
-          break outer;
+        if (numSafe + numMightFail > MAX_CASTS) break outer;
         SSAInstruction instruction = instrs[i];
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
           final TypeReference[] declaredResultTypes = castInstr.getDeclaredResultTypes();
-     
+
           boolean primOnly = true;
           for (TypeReference t : declaredResultTypes) {
-            if (! t.isPrimitiveType()) {
+            if (!t.isPrimitiveType()) {
               primOnly = false;
             }
           }
           if (primOnly) {
             continue;
           }
-          
+
           System.err.println("CHECKING " + castInstr + " in " + node.getMethod());
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
-          Predicate<InstanceKey> castPred = ik -> {
-            TypeReference ikTypeRef = ik.getConcreteType().getReference();
-            for (TypeReference t : declaredResultTypes) {
-              if (cha.isAssignableFrom(cha.lookupClass(t), cha.lookupClass(ikTypeRef))) {
-                return true;
-              }
-            }
-            return false;
-          };
+          Predicate<InstanceKey> castPred =
+              ik -> {
+                TypeReference ikTypeRef = ik.getConcreteType().getReference();
+                for (TypeReference t : declaredResultTypes) {
+                  if (cha.isAssignableFrom(cha.lookupClass(t), cha.lookupClass(ikTypeRef))) {
+                    return true;
+                  }
+                }
+                return false;
+              };
           long startTime = System.currentTimeMillis();
-          Pair<PointsToResult, Collection<InstanceKey>> queryResult = dmp.getPointsTo(castedPk, castPred);
+          Pair<PointsToResult, Collection<InstanceKey>> queryResult =
+              dmp.getPointsTo(castedPk, castPred);
           long runningTime = System.currentTimeMillis() - startTime;
           System.err.println("running time: " + runningTime + "ms");
-          final FieldRefinePolicy fieldRefinePolicy = dmp.getRefinementPolicy().getFieldRefinePolicy();
+          final FieldRefinePolicy fieldRefinePolicy =
+              dmp.getRefinementPolicy().getFieldRefinePolicy();
           switch (queryResult.fst) {
-          case SUCCESS:
-            System.err.println("SAFE: " + castInstr + " in " + node.getMethod());
-            if (fieldRefinePolicy instanceof ManualFieldPolicy) {
-              ManualFieldPolicy hackedFieldPolicy = (ManualFieldPolicy) fieldRefinePolicy;
-              System.err.println(hackedFieldPolicy.getHistory());
-            }
-            System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
-            numSafe++;
-            break;
-          case NOMOREREFINE:
-            if (queryResult.snd != null) {
-              System.err.println("MIGHT FAIL: no more refinement possible for " + castInstr + " in " + node.getMethod());
-            } else {
-              System.err.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
-            }
-            failing.add(Pair.make(node, castInstr));
-            numMightFail++;
-            break;
-          case BUDGETEXCEEDED:
-            System.err.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
-            failing.add(Pair.make(node, castInstr));
-            numMightFail++;
-            break;
-          default:
-            Assertions.UNREACHABLE();
+            case SUCCESS:
+              System.err.println("SAFE: " + castInstr + " in " + node.getMethod());
+              if (fieldRefinePolicy instanceof ManualFieldPolicy) {
+                ManualFieldPolicy hackedFieldPolicy = (ManualFieldPolicy) fieldRefinePolicy;
+                System.err.println(hackedFieldPolicy.getHistory());
+              }
+              System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
+              numSafe++;
+              break;
+            case NOMOREREFINE:
+              if (queryResult.snd != null) {
+                System.err.println(
+                    "MIGHT FAIL: no more refinement possible for "
+                        + castInstr
+                        + " in "
+                        + node.getMethod());
+              } else {
+                System.err.println(
+                    "MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
+              }
+              failing.add(Pair.make(node, castInstr));
+              numMightFail++;
+              break;
+            case BUDGETEXCEEDED:
+              System.err.println(
+                  "MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
+              failing.add(Pair.make(node, castInstr));
+              numMightFail++;
+              break;
+            default:
+              Assertions.UNREACHABLE();
           }
         }
       }
@@ -292,5 +297,4 @@ public class DemandCastChecker {
     System.err.println("TOTAL MIGHT FAIL: " + numMightFail);
     return failing;
   }
-
 }

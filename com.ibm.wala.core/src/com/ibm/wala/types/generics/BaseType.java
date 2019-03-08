@@ -15,17 +15,21 @@ import com.ibm.wala.types.TypeReference;
 public class BaseType extends TypeSignature {
 
   private final TypeReference t;
-  
-  final static BaseType BOOLEAN = new BaseType(TypeReference.BooleanName.toString(),TypeReference.Boolean);
-  final static BaseType BYTE     = new BaseType(TypeReference.ByteName.toString(),TypeReference.Byte);
-  final static BaseType SHORT = new BaseType(TypeReference.ShortName.toString(),TypeReference.Short);
-  final static BaseType INT = new BaseType(TypeReference.IntName.toString(),TypeReference.Int);
-  final static BaseType LONG = new BaseType(TypeReference.LongName.toString(),TypeReference.Long);
-  final static BaseType FLOAT = new BaseType(TypeReference.FloatName.toString(),TypeReference.Float);
-  final static BaseType DOUBLE  = new BaseType(TypeReference.DoubleName.toString(),TypeReference.Double);
-  final static BaseType CHAR = new BaseType(TypeReference.CharName.toString(),TypeReference.Char);
-  final static BaseType VOID = new BaseType(TypeReference.VoidName.toString(),TypeReference.Void);
-  
+
+  static final BaseType BOOLEAN =
+      new BaseType(TypeReference.BooleanName.toString(), TypeReference.Boolean);
+  static final BaseType BYTE = new BaseType(TypeReference.ByteName.toString(), TypeReference.Byte);
+  static final BaseType SHORT =
+      new BaseType(TypeReference.ShortName.toString(), TypeReference.Short);
+  static final BaseType INT = new BaseType(TypeReference.IntName.toString(), TypeReference.Int);
+  static final BaseType LONG = new BaseType(TypeReference.LongName.toString(), TypeReference.Long);
+  static final BaseType FLOAT =
+      new BaseType(TypeReference.FloatName.toString(), TypeReference.Float);
+  static final BaseType DOUBLE =
+      new BaseType(TypeReference.DoubleName.toString(), TypeReference.Double);
+  static final BaseType CHAR = new BaseType(TypeReference.CharName.toString(), TypeReference.Char);
+  static final BaseType VOID = new BaseType(TypeReference.VoidName.toString(), TypeReference.Void);
+
   private BaseType(String s, TypeReference t) {
     super(s);
     this.t = t;
@@ -54,5 +58,4 @@ public class BaseType extends TypeSignature {
   public boolean isBaseType() {
     return true;
   }
-
 }

@@ -10,24 +10,19 @@
  */
 package com.ibm.wala.types;
 
-import java.util.HashMap;
-
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
+import java.util.HashMap;
 
-/**
- * A class to represent the reference in a class file to a field.
- */
+/** A class to represent the reference in a class file to a field. */
 public final class FieldReference extends MemberReference {
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
-  /**
-   * Used to canonicalize MemberReferences a mapping from Key -&gt; MemberReference
-   */
-  final private static HashMap<Key, FieldReference> dictionary = HashMapFactory.make();
+  /** Used to canonicalize MemberReferences a mapping from Key -&gt; MemberReference */
+  private static final HashMap<Key, FieldReference> dictionary = HashMapFactory.make();
 
   private final TypeReference fieldType;
 
@@ -38,10 +33,11 @@ public final class FieldReference extends MemberReference {
 
   /**
    * Find or create the canonical MemberReference instance for the given tuple.
-   * 
+   *
    * @param mn the name of the member
    */
-  public static synchronized FieldReference findOrCreate(TypeReference tref, Atom mn, TypeReference fieldType) {
+  public static synchronized FieldReference findOrCreate(
+      TypeReference tref, Atom mn, TypeReference fieldType) {
     if (tref == null) {
       throw new IllegalArgumentException("null tref");
     }
@@ -58,10 +54,9 @@ public final class FieldReference extends MemberReference {
     return val;
   }
 
-  /**
-   * Find or create the canonical MemberReference instance for the given tuple.
-   */
-  public static FieldReference findOrCreate(ClassLoaderReference loader, String classType, String fieldName, String fieldType)
+  /** Find or create the canonical MemberReference instance for the given tuple. */
+  public static FieldReference findOrCreate(
+      ClassLoaderReference loader, String classType, String fieldName, String fieldType)
       throws IllegalArgumentException {
     TypeReference c = ShrikeUtil.makeTypeReference(loader, classType);
     TypeReference ft = ShrikeUtil.makeTypeReference(loader, fieldType);
@@ -73,33 +68,33 @@ public final class FieldReference extends MemberReference {
     super(key.type, key.name, key.hashCode());
     this.fieldType = fieldType;
     if (DEBUG) {
-      if (getName().toString().indexOf('.') > -1)
-        throw new UnimplementedError();
+      if (getName().toString().indexOf('.') > -1) throw new UnimplementedError();
       if (fieldType.toString().indexOf('.') > -1)
         Assertions.UNREACHABLE("Field name: " + fieldType.toString());
-      if (getName().toString().length() == 0)
-        throw new UnimplementedError();
-      if (fieldType.toString().length() == 0)
-        throw new UnimplementedError();
+      if (getName().toString().length() == 0) throw new UnimplementedError();
+      if (fieldType.toString().length() == 0) throw new UnimplementedError();
     }
   }
 
-  /**
-   * @return the descriptor component of this member reference
-   */
+  /** @return the descriptor component of this member reference */
   public final TypeReference getFieldType() {
     return fieldType;
   }
 
   @Override
   public final String toString() {
-    return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + getName() + ", "
-        + fieldType + " >";
+    return "< "
+        + getDeclaringClass().getClassLoader().getName()
+        + ", "
+        + getDeclaringClass().getName()
+        + ", "
+        + getName()
+        + ", "
+        + fieldType
+        + " >";
   }
 
-  /**
-   * An identifier/selector for fields.
-   */
+  /** An identifier/selector for fields. */
   protected static class Key {
     final TypeReference type;
 
@@ -126,5 +121,4 @@ public final class FieldReference extends MemberReference {
       return type.equals(that.type) && name.equals(that.name) && fieldType.equals(that.fieldType);
     }
   }
-
 }

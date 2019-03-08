@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileUtil;
+import com.ibm.wala.util.ref.CacheReference;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -19,20 +23,14 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.util.ref.CacheReference;
-
-/**
- * A module which is a wrapper around a Jar file
- */
+/** A module which is a wrapper around a Jar file */
 public class JarFileModule implements Module {
 
   private final JarFile file;
 
   /**
-   * For efficiency, try to cache the byte[] holding each ZipEntries contents; this will help avoid multiple unzipping
+   * For efficiency, try to cache the byte[] holding each ZipEntries contents; this will help avoid
+   * multiple unzipping
    */
   private final HashMap<ZipEntry, Object> cache = HashMapFactory.make();
 
@@ -55,7 +53,7 @@ public class JarFileModule implements Module {
   protected ModuleEntry createEntry(ZipEntry z) {
     return new JarFileEntry(z.getName(), this);
   }
-  
+
   /*
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
@@ -87,15 +85,11 @@ public class JarFileModule implements Module {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final JarFileModule other = (JarFileModule) obj;
-    if (!file.getName().equals(other.file.getName()))
-      return false;
+    if (!file.getName().equals(other.file.getName())) return false;
     return true;
   }
 
@@ -122,5 +116,4 @@ public class JarFileModule implements Module {
   public JarFile getJarFile() {
     return file;
   }
-
 }

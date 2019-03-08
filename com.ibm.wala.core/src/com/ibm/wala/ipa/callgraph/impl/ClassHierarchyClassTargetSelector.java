@@ -17,15 +17,14 @@ import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * A {@link ClassTargetSelector} that simply looks up the declared type of a {@link NewSiteReference} in the appropriate class hierarchy.
+ * A {@link ClassTargetSelector} that simply looks up the declared type of a {@link
+ * NewSiteReference} in the appropriate class hierarchy.
  */
 public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
 
   private final IClassHierarchy cha;
 
-  /**
-   * @param cha governing class hierarchy
-   */
+  /** @param cha governing class hierarchy */
   public ClassHierarchyClassTargetSelector(IClassHierarchy cha) {
     this.cha = cha;
   }

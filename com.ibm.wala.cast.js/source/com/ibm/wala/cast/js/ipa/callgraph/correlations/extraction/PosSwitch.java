@@ -12,8 +12,11 @@
 package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 public abstract class PosSwitch<A> {
-	public abstract A caseRootPos(RootPos pos);
-	public abstract A caseChildPos(ChildPos pos);
-	public abstract A caseForInLoopBodyPos(ExtractionPos pos);
-	public abstract A caseLabelPos(LabelPos pos);
+  public abstract A caseRootPos(RootPos pos);
+
+  public abstract A caseChildPos(ChildPos pos);
+
+  public abstract A caseForInLoopBodyPos(ExtractionPos pos);
+
+  public abstract A caseLabelPos(LabelPos pos);
 }

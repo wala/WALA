@@ -11,27 +11,22 @@
 
 package com.ibm.wala.classLoader;
 
-import java.io.Reader;
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.Collections;
 
-/**
- * An {@link IClass} that exists nowhere in bytecode.
- */
+/** An {@link IClass} that exists nowhere in bytecode. */
 public abstract class SyntheticClass implements IClass {
 
   private final TypeReference T;
 
   private final IClassHierarchy cha;
-  /**
-   * @param T type reference describing this class
-   */
+  /** @param T type reference describing this class */
   public SyntheticClass(TypeReference T, IClassHierarchy cha) {
     super();
     this.T = T;
@@ -49,36 +44,29 @@ public abstract class SyntheticClass implements IClass {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (!(obj instanceof SyntheticClass))
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof SyntheticClass)) return false;
     final SyntheticClass other = (SyntheticClass) obj;
     if (T == null) {
-      if (other.T != null)
-        return false;
-    } else if (!T.equals(other.T))
-      return false;
+      if (other.T != null) return false;
+    } else if (!T.equals(other.T)) return false;
     if (cha == null) {
-      if (other.cha != null)
-        return false;
-    } else if (!cha.equals(other.cha))
-      return false;
+      if (other.cha != null) return false;
+    } else if (!cha.equals(other.cha)) return false;
     return true;
   }
 
   /**
-   * By default, a synthetic class is "loaded" by the primordial loader.
-   * Subclasses may override as necessary.
+   * By default, a synthetic class is "loaded" by the primordial loader. Subclasses may override as
+   * necessary.
    */
   @Override
   public IClassLoader getClassLoader() {
     return cha.getLoader(T.getClassLoader());
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#isInterface()
    */
   @Override
@@ -86,7 +74,7 @@ public abstract class SyntheticClass implements IClass {
     return false;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#isAbstract()
    */
   @Override
@@ -104,7 +92,7 @@ public abstract class SyntheticClass implements IClass {
     return false;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#getReference()
    */
   @Override
@@ -112,20 +100,20 @@ public abstract class SyntheticClass implements IClass {
     return T;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
   @Override
   public String getSourceFileName() {
     return null;
   }
-  
+
   @Override
   public Reader getSource() {
     return null;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#isArrayClass()
    */
   @Override
@@ -137,15 +125,13 @@ public abstract class SyntheticClass implements IClass {
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
-  
+
   @Override
   public TypeName getName() {
     return getReference().getName();
   }
 
-  /**
-   * we assume synthetic classes do not need to have multiple fields with the same name.  
-   */
+  /** we assume synthetic classes do not need to have multiple fields with the same name. */
   @Override
   public IField getField(Atom name, TypeName typeName) {
     return getField(name);
@@ -155,6 +141,4 @@ public abstract class SyntheticClass implements IClass {
   public Collection<Annotation> getAnnotations() {
     return Collections.emptySet();
   }
-  
-  
 }

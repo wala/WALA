@@ -14,7 +14,7 @@ import com.ibm.wala.fixpoint.AbstractVariable;
 
 /**
  * A type variable in the dataflow system for type inference.
- * 
+ *
  * @see TypeInference
  */
 public class TypeVariable extends AbstractVariable<TypeVariable> {

@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents local variable load instructions.
- */
+/** This class represents local variable load instructions. */
 public final class LoadInstruction extends Instruction implements ILoadInstruction {
   private final int index;
 
@@ -21,7 +19,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
     this.index = index;
   }
 
-  private final static LoadInstruction[] preallocated = preallocate();
+  private static final LoadInstruction[] preallocated = preallocate();
 
   private static LoadInstruction[] preallocate() {
     LoadInstruction[] r = new LoadInstruction[5 * 16];
@@ -48,9 +46,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
     }
   }
 
-  /**
-   * @return the index of the local variable loaded
-   */
+  /** @return the index of the local variable loaded */
   @Override
   public int getVarIndex() {
     return index;
@@ -107,11 +103,11 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
 
   /**
    * Java does not permit this.
+   *
    * @see com.ibm.wala.shrikeBT.IMemoryOperation#isAddressOf()
    */
   @Override
   public boolean isAddressOf() {
     return false;
   }
-
- }
+}

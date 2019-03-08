@@ -10,26 +10,24 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.intset.OrdinalSetMapping;
-
 /**
- * A bit set mapping based on an immutable object array. This is not terribly efficient, but is useful for prototyping.
+ * A bit set mapping based on an immutable object array. This is not terribly efficient, but is
+ * useful for prototyping.
  */
 public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
 
-  final private T[] array;
+  private final T[] array;
 
-  /**
-   * A mapping from object to Integer
-   */
-  final private HashMap<T, Integer> map = HashMapFactory.make();
+  /** A mapping from object to Integer */
+  private final HashMap<T, Integer> map = HashMapFactory.make();
 
   public ObjectArrayMapping(final T[] array) {
     if (array == null) {

@@ -10,58 +10,42 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Collection;
-
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.Collection;
 
-/**
- * Abstract definition of pointer analysis
- */
+/** Abstract definition of pointer analysis */
 public interface PointerAnalysis<T extends InstanceKey> {
-  
+
   /**
    * @param key representative of an equivalence class of pointers
-   * @return Set of InstanceKey, representing the instance abstractions that define
-   * the points-to set computed for the pointer key
+   * @return Set of InstanceKey, representing the instance abstractions that define the points-to
+   *     set computed for the pointer key
    */
   OrdinalSet<T> getPointsToSet(PointerKey key);
 
-  /**
-   * @return an Object that determines how to model abstract locations in the heap.
-   */
+  /** @return an Object that determines how to model abstract locations in the heap. */
   HeapModel getHeapModel();
 
-  /**
-   * @return a graph view of the pointer analysis solution
-   */
+  /** @return a graph view of the pointer analysis solution */
   HeapGraph<T> getHeapGraph();
-  
+
   /**
-   * @return the bijection between InstanceKey &lt;=&gt; Integer that defines the
-   * interpretation of points-to-sets.
+   * @return the bijection between InstanceKey &lt;=&gt; Integer that defines the interpretation of
+   *     points-to-sets.
    */
   OrdinalSetMapping<T> getInstanceKeyMapping();
 
-  /**
-   * @return all pointer keys known
-   */
+  /** @return all pointer keys known */
   Iterable<PointerKey> getPointerKeys();
-  
-  
-  /**
-   * @return all instance keys known
-   */
+
+  /** @return all instance keys known */
   Collection<T> getInstanceKeys();
 
-  /**
-   * did the pointer analysis use a type filter for a given points-to set?
-   * (this is ugly).
-   */
+  /** did the pointer analysis use a type filter for a given points-to set? (this is ugly). */
   boolean isFiltered(PointerKey pk);
-  
-  public IClassHierarchy getClassHierarchy();
 
+  public IClassHierarchy getClassHierarchy();
 }

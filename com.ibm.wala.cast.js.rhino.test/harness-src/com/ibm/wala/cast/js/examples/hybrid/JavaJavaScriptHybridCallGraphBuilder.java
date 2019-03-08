@@ -1,7 +1,5 @@
 package com.ibm.wala.cast.js.examples.hybrid;
 
-import java.util.Map;
-
 import com.ibm.wala.cast.ipa.callgraph.AstCFAPointerKeys;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.AstImplicitPointsToSetVisitor;
 import com.ibm.wala.cast.ipa.callgraph.CrossLanguageCallGraph;
@@ -38,33 +36,41 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Map;
 
-public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropagationCallGraphBuilder {
+public class JavaJavaScriptHybridCallGraphBuilder
+    extends CrossLanguageSSAPropagationCallGraphBuilder {
 
-  public JavaJavaScriptHybridCallGraphBuilder(IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
+  public JavaJavaScriptHybridCallGraphBuilder(
+      IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
     super(fakeRootClass, options, cache, new AstCFAPointerKeys());
     globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Root));
-    
+
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(null, options, cha);
-    setContextInterpreter( contextInterpreter );
+    setContextInterpreter(contextInterpreter);
 
     ContextSelector def = new DefaultContextSelector(options, cha);
-    Map<Atom,ContextSelector> languageSelectors = HashMapFactory.make();
-    languageSelectors.put(JavaScriptTypes.jsName, 
-      new JavaScriptFunctionApplyContextSelector(new JavaScriptConstructorContextSelector(def)));
+    Map<Atom, ContextSelector> languageSelectors = HashMapFactory.make();
+    languageSelectors.put(
+        JavaScriptTypes.jsName,
+        new JavaScriptFunctionApplyContextSelector(new JavaScriptConstructorContextSelector(def)));
     languageSelectors.put(Language.JAVA.getName(), def);
     setContextSelector(new CrossLanguageContextSelector(languageSelectors));
-    
-    Map<Atom,InstanceKeyFactory> instanceKeys = HashMapFactory.make();
+
+    Map<Atom, InstanceKeyFactory> instanceKeys = HashMapFactory.make();
     instanceKeys.put(
-      JavaScriptTypes.jsName,
-      new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
-          options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS))));
+        JavaScriptTypes.jsName,
+        new JavaScriptScopeMappingInstanceKeys(
+            cha,
+            this,
+            new JavaScriptConstructorInstanceKeys(
+                new ZeroXInstanceKeys(
+                    options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS))));
     instanceKeys.put(
         Language.JAVA.getName(),
         new ZeroXInstanceKeys(options, cha, contextInterpreter, ZeroXInstanceKeys.NONE));
     setInstanceKeys(new CrossLanguageInstanceKeys(instanceKeys));
- }
+  }
 
   private final GlobalObjectKey globalObject;
 
@@ -97,21 +103,27 @@ public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropag
   }
 
   @Override
-  protected TargetLanguageSelector<AstImplicitPointsToSetVisitor, LocalPointerKey> makeImplicitVisitorSelector(
-      CrossLanguagePointerAnalysisImpl analysis) {
+  protected TargetLanguageSelector<AstImplicitPointsToSetVisitor, LocalPointerKey>
+      makeImplicitVisitorSelector(CrossLanguagePointerAnalysisImpl analysis) {
     return (language, construct) -> {
       if (JavaScriptTypes.jsName.equals(language)) {
-        return new JSImplicitPointsToSetVisitor((AstPointerAnalysisImpl) getPointerAnalysis(), construct);
+        return new JSImplicitPointsToSetVisitor(
+            (AstPointerAnalysisImpl) getPointerAnalysis(), construct);
       } else {
-        return new AstImplicitPointsToSetVisitor((AstPointerAnalysisImpl) getPointerAnalysis(), construct);
+        return new AstImplicitPointsToSetVisitor(
+            (AstPointerAnalysisImpl) getPointerAnalysis(), construct);
       }
     };
   }
 
   @Override
-  protected TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> makeRootNodeSelector() {
+  protected TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph>
+      makeRootNodeSelector() {
     return (language, construct) -> {
-        return getOptions().getAnalysisScope().getLanguage(language).getFakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
+      return getOptions()
+          .getAnalysisScope()
+          .getLanguage(language)
+          .getFakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
     };
   }
 
@@ -120,7 +132,6 @@ public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropag
     return true;
   }
 
-  
   @Override
   protected AbstractFieldPointerKey fieldKeyForUnknownWrites(AbstractFieldPointerKey fieldKey) {
     // TODO Auto-generated method stub
@@ -129,22 +140,28 @@ public class JavaJavaScriptHybridCallGraphBuilder extends CrossLanguageSSAPropag
 
   @Override
   protected boolean sameMethod(CGNode opNode, String definingMethod) {
-    if (JavaScriptLoader.JS.equals(opNode.getMethod().getDeclaringClass().getClassLoader().getLanguage())) {
-      return definingMethod.equals(opNode.getMethod().getReference().getDeclaringClass().getName().toString());
+    if (JavaScriptLoader.JS.equals(
+        opNode.getMethod().getDeclaringClass().getClassLoader().getLanguage())) {
+      return definingMethod.equals(
+          opNode.getMethod().getReference().getDeclaringClass().getName().toString());
     } else {
       return false;
     }
   }
 
   @Override
-  protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
-      InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
-    if (JavaScriptLoader.JS.equals(caller.getMethod().getDeclaringClass().getClassLoader().getLanguage())) {
-      JSSSAPropagationCallGraphBuilder.processCallingConstraintsInternal(this, caller, instruction, target, constParams, uniqueCatchKey);      
+  protected void processCallingConstraints(
+      CGNode caller,
+      SSAAbstractInvokeInstruction instruction,
+      CGNode target,
+      InstanceKey[][] constParams,
+      PointerKey uniqueCatchKey) {
+    if (JavaScriptLoader.JS.equals(
+        caller.getMethod().getDeclaringClass().getClassLoader().getLanguage())) {
+      JSSSAPropagationCallGraphBuilder.processCallingConstraintsInternal(
+          this, caller, instruction, target, constParams, uniqueCatchKey);
     } else {
       super.processCallingConstraints(caller, instruction, target, constParams, uniqueCatchKey);
     }
   }
-
-  
 }

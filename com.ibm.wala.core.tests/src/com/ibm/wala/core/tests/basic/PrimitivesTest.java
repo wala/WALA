@@ -10,14 +10,6 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -54,21 +46,22 @@ import com.ibm.wala.util.intset.SemiSparseMutableIntSet;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
 import com.ibm.wala.util.intset.SparseIntSet;
 import com.ibm.wala.util.intset.SparseLongSet;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * JUnit tests for some primitive operations.
- */
+/** JUnit tests for some primitive operations. */
 public class PrimitivesTest extends WalaTestCase {
 
-
-  /**
-   * Test the MutableSparseIntSet implementation
-   */
+  /** Test the MutableSparseIntSet implementation */
   private static void doMutableIntSet(MutableIntSetFactory<?> factory) {
     MutableIntSet v = factory.parse("{9,17}");
     MutableIntSet w = factory.make(new int[] {});
-    MutableIntSet x = factory.make(new int[] { 7, 4, 2, 4, 2, 2 });
-    MutableIntSet y = factory.make(new int[] { 7, 7, 7, 2, 7, 1 });
+    MutableIntSet x = factory.make(new int[] {7, 4, 2, 4, 2, 2});
+    MutableIntSet y = factory.make(new int[] {7, 7, 7, 2, 7, 1});
     MutableIntSet z = factory.parse("{ 9 }");
 
     System.err.println(w); // { }
@@ -115,7 +108,9 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(x); // { 2 4 7 }
     Assert.assertTrue(temp.sameValue(x));
 
-    MutableIntSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
+    MutableIntSet a =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
@@ -125,7 +120,9 @@ public class PrimitivesTest extends WalaTestCase {
     a.add(100);
     Assert.assertTrue(a.sameValue(a));
 
-    MutableIntSet b = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
+    MutableIntSet b =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
     Assert.assertTrue(a.sameValue(b));
     Assert.assertTrue(a.isSubset(b));
 
@@ -137,7 +134,9 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(f.sameValue(b));
     Assert.assertTrue(f.isSubset(b));
 
-    IntSet tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    IntSet tmp =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
     f = IntSetUtil.diff(b, tmp, factory);
     System.err.println(f);
     Assert.assertFalse(f.sameValue(b));
@@ -149,7 +148,9 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(f.contains(59));
     Assert.assertTrue(f.contains(100));
 
-    tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
+    tmp =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
     f = IntSetUtil.diff(b, tmp, factory);
     System.err.println(f);
     Assert.assertFalse(f.sameValue(b));
@@ -179,10 +180,16 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
-    a = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
-    b = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62}");
-    MutableIntSet c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
-    MutableIntSet d = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    a =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    b =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62}");
+    MutableIntSet c =
+        factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    MutableIntSet d =
+        factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     MutableIntSet e = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34}");
 
     Assert.assertTrue(e.isSubset(d));
@@ -242,7 +249,9 @@ public class PrimitivesTest extends WalaTestCase {
     a.addAll(b);
     Assert.assertFalse(a.sameValue(c));
 
-    a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
+    a =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
@@ -252,7 +261,9 @@ public class PrimitivesTest extends WalaTestCase {
     a.add(100);
     Assert.assertTrue(a.sameValue(a));
 
-    b = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
+    b =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
     Assert.assertTrue(a.sameValue(b));
     Assert.assertTrue(a.isSubset(b));
 
@@ -277,14 +288,14 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
-    for (int idx = 500; idx < 550;) {
+    for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
       System.err.println(temp2);
     }
 
-    for (int idx = 3000; idx < 3200;) {
+    for (int idx = 3000; idx < 3200; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
@@ -293,11 +304,11 @@ public class PrimitivesTest extends WalaTestCase {
 
     temp2.clear();
     Assert.assertTrue(temp2.isEmpty());
-    
+
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
-    for (int idx = 500; idx < 550;) {
+    for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
@@ -313,49 +324,42 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(temp2.isEmpty());
   }
 
-  /**
-   * Test the MutableSharedBitVectorIntSet implementation
-   */
-  @Test public void testMutableSharedBitVectorIntSet() {
+  /** Test the MutableSharedBitVectorIntSet implementation */
+  @Test
+  public void testMutableSharedBitVectorIntSet() {
     doMutableIntSet(new MutableSharedBitVectorIntSetFactory());
   }
 
-  /**
-   * Test the MutableSparseIntSet implementation
-   */
-  @Test public void testMutableSparseIntSet() {
+  /** Test the MutableSparseIntSet implementation */
+  @Test
+  public void testMutableSparseIntSet() {
     doMutableIntSet(new MutableSparseIntSetFactory());
   }
 
-  /**
-   * Test the BimodalMutableSparseIntSet implementation
-   */
-  @Test public void testBimodalMutableSparseIntSet() {
+  /** Test the BimodalMutableSparseIntSet implementation */
+  @Test
+  public void testBimodalMutableSparseIntSet() {
     doMutableIntSet(new BimodalMutableIntSetFactory());
   }
 
-  /**
-   * Test the BitVectorIntSet implementation
-   */
-  @Test public void testBitVectorIntSet() {
+  /** Test the BitVectorIntSet implementation */
+  @Test
+  public void testBitVectorIntSet() {
     doMutableIntSet(new BitVectorIntSetFactory());
   }
 
-  /**
-   * Test the SemiSparseMutableIntSet implementation
-   */
-  @Test public void testSemiSparseMutableIntSet() {
+  /** Test the SemiSparseMutableIntSet implementation */
+  @Test
+  public void testSemiSparseMutableIntSet() {
     doMutableIntSet(new SemiSparseMutableIntSetFactory());
   }
 
-  /**
-   * Test the MutableSparseIntSet implementation
-   */
+  /** Test the MutableSparseIntSet implementation */
   private static void doMutableLongSet(MutableLongSetFactory factory) {
     MutableLongSet v = factory.parse("{9,17}");
     MutableLongSet w = factory.make(new long[] {});
-    MutableLongSet x = factory.make(new long[] { 7, 4, 2, 4, 2, 2 });
-    MutableLongSet y = factory.make(new long[] { 7, 7, 7, 2, 7, 1 });
+    MutableLongSet x = factory.make(new long[] {7, 4, 2, 4, 2, 2});
+    MutableLongSet y = factory.make(new long[] {7, 7, 7, 2, 7, 1});
     MutableLongSet z = factory.parse("{ 9 }");
 
     System.err.println(w); // { }
@@ -402,7 +406,9 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(x); // { 2 4 7 }
     Assert.assertTrue(temp.sameValue(x));
 
-    MutableLongSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
+    MutableLongSet a =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
@@ -412,7 +418,9 @@ public class PrimitivesTest extends WalaTestCase {
     a.add(100);
     Assert.assertTrue(a.sameValue(a));
 
-    MutableLongSet b = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
+    MutableLongSet b =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
     Assert.assertTrue(a.sameValue(b));
     Assert.assertTrue(a.isSubset(b));
 
@@ -424,7 +432,9 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(f.sameValue(b));
     Assert.assertTrue(f.isSubset(b));
 
-    LongSet tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    LongSet tmp =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
     f = LongSetUtil.diff(b, tmp, factory);
     System.err.println(f);
     Assert.assertFalse(f.sameValue(b));
@@ -436,7 +446,9 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(f.contains(59));
     Assert.assertTrue(f.contains(100));
 
-    tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
+    tmp =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
     f = LongSetUtil.diff(b, tmp, factory);
     System.err.println(f);
     Assert.assertFalse(f.sameValue(b));
@@ -466,10 +478,16 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
-    a = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
-    b = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62}");
-    MutableLongSet c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
-    MutableLongSet d = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    a =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    b =
+        factory.parse(
+            "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62}");
+    MutableLongSet c =
+        factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    MutableLongSet d =
+        factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     MutableLongSet e = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34}");
 
     Assert.assertTrue(e.isSubset(d));
@@ -529,7 +547,9 @@ public class PrimitivesTest extends WalaTestCase {
     a.addAll(b);
     Assert.assertFalse(a.sameValue(c));
 
-    a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
+    a =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
@@ -539,7 +559,9 @@ public class PrimitivesTest extends WalaTestCase {
     a.add(100);
     Assert.assertTrue(a.sameValue(a));
 
-    b = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
+    b =
+        factory.parse(
+            "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
     Assert.assertTrue(a.sameValue(b));
     Assert.assertTrue(a.isSubset(b));
 
@@ -561,14 +583,14 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
-    for (int idx = 500; idx < 550;) {
+    for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
       System.err.println(temp2);
     }
 
-    for (int idx = 3000; idx < 3200;) {
+    for (int idx = 3000; idx < 3200; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
@@ -578,7 +600,7 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
-    for (int idx = 500; idx < 550;) {
+    for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
@@ -589,17 +611,16 @@ public class PrimitivesTest extends WalaTestCase {
       temp2.add(idx);
       System.err.println(temp2);
     }
-
   }
 
-  /**
-   * Test the MutableSparseLongSet implementation
-   */
-  @Test public void testMutableSparseLongSet() {
+  /** Test the MutableSparseLongSet implementation */
+  @Test
+  public void testMutableSparseLongSet() {
     doMutableLongSet(new MutableSparseLongSetFactory());
   }
 
-  @Test public void testSmallMap() {
+  @Test
+  public void testSmallMap() {
     SmallMap<Integer, Integer> M = new SmallMap<>();
     Integer I1 = Integer.valueOf(1);
     Integer I2 = Integer.valueOf(2);
@@ -621,7 +642,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(I.equals(I3));
   }
 
-  @Test public void testBimodalMap() {
+  @Test
+  public void testBimodalMap() {
     Map<Integer, Integer> M = new BimodalMap<>(3);
     Integer I1 = Integer.valueOf(1);
     Integer I2 = Integer.valueOf(2);
@@ -661,7 +683,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(I.equals(I6));
   }
 
-  @Test public void testBFSPathFinder() {
+  @Test
+  public void testBFSPathFinder() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
     // path from 0 to 8
@@ -671,11 +694,12 @@ public class PrimitivesTest extends WalaTestCase {
     // path should be 8, 6, 4, 2, 0
     System.err.println("Path is " + p);
     for (int i = 0; i < p.size(); i++) {
-      Assert.assertTrue((p.get(i)).intValue() == new int[] { 8, 6, 4, 2, 0 }[i]);
+      Assert.assertTrue((p.get(i)).intValue() == new int[] {8, 6, 4, 2, 0}[i]);
     }
   }
 
-  @Test public void testBoundedBFS() {
+  @Test
+  public void testBoundedBFS() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
     BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<>(G, G.getNode(0), 0);
@@ -713,8 +737,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     // add 10 nodes
     Integer[] nodes = new Integer[10];
-    for (int i = 0; i < nodes.length; i++)
-      G.addNode(nodes[i] = Integer.valueOf(i));
+    for (int i = 0; i < nodes.length; i++) G.addNode(nodes[i] = Integer.valueOf(i));
 
     // edges to i-1, i+1, i+2
     for (int i = 0; i < nodes.length; i++) {
@@ -731,14 +754,14 @@ public class PrimitivesTest extends WalaTestCase {
     return G;
   }
 
-  @Test public void testDominatorsA() {
+  @Test
+  public void testDominatorsA() {
     // test graph
     Graph<Object> G = SlowSparseNumberedGraph.make();
 
     // add nodes
     Object[] nodes = new Object[11];
-    for (int i = 0; i < nodes.length; i++)
-      G.addNode(nodes[i] = Integer.valueOf(i));
+    for (int i = 0; i < nodes.length; i++) G.addNode(nodes[i] = Integer.valueOf(i));
 
     // add edges
     G.addEdge(nodes[10], nodes[0]);
@@ -760,12 +783,12 @@ public class PrimitivesTest extends WalaTestCase {
 
     // Assert.assertions
     int i = 0;
-    Object[] desired4 = new Object[] { nodes[4], nodes[7], nodes[8], nodes[5], nodes[10] };
+    Object[] desired4 = new Object[] {nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]};
     for (Object d4 : Iterator2Iterable.make(D.dominators(nodes[4])))
       Assert.assertTrue(d4 == desired4[i++]);
 
     int j = 0;
-    Object[] desired5 = new Object[] { nodes[8] };
+    Object[] desired5 = new Object[] {nodes[8]};
     for (Object o4 : Iterator2Iterable.make(D.dominatorTree().getSuccNodes(nodes[5]))) {
       Object d = desired5[j++];
       boolean ok = (o4.equals(d));
@@ -774,14 +797,17 @@ public class PrimitivesTest extends WalaTestCase {
         System.err.println("desired " + d);
         Assert.assertTrue(o4.equals(d));
       }
-      
     }
 
     Assert.assertTrue(D.dominatorTree().getSuccNodeCount(nodes[10]) == 5);
   }
 
-  @Test public void testBinaryIntegerRelation() {
-    byte[] impl = new byte[] { BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL, BasicNaturalRelation.SIMPLE };
+  @Test
+  public void testBinaryIntegerRelation() {
+    byte[] impl =
+        new byte[] {
+          BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL, BasicNaturalRelation.SIMPLE
+        };
     IBinaryNaturalRelation R = new BasicNaturalRelation(impl, BasicNaturalRelation.TWO_LEVEL);
     R.add(3, 5);
     R.add(3, 7);
@@ -826,7 +852,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(R.getRelated(1).size() == 99);
   }
 
-  @Test public void testUnionFind() {
+  @Test
+  public void testUnionFind() {
     int SIZE = 10000;
     IntegerUnionFind uf = new IntegerUnionFind(SIZE);
     int count = countEquivalenceClasses(uf);
@@ -838,7 +865,9 @@ public class PrimitivesTest extends WalaTestCase {
 
     uf.union(7, SIZE - 1);
     Assert.assertTrue(uf.find(3) == uf.find(SIZE - 1));
-    Assert.assertTrue("Got uf.find(3)=" + uf.find(3), uf.find(3) == 3 || uf.find(3) == 7 || uf.find(3) == SIZE - 1);
+    Assert.assertTrue(
+        "Got uf.find(3)=" + uf.find(3),
+        uf.find(3) == 3 || uf.find(3) == 7 || uf.find(3) == SIZE - 1);
 
     for (int i = 0; i < SIZE - 1; i++) {
       uf.union(i, i + 1);
@@ -866,27 +895,33 @@ public class PrimitivesTest extends WalaTestCase {
     return s.size();
   }
 
-  @Test public void testBitVector() {
+  @Test
+  public void testBitVector() {
     testSingleBitVector(new BitVector());
   }
 
-  @Test public void testOffsetBitVector0_10() {
+  @Test
+  public void testOffsetBitVector0_10() {
     testSingleBitVector(new OffsetBitVector(0, 10));
   }
 
-  @Test public void testOffsetBitVector10_10() {
+  @Test
+  public void testOffsetBitVector10_10() {
     testSingleBitVector(new OffsetBitVector(10, 10));
   }
 
-  @Test public void testOffsetBitVector50_10() {
+  @Test
+  public void testOffsetBitVector50_10() {
     testSingleBitVector(new OffsetBitVector(50, 10));
   }
 
-  @Test public void testOffsetBitVector50_50() {
+  @Test
+  public void testOffsetBitVector50_50() {
     testSingleBitVector(new OffsetBitVector(50, 50));
   }
 
-  @Test public void testOffsetBitVector100_10() {
+  @Test
+  public void testOffsetBitVector100_10() {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
 
@@ -904,8 +939,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(bv.get(59));
 
     {
-      boolean[] gets = new boolean[] { false, true, true };
-      int[] bits = new int[] { 0, 55, 59 };
+      boolean[] gets = new boolean[] {false, true, true};
+      int[] bits = new int[] {0, 55, 59};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(bv.get(i) == gets[j]);
@@ -916,8 +951,8 @@ public class PrimitivesTest extends WalaTestCase {
 
     Assert.assertTrue("bv.max() is " + bv.max(), bv.max() == 77);
     {
-      boolean[] gets = new boolean[] { false, true, true, true };
-      int[] bits = new int[] { 0, 55, 59, 77 };
+      boolean[] gets = new boolean[] {false, true, true, true};
+      int[] bits = new int[] {0, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(bv.get(i) == gets[j]);
@@ -927,8 +962,8 @@ public class PrimitivesTest extends WalaTestCase {
     bv.set(3);
     Assert.assertTrue("bv.max() is " + bv.max(), bv.max() == 77);
     {
-      boolean[] gets = new boolean[] { false, true, true, true, true };
-      int[] bits = new int[] { 0, 3, 55, 59, 77 };
+      boolean[] gets = new boolean[] {false, true, true, true, true};
+      int[] bits = new int[] {0, 3, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(bv.get(i) == gets[j]);
@@ -938,23 +973,28 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(bv);
   }
 
-  @Test public void testBitVectors() {
+  @Test
+  public void testBitVectors() {
     testBitVectors(new BitVector(), new BitVector());
   }
 
-  @Test public void testOffsetBitVectors150_10() {
+  @Test
+  public void testOffsetBitVectors150_10() {
     testBitVectors(new OffsetBitVector(150, 10), new OffsetBitVector(150, 10));
   }
 
-  @Test public void testOffsetBitVectors100_200_10() {
+  @Test
+  public void testOffsetBitVectors100_200_10() {
     testBitVectors(new OffsetBitVector(100, 10), new OffsetBitVector(200, 10));
   }
 
-  @Test public void testOffsetBitVectors100_25_10() {
+  @Test
+  public void testOffsetBitVectors100_25_10() {
     testBitVectors(new OffsetBitVector(100, 10), new OffsetBitVector(25, 10));
   }
 
-  @Test public void testOffsetBitVectors35_25_20_10() {
+  @Test
+  public void testOffsetBitVectors35_25_20_10() {
     testBitVectors(new OffsetBitVector(35, 20), new OffsetBitVector(25, 10));
   }
 
@@ -980,8 +1020,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 202);
 
     {
-      boolean[] gets = new boolean[] { false, true, true, true, true, true, true };
-      int[] bits = new int[] { 0, 100, 101, 102, 200, 201, 202 };
+      boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
+      int[] bits = new int[] {0, 100, 101, 102, 200, 201, 202};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(v1.get(i) == gets[j]);
@@ -1009,8 +1049,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 104);
 
     {
-      boolean[] gets = new boolean[] { false, true, true };
-      int[] bits = new int[] { 0, 103, 104 };
+      boolean[] gets = new boolean[] {false, true, true};
+      int[] bits = new int[] {0, 103, 104};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(v1.get(i) == gets[j]);
@@ -1024,8 +1064,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 105);
 
     {
-      boolean[] gets = new boolean[] { false, true, true, true, true, true, true };
-      int[] bits = new int[] { 0, 100, 101, 102, 103, 104, 105 };
+      boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
+      int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(v1.get(i) == gets[j]);
@@ -1037,8 +1077,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.andNot(v2);
 
     {
-      boolean[] gets = new boolean[] { false, true, true, true, true, true, true };
-      int[] bits = new int[] { 0, 100, 101, 102, 103, 104, 105 };
+      boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
+      int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(v1.get(i) == gets[j]);
@@ -1052,8 +1092,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.andNot(v2);
 
     {
-      boolean[] gets = new boolean[] { false, true, true, true, true };
-      int[] bits = new int[] { 0, 100, 103, 104, 105 };
+      boolean[] gets = new boolean[] {false, true, true, true, true};
+      int[] bits = new int[] {0, 100, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(v1.get(i) == gets[j]);
@@ -1079,8 +1119,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.xor(v2);
 
     {
-      boolean[] gets = new boolean[] { false, true, true, true, true };
-      int[] bits = new int[] { 0, 35, 103, 105, 206 };
+      boolean[] gets = new boolean[] {false, true, true, true, true};
+      int[] bits = new int[] {0, 35, 103, 105, 206};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         Assert.assertTrue(i == bits[j]);
         Assert.assertTrue(v1.get(i) == gets[j]);
@@ -1281,7 +1321,8 @@ public class PrimitivesTest extends WalaTestCase {
     return v1;
   }
 
-  @Test public void testSpecificBugsInOffsetBitVectors() {
+  @Test
+  public void testSpecificBugsInOffsetBitVectors() {
     OffsetBitVector v1 = makeBigTestOffsetVector();
     System.err.println(v1);
 
@@ -1308,7 +1349,8 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(v2.isSubset(v1));
   }
 
-  @Test public void testSpecificBugsInSemiSparseMutableIntSets() {
+  @Test
+  public void testSpecificBugsInSemiSparseMutableIntSets() {
     SemiSparseMutableIntSet v1 = new SemiSparseMutableIntSet();
     v1.add(54);
     v1.add(58);

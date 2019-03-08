@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -37,9 +37,6 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
@@ -49,26 +46,31 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/**
- * Manually annotated policy for refining field accesses.
- */
+/** Manually annotated policy for refining field accesses. */
 public class ManualFieldPolicy implements FieldRefinePolicy {
 
-  protected final Pattern refinePattern;// =
+  protected final Pattern refinePattern; // =
 
   // Pattern.compile("Lca/mcgill/sable/util|Ljava/util|Lpolyglot/util/TypedList");
 
   private static final int NUM_DECISIONS_TO_TRACK = 10;
 
-  final private boolean[] decisions = new boolean[NUM_DECISIONS_TO_TRACK];
+  private final boolean[] decisions = new boolean[NUM_DECISIONS_TO_TRACK];
 
   private int curDecision;
 
-  final private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
+  private final IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
 
   @Override
-  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
+  public boolean shouldRefine(
+      IField field,
+      PointerKey basePtr,
+      PointerKey val,
+      IFlowLabel label,
+      StateMachine.State state) {
     if (field == null) {
       throw new IllegalArgumentException("null field");
     }
@@ -106,7 +108,8 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   private final IClassHierarchy cha;
 
   /**
-   * @return the top-level {@link IClass} where klass is declared, or klass itself if klass is top-level
+   * @return the top-level {@link IClass} where klass is declared, or klass itself if klass is
+   *     top-level
    */
   private IClass removeInner(IClass klass) {
     ClassLoaderReference cl = klass.getClassLoader().getReference();
@@ -123,10 +126,10 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   }
 
   /**
-   * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring class</em> of the field related
-   *          to the match edge matches the pattern, the match edge will be refined. For example, the pattern
-   *          {@code Pattern.compile("Ljava/util")} will cause all fields of classes in the {@code java.util} package to
-   *          be refined.
+   * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring
+   *     class</em> of the field related to the match edge matches the pattern, the match edge will
+   *     be refined. For example, the pattern {@code Pattern.compile("Ljava/util")} will cause all
+   *     fields of classes in the {@code java.util} package to be refined.
    */
   public ManualFieldPolicy(IClassHierarchy cha, Pattern refinePattern) {
     this.cha = cha;
@@ -138,11 +141,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     return false;
   }
 
-  /**
-   * 
-   * 
-   * @return a String representation of the decisions made by this
-   */
+  /** @return a String representation of the decisions made by this */
   public String getHistory() {
     StringBuilder ret = new StringBuilder();
     for (int i = 0; i < curDecision; i++) {
@@ -158,5 +157,4 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     }
     return ret.toString();
   }
-
 }

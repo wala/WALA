@@ -11,12 +11,11 @@
 
 package com.ibm.wala.shrikeCT;
 
-import java.io.IOException;
-
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.sourcepos.CRTable;
 import com.ibm.wala.sourcepos.MethodPositions;
 import com.ibm.wala.sourcepos.Range;
+import java.io.IOException;
 
 public final class SourcePositionTableReader extends AttributeReader {
 
@@ -25,19 +24,19 @@ public final class SourcePositionTableReader extends AttributeReader {
   }
 
   public static final class Position implements Comparable<Object> {
-    
+
     public final int firstLine;
     public final int lastLine;
     public final int firstCol;
     public final int lastCol;
-    
+
     private Position(int firstLine, int lastLine, int firstCol, int lastCol) {
       this.firstLine = firstLine;
       this.lastLine = lastLine;
       this.firstCol = firstCol;
       this.lastCol = lastCol;
     }
-    
+
     @Override
     public int compareTo(Object o) {
       if (o instanceof Position) {
@@ -56,10 +55,11 @@ public final class SourcePositionTableReader extends AttributeReader {
       } else {
         return -1;
       }
-    } 
+    }
   }
-  
-  public static Position findParameterPosition(int methodNr, CodeReader code) throws InvalidClassFileException, IOException {
+
+  public static Position findParameterPosition(int methodNr, CodeReader code)
+      throws InvalidClassFileException, IOException {
     if (code == null) {
       throw new IllegalArgumentException();
     }
@@ -71,8 +71,8 @@ public final class SourcePositionTableReader extends AttributeReader {
       ClassReader.AttrIterator cIter = new ClassReader.AttrIterator();
       ClassReader cr = code.getClassReader();
       cr.initMethodAttributeIterator(methodNr, cIter);
-      
-      for (;cIter.isValid(); cIter.advance()) {
+
+      for (; cIter.isValid(); cIter.advance()) {
         if (MethodPositions.ATTRIBUTE_NAME.equals(cIter.getName())) {
           byte data[] = getData(cr, cIter.getRawOffset(), cIter.getRawSize());
           MethodPositions mPos = new MethodPositions(data);
@@ -81,25 +81,26 @@ public final class SourcePositionTableReader extends AttributeReader {
         }
       }
     }
-  
+
     return params;
   }
-  
-  public static Position[] makeBytecodeToPositionMap(CodeReader code) throws InvalidClassFileException, IOException {
+
+  public static Position[] makeBytecodeToPositionMap(CodeReader code)
+      throws InvalidClassFileException, IOException {
     if (code == null) {
       throw new IllegalArgumentException();
     }
-    
+
     Position pos[] = null;
     ClassReader.AttrIterator iter = new ClassReader.AttrIterator();
     code.initAttributeIterator(iter);
-    
+
     for (; iter.isValid(); iter.advance()) {
       if (CRTable.ATTRIBUTE_NAME.equals(iter.getName())) {
         if (pos == null) {
           pos = new Position[code.getBytecodeLength()];
         }
-        
+
         SourcePositionTableReader spRead = new SourcePositionTableReader(iter);
         spRead.fillBytecodeToPositionMap(pos);
       }
@@ -117,41 +118,41 @@ public final class SourcePositionTableReader extends AttributeReader {
         }
       }
     }
-    
+
     return pos;
   }
 
   private static final int ATTRIBUTE_HEADER_SIZE = 6;
-  
+
   private static final byte[] getData(ClassReader cr, int rawOffset, int rawSize) {
     // prepare raw data of attribute to pass to sourceinfo
     byte klass[] = cr.getBytes();
     int size = rawSize - ATTRIBUTE_HEADER_SIZE;
     byte data[] = new byte[size];
     System.arraycopy(klass, rawOffset + ATTRIBUTE_HEADER_SIZE, data, 0, size);
-    
+
     return data;
   }
-  
+
   private void fillBytecodeToPositionMap(Position[] pos) throws IOException {
     byte tableData[] = getData(getClassReader(), getRawOffset(), getRawSize());
-    
+
     CRTable crTable = new CRTable(tableData);
-    
+
     for (int pc = 0; pc < pos.length; pc++) {
       Range r = crTable.getSourceInfo(pc);
       Position p = convert(r);
       pos[pc] = p;
     }
   }
-  
-  private final static Position convert(Range r) {
+
+  private static final Position convert(Range r) {
     Position pos = null;
-    
+
     if (r != null) {
       com.ibm.wala.sourcepos.Position start = r.getStartPosition();
       com.ibm.wala.sourcepos.Position end = r.getEndPosition();
-      
+
       if (start != null && !start.isUndefined()) {
         if (end != null && !end.isUndefined()) {
           pos = new Position(start.getLine(), end.getLine(), start.getColumn(), end.getColumn());
@@ -159,20 +160,19 @@ public final class SourcePositionTableReader extends AttributeReader {
           pos = new Position(start.getLine(), start.getLine(), -1, -1);
         }
       }
-    }    
+    }
 
     return pos;
   }
 
   public static Position[] makeLineNumberToPositionMap(int[] lineNumberMap) {
     Position pos[] = new Position[lineNumberMap.length];
-    
+
     for (int i = 0; i < pos.length; i++) {
       int line = lineNumberMap[i];
       pos[i] = new Position(line, line, -1, -1);
     }
-    
+
     return pos;
   }
-
 }

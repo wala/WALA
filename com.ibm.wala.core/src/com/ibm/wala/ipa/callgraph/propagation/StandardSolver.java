@@ -10,17 +10,14 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
-/**
- * standard fixed-point iterative solver for pointer analysis
- */
+/** standard fixed-point iterative solver for pointer analysis */
 public class StandardSolver extends AbstractPointsToSolver {
 
   private static final boolean DEBUG_PHASES = DEBUG || false;
-  
+
   public StandardSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
     super(system, builder);
   }
@@ -43,7 +40,8 @@ public class StandardSolver extends AbstractPointsToSolver {
       }
 
       if (getBuilder().getOptions().getMaxNumberOfNodes() > -1) {
-        if (getBuilder().getCallGraph().getNumberOfNodes() >= getBuilder().getOptions().getMaxNumberOfNodes()) {
+        if (getBuilder().getCallGraph().getNumberOfNodes()
+            >= getBuilder().getOptions().getMaxNumberOfNodes()) {
           if (DEBUG) {
             System.err.println("Bail out from call graph limit" + i);
           }
@@ -58,7 +56,7 @@ public class StandardSolver extends AbstractPointsToSolver {
       getBuilder().addConstraintsFromNewNodes(monitor);
 
       // getBuilder().callGraph.summarizeByPackage();
-      
+
       if (DEBUG_PHASES) {
         System.err.println("handling reflection");
       }
@@ -71,11 +69,11 @@ public class StandardSolver extends AbstractPointsToSolver {
       }
       getBuilder().addConstraintsFromNewNodes(monitor);
 
-      if (monitor != null) { monitor.worked(i); }
+      if (monitor != null) {
+        monitor.worked(i);
+      }
       // Note that we may have added stuff to the
       // worklist; so,
     } while (!getSystem().emptyWorkList());
-
   }
-
 }

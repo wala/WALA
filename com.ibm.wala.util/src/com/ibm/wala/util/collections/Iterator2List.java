@@ -80,5 +80,4 @@ public class Iterator2List<T> extends Iterator2Collection<T> implements List<T> 
   protected Collection<T> getDelegate() {
     return delegate;
   }
-
 }

@@ -10,17 +10,15 @@
  */
 package com.ibm.wala.shrikeCT;
 
-/**
- * This class builds serializable InnerClasses attributes.
- */
+/** This class builds serializable InnerClasses attributes. */
 public final class InnerClassesWriter extends ClassWriter.Element {
-  final private int attrID;
+  private final int attrID;
 
   private int[] table;
 
   /**
    * Build an empty writer.
-   * 
+   *
    * @throws IllegalArgumentException if w is null
    */
   public InnerClassesWriter(ClassWriter w) {
@@ -37,7 +35,7 @@ public final class InnerClassesWriter extends ClassWriter.Element {
 
   /**
    * Copy the bytes into 'buf' at offset 'offset'.
-   * 
+   *
    * @return the number of bytes copies, which must be equal to getSize()
    */
   @Override
@@ -57,7 +55,7 @@ public final class InnerClassesWriter extends ClassWriter.Element {
 
   /**
    * Set the raw values that make up this attribute
-   * 
+   *
    * @throws IllegalArgumentException if classes is null
    */
   public void setRawTable(int[] classes) throws NullPointerException {

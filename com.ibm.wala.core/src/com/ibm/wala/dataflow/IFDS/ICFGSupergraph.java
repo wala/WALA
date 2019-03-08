@@ -11,7 +11,7 @@
 
 /*
  * Licensed Materials - Property of IBM
- * 
+ *
  * "Restricted Materials of IBM"
  *
  * Copyright (c) 2008 IBM Corporation.
@@ -20,10 +20,6 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.dataflow.IFDS;
-
-import java.util.Iterator;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -39,16 +35,19 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.Iterator;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Forward supergraph induced over an {@link ExplodedInterproceduralCFG}
- * 
- * This should lazily build the supergraph as it is explored.
- * 
+ *
+ * <p>This should lazily build the supergraph as it is explored.
+ *
  * @author sjfink
- * 
  */
-public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> {
+public class ICFGSupergraph
+    implements ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> {
 
   private final ExplodedInterproceduralCFG icfg;
 
@@ -71,7 +70,8 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   }
 
   @Override
-  public byte classifyEdge(BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dest) {
+  public byte classifyEdge(
+      BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dest) {
     if (isCall(src)) {
       if (isEntry(dest)) {
         return CALL_EDGE;
@@ -90,26 +90,29 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
    * java.lang.Object)
    */
   @Override
-  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getCallSites(BasicBlockInContext<IExplodedBasicBlock> r, CGNode callee) {
+  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getCallSites(
+      BasicBlockInContext<IExplodedBasicBlock> r, CGNode callee) {
     return icfg.getCallSites(r, callee);
   }
 
   @Override
-  public Iterator<? extends BasicBlockInContext<IExplodedBasicBlock>> getCalledNodes(BasicBlockInContext<IExplodedBasicBlock> call) {
-    final Predicate<BasicBlockInContext<IExplodedBasicBlock>> isEntryFilter = BasicBlockInContext::isEntryBlock;
+  public Iterator<? extends BasicBlockInContext<IExplodedBasicBlock>> getCalledNodes(
+      BasicBlockInContext<IExplodedBasicBlock> call) {
+    final Predicate<BasicBlockInContext<IExplodedBasicBlock>> isEntryFilter =
+        BasicBlockInContext::isEntryBlock;
     return new FilterIterator<>(getSuccNodes(call), isEntryFilter);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public BasicBlockInContext<IExplodedBasicBlock>[] getEntriesForProcedure(CGNode procedure) {
-    return new BasicBlockInContext[] { icfg.getEntry(procedure) };
+    return new BasicBlockInContext[] {icfg.getEntry(procedure)};
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public BasicBlockInContext<IExplodedBasicBlock>[] getExitsForProcedure(CGNode procedure) {
-    return new BasicBlockInContext[] { icfg.getExit(procedure) };
+    return new BasicBlockInContext[] {icfg.getExit(procedure)};
   }
 
   @Override
@@ -123,14 +126,14 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
     return n.getDelegate().getNumber();
   }
 
-
   public BasicBlockInContext<IExplodedBasicBlock> getMainEntry() {
     Assertions.UNREACHABLE();
     return null;
   }
 
   @Override
-  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getNormalSuccessors(BasicBlockInContext<IExplodedBasicBlock> call) {
+  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getNormalSuccessors(
+      BasicBlockInContext<IExplodedBasicBlock> call) {
     return EmptyIterator.instance();
   }
 
@@ -145,10 +148,9 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
     return icfg.getCGNode(n);
   }
 
-
   @Override
-  public Iterator<? extends BasicBlockInContext<IExplodedBasicBlock>> getReturnSites(BasicBlockInContext<IExplodedBasicBlock> call,
-      CGNode callee) {
+  public Iterator<? extends BasicBlockInContext<IExplodedBasicBlock>> getReturnSites(
+      BasicBlockInContext<IExplodedBasicBlock> call, CGNode callee) {
     return icfg.getReturnSites(call);
   }
 
@@ -173,15 +175,14 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   }
 
   @Override
-  public void removeNodeAndEdges(BasicBlockInContext<IExplodedBasicBlock> N) throws UnsupportedOperationException {
+  public void removeNodeAndEdges(BasicBlockInContext<IExplodedBasicBlock> N)
+      throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
-
   }
 
   @Override
   public void addNode(BasicBlockInContext<IExplodedBasicBlock> n) {
     Assertions.UNREACHABLE();
-
   }
 
   @Override
@@ -207,13 +208,12 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   @Override
   public void removeNode(BasicBlockInContext<IExplodedBasicBlock> n) {
     Assertions.UNREACHABLE();
-
   }
 
   @Override
-  public void addEdge(BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst) {
+  public void addEdge(
+      BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst) {
     Assertions.UNREACHABLE();
-
   }
 
   @Override
@@ -222,7 +222,8 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   }
 
   @Override
-  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getPredNodes(BasicBlockInContext<IExplodedBasicBlock> N) {
+  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getPredNodes(
+      BasicBlockInContext<IExplodedBasicBlock> N) {
     return icfg.getPredNodes(N);
   }
 
@@ -232,38 +233,40 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   }
 
   @Override
-  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getSuccNodes(BasicBlockInContext<IExplodedBasicBlock> N) {
+  public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getSuccNodes(
+      BasicBlockInContext<IExplodedBasicBlock> N) {
     return icfg.getSuccNodes(N);
   }
 
   @Override
-  public boolean hasEdge(BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst) {
+  public boolean hasEdge(
+      BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst) {
     return icfg.hasEdge(src, dst);
   }
 
   @Override
-  public void removeAllIncidentEdges(BasicBlockInContext<IExplodedBasicBlock> node) throws UnsupportedOperationException {
-    Assertions.UNREACHABLE();
-
-  }
-
-  @Override
-  public void removeEdge(BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst)
+  public void removeAllIncidentEdges(BasicBlockInContext<IExplodedBasicBlock> node)
       throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
-
   }
 
   @Override
-  public void removeIncomingEdges(BasicBlockInContext<IExplodedBasicBlock> node) throws UnsupportedOperationException {
+  public void removeEdge(
+      BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst)
+      throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
-
   }
 
   @Override
-  public void removeOutgoingEdges(BasicBlockInContext<IExplodedBasicBlock> node) throws UnsupportedOperationException {
+  public void removeIncomingEdges(BasicBlockInContext<IExplodedBasicBlock> node)
+      throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
+  }
 
+  @Override
+  public void removeOutgoingEdges(BasicBlockInContext<IExplodedBasicBlock> node)
+      throws UnsupportedOperationException {
+    Assertions.UNREACHABLE();
   }
 
   @Override
@@ -297,7 +300,8 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
     return icfg.getSuccNodeNumbers(node);
   }
 
-  public ControlFlowGraph<SSAInstruction,IExplodedBasicBlock> getCFG(BasicBlockInContext<IExplodedBasicBlock> node) {
+  public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG(
+      BasicBlockInContext<IExplodedBasicBlock> node) {
     return icfg.getCFG(node);
   }
 
@@ -309,5 +313,4 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
   public String toString() {
     return icfg.toString();
   }
-
 }

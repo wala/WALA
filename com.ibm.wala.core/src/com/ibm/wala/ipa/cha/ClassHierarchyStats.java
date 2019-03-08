@@ -12,14 +12,10 @@ package com.ibm.wala.ipa.cha;
 
 import com.ibm.wala.classLoader.IClassLoader;
 
-/**
- * Statistics about a class hierarchy.
- */
+/** Statistics about a class hierarchy. */
 public class ClassHierarchyStats {
 
-  /**
-   * Dump stats about the class hierarchy to stdout.
-   */
+  /** Dump stats about the class hierarchy to stdout. */
   public static void printStats(IClassHierarchy cha) throws IllegalArgumentException {
     if (cha == null) {
       throw new IllegalArgumentException("cha cannot be null");

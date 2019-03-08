@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.shrike.copywriter;
 
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
 import com.ibm.wala.shrikeBT.MethodData;
@@ -41,13 +36,19 @@ import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableWriter;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 import com.ibm.wala.shrikeCT.SourceFileWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.zip.ZipEntry;
 
 public class CopyWriter {
-  private static final String USAGE = "IBM CopyWriter Tool\n" + "This tool takes the following command line options:\n"
-      + "    <jarname> <jarname> ...   Process the classes from these jars\n"
-      + "    -o <jarname>              Put the resulting classes into <jarname>\n"
-      + "    -c <copyright>            Make the copyright string be\n"
-      + "                              '\u00A9 Copyright <copyright>'";
+  private static final String USAGE =
+      "IBM CopyWriter Tool\n"
+          + "This tool takes the following command line options:\n"
+          + "    <jarname> <jarname> ...   Process the classes from these jars\n"
+          + "    -o <jarname>              Put the resulting classes into <jarname>\n"
+          + "    -c <copyright>            Make the copyright string be\n"
+          + "                              '\u00A9 Copyright <copyright>'";
 
   private static OfflineInstrumenter instrumenter;
 
@@ -110,7 +111,8 @@ public class CopyWriter {
 
     instrumenter.writeUnmodifiedClasses();
 
-    Writer w = new OutputStreamWriter(instrumenter.addOutputJarEntry(new ZipEntry("IBM-Copyright")));
+    Writer w =
+        new OutputStreamWriter(instrumenter.addOutputJarEntry(new ZipEntry("IBM-Copyright")));
     w.write(copyright + '\n');
     for (ZipEntry ze : entries) {
       w.write("  " + ze.getName() + '\n');
@@ -130,8 +132,8 @@ public class CopyWriter {
     }
   }
 
-  private Element transformAttribute(ClassReader cr, int m, ClassWriter w, AttrIterator iter) throws InvalidClassFileException,
-      UnknownAttributeException, InvalidBytecodeException {
+  private Element transformAttribute(ClassReader cr, int m, ClassWriter w, AttrIterator iter)
+      throws InvalidClassFileException, UnknownAttributeException, InvalidBytecodeException {
     String name = iter.getName();
 
     boolean needTransform = true;
@@ -156,79 +158,90 @@ public class CopyWriter {
     }
 
     switch (name) {
-      case "Code": {
-        CodeReader r = new CodeReader(iter);
-        CTDecoder decoder = new CTDecoder(r);
-        decoder.decode();
-        MethodData md = new MethodData(decoder, cr.getMethodAccessFlags(m), CTDecoder.convertClassToType(cr.getName()), cr
-                .getMethodName(m), cr.getMethodType(m));
-        CTCompiler compiler = CTCompiler.make(w, md);
-        compiler.compile();
-        if (compiler.getAuxiliaryMethods().length > 0)
-          throw new Error("Where did this auxiliary method come from?");
-        Compiler.Output out = compiler.getOutput();
-        CodeWriter cw = new CodeWriter(w);
-        cw.setMaxLocals(out.getMaxLocals());
-        cw.setMaxStack(out.getMaxStack());
-        cw.setCode(out.getCode());
-        cw.setRawHandlers(out.getRawHandlers());
-        AttrIterator iterator = new AttrIterator();
-        r.initAttributeIterator(iterator);
-        cw.setAttributes(collectAttributes(cr, m, w, iterator));
-        return cw;
-      }
-      case "ConstantValue": {
-        ConstantValueReader r = new ConstantValueReader(iter);
-        ConstantValueWriter cw = new ConstantValueWriter(w);
-        cw.setValueCPIndex(transformCPIndex(r.getValueCPIndex()));
-        return cw;
-      }
-      case "SourceFile": {
-        SourceFileReader r = new SourceFileReader(iter);
-        SourceFileWriter cw = new SourceFileWriter(w);
-        cw.setSourceFileCPIndex(transformCPIndex(r.getSourceFileCPIndex()));
-        return cw;
-      }
-      case "LocalVariableTableReader": {
-        LocalVariableTableReader lr = new LocalVariableTableReader(iter);
-        LocalVariableTableWriter lw = new LocalVariableTableWriter(w);
-        int[] table = lr.getRawTable();
-        for (int i = 0; i < table.length; i += 5) {
-          table[i + 2] = transformCPIndex(table[i + 2]);
-          table[i + 3] = transformCPIndex(table[i + 3]);
+      case "Code":
+        {
+          CodeReader r = new CodeReader(iter);
+          CTDecoder decoder = new CTDecoder(r);
+          decoder.decode();
+          MethodData md =
+              new MethodData(
+                  decoder,
+                  cr.getMethodAccessFlags(m),
+                  CTDecoder.convertClassToType(cr.getName()),
+                  cr.getMethodName(m),
+                  cr.getMethodType(m));
+          CTCompiler compiler = CTCompiler.make(w, md);
+          compiler.compile();
+          if (compiler.getAuxiliaryMethods().length > 0)
+            throw new Error("Where did this auxiliary method come from?");
+          Compiler.Output out = compiler.getOutput();
+          CodeWriter cw = new CodeWriter(w);
+          cw.setMaxLocals(out.getMaxLocals());
+          cw.setMaxStack(out.getMaxStack());
+          cw.setCode(out.getCode());
+          cw.setRawHandlers(out.getRawHandlers());
+          AttrIterator iterator = new AttrIterator();
+          r.initAttributeIterator(iterator);
+          cw.setAttributes(collectAttributes(cr, m, w, iterator));
+          return cw;
         }
-        lw.setRawTable(table);
-        return lw;
-      }
-      case "Exceptions": {
-        ExceptionsReader lr = new ExceptionsReader(iter);
-        ExceptionsWriter lw = new ExceptionsWriter(w);
-        int[] table = lr.getRawTable();
-        for (int i = 0; i < table.length; i++) {
-          table[i] = transformCPIndex(table[i]);
+      case "ConstantValue":
+        {
+          ConstantValueReader r = new ConstantValueReader(iter);
+          ConstantValueWriter cw = new ConstantValueWriter(w);
+          cw.setValueCPIndex(transformCPIndex(r.getValueCPIndex()));
+          return cw;
         }
-        lw.setRawTable(table);
-        return lw;
-      }
-      case "InnerClasses": {
-        InnerClassesReader lr = new InnerClassesReader(iter);
-        InnerClassesWriter lw = new InnerClassesWriter(w);
-        int[] table = lr.getRawTable();
-        for (int i = 0; i < table.length; i += 4) {
-          table[i] = transformCPIndex(table[i]);
-          table[i + 1] = transformCPIndex(table[i + 1]);
-          table[i + 2] = transformCPIndex(table[i + 2]);
+      case "SourceFile":
+        {
+          SourceFileReader r = new SourceFileReader(iter);
+          SourceFileWriter cw = new SourceFileWriter(w);
+          cw.setSourceFileCPIndex(transformCPIndex(r.getSourceFileCPIndex()));
+          return cw;
         }
-        lw.setRawTable(table);
-        return lw;
-      }
+      case "LocalVariableTableReader":
+        {
+          LocalVariableTableReader lr = new LocalVariableTableReader(iter);
+          LocalVariableTableWriter lw = new LocalVariableTableWriter(w);
+          int[] table = lr.getRawTable();
+          for (int i = 0; i < table.length; i += 5) {
+            table[i + 2] = transformCPIndex(table[i + 2]);
+            table[i + 3] = transformCPIndex(table[i + 3]);
+          }
+          lw.setRawTable(table);
+          return lw;
+        }
+      case "Exceptions":
+        {
+          ExceptionsReader lr = new ExceptionsReader(iter);
+          ExceptionsWriter lw = new ExceptionsWriter(w);
+          int[] table = lr.getRawTable();
+          for (int i = 0; i < table.length; i++) {
+            table[i] = transformCPIndex(table[i]);
+          }
+          lw.setRawTable(table);
+          return lw;
+        }
+      case "InnerClasses":
+        {
+          InnerClassesReader lr = new InnerClassesReader(iter);
+          InnerClassesWriter lw = new InnerClassesWriter(w);
+          int[] table = lr.getRawTable();
+          for (int i = 0; i < table.length; i += 4) {
+            table[i] = transformCPIndex(table[i]);
+            table[i + 1] = transformCPIndex(table[i + 1]);
+            table[i + 2] = transformCPIndex(table[i + 2]);
+          }
+          lw.setRawTable(table);
+          return lw;
+        }
     }
 
     throw new UnknownAttributeException(name);
   }
 
-  private Element[] collectAttributes(ClassReader cr, int m, ClassWriter w, AttrIterator iter) throws InvalidClassFileException,
-      UnknownAttributeException, InvalidBytecodeException {
+  private Element[] collectAttributes(ClassReader cr, int m, ClassWriter w, AttrIterator iter)
+      throws InvalidClassFileException, UnknownAttributeException, InvalidBytecodeException {
     Element[] elems = new Element[iter.getRemainingAttributesCount()];
     for (int i = 0; i < elems.length; i++) {
       elems[i] = transformAttribute(cr, m, w, iter);
@@ -237,33 +250,35 @@ public class CopyWriter {
     return elems;
   }
 
-  private static int copyEntry(ConstantPoolParser cp, ClassWriter w, int i) throws InvalidClassFileException {
+  private static int copyEntry(ConstantPoolParser cp, ClassWriter w, int i)
+      throws InvalidClassFileException {
     byte t = cp.getItemType(i);
     switch (t) {
-    case ClassConstants.CONSTANT_String:
-      return w.addCPString(cp.getCPString(i));
-    case ClassConstants.CONSTANT_Class:
-      return w.addCPClass(cp.getCPClass(i));
-    case ClassConstants.CONSTANT_FieldRef:
-      return w.addCPFieldRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
-    case ClassConstants.CONSTANT_InterfaceMethodRef:
-      return w.addCPInterfaceMethodRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
-    case ClassConstants.CONSTANT_MethodRef:
-      return w.addCPMethodRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
-    case ClassConstants.CONSTANT_NameAndType:
-      return w.addCPNAT(cp.getCPNATName(i), cp.getCPNATType(i));
-    case ClassConstants.CONSTANT_Integer:
-      return w.addCPInt(cp.getCPInt(i));
-    case ClassConstants.CONSTANT_Float:
-      return w.addCPFloat(cp.getCPFloat(i));
-    case ClassConstants.CONSTANT_Long:
-      return w.addCPLong(cp.getCPLong(i));
-    case ClassConstants.CONSTANT_Double:
-      return w.addCPDouble(cp.getCPDouble(i));
-    case ClassConstants.CONSTANT_Utf8:
-      return w.addCPUtf8(cp.getCPUtf8(i));
-    default:
-      return -1;
+      case ClassConstants.CONSTANT_String:
+        return w.addCPString(cp.getCPString(i));
+      case ClassConstants.CONSTANT_Class:
+        return w.addCPClass(cp.getCPClass(i));
+      case ClassConstants.CONSTANT_FieldRef:
+        return w.addCPFieldRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
+      case ClassConstants.CONSTANT_InterfaceMethodRef:
+        return w.addCPInterfaceMethodRef(
+            cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
+      case ClassConstants.CONSTANT_MethodRef:
+        return w.addCPMethodRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
+      case ClassConstants.CONSTANT_NameAndType:
+        return w.addCPNAT(cp.getCPNATName(i), cp.getCPNATType(i));
+      case ClassConstants.CONSTANT_Integer:
+        return w.addCPInt(cp.getCPInt(i));
+      case ClassConstants.CONSTANT_Float:
+        return w.addCPFloat(cp.getCPFloat(i));
+      case ClassConstants.CONSTANT_Long:
+        return w.addCPLong(cp.getCPLong(i));
+      case ClassConstants.CONSTANT_Double:
+        return w.addCPDouble(cp.getCPDouble(i));
+      case ClassConstants.CONSTANT_Utf8:
+        return w.addCPUtf8(cp.getCPUtf8(i));
+      default:
+        return -1;
     }
   }
 
@@ -285,8 +300,7 @@ public class CopyWriter {
 
     // Make the first string in the constant pool be the copyright string
     int r = w.addCPUtf8(copyright);
-    if (r != 1)
-      throw new Error("Invalid constant pool index: " + r);
+    if (r != 1) throw new Error("Invalid constant pool index: " + r);
 
     // Now add the rest of the CP entries
     ConstantPoolParser cp = cr.getCP();
@@ -295,17 +309,17 @@ public class CopyWriter {
     if (1 < CPCount) {
       final byte itemType = cp.getItemType(1);
       switch (itemType) {
-      case ClassConstants.CONSTANT_Long:
-      case ClassConstants.CONSTANT_Double:
-        // item 1 is a double-word item, so the next real item is at 3
-        // to make sure item 3 is allocated at index 3, we'll need to
-        // insert a dummy entry at index 2
-        r = w.addCPUtf8("");
-        if (r != 2)
-          throw new Error("Invalid constant pool index for dummy: " + r);
-        break;
-      default:
-        throw new UnsupportedOperationException(String.format("unexpected constant-pool item type %s", itemType));
+        case ClassConstants.CONSTANT_Long:
+        case ClassConstants.CONSTANT_Double:
+          // item 1 is a double-word item, so the next real item is at 3
+          // to make sure item 3 is allocated at index 3, we'll need to
+          // insert a dummy entry at index 2
+          r = w.addCPUtf8("");
+          if (r != 2) throw new Error("Invalid constant pool index for dummy: " + r);
+          break;
+        default:
+          throw new UnsupportedOperationException(
+              String.format("unexpected constant-pool item type %s", itemType));
       }
     }
     for (int i = 2; i < CPCount; i++) {
@@ -332,13 +346,21 @@ public class CopyWriter {
     int fieldCount = cr.getFieldCount();
     for (int i = 0; i < fieldCount; i++) {
       cr.initFieldAttributeIterator(i, iter);
-      w.addField(cr.getFieldAccessFlags(i), cr.getFieldName(i), cr.getFieldType(i), collectAttributes(cr, i, w, iter));
+      w.addField(
+          cr.getFieldAccessFlags(i),
+          cr.getFieldName(i),
+          cr.getFieldType(i),
+          collectAttributes(cr, i, w, iter));
     }
 
     int methodCount = cr.getMethodCount();
     for (int i = 0; i < methodCount; i++) {
       cr.initMethodAttributeIterator(i, iter);
-      w.addMethod(cr.getMethodAccessFlags(i), cr.getMethodName(i), cr.getMethodType(i), collectAttributes(cr, i, w, iter));
+      w.addMethod(
+          cr.getMethodAccessFlags(i),
+          cr.getMethodName(i),
+          cr.getMethodType(i),
+          collectAttributes(cr, i, w, iter));
     }
 
     cr.initClassAttributeIterator(iter);

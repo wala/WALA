@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,27 +48,25 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.types.TypeReference;
+import org.jf.dexlib2.Opcode;
 
 public class InstanceOf extends Instruction {
-    public final int destination;
-    public final int source;
-    public final TypeReference type;
+  public final int destination;
+  public final int source;
+  public final TypeReference type;
 
-    public InstanceOf(int pc, int destination, TypeReference type, int source, Opcode opcode, DexIMethod method)
-    {
-        super(pc, opcode, method);
-        this.destination = destination;
-        this.type = type;
-        this.source =source;
-    }
+  public InstanceOf(
+      int pc, int destination, TypeReference type, int source, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+    this.destination = destination;
+    this.type = type;
+    this.source = source;
+  }
 
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitInstanceof(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitInstanceof(this);
+  }
 }

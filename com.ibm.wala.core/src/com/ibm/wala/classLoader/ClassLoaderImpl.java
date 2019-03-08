@@ -10,6 +10,22 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeCT.ClassReader;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
+import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.warnings.Warning;
+import com.ibm.wala.util.warnings.Warnings;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,64 +44,31 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.ClassReader;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.ssa.SSAInstructionFactory;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.config.SetOfClasses;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
-
-/**
- * A class loader that reads class definitions from a set of Modules.
- */
+/** A class loader that reads class definitions from a set of Modules. */
 public class ClassLoaderImpl implements IClassLoader {
   public static final int DEBUG_LEVEL = 0;
 
   private static final boolean OPTIMIZE_JAR_FILE_IO = true;
 
-  /**
-   * classes to ignore
-   */
-  final private SetOfClasses exclusions;
+  /** classes to ignore */
+  private final SetOfClasses exclusions;
 
-  /**
-   * Identity for this class loader
-   */
-  final private ClassLoaderReference loader;
+  /** Identity for this class loader */
+  private final ClassLoaderReference loader;
 
-  /**
-   * A mapping from class name (TypeName) to IClass
-   */
+  /** A mapping from class name (TypeName) to IClass */
   protected final Map<TypeName, IClass> loadedClasses = HashMapFactory.make();
 
-  /**
-   * A mapping from class name (TypeName) to String (source file name)
-   */
+  /** A mapping from class name (TypeName) to String (source file name) */
   private final Map<TypeName, ModuleEntry> sourceMap = HashMapFactory.make();
 
-  /**
-   * Parent classloader
-   */
-  final private IClassLoader parent;
+  /** Parent classloader */
+  private final IClassLoader parent;
 
-  /**
-   * Governing class hierarchy
-   */
+  /** Governing class hierarchy */
   protected final IClassHierarchy cha;
 
-  /**
-   * an object to delegate to for loading of array classes
-   */
+  /** an object to delegate to for loading of array classes */
   private final ArrayClassLoader arrayClassLoader;
 
   /**
@@ -94,8 +77,12 @@ public class ClassLoaderImpl implements IClassLoader {
    * @param exclusions set of classes to exclude from loading
    */
   @SuppressWarnings("unused")
-  public ClassLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
-      SetOfClasses exclusions, IClassHierarchy cha) {
+  public ClassLoaderImpl(
+      ClassLoaderReference loader,
+      ArrayClassLoader arrayClassLoader,
+      IClassLoader parent,
+      SetOfClasses exclusions,
+      IClassHierarchy cha) {
 
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
@@ -114,7 +101,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
   /**
    * Return the Set of (ModuleEntry) source files found in a module.
-   * 
+   *
    * @param M the module
    * @return the Set of source files in the module
    */
@@ -142,7 +129,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
   /**
    * Return the Set of (ModuleEntry) class files found in a module.
-   * 
+   *
    * @param M the module
    * @return the Set of class Files in the module
    */
@@ -174,16 +161,12 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  /**
-   * Remove from s any class file module entries which already are in t
-   */
+  /** Remove from s any class file module entries which already are in t */
   private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     s.removeAll(t);
   }
 
-  /**
-   * Return a Set of IClasses, which represents all classes this class loader can load.
-   */
+  /** Return a Set of IClasses, which represents all classes this class loader can load. */
   private Collection<IClass> getAllClasses() {
     assert loadedClasses != null;
 
@@ -219,14 +202,12 @@ public class ClassLoaderImpl implements IClassLoader {
         cleared = true;
       }
     }
-
   }
 
-  /**
-   * Set up the set of classes loaded by this object.
-   */
+  /** Set up the set of classes loaded by this object. */
   @SuppressWarnings("unused")
-  private void loadAllClasses(Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents) {
+  private void loadAllClasses(
+      Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents) {
     for (ModuleEntry entry : moduleEntries) {
       if (!entry.isClassFile()) {
         continue;
@@ -290,8 +271,8 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   @SuppressWarnings("unused")
-  private Map<String, Object> getAllClassAndSourceFileContents(byte[] jarFileContents, String fileName,
-      Map<String, Map<String, Long>> entrySizes) {
+  private Map<String, Object> getAllClassAndSourceFileContents(
+      byte[] jarFileContents, String fileName, Map<String, Map<String, Long>> entrySizes) {
     if (jarFileContents == null) {
       return null;
     }
@@ -300,7 +281,8 @@ public class ClassLoaderImpl implements IClassLoader {
       return null;
     }
     Map<String, Object> result = HashMapFactory.make();
-    try (final JarInputStream s = new JarInputStream(new ByteArrayInputStream(jarFileContents), false)) {
+    try (final JarInputStream s =
+        new JarInputStream(new ByteArrayInputStream(jarFileContents), false)) {
       JarEntry entry = null;
       while ((entry = s.getNextJarEntry()) != null) {
         byte[] entryBytes = getEntryBytes(entrySizesForFile.get(entry.getName()), s);
@@ -309,7 +291,8 @@ public class ClassLoaderImpl implements IClassLoader {
         }
         String name = entry.getName();
         if (FileSuffixes.isJarFile(name) || FileSuffixes.isWarFile(name)) {
-          Map<String, Object> nestedResult = getAllClassAndSourceFileContents(entryBytes, name, entrySizes);
+          Map<String, Object> nestedResult =
+              getAllClassAndSourceFileContents(entryBytes, name, entrySizes);
           if (nestedResult == null) {
             return null;
           }
@@ -347,9 +330,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return S.toByteArray();
   }
 
-  /**
-   * A warning when we find more than one implementation of a given class name
-   */
+  /** A warning when we find more than one implementation of a given class name */
   private static class MultipleImplementationsWarning extends Warning {
 
     final String className;
@@ -369,9 +350,7 @@ public class ClassLoaderImpl implements IClassLoader {
     }
   }
 
-  /**
-   * A warning when we encounter InvalidClassFileException
-   */
+  /** A warning when we encounter InvalidClassFileException */
   private static class InvalidClassFile extends Warning {
 
     final String className;
@@ -391,9 +370,7 @@ public class ClassLoaderImpl implements IClassLoader {
     }
   }
 
-  /**
-   * Set up mapping from type name to Module Entry
-   */
+  /** Set up mapping from type name to Module Entry */
   @SuppressWarnings("unused")
   protected void loadAllSources(Set<ModuleEntry> sourceModules) {
     for (ModuleEntry entry : sourceModules) {
@@ -402,35 +379,35 @@ public class ClassLoaderImpl implements IClassLoader {
       className = 'L' + ((className.startsWith("/")) ? className.substring(1) : className);
       TypeName T = TypeName.string2TypeName(className);
 
-      // Note: entry.getClassName() may not return the correct class name, for example, 
+      // Note: entry.getClassName() may not return the correct class name, for example,
       // com.ibm.wala.classLoader.SourceFileModule.getClassName()
       // {
       //  return FileSuffixes.stripSuffix(fileName).replace(File.separator.charAt(0), '/');
       // }
-      // If fileName includes the full path, such as 
+      // If fileName includes the full path, such as
       // C:\TestApps\HelloWorld\src\main\java\com\ibm\helloworld\MyClass.java
       // Then above method would return the class name as:
       // C:/TestApps/HelloWorld/src/main/java/com/ibm/helloworld/MyClass
       // However, in WALA, we represent class name as:
       // PackageName.className, such as com.ibm.helloworld.MyClass
       //
-      // In method "void init(List<Module> modules)", We loadAllClasses firstly, then 
+      // In method "void init(List<Module> modules)", We loadAllClasses firstly, then
       // loadAllSources. Therefore, all the classes should be in the map loadedClasses
-      // when this method loadAllSources is called. To ensure we add the correct class 
+      // when this method loadAllSources is called. To ensure we add the correct class
       // name to the sourceMap, here we look up the class name from the map "loadedClasses"
-      // before adding the source info to the sourceMap. If we could not find the class, 
+      // before adding the source info to the sourceMap. If we could not find the class,
       // we edit the className and try again.
-      
+
       boolean success = false;
-      if(loadedClasses.get(T) != null){
+      if (loadedClasses.get(T) != null) {
         if (DEBUG_LEVEL > 0) {
           System.err.println("adding to source map: " + T + " -> " + entry.getName());
         }
         sourceMap.put(T, entry);
         success = true;
       }
-      //Class does not exist
-      else{
+      // Class does not exist
+      else {
         // look at substrings starting after '/' characters, in the hope
         // that we find a known class name
         while (className.indexOf('/') > 0) {
@@ -446,9 +423,9 @@ public class ClassLoaderImpl implements IClassLoader {
           }
         }
       }
-      if(success == false){
-        //Add the T and entry to the sourceMap anyway, just in case in some special
-        //cases, we add new classes later.
+      if (success == false) {
+        // Add the T and entry to the sourceMap anyway, just in case in some special
+        // cases, we add new classes later.
         if (DEBUG_LEVEL > 0) {
           System.err.println("adding to source map: " + T + " -> " + entry.getName());
         }
@@ -459,7 +436,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
   /**
    * Initialize internal data structures
-   * 
+   *
    * @throws IllegalArgumentException if modules is null
    */
   @SuppressWarnings("unused")
@@ -479,16 +456,22 @@ public class ClassLoaderImpl implements IClassLoader {
       }
       // byte[] jarFileContents = null;
       if (OPTIMIZE_JAR_FILE_IO && archive instanceof JarFileModule) {
-        // if we have a jar file, we read the whole thing into memory and operate on that; enables more
+        // if we have a jar file, we read the whole thing into memory and operate on that; enables
+        // more
         // efficient sequential I/O
-        // this is work in progress; for now, we read the file into memory and throw away the contents, which
-        // still gives a speedup for large jar files since it reads sequentially and warms up the FS cache. we get a small slowdown
+        // this is work in progress; for now, we read the file into memory and throw away the
+        // contents, which
+        // still gives a speedup for large jar files since it reads sequentially and warms up the FS
+        // cache. we get a small slowdown
         // for smaller jar files or for jar files already in the FS cache. eventually, we should
         // actually use the bytes read and eliminate the slowdown
-        // 11/22/10: I can't figure out a way to actually use the bytes without hurting performance.  Apparently,
-        // extracting files from a jar stored in memory via a JarInputStream is really slow compared to using
+        // 11/22/10: I can't figure out a way to actually use the bytes without hurting performance.
+        //  Apparently,
+        // extracting files from a jar stored in memory via a JarInputStream is really slow compared
+        // to using
         // a JarFile.  Will leave this as is for now.  --MS
-        // jarFileContents = archive instanceof JarFileModule ? getJarFileContents((JarFileModule) archive) : null;
+        // jarFileContents = archive instanceof JarFileModule ? getJarFileContents((JarFileModule)
+        // archive) : null;
         getJarFileContents((JarFileModule) archive);
       }
       Set<ModuleEntry> classFiles = getClassFiles(archive);
@@ -501,7 +484,8 @@ public class ClassLoaderImpl implements IClassLoader {
         // final JarFileModule jfModule = (JarFileModule) archive;
         // final String name = jfModule.getJarFile().getName();
         // Map<String, Map<String, Long>> entrySizes = getEntrySizes(jfModule, name);
-        // allClassAndSourceFileContents = getAllClassAndSourceFileContents(jarFileContents, name, entrySizes);
+        // allClassAndSourceFileContents = getAllClassAndSourceFileContents(jarFileContents, name,
+        // entrySizes);
         // }
         // jarFileContents = null;
       }
@@ -529,9 +513,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  /**
-   * get the contents of a jar file. if any IO exceptions occur, catch and return null.
-   */
+  /** get the contents of a jar file. if any IO exceptions occur, catch and return null. */
   private static void getJarFileContents(JarFileModule archive) {
     String jarFileName = archive.getJarFile().getName();
     InputStream s = null;
@@ -596,9 +578,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  /**
-   * Method getParent.
-   */
+  /** Method getParent. */
   @Override
   public IClassLoader getParent() {
     return parent;
@@ -678,9 +658,7 @@ public class ClassLoaderImpl implements IClassLoader {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
     }
-    toRemove.stream().map(IClass::getName)
-            .peek(loadedClasses::remove)
-            .forEach(sourceMap::remove);
+    toRemove.stream().map(IClass::getName).peek(loadedClasses::remove).forEach(sourceMap::remove);
   }
 
   @Override

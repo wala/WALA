@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents checkcast instructions.
- */
-final public class CheckCastInstruction extends Instruction implements ITypeTestInstruction {
-  final private String type;
+/** This class represents checkcast instructions. */
+public final class CheckCastInstruction extends Instruction implements ITypeTestInstruction {
+  private final String type;
 
   protected CheckCastInstruction(String type) {
     super(OP_checkcast);
@@ -48,12 +46,10 @@ final public class CheckCastInstruction extends Instruction implements ITypeTest
     return 1;
   }
 
-  /**
-   * @return the type to which the operand is cast
-   */
+  /** @return the type to which the operand is cast */
   @Override
   public String[] getTypes() {
-    return new String[]{ type };
+    return new String[] {type};
   }
 
   @Override

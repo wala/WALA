@@ -10,15 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import org.apache.commons.io.ByteOrderMark;
-import org.apache.commons.io.input.BOMInputStream;
-
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -37,12 +28,18 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
 
 public class CAstCallGraphUtil {
 
-  /**
-   * flag to prevent dumping of verbose call graph / pointer analysis output
-   */
+  /** flag to prevent dumping of verbose call graph / pointer analysis output */
   public static boolean AVOID_DUMP = true;
 
   public static SourceFileModule makeSourceModule(URL script, String dir, String name) {
@@ -58,15 +55,21 @@ public class CAstCallGraphUtil {
 
     File scriptFile = new File(hackedName);
 
-    assert hackedName.endsWith(scriptName) : scriptName + " does not match file " + script.getFile();
+    assert hackedName.endsWith(scriptName)
+        : scriptName + " does not match file " + script.getFile();
 
     return new SourceFileModule(scriptFile, scriptName, null) {
       @Override
       public InputStream getInputStream() {
-        BOMInputStream bs = new BOMInputStream(super.getInputStream(), false, 
-            ByteOrderMark.UTF_8, 
-            ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE,
-            ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+        BOMInputStream bs =
+            new BOMInputStream(
+                super.getInputStream(),
+                false,
+                ByteOrderMark.UTF_8,
+                ByteOrderMark.UTF_16LE,
+                ByteOrderMark.UTF_16BE,
+                ByteOrderMark.UTF_32LE,
+                ByteOrderMark.UTF_32BE);
         try {
           if (bs.hasBOM()) {
             System.err.println("removing BOM " + bs.getBOM());
@@ -79,13 +82,17 @@ public class CAstCallGraphUtil {
     };
   }
 
-  public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) {
-    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
+  public static AnalysisScope makeScope(
+      String[] files, SingleClassLoaderFactory loaders, Language language) {
+    CAstAnalysisScope result =
+        new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
-  public static AnalysisScope makeScope(Module[] files, SingleClassLoaderFactory loaders, Language language) {
-    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
+  public static AnalysisScope makeScope(
+      Module[] files, SingleClassLoaderFactory loaders, Language language) {
+    CAstAnalysisScope result =
+        new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
@@ -115,21 +122,19 @@ public class CAstCallGraphUtil {
         }
         result = "ctor of " + result;
       }
-    } 
+    }
     return result;
   }
 
-  public static void dumpCG(SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
-    if (AVOID_DUMP)
-      return;
+  public static void dumpCG(
+      SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
+    if (AVOID_DUMP) return;
     for (CGNode N : CG) {
       System.err.print("callees of node " + getShortName(N) + " : [");
       boolean fst = true;
       for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(N))) {
-        if (fst)
-          fst = false;
-        else
-          System.err.print(", ");
+        if (fst) fst = false;
+        else System.err.print(", ");
         System.err.print(getShortName(n));
       }
       System.err.println("]");
@@ -157,7 +162,9 @@ public class CAstCallGraphUtil {
     for (int i = 0; i < fileNameArgs.length; i++) {
       if (new File(fileNameArgs[i]).exists()) {
         try {
-          fileNames[i] = CAstCallGraphUtil.makeSourceModule(new File(fileNameArgs[i]).toURI().toURL(), fileNameArgs[i]);
+          fileNames[i] =
+              CAstCallGraphUtil.makeSourceModule(
+                  new File(fileNameArgs[i]).toURI().toURL(), fileNameArgs[i]);
         } catch (MalformedURLException e) {
           Assertions.UNREACHABLE(e.toString());
         }
@@ -169,5 +176,4 @@ public class CAstCallGraphUtil {
 
     return fileNames;
   }
-
 }

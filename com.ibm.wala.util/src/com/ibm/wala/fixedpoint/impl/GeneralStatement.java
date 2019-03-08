@@ -14,10 +14,9 @@ import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IVariable;
 
-/**
- * Represents a single step in an iterative solver
- */
-public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractStatement<T, AbstractOperator<T>> {
+/** Represents a single step in an iterative solver */
+public abstract class GeneralStatement<T extends IVariable<T>>
+    extends AbstractStatement<T, AbstractOperator<T>> {
 
   protected final T lhs;
 
@@ -29,7 +28,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
 
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
-   * 
+   *
    * @return true if the lhs value changed. false otherwise
    */
   @Override
@@ -39,7 +38,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
 
   /**
    * Return the left-hand side of this equation.
-   * 
+   *
    * @return the lattice cell this equation computes
    */
   @Override
@@ -49,10 +48,10 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
 
   /**
    * Does this equation contain an appearance of a given cell?
-   * 
-   * Note: this uses reference equality, assuming that the variables are canonical! This is fragile. TODO: Address it perhaps, but
-   * be careful not to sacrifice efficiency.
-   * 
+   *
+   * <p>Note: this uses reference equality, assuming that the variables are canonical! This is
+   * fragile. TODO: Address it perhaps, but be careful not to sacrifice efficiency.
+   *
    * @param cell the cell in question
    * @return true or false
    */
@@ -62,15 +61,14 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
       return true;
     }
     for (T rh : rhs) {
-      if (rh == cell)
-        return true;
+      if (rh == cell) return true;
     }
     return false;
   }
 
   /**
    * Constructor for case of zero operands on the right-hand side.
-   * 
+   *
    * @param lhs the lattice cell set by this equation
    * @param operator the equation operator
    */
@@ -87,7 +85,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
 
   /**
    * Constructor for case of two operands on the right-hand side.
-   * 
+   *
    * @param lhs the lattice cell set by this equation
    * @param operator the equation operator
    * @param op1 the first operand on the rhs
@@ -108,7 +106,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
 
   /**
    * Constructor for case of three operands on the right-hand side.
-   * 
+   *
    * @param lhs the lattice cell set by this equation
    * @param operator the equation operator
    * @param op1 the first operand on the rhs
@@ -131,7 +129,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
 
   /**
    * Constructor for case of more than three operands on the right-hand side.
-   * 
+   *
    * @param lhs the lattice cell set by this equation
    * @param operator the equation operator
    * @param rhs the operands of the right-hand side in order
@@ -139,7 +137,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T[] rhs) {
     super();
-    if (operator ==  null) {
+    if (operator == null) {
       throw new IllegalArgumentException("null operator");
     }
     if (rhs == null) {
@@ -151,15 +149,12 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
     this.hashCode = makeHashCode();
   }
 
-  /**
-   * TODO: use a better hash code?
-   */
-  private final static int[] primes = { 331, 337, 347, 1277 };
+  /** TODO: use a better hash code? */
+  private static final int[] primes = {331, 337, 347, 1277};
 
   private int makeHashCode() {
     int result = operator.hashCode();
-    if (lhs != null)
-      result += lhs.hashCode() * primes[0];
+    if (lhs != null) result += lhs.hashCode() * primes[0];
     for (int i = 0; i < Math.min(rhs.length, 2); i++) {
       if (rhs[i] != null) {
         result += primes[i + 1] * rhs[i].hashCode();
@@ -169,7 +164,7 @@ public abstract class GeneralStatement<T extends IVariable<T>> extends AbstractS
   }
 
   protected abstract T[] makeRHS(int size);
-  
+
   @Override
   public int hashCode() {
     return hashCode;

@@ -21,10 +21,9 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
- * 0-1-CFA Call graph builder which analyzes calls to "container methods" in a context which is defined by the receiver
- * instance.
- * 
+ * 0-1-CFA Call graph builder which analyzes calls to "container methods" in a context which is
+ * defined by the receiver instance.
+ *
  * @author sfink
  */
 public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
@@ -35,14 +34,20 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
    * @param appContextSelector application-specific logic to choose contexts
    * @param appContextInterpreter application-specific logic to interpret a method in context
    */
-  public AstJavaZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter) {
+  public AstJavaZeroOneContainerCFABuilder(
+      IClassHierarchy cha,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      ContextSelector appContextSelector,
+      SSAContextInterpreter appContextInterpreter) {
     super(cha, options, cache);
 
     ContextSelector def = new DefaultContextSelector(options, cha);
-    ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
+    ContextSelector contextSelector =
+        appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
+    SSAContextInterpreter contextInterpreter =
+        makeDefaultContextInterpreters(appContextInterpreter, options, cha);
     setContextInterpreter(contextInterpreter);
 
     ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter);
@@ -53,19 +58,27 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
     setContextSelector(DCS);
   }
 
-  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, AnalysisOptions options,
-      SSAContextInterpreter contextInterpreter) {
-    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS
-        | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_MANY
-        | ZeroXInstanceKeys.SMUSH_THROWABLES);
+  protected ZeroXInstanceKeys makeInstanceKeys(
+      IClassHierarchy cha, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
+    ZeroXInstanceKeys zik =
+        new ZeroXInstanceKeys(
+            options,
+            cha,
+            contextInterpreter,
+            ZeroXInstanceKeys.ALLOCATIONS
+                | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+                | ZeroXInstanceKeys.SMUSH_STRINGS
+                | ZeroXInstanceKeys.SMUSH_MANY
+                | ZeroXInstanceKeys.SMUSH_THROWABLES);
     return zik;
   }
 
   /**
-   * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
+   * @return an object which creates contexts for call graph nodes based on the container
+   *     disambiguation policy
    */
-  protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
+  protected ContextSelector makeContainerContextSelector(
+      IClassHierarchy cha, ZeroXInstanceKeys keys) {
     return new ContainerContextSelector(cha, keys);
   }
-
 }

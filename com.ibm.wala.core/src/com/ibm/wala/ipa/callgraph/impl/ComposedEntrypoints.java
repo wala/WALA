@@ -11,19 +11,16 @@
 
 package com.ibm.wala.ipa.callgraph.impl;
 
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.util.collections.HashSetFactory;
-
-/**
- * This class represents the union of two sets of {@link Entrypoint}s.
- */
+/** This class represents the union of two sets of {@link Entrypoint}s. */
 public class ComposedEntrypoints implements Iterable<Entrypoint> {
 
-  final private Set<Entrypoint> entrypoints = HashSetFactory.make();
-  
+  private final Set<Entrypoint> entrypoints = HashSetFactory.make();
+
   public ComposedEntrypoints(Iterable<Entrypoint> A, Iterable<Entrypoint> B) {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
@@ -43,5 +40,4 @@ public class ComposedEntrypoints implements Iterable<Entrypoint> {
   public Iterator<Entrypoint> iterator() {
     return entrypoints.iterator();
   }
-
 }

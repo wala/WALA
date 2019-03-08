@@ -10,12 +10,11 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import java.util.Collection;
-
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.test.TestCallGraphShape;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import java.util.Collection;
 
 public abstract class TestJSCallGraphShape extends TestCallGraphShape {
 
@@ -23,5 +22,4 @@ public abstract class TestJSCallGraphShape extends TestCallGraphShape {
   protected Collection<CGNode> getNodes(CallGraph CG, String functionIdentifier) {
     return JSCallGraphUtil.getNodes(CG, functionIdentifier);
   }
-
 }

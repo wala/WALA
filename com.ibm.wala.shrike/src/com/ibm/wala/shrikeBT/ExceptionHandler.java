@@ -11,15 +11,16 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * An ExceptionHandler represents a single handler covering a single instruction. It simply tells us what kind of exception to catch
- * and where to dispatch the exception to.
- * 
- * ExceptionHandlers are immutable. It is quite legal to save a reference to an exception handler and use it in any other context.
- * We also treat arrays of ExceptionHandlers as immutable. Therefore the following code can be used to build an exception handler
- * table that specifies two handlers covering an entire block of code:
- * 
+ * An ExceptionHandler represents a single handler covering a single instruction. It simply tells us
+ * what kind of exception to catch and where to dispatch the exception to.
+ *
+ * <p>ExceptionHandlers are immutable. It is quite legal to save a reference to an exception handler
+ * and use it in any other context. We also treat arrays of ExceptionHandlers as immutable.
+ * Therefore the following code can be used to build an exception handler table that specifies two
+ * handlers covering an entire block of code:
+ *
  * <pre>
- * 
+ *
  *   ExceptionHandler[] hs = {
  *     new ExceptionHandler(110, &quot;Ljava.lang.NullPointerException;&quot;),
  *     new ExceptionHandler(220, &quot;Ljava.io.IOException;&quot;);
@@ -29,18 +30,18 @@ package com.ibm.wala.shrikeBT;
  *   }
  * </pre>
  */
-final public class ExceptionHandler {
+public final class ExceptionHandler {
 
   int handler;
 
   final String catchClass;
-  
+
   final Object catchClassLoader;
 
   /**
    * @param handler the label for the handler code
-   * @param catchClass the type of exception that should be caught (in JVM format), or null if all exceptions should be caught (as
-   *          with 'finally')
+   * @param catchClass the type of exception that should be caught (in JVM format), or null if all
+   *     exceptions should be caught (as with 'finally')
    */
   public ExceptionHandler(int handler, String catchClass, Object catchClassLoader) {
     this.handler = handler;
@@ -51,10 +52,8 @@ final public class ExceptionHandler {
   public ExceptionHandler(int handler, String catchClass) {
     this(handler, catchClass, null);
   }
-  
-  /**
-   * @return the label of the handler code
-   */
+
+  /** @return the label of the handler code */
   public int getHandler() {
     return handler;
   }
@@ -63,9 +62,7 @@ final public class ExceptionHandler {
     return catchClassLoader;
   }
 
-  /**
-   * @return the type of exceptions to be caught, or null if all exceptions should be caught
-   */
+  /** @return the type of exceptions to be caught, or null if all exceptions should be caught */
   public String getCatchClass() {
     return catchClass;
   }
@@ -74,7 +71,8 @@ final public class ExceptionHandler {
     if (h == null) {
       throw new IllegalArgumentException("h is null");
     }
-    return h.handler == handler && (catchClass == null ? h.catchClass == null : catchClass.equals(h.catchClass));
+    return h.handler == handler
+        && (catchClass == null ? h.catchClass == null : catchClass.equals(h.catchClass));
   }
 
   @Override

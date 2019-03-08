@@ -14,342 +14,400 @@ import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
 
+import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.ibm.wala.util.collections.HashMapFactory;
-
 /**
- * A class to represent the reference in a class file to some type (class, primitive or array). A type reference is
- * uniquely defined by
+ * A class to represent the reference in a class file to some type (class, primitive or array). A
+ * type reference is uniquely defined by
+ *
  * <ul>
- * <li> an initiating class loader
- * <li> a type name
+ *   <li>an initiating class loader
+ *   <li>a type name
  * </ul>
- * Resolving a TypeReference to a Type can be an expensive operation. Therefore we canonicalize TypeReference instances
- * and cache the result of resolution.
+ *
+ * Resolving a TypeReference to a Type can be an expensive operation. Therefore we canonicalize
+ * TypeReference instances and cache the result of resolution.
  */
 public final class TypeReference implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654327L;  
-  
+  private static final long serialVersionUID = -3256390509887654327L;
+
   /**
    * NOTE: initialisation order is important!
-   * 
-   * TypeReferences are canonical.
+   *
+   * <p>TypeReferences are canonical.
    */
 
-  /**
-   * Used for fast access to primitives. Primitives appear in the main dictionary also.
-   */
-  private final static Map<TypeName, TypeReference> primitiveMap = HashMapFactory.make();
+  /** Used for fast access to primitives. Primitives appear in the main dictionary also. */
+  private static final Map<TypeName, TypeReference> primitiveMap = HashMapFactory.make();
 
-  /**
-   * Used to canonicalize TypeReferences.
-   */
-  private final static Map<Key, TypeReference> dictionary = HashMapFactory.make();
+  /** Used to canonicalize TypeReferences. */
+  private static final Map<Key, TypeReference> dictionary = HashMapFactory.make();
 
   /*
    * Primitive Dispatch *
    */
 
-  public final static TypeName BooleanName = TypeName.string2TypeName("Z");
+  public static final TypeName BooleanName = TypeName.string2TypeName("Z");
 
-  public final static byte BooleanTypeCode = 'Z';
+  public static final byte BooleanTypeCode = 'Z';
 
-  public final static TypeReference Boolean = makePrimitive(BooleanName);
+  public static final TypeReference Boolean = makePrimitive(BooleanName);
 
-  public final static TypeName ByteName = TypeName.string2TypeName("B");
+  public static final TypeName ByteName = TypeName.string2TypeName("B");
 
-  public final static byte ByteTypeCode = 'B';
+  public static final byte ByteTypeCode = 'B';
 
-  public final static TypeReference Byte = makePrimitive(ByteName);
+  public static final TypeReference Byte = makePrimitive(ByteName);
 
-  public final static TypeName CharName = TypeName.string2TypeName("C");
+  public static final TypeName CharName = TypeName.string2TypeName("C");
 
-  public final static byte CharTypeCode = 'C';
+  public static final byte CharTypeCode = 'C';
 
-  public final static TypeReference Char = makePrimitive(CharName);
+  public static final TypeReference Char = makePrimitive(CharName);
 
-  public final static TypeName DoubleName = TypeName.string2TypeName("D");
+  public static final TypeName DoubleName = TypeName.string2TypeName("D");
 
-  public final static byte DoubleTypeCode = 'D';
+  public static final byte DoubleTypeCode = 'D';
 
-  public final static TypeReference Double = makePrimitive(DoubleName);
+  public static final TypeReference Double = makePrimitive(DoubleName);
 
-  public final static TypeName FloatName = TypeName.string2TypeName("F");
+  public static final TypeName FloatName = TypeName.string2TypeName("F");
 
-  public final static byte FloatTypeCode = 'F';
+  public static final byte FloatTypeCode = 'F';
 
-  public final static TypeReference Float = makePrimitive(FloatName);
+  public static final TypeReference Float = makePrimitive(FloatName);
 
-  public final static TypeName IntName = TypeName.string2TypeName("I");
+  public static final TypeName IntName = TypeName.string2TypeName("I");
 
-  public final static byte IntTypeCode = 'I';
+  public static final byte IntTypeCode = 'I';
 
-  public final static TypeReference Int = makePrimitive(IntName);
+  public static final TypeReference Int = makePrimitive(IntName);
 
-  public final static TypeName LongName = TypeName.string2TypeName("J");
+  public static final TypeName LongName = TypeName.string2TypeName("J");
 
-  public final static byte LongTypeCode = 'J';
+  public static final byte LongTypeCode = 'J';
 
-  public final static TypeReference Long = makePrimitive(LongName);
+  public static final TypeReference Long = makePrimitive(LongName);
 
-  public final static TypeName ShortName = TypeName.string2TypeName("S");
+  public static final TypeName ShortName = TypeName.string2TypeName("S");
 
-  public final static byte ShortTypeCode = 'S';
+  public static final byte ShortTypeCode = 'S';
 
-  public final static TypeReference Short = makePrimitive(ShortName);
+  public static final TypeReference Short = makePrimitive(ShortName);
 
-  public final static TypeName VoidName = TypeName.string2TypeName("V");
+  public static final TypeName VoidName = TypeName.string2TypeName("V");
 
-  public final static byte VoidTypeCode = 'V';
+  public static final byte VoidTypeCode = 'V';
 
-  public final static TypeReference Void = makePrimitive(VoidName);
+  public static final TypeReference Void = makePrimitive(VoidName);
 
-  public final static byte OtherPrimitiveTypeCode = 'P';
-  
+  public static final byte OtherPrimitiveTypeCode = 'P';
+
   /*
    * Primitive Array Dispatch *
    */
 
-  public final static TypeReference BooleanArray = findOrCreateArrayOf(Boolean);
+  public static final TypeReference BooleanArray = findOrCreateArrayOf(Boolean);
 
-  public final static TypeReference ByteArray = findOrCreateArrayOf(Byte);
+  public static final TypeReference ByteArray = findOrCreateArrayOf(Byte);
 
-  public final static TypeReference CharArray = findOrCreateArrayOf(Char);
+  public static final TypeReference CharArray = findOrCreateArrayOf(Char);
 
-  public final static TypeReference DoubleArray = findOrCreateArrayOf(Double);
+  public static final TypeReference DoubleArray = findOrCreateArrayOf(Double);
 
-  public final static TypeReference FloatArray = findOrCreateArrayOf(Float);
+  public static final TypeReference FloatArray = findOrCreateArrayOf(Float);
 
-  public final static TypeReference IntArray = findOrCreateArrayOf(Int);
+  public static final TypeReference IntArray = findOrCreateArrayOf(Int);
 
-  public final static TypeReference LongArray = findOrCreateArrayOf(Long);
+  public static final TypeReference LongArray = findOrCreateArrayOf(Long);
 
-  public final static TypeReference ShortArray = findOrCreateArrayOf(Short);
+  public static final TypeReference ShortArray = findOrCreateArrayOf(Short);
 
   /*
    * Special object types *
    */
 
-  private final static TypeName JavaLangArithmeticExceptionName = TypeName.string2TypeName("Ljava/lang/ArithmeticException");
+  private static final TypeName JavaLangArithmeticExceptionName =
+      TypeName.string2TypeName("Ljava/lang/ArithmeticException");
 
-  public final static TypeReference JavaLangArithmeticException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangArithmeticExceptionName);
+  public static final TypeReference JavaLangArithmeticException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangArithmeticExceptionName);
 
-  private final static TypeName JavaLangArrayStoreExceptionName = TypeName.string2TypeName("Ljava/lang/ArrayStoreException");
+  private static final TypeName JavaLangArrayStoreExceptionName =
+      TypeName.string2TypeName("Ljava/lang/ArrayStoreException");
 
-  public final static TypeReference JavaLangArrayStoreException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangArrayStoreExceptionName);
+  public static final TypeReference JavaLangArrayStoreException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangArrayStoreExceptionName);
 
-  private final static TypeName JavaLangArrayIndexOutOfBoundsExceptionName = TypeName
-      .string2TypeName("Ljava/lang/ArrayIndexOutOfBoundsException");
+  private static final TypeName JavaLangArrayIndexOutOfBoundsExceptionName =
+      TypeName.string2TypeName("Ljava/lang/ArrayIndexOutOfBoundsException");
 
-  public final static TypeReference JavaLangArrayIndexOutOfBoundsException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangArrayIndexOutOfBoundsExceptionName);
+  public static final TypeReference JavaLangArrayIndexOutOfBoundsException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangArrayIndexOutOfBoundsExceptionName);
 
-  private final static TypeName JavaLangClassName = TypeName.string2TypeName("Ljava/lang/Class");
+  private static final TypeName JavaLangClassName = TypeName.string2TypeName("Ljava/lang/Class");
 
-  public final static TypeReference JavaLangClass = findOrCreate(ClassLoaderReference.Primordial, JavaLangClassName);
+  public static final TypeReference JavaLangClass =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangClassName);
 
-  private final static TypeName JavaLangInvokeMethodHandleName = TypeName.string2TypeName("Ljava/lang/invoke/MethodHandle");
+  private static final TypeName JavaLangInvokeMethodHandleName =
+      TypeName.string2TypeName("Ljava/lang/invoke/MethodHandle");
 
-  public final static TypeReference JavaLangInvokeMethodHandle = findOrCreate(ClassLoaderReference.Primordial, JavaLangInvokeMethodHandleName);
+  public static final TypeReference JavaLangInvokeMethodHandle =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangInvokeMethodHandleName);
 
-  private final static TypeName JavaLangInvokeMethodHandlesLookupName = TypeName.string2TypeName("Ljava/lang/invoke/MethodHandles$Lookup");
+  private static final TypeName JavaLangInvokeMethodHandlesLookupName =
+      TypeName.string2TypeName("Ljava/lang/invoke/MethodHandles$Lookup");
 
-  public final static TypeReference JavaLangInvokeMethodHandlesLookup = findOrCreate(ClassLoaderReference.Primordial, JavaLangInvokeMethodHandlesLookupName);
+  public static final TypeReference JavaLangInvokeMethodHandlesLookup =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangInvokeMethodHandlesLookupName);
 
-  private final static TypeName JavaLangInvokeMethodTypeName = TypeName.string2TypeName("Ljava/lang/invoke/MethodType");
+  private static final TypeName JavaLangInvokeMethodTypeName =
+      TypeName.string2TypeName("Ljava/lang/invoke/MethodType");
 
-  public final static TypeReference JavaLangInvokeMethodType = findOrCreate(ClassLoaderReference.Primordial, JavaLangInvokeMethodTypeName);
+  public static final TypeReference JavaLangInvokeMethodType =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangInvokeMethodTypeName);
 
-  private final static TypeName JavaLangClassCastExceptionName = TypeName.string2TypeName("Ljava/lang/ClassCastException");
+  private static final TypeName JavaLangClassCastExceptionName =
+      TypeName.string2TypeName("Ljava/lang/ClassCastException");
 
-  public final static TypeReference JavaLangClassCastException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangClassCastExceptionName);
+  public static final TypeReference JavaLangClassCastException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangClassCastExceptionName);
 
-  private final static TypeName JavaLangComparableName = TypeName.string2TypeName("Ljava/lang/Comparable");
+  private static final TypeName JavaLangComparableName =
+      TypeName.string2TypeName("Ljava/lang/Comparable");
 
-  public final static TypeReference JavaLangComparable = findOrCreate(ClassLoaderReference.Primordial, JavaLangComparableName);
+  public static final TypeReference JavaLangComparable =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangComparableName);
 
-  private final static TypeName JavaLangReflectConstructorName = TypeName.string2TypeName("Ljava/lang/reflect/Constructor");
+  private static final TypeName JavaLangReflectConstructorName =
+      TypeName.string2TypeName("Ljava/lang/reflect/Constructor");
 
-  public final static TypeReference JavaLangReflectConstructor = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangReflectConstructorName);
-  
-  private final static TypeName JavaLangReflectMethodName = TypeName.string2TypeName("Ljava/lang/reflect/Method");
+  public static final TypeReference JavaLangReflectConstructor =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangReflectConstructorName);
 
-  public final static TypeReference JavaLangReflectMethod = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangReflectMethodName);
+  private static final TypeName JavaLangReflectMethodName =
+      TypeName.string2TypeName("Ljava/lang/reflect/Method");
 
-  private final static TypeName JavaLangEnumName = TypeName.string2TypeName("Ljava/lang/Enum");
+  public static final TypeReference JavaLangReflectMethod =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangReflectMethodName);
 
-  public final static TypeReference JavaLangEnum = findOrCreate(ClassLoaderReference.Primordial, JavaLangEnumName);
-  
-  private final static TypeName JavaLangErrorName = TypeName.string2TypeName("Ljava/lang/Error");
+  private static final TypeName JavaLangEnumName = TypeName.string2TypeName("Ljava/lang/Enum");
 
-  public final static TypeReference JavaLangError = findOrCreate(ClassLoaderReference.Primordial, JavaLangErrorName);
+  public static final TypeReference JavaLangEnum =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangEnumName);
 
-  private final static TypeName JavaLangExceptionName = TypeName.string2TypeName("Ljava/lang/Exception");
+  private static final TypeName JavaLangErrorName = TypeName.string2TypeName("Ljava/lang/Error");
 
-  public final static TypeReference JavaLangException = findOrCreate(ClassLoaderReference.Primordial, JavaLangExceptionName);
+  public static final TypeReference JavaLangError =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangErrorName);
 
-  private final static TypeName JavaLangNegativeArraySizeExceptionName = TypeName
-      .string2TypeName("Ljava/lang/NegativeArraySizeException");
+  private static final TypeName JavaLangExceptionName =
+      TypeName.string2TypeName("Ljava/lang/Exception");
 
-  public final static TypeReference JavaLangNegativeArraySizeException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangNegativeArraySizeExceptionName);
+  public static final TypeReference JavaLangException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangExceptionName);
 
-  private final static TypeName JavaLangNullPointerExceptionName = TypeName.string2TypeName("Ljava/lang/NullPointerException");
+  private static final TypeName JavaLangNegativeArraySizeExceptionName =
+      TypeName.string2TypeName("Ljava/lang/NegativeArraySizeException");
 
-  public final static TypeReference JavaLangNullPointerException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangNullPointerExceptionName);
+  public static final TypeReference JavaLangNegativeArraySizeException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangNegativeArraySizeExceptionName);
 
-  private final static TypeName JavaLangRuntimeExceptionName = TypeName.string2TypeName("Ljava/lang/RuntimeException");
+  private static final TypeName JavaLangNullPointerExceptionName =
+      TypeName.string2TypeName("Ljava/lang/NullPointerException");
 
-  public final static TypeReference JavaLangRuntimeException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangRuntimeExceptionName);
+  public static final TypeReference JavaLangNullPointerException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangNullPointerExceptionName);
 
-  private final static TypeName JavaLangClassNotFoundExceptionName = TypeName.string2TypeName("Ljava/lang/ClassNotFoundException");
+  private static final TypeName JavaLangRuntimeExceptionName =
+      TypeName.string2TypeName("Ljava/lang/RuntimeException");
 
-  public final static TypeReference JavaLangClassNotFoundException = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangClassNotFoundExceptionName);
+  public static final TypeReference JavaLangRuntimeException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangRuntimeExceptionName);
 
-  private final static TypeName JavaLangOutOfMemoryErrorName = TypeName.string2TypeName("Ljava/lang/OutOfMemoryError");
+  private static final TypeName JavaLangClassNotFoundExceptionName =
+      TypeName.string2TypeName("Ljava/lang/ClassNotFoundException");
 
-  public final static TypeReference JavaLangOutOfMemoryError = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangOutOfMemoryErrorName);
+  public static final TypeReference JavaLangClassNotFoundException =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangClassNotFoundExceptionName);
 
-  private final static TypeName JavaLangExceptionInInitializerErrorName = TypeName
-      .string2TypeName("Ljava/lang/ExceptionInInitializerError");
+  private static final TypeName JavaLangOutOfMemoryErrorName =
+      TypeName.string2TypeName("Ljava/lang/OutOfMemoryError");
 
-  public final static TypeReference JavaLangExceptionInInitializerError = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangExceptionInInitializerErrorName);
+  public static final TypeReference JavaLangOutOfMemoryError =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangOutOfMemoryErrorName);
 
-  private final static TypeName JavaLangObjectName = TypeName.string2TypeName("Ljava/lang/Object");
+  private static final TypeName JavaLangExceptionInInitializerErrorName =
+      TypeName.string2TypeName("Ljava/lang/ExceptionInInitializerError");
 
-  public final static TypeReference JavaLangObject = findOrCreate(ClassLoaderReference.Primordial, JavaLangObjectName);
+  public static final TypeReference JavaLangExceptionInInitializerError =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangExceptionInInitializerErrorName);
 
-  private final static TypeName JavaLangStackTraceElementName = TypeName.string2TypeName("Ljava/lang/StackTraceElement");
+  private static final TypeName JavaLangObjectName = TypeName.string2TypeName("Ljava/lang/Object");
 
-  public final static TypeReference JavaLangStackTraceElement = findOrCreate(ClassLoaderReference.Primordial,
-      JavaLangStackTraceElementName);
+  public static final TypeReference JavaLangObject =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangObjectName);
 
-  private final static TypeName JavaLangStringName = TypeName.string2TypeName("Ljava/lang/String");
+  private static final TypeName JavaLangStackTraceElementName =
+      TypeName.string2TypeName("Ljava/lang/StackTraceElement");
 
-  public final static TypeReference JavaLangString = findOrCreate(ClassLoaderReference.Primordial, JavaLangStringName);
+  public static final TypeReference JavaLangStackTraceElement =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangStackTraceElementName);
 
-  private final static TypeName JavaLangStringBufferName = TypeName.string2TypeName("Ljava/lang/StringBuffer");
+  private static final TypeName JavaLangStringName = TypeName.string2TypeName("Ljava/lang/String");
 
-  public final static TypeReference JavaLangStringBuffer = findOrCreate(ClassLoaderReference.Primordial, JavaLangStringBufferName);
+  public static final TypeReference JavaLangString =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangStringName);
 
-  private final static TypeName JavaLangStringBuilderName = TypeName.string2TypeName("Ljava/lang/StringBuilder");
+  private static final TypeName JavaLangStringBufferName =
+      TypeName.string2TypeName("Ljava/lang/StringBuffer");
 
-  public final static TypeReference JavaLangStringBuilder = findOrCreate(ClassLoaderReference.Primordial, JavaLangStringBuilderName);
+  public static final TypeReference JavaLangStringBuffer =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangStringBufferName);
 
-  private final static TypeName JavaLangThreadName = TypeName.string2TypeName("Ljava/lang/Thread");
+  private static final TypeName JavaLangStringBuilderName =
+      TypeName.string2TypeName("Ljava/lang/StringBuilder");
 
-  public final static TypeReference JavaLangThread = findOrCreate(ClassLoaderReference.Primordial, JavaLangThreadName);
+  public static final TypeReference JavaLangStringBuilder =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangStringBuilderName);
 
-  private final static TypeName JavaLangThrowableName = TypeName.string2TypeName("Ljava/lang/Throwable");
+  private static final TypeName JavaLangThreadName = TypeName.string2TypeName("Ljava/lang/Thread");
 
-  public final static TypeReference JavaLangThrowable = findOrCreate(ClassLoaderReference.Primordial, JavaLangThrowableName);
+  public static final TypeReference JavaLangThread =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangThreadName);
 
-  public final static TypeName JavaLangCloneableName = TypeName.string2TypeName("Ljava/lang/Cloneable");
+  private static final TypeName JavaLangThrowableName =
+      TypeName.string2TypeName("Ljava/lang/Throwable");
 
-  public final static TypeReference JavaLangCloneable = findOrCreate(ClassLoaderReference.Primordial, JavaLangCloneableName);
+  public static final TypeReference JavaLangThrowable =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangThrowableName);
 
-  private final static TypeName JavaLangSystemName = TypeName.string2TypeName("Ljava/lang/System");
+  public static final TypeName JavaLangCloneableName =
+      TypeName.string2TypeName("Ljava/lang/Cloneable");
 
-  public final static TypeReference JavaLangSystem = findOrCreate(ClassLoaderReference.Primordial, JavaLangSystemName);
+  public static final TypeReference JavaLangCloneable =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangCloneableName);
 
-  private final static TypeName JavaLangIntegerName = TypeName.string2TypeName("Ljava/lang/Integer");
+  private static final TypeName JavaLangSystemName = TypeName.string2TypeName("Ljava/lang/System");
 
-  public final static TypeReference JavaLangInteger = findOrCreate(ClassLoaderReference.Primordial, JavaLangIntegerName);
-  
-  private final static TypeName JavaLangBooleanName = TypeName.string2TypeName("Ljava/lang/Boolean");
+  public static final TypeReference JavaLangSystem =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangSystemName);
 
-  public final static TypeReference JavaLangBoolean = findOrCreate(ClassLoaderReference.Primordial, JavaLangBooleanName);
-  
-  private final static TypeName JavaLangDoubleName = TypeName.string2TypeName("Ljava/lang/Double");
+  private static final TypeName JavaLangIntegerName =
+      TypeName.string2TypeName("Ljava/lang/Integer");
 
-  public final static TypeReference JavaLangDouble = findOrCreate(ClassLoaderReference.Primordial, JavaLangDoubleName);
-  
-  private final static TypeName JavaLangFloatName = TypeName.string2TypeName("Ljava/lang/Float");
+  public static final TypeReference JavaLangInteger =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangIntegerName);
 
-  public final static TypeReference JavaLangFloat = findOrCreate(ClassLoaderReference.Primordial, JavaLangFloatName);
+  private static final TypeName JavaLangBooleanName =
+      TypeName.string2TypeName("Ljava/lang/Boolean");
 
-  private final static TypeName JavaLangShortName = TypeName.string2TypeName("Ljava/lang/Short");
+  public static final TypeReference JavaLangBoolean =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangBooleanName);
 
-  public final static TypeReference JavaLangShort = findOrCreate(ClassLoaderReference.Primordial, JavaLangShortName);
-  
-  private final static TypeName JavaLangLongName = TypeName.string2TypeName("Ljava/lang/Long");
+  private static final TypeName JavaLangDoubleName = TypeName.string2TypeName("Ljava/lang/Double");
 
-  public final static TypeReference JavaLangLong = findOrCreate(ClassLoaderReference.Primordial, JavaLangLongName);
-  
-  private final static TypeName JavaLangByteName = TypeName.string2TypeName("Ljava/lang/Byte");
+  public static final TypeReference JavaLangDouble =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangDoubleName);
 
-  public final static TypeReference JavaLangByte = findOrCreate(ClassLoaderReference.Primordial, JavaLangByteName);
-  
-  private final static TypeName JavaLangCharacterName = TypeName.string2TypeName("Ljava/lang/Character");
+  private static final TypeName JavaLangFloatName = TypeName.string2TypeName("Ljava/lang/Float");
 
-  public final static TypeReference JavaLangCharacter = findOrCreate(ClassLoaderReference.Primordial, JavaLangCharacterName);
-  
-  public final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
+  public static final TypeReference JavaLangFloat =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangFloatName);
 
-  public final static TypeReference JavaIoSerializable = findOrCreate(ClassLoaderReference.Primordial, JavaIoSerializableName);
+  private static final TypeName JavaLangShortName = TypeName.string2TypeName("Ljava/lang/Short");
 
-  private final static TypeName JavaUtilCollectionName = TypeName.string2TypeName("Ljava/util/Collection");
+  public static final TypeReference JavaLangShort =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangShortName);
 
-  public final static TypeReference JavaUtilCollection = findOrCreate(ClassLoaderReference.Primordial, JavaUtilCollectionName);
+  private static final TypeName JavaLangLongName = TypeName.string2TypeName("Ljava/lang/Long");
 
-  private final static TypeName JavaUtilMapName = TypeName.string2TypeName("Ljava/util/Map");
+  public static final TypeReference JavaLangLong =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangLongName);
 
-  public final static TypeReference JavaUtilMap = findOrCreate(ClassLoaderReference.Primordial, JavaUtilMapName);
+  private static final TypeName JavaLangByteName = TypeName.string2TypeName("Ljava/lang/Byte");
 
-  private final static TypeName JavaUtilHashSetName = TypeName.string2TypeName("Ljava/util/HashSet");
+  public static final TypeReference JavaLangByte =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangByteName);
 
-  public final static TypeReference JavaUtilHashSet = findOrCreate(ClassLoaderReference.Primordial, JavaUtilHashSetName);
+  private static final TypeName JavaLangCharacterName =
+      TypeName.string2TypeName("Ljava/lang/Character");
 
-  private final static TypeName JavaUtilSetName = TypeName.string2TypeName("Ljava/util/Set");
+  public static final TypeReference JavaLangCharacter =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangCharacterName);
 
-  public final static TypeReference JavaUtilSet = findOrCreate(ClassLoaderReference.Primordial, JavaUtilSetName);
+  public static final TypeName JavaIoSerializableName =
+      TypeName.string2TypeName("Ljava/io/Serializable");
 
-  private final static TypeName JavaUtilEnumName = TypeName.string2TypeName("Ljava/util/Enumeration");
+  public static final TypeReference JavaIoSerializable =
+      findOrCreate(ClassLoaderReference.Primordial, JavaIoSerializableName);
 
-  public final static TypeReference JavaUtilEnum = findOrCreate(ClassLoaderReference.Primordial, JavaUtilEnumName);
+  private static final TypeName JavaUtilCollectionName =
+      TypeName.string2TypeName("Ljava/util/Collection");
 
-  private final static TypeName JavaUtilIteratorName = TypeName.string2TypeName("Ljava/util/Iterator");
+  public static final TypeReference JavaUtilCollection =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilCollectionName);
 
-  public final static TypeReference JavaUtilIterator = findOrCreate(ClassLoaderReference.Primordial, JavaUtilIteratorName);
+  private static final TypeName JavaUtilMapName = TypeName.string2TypeName("Ljava/util/Map");
 
-  private final static TypeName JavaUtilVectorName = TypeName.string2TypeName("Ljava/util/Vector");
+  public static final TypeReference JavaUtilMap =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilMapName);
 
-  public final static TypeReference JavaUtilVector = findOrCreate(ClassLoaderReference.Primordial, JavaUtilVectorName);
+  private static final TypeName JavaUtilHashSetName =
+      TypeName.string2TypeName("Ljava/util/HashSet");
 
-  public final static byte ClassTypeCode = 'L';
+  public static final TypeReference JavaUtilHashSet =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilHashSetName);
 
-  public final static byte ArrayTypeCode = '[';
+  private static final TypeName JavaUtilSetName = TypeName.string2TypeName("Ljava/util/Set");
 
-  public final static byte PointerTypeCode = '*';
+  public static final TypeReference JavaUtilSet =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilSetName);
 
-  public final static byte ReferenceTypeCode = '&';
+  private static final TypeName JavaUtilEnumName =
+      TypeName.string2TypeName("Ljava/util/Enumeration");
+
+  public static final TypeReference JavaUtilEnum =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilEnumName);
+
+  private static final TypeName JavaUtilIteratorName =
+      TypeName.string2TypeName("Ljava/util/Iterator");
+
+  public static final TypeReference JavaUtilIterator =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilIteratorName);
+
+  private static final TypeName JavaUtilVectorName = TypeName.string2TypeName("Ljava/util/Vector");
+
+  public static final TypeReference JavaUtilVector =
+      findOrCreate(ClassLoaderReference.Primordial, JavaUtilVectorName);
+
+  public static final byte ClassTypeCode = 'L';
+
+  public static final byte ArrayTypeCode = '[';
+
+  public static final byte PointerTypeCode = '*';
+
+  public static final byte ReferenceTypeCode = '&';
 
   // TODO! the following two are unsound hacks; kill them.
-  final static TypeName NullName = TypeName.string2TypeName("null");
+  static final TypeName NullName = TypeName.string2TypeName("null");
 
-  public final static TypeReference Null = findOrCreate(ClassLoaderReference.Primordial, NullName);
+  public static final TypeReference Null = findOrCreate(ClassLoaderReference.Primordial, NullName);
 
   // TODO: is the following necessary. Used only by ShrikeBT.
-  final static TypeName UnknownName = TypeName.string2TypeName("?unknown?");
+  static final TypeName UnknownName = TypeName.string2TypeName("?unknown?");
 
-  public final static TypeReference Unknown = findOrCreate(ClassLoaderReference.Primordial, UnknownName);
+  public static final TypeReference Unknown =
+      findOrCreate(ClassLoaderReference.Primordial, UnknownName);
 
-  public final static TypeReference LambdaMetaFactory = findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/invoke/LambdaMetafactory");
-  
+  public static final TypeReference LambdaMetaFactory =
+      findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/invoke/LambdaMetafactory");
+
   private static TypeReference makePrimitive(TypeName n) {
     return makePrimitive(ClassLoaderReference.Primordial, n);
   }
@@ -360,29 +418,24 @@ public final class TypeReference implements Serializable {
     return t;
   }
 
-  /**
-   * Could name a represent a primitive type?
-   */
+  /** Could name a represent a primitive type? */
   public static boolean isPrimitiveType(TypeName name) {
     return name.isPrimitiveType();
   }
 
-  /**
-   * The initiating class loader
-   */
+  /** The initiating class loader */
   private final ClassLoaderReference classloader;
 
-  /**
-   * The type name
-   */
+  /** The type name */
   private final TypeName name;
 
   /**
    * Find or create the canonical TypeReference instance for the given pair.
-   * 
+   *
    * @param cl the classloader (defining/initiating depending on usage)
    */
-  public static synchronized TypeReference findOrCreate(ClassLoaderReference cl, TypeName typeName) {
+  public static synchronized TypeReference findOrCreate(
+      ClassLoaderReference cl, TypeName typeName) {
 
     if (cl == null) {
       throw new IllegalArgumentException("null cl");
@@ -414,7 +467,7 @@ public final class TypeReference implements Serializable {
 
   /**
    * Find or create the canonical {@link TypeReference} instance for the given pair.
-   * 
+   *
    * @param cl the classloader (defining/initiating depending on usage)
    * @param typeName something like "Ljava/util/Arrays"
    */
@@ -428,7 +481,7 @@ public final class TypeReference implements Serializable {
 
   /**
    * Find the canonical TypeReference instance for the given pair. May return null.
-   * 
+   *
    * @param cl the classloader (defining/initiating depending on usage)
    */
   public static synchronized TypeReference find(ClassLoaderReference cl, TypeName typeName) {
@@ -493,7 +546,7 @@ public final class TypeReference implements Serializable {
 
   /**
    * NB: All type names should use '/' and not '.' as a separator. eg. Ljava/lang/Class
-   * 
+   *
    * @param cl the classloader
    * @param tn the type name
    */
@@ -502,74 +555,59 @@ public final class TypeReference implements Serializable {
     name = tn;
   }
 
-  /**
-   * @return the classloader component of this type reference
-   */
+  /** @return the classloader component of this type reference */
   public final ClassLoaderReference getClassLoader() {
     return classloader;
   }
 
-  /**
-   * @return the type name component of this type reference
-   */
+  /** @return the type name component of this type reference */
   public final TypeName getName() {
     return name;
   }
 
   /**
-   * TODO: specialized form of TypeReference for arrays, please. Get the element type of for this array type.
+   * TODO: specialized form of TypeReference for arrays, please. Get the element type of for this
+   * array type.
    */
   public final TypeReference getArrayElementType() {
     TypeName element = name.parseForArrayElementName();
     return findOrCreate(classloader, element);
   }
 
-  /**
-   * Get array type corresponding to "this" array element type.
-   */
+  /** Get array type corresponding to "this" array element type. */
   public final TypeReference getArrayTypeForElementType() {
     return findOrCreate(classloader, name.getArrayTypeForElementType());
   }
 
   /**
-   * Return the dimensionality of the type. By convention, class types have dimensionality 0, primitives -1, and arrays
-   * the number of [ in their descriptor.
+   * Return the dimensionality of the type. By convention, class types have dimensionality 0,
+   * primitives -1, and arrays the number of [ in their descriptor.
    */
   public final int getDerivedMask() {
     return name.getDerivedMask();
   }
 
-  /**
-   * Return the innermost element type reference for an array
-   */
+  /** Return the innermost element type reference for an array */
   public final TypeReference getInnermostElementType() {
     return findOrCreate(classloader, name.getInnermostElementType());
   }
 
-  /**
-   * Does 'this' refer to a class?
-   */
+  /** Does 'this' refer to a class? */
   public final boolean isClassType() {
     return !isArrayType() && !isPrimitiveType();
   }
 
-  /**
-   * Does 'this' refer to an array?
-   */
+  /** Does 'this' refer to an array? */
   public final boolean isArrayType() {
     return name.isArrayType();
   }
 
-  /**
-   * Does 'this' refer to a primitive type
-   */
+  /** Does 'this' refer to a primitive type */
   public final boolean isPrimitiveType() {
     return isPrimitiveType(name);
   }
 
-  /**
-   * Does 'this' refer to a reference type
-   */
+  /** Does 'this' refer to a reference type */
   public final boolean isReferenceType() {
     return !isPrimitiveType();
   }
@@ -580,12 +618,12 @@ public final class TypeReference implements Serializable {
   }
 
   /**
-   * TypeReferences are canonical. However, note that two TypeReferences can be non-equal, yet still represent the same
-   * IClass.
-   * 
-   * For example, the there can be two TypeReferences &lt;Application,java.lang.Object&gt; and &lt;Primordial,java.lang.Object&gt;.
-   * These two TypeReference are <b>NOT</b> equal(), but they both represent the IClass which is named
-   * &lt;Primordial,java.lang.Object&gt;
+   * TypeReferences are canonical. However, note that two TypeReferences can be non-equal, yet still
+   * represent the same IClass.
+   *
+   * <p>For example, the there can be two TypeReferences &lt;Application,java.lang.Object&gt; and
+   * &lt;Primordial,java.lang.Object&gt;. These two TypeReference are <b>NOT</b> equal(), but they
+   * both represent the IClass which is named &lt;Primordial,java.lang.Object&gt;
    */
   @Override
   public final boolean equals(Object other) {
@@ -597,20 +635,17 @@ public final class TypeReference implements Serializable {
     return "<" + classloader.getName() + ',' + name + '>';
   }
 
-  public static TypeReference findOrCreateClass(ClassLoaderReference loader, String packageName, String className) {
+  public static TypeReference findOrCreateClass(
+      ClassLoaderReference loader, String packageName, String className) {
     TypeName tn = TypeName.findOrCreateClassName(packageName, className);
     return findOrCreate(loader, tn);
   }
 
   private static class Key {
-    /**
-     * The initiating class loader
-     */
+    /** The initiating class loader */
     private final ClassLoaderReference classloader;
 
-    /**
-     * The type name
-     */
+    /** The type name */
     private final TypeName name;
 
     Key(ClassLoaderReference classloader, TypeName name) {
@@ -630,21 +665,20 @@ public final class TypeReference implements Serializable {
       return (name.equals(that.name) && classloader.equals(that.classloader));
     }
   }
-  
+
   public int getDimensionality() {
     assert isArrayType();
-    
+
     int mask = getDerivedMask();
-    if ((mask&PrimitiveMask) == PrimitiveMask) {
+    if ((mask & PrimitiveMask) == PrimitiveMask) {
       mask >>= ElementBits;
     }
     int dims = 0;
-    while ((mask&ArrayMask) == ArrayMask) {
+    while ((mask & ArrayMask) == ArrayMask) {
       mask >>= ElementBits;
       dims++;
     }
-    assert dims>0;
+    assert dims > 0;
     return dims;
   }
-
 }

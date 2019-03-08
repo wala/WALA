@@ -17,24 +17,21 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * A Call instruction.
- * 
- * Note that different languages have different notions of what a call is. This is an abstract superclass which encapsulates the
- * common functionality that all languages share, so far.
+ *
+ * <p>Note that different languages have different notions of what a call is. This is an abstract
+ * superclass which encapsulates the common functionality that all languages share, so far.
  */
 public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
 
-  /**
-   * The value number which represents the exception object which the call may throw.
-   */
+  /** The value number which represents the exception object which the call may throw. */
   protected final int exception;
 
-  /**
-   * The call site, containing the program counter location and the method being called.
-   */
+  /** The call site, containing the program counter location and the method being called. */
   protected final CallSiteReference site;
 
   /**
-   * @param exception The value number which represents the exception object which the call may throw.
+   * @param exception The value number which represents the exception object which the call may
+   *     throw.
    * @param site The call site, containing the program counter location and the method being called.
    */
   protected SSAAbstractInvokeInstruction(int iindex, int exception, CallSiteReference site) {
@@ -43,50 +40,41 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     this.site = site;
   }
 
-  /**
-   * @return The call site, containing the program counter location and the method being called.
-   */
+  /** @return The call site, containing the program counter location and the method being called. */
   public CallSiteReference getCallSite() {
     return site;
   }
 
-  /**
-   * Is this a 'static' call? (invokestatic in Java)
-   */
+  /** Is this a 'static' call? (invokestatic in Java) */
   public boolean isStatic() {
     return getCallSite().isStatic();
   }
 
   /**
-   * Might this call dispatch to one of several possible methods?  i.e., in Java, is it an invokeinterface or invokevirtual
+   * Might this call dispatch to one of several possible methods? i.e., in Java, is it an
+   * invokeinterface or invokevirtual
    */
   public boolean isDispatch() {
     return getCallSite().isDispatch();
   }
 
-  /**
-   * Is this a 'special' call? (invokespecial in Java)
-   */
+  /** Is this a 'special' call? (invokespecial in Java) */
   public boolean isSpecial() {
     return getCallSite().isSpecial();
   }
 
-  /**
-   * @return the value number of the receiver of a virtual call
-   */
+  /** @return the value number of the receiver of a virtual call */
   public int getReceiver() {
     assert site.getInvocationCode() != IInvokeInstruction.Dispatch.STATIC : toString();
     return getUse(0);
   }
 
-  /**
-   * @return the program counter (index into the method's bytecode) for this call site.
-   */
+  /** @return the program counter (index into the method's bytecode) for this call site. */
   public int getProgramCounter() {
     return site.getProgramCounter();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfDefs()
    */
   @Override
@@ -94,7 +82,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return getNumberOfReturnValues() + 1;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#getDef(int)
    */
   @Override
@@ -115,13 +103,14 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
   }
 
   /**
-   * Return the value number which is def'fed by this call instruction if the call returns exceptionally.
+   * Return the value number which is def'fed by this call instruction if the call returns
+   * exceptionally.
    */
   public int getException() {
     return exception;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#hasDef()
    */
   @Override
@@ -129,7 +118,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return getNumberOfReturnValues() > 0;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
   @Override
@@ -137,38 +126,26 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return getReturnValue(0);
   }
 
-  /**
-   * How many parameters does this call specify?
-   */
+  /** How many parameters does this call specify? */
   public abstract int getNumberOfPositionalParameters();
 
-  /**
-   * How many distinct values does this call return?
-   */
+  /** How many distinct values does this call return? */
   public abstract int getNumberOfReturnValues();
 
-  /**
-   * What is the the value number of the ith value returned by this call
-   */
+  /** What is the the value number of the ith value returned by this call */
   public abstract int getReturnValue(int i);
 
-  /**
-   * What is the declared return type of the called method
-   */
+  /** What is the declared return type of the called method */
   public TypeReference getDeclaredResultType() {
     return site.getDeclaredTarget().getReturnType();
   }
 
-  /**
-   * What method is the declared callee?
-   */
+  /** What method is the declared callee? */
   public MethodReference getDeclaredTarget() {
     return site.getDeclaredTarget();
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.CallSiteReference#getInvocationCode()
-   */
+  /** @see com.ibm.wala.classLoader.CallSiteReference#getInvocationCode() */
   public IInvokeInstruction.IDispatch getInvocationCode() {
     return site.getInvocationCode();
   }
@@ -218,5 +195,4 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
 
     return s.toString();
   }
-
 }

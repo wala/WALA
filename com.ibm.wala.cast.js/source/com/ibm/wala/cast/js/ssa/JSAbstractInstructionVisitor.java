@@ -14,55 +14,33 @@ import com.ibm.wala.cast.ir.ssa.AstAbstractInstructionVisitor;
 import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 
-public class JSAbstractInstructionVisitor 
-    extends AstAbstractInstructionVisitor 
-    implements JSInstructionVisitor
-{
+public class JSAbstractInstructionVisitor extends AstAbstractInstructionVisitor
+    implements JSInstructionVisitor {
 
   @Override
-  public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
-  
-  }
-    
-  @Override
-  public void visitPropertyRead(AstPropertyRead instruction) {
-  
-  }
-  
-  @Override
-  public void visitPropertyWrite(AstPropertyWrite instruction) {
-  
-  }
+  public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {}
 
   @Override
-  public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
-      
-  }
+  public void visitPropertyRead(AstPropertyRead instruction) {}
 
   @Override
-  public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
-     
-  }
+  public void visitPropertyWrite(AstPropertyWrite instruction) {}
 
   @Override
-  public void visitCheckRef(JavaScriptCheckReference instruction) {
- 
-  }
+  public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {}
 
   @Override
-  public void visitWithRegion(JavaScriptWithRegion instruction) {
-    
-  }
+  public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {}
 
   @Override
-  public void visitSetPrototype(SetPrototype instruction) {
-    
-  }
+  public void visitCheckRef(JavaScriptCheckReference instruction) {}
 
   @Override
-  public void visitPrototypeLookup(PrototypeLookup instruction) {
-    
-  }
+  public void visitWithRegion(JavaScriptWithRegion instruction) {}
 
+  @Override
+  public void visitSetPrototype(SetPrototype instruction) {}
+
+  @Override
+  public void visitPrototypeLookup(PrototypeLookup instruction) {}
 }
-

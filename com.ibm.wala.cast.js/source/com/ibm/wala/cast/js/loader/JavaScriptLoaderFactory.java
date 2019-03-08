@@ -18,25 +18,24 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
-/**
- * Creates the single {@link IClassLoader class loader} used for JavaScript.  
- */
+/** Creates the single {@link IClassLoader class loader} used for JavaScript. */
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
   protected final JavaScriptTranslatorFactory translatorFactory;
   protected final CAstRewriterFactory<?, ?> preprocessor;
-  
+
   public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory) {
     this(factory, null);
   }
 
-  public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
+  public JavaScriptLoaderFactory(
+      JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
     this.translatorFactory = factory;
     this.preprocessor = preprocessor;
   }
 
   @Override
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
-    return new JavaScriptLoader( cha, translatorFactory, preprocessor );
+    return new JavaScriptLoader(cha, translatorFactory, preprocessor);
   }
 
   @Override

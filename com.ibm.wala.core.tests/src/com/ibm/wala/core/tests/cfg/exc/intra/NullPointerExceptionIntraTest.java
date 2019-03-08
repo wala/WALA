@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.core.tests.cfg.exc.intra;
 
-import java.util.Collection;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.cfg.exc.NullPointerAnalysis;
@@ -46,10 +40,15 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.Warnings;
+import java.util.Collection;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
- * Test validity and precision of intra-procedurel NullpointerException-Analysis {@link IntraprocNullPointerAnalysis}
- * 
+ * Test validity and precision of intra-procedurel NullpointerException-Analysis {@link
+ * IntraprocNullPointerAnalysis}
  */
 public class NullPointerExceptionIntraTest extends WalaTestCase {
 
@@ -60,8 +59,11 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   @BeforeClass
   public static void beforeClass() throws Exception {
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), NullPointerExceptionIntraTest.class.getClassLoader());
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            NullPointerExceptionIntraTest.class.getClassLoader());
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
@@ -84,7 +86,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
 
   @Test
   public void testParam() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -96,8 +100,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NULL, returnState.getState(returnVal));
@@ -106,19 +111,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testDynamicParam() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testParam(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -130,8 +137,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NULL, returnState.getState(returnVal));
@@ -140,19 +148,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testParam2() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -164,8 +174,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -174,18 +185,20 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   public void testDynamicParam2() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testDynamicParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testDynamicParam2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -197,8 +210,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -207,20 +221,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
-  
+
   @Test
   public void testIf() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -232,8 +247,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -242,19 +258,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testDynamicIf() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testIf(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -266,8 +284,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -276,19 +295,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testIf2() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -300,8 +321,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -311,20 +333,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testDynamicIf2() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testIf2(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -336,8 +360,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -347,21 +372,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
 
-  
   @Test
   public void testIfContinued() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -373,8 +399,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -384,20 +411,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testDynamicIfContinued() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testIfContinued(ZLcfg/exc/intra/B;Lcfg/exc/intra/B;Lcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -409,8 +438,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -420,20 +450,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
 
   @Test
   public void testIf3() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -445,8 +477,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -456,21 +489,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
 
-  
   @Test
   public void testDynamicIf3() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testIf3(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -482,8 +516,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -493,21 +528,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
-  
+
   @Test
   public void testWhile() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -519,8 +555,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -530,20 +567,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testWhileDynamic() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testWhile(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -555,8 +594,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -566,20 +606,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testWhile2() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -591,8 +633,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -601,19 +644,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testDynamicWhile2() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testWhile2(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -625,8 +670,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -635,19 +681,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
-    }    
+    }
   }
 
   @Test
   public void testGet() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccess.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccess.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -659,8 +707,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -670,20 +719,22 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
-  
+
   @Test
   public void testDynamicGet() throws UnsoundGraphException, CancelException {
-    MethodReference mr = StringStuff.makeMethodReference("cfg.exc.intra.FieldAccessDynamic.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
+    MethodReference mr =
+        StringStuff.makeMethodReference(
+            "cfg.exc.intra.FieldAccessDynamic.testGet(ZLcfg/exc/intra/B;)Lcfg/exc/intra/B");
 
     IMethod m = cha.resolveMethod(mr);
     AnalysisCacheImpl cache = new AnalysisCacheImpl();
@@ -695,8 +746,9 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ir);
       intraExplodedCFG.compute(new NullProgressMonitor());
-        
-      final IExplodedBasicBlock returnNodeExploded = returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
+
+      final IExplodedBasicBlock returnNodeExploded =
+          returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
@@ -706,30 +758,32 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
-      
+
       Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode,           returnNode(intraSSACFG.getCFG()));
-        
+      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
       Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
       Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
-    }    
+    }
   }
 
   public static ISSABasicBlock returnNode(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg) {
-      Collection<ISSABasicBlock> returnNodes = cfg.getNormalPredecessors(cfg.exit());
-      Assert.assertEquals(1, returnNodes.size());
-      return (ISSABasicBlock) returnNodes.toArray()[0];
+    Collection<ISSABasicBlock> returnNodes = cfg.getNormalPredecessors(cfg.exit());
+    Assert.assertEquals(1, returnNodes.size());
+    return (ISSABasicBlock) returnNodes.toArray()[0];
   }
-  
+
   public static int returnVal(ISSABasicBlock returnNode) {
     final SSAReturnInstruction returnInst = (SSAReturnInstruction) returnNode.getLastInstruction();
     Assert.assertEquals(1, returnInst.getNumberOfUses());
     return returnInst.getUse(0);
   }
-  
-  public static IExplodedBasicBlock returnNodeExploded(ISSABasicBlock returnNode, ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> explodedCfg) {
+
+  public static IExplodedBasicBlock returnNodeExploded(
+      ISSABasicBlock returnNode,
+      ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> explodedCfg) {
     final IExplodedBasicBlock exit = explodedCfg.exit();
     for (IExplodedBasicBlock candidate : Iterator2Iterable.make(explodedCfg.getPredNodes(exit))) {
       if (candidate.getInstruction() == returnNode.getLastInstruction()) {

@@ -20,25 +20,31 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
-/**
- * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types.
- */
+/** 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types. */
 public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
-  public AstJavaZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
+  public AstJavaZeroXCFABuilder(
+      IClassHierarchy cha,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      ContextSelector appContextSelector,
+      SSAContextInterpreter appContextInterpreter,
+      int instancePolicy) {
     super(cha, options, cache);
 
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
+    SSAContextInterpreter contextInterpreter =
+        makeDefaultContextInterpreters(appContextInterpreter, options, cha);
     setContextInterpreter(contextInterpreter);
 
     ContextSelector def = new DefaultContextSelector(options, cha);
-    ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
+    ContextSelector contextSelector =
+        appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
     setContextSelector(contextSelector);
 
-    setInstanceKeys(new JavaScopeMappingInstanceKeys(this, new ZeroXInstanceKeys(options, cha, contextInterpreter,
-        instancePolicy)));
+    setInstanceKeys(
+        new JavaScopeMappingInstanceKeys(
+            this, new ZeroXInstanceKeys(options, cha, contextInterpreter, instancePolicy)));
   }
 
   /**
@@ -49,8 +55,14 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
    * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static AstJavaCFABuilder make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, String[] xmlFiles, byte instancePolicy) {
+  public static AstJavaCFABuilder make(
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      ClassLoader cl,
+      AnalysisScope scope,
+      String[] xmlFiles,
+      byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     for (String xmlFile : xmlFiles) {
@@ -59,5 +71,4 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
     return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, instancePolicy);
   }
-
 }

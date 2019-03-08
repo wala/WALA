@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -34,12 +29,17 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
- * A helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective factory methods.
+ * A helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective
+ * factory methods.
  */
 public class ReflectionHandler {
-  private final static boolean VERBOSE = false;
+  private static final boolean VERBOSE = false;
 
   private final PropagationCallGraphBuilder builder;
 
@@ -52,7 +52,8 @@ public class ReflectionHandler {
    *
    * @return true if anything has changed
    */
-  protected boolean updateForReflection(IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
+  protected boolean updateForReflection(IProgressMonitor monitor)
+      throws IllegalArgumentException, CancelException {
 
     Collection<Statement> returnStatements = computeFactoryReturnStatements();
     Set<CGNode> changedNodes = HashSetFactory.make();
@@ -60,27 +61,36 @@ public class ReflectionHandler {
       if (VERBOSE) {
         System.err.println("Slice " + st);
       }
-      Collection<Statement> slice = Slicer.computeForwardSlice(st, builder.callGraph, null, DataDependenceOptions.REFLECTION, ControlDependenceOptions.NONE);
+      Collection<Statement> slice =
+          Slicer.computeForwardSlice(
+              st,
+              builder.callGraph,
+              null,
+              DataDependenceOptions.REFLECTION,
+              ControlDependenceOptions.NONE);
       if (VERBOSE) {
         for (Statement x : slice) {
           System.err.println(" " + x);
         }
       }
-      Predicate<Statement> f = s -> {
-        if (s.getKind() == Kind.NORMAL) {
-          return ((NormalStatement) s).getInstruction() instanceof SSACheckCastInstruction;
-        } else {
-          return false;
-        }
-      };
-      Collection<Statement> casts = Iterator2Collection.toSet(new FilterIterator<>(slice.iterator(), f));
-      changedNodes.addAll(modifyFactoryInterpreter(st, casts, builder.getContextInterpreter(), builder.getClassHierarchy()));
+      Predicate<Statement> f =
+          s -> {
+            if (s.getKind() == Kind.NORMAL) {
+              return ((NormalStatement) s).getInstruction() instanceof SSACheckCastInstruction;
+            } else {
+              return false;
+            }
+          };
+      Collection<Statement> casts =
+          Iterator2Collection.toSet(new FilterIterator<>(slice.iterator(), f));
+      changedNodes.addAll(
+          modifyFactoryInterpreter(
+              st, casts, builder.getContextInterpreter(), builder.getClassHierarchy()));
     }
     for (CGNode cgNode : changedNodes) {
       builder.addConstraintsFromChangedNode(cgNode, monitor);
     }
     return changedNodes.size() > 0;
-
   }
 
   private Collection<Statement> computeFactoryReturnStatements() {
@@ -99,11 +109,14 @@ public class ReflectionHandler {
 
   /**
    * modify the contextInterpreter to account for new interpretations of factory methods.
-   * 
+   *
    * @return set of nodes whose interpretation has changed.
    */
-  private static Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
-      RTAContextInterpreter contextInterpreter, IClassHierarchy cha) {
+  private static Set<CGNode> modifyFactoryInterpreter(
+      Statement returnStatement,
+      Collection<Statement> casts,
+      RTAContextInterpreter contextInterpreter,
+      IClassHierarchy cha) {
     HashSet<CGNode> result = HashSetFactory.make();
 
     for (Statement st : casts) {

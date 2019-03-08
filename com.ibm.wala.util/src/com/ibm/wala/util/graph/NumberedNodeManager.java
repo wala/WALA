@@ -10,26 +10,18 @@
  */
 package com.ibm.wala.util.graph;
 
+import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
 
-import com.ibm.wala.util.intset.IntSet;
-
-/**
- * An object which tracks nodes with numbers.
- */
+/** An object which tracks nodes with numbers. */
 public interface NumberedNodeManager<T> extends NodeManager<T> {
 
   public abstract int getNumber(T N);
 
-
   public abstract T getNode(int number);
-
 
   public abstract int getMaxNumber();
 
-  /**
-   * @return iterator of nodes with the numbers in set s
-   */
+  /** @return iterator of nodes with the numbers in set s */
   public abstract Iterator<T> iterateNodes(IntSet s);
-
 }

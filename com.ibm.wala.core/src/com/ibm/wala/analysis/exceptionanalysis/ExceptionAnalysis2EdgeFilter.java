@@ -17,9 +17,8 @@ import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  * Converter to use the results of the exception analysis with an edge filter.
- * 
- * @author Stephan Gocht {@code <stephan@gobro.de>}
  *
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> {
   private ExceptionAnalysis analysis;
@@ -32,7 +31,8 @@ public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> 
 
   @Override
   public boolean hasNormalEdge(ISSABasicBlock src, ISSABasicBlock dst) {
-    boolean originalEdge = node.getIR().getControlFlowGraph().getNormalSuccessors(src).contains(dst);
+    boolean originalEdge =
+        node.getIR().getControlFlowGraph().getNormalSuccessors(src).contains(dst);
     boolean result = originalEdge;
     SSAInstruction instruction = IntraproceduralExceptionAnalysis.getThrowingInstruction(src);
     if (instruction != null) {
@@ -45,7 +45,8 @@ public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> 
 
   @Override
   public boolean hasExceptionalEdge(ISSABasicBlock src, ISSABasicBlock dst) {
-    boolean originalEdge = node.getIR().getControlFlowGraph().getExceptionalSuccessors(src).contains(dst);
+    boolean originalEdge =
+        node.getIR().getControlFlowGraph().getExceptionalSuccessors(src).contains(dst);
     boolean result = originalEdge;
 
     if (dst.isCatchBlock()) {
@@ -58,5 +59,4 @@ public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> 
     }
     return result;
   }
-
 }

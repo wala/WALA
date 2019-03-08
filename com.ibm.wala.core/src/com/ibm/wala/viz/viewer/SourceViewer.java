@@ -15,14 +15,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-public class SourceViewer extends JPanel{
+public class SourceViewer extends JPanel {
   private static final long serialVersionUID = -1688405955293925453L;
   private URL sourceURL;
   private JTextField sourceCodeLocation;
@@ -44,18 +43,18 @@ public class SourceViewer extends JPanel{
 
   public void setSource(URL url, int sourceLine) {
     boolean succsess = loadSource(url);
-    if (succsess){
+    if (succsess) {
       sourceCodeLocation.setText("Source code: " + url);
-      if (sourceLine != IrViewer.NA){
-        sourceCodeLines.ensureIndexIsVisible(sourceLine-1);
-        sourceCodeLines.setSelectedIndex(sourceLine-1);
+      if (sourceLine != IrViewer.NA) {
+        sourceCodeLines.ensureIndexIsVisible(sourceLine - 1);
+        sourceCodeLines.setSelectedIndex(sourceLine - 1);
         sourceCodeLines.validate();
       }
     } else {
       sourceCodeLocation.setText("Error loading source code from: " + url);
     }
   }
-  
+
   private boolean loadSource(URL url) {
     if (url == null) {
       if (sourceURL != null) {
@@ -95,6 +94,4 @@ public class SourceViewer extends JPanel{
     sourceCodeLinesList.clear();
     sourceCodeLines.validate();
   }
-
-
 }

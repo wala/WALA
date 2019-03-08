@@ -11,18 +11,16 @@
 
 package com.ibm.wala.ipa.callgraph;
 
-/**
- * A placeholder for strong typing.
- */
+/** A placeholder for strong typing. */
 public interface ContextItem {
 
   public class Value<T> implements ContextItem {
     private final T v;
-    
+
     public Value(T v) {
       this.v = v;
     }
-    
+
     public T getValue() {
       return v;
     }
@@ -38,20 +36,14 @@ public interface ContextItem {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       Value<?> other = (Value<?>) obj;
       if (v == null) {
-        if (other.v != null)
-          return false;
-      } else if (!v.equals(other.v))
-        return false;
+        if (other.v != null) return false;
+      } else if (!v.equals(other.v)) return false;
       return true;
     }
-
   }
 }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,57 +48,63 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.types.TypeReference;
+import org.jf.dexlib2.Opcode;
 
 public class ArrayGet extends Instruction {
 
-    public enum Type{t_int,t_wide,t_boolean,t_byte,t_char, t_object, t_short}
+  public enum Type {
+    t_int,
+    t_wide,
+    t_boolean,
+    t_byte,
+    t_char,
+    t_object,
+    t_short
+  }
 
-    public final int destination;
-    public final int array;
-    public final int offset;
-    public final Type type;
+  public final int destination;
+  public final int array;
+  public final int offset;
+  public final Type type;
 
-    public ArrayGet(int pc, int destination, int array, int offset, Type type, Opcode op, DexIMethod method) {
-        super(pc, op, method);
-        this.destination = destination;
-        this.array = array;
-        this.offset = offset;
-        this.type = type;
+  public ArrayGet(
+      int pc, int destination, int array, int offset, Type type, Opcode op, DexIMethod method) {
+    super(pc, op, method);
+    this.destination = destination;
+    this.array = array;
+    this.offset = offset;
+    this.type = type;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitArrayGet(this);
+  }
+
+  public TypeReference getType() {
+    return getType(type);
+  }
+
+  public static TypeReference getType(Type type) {
+    switch (type) {
+      case t_int:
+        return TypeReference.Int;
+      case t_wide:
+        return TypeReference.Long;
+      case t_boolean:
+        return TypeReference.Boolean;
+      case t_byte:
+        return TypeReference.Byte;
+      case t_char:
+        return TypeReference.Char;
+      case t_object:
+        return TypeReference.JavaLangObject;
+      case t_short:
+        return TypeReference.Short;
+      default:
+        return null;
     }
-
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitArrayGet(this);
-    }
-
-    public TypeReference getType()
-    {
-        return getType(type);
-    }
-
-    public static TypeReference getType(Type type) {
-        switch(type)
-        {
-        case t_int:
-            return TypeReference.Int;
-        case t_wide:
-            return TypeReference.Long;
-        case t_boolean:
-            return TypeReference.Boolean;
-        case t_byte:
-            return TypeReference.Byte;
-        case t_char:
-            return TypeReference.Char;
-        case t_object:
-            return TypeReference.JavaLangObject;
-        case t_short:
-            return TypeReference.Short;
-        default:
-            return null;
-        }
-    }
+  }
 }

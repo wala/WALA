@@ -34,5 +34,4 @@ public class SourceURLModule extends AbstractURLModule implements SourceModule {
   public Reader getInputReader() {
     return new InputStreamReader(getInputStream());
   }
-
 }

@@ -10,9 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import org.junit.Before;
-
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import org.junit.Before;
 
 public class TestAjaxsltCallGraphShapeRhino extends TestAjaxsltCallGraphShape {
 
@@ -23,8 +22,7 @@ public class TestAjaxsltCallGraphShapeRhino extends TestAjaxsltCallGraphShape {
   @Override
   @Before
   public void setUp() {
-    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
+        new CAstRhinoTranslatorFactory());
   }
-
-
 }

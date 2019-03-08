@@ -11,9 +11,7 @@
 
 package com.ibm.wala.ssa;
 
-/**
- * An instruction which unconditionally throws an exception
- */
+/** An instruction which unconditionally throws an exception */
 public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
   private final int exception;
 
@@ -54,7 +52,7 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return true;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -62,11 +60,8 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return false;
   }
 
-  /**
-   * @return value number of the thrown exception object.
-   */
+  /** @return value number of the thrown exception object. */
   public int getException() {
     return exception;
   }
-
 }

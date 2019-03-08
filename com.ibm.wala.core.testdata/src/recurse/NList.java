@@ -15,14 +15,13 @@ import java.util.Iterator;
 
 /**
  * @author sfink
- *
- * A simple exercise in recursive data structures.
+ *     <p>A simple exercise in recursive data structures.
  */
 public class NList implements Collection<Object> {
 
   final int value;
   final NList next;
-  
+
   public NList(int value) {
     this.value = value;
     if (value > 0) {
@@ -31,7 +30,6 @@ public class NList implements Collection<Object> {
       this.next = null;
     }
   }
-
 
   public static void main(String[] args) {
     new NList(100);
@@ -81,7 +79,6 @@ public class NList implements Collection<Object> {
     // TODO Auto-generated method stub
     return null;
   }
-
 
   /* (non-Javadoc)
    * @see java.util.Collection#add(java.lang.Object)
@@ -143,9 +140,8 @@ public class NList implements Collection<Object> {
   @Override
   public void clear() {
     // TODO Auto-generated method stub
-    
-  }
 
+  }
 
   @Override
   public Object[] toArray(Object[] a) {

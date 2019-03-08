@@ -52,19 +52,13 @@ public class NestedJarFileModule extends AbstractNestedJarFileModule {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     NestedJarFileModule other = (NestedJarFileModule) obj;
     if (parent == null) {
-      if (other.parent != null)
-        return false;
-    } else if (!parent.equals(other.parent))
-      return false;
+      if (other.parent != null) return false;
+    } else if (!parent.equals(other.parent)) return false;
     return true;
   }
-
 }

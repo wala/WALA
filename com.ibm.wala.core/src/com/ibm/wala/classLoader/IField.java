@@ -13,35 +13,27 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
-/**
- */
+/** */
 public interface IField extends IMember {
 
-  /**
-   * @return the canonical TypeReference of the declared type of the field
-   */
+  /** @return the canonical TypeReference of the declared type of the field */
   public TypeReference getFieldTypeReference();
-  
-  /**
-   * @return canonical FieldReference representing this field
-   */
+
+  /** @return canonical FieldReference representing this field */
   public FieldReference getReference();
-  
-  /**
-   * Is this field final?
-   */
+
+  /** Is this field final? */
   public boolean isFinal();
-  
+
   public boolean isPrivate();
+
   public boolean isProtected();
+
   public boolean isPublic();
+
   @Override
   public boolean isStatic();
 
-  /**
-   * Is this member volatile?
-   */
+  /** Is this member volatile? */
   boolean isVolatile();
-
-
 }

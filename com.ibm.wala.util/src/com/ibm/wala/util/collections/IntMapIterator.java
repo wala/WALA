@@ -10,14 +10,11 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.intset.IntIterator;
 import java.util.Iterator;
 import java.util.function.IntFunction;
 
-import com.ibm.wala.util.intset.IntIterator;
-
-/**
- * An {@code IntMapIterator} maps an {@code Iterator} contents to produce a new Iterator
- */
+/** An {@code IntMapIterator} maps an {@code Iterator} contents to produce a new Iterator */
 public class IntMapIterator<T> implements Iterator<T> {
   final IntIterator i;
 
@@ -53,5 +50,4 @@ public class IntMapIterator<T> implements Iterator<T> {
   public String toString() {
     return "map: " + f + " of " + i;
   }
-
 }

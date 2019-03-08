@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
@@ -73,111 +68,120 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * A flow graph models data flow between vertices representing local variables, properties,
- * return values, and so forth.
- * 
+ * A flow graph models data flow between vertices representing local variables, properties, return
+ * values, and so forth.
+ *
  * @author mschaefer
  */
 public class FlowGraph implements Iterable<Vertex> {
-  
-	// the actual flow graph representation
-	private final NumberedGraph<Vertex> graph;
-	
- 	// a factory that allows us to build canonical vertices
-	private final VertexFactory factory;
-	
-	// the transitive closure of the inverse of this.graph, 
-	// but without paths going through the Unknown vertex
-	private GraphReachability<Vertex,FuncVertex> optimistic_closure;
-	
-	public FlowGraph() {
-		this.graph = new SlowSparseNumberedGraph<>(1);
-		this.factory = new VertexFactory();
-	}
-	
-	// (re-)compute optimistic_closure
-	private void compute_optimistic_closure(IProgressMonitor monitor) throws CancelException {
-		if(optimistic_closure != null)
-			return;
-		
-		optimistic_closure = computeClosure(graph, monitor, FuncVertex.class);
-	}
-	
-	private static <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
-		// prune flowgraph by taking out 'unknown' vertex
-		Graph<Vertex> pruned_flowgraph = GraphSlicer.prune(graph, t -> t.accept(new AbstractVertexVisitor<Boolean>() {
-    	@Override
-    	public Boolean visitVertex() {
-    		return true;
-    	}
-    	
-    	@Override
-    	public Boolean visitUnknownVertex(UnknownVertex unknownVertex) {
-    		return false;
-    	}
-    }));
-		
-		// compute transitive closure
-		GraphReachability<Vertex, T> optimistic_closure = 
-		    new GraphReachability<>(
-		      new InvertedGraph<>(pruned_flowgraph),
-		      type::isInstance
-		    );
-		
-		optimistic_closure.solve(monitor);
-		
-		return optimistic_closure;
-	}
-	
-	public VertexFactory getVertexFactory() {
-		return factory;
-	}
-	
-	/**
-	 * Adds an edge from vertex {@code from} to vertex {@code to}, adding the vertices
-	 * to the graph if they are not in there yet.
-	 */
-	public void addEdge(Vertex from, Vertex to) {
-		if(!graph.containsNode(from))
-			graph.addNode(from);
-		if(!graph.containsNode(to))
-			graph.addNode(to);
-		
-		if(!graph.hasEdge(from, to)) {
-		  optimistic_closure = null;   
-		  graph.addEdge(from, to);
-		}
-	}
 
-	/**
-	 * Computes the set of vertices that may reach {@code dest} along paths not containing an
-	 * {@link UnknownVertex}.
-	 */
-	public OrdinalSet<FuncVertex> getReachingSet(Vertex dest, IProgressMonitor monitor) throws CancelException {
-		if(!graph.containsNode(dest))
-			return OrdinalSet.empty();
-		
-		compute_optimistic_closure(monitor);
-		return optimistic_closure.getReachableSet(dest);
-	}
-	
-	public Iterator<Vertex> getSucc(Vertex v) {
-	  return graph.getSuccNodes(v);
-	}
-	
+  // the actual flow graph representation
+  private final NumberedGraph<Vertex> graph;
+
+  // a factory that allows us to build canonical vertices
+  private final VertexFactory factory;
+
+  // the transitive closure of the inverse of this.graph,
+  // but without paths going through the Unknown vertex
+  private GraphReachability<Vertex, FuncVertex> optimistic_closure;
+
+  public FlowGraph() {
+    this.graph = new SlowSparseNumberedGraph<>(1);
+    this.factory = new VertexFactory();
+  }
+
+  // (re-)compute optimistic_closure
+  private void compute_optimistic_closure(IProgressMonitor monitor) throws CancelException {
+    if (optimistic_closure != null) return;
+
+    optimistic_closure = computeClosure(graph, monitor, FuncVertex.class);
+  }
+
+  private static <T> GraphReachability<Vertex, T> computeClosure(
+      NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type)
+      throws CancelException {
+    // prune flowgraph by taking out 'unknown' vertex
+    Graph<Vertex> pruned_flowgraph =
+        GraphSlicer.prune(
+            graph,
+            t ->
+                t.accept(
+                    new AbstractVertexVisitor<Boolean>() {
+                      @Override
+                      public Boolean visitVertex() {
+                        return true;
+                      }
+
+                      @Override
+                      public Boolean visitUnknownVertex(UnknownVertex unknownVertex) {
+                        return false;
+                      }
+                    }));
+
+    // compute transitive closure
+    GraphReachability<Vertex, T> optimistic_closure =
+        new GraphReachability<>(new InvertedGraph<>(pruned_flowgraph), type::isInstance);
+
+    optimistic_closure.solve(monitor);
+
+    return optimistic_closure;
+  }
+
+  public VertexFactory getVertexFactory() {
+    return factory;
+  }
+
+  /**
+   * Adds an edge from vertex {@code from} to vertex {@code to}, adding the vertices to the graph if
+   * they are not in there yet.
+   */
+  public void addEdge(Vertex from, Vertex to) {
+    if (!graph.containsNode(from)) graph.addNode(from);
+    if (!graph.containsNode(to)) graph.addNode(to);
+
+    if (!graph.hasEdge(from, to)) {
+      optimistic_closure = null;
+      graph.addEdge(from, to);
+    }
+  }
+
+  /**
+   * Computes the set of vertices that may reach {@code dest} along paths not containing an {@link
+   * UnknownVertex}.
+   */
+  public OrdinalSet<FuncVertex> getReachingSet(Vertex dest, IProgressMonitor monitor)
+      throws CancelException {
+    if (!graph.containsNode(dest)) return OrdinalSet.empty();
+
+    compute_optimistic_closure(monitor);
+    return optimistic_closure.getReachableSet(dest);
+  }
+
+  public Iterator<Vertex> getSucc(Vertex v) {
+    return graph.getSuccNodes(v);
+  }
+
   @Override
   public Iterator<Vertex> iterator() {
     return graph.iterator();
   }
-  
-  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final IAnalysisCacheView cache, final IProgressMonitor monitor) throws CancelException {
+
+  public PointerAnalysis<ObjectVertex> getPointerAnalysis(
+      final CallGraph cg, final IAnalysisCacheView cache, final IProgressMonitor monitor)
+      throws CancelException {
     return new PointerAnalysis<ObjectVertex>() {
-      
-      private final Map<Pair<PrototypeField,ObjectVertex>,PrototypeFieldVertex> proto = HashMapFactory.make();
-      
-      private GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
+
+      private final Map<Pair<PrototypeField, ObjectVertex>, PrototypeFieldVertex> proto =
+          HashMapFactory.make();
+
+      private GraphReachability<Vertex, ObjectVertex> pointerAnalysis =
+          computeClosure(graph, monitor, ObjectVertex.class);
 
       private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<>(graph);
 
@@ -192,22 +196,22 @@ public class FlowGraph implements Iterable<Vertex> {
           return factory.makePropVertex(property);
         }
       }
-            
+
       {
         PropVertex proto = factory.makePropVertex("prototype");
         if (graph.containsNode(proto)) {
-          for(Vertex p : Iterator2Iterable.make(graph.getPredNodes(proto))) {
+          for (Vertex p : Iterator2Iterable.make(graph.getPredNodes(proto))) {
             if (p instanceof VarVertex) {
               int rval = ((VarVertex) p).getValueNumber();
               FuncVertex func = ((VarVertex) p).getFunction();
               DefUse du = cache.getDefUse(getIR(cache, func));
-              for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
+              for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                 if (inst instanceof JavaScriptPropertyWrite) {
                   int obj = ((AstPropertyWrite) inst).getObjectRef();
                   VarVertex object = factory.makeVarVertex(func, obj);
-                  for(ObjectVertex o : getPointsToSet(object)) {
+                  for (ObjectVertex o : getPointsToSet(object)) {
                     PrototypeFieldVertex prototype = get(PrototypeField.prototype, o);
-                    if (! dataflow.containsNode(prototype)) {
+                    if (!dataflow.containsNode(prototype)) {
                       dataflow.addNode(prototype);
                     }
                     System.err.println("adding " + p + " --> " + prototype);
@@ -218,13 +222,13 @@ public class FlowGraph implements Iterable<Vertex> {
             }
           }
         }
-        
+
         pointerAnalysis = computeClosure(dataflow, monitor, ObjectVertex.class);
       }
-      
+
       private PrototypeFieldVertex get(PrototypeField f, ObjectVertex o) {
-        Pair<PrototypeField,ObjectVertex> key = Pair.make(f, o);
-        if (! proto.containsKey(key)) {
+        Pair<PrototypeField, ObjectVertex> key = Pair.make(f, o);
+        if (!proto.containsKey(key)) {
           proto.put(key, new PrototypeFieldVertex(f, o));
         }
         return proto.get(key);
@@ -237,12 +241,12 @@ public class FlowGraph implements Iterable<Vertex> {
           return factory.makeFuncVertex(fun);
         } else {
           return null;
-        }       
+        }
       }
 
       @Override
       public OrdinalSet<ObjectVertex> getPointsToSet(PointerKey key) {
-        if (dataflow.containsNode((Vertex)key)) {
+        if (dataflow.containsNode((Vertex) key)) {
           return pointerAnalysis.getReachableSet(key);
         } else {
           return OrdinalSet.empty();
@@ -252,7 +256,7 @@ public class FlowGraph implements Iterable<Vertex> {
       @Override
       public Collection<ObjectVertex> getInstanceKeys() {
         Set<ObjectVertex> result = HashSetFactory.make();
-        for(CreationSiteVertex cs : factory.creationSites()) {
+        for (CreationSiteVertex cs : factory.creationSites()) {
           if (cg.getNode(cs.getMethod(), Everywhere.EVERYWHERE) != null) {
             result.add(cs);
           }
@@ -264,7 +268,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
       @Override
       public boolean isFiltered(PointerKey pk) {
-         return false;
+        return false;
       }
 
       @Override
@@ -275,16 +279,20 @@ public class FlowGraph implements Iterable<Vertex> {
 
       @Override
       public Iterable<PointerKey> getPointerKeys() {
-        return () -> new CompoundIterator<>(factory.getArgVertices().iterator(),
-            new CompoundIterator<>(factory.getRetVertices().iterator(), 
-                new CompoundIterator<PointerKey>(factory.getVarVertices().iterator(),
-                    factory.getPropVertices().iterator())));
+        return () ->
+            new CompoundIterator<>(
+                factory.getArgVertices().iterator(),
+                new CompoundIterator<>(
+                    factory.getRetVertices().iterator(),
+                    new CompoundIterator<PointerKey>(
+                        factory.getVarVertices().iterator(),
+                        factory.getPropVertices().iterator())));
       }
-      
+
       @Override
       public HeapModel getHeapModel() {
         return new AstHeapModel() {
-          
+
           @Override
           public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
             FuncVertex function = getVertex(node);
@@ -311,7 +319,7 @@ public class FlowGraph implements Iterable<Vertex> {
           public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
             String f = field.getName().toString();
             if ("__proto__".equals(f) || "prototype".equals(f)) {
-              return get(PrototypeField.valueOf(f), (ObjectVertex)I);
+              return get(PrototypeField.valueOf(f), (ObjectVertex) I);
             } else {
               return factory.makePropVertex(f);
             }
@@ -324,7 +332,8 @@ public class FlowGraph implements Iterable<Vertex> {
           }
 
           @Override
-          public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+          public InstanceKey getInstanceKeyForMultiNewArray(
+              CGNode node, NewSiteReference allocation, int dim) {
             // TODO Auto-generated method stub
             return null;
           }
@@ -336,7 +345,8 @@ public class FlowGraph implements Iterable<Vertex> {
           }
 
           @Override
-          public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
+          public InstanceKey getInstanceKeyForPEI(
+              CGNode node, ProgramCounter instr, TypeReference type) {
             // TODO Auto-generated method stub
             return null;
           }
@@ -348,7 +358,8 @@ public class FlowGraph implements Iterable<Vertex> {
           }
 
           @Override
-          public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, TypeFilter filter) {
+          public FilteredPointerKey getFilteredPointerKeyForLocal(
+              CGNode node, int valueNumber, TypeFilter filter) {
             // TODO Auto-generated method stub
             return null;
           }
@@ -390,13 +401,15 @@ public class FlowGraph implements Iterable<Vertex> {
           }
 
           @Override
-          public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+          public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(
+              InstanceKey I, InstanceKey F) {
             // TODO Auto-generated method stub
             return null;
           }
 
           @Override
-          public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+          public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(
+              InstanceKey I, InstanceKey F) {
             // TODO Auto-generated method stub
             return null;
           }
@@ -405,18 +418,19 @@ public class FlowGraph implements Iterable<Vertex> {
           public PointerKey getPointerKeyForObjectCatalog(InstanceKey I) {
             // TODO Auto-generated method stub
             return null;
-          }        
+          }
         };
       }
 
       private HeapGraph<ObjectVertex> heapGraph;
-      
+
       @Override
       public HeapGraph<ObjectVertex> getHeapGraph() {
         if (heapGraph == null) {
 
           final PointerAnalysis<ObjectVertex> pa = this;
-          class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object> implements HeapGraph<ObjectVertex> {
+          class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object>
+              implements HeapGraph<ObjectVertex> {
 
             private static final long serialVersionUID = -3544629644808422215L;
 
@@ -433,49 +447,54 @@ public class FlowGraph implements Iterable<Vertex> {
                 return factory.makePropVertex("Object$proto$__WALA__");
               } else if (coreType.equals(JavaScriptTypes.Function)) {
                 return factory.makePropVertex("Function$proto$__WALA__");
-              } else if (coreType.equals(JavaScriptTypes.Number) || coreType.equals(JavaScriptTypes.NumberObject)) {
+              } else if (coreType.equals(JavaScriptTypes.Number)
+                  || coreType.equals(JavaScriptTypes.NumberObject)) {
                 return factory.makePropVertex("Number$proto$__WALA__");
               } else if (coreType.equals(JavaScriptTypes.Array)) {
                 return factory.makePropVertex("Array$proto$__WALA__");
-              } else if (coreType.equals(JavaScriptTypes.String) || coreType.equals(JavaScriptTypes.StringObject)) {
+              } else if (coreType.equals(JavaScriptTypes.String)
+                  || coreType.equals(JavaScriptTypes.StringObject)) {
                 return factory.makePropVertex("String$proto$__WALA__");
               } else if (coreType.equals(JavaScriptTypes.Date)) {
                 return factory.makePropVertex("Date$proto$__WALA__");
-              } else if (coreType.equals(JavaScriptTypes.RegExp) || coreType.equals(JavaScriptTypes.RegExpObject)) {
+              } else if (coreType.equals(JavaScriptTypes.RegExp)
+                  || coreType.equals(JavaScriptTypes.RegExpObject)) {
                 return factory.makePropVertex("RegExp$proto$__WALA__");
               } else {
                 return null;
               }
             }
-            
+
             {
-              for(PropVertex property : factory.getPropVertices()) {
+              for (PropVertex property : factory.getPropVertices()) {
 
                 // edges from objects to properties assigned to them
-                for(Vertex p : Iterator2Iterable.make(dataflow.getPredNodes(property))) {
+                for (Vertex p : Iterator2Iterable.make(dataflow.getPredNodes(property))) {
                   if (p instanceof VarVertex) {
                     int rval = ((VarVertex) p).getValueNumber();
                     FuncVertex func = ((VarVertex) p).getFunction();
                     DefUse du = cache.getDefUse(getIR(cache, func));
-                    for(SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
+                    for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                       if (inst instanceof JavaScriptPropertyWrite) {
                         int obj = ((AstPropertyWrite) inst).getObjectRef();
                         VarVertex object = factory.makeVarVertex(func, obj);
-                        for(ObjectVertex o : getPointsToSet(object)) {
-                          addEdge(ensureNode(o), ensureNode(propertyKey(property.getPropName(), o)));
-                          for(ObjectVertex v : getPointsToSet(property)) {
-                            addEdge(ensureNode(propertyKey(property.getPropName(), o)), ensureNode(v));
+                        for (ObjectVertex o : getPointsToSet(object)) {
+                          addEdge(
+                              ensureNode(o), ensureNode(propertyKey(property.getPropName(), o)));
+                          for (ObjectVertex v : getPointsToSet(property)) {
+                            addEdge(
+                                ensureNode(propertyKey(property.getPropName(), o)), ensureNode(v));
                           }
                         }
                       } else if (inst instanceof AstGlobalWrite) {
                         addEdge(ensureNode(factory.global()), ensureNode(property));
-                        for(ObjectVertex v : getPointsToSet(property)) {
-                          addEdge(ensureNode(property), ensureNode(v));                        
+                        for (ObjectVertex v : getPointsToSet(property)) {
+                          addEdge(ensureNode(property), ensureNode(v));
                         }
                       } else if (inst instanceof SetPrototype) {
                         int obj = inst.getUse(0);
-                        for(ObjectVertex o : getPointsToSet(factory.makeVarVertex(func, obj))) {
-                          for(ObjectVertex v : getPointsToSet(property)) {
+                        for (ObjectVertex o : getPointsToSet(factory.makeVarVertex(func, obj))) {
+                          for (ObjectVertex v : getPointsToSet(property)) {
                             addEdge(ensureNode(o), ensureNode(get(PrototypeField.prototype, o)));
                             addEdge(ensureNode(get(PrototypeField.prototype, o)), ensureNode(v));
                           }
@@ -486,45 +505,50 @@ public class FlowGraph implements Iterable<Vertex> {
                     }
                   }
                 }
-              } 
-                                   
+              }
+
               // prototype dataflow for function creations
-              for(FuncVertex f : factory.getFuncVertices()) {
+              for (FuncVertex f : factory.getFuncVertices()) {
                 ensureNode(get(PrototypeField.__proto__, f));
                 addEdge(
-                  ensureNode(getCoreProto(JavaScriptTypes.Function)),
-                  ensureNode(get(PrototypeField.prototype, f))
-                );
+                    ensureNode(getCoreProto(JavaScriptTypes.Function)),
+                    ensureNode(get(PrototypeField.prototype, f)));
               }
 
               // prototype dataflow for object creations
-              for(CreationSiteVertex cs : factory.creationSites()) {
+              for (CreationSiteVertex cs : factory.creationSites()) {
                 if (cg.getNode(cs.getMethod(), Everywhere.EVERYWHERE) != null) {
-                for(Pair<CGNode, NewSiteReference> site : Iterator2Iterable.make(cs.getCreationSites(cg))) {
-                  IR ir = site.fst.getIR();
-                  SSAInstruction creation = ir.getInstructions()[ site.snd.getProgramCounter() ];
-                  if (creation instanceof JavaScriptInvoke) {
-                    for(ObjectVertex f : getPointsToSet(factory.makeVarVertex(getVertex(site.fst), creation.getUse(0)))) {
-                      for(ObjectVertex o : getPointsToSet(factory.makeVarVertex(getVertex(site.fst), creation.getDef(0)))) {
-                        addEdge(
-                            ensureNode(get(PrototypeField.prototype, f)),                    
-                            ensureNode(get(PrototypeField.__proto__, o)));                      
-                      }
-                    }
-                  } else if (creation instanceof SSANewInstruction) {
-                    PointerKey proto = getCoreProto(((SSANewInstruction) creation).getConcreteType());
-                    if (proto != null) {
-                      for(ObjectVertex f : getPointsToSet(proto)) {
-                        for(ObjectVertex o : getPointsToSet(factory.makeVarVertex(getVertex(site.fst), creation.getDef(0)))) {
+                  for (Pair<CGNode, NewSiteReference> site :
+                      Iterator2Iterable.make(cs.getCreationSites(cg))) {
+                    IR ir = site.fst.getIR();
+                    SSAInstruction creation = ir.getInstructions()[site.snd.getProgramCounter()];
+                    if (creation instanceof JavaScriptInvoke) {
+                      for (ObjectVertex f :
+                          getPointsToSet(
+                              factory.makeVarVertex(getVertex(site.fst), creation.getUse(0)))) {
+                        for (ObjectVertex o :
+                            getPointsToSet(
+                                factory.makeVarVertex(getVertex(site.fst), creation.getDef(0)))) {
                           addEdge(
-                            ensureNode(get(PrototypeField.__proto__, o)),
-                            ensureNode(f));
+                              ensureNode(get(PrototypeField.prototype, f)),
+                              ensureNode(get(PrototypeField.__proto__, o)));
+                        }
+                      }
+                    } else if (creation instanceof SSANewInstruction) {
+                      PointerKey proto =
+                          getCoreProto(((SSANewInstruction) creation).getConcreteType());
+                      if (proto != null) {
+                        for (ObjectVertex f : getPointsToSet(proto)) {
+                          for (ObjectVertex o :
+                              getPointsToSet(
+                                  factory.makeVarVertex(getVertex(site.fst), creation.getDef(0)))) {
+                            addEdge(ensureNode(get(PrototypeField.__proto__, o)), ensureNode(f));
+                          }
                         }
                       }
                     }
                   }
                 }
-              }
               }
             }
 
@@ -555,7 +579,6 @@ public class FlowGraph implements Iterable<Vertex> {
         assert false;
         return null;
       }
-      
     };
   }
 }

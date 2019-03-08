@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -37,16 +37,14 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
+import java.io.IOException;
+import org.junit.Test;
 
 /**
- * Note that in this test we still do refinement of the array contents
- * pseudo-field, to avoid excessive sensitivity to library versions.
+ * Note that in this test we still do refinement of the array contents pseudo-field, to avoid
+ * excessive sensitivity to library versions.
  */
 public class NoRefinePtrTest extends AbstractPtrTest {
 
@@ -55,104 +53,124 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   }
 
   @Test
-  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testOnTheFlySimple()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ONTHEFLY_SIMPLE, 1);
   }
 
   @Test
-  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testArraySet()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET, 2);
   }
 
   @Test
-  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testArraySetIter()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 2);
   }
 
   @Test
-  public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testHashSet()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_HASH_SET, 2);
   }
 
   @Test
-  public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testMethodRecursion()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_METHOD_RECURSION, 2);
   }
 
   @Test
-  public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFooId()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ID, 2);
   }
 
   @Test
-  public void testLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testLocals()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_LOCALS, 1);
   }
 
   @Test
-  public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testArrays()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAYS, 2);
   }
 
   @Test
-  public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFields()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_FIELDS, 2);
   }
 
   @Test
-  public void testFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFieldsHarder()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_FIELDS_HARDER, 2);
   }
 
   @Test
-  public void testGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testGetterSetter()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_GETTER_SETTER, 2);
   }
 
   @Test
-  public void testException() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testException()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_EXCEPTION, 4);
   }
 
   @Test
-  public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testMultiDim()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_MULTI_DIM, 2);
   }
 
   @Test
-  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testGlobal()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_GLOBAL, 1);
   }
-  
+
   @Test
-  public void testFlowsToLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFlowsToLocals()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     // local var, init of FlowsToType, init of Object, and param of TestUtil.makeVarUsed()
     doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_LOCALS, 4);
   }
 
   @Test
-  public void testFlowsToId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFlowsToId()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ID, 8);
   }
 
   @Test
-  public void testFlowsToFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFlowsToFields()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_FIELDS, 6);
   }
 
   @Test
-  public void testFlowsToFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFlowsToFieldsHarder()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_FIELDS_HARDER, 6);
   }
 
   @Test
-  public void testFlowsToArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testFlowsToArraySetIter()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ARRAYSET_ITER, 8);
   }
 
   // don't test this until we have a way to handle different library versions
-//  @Test
-//  public void testFlowsToHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-//    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_HASHSET, 8);
-//  }
+  //  @Test
+  //  public void testFlowsToHashSet() throws ClassHierarchyException, IllegalArgumentException,
+  // CancelException, IOException {
+  //    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_HASHSET, 8);
+  //  }
 }

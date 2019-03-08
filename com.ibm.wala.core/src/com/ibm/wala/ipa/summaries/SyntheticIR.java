@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import java.util.Map;
-
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.IMethod;
@@ -27,24 +25,35 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Map;
 
 public class SyntheticIR extends IR {
 
-  private final static boolean PARANOID = true;
+  private static final boolean PARANOID = true;
 
   /**
-   * Create an SSA form, induced over a list of instructions provided externally. This entrypoint is often used for, e.g., native
-   * method models
-   * 
+   * Create an SSA form, induced over a list of instructions provided externally. This entrypoint is
+   * often used for, e.g., native method models
+   *
    * @param method the method to construct SSA form for
    * @param context the governing context
    * @param instructions the SSA instructions which define the body of the method
    * @param constants a Map giving information on constant values for the symbol table
    * @throws AssertionError if method is null
    */
-  public SyntheticIR(IMethod method, Context context, AbstractCFG<?, ?> cfg, SSAInstruction[] instructions, SSAOptions options,
-      Map<Integer, ConstantValue> constants) throws AssertionError {
-    super(method, instructions, makeSymbolTable(method, instructions, constants, cfg), new SSACFG(method, cfg, instructions),
+  public SyntheticIR(
+      IMethod method,
+      Context context,
+      AbstractCFG<?, ?> cfg,
+      SSAInstruction[] instructions,
+      SSAOptions options,
+      Map<Integer, ConstantValue> constants)
+      throws AssertionError {
+    super(
+        method,
+        instructions,
+        makeSymbolTable(method, instructions, constants, cfg),
+        new SSACFG(method, cfg, instructions),
         options);
     if (PARANOID) {
       repOK(instructions);
@@ -53,9 +62,7 @@ public class SyntheticIR extends IR {
     setupLocationMap();
   }
 
-  /**
-   * throw an assertion if the instruction array contains a phi instruction
-   */
+  /** throw an assertion if the instruction array contains a phi instruction */
   private static void repOK(SSAInstruction[] instructions) {
     for (SSAInstruction s : instructions) {
       if (s instanceof SSAPhiInstruction) {
@@ -69,10 +76,13 @@ public class SyntheticIR extends IR {
 
   /**
    * Set up the symbol table according to statements in the IR
-   * 
+   *
    * @param constants Map: value number (Integer) -&gt; ConstantValue
    */
-  private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants,
+  private static SymbolTable makeSymbolTable(
+      IMethod method,
+      SSAInstruction[] instructions,
+      Map<Integer, ConstantValue> constants,
       AbstractCFG<?, ?> cfg) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
@@ -87,7 +97,8 @@ public class SyntheticIR extends IR {
     }
 
     /**
-     * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back and retrieve them now.
+     * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back
+     * and retrieve them now.
      */
     if (cfg instanceof InducedCFG) {
       InducedCFG icfg = (InducedCFG) cfg;
@@ -99,7 +110,8 @@ public class SyntheticIR extends IR {
     return symbolTable;
   }
 
-  private static void updateForInstruction(Map<Integer, ConstantValue> constants, SymbolTable symbolTable, SSAInstruction s) {
+  private static void updateForInstruction(
+      Map<Integer, ConstantValue> constants, SymbolTable symbolTable, SSAInstruction s) {
     for (int j = 0; j < s.getNumberOfDefs(); j++) {
       symbolTable.ensureSymbol(s.getDef(j));
     }
@@ -111,17 +123,13 @@ public class SyntheticIR extends IR {
     }
   }
 
-  /**
-   * This returns "", as synthetic IRs have no line numbers right now.
-   */
+  /** This returns "", as synthetic IRs have no line numbers right now. */
   @Override
   protected String instructionPosition(int instructionIndex) {
     return "";
   }
 
-  /**
-   * This returns null, as synthetic IRs have no local names right now.
-   */
+  /** This returns null, as synthetic IRs have no local names right now. */
   @Override
   public SSA2LocalMap getLocalMap() {
     return null;
@@ -129,6 +137,6 @@ public class SyntheticIR extends IR {
 
   @Override
   protected SSAIndirectionData<Name> getIndirectionData() {
-     return null;
+    return null;
   }
 }

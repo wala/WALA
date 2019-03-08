@@ -13,6 +13,5 @@ package com.ibm.wala.util.intset;
 
 public interface LongSetAction {
 
-    void act(long x);
-
+  void act(long x);
 }

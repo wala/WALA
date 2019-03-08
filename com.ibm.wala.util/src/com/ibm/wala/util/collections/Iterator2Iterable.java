@@ -12,9 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-/**
- * Converts an {@link Iterator} to an {@link Iterable}.
- */
+/** Converts an {@link Iterator} to an {@link Iterable}. */
 public class Iterator2Iterable<T> implements Iterable<T> {
 
   private final Iterator<T> iter;
@@ -31,5 +29,4 @@ public class Iterator2Iterable<T> implements Iterable<T> {
   public Iterator<T> iterator() {
     return iter;
   }
-
 }

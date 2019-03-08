@@ -15,7 +15,8 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * An {@link InstanceKey} which represents a "normal" (not multinewarray) {@link NewSiteReference} in a {@link CGNode}.
+ * An {@link InstanceKey} which represents a "normal" (not multinewarray) {@link NewSiteReference}
+ * in a {@link CGNode}.
  */
 public final class NormalAllocationInNode extends AllocationSiteInNode {
   public NormalAllocationInNode(CGNode node, NewSiteReference allocation, IClass type) {
@@ -37,5 +38,4 @@ public final class NormalAllocationInNode extends AllocationSiteInNode {
   public int hashCode() {
     return getNode().hashCode() * 8647 + getSite().hashCode();
   }
-
 }

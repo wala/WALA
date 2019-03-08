@@ -10,14 +10,6 @@
  */
 package com.ibm.wala.analysis.exceptionanalysis;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -37,6 +29,13 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.ssa.InstructionByIIndexMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class IntraproceduralExceptionAnalysis {
   private Set<TypeReference> exceptions;
@@ -53,38 +52,38 @@ public class IntraproceduralExceptionAnalysis {
     return new IntraproceduralExceptionAnalysis();
   }
 
-  /**
-   * Create a dummy analysis.
-   */
+  /** Create a dummy analysis. */
   private IntraproceduralExceptionAnalysis() {
     this.dummy = true;
     this.exceptions = Collections.emptySet();
   }
 
   /**
-   * You can use this method, if you don't have a call graph, but want some
-   * exception analysis. But as no pointer analysis is given, we can not
-   * consider throw instructions.
+   * You can use this method, if you don't have a call graph, but want some exception analysis. But
+   * as no pointer analysis is given, we can not consider throw instructions.
    */
   @Deprecated
-  public IntraproceduralExceptionAnalysis(IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha) {
+  public IntraproceduralExceptionAnalysis(
+      IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha) {
     this(ir, filter, cha, null, null);
   }
 
-  /**
-   * Create and compute intraprocedural exception analysis. (IR from
-   * node.getIR() will be used.)
-   */
-  public IntraproceduralExceptionAnalysis(CGNode node, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha,
+  /** Create and compute intraprocedural exception analysis. (IR from node.getIR() will be used.) */
+  public IntraproceduralExceptionAnalysis(
+      CGNode node,
+      ExceptionFilter<SSAInstruction> filter,
+      ClassHierarchy cha,
       PointerAnalysis<InstanceKey> pointerAnalysis) {
     this(node.getIR(), filter, cha, pointerAnalysis, node);
   }
 
-  /**
-   * Create and compute intraprocedural exception analysis.
-   */
-  public IntraproceduralExceptionAnalysis(IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha,
-      PointerAnalysis<InstanceKey> pointerAnalysis, CGNode node) {
+  /** Create and compute intraprocedural exception analysis. */
+  public IntraproceduralExceptionAnalysis(
+      IR ir,
+      ExceptionFilter<SSAInstruction> filter,
+      ClassHierarchy cha,
+      PointerAnalysis<InstanceKey> pointerAnalysis,
+      CGNode node) {
     this.pointerAnalysis = pointerAnalysis;
     this.classHierachy = cha;
     this.filter = filter;
@@ -97,9 +96,8 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * Computes thrown exceptions for each basic block of all call graph nodes.
-   * Everything, but invoke instructions, will be considered. This includes
-   * filtered and caught exceptions.
+   * Computes thrown exceptions for each basic block of all call graph nodes. Everything, but invoke
+   * instructions, will be considered. This includes filtered and caught exceptions.
    */
   private void compute() {
     if (ir != null) {
@@ -137,7 +135,7 @@ public class IntraproceduralExceptionAnalysis {
 
   /**
    * Return all exceptions that could be returned from getCaughtExceptions
-   * 
+   *
    * @return all exceptions that could be returned from getCaughtExceptions
    */
   public Set<TypeReference> getPossiblyCaughtExceptions() {
@@ -145,9 +143,8 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * Returns the set of exceptions, which are to be filtered for
-   * throwingInstruction.
-   * 
+   * Returns the set of exceptions, which are to be filtered for throwingInstruction.
+   *
    * @return exceptions, which are to be filtered
    */
   private Set<TypeReference> collectFilteredExceptions(SSAInstruction throwingInstruction) {
@@ -170,43 +167,41 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * Returns a set of exceptions, which might be thrown from this instruction
-   * within this method.
-   * 
-   * This does include exceptions dispatched by throw instructions, but not
-   * exceptions from method calls.
-   * 
-   * @return a set of exceptions, which might be thrown from this instruction
-   *         within this method
+   * Returns a set of exceptions, which might be thrown from this instruction within this method.
+   *
+   * <p>This does include exceptions dispatched by throw instructions, but not exceptions from
+   * method calls.
+   *
+   * @return a set of exceptions, which might be thrown from this instruction within this method
    */
   public Set<TypeReference> collectThrownExceptions(SSAInstruction throwingInstruction) {
-    final LinkedHashSet<TypeReference> result = new LinkedHashSet<>(throwingInstruction.getExceptionTypes());
+    final LinkedHashSet<TypeReference> result =
+        new LinkedHashSet<>(throwingInstruction.getExceptionTypes());
 
-    throwingInstruction.visit(new Visitor() {
-      @Override
-      public void visitThrow(SSAThrowInstruction instruction) {
-        addThrown(result, instruction);
-      }
-    });
+    throwingInstruction.visit(
+        new Visitor() {
+          @Override
+          public void visitThrow(SSAThrowInstruction instruction) {
+            addThrown(result, instruction);
+          }
+        });
 
     return result;
   }
 
   /**
-   * Collects all exceptions, which could be dispatched by the throw
-   * instruction, using the pointer analysis. Adds the collected exceptions to
-   * addTo.
-   * 
-   * @param addTo
-   *          set to add the result
-   * @param instruction
-   *          the throw instruction
+   * Collects all exceptions, which could be dispatched by the throw instruction, using the pointer
+   * analysis. Adds the collected exceptions to addTo.
+   *
+   * @param addTo set to add the result
+   * @param instruction the throw instruction
    */
   private void addThrown(LinkedHashSet<TypeReference> addTo, SSAThrowInstruction instruction) {
     int exceptionVariable = instruction.getException();
 
     if (pointerAnalysis != null) {
-      PointerKey pointerKey = pointerAnalysis.getHeapModel().getPointerKeyForLocal(node, exceptionVariable);
+      PointerKey pointerKey =
+          pointerAnalysis.getHeapModel().getPointerKeyForLocal(node, exceptionVariable);
       Iterator<Object> it = pointerAnalysis.getHeapGraph().getSuccNodes(pointerKey);
       while (it.hasNext()) {
         Object next = it.next();
@@ -215,15 +210,15 @@ public class IntraproceduralExceptionAnalysis {
           IClass iclass = instanceKey.getConcreteType();
           addTo.add(iclass.getReference());
         } else {
-          throw new IllegalStateException("Internal error: Expected InstanceKey, got " + next.getClass().getName());
+          throw new IllegalStateException(
+              "Internal error: Expected InstanceKey, got " + next.getClass().getName());
         }
       }
     }
   }
 
   /**
-   * @return an instruction which may throw exceptions, or null if this block
-   *         can't throw exceptions
+   * @return an instruction which may throw exceptions, or null if this block can't throw exceptions
    */
   public static SSAInstruction getThrowingInstruction(ISSABasicBlock block) {
     SSAInstruction result = null;
@@ -236,13 +231,11 @@ public class IntraproceduralExceptionAnalysis {
     return result;
   }
 
-  /**
-   * @return a set of all exceptions which will be caught, if thrown by the
-   *         given block.
-   */
+  /** @return a set of all exceptions which will be caught, if thrown by the given block. */
   private Set<TypeReference> collectCaughtExceptions(ISSABasicBlock block) {
     LinkedHashSet<TypeReference> result = new LinkedHashSet<>();
-    List<ISSABasicBlock> exceptionalSuccessors = ir.getControlFlowGraph().getExceptionalSuccessors(block);
+    List<ISSABasicBlock> exceptionalSuccessors =
+        ir.getControlFlowGraph().getExceptionalSuccessors(block);
     for (ISSABasicBlock succ : exceptionalSuccessors) {
       if (succ.isCatchBlock()) {
         Iterator<TypeReference> it = succ.getCaughtExceptionTypes();
@@ -264,9 +257,9 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * Returns all exceptions for the given call site in the given call graph
-   * node, which will be caught.
-   * 
+   * Returns all exceptions for the given call site in the given call graph node, which will be
+   * caught.
+   *
    * @return caught exceptions
    */
   public Set<TypeReference> getCaughtExceptions(CallSiteReference callsite) {
@@ -281,7 +274,8 @@ public class IntraproceduralExceptionAnalysis {
 
         SSAInstruction instruction = ir.getInstructions()[iindex];
         if (!((instruction instanceof SSAInvokeInstruction))) {
-          throw new IllegalArgumentException("The given callsite dose not correspond to an invoke instruction." + instruction);
+          throw new IllegalArgumentException(
+              "The given callsite dose not correspond to an invoke instruction." + instruction);
         }
 
         ISSABasicBlock block = ir.getBasicBlockForInstruction(instruction);
@@ -301,12 +295,12 @@ public class IntraproceduralExceptionAnalysis {
   }
 
   /**
-   * Returns all exceptions which might be created and thrown but not caught or
-   * filtered. (So this does not contain exceptions from invoked methods.)
-   * 
-   * If constructed without points-to-analysis, it does not contain exceptions
-   * thrown by throw statements.
-   * 
+   * Returns all exceptions which might be created and thrown but not caught or filtered. (So this
+   * does not contain exceptions from invoked methods.)
+   *
+   * <p>If constructed without points-to-analysis, it does not contain exceptions thrown by throw
+   * statements.
+   *
    * @return all exceptions created and thrown intraprocedural
    */
   public Set<TypeReference> getExceptions() {

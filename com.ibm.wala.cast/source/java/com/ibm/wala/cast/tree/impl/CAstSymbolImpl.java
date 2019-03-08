@@ -33,10 +33,17 @@ public class CAstSymbolImpl extends CAstSymbolImplBase {
     super(_name, type, _isFinal, _defaultInitValue);
   }
 
-  public CAstSymbolImpl(String _name, CAstType type, boolean _isFinal, boolean _isCaseInsensitive, Object _defaultInitValue) {
+  public CAstSymbolImpl(
+      String _name,
+      CAstType type,
+      boolean _isFinal,
+      boolean _isCaseInsensitive,
+      Object _defaultInitValue) {
     super(_name, type, _isFinal, _isCaseInsensitive, _defaultInitValue);
   }
 
   @Override
-  public boolean isInternalName() { return false; }
+  public boolean isInternalName() {
+    return false;
+  }
 }

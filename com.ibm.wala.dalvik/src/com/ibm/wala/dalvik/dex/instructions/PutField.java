@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,46 +48,63 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
+import org.jf.dexlib2.Opcode;
 
 public abstract class PutField extends Instruction {
 
-    public final int source;
-    public final String clazzName;
-    public final String fieldName;
-    public final String fieldType;
+  public final int source;
+  public final String clazzName;
+  public final String fieldName;
+  public final String fieldType;
 
-    protected PutField(int pc, int source, String clazzName, String fieldName, String fieldType, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.source = source;
-        this.clazzName = clazzName;
-        this.fieldName = fieldName;
-        this.fieldType = fieldType;
+  protected PutField(
+      int pc,
+      int source,
+      String clazzName,
+      String fieldName,
+      String fieldType,
+      Opcode opcode,
+      DexIMethod method) {
+    super(pc, opcode, method);
+    this.source = source;
+    this.clazzName = clazzName;
+    this.fieldName = fieldName;
+    this.fieldType = fieldType;
+  }
+
+  public static class PutInstanceField extends PutField {
+    public final int instance;
+
+    public PutInstanceField(
+        int pc,
+        int source,
+        int instance,
+        String clazzName,
+        String fieldName,
+        String fieldType,
+        Opcode opcode,
+        DexIMethod method) {
+      super(pc, source, clazzName, fieldName, fieldType, opcode, method);
+      this.instance = instance;
     }
+  }
 
-    public static class PutInstanceField extends PutField
-    {
-        public final int instance;
-
-        public PutInstanceField(int pc, int source, int instance, String clazzName, String fieldName, String fieldType, Opcode opcode, DexIMethod method) {
-            super(pc, source, clazzName, fieldName, fieldType, opcode, method);
-            this.instance = instance;
-        }
-
+  public static class PutStaticField extends PutField {
+    public PutStaticField(
+        int pc,
+        int source,
+        String clazzName,
+        String fieldName,
+        String fieldType,
+        Opcode opcode,
+        DexIMethod method) {
+      super(pc, source, clazzName, fieldName, fieldType, opcode, method);
     }
-    public static class PutStaticField extends PutField
-    {
-        public PutStaticField(int pc, int source, String clazzName, String fieldName, String fieldType, Opcode opcode, DexIMethod method) {
-            super(pc, source, clazzName, fieldName, fieldType, opcode, method);
-        }
+  }
 
-    }
-
-    @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitPutField(this);
-    }
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitPutField(this);
+  }
 }

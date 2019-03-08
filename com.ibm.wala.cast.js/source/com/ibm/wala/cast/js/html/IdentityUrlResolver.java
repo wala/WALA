@@ -12,7 +12,7 @@ package com.ibm.wala.cast.js.html;
 
 import java.net.URL;
 
-public class IdentityUrlResolver implements IUrlResolver{
+public class IdentityUrlResolver implements IUrlResolver {
 
   @Override
   public URL resolve(URL input) {
@@ -23,5 +23,4 @@ public class IdentityUrlResolver implements IUrlResolver{
   public URL deResolve(URL input) {
     return input;
   }
-
 }

@@ -11,15 +11,12 @@
 
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileSuffixes;
 import java.io.InputStream;
 import java.util.jar.JarFile;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileSuffixes;
-
-/**
- * An entry in a Jar file.
- */
+/** An entry in a Jar file. */
 public class JarFileEntry implements ModuleEntry {
 
   private final String entryName;
@@ -95,7 +92,7 @@ public class JarFileEntry implements ModuleEntry {
   public JarFile getJarFile() {
     return jarFileModule.getJarFile();
   }
-  
+
   @Override
   public JarFileModule getContainer() {
     return jarFileModule;

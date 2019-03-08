@@ -16,9 +16,9 @@ public class DummyLinkedList {
     Element next;
     Object data;
   }
-  
+
   Element head = null;
-  
+
   public void add(Object o) {
     if (head == null) {
       head = new Element();
@@ -33,21 +33,22 @@ public class DummyLinkedList {
       tmp.next = newElement;
     }
   }
-  
+
   public Object get(int ind) {
     Element tmp = head;
     for (int i = 0; i < ind; i++) {
-      tmp = tmp.next;      
+      tmp = tmp.next;
     }
     return tmp.data;
   }
 
   public Iter iterator() {
     return new Iter() {
-      
+
       @Override
       public Object next() {
-        // just return some arbitrary element, from the point of view of flow-insensitive points-to analysis
+        // just return some arbitrary element, from the point of view of flow-insensitive points-to
+        // analysis
         Element tmp = head;
         while (tmp.data == tmp.next) { // shouldn't be able to interpret this condition
           tmp = tmp.next;

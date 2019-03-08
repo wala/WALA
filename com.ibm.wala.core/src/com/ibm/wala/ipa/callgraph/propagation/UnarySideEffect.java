@@ -13,12 +13,14 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.fixpoint.UnaryOperator;
 
 /**
- * A SideEffect is a constraint which carries a points-to-set which is def'fed or used in created constraints.
- * 
- * The side effect doesn't actually def or use the fixedSet itself ... rather, the side effect creates <em>new</em> constraints that
- * def or use the fixed set.
- * 
- * A "load" operator generates defs of the fixed set. A "store" operator generates uses of the fixed set.
+ * A SideEffect is a constraint which carries a points-to-set which is def'fed or used in created
+ * constraints.
+ *
+ * <p>The side effect doesn't actually def or use the fixedSet itself ... rather, the side effect
+ * creates <em>new</em> constraints that def or use the fixed set.
+ *
+ * <p>A "load" operator generates defs of the fixed set. A "store" operator generates uses of the
+ * fixed set.
  */
 public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable> {
   private PointsToSetVariable fixedSet;
@@ -34,9 +36,7 @@ public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable>
 
   public abstract byte evaluate(PointsToSetVariable rhs);
 
-  /**
-   * @return Returns the fixed points-to-set associated with this side effect.
-   */
+  /** @return Returns the fixed points-to-set associated with this side effect. */
   PointsToSetVariable getFixedSet() {
     return fixedSet;
   }
@@ -60,13 +60,12 @@ public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable>
   }
 
   /**
-   * A "load" operator generates defs of the fixed set. A "store" operator generates uses of the fixed set.
+   * A "load" operator generates defs of the fixed set. A "store" operator generates uses of the
+   * fixed set.
    */
-  abstract protected boolean isLoadOperator();
+  protected abstract boolean isLoadOperator();
 
-  /**
-   * Update the fixed points-to-set associated with this side effect.
-   */
+  /** Update the fixed points-to-set associated with this side effect. */
   public void replaceFixedSet(PointsToSetVariable p) {
     fixedSet = p;
   }

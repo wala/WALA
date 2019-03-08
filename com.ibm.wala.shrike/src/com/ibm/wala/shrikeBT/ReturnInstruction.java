@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This instruction represents all return instructions.
- */
+/** This instruction represents all return instructions. */
 public final class ReturnInstruction extends Instruction {
   protected ReturnInstruction(short opcode) {
     super(opcode);

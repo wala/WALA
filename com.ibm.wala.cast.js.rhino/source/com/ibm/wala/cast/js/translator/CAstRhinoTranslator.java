@@ -14,8 +14,8 @@ import com.ibm.wala.cast.ir.translator.RewritingTranslatorToCAst;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.classLoader.ModuleEntry;
 
-public class CAstRhinoTranslator extends RewritingTranslatorToCAst {    
+public class CAstRhinoTranslator extends RewritingTranslatorToCAst {
   public CAstRhinoTranslator(ModuleEntry m, boolean replicateForDoLoops) {
     super(m, new RhinoToAstTranslator(new CAstImpl(), m, m.getName(), replicateForDoLoops));
-   }
+  }
 }

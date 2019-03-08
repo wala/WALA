@@ -11,7 +11,6 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
-import java.util.ArrayList;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.Util;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
@@ -49,49 +48,48 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import java.util.ArrayList;
 
-/**
- * @author Juergen Graf &lt;graf@kit.edu&gt;
- *
- */
-class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements ITransferFunctionProvider<T, NullPointerState> {
+/** @author Juergen Graf &lt;graf@kit.edu&gt; */
+class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
+    implements ITransferFunctionProvider<T, NullPointerState> {
 
   private final AbstractMeetOperator<NullPointerState> meet = NullPointerState.meetOperator();
   private final TransferFunctionSSAVisitor visitor;
   private final ControlFlowGraph<SSAInstruction, T> cfg;
-  
-  
+
   NullPointerTransferFunctionProvider(ControlFlowGraph<SSAInstruction, T> cfg, IR ir) {
     this.visitor = new TransferFunctionSSAVisitor(ir);
     this.cfg = cfg;
   }
-  
+
   static <T extends ISSABasicBlock> SSAInstruction getRelevantInstruction(T block) {
     SSAInstruction instr = null;
     if (block.getLastInstructionIndex() >= 0) {
       instr = block.getLastInstruction();
     }
-    
+
     if (instr == null && block.isCatchBlock()) {
       if (block instanceof IExplodedBasicBlock) {
         instr = ((IExplodedBasicBlock) block).getCatchInstruction();
       } else if (block instanceof SSACFG.ExceptionHandlerBasicBlock) {
         instr = ((SSACFG.ExceptionHandlerBasicBlock) block).getCatchInstruction();
       } else {
-        throw new IllegalStateException("Unable to get catch instruction from unknown ISSABasicBlock implementation.");
+        throw new IllegalStateException(
+            "Unable to get catch instruction from unknown ISSABasicBlock implementation.");
       }
     }
-    
+
     return instr;
   }
-  
+
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
    */
   @Override
   public UnaryOperator<NullPointerState> getEdgeTransferFunction(T src, T dst) {
     SSAInstruction instr = getRelevantInstruction(src);
-    
+
     assert !(instr instanceof SSAPhiInstruction);
     if (instr != null && cfg.hasEdge(src, dst)) {
       instr.visit(visitor);
@@ -105,7 +103,8 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
             // condition is true -> take function 2
             return visitor.transfer2;
           } else {
-            throw new IllegalStateException("Successor of if clause is neither true nor false case.");
+            throw new IllegalStateException(
+                "Successor of if clause is neither true nor false case.");
           }
         } else {
           if (cfg.getNormalSuccessors(src).contains(dst)) {
@@ -120,7 +119,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
         }
       }
     }
-    
+
     return NullPointerState.identityFunction();
   }
 
@@ -167,24 +166,24 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
   public boolean hasNodeTransferFunctions() {
     return true;
   }
-  
+
   private static class TransferFunctionSSAVisitor implements IVisitor {
 
     private final SymbolTable sym;
 
     // used for true case of if clause and non-exception path
     private UnaryOperator<NullPointerState> transfer1 = NullPointerState.identityFunction();
-    
+
     // used for false case of if clause and exceptional path
     private UnaryOperator<NullPointerState> transfer2 = NullPointerState.identityFunction();
-    
+
     // true if sth will change. false => just use identity transfer function.
     private boolean noIdentity = false;
-    
+
     private TransferFunctionSSAVisitor(IR ir) {
       this.sym = ir.getSymbolTable();
     }
-    
+
     /* (non-Javadoc)
      * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitArrayLength(com.ibm.wala.ssa.SSAArrayLengthInstruction)
      */
@@ -254,39 +253,40 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
       int arg2 = instruction.getUse(1);
       IConditionalBranchInstruction.IOperator testOp = instruction.getOperator();
       if (!(testOp instanceof IConditionalBranchInstruction.Operator)) {
-        throw new IllegalStateException("Conditional operator of unknown type: " + testOp.getClass());
+        throw new IllegalStateException(
+            "Conditional operator of unknown type: " + testOp.getClass());
       }
       IConditionalBranchInstruction.Operator op = (IConditionalBranchInstruction.Operator) testOp;
 
       if (sym.isNullConstant(arg1)) {
         switch (op) {
-        case EQ:
-          noIdentity = true;
-          transfer1 = NullPointerState.nullifyFunction(arg2);
-          transfer2 = NullPointerState.denullifyFunction(arg2);
-          break;
-        case NE:
-          noIdentity = true;
-          transfer1 = NullPointerState.denullifyFunction(arg2);
-          transfer2 = NullPointerState.nullifyFunction(arg2);
-          break;
-        default:
-          throw new IllegalStateException("Comparision to a null constant using " + op);
+          case EQ:
+            noIdentity = true;
+            transfer1 = NullPointerState.nullifyFunction(arg2);
+            transfer2 = NullPointerState.denullifyFunction(arg2);
+            break;
+          case NE:
+            noIdentity = true;
+            transfer1 = NullPointerState.denullifyFunction(arg2);
+            transfer2 = NullPointerState.nullifyFunction(arg2);
+            break;
+          default:
+            throw new IllegalStateException("Comparision to a null constant using " + op);
         }
       } else if (sym.isNullConstant(arg2)) {
         switch (op) {
-        case EQ:
-          noIdentity = true;
-          transfer1 = NullPointerState.nullifyFunction(arg1);
-          transfer2 = NullPointerState.denullifyFunction(arg1);
-          break;
-        case NE:
-          noIdentity = true;
-          transfer1 = NullPointerState.denullifyFunction(arg1);
-          transfer2 = NullPointerState.nullifyFunction(arg1);
-          break;
-        default:
-          throw new IllegalStateException("Comparision to a null constant using " + op);
+          case EQ:
+            noIdentity = true;
+            transfer1 = NullPointerState.nullifyFunction(arg1);
+            transfer2 = NullPointerState.denullifyFunction(arg1);
+            break;
+          case NE:
+            noIdentity = true;
+            transfer1 = NullPointerState.denullifyFunction(arg1);
+            transfer2 = NullPointerState.nullifyFunction(arg1);
+            break;
+          default:
+            throw new IllegalStateException("Comparision to a null constant using " + op);
         }
       } else {
         noIdentity = false;
@@ -359,7 +359,8 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
     public void visitInvoke(SSAInvokeInstruction instruction) {
       if (!instruction.isStatic()) {
         // when no exception is raised on a virtual call, the receiver is not null. Otherwise it is
-        // unsure if the receiver is definitely null as an exception may also stem from the method itself.
+        // unsure if the receiver is definitely null as an exception may also stem from the method
+        // itself.
         noIdentity = true;
         transfer1 = NullPointerState.denullifyFunction(instruction.getReceiver());
         transfer2 = NullPointerState.identityFunction();
@@ -385,8 +386,10 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
      */
     @Override
     public void visitMonitor(SSAMonitorInstruction instruction) {
-      // when no exception is raised on a synchronized statement, the monitor is not null. Otherwise it is
-      // unsure if the monitor is definitely null as other exception may also appear (synchronization related).
+      // when no exception is raised on a synchronized statement, the monitor is not null. Otherwise
+      // it is
+      // unsure if the monitor is definitely null as other exception may also appear
+      // (synchronization related).
       noIdentity = true;
       transfer1 = NullPointerState.denullifyFunction(instruction.getRef());
       transfer2 = NullPointerState.identityFunction();
@@ -416,7 +419,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
       for (int i = 0; i < uses.length; i++) {
         uses[i] = instruction.getUse(i);
       }
-      
+
       transfer1 = NullPointerState.phiValueMeetFunction(instruction.getDef(), uses);
       // should not be used as no alternative path exists
       transfer2 = NullPointerState.identityFunction();
@@ -488,7 +491,5 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock> implements I
       transfer1 = NullPointerState.identityFunction();
       transfer2 = NullPointerState.identityFunction();
     }
-    
   }
-  
 }

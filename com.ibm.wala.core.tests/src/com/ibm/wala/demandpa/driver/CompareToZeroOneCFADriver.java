@@ -10,39 +10,28 @@
  */
 
 /**
- * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
- * University of California (Regents). Provided that this notice and
- * the following two paragraphs are included in any distribution of
- * Refinement Analysis Tools or its derivative work, Regents agrees
- * not to assert any of Regents' copyright rights in Refinement
- * Analysis Tools against recipient for recipient's reproduction,
- * preparation of derivative works, public display, public
- * performance, distribution or sublicensing of Refinement Analysis
- * Tools and derivative works, in source code and object code form.
- * This agreement not to assert does not confer, by implication,
- * estoppel, or otherwise any license or rights in any intellectual
- * property of Regents, including, but not limited to, any patents
- * of Regents or Regents' employees.
- * 
- * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
- * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
- * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
- * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *   
- * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
- * WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE AND ACCOMPANYING
- * DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS
- * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
- * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the University of California
+ * (Regents). Provided that this notice and the following two paragraphs are included in any
+ * distribution of Refinement Analysis Tools or its derivative work, Regents agrees not to assert
+ * any of Regents' copyright rights in Refinement Analysis Tools against recipient for recipient's
+ * reproduction, preparation of derivative works, public display, public performance, distribution
+ * or sublicensing of Refinement Analysis Tools and derivative works, in source code and object code
+ * form. This agreement not to assert does not confer, by implication, estoppel, or otherwise any
+ * license or rights in any intellectual property of Regents, including, but not limited to, any
+ * patents of Regents or Regents' employees.
+ *
+ * <p>IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+ * CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+ * DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * <p>REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY
+ * STATUTORY WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY,
+ * PROVIDED HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE,
+ * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.driver;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -78,12 +67,14 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Driver that tests analysis results against ZeroOneCFA analysis.
- * 
+ *
  * @author Manu Sridharan
- * 
  */
 public class CompareToZeroOneCFADriver {
 
@@ -96,11 +87,14 @@ public class CompareToZeroOneCFADriver {
   }
 
   @SuppressWarnings("unused")
-  private static void runUnitTestCase(String mainClass) throws IllegalArgumentException, CancelException, IOException {
+  private static void runUnitTestCase(String mainClass)
+      throws IllegalArgumentException, CancelException, IOException {
     System.err.println("=======---------------=============");
     System.err.println(("ANALYZING " + mainClass + "\n\n"));
     // describe the "scope", what is the program we're analyzing
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestInfo.SCOPE_FILE, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestInfo.SCOPE_FILE, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     Object warnings = new Object();
 
     // build a type hierarchy
@@ -114,7 +108,8 @@ public class CompareToZeroOneCFADriver {
 
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // run existing pointer analysis
@@ -123,11 +118,14 @@ public class CompareToZeroOneCFADriver {
   }
 
   @SuppressWarnings("unused")
-  private static void runApplication(String appJar) throws IllegalArgumentException, CancelException, IOException {
+  private static void runApplication(String appJar)
+      throws IllegalArgumentException, CancelException, IOException {
     System.err.println("=======---------------=============");
     System.err.println(("ANALYZING " + appJar + "\n\n"));
 
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+    AnalysisScope scope =
+        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+            appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     // TODO: return the warning set (need a CAPA type)
     // invoke DOMO to build a DOMO class hierarchy object
@@ -140,24 +138,31 @@ public class CompareToZeroOneCFADriver {
       e.printStackTrace();
     }
 
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
     doTests(scope, cha, options);
     System.err.println("ALL FINE");
   }
 
-  private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
-    final SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
-    final CallGraph oldCG = builder.makeCallGraph(options,null);
+  private static void doTests(
+      AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options)
+      throws IllegalArgumentException, CancelException {
+    final SSAPropagationCallGraphBuilder builder =
+        Util.makeVanillaZeroOneCFABuilder(
+            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    final CallGraph oldCG = builder.makeCallGraph(options, null);
     final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
     // now, run our analysis
     // build an RTA call graph
-    CallGraphBuilder<InstanceKey> rtaBuilder = Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> rtaBuilder =
+        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
-    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, rtaBuilder.getPointerAnalysis().getHeapModel(), false);
+    MemoryAccessMap fam =
+        new SimpleMemoryAccessMap(cg, rtaBuilder.getPointerAnalysis().getHeapModel(), false);
 
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, scope, cg, fam);
 
@@ -180,7 +185,8 @@ public class CompareToZeroOneCFADriver {
           if (t != null) {
             final HeapModel heapModel = dmp.getHeapModel();
             LocalPointerKey pk = (LocalPointerKey) heapModel.getPointerKeyForLocal(node, i);
-            LocalPointerKey oldPk = (LocalPointerKey) CallGraphMapUtil.mapPointerKey(pk, cg, oldCG, heapModel);
+            LocalPointerKey oldPk =
+                (LocalPointerKey) CallGraphMapUtil.mapPointerKey(pk, cg, oldCG, heapModel);
             Collection<InstanceKey> p2set = dmp.getPointsTo(pk);
             OrdinalSet<InstanceKey> otherP2Set = pa.getPointsToSet(oldPk);
             System.err.println(("OLD POINTS-TO " + otherP2Set));
@@ -199,7 +205,6 @@ public class CompareToZeroOneCFADriver {
           }
         }
       }
-
     }
     Helper h = new Helper();
     for (CGNode node : cg) {
@@ -214,21 +219,30 @@ public class CompareToZeroOneCFADriver {
     if (key instanceof InstanceKeyWithNode) {
       CGNode node = ((InstanceKeyWithNode) key).getNode();
       MethodReference methodRef = node.getMethod().getReference();
-      if (methodRef.toString().equals("< Primordial, Ljava/lang/Object, clone()Ljava/lang/Object; >")) {
+      if (methodRef
+          .toString()
+          .equals("< Primordial, Ljava/lang/Object, clone()Ljava/lang/Object; >")) {
         return true;
       }
     }
     return false;
   }
 
-  private static IDemandPointerAnalysis makeDemandPointerAnalysis(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
-      CallGraph cg, MemoryAccessMap fam) {
-    SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+  private static IDemandPointerAnalysis makeDemandPointerAnalysis(
+      AnalysisOptions options,
+      ClassHierarchy cha,
+      AnalysisScope scope,
+      CallGraph cg,
+      MemoryAccessMap fam) {
+    SSAPropagationCallGraphBuilder builder =
+        Util.makeVanillaZeroOneCFABuilder(
+            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
-    DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, fam, cha, options, new DummyStateMachine.Factory<IFlowLabel>());
+    DemandRefinementPointsTo fullDemandPointsTo =
+        DemandRefinementPointsTo.makeWithDefaultFlowGraph(
+            cg, builder, fam, cha, options, new DummyStateMachine.Factory<IFlowLabel>());
     // fullDemandPointsTo.setOnTheFly(true);
     // fullDemandPointsTo.setRefineFields(true);
     return fullDemandPointsTo;
   }
-
 }

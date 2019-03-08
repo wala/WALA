@@ -11,11 +11,10 @@
 package com.ibm.wala.types.generics;
 
 /**
- * Base class for wrappers around Strings that represent Signature annotations
- * according to Java 5.0 JVM spec enhancements.
- * 
+ * Base class for wrappers around Strings that represent Signature annotations according to Java 5.0
+ * JVM spec enhancements.
+ *
  * @author sjfink
- * 
  */
 public abstract class Signature {
 
@@ -44,23 +43,17 @@ public abstract class Signature {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final Signature other = (Signature) obj;
     if (s == null) {
-      if (other.s != null)
-        return false;
-    } else if (!s.equals(other.s))
-      return false;
+      if (other.s != null) return false;
+    } else if (!s.equals(other.s)) return false;
     return true;
   }
 
   protected String rawString() {
     return s;
   }
-
 }

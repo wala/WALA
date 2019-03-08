@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -43,10 +38,12 @@ import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.UTF8Convert;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-/**
- * Test IR's getLocalNames.
- */
+/** Test IR's getLocalNames. */
 public class LocalNamesTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = LocalNamesTest.class.getClassLoader();
@@ -67,8 +64,11 @@ public class LocalNamesTest extends WalaTestCase {
   @BeforeClass
   public static void beforeClass() throws Exception {
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
@@ -82,7 +82,7 @@ public class LocalNamesTest extends WalaTestCase {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see junit.framework.TestCase#tearDown()
    */
   @AfterClass
@@ -92,24 +92,30 @@ public class LocalNamesTest extends WalaTestCase {
     options = null;
   }
 
-  /**
-   * Build an IR, then check getLocalNames
-   */
+  /** Build an IR, then check getLocalNames */
   @Test
   public void testAliasNames() {
     try {
-      AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider())
-          .getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+      AnalysisScope scope =
+          AnalysisScopeReader.readJavaScope(
+              TestConstants.WALA_TESTDATA,
+              (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+              MY_CLASSLOADER);
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-      TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "AliasNames");
+      TypeReference t =
+          TypeReference.findOrCreateClass(
+              scope.getApplicationLoader(), "cornerCases", "AliasNames");
       IClass klass = cha.lookupClass(t);
       Assert.assertTrue(klass != null);
-      IMethod m = klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
-          .findOrCreateUTF8("([Ljava/lang/String;)V")));
+      IMethod m =
+          klass.getMethod(
+              new Selector(
+                  Atom.findOrCreateAsciiAtom("foo"),
+                  Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V")));
 
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
-      
+
       IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
 
       IR ir = cache.getIR(m, Everywhere.EVERYWHERE);
@@ -120,8 +126,11 @@ public class LocalNamesTest extends WalaTestCase {
           String[] localNames = ir.getLocalNames(offsetIndex, instr.getDef());
           if (localNames != null && localNames.length > 0 && localNames[0] == null) {
             System.err.println(ir);
-            Assert.assertTrue(" getLocalNames() returned [null,...] for the def of instruction at offset " + offsetIndex
-                + "\n\tinstr", false);
+            Assert.assertTrue(
+                " getLocalNames() returned [null,...] for the def of instruction at offset "
+                    + offsetIndex
+                    + "\n\tinstr",
+                false);
           }
         }
       }
@@ -135,8 +144,12 @@ public class LocalNamesTest extends WalaTestCase {
   public void testLocalNamesWithoutPiNodes() {
     SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
     options.getSSAOptions().setPiNodePolicy(null);
-    MethodReference mref = scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
+    MethodReference mref =
+        scope.findMethod(
+            AnalysisScope.APPLICATION,
+            "LcornerCases/Locals",
+            Atom.findOrCreateUnicodeAtom("foo"),
+            new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
     Assert.assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     Assert.assertNotNull("imethod not found", imethod);
@@ -147,8 +160,10 @@ public class LocalNamesTest extends WalaTestCase {
     // v1 should be the parameter "a" at pc 0
     String[] names = ir.getLocalNames(0, 1);
     Assert.assertTrue("failed local name resolution for v1@0", names != null);
-    Assert.assertTrue("incorrect number of local names for v1@0: " + names.length, names.length == 1);
-    Assert.assertTrue("incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
+    Assert.assertTrue(
+        "incorrect number of local names for v1@0: " + names.length, names.length == 1);
+    Assert.assertTrue(
+        "incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
 
     // v2 is a compiler-induced temporary
     Assert.assertTrue("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2) == null);
@@ -156,17 +171,24 @@ public class LocalNamesTest extends WalaTestCase {
     // at pc 5, v1 should represent the locals "a" and "b"
     names = ir.getLocalNames(5, 1);
     Assert.assertTrue("failed local name resolution for v1@5", names != null);
-    Assert.assertTrue("incorrect number of local names for v1@5: " + names.length, names.length == 2);
-    Assert.assertTrue("incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
-    Assert.assertTrue("incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
+    Assert.assertTrue(
+        "incorrect number of local names for v1@5: " + names.length, names.length == 2);
+    Assert.assertTrue(
+        "incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
+    Assert.assertTrue(
+        "incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
   }
 
   @Test
   public void testLocalNamesWithPiNodes() {
     SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
     options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
-    MethodReference mref = scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
+    MethodReference mref =
+        scope.findMethod(
+            AnalysisScope.APPLICATION,
+            "LcornerCases/Locals",
+            Atom.findOrCreateUnicodeAtom("foo"),
+            new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
     Assert.assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     Assert.assertNotNull("imethod not found", imethod);
@@ -177,8 +199,10 @@ public class LocalNamesTest extends WalaTestCase {
     // v1 should be the parameter "a" at pc 0
     String[] names = ir.getLocalNames(0, 1);
     Assert.assertTrue("failed local name resolution for v1@0", names != null);
-    Assert.assertTrue("incorrect number of local names for v1@0: " + names.length, names.length == 1);
-    Assert.assertTrue("incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
+    Assert.assertTrue(
+        "incorrect number of local names for v1@0: " + names.length, names.length == 1);
+    Assert.assertTrue(
+        "incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
 
     // v2 is a compiler-induced temporary
     Assert.assertTrue("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2) == null);
@@ -186,8 +210,11 @@ public class LocalNamesTest extends WalaTestCase {
     // at pc 5, v1 should represent the locals "a" and "b"
     names = ir.getLocalNames(5, 1);
     Assert.assertTrue("failed local name resolution for v1@5", names != null);
-    Assert.assertTrue("incorrect number of local names for v1@5: " + names.length, names.length == 2);
-    Assert.assertTrue("incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
-    Assert.assertTrue("incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
+    Assert.assertTrue(
+        "incorrect number of local names for v1@5: " + names.length, names.length == 2);
+    Assert.assertTrue(
+        "incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
+    Assert.assertTrue(
+        "incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
   }
 }

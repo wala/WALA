@@ -12,23 +12,18 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 
-/**
- * Operator U(n) = U(n) U U(j)
- */
+/** Operator U(n) = U(n) U U(j) */
 public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
 
-  private final static BitVectorUnion SINGLETON = new BitVectorUnion();
+  private static final BitVectorUnion SINGLETON = new BitVectorUnion();
 
   public static BitVectorUnion instance() {
     return SINGLETON;
   }
 
-  private BitVectorUnion() {
-  }
+  private BitVectorUnion() {}
 
-  /**
-   * @see java.lang.Object#toString()
-   */
+  /** @see java.lang.Object#toString() */
   @Override
   public String toString() {
     return "UNION";
@@ -48,7 +43,8 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable[] rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable[] rhs)
+      throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("null lhs");
     }

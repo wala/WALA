@@ -12,10 +12,10 @@
 package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 public final class RootPos extends NodePos {
-	@Override
-	public <A> A accept(PosSwitch<A> ps) {
-		return ps.caseRootPos(this);
-	}
+  @Override
+  public <A> A accept(PosSwitch<A> ps) {
+    return ps.caseRootPos(this);
+  }
 
   @Override
   public int hashCode() {

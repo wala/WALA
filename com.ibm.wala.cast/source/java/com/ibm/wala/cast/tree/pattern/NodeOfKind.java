@@ -14,31 +14,29 @@ package com.ibm.wala.cast.tree.pattern;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**
- * A node pattern that matches an AST node of a certain kind; additionally, the node's children
- * have to match the pattern's child patterns.
- * 
- * @author mschaefer
+ * A node pattern that matches an AST node of a certain kind; additionally, the node's children have
+ * to match the pattern's child patterns.
  *
+ * @author mschaefer
  */
 public class NodeOfKind implements NodePattern {
-	protected int kind;
-	protected NodePattern[] children;
-	
-	public NodeOfKind(int kind, NodePattern... children) {
-		this.kind = kind;
-		this.children = children.clone();
-	}
-	
-	/* (non-Javadoc)
-	 * @see pattern.NodePattern#matches(com.ibm.wala.cast.tree.CAstNode)
-	 */
-	@Override
+  protected int kind;
+  protected NodePattern[] children;
+
+  public NodeOfKind(int kind, NodePattern... children) {
+    this.kind = kind;
+    this.children = children.clone();
+  }
+
+  /* (non-Javadoc)
+   * @see pattern.NodePattern#matches(com.ibm.wala.cast.tree.CAstNode)
+   */
+  @Override
   public boolean matches(CAstNode node) {
-		if(node == null || node.getKind() != kind || node.getChildCount() != children.length)
-			return false;
-		for(int i=0;i<children.length;++i)
-			if(!children[i].matches(node.getChild(i)))
-				return false;
-		return true;
-	}
+    if (node == null || node.getKind() != kind || node.getChildCount() != children.length)
+      return false;
+    for (int i = 0; i < children.length; ++i)
+      if (!children[i].matches(node.getChild(i))) return false;
+    return true;
+  }
 }

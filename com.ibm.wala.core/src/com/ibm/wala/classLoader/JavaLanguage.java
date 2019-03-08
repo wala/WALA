@@ -7,16 +7,9 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *
  */
 package com.ibm.wala.classLoader;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
@@ -88,11 +81,14 @@ import com.ibm.wala.util.shrike.Exceptions.MethodResolutionFailure;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
-/**
- * The implementation of {@link Language} which defines Java semantics.
- *
- */
+/** The implementation of {@link Language} which defines Java semantics. */
 public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Constants {
 
   public static class JavaInstructionFactory implements SSAInstructionFactory {
@@ -107,7 +103,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAArrayLoadInstruction ArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference declaredType) {
+    public SSAArrayLoadInstruction ArrayLoadInstruction(
+        int iindex, int result, int arrayref, int index, TypeReference declaredType) {
       return new SSAArrayLoadInstruction(iindex, result, arrayref, index, declaredType) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
@@ -117,7 +114,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAArrayStoreInstruction ArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference declaredType) {
+    public SSAArrayStoreInstruction ArrayStoreInstruction(
+        int iindex, int arrayref, int index, int value, TypeReference declaredType) {
       return new SSAArrayStoreInstruction(iindex, arrayref, index, value, declaredType) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
@@ -131,16 +129,31 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAAbstractBinaryInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
-        int result, int val1, int val2, boolean mayBeInteger) {
+    public SSAAbstractBinaryInstruction BinaryOpInstruction(
+        int iindex,
+        IBinaryOpInstruction.IOperator operator,
+        boolean overflow,
+        boolean unsigned,
+        int result,
+        int val1,
+        int val2,
+        boolean mayBeInteger) {
       assert !overflow;
-      // assert (!unsigned) : "BinaryOpInstuction: unsigned disallowed! iIndex: " + iindex + ", operation: " + val1 + " " + operator.toString() + " " + val2 ;
+      // assert (!unsigned) : "BinaryOpInstuction: unsigned disallowed! iIndex: " + iindex + ",
+      // operation: " + val1 + " " + operator.toString() + " " + val2 ;
       return new SSABinaryOpInstruction(iindex, operator, result, val1, val2, mayBeInteger) {
 
         @Override
         public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-          return insts.BinaryOpInstruction(iindex, getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
-              uses == null ? getUse(0) : uses[0], uses == null ? getUse(1) : uses[1], mayBeIntegerOp());
+          return insts.BinaryOpInstruction(
+              iindex,
+              getOperator(),
+              false,
+              false,
+              defs == null || defs.length == 0 ? getDef(0) : defs[0],
+              uses == null ? getUse(0) : uses[0],
+              uses == null ? getUse(1) : uses[1],
+              mayBeIntegerOp());
         }
 
         @Override
@@ -155,14 +168,16 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues, boolean isPEI) {
+    public SSACheckCastInstruction CheckCastInstruction(
+        int iindex, int result, int val, int[] typeValues, boolean isPEI) {
       throw new UnsupportedOperationException();
     }
-       
+
     @Override
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
-       assert types.length == 1;
-       assert isPEI;
+    public SSACheckCastInstruction CheckCastInstruction(
+        int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
+      assert types.length == 1;
+      assert isPEI;
       return new SSACheckCastInstruction(iindex, result, val, types, true) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
@@ -170,55 +185,74 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
         }
       };
     }
-     
+
     @Override
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue, boolean isPEI) {
+    public SSACheckCastInstruction CheckCastInstruction(
+        int iindex, int result, int val, int typeValue, boolean isPEI) {
       assert isPEI;
-      return CheckCastInstruction(iindex, result, val, new int[]{ typeValue }, true);
+      return CheckCastInstruction(iindex, result, val, new int[] {typeValue}, true);
     }
 
     @Override
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type, boolean isPEI) {
+    public SSACheckCastInstruction CheckCastInstruction(
+        int iindex, int result, int val, TypeReference type, boolean isPEI) {
       assert isPEI;
-      return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type }, true);
+      return CheckCastInstruction(iindex, result, val, new TypeReference[] {type}, true);
     }
 
     @Override
-    public SSAComparisonInstruction ComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
+    public SSAComparisonInstruction ComparisonInstruction(
+        int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
       return new SSAComparisonInstruction(iindex, operator, result, val1, val2);
     }
 
     @Override
-    public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex, IConditionalBranchInstruction.IOperator operator,
-        TypeReference type, int val1, int val2, int target) {
+    public SSAConditionalBranchInstruction ConditionalBranchInstruction(
+        int iindex,
+        IConditionalBranchInstruction.IOperator operator,
+        TypeReference type,
+        int val1,
+        int val2,
+        int target) {
       return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2, target);
     }
 
     @Override
-    public SSAConversionInstruction ConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType,
+    public SSAConversionInstruction ConversionInstruction(
+        int iindex,
+        int result,
+        int val,
+        TypeReference fromType,
+        TypeReference toType,
         boolean overflow) {
       assert !overflow;
       return new SSAConversionInstruction(iindex, result, val, fromType, toType) {
         @Override
-        public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
+        public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
+            throws IllegalArgumentException {
           if (uses != null && uses.length == 0) {
             throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
           }
-          return insts.ConversionInstruction(iindex, defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0)
-              : uses[0], getFromType(), getToType(), false);
+          return insts.ConversionInstruction(
+              iindex,
+              defs == null || defs.length == 0 ? getDef(0) : defs[0],
+              uses == null ? getUse(0) : uses[0],
+              getFromType(),
+              getToType(),
+              false);
         }
       };
     }
 
     @Override
-    public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int iindex, int bbNumber, int exceptionValueNumber) {
+    public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(
+        int iindex, int bbNumber, int exceptionValueNumber) {
       return new SSAGetCaughtExceptionInstruction(iindex, bbNumber, exceptionValueNumber);
     }
 
     @Override
     public SSAGetInstruction GetInstruction(int iindex, int result, FieldReference field) {
-      return new SSAGetInstruction(iindex, result, field) {
-      };
+      return new SSAGetInstruction(iindex, result, field) {};
     }
 
     @Override
@@ -237,12 +271,19 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType) {
+    public SSAInstanceofInstruction InstanceofInstruction(
+        int iindex, int result, int ref, TypeReference checkedType) {
       return new SSAInstanceofInstruction(iindex, result, ref, checkedType);
     }
 
     @Override
-    public SSAAbstractInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+    public SSAAbstractInvokeInstruction InvokeInstruction(
+        int iindex,
+        int result,
+        int[] params,
+        int exception,
+        CallSiteReference site,
+        BootstrapMethod bootstrap) {
       if (bootstrap != null) {
         return new SSAInvokeDynamicInstruction(iindex, result, params, exception, site, bootstrap) {
           @Override
@@ -269,7 +310,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+    public SSAInvokeInstruction InvokeInstruction(
+        int iindex,
+        int[] params,
+        int exception,
+        CallSiteReference site,
+        BootstrapMethod bootstrap) {
       if (bootstrap != null) {
         return new SSAInvokeDynamicInstruction(iindex, params, exception, site, bootstrap) {
           @Override
@@ -320,9 +366,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAPhiInstruction PhiInstruction(int iindex, int result, int[] params) throws IllegalArgumentException {
-      return new SSAPhiInstruction(iindex, result, params) {
-      };
+    public SSAPhiInstruction PhiInstruction(int iindex, int result, int[] params)
+        throws IllegalArgumentException {
+      return new SSAPhiInstruction(iindex, result, params) {};
     }
 
     @Override
@@ -337,8 +383,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
     @Override
     public SSAPutInstruction PutInstruction(int iindex, int value, FieldReference field) {
-      return new SSAPutInstruction(iindex, value, field) {
-      };
+      return new SSAPutInstruction(iindex, value, field) {};
     }
 
     @Override
@@ -352,7 +397,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSASwitchInstruction SwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels) {
+    public SSASwitchInstruction SwitchInstruction(
+        int iindex, int val, int defaultLabel, int[] casesAndLabels) {
       return new SSASwitchInstruction(iindex, val, defaultLabel, casesAndLabels);
     }
 
@@ -367,12 +413,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAUnaryOpInstruction UnaryOpInstruction(int iindex, IUnaryOpInstruction.IOperator operator, int result, int val) {
+    public SSAUnaryOpInstruction UnaryOpInstruction(
+        int iindex, IUnaryOpInstruction.IOperator operator, int result, int val) {
       return new SSAUnaryOpInstruction(iindex, operator, result, val);
     }
 
     @Override
-    public SSALoadMetadataInstruction LoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
+    public SSALoadMetadataInstruction LoadMetadataInstruction(
+        int iindex, int lval, TypeReference entityType, Object token) {
       return new SSALoadMetadataInstruction(iindex, lval, entityType, token) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
@@ -382,7 +430,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site, int[] params) {
+    public SSANewInstruction NewInstruction(
+        int iindex, int result, NewSiteReference site, int[] params) {
       return new SSANewInstruction(iindex, result, site, params) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
@@ -392,70 +441,96 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAPiInstruction PiInstruction(int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
+    public SSAPiInstruction PiInstruction(
+        int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
       return new SSAPiInstruction(iindex, result, val, piBlock, successorBlock, cause);
     }
 
     @Override
-    public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType) {
+    public SSAAddressOfInstruction AddressOfInstruction(
+        int iindex, int lval, int local, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, int indexVal, TypeReference pointeeType) {
-      throw new UnsupportedOperationException();
-   }
-
-    @Override
-    public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, FieldReference field, TypeReference pointeeType) {
+    public SSAAddressOfInstruction AddressOfInstruction(
+        int iindex, int lval, int local, int indexVal, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public SSALoadIndirectInstruction LoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal) {
+    public SSAAddressOfInstruction AddressOfInstruction(
+        int iindex, int lval, int local, FieldReference field, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public SSAStoreIndirectInstruction StoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference pointeeType) {
+    public SSALoadIndirectInstruction LoadIndirectInstruction(
+        int iindex, int lval, TypeReference t, int addressVal) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public SSAStoreIndirectInstruction StoreIndirectInstruction(
+        int iindex, int addressVal, int rval, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
   }
 
-  private static final Collection<TypeReference> arrayAccessExceptions = Collections.unmodifiableCollection(Arrays
-      .asList(new TypeReference[] { TypeReference.JavaLangNullPointerException,
-          TypeReference.JavaLangArrayIndexOutOfBoundsException }));
+  private static final Collection<TypeReference> arrayAccessExceptions =
+      Collections.unmodifiableCollection(
+          Arrays.asList(
+              new TypeReference[] {
+                TypeReference.JavaLangNullPointerException,
+                TypeReference.JavaLangArrayIndexOutOfBoundsException
+              }));
 
-  private static final Collection<TypeReference> aaStoreExceptions = Collections.unmodifiableCollection(Arrays
-      .asList(new TypeReference[] { TypeReference.JavaLangNullPointerException,
-          TypeReference.JavaLangArrayIndexOutOfBoundsException, TypeReference.JavaLangArrayStoreException }));
+  private static final Collection<TypeReference> aaStoreExceptions =
+      Collections.unmodifiableCollection(
+          Arrays.asList(
+              new TypeReference[] {
+                TypeReference.JavaLangNullPointerException,
+                TypeReference.JavaLangArrayIndexOutOfBoundsException,
+                TypeReference.JavaLangArrayStoreException
+              }));
 
-  private static final Collection<TypeReference> newScalarExceptions = Collections.unmodifiableCollection(Arrays
-      .asList(new TypeReference[] { TypeReference.JavaLangExceptionInInitializerError, TypeReference.JavaLangOutOfMemoryError }));
+  private static final Collection<TypeReference> newScalarExceptions =
+      Collections.unmodifiableCollection(
+          Arrays.asList(
+              new TypeReference[] {
+                TypeReference.JavaLangExceptionInInitializerError,
+                TypeReference.JavaLangOutOfMemoryError
+              }));
 
-  private static final Collection<TypeReference> newArrayExceptions = Collections.unmodifiableCollection(Arrays
-      .asList(new TypeReference[] { TypeReference.JavaLangOutOfMemoryError, TypeReference.JavaLangNegativeArraySizeException }));
+  private static final Collection<TypeReference> newArrayExceptions =
+      Collections.unmodifiableCollection(
+          Arrays.asList(
+              new TypeReference[] {
+                TypeReference.JavaLangOutOfMemoryError,
+                TypeReference.JavaLangNegativeArraySizeException
+              }));
 
-  private static final Collection<TypeReference> newSafeArrayExceptions = Collections.unmodifiableCollection(Arrays
-      .asList(new TypeReference[] { TypeReference.JavaLangOutOfMemoryError}));
+  private static final Collection<TypeReference> newSafeArrayExceptions =
+      Collections.unmodifiableCollection(
+          Arrays.asList(new TypeReference[] {TypeReference.JavaLangOutOfMemoryError}));
 
-  private static final Collection<TypeReference> exceptionInInitializerError = Collections
-      .singleton(TypeReference.JavaLangExceptionInInitializerError);
+  private static final Collection<TypeReference> exceptionInInitializerError =
+      Collections.singleton(TypeReference.JavaLangExceptionInInitializerError);
 
-  private static final Collection<TypeReference> nullPointerException = Collections
-      .singleton(TypeReference.JavaLangNullPointerException);
+  private static final Collection<TypeReference> nullPointerException =
+      Collections.singleton(TypeReference.JavaLangNullPointerException);
 
-  private static final Collection<TypeReference> arithmeticException = Collections
-      .singleton(TypeReference.JavaLangArithmeticException);
+  private static final Collection<TypeReference> arithmeticException =
+      Collections.singleton(TypeReference.JavaLangArithmeticException);
 
-  private static final Collection<TypeReference> classCastException = Collections
-      .singleton(TypeReference.JavaLangClassCastException);
+  private static final Collection<TypeReference> classCastException =
+      Collections.singleton(TypeReference.JavaLangClassCastException);
 
-  private static final Collection<TypeReference> classNotFoundException = Collections
-      .singleton(TypeReference.JavaLangClassNotFoundException);
+  private static final Collection<TypeReference> classNotFoundException =
+      Collections.singleton(TypeReference.JavaLangClassNotFoundException);
 
-  private static final Collection<TypeReference> loadClassExceptions = Collections
-      .singleton(TypeReference.JavaLangClassNotFoundException);
+  private static final Collection<TypeReference> loadClassExceptions =
+      Collections.singleton(TypeReference.JavaLangClassNotFoundException);
 
   public static Collection<TypeReference> getAaStoreExceptions() {
     return aaStoreExceptions;
@@ -480,9 +555,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public static Collection<TypeReference> getNewArrayExceptions() {
     return newArrayExceptions;
   }
+
   public static Collection<TypeReference> getNewSafeArrayExceptions() {
     return newSafeArrayExceptions;
   }
+
   public static Collection<TypeReference> getNewScalarExceptions() {
     return newScalarExceptions;
   }
@@ -532,7 +609,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       return TypeReference.JavaLangClass;
     } else if (o instanceof IMethod) {
       IMethod m = (IMethod) o;
-      return m.isInit() ? TypeReference.JavaLangReflectConstructor : TypeReference.JavaLangReflectMethod;
+      return m.isInit()
+          ? TypeReference.JavaLangReflectConstructor
+          : TypeReference.JavaLangReflectMethod;
     } else if (o instanceof MethodHandle || o instanceof ReferenceToken) {
       return TypeReference.JavaLangInvokeMethodHandle;
     } else if (o instanceof MethodType) {
@@ -550,7 +629,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   @Override
   public TypeReference[] getArrayInterfaces() {
-    return new TypeReference[] { TypeReference.JavaIoSerializable, TypeReference.JavaLangCloneable };
+    return new TypeReference[] {TypeReference.JavaIoSerializable, TypeReference.JavaLangCloneable};
   }
 
   @Override
@@ -559,13 +638,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   }
 
   /**
-   * @return {@link Collection}&lt;{@link TypeReference}&gt;, set of exception types a call to a declared target might throw.
+   * @return {@link Collection}&lt;{@link TypeReference}&gt;, set of exception types a call to a
+   *     declared target might throw.
    * @throws IllegalArgumentException if target is null
    * @throws IllegalArgumentException if cha is null
    */
   @Override
-  public Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha)
-      throws InvalidClassFileException {
+  public Collection<TypeReference> inferInvokeExceptions(
+      MethodReference target, IClassHierarchy cha) throws InvalidClassFileException {
 
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
@@ -596,17 +676,19 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   /**
    * @param pei a potentially-excepting instruction
-   * @return the exception types that pei may throw, independent of the class hierarchy. null if none.
-   * 
-   *         Notes
-   *         <ul>
-   *         <li>this method will <em>NOT</em> return the exception type explicitly thrown by an athrow
-   *         <li>this method will <em>NOT</em> return the exception types that a called method may throw
-   *         <li>this method ignores OutOfMemoryError
-   *         <li>this method ignores linkage errors
-   *         <li>this method ignores IllegalMonitorState exceptions
-   *         </ul>
-   * 
+   * @return the exception types that pei may throw, independent of the class hierarchy. null if
+   *     none.
+   *     <p>Notes
+   *     <ul>
+   *       <li>this method will <em>NOT</em> return the exception type explicitly thrown by an
+   *           athrow
+   *       <li>this method will <em>NOT</em> return the exception types that a called method may
+   *           throw
+   *       <li>this method ignores OutOfMemoryError
+   *       <li>this method ignores linkage errors
+   *       <li>this method ignores IllegalMonitorState exceptions
+   *     </ul>
+   *
    * @throws IllegalArgumentException if pei is null
    */
   @Override
@@ -615,64 +697,63 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       throw new IllegalArgumentException("pei is null");
     }
     switch (((Instruction) pei).getOpcode()) {
-    case OP_iaload:
-    case OP_laload:
-    case OP_faload:
-    case OP_daload:
-    case OP_aaload:
-    case OP_baload:
-    case OP_caload:
-    case OP_saload:
-    case OP_iastore:
-    case OP_lastore:
-    case OP_fastore:
-    case OP_dastore:
-    case OP_bastore:
-    case OP_castore:
-    case OP_sastore:
-      return getArrayAccessExceptions();
-    case OP_aastore:
-      return getAaStoreExceptions();
-    case OP_getfield:
-    case OP_putfield:
-    case OP_invokevirtual:
-    case OP_invokespecial:
-    case OP_invokeinterface:
-      return getNullPointerException();
-    case OP_idiv:
-    case OP_irem:
-    case OP_ldiv:
-    case OP_lrem:
-      return getArithmeticException();
-    case OP_new:
-      return newScalarExceptions;
-    case OP_newarray:
-    case OP_anewarray:
-    case OP_multianewarray:
-      return newArrayExceptions;
-    case OP_arraylength:
-      return getNullPointerException();
-    case OP_athrow:
-      // N.B: the caller must handle the explicitly-thrown exception
-      return getNullPointerException();
-    case OP_checkcast:
-      return getClassCastException();
-    case OP_monitorenter:
-    case OP_monitorexit:
-      // we're currently ignoring MonitorStateExceptions, since J2EE stuff
-      // should be
-      // logically single-threaded
-      return getNullPointerException();
-    case OP_ldc_w:
-      if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
-        return getClassNotFoundException();
-      else
-        return null;
-    case OP_getstatic:
-    case OP_putstatic:
-      return getExceptionInInitializerError();
-    default:
-      return Collections.emptySet();
+      case OP_iaload:
+      case OP_laload:
+      case OP_faload:
+      case OP_daload:
+      case OP_aaload:
+      case OP_baload:
+      case OP_caload:
+      case OP_saload:
+      case OP_iastore:
+      case OP_lastore:
+      case OP_fastore:
+      case OP_dastore:
+      case OP_bastore:
+      case OP_castore:
+      case OP_sastore:
+        return getArrayAccessExceptions();
+      case OP_aastore:
+        return getAaStoreExceptions();
+      case OP_getfield:
+      case OP_putfield:
+      case OP_invokevirtual:
+      case OP_invokespecial:
+      case OP_invokeinterface:
+        return getNullPointerException();
+      case OP_idiv:
+      case OP_irem:
+      case OP_ldiv:
+      case OP_lrem:
+        return getArithmeticException();
+      case OP_new:
+        return newScalarExceptions;
+      case OP_newarray:
+      case OP_anewarray:
+      case OP_multianewarray:
+        return newArrayExceptions;
+      case OP_arraylength:
+        return getNullPointerException();
+      case OP_athrow:
+        // N.B: the caller must handle the explicitly-thrown exception
+        return getNullPointerException();
+      case OP_checkcast:
+        return getClassCastException();
+      case OP_monitorenter:
+      case OP_monitorexit:
+        // we're currently ignoring MonitorStateExceptions, since J2EE stuff
+        // should be
+        // logically single-threaded
+        return getNullPointerException();
+      case OP_ldc_w:
+        if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
+          return getClassNotFoundException();
+        else return null;
+      case OP_getstatic:
+      case OP_putstatic:
+        return getExceptionInInitializerError();
+      default:
+        return Collections.emptySet();
     }
   }
 
@@ -681,7 +762,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     return javaShrikeFactory;
   }
 
-  private final static SSAInstructionFactory javaShrikeFactory = new JavaInstructionFactory();
+  private static final SSAInstructionFactory javaShrikeFactory = new JavaInstructionFactory();
 
   @Override
   public boolean isDoubleType(TypeReference type) {
@@ -702,7 +783,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public boolean isLongType(TypeReference type) {
     return type == TypeReference.Long;
   }
-  
+
   @Override
   public boolean isVoidType(TypeReference type) {
     return type == TypeReference.Void;
@@ -710,21 +791,21 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   @Override
   public boolean isMetadataType(TypeReference type) {
-    return type == TypeReference.JavaLangClass ||
-        type == TypeReference.JavaLangInvokeMethodHandle ||
-        type == TypeReference.JavaLangInvokeMethodType;
+    return type == TypeReference.JavaLangClass
+        || type == TypeReference.JavaLangInvokeMethodHandle
+        || type == TypeReference.JavaLangInvokeMethodType;
   }
-  
+
   @Override
   public boolean isStringType(TypeReference type) {
     return type == TypeReference.JavaLangString;
   }
-  
+
   @Override
   public boolean isBooleanType(TypeReference type) {
     return type == TypeReference.Boolean;
   }
-  
+
   @Override
   public boolean isCharType(TypeReference type) {
     return type == TypeReference.Char;
@@ -733,11 +814,17 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   @Override
   public Object getMetadataToken(Object value) {
     if (value instanceof ClassToken) {
-      return ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, ((ClassToken) value).getTypeName());
+      return ShrikeUtil.makeTypeReference(
+          ClassLoaderReference.Application, ((ClassToken) value).getTypeName());
     } else if (value instanceof ReferenceToken) {
-      ReferenceToken tok = (ReferenceToken)value;
-      TypeReference cls = ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.getClassName());
-      return MethodReference.findOrCreate(cls, new Selector(Atom.findOrCreateUnicodeAtom(tok.getElementName()), Descriptor.findOrCreateUTF8(tok.getDescriptor())));
+      ReferenceToken tok = (ReferenceToken) value;
+      TypeReference cls =
+          ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.getClassName());
+      return MethodReference.findOrCreate(
+          cls,
+          new Selector(
+              Atom.findOrCreateUnicodeAtom(tok.getElementName()),
+              Descriptor.findOrCreateUTF8(tok.getDescriptor())));
     } else if (value instanceof MethodHandle || value instanceof MethodType) {
       return value;
     } else {
@@ -755,11 +842,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public TypeReference getStringType() {
     return TypeReference.JavaLangString;
   }
-  
+
   static {
     JavaPrimitiveType.init();
   }
-  
+
   @Override
   @SuppressWarnings("static-access")
   public PrimitiveType getPrimitive(TypeReference reference) {
@@ -767,8 +854,13 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   }
 
   @Override
-  public MethodReference getInvokeMethodReference(ClassLoaderReference loader, IInvokeInstruction instruction) {
-    return MethodReference.findOrCreate(this, loader, instruction.getClassType(), instruction.getMethodName(),
+  public MethodReference getInvokeMethodReference(
+      ClassLoaderReference loader, IInvokeInstruction instruction) {
+    return MethodReference.findOrCreate(
+        this,
+        loader,
+        instruction.getClassType(),
+        instruction.getMethodName(),
         instruction.getMethodSignature());
   }
 
@@ -778,20 +870,25 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   }
 
   @Override
-  public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return new FakeRootMethod(new FakeRootClass(ClassLoaderReference.Primordial, cha), options, cache); 
+  public AbstractRootMethod getFakeRootMethod(
+      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+    return new FakeRootMethod(
+        new FakeRootClass(ClassLoaderReference.Primordial, cha), options, cache);
   }
 
   @Override
-  public <T extends InstanceKey> RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n, Collection<PointerKey> result,
-      PointerAnalysis<T> pa, ExtendedHeapModel h) {
+  public <T extends InstanceKey> RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(
+      CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
     return new RefVisitor<>(n, result, pa, h);
   }
 
   @Override
-  public <T extends InstanceKey> ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result,
-      PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+  public <T extends InstanceKey> ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(
+      CGNode n,
+      Collection<PointerKey> result,
+      PointerAnalysis<T> pa,
+      ExtendedHeapModel h,
+      boolean ignoreAllocHeapDefs) {
     return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
   }
-
 }

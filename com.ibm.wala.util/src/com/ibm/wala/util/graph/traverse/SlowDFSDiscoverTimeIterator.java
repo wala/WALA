@@ -10,35 +10,29 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * This class implements depth-first search over a Graph, return an enumeration of the nodes of the graph in order of increasing
- * discover time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by
- * overriding the getConnected method.
+ * This class implements depth-first search over a Graph, return an enumeration of the nodes of the
+ * graph in order of increasing discover time. This class follows the outNodes of the graph nodes to
+ * define the graph, but this behavior can be changed by overriding the getConnected method.
  */
 public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator<T> {
   public static final long serialVersionUID = 9439217987188L;
 
-  /**
-   * An iterator of child nodes for each node being searched A Map: Node -&gt; Iterator
-   */
-  final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
+  /** An iterator of child nodes for each node being searched A Map: Node -&gt; Iterator */
+  private final Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 
-  /**
-   * For use with extreme care by subclasses that know what they're doing.
-   */
-  protected SlowDFSDiscoverTimeIterator() {
-  }
+  /** For use with extreme care by subclasses that know what they're doing. */
+  protected SlowDFSDiscoverTimeIterator() {}
 
   /**
    * Construct a depth-first enumerator starting with a particular node in a directed graph.
-   * 
+   *
    * @param G the graph whose nodes to enumerate
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G, T N) {
@@ -46,9 +40,9 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
   }
 
   /**
-   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
-   * enumeration.
-   * 
+   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable
+   * from the nodes in the given enumeration.
+   *
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
@@ -61,7 +55,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
 
   /**
    * Constructor SlowDFSDiscoverTimeIterator.
-   * 
+   *
    * @throws NullPointerException if G is null
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G) throws NullPointerException {
@@ -76,9 +70,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
     return pendingChildren.get(n);
   }
 
-  /**
-   * Method setPendingChildren.
-   */
+  /** Method setPendingChildren. */
   @Override
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren.put(v, iterator);

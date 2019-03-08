@@ -10,42 +10,34 @@
  */
 package com.ibm.wala.fixpoint;
 
-/**
- * Constants used in the fixed-point solver framework
- */
+/** Constants used in the fixed-point solver framework */
 public interface FixedPointConstants {
 
   /**
-   * A return value which indicates that a lhs has changed, and the statement might
-   * need to be evaluated again.
+   * A return value which indicates that a lhs has changed, and the statement might need to be
+   * evaluated again.
    */
-  final static byte CHANGED = 1;
+  static final byte CHANGED = 1;
   /**
-   * A return value which indicates that lhs has not changed, and the statement might
-   * need to be evaluated again.
+   * A return value which indicates that lhs has not changed, and the statement might need to be
+   * evaluated again.
    */
-  final static byte NOT_CHANGED = 0;
+  static final byte NOT_CHANGED = 0;
   /**
-   * A return value which indicates that lhs has changed, and the statement need not
-   * be evaluated again.
+   * A return value which indicates that lhs has changed, and the statement need not be evaluated
+   * again.
    */
-  final static byte CHANGED_AND_FIXED = 3;
+  static final byte CHANGED_AND_FIXED = 3;
   /**
-   * A return value which indicates that lhs has not changed, and the statement need
-   * not be evaluated again.
+   * A return value which indicates that lhs has not changed, and the statement need not be
+   * evaluated again.
    */
-  final static byte NOT_CHANGED_AND_FIXED = 2;
-  
-  /**
-   * The bit-mask which defines the "CHANGED" flag
-   */
-  final static int CHANGED_MASK = 0x1;
-  /**
-   * The bit-mask which defines the "FIXED" flag
-   */
-  final static int FIXED_MASK = 0x2;
-  /**
-   * The bit-mask which defines the "SIDE EFFECT" flag
-   */
-  final static int SIDE_EFFECT_MASK = 0x4;
+  static final byte NOT_CHANGED_AND_FIXED = 2;
+
+  /** The bit-mask which defines the "CHANGED" flag */
+  static final int CHANGED_MASK = 0x1;
+  /** The bit-mask which defines the "FIXED" flag */
+  static final int FIXED_MASK = 0x2;
+  /** The bit-mask which defines the "SIDE EFFECT" flag */
+  static final int SIDE_EFFECT_MASK = 0x4;
 }

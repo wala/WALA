@@ -12,7 +12,8 @@
 package com.ibm.wala.ipa.cha;
 
 /**
- * Exception class that indicates that construction of class hierarchy has been cancelled by a progress monitor.
+ * Exception class that indicates that construction of class hierarchy has been cancelled by a
+ * progress monitor.
  */
 public final class CancelCHAConstructionException extends ClassHierarchyException {
 
@@ -21,5 +22,4 @@ public final class CancelCHAConstructionException extends ClassHierarchyExceptio
   public CancelCHAConstructionException() {
     super("class hierarchy construction was cancelled");
   }
-
 }

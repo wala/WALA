@@ -10,17 +10,16 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents comparisons between floats, longs and doubles.
- */
-final public class ComparisonInstruction extends Instruction implements IComparisonInstruction {
+/** This class represents comparisons between floats, longs and doubles. */
+public final class ComparisonInstruction extends Instruction implements IComparisonInstruction {
   protected ComparisonInstruction(short opcode) {
     super(opcode);
   }
 
-  private final static ComparisonInstruction preallocatedLCMP = new ComparisonInstruction(OP_lcmp);
+  private static final ComparisonInstruction preallocatedLCMP = new ComparisonInstruction(OP_lcmp);
 
-  private final static ComparisonInstruction[] preallocatedFloatingCompares = preallocateFloatingCompares();
+  private static final ComparisonInstruction[] preallocatedFloatingCompares =
+      preallocateFloatingCompares();
 
   private static ComparisonInstruction[] preallocateFloatingCompares() {
     ComparisonInstruction[] r = new ComparisonInstruction[OP_dcmpg - OP_fcmpl + 1];
@@ -30,24 +29,30 @@ final public class ComparisonInstruction extends Instruction implements ICompari
     return r;
   }
 
-  public static ComparisonInstruction make(String type, Operator operator) throws IllegalArgumentException {
+  public static ComparisonInstruction make(String type, Operator operator)
+      throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     switch (t) {
-    case TYPE_long_index:
-      if (operator != Operator.CMP) {
-        throw new IllegalArgumentException("Operator " + operator + " is not a valid comparison operator for longs");
-      } else {
-        return preallocatedLCMP;
-      }
-    case TYPE_float_index:
-    case TYPE_double_index:
-      if (operator == Operator.CMP) {
-        throw new IllegalArgumentException("Operator " + operator + " is not a valid comparison operator for floating point values");
-      } else {
-        return preallocatedFloatingCompares[(operator.ordinal() - Operator.CMPL.ordinal()) + (t - TYPE_float_index) * 2];
-      }
-    default:
-      throw new IllegalArgumentException("Type " + type + " cannot be compared");
+      case TYPE_long_index:
+        if (operator != Operator.CMP) {
+          throw new IllegalArgumentException(
+              "Operator " + operator + " is not a valid comparison operator for longs");
+        } else {
+          return preallocatedLCMP;
+        }
+      case TYPE_float_index:
+      case TYPE_double_index:
+        if (operator == Operator.CMP) {
+          throw new IllegalArgumentException(
+              "Operator "
+                  + operator
+                  + " is not a valid comparison operator for floating point values");
+        } else {
+          return preallocatedFloatingCompares[
+              (operator.ordinal() - Operator.CMPL.ordinal()) + (t - TYPE_float_index) * 2];
+        }
+      default:
+        throw new IllegalArgumentException("Type " + type + " cannot be compared");
     }
   }
 
@@ -61,38 +66,36 @@ final public class ComparisonInstruction extends Instruction implements ICompari
     }
   }
 
-  /**
-   * @return OPR_cmp (for long), OPR_cmpl, or OPR_cmpg (for float and double)
-   */
+  /** @return OPR_cmp (for long), OPR_cmpl, or OPR_cmpg (for float and double) */
   @Override
   public Operator getOperator() {
     switch (opcode) {
-    case OP_lcmp:
-      return Operator.CMP;
-    case OP_fcmpl:
-    case OP_dcmpl:
-      return Operator.CMPL;
-    case OP_dcmpg:
-    case OP_fcmpg:
-      return Operator.CMPG;
-    default:
-      throw new Error("Unknown opcode");
+      case OP_lcmp:
+        return Operator.CMP;
+      case OP_fcmpl:
+      case OP_dcmpl:
+        return Operator.CMPL;
+      case OP_dcmpg:
+      case OP_fcmpg:
+        return Operator.CMPG;
+      default:
+        throw new Error("Unknown opcode");
     }
   }
 
   @Override
   public String getType() {
     switch (opcode) {
-    case OP_lcmp:
-      return TYPE_long;
-    case OP_fcmpg:
-    case OP_fcmpl:
-      return TYPE_float;
-    case OP_dcmpl:
-    case OP_dcmpg:
-      return TYPE_double;
-    default:
-      throw new Error("Unknown opcode");
+      case OP_lcmp:
+        return TYPE_long;
+      case OP_fcmpg:
+      case OP_fcmpl:
+        return TYPE_float;
+      case OP_dcmpl:
+      case OP_dcmpg:
+        return TYPE_double;
+      default:
+        throw new Error("Unknown opcode");
     }
   }
 

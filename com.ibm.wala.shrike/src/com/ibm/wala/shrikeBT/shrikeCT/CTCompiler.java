@@ -10,25 +10,22 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT;
 
-import java.util.Random;
-
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.MethodData;
-import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
+import java.util.Random;
 
 /**
  * This class lets you compile ShrikeBT intermediate code into real Java bytecodes using ShrikeCT.
  */
-final public class CTCompiler extends Compiler {
-  final private ClassWriter cw;
+public final class CTCompiler extends Compiler {
+  private final ClassWriter cw;
 
-  final private Random random = new Random();
+  private final Random random = new Random();
 
-  /**
-   * Compile 'md' into the class given by 'cw'.
-   */
+  /** Compile 'md' into the class given by 'cw'. */
   private CTCompiler(ClassWriter cw, MethodData md) {
     super(md);
     this.cw = cw;
@@ -80,8 +77,9 @@ final public class CTCompiler extends Compiler {
   }
 
   /**
-   * Convert a JVM type to the internal JVM class name (e.g., Ljava/lang/Object; to java/lang/Object)
-   * 
+   * Convert a JVM type to the internal JVM class name (e.g., Ljava/lang/Object; to
+   * java/lang/Object)
+   *
    * @throws IllegalArgumentException if s is null
    */
   public static String convertTypeToClass(String s) {

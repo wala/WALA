@@ -13,13 +13,16 @@ public class LibModels {
       reachable2();
     }
   }
-  public static void main( String[] argv) {
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        reachable1();
-      }
-    });
+
+  public static void main(String[] argv) {
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread() {
+              @Override
+              public void run() {
+                reachable1();
+              }
+            });
     Thread.setDefaultUncaughtExceptionHandler(new Handler());
   }
 }

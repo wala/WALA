@@ -16,9 +16,8 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * TypeVariableSignature: T identifier ;
- * 
+ *
  * @author sjfink
- * 
  */
 public class TypeVariableSignature extends TypeSignature {
 
@@ -57,20 +56,19 @@ public class TypeVariableSignature extends TypeSignature {
   public String getIdentifier() {
     return rawString().substring(1, rawString().length() - 1);
   }
-  
+
   @Override
   public boolean isBaseType() {
     return false;
   }
 
-  /**
-   * @return -1 if there is no match
-   */
-  public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass) throws IllegalArgumentException {
+  /** @return -1 if there is no match */
+  public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass)
+      throws IllegalArgumentException {
     if (klass == null) {
       throw new IllegalArgumentException("klass cannot be null");
     }
-    
+
     try {
       ClassSignature sig = klass.getClassSignature();
       if (sig == null) {
@@ -86,18 +84,17 @@ public class TypeVariableSignature extends TypeSignature {
           return i;
         }
       }
-//      System.err.println("sig : " + sig);
-//      System.err.println("fp : " + fp.length);
-//      for (FormalTypeParameter f : fp) {
-//        System.err.println(f);
-//      }
-//      Assertions.UNREACHABLE("did not find " + v + " in " + klass );
+      //      System.err.println("sig : " + sig);
+      //      System.err.println("fp : " + fp.length);
+      //      for (FormalTypeParameter f : fp) {
+      //        System.err.println(f);
+      //      }
+      //      Assertions.UNREACHABLE("did not find " + v + " in " + klass );
       return -1;
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
       return -1;
     }
-  
   }
 }

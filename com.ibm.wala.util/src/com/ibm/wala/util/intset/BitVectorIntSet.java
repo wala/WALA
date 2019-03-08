@@ -15,8 +15,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A {@link BitVector} implementation of {@link MutableIntSet}.
- * 
- * Note that this is NOT a value with regard to hashCode and equals.
+ *
+ * <p>Note that this is NOT a value with regard to hashCode and equals.
  */
 public final class BitVectorIntSet implements MutableIntSet {
 
@@ -29,8 +29,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   private BitVector bitVector = new BitVector(0);
 
-  public BitVectorIntSet() {
-  }
+  public BitVectorIntSet() {}
 
   public BitVectorIntSet(BitVector v) {
     if (v == null) {
@@ -47,7 +46,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     copySet(S);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.util.intset.MutableIntSet#clear()
    */
   @Override
@@ -55,7 +54,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     bitVector.clearAll();
     populationCount = 0;
   }
-  
+
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
@@ -90,11 +89,10 @@ public final class BitVectorIntSet implements MutableIntSet {
     } else {
       bitVector.clearAll();
       populationCount = set.size();
-      for (IntIterator it = set.intIterator(); it.hasNext();) {
+      for (IntIterator it = set.intIterator(); it.hasNext(); ) {
         bitVector.set(it.next());
       }
     }
-
   }
 
   @Override
@@ -112,7 +110,9 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /**
-   * this version of add all will likely be faster if the client doesn't care about the change or the population count.
+   * this version of add all will likely be faster if the client doesn't care about the change or
+   * the population count.
+   *
    * @throws IllegalArgumentException if set == null
    */
   public void addAllOblivious(IntSet set) throws IllegalArgumentException {
@@ -208,16 +208,16 @@ public final class BitVectorIntSet implements MutableIntSet {
    */
   @Override
   public int size() {
-    populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
+    populationCount =
+        (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     return populationCount;
   }
 
-  /**
-   * Use with extreme care; doesn't detect ConcurrentModificationExceptions
-   */
+  /** Use with extreme care; doesn't detect ConcurrentModificationExceptions */
   @Override
   public IntIterator intIterator() {
-    populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
+    populationCount =
+        (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     return new IntIterator() {
       int count = 0;
 
@@ -247,7 +247,8 @@ public final class BitVectorIntSet implements MutableIntSet {
       throw new IllegalArgumentException("null action");
     }
     int nextBit = bitVector.nextSetBit(0);
-    populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
+    populationCount =
+        (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     for (int i = 0; i < populationCount; i++) {
       action.act(nextBit);
       nextBit = bitVector.nextSetBit(nextBit + 1);
@@ -255,12 +256,12 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   public SparseIntSet makeSparseCopy() {
-    populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
+    populationCount =
+        (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     int[] elements = new int[populationCount];
     int i = 0;
     int nextBit = -1;
-    while (i < populationCount)
-      elements[i++] = nextBit = bitVector.nextSetBit(nextBit + 1);
+    while (i < populationCount) elements[i++] = nextBit = bitVector.nextSetBit(nextBit + 1);
 
     return new SparseIntSet(elements);
   }
@@ -278,7 +279,8 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   private void slowForeachExcluding(IntSet X, IntSetAction action) {
-    populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
+    populationCount =
+        (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     for (int i = 0, count = 0; count < populationCount; i++) {
       if (contains(i)) {
         if (!X.contains(i)) {
@@ -289,9 +291,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * internal optimized form
-   */
+  /** internal optimized form */
   private void fastForeachExcluding(BitVectorIntSet X, IntSetAction action) {
     int[] bits = bitVector.bits;
     int[] xbits = X.bitVector.bits;
@@ -326,7 +326,7 @@ public final class BitVectorIntSet implements MutableIntSet {
   @Override
   public boolean contains(int i) {
     if (i < 0) {
-      throw new IllegalArgumentException("invalid i: " + i)  ;
+      throw new IllegalArgumentException("invalid i: " + i);
     }
     return bitVector.get(i);
   }
@@ -341,9 +341,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     return bitVector.toString();
   }
 
-  /**
-   * @return min j &gt;= n s.t get(j)
-   */
+  /** @return min j &gt;= n s.t get(j) */
   public int nextSetBit(int n) {
     return bitVector.nextSetBit(n);
   }
@@ -371,10 +369,10 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   */
+  /** */
   private boolean sameValueInternal(SparseIntSet that) {
-    populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
+    populationCount =
+        (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     if (populationCount != that.size()) {
       return false;
     }
@@ -398,7 +396,7 @@ public final class BitVectorIntSet implements MutableIntSet {
       return isSubsetInternal((SparseIntSet) that);
     } else {
       // really slow. optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext();) {
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
         int x = it.next();
         if (!that.contains(x)) {
           return false;
@@ -416,21 +414,16 @@ public final class BitVectorIntSet implements MutableIntSet {
     return bitVector;
   }
 
-  /**
-   * TODO: optimize
-   * 
-   */
+  /** TODO: optimize */
   public SparseIntSet toSparseIntSet() {
     MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-    for (IntIterator it = intIterator(); it.hasNext();) {
+    for (IntIterator it = intIterator(); it.hasNext(); ) {
       result.add(it.next());
     }
     return result;
   }
 
-  /**
-   * @throws IllegalArgumentException if set is null
-   */
+  /** @throws IllegalArgumentException if set is null */
   public boolean removeAll(BitVectorIntSet set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -454,7 +447,7 @@ public final class BitVectorIntSet implements MutableIntSet {
       return !bitVector.intersectionEmpty(b.bitVector);
     } else {
       // TODO: optimize
-      for (IntIterator it = set.intIterator(); it.hasNext();) {
+      for (IntIterator it = set.intIterator(); it.hasNext(); ) {
         if (contains(it.next())) {
           return true;
         }

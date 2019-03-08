@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.ScriptFakeRoot;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -23,6 +20,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Iterator;
+import java.util.Set;
 
 public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
@@ -34,7 +33,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     public ScriptEntryPoint(IMethod scriptCodeBody) {
       super(scriptCodeBody);
     }
-      
+
     @Override
     public CallSiteReference makeSite(int programCounter) {
       return makeScriptSite(getMethod(), programCounter);
@@ -44,27 +43,26 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     public TypeReference[] getParameterTypes(int i) {
       assert i == 0;
       if (getMethod().isStatic()) {
-	return new TypeReference[0];
+        return new TypeReference[0];
       } else {
-	return new TypeReference[] { getMethod().getDeclaringClass().getReference() };
+        return new TypeReference[] {getMethod().getDeclaringClass().getReference()};
       }
     }
 
     @Override
     public int getNumberOfParameters() {
-      return getMethod().isStatic()? 0: 1;
+      return getMethod().isStatic() ? 0 : 1;
     }
 
-      
     @Override
-    public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m){
+    public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m) {
       CallSiteReference site = makeSite(0);
 
       if (site == null) {
         return null;
       }
 
-      int functionVn = getMethod().isStatic()? -1: makeArgument(m, 0);
+      int functionVn = getMethod().isStatic() ? -1 : makeArgument(m, 0);
       int paramVns[] = new int[Math.min(0, getNumberOfParameters() - 1)];
       for (int j = 0; j < paramVns.length; j++) {
         paramVns[j] = makeArgument(m, j + 1);
@@ -84,7 +82,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
   protected boolean keep() {
     return true;
   }
-  
+
   @Override
   public Iterator<Entrypoint> iterator() {
     Set<Entrypoint> ES = HashSetFactory.make();
@@ -104,14 +102,17 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
   }
 
   public Entrypoint make(String scriptName) {
-    IClass cls = cha.lookupClass(TypeReference.findOrCreate(scriptType.getClassLoader().getReference(), scriptName));
-    assert cls != null && cha.isSubclassOf(cls, scriptType) && !cls.isAbstract() : String.valueOf(cls) + " for " + scriptName;
+    IClass cls =
+        cha.lookupClass(
+            TypeReference.findOrCreate(scriptType.getClassLoader().getReference(), scriptName));
+    assert cls != null && cha.isSubclassOf(cls, scriptType) && !cls.isAbstract()
+        : String.valueOf(cls) + " for " + scriptName;
     for (IMethod method : cls.getDeclaredMethods()) {
       if (keep()) {
         return new ScriptEntryPoint(method);
       }
     }
-    
+
     assert false;
     return null;
   }

@@ -20,17 +20,19 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
   private final int lval;
 
   /**
-   * A representation of the meta-data itself. For a loadClass operation, this would be a {@link TypeReference} representing the
-   * class object being manipulated
+   * A representation of the meta-data itself. For a loadClass operation, this would be a {@link
+   * TypeReference} representing the class object being manipulated
    */
   private final Object token;
 
   /**
-   * The type of the thing that this meta-data represents. For a loadClass instruction, entityType is java.lang.Class
+   * The type of the thing that this meta-data represents. For a loadClass instruction, entityType
+   * is java.lang.Class
    */
   private final TypeReference entityType;
 
-  protected SSALoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
+  protected SSALoadMetadataInstruction(
+      int iindex, int lval, TypeReference entityType, Object token) {
     super(iindex);
     this.lval = lval;
     this.token = token;

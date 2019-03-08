@@ -17,21 +17,20 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * Utility class used by {@link CorrelationSummary} to map SSA instructions to source positions. 
- * 
- * @author mschaefer
+ * Utility class used by {@link CorrelationSummary} to map SSA instructions to source positions.
  *
+ * @author mschaefer
  */
 public class SSASourcePositionMap {
-	private final AstMethod method;
-	private final OrdinalSetMapping<SSAInstruction> instrIndices;
-	
-	public SSASourcePositionMap(AstMethod method, OrdinalSetMapping<SSAInstruction> instrIndices) {
-		this.method = method;
-		this.instrIndices = instrIndices;
-	}
-	
-	public Position getPosition(SSAInstruction inst) {
-		return method.getSourcePosition(instrIndices.getMappedIndex(inst));
-	}
+  private final AstMethod method;
+  private final OrdinalSetMapping<SSAInstruction> instrIndices;
+
+  public SSASourcePositionMap(AstMethod method, OrdinalSetMapping<SSAInstruction> instrIndices) {
+    this.method = method;
+    this.instrIndices = instrIndices;
+  }
+
+  public Position getPosition(SSAInstruction inst) {
+    return method.getSourcePosition(instrIndices.getMappedIndex(inst));
+  }
 }

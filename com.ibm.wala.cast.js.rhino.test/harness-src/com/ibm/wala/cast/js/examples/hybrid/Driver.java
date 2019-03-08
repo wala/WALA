@@ -1,9 +1,5 @@
 package com.ibm.wala.cast.js.examples.hybrid;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-
 import com.ibm.wala.cast.ipa.callgraph.CrossLanguageCallGraph;
 import com.ibm.wala.cast.ipa.callgraph.CrossLanguageMethodTargetSelector;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
@@ -33,60 +29,72 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
 
 public class Driver {
 
   public static void addDefaultDispatchLogic(AnalysisOptions options, IClassHierarchy cha) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
 
-    Map<Atom,MethodTargetSelector> methodTargetSelectors = HashMapFactory.make();
-    methodTargetSelectors.put(JavaScriptLoader.JS.getName(), new JavaScriptConstructTargetSelector(cha,
-        new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector())));
+    Map<Atom, MethodTargetSelector> methodTargetSelectors = HashMapFactory.make();
+    methodTargetSelectors.put(
+        JavaScriptLoader.JS.getName(),
+        new JavaScriptConstructTargetSelector(
+            cha, new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector())));
     methodTargetSelectors.put(Language.JAVA.getName(), options.getMethodTargetSelector());
 
     options.setSelector(new CrossLanguageMethodTargetSelector(methodTargetSelectors));
   }
 
-  public static void main(String[] args) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+  public static void main(String[] args)
+      throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 
     HybridClassLoaderFactory loaders = new HybridClassLoaderFactory();
 
     HybridAnalysisScope scope = new HybridAnalysisScope();
     FileProvider files = new FileProvider();
-    AnalysisScopeReader.read(scope, args[0], files.getFile("Java60RegressionExclusions.txt"), Driver.class.getClassLoader());
+    AnalysisScopeReader.read(
+        scope,
+        args[0],
+        files.getFile("Java60RegressionExclusions.txt"),
+        Driver.class.getClassLoader());
 
-    scope.addToScope(
-        scope.getJavaScriptLoader(),
-        JSCallGraphUtil.getPrologueFile("prologue.js"));
-    for(int i = 1; i < args.length; i++) {
+    scope.addToScope(scope.getJavaScriptLoader(), JSCallGraphUtil.getPrologueFile("prologue.js"));
+    for (int i = 1; i < args.length; i++) {
       URL script = Driver.class.getClassLoader().getResource(args[i]);
-      scope.addToScope(
-          scope.getJavaScriptLoader(),
-          new SourceURLModule(script));
+      scope.addToScope(scope.getJavaScriptLoader(), new SourceURLModule(script));
     }
-    
+
     System.err.println(scope);
-    
+
     IClassHierarchy cha = CrossLanguageClassHierarchy.make(scope, loaders);
-    
+
     Iterable<Entrypoint> jsRoots =
         new JavaScriptEntryPoints(cha, cha.getLoader(scope.getJavaScriptLoader()));
 
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
-    
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+
     ComposedEntrypoints roots = new ComposedEntrypoints(jsRoots, entrypoints);
 
     AnalysisOptions options = new AnalysisOptions(scope, roots);
-    
+
     IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
 
     IAnalysisCacheView cache = new AnalysisCacheImpl(factory);
 
     addDefaultDispatchLogic(options, cha);
 
-    JavaJavaScriptHybridCallGraphBuilder b = new JavaJavaScriptHybridCallGraphBuilder(new FakeRootMethod(new FakeRootClass(CrossLanguageCallGraph.crossCoreLoader, cha), options, cache), options, cache);
-    
+    JavaJavaScriptHybridCallGraphBuilder b =
+        new JavaJavaScriptHybridCallGraphBuilder(
+            new FakeRootMethod(
+                new FakeRootClass(CrossLanguageCallGraph.crossCoreLoader, cha), options, cache),
+            options,
+            cache);
+
     System.err.println(b.makeCallGraph(options));
   }
 }

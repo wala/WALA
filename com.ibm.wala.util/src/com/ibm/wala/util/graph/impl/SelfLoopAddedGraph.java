@@ -5,16 +5,16 @@ import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NodeManager;
 
-public class SelfLoopAddedGraph <T> extends AbstractGraph<T> {
+public class SelfLoopAddedGraph<T> extends AbstractGraph<T> {
 
-  final private NodeManager<T> nodes;
+  private final NodeManager<T> nodes;
 
   @Override
   protected NodeManager<T> getNodeManager() {
     return nodes;
   }
 
-  final private EdgeManager<T> edges;
+  private final EdgeManager<T> edges;
 
   @Override
   protected EdgeManager<T> getEdgeManager() {
@@ -25,6 +25,4 @@ public class SelfLoopAddedGraph <T> extends AbstractGraph<T> {
     nodes = G;
     edges = new SelfLoopAddedEdgeManager<>(G);
   }
-
 }
-

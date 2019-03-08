@@ -10,146 +10,144 @@
  */
 package com.ibm.wala.cast.js.html.jericho;
 
+import com.ibm.wala.cast.js.html.ITag;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-
-import com.ibm.wala.cast.js.html.ITag;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.Pair;
-
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Segment;
 
 /**
  * ITag impel for Jericho generated tags
- * @author danielk 
+ *
+ * @author danielk
  */
 public class JerichoTag implements ITag {
 
-	private final Element innerElement;
-	private final String sourceFile;
-	private Map<String, Pair<String, Position>> allAttributes = null;
-	
-	public JerichoTag(Element root, String sourceFile) {
-		this.innerElement = root;
-		this.sourceFile = sourceFile;
-	}
+  private final Element innerElement;
+  private final String sourceFile;
+  private Map<String, Pair<String, Position>> allAttributes = null;
 
-	 private Position getPosition(final Segment e) {
-	    return new AbstractSourcePosition() {
+  public JerichoTag(Element root, String sourceFile) {
+    this.innerElement = root;
+    this.sourceFile = sourceFile;
+  }
 
-	      @Override
-	      public int getFirstLine() {
-	        return e.getSource().getRowColumnVector(e.getBegin()).getRow();
-	      }
+  private Position getPosition(final Segment e) {
+    return new AbstractSourcePosition() {
 
-	      @Override
-	      public int getLastLine() {
-	        return e.getSource().getRowColumnVector(e.getEnd()).getRow();
-	      }
+      @Override
+      public int getFirstLine() {
+        return e.getSource().getRowColumnVector(e.getBegin()).getRow();
+      }
 
-	      @Override
-	      public int getFirstCol() {
-	        return -1;
-	        // return e.getSource().getRowColumnVector(e.getBegin()).getColumn();
-	      }
+      @Override
+      public int getLastLine() {
+        return e.getSource().getRowColumnVector(e.getEnd()).getRow();
+      }
 
-	      @Override
-	      public int getLastCol() {
-	        return -1;
-	        //return e.getSource().getRowColumnVector(e.getEnd()).getColumn();
-	      }
+      @Override
+      public int getFirstCol() {
+        return -1;
+        // return e.getSource().getRowColumnVector(e.getBegin()).getColumn();
+      }
 
-	      @Override
-	      public int getFirstOffset() {
-	         return e.getBegin();
-	      }
+      @Override
+      public int getLastCol() {
+        return -1;
+        // return e.getSource().getRowColumnVector(e.getEnd()).getColumn();
+      }
 
-	      @Override
-	      public int getLastOffset() {
-	        return e.getEnd();
-	      }
+      @Override
+      public int getFirstOffset() {
+        return e.getBegin();
+      }
 
-	      @Override
-	      public URL getURL() {
-	        try {
-	          return new URL("file://" + sourceFile);
-	        } catch (MalformedURLException e) {
-	          return null;
-	        }
-	      }
+      @Override
+      public int getLastOffset() {
+        return e.getEnd();
+      }
 
-	      @Override
-	      public Reader getReader() throws IOException {
-	        return new FileReader(sourceFile);
-	      }
-	    };
-	  }
+      @Override
+      public URL getURL() {
+        try {
+          return new URL("file://" + sourceFile);
+        } catch (MalformedURLException e) {
+          return null;
+        }
+      }
 
-	private Map<String, Pair<String, Position>> makeAllAttributes() {
-	  Map<String, Pair<String, Position>> result = HashMapFactory.make();
-	  if (innerElement.getStartTag().getAttributes() != null) {
-	    for (Attribute a : innerElement.getStartTag().getAttributes()) {
-	      result.put(
-	        a.getName().toLowerCase(), 
-	        Pair.make(a.getValue(), getPosition(a.getValueSegment())));
-	    }
-	  }
-		return result;
-	}
+      @Override
+      public Reader getReader() throws IOException {
+        return new FileReader(sourceFile);
+      }
+    };
+  }
 
-	 @Override
+  private Map<String, Pair<String, Position>> makeAllAttributes() {
+    Map<String, Pair<String, Position>> result = HashMapFactory.make();
+    if (innerElement.getStartTag().getAttributes() != null) {
+      for (Attribute a : innerElement.getStartTag().getAttributes()) {
+        result.put(
+            a.getName().toLowerCase(), Pair.make(a.getValue(), getPosition(a.getValueSegment())));
+      }
+    }
+    return result;
+  }
+
+  @Override
   public Map<String, Pair<String, Position>> getAllAttributes() {
-	   if (allAttributes == null) {
-	     allAttributes = makeAllAttributes();
-	   }
-	   return allAttributes;
-	 }
-	 
-	@Override
+    if (allAttributes == null) {
+      allAttributes = makeAllAttributes();
+    }
+    return allAttributes;
+  }
+
+  @Override
   public Pair<String, Position> getAttributeByName(String name) {
     if (allAttributes == null) {
       allAttributes = makeAllAttributes();
     }
-		return allAttributes.get(name.toLowerCase());
-	}
+    return allAttributes.get(name.toLowerCase());
+  }
 
-	public Pair<Integer, String> getBodyText() {
-		Segment content = innerElement.getContent();
-		Integer lineNum = innerElement.getSource().getRow(content.getBegin());
-		String nl = content.getSource().getNewLine();
-		String body = nl==null? content.toString(): content.toString().replace(nl, "\n");
-		return Pair.make(lineNum, body);
-	}
+  public Pair<Integer, String> getBodyText() {
+    Segment content = innerElement.getContent();
+    Integer lineNum = innerElement.getSource().getRow(content.getBegin());
+    String nl = content.getSource().getNewLine();
+    String body = nl == null ? content.toString() : content.toString().replace(nl, "\n");
+    return Pair.make(lineNum, body);
+  }
 
-	public String getFilePath() {
-		return sourceFile;
-	}
+  public String getFilePath() {
+    return sourceFile;
+  }
 
-	@Override
+  @Override
   public String getName() {
-		return innerElement.getName();
-	}
+    return innerElement.getName();
+  }
 
-	@Override
-	public String toString() {
-		return innerElement.toString();
-	}
-	
-	 @Override
+  @Override
+  public String toString() {
+    return innerElement.toString();
+  }
+
+  @Override
   public Position getElementPosition() {
-	   return getPosition(innerElement);
-	 }
- 
-	 @Override
+    return getPosition(innerElement);
+  }
+
+  @Override
   public Position getContentPosition() {
-     return getPosition(innerElement.getContent());
-   }
+    return getPosition(innerElement.getContent());
+  }
 }

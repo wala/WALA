@@ -11,6 +11,7 @@
 
 package com.ibm.wala.shrikeBT;
 
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
@@ -19,14 +20,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
-
 public class InvokeDynamicInstruction extends Instruction implements IInvokeInstruction {
   protected BootstrapMethod bootstrap;
   protected String methodName;
   protected String methodType;
-  
-  public InvokeDynamicInstruction(short opcode, BootstrapMethod bootstrap, String methodName, String methodType) {
+
+  public InvokeDynamicInstruction(
+      short opcode, BootstrapMethod bootstrap, String methodName, String methodType) {
     super(opcode);
     this.bootstrap = bootstrap;
     this.methodName = methodName;
@@ -46,22 +46,27 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   public Dispatch getInvocationCode() {
     int invokeType = getBootstrap().invokeType();
     switch (invokeType) {
-    case 5: return Dispatch.VIRTUAL;
-    case 6: return Dispatch.STATIC;
-    case 7: return Dispatch.SPECIAL;
-    case 9: return Dispatch.INTERFACE;
-    default:
-      throw new Error("unexpected dynamic invoke type " + invokeType);
+      case 5:
+        return Dispatch.VIRTUAL;
+      case 6:
+        return Dispatch.STATIC;
+      case 7:
+        return Dispatch.SPECIAL;
+      case 9:
+        return Dispatch.INTERFACE;
+      default:
+        throw new Error("unexpected dynamic invoke type " + invokeType);
     }
   }
 
   @Override
-  final public int getPoppedCount() {
-    return (getInvocationCode().equals(Dispatch.STATIC) ? 0 : 1) + Util.getParamsCount(getMethodSignature());
+  public final int getPoppedCount() {
+    return (getInvocationCode().equals(Dispatch.STATIC) ? 0 : 1)
+        + Util.getParamsCount(getMethodSignature());
   }
 
   @Override
-  final public String getPushedType(String[] types) {
+  public final String getPushedType(String[] types) {
     String t = Util.getReturnType(getMethodSignature());
     if (t.equals(Constants.TYPE_void)) {
       return null;
@@ -71,19 +76,19 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   }
 
   @Override
-  final public byte getPushedWordSize() {
+  public final byte getPushedWordSize() {
     String t = getMethodSignature();
     int index = t.lastIndexOf(')');
     return Util.getWordSize(t, index + 1);
   }
-  
+
   public BootstrapMethod getBootstrap() {
     return bootstrap;
   }
-  
+
   @Override
   public String getMethodSignature() {
-     return methodType;
+    return methodType;
   }
 
   @Override
@@ -106,10 +111,10 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     return "InvokeDynamic [" + getBootstrap() + "] " + getMethodName() + getMethodSignature();
   }
 
-  final static class Lazy extends InvokeDynamicInstruction {
-    final private ConstantPoolReader cp;
+  static final class Lazy extends InvokeDynamicInstruction {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null, null, null);
@@ -128,7 +133,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
       }
       return bootstrap;
     }
-    
+
     @Override
     public String getMethodName() {
       if (methodName == null) {
@@ -144,57 +149,69 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
       }
       return methodType;
     }
-    
+
     @Override
     ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
   }
 
-  public CallSite bootstrap(Class<?> cl) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+  public CallSite bootstrap(Class<?> cl)
+      throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+          IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+          NoSuchFieldException {
     ClassLoader classLoader = cl.getClassLoader();
     ClassLoader bootstrapCL = classLoader;
 
-    Class<?> bootstrapClass = Class.forName(getBootstrap().methodClass().replace('/', '.'), false, bootstrapCL);
-    MethodType bt = makeMethodType( bootstrapCL, bootstrap.methodType());
-    Method bootstrap = bootstrapClass.getMethod(this.bootstrap.methodName(), bt.parameterList().toArray(new Class[ bt.parameterCount() ]));
-    Object[] args = new Object[ bt.parameterCount() ];
-    
+    Class<?> bootstrapClass =
+        Class.forName(getBootstrap().methodClass().replace('/', '.'), false, bootstrapCL);
+    MethodType bt = makeMethodType(bootstrapCL, bootstrap.methodType());
+    Method bootstrap =
+        bootstrapClass.getMethod(
+            this.bootstrap.methodName(),
+            bt.parameterList().toArray(new Class[bt.parameterCount()]));
+    Object[] args = new Object[bt.parameterCount()];
+
     Lookup myLookup = MethodHandles.lookup().in(cl);
-    Field impl_lookup = Lookup.class.getDeclaredField("IMPL_LOOKUP"); // get the required field via reflections
+    Field impl_lookup =
+        Lookup.class.getDeclaredField("IMPL_LOOKUP"); // get the required field via reflections
     impl_lookup.setAccessible(true); // set it accessible
-    Lookup lutrusted = (Lookup) impl_lookup.get(myLookup); // get the value of IMPL_LOOKUP from the Lookup instance and save it in a new Lookup object
+    Lookup lutrusted =
+        (Lookup)
+            impl_lookup.get(
+                myLookup); // get the value of IMPL_LOOKUP from the Lookup instance and save it in a
+    // new Lookup object
     args[0] = lutrusted;
     args[1] = getMethodName();
-    args[2] = makeMethodType(classLoader, getMethodSignature()); 
-    for(int i = 3; i < bt.parameterCount(); i++) {
-      args[i] = getBootstrap().callArgument(bootstrapCL,i-3);
+    args[2] = makeMethodType(classLoader, getMethodSignature());
+    for (int i = 3; i < bt.parameterCount(); i++) {
+      args[i] = getBootstrap().callArgument(bootstrapCL, i - 3);
     }
-    
+
     bootstrap.setAccessible(true);
-    
+
     System.err.println(cl + " : " + bootstrap);
-    
+
     return (CallSite) bootstrap.invoke(null, args);
   }
 
-  public static MethodType makeMethodType(ClassLoader classLoader, String descriptor) throws ClassNotFoundException {
+  public static MethodType makeMethodType(ClassLoader classLoader, String descriptor)
+      throws ClassNotFoundException {
     String returnType = Util.makeClass(Util.getReturnType(descriptor));
     Class<?> returnClass = Class.forName(returnType, false, classLoader);
     String[] paramTypes = Util.getParamsTypes(null, descriptor);
-    Class<?>[] paramClasses = new Class[ paramTypes.length ];
-    for(int i = 0; i < paramTypes.length; i++) {
+    Class<?>[] paramClasses = new Class[paramTypes.length];
+    for (int i = 0; i < paramTypes.length; i++) {
       paramClasses[i] = Class.forName(Util.makeClass(paramTypes[i]), false, classLoader);
     }
     MethodType mt = MethodType.methodType(returnClass, paramClasses);
     return mt;
   }
-  
+
   static InvokeDynamicInstruction make(ConstantPoolReader cp, int index, int mode) {
     if (mode != OP_invokedynamic) {
       throw new IllegalArgumentException("Unknown mode: " + mode);
     }
     return new Lazy((short) mode, cp, index);
   }
-
 }

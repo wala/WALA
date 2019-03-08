@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,188 +48,247 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.IDispatch;
 import com.ibm.wala.types.Descriptor;
+import org.jf.dexlib2.Opcode;
 
 public abstract class Invoke extends Instruction {
 
-    public final int [] args;
-    public final String clazzName;
-    public final String methodName;
-    public final String descriptor;
+  public final int[] args;
+  public final String clazzName;
+  public final String methodName;
+  public final String descriptor;
 
-    protected Invoke(int instLoc, String clazzName, String methodName, String descriptor, int [] args, Opcode opcode, DexIMethod method)
-    {
-        super(instLoc, opcode, method);
-        this.clazzName = clazzName;
-        this.methodName = methodName;
-        this.descriptor = descriptor;
-        this.args = args;
-        
-        assert Descriptor.findOrCreateUTF8(descriptor) != null;
-    }
+  protected Invoke(
+      int instLoc,
+      String clazzName,
+      String methodName,
+      String descriptor,
+      int[] args,
+      Opcode opcode,
+      DexIMethod method) {
+    super(instLoc, opcode, method);
+    this.clazzName = clazzName;
+    this.methodName = methodName;
+    this.descriptor = descriptor;
+    this.args = args;
 
-    public static class InvokeVirtual extends Invoke
-    {
+    assert Descriptor.findOrCreateUTF8(descriptor) != null;
+  }
 
-        public InvokeVirtual(int instLoc,
-                String clazzName, String methodName, String descriptor,
-                int[] args, Opcode opcode, DexIMethod method) {
-            super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
-        }
-        @Override
-        public IDispatch getInvocationCode() {
-            return IInvokeInstruction.Dispatch.VIRTUAL;
-        }
+  public static class InvokeVirtual extends Invoke {
 
-        @Override
-        public String toString()
-        {
-            StringBuilder argString = new StringBuilder();
-            argString.append('(');
-            String sep = "";
-            for(int r:args)
-            {
-                argString.append(sep).append(r);
-                sep=",";
-            }
-            argString.append(')');
-            return "InvokeVirtual "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
-        }
-
-    }
-    public static class InvokeSuper extends Invoke
-    {
-        public InvokeSuper(int instLoc,
-                String clazzName, String methodName, String descriptor,
-                int[] args, Opcode opcode, DexIMethod method) {
-            super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
-           	assert descriptor.contains("(");
-        }
-
-        @Override
-        public IDispatch getInvocationCode() {
-            // TODO: check that this is correct -- I suspect the invoke super in dex is for method protection rather than dispatching
-            return IInvokeInstruction.Dispatch.SPECIAL;
-        }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder argString = new StringBuilder();
-            argString.append('(');
-            String sep = "";
-            for(int r:args)
-            {
-                argString.append(sep).append(r);
-                sep=",";
-            }
-            argString.append(')');
-            return "InvokeSuper "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
-        }
-
-    }
-    public static class InvokeDirect extends Invoke
-    {
-
-        public InvokeDirect(int instLoc,
-                String clazzName, String methodName, String descriptor,
-                int[] args, Opcode opcode, DexIMethod method) {
-            super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
-         }
- 
-        @Override
-        public IDispatch getInvocationCode() {
-            return IInvokeInstruction.Dispatch.SPECIAL;
-        }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder argString = new StringBuilder();
-            argString.append('(');
-            String sep = "";
-            for(int r:args)
-            {
-                argString.append(sep).append(r);
-                sep=",";
-            }
-            argString.append(')');
-            return "InvokeDirect "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
-        }
-
-
-    }
-    public static class InvokeStatic extends Invoke
-    {
-
-        public InvokeStatic(int instLoc,
-                String clazzName, String methodName, String descriptor,
-                int[] args, Opcode opcode, DexIMethod method) {
-            super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
-         }
- 
-        @Override
-        public IDispatch getInvocationCode() {
-            return IInvokeInstruction.Dispatch.STATIC;
-        }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder argString = new StringBuilder();
-            argString.append('(');
-            String sep = "";
-            for(int r:args)
-            {
-                argString.append(sep).append(r);
-                sep=",";
-            }
-            argString.append(')');
-            return "InvokeStatic "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
-        }
-
-    }
-    public static class InvokeInterface extends Invoke
-    {
-
-        public InvokeInterface(int instLoc,
-                String clazzName, String methodName, String descriptor,
-                int[] args, Opcode opcode, DexIMethod method) {
-            super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
-        }
-
-        @Override
-        public IDispatch getInvocationCode() {
-            return IInvokeInstruction.Dispatch.INTERFACE;
-        }
-        @Override
-        public String toString()
-        {
-            StringBuilder argString = new StringBuilder();
-            argString.append('(');
-            String sep = "";
-            for(int r:args)
-            {
-                argString.append(sep).append(r);
-                sep=",";
-            }
-            argString.append(')');
-            return "InvokeInterface "+clazzName+ ' ' +methodName+ ' ' +descriptor+ ' ' + argString + ' ' +pc;
-        }
-
+    public InvokeVirtual(
+        int instLoc,
+        String clazzName,
+        String methodName,
+        String descriptor,
+        int[] args,
+        Opcode opcode,
+        DexIMethod method) {
+      super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
     }
 
     @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitInvoke(this);
+    public IDispatch getInvocationCode() {
+      return IInvokeInstruction.Dispatch.VIRTUAL;
     }
 
-    public abstract IDispatch getInvocationCode();
+    @Override
+    public String toString() {
+      StringBuilder argString = new StringBuilder();
+      argString.append('(');
+      String sep = "";
+      for (int r : args) {
+        argString.append(sep).append(r);
+        sep = ",";
+      }
+      argString.append(')');
+      return "InvokeVirtual "
+          + clazzName
+          + ' '
+          + methodName
+          + ' '
+          + descriptor
+          + ' '
+          + argString
+          + ' '
+          + pc;
+    }
+  }
 
+  public static class InvokeSuper extends Invoke {
+    public InvokeSuper(
+        int instLoc,
+        String clazzName,
+        String methodName,
+        String descriptor,
+        int[] args,
+        Opcode opcode,
+        DexIMethod method) {
+      super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
+      assert descriptor.contains("(");
+    }
+
+    @Override
+    public IDispatch getInvocationCode() {
+      // TODO: check that this is correct -- I suspect the invoke super in dex is for method
+      // protection rather than dispatching
+      return IInvokeInstruction.Dispatch.SPECIAL;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder argString = new StringBuilder();
+      argString.append('(');
+      String sep = "";
+      for (int r : args) {
+        argString.append(sep).append(r);
+        sep = ",";
+      }
+      argString.append(')');
+      return "InvokeSuper "
+          + clazzName
+          + ' '
+          + methodName
+          + ' '
+          + descriptor
+          + ' '
+          + argString
+          + ' '
+          + pc;
+    }
+  }
+
+  public static class InvokeDirect extends Invoke {
+
+    public InvokeDirect(
+        int instLoc,
+        String clazzName,
+        String methodName,
+        String descriptor,
+        int[] args,
+        Opcode opcode,
+        DexIMethod method) {
+      super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
+    }
+
+    @Override
+    public IDispatch getInvocationCode() {
+      return IInvokeInstruction.Dispatch.SPECIAL;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder argString = new StringBuilder();
+      argString.append('(');
+      String sep = "";
+      for (int r : args) {
+        argString.append(sep).append(r);
+        sep = ",";
+      }
+      argString.append(')');
+      return "InvokeDirect "
+          + clazzName
+          + ' '
+          + methodName
+          + ' '
+          + descriptor
+          + ' '
+          + argString
+          + ' '
+          + pc;
+    }
+  }
+
+  public static class InvokeStatic extends Invoke {
+
+    public InvokeStatic(
+        int instLoc,
+        String clazzName,
+        String methodName,
+        String descriptor,
+        int[] args,
+        Opcode opcode,
+        DexIMethod method) {
+      super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
+    }
+
+    @Override
+    public IDispatch getInvocationCode() {
+      return IInvokeInstruction.Dispatch.STATIC;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder argString = new StringBuilder();
+      argString.append('(');
+      String sep = "";
+      for (int r : args) {
+        argString.append(sep).append(r);
+        sep = ",";
+      }
+      argString.append(')');
+      return "InvokeStatic "
+          + clazzName
+          + ' '
+          + methodName
+          + ' '
+          + descriptor
+          + ' '
+          + argString
+          + ' '
+          + pc;
+    }
+  }
+
+  public static class InvokeInterface extends Invoke {
+
+    public InvokeInterface(
+        int instLoc,
+        String clazzName,
+        String methodName,
+        String descriptor,
+        int[] args,
+        Opcode opcode,
+        DexIMethod method) {
+      super(instLoc, clazzName, methodName, descriptor, args, opcode, method);
+    }
+
+    @Override
+    public IDispatch getInvocationCode() {
+      return IInvokeInstruction.Dispatch.INTERFACE;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder argString = new StringBuilder();
+      argString.append('(');
+      String sep = "";
+      for (int r : args) {
+        argString.append(sep).append(r);
+        sep = ",";
+      }
+      argString.append(')');
+      return "InvokeInterface "
+          + clazzName
+          + ' '
+          + methodName
+          + ' '
+          + descriptor
+          + ' '
+          + argString
+          + ' '
+          + pc;
+    }
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitInvoke(this);
+  }
+
+  public abstract IDispatch getInvocationCode();
 }

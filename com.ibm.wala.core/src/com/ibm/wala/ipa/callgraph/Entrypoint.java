@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
-import java.util.Arrays;
-
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -27,20 +25,15 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Arrays;
 
-/**
- * A representation of an entrypoint in the call graph.
- */
+/** A representation of an entrypoint in the call graph. */
 public abstract class Entrypoint implements BytecodeConstants {
 
-  /**
-   * The method to be called
-   */
+  /** The method to be called */
   protected final IMethod method;
 
-  /**
-   * @param method the method to be called for this entrypoint
-   */
+  /** @param method the method to be called for this entrypoint */
   protected Entrypoint(IMethod method) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
@@ -62,7 +55,7 @@ public abstract class Entrypoint implements BytecodeConstants {
 
   /**
    * Create a call site reference representing a call to this entrypoint
-   * 
+   *
    * @param programCounter the bytecode index of the synthesize call
    * @return the call site reference, or null if failed to find entrypoint
    */
@@ -70,27 +63,32 @@ public abstract class Entrypoint implements BytecodeConstants {
 
     if (method.getSelector().equals(MethodReference.clinitSelector)) {
       assert method.isStatic();
-      return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
+      return CallSiteReference.make(
+          programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
     } else if (method.getSelector().equals(MethodReference.initSelector)) {
       assert !method.isStatic();
-      return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.SPECIAL);
+      return CallSiteReference.make(
+          programCounter, method.getReference(), IInvokeInstruction.Dispatch.SPECIAL);
     } else {
       if (method.getDeclaringClass().isInterface()) {
-        return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.INTERFACE);
+        return CallSiteReference.make(
+            programCounter, method.getReference(), IInvokeInstruction.Dispatch.INTERFACE);
       } else {
         if (method.isStatic()) {
-          return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
+          return CallSiteReference.make(
+              programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
         } else {
-          return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.VIRTUAL);
+          return CallSiteReference.make(
+              programCounter, method.getReference(), IInvokeInstruction.Dispatch.VIRTUAL);
         }
       }
     }
   }
 
   /**
-   * Add allocation statements to the fake root method for each possible value of parameter i. If necessary, add a phi to combine
-   * the values.
-   * 
+   * Add allocation statements to the fake root method for each possible value of parameter i. If
+   * necessary, add a phi to combine the values.
+   *
    * @return value number holding the parameter to the call; -1 if there was some error
    */
   protected int makeArgument(AbstractRootMethod m, int i) {
@@ -140,7 +138,7 @@ public abstract class Entrypoint implements BytecodeConstants {
         }
 
         return m.addPhi(values);
-      }
+    }
   }
 
   @Override
@@ -151,7 +149,7 @@ public abstract class Entrypoint implements BytecodeConstants {
 
   /**
    * Add a call to this entrypoint from the fake root method
-   * 
+   *
    * @param m the Fake Root Method
    * @return the call instruction added, or null if the operation fails
    */
@@ -173,21 +171,15 @@ public abstract class Entrypoint implements BytecodeConstants {
     return m.addInvocation(paramValues, site);
   }
 
-  /**
-   * @return the method this call invokes
-   */
+  /** @return the method this call invokes */
   public IMethod getMethod() {
     return method;
   }
 
-  /**
-   * @return types to allocate for parameter i; for non-static methods, parameter 0 is "this"
-   */
+  /** @return types to allocate for parameter i; for non-static methods, parameter 0 is "this" */
   public abstract TypeReference[] getParameterTypes(int i);
 
-  /**
-   * @return number of parameters to this call, including "this" for non-statics
-   */
+  /** @return number of parameters to this call, including "this" for non-statics */
   public abstract int getNumberOfParameters();
 
   @Override

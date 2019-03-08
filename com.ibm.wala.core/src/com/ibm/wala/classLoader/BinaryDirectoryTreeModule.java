@@ -10,15 +10,12 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.io.File;
-
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
+import java.io.File;
 
-/**
- * Module representing a directory of .class files
- */
+/** Module representing a directory of .class files */
 public class BinaryDirectoryTreeModule extends DirectoryTreeModule {
 
   public BinaryDirectoryTreeModule(File root) {
@@ -35,15 +32,15 @@ public class BinaryDirectoryTreeModule extends DirectoryTreeModule {
     try {
       return new ClassFileModule(file, this);
     } catch (InvalidClassFileException e) {
-      Warnings.add(new Warning(Warning.MODERATE) {
-        
-        @Override
-        public String getMsg() {
-          return "Invalid class file at path " + file.getAbsolutePath();
-        }
-      });
+      Warnings.add(
+          new Warning(Warning.MODERATE) {
+
+            @Override
+            public String getMsg() {
+              return "Invalid class file at path " + file.getAbsolutePath();
+            }
+          });
       return null;
     }
   }
-
 }

@@ -16,21 +16,17 @@ import com.ibm.wala.ipa.callgraph.Context;
 
 /**
  * This is intended as an internal interface; clients probably shouldn't be using this directly.
- * 
- * If you have a call graph in hand, to get the {@link IR} for a {@link CGNode}, use node.getIR();
- * 
- * Otherwise, look at {@link SSACache}.
+ *
+ * <p>If you have a call graph in hand, to get the {@link IR} for a {@link CGNode}, use
+ * node.getIR();
+ *
+ * <p>Otherwise, look at {@link SSACache}.
  */
 public interface IRFactory<T extends IMethod> {
 
-  /**
-   * Build an SSA {@link IR} for a method in a particular context
-   */
+  /** Build an SSA {@link IR} for a method in a particular context */
   IR makeIR(T method, Context c, SSAOptions options);
 
-  /**
-   * Does this factory always return the same IR for a method, regardless of context?
-   */
+  /** Does this factory always return the same IR for a method, regardless of context? */
   boolean contextIsIrrelevant(T method);
-
 }

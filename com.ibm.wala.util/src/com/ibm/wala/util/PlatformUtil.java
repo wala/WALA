@@ -13,48 +13,37 @@ package com.ibm.wala.util;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Platform-specific utility functions.
- */
+/** Platform-specific utility functions. */
 public class PlatformUtil {
 
-  /**
-   * are we running on Mac OS X?
-   */
+  /** are we running on Mac OS X? */
   public static boolean onMacOSX() {
     String osname = System.getProperty("os.name");
     return osname.toLowerCase().contains("mac");
     // return System.getProperty("mrj.version") != null;
   }
 
-  /**
-   * are we running on Linux?
-   */
+  /** are we running on Linux? */
   public static boolean onLinux() {
     String osname = System.getProperty("os.name");
     return osname.equalsIgnoreCase("linux");
   }
 
-  /**
-   * are we running on Windows?
-   */
+  /** are we running on Windows? */
   public static boolean onWindows() {
     String osname = System.getProperty("os.name");
     return osname.toLowerCase().contains("windows");
   }
 
-  /**
-   * are we running on IKVM? see http://www.ikvm.net
-   */
+  /** are we running on IKVM? see http://www.ikvm.net */
   public static boolean onIKVM() {
     return "IKVM.NET".equals(System.getProperty("java.runtime.name"));
   }
 
   /**
    * get the jars in the boot classpath. TODO test on more JVMs
-   * 
-   * @throws IllegalStateException
-   *           if boot classpath cannot be found
+   *
+   * @throws IllegalStateException if boot classpath cannot be found
    */
   public static String[] getBootClassPathJars() {
     String classpath = System.getProperty("sun.boot.class.path");

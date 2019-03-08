@@ -10,16 +10,15 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.SetOfClasses;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.config.SetOfClasses;
-
 /**
- * A serializable version of {@link AnalysisScope}. Note: any information about the array class loader is lost using this
- * representation.
+ * A serializable version of {@link AnalysisScope}. Note: any information about the array class
+ * loader is lost using this representation.
  */
 public class ShallowAnalysisScope implements Serializable {
 
@@ -31,11 +30,13 @@ public class ShallowAnalysisScope implements Serializable {
   // example for a line: "Primordial,Java,jarFile,primordial.jar.model"
   private final List<String> moduleLinesList;
 
-  // example for a line: "Synthetic, Java, loaderImpl, com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader"
+  // example for a line: "Synthetic, Java, loaderImpl,
+  // com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader"
   // may be empty
   private final List<String> ldrImplLinesList;
 
-  public ShallowAnalysisScope(SetOfClasses exclusions, List<String> moduleLinesList, List<String> ldrImplLinesList) {
+  public ShallowAnalysisScope(
+      SetOfClasses exclusions, List<String> moduleLinesList, List<String> ldrImplLinesList) {
     if (moduleLinesList == null) {
       throw new IllegalArgumentException("null moduleLinesList");
     }
@@ -52,16 +53,18 @@ public class ShallowAnalysisScope implements Serializable {
     analysisScope.setExclusions(exclusions);
 
     for (String moduleLine : moduleLinesList) {
-      AnalysisScopeReader.processScopeDefLine(analysisScope, this.getClass().getClassLoader(), moduleLine);
+      AnalysisScopeReader.processScopeDefLine(
+          analysisScope, this.getClass().getClassLoader(), moduleLine);
     }
 
     for (String ldrLine : ldrImplLinesList) {
-      AnalysisScopeReader.processScopeDefLine(analysisScope, this.getClass().getClassLoader(), ldrLine);
+      AnalysisScopeReader.processScopeDefLine(
+          analysisScope, this.getClass().getClassLoader(), ldrLine);
     }
 
     return analysisScope;
   }
-  
+
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder();

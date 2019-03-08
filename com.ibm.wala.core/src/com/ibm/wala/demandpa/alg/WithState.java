@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -39,9 +39,7 @@ package com.ibm.wala.demandpa.alg;
 
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine.State;
 
-/**
- * Simple abstraction for pairing some type with a {@link State}.
- */
+/** Simple abstraction for pairing some type with a {@link State}. */
 public abstract class WithState<T> {
 
   private final T wrapped;
@@ -49,7 +47,7 @@ public abstract class WithState<T> {
   private final State state;
 
   private final int hc;
-  
+
   public WithState(final T wrapped, final State state) {
     if (wrapped == null) {
       throw new IllegalArgumentException("null wrapped");
@@ -83,23 +81,16 @@ public abstract class WithState<T> {
   @SuppressWarnings("unchecked")
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final WithState<T> other = (WithState<T>) obj;
     if (state == null) {
-      if (other.state != null)
-        return false;
-    } else if (!state.equals(other.state))
-      return false;
+      if (other.state != null) return false;
+    } else if (!state.equals(other.state)) return false;
     if (wrapped == null) {
-      if (other.wrapped != null)
-        return false;
-    } else if (!wrapped.equals(other.wrapped))
-      return false;
+      if (other.wrapped != null) return false;
+    } else if (!wrapped.equals(other.wrapped)) return false;
     return true;
   }
 }

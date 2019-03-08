@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.analysis.reflection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.ArrayClass;
@@ -53,50 +47,54 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.strings.Atom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A context interpreter for java.lang.Object.clone
- * 
- * TODO: The current implementation does not model CloneNotSupportedExceptions
+ *
+ * <p>TODO: The current implementation does not model CloneNotSupportedExceptions
  */
 public class CloneInterpreter implements SSAContextInterpreter {
 
-  /**
-   * Comment for {@code cloneAtom}
-   */
-  public final static Atom cloneAtom = Atom.findOrCreateUnicodeAtom("clone");
+  /** Comment for {@code cloneAtom} */
+  public static final Atom cloneAtom = Atom.findOrCreateUnicodeAtom("clone");
 
-  private final static Descriptor cloneDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
+  private static final Descriptor cloneDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
 
-  /**
-   * Comment for {@code CLONE}
-   */
-  public final static MethodReference CLONE = MethodReference.findOrCreate(TypeReference.JavaLangObject, cloneAtom, cloneDesc);
+  /** Comment for {@code CLONE} */
+  public static final MethodReference CLONE =
+      MethodReference.findOrCreate(TypeReference.JavaLangObject, cloneAtom, cloneDesc);
 
-  private final static TypeReference SYNTHETIC_SYSTEM = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
-      .string2TypeName("Lcom/ibm/wala/model/java/lang/System"));
+  private static final TypeReference SYNTHETIC_SYSTEM =
+      TypeReference.findOrCreate(
+          ClassLoaderReference.Primordial,
+          TypeName.string2TypeName("Lcom/ibm/wala/model/java/lang/System"));
 
-  private final static Atom arraycopyAtom = Atom.findOrCreateUnicodeAtom("arraycopy");
+  private static final Atom arraycopyAtom = Atom.findOrCreateUnicodeAtom("arraycopy");
 
-  private final static Descriptor arraycopyDesc = Descriptor.findOrCreateUTF8("(Ljava/lang/Object;Ljava/lang/Object;)V");
+  private static final Descriptor arraycopyDesc =
+      Descriptor.findOrCreateUTF8("(Ljava/lang/Object;Ljava/lang/Object;)V");
 
-  private final static MethodReference SYNTHETIC_ARRAYCOPY = MethodReference.findOrCreate(SYNTHETIC_SYSTEM, arraycopyAtom,
-      arraycopyDesc);
-
-  /**
-   * If the type is an array, the program counter of the synthesized call to arraycopy. Doesn't really matter what it is.
-   */
-  private final static int ARRAYCOPY_PC = 3;
-
-  private final static CallSiteReference ARRAYCOPY_SITE = CallSiteReference.make(ARRAYCOPY_PC, SYNTHETIC_ARRAYCOPY,
-      IInvokeInstruction.Dispatch.STATIC);
-
-  private final static int NEW_PC = 0;
+  private static final MethodReference SYNTHETIC_ARRAYCOPY =
+      MethodReference.findOrCreate(SYNTHETIC_SYSTEM, arraycopyAtom, arraycopyDesc);
 
   /**
-   * Mapping from TypeReference -&gt; IR TODO: Soft references?
+   * If the type is an array, the program counter of the synthesized call to arraycopy. Doesn't
+   * really matter what it is.
    */
-  final private Map<TypeReference, IR> IRCache = HashMapFactory.make();
+  private static final int ARRAYCOPY_PC = 3;
+
+  private static final CallSiteReference ARRAYCOPY_SITE =
+      CallSiteReference.make(ARRAYCOPY_PC, SYNTHETIC_ARRAYCOPY, IInvokeInstruction.Dispatch.STATIC);
+
+  private static final int NEW_PC = 0;
+
+  /** Mapping from TypeReference -&gt; IR TODO: Soft references? */
+  private final Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
   private final SSAInstructionFactory insts = Language.JAVA.instructionFactory();
 
@@ -131,7 +129,8 @@ public class CloneInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return (node.getMethod().getReference().equals(CLONE) && ContextUtil.getConcreteClassFromContext(node.getContext()) != null);
+    return (node.getMethod().getReference().equals(CLONE)
+        && ContextUtil.getConcreteClassFromContext(node.getContext()) != null);
   }
 
   @Override
@@ -167,7 +166,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     if (klass.isArrayClass()) {
       int length = nextLocal++;
       statements.add(insts.ArrayLengthInstruction(statements.size(), length, 1));
-      int[] sizes = new int[((ArrayClass)klass).getDimensionality()];
+      int[] sizes = new int[((ArrayClass) klass).getDimensionality()];
       Arrays.fill(sizes, length);
       N = insts.NewInstruction(statements.size(), retValue, ref, sizes);
     } else {
@@ -182,7 +181,8 @@ public class CloneInterpreter implements SSAContextInterpreter {
       int[] params = new int[2];
       params[0] = 1;
       params[1] = retValue;
-      SSAInvokeInstruction S = insts.InvokeInstruction(statements.size(), params, exceptionValue, ARRAYCOPY_SITE, null);
+      SSAInvokeInstruction S =
+          insts.InvokeInstruction(statements.size(), params, exceptionValue, ARRAYCOPY_SITE, null);
       statements.add(S);
     } else {
       // copy the fields over, one by one.
@@ -191,14 +191,15 @@ public class CloneInterpreter implements SSAContextInterpreter {
       while (k != null) {
         for (IField f : klass.getDeclaredInstanceFields()) {
           int tempValue = nextLocal++;
-          SSAGetInstruction G = insts.GetInstruction(statements.size(), tempValue, 1, f.getReference());
+          SSAGetInstruction G =
+              insts.GetInstruction(statements.size(), tempValue, 1, f.getReference());
           statements.add(G);
-          SSAPutInstruction P = insts.PutInstruction(statements.size(), retValue, tempValue, f.getReference());
+          SSAPutInstruction P =
+              insts.PutInstruction(statements.size(), retValue, tempValue, f.getReference());
           statements.add(P);
         }
         k = k.getSuperclass();
       }
-
     }
 
     SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
@@ -212,13 +213,17 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return result;
   }
 
-  /**
-   * @return an IR that encodes the behavior of the clone method for a given type.
-   */
+  /** @return an IR that encodes the behavior of the clone method for a given type. */
   private IR makeIR(IMethod method, Context context, IClass klass) {
     assert klass != null;
     SSAInstruction instrs[] = makeStatements(klass);
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
+    return new SyntheticIR(
+        method,
+        context,
+        new InducedCFG(instrs, method, context),
+        instrs,
+        SSAOptions.defaultOptions(),
+        null);
   }
 
   /*

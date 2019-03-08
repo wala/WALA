@@ -14,6 +14,7 @@ import com.ibm.wala.ipa.callgraph.propagation.AbstractPointerKey;
 
 public class AstGlobalPointerKey extends AbstractPointerKey {
   private final String globalName;
+
   public String getName() {
     return globalName;
   }
@@ -24,8 +25,8 @@ public class AstGlobalPointerKey extends AbstractPointerKey {
 
   @Override
   public boolean equals(Object x) {
-    return (x instanceof AstGlobalPointerKey) &&
-      ((AstGlobalPointerKey)x).globalName.equals(globalName);
+    return (x instanceof AstGlobalPointerKey)
+        && ((AstGlobalPointerKey) x).globalName.equals(globalName);
   }
 
   @Override
@@ -38,4 +39,3 @@ public class AstGlobalPointerKey extends AbstractPointerKey {
     return "[global: " + globalName + ']';
   }
 }
-    

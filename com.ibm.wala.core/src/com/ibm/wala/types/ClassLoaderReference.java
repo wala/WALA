@@ -10,51 +10,40 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.util.strings.Atom;
 import java.io.Serializable;
 
-import com.ibm.wala.util.strings.Atom;
-
 /**
- * Defines the meta-information that identifies a class loader. This is effectively a "name" for a class loader.
+ * Defines the meta-information that identifies a class loader. This is effectively a "name" for a
+ * class loader.
  */
 public class ClassLoaderReference implements Serializable {
 
   /* Serial version */
   private static final long serialVersionUID = -3256390509887654325L;
 
-  /**
-   * Canonical name for the Java language
-   */
-  public final static Atom Java = Atom.findOrCreateUnicodeAtom("Java");
+  /** Canonical name for the Java language */
+  public static final Atom Java = Atom.findOrCreateUnicodeAtom("Java");
 
-  /**
-   * Canonical reference to primordial class loader
-   */
-  public final static ClassLoaderReference Primordial = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Primordial"), Java, null);
+  /** Canonical reference to primordial class loader */
+  public static final ClassLoaderReference Primordial =
+      new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Primordial"), Java, null);
 
-  /**
-   * Canonical reference to extension class loader
-   */
-  public final static ClassLoaderReference Extension = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Extension"), Java, Primordial);
+  /** Canonical reference to extension class loader */
+  public static final ClassLoaderReference Extension =
+      new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Extension"), Java, Primordial);
 
-  /**
-   * Canonical reference to application class loader
-   */
-  public final static ClassLoaderReference Application = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"), Java, Extension);
+  /** Canonical reference to application class loader */
+  public static final ClassLoaderReference Application =
+      new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"), Java, Extension);
 
-  /**
-   * A String which identifies this loader
-   */
+  /** A String which identifies this loader */
   private final Atom name;
 
-  /**
-   * A String which identifies the language for this loader
-   */
+  /** A String which identifies the language for this loader */
   private final Atom language;
 
-  /**
-   * This class loader's parent
-   */
+  /** This class loader's parent */
   private final ClassLoaderReference parent;
 
   public ClassLoaderReference(Atom name, Atom language, ClassLoaderReference parent) {
@@ -66,30 +55,22 @@ public class ClassLoaderReference implements Serializable {
     this.parent = parent;
   }
 
-  /**
-   * @return the name of this class loader
-   */
+  /** @return the name of this class loader */
   public Atom getName() {
     return name;
   }
 
-  /**
-   * @return the name of the language this class loader belongs to
-   */
+  /** @return the name of the language this class loader belongs to */
   public Atom getLanguage() {
     return language;
   }
 
-  /**
-   * @return the parent of this loader in the loader hierarchy, or null if none
-   */
+  /** @return the parent of this loader in the loader hierarchy, or null if none */
   public ClassLoaderReference getParent() {
     return parent;
   }
 
-  /**
-   * Note: names for class loader references must be unique.
-   */
+  /** Note: names for class loader references must be unique. */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -101,7 +82,6 @@ public class ClassLoaderReference implements Serializable {
       ClassLoaderReference o = (ClassLoaderReference) obj;
       return name.equals(o.name);
     }
-
   }
 
   @Override
@@ -113,5 +93,4 @@ public class ClassLoaderReference implements Serializable {
   public String toString() {
     return name + " classloader\n";
   }
-
 }

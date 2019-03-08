@@ -11,11 +11,12 @@ public abstract class AstPropertyRead extends AbstractReflectiveGet {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return
-      ((AstInstructionFactory)insts).PropertyRead(iindex,
-        defs==null? getDef(): defs[0],
-        uses==null? getObjectRef(): uses[0],
-        uses==null? getMemberRef(): uses[1]);
+    return ((AstInstructionFactory) insts)
+        .PropertyRead(
+            iindex,
+            defs == null ? getDef() : defs[0],
+            uses == null ? getObjectRef() : uses[0],
+            uses == null ? getMemberRef() : uses[1]);
   }
 
   @Override
@@ -24,13 +25,13 @@ public abstract class AstPropertyRead extends AbstractReflectiveGet {
   }
 
   /**
-  /* (non-Javadoc)
+   * /* (non-Javadoc)
+   *
    * @see com.ibm.wala.ssa.SSAInstruction#visit(com.ibm.wala.ssa.SSAInstruction.IVisitor)
    */
   @Override
   public void visit(IVisitor v) {
     assert v instanceof AstInstructionVisitor;
-    ((AstInstructionVisitor)v).visitPropertyRead(this);
+    ((AstInstructionVisitor) v).visitPropertyRead(this);
   }
-
 }

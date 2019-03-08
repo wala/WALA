@@ -9,6 +9,7 @@
  */
 package com.ibm.wala.util.io;
 
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,20 +28,14 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import com.ibm.wala.util.collections.HashSetFactory;
-
-/**
- * Simple utilities for accessing files.
- */
+/** Simple utilities for accessing files. */
 public class FileUtil {
 
   /**
    * List all the files in a directory that match a regular expression
-   * 
-   * @param recurse
-   *          recurse to subdirectories?
-   * @throws IllegalArgumentException
-   *           if dir is null
+   *
+   * @param recurse recurse to subdirectories?
+   * @throws IllegalArgumentException if dir is null
    */
   public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
     if (dir == null) {
@@ -72,11 +67,10 @@ public class FileUtil {
   }
 
   /**
-   * This may be a resource leak:
-   * http://bugs.sun.com/view_bug.do?bug_id=4724038
-   * 
-   * We may have to reconsider using nio for this, or apply one of the horrible
-   * workarounds listed in the bug report above.
+   * This may be a resource leak: http://bugs.sun.com/view_bug.do?bug_id=4724038
+   *
+   * <p>We may have to reconsider using nio for this, or apply one of the horrible workarounds
+   * listed in the bug report above.
    */
   public static void copy(String srcFileName, String destFileName) throws IOException {
     if (srcFileName == null) {
@@ -85,12 +79,10 @@ public class FileUtil {
     if (destFileName == null) {
       throw new IllegalArgumentException("destFileName is null");
     }
-    try (
-      final FileInputStream srcStream = new FileInputStream(srcFileName);
-      final FileOutputStream dstStream = new FileOutputStream(destFileName);
-      final FileChannel src = srcStream.getChannel();
-      final FileChannel dest = dstStream.getChannel();
-    ) {
+    try (final FileInputStream srcStream = new FileInputStream(srcFileName);
+        final FileOutputStream dstStream = new FileOutputStream(destFileName);
+        final FileChannel src = srcStream.getChannel();
+        final FileChannel dest = dstStream.getChannel(); ) {
       long n = src.size();
       MappedByteBuffer buf = src.map(FileChannel.MapMode.READ_ONLY, 0, n);
       dest.write(buf);
@@ -98,11 +90,9 @@ public class FileUtil {
   }
 
   /**
-   * delete all files (recursively) in a directory. This is dangerous. Use with
-   * care.
-   * 
-   * @throws IOException
-   *           if there's a problem deleting some file
+   * delete all files (recursively) in a directory. This is dangerous. Use with care.
+   *
+   * @throws IOException if there's a problem deleting some file
    */
   public static void deleteContents(String directory) throws IOException {
     File f = new File(directory);
@@ -117,7 +107,7 @@ public class FileUtil {
     }
   }
 
-  private static void deleteRecursively(File f) throws IOException{
+  private static void deleteRecursively(File f) throws IOException {
     if (f.isDirectory()) {
       for (String s : f.list()) {
         deleteRecursively(new File(f, s));
@@ -131,8 +121,8 @@ public class FileUtil {
   }
 
   /**
-   * Create a {@link FileOutputStream} corresponding to a particular file name.
-   * Delete the existing file if one exists.
+   * Create a {@link FileOutputStream} corresponding to a particular file name. Delete the existing
+   * file if one exists.
    */
   public static final FileOutputStream createFile(String fileName) throws IOException {
     if (fileName == null) {
@@ -155,9 +145,7 @@ public class FileUtil {
     return new FileOutputStream(f);
   }
 
-  /**
-   * read fully the contents of s and return a byte array holding the result
-   */
+  /** read fully the contents of s and return a byte array holding the result */
   public static byte[] readBytes(InputStream s) throws IOException {
     if (s == null) {
       throw new IllegalArgumentException("null s");
@@ -174,9 +162,7 @@ public class FileUtil {
     }
   }
 
-  /**
-   * write string s into file f
-   */
+  /** write string s into file f */
   public static void writeFile(File f, String content) throws IOException {
     try (final Writer fw = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)) {
       fw.append(content);
@@ -184,12 +170,12 @@ public class FileUtil {
   }
 
   public static void recurseFiles(Consumer<File> action, final Predicate<File> filter, File top) {
-  	if (top.isDirectory()) {
-  		for(File f : top.listFiles(file -> filter.test(file) || file.isDirectory())) {
-  			recurseFiles(action, filter, f);
-  		}
-  	} else {
-  		action.accept(top);
-  	}
+    if (top.isDirectory()) {
+      for (File f : top.listFiles(file -> filter.test(file) || file.isDirectory())) {
+        recurseFiles(action, filter, f);
+      }
+    } else {
+      action.accept(top);
+    }
   }
 }

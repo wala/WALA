@@ -13,7 +13,9 @@ package com.ibm.wala.shrikeBT;
 public interface IShiftInstruction extends IInstruction {
 
   public enum Operator implements IBinaryOpInstruction.IOperator {
-    SHL, SHR, USHR;
+    SHL,
+    SHR,
+    USHR;
   }
 
   Operator getOperator();
@@ -21,5 +23,4 @@ public interface IShiftInstruction extends IInstruction {
   String getType();
 
   boolean isUnsigned();
-
 }

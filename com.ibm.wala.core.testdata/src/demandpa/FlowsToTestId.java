@@ -10,10 +10,7 @@
  */
 package demandpa;
 
-/**
- * @author manu
- *
- */
+/** @author manu */
 public class FlowsToTestId {
 
   static Object id(Object o) {
@@ -28,5 +25,4 @@ public class FlowsToTestId {
     DemandPATestUtil.makeVarUsed(o3);
     DemandPATestUtil.makeVarUsed(o4);
   }
-
 }

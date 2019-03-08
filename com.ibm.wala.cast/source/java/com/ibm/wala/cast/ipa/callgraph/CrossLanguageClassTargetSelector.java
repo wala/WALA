@@ -10,20 +10,17 @@
  */
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Map;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Map;
 
 /**
- *  A ClassTargetSelector implementation that delegates to one of several
- * child selectors based on the language of the type being allocated.  This
- * selector uses the language associated with the TypeReference of the
- * allocated type to delagate t =o the appropriate language-specific 
- * selector.
+ * A ClassTargetSelector implementation that delegates to one of several child selectors based on
+ * the language of the type being allocated. This selector uses the language associated with the
+ * TypeReference of the allocated type to delagate t =o the appropriate language-specific selector.
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
@@ -36,10 +33,7 @@ public class CrossLanguageClassTargetSelector implements ClassTargetSelector {
   }
 
   private static Atom getLanguage(NewSiteReference target) {
-    return target
-	.getDeclaredType()
-	.getClassLoader()
-	.getLanguage();
+    return target.getDeclaredType().getClassLoader().getLanguage();
   }
 
   private ClassTargetSelector getSelector(NewSiteReference site) {
@@ -50,6 +44,4 @@ public class CrossLanguageClassTargetSelector implements ClassTargetSelector {
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
     return getSelector(site).getAllocatedTarget(caller, site);
   }
-
 }
-

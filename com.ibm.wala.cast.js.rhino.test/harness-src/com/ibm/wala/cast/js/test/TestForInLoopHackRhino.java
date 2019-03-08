@@ -10,16 +10,15 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import org.junit.Before;
-
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import org.junit.Before;
 
 public class TestForInLoopHackRhino extends TestForInLoopHack {
 
-	  @Override
-    @Before
-	  public void setUp() {
-		    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-	  }
-
+  @Override
+  @Before
+  public void setUp() {
+    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
+        new CAstRhinoTranslatorFactory());
+  }
 }

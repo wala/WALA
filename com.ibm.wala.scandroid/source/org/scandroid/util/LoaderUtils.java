@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -52,29 +52,26 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class LoaderUtils {
-    
-    public static boolean fromLoader(CGNode node, ClassLoaderReference clr) {
-        IClass declClass = node.getMethod().getDeclaringClass();
 
-        ClassLoaderReference nodeClRef =
-                declClass.getClassLoader().getReference();
+  public static boolean fromLoader(CGNode node, ClassLoaderReference clr) {
+    IClass declClass = node.getMethod().getDeclaringClass();
 
-        return nodeClRef.equals(clr);
-    }
-    
-    public static boolean fromLoader(IMethod method, ClassLoaderReference clr) {
-        IClass declClass = method.getDeclaringClass();
+    ClassLoaderReference nodeClRef = declClass.getClassLoader().getReference();
 
-        ClassLoaderReference nodeClRef =
-                declClass.getClassLoader().getReference();
+    return nodeClRef.equals(clr);
+  }
 
-        return nodeClRef.equals(clr);
-    }
-    
-    public static boolean fromLoader(IClass declClass, ClassLoaderReference clr) {
-        ClassLoaderReference nodeClRef =
-                declClass.getClassLoader().getReference();
+  public static boolean fromLoader(IMethod method, ClassLoaderReference clr) {
+    IClass declClass = method.getDeclaringClass();
 
-        return nodeClRef.equals(clr);
-    }
+    ClassLoaderReference nodeClRef = declClass.getClassLoader().getReference();
+
+    return nodeClRef.equals(clr);
+  }
+
+  public static boolean fromLoader(IClass declClass, ClassLoaderReference clr) {
+    ClassLoaderReference nodeClRef = declClass.getClassLoader().getReference();
+
+    return nodeClRef.equals(clr);
+  }
 }

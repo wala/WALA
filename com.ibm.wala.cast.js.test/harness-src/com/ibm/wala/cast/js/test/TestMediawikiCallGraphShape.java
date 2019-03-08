@@ -10,15 +10,13 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import java.io.IOException;
+import java.net.URL;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
 
@@ -26,15 +24,14 @@ public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
     justThisTest(TestMediawikiCallGraphShape.class);
   }
 
-  private static final Object[][] assertionsForSwineFlu = new Object[][] {
-
-  };
+  private static final Object[][] assertionsForSwineFlu = new Object[][] {};
 
   @Ignore("not terminating; Julian, take a look?")
-  @Test public void testSwineFlu() throws IOException, IllegalArgumentException, CancelException, WalaException {
+  @Test
+  public void testSwineFlu()
+      throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = new URL("http://en.wikipedia.org/wiki/2009_swine_flu_outbreak");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForSwineFlu);
   }
-
 }

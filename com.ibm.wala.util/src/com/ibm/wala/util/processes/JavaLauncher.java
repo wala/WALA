@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.processes;
 
+import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,102 +19,87 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.collections.Iterator2Iterable;
-
-/**
- * A Java process launcher
- */
+/** A Java process launcher */
 public class JavaLauncher extends Launcher {
 
   /**
-   * @param programArgs
-   *          arguments to be passed to the Java program
-   * @param mainClass
-   *          Declaring class of the main() method to run.
-   * @param classpathEntries
-   *          Paths that will be added to the default classpath
+   * @param programArgs arguments to be passed to the Java program
+   * @param mainClass Declaring class of the main() method to run.
+   * @param classpathEntries Paths that will be added to the default classpath
    */
-  public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries, Logger logger) {
+  public static JavaLauncher make(
+      String programArgs, String mainClass, List<String> classpathEntries, Logger logger) {
     return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false, false, logger);
   }
 
   /**
-   * @param programArgs
-   *          arguments to be passed to the Java program
-   * @param mainClass
-   *          Declaring class of the main() method to run.
-   * @param inheritClasspath
-   *          Should the spawned process inherit all classpath entries of the
-   *          currently running process?
-   * @param classpathEntries
-   *          Paths that will be added to the default classpath
-   * @param captureOutput
-   *          should the launcher capture the stdout from the subprocess?
-   * @param captureErr
-   *          should the launcher capture the stderr from the subprocess?
+   * @param programArgs arguments to be passed to the Java program
+   * @param mainClass Declaring class of the main() method to run.
+   * @param inheritClasspath Should the spawned process inherit all classpath entries of the
+   *     currently running process?
+   * @param classpathEntries Paths that will be added to the default classpath
+   * @param captureOutput should the launcher capture the stdout from the subprocess?
+   * @param captureErr should the launcher capture the stderr from the subprocess?
    */
-  public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries,
-      boolean captureOutput, boolean captureErr, Logger logger) {
+  public static JavaLauncher make(
+      String programArgs,
+      String mainClass,
+      boolean inheritClasspath,
+      List<String> classpathEntries,
+      boolean captureOutput,
+      boolean captureErr,
+      Logger logger) {
     if (mainClass == null) {
       throw new IllegalArgumentException("null mainClass");
     }
-    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput, captureErr, logger);
+    return new JavaLauncher(
+        programArgs,
+        mainClass,
+        inheritClasspath,
+        classpathEntries,
+        captureOutput,
+        captureErr,
+        logger);
   }
 
-  /**
-   * arguments to be passed to the Java program
-   */
+  /** arguments to be passed to the Java program */
   private String programArgs;
 
-  /**
-   * Declaring class of the main() method to run.
-   */
+  /** Declaring class of the main() method to run. */
   private final String mainClass;
 
-  /**
-   * Should the spawned process inherit all classpath entries of the currently
-   * running process?
-   */
+  /** Should the spawned process inherit all classpath entries of the currently running process? */
   private final boolean inheritClasspath;
 
-  /**
-   * Should assertions be enabled in the subprocess? default false.
-   */
+  /** Should assertions be enabled in the subprocess? default false. */
   private boolean enableAssertions;
 
-  /**
-   * Paths that will be added to the default classpath
-   */
+  /** Paths that will be added to the default classpath */
   private final List<String> xtraClasspath = new ArrayList<>();
 
-  /**
-   * A {@link Thread} which spins and drains stdout of the running process.
-   */
+  /** A {@link Thread} which spins and drains stdout of the running process. */
   private Thread stdOutDrain;
 
-  /**
-   * A {@link Thread} which spins and drains stderr of the running process.
-   */
+  /** A {@link Thread} which spins and drains stderr of the running process. */
   private Thread stdErrDrain;
 
-  /**
-   * Absolute path of the 'java' executable to use.
-   */
+  /** Absolute path of the 'java' executable to use. */
   private String javaExe;
 
-  /**
-   * Extra args to pass to the JVM
-   */
+  /** Extra args to pass to the JVM */
   private List<String> vmArgs = new ArrayList<>();
 
-  /**
-   * The last process returned by a call to start() on this object.
-   */
+  /** The last process returned by a call to start() on this object. */
   private Process lastProcess;
 
-  private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath,
-      boolean captureOutput, boolean captureErr, Logger logger) {
+  private JavaLauncher(
+      String programArgs,
+      String mainClass,
+      boolean inheritClasspath,
+      List<String> xtraClasspath,
+      boolean captureOutput,
+      boolean captureErr,
+      Logger logger) {
     super(captureOutput, captureErr, logger);
     this.programArgs = programArgs;
     this.mainClass = mainClass;
@@ -149,22 +136,24 @@ public class JavaLauncher extends Launcher {
 
   @Override
   public String toString() {
-    return super.toString() + " (programArgs: " + programArgs
-            + ", mainClass: " + mainClass
-            + ", xtraClasspath: " + xtraClasspath + ')';
+    return super.toString()
+        + " (programArgs: "
+        + programArgs
+        + ", mainClass: "
+        + mainClass
+        + ", xtraClasspath: "
+        + xtraClasspath
+        + ')';
   }
 
-  /**
-   * @return the string that identifies the java executable file
-   */
+  /** @return the string that identifies the java executable file */
   public static String defaultJavaExe() {
-    String java = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
+    String java =
+        System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
     return java;
   }
 
-  /**
-   * Launch the java process.
-   */
+  /** Launch the java process. */
   public Process start() throws IllegalArgumentException, IOException {
     String cp = makeClasspath();
 
@@ -228,9 +217,8 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Wait for the spawned process to terminate.
-   * 
-   * @throws IllegalStateException
-   *           if the process has not been started
+   *
+   * @throws IllegalStateException if the process has not been started
    */
   public void join() {
     if (stdOutDrain == null || stdErrDrain == null) {
@@ -253,11 +241,10 @@ public class JavaLauncher extends Launcher {
     }
   }
 
-  /**
-   * Compute the classpath for the spawned process
-   */
+  /** Compute the classpath for the spawned process */
   public String makeClasspath() {
-    final StringBuilder cp = inheritClasspath
+    final StringBuilder cp =
+        inheritClasspath
             ? new StringBuilder(System.getProperty("java.class.path"))
             : new StringBuilder();
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
@@ -272,10 +259,9 @@ public class JavaLauncher extends Launcher {
   }
 
   /**
-   * If the input string contains a space, quote it (for use as a classpath).
-   * TODO: Figure out how to make a Mac happy with quotes. Trailing separators
-   * are unsafe, so we have to escape the last backslash (if present and
-   * unescaped), so it doesn't escape the closing quote.
+   * If the input string contains a space, quote it (for use as a classpath). TODO: Figure out how
+   * to make a Mac happy with quotes. Trailing separators are unsafe, so we have to escape the last
+   * backslash (if present and unescaped), so it doesn't escape the closing quote.
    */
   @Deprecated
   public static String quoteStringIfNeeded(String s) {
@@ -309,5 +295,4 @@ public class JavaLauncher extends Launcher {
   public List<String> getVmArgs() {
     return Collections.unmodifiableList(vmArgs);
   }
-
 }

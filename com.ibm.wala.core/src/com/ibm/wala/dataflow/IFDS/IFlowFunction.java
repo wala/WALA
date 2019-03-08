@@ -12,8 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 /**
  * A flow function corresponding to an edge in the supergraph.
- * 
- * This function should be distributive for use with the Tabulation algorithm.
+ *
+ * <p>This function should be distributive for use with the Tabulation algorithm.
  */
-public interface IFlowFunction {
-}
+public interface IFlowFunction {}

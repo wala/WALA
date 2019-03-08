@@ -13,16 +13,12 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
-/**
- * A function which kills a vector of incoming dataflow facts
- */
+/** A function which kills a vector of incoming dataflow facts */
 public class VectorKillFlowFunction implements IReversibleFlowFunction {
 
   private final IntSet kill;
 
-  /**
-   * @param kill the intset of facts which are killed by this flow function
-   */
+  /** @param kill the intset of facts which are killed by this flow function */
   private VectorKillFlowFunction(IntSet kill) {
     if (kill == null) {
       throw new IllegalArgumentException("null kill");
@@ -47,7 +43,7 @@ public class VectorKillFlowFunction implements IReversibleFlowFunction {
   public static VectorKillFlowFunction make(IntSet kill) {
     return new VectorKillFlowFunction(kill);
   }
-  
+
   @Override
   public String toString() {
     return "VectorKill: " + kill;

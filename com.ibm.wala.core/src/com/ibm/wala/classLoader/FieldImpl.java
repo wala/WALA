@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
@@ -21,10 +18,12 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.annotations.TypeAnnotation;
 import com.ibm.wala.types.generics.TypeSignature;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
- * Implementation of a canonical field reference. TODO: canonicalize these?
- * TODO: don't cache fieldType here .. move to class?
+ * Implementation of a canonical field reference. TODO: canonicalize these? TODO: don't cache
+ * fieldType here .. move to class?
  */
 public final class FieldImpl implements IField {
 
@@ -33,19 +32,29 @@ public final class FieldImpl implements IField {
   private final FieldReference fieldRef;
 
   private final int accessFlags;
-  
+
   private final Collection<Annotation> annotations;
-  
+
   private final Collection<TypeAnnotation> typeAnnotations;
 
   private final TypeSignature genericSignature;
-  
-  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations, TypeSignature sig) {
+
+  public FieldImpl(
+      IClass declaringClass,
+      FieldReference canonicalRef,
+      int accessFlags,
+      Collection<Annotation> annotations,
+      TypeSignature sig) {
     this(declaringClass, canonicalRef, accessFlags, annotations, null, sig);
   }
-  
-  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations,
-      Collection<TypeAnnotation> typeAnnotations, TypeSignature sig) {
+
+  public FieldImpl(
+      IClass declaringClass,
+      FieldReference canonicalRef,
+      int accessFlags,
+      Collection<Annotation> annotations,
+      Collection<TypeAnnotation> typeAnnotations,
+      TypeSignature sig) {
     this.declaringClass = declaringClass;
     this.fieldRef = canonicalRef;
     this.accessFlags = accessFlags;
@@ -60,13 +69,15 @@ public final class FieldImpl implements IField {
     }
   }
 
-  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations) {
+  public FieldImpl(
+      IClass declaringClass,
+      FieldReference canonicalRef,
+      int accessFlags,
+      Collection<Annotation> annotations) {
     this(declaringClass, canonicalRef, accessFlags, annotations, null);
   }
-  
-  /**
-   * @return the genericSignature
-   */
+
+  /** @return the genericSignature */
   public TypeSignature getGenericSignature() {
     return genericSignature;
   }
@@ -106,7 +117,8 @@ public final class FieldImpl implements IField {
 
   @Override
   public FieldReference getReference() {
-    return FieldReference.findOrCreate(getDeclaringClass().getReference(), getName(), getFieldTypeReference());
+    return FieldReference.findOrCreate(
+        getDeclaringClass().getReference(), getName(), getFieldTypeReference());
   }
 
   /*
@@ -149,7 +161,7 @@ public final class FieldImpl implements IField {
   public boolean isPublic() {
     return ((accessFlags & ClassConstants.ACC_PUBLIC) != 0);
   }
-  
+
   @Override
   public boolean isVolatile() {
     return ((accessFlags & ClassConstants.ACC_VOLATILE) != 0);
