@@ -13,19 +13,16 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 
-/**
- * Just kills everything
- */
+/** Just kills everything */
 public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
 
-  private final static BitVectorKillAll SINGLETON = new BitVectorKillAll();
+  private static final BitVectorKillAll SINGLETON = new BitVectorKillAll();
 
   public static BitVectorKillAll instance() {
     return SINGLETON;
   }
 
-  private BitVectorKillAll() {
-  }
+  private BitVectorKillAll() {}
 
   /* (non-Javadoc)
    * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
@@ -64,5 +61,4 @@ public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
   public String toString() {
     return "KillAll";
   }
-
 }

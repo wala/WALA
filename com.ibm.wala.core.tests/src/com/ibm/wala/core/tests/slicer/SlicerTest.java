@@ -10,19 +10,6 @@
  */
 package com.ibm.wala.core.tests.slicer;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Collections;
-
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -77,6 +64,17 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class SlicerTest {
 
@@ -84,32 +82,36 @@ public class SlicerTest {
 
   // more aggressive exclusions to avoid library blowup
   // in interprocedural tests
-  private static final String EXCLUSIONS = "java\\/awt\\/.*\n" +
-      "javax\\/swing\\/.*\n" +
-      "sun\\/awt\\/.*\n" +
-      "sun\\/swing\\/.*\n" +
-      "com\\/sun\\/.*\n" +
-      "sun\\/.*\n" +
-      "org\\/netbeans\\/.*\n" +
-      "org\\/openide\\/.*\n" +
-      "com\\/ibm\\/crypto\\/.*\n" +
-      "com\\/ibm\\/security\\/.*\n" +
-      "org\\/apache\\/xerces\\/.*\n" +
-      "java\\/security\\/.*\n" +
-      "";
+  private static final String EXCLUSIONS =
+      "java\\/awt\\/.*\n"
+          + "javax\\/swing\\/.*\n"
+          + "sun\\/awt\\/.*\n"
+          + "sun\\/swing\\/.*\n"
+          + "com\\/sun\\/.*\n"
+          + "sun\\/.*\n"
+          + "org\\/netbeans\\/.*\n"
+          + "org\\/openide\\/.*\n"
+          + "com\\/ibm\\/crypto\\/.*\n"
+          + "com\\/ibm\\/security\\/.*\n"
+          + "org\\/apache\\/xerces\\/.*\n"
+          + "java\\/security\\/.*\n"
+          + "";
 
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
-      cachedScope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
-      cachedScope.setExclusions(new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
-
+      cachedScope =
+          AnalysisScopeReader.readJavaScope(
+              TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
+      cachedScope.setExclusions(
+          new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
     }
     return cachedScope;
   }
 
   private static IClassHierarchy cachedCHA;
 
-  private static IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
+  private static IClassHierarchy findOrCreateCHA(AnalysisScope scope)
+      throws ClassHierarchyException {
     if (cachedCHA == null) {
       cachedCHA = ClassHierarchyFactory.make(scope);
     }
@@ -123,14 +125,17 @@ public class SlicerTest {
   }
 
   @Test
-  public void testSlice1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice1()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE1_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -139,14 +144,20 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    Collection<Statement> computeBackwardSlice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
 
     int i = 0;
     for (Statement st : slice) {
-      if (st.getNode().getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
+      if (st.getNode()
+          .getMethod()
+          .getDeclaringClass()
+          .getClassLoader()
+          .getReference()
+          .equals(ClassLoaderReference.Application)) {
         i++;
       }
     }
@@ -154,14 +165,17 @@ public class SlicerTest {
   }
 
   @Test
-  public void testSlice2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice2()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE2_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE2_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMethod(cg, "baz");
@@ -170,8 +184,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    Collection<Statement> computeBackwardSlice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
 
@@ -179,14 +194,17 @@ public class SlicerTest {
   }
 
   @Test
-  public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice3()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE3_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE3_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMethod(cg, "main");
@@ -195,22 +213,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
   }
 
   @Test
-  public void testSlice4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice4()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE4_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE4_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -219,22 +241,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeForwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 4, slice.size());
   }
 
   @Test
-  public void testSlice5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice5()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE5_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE5_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode n = findMethod(cg, "baz");
@@ -243,25 +269,27 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeForwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 7, slice.size());
   }
 
-  /**
-   * test unreproduced bug reported on mailing list by Sameer Madan, 7/3/2007
-   */
+  /** test unreproduced bug reported on mailing list by Sameer Madan, 7/3/2007 */
   @Test
-  public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice7()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE7_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE7_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -269,51 +297,63 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeForwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
   }
 
-  /**
-   * test bug reported on mailing list by Ravi Chandhran, 4/16/2010
-   */
+  /** test bug reported on mailing list by Ravi Chandhran, 4/16/2010 */
   @Test
-  public void testSlice8() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice8()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE8_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode process = findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
+    CGNode process =
+        findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
     Statement s = findCallToDoNothing(process);
     System.err.println("Statement: " + s);
     // compute a backward slice, with data dependence and no exceptional control dependence
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertEquals(4, countInvokes(slice));
     // should only get 4 statements total when ignoring control dependences completely
-    slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Assert.assertEquals(slice.toString(), 4, slice.size());
   }
 
   @Test
-  public void testSlice9() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testSlice9()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE9_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE9_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -321,22 +361,30 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a backward slice, with data dependence and no exceptional control dependence
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
-    //dumpSlice(slice);
-    Assert.assertEquals(/*slice.toString(), */5, countApplicationNormals(slice));
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    // dumpSlice(slice);
+    Assert.assertEquals(/*slice.toString(), */ 5, countApplicationNormals(slice));
   }
 
   @Test
-  public void testTestCD1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD1()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD1);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -345,22 +393,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.NONE,
-        ControlDependenceOptions.FULL);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countConditionals(slice));
   }
 
   @Test
-  public void testTestCD2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD2()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD2);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD2);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -369,22 +421,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.NONE,
-        ControlDependenceOptions.FULL);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
 
   @Test
-  public void testTestCD3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD3()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD3);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD3);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -393,22 +449,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.NONE,
-        ControlDependenceOptions.FULL);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 0, countConditionals(slice));
   }
 
   @Test
-  public void testTestCD4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD4()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD4);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD4);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -418,28 +478,33 @@ public class SlicerTest {
 
     // compute a no-data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.NONE,
-        ControlDependenceOptions.FULL);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(0, countConditionals(slice));
 
     // compute a full slice
-    slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
 
   @Test
-  public void testTestCD5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD5()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD5);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD5);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -449,23 +514,31 @@ public class SlicerTest {
 
     // compute a no-data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.NONE, ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    Collection<Statement> slice =
+        Slicer.computeForwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.NONE,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertEquals(10, slice.size());
     Assert.assertEquals(3, countReturns(slice));
   }
 
   @Test
-  public void testTestCD5NoInterproc() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD5NoInterproc()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD5);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD5);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -475,23 +548,31 @@ public class SlicerTest {
 
     // compute a no-data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.NONE, ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
+    Collection<Statement> slice =
+        Slicer.computeForwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.NONE,
+            ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
     dumpSlice(slice);
     Assert.assertEquals(8, slice.size());
     Assert.assertEquals(2, countReturns(slice));
   }
 
   @Test
-  public void testTestCD6() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestCD6()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTCD6);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTCD6);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -501,22 +582,30 @@ public class SlicerTest {
 
     // compute a no-data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.NONE, ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    Collection<Statement> slice =
+        Slicer.computeForwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.NONE,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countInvokes(slice));
   }
 
   @Test
-  public void testTestId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestId()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTID);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTID);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -525,22 +614,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
   }
 
   @Test
-  public void testTestArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestArrays()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTARRAYS);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTARRAYS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -549,23 +642,27 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countAloads(slice));
   }
 
   @Test
-  public void testTestFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestFields()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTFIELDS);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTFIELDS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -574,23 +671,27 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
   @Test
-  public void testThin1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testThin1()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTTHIN1);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTTHIN1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -601,15 +702,21 @@ public class SlicerTest {
     // compute normal data slice
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(3, countAllocations(slice));
     Assert.assertEquals(2, countPutfields(slice));
 
     // compute thin slice .. ignore base pointers
-    Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis,
-        DataDependenceOptions.NO_BASE_PTRS, ControlDependenceOptions.NONE);
+    Collection<Statement> computeBackwardSlice =
+        Slicer.computeBackwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.NO_BASE_PTRS,
+            ControlDependenceOptions.NONE);
     slice = computeBackwardSlice;
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
@@ -617,15 +724,18 @@ public class SlicerTest {
   }
 
   @Test
-  public void testTestGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestGlobal()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTGLOBAL);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTGLOBAL);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -634,8 +744,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 2, countPutstatics(slice));
@@ -643,15 +754,18 @@ public class SlicerTest {
   }
 
   @Test
-  public void testTestMultiTarget() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestMultiTarget()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTMULTITARGET);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTMULTITARGET);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -660,22 +774,26 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
   }
 
   @Test
-  public void testTestRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestRecursion()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTRECURSION);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTRECURSION);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -685,23 +803,27 @@ public class SlicerTest {
 
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 3, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 2, countPutfields(slice));
   }
 
   @Test
-  public void testPrimGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testPrimGetterSetter()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode test = findMethod(cg, "test");
@@ -713,38 +835,54 @@ public class SlicerTest {
 
     // compute full slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 0, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
   /**
-   * Test of using N-CFA builder to distinguish receiver objects for two calls
-   * to a getter method. Also tests disabling SMUSH_PRIMITIVE_HOLDERS to ensure
-   * we get distinct abstract objects for two different primitive holders.
+   * Test of using N-CFA builder to distinguish receiver objects for two calls to a getter method.
+   * Also tests disabling SMUSH_PRIMITIVE_HOLDERS to ensure we get distinct abstract objects for two
+   * different primitive holders.
    */
   @Test
-  public void testPrimGetterSetter2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testPrimGetterSetter2()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TEST_PRIM_GETTER_SETTER2);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TEST_PRIM_GETTER_SETTER2);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     IAnalysisCacheView cache = new AnalysisCacheImpl();
-    SSAPropagationCallGraphBuilder builder = new nCFABuilder(1, Language.JAVA.getFakeRootMethod(cha, options, cache), options, cache, appSelector, appInterpreter);
+    SSAPropagationCallGraphBuilder builder =
+        new nCFABuilder(
+            1,
+            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            options,
+            cache,
+            appSelector,
+            appInterpreter);
     // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
     // NOTE: we disable ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS for this test, since IntWrapper
     // is a primitive holder
-    builder.setInstanceKeys(new ZeroXInstanceKeys(options, cha, builder.getContextInterpreter(), ZeroXInstanceKeys.ALLOCATIONS
-        | ZeroXInstanceKeys.SMUSH_MANY /* | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS */ | ZeroXInstanceKeys.SMUSH_STRINGS
-        | ZeroXInstanceKeys.SMUSH_THROWABLES));
+    builder.setInstanceKeys(
+        new ZeroXInstanceKeys(
+            options,
+            cha,
+            builder.getContextInterpreter(),
+            ZeroXInstanceKeys.ALLOCATIONS
+                | ZeroXInstanceKeys.SMUSH_MANY /* | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS */
+                | ZeroXInstanceKeys.SMUSH_STRINGS
+                | ZeroXInstanceKeys.SMUSH_THROWABLES));
 
     CallGraph cg = builder.makeCallGraph(options, null);
 
@@ -756,22 +894,27 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, pointerAnalysis,
-        DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
+
   @Test
-  public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestThrowCatch()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTTHROWCATCH);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTTHROWCATCH);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -780,8 +923,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 1, countApplicationAllocations(slice));
     Assert.assertEquals(slice.toString(), 1, countThrows(slice));
@@ -789,15 +933,18 @@ public class SlicerTest {
   }
 
   @Test
-  public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testTestMessageFormat()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTMESSAGEFORMAT);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTMESSAGEFORMAT);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -808,37 +955,46 @@ public class SlicerTest {
     ThinSlicer ts = new ThinSlicer(cg, builder.getPointerAnalysis());
     Collection<Statement> slice = ts.computeBackwardThinSlice(seed);
     dumpSlice(slice);
-
   }
 
-  /**
-   * test for bug reported on mailing list by Joshua Garcia, 5/16/2010
-   */
+  /** test for bug reported on mailing list by Joshua Garcia, 5/16/2010 */
   @Test
-  public void testTestInetAddr() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
+  public void testTestInetAddr()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
+          UnsoundGraphException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_TESTINETADDR);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_TESTINETADDR);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    SDG<?> sdg = new SDG<>(cg, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
+    SDG<?> sdg =
+        new SDG<>(
+            cg,
+            builder.getPointerAnalysis(),
+            DataDependenceOptions.NO_BASE_NO_HEAP,
+            ControlDependenceOptions.FULL);
     GraphIntegrity.check(sdg);
   }
 
   @Test
-  public void testJustThrow() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void testJustThrow()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
     IClassHierarchy cha = findOrCreateCHA(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.SLICE_JUSTTHROW);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.SLICE_JUSTTHROW);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
@@ -847,8 +1003,13 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL,
-        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
   }
 
@@ -872,7 +1033,8 @@ public class SlicerTest {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSANewInstruction) {
           AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
-          if (scope.isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+          if (scope.isApplicationLoader(
+              s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
             count++;
           }
         }
@@ -922,13 +1084,15 @@ public class SlicerTest {
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
-        if (scope.isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+        if (scope.isApplicationLoader(
+            s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
           count++;
         }
       }
     }
     return count;
   }
+
   public static int countConditionals(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
@@ -973,7 +1137,7 @@ public class SlicerTest {
 
   public static int countReturns(Collection<Statement> slice) {
     int count = 0;
-    for (Statement s: slice) {
+    for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSAReturnInstruction) {
@@ -1046,7 +1210,8 @@ public class SlicerTest {
     }
   }
 
-  public static void dumpSliceToFile(Collection<Statement> slice, String fileName) throws FileNotFoundException {
+  public static void dumpSliceToFile(Collection<Statement> slice, String fileName)
+      throws FileNotFoundException {
     File f = new File(fileName);
     FileOutputStream fo = new FileOutputStream(f);
     try (final PrintWriter w = new PrintWriter(fo)) {
@@ -1095,7 +1260,8 @@ public class SlicerTest {
         SSAInvokeInstruction call = (SSAInvokeInstruction) s;
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
           IntSet indices = ir.getCallInstructionIndices(((SSAInvokeInstruction) s).getCallSite());
-          Assertions.productionAssertion(indices.size() == 1, "expected 1 but got " + indices.size());
+          Assertions.productionAssertion(
+              indices.size() == 1, "expected 1 but got " + indices.size());
           return new NormalStatement(n, indices.intIterator().next());
         }
       }

@@ -14,28 +14,27 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
  * A property vertex represents all properties with a given name.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public class PropVertex extends Vertex implements PointerKey {
-	private final String propName;
+  private final String propName;
 
-	PropVertex(String propName) {
-		this.propName = propName;
-	}
-	
-	public String getPropName() {
-	  return propName;
-	}
+  PropVertex(String propName) {
+    this.propName = propName;
+  }
 
-	@Override
-	public <T> T accept(VertexVisitor<T> visitor) {
-		return visitor.visitPropVertex(this);
-	}
-	
-	@Override
-	public String toString() {
-		return "Prop(" + propName + ')';
-	}
+  public String getPropName() {
+    return propName;
+  }
+
+  @Override
+  public <T> T accept(VertexVisitor<T> visitor) {
+    return visitor.visitPropVertex(this);
+  }
+
+  @Override
+  public String toString() {
+    return "Prop(" + propName + ')';
+  }
 }

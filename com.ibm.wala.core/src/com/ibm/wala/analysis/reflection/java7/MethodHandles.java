@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.analysis.reflection.java7;
 
-import java.lang.ref.SoftReference;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.function.Predicate;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -56,6 +51,10 @@ import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.lang.ref.SoftReference;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Predicate;
 
 public class MethodHandles {
 
@@ -63,27 +62,30 @@ public class MethodHandles {
 
   private static final IntSet self = IntSetUtil.make(new int[0]);
 
-  private static ContextKey METHOD_KEY = new ContextKey() {
-    @Override
-    public String toString() {
-      return "METHOD_KEY";
-    }
-  };
-  
-  private static ContextKey CLASS_KEY = new ContextKey() {
-    @Override
-    public String toString() {
-      return "CLASS_KEY";
-    }
-  };
-  
-  private static ContextKey NAME_KEY = new ContextKey() {
-    @Override
-    public String toString() {
-      return "NAME_KEY";
-    }
-  };
-  
+  private static ContextKey METHOD_KEY =
+      new ContextKey() {
+        @Override
+        public String toString() {
+          return "METHOD_KEY";
+        }
+      };
+
+  private static ContextKey CLASS_KEY =
+      new ContextKey() {
+        @Override
+        public String toString() {
+          return "CLASS_KEY";
+        }
+      };
+
+  private static ContextKey NAME_KEY =
+      new ContextKey() {
+        @Override
+        public String toString() {
+          return "NAME_KEY";
+        }
+      };
+
   private static class HandlesItem<T> implements ContextItem {
     private final T item;
 
@@ -101,27 +103,22 @@ public class MethodHandles {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       HandlesItem<?> other = (HandlesItem<?>) obj;
       if (item == null) {
-        if (other.item != null)
-          return false;
-      } else if (!item.equals(other.item))
-        return false;
+        if (other.item != null) return false;
+      } else if (!item.equals(other.item)) return false;
       return true;
     }
   }
- 
+
   public static class FindContext implements Context {
     private final Context base;
     private final TypeReference cls;
     private final String selector;
-    
+
     public FindContext(Context base, TypeReference cls, String methodName) {
       this.base = base;
       this.cls = cls;
@@ -152,38 +149,27 @@ public class MethodHandles {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       FindContext other = (FindContext) obj;
       if (base == null) {
-        if (other.base != null)
-          return false;
-      } else if (!base.equals(other.base))
-        return false;
+        if (other.base != null) return false;
+      } else if (!base.equals(other.base)) return false;
       if (cls == null) {
-        if (other.cls != null)
-          return false;
-      } else if (!cls.equals(other.cls))
-        return false;
+        if (other.cls != null) return false;
+      } else if (!cls.equals(other.cls)) return false;
       if (selector == null) {
-        if (other.selector != null)
-          return false;
-      } else if (!selector.equals(other.selector))
-        return false;
+        if (other.selector != null) return false;
+      } else if (!selector.equals(other.selector)) return false;
       return true;
     }
-    
-    
   }
-  
+
   private static class MethodContext implements Context {
     private final Context base;
     private final MethodReference method;
-        
+
     public MethodContext(Context base, MethodReference method) {
       this.base = base;
       this.method = method;
@@ -209,78 +195,96 @@ public class MethodHandles {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       MethodContext other = (MethodContext) obj;
       if (base == null) {
-        if (other.base != null)
-          return false;
-      } else if (!base.equals(other.base))
-        return false;
+        if (other.base != null) return false;
+      } else if (!base.equals(other.base)) return false;
       if (method == null) {
-        if (other.method != null)
-          return false;
-      } else if (!method.equals(other.method))
-        return false;
+        if (other.method != null) return false;
+      } else if (!method.equals(other.method)) return false;
       return true;
     }
-    
+
     @Override
     public String toString() {
       return "ctxt:" + method.getName();
     }
   }
-  
+
   private static class ContextSelectorImpl implements ContextSelector {
     private final ContextSelector base;
-    
+
     public ContextSelectorImpl(ContextSelector base) {
       this.base = base;
     }
 
     @Override
-    public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
+    public Context getCalleeTarget(
+        CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
       Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
-      if ((isInvoke(callee) || isType(callee)) && callee.getReference().getDeclaringClass().getName().equals(TypeReference.JavaLangInvokeMethodHandle.getName())) {
+      if ((isInvoke(callee) || isType(callee))
+          && callee
+              .getReference()
+              .getDeclaringClass()
+              .getName()
+              .equals(TypeReference.JavaLangInvokeMethodHandle.getName())) {
         if (actualParameters != null && actualParameters.length > 0) {
           InstanceKey selfKey = actualParameters[0];
-          if (selfKey instanceof ConstantKey && ((ConstantKey<?>)selfKey).getConcreteType().getReference().equals(TypeReference.JavaLangInvokeMethodHandle)) {
-            MethodReference ref = ((IMethod) ((ConstantKey<?>)selfKey).getValue()).getReference();
+          if (selfKey instanceof ConstantKey
+              && ((ConstantKey<?>) selfKey)
+                  .getConcreteType()
+                  .getReference()
+                  .equals(TypeReference.JavaLangInvokeMethodHandle)) {
+            MethodReference ref = ((IMethod) ((ConstantKey<?>) selfKey).getValue()).getReference();
             return new MethodContext(baseContext, ref);
           }
         }
       }
-      
-      if (isFindStatic(callee)  && callee.getDeclaringClass().getReference().equals(TypeReference.JavaLangInvokeMethodHandlesLookup)) {
+
+      if (isFindStatic(callee)
+          && callee
+              .getDeclaringClass()
+              .getReference()
+              .equals(TypeReference.JavaLangInvokeMethodHandlesLookup)) {
         if (actualParameters != null && actualParameters.length > 2) {
           InstanceKey classKey = actualParameters[1];
           InstanceKey nameKey = actualParameters[2];
-          if (classKey instanceof ConstantKey && ((ConstantKey<?>)classKey).getConcreteType().getReference().equals(TypeReference.JavaLangClass) &&
-              nameKey instanceof ConstantKey && ((ConstantKey<?>)nameKey).getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
-            return new FindContext(baseContext, ((IClass)((ConstantKey<?>)classKey).getValue()).getReference(), (String)((ConstantKey<?>)nameKey).getValue());
+          if (classKey instanceof ConstantKey
+              && ((ConstantKey<?>) classKey)
+                  .getConcreteType()
+                  .getReference()
+                  .equals(TypeReference.JavaLangClass)
+              && nameKey instanceof ConstantKey
+              && ((ConstantKey<?>) nameKey)
+                  .getConcreteType()
+                  .getReference()
+                  .equals(TypeReference.JavaLangString)) {
+            return new FindContext(
+                baseContext,
+                ((IClass) ((ConstantKey<?>) classKey).getValue()).getReference(),
+                (String) ((ConstantKey<?>) nameKey).getValue());
           }
         }
       }
-      
+
       return baseContext;
     }
 
     @Override
     public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
       MutableIntSet x = IntSetUtil.makeMutableCopy(base.getRelevantParameters(caller, site));
-      x.addAll(isFindStatic(site.getDeclaredTarget())? params: self);
+      x.addAll(isFindStatic(site.getDeclaredTarget()) ? params : self);
       return x;
     }
   }
-  
+
   private static class InvokeExactTargetSelector implements MethodTargetSelector {
     private final MethodTargetSelector base;
     private final Map<MethodReference, SyntheticMethod> impls = HashMapFactory.make();
-    
+
     public InvokeExactTargetSelector(MethodTargetSelector base) {
       this.base = base;
     }
@@ -289,27 +293,37 @@ public class MethodHandles {
     public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
       MethodReference target = site.getDeclaredTarget();
       if (isInvokeExact(target)) {
-        if (! impls.containsKey(target)) {
-          SyntheticMethod invokeExactTrampoline = new SyntheticMethod(target, receiver.getClassHierarchy().lookupClass(TypeReference.JavaLangInvokeMethodHandle), false, false);
+        if (!impls.containsKey(target)) {
+          SyntheticMethod invokeExactTrampoline =
+              new SyntheticMethod(
+                  target,
+                  receiver
+                      .getClassHierarchy()
+                      .lookupClass(TypeReference.JavaLangInvokeMethodHandle),
+                  false,
+                  false);
           impls.put(target, invokeExactTrampoline);
         }
-        
+
         return impls.get(target);
       }
-      
+
       return base.getCalleeTarget(caller, site, receiver);
     }
   }
-  
+
   private static boolean isInvokeExact(MethodReference target) {
-    return target.getDeclaringClass().getName().equals(TypeReference.JavaLangInvokeMethodHandle.getName()) &&
-        target.getName().toString().equals("invokeExact");
+    return target
+            .getDeclaringClass()
+            .getName()
+            .equals(TypeReference.JavaLangInvokeMethodHandle.getName())
+        && target.getName().toString().equals("invokeExact");
   }
 
   private static boolean isFindStatic(MethodReference node) {
     return node.getName().toString().startsWith("findStatic");
   }
-  
+
   private static boolean isFindStatic(IMethod node) {
     return isFindStatic(node.getReference());
   }
@@ -343,17 +357,16 @@ public class MethodHandles {
     }
 
     public Iterator<FieldReference> iterateFields(CGNode node, Predicate<SSAInstruction> filter) {
-      return 
-          new MapIterator<>(
-              new FilterIterator<>(getIR(node).iterateNormalInstructions(), filter), 
-              object -> ((SSAFieldAccessInstruction)object).getDeclaredField());
+      return new MapIterator<>(
+          new FilterIterator<>(getIR(node).iterateNormalInstructions(), filter),
+          object -> ((SSAFieldAccessInstruction) object).getDeclaredField());
     }
-    
+
     @Override
     public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
       return iterateFields(node, SSAGetInstruction.class::isInstance);
     }
-    
+
     @Override
     public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
       return iterateFields(node, SSAPutInstruction.class::isInstance);
@@ -361,7 +374,7 @@ public class MethodHandles {
 
     @Override
     public boolean recordFactoryType(CGNode node, IClass klass) {
-       return false;
+      return false;
     }
 
     @Override
@@ -388,11 +401,10 @@ public class MethodHandles {
     public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) {
       return getIR(n).getControlFlowGraph();
     }
-
   }
-  
+
   private static class FindContextInterpreterImpl extends HandlersContextInterpreterImpl {
-    
+
     @Override
     public boolean understands(CGNode node) {
       return isFindStatic(node) && node.getContext().isA(FindContext.class);
@@ -402,32 +414,47 @@ public class MethodHandles {
     public IR getIR(CGNode node) {
       if (!irs.containsKey(node) || irs.get(node).get() == null) {
         MethodSummary code = new MethodSummary(node.getMethod().getReference());
-        SummarizedMethod m = new SummarizedMethod(node.getMethod().getReference(), code, node.getMethod().getDeclaringClass());
-        SSAInstructionFactory insts = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().instructionFactory();
+        SummarizedMethod m =
+            new SummarizedMethod(
+                node.getMethod().getReference(), code, node.getMethod().getDeclaringClass());
+        SSAInstructionFactory insts =
+            node.getMethod()
+                .getDeclaringClass()
+                .getClassLoader()
+                .getLanguage()
+                .instructionFactory();
         assert node.getContext().isA(FindContext.class);
-        
+
         @SuppressWarnings("unchecked")
-        IClass cls = node.getClassHierarchy().lookupClass(((HandlesItem<TypeReference>)node.getContext().get(CLASS_KEY)).item);
+        IClass cls =
+            node.getClassHierarchy()
+                .lookupClass(((HandlesItem<TypeReference>) node.getContext().get(CLASS_KEY)).item);
         @SuppressWarnings("unchecked")
-        String selector = ((HandlesItem<String>)node.getContext().get(NAME_KEY)).item;
-        
+        String selector = ((HandlesItem<String>) node.getContext().get(NAME_KEY)).item;
+
         int vn = 10;
-        for(IMethod handleMethod : cls.getAllMethods()) {
-           if (handleMethod.getName().toString().contains(selector)) {  
-            code.addStatement(insts.LoadMetadataInstruction(code.getNextProgramCounter(), vn, TypeReference.JavaLangInvokeMethodHandle, handleMethod.getReference()));
-            code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), vn , false));
+        for (IMethod handleMethod : cls.getAllMethods()) {
+          if (handleMethod.getName().toString().contains(selector)) {
+            code.addStatement(
+                insts.LoadMetadataInstruction(
+                    code.getNextProgramCounter(),
+                    vn,
+                    TypeReference.JavaLangInvokeMethodHandle,
+                    handleMethod.getReference()));
+            code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), vn, false));
             vn++;
           }
         }
-        irs.put(node, new SoftReference<>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
+        irs.put(
+            node, new SoftReference<>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
       }
 
       return irs.get(node).get();
     }
   }
-    
+
   private static class InvokeContextInterpreterImpl extends HandlersContextInterpreterImpl {
-      
+
     @Override
     public boolean understands(CGNode node) {
       return (isInvoke(node) || isType(node)) && node.getContext().isA(MethodContext.class);
@@ -437,63 +464,110 @@ public class MethodHandles {
     public IR getIR(CGNode node) {
       if (!irs.containsKey(node) || irs.get(node).get() == null) {
         MethodSummary code = new MethodSummary(node.getMethod().getReference());
-        SummarizedMethod m = new SummarizedMethod(node.getMethod().getReference(), code, node.getMethod().getDeclaringClass());
-        SSAInstructionFactory insts = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().instructionFactory();
+        SummarizedMethod m =
+            new SummarizedMethod(
+                node.getMethod().getReference(), code, node.getMethod().getDeclaringClass());
+        SSAInstructionFactory insts =
+            node.getMethod()
+                .getDeclaringClass()
+                .getClassLoader()
+                .getLanguage()
+                .instructionFactory();
         assert node.getContext().isA(MethodContext.class);
-        MethodReference ref = ((MethodContext)node.getContext()).method;
+        MethodReference ref = ((MethodContext) node.getContext()).method;
         boolean isStatic = node.getClassHierarchy().resolveMethod(ref).isStatic();
         boolean isVoid = ref.getReturnType().equals(TypeReference.Void);
         if (isInvoke(node)) {
           String name = node.getMethod().getName().toString();
           switch (name) {
-            case "invokeWithArguments": {
-              int nargs = ref.getNumberOfParameters();
-              int params[] = new int[nargs];
-              for (int i = 0; i < nargs; i++) {
-                code.addConstant(i + nargs + 3, new ConstantValue(i));
-                code.addStatement(insts.ArrayLoadInstruction(code.getNextProgramCounter(), i + 3, 1, i + nargs + 3, TypeReference.JavaLangObject));
-                params[i] = i + 3;
-              }
-              CallSiteReference site = CallSiteReference.make(nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
-              code.addStatement(insts.InvokeInstruction(code.getNextProgramCounter(), 2 * nargs + 3, params, 2 * nargs + 4, site, null));
-              code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2 * nargs + 3, false));
-              break;
-            }
-            case "invokeExact": {
-              int nargs = node.getMethod().getReference().getNumberOfParameters();
-              int params[] = new int[nargs];
-              if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
+            case "invokeWithArguments":
+              {
+                int nargs = ref.getNumberOfParameters();
+                int params[] = new int[nargs];
                 for (int i = 0; i < nargs; i++) {
-                  params[i] = i + 2;
+                  code.addConstant(i + nargs + 3, new ConstantValue(i));
+                  code.addStatement(
+                      insts.ArrayLoadInstruction(
+                          code.getNextProgramCounter(),
+                          i + 3,
+                          1,
+                          i + nargs + 3,
+                          TypeReference.JavaLangObject));
+                  params[i] = i + 3;
                 }
-                CallSiteReference site = CallSiteReference.make(0, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
-                if (isVoid) {
-                  code.addStatement(insts.InvokeInstruction(code.getNextProgramCounter(), params, nargs + 2, site, null));
-                } else {
-                  code.addStatement(insts.InvokeInstruction(code.getNextProgramCounter(), nargs + 2, params, nargs + 3, site, null));
-                  code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), nargs + 2, false));
-                }
+                CallSiteReference site =
+                    CallSiteReference.make(
+                        nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
+                code.addStatement(
+                    insts.InvokeInstruction(
+                        code.getNextProgramCounter(),
+                        2 * nargs + 3,
+                        params,
+                        2 * nargs + 4,
+                        site,
+                        null));
+                code.addStatement(
+                    insts.ReturnInstruction(code.getNextProgramCounter(), 2 * nargs + 3, false));
+                break;
               }
-              break;
-            }
+            case "invokeExact":
+              {
+                int nargs = node.getMethod().getReference().getNumberOfParameters();
+                int params[] = new int[nargs];
+                if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
+                  for (int i = 0; i < nargs; i++) {
+                    params[i] = i + 2;
+                  }
+                  CallSiteReference site =
+                      CallSiteReference.make(0, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
+                  if (isVoid) {
+                    code.addStatement(
+                        insts.InvokeInstruction(
+                            code.getNextProgramCounter(), params, nargs + 2, site, null));
+                  } else {
+                    code.addStatement(
+                        insts.InvokeInstruction(
+                            code.getNextProgramCounter(),
+                            nargs + 2,
+                            params,
+                            nargs + 3,
+                            site,
+                            null));
+                    code.addStatement(
+                        insts.ReturnInstruction(code.getNextProgramCounter(), nargs + 2, false));
+                  }
+                }
+                break;
+              }
           }
         } else {
           assert isType(node);
-          code.addStatement(insts.LoadMetadataInstruction(code.getNextProgramCounter(), 2, TypeReference.JavaLangInvokeMethodType, ref.getDescriptor()));
+          code.addStatement(
+              insts.LoadMetadataInstruction(
+                  code.getNextProgramCounter(),
+                  2,
+                  TypeReference.JavaLangInvokeMethodType,
+                  ref.getDescriptor()));
           code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2, false));
         }
-        irs.put(node, new SoftReference<>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
+        irs.put(
+            node, new SoftReference<>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
       }
 
       return irs.get(node).get();
     }
   }
-  
-  public static void analyzeMethodHandles(AnalysisOptions options, SSAPropagationCallGraphBuilder builder) {
+
+  public static void analyzeMethodHandles(
+      AnalysisOptions options, SSAPropagationCallGraphBuilder builder) {
     options.setSelector(new InvokeExactTargetSelector(options.getMethodTargetSelector()));
 
     builder.setContextSelector(new ContextSelectorImpl(builder.getContextSelector()));
-    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new InvokeContextInterpreterImpl(), builder.getCFAContextInterpreter()));
-    builder.setContextInterpreter(new DelegatingSSAContextInterpreter(new FindContextInterpreterImpl(), builder.getCFAContextInterpreter()));
+    builder.setContextInterpreter(
+        new DelegatingSSAContextInterpreter(
+            new InvokeContextInterpreterImpl(), builder.getCFAContextInterpreter()));
+    builder.setContextInterpreter(
+        new DelegatingSSAContextInterpreter(
+            new FindContextInterpreterImpl(), builder.getCFAContextInterpreter()));
   }
 }

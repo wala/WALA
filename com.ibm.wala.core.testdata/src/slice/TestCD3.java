@@ -12,8 +12,7 @@ package slice;
 
 public class TestCD3 {
 
-  static void doNothing(Object o) {
-  }
+  static void doNothing(Object o) {}
 
   public static void main(String[] args) {
     Integer I = (Integer) new A().foo();

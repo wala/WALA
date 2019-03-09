@@ -14,47 +14,46 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**
- * A {@link NodePos} for a non-root node; includes information about the parent node, the child index, and
- * the position of the parent node.
- * 
- * @author mschaefer
+ * A {@link NodePos} for a non-root node; includes information about the parent node, the child
+ * index, and the position of the parent node.
  *
+ * @author mschaefer
  */
 public class ChildPos extends NodePos {
-	private CAstNode parent;
-	private int index;
-	private NodePos parent_pos;
-	
-	public ChildPos(CAstNode parent, int index, NodePos parent_pos) {
-		this.parent = parent;
-		this.index = index;
-		this.parent_pos = parent_pos;
-	}
-	
-	public CAstNode getParent() {
-		return parent;
-	}
-	
-	public int getIndex() {
-		return index;
-	}
-	
-	public NodePos getParentPos() {
-		return parent_pos;
-	}
-	
-	public CAstNode getChild() {
-	  return parent.getChild(index);
-	}
-	
-	public ChildPos getChildPos(int index) {
-	  return new ChildPos(this.getChild(), index, this);
-	}
-	
-	@Override
-	public <A> A accept(PosSwitch<A> ps) {
-		return ps.caseChildPos(this);
-	}
+  private CAstNode parent;
+  private int index;
+  private NodePos parent_pos;
+
+  public ChildPos(CAstNode parent, int index, NodePos parent_pos) {
+    this.parent = parent;
+    this.index = index;
+    this.parent_pos = parent_pos;
+  }
+
+  public CAstNode getParent() {
+    return parent;
+  }
+
+  public int getIndex() {
+    return index;
+  }
+
+  public NodePos getParentPos() {
+    return parent_pos;
+  }
+
+  public CAstNode getChild() {
+    return parent.getChild(index);
+  }
+
+  public ChildPos getChildPos(int index) {
+    return new ChildPos(this.getChild(), index, this);
+  }
+
+  @Override
+  public <A> A accept(PosSwitch<A> ps) {
+    return ps.caseChildPos(this);
+  }
 
   @Override
   public int hashCode() {
@@ -68,25 +67,17 @@ public class ChildPos extends NodePos {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     ChildPos other = (ChildPos) obj;
-    if (index != other.index)
-      return false;
+    if (index != other.index) return false;
     if (parent == null) {
-      if (other.parent != null)
-        return false;
-    } else if (!parent.equals(other.parent))
-      return false;
+      if (other.parent != null) return false;
+    } else if (!parent.equals(other.parent)) return false;
     if (parent_pos == null) {
-      if (other.parent_pos != null)
-        return false;
-    } else if (!parent_pos.equals(other.parent_pos))
-      return false;
+      if (other.parent_pos != null) return false;
+    } else if (!parent_pos.equals(other.parent_pos)) return false;
     return true;
   }
 }

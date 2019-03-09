@@ -10,69 +10,68 @@
  */
 package com.ibm.wala.util.intset;
 
-import java.io.Serializable;
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.collections.TwoLevelVector;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * A relation between non-negative integers
- * 
- * This implementation uses n IntVectors, to hold the first n y's associated with each x, and then 1 extra vector of SparseIntSet to
- * hold the remaining ys.
+ *
+ * <p>This implementation uses n IntVectors, to hold the first n y's associated with each x, and
+ * then 1 extra vector of SparseIntSet to hold the remaining ys.
  */
 public final class BasicNaturalRelation implements IBinaryNaturalRelation, Serializable {
 
   private static final long serialVersionUID = 4483720230344867621L;
 
-  private final static boolean VERBOSE = false;
+  private static final boolean VERBOSE = false;
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
-  /**
-   * Tokens used as enumerated types to control the representation
-   */
-  public final static byte SIMPLE = 0;
+  /** Tokens used as enumerated types to control the representation */
+  public static final byte SIMPLE = 0;
 
-  public final static byte TWO_LEVEL = 1;
+  public static final byte TWO_LEVEL = 1;
 
-  public final static byte SIMPLE_SPACE_STINGY = 2;
+  public static final byte SIMPLE_SPACE_STINGY = 2;
 
-  private final static int EMPTY_CODE = -1;
+  private static final int EMPTY_CODE = -1;
 
-  private final static int DELEGATE_CODE = -2;
+  private static final int DELEGATE_CODE = -2;
 
   /**
    * smallStore[i][x] holds
+   *
    * <ul>
-   * <li>if &gt;=0, the ith integer associated with x
-   * <li>if -2, then use the delegateStore instead of the small store
-   * <li>if -1, then R(x) is empty
+   *   <li>if &gt;=0, the ith integer associated with x
+   *   <li>if -2, then use the delegateStore instead of the small store
+   *   <li>if -1, then R(x) is empty
    * </ul>
+   *
    * represented.
    */
   final IntVector[] smallStore;
 
-  /**
-   * delegateStore[x] holds an int set of the y's s.t. R(x,y)
-   */
+  /** delegateStore[x] holds an int set of the y's s.t. R(x,y) */
   final IVector<IntSet> delegateStore;
 
   /**
-   * @param implementation a set of codes that represent how the first n IntVectors should be implemented.
+   * @param implementation a set of codes that represent how the first n IntVectors should be
+   *     implemented.
    * @param vectorImpl a code that indicates how to represent the delegateStore.
-   * 
-   *          For example implementation = {SIMPLE_INT_VECTOR,TWO_LEVEL_INT_VECTOR,TWO_LEVEL_INT_VECTOR} will result in an
-   *          implementation where the first 3 y's associated with each x are represented in IntVectors. The IntVector for the first
-   *          y will be implemented with a SimpleIntVector, and the 2nd and 3rd are implemented with TwoLevelIntVector
-   * 
+   *     <p>For example implementation =
+   *     {SIMPLE_INT_VECTOR,TWO_LEVEL_INT_VECTOR,TWO_LEVEL_INT_VECTOR} will result in an
+   *     implementation where the first 3 y's associated with each x are represented in IntVectors.
+   *     The IntVector for the first y will be implemented with a SimpleIntVector, and the 2nd and
+   *     3rd are implemented with TwoLevelIntVector
    * @throws IllegalArgumentException if implementation is null
    * @throws IllegalArgumentException if implementation.length == 0
    */
-  public BasicNaturalRelation(byte[] implementation, byte vectorImpl) throws IllegalArgumentException {
+  public BasicNaturalRelation(byte[] implementation, byte vectorImpl)
+      throws IllegalArgumentException {
 
     if (implementation == null) {
       throw new IllegalArgumentException("implementation is null");
@@ -83,46 +82,44 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     smallStore = new IntVector[implementation.length];
     for (int i = 0; i < implementation.length; i++) {
       switch (implementation[i]) {
-      case SIMPLE:
-        smallStore[i] = new SimpleIntVector(EMPTY_CODE);
-        break;
-      case TWO_LEVEL:
-        smallStore[i] = new TwoLevelIntVector(EMPTY_CODE);
-        break;
-      case SIMPLE_SPACE_STINGY:
-        smallStore[i] = new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
-        break;
-      default:
-        throw new IllegalArgumentException("unsupported implementation " + implementation[i]);
+        case SIMPLE:
+          smallStore[i] = new SimpleIntVector(EMPTY_CODE);
+          break;
+        case TWO_LEVEL:
+          smallStore[i] = new TwoLevelIntVector(EMPTY_CODE);
+          break;
+        case SIMPLE_SPACE_STINGY:
+          smallStore[i] = new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
+          break;
+        default:
+          throw new IllegalArgumentException("unsupported implementation " + implementation[i]);
       }
     }
     switch (vectorImpl) {
-    case SIMPLE:
-      delegateStore = new SimpleVector<>();
-      break;
-    case TWO_LEVEL:
-      delegateStore = new TwoLevelVector<>();
-      break;
-    default:
-      throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
+      case SIMPLE:
+        delegateStore = new SimpleVector<>();
+        break;
+      case TWO_LEVEL:
+        delegateStore = new TwoLevelVector<>();
+        break;
+      default:
+        throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
     }
   }
 
   public BasicNaturalRelation() {
-    this(new byte[] { SIMPLE }, TWO_LEVEL);
+    this(new byte[] {SIMPLE}, TWO_LEVEL);
   }
 
-  /**
-   * maximum x for any pair in this relation.
-   */
+  /** maximum x for any pair in this relation. */
   private int maxX = -1;
 
   /**
    * Add (x,y) to the relation.
-   * 
-   * This is performance-critical, so the implementation looks a little ugly in order to help out the compiler with redundancy
-   * elimination.
-   * 
+   *
+   * <p>This is performance-critical, so the implementation looks a little ugly in order to help out
+   * the compiler with redundancy elimination.
+   *
    * @return true iff the relation changes as a result of this call.
    */
   @Override
@@ -183,14 +180,12 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
 
   private class TotalIterator implements Iterator<IntPair> {
 
-    /**
-     * the next x that will be returned in a pair (x,y), or -1 if not hasNext()
-     */
+    /** the next x that will be returned in a pair (x,y), or -1 if not hasNext() */
     private int nextX = -1;
 
     /**
-     * the source of the next y ... an integer between 0 and smallStore.length .. nextIndex == smallStore.length means use the
-     * delegateIterator
+     * the source of the next y ... an integer between 0 and smallStore.length .. nextIndex ==
+     * smallStore.length means use the delegateIterator
      */
     private int nextIndex = -1;
 
@@ -243,7 +238,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
         }
       } else {
         result = new IntPair(nextX, smallStore[nextIndex].get(nextX));
-        if (nextIndex == (smallStore.length - 1) || smallStore[nextIndex + 1].get(nextX) == EMPTY_CODE) {
+        if (nextIndex == (smallStore.length - 1)
+            || smallStore[nextIndex + 1].get(nextX) == EMPTY_CODE) {
           advanceX();
         } else {
           nextIndex++;
@@ -256,16 +252,13 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     public void remove() {
       Assertions.UNREACHABLE();
     }
-
   }
 
   private IntSet getDelegate(int x) {
     return delegateStore.get(x);
   }
 
-  /**
-   * @return true iff there exists pair (x,y) for some y
-   */
+  /** @return true iff there exists pair (x,y) for some y */
   @Override
   public boolean anyRelated(int x) {
     return smallStore[0].get(x) != EMPTY_CODE;
@@ -288,31 +281,34 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
       } else {
         int ssLength = smallStore.length;
         switch (ssLength) {
-          case 2: {
-            int ss1 = smallStore[1].get(x);
-            if (ss1 == EMPTY_CODE) {
-              return SparseIntSet.singleton(ss0);
-            } else {
-              return SparseIntSet.pair(ss0, ss1);
+          case 2:
+            {
+              int ss1 = smallStore[1].get(x);
+              if (ss1 == EMPTY_CODE) {
+                return SparseIntSet.singleton(ss0);
+              } else {
+                return SparseIntSet.pair(ss0, ss1);
+              }
             }
-          }
           case 1:
             return SparseIntSet.singleton(ss0);
-          default: {
-            int ss1 = smallStore[1].get(x);
-            if (ss1 == EMPTY_CODE) {
-              return SparseIntSet.singleton(ss0);
-            } else {
-              MutableSparseIntSet result = MutableSparseIntSet.createMutableSparseIntSet(ssLength);
-              for (IntVector element : smallStore) {
-                if (element.get(x) == EMPTY_CODE) {
-                  break;
+          default:
+            {
+              int ss1 = smallStore[1].get(x);
+              if (ss1 == EMPTY_CODE) {
+                return SparseIntSet.singleton(ss0);
+              } else {
+                MutableSparseIntSet result =
+                    MutableSparseIntSet.createMutableSparseIntSet(ssLength);
+                for (IntVector element : smallStore) {
+                  if (element.get(x) == EMPTY_CODE) {
+                    break;
+                  }
+                  result.add(element.get(x));
                 }
-                result.add(element.get(x));
+                return result;
               }
-              return result;
             }
-          }
         }
       }
     }
@@ -404,7 +400,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
 
   /**
    * This is slow.
-   * 
+   *
    * @return the size of this relation, in the number of pairs
    */
   private int countPairs() {

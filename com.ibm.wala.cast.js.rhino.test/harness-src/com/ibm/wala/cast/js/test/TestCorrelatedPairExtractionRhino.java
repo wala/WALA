@@ -11,8 +11,6 @@
 
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
-
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -20,23 +18,25 @@ import com.ibm.wala.cast.js.translator.RhinoToAstTranslator;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.classLoader.SourceModule;
+import java.io.IOException;
 
 public class TestCorrelatedPairExtractionRhino extends TestCorrelatedPairExtraction {
-	@Override
+  @Override
   protected CorrelationFinder makeCorrelationFinder() {
-		return new CorrelationFinder(new CAstRhinoTranslatorFactory());
-	}
-	
-	@Override
+    return new CorrelationFinder(new CAstRhinoTranslatorFactory());
+  }
+
+  @Override
   protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
-		RhinoToAstTranslator translator = new RhinoToAstTranslator(ast, module, module.getName(), false);
-		CAstEntity entity = null;
-		try {
-			entity = translator.translateToCAst();
-		} catch (Error e) {
-			e.printStackTrace();
-			assert false;
-		}
-		return entity;
-	}
+    RhinoToAstTranslator translator =
+        new RhinoToAstTranslator(ast, module, module.getName(), false);
+    CAstEntity entity = null;
+    try {
+      entity = translator.translateToCAst();
+    } catch (Error e) {
+      e.printStackTrace();
+      assert false;
+    }
+    return entity;
+  }
 }

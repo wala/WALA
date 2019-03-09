@@ -14,28 +14,26 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 
-/**
- */
+/** */
 public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
   protected final int result;
 
   /**
-   * The value numbers of the arguments passed to the call. For non-static methods, params[0] == this. If params == null, this
-   * should be a static method with no parameters.
+   * The value numbers of the arguments passed to the call. For non-static methods, params[0] ==
+   * this. If params == null, this should be a static method with no parameters.
    */
   protected final int[] params;
 
-  protected SSAInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+  protected SSAInvokeInstruction(
+      int iindex, int result, int[] params, int exception, CallSiteReference site) {
     super(iindex, exception, site);
     this.result = result;
     this.params = params;
     assertParamsKosher(result, params, site);
   }
 
-  /**
-   * Constructor InvokeInstruction. This case for void return values
-   */
+  /** Constructor InvokeInstruction. This case for void return values */
   protected SSAInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
     this(iindex, -1, params, exception, site);
   }
@@ -44,11 +42,17 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     // result == -1 for void-returning methods, which are the only calls
     // that have a single value def.
-    return insts.InvokeInstruction(iindex, defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
-        defs == null ? exception : defs[result == -1 ? 0 : 1], site, null);
+    return insts.InvokeInstruction(
+        iindex,
+        defs == null || result == -1 ? result : defs[0],
+        uses == null ? params : uses,
+        defs == null ? exception : defs[result == -1 ? 0 : 1],
+        site,
+        null);
   }
 
-  public static void assertParamsKosher(int result, int[] params, CallSiteReference site) throws IllegalArgumentException {
+  public static void assertParamsKosher(int result, int[] params, CallSiteReference site)
+      throws IllegalArgumentException {
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
@@ -67,8 +71,13 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     if (nExpected > 0) {
       assert params != null : "null params for " + site;
       if (params.length != nExpected) {
-        assert params.length == nExpected : "wrong number of params for " + site + " Expected " + nExpected + " got "
-            + params.length;
+        assert params.length == nExpected
+            : "wrong number of params for "
+                + site
+                + " Expected "
+                + nExpected
+                + " got "
+                + params.length;
       }
     }
   }
@@ -85,9 +94,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     v.visitInvoke(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfUses() {
     if (params == null) {
@@ -117,19 +124,24 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */
   @Override
   public int getUse(int j) {
     if (params == null) {
       assert false : "Invalid getUse: " + j + " , null params " + this;
     }
     if (j >= params.length) {
-        throw new ArrayIndexOutOfBoundsException("Invalid getUse: " + this + ", index " + j + ", params.length " + params.length);
+      throw new ArrayIndexOutOfBoundsException(
+          "Invalid getUse: " + this + ", index " + j + ", params.length " + params.length);
     }
     if (j < 0) {
-        throw new ArrayIndexOutOfBoundsException("j may not be negative! In getUse "  + this + ", index " + j + ", params.length " + params.length);
+      throw new ArrayIndexOutOfBoundsException(
+          "j may not be negative! In getUse "
+              + this
+              + ", index "
+              + j
+              + ", params.length "
+              + params.length);
     }
     return params[j];
   }
@@ -138,5 +150,4 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   public int hashCode() {
     return (site.hashCode() * 7529) + (exception * 9823);
   }
-
 }

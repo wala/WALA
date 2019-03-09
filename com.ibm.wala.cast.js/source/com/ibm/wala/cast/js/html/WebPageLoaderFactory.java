@@ -33,14 +33,15 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
   public WebPageLoaderFactory(JavaScriptTranslatorFactory factory) {
     super(factory);
   }
-  
-  public WebPageLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
-   super(factory, preprocessor); 
+
+  public WebPageLoaderFactory(
+      JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
+    super(factory, preprocessor);
   }
 
   @Override
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
-    return new JavaScriptLoader( cha, translatorFactory, preprocessor ) {
+    return new JavaScriptLoader(cha, translatorFactory, preprocessor) {
       @Override
       protected TranslatorToIR initTranslator() {
         return new JSAstTranslator(this) {
@@ -49,76 +50,115 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
           private boolean isNestedWithinScriptBody(WalkContext context) {
             return isScriptBody(context) || context.getName().contains("__WINDOW_MAIN__");
           }
-          
+
           private boolean isScriptBody(WalkContext context) {
-            return context.top().getName().equals( "__WINDOW_MAIN__" );
+            return context.top().getName().equals("__WINDOW_MAIN__");
           }
-          
+
           @Override
-          protected int doGlobalRead(CAstNode n, WalkContext context, String name, TypeReference type) {
+          protected int doGlobalRead(
+              CAstNode n, WalkContext context, String name, TypeReference type) {
             int result = context.currentScope().allocateTempValue();
-            if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(name)  && !"window".equals(name) && !name.startsWith("$$destructure")) {
-              
+            if (isNestedWithinScriptBody(context)
+                && !"$$undefined".equals(name)
+                && !"window".equals(name)
+                && !name.startsWith("$$destructure")) {
+
               // check if field is defined on 'window'
-              int windowVal = isScriptBody(context)? super.doLocalRead(context, "this", JavaScriptTypes.Root): super.doGlobalRead(n, context, "window", type);
+              int windowVal =
+                  isScriptBody(context)
+                      ? super.doLocalRead(context, "this", JavaScriptTypes.Root)
+                      : super.doGlobalRead(n, context, "window", type);
               int isDefined = context.currentScope().allocateTempValue();
               context.currentScope().getConstantValue(name);
               doIsFieldDefined(context, isDefined, windowVal, Ast.makeConstant(name));
-              context.cfg().addInstruction(
-                  insts.ConditionalBranchInstruction(context.cfg().getCurrentInstruction(),
-                      translateConditionOpcode(CAstOperator.OP_NE), 
-                      null, 
-                      isDefined, 
-                      context.currentScope().getConstantValue(Integer.valueOf(0)),
-                      -1));
-              PreBasicBlock srcB = context.cfg().getCurrentBlock();       
-              
+              context
+                  .cfg()
+                  .addInstruction(
+                      insts.ConditionalBranchInstruction(
+                          context.cfg().getCurrentInstruction(),
+                          translateConditionOpcode(CAstOperator.OP_NE),
+                          null,
+                          isDefined,
+                          context.currentScope().getConstantValue(Integer.valueOf(0)),
+                          -1));
+              PreBasicBlock srcB = context.cfg().getCurrentBlock();
+
               // field lookup of value
               context.cfg().newBlock(true);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(context.cfg().getCurrentInstruction(), result, windowVal, name));
+              context
+                  .cfg()
+                  .addInstruction(
+                      ((JSInstructionFactory) insts)
+                          .GetInstruction(
+                              context.cfg().getCurrentInstruction(), result, windowVal, name));
               context.cfg().newBlock(true);
-              context.cfg().addInstruction(insts.GotoInstruction(context.cfg().getCurrentInstruction(), -1));
+              context
+                  .cfg()
+                  .addInstruction(insts.GotoInstruction(context.cfg().getCurrentInstruction(), -1));
               PreBasicBlock trueB = context.cfg().getCurrentBlock();
 
               // read global
               context.cfg().newBlock(false);
               PreBasicBlock falseB = context.cfg().getCurrentBlock();
               int sr = super.doGlobalRead(n, context, name, type);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(), result, sr));
+              context
+                  .cfg()
+                  .addInstruction(
+                      ((JSInstructionFactory) insts)
+                          .AssignInstruction(context.cfg().getCurrentInstruction(), result, sr));
 
               // end
               context.cfg().newBlock(true);
-              
+
               context.cfg().addEdge(trueB, context.cfg().getCurrentBlock());
               context.cfg().addEdge(srcB, falseB);
-            
+
               return result;
-              
-            } else {  
+
+            } else {
               return super.doGlobalRead(n, context, name, type);
             }
           }
 
           @Override
-          protected void doLocalWrite(WalkContext context, String nm, TypeReference type, int rval) {
-            if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(nm)  && !"window".equals(nm) && !nm.startsWith("$$destructure")) {
+          protected void doLocalWrite(
+              WalkContext context, String nm, TypeReference type, int rval) {
+            if (isNestedWithinScriptBody(context)
+                && !"$$undefined".equals(nm)
+                && !"window".equals(nm)
+                && !nm.startsWith("$$destructure")) {
               int windowVal = super.doLocalRead(context, "this", type);
               context.currentScope().getConstantValue(nm);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), windowVal, rval, nm));
-            } 
-            
+              context
+                  .cfg()
+                  .addInstruction(
+                      ((JSInstructionFactory) insts)
+                          .PutInstruction(
+                              context.cfg().getCurrentInstruction(), windowVal, rval, nm));
+            }
+
             super.doLocalWrite(context, nm, type, rval);
           }
-          
+
           @Override
-          protected void leaveFunctionStmt(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
+          protected void leaveFunctionStmt(
+              CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
             super.leaveFunctionStmt(n, context, visitor);
             if (isScriptBody(context)) {
               CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
               int fnValue = context.currentScope().lookup(fn.getName()).valueNumber();
               assert fnValue > 0;
               int windowVal = super.doLocalRead(context, "this", JavaScriptTypes.Function);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), windowVal, fnValue, fn.getName()));
+              context
+                  .cfg()
+                  .addInstruction(
+                      ((JSInstructionFactory) insts)
+                          .PutInstruction(
+                              context.cfg().getCurrentInstruction(),
+                              windowVal,
+                              fnValue,
+                              fn.getName()));
             }
           }
         };

@@ -12,14 +12,10 @@ package com.ibm.wala.util.intset;
 
 import java.util.TreeSet;
 
-/**
- * An object that creates mutable sparse int sets.
- */
+/** An object that creates mutable sparse int sets. */
 public class MutableSparseLongSetFactory implements MutableLongSetFactory {
 
-  /**
-   * @throws IllegalArgumentException  if set is null
-   */
+  /** @throws IllegalArgumentException if set is null */
   @Override
   public MutableLongSet make(long[] set) {
     if (set == null) {
@@ -46,8 +42,8 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
   @Override
   public MutableLongSet parse(String string) throws NumberFormatException {
     int[] backingStore = SparseIntSet.parseIntArray(string);
-    long[] bs = new long[ backingStore.length ];
-    for(int i = 0; i < bs.length; i++) bs[i] = backingStore[i];
+    long[] bs = new long[backingStore.length];
+    for (int i = 0; i < bs.length; i++) bs[i] = backingStore[i];
     return new MutableSparseLongSet(bs);
   }
 
@@ -69,5 +65,4 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
   public MutableLongSet make() {
     return new MutableSparseLongSet();
   }
-
 }

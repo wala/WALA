@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Arrays;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -19,20 +17,19 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.util.Arrays;
 
-/**
- * A {@link PointerKey} which carries a type filter, used during pointer analysis
- */
+/** A {@link PointerKey} which carries a type filter, used during pointer analysis */
 public interface FilteredPointerKey extends PointerKey {
 
   public interface TypeFilter extends ContextItem {
 
     boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R);
 
-    boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R);
+    boolean addInverseFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R);
 
     boolean isRootFilter();
-    
   }
 
   public class SingleClassFilter implements TypeFilter {
@@ -58,17 +55,20 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof SingleClassFilter) && ((SingleClassFilter) o).getConcreteType().equals(concreteType);
+      return (o instanceof SingleClassFilter)
+          && ((SingleClassFilter) o).getConcreteType().equals(concreteType);
     }
 
     @Override
-    public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = system.getInstanceKeysForClass(concreteType);
       return (f == null) ? false : L.addAllInIntersection(R, f);
     }
 
     @Override
-    public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addInverseFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = system.getInstanceKeysForClass(concreteType);
 
       // SJF: this is horribly inefficient. we really don't want to do
@@ -106,28 +106,28 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      if (! (o instanceof MultipleClassesFilter)) {
+      if (!(o instanceof MultipleClassesFilter)) {
         return false;
       }
-     
-      MultipleClassesFilter f = (MultipleClassesFilter)o;
-      
+
+      MultipleClassesFilter f = (MultipleClassesFilter) o;
+
       if (concreteType.length != f.concreteType.length) {
         return false;
       }
-      
-      for(int i = 0; i < concreteType.length; i++) {
-        if (! (concreteType[i].equals(f.concreteType[i]))) {
+
+      for (int i = 0; i < concreteType.length; i++) {
+        if (!(concreteType[i].equals(f.concreteType[i]))) {
           return false;
         }
       }
-      
+
       return true;
     }
 
     private IntSet bits(PropagationSystem system) {
       IntSet f = null;
-      for(IClass cls : concreteType) {
+      for (IClass cls : concreteType) {
         if (f == null) {
           f = system.getInstanceKeysForClass(cls);
         } else {
@@ -136,15 +136,17 @@ public interface FilteredPointerKey extends PointerKey {
       }
       return f;
     }
-    
+
     @Override
-    public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = bits(system);
       return (f == null) ? false : L.addAllInIntersection(R, f);
     }
 
     @Override
-    public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addInverseFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = bits(system);
 
       // SJF: this is horribly inefficient. we really don't want to do
@@ -155,7 +157,8 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean isRootFilter() {
-      return concreteType.length == 1 && concreteType[0].getClassHierarchy().getRootClass().equals(concreteType[0]);
+      return concreteType.length == 1
+          && concreteType[0].getClassHierarchy().getRootClass().equals(concreteType[0]);
     }
   }
 
@@ -182,11 +185,13 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof SingleInstanceFilter) && ((SingleInstanceFilter) o).getInstance().equals(concreteType);
+      return (o instanceof SingleInstanceFilter)
+          && ((SingleInstanceFilter) o).getInstance().equals(concreteType);
     }
 
     @Override
-    public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       int idx = system.findOrCreateIndexForInstanceKey(concreteType);
       if (R.contains(idx)) {
         return L.add(idx);
@@ -196,7 +201,8 @@ public interface FilteredPointerKey extends PointerKey {
     }
 
     @Override
-    public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addInverseFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       int idx = system.findOrCreateIndexForInstanceKey(concreteType);
       if (!R.contains(idx) || L.contains(idx)) {
         return L.addAll(R);
@@ -209,7 +215,7 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean isRootFilter() {
-       return false;
+      return false;
     }
   }
 
@@ -236,7 +242,8 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof TargetMethodFilter) && ((TargetMethodFilter) o).getMethod().equals(targetMethod);
+      return (o instanceof TargetMethodFilter)
+          && ((TargetMethodFilter) o).getMethod().equals(targetMethod);
     }
 
     private class UpdateAction implements IntSetAction {
@@ -267,7 +274,8 @@ public interface FilteredPointerKey extends PointerKey {
     }
 
     @Override
-    public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       if (R.getValue() == null) {
         return false;
       } else {
@@ -278,7 +286,8 @@ public interface FilteredPointerKey extends PointerKey {
     }
 
     @Override
-    public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+    public boolean addInverseFiltered(
+        PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       if (R.getValue() == null) {
         return false;
       } else {
@@ -295,7 +304,8 @@ public interface FilteredPointerKey extends PointerKey {
   }
 
   /**
-   * @return the class which should govern filtering of instances to which this pointer points, or null if no filtering needed
+   * @return the class which should govern filtering of instances to which this pointer points, or
+   *     null if no filtering needed
    */
   public TypeFilter getTypeFilter();
 }

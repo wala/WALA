@@ -17,7 +17,7 @@ public class ObjectPropertyCatalogKey extends AbstractPointerKey {
   private final InstanceKey object;
 
   public String getName() {
-      return "catalog of "+object.toString();
+    return "catalog of " + object.toString();
   }
 
   public ObjectPropertyCatalogKey(InstanceKey object) {
@@ -26,8 +26,8 @@ public class ObjectPropertyCatalogKey extends AbstractPointerKey {
 
   @Override
   public boolean equals(Object x) {
-    return (x instanceof ObjectPropertyCatalogKey) &&
-      ((ObjectPropertyCatalogKey)x).object.equals(object);
+    return (x instanceof ObjectPropertyCatalogKey)
+        && ((ObjectPropertyCatalogKey) x).object.equals(object);
   }
 
   @Override

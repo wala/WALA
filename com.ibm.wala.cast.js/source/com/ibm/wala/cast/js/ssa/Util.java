@@ -10,15 +10,14 @@
  */
 package com.ibm.wala.cast.js.ssa;
 
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.types.TypeReference;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.types.TypeReference;
-
 class Util {
-  private static final Collection<TypeReference> TYPE_ERROR_EXCEPTIONS = Collections.unmodifiableCollection(Collections
-      .singleton(JavaScriptTypes.TypeError));
+  private static final Collection<TypeReference> TYPE_ERROR_EXCEPTIONS =
+      Collections.unmodifiableCollection(Collections.singleton(JavaScriptTypes.TypeError));
 
   public static Collection<TypeReference> typeErrorExceptions() {
     return TYPE_ERROR_EXCEPTIONS;
@@ -27,5 +26,4 @@ class Util {
   public static Collection<TypeReference> noExceptions() {
     return Collections.emptySet();
   }
-
 }

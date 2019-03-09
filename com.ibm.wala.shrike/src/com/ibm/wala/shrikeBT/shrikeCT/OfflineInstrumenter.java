@@ -10,20 +10,20 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.tools.OfflineInstrumenterBase;
 import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * This class provides a convenient way to iterate through a collection of Java classes and instrument their code. This is just a
- * specialization of OfflineInstrumenterBase to use the shrikeCT functionality.
+ * This class provides a convenient way to iterate through a collection of Java classes and
+ * instrument their code. This is just a specialization of OfflineInstrumenterBase to use the
+ * shrikeCT functionality.
  */
-final public class OfflineInstrumenter extends OfflineInstrumenterBase {
+public final class OfflineInstrumenter extends OfflineInstrumenterBase {
 
   @Override
   protected Object makeClassFromStream(String inputName, BufferedInputStream s) throws IOException {
@@ -56,25 +56,26 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
     }
   }
 
-  /**
-   * Get the next class to be instrumented.
-   */
+  /** Get the next class to be instrumented. */
   public ClassInstrumenter nextClass() throws IOException {
     return (ClassInstrumenter) internalNextClass();
   }
 
   /**
-   * Update the original class with some method changes. 'code' should be the result of out.emitClass(). You can add new fields and
-   * methods to 'code' (or make other changes) before calling this method.
+   * Update the original class with some method changes. 'code' should be the result of
+   * out.emitClass(). You can add new fields and methods to 'code' (or make other changes) before
+   * calling this method.
    */
-  public void outputModifiedClass(ClassInstrumenter out, ClassWriter code) throws IllegalStateException, IOException {
+  public void outputModifiedClass(ClassInstrumenter out, ClassWriter code)
+      throws IllegalStateException, IOException {
     internalOutputModifiedClass(out, out.getInputName(), code);
   }
 
   /**
    * Update the original class with some method changes. This method calls out.emitClass() for you.
    */
-  public void outputModifiedClass(ClassInstrumenter out) throws IllegalArgumentException, IOException {
+  public void outputModifiedClass(ClassInstrumenter out)
+      throws IllegalArgumentException, IOException {
     if (out == null) {
       throw new IllegalArgumentException();
     }

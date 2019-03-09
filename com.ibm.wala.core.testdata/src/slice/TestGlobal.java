@@ -20,17 +20,13 @@ public class TestGlobal {
     global2 = global1;
   }
 
-  static void doNothing(Object o) {
-  }
+  static void doNothing(Object o) {}
 
-  /**
-   * make sure global variables are being properly handled
-   */
+  /** make sure global variables are being properly handled */
   public static void main(String[] args) {
     global1 = new Object();
     copyGlobals();
     Object x = global2;
     doNothing(x);
   }
-
 }

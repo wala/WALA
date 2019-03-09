@@ -16,13 +16,12 @@ public class Slice1 {
     int y = bar(2);
     System.out.println(x + y);
   }
-  
+
   static int foo(int x) {
     return x + 2;
   }
-  
+
   static int bar(int x) {
     return x + 3;
   }
-  
 }

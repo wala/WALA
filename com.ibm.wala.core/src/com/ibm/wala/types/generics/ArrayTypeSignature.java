@@ -31,7 +31,7 @@ public class ArrayTypeSignature extends TypeSignature {
   public boolean isTypeVariable() {
     return false;
   }
-  
+
   public static ArrayTypeSignature make(String s) throws IllegalArgumentException {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -43,14 +43,13 @@ public class ArrayTypeSignature extends TypeSignature {
   public boolean isArrayTypeSignature() {
     return true;
   }
-  
+
   public TypeSignature getContents() {
     return TypeSignature.make(rawString().substring(1));
   }
-  
+
   @Override
   public boolean isBaseType() {
     return false;
   }
-
 }

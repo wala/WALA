@@ -12,9 +12,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.FieldReference;
 
-/**
- * A putfield or putstatic instruction
- */
+/** A putfield or putstatic instruction */
 public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
 
   private final int val;
@@ -34,7 +32,11 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     if (isStatic())
       return insts.PutInstruction(iindex, uses == null ? val : uses[0], getDeclaredField());
     else
-      return insts.PutInstruction(iindex, uses == null ? getRef() : uses[0], uses == null ? val : uses[1], getDeclaredField());
+      return insts.PutInstruction(
+          iindex,
+          uses == null ? getRef() : uses[0],
+          uses == null ? val : uses[1],
+          getDeclaredField());
   }
 
   @Override
@@ -42,7 +44,12 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     if (isStatic()) {
       return "putstatic " + getDeclaredField() + " = " + getValueString(symbolTable, val);
     } else {
-      return "putfield " + getValueString(symbolTable, getRef()) + '.' + getDeclaredField() + " = " + getValueString(symbolTable, val);
+      return "putfield "
+          + getValueString(symbolTable, getRef())
+          + '.'
+          + getDeclaredField()
+          + " = "
+          + getValueString(symbolTable, val);
     }
   }
 
@@ -58,17 +65,13 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     v.visitPut(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfUses() {
     return isStatic() ? 1 : 2;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */
   @Override
   public int getUse(int j) {
     assert j == 0 || (!isStatic() && j == 1);

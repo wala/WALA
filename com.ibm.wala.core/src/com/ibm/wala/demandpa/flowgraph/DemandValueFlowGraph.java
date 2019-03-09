@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,9 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.flowgraph;
-
-import java.util.List;
-import java.util.Set;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
@@ -83,18 +80,20 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A flow graph including both pointer and primitive values.
- * 
- * TODO share more code with {@link DemandPointerFlowGraph}
- * 
+ *
+ * <p>TODO share more code with {@link DemandPointerFlowGraph}
+ *
  * @author Manu Sridharan
- * 
  */
 public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
-  public DemandValueFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
+  public DemandValueFlowGraph(
+      CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
   }
 
@@ -123,24 +122,16 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
   private class AllValsStatementVisitor extends Visitor implements FlowStatementVisitor {
 
-    /**
-     * The node whose statements we are currently traversing
-     */
+    /** The node whose statements we are currently traversing */
     protected final CGNode node;
 
-    /**
-     * The governing IR
-     */
+    /** The governing IR */
     protected final IR ir;
 
-    /**
-     * The basic block currently being processed
-     */
+    /** The basic block currently being processed */
     private ISSABasicBlock basicBlock;
 
-    /**
-     * Governing symbol table
-     */
+    /** Governing symbol table */
     protected final SymbolTable symbolTable;
 
     public AllValsStatementVisitor(CGNode node) {
@@ -182,9 +173,9 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-     Set<IClass> types = HashSetFactory.make();
-      
-      for(TypeReference t : instruction.getDeclaredResultTypes()) {
+      Set<IClass> types = HashSetFactory.make();
+
+      for (TypeReference t : instruction.getDeclaredResultTypes()) {
         IClass cls = cha.lookupClass(t);
         if (cls == null) {
           return;
@@ -192,12 +183,13 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
           types.add(cls);
         }
       }
-      
 
-      PointerKey result = heapModel.getFilteredPointerKeyForLocal(node, 
-          instruction.getResult(), 
-          new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0])) );
-        
+      PointerKey result =
+          heapModel.getFilteredPointerKeyForLocal(
+              node,
+              instruction.getResult(),
+              new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[0])));
+
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
 
       addNode(result);
@@ -228,7 +220,11 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
-      visitGetInternal(instruction.getDef(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
+      visitGetInternal(
+          instruction.getDef(),
+          instruction.getRef(),
+          instruction.isStatic(),
+          instruction.getDeclaredField());
     }
 
     protected void visitGetInternal(int lval, int ref, boolean isStatic, FieldReference field) {
@@ -260,7 +256,11 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
-      visitPutInternal(instruction.getVal(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
+      visitPutInternal(
+          instruction.getVal(),
+          instruction.getRef(),
+          instruction.isStatic(),
+          instruction.getDeclaredField());
     }
 
     public void visitPutInternal(int rval, int ref, boolean isStatic, FieldReference field) {
@@ -283,7 +283,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
         addNode(refKey);
         addEdge(refKey, use, PutFieldLabel.make(f));
       }
-
     }
 
     /*
@@ -338,7 +337,8 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
         klass = ((ArrayClass) klass).getElementClass();
         // klass == null means it's a primitive
         if (klass != null && klass.isArrayClass()) {
-          InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
+          InstanceKey ik =
+              heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
           PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
           addNode(ik);
           addNode(pk);
@@ -349,12 +349,11 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
           dim++;
         }
       }
-
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitThrow(com.ibm.domo.ssa.ThrowInstruction)
      */
     @Override
@@ -368,7 +367,8 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
-      List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
+      List<ProgramCounter> peis =
+          SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
 
       Set<IClass> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
@@ -435,9 +435,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       return basicBlock;
     }
 
-    /**
-     * The calling loop must call this in each iteration!
-     */
+    /** The calling loop must call this in each iteration! */
     @Override
     public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
@@ -447,7 +445,5 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       Assertions.UNREACHABLE();
     }
-
   }
-
 }

@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.cast.js.nodejs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
@@ -44,71 +39,81 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.WalaException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
-/**
- * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
- */
+/** @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt; */
 public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 
-	public static PropagationCallGraphBuilder makeCGBuilder(File mainFile)
-			throws IOException, IllegalArgumentException, WalaException {
-		return makeCGBuilder(mainFile.getParentFile(), mainFile);
-	}
+  public static PropagationCallGraphBuilder makeCGBuilder(File mainFile)
+      throws IOException, IllegalArgumentException, WalaException {
+    return makeCGBuilder(mainFile.getParentFile(), mainFile);
+  }
 
-	public static PropagationCallGraphBuilder makeCGBuilder(File workingDir, File mainFile)
-			throws IOException, IllegalArgumentException, WalaException {
-		JavaScriptTranslatorFactory translatorFactory = new CAstRhinoTranslatorFactory();
-		JSCallGraphUtil.setTranslatorFactory(translatorFactory);
+  public static PropagationCallGraphBuilder makeCGBuilder(File workingDir, File mainFile)
+      throws IOException, IllegalArgumentException, WalaException {
+    JavaScriptTranslatorFactory translatorFactory = new CAstRhinoTranslatorFactory();
+    JSCallGraphUtil.setTranslatorFactory(translatorFactory);
 
-		Language language = JavaScriptLoader.JS;
-		Collection<Language> languages = Collections.singleton(language);
+    Language language = JavaScriptLoader.JS;
+    Collection<Language> languages = Collections.singleton(language);
 
-		IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory<>();
-		IAnalysisCacheView cache = new AnalysisCacheImpl(irFactory);
+    IRFactory<IMethod> irFactory = new AstIRFactory.AstDefaultIRFactory<>();
+    IAnalysisCacheView cache = new AnalysisCacheImpl(irFactory);
 
-		JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory, null);
+    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory, null);
 
-		SourceFileModule mainSourceModule = CAstCallGraphUtil.makeSourceModule(mainFile.toURI().toURL(),
-				mainFile.getName());
-		String mainFileClassName = NodejsRequiredSourceModule.convertFileToClassName(workingDir, mainFile);
+    SourceFileModule mainSourceModule =
+        CAstCallGraphUtil.makeSourceModule(mainFile.toURI().toURL(), mainFile.getName());
+    String mainFileClassName =
+        NodejsRequiredSourceModule.convertFileToClassName(workingDir, mainFile);
 
-		Module[] files = new Module[] {
-				JSCallGraphUtil.getPrologueFile("prologue.js"),
-				JSCallGraphUtil.getPrologueFile("extended-prologue.js"),
-				new NodejsRequiredSourceModule(mainFileClassName, mainFile, mainSourceModule) };
+    Module[] files =
+        new Module[] {
+          JSCallGraphUtil.getPrologueFile("prologue.js"),
+          JSCallGraphUtil.getPrologueFile("extended-prologue.js"),
+          new NodejsRequiredSourceModule(mainFileClassName, mainFile, mainSourceModule)
+        };
 
-		CAstAnalysisScope scope = new CAstAnalysisScope(files, loaders, languages);
+    CAstAnalysisScope scope = new CAstAnalysisScope(files, loaders, languages);
 
-		IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, language, null);
-		com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, language, null);
+    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
 
-		// Make Script Roots
-		Iterable<Entrypoint> roots = new JavaScriptEntryPoints(cha, loaders.getTheLoader());
+    // Make Script Roots
+    Iterable<Entrypoint> roots = new JavaScriptEntryPoints(cha, loaders.getTheLoader());
 
-		// Make Options
-		JSAnalysisOptions options = new JSAnalysisOptions(scope, roots);
-		options.setUseConstantSpecificKeys(true);
-		options.setUseStacksForLexicalScoping(true);
-		options.setHandleCallApply(true);
-		// Important to be able to identify what file are required
-		options.setTraceStringConstants(true);
+    // Make Options
+    JSAnalysisOptions options = new JSAnalysisOptions(scope, roots);
+    options.setUseConstantSpecificKeys(true);
+    options.setUseStacksForLexicalScoping(true);
+    options.setHandleCallApply(true);
+    // Important to be able to identify what file are required
+    options.setTraceStringConstants(true);
 
-		com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
 
-		MethodTargetSelector baseSelector = new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector());
-		NodejsRequireTargetSelector requireTargetSelector = new NodejsRequireTargetSelector(workingDir, baseSelector);
-		options.setSelector(requireTargetSelector);
+    MethodTargetSelector baseSelector =
+        new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector());
+    NodejsRequireTargetSelector requireTargetSelector =
+        new NodejsRequireTargetSelector(workingDir, baseSelector);
+    options.setSelector(requireTargetSelector);
 
-		JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null,
-				ZeroXInstanceKeys.ALLOCATIONS, true);
+    JSCFABuilder builder =
+        new JSZeroOrOneXCFABuilder(
+            cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, true);
 
-		// A little hacky, but the instance of RequireTargetSelector is required to build the CallGraphBuilder
-		// and the RequireTargetSelector also needs the CallGraphBuilder instance.
-		requireTargetSelector.setCallGraphBuilder(builder);
+    // A little hacky, but the instance of RequireTargetSelector is required to build the
+    // CallGraphBuilder
+    // and the RequireTargetSelector also needs the CallGraphBuilder instance.
+    requireTargetSelector.setCallGraphBuilder(builder);
 
-		ContextSelector contextSelector = new PropertyNameContextSelector(cache, 2, builder.getContextSelector());
-		builder.setContextSelector(contextSelector);
+    ContextSelector contextSelector =
+        new PropertyNameContextSelector(cache, 2, builder.getContextSelector());
+    builder.setContextSelector(contextSelector);
 
-		return builder;
-	}
+    return builder;
+  }
 }

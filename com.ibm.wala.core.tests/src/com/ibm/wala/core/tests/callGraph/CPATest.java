@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import java.io.IOException;
-import java.util.Set;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -37,36 +31,49 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import java.util.Set;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * Check properties of a call to clone() in RTA
- */
+/** Check properties of a call to clone() in RTA */
 public class CPATest extends WalaTestCase {
 
-  @Test public void cpaTest1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void cpaTest1()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doCPATest("Lcpa/CPATest1", "(Lcpa/CPATest1$N;)Lcpa/CPATest1$N;");
   }
-  
-  @Test public void cpaTest2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+
+  @Test
+  public void cpaTest2()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doCPATest("Lcpa/CPATest2", "(Lcpa/CPATest2$N;I)Lcpa/CPATest2$N;");
   }
 
-  private static void doCPATest(String testClass, String testIdSignature) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  private static void doCPATest(String testClass, String testIdSignature)
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, testClass);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, testClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    SSAPropagationCallGraphBuilder builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph cg = builder.makeCallGraph(options, null);
-    
+
     // Find id
     TypeReference str = TypeReference.findOrCreate(ClassLoaderReference.Application, testClass);
-    MethodReference ct = MethodReference.findOrCreate(str, Atom.findOrCreateUnicodeAtom("id"), Descriptor.findOrCreateUTF8(testIdSignature));
+    MethodReference ct =
+        MethodReference.findOrCreate(
+            str, Atom.findOrCreateUnicodeAtom("id"), Descriptor.findOrCreateUTF8(testIdSignature));
     Set<CGNode> idNodes = cg.getNodes(ct);
-  
+
     System.err.println(cg);
 
     Assert.assertEquals(2, idNodes.size());

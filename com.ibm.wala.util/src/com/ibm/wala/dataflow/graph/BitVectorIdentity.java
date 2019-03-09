@@ -13,26 +13,24 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 
-/**
- * Operator OUT = IN
- */
+/** Operator OUT = IN */
 public class BitVectorIdentity extends UnaryOperator<BitVectorVariable> {
 
-  private final static BitVectorIdentity SINGLETON = new BitVectorIdentity();
+  private static final BitVectorIdentity SINGLETON = new BitVectorIdentity();
 
   public static BitVectorIdentity instance() {
     return SINGLETON;
   }
 
-  private BitVectorIdentity() {
-  }
+  private BitVectorIdentity() {}
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException  {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+      throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs cannot be null");
     }
-    
+
     if (lhs.sameValue(rhs)) {
       return NOT_CHANGED;
     } else {
@@ -56,7 +54,7 @@ public class BitVectorIdentity extends UnaryOperator<BitVectorVariable> {
     return (o instanceof BitVectorIdentity);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.fixpoint.UnaryOperator#isIdentity()
    */
   @Override

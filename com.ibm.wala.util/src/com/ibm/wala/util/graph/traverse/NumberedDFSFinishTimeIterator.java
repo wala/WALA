@@ -10,33 +10,29 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.graph.NumberedGraph;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.graph.NumberedGraph;
-
 /**
- * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes of the graph in order of
- * increasing discover time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be
- * changed by overriding the getConnected method.
+ * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes
+ * of the graph in order of increasing discover time. This class follows the outNodes of the graph
+ * nodes to define the graph, but this behavior can be changed by overriding the getConnected
+ * method.
  */
 public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   public static final long serialVersionUID = 8737376661L;
 
-  /**
-   * An iterator of child nodes for each node being searched
-   */
+  /** An iterator of child nodes for each node being searched */
   private Iterator<T>[] pendingChildren;
 
-  /**
-   * The Graph being traversed
-   */
+  /** The Graph being traversed */
   private final NumberedGraph<T> G;
 
   /**
    * Construct a depth-first enumerator starting with a particular node in a directed graph.
-   * 
+   *
    * @param G the graph whose nodes to enumerate
    */
   @SuppressWarnings("unchecked")
@@ -47,9 +43,9 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   }
 
   /**
-   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
-   * enumeration.
-   * 
+   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable
+   * from the nodes in the given enumeration.
+   *
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
@@ -60,9 +56,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     init(G, nodes);
   }
 
-  /**
-   * Constructor DFSFinishTimeIterator.
-   */
+  /** Constructor DFSFinishTimeIterator. */
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G) {
     this(G, G.iterator());
   }
@@ -81,9 +75,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     return pendingChildren[number];
   }
 
-  /**
-   * Method setPendingChildren.
-   */
+  /** Method setPendingChildren. */
   @Override
   void setPendingChildren(T v, Iterator<T> iterator) {
     pendingChildren[G.getNumber(v)] = iterator;

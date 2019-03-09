@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.util.shrike;
 
-import java.util.HashMap;
-
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -19,13 +17,12 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.ImmutableByteArray;
+import java.util.HashMap;
 
-/**
- * Utilities to interface with the Shrike CT library.
- */
+/** Utilities to interface with the Shrike CT library. */
 public class ShrikeUtil implements BytecodeConstants {
 
-  final private static HashMap<String, TypeReference> primitiveMap;
+  private static final HashMap<String, TypeReference> primitiveMap;
 
   static {
     primitiveMap = HashMapFactory.make(10);
@@ -41,10 +38,9 @@ public class ShrikeUtil implements BytecodeConstants {
     primitiveMap.put(Constants.TYPE_null, TypeReference.Null);
   }
 
-  /**
-   * @param type a type as a String returned by Shrike
-   */
-  public static TypeReference makeTypeReference(ClassLoaderReference loader, String type) throws IllegalArgumentException {
+  /** @param type a type as a String returned by Shrike */
+  public static TypeReference makeTypeReference(ClassLoaderReference loader, String type)
+      throws IllegalArgumentException {
     if (type == null) {
       throw new IllegalArgumentException("null type");
     }
@@ -57,12 +53,12 @@ public class ShrikeUtil implements BytecodeConstants {
     /*if (b.get(0) != '[') {
       T = TypeName.findOrCreate(b, 0, b.length() - 1);
     } else {*/
-      if (b.get(b.length() - 1) == ';') {
-        T = TypeName.findOrCreate(b, 0, b.length() - 1);
-      } else {
-        T = TypeName.findOrCreate(b);
-      }
-    //}
+    if (b.get(b.length() - 1) == ';') {
+      T = TypeName.findOrCreate(b, 0, b.length() - 1);
+    } else {
+      T = TypeName.findOrCreate(b);
+    }
+    // }
     return TypeReference.findOrCreate(loader, T);
   }
 }

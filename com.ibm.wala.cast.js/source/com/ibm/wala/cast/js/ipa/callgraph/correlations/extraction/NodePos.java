@@ -17,35 +17,31 @@ import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 
 /**
- * Representation of a node's position in a CAst entity's syntax tree. The position is stored as a zipper
- * data structure.
- * 
- * @author mschaefer
+ * Representation of a node's position in a CAst entity's syntax tree. The position is stored as a
+ * zipper data structure.
  *
+ * @author mschaefer
  */
 public abstract class NodePos implements CAstRewriter.RewriteContext<CAstBasicRewriter.NoKey> {
-	public abstract <A> A accept(PosSwitch<A> ps);
-	
-	@Override
-  public NoKey key() {
-		return null;
-	}
+  public abstract <A> A accept(PosSwitch<A> ps);
 
-	/**
-	 * Determines whether a node is inside the subtree rooted at some other node.
-	 * 
-	 * @param node the node
-	 * @param tree the subtree
-	 * @return {@literal true} if {@code node} is a descendant of {@code tree}, {@literal false} otherwise
-	 */
-	public static boolean inSubtree(CAstNode node, CAstNode tree) {
-		if(node == tree)
-			return true;
-		if(tree == null)
-			return false;
-		for(CAstNode child : tree.getChildren())
-			if(inSubtree(node, child))
-				return true;
-		return false;
-	}
+  @Override
+  public NoKey key() {
+    return null;
+  }
+
+  /**
+   * Determines whether a node is inside the subtree rooted at some other node.
+   *
+   * @param node the node
+   * @param tree the subtree
+   * @return {@literal true} if {@code node} is a descendant of {@code tree}, {@literal false}
+   *     otherwise
+   */
+  public static boolean inSubtree(CAstNode node, CAstNode tree) {
+    if (node == tree) return true;
+    if (tree == null) return false;
+    for (CAstNode child : tree.getChildren()) if (inSubtree(node, child)) return true;
+    return false;
+  }
 }

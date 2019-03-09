@@ -10,13 +10,12 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.classLoader.IMethod.SourcePosition;
 
 public class RangePosition extends AbstractSourcePosition {
   private final URL url;
@@ -24,7 +23,7 @@ public class RangePosition extends AbstractSourcePosition {
   private final int endLine;
   private final int startOffset;
   private final int endOffset;
-  
+
   public RangePosition(URL url, int startLine, int endLine, int startOffset, int endOffset) {
     super();
     this.url = url;
@@ -34,10 +33,10 @@ public class RangePosition extends AbstractSourcePosition {
     this.endOffset = endOffset;
   }
 
-  public RangePosition(URL url, int line, int startOffset, int endOffset) {  
+  public RangePosition(URL url, int line, int startOffset, int endOffset) {
     this(url, line, -1, startOffset, endOffset);
   }
-  
+
   @Override
   public int compareTo(SourcePosition o) {
     Position other = (Position) o;

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -46,45 +46,40 @@
  */
 
 package org.scandroid.prefixtransfer;
+
 import com.ibm.wala.fixpoint.UnaryOperator;
 
+public class PrefixTransferFunction extends UnaryOperator<PrefixVariable> {
+  private final InstanceKeySite node;
 
-public class PrefixTransferFunction extends UnaryOperator<PrefixVariable>
-{
-    private final InstanceKeySite node;
+  public PrefixTransferFunction(InstanceKeySite node) {
+    this.node = node;
+  }
 
-    public PrefixTransferFunction(InstanceKeySite node)
-    {
-        this.node = node;
-    }
+  //  public int nodeID = finalNode.getGraphNodeId();
+  @Override
+  public byte evaluate(PrefixVariable lhs, PrefixVariable rhs) {
+    PrefixVariable newLhs = node.propagate(rhs);
+    //      if(lhs.equals(newLhs))
+    //          return 1;
+    lhs.copyState(newLhs);
+    return 1;
+  }
 
-//  public int nodeID = finalNode.getGraphNodeId();
-    @Override
-    public byte evaluate(PrefixVariable lhs,
-            PrefixVariable rhs) {
-        PrefixVariable newLhs = node.propagate(rhs);
-//      if(lhs.equals(newLhs))
-//          return 1;
-        lhs.copyState(newLhs);
-        return 1;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (o != null && o.getClass().equals(this.getClass()))
+      return this.node == ((PrefixTransferFunction) o).node;
+    return false;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if(o != null && o.getClass().equals(this.getClass()))
-            return this.node == ((PrefixTransferFunction)o).node;
-        return false;
-    }
+  @Override
+  public int hashCode() {
+    return node.hashCode();
+  }
 
-    @Override
-    public int hashCode() {
-        return node.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Unary operator for "+node;
-    }
-
-
+  @Override
+  public String toString() {
+    return "Unary operator for " + node;
+  }
 }

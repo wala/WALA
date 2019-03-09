@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
-import java.util.Iterator;
-
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -27,10 +25,9 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
+import java.util.Iterator;
 
-/**
- * Basic analysis; context-insensitive except for newInstance and clone
- */
+/** Basic analysis; context-insensitive except for newInstance and clone */
 public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAContextInterpreter {
 
   private final CloneInterpreter cloneInterpreter;
@@ -49,7 +46,6 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
     } else {
       return defaultInterpreter;
     }
-
   }
 
   @Override
@@ -57,7 +53,6 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
     return getCFAInterpreter(node).getIR(node);
   }
 
-  
   @Override
   public IRView getIRView(CGNode node) {
     return getIR(node);
@@ -93,5 +88,4 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
   public DefUse getDU(CGNode node) {
     return getCFAInterpreter(node).getDU(node);
   }
-
 }

@@ -10,18 +10,15 @@
  */
 package com.ibm.wala.util.warnings;
 
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import com.ibm.wala.util.collections.HashSetFactory;
-
-/**
- * A global, static dictionary of warnings
- */
+/** A global, static dictionary of warnings */
 public class Warnings {
 
-  private final static Collection<Warning> warnings = HashSetFactory.make();
+  private static final Collection<Warning> warnings = HashSetFactory.make();
 
   public static synchronized boolean add(Warning w) {
     return warnings.add(w);

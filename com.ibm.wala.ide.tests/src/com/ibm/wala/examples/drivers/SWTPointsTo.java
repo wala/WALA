@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import java.io.IOException;
-import java.util.Properties;
-
-import org.eclipse.jface.window.ApplicationWindow;
-
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -36,19 +31,20 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
+import java.io.IOException;
+import java.util.Properties;
+import org.eclipse.jface.window.ApplicationWindow;
 
 /**
- * 
- * This application is a WALA client: it invokes an SWT TreeViewer to visualize
- * a Points-To solution
- * 
+ * This application is a WALA client: it invokes an SWT TreeViewer to visualize a Points-To solution
+ *
  * @author sfink
  */
 public class SWTPointsTo {
 
   /**
-   * Usage: SWTPointsTo -appJar [jar file name] The "jar file name" should be
-   * something like "c:/temp/testdata/java_cup.jar"
+   * Usage: SWTPointsTo -appJar [jar file name] The "jar file name" should be something like
+   * "c:/temp/testdata/java_cup.jar"
    */
   public static void main(String[] args) {
     Properties p = CommandLine.parse(args);
@@ -56,10 +52,7 @@ public class SWTPointsTo {
     run(p.getProperty("appJar"));
   }
 
-  /**
-   * @param appJar
-   *            should be something like "c:/temp/testdata/java_cup.jar"
-   */
+  /** @param appJar should be something like "c:/temp/testdata/java_cup.jar" */
   public static ApplicationWindow run(String appJar) {
 
     try {
@@ -78,24 +71,29 @@ public class SWTPointsTo {
     }
   }
 
-  public static Graph<Object> buildPointsTo(String appJar) throws WalaException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+  public static Graph<Object> buildPointsTo(String appJar)
+      throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope =
+        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+            appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
-    
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(),cha, scope, null, null);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
+        Util.makeVanillaZeroOneCFABuilder(
+            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope, null, null);
+    CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    
+
     System.err.println(pointerAnalysis);
-    
+
     return new BasicHeapGraph<>(pointerAnalysis, cg);
   }
 }

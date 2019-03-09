@@ -10,17 +10,16 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.Collection;
-
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
 
 /**
- *  A write of a global variable denoted by a FieldReference
+ * A write of a global variable denoted by a FieldReference
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
@@ -32,18 +31,18 @@ public class AstGlobalWrite extends SSAPutInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).GlobalWrite(iindex, getDeclaredField(), (uses==null)? getVal(): uses[0]);
+    return ((AstInstructionFactory) insts)
+        .GlobalWrite(iindex, getDeclaredField(), (uses == null) ? getVal() : uses[0]);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "global:" + getGlobalName() + " = " + getValueString(symbolTable,getVal());
+    return "global:" + getGlobalName() + " = " + getValueString(symbolTable, getVal());
   }
 
   @Override
   public void visit(IVisitor v) {
-    if (v instanceof AstInstructionVisitor) 
-      ((AstInstructionVisitor)v).visitAstGlobalWrite(this);
+    if (v instanceof AstInstructionVisitor) ((AstInstructionVisitor) v).visitAstGlobalWrite(this);
   }
 
   @Override

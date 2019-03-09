@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.demandpa.alg;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
@@ -27,14 +25,15 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Iterator;
 
 /**
- * a {@link HeapModel} that delegates to another except for pointer keys representing {@code this} parameters of methods, for
- * which it returns a {@link FilteredPointerKey} for the type of the parameter
- * 
+ * a {@link HeapModel} that delegates to another except for pointer keys representing {@code this}
+ * parameters of methods, for which it returns a {@link FilteredPointerKey} for the type of the
+ * parameter
+ *
  * @see DemandRefinementPointsTo
  * @author manu
- * 
  */
 class ThisFilteringHeapModel implements HeapModel {
 
@@ -48,7 +47,8 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   @Override
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, TypeFilter filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(
+      CGNode node, int valueNumber, TypeFilter filter) {
     return delegate.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
@@ -68,7 +68,8 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+  public InstanceKey getInstanceKeyForMultiNewArray(
+      CGNode node, NewSiteReference allocation, int dim) {
     return delegate.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
@@ -102,7 +103,8 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   private FilteredPointerKey.TypeFilter getFilter(CGNode target) {
-    FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[0]);
+    FilteredPointerKey.TypeFilter filter =
+        (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[0]);
 
     if (filter != null) {
       return filter;
@@ -114,9 +116,7 @@ class ThisFilteringHeapModel implements HeapModel {
     }
   }
 
-  /**
-   * @return the receiver class for this method.
-   */
+  /** @return the receiver class for this method. */
   private IClass getReceiverClass(IMethod method) {
     TypeReference formalType = method.getParameterType(0);
     IClass C = cha.lookupClass(formalType);
@@ -151,5 +151,4 @@ class ThisFilteringHeapModel implements HeapModel {
     this.delegate = delegate;
     this.cha = cha;
   }
-
 }

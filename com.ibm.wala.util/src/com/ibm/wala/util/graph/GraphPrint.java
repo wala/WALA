@@ -13,9 +13,7 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
-/**
- * Simple graph printing utility
- */
+/** Simple graph printing utility */
 public class GraphPrint {
 
   public static <T> String genericToString(Graph<T> G) {
@@ -28,10 +26,9 @@ public class GraphPrint {
     }
     for (T n : G) {
       for (T d : Iterator2Iterable.make(G.getSuccNodes(n))) {
-        sg.addEdge(n,d);
+        sg.addEdge(n, d);
       }
     }
     return sg.toString();
   }
-
 }

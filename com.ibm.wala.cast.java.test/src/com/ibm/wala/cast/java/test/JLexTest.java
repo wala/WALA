@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.ibm.wala.util.CancelException;
+import java.io.IOException;
+import org.junit.Test;
 
 public abstract class JLexTest extends IRTests {
 
@@ -27,8 +25,9 @@ public abstract class JLexTest extends IRTests {
     return "JLex";
   }
 
-  @Test public void testJLex() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, emptyList, false, null);
+  @Test
+  public void testJLex() throws IllegalArgumentException, CancelException, IOException {
+    runTest(singleTestSrc(), rtJar, new String[] {"LJLex/Main"}, emptyList, false, null);
   }
 
   @Override

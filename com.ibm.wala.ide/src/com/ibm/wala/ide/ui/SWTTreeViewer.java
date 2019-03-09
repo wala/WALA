@@ -10,10 +10,15 @@
  */
 package com.ibm.wala.ide.ui;
 
+import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.viz.NodeDecorator;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,16 +32,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.viz.NodeDecorator;
-
-/**
- * A class to view a WALA {@link Graph} with an SWT {@link TreeViewer}
- */
+/** A class to view a WALA {@link Graph} with an SWT {@link TreeViewer} */
 @SuppressWarnings("unchecked")
 public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
@@ -46,7 +42,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
   protected NodeDecorator<Object> nodeDecoratorInput = null;
 
-  final protected List<IAction> popUpActions = new LinkedList<>();
+  protected final List<IAction> popUpActions = new LinkedList<>();
 
   public SWTTreeViewer() {
     super();
@@ -82,8 +78,16 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
   @Override
   public String toString() {
-    return super.toString() + ", graphInput: " + graphInput + ", rootsInput: " + rootsInput
-            + ", NodeDecoratorInput: " + nodeDecoratorInput + ", popUpActions: " + popUpActions + ')';
+    return super.toString()
+        + ", graphInput: "
+        + graphInput
+        + ", rootsInput: "
+        + rootsInput
+        + ", NodeDecoratorInput: "
+        + nodeDecoratorInput
+        + ", popUpActions: "
+        + popUpActions
+        + ')';
   }
 
   public void run() throws WalaException {
@@ -99,13 +103,14 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
     if (PlatformUI.isWorkbenchRunning()) {
       // run the code on the UI thread
       Display d = PlatformUI.getWorkbench().getDisplay();
-      Runnable r = () -> {
-        try {
-          w.open();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      };
+      Runnable r =
+          () -> {
+            try {
+              w.open();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          };
       if (isBlockInput()) {
         d.syncExec(r);
       } else {
@@ -118,10 +123,11 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
         w.open();
         Display.getCurrent().dispose();
       } else {
-        Runnable r = () -> {
-          w.open();
-          Display.getCurrent().dispose();
-        };
+        Runnable r =
+            () -> {
+              w.open();
+              Display.getCurrent().dispose();
+            };
         Thread t = new Thread(r);
         t.start();
         if (isBlockInput()) {
@@ -145,19 +151,14 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
   /**
    * @author sfink
-   * 
-   * An SWT window to visualize a graph
+   *     <p>An SWT window to visualize a graph
    */
   private class GraphViewer extends ApplicationWindow {
 
-    /**
-     * Graph to visualize
-     */
+    /** Graph to visualize */
     private final Graph<T> graph;
 
-    /**
-     * JFace component implementing the tree viewer
-     */
+    /** JFace component implementing the tree viewer */
     private TreeViewer treeViewer;
 
     public GraphViewer(Graph<T> graph) throws WalaException {
@@ -191,8 +192,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
     /**
      * @author sfink
-     * 
-     * Simple wrapper around an EObjectGraph to provide content for a tree viewer.
+     *     <p>Simple wrapper around an EObjectGraph to provide content for a tree viewer.
      */
     private class GraphContentProvider implements ITreeContentProvider {
 
@@ -257,9 +257,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       }
     }
 
-    /**
-     * Simple graph label provider. TODO: finish this implementation.
-     */
+    /** Simple graph label provider. TODO: finish this implementation. */
     private class GraphLabelProvider extends LabelProvider {
 
       final NodeDecorator<Object> d = getNodeDecoratorInput();
@@ -274,7 +272,6 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
           return null;
         }
       }
-
     }
   }
 }

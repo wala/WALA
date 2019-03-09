@@ -10,22 +10,21 @@
  */
 package com.ibm.wala.util.graph.impl;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.OrderedMultiGraph;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Inefficient implementation of OrderedMultiGraph.
- * 
- * UNDER CONSTRUCTION.
- * 
+ *
+ * <p>UNDER CONSTRUCTION.
+ *
  * @param <T> type of node in the graph
  */
 public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
@@ -38,9 +37,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     this.delegate = SlowSparseNumberedGraph.make();
   }
 
-  /**
-   * Add this edge, unconditionally setting it as the next successor.
-   */
+  /** Add this edge, unconditionally setting it as the next successor. */
   @Override
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
@@ -83,9 +80,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     return delegate.getPredNodeCount(N);
   }
 
-  /**
-   * For now, this returns nodes in no particular order! Fix this when needed.
-   */
+  /** For now, this returns nodes in no particular order! Fix this when needed. */
   @Override
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
@@ -163,5 +158,4 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     }
     return s.get(i);
   }
-
 }

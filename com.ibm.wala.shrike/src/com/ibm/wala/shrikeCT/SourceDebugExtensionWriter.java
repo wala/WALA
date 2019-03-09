@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeCT;
 import java.io.UnsupportedEncodingException;
 
 public class SourceDebugExtensionWriter extends ClassWriter.Element {
-  final private int attrID;
+  private final int attrID;
 
   private byte[] table;
 

@@ -12,12 +12,11 @@ package com.ibm.wala.ide.util;
 
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
-/**
- * A Wrapper around an Eclipse IProgressMonitor
- */
+/** A Wrapper around an Eclipse IProgressMonitor */
 public class ProgressMonitorDelegate implements IProgressMonitor {
 
-  public static ProgressMonitorDelegate createProgressMonitorDelegate(org.eclipse.core.runtime.IProgressMonitor d) {
+  public static ProgressMonitorDelegate createProgressMonitorDelegate(
+      org.eclipse.core.runtime.IProgressMonitor d) {
     if (d == null) {
       throw new IllegalArgumentException("d is null");
     }
@@ -33,7 +32,6 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
   @Override
   public void beginTask(String task, int totalWork) {
     delegate.beginTask(task, totalWork);
-
   }
 
   @Override
@@ -51,7 +49,7 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
     delegate.worked(units);
   }
 
-/** BEGIN Custom change: subtasks and canceling */
+  /** BEGIN Custom change: subtasks and canceling */
   @Override
   public void subTask(String subTask) {
     delegate.subTask(subTask);
@@ -61,10 +59,9 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
   public void cancel() {
     delegate.setCanceled(true);
   }
-/** END Custom change: subtasks and canceling */
+  /** END Custom change: subtasks and canceling */
   @Override
   public String getCancelMessage() {
     return "cancelled by eclipse monitor: " + delegate.toString();
   }
-
 }

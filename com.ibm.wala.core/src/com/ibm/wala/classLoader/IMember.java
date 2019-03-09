@@ -10,40 +10,30 @@
  */
 package com.ibm.wala.classLoader;
 
-import java.util.Collection;
-
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
 
 /**
- * Basic interface for an object that represents a single
- * Java member (method or field) for analysis purposes.
+ * Basic interface for an object that represents a single Java member (method or field) for analysis
+ * purposes.
  */
 public interface IMember extends IClassHierarchyDweller {
 
   /**
-   * Return the object that represents the declaring class
-   * for this member.
-   * @return the object that represents the declaring class
-   * for this member.
+   * Return the object that represents the declaring class for this member.
+   *
+   * @return the object that represents the declaring class for this member.
    */
   IClass getDeclaringClass();
-  
-  /**
-   * 
-   * @return the name of this member
-   */
+
+  /** @return the name of this member */
   Atom getName();
 
-  /**
-   * Is this member static?
-   */
+  /** Is this member static? */
   boolean isStatic();
-  
-  /**
-   * Get the annotations on this member, if any
-   */
+
+  /** Get the annotations on this member, if any */
   Collection<Annotation> getAnnotations();
-  
 }

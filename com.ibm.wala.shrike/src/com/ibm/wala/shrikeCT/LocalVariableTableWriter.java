@@ -10,15 +10,12 @@
  */
 package com.ibm.wala.shrikeCT;
 
+import com.ibm.wala.shrikeBT.Compiler;
 import java.util.Arrays;
 
-import com.ibm.wala.shrikeBT.Compiler;
-
-/**
- * This class helps emit LocalVariableTable attributes.
- */
+/** This class helps emit LocalVariableTable attributes. */
 public final class LocalVariableTableWriter extends ClassWriter.Element {
-  final private int attrID;
+  private final int attrID;
 
   private int[] rawTable = emptyTable;
 
@@ -26,7 +23,7 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
 
   /**
    * Create a blank LocalVariableTable.
-   * 
+   *
    * @throws IllegalArgumentException if w is null
    */
   public LocalVariableTableWriter(ClassWriter w) {
@@ -37,9 +34,11 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
   }
 
   /**
-   * Set the raw local variable table values. Consider using LocalVariableTableWriter.makeRawTable to build the raw values.
-   * 
-   * @param table the raw values, a flattened sequence of (startPC, length, nameIndex, typeIndex, var) tuples
+   * Set the raw local variable table values. Consider using LocalVariableTableWriter.makeRawTable
+   * to build the raw values.
+   *
+   * @param table the raw values, a flattened sequence of (startPC, length, nameIndex, typeIndex,
+   *     var) tuples
    */
   public void setRawTable(int[] table) {
     if (table == null) {
@@ -50,7 +49,8 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
       throw new IllegalArgumentException("Local variable table has bad length: " + table.length);
     }
     if (table.length / 5 > 0xFFFF) {
-      throw new IllegalArgumentException("Too many local variable table entries: " + table.length / 5);
+      throw new IllegalArgumentException(
+          "Too many local variable table entries: " + table.length / 5);
     }
     for (int i = 0; i < table.length; i++) {
       int v = table[i];
@@ -83,13 +83,15 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
 
   /**
    * Build a raw local variable table from a formatted variable map.
-   * 
-   * @param varMap an array mapping bytecode offsets to a variable map for each offset; a variable map is a array of 2*localVars
-   *          elements, containing a (nameIndex, typeIndex) for each local variable; the pair (0,0) indicates that there is no
-   *          information about that local variable at that offset
+   *
+   * @param varMap an array mapping bytecode offsets to a variable map for each offset; a variable
+   *     map is a array of 2*localVars elements, containing a (nameIndex, typeIndex) for each local
+   *     variable; the pair (0,0) indicates that there is no information about that local variable
+   *     at that offset
    * @throws IllegalArgumentException if varMap == null
    */
-  public static int[] makeRawTable(int[][] varMap, Compiler.Output output) throws IllegalArgumentException {
+  public static int[] makeRawTable(int[][] varMap, Compiler.Output output)
+      throws IllegalArgumentException {
     if (varMap == null) {
       throw new IllegalArgumentException("varMap == null");
     }
@@ -123,7 +125,9 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
                 int typeIndex = lastVector[k * 2 + 1];
                 int end = i + 1;
                 while (end < varMap.length) {
-                  if (varMap[end] == null || k * 2 >= varMap[end].length || varMap[end][k * 2] != nameIndex
+                  if (varMap[end] == null
+                      || k * 2 >= varMap[end].length
+                      || varMap[end][k * 2] != nameIndex
                       || varMap[end][k * 2 + 1] != typeIndex) {
                     break;
                   }

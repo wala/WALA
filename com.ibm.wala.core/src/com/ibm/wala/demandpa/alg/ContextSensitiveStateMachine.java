@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,9 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.alg;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
@@ -63,22 +60,20 @@ import com.ibm.wala.demandpa.flowgraph.ReturnBarLabel;
 import com.ibm.wala.demandpa.flowgraph.ReturnLabel;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
- * A state machine for tracking calling context during a points-to query.
- * Filters unrealizable paths.
- * 
+ * A state machine for tracking calling context during a points-to query. Filters unrealizable
+ * paths.
  */
 public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
   private static final boolean DEBUG = false;
-  
+
   private static final boolean DEBUG_RECURSION = false;
 
-  /**
-   * The empty call stack. Note that the empty stack essentially represents all
-   * possible states.
-   */
+  /** The empty call stack. Note that the empty stack essentially represents all possible states. */
   private final CallStack emptyStack = CallStack.emptyCallStack();
 
   @Override
@@ -87,7 +82,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   }
 
   private final RecursionHandler recursionHandler;
-  
+
   private class CSLabelVisitor implements IFlowLabelVisitor {
 
     final CallStack prevStack;
@@ -220,19 +215,20 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     public void visitReturnBar(ReturnBarLabel label, Object dst) {
       handleMethodExit(label.getCallSite());
     }
-
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.alg.statemachine.StateMachine#transition(com.ibm.wala.demandpa.alg.statemachine.StateMachine.State, java.lang.Object)
    */
   @Override
-  public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException, IllegalArgumentException {
+  public State transition(State prevState, IFlowLabel label)
+      throws IllegalArgumentException, IllegalArgumentException {
     if (prevState == null) {
       throw new IllegalArgumentException("prevState == null");
     }
     if (!(prevState instanceof CallStack)) {
-      throw new IllegalArgumentException("not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
+      throw new IllegalArgumentException(
+          "not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
     }
     CallStack prevStack = (CallStack) prevState;
     if (!prevStack.isEmpty() && recursionHandler.isRecursive(prevStack.peek())) {
@@ -261,37 +257,33 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   public static class Factory implements StateMachineFactory<IFlowLabel> {
 
     private final RecursionHandler prototype;
-    
+
     public Factory(RecursionHandler prototype) {
       this.prototype = prototype;
     }
-    
-    public Factory() { 
+
+    public Factory() {
       this(new BasicRecursionHandler());
     }
-    
+
     @Override
     public StateMachine<IFlowLabel> make() {
       return new ContextSensitiveStateMachine(prototype.makeNew());
     }
-
   }
-  
+
   public static interface RecursionHandler {
- 
+
     public boolean isRecursive(CallerSiteContext callSite);
-    
+
     public void makeRecursive(Collection<CallerSiteContext> callSites);
-    
-    /**
-     * in lieu of creating factories
-     */
+
+    /** in lieu of creating factories */
     public RecursionHandler makeNew();
   }
-  
+
   /**
-   * handles method recursion by only collapsing cycles of recursive
-   * calls observed during analysis
+   * handles method recursion by only collapsing cycles of recursive calls observed during analysis
    */
   public static class BasicRecursionHandler implements RecursionHandler {
 
@@ -306,7 +298,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     public void makeRecursive(Collection<CallerSiteContext> callSites) {
       recursiveCallSites.addAll(callSites);
     }
-    
+
     @Override
     public RecursionHandler makeNew() {
       return new BasicRecursionHandler();

@@ -10,33 +10,28 @@
  */
 package com.ibm.wala.ipa.slicer;
 
-import java.util.Iterator;
-
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.util.graph.NumberedGraph;
+import java.util.Iterator;
 
 /**
- * Interface for an SDG (loosely defined here as a graph of {@link Statement}s. 
- * This interface implies that the underlying graph is computed lazily on demand.
+ * Interface for an SDG (loosely defined here as a graph of {@link Statement}s. This interface
+ * implies that the underlying graph is computed lazily on demand.
  */
 public interface ISDG extends NumberedGraph<Statement>, IClassHierarchyDweller {
 
-  /**
-   * {@link ControlDependenceOptions} used to construct this graph.
-   */
+  /** {@link ControlDependenceOptions} used to construct this graph. */
   ControlDependenceOptions getCOptions();
 
-  /**
-   * Get the program dependence graph constructed for a particular node.
-   */
+  /** Get the program dependence graph constructed for a particular node. */
   PDG<? extends InstanceKey> getPDG(CGNode node);
 
   /**
-   * Iterate over the nodes which have been discovered so far, but do <em>NOT</em> eagerly construct the entire graph.
+   * Iterate over the nodes which have been discovered so far, but do <em>NOT</em> eagerly construct
+   * the entire graph.
    */
   Iterator<? extends Statement> iterateLazyNodes();
-
 }

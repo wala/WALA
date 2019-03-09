@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,70 +48,63 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
+import org.jf.dexlib2.Opcode;
 
 public class Switch extends Instruction {
 
-    public final int regA;
-    public final int tableAddressOffset;
-    public SwitchPad pad;
-    private int[] casesAndLabels;
-    private int defaultLabel;
+  public final int regA;
+  public final int tableAddressOffset;
+  public SwitchPad pad;
+  private int[] casesAndLabels;
+  private int defaultLabel;
 
-    public Switch(int instLoc, int regA, int tableAddressOffset, Opcode opcode, DexIMethod method)
-    {
-        super(instLoc, opcode, method);
-        this.regA = regA;
-        this.tableAddressOffset = tableAddressOffset;
+  public Switch(int instLoc, int regA, int tableAddressOffset, Opcode opcode, DexIMethod method) {
+    super(instLoc, opcode, method);
+    this.regA = regA;
+    this.tableAddressOffset = tableAddressOffset;
+  }
+
+  public void setSwitchPad(SwitchPad pad) {
+    this.pad = pad;
+    computeCasesAndLabels();
+  }
+
+  private void computeCasesAndLabels() {
+    casesAndLabels = pad.getLabelsAndOffsets();
+
+    for (int i = 1; i < casesAndLabels.length; i += 2)
+      //            casesAndLabels[i] = method.getInstructionIndex(pc+casesAndLabels[i]);
+      casesAndLabels[i] = pc + casesAndLabels[i];
+
+    // defaultLabel = method.getInstructionIndex(pc + pad.getDefaultOffset());
+    defaultLabel = pc + pad.getDefaultOffset();
+  }
+
+  public int[] getOffsets() {
+    return pad.getOffsets();
+  }
+
+  public int getDefaultLabel() {
+    return defaultLabel;
+  }
+
+  public int[] getCasesAndLabels() {
+    return casesAndLabels;
+  }
+
+  @Override
+  public int[] getBranchTargets() {
+    int[] r = new int[casesAndLabels.length / 2 + 1];
+    r[0] = method.getInstructionIndex(defaultLabel);
+    for (int i = 1; i < r.length; i++) {
+      r[i] = method.getInstructionIndex(casesAndLabels[(i - 1) * 2 + 1]);
     }
+    return r;
+  }
 
-    public void setSwitchPad (SwitchPad pad)
-    {
-        this.pad = pad;
-        computeCasesAndLabels();
-    }
-
-    private void computeCasesAndLabels() {
-        casesAndLabels = pad.getLabelsAndOffsets();
- 
-        for (int i = 1; i < casesAndLabels.length; i+=2)
-//            casesAndLabels[i] = method.getInstructionIndex(pc+casesAndLabels[i]);
-        	casesAndLabels[i] = pc+casesAndLabels[i];
-        
-        // defaultLabel = method.getInstructionIndex(pc + pad.getDefaultOffset());
-        defaultLabel = pc + pad.getDefaultOffset();
-    }
-
-    public int[] getOffsets()
-    {
-        return pad.getOffsets();
-    }
-
-    public int getDefaultLabel()
-    {
-        return defaultLabel;
-    }
-
-    public int[] getCasesAndLabels() {
-        return casesAndLabels;
-    }
-
-    @Override
-    public int[] getBranchTargets() {
-        int[] r = new int[casesAndLabels.length / 2 + 1];
-        r[0] = method.getInstructionIndex(defaultLabel);
-        for (int i = 1; i < r.length; i++) {
-            r[i] = method.getInstructionIndex(casesAndLabels[(i - 1) * 2 + 1]);
-        }
-        return r;
-    }
-
-    @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitSwitch(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitSwitch(this);
+  }
 }

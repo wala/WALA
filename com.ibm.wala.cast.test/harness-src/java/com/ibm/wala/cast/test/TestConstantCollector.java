@@ -1,12 +1,5 @@
 package com.ibm.wala.cast.test;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -24,11 +17,16 @@ import com.ibm.wala.cast.util.AstConstantCollector;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.util.collections.EmptyIterator;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import org.junit.Test;
 
 public class TestConstantCollector {
 
   private CAst ast = new CAstImpl();
-    
+
   private static CAstEntity fakeEntity(CAstNode root) {
     return new CAstEntity() {
 
@@ -138,55 +136,62 @@ public class TestConstantCollector {
       }
     };
   }
-  
+
   private CAstNode root1 =
-      ast.makeNode(CAstNode.BLOCK_STMT,
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var1")),
+      ast.makeNode(
+          CAstNode.BLOCK_STMT,
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var1")),
               ast.makeConstant(15)));
 
   @Test
   public void testSegmentsRoot1() {
-    Collection<Segments> x = CAstPattern.findAll(AstConstantCollector.simpleValuePattern, fakeEntity(root1));
+    Collection<Segments> x =
+        CAstPattern.findAll(AstConstantCollector.simpleValuePattern, fakeEntity(root1));
     assert x.size() == 1;
   }
 
   @Test
   public void testRoot1() {
-    Map<String,Object> x = AstConstantCollector.collectConstants(fakeEntity(root1));
+    Map<String, Object> x = AstConstantCollector.collectConstants(fakeEntity(root1));
     assert x.size() == 1;
   }
 
   private CAstNode root2 =
-      ast.makeNode(CAstNode.BLOCK_STMT,
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var1")),
+      ast.makeNode(
+          CAstNode.BLOCK_STMT,
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var1")),
               ast.makeConstant(15)),
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var1")),
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var1")),
               ast.makeConstant(14)));
 
   @Test
   public void testSegmentsRoot2() {
-    Collection<Segments> x = CAstPattern.findAll(AstConstantCollector.simpleValuePattern, fakeEntity(root2));
+    Collection<Segments> x =
+        CAstPattern.findAll(AstConstantCollector.simpleValuePattern, fakeEntity(root2));
     assert x.size() == 2;
   }
 
   private CAstNode root3 =
-      ast.makeNode(CAstNode.BLOCK_EXPR,
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var1")),
+      ast.makeNode(
+          CAstNode.BLOCK_EXPR,
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var1")),
               ast.makeConstant(15)),
-          ast.makeNode(CAstNode.BINARY_EXPR,
+          ast.makeNode(
+              CAstNode.BINARY_EXPR,
               CAstOperator.OP_ADD,
               ast.makeConstant(10),
               ast.makeNode(CAstNode.VAR, ast.makeConstant("var1"))));
 
-  public static final CAstPattern toCodePattern3 = CAstPattern.parse("BINARY_EXPR(*,\"10\",\"15\")");
+  public static final CAstPattern toCodePattern3 =
+      CAstPattern.parse("BINARY_EXPR(*,\"10\",\"15\")");
 
   @Test
   public void testRoot3() {
@@ -195,31 +200,30 @@ public class TestConstantCollector {
     Collection<Segments> matches = CAstPattern.findAll(toCodePattern3, nce);
     assert matches.size() == 1;
   }
-  
+
   private CAstNode root4 =
-      ast.makeNode(CAstNode.BLOCK_STMT,
-          ast.makeNode(CAstNode.GLOBAL_DECL,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var1")),
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var2"))),
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var1")),
+      ast.makeNode(
+          CAstNode.BLOCK_STMT,
+          ast.makeNode(
+              CAstNode.GLOBAL_DECL,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var1")),
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var2"))),
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var1")),
               ast.makeConstant(14)),
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var2")),
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var2")),
               ast.makeConstant(15)),
-          ast.makeNode(CAstNode.ASSIGN,
-              ast.makeNode(CAstNode.VAR,
-                  ast.makeConstant("var3")),
+          ast.makeNode(
+              CAstNode.ASSIGN,
+              ast.makeNode(CAstNode.VAR, ast.makeConstant("var3")),
               ast.makeConstant(16)));
 
   @Test
   public void testRoot4() {
-    Map<String,Object> x = AstConstantCollector.collectConstants(fakeEntity(root4));
+    Map<String, Object> x = AstConstantCollector.collectConstants(fakeEntity(root4));
     assert x.size() == 1 : x;
   }
-
 }

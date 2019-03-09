@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * WALA JDT Frontend is Copyright (c) 2008 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -37,32 +37,28 @@
  */
 package com.ibm.wala.cast.java.translator.jdt;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-
 import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
 import com.ibm.wala.cast.java.types.JavaType;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstTypeDictionaryImpl;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 
 public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
-  // TODO: better way of getting type "ObjecT" that doesn't require us to keep AST? although this is similar to
+  // TODO: better way of getting type "ObjecT" that doesn't require us to keep AST? although this is
+  // similar to
   // polyglot.
   protected final AST fAst; // TAGALONG
 
   protected final JDTIdentityMapper fIdentityMapper; // TAGALONG
 
-  /**
-   * 
-   * @param ast Needed to get root type "java.lang.Object"
-   */
+  /** @param ast Needed to get root type "java.lang.Object" */
   public JDTTypeDictionary(AST ast, JDTIdentityMapper identityMapper) {
     fAst = ast;
     fIdentityMapper = identityMapper;
@@ -80,15 +76,18 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     // In this case, just create a new type and return that.
     if (type == null) {
 
-      if (jdtType.isClass() || jdtType.isEnum() || jdtType.isInterface()) // in JDT interfaces are not classes
-        type = new JdtJavaType(jdtType);
+      if (jdtType.isClass()
+          || jdtType.isEnum()
+          || jdtType.isInterface()) // in JDT interfaces are not classes
+      type = new JdtJavaType(jdtType);
       else if (jdtType.isPrimitive()) {
         type = JavaPrimitiveTypeMap.lookupType(jdtType.getName());
       } else if (jdtType.isArray()) {
         type = new JdtJavaArrayType(jdtType);
       } else
-        Assertions.UNREACHABLE("getCAstTypeFor() passed type that is not primitive, array, or class?");
-      super.map((ITypeBinding)astType, type); // put in cache
+        Assertions.UNREACHABLE(
+            "getCAstTypeFor() passed type that is not primitive, array, or class?");
+      super.map((ITypeBinding) astType, type); // put in cache
     }
     return type;
   }
@@ -123,10 +122,12 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     public Collection<CAstType> getSupertypes() {
       if (fEltJdtType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fAst.resolveWellKnownType("java.lang.Object")));
-      // TODO: there is no '.isReference()' as in Polyglot: is this right? enum? I think if it's another array it will
+      // TODO: there is no '.isReference()' as in Polyglot: is this right? enum? I think if it's
+      // another array it will
       // just ignore it
       // TEST DOUBLE ARRAYS! and maybe ask someone?
-      assert fEltJdtType.isArray() || fEltJdtType.isClass() : "Non-primitive, non-reference array element type!";
+      assert fEltJdtType.isArray() || fEltJdtType.isClass()
+          : "Non-primitive, non-reference array element type!";
       Collection<CAstType> supers = new ArrayList<>();
       for (ITypeBinding type : fEltJdtType.getInterfaces()) {
         supers.add(getCAstTypeFor(type));
@@ -168,21 +169,23 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     private void buildSuperTypes() {
       // TODO this is a source entity, but it might actually be the root type
       // (Object), so assume # intfs + 1
-      ITypeBinding superType = (fType.getSuperclass() == null) ? fAst.resolveWellKnownType("java.lang.Object") : fType
-          .getSuperclass();
+      ITypeBinding superType =
+          (fType.getSuperclass() == null)
+              ? fAst.resolveWellKnownType("java.lang.Object")
+              : fType.getSuperclass();
       int N = fType.getInterfaces().length + 1;
 
       fSuperTypes = new ArrayList<>(N);
       // Following assumes that noone can call getSupertypes() before we have
       // created CAstType's for every type in the program being analyzed.
       fSuperTypes.add(getCAstTypeFor(superType));
-      for (ITypeBinding t : fType.getInterfaces())
-        fSuperTypes.add(getCAstTypeFor(t));
+      for (ITypeBinding t : fType.getInterfaces()) fSuperTypes.add(getCAstTypeFor(t));
     }
 
     @Override
     public Collection<CAstQualifier> getQualifiers() {
-      return JDT2CAstUtils.mapModifiersToQualifiers(fType.getModifiers(), fType.isInterface(), fType.isAnnotation());
+      return JDT2CAstUtils.mapModifiersToQualifiers(
+          fType.getModifiers(), fType.isInterface(), fType.isAnnotation());
     }
 
     @Override
@@ -190,5 +193,4 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
       return fType.isInterface();
     }
   }
-
 }

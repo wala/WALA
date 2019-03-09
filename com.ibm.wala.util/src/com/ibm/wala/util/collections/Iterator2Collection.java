@@ -18,17 +18,15 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Converts an {@link Iterator} to a {@link Collection}. Note that if you just want to use Java 5's for-each loop with an
- * {@link Iterator}, use {@link Iterator2Iterable}.
- * 
+ * Converts an {@link Iterator} to a {@link Collection}. Note that if you just want to use Java 5's
+ * for-each loop with an {@link Iterator}, use {@link Iterator2Iterable}.
+ *
  * @see Iterator2Iterable
  */
 public abstract class Iterator2Collection<T> implements Collection<T> {
 
   protected abstract Collection<T> getDelegate();
-  /**
-   * Returns a {@link Set} containing all elements in i. Note that duplicates will be removed.
-   */
+  /** Returns a {@link Set} containing all elements in i. Note that duplicates will be removed. */
   public static <T> Iterator2Set<T> toSet(Iterator<? extends T> i) throws IllegalArgumentException {
     if (i == null) {
       throw new IllegalArgumentException("i == null");
@@ -36,10 +34,9 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
     return new Iterator2Set<>(i, new LinkedHashSet<T>(5));
   }
 
-  /**
-   * Returns a {@link List} containing all elements in i, preserving duplicates.
-   */
-  public static <T> Iterator2List<T> toList(Iterator<? extends T> i) throws IllegalArgumentException {
+  /** Returns a {@link List} containing all elements in i, preserving duplicates. */
+  public static <T> Iterator2List<T> toList(Iterator<? extends T> i)
+      throws IllegalArgumentException {
     if (i == null) {
       throw new IllegalArgumentException("i == null");
     }

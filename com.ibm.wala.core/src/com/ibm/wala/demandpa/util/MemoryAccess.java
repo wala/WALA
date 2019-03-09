@@ -13,21 +13,17 @@ package com.ibm.wala.demandpa.util;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- *  * 
- * represents a single static occurrence of a memory access (i.e., an access to a field 
- * or to the contents of an array) in the code
- * 
+ * * represents a single static occurrence of a memory access (i.e., an access to a field or to the
+ * contents of an array) in the code
+ *
  * @author sfink
  */
 public class MemoryAccess {
 
-  final private CGNode node;
+  private final CGNode node;
 
-  /**
-   * index of the field access instruction in a shrikeBt or SSA instruction
-   * array
-   */
-  final private int instructionIndex;
+  /** index of the field access instruction in a shrikeBt or SSA instruction array */
+  private final int instructionIndex;
 
   public MemoryAccess(int index, CGNode node) {
     super();
@@ -35,9 +31,7 @@ public class MemoryAccess {
     this.node = node;
   }
 
-  /**
-   * @return Returns the instructionIndex.
-   */
+  /** @return Returns the instructionIndex. */
   public int getInstructionIndex() {
     return instructionIndex;
   }
@@ -47,13 +41,11 @@ public class MemoryAccess {
     return "MemAccess: " + getNode() + ':' + getInstructionIndex();
   }
 
-  /**
-   * @return Returns the node.
-   */
+  /** @return Returns the node. */
   public CGNode getNode() {
     return node;
   }
-  
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -65,23 +57,14 @@ public class MemoryAccess {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     MemoryAccess other = (MemoryAccess) obj;
-    if (instructionIndex != other.instructionIndex)
-      return false;
+    if (instructionIndex != other.instructionIndex) return false;
     if (node == null) {
-      if (other.node != null)
-        return false;
-    } else if (!node.equals(other.node))
-      return false;
+      if (other.node != null) return false;
+    } else if (!node.equals(other.node)) return false;
     return true;
   }
-
-  
-
 }

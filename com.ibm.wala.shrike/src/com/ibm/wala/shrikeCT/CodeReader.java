@@ -10,13 +10,11 @@
  */
 package com.ibm.wala.shrikeCT;
 
-/**
- * This attribute reader reads Code attributes from methods.
- */
+/** This attribute reader reads Code attributes from methods. */
 public final class CodeReader extends AttributeReader {
-  final private int codeLen;
+  private final int codeLen;
 
-  final private int exnTableLen;
+  private final int exnTableLen;
 
   public CodeReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, "Code");
@@ -43,30 +41,22 @@ public final class CodeReader extends AttributeReader {
     }
   }
 
-  /**
-   * @return the maximum stack size used by the code, in words
-   */
+  /** @return the maximum stack size used by the code, in words */
   public int getMaxStack() {
     return cr.getUShort(attr + 6);
   }
 
-  /**
-   * @return the maximum local variable size used by the code, in words
-   */
+  /** @return the maximum local variable size used by the code, in words */
   public int getMaxLocals() {
     return cr.getUShort(attr + 8);
   }
 
-  /**
-   * @return the length of the bytecode array, in bytes
-   */
+  /** @return the length of the bytecode array, in bytes */
   public int getBytecodeLength() {
     return codeLen;
   }
 
-  /**
-   * @return the bytecode bytes
-   */
+  /** @return the bytecode bytes */
   public byte[] getBytecode() {
     byte[] r = new byte[codeLen];
     System.arraycopy(cr.getBytes(), attr + 14, r, 0, r.length);
@@ -74,7 +64,8 @@ public final class CodeReader extends AttributeReader {
   }
 
   /**
-   * @return the raw exception handler data, a flattened sequence of (startPC, endPC, catchClassIndex, catchPC) tuples
+   * @return the raw exception handler data, a flattened sequence of (startPC, endPC,
+   *     catchClassIndex, catchPC) tuples
    */
   public int[] getRawHandlers() {
     int[] r = new int[exnTableLen * 4];
@@ -88,7 +79,7 @@ public final class CodeReader extends AttributeReader {
 
   /**
    * Point iter at the list of attributes for this code.
-   * 
+   *
    * @throws IllegalArgumentException if iter is null
    */
   public void initAttributeIterator(ClassReader.AttrIterator iter) {

@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.examples.analysis.dataflow;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
@@ -34,19 +31,18 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
- * Compute intraprocedural reaching defs of global variables, i.e., the defs are
- * {@link SSAPutInstruction}s on static state.
- * 
+ * Compute intraprocedural reaching defs of global variables, i.e., the defs are {@link
+ * SSAPutInstruction}s on static state.
+ *
  * @author manu
- * 
  */
 public class IntraprocReachingDefs {
 
-  /**
-   * the exploded control-flow graph on which to compute the analysis
-   */
+  /** the exploded control-flow graph on which to compute the analysis */
   private final ExplodedControlFlowGraph ecfg;
 
   /**
@@ -54,14 +50,12 @@ public class IntraprocReachingDefs {
    */
   private final OrdinalSetMapping<Integer> putInstrNumbering;
 
-  /**
-   * used to resolve references to fields in putstatic instructions
-   */
+  /** used to resolve references to fields in putstatic instructions */
   private final IClassHierarchy cha;
 
   /**
-   * maps each static field to the numbers of the statements (in {@link #putInstrNumbering}) that define it; used for kills in flow
-   * functions
+   * maps each static field to the numbers of the statements (in {@link #putInstrNumbering}) that
+   * define it; used for kills in flow functions
    */
   private final Map<IField, BitVector> staticField2DefStatements = HashMapFactory.make();
 
@@ -73,16 +67,15 @@ public class IntraprocReachingDefs {
     this.putInstrNumbering = numberPutStatics();
   }
 
-  /**
-   * generate a numbering of the putstatic instructions
-   */
+  /** generate a numbering of the putstatic instructions */
   private OrdinalSetMapping<Integer> numberPutStatics() {
     ArrayList<Integer> putInstrs = new ArrayList<>();
     IR ir = ecfg.getIR();
     SSAInstruction[] instructions = ir.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       SSAInstruction instruction = instructions[i];
-      if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
+      if (instruction instanceof SSAPutInstruction
+          && ((SSAPutInstruction) instruction).isStatic()) {
         SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
         // instrNum is the number that will be assigned to this putstatic
         int instrNum = putInstrs.size();
@@ -101,16 +94,16 @@ public class IntraprocReachingDefs {
     return new ObjectArrayMapping<>(putInstrs.toArray(new Integer[0]));
   }
 
-  private class TransferFunctions implements ITransferFunctionProvider<IExplodedBasicBlock, BitVectorVariable> {
+  private class TransferFunctions
+      implements ITransferFunctionProvider<IExplodedBasicBlock, BitVectorVariable> {
 
     @Override
-    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IExplodedBasicBlock src, IExplodedBasicBlock dst) {
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(
+        IExplodedBasicBlock src, IExplodedBasicBlock dst) {
       throw new UnsupportedOperationException();
     }
 
-    /**
-     * our meet operator is set union
-     */
+    /** our meet operator is set union */
     @Override
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
@@ -120,7 +113,8 @@ public class IntraprocReachingDefs {
     public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IExplodedBasicBlock node) {
       SSAInstruction instruction = node.getInstruction();
       int instructionIndex = node.getFirstInstructionIndex();
-      if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
+      if (instruction instanceof SSAPutInstruction
+          && ((SSAPutInstruction) instruction).isStatic()) {
         // kill all defs of the same static field, and gen this instruction
         final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
         final IField field = cha.resolveField(putInstr.getDeclaredField());
@@ -145,18 +139,18 @@ public class IntraprocReachingDefs {
     public boolean hasNodeTransferFunctions() {
       return true;
     }
-
   }
 
   /**
    * run the analysis
-   * 
+   *
    * @return the solver used for the analysis, which contains the analysis result
    */
   public BitVectorSolver<IExplodedBasicBlock> analyze() {
-    // the framework describes the dataflow problem, in particular the underlying graph and the transfer functions
-    BitVectorFramework<IExplodedBasicBlock, Integer> framework = new BitVectorFramework<>(ecfg,
-        new TransferFunctions(), putInstrNumbering);
+    // the framework describes the dataflow problem, in particular the underlying graph and the
+    // transfer functions
+    BitVectorFramework<IExplodedBasicBlock, Integer> framework =
+        new BitVectorFramework<>(ecfg, new TransferFunctions(), putInstrNumbering);
     BitVectorSolver<IExplodedBasicBlock> solver = new BitVectorSolver<>(framework);
     try {
       solver.solve(null);

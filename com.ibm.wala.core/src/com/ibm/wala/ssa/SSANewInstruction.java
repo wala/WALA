@@ -16,8 +16,8 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * An allocation instruction ("new") for SSA form.
- * 
- * This includes allocations of both scalars and arrays.
+ *
+ * <p>This includes allocations of both scalars and arrays.
  */
 public abstract class SSANewInstruction extends SSAInstruction {
   private final int result;
@@ -25,15 +25,15 @@ public abstract class SSANewInstruction extends SSAInstruction {
   private final NewSiteReference site;
 
   /**
-   * The value numbers of the arguments passed to the call. If params == null, this should be a static this statement allocates a
-   * scalar. if params != null, then params[i] is the size of the ith dimension of the array.
+   * The value numbers of the arguments passed to the call. If params == null, this should be a
+   * static this statement allocates a scalar. if params != null, then params[i] is the size of the
+   * ith dimension of the array.
    */
   private final int[] params;
 
-  /**
-   * Create a new instruction to allocate a scalar.
-   */
-  protected SSANewInstruction(int iindex, int result, NewSiteReference site) throws IllegalArgumentException {
+  /** Create a new instruction to allocate a scalar. */
+  protected SSANewInstruction(int iindex, int result, NewSiteReference site)
+      throws IllegalArgumentException {
     super(iindex);
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
@@ -45,7 +45,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   /**
    * Create a new instruction to allocate an array.
-   * 
+   *
    * @throws IllegalArgumentException if site is null
    * @throws IllegalArgumentException if params is null
    */
@@ -69,13 +69,18 @@ public abstract class SSANewInstruction extends SSAInstruction {
     if (params == null) {
       return insts.NewInstruction(iindex, defs == null ? result : defs[0], site);
     } else {
-      return insts.NewInstruction(iindex, defs == null ? result : defs[0], site, uses == null ? params : uses);
+      return insts.NewInstruction(
+          iindex, defs == null ? result : defs[0], site, uses == null ? params : uses);
     }
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = new " + site.getDeclaredType() + '@' + site.getProgramCounter()
+    return getValueString(symbolTable, result)
+        + " = new "
+        + site.getDeclaredType()
+        + '@'
+        + site.getProgramCounter()
         + (params == null ? "" : array2String(params, symbolTable));
   }
 
@@ -96,9 +101,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
     v.visitNew(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public boolean hasDef() {
     return true;
@@ -120,9 +123,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
     return 1;
   }
 
-  /**
-   * @return TypeReference
-   */
+  /** @return TypeReference */
   public TypeReference getConcreteType() {
     return site.getDeclaredType();
   }
@@ -163,5 +164,4 @@ public abstract class SSANewInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return true;
   }
-
 }

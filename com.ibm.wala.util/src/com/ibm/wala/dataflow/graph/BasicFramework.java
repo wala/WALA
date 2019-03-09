@@ -13,20 +13,19 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.Graph;
 
-/**
- * a basic implementation of the dataflow framework
- */
+/** a basic implementation of the dataflow framework */
 public class BasicFramework<T, V extends IVariable<V>> implements IKilldallFramework<T, V> {
 
   private final Graph<T> flowGraph;
   private final ITransferFunctionProvider<T, V> transferFunctionProvider;
 
-  public BasicFramework(Graph<T> flowGraph, ITransferFunctionProvider<T, V> transferFunctionProvider) {
+  public BasicFramework(
+      Graph<T> flowGraph, ITransferFunctionProvider<T, V> transferFunctionProvider) {
     this.flowGraph = flowGraph;
     this.transferFunctionProvider = transferFunctionProvider;
-  } 
+  }
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
    */
   @Override

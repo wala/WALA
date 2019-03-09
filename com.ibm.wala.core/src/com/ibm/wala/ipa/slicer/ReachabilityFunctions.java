@@ -16,35 +16,33 @@ import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.dataflow.IFDS.VectorGenFlowFunction;
 import com.ibm.wala.util.intset.SparseIntSet;
 
-/**
- * Trivial flow functions to represent simple reachability. All functions simply
- * return "0"
- */
+/** Trivial flow functions to represent simple reachability. All functions simply return "0" */
 public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
 
+  public static final VectorGenFlowFunction FLOW_REACHES =
+      VectorGenFlowFunction.make(SparseIntSet.singleton(0));
 
-  public final static VectorGenFlowFunction FLOW_REACHES = VectorGenFlowFunction.make(SparseIntSet.singleton(0));
+  public static final IUnaryFlowFunction KILL_FLOW =
+      new IUnaryFlowFunction() {
+        @Override
+        public SparseIntSet getTargets(int d1) {
+          // kill even the reachability predicate 0.
+          return new SparseIntSet();
+        }
 
-  public final static IUnaryFlowFunction KILL_FLOW = new IUnaryFlowFunction() {
-    @Override
-    public SparseIntSet getTargets(int d1) {
-      // kill even the reachability predicate 0.
-      return new SparseIntSet();
-    }
-    @Override
-    public String toString() {
-      return "killFlow";
-    }
-  };
+        @Override
+        public String toString() {
+          return "killFlow";
+        }
+      };
 
   public static <T> ReachabilityFunctions<T> createReachabilityFunctions() {
     return new ReachabilityFunctions<>();
   }
 
-  private ReachabilityFunctions() {
-  }
+  private ReachabilityFunctions() {}
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
   @Override
@@ -67,7 +65,7 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
     return FLOW_REACHES;
   }
-  
+
   @SuppressWarnings("unused")
   public IFlowFunction getReturnFlowFunction(T src, T dest) {
     return FLOW_REACHES;
@@ -77,5 +75,4 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
   public IUnaryFlowFunction getCallFlowFunction(T src, T dest, T ret) {
     return FLOW_REACHES;
   }
-
 }

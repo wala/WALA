@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
@@ -30,23 +24,28 @@ import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Abstract core of traditional SSA conversion (Cytron et al.).
- * 
- * This implementation is abstract in the sense that it is designed to work over
- * the instructions and CFG of a Domo IR, but it is abstract with respect to
- * several integral portions of the traditional algorithm:
+ *
+ * <p>This implementation is abstract in the sense that it is designed to work over the instructions
+ * and CFG of a Domo IR, but it is abstract with respect to several integral portions of the
+ * traditional algorithm:
+ *
  * <UL>
- * <LI> The notion of uses and defs of a given instruction.
- * <LI> Assignments (&lt;def&gt; := &lt;use&gt;) that are be copy-propagated away
- * <LI> Which values are constants---i.e. have no definition.
- * <LI> Any value numbers to be skipped during SSA construction
- * <LI> Special initialization and exit block processing.
+ *   <LI>The notion of uses and defs of a given instruction.
+ *   <LI>Assignments (&lt;def&gt; := &lt;use&gt;) that are be copy-propagated away
+ *   <LI>Which values are constants---i.e. have no definition.
+ *   <LI>Any value numbers to be skipped during SSA construction
+ *   <LI>Special initialization and exit block processing.
  * </UL>
- * 
+ *
  * @author Julian dolby (dolby@us.ibm.com)
- * 
  */
 public abstract class AbstractSSAConversion {
 
@@ -82,11 +81,13 @@ public abstract class AbstractSSAConversion {
 
   protected abstract SSAPhiInstruction repairPhiDefs(SSAPhiInstruction phi, int[] newDefs);
 
-  protected abstract void repairPhiUse(SSACFG.BasicBlock BB, int phiIndex, int rvalIndex, int newRval);
+  protected abstract void repairPhiUse(
+      SSACFG.BasicBlock BB, int phiIndex, int rvalIndex, int newRval);
 
   protected abstract void repairInstructionUses(SSAInstruction inst, int index, int[] newUses);
 
-  protected abstract void repairInstructionDefs(SSAInstruction inst, int index, int[] newDefs, int[] newUses);
+  protected abstract void repairInstructionDefs(
+      SSAInstruction inst, int index, int[] newDefs, int[] newUses);
 
   protected abstract void pushAssignment(SSAInstruction inst, int index, int newRhs);
 
@@ -129,14 +130,14 @@ public abstract class AbstractSSAConversion {
 
   //
   // top-level control
-  //  
+  //
   protected void perform() {
     init();
     placePhiNodes();
     renameVariables();
   }
 
-  // 
+  //
   // initialization
   //
   protected SSAInstruction[] getInstructions(IR ir) {
@@ -146,7 +147,7 @@ public abstract class AbstractSSAConversion {
   protected final Iterator<SSAInstruction> iterateInstructions(IR ir) {
     return new ArrayIterator<>(getInstructions(ir));
   }
-  
+
   protected void init() {
     this.S = new IntStack[getMaxValueNumber() + 1];
     this.C = new int[getMaxValueNumber() + 1];
@@ -196,12 +197,10 @@ public abstract class AbstractSSAConversion {
     for (int V = 0; V < assignmentMap.length; V++) {
 
       // some things (e.g. constants) have no defs at all
-      if (assignmentMap[V] == null)
-        continue;
+      if (assignmentMap[V] == null) continue;
 
       // ignore values as requested
-      if (skip(V))
-        continue;
+      if (skip(V)) continue;
 
       IterCount++;
 
@@ -263,37 +262,38 @@ public abstract class AbstractSSAConversion {
     SEARCH(CFG.entry());
   }
 
-  
   /**
-   * Stack frames for the SEARCH recursion.
-   * Used for converting the recursion to an iteration and avoiding stack overflow. 
-   * @author yinnonh
+   * Stack frames for the SEARCH recursion. Used for converting the recursion to an iteration and
+   * avoiding stack overflow.
    *
+   * @author yinnonh
    */
-  private static class Frame{
+  private static class Frame {
     public final SSACFG.BasicBlock X;
     public final Iterator<ISSABasicBlock> i; // iterator o
+
     public Frame(SSACFG.BasicBlock X, Iterator<ISSABasicBlock> i) {
       this.X = X;
       this.i = i;
     }
   }
+
   private void SEARCH(SSACFG.BasicBlock X) {
     // original method was recursive:
     //   SearchPreRec(X)
     //   for (BasicBlock Y: childs(X))
     //     SEARCH(Y)
     //   SearchPostRec(X)
-    
+
     ArrayList<Frame> stack = new ArrayList<>();
-    
+
     SearchPreRec(X);
     push(stack, new Frame(X, dominatorTree.getSuccNodes(X)));
-    
-    // invariant: pre-rec phase was performed for elements in the queue. 
-    while (!stack.isEmpty()){
+
+    // invariant: pre-rec phase was performed for elements in the queue.
+    while (!stack.isEmpty()) {
       Frame f = peek(stack);
-      if (f.i.hasNext()){
+      if (f.i.hasNext()) {
         // iterate next child
         BasicBlock next = (BasicBlock) f.i.next();
         SearchPreRec(next);
@@ -306,17 +306,17 @@ public abstract class AbstractSSAConversion {
     }
   }
 
-   private static <T> void push(ArrayList<T> stack, T elt) {
+  private static <T> void push(ArrayList<T> stack, T elt) {
     stack.add(elt);
   }
-  
+
   private static <T> T peek(ArrayList<T> stack) {
-    return stack.get(stack.size()-1); 
+    return stack.get(stack.size() - 1);
   }
-  
+
   private static <T> T pop(ArrayList<T> stack) {
-    T e = stack.get(stack.size()-1);
-    stack.remove(stack.size()-1);
+    T e = stack.get(stack.size() - 1);
+    stack.remove(stack.size() - 1);
     return e;
   }
 
@@ -427,14 +427,9 @@ public abstract class AbstractSSAConversion {
   }
 
   protected boolean skipRepair(SSAInstruction inst, @SuppressWarnings("unused") int index) {
-    if (inst == null)
-      return true;
-    for (int i = 0; i < getNumberOfDefs(inst); i++)
-      if (!skip(getDef(inst, i)))
-        return false;
-    for (int i = 0; i < getNumberOfUses(inst); i++)
-      if (!skip(getUse(inst, i)))
-        return false;
+    if (inst == null) return true;
+    for (int i = 0; i < getNumberOfDefs(inst); i++) if (!skip(getDef(inst, i))) return false;
+    for (int i = 0; i < getNumberOfUses(inst); i++) if (!skip(getUse(inst, i))) return false;
     return true;
   }
 
@@ -443,7 +438,8 @@ public abstract class AbstractSSAConversion {
   }
 
   protected boolean hasDefaultValue(int valueNumber) {
-    return (defaultValues != null) && (defaultValues.getDefaultValue(symbolTable, valueNumber) != -1);
+    return (defaultValues != null)
+        && (defaultValues.getDefaultValue(symbolTable, valueNumber) != -1);
   }
 
   protected int getDefaultValue(int valueNumber) {
@@ -459,8 +455,6 @@ public abstract class AbstractSSAConversion {
       }
     }
 
-   
     return (isConstant(v)) ? v : S[v].peek();
   }
-
 }

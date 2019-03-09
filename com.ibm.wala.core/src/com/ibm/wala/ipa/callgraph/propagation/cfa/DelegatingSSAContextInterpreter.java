@@ -21,18 +21,15 @@ import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
-/**
- * An {@link SSAContextInterpreter} that first checks with A, then defaults to B.
- */
-public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpreter implements SSAContextInterpreter {
+/** An {@link SSAContextInterpreter} that first checks with A, then defaults to B. */
+public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpreter
+    implements SSAContextInterpreter {
 
   private final SSAContextInterpreter A;
 
   private final SSAContextInterpreter B;
 
-  /**
-   * neither A nor B should be null.
-   */
+  /** neither A nor B should be null. */
   public DelegatingSSAContextInterpreter(SSAContextInterpreter A, SSAContextInterpreter B) {
     super(A, B);
     this.A = A;

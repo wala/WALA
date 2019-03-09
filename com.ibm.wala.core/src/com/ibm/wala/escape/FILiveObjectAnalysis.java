@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.escape;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -34,41 +30,31 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * A simple liveness analysis based on flow-insensitive pointer analysis.
- */
+/** A simple liveness analysis based on flow-insensitive pointer analysis. */
 public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
 
-  /**
-   * governing call graph
-   */
+  /** governing call graph */
   private final CallGraph callGraph;
 
-  /**
-   * Graph view of pointer analysis results
-   */
+  /** Graph view of pointer analysis results */
   private final HeapGraph<?> heapGraph;
 
-  /**
-   * Cached map from InstanceKey -&gt; Set&lt;CGNode&gt;
-   */
-  final private Map<InstanceKey, Set<CGNode>> liveNodes = HashMapFactory.make();
+  /** Cached map from InstanceKey -&gt; Set&lt;CGNode&gt; */
+  private final Map<InstanceKey, Set<CGNode>> liveNodes = HashMapFactory.make();
 
-  /**
-   * Set of instanceKeys which are live everywhere
-   */
-  final private Set<InstanceKey> liveEverywhere = HashSetFactory.make();
+  /** Set of instanceKeys which are live everywhere */
+  private final Set<InstanceKey> liveEverywhere = HashSetFactory.make();
 
-  /**
-   * A hack for now .. since right now the intraprocedural analysis is expensive
-   */
+  /** A hack for now .. since right now the intraprocedural analysis is expensive */
   private final boolean expensiveIntraproceduralAnalysis;
 
-  /**
-   * 
-   */
-  public FILiveObjectAnalysis(CallGraph callGraph, HeapGraph<?> heapGraph, boolean expensiveIntraproceduralAnalysis) {
+  /** */
+  public FILiveObjectAnalysis(
+      CallGraph callGraph, HeapGraph<?> heapGraph, boolean expensiveIntraproceduralAnalysis) {
     super();
     this.callGraph = callGraph;
     this.heapGraph = heapGraph;
@@ -76,8 +62,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   @Override
-  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws IllegalArgumentException,
-      WalaException {
+  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex)
+      throws IllegalArgumentException, WalaException {
     if (allocMethod == null) {
       throw new IllegalArgumentException("allocMethod == null");
     }
@@ -86,9 +72,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     return mayBeLive(ik, m, instructionIndex);
   }
 
-  /**
-   * @param instructionIndex index of an SSA instruction
-   */
+  /** @param instructionIndex index of an SSA instruction */
   @Override
   public boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) {
     if (liveEverywhere.contains(ik)) {
@@ -135,7 +119,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
 
   /**
    * precondition: !mayBeLiveInSomeCaller(ik, m)
-   * 
+   *
    * @param instructionIndex index of an SSA instruction
    */
   private boolean mayBeLiveIntraprocedural(InstanceKey ik, CGNode m, int instructionIndex) {
@@ -143,7 +127,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     IR ir = m.getIR();
     DefUse du = m.getDU();
 
-    for (Object p : Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
+    for (Object p :
+        Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
       if (p instanceof LocalPointerKey) {
         LocalPointerKey lpk = (LocalPointerKey) p;
         if (lpk.getNode().equals(m)) {
@@ -157,12 +142,13 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   /**
-   * Compute the set of nodes in which ik may be live. If it's live everywhere, return an EMPTY_SET, but also record this fact in
-   * the "liveEverywhere" set as a side effect
+   * Compute the set of nodes in which ik may be live. If it's live everywhere, return an EMPTY_SET,
+   * but also record this fact in the "liveEverywhere" set as a side effect
    */
   private Set<CGNode> computeLiveNodes(InstanceKey ik) {
     Set<CGNode> localRootNodes = HashSetFactory.make();
-    for (Object node : Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
+    for (Object node :
+        Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
       if (node instanceof StaticFieldKey) {
         liveEverywhere.add(ik);
         return Collections.emptySet();
@@ -177,7 +163,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
             AbstractLocalPointerKey local = (AbstractLocalPointerKey) node;
             localRootNodes.add(local.getNode());
           } else {
-            Assertions.UNREACHABLE("unexpected base of TypedPointerKey: " + node.getClass() + ' ' + node);
+            Assertions.UNREACHABLE(
+                "unexpected base of TypedPointerKey: " + node.getClass() + ' ' + node);
           }
         }
       }
@@ -191,7 +178,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
       throw new IllegalArgumentException("instructionIndices is null");
     }
     // TODO this sucks
-    for (IntIterator it = instructionIndices.intIterator(); it.hasNext();) {
+    for (IntIterator it = instructionIndices.intIterator(); it.hasNext(); ) {
       int i = it.next();
       if (mayBeLive(ik, m, i)) {
         return true;
@@ -199,5 +186,4 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     }
     return false;
   }
-
 }

@@ -10,9 +10,8 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import java.util.regex.Pattern;
-
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import java.util.regex.Pattern;
 
 public class ContainersFieldPolicy extends ManualFieldPolicy {
 

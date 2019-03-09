@@ -18,64 +18,61 @@ import java.util.Collections;
 import java.util.List;
 
 public interface CAstType {
-    /**
-     * Returns the fully-qualified (e.g. bytecode-compliant for Java) type name.
-     */
-    String getName();
+  /** Returns the fully-qualified (e.g. bytecode-compliant for Java) type name. */
+  String getName();
 
-    Collection<CAstType> getSupertypes();
+  Collection<CAstType> getSupertypes();
 
-    public interface Primitive extends CAstType {
-	// Need anything else? The name pretty much says it all...
-    }
+  public interface Primitive extends CAstType {
+    // Need anything else? The name pretty much says it all...
+  }
 
-    public interface Reference extends CAstType {
-    }
+  public interface Reference extends CAstType {}
 
-    public interface Class extends Reference {
-      boolean isInterface();
+  public interface Class extends Reference {
+    boolean isInterface();
 
-      Collection<CAstQualifier> getQualifiers();
-    }
+    Collection<CAstQualifier> getQualifiers();
+  }
 
-    public interface Array extends Reference {
-	int getNumDimensions();
-	CAstType getElementType();
-    }
+  public interface Array extends Reference {
+    int getNumDimensions();
 
-    public interface Function extends Reference {
-	CAstType getReturnType();
+    CAstType getElementType();
+  }
 
-	List<CAstType> getArgumentTypes();
-	Collection<CAstType> getExceptionTypes();
+  public interface Function extends Reference {
+    CAstType getReturnType();
 
-	int getArgumentCount();
-    }
+    List<CAstType> getArgumentTypes();
 
-    public interface Method extends Function {
-	CAstType getDeclaringType();
-	
-	boolean isStatic();
-	
-    }
+    Collection<CAstType> getExceptionTypes();
 
-    public interface Complex extends CAstType {
-      
-      CAstType getType();
+    int getArgumentCount();
+  }
 
-    }
-    
-    public static final CAstType DYNAMIC = new CAstType() {
-    
-      @Override
-      public String getName() {
-	return "DYNAMIC";
-      }
+  public interface Method extends Function {
+    CAstType getDeclaringType();
 
-      @Override
-      public Collection<CAstType>/*<CAstType>*/ getSupertypes() {
-	return Collections.EMPTY_SET;
-      }
- 
-   };
+    boolean isStatic();
+  }
+
+  public interface Complex extends CAstType {
+
+    CAstType getType();
+  }
+
+  public static final CAstType DYNAMIC =
+      new CAstType() {
+
+        @Override
+        public String getName() {
+          return "DYNAMIC";
+        }
+
+        @Override
+        public Collection<CAstType> /*<CAstType>*/ getSupertypes() {
+          return Collections.EMPTY_SET;
+        }
+      };
 }

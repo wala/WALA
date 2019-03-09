@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,45 +47,41 @@
 
 package org.scandroid.spec;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.scandroid.flow.types.FlowType;
-import org.scandroid.flow.types.ParameterFlow;
-
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import org.scandroid.flow.types.FlowType;
+import org.scandroid.flow.types.ParameterFlow;
 
 public class CallArgSinkSpec extends SinkSpec {
 
-	public CallArgSinkSpec(MethodNamePattern name, int[] args) {
-		namePattern = name;
-		argNums = args;
-	}
+  public CallArgSinkSpec(MethodNamePattern name, int[] args) {
+    namePattern = name;
+    argNums = args;
+  }
 
-	@Override
-	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
-			BasicBlockInContext<E> block) {
+  @Override
+  public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
+      BasicBlockInContext<E> block) {
 
-		HashSet<FlowType<E>> flowSet = new HashSet<>();
-		if (argNums == null) {
-			SSAInvokeInstruction i = (SSAInvokeInstruction) block
-					.getLastInstruction();
-			argNums = new int[i.getDeclaredTarget().getNumberOfParameters()];
-			for (int p = 0; p < argNums.length; p++)
-				argNums[p] = p;
-		}
-		for (int arg : argNums) {
-			flowSet.add(new ParameterFlow<>(block, arg, false));
-		}
-		return flowSet;
-	}
+    HashSet<FlowType<E>> flowSet = new HashSet<>();
+    if (argNums == null) {
+      SSAInvokeInstruction i = (SSAInvokeInstruction) block.getLastInstruction();
+      argNums = new int[i.getDeclaredTarget().getNumberOfParameters()];
+      for (int p = 0; p < argNums.length; p++) argNums[p] = p;
+    }
+    for (int arg : argNums) {
+      flowSet.add(new ParameterFlow<>(block, arg, false));
+    }
+    return flowSet;
+  }
 
-	@Override
-	public String toString() {
-		return String.format("CallArgSinkSpec(%s,%s)",
-				namePattern.getDescriptor(), Arrays.toString(argNums));
-	}
+  @Override
+  public String toString() {
+    return String.format(
+        "CallArgSinkSpec(%s,%s)", namePattern.getDescriptor(), Arrays.toString(argNums));
+  }
 }

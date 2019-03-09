@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,48 +48,38 @@
 package org.scandroid.prefixtransfer.modeledAllocations;
 
 import java.util.Set;
-
 import org.scandroid.prefixtransfer.InstanceKeySite;
 import org.scandroid.prefixtransfer.PrefixVariable;
 
-
 public class StringToLower extends InstanceKeySite {
 
-    private final int instanceID;
-    private final Set<Integer> dependencies;
+  private final int instanceID;
+  private final Set<Integer> dependencies;
 
-    public StringToLower(int instanceID, Set<Integer> dependencies)
-    {
-        this.instanceID = instanceID;
-        this.dependencies = dependencies;
+  public StringToLower(int instanceID, Set<Integer> dependencies) {
+    this.instanceID = instanceID;
+    this.dependencies = dependencies;
+  }
+
+  @Override
+  public PrefixVariable propagate(PrefixVariable input) {
+    // TODO Auto-generated method stub
+    PrefixVariable retVal = new PrefixVariable();
+    String prefix = null;
+    for (Integer dep : dependencies) {
+      String depPrefix = input.getPrefix(dep);
+      // if any of the dependencies are unknown, then this prefix is also unknown
+      if (depPrefix == null) return retVal;
+      depPrefix = depPrefix.toLowerCase();
+      if (prefix == null) prefix = depPrefix;
+      else prefix = PrefixVariable.intersect(prefix, depPrefix);
     }
+    retVal.update(instanceID, prefix);
+    return retVal;
+  }
 
-
-    @Override
-    public PrefixVariable propagate(PrefixVariable input) {
-        // TODO Auto-generated method stub
-        PrefixVariable retVal = new PrefixVariable();
-        String prefix = null;
-        for(Integer dep:dependencies)
-        {
-            String depPrefix = input.getPrefix(dep);
-            // if any of the dependencies are unknown, then this prefix is also unknown
-            if(depPrefix == null)
-                return retVal;
-            depPrefix = depPrefix.toLowerCase();
-            if(prefix == null)
-                prefix = depPrefix;
-            else
-                prefix = PrefixVariable.intersect(prefix, depPrefix);
-        }
-        retVal.update(instanceID, prefix);
-        return retVal;
-    }
-
-
-    @Override
-    public int instanceID() {
-        return instanceID;
-    }
-
+  @Override
+  public int instanceID() {
+    return instanceID;
+  }
 }

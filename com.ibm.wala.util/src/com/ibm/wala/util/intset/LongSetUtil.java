@@ -13,12 +13,11 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
-/**
- * Utilities for dealing with LongSets
- */
+/** Utilities for dealing with LongSets */
 public class LongSetUtil {
 
-  public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME = "com.ibm.wala.mutableLongSetFactory";
+  public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME =
+      "com.ibm.wala.mutableLongSetFactory";
 
   private static MutableLongSetFactory defaultLongSetFactory;
 
@@ -26,11 +25,15 @@ public class LongSetUtil {
     MutableLongSetFactory defaultFactory = new MutableSparseLongSetFactory();
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
-        Class<?> intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-        MutableLongSetFactory intSetFactory = (MutableLongSetFactory) intSetFactoryClass.getDeclaredConstructor().newInstance();
+        Class<?> intSetFactoryClass =
+            Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        MutableLongSetFactory intSetFactory =
+            (MutableLongSetFactory) intSetFactoryClass.getDeclaredConstructor().newInstance();
         setDefaultLongSetFactory(intSetFactory);
       } catch (Exception e) {
-        System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
+        System.err.println(
+            ("Cannot use int set factory "
+                + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
         setDefaultLongSetFactory(defaultFactory);
       }
     } else {
@@ -43,21 +46,22 @@ public class LongSetUtil {
     return defaultLongSetFactory.make();
   }
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
   /**
    * This method constructs an appropriate mutable copy of set.
-   * 
+   *
    * @return a new MutableLongSet object with the same value as set
-   * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.BitVectorLongSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.BimodalMutableLongSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.DebuggingMutableLongSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.SemiSparseMutableLongSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
+   * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) )
+   *     and (not ( set instanceof com.ibm.wala.util.intset.BitVectorLongSet ) ) and (not ( set
+   *     instanceof com.ibm.wala.util.intset.BimodalMutableLongSet ) ) and (not ( set instanceof
+   *     com.ibm.wala.util.intset.DebuggingMutableLongSet ) ) and (not ( set instanceof
+   *     com.ibm.wala.util.intset.SemiSparseMutableLongSet ) ) and (not ( set instanceof
+   *     com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
    * @throws IllegalArgumentException if set == null
    */
-  public static MutableLongSet makeMutableCopy(LongSet set) throws IllegalArgumentException, UnimplementedError {
+  public static MutableLongSet makeMutableCopy(LongSet set)
+      throws IllegalArgumentException, UnimplementedError {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
@@ -69,9 +73,7 @@ public class LongSetUtil {
     }
   }
 
-  /**
-   * Compute the asymmetric difference of two sets, a \ b.
-   */
+  /** Compute the asymmetric difference of two sets, a \ b. */
   public static LongSet diff(LongSet A, LongSet B) {
     if (A == null) {
       throw new IllegalArgumentException("null A");
@@ -88,7 +90,7 @@ public class LongSetUtil {
     if (DEBUG) {
       System.err.println(("initial result " + result + ' ' + result.getClass()));
     }
-    for (LongIterator it = B.longIterator(); it.hasNext();) {
+    for (LongIterator it = B.longIterator(); it.hasNext(); ) {
       long I = it.next();
       result.remove(I);
       if (DEBUG) {
@@ -101,9 +103,7 @@ public class LongSetUtil {
     return result;
   }
 
-  /**
-   * Compute the asymmetric difference of two sets, a \ b.
-   */
+  /** Compute the asymmetric difference of two sets, a \ b. */
   public static LongSet diff(LongSet A, LongSet B, MutableLongSetFactory factory) {
     if (A == null) {
       throw new IllegalArgumentException("null A");
@@ -120,17 +120,18 @@ public class LongSetUtil {
 
   /**
    * Subtract two sets, i.e. a = a \ b.
-   * 
+   *
    * @throws IllegalArgumentException if A == null || B == null
    */
-  public static MutableLongSet removeAll(MutableLongSet A, LongSet B) throws IllegalArgumentException {
+  public static MutableLongSet removeAll(MutableLongSet A, LongSet B)
+      throws IllegalArgumentException {
     if (A == null) {
       throw new IllegalArgumentException("A == null");
     }
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }
-    for (LongIterator it = B.longIterator(); it.hasNext();) {
+    for (LongIterator it = B.longIterator(); it.hasNext(); ) {
       long I = it.next();
       A.remove(I);
       if (DEBUG) {
@@ -143,10 +144,9 @@ public class LongSetUtil {
     return A;
   }
 
-  /**
-   * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
-   */
-  public static int binarySearch(long[] data, long key, int low, int high) throws IllegalArgumentException {
+  /** @return index \in [low,high] s.t. data[index] = key, or -1 if not found */
+  public static int binarySearch(long[] data, long key, int low, int high)
+      throws IllegalArgumentException {
     if (data == null) {
       throw new IllegalArgumentException("null array");
     }

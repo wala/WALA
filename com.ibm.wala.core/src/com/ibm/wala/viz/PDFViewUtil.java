@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.viz;
 
-import java.util.HashMap;
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
@@ -27,30 +26,37 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.strings.StringStuff;
+import java.util.HashMap;
 
-/**
- * utilities for integrating with ghostview (or another PS/PDF viewer)
- */
+/** utilities for integrating with ghostview (or another PS/PDF viewer) */
 public class PDFViewUtil {
 
   /**
    * spawn a process to view a WALA IR
-   * 
+   *
    * @return a handle to the ghostview process
    */
-  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe)
+  public static Process ghostviewIR(
+      IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe)
       throws WalaException {
     return ghostviewIR(cha, ir, pdfFile, dotFile, dotExe, pdfViewExe, null);
   }
 
   /**
    * spawn a process to view a WALA IR
-   * 
+   *
    * @return a handle to the pdf viewer process
    * @throws IllegalArgumentException if ir is null
    */
-  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe,
-      NodeDecorator<ISSABasicBlock> annotations) throws WalaException {
+  public static Process ghostviewIR(
+      IClassHierarchy cha,
+      IR ir,
+      String pdfFile,
+      String dotFile,
+      String dotExe,
+      String pdfViewExe,
+      NodeDecorator<ISSABasicBlock> annotations)
+      throws WalaException {
 
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
@@ -64,7 +70,7 @@ public class PDFViewUtil {
 
     g = CFGSanitizer.sanitize(ir, cha);
 
-    DotUtil.<ISSABasicBlock>dotify(g,labels,dotFile,pdfFile,dotExe);
+    DotUtil.<ISSABasicBlock>dotify(g, labels, dotFile, pdfFile, dotExe);
 
     return launchPDFView(pdfFile, pdfViewExe);
   }
@@ -73,7 +79,7 @@ public class PDFViewUtil {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    final HashMap<ISSABasicBlock,String> labelMap = HashMapFactory.make();
+    final HashMap<ISSABasicBlock, String> labelMap = HashMapFactory.make();
     for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) issaBasicBlock;
       labelMap.put(bb, getNodeLabel(ir, bb));
@@ -84,9 +90,10 @@ public class PDFViewUtil {
 
   /**
    * A node decorator which concatenates the labels from two other node decorators
+   *
    * @param <T> the type of the node
    */
-  private final static class ConcatenatingNodeDecorator<T> implements NodeDecorator<T> {
+  private static final class ConcatenatingNodeDecorator<T> implements NodeDecorator<T> {
 
     private final NodeDecorator<T> A;
 
@@ -101,7 +108,6 @@ public class PDFViewUtil {
     public String getLabel(T n) throws WalaException {
       return A.getLabel(n) + B.getLabel(n);
     }
-
   }
 
   private static String getNodeLabel(IR ir, BasicBlock bb) {
@@ -136,7 +142,8 @@ public class PDFViewUtil {
     SSAInstruction[] instructions = ir.getInstructions();
     for (int j = start; j <= end; j++) {
       if (instructions[j] != null) {
-        StringBuilder x = new StringBuilder(j + "   " + instructions[j].toString(ir.getSymbolTable()));
+        StringBuilder x =
+            new StringBuilder(j + "   " + instructions[j].toString(ir.getSymbolTable()));
         StringStuff.padWithSpaces(x, 35);
         result.append(x);
         result.append("\\l");
@@ -150,9 +157,7 @@ public class PDFViewUtil {
     return result.toString();
   }
 
-  /**
-   * Launch a process to view a PDF file
-   */
+  /** Launch a process to view a PDF file */
   public static Process launchPDFView(String pdfFile, String gvExe) throws WalaException {
     // set up a viewer for the ps file.
     if (gvExe == null) {
@@ -170,5 +175,4 @@ public class PDFViewUtil {
     }
     return gv.getProcess();
   }
-
 }

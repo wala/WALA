@@ -25,40 +25,33 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A factory which tries by default to create {@link InstanceKey}s which are
- * {@link AllocationSiteInNode}s.
- * 
- * Notes:
+ * A factory which tries by default to create {@link InstanceKey}s which are {@link
+ * AllocationSiteInNode}s.
+ *
+ * <p>Notes:
+ *
  * <ul>
- * <li>This class checks to avoid creating recursive contexts when
- * {@link CGNode}s are based on {@link ReceiverInstanceContext}, as in
- * object-sensitivity.
- * <li>Up till recursion, this class will happily create unlimited object
- * sensitivity, so be careful.
- * <li>This class resorts to {@link ClassBasedInstanceKeys} for exceptions from
- * PEIs and class objects.
- * <li>This class consults the {@link AnalysisOptions} to determine whether to
- * disambiguate individual constants.
+ *   <li>This class checks to avoid creating recursive contexts when {@link CGNode}s are based on
+ *       {@link ReceiverInstanceContext}, as in object-sensitivity.
+ *   <li>Up till recursion, this class will happily create unlimited object sensitivity, so be
+ *       careful.
+ *   <li>This class resorts to {@link ClassBasedInstanceKeys} for exceptions from PEIs and class
+ *       objects.
+ *   <li>This class consults the {@link AnalysisOptions} to determine whether to disambiguate
+ *       individual constants.
  * </ul>
  */
 public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
 
-  /**
-   * Governing call graph construction options
-   */
+  /** Governing call graph construction options */
   private final AnalysisOptions options;
 
-  /**
-   * Governing class hierarchy
-   */
+  /** Governing class hierarchy */
   private final IClassHierarchy cha;
 
   private final ClassBasedInstanceKeys classBased;
 
-  /**
-   * @param options
-   *          Governing call graph construction options
-   */
+  /** @param options Governing call graph construction options */
   public AllocationSiteInNodeFactory(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;
@@ -75,8 +68,8 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     CGNode nodeToUse = node;
 
     // disallow recursion in contexts.
-    if (node.getContext().isA(ReceiverInstanceContext.class) || 
-        node.getContext().isA(CallerContext.class)) {
+    if (node.getContext().isA(ReceiverInstanceContext.class)
+        || node.getContext().isA(CallerContext.class)) {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {
@@ -107,8 +100,10 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
-    ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
+  public InstanceKey getInstanceKeyForMultiNewArray(
+      CGNode node, NewSiteReference allocation, int dim) {
+    ArrayClass type =
+        (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
       return null;
     }
@@ -135,5 +130,4 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
     return classBased.getInstanceKeyForMetadataObject(obj, objType);
   }
-
 }

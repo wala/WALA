@@ -19,5 +19,4 @@ public class MessageFormatBench {
     MessageFormat form2 = (MessageFormat) form.clone();
     System.out.println(form2.format(testArgs));
   }
-
 }

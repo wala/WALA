@@ -10,21 +10,19 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.debug.UnimplementedError;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.ibm.wala.util.debug.UnimplementedError;
-
 /**
- * a debugging aid. This implementation complains if you stick an object in here which appears to use System.identityHashCode()
+ * a debugging aid. This implementation complains if you stick an object in here which appears to
+ * use System.identityHashCode()
  */
 public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   public static final long serialVersionUID = 909018793791787198L;
 
-  /**
-   * @throws NullPointerException if t is null
-   */
+  /** @throws NullPointerException if t is null */
   public ParanoidHashMap(Map<K, V> t) throws NullPointerException {
     super(t.size());
     putAll(t);
@@ -34,8 +32,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
     super(size);
   }
 
-  public ParanoidHashMap() {
-  }
+  public ParanoidHashMap() {}
 
   /*
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
@@ -71,5 +68,4 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
       put(E.getKey(), E.getValue());
     }
   }
-
 }

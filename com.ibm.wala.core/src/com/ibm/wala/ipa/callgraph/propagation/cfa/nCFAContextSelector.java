@@ -27,5 +27,4 @@ public class nCFAContextSelector extends CallStringContextSelector {
   protected int getLength(CGNode caller, CallSiteReference site, IMethod target) {
     return n;
   }
-
 }

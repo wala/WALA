@@ -21,12 +21,12 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
- * 
- * A factory to create call graph builders using 0-CFA
+ *     <p>A factory to create call graph builders using 0-CFA
  */
-public class ZeroOneContainerCFABuilderFactory  {
+public class ZeroOneContainerCFABuilderFactory {
 
-  public CallGraphBuilder<InstanceKey> make(AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+  public CallGraphBuilder<InstanceKey> make(
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     return new AstJavaZeroOneContainerCFABuilder(cha, options, cache, null, null);

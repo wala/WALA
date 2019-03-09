@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents put and putstatic instructions.
- */
+/** This class represents put and putstatic instructions. */
 public class PutInstruction extends Instruction implements IPutInstruction {
   protected String type;
 
@@ -31,10 +29,10 @@ public class PutInstruction extends Instruction implements IPutInstruction {
     return null;
   }
 
-  final static class Lazy extends PutInstruction {
-    final private ConstantPoolReader cp;
+  static final class Lazy extends PutInstruction {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null, null, null);
@@ -80,7 +78,8 @@ public class PutInstruction extends Instruction implements IPutInstruction {
     return new Lazy(isStatic ? OP_putstatic : OP_putfield, cp, index);
   }
 
-  public static PutInstruction make(String type, String className, String fieldName, boolean isStatic) {
+  public static PutInstruction make(
+      String type, String className, String fieldName, boolean isStatic) {
     if (type == null) {
       throw new IllegalArgumentException("type must not be null");
     }
@@ -94,11 +93,13 @@ public class PutInstruction extends Instruction implements IPutInstruction {
   }
 
   @Override
-  final public boolean equals(Object o) {
+  public final boolean equals(Object o) {
     if (o instanceof PutInstruction) {
       PutInstruction i = (PutInstruction) o;
-      return i.getFieldType().equals(getFieldType()) && i.getClassType().equals(getClassType())
-          && i.getFieldName().equals(getFieldName()) && i.opcode == opcode;
+      return i.getFieldType().equals(getFieldType())
+          && i.getClassType().equals(getClassType())
+          && i.getFieldName().equals(getFieldName())
+          && i.opcode == opcode;
     } else {
       return false;
     }
@@ -120,28 +121,38 @@ public class PutInstruction extends Instruction implements IPutInstruction {
   }
 
   @Override
-  final public boolean isStatic() {
+  public final boolean isStatic() {
     return opcode == OP_putstatic;
   }
 
   @Override
-  final public int hashCode() {
-    return getClassType().hashCode() + 9011 * getClassType().hashCode() + 317 * getFieldName().hashCode() + opcode;
+  public final int hashCode() {
+    return getClassType().hashCode()
+        + 9011 * getClassType().hashCode()
+        + 317 * getFieldName().hashCode()
+        + opcode;
   }
 
   @Override
-  final public int getPoppedCount() {
+  public final int getPoppedCount() {
     return isStatic() ? 1 : 2;
   }
 
   @Override
-  final public String toString() {
-    return "Put(" + getFieldType() + ',' + (isStatic() ? "STATIC" : "NONSTATIC") + ',' + getClassType() + ',' + getFieldName()
+  public final String toString() {
+    return "Put("
+        + getFieldType()
+        + ','
+        + (isStatic() ? "STATIC" : "NONSTATIC")
+        + ','
+        + getClassType()
+        + ','
+        + getFieldName()
         + ')';
   }
 
   @Override
-  final public void visit(IInstruction.Visitor v) throws NullPointerException {
+  public final void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitPut(this);
   }
 

@@ -12,28 +12,25 @@ package slice;
 
 public class TestCD4 {
 
-  static void doNothing(int i) {
-	
-  }
+  static void doNothing(int i) {}
 
   public static void main(String[] args) {
     int i = 3;
     int j = 4;
-    int k = foo(i,j);
+    int k = foo(i, j);
 
     doNothing(k);
   }
 
-  static int foo(int i, int j){
+  static int foo(int i, int j) {
     int k = 0;
-    if (i == 3){
+    if (i == 3) {
       k = 9;
-      if (j != 4){
-	k = k+1;
+      if (j != 4) {
+        k = k + 1;
       }
       k = 8;
     }
     return k;
   }
-
 }

@@ -13,16 +13,14 @@ package com.ibm.wala.shrikeBT;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser;
 
-/**
- * A ConstantInstruction pushes some constant value onto the stack.
- */
+/** A ConstantInstruction pushes some constant value onto the stack. */
 public abstract class ConstantInstruction extends Instruction {
 
   public static class InvokeDynamicToken {
     private final BootstrapMethod bootstrapMethod;
     private final String name;
     private final String type;
-    
+
     public InvokeDynamicToken(BootstrapMethod bootstrapMethod, String name, String type) {
       this.bootstrapMethod = bootstrapMethod;
       this.name = name;
@@ -41,34 +39,23 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       InvokeDynamicToken other = (InvokeDynamicToken) obj;
       if (bootstrapMethod == null) {
-        if (other.bootstrapMethod != null)
-          return false;
-      } else if (!bootstrapMethod.equals(other.bootstrapMethod))
-        return false;
+        if (other.bootstrapMethod != null) return false;
+      } else if (!bootstrapMethod.equals(other.bootstrapMethod)) return false;
       if (name == null) {
-        if (other.name != null)
-          return false;
-      } else if (!name.equals(other.name))
-        return false;
+        if (other.name != null) return false;
+      } else if (!name.equals(other.name)) return false;
       if (type == null) {
-        if (other.type != null)
-          return false;
-      } else if (!type.equals(other.type))
-        return false;
+        if (other.type != null) return false;
+      } else if (!type.equals(other.type)) return false;
       return true;
     }
-    
-    
   }
-  
+
   public static class ClassToken {
     private final String typeName;
 
@@ -86,25 +73,19 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       ClassToken other = (ClassToken) obj;
       if (typeName == null) {
-        if (other.typeName != null)
-          return false;
-      } else if (!typeName.equals(other.typeName))
-        return false;
+        if (other.typeName != null) return false;
+      } else if (!typeName.equals(other.typeName)) return false;
       return true;
     }
 
     public String getTypeName() {
       return typeName;
     }
-
   }
 
   public ConstantInstruction(short opcode) {
@@ -119,12 +100,12 @@ public abstract class ConstantInstruction extends Instruction {
     return 0;
   }
 
-  final static class ConstNull extends ConstantInstruction {
+  static final class ConstNull extends ConstantInstruction {
     protected ConstNull() {
       super(OP_aconst_null);
     }
 
-    private final static ConstNull preallocated = new ConstNull();
+    private static final ConstNull preallocated = new ConstNull();
 
     static ConstNull makeInternal() {
       return preallocated;
@@ -144,7 +125,7 @@ public abstract class ConstantInstruction extends Instruction {
   static class ConstInt extends ConstantInstruction {
     protected int value;
 
-    private final static ConstInt[] preallocated = preallocate();
+    private static final ConstInt[] preallocated = preallocate();
 
     protected ConstInt(short opcode, int value) {
       super(opcode);
@@ -173,12 +154,12 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     @Override
-    final public Object getValue() {
+    public final Object getValue() {
       return Integer.valueOf(getIntValue());
     }
 
     @Override
-    final public String getType() {
+    public final String getType() {
       return TYPE_int;
     }
 
@@ -187,10 +168,10 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
-  final static class LazyInt extends ConstInt {
-    final private ConstantPoolReader cp;
+  static final class LazyInt extends ConstInt {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     private boolean isSet;
 
@@ -224,7 +205,7 @@ public abstract class ConstantInstruction extends Instruction {
   static class ConstLong extends ConstantInstruction {
     protected long value;
 
-    private final static ConstLong[] preallocated = preallocate();
+    private static final ConstLong[] preallocated = preallocate();
 
     protected ConstLong(short opcode, long value) {
       super(opcode);
@@ -232,7 +213,7 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     private static ConstLong[] preallocate() {
-      ConstLong[] r = { new ConstLong(OP_lconst_0, 0), new ConstLong(OP_lconst_1, 1) };
+      ConstLong[] r = {new ConstLong(OP_lconst_0, 0), new ConstLong(OP_lconst_1, 1)};
       return r;
     }
 
@@ -245,12 +226,12 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     @Override
-    final public Object getValue() {
+    public final Object getValue() {
       return Long.valueOf(getLongValue());
     }
 
     @Override
-    final public String getType() {
+    public final String getType() {
       return TYPE_long;
     }
 
@@ -259,10 +240,10 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
-  final static class LazyLong extends ConstLong {
-    final private ConstantPoolReader cp;
+  static final class LazyLong extends ConstLong {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     private boolean isSet;
 
@@ -296,7 +277,7 @@ public abstract class ConstantInstruction extends Instruction {
   static class ConstFloat extends ConstantInstruction {
     protected float value;
 
-    private final static ConstFloat[] preallocated = preallocate();
+    private static final ConstFloat[] preallocated = preallocate();
 
     protected ConstFloat(short opcode, float value) {
       super(opcode);
@@ -304,7 +285,11 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     private static ConstFloat[] preallocate() {
-      ConstFloat[] r = { new ConstFloat(OP_fconst_0, 0), new ConstFloat(OP_fconst_1, 1), new ConstFloat(OP_fconst_2, 2) };
+      ConstFloat[] r = {
+        new ConstFloat(OP_fconst_0, 0),
+        new ConstFloat(OP_fconst_1, 1),
+        new ConstFloat(OP_fconst_2, 2)
+      };
       return r;
     }
 
@@ -317,12 +302,12 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     @Override
-    final public Object getValue() {
+    public final Object getValue() {
       return Float.valueOf(getFloatValue());
     }
 
     @Override
-    final public String getType() {
+    public final String getType() {
       return TYPE_float;
     }
 
@@ -331,10 +316,10 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
-  final static class LazyFloat extends ConstFloat {
-    final private ConstantPoolReader cp;
+  static final class LazyFloat extends ConstFloat {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     private boolean isSet;
 
@@ -368,7 +353,7 @@ public abstract class ConstantInstruction extends Instruction {
   static class ConstDouble extends ConstantInstruction {
     protected double value;
 
-    private final static ConstDouble[] preallocated = preallocate();
+    private static final ConstDouble[] preallocated = preallocate();
 
     protected ConstDouble(short opcode, double value) {
       super(opcode);
@@ -376,7 +361,7 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     private static ConstDouble[] preallocate() {
-      ConstDouble[] r = { new ConstDouble(OP_dconst_0, 0), new ConstDouble(OP_dconst_1, 1) };
+      ConstDouble[] r = {new ConstDouble(OP_dconst_0, 0), new ConstDouble(OP_dconst_1, 1)};
       return r;
     }
 
@@ -389,12 +374,12 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     @Override
-    final public Object getValue() {
+    public final Object getValue() {
       return Double.valueOf(getDoubleValue());
     }
 
     @Override
-    final public String getType() {
+    public final String getType() {
       return TYPE_double;
     }
 
@@ -403,10 +388,10 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
-  final static class LazyDouble extends ConstDouble {
-    final private ConstantPoolReader cp;
+  static final class LazyDouble extends ConstDouble {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     private boolean isSet;
 
@@ -455,15 +440,15 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     @Override
-    final public String getType() {
+    public final String getType() {
       return TYPE_String;
     }
   }
 
-  final static class LazyString extends ConstString {
-    final private ConstantPoolReader cp;
+  static final class LazyString extends ConstString {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     protected LazyString(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
@@ -508,7 +493,7 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     @Override
-    final public String getType() {
+    public final String getType() {
       return TYPE_Class;
     }
 
@@ -517,13 +502,12 @@ public abstract class ConstantInstruction extends Instruction {
       // load of a class constant may trigger a ClassNotFoundException
       return true;
     }
-   
   }
 
-  final static class LazyClass extends ConstClass {
-    final private ConstantPoolReader cp;
+  static final class LazyClass extends ConstClass {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     protected LazyClass(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
@@ -552,7 +536,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   static class ConstMethodType extends ConstantInstruction {
     protected String descriptor;
-    
+
     ConstMethodType(short opcode, String descriptor) {
       super(opcode);
       this.descriptor = descriptor;
@@ -568,18 +552,18 @@ public abstract class ConstantInstruction extends Instruction {
       return TYPE_MethodType;
     }
   }
-  
-  static class LazyMethodType extends ConstMethodType {
-    final private ConstantPoolReader cp;
 
-    final private int index;
+  static class LazyMethodType extends ConstMethodType {
+    private final ConstantPoolReader cp;
+
+    private final int index;
 
     LazyMethodType(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
       this.cp = cp;
       this.index = index;
     }
-    
+
     @Override
     public Object getValue() {
       if (descriptor == null) {
@@ -598,10 +582,10 @@ public abstract class ConstantInstruction extends Instruction {
       return index;
     }
   }
-  
+
   static class ConstMethodHandle extends ConstantInstruction {
     protected Object value;
-    
+
     public ConstMethodHandle(short opcode, Object value) {
       super(opcode);
       this.value = value;
@@ -616,20 +600,19 @@ public abstract class ConstantInstruction extends Instruction {
     public String getType() {
       return TYPE_MethodHandle;
     }
-    
   }
-  
-  static class LazyMethodHandle extends ConstMethodHandle {
-    final private ConstantPoolReader cp;
 
-    final private int index;
+  static class LazyMethodHandle extends ConstMethodHandle {
+    private final ConstantPoolReader cp;
+
+    private final int index;
 
     LazyMethodHandle(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
       this.cp = cp;
       this.index = index;
     }
-    
+
     @Override
     public Object getValue() {
       if (value == null) {
@@ -655,7 +638,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   static class ConstInvokeDynamic extends ConstantInstruction {
     protected Object value;
-    
+
     public ConstInvokeDynamic(short opcode, Object value) {
       super(opcode);
       this.value = value;
@@ -670,29 +653,28 @@ public abstract class ConstantInstruction extends Instruction {
     public String getType() {
       return null;
     }
-    
   }
 
   static class LazyInvokeDynamic extends ConstMethodHandle {
-    final private ConstantPoolReader cp;
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     LazyInvokeDynamic(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
       this.cp = cp;
       this.index = index;
     }
-    
+
     @Override
     public Object getValue() {
       if (value == null) {
-        BootstrapMethod bootstrap = cp.getConstantPoolDynamicBootstrap(index); 
+        BootstrapMethod bootstrap = cp.getConstantPoolDynamicBootstrap(index);
         String name = cp.getConstantPoolDynamicName(index);
         String type = cp.getConstantPoolDynamicType(index);
         value = new InvokeDynamicToken(bootstrap, name, type);
       }
-      
+
       return value;
     }
 
@@ -707,17 +689,14 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
-  /**
-   * @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null
-   */
+  /** @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null */
   public abstract Object getValue();
 
-  /**
-   * @return the type of the value pushed
-   */
+  /** @return the type of the value pushed */
   public abstract String getType();
 
-  public static ConstantInstruction make(String type, Object constant) throws IllegalArgumentException {
+  public static ConstantInstruction make(String type, Object constant)
+      throws IllegalArgumentException {
     if (type == null && constant != null) {
       throw new IllegalArgumentException("(type == null) and (constant != null)");
     }
@@ -730,16 +709,16 @@ public abstract class ConstantInstruction extends Instruction {
     } else {
       try {
         switch (Util.getTypeIndex(type)) {
-        case TYPE_int_index:
-          return make(((Number) constant).intValue());
-        case TYPE_long_index:
-          return make(((Number) constant).longValue());
-        case TYPE_float_index:
-          return make(((Number) constant).floatValue());
-        case TYPE_double_index:
-          return make(((Number) constant).doubleValue());
-        default:
-          throw new IllegalArgumentException("Invalid type for constant: " + type);
+          case TYPE_int_index:
+            return make(((Number) constant).intValue());
+          case TYPE_long_index:
+            return make(((Number) constant).longValue());
+          case TYPE_float_index:
+            return make(((Number) constant).floatValue());
+          case TYPE_double_index:
+            return make(((Number) constant).doubleValue());
+          default:
+            throw new IllegalArgumentException("Invalid type for constant: " + type);
         }
       } catch (ClassCastException e) {
         throw new IllegalArgumentException(e);
@@ -764,7 +743,9 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   public static ConstantInstruction makeString(String s) {
-    return s == null ? (ConstantInstruction) ConstNull.makeInternal() : (ConstantInstruction) ConstString.makeInternal(s);
+    return s == null
+        ? (ConstantInstruction) ConstNull.makeInternal()
+        : (ConstantInstruction) ConstString.makeInternal(s);
   }
 
   public static ConstantInstruction makeClass(String s) {
@@ -773,31 +754,31 @@ public abstract class ConstantInstruction extends Instruction {
 
   public static ConstantInstruction make(ConstantPoolReader cp, int index) {
     switch (cp.getConstantPoolItemType(index)) {
-    case CONSTANT_Integer:
-      return new LazyInt(OP_ldc_w, cp, index);
-    case CONSTANT_Long:
-      return new LazyLong(OP_ldc2_w, cp, index);
-    case CONSTANT_Float:
-      return new LazyFloat(OP_ldc_w, cp, index);
-    case CONSTANT_Double:
-      return new LazyDouble(OP_ldc2_w, cp, index);
-    case CONSTANT_String:
-      return new LazyString(OP_ldc_w, cp, index);
-    case CONSTANT_Class:
-      return new LazyClass(OP_ldc_w, cp, index);
-    case CONSTANT_MethodHandle:
-      return new LazyMethodHandle(OP_ldc_w, cp, index);
-    case CONSTANT_MethodType:
-      return new LazyMethodType(OP_ldc_w, cp, index);
-    case CONSTANT_InvokeDynamic:
-      return new LazyInvokeDynamic(OP_ldc_w, cp, index);
-    default:
-      return null;
+      case CONSTANT_Integer:
+        return new LazyInt(OP_ldc_w, cp, index);
+      case CONSTANT_Long:
+        return new LazyLong(OP_ldc2_w, cp, index);
+      case CONSTANT_Float:
+        return new LazyFloat(OP_ldc_w, cp, index);
+      case CONSTANT_Double:
+        return new LazyDouble(OP_ldc2_w, cp, index);
+      case CONSTANT_String:
+        return new LazyString(OP_ldc_w, cp, index);
+      case CONSTANT_Class:
+        return new LazyClass(OP_ldc_w, cp, index);
+      case CONSTANT_MethodHandle:
+        return new LazyMethodHandle(OP_ldc_w, cp, index);
+      case CONSTANT_MethodType:
+        return new LazyMethodType(OP_ldc_w, cp, index);
+      case CONSTANT_InvokeDynamic:
+        return new LazyInvokeDynamic(OP_ldc_w, cp, index);
+      default:
+        return null;
     }
   }
 
   @Override
-  final public boolean equals(Object o) {
+  public final boolean equals(Object o) {
     if (o instanceof ConstantInstruction) {
       ConstantInstruction i = (ConstantInstruction) o;
       if (!i.getType().equals(getType())) {
@@ -822,23 +803,23 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   @Override
-  final public String getPushedType(String[] types) {
+  public final String getPushedType(String[] types) {
     return getType();
   }
 
   @Override
-  final public byte getPushedWordSize() {
+  public final byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
 
   @Override
-  final public int hashCode() {
+  public final int hashCode() {
     int v = getValue() == null ? 0 : getValue().hashCode();
     return getType().hashCode() + 14411 * v;
   }
 
   @Override
-  final public void visit(IInstruction.Visitor v) throws NullPointerException {
+  public final void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitConstant(this);
   }
 
@@ -850,18 +831,18 @@ public abstract class ConstantInstruction extends Instruction {
       for (int i = 0; i < len; i++) {
         char ch = s.charAt(i);
         switch (ch) {
-        case '"':
-          buf.append('\\');
-          buf.append(ch);
-          break;
-        case '\n':
-          buf.append("\\\n");
-          break;
-        case '\t':
-          buf.append("\\\t");
-          break;
-        default:
-          buf.append(ch);
+          case '"':
+            buf.append('\\');
+            buf.append(ch);
+            break;
+          case '\n':
+            buf.append("\\\n");
+            break;
+          case '\t':
+            buf.append("\\\t");
+            break;
+          default:
+            buf.append(ch);
         }
       }
       buf.append('\"');
@@ -874,7 +855,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   @Override
-  final public String toString() {
+  public final String toString() {
     return "Constant(" + getType() + ',' + quote(getValue()) + ')';
   }
 

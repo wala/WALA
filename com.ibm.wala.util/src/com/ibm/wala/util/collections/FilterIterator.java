@@ -14,9 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-/**
- * A {@code FilterIterator} filters an {@code Iterator} to generate a new one.
- */
+/** A {@code FilterIterator} filters an {@code Iterator} to generate a new one. */
 public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<? extends T> i;
 
@@ -42,9 +40,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     advance();
   }
 
-  /**
-   * update the internal state to prepare for the next access to this iterator
-   */
+  /** update the internal state to prepare for the next access to this iterator */
   private void advance() {
     while (i.hasNext()) {
       T o = i.next();

@@ -14,21 +14,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-/**
- * simple implementation of IVector
- */
+/** simple implementation of IVector */
 public class SimpleVector<T> implements IVector<T> {
-  
-  private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
 
-  private final static double GROWTH_FACTOR = 1.5;
+  private static final int MAX_SIZE = Integer.MAX_VALUE / 4;
+
+  private static final double GROWTH_FACTOR = 1.5;
 
   Object[] store = new Object[1];
-  
+
   int maxIndex = -1;
 
-  public SimpleVector() {
-  }
+  public SimpleVector() {}
 
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
@@ -57,7 +54,7 @@ public class SimpleVector<T> implements IVector<T> {
     if (x > MAX_SIZE) {
       throw new IllegalArgumentException("x is too big: " + x);
     }
-    maxIndex = Math.max(maxIndex,x);
+    maxIndex = Math.max(maxIndex, x);
     if (value == null) {
       if (x >= store.length) {
         return;
@@ -70,9 +67,7 @@ public class SimpleVector<T> implements IVector<T> {
     }
   }
 
-  /**
-   * make sure we can store to a particular index
-   */
+  /** make sure we can store to a particular index */
   private void ensureCapacity(int capacity) {
     if (capacity >= store.length) {
       store = Arrays.copyOf(store, 1 + (int) (GROWTH_FACTOR * capacity));
@@ -88,9 +83,7 @@ public class SimpleVector<T> implements IVector<T> {
     System.err.println(("occupancy:  " + computeOccupancy()));
   }
 
-  /**
-   * @return the percentage of entries in delegateStore that are non-null
-   */
+  /** @return the percentage of entries in delegateStore that are non-null */
   private double computeOccupancy() {
     int count = 0;
     for (Object element : store) {
@@ -101,12 +94,11 @@ public class SimpleVector<T> implements IVector<T> {
     return (double) count / (double) store.length;
   }
 
-
   @Override
   @SuppressWarnings("unchecked")
   public Iterator<T> iterator() {
     ArrayList<T> result = new ArrayList<>();
-    for (int i =0; i <= maxIndex; i++) {
+    for (int i = 0; i <= maxIndex; i++) {
       result.add((T) store[i]);
     }
     return result.iterator();

@@ -10,16 +10,10 @@
  */
 package com.ibm.wala.util;
 
-
-
-/**
- * Simple utilities for Eclipse progress monitors
- */
+/** Simple utilities for Eclipse progress monitors */
 public class MonitorUtil {
-  
-  /**
-   * Use this interface to decouple core utilities from the Eclipse layer
-   */
+
+  /** Use this interface to decouple core utilities from the Eclipse layer */
   public interface IProgressMonitor {
 
     /** Constant indicating an unknown amount of work. */
@@ -27,22 +21,23 @@ public class MonitorUtil {
 
     void beginTask(String task, int totalWork);
 
-/** BEGIN Custom change: subtasks and canceling */
+    /** BEGIN Custom change: subtasks and canceling */
     void subTask(String subTask);
 
     void cancel();
 
-/** END Custom change: subtasks and canceling */
+    /** END Custom change: subtasks and canceling */
     boolean isCanceled();
 
     void done();
 
     void worked(int units);
-    
+
     String getCancelMessage();
   }
 
-  public static void beginTask(IProgressMonitor monitor, String task, int totalWork) throws CancelException {
+  public static void beginTask(IProgressMonitor monitor, String task, int totalWork)
+      throws CancelException {
     if (monitor != null) {
       monitor.beginTask(task, totalWork);
       if (monitor.isCanceled()) {
@@ -69,16 +64,17 @@ public class MonitorUtil {
     }
   }
 
-  public static void throwExceptionIfCanceled(IProgressMonitor progressMonitor) throws CancelException {
+  public static void throwExceptionIfCanceled(IProgressMonitor progressMonitor)
+      throws CancelException {
     if (progressMonitor != null) {
       if (progressMonitor.isCanceled()) {
         throw CancelException.make(progressMonitor.getCancelMessage());
       }
     }
   }
-/** BEGIN Custom change: more on subtasks */
-
-  public static void subTask(IProgressMonitor progressMonitor, String subTask) throws CancelException {
+  /** BEGIN Custom change: more on subtasks */
+  public static void subTask(IProgressMonitor progressMonitor, String subTask)
+      throws CancelException {
     if (progressMonitor != null) {
       progressMonitor.subTask(subTask);
       if (progressMonitor.isCanceled()) {
@@ -94,19 +90,19 @@ public class MonitorUtil {
       return progressMonitor.isCanceled();
     }
   }
-  
+
   public static void cancel(IProgressMonitor progress) {
     if (progress != null) {
       progress.cancel();
     }
   }
-/** END Custom change: more on subtasks */
+  /** END Custom change: more on subtasks */
 
-//  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
-//    if (progress == null) {
-//      return null;
-//    } else {
-//      return new SubProgressMonitor(progress, i);
-//    }
-//  }
+  //  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
+  //    if (progress == null) {
+  //      return null;
+  //    } else {
+  //      return new SubProgressMonitor(progress, i);
+  //    }
+  //  }
 }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,36 +47,35 @@
 
 package org.scandroid.spec;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class FieldNamePattern {
-    final String className;   // null = match any class
+  final String className; // null = match any class
 
-    final String memberName;  // null = match any method
-                              // * used to match arbitrary substrings
-    public FieldNamePattern(String c, String m) {
-        className = c;
-        memberName = m;
-    }
+  final String memberName; // null = match any method
+  // * used to match arbitrary substrings
+  public FieldNamePattern(String c, String m) {
+    className = c;
+    memberName = m;
+  }
 
-    Collection<IField> lookupFields(IClassLoader cl) {
-        Collection<IField> matching = new LinkedList<>();
-        IClass c = cl.lookupClass(TypeName.findOrCreate(className));
-        if(c == null) return matching;
-        Atom atom = Atom.findOrCreateUnicodeAtom(memberName);
-        Collection<IField> allFields = c.getAllFields();
-        for(IField f: allFields) {
-            if(f.getName().equals(atom)) {
-                matching.add(f);
-            }
-        }
-        return matching;
+  Collection<IField> lookupFields(IClassLoader cl) {
+    Collection<IField> matching = new LinkedList<>();
+    IClass c = cl.lookupClass(TypeName.findOrCreate(className));
+    if (c == null) return matching;
+    Atom atom = Atom.findOrCreateUnicodeAtom(memberName);
+    Collection<IField> allFields = c.getAllFields();
+    for (IField f : allFields) {
+      if (f.getName().equals(atom)) {
+        matching.add(f);
+      }
     }
+    return matching;
+  }
 }

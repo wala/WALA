@@ -12,14 +12,10 @@ package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.IVariable;
 
-/**
- * An implementation of NullaryStep that carries its operator explicitly
- */
+/** An implementation of NullaryStep that carries its operator explicitly */
 public class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatement<T> {
 
-  /**
-   * The operator in the equation
-   */
+  /** The operator in the equation */
   private final NullaryOperator<T> operator;
 
   public BasicNullaryStatement(T lhs, NullaryOperator<T> operator) {
@@ -27,9 +23,7 @@ public class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatem
     this.operator = operator;
   }
 
-  /**
-   * @return Returns the operator.
-   */
+  /** @return Returns the operator. */
   @Override
   public NullaryOperator<T> getOperator() {
     return operator;
@@ -37,6 +31,7 @@ public class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatem
 
   /**
    * Return a string representation of this object
+   *
    * @return a string representation of this object
    */
   @Override

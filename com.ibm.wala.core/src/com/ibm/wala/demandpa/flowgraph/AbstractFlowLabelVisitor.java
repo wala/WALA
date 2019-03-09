@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -40,91 +40,58 @@ package com.ibm.wala.demandpa.flowgraph;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 
 /**
- * An {@link IFlowLabelVisitor} that does nothing. Subclasses can override only
- * the label types they care about.
- * 
+ * An {@link IFlowLabelVisitor} that does nothing. Subclasses can override only the label types they
+ * care about.
+ *
  * @author Manu Sridharan
- * 
  */
 public class AbstractFlowLabelVisitor implements IFlowLabelVisitor {
 
   @Override
-  public void visitParam(ParamLabel label, Object dst) {
-
-  }
+  public void visitParam(ParamLabel label, Object dst) {}
 
   @Override
-  public void visitReturn(ReturnLabel label, Object dst) {
-
-  }
+  public void visitReturn(ReturnLabel label, Object dst) {}
 
   @Override
-  public void visitAssign(AssignLabel label, Object dst) {
-
-  }
+  public void visitAssign(AssignLabel label, Object dst) {}
 
   @Override
-  public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {
-
-  }
+  public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {}
 
   @Override
-  public void visitGetField(GetFieldLabel label, Object dst) {
-
-  }
+  public void visitGetField(GetFieldLabel label, Object dst) {}
 
   @Override
-  public void visitMatch(MatchLabel label, Object dst) {
-
-  }
+  public void visitMatch(MatchLabel label, Object dst) {}
 
   @Override
-  public void visitNew(NewLabel label, Object dst) {
-
-  }
+  public void visitNew(NewLabel label, Object dst) {}
 
   @Override
-  public void visitPutField(PutFieldLabel label, Object dst) {
-
-  }
+  public void visitPutField(PutFieldLabel label, Object dst) {}
 
   @Override
-  public void visitAssignGlobalBar(AssignGlobalBarLabel label, Object dst) {
-
-  }
+  public void visitAssignGlobalBar(AssignGlobalBarLabel label, Object dst) {}
 
   @Override
-  public void visitAssignBar(AssignBarLabel label, Object dst) {
-  }
+  public void visitAssignBar(AssignBarLabel label, Object dst) {}
 
   @Override
-  public void visitGetFieldBar(GetFieldBarLabel label, Object dst) {
-
-  }
+  public void visitGetFieldBar(GetFieldBarLabel label, Object dst) {}
 
   @Override
-  public void visitMatchBar(MatchBarLabel label, Object dst) {
-
-  }
+  public void visitMatchBar(MatchBarLabel label, Object dst) {}
 
   @Override
-  public void visitNewBar(NewBarLabel label, Object dst) {
-
-  }
+  public void visitNewBar(NewBarLabel label, Object dst) {}
 
   @Override
-  public void visitPutFieldBar(PutFieldBarLabel label, Object dst) {
-
-  }
+  public void visitPutFieldBar(PutFieldBarLabel label, Object dst) {}
 
   @Override
-  public void visitReturnBar(ReturnBarLabel label, Object dst) {
-
-  }
+  public void visitReturnBar(ReturnBarLabel label, Object dst) {}
 
   @Override
-  public void visitParamBar(ParamBarLabel label, Object dst) {
-
-  }
-
+  public void visitParamBar(ParamBarLabel label, Object dst) {}
 }

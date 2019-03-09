@@ -10,15 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.invoke.CallSite;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
@@ -28,13 +19,19 @@ import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.invoke.CallSite;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class BootstrapDumper {
-  final private PrintWriter w;
+  private final PrintWriter w;
 
-  /**
-   * Get ready to print a class to the given output stream.
-   */
+  /** Get ready to print a class to the given output stream. */
   public BootstrapDumper(PrintWriter w) {
     this.w = w;
   }
@@ -42,19 +39,20 @@ public class BootstrapDumper {
   public static void main(String[] args) throws Exception {
     OfflineInstrumenter oi = new OfflineInstrumenter();
     String[] classpathEntries = oi.parseStandardArgs(args);
-    
+
     PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
 
     BootstrapDumper p = new BootstrapDumper(w);
 
-    URL[] urls = new URL[ classpathEntries.length-1 ];
-    for(int i = 1; i < classpathEntries.length; i++) {
+    URL[] urls = new URL[classpathEntries.length - 1];
+    for (int i = 1; i < classpathEntries.length; i++) {
       System.err.println(classpathEntries[i]);
       File f = new File(classpathEntries[i]);
       assert f.exists();
-      urls[i-1] = f.toURI().toURL(); 
+      urls[i - 1] = f.toURI().toURL();
     }
-    try (final URLClassLoader image = URLClassLoader.newInstance(urls, BootstrapDumper.class.getClassLoader().getParent())) {
+    try (final URLClassLoader image =
+        URLClassLoader.newInstance(urls, BootstrapDumper.class.getClassLoader().getParent())) {
       System.err.println(image);
 
       ClassInstrumenter ci;
@@ -71,8 +69,10 @@ public class BootstrapDumper {
     oi.close();
   }
 
-  private void dumpAttributes(Class<?> cl, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
-      InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+  private void dumpAttributes(Class<?> cl, ClassReader.AttrIterator attrs)
+      throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException,
+          NoSuchMethodException, SecurityException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();
       if (name.equals("Code")) {
@@ -81,9 +81,9 @@ public class BootstrapDumper {
         CTDecoder decoder = new CTDecoder(code);
         decoder.decode();
         IInstruction[] insts = decoder.getInstructions();
-        for(IInstruction inst : insts) {
+        for (IInstruction inst : insts) {
           if (inst instanceof InvokeDynamicInstruction) {
-            CallSite target = ((InvokeDynamicInstruction)inst).bootstrap(cl);
+            CallSite target = ((InvokeDynamicInstruction) inst).bootstrap(cl);
             w.println(target.dynamicInvoker());
             w.println(target.getTarget());
             /*
@@ -100,14 +100,15 @@ public class BootstrapDumper {
     }
   }
 
-
-
   /**
    * Print a class.
    *
    * @throws IllegalArgumentException if cr is null
    */
-  public void doClass(ClassLoader image, final ClassReader cr) throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+  public void doClass(ClassLoader image, final ClassReader cr)
+      throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException,
+          NoSuchMethodException, SecurityException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
@@ -115,7 +116,7 @@ public class BootstrapDumper {
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     cr.initClassAttributeIterator(attrs);
     int methodCount = cr.getMethodCount();
-    
+
     for (int i = 0; i < methodCount; i++) {
       cr.initMethodAttributeIterator(i, attrs);
       dumpAttributes(Class.forName(cr.getName().replace('/', '.'), false, image), attrs);

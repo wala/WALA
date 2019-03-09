@@ -16,5 +16,4 @@ public interface JavaProcedureEntity extends CAstEntity {
 
   @Override
   public String getSignature();
-
 }

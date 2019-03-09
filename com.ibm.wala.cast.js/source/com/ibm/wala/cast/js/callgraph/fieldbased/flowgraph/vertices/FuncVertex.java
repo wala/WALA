@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
@@ -25,63 +22,67 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
- * A function vertex represents a function object (or, more precisely, all function objects
- * arising from a single function expression or declaration).
- * 
+ * A function vertex represents a function object (or, more precisely, all function objects arising
+ * from a single function expression or declaration).
+ *
  * @author mschaefer
  */
 public class FuncVertex extends Vertex implements ObjectVertex {
-	// the IClass representing this function in the class hierarchy
-	protected final IClass klass;
+  // the IClass representing this function in the class hierarchy
+  protected final IClass klass;
 
-	FuncVertex(IClass method) {
-		this.klass = method;
-	}
-		
-	public String getFullName() {
-		return klass.getName().toString();
-	}
+  FuncVertex(IClass method) {
+    this.klass = method;
+  }
 
-	@Override
-	public <T> T accept(VertexVisitor<T> visitor) {
-		return visitor.visitFuncVertex(this);
-	}
+  public String getFullName() {
+    return klass.getName().toString();
+  }
 
-	@Override
-	public String toString() {
-		String methodName = klass.getName().toString();
-    return "Func(" + methodName.substring(methodName.lastIndexOf('/')+1) + ')';
-	}
+  @Override
+  public <T> T accept(VertexVisitor<T> visitor) {
+    return visitor.visitFuncVertex(this);
+  }
+
+  @Override
+  public String toString() {
+    String methodName = klass.getName().toString();
+    return "Func(" + methodName.substring(methodName.lastIndexOf('/') + 1) + ')';
+  }
 
   @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     MethodReference ctorRef = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Function);
     Set<CGNode> f = CG.getNodes(ctorRef);
     CGNode ctor = null;
-    for(CGNode n : f) {
+    for (CGNode n : f) {
       JavaScriptConstructor c = (JavaScriptConstructor) n.getMethod();
       if (c.constructedType().equals(klass)) {
         ctor = n;
         break;
       }
     }
-    
+
     // built in objects
     if (ctor == null) {
       return EmptyIterator.instance();
     }
-    
+
     Iterator<CGNode> callers = CG.getPredNodes(ctor);
     CGNode caller = callers.next();
     assert !callers.hasNext();
-    
+
     Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, ctor);
     CallSiteReference site = sites.next();
-    assert !sites.hasNext() : caller + " --> " + ctor + " @ " + site + " and " + sites.next() + '\n' + caller.getIR();
-    
-    return NonNullSingletonIterator.make(Pair.make(caller, NewSiteReference.make(site.getProgramCounter(), klass.getReference())));
+    assert !sites.hasNext()
+        : caller + " --> " + ctor + " @ " + site + " and " + sites.next() + '\n' + caller.getIR();
+
+    return NonNullSingletonIterator.make(
+        Pair.make(caller, NewSiteReference.make(site.getProgramCounter(), klass.getReference())));
   }
 
   @Override

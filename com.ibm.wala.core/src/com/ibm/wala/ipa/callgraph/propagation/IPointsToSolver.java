@@ -10,13 +10,10 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
-/**
- * Basic interface for a pointer analysis solver.
- */
+/** Basic interface for a pointer analysis solver. */
 public interface IPointsToSolver {
 
   public void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException;

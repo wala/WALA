@@ -41,13 +41,10 @@ public class JSInducedCFG extends AstInducedCFG {
     }
 
     @Override
-    public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
-    }
+    public void visitTypeOf(JavaScriptTypeOfInstruction inst) {}
 
     @Override
-    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
-      
-    }
+    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {}
 
     @Override
     public void visitCheckRef(JavaScriptCheckReference instruction) {
@@ -55,19 +52,15 @@ public class JSInducedCFG extends AstInducedCFG {
     }
 
     @Override
-    public void visitWithRegion(JavaScriptWithRegion instruction) {
-      
-    }
+    public void visitWithRegion(JavaScriptWithRegion instruction) {}
 
     @Override
-    public void visitSetPrototype(SetPrototype instruction) {
-    }
+    public void visitSetPrototype(SetPrototype instruction) {}
 
     @Override
-    public void visitPrototypeLookup(PrototypeLookup instruction) {
-    }
+    public void visitPrototypeLookup(PrototypeLookup instruction) {}
   }
-    
+
   class JSBranchVisitor extends AstBranchVisitor implements JSInstructionVisitor {
 
     JSBranchVisitor(boolean[] r) {
@@ -75,34 +68,27 @@ public class JSInducedCFG extends AstInducedCFG {
     }
 
     @Override
-    public void visitJavaScriptInvoke(JavaScriptInvoke inst) {
-    }
+    public void visitJavaScriptInvoke(JavaScriptInvoke inst) {}
 
     @Override
-    public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
-    }
+    public void visitTypeOf(JavaScriptTypeOfInstruction inst) {}
 
     @Override
-    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {      
-    }
+    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {}
 
     @Override
-    public void visitCheckRef(JavaScriptCheckReference instruction) {      
-    }
+    public void visitCheckRef(JavaScriptCheckReference instruction) {}
 
     @Override
-    public void visitWithRegion(JavaScriptWithRegion instruction) {
-    }
+    public void visitWithRegion(JavaScriptWithRegion instruction) {}
 
     @Override
-    public void visitSetPrototype(SetPrototype instruction) {
-    }
+    public void visitSetPrototype(SetPrototype instruction) {}
 
     @Override
-    public void visitPrototypeLookup(PrototypeLookup instruction) {
-    }
+    public void visitPrototypeLookup(PrototypeLookup instruction) {}
   }
-    
+
   @Override
   protected BranchVisitor makeBranchVisitor(boolean[] r) {
     return new JSBranchVisitor(r);
@@ -112,5 +98,4 @@ public class JSInducedCFG extends AstInducedCFG {
   protected PEIVisitor makePEIVisitor(boolean[] r) {
     return new JSPEIVisitor(r);
   }
-
 }

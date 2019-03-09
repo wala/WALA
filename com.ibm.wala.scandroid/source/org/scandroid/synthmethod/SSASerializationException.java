@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,13 +48,13 @@ package org.scandroid.synthmethod;
 
 public class SSASerializationException extends RuntimeException {
 
-	private static final long serialVersionUID = 5679383911644331821L;
+  private static final long serialVersionUID = 5679383911644331821L;
 
-	public SSASerializationException(Exception e) {
-		super(e);
-	}
+  public SSASerializationException(Exception e) {
+    super(e);
+  }
 
-    public SSASerializationException(String string) {
-        super(string);
-    }
+  public SSASerializationException(String string) {
+    super(string);
+  }
 }

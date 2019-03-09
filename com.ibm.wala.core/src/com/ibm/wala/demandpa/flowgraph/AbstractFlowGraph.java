@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,14 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.demandpa.flowgraph;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -87,54 +79,62 @@ import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A graph whose edges are labeled with {@link IFlowLabel}s.
- * 
+ *
  * @author Manu Sridharan
- * 
  */
-public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel> implements IFlowGraph {
+public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel>
+    implements IFlowGraph {
 
-  private final static IFlowLabel defaultLabel = new IFlowLabel() {
-    @Override
-    public IFlowLabel bar() {
-      return defaultLabel;
-    }
+  private static final IFlowLabel defaultLabel =
+      new IFlowLabel() {
+        @Override
+        public IFlowLabel bar() {
+          return defaultLabel;
+        }
 
-    @Override
-    public boolean isBarred() {
-      return false;
-    }
+        @Override
+        public boolean isBarred() {
+          return false;
+        }
 
-    @Override
-    public void visit(IFlowLabelVisitor v, Object dst) {
-    }
-
-  };
+        @Override
+        public void visit(IFlowLabelVisitor v, Object dst) {}
+      };
 
   /**
-   * Map: LocalPointerKey -&gt; SSAInvokeInstruction. If we have (x, foo()), that means that x was def'fed by the return value from the
-   * call to foo()
+   * Map: LocalPointerKey -&gt; SSAInvokeInstruction. If we have (x, foo()), that means that x was
+   * def'fed by the return value from the call to foo()
    */
   protected final Map<PointerKey, SSAAbstractInvokeInstruction> callDefs = HashMapFactory.make();
 
   /**
-   * Map: {@link LocalPointerKey} -&gt; {@link Set}&lt;{@link SSAInvokeInstruction}&gt;.
-   * If we have (x, foo()), that means x was passed as a parameter to the call to foo().
-   * The parameter position is not represented and must be recovered.
+   * Map: {@link LocalPointerKey} -&gt; {@link Set}&lt;{@link SSAInvokeInstruction}&gt;. If we have
+   * (x, foo()), that means x was passed as a parameter to the call to foo(). The parameter position
+   * is not represented and must be recovered.
    */
-  protected final Map<PointerKey, Set<SSAAbstractInvokeInstruction>> callParams = HashMapFactory.make();
+  protected final Map<PointerKey, Set<SSAAbstractInvokeInstruction>> callParams =
+      HashMapFactory.make();
 
   /**
-   * Map: LocalPointerKey -&gt; CGNode. If we have (x, foo), then x is a parameter of method foo. For now, we have to re-discover the
-   * parameter position. TODO this should just be a set; we can get the CGNode from the {@link LocalPointerKey}
+   * Map: LocalPointerKey -&gt; CGNode. If we have (x, foo), then x is a parameter of method foo.
+   * For now, we have to re-discover the parameter position. TODO this should just be a set; we can
+   * get the CGNode from the {@link LocalPointerKey}
    */
   protected final Map<PointerKey, CGNode> params = HashMapFactory.make();
 
   /**
-   * Map: {@link LocalPointerKey} -&gt; {@link CGNode}. If we have (x, foo), then x is a return value of method foo. Must re-discover
-   * if x is normal or exceptional return value.
+   * Map: {@link LocalPointerKey} -&gt; {@link CGNode}. If we have (x, foo), then x is a return
+   * value of method foo. Must re-discover if x is normal or exceptional return value.
    */
   protected final Map<PointerKey, CGNode> returns = HashMapFactory.make();
 
@@ -146,7 +146,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   protected final CallGraph cg;
 
-  public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel, IClassHierarchy cha, CallGraph cg) {
+  public AbstractFlowGraph(
+      MemoryAccessMap mam, HeapModel heapModel, IClassHierarchy cha, CallGraph cg) {
     super(defaultLabel);
     this.mam = mam;
     this.heapModel = heapModel;
@@ -180,9 +181,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     }
   }
 
-  /**
-   * For each invocation in the method, add nodes for actual parameters and return values
-   */
+  /** For each invocation in the method, add nodes for actual parameters and return values */
   protected void addNodesForInvocations(CGNode node, IR ir) {
     for (CallSiteReference site : Iterator2Iterable.make(ir.iterateCallSites())) {
       SSAAbstractInvokeInstruction[] calls = ir.getCalls(site);
@@ -207,7 +206,6 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         PointerKey exc = heapModel.getPointerKeyForLocal(node, invokeInstr.getException());
         addNode(exc);
         callDefs.put(exc, invokeInstr);
-
       }
     }
   }
@@ -233,7 +231,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
+  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk)
+      throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
@@ -245,7 +244,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
+  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk)
+      throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
@@ -288,9 +288,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   /**
    * convert a pointer key to one in the memory access map's heap model
-   * 
-   * TODO move this somewhere more appropriate
-   * 
+   *
+   * <p>TODO move this somewhere more appropriate
+   *
    * @throws UnsupportedOperationException if it doesn't know how to handle a {@link PointerKey}
    */
   public static PointerKey convertPointerKeyToHeapModel(PointerKey pk, HeapModel h) {
@@ -366,8 +366,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         PointerKey r = heapModel.getPointerKeyForLocal(node, s.getValue());
         written.add(r);
       } else if (instruction instanceof SSANewInstruction) {
-        NewMultiDimInfo multiDimInfo = DemandPointerFlowGraph.getInfoForNewMultiDim((SSANewInstruction) instruction, heapModel,
-            node);
+        NewMultiDimInfo multiDimInfo =
+            DemandPointerFlowGraph.getInfoForNewMultiDim(
+                (SSANewInstruction) instruction, heapModel, node);
         for (Pair<PointerKey, PointerKey> arrStoreInstr : multiDimInfo.arrStoreInstrs) {
           written.add(arrStoreInstr.snd);
         }
@@ -387,7 +388,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     ArrayList<PointerKey> read = new ArrayList<>();
     for (MemoryAccess a : arrayReads) {
       IR ir = a.getNode().getIR();
-      SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      SSAArrayLoadInstruction s =
+          (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
       if (s == null) {
         // actually dead code
         continue;
@@ -402,12 +404,14 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   /**
-   * Add constraints to represent the flow of exceptions to the exceptional return value for this node
+   * Add constraints to represent the flow of exceptions to the exceptional return value for this
+   * node
    */
   protected void addNodePassthruExceptionConstraints(CGNode node, IR ir) {
     // add constraints relating to thrown exceptions that reach the exit
     // block.
-    List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
+    List<ProgramCounter> peis =
+        SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = heapModel.getPointerKeyForExceptionalReturnValue(node);
     IClass c = node.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable);
 
@@ -416,13 +420,17 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   /**
    * Generate constraints which assign exception values into an exception pointer
-   * 
+   *
    * @param node governing node
    * @param peis list of PEI instructions
    * @param exceptionVar PointerKey representing a pointer to an exception value
    * @param catchClasses the types "caught" by the exceptionVar
    */
-  protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
+  protected void addExceptionDefConstraints(
+      IR ir,
+      CGNode node,
+      List<ProgramCounter> peis,
+      PointerKey exceptionVar,
       Set<IClass> catchClasses) {
     for (ProgramCounter peiLoc : peis) {
       SSAInstruction pei = ir.getPEI(peiLoc);
@@ -456,7 +464,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
               continue;
             }
             if (!(ik instanceof ConcreteTypeKey)) {
-              assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
+              assert ik instanceof ConcreteTypeKey
+                  : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             }
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
             IClass klass = ck.getType();
@@ -471,9 +480,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     }
   }
 
-  /**
-   * add constraints for reference constants assigned to vars
-   */
+  /** add constraints for reference constants assigned to vars */
   protected void addNodeConstantConstraints(CGNode node, IR ir) {
     SymbolTable symbolTable = ir.getSymbolTable();
     for (int i = 1; i <= symbolTable.getMaxValueNumber(); i++) {
@@ -481,7 +488,12 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         Object v = symbolTable.getConstantValue(i);
         if (!(v instanceof Number)) {
           Object S = symbolTable.getConstantValue(i);
-          TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
+          TypeReference type =
+              node.getMethod()
+                  .getDeclaringClass()
+                  .getClassLoader()
+                  .getLanguage()
+                  .getConstantType(S);
           if (type != null) {
             InstanceKey ik = heapModel.getInstanceKeyForConstant(type, S);
             if (ik != null) {
@@ -495,5 +507,4 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       }
     }
   }
-
 }

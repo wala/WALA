@@ -13,8 +13,8 @@ package com.ibm.wala.cast.ir.translator;
 import com.ibm.wala.cast.tree.CAst;
 
 /**
- * superclass for CAst parsers / translators making use of native code. performs
- * initialization of the core CAst native library.
+ * superclass for CAst parsers / translators making use of native code. performs initialization of
+ * the core CAst native library.
  */
 public abstract class NativeBridge {
 
@@ -23,5 +23,4 @@ public abstract class NativeBridge {
   protected NativeBridge(CAst Ast) {
     this.Ast = Ast;
   }
-
 }

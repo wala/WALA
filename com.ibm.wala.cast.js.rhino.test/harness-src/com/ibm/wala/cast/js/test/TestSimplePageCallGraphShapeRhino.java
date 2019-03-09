@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import java.net.URL;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
@@ -24,41 +19,47 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import java.net.URL;
+import org.junit.Before;
+import org.junit.Test;
 
 public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
 
-	private static final Object[][] assertionsForPage3 = new Object[][] {
-		new Object[] { ROOT, new String[] { "page3.html" } },
-		new Object[] { "page3.html", new String[] { "page3.html/__WINDOW_MAIN__" } }
-	};
+  private static final Object[][] assertionsForPage3 =
+      new Object[][] {
+        new Object[] {ROOT, new String[] {"page3.html"}},
+        new Object[] {"page3.html", new String[] {"page3.html/__WINDOW_MAIN__"}}
+      };
 
-	@Test public void testPage3() throws IllegalArgumentException, CancelException, WalaException {
-		URL url = getClass().getClassLoader().getResource("pages/page3.html");
-		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, DefaultSourceExtractor.factory);
-		verifyGraphAssertions(CG, assertionsForPage3);
-	}
+  @Test
+  public void testPage3() throws IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/page3.html");
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, DefaultSourceExtractor.factory);
+    verifyGraphAssertions(CG, assertionsForPage3);
+  }
 
-	@Test(expected = WalaException.class)
-	public void testJSParseError() throws IllegalArgumentException, CancelException, WalaException {
-		URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
-		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
-		B.makeCallGraph(B.getOptions());
-	    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
-	}
+  @Test(expected = WalaException.class)
+  public void testJSParseError() throws IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
+    B.makeCallGraph(B.getOptions());
+    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+  }
 
-	public static void main(String[] args) {
-		justThisTest(TestSimplePageCallGraphShapeRhino.class);
-	}
+  public static void main(String[] args) {
+    justThisTest(TestSimplePageCallGraphShapeRhino.class);
+  }
 
-	 @Override
+  @Override
   protected abstract IHtmlParser getParser();
-	  
-	  @Override
-    @Before
-	  public void setUp() {
-		    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-			WebUtil.setFactory(TestSimplePageCallGraphShapeRhino.this::getParser);
-		    JSSourceExtractor.USE_TEMP_NAME = false;
-//		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
-	  }
+
+  @Override
+  @Before
+  public void setUp() {
+    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
+        new CAstRhinoTranslatorFactory());
+    WebUtil.setFactory(TestSimplePageCallGraphShapeRhino.this::getParser);
+    JSSourceExtractor.USE_TEMP_NAME = false;
+    //		    JSSourceExtractor.DELETE_UPON_EXIT = false;
+  }
 }

@@ -10,6 +10,11 @@
  */
 package com.ibm.wala.ide.util;
 
+import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.ide.plugin.CorePlugin;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,7 +22,6 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.jar.JarFile;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -25,35 +29,25 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.Bundle;
 
-import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.ide.plugin.CorePlugin;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
-
 public class EclipseFileProvider extends FileProvider {
 
-  /**
-   * the plug-in to use.  If {@code null}, {@link CorePlugin#getDefault()} is used.
-   */
+  /** the plug-in to use. If {@code null}, {@link CorePlugin#getDefault()} is used. */
   private final Plugin plugIn;
-  
+
   public EclipseFileProvider() {
     this(null);
   }
-  
+
   public EclipseFileProvider(Plugin plugIn) {
     this.plugIn = plugIn;
   }
   /**
-   * This class uses reflection to access classes and methods that are only
-   * available when Eclipse is running as an IDE environment. The choice to use
-   * reflection is related to builds: with this design the build doesn't need to
-   * provide IDE bundles during compilation and hence can spot invalid uses of
-   * such classes through this bundle.
-   * 
-   * Because of this class, this bundle must OPTIONALY require
-   * 'org.eclipse.core.resources'.
+   * This class uses reflection to access classes and methods that are only available when Eclipse
+   * is running as an IDE environment. The choice to use reflection is related to builds: with this
+   * design the build doesn't need to provide IDE bundles during compilation and hence can spot
+   * invalid uses of such classes through this bundle.
+   *
+   * <p>Because of this class, this bundle must OPTIONALY require 'org.eclipse.core.resources'.
    */
   private static final class EclipseUtil {
     private static Object workspaceRoot = null;
@@ -84,7 +78,7 @@ public class EclipseFileProvider extends FileProvider {
       return null;
     }
   }
-  
+
   @Override
   public Module getJarFileModule(String fileName, ClassLoader loader) throws IOException {
     if (CorePlugin.getDefault() == null) {
@@ -99,11 +93,8 @@ public class EclipseFileProvider extends FileProvider {
     }
     return getFromPlugin(CorePlugin.getDefault(), fileName);
   }
-  
-  /**
-   * @return the jar file packaged with this plug-in of the given name, or null
-   *         if not found.
-   */
+
+  /** @return the jar file packaged with this plug-in of the given name, or null if not found. */
   private JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
     URL url = getFileURLFromPlugin(p, fileName);
     if (url == null) return null;
@@ -111,12 +102,11 @@ public class EclipseFileProvider extends FileProvider {
       return new JarFileModule(jar);
     }
   }
-  
+
   /**
    * get a file URL for a file from a plugin
-   * 
-   * @param fileName
-   *          the file name
+   *
+   * @param fileName the file name
    * @return the URL, or {@code null} if the file is not found
    */
   private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
@@ -151,9 +141,8 @@ public class EclipseFileProvider extends FileProvider {
   }
 
   /**
-   * escape spaces in a URL, primarily to work around a bug in
-   * {@link File#toURL()}
-   * 
+   * escape spaces in a URL, primarily to work around a bug in {@link File#toURL()}
+   *
    * @return an escaped version of the URL
    */
   @SuppressWarnings("javadoc")
@@ -181,7 +170,7 @@ public class EclipseFileProvider extends FileProvider {
     }
     return null;
   }
-  
+
   @Override
   public URL getResource(String fileName, ClassLoader loader) {
     if (fileName == null) {
@@ -191,29 +180,28 @@ public class EclipseFileProvider extends FileProvider {
     if (p == null && loader == null) {
       throw new IllegalArgumentException("null loader");
     }
-    return (p == null) ? loader.getResource(fileName) : FileLocator.find(p.getBundle(),
-        new Path(fileName), null);
+    return (p == null)
+        ? loader.getResource(fileName)
+        : FileLocator.find(p.getBundle(), new Path(fileName), null);
   }
-  
+
   @Override
   public File getFile(String fileName, ClassLoader loader) throws IOException {
     Plugin p = plugIn == null ? CorePlugin.getDefault() : plugIn;
     if (p == null) {
-      return getFileFromClassLoader(fileName, loader); 
+      return getFileFromClassLoader(fileName, loader);
     } else {
-        try {
-          return getFileFromPlugin(p, fileName);
-        } catch (IOException e) {
-          return getFileFromClassLoader(fileName, loader); 
-        }
+      try {
+        return getFileFromPlugin(p, fileName);
+      } catch (IOException e) {
+        return getFileFromClassLoader(fileName, loader);
+      }
     }
   }
-  
+
   /**
-   * @return the jar file packaged with this plug-in of the given name, or null
-   *         if not found.
-   * @throws IllegalArgumentException
-   *           if p is null
+   * @return the jar file packaged with this plug-in of the given name, or null if not found.
+   * @throws IllegalArgumentException if p is null
    */
   public File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
@@ -231,12 +219,13 @@ public class EclipseFileProvider extends FileProvider {
   }
 
   /**
-   * This is fragile.  Use with care.
+   * This is fragile. Use with care.
+   *
    * @return a String representing the path to the wala.core plugin installation
    */
   public static String getWalaCorePluginHome() {
     if (CorePlugin.getDefault() == null) {
-       return null;
+      return null;
     }
     String install = Platform.getInstallLocation().getURL().getPath();
     Bundle b = Platform.getBundle("com.ibm.wala.core");
@@ -245,10 +234,9 @@ public class EclipseFileProvider extends FileProvider {
       l = l.replace("update@", "");
     }
     if (l.startsWith("reference:file:")) {
-      return l.replace("reference:file:","");
+      return l.replace("reference:file:", "");
     } else {
       return install + File.separator + l;
     }
   }
-
 }

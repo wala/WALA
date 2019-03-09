@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.shrike.bench;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.Writer;
-
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.MethodData;
@@ -23,18 +19,23 @@ import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassWriter;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.Writer;
 
 /**
  * This is a demo class.
- * 
- * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
- * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
- * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
- * 
- * The instrumented classes are placed in the directory "output" under the current directory. Disassembled code is written to the
- * file "report" under the current directory.
- * 
+ *
+ * <p>Class files are taken as input arguments (or if there are none, from standard input). The
+ * methods in those files are instrumented: we insert a System.err.println() at ever method call,
+ * and a System.err.println() at every method entry.
+ *
+ * <p>In Unix, I run it like this: java -cp ~/dev/shrike/shrike
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
+ *
+ * <p>The instrumented classes are placed in the directory "output" under the current directory.
+ * Disassembled code is written to the file "report" under the current directory.
+ *
  * @author Rob O' Callahan
  */
 public class AddBytecodeDebug {
@@ -78,13 +79,15 @@ public class AddBytecodeDebug {
             int offset = element.getHandler();
             if (!putDumperAt[offset]) {
               putDumperAt[offset] = true;
-              me.insertBefore(offset, new MethodEditor.Patch() {
-                @Override
-                public void emitTo(Output w) {
-                  w.emit(DupInstruction.make(0));
-                  w.emit(Util.makeInvoke(Throwable.class, "printStackTrace", new Class[0]));
-                }
-              });
+              me.insertBefore(
+                  offset,
+                  new MethodEditor.Patch() {
+                    @Override
+                    public void emitTo(Output w) {
+                      w.emit(DupInstruction.make(0));
+                      w.emit(Util.makeInvoke(Throwable.class, "printStackTrace", new Class[0]));
+                    }
+                  });
             }
           }
         }

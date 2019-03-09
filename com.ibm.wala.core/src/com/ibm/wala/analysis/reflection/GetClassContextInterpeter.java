@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.analysis.reflection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -39,16 +35,20 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * {@link SSAContextInterpreter} specialized to interpret Object.getClass() in a {@link JavaTypeContext}
+ * {@link SSAContextInterpreter} specialized to interpret Object.getClass() in a {@link
+ * JavaTypeContext}
  */
 public class GetClassContextInterpeter implements SSAContextInterpreter {
 
-/** BEGIN Custom change: caching */
+  /** BEGIN Custom change: caching */
   private final Map<String, IR> cache = HashMapFactory.make();
-  
-/** END Custom change: caching */
+
+  /** END Custom change: caching */
   private static final boolean DEBUG = false;
 
   @Override
@@ -60,20 +60,19 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-/** BEGIN Custom change: caching */
-    
+    /** BEGIN Custom change: caching */
     final Context context = node.getContext();
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + context.toString();
-    
+
     IR result = cache.get(hashKey);
-    
+
     if (result == null) {
       result = makeIR(method, context);
       cache.put(hashKey, result);
     }
-    
-/** END Custom change: caching */
+
+    /** END Custom change: caching */
     return result;
   }
 
@@ -113,10 +112,16 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     ArrayList<SSAInstruction> statements = new ArrayList<>();
     int nextLocal = 2;
     int retValue = nextLocal++;
-    TypeReference tr = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getTypeReference();
-    SSAInstructionFactory insts = ((TypeAbstraction)context.get(ContextKey.RECEIVER)).getType().getClassLoader().getInstructionFactory();
+    TypeReference tr = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getTypeReference();
+    SSAInstructionFactory insts =
+        ((TypeAbstraction) context.get(ContextKey.RECEIVER))
+            .getType()
+            .getClassLoader()
+            .getInstructionFactory();
     if (tr != null) {
-      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(statements.size(), retValue, TypeReference.JavaLangClass, tr);
+      SSALoadMetadataInstruction l =
+          insts.LoadMetadataInstruction(
+              statements.size(), retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
       SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
@@ -131,7 +136,13 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
 
   private static IR makeIR(IMethod method, Context context) {
     SSAInstruction instrs[] = makeStatements(context);
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
+    return new SyntheticIR(
+        method,
+        context,
+        new InducedCFG(instrs, method, context),
+        instrs,
+        SSAOptions.defaultOptions(),
+        null);
   }
 
   @Override

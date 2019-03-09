@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.examples.analysis;
 
-import java.io.IOException;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -19,35 +17,34 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import java.io.IOException;
 
 /**
  * This is a simple example WALA application.
- * 
- * This counts the number of parameters to each method in the primordial loader (the J2SE standard libraries), and
- * prints the result.
- * 
+ *
+ * <p>This counts the number of parameters to each method in the primordial loader (the J2SE
+ * standard libraries), and prints the result.
+ *
  * @author sfink
  */
 public class CountParameters {
-  
-  private final static ClassLoader MY_CLASSLOADER = CountParameters.class.getClassLoader();
-  
-  /**
-   * Use the 'CountParameters' launcher to run this program with the appropriate classpath
-   */
+
+  private static final ClassLoader MY_CLASSLOADER = CountParameters.class.getClassLoader();
+
+  /** Use the 'CountParameters' launcher to run this program with the appropriate classpath */
   public static void main(String[] args) throws IOException, ClassHierarchyException {
     // build an analysis scope representing the standard libraries, excluding no classes
     AnalysisScope scope = AnalysisScopeReader.readJavaScope("primordial.txt", null, MY_CLASSLOADER);
-    
+
     // build a class hierarchy
     System.err.print("Build class hierarchy...");
     IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     System.err.println("Done");
-    
+
     int nClasses = 0;
     int nMethods = 0;
     int nParameters = 0;
-    
+
     for (IClass c : cha) {
       nClasses++;
       for (IMethod m : c.getDeclaredMethods()) {
@@ -55,10 +52,9 @@ public class CountParameters {
         nParameters += m.getNumberOfParameters();
       }
     }
-  
+
     System.out.println(nClasses + " classes");
     System.out.println(nMethods + " methods");
-    System.out.println((float)nParameters/(float)nMethods + " parameters per method");
-    
+    System.out.println((float) nParameters / (float) nMethods + " parameters per method");
   }
 }

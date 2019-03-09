@@ -13,21 +13,21 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 import java.util.Arrays;
 
 /**
- * Default {@link RefinementPolicy} implementation, delegating to some provided {@link FieldRefinePolicy} and
- * {@link CallGraphRefinePolicy}
+ * Default {@link RefinementPolicy} implementation, delegating to some provided {@link
+ * FieldRefinePolicy} and {@link CallGraphRefinePolicy}
+ *
  * @author manu
- * 
  */
 public abstract class AbstractRefinementPolicy implements RefinementPolicy {
 
   protected static final int DEFAULT_NUM_PASSES = 4;
 
   protected static final int LONGER_PASS_BUDGET = 12000;
-  
+
   private static final int SHORTER_PASS_BUDGET = 1000;
-  
-  private static final int[] DEFAULT_BUDGET_PER_PASS; 
-  
+
+  private static final int[] DEFAULT_BUDGET_PER_PASS;
+
   static {
     int[] tmp = new int[DEFAULT_NUM_PASSES];
     tmp[0] = SHORTER_PASS_BUDGET;
@@ -40,10 +40,13 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
   protected final CallGraphRefinePolicy cgRefinePolicy;
 
   protected final int numPasses;
-  
+
   protected final int[] budgetPerPass;
-  
-  public AbstractRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int numPasses,
+
+  public AbstractRefinementPolicy(
+      FieldRefinePolicy fieldRefinePolicy,
+      CallGraphRefinePolicy cgRefinePolicy,
+      int numPasses,
       int[] budgetPerPass) {
     this.fieldRefinePolicy = fieldRefinePolicy;
     this.cgRefinePolicy = cgRefinePolicy;
@@ -51,7 +54,8 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
     this.budgetPerPass = budgetPerPass;
   }
 
-  public AbstractRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
+  public AbstractRefinementPolicy(
+      FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
     this(fieldRefinePolicy, cgRefinePolicy, DEFAULT_NUM_PASSES, DEFAULT_BUDGET_PER_PASS);
   }
 
@@ -76,12 +80,10 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
   }
 
   @Override
-  public boolean nextPass() {    
+  public boolean nextPass() {
     // don't short-circuit since nextPass() can have side-effects
     boolean fieldNextPass = fieldRefinePolicy.nextPass();
     boolean callNextPass = cgRefinePolicy.nextPass();
     return fieldNextPass || callNextPass;
   }
-
-
 }

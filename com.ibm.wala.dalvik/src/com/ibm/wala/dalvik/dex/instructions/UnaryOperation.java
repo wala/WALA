@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,105 +48,122 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator;
 import com.ibm.wala.util.debug.Assertions;
+import org.jf.dexlib2.Opcode;
 
 public class UnaryOperation extends Instruction {
 
-    public enum OpID {MOVE, MOVE_WIDE, MOVE_EXCEPTION, NOT, NEGINT, NOTINT, NEGLONG, NOTLONG, NEGFLOAT, NEGDOUBLE, DOUBLETOLONG, DOUBLETOFLOAT, INTTOBYTE, INTTOCHAR, INTTOSHORT, DOUBLETOINT, FLOATTODOUBLE, FLOATTOLONG, FLOATTOINT, LONGTODOUBLE, LONGTOFLOAT, LONGTOINT, INTTODOUBLE, INTTOFLOAT, INTTOLONG}
+  public enum OpID {
+    MOVE,
+    MOVE_WIDE,
+    MOVE_EXCEPTION,
+    NOT,
+    NEGINT,
+    NOTINT,
+    NEGLONG,
+    NOTLONG,
+    NEGFLOAT,
+    NEGDOUBLE,
+    DOUBLETOLONG,
+    DOUBLETOFLOAT,
+    INTTOBYTE,
+    INTTOCHAR,
+    INTTOSHORT,
+    DOUBLETOINT,
+    FLOATTODOUBLE,
+    FLOATTOLONG,
+    FLOATTOINT,
+    LONGTODOUBLE,
+    LONGTOFLOAT,
+    LONGTOINT,
+    INTTODOUBLE,
+    INTTOFLOAT,
+    INTTOLONG
+  }
 
-    /**
-     * for unary ops not defined in JVML
-     */
-    public enum DalvikUnaryOp implements IUnaryOpInstruction.IOperator {
-        BITNOT;
-
-        @Override
-        public String toString() {
-            return super.toString().toLowerCase();
-        }
-
-    }
-
-    public final OpID op;
-    public final int source;
-    public final int destination;
-
-    public UnaryOperation(int pc, OpID op, int destination, int source, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.op = op;
-        this.destination = destination;
-        this.source = source;
-    }
+  /** for unary ops not defined in JVML */
+  public enum DalvikUnaryOp implements IUnaryOpInstruction.IOperator {
+    BITNOT;
 
     @Override
-    public void visit(Visitor visitor)
-    {
-        visitor.visitUnaryOperation(this);
+    public String toString() {
+      return super.toString().toLowerCase();
     }
+  }
 
-    public boolean isConversion()
-    {
-        switch(op)
-        {
-        case DOUBLETOLONG:
-        case DOUBLETOFLOAT:
-        case INTTOBYTE:
-        case INTTOCHAR:
-        case INTTOSHORT:
-        case DOUBLETOINT:
-        case FLOATTODOUBLE:
-        case FLOATTOLONG:
-        case FLOATTOINT:
-        case LONGTODOUBLE:
-        case LONGTOFLOAT:
-        case LONGTOINT:
-        case INTTODOUBLE:
-        case INTTOFLOAT:
-        case INTTOLONG:
-            return true;
-        default:
-            return false;
-        }
+  public final OpID op;
+  public final int source;
+  public final int destination;
+
+  public UnaryOperation(
+      int pc, OpID op, int destination, int source, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+    this.op = op;
+    this.destination = destination;
+    this.source = source;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitUnaryOperation(this);
+  }
+
+  public boolean isConversion() {
+    switch (op) {
+      case DOUBLETOLONG:
+      case DOUBLETOFLOAT:
+      case INTTOBYTE:
+      case INTTOCHAR:
+      case INTTOSHORT:
+      case DOUBLETOINT:
+      case FLOATTODOUBLE:
+      case FLOATTOLONG:
+      case FLOATTOINT:
+      case LONGTODOUBLE:
+      case LONGTOFLOAT:
+      case LONGTOINT:
+      case INTTODOUBLE:
+      case INTTOFLOAT:
+      case INTTOLONG:
+        return true;
+      default:
+        return false;
     }
+  }
 
-    public boolean isMove()
-    {
-        switch(op)
-        {
-        case MOVE:
-        case MOVE_WIDE:
-            return true;
-        default:
-            return false;
-        }
+  public boolean isMove() {
+    switch (op) {
+      case MOVE:
+      case MOVE_WIDE:
+        return true;
+      default:
+        return false;
     }
+  }
 
-    public IOperator getOperator() {
-        switch(op)
-        {
+  public IOperator getOperator() {
+    switch (op) {
         // SSA unary ops
-        case NOT:
-            return DalvikUnaryOp.BITNOT;
-        case NEGINT:
-            return IUnaryOpInstruction.Operator.NEG;
-        case NOTINT:
-            return DalvikUnaryOp.BITNOT;
-        case NEGLONG:
-            return IUnaryOpInstruction.Operator.NEG;
-        case NOTLONG:
-            return DalvikUnaryOp.BITNOT;
-        case NEGFLOAT:
-            return IUnaryOpInstruction.Operator.NEG;
-        case NEGDOUBLE:
-            return IUnaryOpInstruction.Operator.NEG;
-        default:
-        	Assertions.UNREACHABLE();
-            return null;
-        }
+      case NOT:
+        return DalvikUnaryOp.BITNOT;
+      case NEGINT:
+        return IUnaryOpInstruction.Operator.NEG;
+      case NOTINT:
+        return DalvikUnaryOp.BITNOT;
+      case NEGLONG:
+        return IUnaryOpInstruction.Operator.NEG;
+      case NOTLONG:
+        return DalvikUnaryOp.BITNOT;
+      case NEGFLOAT:
+        return IUnaryOpInstruction.Operator.NEG;
+      case NEGDOUBLE:
+        return IUnaryOpInstruction.Operator.NEG;
+      default:
+        Assertions.UNREACHABLE();
+        return null;
     }
+  }
 }

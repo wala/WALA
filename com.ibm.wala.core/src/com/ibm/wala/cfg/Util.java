@@ -18,15 +18,12 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 
-/**
- * Convenience methods for navigating a {@link ControlFlowGraph}.
- */
+/** Convenience methods for navigating a {@link ControlFlowGraph}. */
 public class Util {
 
-  /**
-   * @return the last instruction in basic block b, as stored in the instruction array for cfg
-   */
-  public static SSAInstruction getLastInstruction(ControlFlowGraph<? extends SSAInstruction, ?> cfg, IBasicBlock<?> b) {
+  /** @return the last instruction in basic block b, as stored in the instruction array for cfg */
+  public static SSAInstruction getLastInstruction(
+      ControlFlowGraph<? extends SSAInstruction, ?> cfg, IBasicBlock<?> b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -36,17 +33,15 @@ public class Util {
     return cfg.getInstructions()[b.getLastInstructionIndex()];
   }
 
-  /**
-   * Does basic block b end with a conditional branch instruction?
-   */
-  public static boolean endsWithConditionalBranch(ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
+  /** Does basic block b end with a conditional branch instruction? */
+  public static boolean endsWithConditionalBranch(
+      ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
     return getLastInstruction(G, b) instanceof SSAConditionalBranchInstruction;
   }
 
-  /**
-   * Does basic block b end with a switch instruction?
-   */
-  public static boolean endsWithSwitch(ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
+  /** Does basic block b end with a switch instruction? */
+  public static boolean endsWithSwitch(
+      ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
     return getLastInstruction(G, b) instanceof SSASwitchInstruction;
   }
 
@@ -64,10 +59,11 @@ public class Util {
   }
 
   /**
-   * Given that b ends with a conditional branch, return the basic block to
-   * which control transfers if the branch is not taken.
+   * Given that b ends with a conditional branch, return the basic block to which control transfers
+   * if the branch is not taken.
    */
-  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getNotTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getNotTakenSuccessor(
+      ControlFlowGraph<I, T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -78,10 +74,11 @@ public class Util {
   }
 
   /**
-   * Given that b ends with a conditional branch, return the basic block to
-   * which control transfers if the branch is taken.
+   * Given that b ends with a conditional branch, return the basic block to which control transfers
+   * if the branch is taken.
    */
-  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getTakenSuccessor(
+      ControlFlowGraph<I, T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -90,8 +87,7 @@ public class Util {
     }
     T fs = getNotTakenSuccessor(G, b);
     for (T s : Iterator2Iterable.make(G.getSuccNodes(b))) {
-      if (s != fs)
-        return s;
+      if (s != fs) return s;
     }
 
     // under pathological conditions, b may have exactly one successor (in other
@@ -101,24 +97,26 @@ public class Util {
   }
 
   /**
-   * When the tested value of the switch statement in b has value c, which basic
-   * block does control transfer to.
+   * When the tested value of the switch statement in b has value c, which basic block does control
+   * transfer to.
    */
-  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T resolveSwitch(ControlFlowGraph<I, T> G, T b, int c) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T resolveSwitch(
+      ControlFlowGraph<I, T> G, T b, int c) {
     assert endsWithSwitch(G, b);
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
     for (int i = 0; i < casesAndLabels.length; i += 2)
-      if (casesAndLabels[i] == c)
-        return G.getBlockForInstruction(casesAndLabels[i + 1]);
+      if (casesAndLabels[i] == c) return G.getBlockForInstruction(casesAndLabels[i + 1]);
 
     return G.getBlockForInstruction(s.getDefault());
   }
 
   /**
-   * Is block s the default case for the switch instruction which is the last instruction of block b?
+   * Is block s the default case for the switch instruction which is the last instruction of block
+   * b?
    */
-  public static <I extends SSAInstruction, T extends IBasicBlock<I>> boolean isSwitchDefault(ControlFlowGraph<I, T> G, T b, T s) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> boolean isSwitchDefault(
+      ControlFlowGraph<I, T> G, T b, T s) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -129,11 +127,11 @@ public class Util {
   }
 
   /**
-   * When a switch statement at the end of block b transfers control to block s,
-   * which case was taken? TODO: Is this correct? Can't we have multiple cases
-   * that apply? Check on this.
+   * When a switch statement at the end of block b transfers control to block s, which case was
+   * taken? TODO: Is this correct? Can't we have multiple cases that apply? Check on this.
    */
-  public static <I extends SSAInstruction, T extends IBasicBlock<I>> int getSwitchLabel(ControlFlowGraph<I, T> G, T b, T s) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> int getSwitchLabel(
+      ControlFlowGraph<I, T> G, T b, T s) {
     assert endsWithSwitch(G, b);
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = sw.getCasesAndLabels();
@@ -148,58 +146,47 @@ public class Util {
   }
 
   /**
-   * To which {@link IBasicBlock} does control flow from basic block bb, which ends in a
-   * conditional branch, when the conditional branch operands evaluate to the
-   * constants c1 and c2, respectively.
-   * 
-   * Callers must resolve the constant values from the {@link SymbolTable}
-   * before calling this method. These integers are <b>not</b> value numbers;
+   * To which {@link IBasicBlock} does control flow from basic block bb, which ends in a conditional
+   * branch, when the conditional branch operands evaluate to the constants c1 and c2, respectively.
+   *
+   * <p>Callers must resolve the constant values from the {@link SymbolTable} before calling this
+   * method. These integers are <b>not</b> value numbers;
    */
-  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T resolveBranch(ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
+  public static <I extends SSAInstruction, T extends IBasicBlock<I>> T resolveBranch(
+      ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
-    final ConditionalBranchInstruction.Operator operator = (ConditionalBranchInstruction.Operator) c.getOperator();
+    final ConditionalBranchInstruction.Operator operator =
+        (ConditionalBranchInstruction.Operator) c.getOperator();
     switch (operator) {
-    case EQ:
-      if (c1 == c2)
-        return getTakenSuccessor(G, bb);
-      else
-        return getNotTakenSuccessor(G, bb);
-    case NE:
-      if (c1 != c2)
-        return getTakenSuccessor(G, bb);
-      else
-        return getNotTakenSuccessor(G, bb);
-    case LT:
-      if (c1 < c2)
-        return getTakenSuccessor(G, bb);
-      else
-        return getNotTakenSuccessor(G, bb);
-    case GE:
-      if (c1 >= c2)
-        return getTakenSuccessor(G, bb);
-      else
-        return getNotTakenSuccessor(G, bb);
-    case GT:
-      if (c1 > c2)
-        return getTakenSuccessor(G, bb);
-      else
-        return getNotTakenSuccessor(G, bb);
-    case LE:
-      if (c1 <= c2)
-        return getTakenSuccessor(G, bb);
-      else
-        return getNotTakenSuccessor(G, bb);
-    default:
-      throw new UnsupportedOperationException(String.format("unexpected operator %s", operator));
+      case EQ:
+        if (c1 == c2) return getTakenSuccessor(G, bb);
+        else return getNotTakenSuccessor(G, bb);
+      case NE:
+        if (c1 != c2) return getTakenSuccessor(G, bb);
+        else return getNotTakenSuccessor(G, bb);
+      case LT:
+        if (c1 < c2) return getTakenSuccessor(G, bb);
+        else return getNotTakenSuccessor(G, bb);
+      case GE:
+        if (c1 >= c2) return getTakenSuccessor(G, bb);
+        else return getNotTakenSuccessor(G, bb);
+      case GT:
+        if (c1 > c2) return getTakenSuccessor(G, bb);
+        else return getNotTakenSuccessor(G, bb);
+      case LE:
+        if (c1 <= c2) return getTakenSuccessor(G, bb);
+        else return getNotTakenSuccessor(G, bb);
+      default:
+        throw new UnsupportedOperationException(String.format("unexpected operator %s", operator));
     }
   }
 
   /**
    * Given that a is a predecessor of b in the cfg ..
-   * 
-   * When we enumerate the predecessors of b in order, which is the first index
-   * in this order in which a appears? Note that this order corresponds to the
-   * order of operands in a phi instruction.
+   *
+   * <p>When we enumerate the predecessors of b in order, which is the first index in this order in
+   * which a appears? Note that this order corresponds to the order of operands in a phi
+   * instruction.
    */
   public static <I, T extends IBasicBlock<I>> int whichPred(ControlFlowGraph<I, T> cfg, T a, T b) {
     if (cfg == null) {

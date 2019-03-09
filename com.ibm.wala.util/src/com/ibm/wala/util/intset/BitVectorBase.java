@@ -12,23 +12,21 @@ package com.ibm.wala.util.intset;
 
 import java.io.Serializable;
 
-/**
- * Abstract base class for implementations of bitvectors
- */
+/** Abstract base class for implementations of bitvectors */
 @SuppressWarnings("rawtypes")
-abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
+public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 1151811022797406841L;
 
-  protected final static boolean DEBUG = false;
+  protected static final boolean DEBUG = false;
 
-  protected final static int LOG_BITS_PER_UNIT = 5;
+  protected static final int LOG_BITS_PER_UNIT = 5;
 
-  protected final static int BITS_PER_UNIT = 32;
+  protected static final int BITS_PER_UNIT = 32;
 
-  protected final static int MASK = 0xffffffff;
+  protected static final int MASK = 0xffffffff;
 
-  protected final static int LOW_MASK = 0x1f;
+  protected static final int LOW_MASK = 0x1f;
 
   protected int bits[];
 
@@ -54,16 +52,12 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
 
   public abstract boolean intersectionEmpty(T other);
 
-  /**
-   * Convert bitIndex to a subscript into the bits[] array.
-   */
+  /** Convert bitIndex to a subscript into the bits[] array. */
   public static int subscript(int bitIndex) {
     return bitIndex >> LOG_BITS_PER_UNIT;
   }
 
-  /**
-   * Clears all bits.
-   */
+  /** Clears all bits. */
   public final void clearAll() {
     for (int i = 0; i < bits.length; i++) {
       bits[i] = 0;
@@ -73,16 +67,14 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   @Override
   public int hashCode() {
     int h = 1234;
-    for (int i = bits.length - 1; i >= 0;) {
+    for (int i = bits.length - 1; i >= 0; ) {
       h ^= bits[i] * (i + 1);
       i--;
     }
     return h;
   }
 
-  /**
-   * How many bits are set?
-   */
+  /** How many bits are set? */
   public final int populationCount() {
     int count = 0;
     for (int bit : bits) {
@@ -93,9 +85,8 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
 
   public boolean isZero() {
     int setLength = bits.length;
-    for (int i = setLength - 1; i >= 0;) {
-      if (bits[i] != 0)
-        return false;
+    for (int i = setLength - 1; i >= 0; ) {
+      if (bits[i] != 0) return false;
       i--;
     }
     return true;
@@ -143,22 +134,47 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return get(i);
   }
 
-  private static final int[][] masks = new int[][] {
-      { 0xFFFF0000 },
-      { 0xFF000000, 0x0000FF00 },
-      { 0xF0000000, 0x00F00000, 0x0000F000, 0x000000F0 },
-      { 0xC0000000, 0x0C000000, 0x00C00000, 0x000C0000, 0x0000C000, 0x00000C00, 0x000000C0, 0x0000000C },
-      { 0x80000000, 0x20000000, 0x08000000, 0x02000000, 0x00800000, 0x00200000, 0x00080000, 0x00020000, 0x00008000, 0x00002000,
-          0x00000800, 0x00000200, 0x00000080, 0x00000020, 0x00000008, 0x00000002 } };
+  private static final int[][] masks =
+      new int[][] {
+        {0xFFFF0000},
+        {0xFF000000, 0x0000FF00},
+        {0xF0000000, 0x00F00000, 0x0000F000, 0x000000F0},
+        {
+          0xC0000000,
+          0x0C000000,
+          0x00C00000,
+          0x000C0000,
+          0x0000C000,
+          0x00000C00,
+          0x000000C0,
+          0x0000000C
+        },
+        {
+          0x80000000,
+          0x20000000,
+          0x08000000,
+          0x02000000,
+          0x00800000,
+          0x00200000,
+          0x00080000,
+          0x00020000,
+          0x00008000,
+          0x00002000,
+          0x00000800,
+          0x00000200,
+          0x00000080,
+          0x00000020,
+          0x00000008,
+          0x00000002
+        }
+      };
 
   public int max() {
     int lastWord = bits.length - 1;
 
-    while (lastWord >= 0 && bits[lastWord] == 0)
-      lastWord--;
+    while (lastWord >= 0 && bits[lastWord] == 0) lastWord--;
 
-    if (lastWord < 0)
-      return -1;
+    if (lastWord < 0) return -1;
 
     int count = lastWord * BITS_PER_UNIT;
 
@@ -177,9 +193,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return count + (31 - j);
   }
 
-  /**
-   * @return min j &gt;= start s.t get(j)
-   */
+  /** @return min j &gt;= start s.t get(j) */
   public int nextSetBit(int start) {
     if (start < 0) {
       throw new IllegalArgumentException("illegal start: " + start);
@@ -189,8 +203,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     while (word < bits.length) {
       if (bits[word] != 0) {
         do {
-          if ((bits[word] & bit) != 0)
-            return start;
+          if ((bits[word] & bit) != 0) return start;
           bit <<= 1;
           start++;
         } while (bit != 0);
@@ -207,7 +220,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
 
   /**
    * Copies the values of the bits in the specified set into this set.
-   * 
+   *
    * @param set the bit set to copy the bits from
    * @throws IllegalArgumentException if set is null
    */
@@ -217,7 +230,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     }
     int setLength = set.bits.length;
     bits = new int[setLength];
-    for (int i = setLength - 1; i >= 0;) {
+    for (int i = setLength - 1; i >= 0; ) {
       bits[i] = set.bits[i];
       i--;
     }

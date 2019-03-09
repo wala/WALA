@@ -15,13 +15,12 @@ public class Slice4 {
     int x = foo(1);
     bar(x);
   }
-  
+
   static int foo(int x) {
     return x + 2;
   }
-  
+
   static void bar(int x) {
     return;
   }
-  
 }

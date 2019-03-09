@@ -12,8 +12,7 @@ package slice;
 
 public class TestCD1 {
 
-  static void doNothing(Object o) {
-  }
+  static void doNothing(Object o) {}
 
   public static void main(String[] args) {
     Integer I = (Integer) new A().foo();
@@ -26,5 +25,4 @@ public class TestCD1 {
       }
     }
   }
-
 }

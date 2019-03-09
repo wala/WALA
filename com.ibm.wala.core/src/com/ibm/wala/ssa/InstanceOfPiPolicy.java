@@ -10,42 +10,43 @@
  */
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.util.collections.Pair;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ibm.wala.util.collections.Pair;
-
 /**
  * A pi node policy with the following rule:
- * 
- * If we have the following code:
+ *
+ * <p>If we have the following code:
  *
  * <pre> S1: c = v1 instanceof T S2: if (c == 0) { ... } </pre>
- * 
+ *
  * replace it with:
  *
  * <pre> S1: c = v1 instanceof T S2: if (c == 0) { v2 = PI(v1, S1) .... } </pre>
- * 
- * The same pattern holds if the test is c == 1. This renaming allows SSA-based analysis to reason about the type of v2 depending on
- * the outcome of the branch.
+ *
+ * The same pattern holds if the test is c == 1. This renaming allows SSA-based analysis to reason
+ * about the type of v2 depending on the outcome of the branch.
  */
 public class InstanceOfPiPolicy implements SSAPiNodePolicy {
 
-  private final static InstanceOfPiPolicy singleton = new InstanceOfPiPolicy();
+  private static final InstanceOfPiPolicy singleton = new InstanceOfPiPolicy();
 
   public static InstanceOfPiPolicy createInstanceOfPiPolicy() {
     return singleton;
   }
 
-  private InstanceOfPiPolicy() {
-  }
+  private InstanceOfPiPolicy() {}
 
   /*
    * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAConditionalBranchInstruction, com.ibm.wala.ssa.SSAInstruction,
    * com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
    */
   @Override
-  public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
+  public Pair<Integer, SSAInstruction> getPi(
+      SSAConditionalBranchInstruction cond,
+      SSAInstruction def1,
+      SSAInstruction def2,
       SymbolTable symbolTable) {
     if (def1 instanceof SSAInstanceofInstruction) {
       if (symbolTable.isBooleanOrZeroOneConstant(cond.getUse(1))) {
@@ -70,20 +71,23 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
     return 12;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAAbstractInvokeInstruction, com.ibm.wala.ssa.SymbolTable)
    */
   @Override
-  public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
+  public Pair<Integer, SSAInstruction> getPi(
+      SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
     return null;
   }
 
   @Override
-  public List<Pair<Integer, SSAInstruction>> getPis(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
+  public List<Pair<Integer, SSAInstruction>> getPis(
+      SSAConditionalBranchInstruction cond,
+      SSAInstruction def1,
+      SSAInstruction def2,
       SymbolTable symbolTable) {
     LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
     result.add(getPi(cond, def1, def2, symbolTable));
     return result;
   }
-
 }

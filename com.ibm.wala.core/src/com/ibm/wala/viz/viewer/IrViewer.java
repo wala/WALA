@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.viz.viewer;
 
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.util.collections.HashMapFactory;
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +20,6 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -27,11 +29,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.util.collections.HashMapFactory;
-
-public class IrViewer extends JPanel{
+public class IrViewer extends JPanel {
   private static final long serialVersionUID = -5668847442988389016L;
   private JTextField methodName;
   private DefaultListModel<String> irLineList = new DefaultListModel<>();
@@ -39,45 +37,51 @@ public class IrViewer extends JPanel{
 
   // mapping from ir viewer list line to source code line number.
   private Map<Integer, Integer> lineToPosition = null;
-  
+
   // Mapping for pc to line in the ir viewer list.
   private Map<Integer, Integer> pcToLine = null;
   private Map<Integer, Integer> lineToPc = null;
 
-  public interface SelectedPcListner{
+  public interface SelectedPcListner {
     void valueChanged(int pc);
   }
+
   Set<SelectedPcListner> selectedPcListners = new HashSet<>();
-  
+
   public IrViewer() {
     super(new BorderLayout());
     irLines = new JList<>(irLineList);
     methodName = new JTextField("IR");
     this.add(methodName, BorderLayout.PAGE_START);
-    this.add(new JScrollPane(irLines, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-    
-    
-    irLines.addListSelectionListener(new ListSelectionListener() {
+    this.add(
+        new JScrollPane(
+            irLines,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        BorderLayout.CENTER);
 
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-      int index = irLines.getSelectedIndex();
-      Integer pc = lineToPc.get(index);
-      if (pc == null) {
-        pc = NA;
-      }
-      for (SelectedPcListner selectedPcListner : selectedPcListners) {
-        selectedPcListner.valueChanged(pc);
-      }
-    }});
+    irLines.addListSelectionListener(
+        new ListSelectionListener() {
+
+          @Override
+          public void valueChanged(ListSelectionEvent e) {
+            int index = irLines.getSelectedIndex();
+            Integer pc = lineToPc.get(index);
+            if (pc == null) {
+              pc = NA;
+            }
+            for (SelectedPcListner selectedPcListner : selectedPcListners) {
+              selectedPcListner.valueChanged(pc);
+            }
+          }
+        });
   }
-  
+
   public void setIR(IR ir) {
     this.lineToPosition = HashMapFactory.make();
     this.pcToLine = HashMapFactory.make();
     this.lineToPc = HashMapFactory.make();
-    
+
     int firstLineWithPosition = NA;
 
     try {
@@ -101,7 +105,7 @@ public class IrViewer extends JPanel{
 
           if (position != NA) {
             lineToPosition.put(lineNum, position);
-            if (firstLineWithPosition == NA){
+            if (firstLineWithPosition == NA) {
               firstLineWithPosition = lineNum;
             }
           }
@@ -112,9 +116,9 @@ public class IrViewer extends JPanel{
       // ???
       assert false;
     }
-    
-    // focusing on the first line with position 
-    if (firstLineWithPosition != NA){
+
+    // focusing on the first line with position
+    if (firstLineWithPosition != NA) {
       irLines.setSelectedIndex(firstLineWithPosition);
       irLines.ensureIndexIsVisible(firstLineWithPosition);
     }
@@ -139,10 +143,10 @@ public class IrViewer extends JPanel{
   public void addSelectedPcListner(SelectedPcListner selectedPcListner) {
     this.selectedPcListners.add(selectedPcListner);
   }
-  
-  public void setPc(int pc){
+
+  public void setPc(int pc) {
     Integer lineNum = pcToLine.get(pc);
-    if (lineNum != null){
+    if (lineNum != null) {
       irLines.ensureIndexIsVisible(lineNum);
       irLines.setSelectedIndex(lineNum);
     } else {
@@ -152,7 +156,7 @@ public class IrViewer extends JPanel{
 
   public void setIRAndPc(IR ir, int pc) {
     setIR(ir);
-    if (pc != NA){
+    if (pc != NA) {
       setPc(pc);
     } else {
       removeSelection();
@@ -163,6 +167,4 @@ public class IrViewer extends JPanel{
     int curSelectedIndex = irLines.getSelectedIndex();
     irLines.removeSelectionInterval(curSelectedIndex, curSelectedIndex);
   }
-
-
 }

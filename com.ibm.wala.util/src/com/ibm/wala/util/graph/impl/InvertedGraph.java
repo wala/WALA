@@ -15,19 +15,17 @@ import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NodeManager;
 
-/**
- * A graph view that reverses the edges in a graph
- */
+/** A graph view that reverses the edges in a graph */
 public class InvertedGraph<T> extends AbstractGraph<T> {
 
-  final private NodeManager<T> nodes;
+  private final NodeManager<T> nodes;
 
   @Override
   protected NodeManager<T> getNodeManager() {
     return nodes;
   }
 
-  final private EdgeManager<T> edges;
+  private final EdgeManager<T> edges;
 
   @Override
   protected EdgeManager<T> getEdgeManager() {
@@ -38,5 +36,4 @@ public class InvertedGraph<T> extends AbstractGraph<T> {
     nodes = G;
     edges = new InvertingEdgeManager<>(G);
   }
-
 }

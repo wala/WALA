@@ -10,27 +10,29 @@
  */
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.util.collections.Pair;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ibm.wala.util.collections.Pair;
-
 /**
- * A policy, that adds pi nodes for all variables, that are used in a branch
- * instruction.
- * 
+ * A policy, that adds pi nodes for all variables, that are used in a branch instruction.
+ *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
 
   @Override
-  public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
+  public Pair<Integer, SSAInstruction> getPi(
+      SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
     return null;
   }
 
   @Override
-  public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
+  public Pair<Integer, SSAInstruction> getPi(
+      SSAConditionalBranchInstruction cond,
+      SSAInstruction def1,
+      SSAInstruction def2,
       SymbolTable symbolTable) {
     final List<Pair<Integer, SSAInstruction>> pis = this.getPis(cond, def1, def2, symbolTable);
     if (pis.size() == 0) {
@@ -44,7 +46,10 @@ public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
   }
 
   @Override
-  public List<Pair<Integer, SSAInstruction>> getPis(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
+  public List<Pair<Integer, SSAInstruction>> getPis(
+      SSAConditionalBranchInstruction cond,
+      SSAInstruction def1,
+      SSAInstruction def2,
       SymbolTable symbolTable) {
     if (cond.isIntegerComparison()) {
       final LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
@@ -55,6 +60,5 @@ public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
     } else {
       return Collections.emptyList();
     }
-
   }
 }

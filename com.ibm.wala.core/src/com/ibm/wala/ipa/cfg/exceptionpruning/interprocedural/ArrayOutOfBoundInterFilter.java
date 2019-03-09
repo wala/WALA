@@ -16,12 +16,11 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.filter.ArrayOutOfBoundFilter;
 import com.ibm.wala.ssa.SSAInstruction;
 
-public class ArrayOutOfBoundInterFilter extends StoringExceptionFilter<SSAInstruction>{
+public class ArrayOutOfBoundInterFilter extends StoringExceptionFilter<SSAInstruction> {
 
   @Override
   protected ExceptionFilter<SSAInstruction> computeFilter(CGNode node) {
     ArrayOutOfBoundsAnalysis analysis = new ArrayOutOfBoundsAnalysis(node.getIR());
     return new ArrayOutOfBoundFilter(analysis);
   }
-
 }

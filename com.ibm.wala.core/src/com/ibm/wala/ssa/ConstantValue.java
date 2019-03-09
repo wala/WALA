@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.ssa;
 
-/**
- * The value of a constant which appears in an SSA IR.
- */
+/** The value of a constant which appears in an SSA IR. */
 public class ConstantValue implements Value {
-  final private Object constant;
+  private final Object constant;
 
   public ConstantValue(Object constant) {
     this.constant = constant;
@@ -28,10 +26,7 @@ public class ConstantValue implements Value {
     this(Double.valueOf(constant));
   }
 
-
-  /**
-   * @return an object which represents the constant value
-   */
+  /** @return an object which represents the constant value */
   public Object getValue() {
     return constant;
   }
@@ -49,42 +44,30 @@ public class ConstantValue implements Value {
     return constant instanceof String;
   }
 
-  /**
-   * @return true iff this constant is "false"
-   */
+  /** @return true iff this constant is "false" */
   public boolean isFalseConstant() {
     return (constant instanceof Boolean) && constant.equals(Boolean.FALSE);
   }
 
-  /**
-   * @return true iff this constant is "true"
-   */
+  /** @return true iff this constant is "true" */
   public boolean isTrueConstant() {
     return (constant instanceof Boolean) && constant.equals(Boolean.TRUE);
   }
 
-  /**
-   * @return true iff this constant is "zero"
-   */
+  /** @return true iff this constant is "zero" */
   public boolean isZeroConstant() {
-    return ( (constant instanceof Number) && 
-	     (((Number) constant).intValue() == 0) );
+    return ((constant instanceof Number) && (((Number) constant).intValue() == 0));
   }
 
-  /**
-   * @return true iff this constant is "null"
-   */
+  /** @return true iff this constant is "null" */
   @Override
   public boolean isNullConstant() {
     return (constant == null);
   }
 
-  /**
-   * @return true iff this constant is "one"
-   */
+  /** @return true iff this constant is "one" */
   public boolean isOneConstant() {
-    return ( (constant instanceof Number) &&
-	     (((Number) constant).intValue() == 1) );
+    return ((constant instanceof Number) && (((Number) constant).intValue() == 1));
   }
 
   @Override
@@ -93,7 +76,7 @@ public class ConstantValue implements Value {
       return false;
     }
     if (obj.getClass().equals(getClass())) {
-      ConstantValue other = (ConstantValue)obj;
+      ConstantValue other = (ConstantValue) obj;
       if (constant == null) {
         return other.constant == null;
       }
@@ -107,5 +90,4 @@ public class ConstantValue implements Value {
   public int hashCode() {
     return constant == null ? 74 : 91 * constant.hashCode();
   }
-
 }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,6 +47,10 @@
 
 package org.scandroid.domain;
 
+import com.ibm.wala.dataflow.IFDS.PathEdge;
+import com.ibm.wala.dataflow.IFDS.TabulationDomain;
+import com.ibm.wala.ipa.cfg.BasicBlockInContext;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,107 +59,94 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.ibm.wala.dataflow.IFDS.PathEdge;
-import com.ibm.wala.dataflow.IFDS.TabulationDomain;
-import com.ibm.wala.ipa.cfg.BasicBlockInContext;
-import com.ibm.wala.ssa.ISSABasicBlock;
+public class IFDSTaintDomain<E extends ISSABasicBlock>
+    implements TabulationDomain<DomainElement, BasicBlockInContext<E>> {
+  private Map<DomainElement, Integer> table = new HashMap<>();
+  private ArrayList<DomainElement> objects = new ArrayList<>();
 
-public class IFDSTaintDomain <E extends ISSABasicBlock>
-  implements TabulationDomain<DomainElement, BasicBlockInContext<E>> {
-    private Map<DomainElement, Integer> table = new HashMap<>();
-    private ArrayList<DomainElement> objects = new ArrayList<>();
+  private Map<CodeElement, Set<DomainElement>> elementIndex = new HashMap<>();
 
-    private Map<CodeElement, Set<DomainElement>> elementIndex = new HashMap<>();
+  Set<DomainElement> emptySet = new HashSet<>();
 
-    Set<DomainElement> emptySet = new HashSet<>();
-    public Set<DomainElement> getPossibleElements(CodeElement codeElement)
-    {
-        Set<DomainElement> elts = elementIndex.get(codeElement);
-        if(elts != null)
-            return elts;
-        return emptySet;
+  public Set<DomainElement> getPossibleElements(CodeElement codeElement) {
+    Set<DomainElement> elts = elementIndex.get(codeElement);
+    if (elts != null) return elts;
+    return emptySet;
+  }
+
+  private void index(DomainElement e) {
+    Set<DomainElement> elements = elementIndex.get(e.codeElement);
+    if (elements == null) {
+      elements = new HashSet<>();
+      elementIndex.put(e.codeElement, elements);
+    }
+    elements.add(e);
+  }
+
+  @Override
+  public int add(DomainElement o) {
+    Integer i = table.get(o);
+    if (i == null) {
+      objects.add(o);
+      i = table.size() + 1;
+      table.put(o, i);
+      // System.out.println("Adding domain element "+i+": "+o);
+    }
+    index(o);
+
+    return i;
+  }
+
+  @Override
+  public synchronized int getMappedIndex(final Object o) {
+    if (!(o instanceof DomainElement)) {
+      throw new IllegalArgumentException(o.getClass().getCanonicalName());
     }
 
-    private void index(DomainElement e)
-    {
-        Set<DomainElement> elements = elementIndex.get(e.codeElement);
-        if(elements == null)
-        {
-            elements = new HashSet<>();
-            elementIndex.put(e.codeElement, elements);
-        }
-        elements.add(e);
-    }
+    final DomainElement de = (DomainElement) o;
+    final Integer i = table.get(de);
 
-    @Override
-    public int add(DomainElement o) {
-        Integer i = table.get(o);
-        if(i == null)
-        {
-            objects.add(o);
-            i = table.size() + 1;
-            table.put(o, i);
-            //System.out.println("Adding domain element "+i+": "+o);
-        }
-        index(o);
+    return (i == null ? add(de) : i);
+  }
 
-        return i;
-    }
+  @Override
+  public boolean hasPriorityOver(
+      PathEdge<BasicBlockInContext<E>> p1, PathEdge<BasicBlockInContext<E>> p2) {
+    return false;
+  }
 
+  @Override
+  public DomainElement getMappedObject(int n) {
+    if (n > 0 && n <= objects.size()) return objects.get(n - 1);
+    return null;
+  }
 
-    @Override
-    public synchronized int getMappedIndex(final Object o) {
-    	if (!(o instanceof DomainElement)) {
-    		throw new IllegalArgumentException(o.getClass().getCanonicalName());
-    	}
-    	
-    	final DomainElement de = (DomainElement) o;
-        final Integer i = table.get(de);
-        
-        return (i == null ? add(de) : i);
-    }
+  @Override
+  public int getMaximumIndex() {
+    return objects.size();
+  }
 
-    @Override
-    public boolean hasPriorityOver(
-            PathEdge<BasicBlockInContext<E>> p1,
-            PathEdge<BasicBlockInContext<E>> p2) {
-        return false;
-    }
+  @Override
+  public int getSize() {
+    return objects.size() + 1;
+  }
 
-    @Override
-    public DomainElement getMappedObject(int n) {
-        if(n > 0 && n <= objects.size())
-            return objects.get(n - 1);
-        return null;
-    }
+  @Override
+  public boolean hasMappedIndex(DomainElement o) {
+    return table.keySet().contains(o);
+  }
 
-    @Override
-    public int getMaximumIndex() {
-        return objects.size();
-    }
+  @Override
+  public Iterator<DomainElement> iterator() {
+    return table.keySet().iterator();
+  }
 
-    @Override
-    public int getSize() {
-        return objects.size()+1;
-    }
+  @Override
+  public Stream<DomainElement> stream() {
+    return objects.stream();
+  }
 
-    @Override
-    public boolean hasMappedIndex(DomainElement o) {
-        return table.keySet().contains(o);
-    }
-
-    @Override
-    public Iterator<DomainElement> iterator() {
-        return table.keySet().iterator();
-    }
-    
-    @Override
-    public Stream<DomainElement> stream() {
-        return objects.stream();
-    }
-
-    public Set<CodeElement> codeElements () {
-    	return elementIndex.keySet();
-    }
-
+  public Set<CodeElement> codeElements() {
+    return elementIndex.keySet();
+  }
 }

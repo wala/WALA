@@ -10,6 +10,4 @@
  */
 package annotations;
 
-public @interface DefaultVisableAnnotation {
-
-}
+public @interface DefaultVisableAnnotation {}

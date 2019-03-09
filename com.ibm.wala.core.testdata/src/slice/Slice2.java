@@ -15,7 +15,7 @@ public class Slice2 {
   public static void main(String[] args) {
     int x = foo(1);
     int y = bar(2);
-    baz(x+y);
+    baz(x + y);
   }
 
   public static void baz(int z) {
@@ -29,5 +29,4 @@ public class Slice2 {
   static int bar(int x) {
     return x + 3;
   }
-
 }

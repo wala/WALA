@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
-import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -34,38 +30,47 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TypeBasedArrayAliasTest extends WalaTestCase {
 
-  @Test public void testTypeBasedArrayAlias() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+  @Test
+  public void testTypeBasedArrayAlias()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
-        .makeMainEntrypoints(scope, cha, TestConstants.ARRAY_ALIAS_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.ARRAY_ALIAS_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // RTA yields a TypeBasedPointerAnalysis
-    CallGraphBuilder<InstanceKey> builder = Util.makeRTABuilder(options, new AnalysisCacheImpl(),cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
-    
+
     CGNode node = findNode(cg, "testMayAlias1");
     PointerKey pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     PointerKey pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
     Assert.assertTrue(mayAliased(pk1, pk2, pa));
-    
+
     node = findNode(cg, "testMayAlias2");
     pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
     Assert.assertTrue(mayAliased(pk1, pk2, pa));
-    
+
     node = findNode(cg, "testMayAlias3");
     pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
     Assert.assertTrue(mayAliased(pk1, pk2, pa));
   }
 
-  private final static CGNode findNode(CallGraph cg, String methodName) {
+  private static final CGNode findNode(CallGraph cg, String methodName) {
     for (CGNode n : cg) {
       if (n.getMethod().getName().toString().equals(methodName)) {
         return n;
@@ -75,11 +80,13 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     return null;
   }
 
-  private static boolean mayAliased(PointerKey pk1, PointerKey pk2, PointerAnalysis<InstanceKey> pa) {
+  private static boolean mayAliased(
+      PointerKey pk1, PointerKey pk2, PointerAnalysis<InstanceKey> pa) {
     OrdinalSet<InstanceKey> ptsTo1 = pa.getPointsToSet(pk1);
     OrdinalSet<InstanceKey> ptsTo2 = pa.getPointsToSet(pk2);
     boolean foundIntersection = false;
-    outer: for (InstanceKey i : ptsTo1) {
+    outer:
+    for (InstanceKey i : ptsTo1) {
       for (InstanceKey j : ptsTo2) {
         if (i.equals(j)) {
           foundIntersection = true;
@@ -89,6 +96,4 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     }
     return foundIntersection;
   }
-
-  
 }

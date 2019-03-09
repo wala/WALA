@@ -16,8 +16,8 @@ import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
  * A variable for dataflow analysis, representing a set of integers.
- * 
- * TODO: optimize the representation more; e.g. BitVectors with non-zero lower bound.
+ *
+ * <p>TODO: optimize the representation more; e.g. BitVectors with non-zero lower bound.
  */
 @SuppressWarnings("rawtypes")
 public abstract class IntSetVariable<T extends IntSetVariable<T>> extends AbstractVariable<T> {
@@ -42,7 +42,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
 
   /**
    * Add all integers from the set B
-   * 
+   *
    * @return true iff the value of this changes
    */
   public boolean addAll(IntSet B) {
@@ -57,7 +57,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
 
   /**
    * Add all integers from the other int set variable.
-   * 
+   *
    * @return true iff the contents of this variable changes.
    */
   public boolean addAll(T other) {
@@ -96,7 +96,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
 
   /**
    * Set a particular bit
-   * 
+   *
    * @param b the bit to set
    */
   public boolean add(int b) {
@@ -108,7 +108,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
 
   /**
    * Is a particular bit set?
-   * 
+   *
    * @param b the bit to check
    */
   public boolean contains(int b) {
@@ -119,9 +119,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
     }
   }
 
-  /**
-   * @return the value of this variable as a MutableSparseIntSet ... null if the set is empty.
-   */
+  /** @return the value of this variable as a MutableSparseIntSet ... null if the set is empty. */
   public MutableIntSet getValue() {
     return V;
   }

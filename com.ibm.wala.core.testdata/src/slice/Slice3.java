@@ -11,8 +11,7 @@
 package slice;
 
 public class Slice3 {
-  static void doNothing(Object o) {
-  }
+  static void doNothing(Object o) {}
 
   public static void main(String[] args) {
     Object o1 = new Object();
@@ -24,6 +23,4 @@ public class Slice3 {
   static Object foo(Object x, Object y) {
     return x;
   }
-
-
 }

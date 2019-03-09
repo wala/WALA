@@ -13,8 +13,8 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * A {@link Statement} representing the normal return value in a callee,
- * immediately before returning to the caller.
+ * A {@link Statement} representing the normal return value in a callee, immediately before
+ * returning to the caller.
  */
 public class NormalReturnCallee extends Statement {
 

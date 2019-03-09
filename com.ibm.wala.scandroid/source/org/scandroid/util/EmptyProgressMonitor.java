@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -49,21 +49,28 @@ package org.scandroid.util;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 public final class EmptyProgressMonitor implements IProgressMonitor {
-    @Override public void beginTask(String task, int totalWork) { }
-    @Override public boolean isCanceled() { return false; }
-    @Override public void done() { }
-    @Override public void worked(int units) { }
-    
-	@Override
-	public void subTask(String subTask) {
-	}
-	
-	@Override
-	public void cancel() {
-	}
+  @Override
+  public void beginTask(String task, int totalWork) {}
 
-	@Override
-	public String getCancelMessage() {
-		return "EmptyProgressMonitor canceled.";
-	}
+  @Override
+  public boolean isCanceled() {
+    return false;
+  }
+
+  @Override
+  public void done() {}
+
+  @Override
+  public void worked(int units) {}
+
+  @Override
+  public void subTask(String subTask) {}
+
+  @Override
+  public void cancel() {}
+
+  @Override
+  public String getCancelMessage() {
+    return "EmptyProgressMonitor canceled.";
+  }
 }

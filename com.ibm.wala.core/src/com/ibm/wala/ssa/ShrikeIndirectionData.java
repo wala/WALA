@@ -15,13 +15,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-/**
- * An implementation of {@link SSAIndirectionData} specialized for IRs originated from Shrike.
- */
-public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirectionData.ShrikeLocalName> {
+/** An implementation of {@link SSAIndirectionData} specialized for IRs originated from Shrike. */
+public class ShrikeIndirectionData
+    implements SSAIndirectionData<ShrikeIndirectionData.ShrikeLocalName> {
 
   /**
-   * In Shrike, the only "source" level entities which have names relevant to indirect pointer operations are bytecode locals.
+   * In Shrike, the only "source" level entities which have names relevant to indirect pointer
+   * operations are bytecode locals.
    */
   public static class ShrikeLocalName implements com.ibm.wala.ssa.SSAIndirectionData.Name {
     private final int bytecodeLocalNumber;
@@ -40,15 +40,11 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       ShrikeLocalName other = (ShrikeLocalName) obj;
-      if (bytecodeLocalNumber != other.bytecodeLocalNumber)
-        return false;
+      if (bytecodeLocalNumber != other.bytecodeLocalNumber) return false;
       return true;
     }
 

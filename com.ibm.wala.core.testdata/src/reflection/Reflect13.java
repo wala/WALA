@@ -13,12 +13,12 @@ package reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/**
- * Test of Method.invoke
- */
+/** Test of Method.invoke */
 public class Reflect13 {
-  public static void main(String[] args) throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
-      IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
+  public static void main(String[] args)
+      throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
+          IllegalAccessException, InvocationTargetException, SecurityException,
+          NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
     Method[] m = c.getMethods();
     int length = Integer.parseInt(args[0]);

@@ -25,19 +25,18 @@ public class JSSyntheticParameterKey extends NodeKey {
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof JSSyntheticParameterKey) &&
-      ((JSSyntheticParameterKey)o).param == param &&
-      internalEquals(o);
+    return (o instanceof JSSyntheticParameterKey)
+        && ((JSSyntheticParameterKey) o).param == param
+        && internalEquals(o);
   }
 
   @Override
   public int hashCode() {
-    return param*getNode().hashCode();
+    return param * getNode().hashCode();
   }
 
   @Override
   public String toString() {
-    return "p" + param + ':' +  getNode().getMethod().getName();
+    return "p" + param + ':' + getNode().getMethod().getName();
   }
-
 }

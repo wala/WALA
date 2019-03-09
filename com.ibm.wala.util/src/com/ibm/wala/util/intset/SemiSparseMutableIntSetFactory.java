@@ -12,13 +12,11 @@ package com.ibm.wala.util.intset;
 
 import java.util.TreeSet;
 
-/**
- */
-public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<SemiSparseMutableIntSet> {
+/** */
+public class SemiSparseMutableIntSetFactory
+    implements MutableIntSetFactory<SemiSparseMutableIntSet> {
 
-  /**
-   * @throws IllegalArgumentException  if set is null
-   */
+  /** @throws IllegalArgumentException if set is null */
   @Override
   public SemiSparseMutableIntSet make(int[] set) {
     if (set == null) {
@@ -44,8 +42,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
   public SemiSparseMutableIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
     SemiSparseMutableIntSet result = new SemiSparseMutableIntSet();
-    for (int element : data)
-      result.add(element);
+    for (int element : data) result.add(element);
     return result;
   }
 
@@ -66,5 +63,4 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
   public SemiSparseMutableIntSet make() {
     return new SemiSparseMutableIntSet();
   }
-
 }

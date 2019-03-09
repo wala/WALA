@@ -22,7 +22,7 @@ import java.util.LinkedList;
 
 /**
  * An exception for invalid data in the CharacterRangeTable.
- * 
+ *
  * @see CRTable
  * @see CRTData
  * @see CRTFlags
@@ -36,32 +36,24 @@ class InvalidCRTDataException extends Exception {
   /** Stores additional information */
   private LinkedList<Object> data;
 
-  /**
-   * Creates a new instance of {@code InvalidCRTDataException} without
-   * detail message.
-   */
-  InvalidCRTDataException() {
-  }
+  /** Creates a new instance of {@code InvalidCRTDataException} without detail message. */
+  InvalidCRTDataException() {}
 
   /**
-   * Constructs an instance of {@code InvalidCRTDataException} with the
-   * specified detail message.
-   * 
-   * @param msg
-   *          the detail message.
+   * Constructs an instance of {@code InvalidCRTDataException} with the specified detail message.
+   *
+   * @param msg the detail message.
    */
   InvalidCRTDataException(String msg) {
     super(msg);
   }
 
   /**
-   * Constructs an instance of {@code InvalidCRTDataException} with the
-   * specified detail message and additional information.
-   * 
-   * @param msg
-   *          the detail message.
-   * @param data
-   *          additional information.
+   * Constructs an instance of {@code InvalidCRTDataException} with the specified detail message and
+   * additional information.
+   *
+   * @param msg the detail message.
+   * @param data additional information.
    */
   InvalidCRTDataException(String msg, Object... data) {
     super(msg);
@@ -71,7 +63,7 @@ class InvalidCRTDataException extends Exception {
 
   /**
    * Returns additional information.
-   * 
+   *
    * @return additional information
    */
   LinkedList<Object> getData() {

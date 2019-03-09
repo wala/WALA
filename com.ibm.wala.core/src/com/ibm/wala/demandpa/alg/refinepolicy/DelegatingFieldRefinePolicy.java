@@ -15,9 +15,7 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
-/**
- * A field refine policy that first checks with A, then delegates to B
- */
+/** A field refine policy that first checks with A, then delegates to B */
 public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
 
   private final FieldRefinePolicy A;
@@ -44,13 +42,17 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
   }
 
   /**
-   * returns {@code true} if
-   * {@code A.shouldRefine(field) || B.shouldRefine(field)}. Note that
-   * if {@code A.shouldRefine(field)} is {@code true},
-   * {@code B.shouldRefine(field)} is <em>not</em> called.
+   * returns {@code true} if {@code A.shouldRefine(field) || B.shouldRefine(field)}. Note that if
+   * {@code A.shouldRefine(field)} is {@code true}, {@code B.shouldRefine(field)} is <em>not</em>
+   * called.
    */
   @Override
-  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
+  public boolean shouldRefine(
+      IField field,
+      PointerKey basePtr,
+      PointerKey val,
+      IFlowLabel label,
+      StateMachine.State state) {
     // make code explicit to avoid subtle reliance on short-circuiting
     boolean AshouldRefine = A.shouldRefine(field, basePtr, val, label, state);
     if (AshouldRefine) {
@@ -59,5 +61,4 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
       return B.shouldRefine(field, basePtr, val, label, state);
     }
   }
-
 }

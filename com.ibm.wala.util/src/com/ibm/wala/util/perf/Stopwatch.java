@@ -10,22 +10,17 @@
  */
 package com.ibm.wala.util.perf;
 
-/**
- * Basic class to time events
- */
+/** Basic class to time events */
 public class Stopwatch {
 
   protected int count;
 
-  /**
-   * elapsed time in nanoseconds
-   */
+  /** elapsed time in nanoseconds */
   private long elapsedTime;
 
   private long startTime;
 
-  public Stopwatch() {
-  }
+  public Stopwatch() {}
 
   public void start() {
     startTime = System.nanoTime();
@@ -37,25 +32,21 @@ public class Stopwatch {
     elapsedTime += (endTime - startTime);
   }
 
-  /**
-   * @return elapsed time in ms
-   */
+  /** @return elapsed time in ms */
   public long getElapsedMillis() {
     return elapsedTime / 1000000;
   }
-  
-  /**
-   * @return number of times this stopwatch was stopped
-   */
+
+  /** @return number of times this stopwatch was stopped */
   public int getCount() {
     return count;
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("total: ").append(getElapsedMillis());
-    if (count > 0){
+    if (count > 0) {
       sb.append(", inv: ").append(count);
       sb.append(", avg: ").append(getElapsedMillis() / count);
     }

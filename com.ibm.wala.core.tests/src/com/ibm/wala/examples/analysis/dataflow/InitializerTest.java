@@ -11,10 +11,6 @@
 
 package com.ibm.wala.examples.analysis.dataflow;
 
-import java.io.IOException;
-
-import org.junit.Assert;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -40,34 +36,40 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.io.FileProvider;
+import java.io.IOException;
+import org.junit.Assert;
 
 public class InitializerTest {
 
   public static void main(String[] args) {
-    
+
     AnalysisScope scope = null;
     try {
-      scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-          (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), InitializerTest.class.getClassLoader());
+      scope =
+          AnalysisScopeReader.readJavaScope(
+              TestConstants.WALA_TESTDATA,
+              (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+              InitializerTest.class.getClassLoader());
     } catch (IOException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
 
     IClassHierarchy cha = null;
-    
+
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
     }
-    
-    
-    
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "LstaticInit/TestStaticInit");
+
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = null;
     try {
       cg = builder.makeCallGraph(options, null);
@@ -78,15 +80,17 @@ public class InitializerTest {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
+
     System.out.println("Start");
-    
+
     StaticInitializer reachingDefs = new StaticInitializer(cg);
-    TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, IClass> result = reachingDefs.analyze();
-    ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph = reachingDefs.getSupergraph();
+    TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, IClass> result =
+        reachingDefs.analyze();
+    ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph =
+        reachingDefs.getSupergraph();
     for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {
       if (bb.getNode().toString().contains("doNothing")) {
-//        System.out.println("Do!");
+        //        System.out.println("Do!");
         IExplodedBasicBlock delegate = bb.getDelegate();
         if (delegate.getNumber() == 4) {
           IntSet solution = result.getResult(bb);
@@ -99,11 +103,7 @@ public class InitializerTest {
         }
       }
     }
-    
+
     System.out.println("End");
-    
   }
-    
-
-
 }

@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import java.io.IOException;
-import java.util.Set;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -41,11 +35,13 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import java.util.Set;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- */
+/** */
 public class PiNodeCallGraphTest extends WalaTestCase {
-
 
   public static void main(String[] args) {
     justThisTest(PiNodeCallGraphTest.class);
@@ -59,35 +55,55 @@ public class PiNodeCallGraphTest extends WalaTestCase {
 
   private static final ClassLoaderReference loader = ClassLoaderReference.Application;
 
-  private static final TypeReference whateverRef = TypeReference.findOrCreate(loader, TypeName.string2TypeName(whateverName));
+  private static final TypeReference whateverRef =
+      TypeReference.findOrCreate(loader, TypeName.string2TypeName(whateverName));
 
-  private static final TypeReference thisRef = TypeReference.findOrCreate(loader, TypeName.string2TypeName(thisName));
+  private static final TypeReference thisRef =
+      TypeReference.findOrCreate(loader, TypeName.string2TypeName(thisName));
 
-  private static final TypeReference thatRef = TypeReference.findOrCreate(loader, TypeName.string2TypeName(thatName));
+  private static final TypeReference thatRef =
+      TypeReference.findOrCreate(loader, TypeName.string2TypeName(thatName));
 
-  private static final MethodReference thisBinaryRef = MethodReference.findOrCreate(thisRef,
-      Atom.findOrCreateUnicodeAtom("binary"), Descriptor.findOrCreateUTF8("(" + whateverName + ";)V"));
+  private static final MethodReference thisBinaryRef =
+      MethodReference.findOrCreate(
+          thisRef,
+          Atom.findOrCreateUnicodeAtom("binary"),
+          Descriptor.findOrCreateUTF8("(" + whateverName + ";)V"));
 
-  private static final MethodReference thatBinaryRef = MethodReference.findOrCreate(thatRef,
-      Atom.findOrCreateUnicodeAtom("binary"), Descriptor.findOrCreateUTF8("(" + whateverName + ";)V"));
+  private static final MethodReference thatBinaryRef =
+      MethodReference.findOrCreate(
+          thatRef,
+          Atom.findOrCreateUnicodeAtom("binary"),
+          Descriptor.findOrCreateUTF8("(" + whateverName + ";)V"));
 
-  private static final MemberReference unary2Ref = MethodReference.findOrCreate(whateverRef,
-      Atom.findOrCreateUnicodeAtom("unary2"), Descriptor.findOrCreateUTF8("()V"));
+  private static final MemberReference unary2Ref =
+      MethodReference.findOrCreate(
+          whateverRef, Atom.findOrCreateUnicodeAtom("unary2"), Descriptor.findOrCreateUTF8("()V"));
 
-  private static CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+  private static CallGraph doGraph(boolean usePiNodes)
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.PI_TEST_MAIN);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.PI_TEST_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     SSAPiNodePolicy policy = usePiNodes ? SSAOptions.getAllBuiltInPiNodes() : null;
     options.getSSAOptions().setPiNodePolicy(policy);
 
-    return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(new DefaultIRFactory(), options.getSSAOptions()), cha, scope, false);
+    return CallGraphTestUtil.buildZeroCFA(
+        options,
+        new AnalysisCacheImpl(new DefaultIRFactory(), options.getSSAOptions()),
+        cha,
+        scope,
+        false);
   }
 
-  private static void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls, int numLocalCastCallees) {
-  
+  private static void checkCallAssertions(
+      CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls, int numLocalCastCallees) {
+
     int numberOfCalls = 0;
     Set<CGNode> callerNodes = HashSetFactory.make();
     callerNodes.addAll(cg.getNodes(thisBinaryRef));
@@ -103,20 +119,29 @@ public class PiNodeCallGraphTest extends WalaTestCase {
       }
     }
 
-    
     assert numberOfCalls == desiredNumberOfCalls;
 
-    CGNode localCastNode = cg.getNodes(MethodReference.findOrCreate(TypeReference.findOrCreate(loader, TestConstants.PI_TEST_MAIN), "localCast", "()V")).iterator().next();
+    CGNode localCastNode =
+        cg.getNodes(
+                MethodReference.findOrCreate(
+                    TypeReference.findOrCreate(loader, TestConstants.PI_TEST_MAIN),
+                    "localCast",
+                    "()V"))
+            .iterator()
+            .next();
     int actualLocalCastCallees = cg.getSuccNodeCount(localCastNode);
     Assert.assertEquals(numLocalCastCallees, actualLocalCastCallees);
   }
 
-  @Test public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testNoPiNodes()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(false), 2, 2, 2);
   }
 
-  @Test public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testPiNodes()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(true), 1, 2, 1);
-  } 
-
+  }
 }

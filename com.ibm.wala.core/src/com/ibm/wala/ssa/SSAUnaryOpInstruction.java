@@ -14,34 +14,42 @@ import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
 /**
  * An SSA instruction for some unary operator.
- * 
+ *
  * @see IUnaryOpInstruction for a list of operators
  */
 public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
   private final IUnaryOpInstruction.IOperator operator;
 
-  public SSAUnaryOpInstruction(int iindex, IUnaryOpInstruction.IOperator operator, int result, int val) {
+  public SSAUnaryOpInstruction(
+      int iindex, IUnaryOpInstruction.IOperator operator, int result, int val) {
     super(iindex, result, val);
     this.operator = operator;
   }
 
   @Override
-  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
+      throws IllegalArgumentException {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return insts.UnaryOpInstruction(iindex, operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
+    return insts.UnaryOpInstruction(
+        iindex,
+        operator,
+        defs == null || defs.length == 0 ? result : defs[0],
+        uses == null ? val : uses[0]);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = " + operator + ' ' + getValueString(symbolTable, val);
+    return getValueString(symbolTable, result)
+        + " = "
+        + operator
+        + ' '
+        + getValueString(symbolTable, val);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitUnaryOp(this);
@@ -50,5 +58,4 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   public IUnaryOpInstruction.IOperator getOpcode() {
     return operator;
   }
-
- }
+}

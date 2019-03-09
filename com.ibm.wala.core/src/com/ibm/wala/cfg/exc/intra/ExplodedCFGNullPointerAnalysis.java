@@ -11,8 +11,6 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
-import java.util.List;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.ssa.IR;
@@ -23,15 +21,16 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import java.util.List;
 
 /**
  * Intraprocedural null pointer analysis for the exploded control flow graph.
- * 
- * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  */
-public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> {
-  
+public class ExplodedCFGNullPointerAnalysis
+    implements ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> {
+
   private final TypeReference[] ignoredExceptions;
   private IntraprocNullPointerAnalysis<IExplodedBasicBlock> intra;
   private final IR ir;
@@ -39,10 +38,16 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   private final MethodState mState;
   private final boolean optHasExceptions;
 
-  public ExplodedCFGNullPointerAnalysis(TypeReference[] ignoredExceptions, IR ir, ParameterState paramState, MethodState mState, boolean optHasExceptions) {
+  public ExplodedCFGNullPointerAnalysis(
+      TypeReference[] ignoredExceptions,
+      IR ir,
+      ParameterState paramState,
+      MethodState mState,
+      boolean optHasExceptions) {
     this.ignoredExceptions = (ignoredExceptions != null ? ignoredExceptions.clone() : null);
     this.ir = ir;
-    this.initialState = (paramState == null ? ParameterState.createDefault(ir.getMethod()) : paramState);
+    this.initialState =
+        (paramState == null ? ParameterState.createDefault(ir.getMethod()) : paramState);
     this.mState = (mState == null ? MethodState.DEFAULT : mState);
     this.optHasExceptions = optHasExceptions;
   }
@@ -56,10 +61,10 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
 
     intra = new IntraprocNullPointerAnalysis<>(ir, orig, ignoredExceptions, initialState, mState);
     intra.run(progress);
-    
+
     return intra.getNumberOfDeletedEdges();
   }
-  
+
   /* (non-Javadoc)
    * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getCFG()
    */
@@ -68,7 +73,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
-    
+
     return intra.getPrunedCFG();
   }
 
@@ -80,9 +85,9 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
-    
+
     ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg = intra.getPrunedCFG();
-    
+
     boolean hasException = false;
     for (IExplodedBasicBlock bb : cfg) {
       if (bb.getInstruction() == null) continue;
@@ -92,7 +97,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
         break;
       }
     }
-    
+
     return hasException;
   }
 
@@ -101,7 +106,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
-    
+
     return intra.getState(bb);
   }
 }

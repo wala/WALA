@@ -10,19 +10,12 @@
  */
 package com.ibm.wala.ssa;
 
-
-/**
- * An instruction representing a monitorenter or monitorexit operation.
- */
+/** An instruction representing a monitorenter or monitorexit operation. */
 public abstract class SSAMonitorInstruction extends SSAInstruction {
-  /**
-   * The value number of the object being locked or unlocked
-   */
+  /** The value number of the object being locked or unlocked */
   private final int ref;
 
-  /**
-   * Does this instruction represent a monitorenter?
-   */
+  /** Does this instruction represent a monitorenter? */
   private final boolean isEnter;
 
   /**
@@ -86,16 +79,12 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
     return true;
   }
 
-  /**
-   * @return The value number of the object being locked or unlocked
-   */
+  /** @return The value number of the object being locked or unlocked */
   public int getRef() {
     return ref;
   }
 
-  /**
-   * Does this instruction represent a monitorenter?
-   */
+  /** Does this instruction represent a monitorenter? */
   public boolean isMonitorEnter() {
     return isEnter;
   }

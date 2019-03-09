@@ -10,22 +10,21 @@
  */
 package com.ibm.wala.cast.js.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
- * Checks if a reference is null or undefined, and if so, throws a
- * ReferenceError. Otherwise, it's a no-op.
+ * Checks if a reference is null or undefined, and if so, throws a ReferenceError. Otherwise, it's a
+ * no-op.
  */
 public class JavaScriptCheckReference extends SSAInstruction {
   private final int ref;
-  
+
   public JavaScriptCheckReference(int iindex, int ref) {
     super(iindex);
     this.ref = ref;
@@ -33,7 +32,7 @@ public class JavaScriptCheckReference extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-     return ((JSInstructionFactory)insts).CheckReference(iindex, uses==null? ref: uses[0]);
+    return ((JSInstructionFactory) insts).CheckReference(iindex, uses == null ? ref : uses[0]);
   }
 
   @Override
@@ -58,23 +57,22 @@ public class JavaScriptCheckReference extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    ((JSInstructionVisitor)v).visitCheckRef(this);
+    ((JSInstructionVisitor) v).visitCheckRef(this);
   }
 
   @Override
   public boolean isPEI() {
     return true;
   }
-  
+
   @Override
   public int getNumberOfUses() {
     return 1;
   }
-  
+
   @Override
   public int getUse(int i) {
     assert i == 0;
     return ref;
   }
-  
 }

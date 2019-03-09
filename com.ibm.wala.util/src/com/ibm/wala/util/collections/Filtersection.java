@@ -12,13 +12,11 @@ package com.ibm.wala.util.collections;
 
 import java.util.function.Predicate;
 
-/**
- * intersection of two filters
- */
+/** intersection of two filters */
 public class Filtersection<T> implements Predicate<T> {
 
-  final private Predicate<T> a;
-  final private Predicate<T> b;
+  private final Predicate<T> a;
+  private final Predicate<T> b;
 
   public Filtersection(Predicate<T> a, Predicate<T> b) {
     this.a = a;
@@ -35,5 +33,4 @@ public class Filtersection<T> implements Predicate<T> {
   public boolean test(T o) {
     return a.test(o) && b.test(o);
   }
-
 }

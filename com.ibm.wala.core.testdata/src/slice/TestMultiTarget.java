@@ -12,13 +12,9 @@ package slice;
 
 public class TestMultiTarget {
 
-  static void doNothing(Object o) {
-  }
+  static void doNothing(Object o) {}
 
-  /**
-   * test a virtual call with multiple targets. slice should include statements
-   * assigning to a
-   */
+  /** test a virtual call with multiple targets. slice should include statements assigning to a */
   public static void main(String[] args) {
     A a = null;
     if (args[0] == null) {
@@ -29,5 +25,4 @@ public class TestMultiTarget {
     Object x = a.foo();
     doNothing(x);
   }
-
 }

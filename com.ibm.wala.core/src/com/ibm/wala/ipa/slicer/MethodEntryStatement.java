@@ -14,8 +14,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
  * A statement representing method entry, used for managing control dependence.
- * 
- * This is also used as a dummy entry for starting propagation to a seed statement.
+ *
+ * <p>This is also used as a dummy entry for starting propagation to a seed statement.
  */
 public class MethodEntryStatement extends Statement {
 
@@ -50,5 +50,4 @@ public class MethodEntryStatement extends Statement {
   public String toString() {
     return getKind() + ":" + getNode();
   }
-
 }

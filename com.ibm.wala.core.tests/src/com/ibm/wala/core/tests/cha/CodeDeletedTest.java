@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -29,20 +25,26 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.WalaRuntimeException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
+import java.io.IOException;
+import org.junit.Test;
 
 public class CodeDeletedTest extends WalaTestCase {
 
   /**
-   * Test handling of an invalid class where a non-abstract method has no code.
-   * We want to throw an exception rather than crash.
+   * Test handling of an invalid class where a non-abstract method has no code. We want to throw an
+   * exception rather than crash.
    */
   @Test(expected = WalaRuntimeException.class)
   public void testDeletedCode() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            DupFieldsTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application, "LCodeDeleted");
+    TypeReference ref =
+        TypeReference.findOrCreate(ClassLoaderReference.Application, "LCodeDeleted");
     IClass klass = cha.lookupClass(ref);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     for (IMethod m : klass.getDeclaredMethods()) {
@@ -51,6 +53,5 @@ public class CodeDeletedTest extends WalaTestCase {
         cache.getIR(m);
       }
     }
-
   }
 }

@@ -13,10 +13,16 @@ package annotations;
 public @interface AnnotationWithParams {
 
   String strParam() default "strdef";
+
   int intParam() default 0;
+
   Class<?> klassParam() default Object.class;
+
   AnnotationEnum enumParam() default AnnotationEnum.VAL2;
-  String[] strArrParam() default {"foo","baz"};
-  int[] intArrParam() default {3,4};
+
+  String[] strArrParam() default {"foo", "baz"};
+
+  int[] intArrParam() default {3, 4};
+
   AnnotationWithSingleParam annotParam() default @AnnotationWithSingleParam("fsf");
 }

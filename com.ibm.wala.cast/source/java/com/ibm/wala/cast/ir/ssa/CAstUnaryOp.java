@@ -12,12 +12,13 @@ package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
+public enum CAstUnaryOp implements IUnaryOpInstruction.IOperator {
+  MINUS,
+  BITNOT,
+  PLUS;
 
-  public enum CAstUnaryOp implements IUnaryOpInstruction.IOperator {
-    MINUS, BITNOT, PLUS;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
+  @Override
+  public String toString() {
+    return super.toString().toLowerCase();
   }
+}

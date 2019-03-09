@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -51,49 +51,44 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.types.FieldReference;
 
 public class FieldElement extends CodeElement {
-    private FieldReference fieldRef;
-    private InstanceKey object;
-//    private TypeReference object;
+  private FieldReference fieldRef;
+  private InstanceKey object;
+  //    private TypeReference object;
 
-    public FieldElement(InstanceKey object, FieldReference fieldRef)
-    {
-        this.fieldRef = fieldRef;
-        this.object = object;
-    }
-//    public FieldElement(TypeReference object, String fieldname)
-//    {
-//        this.fieldname = fieldname;
-//        this.object = object;
-//    }
-    
-    public InstanceKey getIK() {
-    	return object;
-    }
-    
-    public FieldReference getRef() {
-    	return fieldRef;
-    }
+  public FieldElement(InstanceKey object, FieldReference fieldRef) {
+    this.fieldRef = fieldRef;
+    this.object = object;
+  }
+  //    public FieldElement(TypeReference object, String fieldname)
+  //    {
+  //        this.fieldname = fieldname;
+  //        this.object = object;
+  //    }
 
-    @Override
-    public boolean equals(Object other)
-    {
-        if(other != null && other instanceof FieldElement)
-        {
-            FieldElement otherFE = (FieldElement)other;
-            return object.equals(otherFE.object) && fieldRef.equals(otherFE.fieldRef);
-        }
-        return false;
-    }
+  public InstanceKey getIK() {
+    return object;
+  }
 
-    @Override
-    public int hashCode()
-    {
-        return object.hashCode() * fieldRef.hashCode();
-    }
+  public FieldReference getRef() {
+    return fieldRef;
+  }
 
-    @Override
-    public String toString()
-    {
-        return "FieldElement("+fieldRef.getSignature()+ ',' +object+ ')';
+  @Override
+  public boolean equals(Object other) {
+    if (other != null && other instanceof FieldElement) {
+      FieldElement otherFE = (FieldElement) other;
+      return object.equals(otherFE.object) && fieldRef.equals(otherFE.fieldRef);
     }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return object.hashCode() * fieldRef.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "FieldElement(" + fieldRef.getSignature() + ',' + object + ')';
+  }
 }

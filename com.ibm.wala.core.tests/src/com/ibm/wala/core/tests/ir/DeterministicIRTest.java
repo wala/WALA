@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import java.io.IOException;
-import java.util.Iterator;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -32,19 +26,23 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.UTF8Convert;
+import java.io.IOException;
+import java.util.Iterator;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test that the SSA-numbering of variables in the IR is deterministic.
- * 
- * Introduced 05-AUG-03; the default implementation of hashCode was being invoked. Object.hashCode is a source of random numbers and
- * has no place in a deterministic program.
+ *
+ * <p>Introduced 05-AUG-03; the default implementation of hashCode was being invoked.
+ * Object.hashCode is a source of random numbers and has no place in a deterministic program.
  */
 public class DeterministicIRTest extends WalaTestCase {
 
   private IClassHierarchy cha;
 
   private final AnalysisOptions options = new AnalysisOptions();
-  
+
   protected DeterministicIRTest(IClassHierarchy cha) {
     this.cha = cha;
   }
@@ -52,7 +50,7 @@ public class DeterministicIRTest extends WalaTestCase {
   public DeterministicIRTest() throws ClassHierarchyException, IOException {
     this(WalaTestCase.makeCHA());
   }
-  
+
   public static void main(String[] args) {
     justThisTest(DeterministicIRTest.class);
   }
@@ -96,7 +94,6 @@ public class DeterministicIRTest extends WalaTestCase {
     while (iterator.hasNext()) {
       Assert.assertTrue(iterator.next() != null);
     }
-
   }
 
   private static void checkNotAllNull(SSAInstruction[] instructions) {
@@ -108,28 +105,54 @@ public class DeterministicIRTest extends WalaTestCase {
     Assert.assertTrue("no instructions generated", false);
   }
 
-  @Test public void testIR1() {
+  @Test
+  public void testIR1() {
     // 'remove' is a nice short method
-    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "Ljava/util/HashMap", Atom.findOrCreateUnicodeAtom("remove"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Ljava/lang/Object;"))));
+    doMethod(
+        cha.getScope()
+            .findMethod(
+                AnalysisScope.APPLICATION,
+                "Ljava/util/HashMap",
+                Atom.findOrCreateUnicodeAtom("remove"),
+                new ImmutableByteArray(
+                    UTF8Convert.toUTF8("(Ljava/lang/Object;)Ljava/lang/Object;"))));
   }
 
-  @Test public void testIR2() {
+  @Test
+  public void testIR2() {
     // 'equals' is a nice medium-sized method
-    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "Ljava/lang/String", Atom.findOrCreateUnicodeAtom("equals"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Z"))));
+    doMethod(
+        cha.getScope()
+            .findMethod(
+                AnalysisScope.APPLICATION,
+                "Ljava/lang/String",
+                Atom.findOrCreateUnicodeAtom("equals"),
+                new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Z"))));
   }
 
-  @Test public void testIR3() {
+  @Test
+  public void testIR3() {
     // 'resolveProxyClass' is a nice long method (at least in Sun libs)
-    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "Ljava/io/ObjectInputStream", Atom
-        .findOrCreateUnicodeAtom("resolveProxyClass"), new ImmutableByteArray(UTF8Convert
-        .toUTF8("([Ljava/lang/String;)Ljava/lang/Class;"))));
+    doMethod(
+        cha.getScope()
+            .findMethod(
+                AnalysisScope.APPLICATION,
+                "Ljava/io/ObjectInputStream",
+                Atom.findOrCreateUnicodeAtom("resolveProxyClass"),
+                new ImmutableByteArray(
+                    UTF8Convert.toUTF8("([Ljava/lang/String;)Ljava/lang/Class;"))));
   }
 
-  @Test public void testIR4() {
+  @Test
+  public void testIR4() {
     // test some corner cases with try-finally
-    doMethod(cha.getScope().findMethod(AnalysisScope.APPLICATION, "LcornerCases/TryFinally", Atom.findOrCreateUnicodeAtom("test1"),
-        new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/io/InputStream;Ljava/io/InputStream;)V"))));
+    doMethod(
+        cha.getScope()
+            .findMethod(
+                AnalysisScope.APPLICATION,
+                "LcornerCases/TryFinally",
+                Atom.findOrCreateUnicodeAtom("test1"),
+                new ImmutableByteArray(
+                    UTF8Convert.toUTF8("(Ljava/io/InputStream;Ljava/io/InputStream;)V"))));
   }
 }

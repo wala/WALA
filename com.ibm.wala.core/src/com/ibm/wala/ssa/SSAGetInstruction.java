@@ -13,9 +13,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.FieldReference;
 
-/**
- * SSA instruction that reads a field (i.e. getstatic or getfield).
- */
+/** SSA instruction that reads a field (i.e. getstatic or getfield). */
 public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   private final int result;
 
@@ -32,9 +30,13 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
-      return insts.GetInstruction(iindex, defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
+      return insts.GetInstruction(
+          iindex, defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
     else
-      return insts.GetInstruction(iindex, defs == null || defs.length == 0 ? result : defs[0], uses == null ? getRef() : uses[0],
+      return insts.GetInstruction(
+          iindex,
+          defs == null || defs.length == 0 ? result : defs[0],
+          uses == null ? getRef() : uses[0],
           getDeclaredField());
   }
 
@@ -43,22 +45,21 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     if (isStatic()) {
       return getValueString(symbolTable, result) + " = getstatic " + getDeclaredField();
     } else {
-      return getValueString(symbolTable, result) + " = getfield " + getDeclaredField() + ' '
+      return getValueString(symbolTable, result)
+          + " = getfield "
+          + getDeclaredField()
+          + ' '
           + getValueString(symbolTable, getRef());
     }
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitGet(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public boolean hasDef() {
     return true;
@@ -75,9 +76,7 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfDefs() {
     return 1;
@@ -88,9 +87,7 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return (isStatic()) ? 0 : 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */
   @Override
   public int getUse(int j) {
     assert j == 0 && getRef() != -1;

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,19 +19,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import com.ibm.wala.util.collections.HashMapFactory;
-
 /**
- * A bit set mapping based on an object array. This is not terribly efficient, but is useful for prototyping.
+ * A bit set mapping based on an object array. This is not terribly efficient, but is useful for
+ * prototyping.
  */
 public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   private static final long serialVersionUID = 4011751404163534418L;
 
   private static final int INITIAL_CAPACITY = 20;
-  
-  private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
-  
+
+  private static final int MAX_SIZE = Integer.MAX_VALUE / 4;
+
   public static <T> MutableMapping<T> make() {
     return new MutableMapping<>();
   }
@@ -39,14 +39,10 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   private int nextIndex = 0;
 
-  /**
-   * A mapping from object to Integer.
-   */
+  /** A mapping from object to Integer. */
   final HashMap<T, Integer> map = HashMapFactory.make();
 
-  /**
-   * @throws IllegalArgumentException if array is null
-   */
+  /** @throws IllegalArgumentException if array is null */
   @SuppressWarnings("unchecked")
   public MutableMapping(final Object[] array) {
     if (array == null) {
@@ -83,7 +79,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     } else {
       return I.intValue();
     }
-
   }
 
   @Override
@@ -93,7 +88,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   /**
    * Add an object to the set of mapped objects.
-   * 
+   *
    * @return the integer to which the object is mapped.
    */
   @Override
@@ -152,9 +147,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return Collections.unmodifiableCollection(map.keySet());
   }
 
-  /**
-   * Replace a in this mapping with b.
-   */
+  /** Replace a in this mapping with b. */
   public void replace(T a, T b) throws IllegalArgumentException {
     int i = getMappedIndex(a);
     if (i == -1) {
@@ -165,9 +158,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     array[i] = b;
   }
 
-  /**
-   * Add an object to the set of mapped objects at index i.
-   */
+  /** Add an object to the set of mapped objects at index i. */
   public void put(int i, T o) {
 
     if (i < 0 || i > MAX_SIZE) {
@@ -180,7 +171,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     }
     array[i] = o;
     nextIndex = Math.max(nextIndex, i + 1);
-
   }
 
   @Override
@@ -192,5 +182,4 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   public int getSize() {
     return map.size();
   }
-
 }

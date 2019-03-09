@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -36,16 +31,27 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class MultiNewArrayTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = MultiNewArrayTest.class.getClassLoader();
-  
-  @Test public void testMultiNewArray1() throws IOException, ClassHierarchyException {
+
+  @Test
+  public void testMultiNewArray1() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
+    IClass klass =
+        cha.lookupClass(
+            TypeReference.findOrCreate(
+                ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
     Assert.assertTrue(klass != null);
     IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
     Assert.assertTrue(m != null);

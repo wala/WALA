@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,109 +48,122 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator;
+import org.jf.dexlib2.Opcode;
 
 public abstract class Branch extends Instruction {
 
-    public final int offset;
-    private int label;
+  public final int offset;
+  private int label;
 
-    protected Branch(int instLoc, int offset, Opcode opcode, DexIMethod method)
-    {
-        super(instLoc, opcode, method);
-        this.offset = offset;
+  protected Branch(int instLoc, int offset, Opcode opcode, DexIMethod method) {
+    super(instLoc, opcode, method);
+    this.offset = offset;
+  }
+
+  public static class UnaryBranch extends Branch {
+    public enum CompareOp {
+      EQZ,
+      NEZ,
+      LTZ,
+      LEZ,
+      GTZ,
+      GEZ
     }
 
+    public final int oper1;
+    public final CompareOp op;
 
-    public static class UnaryBranch extends Branch
-    {
-        public enum CompareOp {EQZ,NEZ,LTZ,LEZ,GTZ,GEZ}
-        public final int oper1;
-        public final CompareOp op;
-
-        public UnaryBranch(int instLoc, int offset, CompareOp op, int oper1, Opcode opcode, DexIMethod method)
-        {
-            super(instLoc,offset, opcode, method);
-            this.op = op;
-            this.oper1 = oper1;
-        }
-
-        @Override
-        public IOperator getOperator() {
-            switch(op)
-            {
-            case EQZ:
-                return IConditionalBranchInstruction.Operator.EQ;
-            case NEZ:
-                return IConditionalBranchInstruction.Operator.NE;
-            case LTZ:
-                return IConditionalBranchInstruction.Operator.LT;
-            case LEZ:
-                return IConditionalBranchInstruction.Operator.LE;
-            case GTZ:
-                return IConditionalBranchInstruction.Operator.GT;
-            case GEZ:
-                return IConditionalBranchInstruction.Operator.GE;
-            default:
-                return null;
-            }
-        }
-    }
-
-    public static class BinaryBranch extends Branch
-    {
-        public enum CompareOp {EQ,NE,LT,LE,GT,GE}
-        public final int oper1;
-        public final int oper2;
-        public final CompareOp op;
-
-        public BinaryBranch(int instLoc, int offset, CompareOp op, int oper1, int oper2, Opcode opcode, DexIMethod method)
-        {
-            super(instLoc,offset, opcode, method);
-            this.op = op;
-            this.oper1 = oper1;
-            this.oper2 = oper2;
-        }
-
-        @Override
-        public IOperator getOperator() {
-            switch(op)
-            {
-            case EQ:
-                return IConditionalBranchInstruction.Operator.EQ;
-            case NE:
-                return IConditionalBranchInstruction.Operator.NE;
-            case LT:
-                return IConditionalBranchInstruction.Operator.LT;
-            case LE:
-                return IConditionalBranchInstruction.Operator.LE;
-            case GT:
-                return IConditionalBranchInstruction.Operator.GT;
-            case GE:
-                return IConditionalBranchInstruction.Operator.GE;
-            default:
-                return null;
-            }
-        }
+    public UnaryBranch(
+        int instLoc, int offset, CompareOp op, int oper1, Opcode opcode, DexIMethod method) {
+      super(instLoc, offset, opcode, method);
+      this.op = op;
+      this.oper1 = oper1;
     }
 
     @Override
-    public void visit(Visitor visitor) {
-        visitor.visitBranch(this);
+    public IOperator getOperator() {
+      switch (op) {
+        case EQZ:
+          return IConditionalBranchInstruction.Operator.EQ;
+        case NEZ:
+          return IConditionalBranchInstruction.Operator.NE;
+        case LTZ:
+          return IConditionalBranchInstruction.Operator.LT;
+        case LEZ:
+          return IConditionalBranchInstruction.Operator.LE;
+        case GTZ:
+          return IConditionalBranchInstruction.Operator.GT;
+        case GEZ:
+          return IConditionalBranchInstruction.Operator.GE;
+        default:
+          return null;
+      }
+    }
+  }
+
+  public static class BinaryBranch extends Branch {
+    public enum CompareOp {
+      EQ,
+      NE,
+      LT,
+      LE,
+      GT,
+      GE
     }
 
-    public abstract IOperator getOperator();
+    public final int oper1;
+    public final int oper2;
+    public final CompareOp op;
+
+    public BinaryBranch(
+        int instLoc,
+        int offset,
+        CompareOp op,
+        int oper1,
+        int oper2,
+        Opcode opcode,
+        DexIMethod method) {
+      super(instLoc, offset, opcode, method);
+      this.op = op;
+      this.oper1 = oper1;
+      this.oper2 = oper2;
+    }
 
     @Override
-    public int[] getBranchTargets() {
-        this.label = method.getInstructionIndex(pc + offset);
-        int[] r = { label };
-        return r;
+    public IOperator getOperator() {
+      switch (op) {
+        case EQ:
+          return IConditionalBranchInstruction.Operator.EQ;
+        case NE:
+          return IConditionalBranchInstruction.Operator.NE;
+        case LT:
+          return IConditionalBranchInstruction.Operator.LT;
+        case LE:
+          return IConditionalBranchInstruction.Operator.LE;
+        case GT:
+          return IConditionalBranchInstruction.Operator.GT;
+        case GE:
+          return IConditionalBranchInstruction.Operator.GE;
+        default:
+          return null;
+      }
     }
+  }
 
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitBranch(this);
+  }
 
+  public abstract IOperator getOperator();
+
+  @Override
+  public int[] getBranchTargets() {
+    this.label = method.getInstructionIndex(pc + offset);
+    int[] r = {label};
+    return r;
+  }
 }

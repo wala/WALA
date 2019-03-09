@@ -13,23 +13,21 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 
-
-/**
- * Operator OUT = IN U c
- */
+/** Operator OUT = IN U c */
 public class BitVectorUnionConstant extends UnaryOperator<BitVectorVariable> {
-  
+
   private final int c;
+
   public BitVectorUnionConstant(int c) {
     if (c < 0) {
       throw new IllegalArgumentException("Invalid c: " + c);
     }
     this.c = c;
   }
-  
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+      throws IllegalArgumentException {
 
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
@@ -59,7 +57,7 @@ public class BitVectorUnionConstant extends UnaryOperator<BitVectorVariable> {
   @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorUnionConstant) {
-      BitVectorUnionConstant other = (BitVectorUnionConstant)o;
+      BitVectorUnionConstant other = (BitVectorUnionConstant) o;
       return c == other.c;
     } else {
       return false;

@@ -10,21 +10,20 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.graph.Graph;
-
 /**
- * Extends {@link DFSPathFinder} to discover all paths from a set of root nodes
- * to nodes passing some {@link Predicate}.
- * 
- * Note that this code performs work that is potentially exponential in the size
- * of the underlying graph, using exponential space. It most likely won't work
- * even for graphs of moderate size.
+ * Extends {@link DFSPathFinder} to discover all paths from a set of root nodes to nodes passing
+ * some {@link Predicate}.
+ *
+ * <p>Note that this code performs work that is potentially exponential in the size of the
+ * underlying graph, using exponential space. It most likely won't work even for graphs of moderate
+ * size.
  */
 public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
 
@@ -41,20 +40,18 @@ public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
   @Override
   protected Iterator<? extends T> getConnected(T n) {
     final List<T> cp = currentPath();
-    return new FilterIterator<>(G.getSuccNodes(n), o -> ! cp.contains(o));
+    return new FilterIterator<>(G.getSuccNodes(n), o -> !cp.contains(o));
   }
 
   @Override
   protected Iterator<? extends T> getPendingChildren(T n) {
-    Pair<List<T>,T> key = Pair.make(currentPath(), n);
+    Pair<List<T>, T> key = Pair.make(currentPath(), n);
     return pendingChildren.get(key);
   }
 
   @Override
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {
-    Pair<List<T>,T> key = Pair.make(currentPath(), v);
+    Pair<List<T>, T> key = Pair.make(currentPath(), v);
     pendingChildren.put(key, iterator);
   }
-
-  
 }

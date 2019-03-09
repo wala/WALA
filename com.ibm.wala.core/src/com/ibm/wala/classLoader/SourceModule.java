@@ -16,7 +16,6 @@ import java.net.URL;
 public interface SourceModule extends Module, ModuleEntry {
 
   Reader getInputReader();
-  
+
   URL getURL();
-  
 }

@@ -10,17 +10,15 @@
  */
 package com.ibm.wala.util.graph.impl;
 
-import java.io.Serializable;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
+import java.io.Serializable;
 
-/**
- * A graph of numbered nodes, expected to have a fairly sparse edge structure.
- */
+/** A graph of numbered nodes, expected to have a fairly sparse edge structure. */
 public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> implements Serializable {
 
   private static final long serialVersionUID = 7014361126159594838L;
@@ -34,13 +32,15 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> impleme
   }
 
   /**
-   * If normalOutCount == n, this edge manager will eagerly allocated n words to hold out edges for each node. (performance
-   * optimization for time)
-   * 
+   * If normalOutCount == n, this edge manager will eagerly allocated n words to hold out edges for
+   * each node. (performance optimization for time)
+   *
    * @param normalOutCount what is the "normal" number of out edges for a node?
    */
   public SlowSparseNumberedGraph(int normalOutCount) {
-    edgeManager = new SparseNumberedEdgeManager<>(nodeManager, normalOutCount, BasicNaturalRelation.TWO_LEVEL);
+    edgeManager =
+        new SparseNumberedEdgeManager<>(
+            nodeManager, normalOutCount, BasicNaturalRelation.TWO_LEVEL);
   }
 
   /*
@@ -59,9 +59,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> impleme
     return edgeManager;
   }
 
-  /**
-   * @return a graph with the same nodes and edges as g
-   */
+  /** @return a graph with the same nodes and edges as g */
   public static <T> SlowSparseNumberedGraph<T> duplicate(Graph<T> g) {
     SlowSparseNumberedGraph<T> result = make();
     copyInto(g, result);

@@ -22,7 +22,6 @@ public class TestCD5 {
     }
   }
 
-
   public static boolean someBool() {
     return false;
   }

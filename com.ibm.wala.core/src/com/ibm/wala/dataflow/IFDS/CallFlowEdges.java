@@ -19,36 +19,35 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
-/**
- * A set of call flow edges which lead to a particular procedure entry s_p.
- */
+/** A set of call flow edges which lead to a particular procedure entry s_p. */
 public class CallFlowEdges {
 
   /**
    * A map from integer -&gt; (IBinaryNonNegativeIntRelation)
-   * 
-   * For a fact d2, edges[d2] gives a relation R=(c,d1) s.t. (&lt;c, d1&gt; -&gt; &lt;s_p,d2&gt;) was recorded as a call flow edge.
-   * 
-   * Note that we handle paths of the form &lt;c, d1&gt; -&gt; &lt;s_p,d1&gt; specially, below.
-   * 
-   * TODO: more representation optimization. A special representation for triples? sparse representations for CFG? exploit shorts
-   * for ints?
+   *
+   * <p>For a fact d2, edges[d2] gives a relation R=(c,d1) s.t. (&lt;c, d1&gt; -&gt; &lt;s_p,d2&gt;)
+   * was recorded as a call flow edge.
+   *
+   * <p>Note that we handle paths of the form &lt;c, d1&gt; -&gt; &lt;s_p,d1&gt; specially, below.
+   *
+   * <p>TODO: more representation optimization. A special representation for triples? sparse
+   * representations for CFG? exploit shorts for ints?
    */
   private final SparseVector<IBinaryNaturalRelation> edges = new SparseVector<>(1, 1.1f);
 
   /**
    * a map from integer d1 -&gt; int set.
-   * 
-   * for fact d1, identityPaths[d1] gives the set of block numbers C s.t. for c \in C, &lt;c, d1&gt; -&gt; &lt;s_p, d1&gt; is an edge.
+   *
+   * <p>for fact d1, identityPaths[d1] gives the set of block numbers C s.t. for c \in C, &lt;c,
+   * d1&gt; -&gt; &lt;s_p, d1&gt; is an edge.
    */
   private final SparseVector<IntSet> identityEdges = new SparseVector<>(1, 1.1f);
 
-  public CallFlowEdges() {
-  }
+  public CallFlowEdges() {}
 
   /**
    * Record that we've discovered a call edge &lt;c,d1&gt; -&gt; &lt;s_p, d2&gt;
-   * 
+   *
    * @param c global number identifying the call site node
    * @param d1 source fact at the call edge
    * @param d2 result fact (result of the call flow function)
@@ -69,7 +68,9 @@ public class CallFlowEdges {
       IBinaryNaturalRelation R = edges.get(d2);
       if (R == null) {
         // we expect the first dimension of R to be dense, the second sparse
-        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.TWO_LEVEL }, BasicNaturalRelation.TWO_LEVEL);
+        R =
+            new BasicNaturalRelation(
+                new byte[] {BasicNaturalRelation.TWO_LEVEL}, BasicNaturalRelation.TWO_LEVEL);
         edges.set(d2, R);
       }
       R.add(c, d1);
@@ -77,7 +78,8 @@ public class CallFlowEdges {
   }
 
   /**
-   * @return set of d1 s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow, or null if none found.
+   * @return set of d1 s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow, or null if
+   *     none found.
    */
   @SuppressWarnings("unused")
   public IntSet getCallFlowSources(int c, int d2) {
@@ -117,7 +119,8 @@ public class CallFlowEdges {
   }
 
   /**
-   * @return set of c s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow (for some d1), or null if none found.
+   * @return set of c s.t. {@literal <c, d1> -> <s_p, d2>} was recorded as call flow (for some d1),
+   *     or null if none found.
    */
   @SuppressWarnings("unused")
   public IntSet getCallFlowSourceNodes(int d2) {
@@ -140,7 +143,6 @@ public class CallFlowEdges {
       System.err.println("getCallFlowSources " + d2 + ' ' + result);
     }
     return result;
-
   }
 
   // TODO optimize
@@ -154,5 +156,4 @@ public class CallFlowEdges {
     }
     return result;
   }
-
 }

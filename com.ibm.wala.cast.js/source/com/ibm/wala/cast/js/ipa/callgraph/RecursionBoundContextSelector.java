@@ -28,9 +28,9 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * A context selector that attempts to detect recursion beyond some depth in a
- * base selector. If such recursion is detected, the base selector's context is
- * replaced with {@link Everywhere#EVERYWHERE}.
+ * A context selector that attempts to detect recursion beyond some depth in a base selector. If
+ * such recursion is detected, the base selector's context is replaced with {@link
+ * Everywhere#EVERYWHERE}.
  */
 public class RecursionBoundContextSelector implements ContextSelector {
 
@@ -39,20 +39,17 @@ public class RecursionBoundContextSelector implements ContextSelector {
   private final int recursionBound;
 
   /**
-   * the highest parameter index that we'll check . this is a HACK. ideally,
-   * given a context, we'd have some way to know all the {@link ContextKey}s
-   * that it knows about.
-   * 
+   * the highest parameter index that we'll check . this is a HACK. ideally, given a context, we'd
+   * have some way to know all the {@link ContextKey}s that it knows about.
+   *
    * @see ContextKey#PARAMETERS
    */
   private static final int MAX_INTERESTING_PARAM = 5;
 
   /**
-   * @param recursionBound
-   *          bound on recursion depth, with the top level of the context
-   *          returned by the base selector being depth 0. The
-   *          {@link Everywhere#EVERYWHERE} context is returned if the base
-   *          context <em>exceeds</em> this bound.
+   * @param recursionBound bound on recursion depth, with the top level of the context returned by
+   *     the base selector being depth 0. The {@link Everywhere#EVERYWHERE} context is returned if
+   *     the base context <em>exceeds</em> this bound.
    */
   public RecursionBoundContextSelector(ContextSelector base, int recursionBound) {
     this.base = base;
@@ -60,7 +57,8 @@ public class RecursionBoundContextSelector implements ContextSelector {
   }
 
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
     final boolean exceedsRecursionBound = exceedsRecursionBound(baseContext, 0);
     if (!exceedsRecursionBound) {
@@ -86,14 +84,16 @@ public class RecursionBoundContextSelector implements ContextSelector {
       return true;
     }
     for (int i = 0; i < MAX_INTERESTING_PARAM; i++) {
-      FilteredPointerKey.SingleInstanceFilter filter = (SingleInstanceFilter) baseContext.get(ContextKey.PARAMETERS[i]);
+      FilteredPointerKey.SingleInstanceFilter filter =
+          (SingleInstanceFilter) baseContext.get(ContextKey.PARAMETERS[i]);
       if (filter != null) {
         InstanceKey ik = filter.getInstance();
         if (ik instanceof ScopeMappingInstanceKey) {
           ik = ((ScopeMappingInstanceKey) ik).getBase();
         }
         if (ik instanceof InstanceKeyWithNode) {
-          if (exceedsRecursionBound(((InstanceKeyWithNode) ik).getNode().getContext(), curLevel + 1)) {
+          if (exceedsRecursionBound(
+              ((InstanceKeyWithNode) ik).getNode().getContext(), curLevel + 1)) {
             return true;
           }
         }
@@ -106,5 +106,4 @@ public class RecursionBoundContextSelector implements ContextSelector {
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return base.getRelevantParameters(caller, site);
   }
-
 }

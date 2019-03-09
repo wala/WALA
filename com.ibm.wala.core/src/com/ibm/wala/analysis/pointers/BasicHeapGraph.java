@@ -10,13 +10,6 @@
  */
 package com.ibm.wala.analysis.pointers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.function.IntFunction;
-import java.util.stream.Stream;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -46,202 +39,207 @@ import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import com.ibm.wala.util.intset.SparseIntSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.function.IntFunction;
+import java.util.stream.Stream;
 
-/**
- * Basic implementation of {@link HeapGraph}
- */
+/** Basic implementation of {@link HeapGraph} */
 public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
-  private final static boolean VERBOSE = false;
+  private static final boolean VERBOSE = false;
 
-  private final static int VERBOSE_INTERVAL = 10000;
+  private static final int VERBOSE_INTERVAL = 10000;
 
-  private final static MutableSparseIntSetFactory factory = new MutableSparseIntSetFactory();
-  
-  /**
-   * The backing graph
-   */
+  private static final MutableSparseIntSetFactory factory = new MutableSparseIntSetFactory();
+
+  /** The backing graph */
   private final NumberedGraph<Object> G;
 
-  /**
-   * governing call graph
-   */
+  /** governing call graph */
   private final CallGraph callGraph;
 
   /**
    * @param P governing pointer analysis
    * @throws NullPointerException if P is null
    */
-  public BasicHeapGraph(final PointerAnalysis<T> P, final CallGraph callGraph) throws NullPointerException {
+  public BasicHeapGraph(final PointerAnalysis<T> P, final CallGraph callGraph)
+      throws NullPointerException {
     super(P);
     this.callGraph = callGraph;
 
     final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys();
-    final NumberedNodeManager<Object> nodeMgr = new NumberedNodeManager<Object>() {
-      @Override
-      public Iterator<Object> iterator() {
-        return new CompoundIterator<>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
-      }
-
-      @Override
-      public Stream<Object> stream() {
-        return Stream.concat(pointerKeys.stream(), P.getInstanceKeyMapping().stream());
-      }
-
-      @Override
-      public int getNumberOfNodes() {
-        return pointerKeys.getSize() + P.getInstanceKeyMapping().getSize();
-      }
-
-      @Override
-      public void addNode(Object n) {
-        Assertions.UNREACHABLE();
-      }
-
-      @Override
-      public void removeNode(Object n) {
-        Assertions.UNREACHABLE();
-      }
-
-      @Override
-      public int getNumber(Object N) {
-        if (N instanceof PointerKey) {
-          return pointerKeys.getMappedIndex(N);
-        } else {
-          if (!(N instanceof InstanceKey)) {
-            Assertions.UNREACHABLE(N.getClass().toString());
+    final NumberedNodeManager<Object> nodeMgr =
+        new NumberedNodeManager<Object>() {
+          @Override
+          public Iterator<Object> iterator() {
+            return new CompoundIterator<>(
+                pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
           }
-          int inumber = P.getInstanceKeyMapping().getMappedIndex(N);
-          return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex() + 1;
-        }
-      }
 
-      @Override
-      public Object getNode(int number) {
-        if (number > pointerKeys.getMaximumIndex()) {
-          return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getSize());
-        } else {
-          return pointerKeys.getMappedObject(number);
-        }
-      }
+          @Override
+          public Stream<Object> stream() {
+            return Stream.concat(pointerKeys.stream(), P.getInstanceKeyMapping().stream());
+          }
 
-      @Override
-      public int getMaxNumber() {
-        return getNumberOfNodes() - 1;
-      }
+          @Override
+          public int getNumberOfNodes() {
+            return pointerKeys.getSize() + P.getInstanceKeyMapping().getSize();
+          }
 
-      @Override
-      public boolean containsNode(Object n) {
-        return getNumber(n) != -1;
-      }
+          @Override
+          public void addNode(Object n) {
+            Assertions.UNREACHABLE();
+          }
 
-      @Override
-      public Iterator<Object> iterateNodes(IntSet s) {
-        return new NumberedNodeIterator<>(s, this);
-      }
-    };
+          @Override
+          public void removeNode(Object n) {
+            Assertions.UNREACHABLE();
+          }
+
+          @Override
+          public int getNumber(Object N) {
+            if (N instanceof PointerKey) {
+              return pointerKeys.getMappedIndex(N);
+            } else {
+              if (!(N instanceof InstanceKey)) {
+                Assertions.UNREACHABLE(N.getClass().toString());
+              }
+              int inumber = P.getInstanceKeyMapping().getMappedIndex(N);
+              return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex() + 1;
+            }
+          }
+
+          @Override
+          public Object getNode(int number) {
+            if (number > pointerKeys.getMaximumIndex()) {
+              return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getSize());
+            } else {
+              return pointerKeys.getMappedObject(number);
+            }
+          }
+
+          @Override
+          public int getMaxNumber() {
+            return getNumberOfNodes() - 1;
+          }
+
+          @Override
+          public boolean containsNode(Object n) {
+            return getNumber(n) != -1;
+          }
+
+          @Override
+          public Iterator<Object> iterateNodes(IntSet s) {
+            return new NumberedNodeIterator<>(s, this);
+          }
+        };
 
     final IBinaryNaturalRelation pred = computePredecessors(nodeMgr);
     final IntFunction<Object> toNode = nodeMgr::getNode;
 
-    this.G = new AbstractNumberedGraph<Object>() {
-      private final NumberedEdgeManager<Object> edgeMgr = new NumberedEdgeManager<Object>() {
-        @Override
-        public Iterator<Object> getPredNodes(Object N) {
-          int n = nodeMgr.getNumber(N);
-          IntSet p = pred.getRelated(n);
-          if (p == null) {
-            return EmptyIterator.instance();
-          } else {
-            return new IntMapIterator<>(p.intIterator(), toNode);
+    this.G =
+        new AbstractNumberedGraph<Object>() {
+          private final NumberedEdgeManager<Object> edgeMgr =
+              new NumberedEdgeManager<Object>() {
+                @Override
+                public Iterator<Object> getPredNodes(Object N) {
+                  int n = nodeMgr.getNumber(N);
+                  IntSet p = pred.getRelated(n);
+                  if (p == null) {
+                    return EmptyIterator.instance();
+                  } else {
+                    return new IntMapIterator<>(p.intIterator(), toNode);
+                  }
+                }
+
+                @Override
+                public IntSet getPredNodeNumbers(Object N) {
+                  int n = nodeMgr.getNumber(N);
+                  IntSet p = pred.getRelated(n);
+                  if (p != null) {
+                    return p;
+                  } else {
+                    return IntSetUtil.make();
+                  }
+                }
+
+                @Override
+                public int getPredNodeCount(Object N) {
+                  int n = nodeMgr.getNumber(N);
+                  return pred.getRelatedCount(n);
+                }
+
+                @Override
+                public Iterator<Object> getSuccNodes(Object N) {
+                  int[] succ = computeSuccNodeNumbers(N, nodeMgr);
+                  if (succ == null) {
+                    return EmptyIterator.instance();
+                  }
+                  SparseIntSet s = factory.make(succ);
+                  return new IntMapIterator<>(s.intIterator(), toNode);
+                }
+
+                @Override
+                public IntSet getSuccNodeNumbers(Object N) {
+                  int[] succ = computeSuccNodeNumbers(N, nodeMgr);
+                  if (succ == null) {
+                    return IntSetUtil.make();
+                  } else {
+                    return IntSetUtil.make(succ);
+                  }
+                }
+
+                @Override
+                public int getSuccNodeCount(Object N) {
+                  int[] succ = computeSuccNodeNumbers(N, nodeMgr);
+                  return succ == null ? 0 : succ.length;
+                }
+
+                @Override
+                public void addEdge(Object src, Object dst) {
+                  Assertions.UNREACHABLE();
+                }
+
+                @Override
+                public void removeEdge(Object src, Object dst) {
+                  Assertions.UNREACHABLE();
+                }
+
+                @Override
+                public void removeAllIncidentEdges(Object node) {
+                  Assertions.UNREACHABLE();
+                }
+
+                @Override
+                public void removeIncomingEdges(Object node) {
+                  Assertions.UNREACHABLE();
+                }
+
+                @Override
+                public void removeOutgoingEdges(Object node) {
+                  Assertions.UNREACHABLE();
+                }
+
+                @Override
+                public boolean hasEdge(Object src, Object dst) {
+                  Assertions.UNREACHABLE();
+                  return false;
+                }
+              };
+
+          @Override
+          protected NumberedNodeManager<Object> getNodeManager() {
+            return nodeMgr;
           }
-        }
 
-        @Override
-        public IntSet getPredNodeNumbers(Object N) {
-          int n = nodeMgr.getNumber(N);
-          IntSet p = pred.getRelated(n);
-          if (p != null) {
-            return p;
-          } else {
-            return IntSetUtil.make();
+          @Override
+          protected NumberedEdgeManager<Object> getEdgeManager() {
+            return edgeMgr;
           }
-        }
-
-        @Override
-        public int getPredNodeCount(Object N) {
-          int n = nodeMgr.getNumber(N);
-          return pred.getRelatedCount(n);
-        }
-
-        @Override
-        public Iterator<Object> getSuccNodes(Object N) {
-          int[] succ = computeSuccNodeNumbers(N, nodeMgr);
-          if (succ == null) {
-            return EmptyIterator.instance();
-          }
-          SparseIntSet s = factory.make(succ);
-          return new IntMapIterator<>(s.intIterator(), toNode);
-        }
-
-        @Override
-        public IntSet getSuccNodeNumbers(Object N) {
-          int[] succ = computeSuccNodeNumbers(N, nodeMgr);
-          if (succ == null) {
-            return IntSetUtil.make();
-          } else {
-            return IntSetUtil.make(succ);
-          }
-        }
-        
-        @Override
-        public int getSuccNodeCount(Object N) {
-          int[] succ = computeSuccNodeNumbers(N, nodeMgr);
-          return succ == null ? 0 : succ.length;
-        }
-
-        @Override
-        public void addEdge(Object src, Object dst) {
-          Assertions.UNREACHABLE();
-        }
-
-        @Override
-        public void removeEdge(Object src, Object dst) {
-          Assertions.UNREACHABLE();
-        }
-
-        @Override
-        public void removeAllIncidentEdges(Object node) {
-          Assertions.UNREACHABLE();
-        }
-
-        @Override
-        public void removeIncomingEdges(Object node) {
-          Assertions.UNREACHABLE();
-        }
-
-        @Override
-        public void removeOutgoingEdges(Object node) {
-          Assertions.UNREACHABLE();
-        }
-
-        @Override
-        public boolean hasEdge(Object src, Object dst) {
-          Assertions.UNREACHABLE();
-          return false;
-        }
-      };
-
-      @Override
-      protected NumberedNodeManager<Object> getNodeManager() {
-        return nodeMgr;
-      }
-
-      @Override
-      protected NumberedEdgeManager<Object> getEdgeManager() {
-        return edgeMgr;
-      }
-    };
+        };
   }
 
   private OrdinalSetMapping<PointerKey> getPointerKeys() {
@@ -251,7 +249,6 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
       result.add(p);
     }
     return result;
-
   }
 
   private int[] computeSuccNodeNumbers(Object N, NumberedNodeManager<Object> nodeManager) {
@@ -275,7 +272,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
         if (p == null || !nodeManager.containsNode(p)) {
           return null;
         } else {
-          return new int[] { nodeManager.getNumber(p) };
+          return new int[] {nodeManager.getNumber(p)};
         }
       } else {
         IClass klass = I.getConcreteType();
@@ -297,11 +294,11 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     }
   }
 
-  /**
-   * @return R, y \in R(x,y) if the node y is a predecessor of node x
-   */
+  /** @return R, y \in R(x,y) if the node y is a predecessor of node x */
   private IBinaryNaturalRelation computePredecessors(NumberedNodeManager<Object> nodeManager) {
-    BasicNaturalRelation R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE }, BasicNaturalRelation.SIMPLE);
+    BasicNaturalRelation R =
+        new BasicNaturalRelation(
+            new byte[] {BasicNaturalRelation.SIMPLE}, BasicNaturalRelation.SIMPLE);
 
     // we split the following loops to improve temporal locality,
     // particularly for locals
@@ -311,7 +308,8 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     return R;
   }
 
-  private void computePredecessorsForNonLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
+  private void computePredecessorsForNonLocals(
+      NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
     // Note: we run this loop backwards on purpose, to avoid lots of resizing of
     // bitvectors
     // in the backing relation. i.e., we will add the biggest bits first.
@@ -334,10 +332,9 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     }
   }
 
-  /**
-   * traverse locals in order, first by node, then by value number: attempt to improve locality
-   */
-  private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
+  /** traverse locals in order, first by node, then by value number: attempt to improve locality */
+  private void computePredecessorsForLocals(
+      NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 
     ArrayList<LocalPointerKey> list = new ArrayList<>();
     for (Object n : nodeManager) {
@@ -365,9 +362,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     }
   }
 
-  /**
-   * sorts local pointers by node, then value number
-   */
+  /** sorts local pointers by node, then value number */
   private final class LocalPointerComparator implements Comparator<Object> {
     @Override
     public int compare(Object arg1, Object arg2) {

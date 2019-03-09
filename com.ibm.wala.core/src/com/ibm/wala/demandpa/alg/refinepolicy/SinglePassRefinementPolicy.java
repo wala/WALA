@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -39,13 +39,13 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 
 /**
  * A policy for performing a single analysis pass, i.e., with no refinement.
- * 
+ *
  * @author Manu Sridharan
- * 
  */
 public class SinglePassRefinementPolicy extends AbstractRefinementPolicy {
 
-  private SinglePassRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
+  private SinglePassRefinementPolicy(
+      FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
     super(fieldRefinePolicy, cgRefinePolicy, 1, new int[] {budget});
   }
 
@@ -61,22 +61,21 @@ public class SinglePassRefinementPolicy extends AbstractRefinementPolicy {
     private final CallGraphRefinePolicy cgRefinePolicy;
 
     private final int budget;
-    
+
     public Factory(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
       this(fieldRefinePolicy, cgRefinePolicy, Integer.MAX_VALUE);
     }
 
-    public Factory(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
+    public Factory(
+        FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
       this.fieldRefinePolicy = fieldRefinePolicy;
       this.cgRefinePolicy = cgRefinePolicy;
       this.budget = budget;
     }
 
-
     @Override
     public RefinementPolicy make() {
       return new SinglePassRefinementPolicy(fieldRefinePolicy, cgRefinePolicy, budget);
     }
-
   }
 }

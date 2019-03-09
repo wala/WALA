@@ -12,8 +12,8 @@ package com.ibm.wala.util.collections;
 
 /**
  * simple interface for a vector.
- * 
- * TODO: get rid of this and use java.util.collection.RandomAccess
+ *
+ * <p>TODO: get rid of this and use java.util.collection.RandomAccess
  */
 public interface IVector<T> extends Iterable<T> {
   /*
@@ -23,7 +23,7 @@ public interface IVector<T> extends Iterable<T> {
 
   /**
    * TODO: this can be optimized
-   * 
+   *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public abstract void set(int x, T value);
@@ -33,8 +33,6 @@ public interface IVector<T> extends Iterable<T> {
    */
   public abstract void performVerboseAction();
 
-  /**
-   * @return max i s.t get(i) != null
-   */
+  /** @return max i s.t get(i) != null */
   public abstract int getMaxIndex();
 }

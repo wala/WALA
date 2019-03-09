@@ -14,16 +14,12 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
-/**
- * Represents a single concrete type.
- */
+/** Represents a single concrete type. */
 public class PointType extends TypeAbstraction {
 
   private final IClass type;
 
-  /**
-   * @throws IllegalArgumentException if type is null
-   */
+  /** @throws IllegalArgumentException if type is null */
   public PointType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
@@ -45,7 +41,8 @@ public class PointType extends TypeAbstraction {
           // give up on arrays. We don't care anyway.
           return new ConeType(type.getClassHierarchy().getRootClass());
         } else {
-          return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
+          return new ConeType(
+              type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
         }
       } else if (rhs instanceof ConeType) {
         ConeType other = (ConeType) rhs;

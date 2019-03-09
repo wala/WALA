@@ -10,27 +10,25 @@
  */
 package com.ibm.wala.util.graph;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.graph.traverse.BFSIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
-/**
- * Utility class to check integrity of a graph data structure.
- */
+/** Utility class to check integrity of a graph data structure. */
 public class GraphIntegrity {
 
   /**
    * DEBUG_LEVEL:
+   *
    * <ul>
-   * <li>0 No output
-   * <li>1 Print some simple stats and warning information
-   * <li>2 Detailed debugging
+   *   <li>0 No output
+   *   <li>1 Print some simple stats and warning information
+   *   <li>2 Detailed debugging
    * </ul>
    */
   static final int DEBUG_LEVEL = 0;
@@ -63,11 +61,14 @@ public class GraphIntegrity {
   private static <T> void checkEdges(Graph<T> G) throws UnsoundGraphException {
     for (T N : G) {
       if (!G.containsNode(N)) {
-        throw new UnsoundGraphException(N + " is not contained in the the graph " + G.containsNode(N));
+        throw new UnsoundGraphException(
+            N + " is not contained in the the graph " + G.containsNode(N));
       }
-      PRED: for (T pred : Iterator2Iterable.make(G.getPredNodes(N))) {
+      PRED:
+      for (T pred : Iterator2Iterable.make(G.getPredNodes(N))) {
         if (!G.containsNode(pred)) {
-          throw new UnsoundGraphException(pred + " is a predecessor of " + N + " but is not contained in the graph");
+          throw new UnsoundGraphException(
+              pred + " is a predecessor of " + N + " but is not contained in the graph");
         }
         for (Object succ : Iterator2Iterable.make(G.getSuccNodes(pred))) {
           if (succ.equals(N)) {
@@ -77,11 +78,14 @@ public class GraphIntegrity {
         // didn't find N
         G.getPredNodes(N);
         G.getSuccNodes(pred);
-        throw new UnsoundGraphException(pred + " is a predecessor of " + N + " but inverse doesn't hold");
+        throw new UnsoundGraphException(
+            pred + " is a predecessor of " + N + " but inverse doesn't hold");
       }
-      SUCC: for (T succ : Iterator2Iterable.make(G.getSuccNodes(N))) {
+      SUCC:
+      for (T succ : Iterator2Iterable.make(G.getSuccNodes(N))) {
         if (!G.containsNode(succ)) {
-          throw new UnsoundGraphException(succ + " is a successor of " + N + " but is not contained in the graph");
+          throw new UnsoundGraphException(
+              succ + " is a successor of " + N + " but is not contained in the graph");
         }
         for (Object pred : Iterator2Iterable.make(G.getPredNodes(succ))) {
           if (pred.equals(N)) {
@@ -89,10 +93,10 @@ public class GraphIntegrity {
           }
         }
         // didn't find N
-        throw new UnsoundGraphException(succ + " is a successor of " + N + " but inverse doesn't hold");
+        throw new UnsoundGraphException(
+            succ + " is a successor of " + N + " but inverse doesn't hold");
       }
     }
-
   }
 
   @SuppressWarnings("unused")
@@ -131,10 +135,10 @@ public class GraphIntegrity {
     if (n1 != n5) {
       throw new UnsoundGraphException("n1: " + n1 + " n5: " + n3);
     }
-
   }
 
-  private static <T> UnsoundGraphException setDiffException(String msg, Iterator<? extends T> i1, Iterator<T> i2) {
+  private static <T> UnsoundGraphException setDiffException(
+      String msg, Iterator<? extends T> i1, Iterator<T> i2) {
     HashSet<T> set1 = HashSetFactory.make();
     while (i1.hasNext()) {
       T o1 = i1.next();
@@ -179,19 +183,14 @@ public class GraphIntegrity {
 
     public UnsoundGraphException() {
       super();
-
     }
 
     public UnsoundGraphException(String s) {
       super(s);
     }
-
   }
 
-  /**
-   * @throws IllegalArgumentException
-   *           if c is null
-   */
+  /** @throws IllegalArgumentException if c is null */
   public static void printCollection(String string, Collection<?> c) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
@@ -206,5 +205,4 @@ public class GraphIntegrity {
       System.err.println("\n");
     }
   }
-
 }

@@ -10,119 +10,117 @@
  */
 package com.ibm.wala.ide.util;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
+import com.ibm.wala.util.debug.Assertions;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.eclipse.core.resources.IFile;
 
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.classLoader.IMethod.SourcePosition;
-import com.ibm.wala.util.debug.Assertions;
-
 public final class JdtPosition implements Position {
-    private final int firstOffset;
+  private final int firstOffset;
 
-    private final int lastOffset;
+  private final int lastOffset;
 
-    private final int firstLine, lastLine;
+  private final int firstLine, lastLine;
 
-    private final String path;
+  private final String path;
 
-    private final IFile eclipseFile;
-    
-    public JdtPosition(int start, int end, int startLine, int endLine, IFile eclipseFile, String path) {
-      firstOffset = start;
-      lastOffset = end;
-      firstLine = startLine;
-      lastLine = endLine;
-      this.path = path;
-      this.eclipseFile = eclipseFile;
-    }
+  private final IFile eclipseFile;
 
-    @Override
-    public int getFirstCol() {
-      return -1;
-    }
+  public JdtPosition(
+      int start, int end, int startLine, int endLine, IFile eclipseFile, String path) {
+    firstOffset = start;
+    lastOffset = end;
+    firstLine = startLine;
+    lastLine = endLine;
+    this.path = path;
+    this.eclipseFile = eclipseFile;
+  }
 
-    @Override
-    public int getFirstLine() {
-      return firstLine;
-    }
+  @Override
+  public int getFirstCol() {
+    return -1;
+  }
 
-    @Override
-    public Reader getReader() throws IOException {
+  @Override
+  public int getFirstLine() {
+    return firstLine;
+  }
+
+  @Override
+  public Reader getReader() throws IOException {
+    return null;
+  }
+
+  @Override
+  public int getLastCol() {
+    return -1;
+  }
+
+  @Override
+  public int getLastLine() {
+    return lastLine;
+  }
+
+  @Override
+  public URL getURL() {
+    try {
+      return new URL("file:" + path);
+    } catch (MalformedURLException e) {
+      Assertions.UNREACHABLE(e.toString());
       return null;
     }
+  }
 
-    @Override
-    public int getLastCol() {
-      return -1;
-    }
-
-    @Override
-    public int getLastLine() {
-      return lastLine;
-    }
-
-    @Override
-    public URL getURL() {
-      try {
-        return new URL("file:" + path);
-      } catch (MalformedURLException e) {
-        Assertions.UNREACHABLE(e.toString());
-        return null;
+  @Override
+  public int compareTo(SourcePosition arg0) {
+    if (arg0 instanceof JdtPosition) {
+      if (firstOffset != ((JdtPosition) arg0).firstOffset) {
+        return firstOffset - ((JdtPosition) arg0).firstOffset;
+      } else if (lastOffset != ((JdtPosition) arg0).lastOffset) {
+        return lastOffset - ((JdtPosition) arg0).lastOffset;
       }
     }
 
-    @Override
-    public int compareTo(SourcePosition arg0) {
-    	if (arg0 instanceof JdtPosition) {
-    		if (firstOffset != ((JdtPosition)arg0).firstOffset) {
-    			return firstOffset - ((JdtPosition)arg0).firstOffset;
-    		} else if (lastOffset != ((JdtPosition)arg0).lastOffset) {
-    			return lastOffset - ((JdtPosition)arg0).lastOffset;
-    		}
-    	}
-    	
-    	return 0;
-    }
-
-    @Override
-    public int getFirstOffset() {
-      return firstOffset;
-    }
-
-    @Override
-    public int getLastOffset() {
-      return lastOffset;
-    }
-
-    @Override
-    public String toString() {
-      return "[offset " + firstOffset + ':' + lastOffset + ']';
-    }
-    
-    public IFile getEclipseFile() {
-    	return eclipseFile;
-    }
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof JdtPosition) {
-			JdtPosition jp = (JdtPosition) obj;
-			return jp.getEclipseFile().equals(eclipseFile)
-					&& jp.getFirstOffset() == firstOffset 
-					&& jp.getLastOffset() == lastOffset;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return firstOffset + 12432*lastOffset;
-	}
-    
+    return 0;
   }
+
+  @Override
+  public int getFirstOffset() {
+    return firstOffset;
+  }
+
+  @Override
+  public int getLastOffset() {
+    return lastOffset;
+  }
+
+  @Override
+  public String toString() {
+    return "[offset " + firstOffset + ':' + lastOffset + ']';
+  }
+
+  public IFile getEclipseFile() {
+    return eclipseFile;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof JdtPosition) {
+      JdtPosition jp = (JdtPosition) obj;
+      return jp.getEclipseFile().equals(eclipseFile)
+          && jp.getFirstOffset() == firstOffset
+          && jp.getLastOffset() == lastOffset;
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return firstOffset + 12432 * lastOffset;
+  }
+}

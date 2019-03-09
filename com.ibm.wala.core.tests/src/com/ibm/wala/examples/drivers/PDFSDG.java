@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.function.Predicate;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
@@ -50,32 +45,40 @@ import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.NodeDecorator;
 import com.ibm.wala.viz.PDFViewUtil;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.function.Predicate;
 
 /**
- * 
- * This simple example WALA application builds an SDG and fires off ghostview to
- * viz a DOT representation.
- * 
+ * This simple example WALA application builds an SDG and fires off ghostview to viz a DOT
+ * representation.
+ *
  * @author sfink
  */
 public class PDFSDG {
 
-  private final static String PDF_FILE = "sdg.pdf";
+  private static final String PDF_FILE = "sdg.pdf";
 
   /**
    * Usage: GVSDG -appJar [jar file name] -mainclass [main class]
-   * 
-   * The "jar file name" should be something like
-   * "c:/temp/testdata/java_cup.jar"
+   *
+   * <p>The "jar file name" should be something like "c:/temp/testdata/java_cup.jar"
    */
-  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
+  public static void main(String[] args)
+      throws IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
-  public static Process run(String[] args) throws IllegalArgumentException, CancelException, IOException {
+  public static Process run(String[] args)
+      throws IllegalArgumentException, CancelException, IOException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
-    return run(p.getProperty("appJar"), p.getProperty("mainClass"), getDataDependenceOptions(p), getControlDependenceOptions(p));
+    return run(
+        p.getProperty("appJar"),
+        p.getProperty("mainClass"),
+        getDataDependenceOptions(p),
+        getControlDependenceOptions(p));
   }
 
   public static DataDependenceOptions getDataDependenceOptions(Properties p) {
@@ -100,22 +103,28 @@ public class PDFSDG {
     return null;
   }
 
-  /**
-   * @param appJar
-   *            something like "c:/temp/testdata/java_cup.jar"
-   */
-  public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException, IOException {
+  /** @param appJar something like "c:/temp/testdata/java_cup.jar" */
+  public static Process run(
+      String appJar,
+      String mainClass,
+      DataDependenceOptions dOptions,
+      ControlDependenceOptions cOptions)
+      throws IllegalArgumentException, CancelException, IOException {
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope =
+          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+              appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // generate a WALA-consumable wrapper around the incoming scope object
-      
+
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-      Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+      Iterable<Entrypoint> entrypoints =
+          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-      CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
-      CallGraph cg = builder.makeCallGraph(options,null);
+      CallGraphBuilder<InstanceKey> builder =
+          Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+      CallGraph cg = builder.makeCallGraph(options, null);
       final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
       SDG<?> sdg = new SDG<>(cg, pointerAnalysis, dOptions, cOptions);
       try {
@@ -151,54 +160,55 @@ public class PDFSDG {
   }
 
   private static Graph<Statement> pruneSDG(final SDG<?> sdg) {
-    Predicate<Statement> f = s -> {
-      if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
-        return false;
-      } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {
-        return false;
-      } else {
-        return true;
-      }
-    };
+    Predicate<Statement> f =
+        s -> {
+          if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
+            return false;
+          } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {
+            return false;
+          } else {
+            return true;
+          }
+        };
     return GraphSlicer.prune(sdg, f);
   }
 
   private static NodeDecorator<Statement> makeNodeDecorator() {
     return s -> {
       switch (s.getKind()) {
-      case HEAP_PARAM_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case HEAP_RET_CALLEE:
-      case HEAP_RET_CALLER:
-        HeapStatement h = (HeapStatement) s;
-        return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-      case EXC_RET_CALLEE:
-      case EXC_RET_CALLER:
-      case NORMAL:
-      case NORMAL_RET_CALLEE:
-      case NORMAL_RET_CALLER:
-      case PARAM_CALLEE:
-      case PARAM_CALLER:
-      case PHI:
-      default:
-        return s.toString();
+        case HEAP_PARAM_CALLEE:
+        case HEAP_PARAM_CALLER:
+        case HEAP_RET_CALLEE:
+        case HEAP_RET_CALLER:
+          HeapStatement h = (HeapStatement) s;
+          return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+        case EXC_RET_CALLEE:
+        case EXC_RET_CALLER:
+        case NORMAL:
+        case NORMAL_RET_CALLEE:
+        case NORMAL_RET_CALLER:
+        case PARAM_CALLEE:
+        case PARAM_CALLER:
+        case PHI:
+        default:
+          return s.toString();
       }
     };
   }
 
   /**
    * Validate that the command-line arguments obey the expected usage.
-   * 
-   * Usage:
+   *
+   * <p>Usage:
+   *
    * <ul>
-   * <li> args[0] : "-appJar"
-   * <li> args[1] : something like "c:/temp/testdata/java_cup.jar"
-   * <li> args[2] : "-mainClass"
-   * <li> args[3] : something like "Lslice/TestRecursion"
+   *   <li>args[0] : "-appJar"
+   *   <li>args[1] : something like "c:/temp/testdata/java_cup.jar"
+   *   <li>args[2] : "-mainClass"
+   *   <li>args[3] : something like "Lslice/TestRecursion"
    * </ul>
-   * 
-   * @throws UnsupportedOperationException
-   *             if command-line is malformed.
+   *
+   * @throws UnsupportedOperationException if command-line is malformed.
    */
   static void validateCommandLine(Properties p) {
     if (p.get("appJar") == null) {

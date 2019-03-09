@@ -9,17 +9,14 @@
  *     IBM Corporation - initial API and implementation
  */
 
-/**
- * 
- */
+/** */
 package com.ibm.wala.cast.ir.translator;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class AbstractGlobalEntity extends AbstractDataEntity {
   private final String name;
@@ -27,7 +24,7 @@ public abstract class AbstractGlobalEntity extends AbstractDataEntity {
   private final Set<CAstQualifier> modifiers;
 
   private final CAstType type;
-  
+
   public AbstractGlobalEntity(String name, CAstType type, Set<CAstQualifier> modifiers) {
     this.name = name;
     this.type = type;
@@ -35,7 +32,7 @@ public abstract class AbstractGlobalEntity extends AbstractDataEntity {
     if (modifiers != null) {
       this.modifiers.addAll(modifiers);
     }
-   }
+  }
 
   @Override
   public String toString() {

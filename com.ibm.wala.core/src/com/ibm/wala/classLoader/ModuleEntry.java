@@ -13,41 +13,30 @@ package com.ibm.wala.classLoader;
 
 import java.io.InputStream;
 
-/**
- * A ModuleEntry represents a wrapper around a file representation
- * in a {@link Module}.
- */
+/** A ModuleEntry represents a wrapper around a file representation in a {@link Module}. */
 public interface ModuleEntry {
 
-  /**
-   * @return a String that represents the name of the file described
-   * by this object
-   */
+  /** @return a String that represents the name of the file described by this object */
   String getName();
 
-  /**
-   * @return true if the file is a class file.
-   */
+  /** @return true if the file is a class file. */
   boolean isClassFile();
-  
-  /**
-   * @return true if the file is a source file.
-   */
+
+  /** @return true if the file is a source file. */
   boolean isSourceFile();
 
-  /**
-   * @return an InputStream which provides the contents of this logical file.
-   */
+  /** @return an InputStream which provides the contents of this logical file. */
   InputStream getInputStream();
 
   /**
-   * @return true iff this module entry (file) represents a module in its own right.
-   * e.g., a jar file which is an entry in another jar file.
+   * @return true iff this module entry (file) represents a module in its own right. e.g., a jar
+   *     file which is an entry in another jar file.
    */
   boolean isModuleFile();
 
   /**
    * Precondition: isModuleFile().
+   *
    * @return a Module view of this entry.
    */
   Module asModule();
@@ -58,9 +47,6 @@ public interface ModuleEntry {
    */
   String getClassName();
 
-  /**
-   * the containing module
-   */
+  /** the containing module */
   Module getContainer();
-   
 }

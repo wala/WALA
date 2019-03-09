@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.escape;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.function.Predicate;
-
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -26,18 +21,20 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.traverse.DFS;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.function.Predicate;
 
-/**
- * Intraprocedural SSA-based live range analysis. This is horribly inefficient.
- * 
- */
+/** Intraprocedural SSA-based live range analysis. This is horribly inefficient. */
 public class LocalLiveRangeAnalysis {
 
   /**
    * Is the variable with value number v live immediately after a particular instruction index?
-   * 
-   * Algorithm: returns true if there is a path from pc to some use of v that does not traverse the def of v
-   * 
+   *
+   * <p>Algorithm: returns true if there is a path from pc to some use of v that does not traverse
+   * the def of v
+   *
    * @param instructionIndex index of an instruction in the IR
    * @throws IllegalArgumentException if du is null
    */
@@ -63,7 +60,9 @@ public class LocalLiveRangeAnalysis {
       // for now, conservatively say it's live. fix this later if necessary.
       return true;
     } else {
-      Collection<ISSABasicBlock> reached = DFS.getReachableNodes(ir.getControlFlowGraph(), Collections.singleton(queryBlock), notDef);
+      Collection<ISSABasicBlock> reached =
+          DFS.getReachableNodes(
+              ir.getControlFlowGraph(), Collections.singleton(queryBlock), notDef);
       uses.retainAll(reached);
       if (uses.isEmpty()) {
         return false;
@@ -89,13 +88,12 @@ public class LocalLiveRangeAnalysis {
     }
   }
 
-  /**
-   * @param statements {@code Iterator<SSAInstruction>}
-   */
+  /** @param statements {@code Iterator<SSAInstruction>} */
   private static Collection<BasicBlock> findBlocks(IR ir, Iterator<SSAInstruction> statements) {
     Collection<SSAInstruction> s = Iterator2Collection.toSet(statements);
     Collection<BasicBlock> result = HashSetFactory.make();
-    outer: for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
+    outer:
+    for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
       SSACFG.BasicBlock b = (SSACFG.BasicBlock) issaBasicBlock;
       for (SSAInstruction x : b) {
         if (s.contains(x)) {
@@ -112,7 +110,7 @@ public class LocalLiveRangeAnalysis {
 
   /**
    * This is horribly inefficient.
-   * 
+   *
    * @return the basic block which contains the instruction
    */
   private static SSACFG.BasicBlock findBlock(IR ir, SSAInstruction s) {
@@ -133,7 +131,7 @@ public class LocalLiveRangeAnalysis {
 
   /**
    * This is horribly inefficient.
-   * 
+   *
    * @return the basic block which contains the ith instruction
    */
   private static ISSABasicBlock findBlock(IR ir, int i) {
@@ -146,5 +144,4 @@ public class LocalLiveRangeAnalysis {
     Assertions.UNREACHABLE("no block for " + i + " in IR " + ir);
     return null;
   }
-
 }

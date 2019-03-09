@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -54,9 +54,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * Miscellaneous utility functions.
- */
+/** Miscellaneous utility functions. */
 public class Util {
 
   /** The empty {@link BitSet}. */
@@ -64,7 +62,7 @@ public class Util {
 
   /**
    * Get a {@link String} representation of a {@link Throwable}.
-   * 
+   *
    * @throws IllegalArgumentException if thrown == null
    */
   public static String str(Throwable thrown) throws IllegalArgumentException {
@@ -73,30 +71,30 @@ public class Util {
     }
     // create a memory buffer to which to dump the trace
     ByteArrayOutputStream traceDump = new ByteArrayOutputStream();
-    try (final PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(traceDump, StandardCharsets.UTF_8)))) {
+    try (final PrintWriter w =
+        new PrintWriter(
+            new BufferedWriter(new OutputStreamWriter(traceDump, StandardCharsets.UTF_8)))) {
       thrown.printStackTrace(w);
     }
     return traceDump.toString();
   }
-  
-  /**
-   * Return those elements of {@code c} that are assignable to {@code klass}.
-   */
+
+  /** Return those elements of {@code c} that are assignable to {@code klass}. */
   @SuppressWarnings("unchecked")
   public static <S, T> Set<T> filterByType(Iterable<S> c, Class<T> klass) {
     Set<T> result = HashSetFactory.make();
-    for(S s : c)
-      if(klass.isAssignableFrom(s.getClass()))
-        result.add((T)s);
+    for (S s : c) if (klass.isAssignableFrom(s.getClass())) result.add((T) s);
     return result;
   }
 
   /**
-   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link Predicate}.
-   * 
+   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link
+   * Predicate}.
+   *
    * @throws IllegalArgumentException if c == null
    */
-  public static <T> boolean forSome(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
+  public static <T> boolean forSome(Collection<T> c, Predicate<T> p)
+      throws IllegalArgumentException {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
     }
@@ -109,8 +107,9 @@ public class Util {
   }
 
   /**
-   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link Predicate}.
-   * 
+   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link
+   * Predicate}.
+   *
    * @return The first element satisfying the predicate; otherwise null.
    * @throws IllegalArgumentException if c == null
    */
@@ -119,49 +118,50 @@ public class Util {
       throw new IllegalArgumentException("c == null");
     }
     for (T obj : c) {
-      if (p.test(obj))
-        return obj;
+      if (p.test(obj)) return obj;
     }
 
     return null;
   }
 
   /**
-   * Test whether <em>all</em> elements of the given {@link Collection} satisfy the given {@link Predicate}.
-   * 
+   * Test whether <em>all</em> elements of the given {@link Collection} satisfy the given {@link
+   * Predicate}.
+   *
    * @throws NullPointerException if c == null
    */
   public static <T> boolean forAll(Collection<T> c, Predicate<T> p) throws NullPointerException {
     for (T t : c) {
-      if (!p.test(t))
-        return false;
+      if (!p.test(t)) return false;
     }
     return true;
   }
 
   /**
    * Perform an action for all elements in a collection.
-   * 
+   *
    * @param c the collection
    * @param v the visitor defining the action
    * @throws IllegalArgumentException if c == null
    */
-  public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v) throws IllegalArgumentException {
+  public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v)
+      throws IllegalArgumentException {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
     }
-    for (T t : c)
-      v.visit(t);
+    for (T t : c) v.visit(t);
   }
 
   /**
-   * Map a list: generate a new list with each element mapped. The new list is always an {@link ArrayList}; it would have been more
-   * precise to use {@link java.lang.reflect reflection} to create a list of the same type as 'srcList', but reflection works really
-   * slowly in some implementations, so it's best to avoid it.
-   * 
+   * Map a list: generate a new list with each element mapped. The new list is always an {@link
+   * ArrayList}; it would have been more precise to use {@link java.lang.reflect reflection} to
+   * create a list of the same type as 'srcList', but reflection works really slowly in some
+   * implementations, so it's best to avoid it.
+   *
    * @throws IllegalArgumentException if srcList == null
    */
-  public static <T, U> List<U> map(List<T> srcList, Function<T, U> f) throws IllegalArgumentException {
+  public static <T, U> List<U> map(List<T> srcList, Function<T, U> f)
+      throws IllegalArgumentException {
     if (srcList == null) {
       throw new IllegalArgumentException("srcList == null");
     }
@@ -173,13 +173,15 @@ public class Util {
   }
 
   /**
-   * Map a set: generate a new set with each element mapped. The new set is always a {@link HashSet}; it would have been more
-   * precise to use {@link java.lang.reflect reflection} to create a set of the same type as 'srcSet', but reflection works really
-   * slowly in some implementations, so it's best to avoid it.
-   * 
+   * Map a set: generate a new set with each element mapped. The new set is always a {@link
+   * HashSet}; it would have been more precise to use {@link java.lang.reflect reflection} to create
+   * a set of the same type as 'srcSet', but reflection works really slowly in some implementations,
+   * so it's best to avoid it.
+   *
    * @throws IllegalArgumentException if srcSet == null
    */
-  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Function<T, U> f) throws IllegalArgumentException {
+  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Function<T, U> f)
+      throws IllegalArgumentException {
     if (srcSet == null) {
       throw new IllegalArgumentException("srcSet == null");
     }
@@ -199,8 +201,7 @@ public class Util {
     }
     if (data.length < newSize) {
       return Arrays.copyOf(data, newSize);
-    } else
-      return data;
+    } else return data;
   }
 
   /** Generate strings with fully qualified names or not */
@@ -208,7 +209,7 @@ public class Util {
 
   /**
    * Write object fields to string
-   * 
+   *
    * @throws IllegalArgumentException if obj == null
    */
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
@@ -217,19 +218,19 @@ public class Util {
     }
     // Temporarily disable the security manager
     SecurityManager oldsecurity = System.getSecurityManager();
-    System.setSecurityManager(new SecurityManager() {
-      @Override
-      public void checkPermission(Permission perm) {
-      }
-    });
+    System.setSecurityManager(
+        new SecurityManager() {
+          @Override
+          public void checkPermission(Permission perm) {}
+        });
 
     Class<?> c = obj.getClass();
-    StringBuilder buf = new StringBuilder(FULLY_QUALIFIED_NAMES ? c.getName() : removePackageName(c.getName()));
+    StringBuilder buf =
+        new StringBuilder(FULLY_QUALIFIED_NAMES ? c.getName() : removePackageName(c.getName()));
     while (c != Object.class) {
       Field[] fields = c.getDeclaredFields();
 
-      if (fields.length > 0)
-        buf = buf.append(" (");
+      if (fields.length > 0) buf = buf.append(" (");
 
       for (int i = 0; i < fields.length; i++) {
         // Make this field accessible
@@ -245,7 +246,9 @@ public class Util {
           buf = buf.append('=');
           buf = buf.append(value == null ? "null" : value.toString());
           buf = buf.append(" : ");
-          buf = buf.append(FULLY_QUALIFIED_NAMES ? type.getName() : removePackageName(type.getName()));
+          buf =
+              buf.append(
+                  FULLY_QUALIFIED_NAMES ? type.getName() : removePackageName(type.getName()));
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         }
@@ -262,8 +265,7 @@ public class Util {
 
   /** Remove the package name from a fully qualified class name */
   public static String removePackageName(String fully_qualified_name_) {
-    if (fully_qualified_name_ == null)
-      return null;
+    if (fully_qualified_name_ == null) return null;
 
     int lastdot = fully_qualified_name_.lastIndexOf('.');
 
@@ -276,7 +278,7 @@ public class Util {
 
   /**
    * checks if two sets have a non-empty intersection
-   * 
+   *
    * @return {@code true} if the sets intersect; {@code false} otherwise
    */
   public static <T> boolean intersecting(final Set<T> s1, final Set<T> s2) {
@@ -284,9 +286,9 @@ public class Util {
   }
 
   /**
-   * given the name of a class C, returns the name of the top-most enclosing class of class C. For example, given A$B$C, the method
-   * returns A
-   * 
+   * given the name of a class C, returns the name of the top-most enclosing class of class C. For
+   * example, given A$B$C, the method returns A
+   *
    * @return String name of top-most enclosing class
    * @throws IllegalArgumentException if typeStr == null
    */
@@ -306,8 +308,8 @@ public class Util {
   }
 
   /**
-   * @return the amount of memory currently being used, in bytes. Often inaccurate, but there's no better thing to do from within
-   *         the JVM.
+   * @return the amount of memory currently being used, in bytes. Often inaccurate, but there's no
+   *     better thing to do from within the JVM.
    */
   public static long getUsedMemory() {
     gc();
@@ -330,5 +332,4 @@ public class Util {
       e.printStackTrace();
     }
   }
-
 } // class Util

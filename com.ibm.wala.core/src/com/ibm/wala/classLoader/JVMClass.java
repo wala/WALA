@@ -17,8 +17,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Note that classes from JVML have some features that are not present in all "bytecode" languages currently supported.
- * 
+ * Note that classes from JVML have some features that are not present in all "bytecode" languages
+ * currently supported.
+ *
  * @param <T> type of classloader which loads this format of class.
  */
 public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> {
@@ -27,9 +28,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     super(loader, cha);
   }
 
-  /**
-   * JVM-level modifiers; cached here for efficiency
-   */
+  /** JVM-level modifiers; cached here for efficiency */
   protected int modifiers;
 
   @Override
@@ -53,7 +52,6 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
   public boolean isInterface() {
     boolean result = ((modifiers & Constants.ACC_INTERFACE) != 0);
     return result;
-
   }
 
   /*
@@ -74,9 +72,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getClassInitializer() */
   @Override
   public IMethod getClassInitializer() {
     try {
@@ -87,5 +83,4 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     }
     return methodMap.get(MethodReference.clinitSelector);
   }
-
 }

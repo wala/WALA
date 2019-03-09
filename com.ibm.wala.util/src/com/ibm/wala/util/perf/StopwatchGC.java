@@ -10,14 +10,10 @@
  */
 package com.ibm.wala.util.perf;
 
-
-/**
- * A {@link Stopwatch} that also queries the free memory from the GC.
- * This is mostly useless.
- */
+/** A {@link Stopwatch} that also queries the free memory from the GC. This is mostly useless. */
 public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
 
-  final private String name;
+  private final String name;
 
   private long startMemory;
 
@@ -30,9 +26,10 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
 
   @Override
   public final void start() {
-    if (count == 0){
-      // when the GC stop watch is used for repeating events, we count from the first start to the last end.
-      // (a different approach would be to accumulate the delta's) 
+    if (count == 0) {
+      // when the GC stop watch is used for repeating events, we count from the first start to the
+      // last end.
+      // (a different approach would be to accumulate the delta's)
       System.gc();
       Runtime r = Runtime.getRuntime();
       startMemory = r.totalMemory() - r.freeMemory();
@@ -52,40 +49,32 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
     String result = "";
     if (getCount() > 0) {
       result += "Stopwatch: " + name + ' ' + getElapsedMillis() + " ms" + '\n';
-
     }
     if (getCount() == 1) {
       result += "       Footprint at entry: " + (float) startMemory / 1000000 + " MB\n";
       result += "        Footprint at exit: " + (float) endMemory / 1000000 + " MB\n";
-      result += "                    Delta: " + (float) (endMemory - startMemory) / 1000000 + " MB\n";
+      result +=
+          "                    Delta: " + (float) (endMemory - startMemory) / 1000000 + " MB\n";
     }
     return result;
   }
 
-  /**
-   * @return memory at the end of the phase, in MB
-   */
+  /** @return memory at the end of the phase, in MB */
   public float getEndMemory() {
     return (float) endMemory / 1000000;
   }
 
-  /**
-   * @return memory at the end of the phase, in MB
-   */
+  /** @return memory at the end of the phase, in MB */
   public float getStartMemory() {
     return (float) startMemory / 1000000;
   }
 
-  /**
-   * @return getEndMemory() - getStartMemory()
-   */
+  /** @return getEndMemory() - getStartMemory() */
   public float getFootprint() {
     return getEndMemory() - getStartMemory();
   }
 
-  /**
-   * Returns the name for this timer.
-   */
+  /** Returns the name for this timer. */
   public String getName() {
     return name;
   }
@@ -93,8 +82,8 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
   @Override
   public String toString() {
     //    if (count == 1){
-//      sb.append (", Footprint at entry: " + (float) startMemory / 1000000 + " MB");
-//      sb.append (", Footprint at exit: " + (float) endMemory / 1000000 + " MB");
+    //      sb.append (", Footprint at entry: " + (float) startMemory / 1000000 + " MB");
+    //      sb.append (", Footprint at exit: " + (float) endMemory / 1000000 + " MB");
     //    }
     return super.toString() + ", Delta: " + (float) (endMemory - startMemory) / 1000000 + " MB";
   }

@@ -15,20 +15,21 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
  * Keeps a given CGNode if it stems from application code
- * @author Martin Mohr
  *
+ * @author Martin Mohr
  */
 public class ApplicationLoaderPolicy implements PruningPolicy {
-  
+
   public static final ApplicationLoaderPolicy INSTANCE = new ApplicationLoaderPolicy();
-  
-  private ApplicationLoaderPolicy() {
-    
-  }
-  
+
+  private ApplicationLoaderPolicy() {}
+
   @Override
   public boolean check(CGNode n) {
-    return n.getMethod().getDeclaringClass().getClassLoader().getName().equals(AnalysisScope.APPLICATION);
+    return n.getMethod()
+        .getDeclaringClass()
+        .getClassLoader()
+        .getName()
+        .equals(AnalysisScope.APPLICATION);
   }
-  
 }

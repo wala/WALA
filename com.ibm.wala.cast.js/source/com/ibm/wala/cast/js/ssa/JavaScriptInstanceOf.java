@@ -10,21 +10,20 @@
  */
 package com.ibm.wala.cast.js.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Collections;
 
 public class JavaScriptInstanceOf extends SSAInstruction {
   private final int objVal;
   private final int typeVal;
   private final int result;
-  
+
   public JavaScriptInstanceOf(int iindex, int result, int objVal, int typeVal) {
     super(iindex);
     this.objVal = objVal;
@@ -34,11 +33,12 @@ public class JavaScriptInstanceOf extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return 
-      ((JSInstructionFactory)insts).InstanceOf(iindex,
-          defs==null? result: defs[0],
-          uses==null? objVal: uses[0],
-          uses==null? typeVal: uses[1]);
+    return ((JSInstructionFactory) insts)
+        .InstanceOf(
+            iindex,
+            defs == null ? result : defs[0],
+            uses == null ? objVal : uses[0],
+            uses == null ? typeVal : uses[1]);
   }
 
   @Override
@@ -50,10 +50,10 @@ public class JavaScriptInstanceOf extends SSAInstruction {
   public boolean isPEI() {
     return true;
   }
-  
+
   @Override
   public int hashCode() {
-     return objVal*31771 + typeVal*23 + result;
+    return objVal * 31771 + typeVal * 23 + result;
   }
 
   @Override
@@ -63,14 +63,18 @@ public class JavaScriptInstanceOf extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = " + getValueString(symbolTable, objVal) + " is instance of " + getValueString(symbolTable, typeVal); 
+    return getValueString(symbolTable, result)
+        + " = "
+        + getValueString(symbolTable, objVal)
+        + " is instance of "
+        + getValueString(symbolTable, typeVal);
   }
 
   @Override
   public void visit(IVisitor v) {
-     ((JSInstructionVisitor)v).visitJavaScriptInstanceOf(this);
+    ((JSInstructionVisitor) v).visitJavaScriptInstanceOf(this);
   }
-  
+
   @Override
   public int getNumberOfDefs() {
     return 1;
@@ -81,18 +85,22 @@ public class JavaScriptInstanceOf extends SSAInstruction {
     assert i == 0;
     return result;
   }
-  
+
   @Override
   public int getNumberOfUses() {
     return 2;
   }
-  
+
   @Override
   public int getUse(int i) {
     switch (i) {
-    case 0: return objVal;
-    case 1: return typeVal;
-    default: Assertions.UNREACHABLE(); return -1;
+      case 0:
+        return objVal;
+      case 1:
+        return typeVal;
+      default:
+        Assertions.UNREACHABLE();
+        return -1;
     }
   }
 }

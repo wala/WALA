@@ -16,14 +16,16 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 
 /**
- * Basic functionality for a graph that delegates node and edge management, and
- * tracks node numbers
+ * Basic functionality for a graph that delegates node and edge management, and tracks node numbers
  */
-public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends AbstractNumberedGraph<T> {
+public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges>
+    extends AbstractNumberedGraph<T> {
 
-  final private DelegatingNumberedNodeManager<T> nodeManager = new DelegatingNumberedNodeManager<>();
+  private final DelegatingNumberedNodeManager<T> nodeManager =
+      new DelegatingNumberedNodeManager<>();
 
-  final private DelegatingNumberedEdgeManager<T> edgeManager = new DelegatingNumberedEdgeManager<>(nodeManager);
+  private final DelegatingNumberedEdgeManager<T> edgeManager =
+      new DelegatingNumberedEdgeManager<>(nodeManager);
 
   /*
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()

@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.analysis;
 
-import java.util.BitSet;
-import java.util.List;
-
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
@@ -44,12 +41,14 @@ import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeBT.Util;
+import java.util.BitSet;
+import java.util.List;
 
 /**
  * This class typechecks intermediate code. It's very easy to use:
- * 
+ *
  * <pre>
- * 
+ *
  *      MethodData md = ...;
  *      try {
  *          (new Verifier(md)).verify();
@@ -57,15 +56,17 @@ import com.ibm.wala.shrikeBT.Util;
  *          System.out.println(&quot;Verification failed at instruction &quot;
  *              + ex.getOffset() + &quot;: &quot; + ex.getReason());
  *      }
- * 
+ *
  * </pre>
- * 
- * For full verification you need to provide class hierarchy information using setClassHierarchy. Without this information, we can't
- * compute the exact types of variables at control flow merge points. If you don't provide a hierarchy, or the hierarchy you provide
- * is partial, then the Verifier will be optimistic.
- * 
- * This method can also be used to gather type information for every stack and local variable at every program point. Just call
- * computeTypes() instead of verify() and then retrieve the results with getLocalTypes() and getStackTypes().
+ *
+ * For full verification you need to provide class hierarchy information using setClassHierarchy.
+ * Without this information, we can't compute the exact types of variables at control flow merge
+ * points. If you don't provide a hierarchy, or the hierarchy you provide is partial, then the
+ * Verifier will be optimistic.
+ *
+ * <p>This method can also be used to gather type information for every stack and local variable at
+ * every program point. Just call computeTypes() instead of verify() and then retrieve the results
+ * with getLocalTypes() and getStackTypes().
  */
 public final class Verifier extends Analyzer {
   final class VerifyVisitor extends TypeVisitor {
@@ -79,11 +80,11 @@ public final class Verifier extends Analyzer {
 
     private String[] curLocals;
 
-    VerifyVisitor() {
-    }
+    VerifyVisitor() {}
 
     @Override
-    public void setState(int offset, List<PathElement> path, String[] curStack, String[] curLocals) {
+    public void setState(
+        int offset, List<PathElement> path, String[] curStack, String[] curLocals) {
       curIndex = offset;
       curPath = path;
       this.curStack = curStack;
@@ -103,7 +104,11 @@ public final class Verifier extends Analyzer {
 
     private void checkStackSubtype(int i, String t) {
       if (!isSubtypeOf(curStack[i], Util.getStackType(t))) {
-        ex = new FailureException(curIndex, "Expected type " + t + " at stack " + i + ", got " + curStack[i], curPath);
+        ex =
+            new FailureException(
+                curIndex,
+                "Expected type " + t + " at stack " + i + ", got " + curStack[i],
+                curPath);
       }
     }
 
@@ -120,18 +125,29 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitGoto(GotoInstruction instruction) {
-    }
+    public void visitGoto(GotoInstruction instruction) {}
 
     @Override
     public void visitLocalLoad(ILoadInstruction instruction) {
       String t = curLocals[instruction.getVarIndex()];
       if (t == null) {
-        ex = new FailureException(curIndex, "Local variable " + instruction.getVarIndex() + " is not defined", curPath);
+        ex =
+            new FailureException(
+                curIndex,
+                "Local variable " + instruction.getVarIndex() + " is not defined",
+                curPath);
       }
       if (!isSubtypeOf(t, instruction.getType())) {
-        ex = new FailureException(curIndex, "Expected type " + instruction.getType() + " for local " + instruction.getVarIndex()
-            + ", got " + t, curPath);
+        ex =
+            new FailureException(
+                curIndex,
+                "Expected type "
+                    + instruction.getType()
+                    + " for local "
+                    + instruction.getVarIndex()
+                    + ", got "
+                    + t,
+                curPath);
       }
     }
 
@@ -154,12 +170,10 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitPop(PopInstruction instruction) {
-    }
+    public void visitPop(PopInstruction instruction) {}
 
     @Override
-    public void visitDup(DupInstruction instruction) {
-    }
+    public void visitDup(DupInstruction instruction) {}
 
     @Override
     public void visitBinaryOp(IBinaryOpInstruction instruction) {
@@ -235,12 +249,13 @@ public final class Verifier extends Analyzer {
       if (instruction instanceof InvokeDynamicInstruction) {
         return;
       }
-      
+
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
       String signature = instruction.getMethodSignature();
 
-      String thisClass = instruction.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC ? null : classType;            
+      String thisClass =
+          instruction.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC ? null : classType;
       String[] params = Util.getParamsTypes(thisClass, signature);
 
       for (int i = 0; i < params.length; i++) {
@@ -260,7 +275,9 @@ public final class Verifier extends Analyzer {
     @Override
     public void visitArrayLength(ArrayLengthInstruction instruction) {
       if (!curStack[0].equals(Constants.TYPE_null) && !Util.isArrayType(curStack[0])) {
-        ex = new FailureException(curIndex, "Expected array type at stack 0, got " + curStack[0], curPath);
+        ex =
+            new FailureException(
+                curIndex, "Expected array type at stack 0, got " + curStack[0], curPath);
       }
     }
 
@@ -289,16 +306,22 @@ public final class Verifier extends Analyzer {
     }
   }
 
-  /**
-   * Initialize a verifier.
-   */
-  public Verifier(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instToBC, String[][] vars) {
+  /** Initialize a verifier. */
+  public Verifier(
+      boolean isConstructor,
+      boolean isStatic,
+      String classType,
+      String signature,
+      IInstruction[] instructions,
+      ExceptionHandler[][] handlers,
+      int[] instToBC,
+      String[][] vars) {
     super(isConstructor, isStatic, classType, signature, instructions, handlers, instToBC, vars);
   }
 
   /**
    * Initialize a verifier.
-   * 
+   *
    * @throws NullPointerException if info is null
    */
   public Verifier(MethodData info) throws NullPointerException {
@@ -311,7 +334,7 @@ public final class Verifier extends Analyzer {
 
   /**
    * Try to verify the method. If verification is unsuccessful, we throw an exception.
-   * 
+   *
    * @throws FailureException the method contains invalid bytecode
    */
   public void verify() throws FailureException {

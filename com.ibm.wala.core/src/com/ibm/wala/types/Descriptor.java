@@ -10,29 +10,24 @@
  */
 package com.ibm.wala.types;
 
-import java.util.Map;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.strings.UTF8Convert;
+import java.util.Map;
 
 /**
  * A method descriptor; something like: (Ljava/langString;)Ljava/lang/Class;
- * 
- * Descriptors are canonical
+ *
+ * <p>Descriptors are canonical
  */
 public final class Descriptor {
 
-  /**
-   * A mapping from Key -&gt; Descriptor
-   */
+  /** A mapping from Key -&gt; Descriptor */
   private static final Map<Key, Descriptor> map = HashMapFactory.make();
 
-  /**
-   * key holds the logical value of this descriptor
-   */
+  /** key holds the logical value of this descriptor */
   private final Key key;
 
   /**
@@ -60,7 +55,8 @@ public final class Descriptor {
    * @param b a byte array holding the string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(Language l, ImmutableByteArray b) throws IllegalArgumentException {
+  public static Descriptor findOrCreate(Language l, ImmutableByteArray b)
+      throws IllegalArgumentException {
     TypeName returnType = StringStuff.parseForReturnTypeName(l, b);
     TypeName[] parameters = StringStuff.parseForParameterNames(l, b);
     Key k = new Key(returnType, parameters);
@@ -93,9 +89,7 @@ public final class Descriptor {
     return findOrCreate(l, new ImmutableByteArray(b));
   }
 
-  /**
-   * @param key "value" of this descriptor
-   */
+  /** @param key "value" of this descriptor */
   private Descriptor(Key key) {
     this.key = key;
   }
@@ -115,43 +109,33 @@ public final class Descriptor {
     return key.toString();
   }
 
-  /**
-   * @return a unicode string representation of this descriptor
-   */
+  /** @return a unicode string representation of this descriptor */
   public String toUnicodeString() {
     return key.toUnicodeString();
   }
 
-  /**
-   * @return the name of the return type of this descriptor
-   */
+  /** @return the name of the return type of this descriptor */
   public TypeName getReturnType() {
     return key.returnType;
   }
 
-  /**
-   * @return the type names for the parameters in this descriptor
-   */
+  /** @return the type names for the parameters in this descriptor */
   public TypeName[] getParameters() {
     return key.parameters;
   }
 
-  /**
-   * @return number of parameters in this descriptor
-   */
+  /** @return number of parameters in this descriptor */
   public int getNumberOfParameters() {
     return key.parameters == null ? 0 : key.parameters.length;
   }
 
-  /**
-   * value that defines a descriptor: used to canonicalize instances
-   */
+  /** value that defines a descriptor: used to canonicalize instances */
   private static class Key {
-    final private TypeName returnType;
+    private final TypeName returnType;
 
-    final private TypeName[] parameters;
+    private final TypeName[] parameters;
 
-    final private int hashCode; // cached for efficiency
+    private final int hashCode; // cached for efficiency
 
     Key(TypeName returnType, TypeName[] parameters) {
       this.returnType = returnType;
@@ -247,5 +231,4 @@ public final class Descriptor {
       }
     }
   }
-
 }

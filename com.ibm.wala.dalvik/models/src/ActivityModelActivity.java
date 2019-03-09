@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,30 +47,28 @@
 package activity.model;
 
 import android.app.Activity;
-import android.os.Bundle;
 
-/**
- *  @deprecated building the Android-Livecycle is done in the class AndroidModel now
- */
+/** @deprecated building the Android-Livecycle is done in the class AndroidModel now */
 @Deprecated
 public class ActivityModelActivity extends Activity {
-        /*   |, /, \ flow down
-     *   ^ flow up , <= flow left, => flow right
-     *
-     *                     onCreate(...)
-     *                          |
-     *  ================>    onStart()
-     *  ^                  /          \
-     *  ^            onStop() <====   onResume()  <======
-     *  ^              /   \      ^<====      |         ^
-     *  ^ <= onRestart()  onDestroy()  ^<= onPause() => ^
-     *                         |
-     *                       (kill) 
-     *                       
-     */
-	public void ActivityModel() {
-    	//is null correct for savedInstanceState?
-		//com.galois.ReadsContactApp.ReadsContactApp rca = new com.galois.ReadsContactApp.ReadsContactApp();
-		
-    }
+  /*   |, /, \ flow down
+   *   ^ flow up , <= flow left, => flow right
+   *
+   *                     onCreate(...)
+   *                          |
+   *  ================>    onStart()
+   *  ^                  /          \
+   *  ^            onStop() <====   onResume()  <======
+   *  ^              /   \      ^<====      |         ^
+   *  ^ <= onRestart()  onDestroy()  ^<= onPause() => ^
+   *                         |
+   *                       (kill)
+   *
+   */
+  public void ActivityModel() {
+    // is null correct for savedInstanceState?
+    // com.galois.ReadsContactApp.ReadsContactApp rca = new
+    // com.galois.ReadsContactApp.ReadsContactApp();
+
+  }
 }

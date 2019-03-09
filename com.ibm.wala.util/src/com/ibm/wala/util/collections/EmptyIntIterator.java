@@ -10,13 +10,12 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.intset.IntIterator;
 import java.util.NoSuchElementException;
 
-import com.ibm.wala.util.intset.IntIterator;
-
 /**
- * A singleton instance of an empty iterator; this is better than
- * Collections.EMPTY_SET.iterator(), which allocates an iterator object;
+ * A singleton instance of an empty iterator; this is better than Collections.EMPTY_SET.iterator(),
+ * which allocates an iterator object;
  */
 public final class EmptyIntIterator implements IntIterator {
 
@@ -26,11 +25,8 @@ public final class EmptyIntIterator implements IntIterator {
     return EMPTY;
   }
 
-  /**
-   * prevent instantiation
-   */
-  private EmptyIntIterator() {
-  }
+  /** prevent instantiation */
+  private EmptyIntIterator() {}
 
   @Override
   public boolean hasNext() {

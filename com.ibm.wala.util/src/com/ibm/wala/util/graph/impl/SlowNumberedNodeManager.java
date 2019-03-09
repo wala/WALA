@@ -10,34 +10,27 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import com.ibm.wala.util.graph.NumberedNodeManager;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.MutableMapping;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import com.ibm.wala.util.graph.NumberedNodeManager;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.MutableMapping;
-
-/**
- * An object which manages node numbers via a mapping.
- */
+/** An object which manages node numbers via a mapping. */
 public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Serializable {
 
   private static final long serialVersionUID = 8956107128389624337L;
-  /**
-   * A bijection between integer &lt;-&gt; node
-   */
-  final private MutableMapping<T> map = MutableMapping.make();
-
+  /** A bijection between integer &lt;-&gt; node */
+  private final MutableMapping<T> map = MutableMapping.make();
 
   @Override
   public int getNumber(T obj) {
     return map.getMappedIndex(obj);
   }
 
-
   @Override
-  public T getNode(int number)  {
+  public T getNode(int number) {
     if (number < 0) {
       throw new IllegalArgumentException("number must be >= 0");
     }
@@ -52,7 +45,6 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
   public int getMaxNumber() {
     return map.getMaximumIndex();
   }
-
 
   @Override
   public Iterator<T> iterator() {
@@ -111,5 +103,4 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<>(s, this);
   }
-
 }

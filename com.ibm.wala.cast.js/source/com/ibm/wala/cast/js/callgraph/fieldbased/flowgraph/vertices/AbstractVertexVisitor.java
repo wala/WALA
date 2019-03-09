@@ -12,71 +12,71 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 /**
  * Visitor class for {@link Vertex}.
- *  
+ *
  * @author mschaefer
  */
 public class AbstractVertexVisitor<T> implements VertexVisitor<T> {
-	public T visitVertex() {
-		return null;
-	}
-	
-	@Override
+  public T visitVertex() {
+    return null;
+  }
+
+  @Override
   public T visitVarVertex(VarVertex varVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitPropVertex(PropVertex propVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitUnknownVertex(UnknownVertex unknownVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitFuncVertex(FuncVertex funcVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	 @Override
-	  public T visitCreationSiteVertex(CreationSiteVertex csVertex) {
-	    return visitVertex();
-	  }
+  @Override
+  public T visitCreationSiteVertex(CreationSiteVertex csVertex) {
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitParamVertex(ParamVertex paramVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitRetVertex(RetVertex retVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	@Override
-	public T visitArgVertex(ArgVertex argVertex) {
-	  return visitVertex();
-	}
+  @Override
+  public T visitArgVertex(ArgVertex argVertex) {
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitCalleeVertex(CallVertex calleeVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	@Override
+  @Override
   public T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex) {
-		return visitVertex();
-	}
+    return visitVertex();
+  }
 
-	 @Override
-	  public T visitGlobalVertex(GlobalVertex globalVertex) {
-	    return visitVertex();
-	  }
+  @Override
+  public T visitGlobalVertex(GlobalVertex globalVertex) {
+    return visitVertex();
+  }
 
-	 @Override
-	 public T visitPrototypeVertex(PrototypeFieldVertex protoVertex) {
-	   return visitVertex();
-	 }
+  @Override
+  public T visitPrototypeVertex(PrototypeFieldVertex protoVertex) {
+    return visitVertex();
+  }
 }

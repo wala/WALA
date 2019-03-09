@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
-import java.util.Set;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -27,31 +25,30 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import java.util.Set;
 
 /**
- * A call graph implementation where some edges are delegated to other
- * call sites, since they are guaranteed to be the same.
+ * A call graph implementation where some edges are delegated to other call sites, since they are
+ * guaranteed to be the same.
  */
 public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
 
-  /**
-   * delegateR(x,y) means that for at least one site, node number y delegates to
-   * node number x.
-   */
+  /** delegateR(x,y) means that for at least one site, node number y delegates to node number x. */
   private final IBinaryNaturalRelation delegateR = new BasicNaturalRelation();
 
-  public DelegatingExplicitCallGraph(IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
+  public DelegatingExplicitCallGraph(
+      IMethod fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
     super(fakeRootClass, options, cache);
   }
 
   /**
-   * In this implementation, super.targets is a mapping from call site -&gt;
-   * Object, where Object is a
+   * In this implementation, super.targets is a mapping from call site -&gt; Object, where Object is
+   * a
+   *
    * <ul>
-   * <li>CGNode if we've discovered exactly one target for the site
-   * <li> or an IntSet of node numbers if we've discovered more than one target
-   * for the site.
-   * <li> a CallSite if we're delegating these edges to another node
+   *   <li>CGNode if we've discovered exactly one target for the site
+   *   <li>or an IntSet of node numbers if we've discovered more than one target for the site.
+   *   <li>a CallSite if we're delegating these edges to another node
    * </ul>
    */
   public class DelegatingCGNode extends ExplicitNode {
@@ -65,11 +62,14 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
      */
     @Override
     public MutableSharedBitVectorIntSet getAllTargetNumbers() {
-      MutableSharedBitVectorIntSet result = new MutableSharedBitVectorIntSet(super.getAllTargetNumbers());
+      MutableSharedBitVectorIntSet result =
+          new MutableSharedBitVectorIntSet(super.getAllTargetNumbers());
       for (Object n : targets) {
         if (n instanceof CallSite) {
           ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
-          IntSet s = DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(delegate, ((CallSite) n).getSite());
+          IntSet s =
+              DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(
+                  delegate, ((CallSite) n).getSite());
           if (s != null) {
             result.addAll(s);
           }
@@ -114,8 +114,10 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
         for (Object n : targets) {
           if (n instanceof CallSite) {
             ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
-            IntSet s = DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(delegate,((CallSite) n).getSite());
-            if (s!= null && s.contains(y)) {
+            IntSet s =
+                DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(
+                    delegate, ((CallSite) n).getSite());
+            if (s != null && s.contains(y)) {
               return true;
             }
           }
@@ -131,13 +133,14 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
-        return DelegatingExplicitCallGraph.this.getNumberOfTargets(n,s);
+        return DelegatingExplicitCallGraph.this.getNumberOfTargets(n, s);
       } else {
         return super.getNumberOfTargets(site);
       }
     }
 
-    public void delegate(CallSiteReference site, CGNode delegateNode, CallSiteReference delegateSite) {
+    public void delegate(
+        CallSiteReference site, CGNode delegateNode, CallSiteReference delegateSite) {
       CallSite d = new CallSite(delegateSite, delegateNode);
       targets.set(site.getProgramCounter(), d);
       int y = getCallGraph().getNumber(this);
@@ -230,14 +233,14 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       } else {
         MutableSparseIntSet result = MutableSparseIntSet.make(superR);
         BitVectorIntSet allPossiblePreds = new BitVectorIntSet(superR);
-        for (IntIterator it = superR.intIterator(); it.hasNext();) {
+        for (IntIterator it = superR.intIterator(); it.hasNext(); ) {
           int x = it.next();
           IntSet ySet = delegateR.getRelated(x);
           if (ySet != null) {
             allPossiblePreds.addAll(ySet);
           }
         }
-        for (IntIterator it = allPossiblePreds.intIterator(); it.hasNext();) {
+        for (IntIterator it = allPossiblePreds.intIterator(); it.hasNext(); ) {
           int y = it.next();
           DelegatingCGNode yNode = (DelegatingCGNode) getNode(y);
           if (hasEdge(yNode, node)) {
@@ -256,5 +259,4 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
   protected ExplicitEdgeManager makeEdgeManger() {
     return new DelegatingEdgeManager();
   }
-
 }

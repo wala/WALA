@@ -10,22 +10,16 @@
  */
 package com.ibm.wala.shrikeCT;
 
-/**
- * This class reads Signature attributes.
- */
+/** This class reads Signature attributes. */
 public final class SignatureReader extends AttributeReader {
-  /**
-   * Build a reader for the attribute 'iter'.
-   */
+  /** Build a reader for the attribute 'iter'. */
   public SignatureReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, "Signature");
 
     checkSizeEquals(attr + 6, 2);
   }
 
-  /**
-   * @return the index of the constant pool item holding the value
-   */
+  /** @return the index of the constant pool item holding the value */
   public int getSignatureCPIndex() {
     return cr.getUShort(attr + 6);
   }

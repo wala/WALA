@@ -11,27 +11,28 @@
 
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
-import java.util.function.Function;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import java.util.function.Function;
 
 public class FilteredFlowGraphBuilder extends FlowGraphBuilder {
 
-	private final Function<IMethod, Boolean> filter;
-	
-	public FilteredFlowGraphBuilder(IClassHierarchy cha, IAnalysisCacheView cache, boolean fullPointerAnalysis, Function<IMethod, Boolean> filter) {
-		super(cha, cache, fullPointerAnalysis);
-		this.filter = filter;
-	}
+  private final Function<IMethod, Boolean> filter;
 
-	@Override
-	public void visitFunction(FlowGraph flowgraph, IMethod method) {
-		if (filter.apply(method)) {
-			super.visitFunction(flowgraph, method);
-		}
-	}
+  public FilteredFlowGraphBuilder(
+      IClassHierarchy cha,
+      IAnalysisCacheView cache,
+      boolean fullPointerAnalysis,
+      Function<IMethod, Boolean> filter) {
+    super(cha, cache, fullPointerAnalysis);
+    this.filter = filter;
+  }
 
-	
+  @Override
+  public void visitFunction(FlowGraph flowgraph, IMethod method) {
+    if (filter.apply(method)) {
+      super.visitFunction(flowgraph, method);
+    }
+  }
 }

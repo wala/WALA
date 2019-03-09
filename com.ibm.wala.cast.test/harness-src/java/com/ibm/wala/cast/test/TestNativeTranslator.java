@@ -1,14 +1,5 @@
 package com.ibm.wala.cast.test;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.ibm.wala.cast.ir.translator.NativeTranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstAnnotation;
@@ -26,9 +17,16 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.io.TemporaryFile;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import org.junit.Test;
 
 public class TestNativeTranslator {
-  
+
   static {
     System.loadLibrary("xlator_test");
   }
@@ -42,8 +40,8 @@ public class TestNativeTranslator {
     }
 
     @Override
-    public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory,
-        boolean prepend) {
+    public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(
+        CAstRewriterFactory<C, K> factory, boolean prepend) {
       assert false;
     }
 
@@ -68,7 +66,7 @@ public class TestNativeTranslator {
 
         @Override
         public String[] getArgumentNames() {
-           return new String[0];
+          return new String[0];
         }
 
         @Override
@@ -92,7 +90,7 @@ public class TestNativeTranslator {
         }
 
         private CAstNode ast;
-        
+
         @Override
         public CAstNode getAST() {
           if (ast == null) {
@@ -157,19 +155,19 @@ public class TestNativeTranslator {
       };
     }
   }
-    
+
   @Test
   public void testNativeCAst() throws IOException {
     CAst Ast = new CAstImpl();
-    
+
     URL junk = IR.class.getClassLoader().getResource("primordial.txt");
-     
+
     SmokeXlator xlator = new SmokeXlator(Ast, junk);
-    
-    CAstNode ast = xlator.translateToCAst().getAST();    
-  
+
+    CAstNode ast = xlator.translateToCAst().getAST();
+
     System.err.println(ast);
-    
+
     assert ast.getChildCount() == 3;
   }
 }

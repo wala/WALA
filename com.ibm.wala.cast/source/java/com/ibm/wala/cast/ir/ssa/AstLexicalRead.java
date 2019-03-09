@@ -16,11 +16,12 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A set of lexical reads. This instruction represents reads of a set of variables that are defined by a pair of
- * variable name and defining code body (i.e. a method or function). This instruction has one local value number
- * definition for each lexical read, and the call graph builder ensures that these value numbers are kept consistent as
- * lexical uses and definitions are discovered during call graph construction.
- * 
+ * A set of lexical reads. This instruction represents reads of a set of variables that are defined
+ * by a pair of variable name and defining code body (i.e. a method or function). This instruction
+ * has one local value number definition for each lexical read, and the call graph builder ensures
+ * that these value numbers are kept consistent as lexical uses and definitions are discovered
+ * during call graph construction.
+ *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class AstLexicalRead extends AstLexicalAccess {
@@ -30,10 +31,11 @@ public class AstLexicalRead extends AstLexicalAccess {
   }
 
   public AstLexicalRead(int iindex, Access access) {
-    this(iindex, new Access[] { access });
+    this(iindex, new Access[] {access});
   }
 
-  public AstLexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type) {
+  public AstLexicalRead(
+      int iindex, int lhs, String definer, String globalName, TypeReference type) {
     this(iindex, new Access(globalName, definer, type, lhs));
   }
 
@@ -45,10 +47,11 @@ public class AstLexicalRead extends AstLexicalAccess {
       Access[] accesses = new Access[getAccessCount()];
       for (int i = 0; i < accesses.length; i++) {
         Access oldAccess = getAccess(i);
-        accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, defs[i]);
+        accesses[i] =
+            new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, defs[i]);
       }
 
-      return ((AstInstructionFactory)insts).LexicalRead(iindex, accesses);
+      return ((AstInstructionFactory) insts).LexicalRead(iindex, accesses);
     }
   }
 
@@ -77,8 +80,7 @@ public class AstLexicalRead extends AstLexicalAccess {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < getAccessCount(); i++) {
       Access A = getAccess(i);
-      if (i != 0)
-        sb.append(", ");
+      if (i != 0) sb.append(", ");
       sb.append(getValueString(symbolTable, A.valueNumber));
       sb.append(" = lexical:");
       sb.append(A.variableName);

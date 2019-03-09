@@ -10,15 +10,13 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents the ?astore instructions.
- */
-final public class ArrayStoreInstruction extends Instruction implements IArrayStoreInstruction {
+/** This class represents the ?astore instructions. */
+public final class ArrayStoreInstruction extends Instruction implements IArrayStoreInstruction {
   protected ArrayStoreInstruction(short opcode) {
     super(opcode);
   }
 
-  private final static ArrayStoreInstruction[] preallocated = preallocate();
+  private static final ArrayStoreInstruction[] preallocated = preallocate();
 
   private static ArrayStoreInstruction[] preallocate() {
     ArrayStoreInstruction[] r = new ArrayStoreInstruction[OP_sastore - OP_iastore + 2];

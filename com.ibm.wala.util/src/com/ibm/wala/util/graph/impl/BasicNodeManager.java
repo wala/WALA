@@ -11,19 +11,16 @@
 
 package com.ibm.wala.util.graph.impl;
 
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.graph.NodeManager;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.graph.NodeManager;
-
-/**
- * Simple implementation of a {@link NodeManager}.
- */
+/** Simple implementation of a {@link NodeManager}. */
 public class BasicNodeManager<T> implements NodeManager<T> {
 
-  final private HashSet<T> nodes = HashSetFactory.make();
+  private final HashSet<T> nodes = HashSetFactory.make();
 
   @Override
   public Stream<T> stream() {
@@ -66,5 +63,4 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   public boolean containsNode(T N) {
     return nodes.contains(N);
   }
-
 }

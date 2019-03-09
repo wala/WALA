@@ -15,29 +15,26 @@ import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 
 /**
- * A basic block with exactly one normal instruction (which may be null), corresponding to a single instruction index in the SSA
- * instruction array.
+ * A basic block with exactly one normal instruction (which may be null), corresponding to a single
+ * instruction index in the SSA instruction array.
  *
- * The block may also have phis.
+ * <p>The block may also have phis.
  */
 public interface IExplodedBasicBlock extends ISSABasicBlock {
 
-  /**
-   * get the instruction for this block, or null if the block has no instruction
-   */
+  /** get the instruction for this block, or null if the block has no instruction */
   public SSAInstruction getInstruction();
 
   /**
-   * if this represents an exception handler block, return the corresponding {@link SSAGetCaughtExceptionInstruction}
+   * if this represents an exception handler block, return the corresponding {@link
+   * SSAGetCaughtExceptionInstruction}
    *
    * @throws IllegalArgumentException if this does not represent an exception handler block
    */
   public SSAGetCaughtExceptionInstruction getCatchInstruction();
 
   /**
-   * get the number of the original basic block containing the instruction of
-   * this exploded block
+   * get the number of the original basic block containing the instruction of this exploded block
    */
   public int getOriginalNumber();
-
 }

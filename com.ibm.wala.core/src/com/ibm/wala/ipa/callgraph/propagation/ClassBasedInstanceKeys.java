@@ -24,12 +24,12 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * This class provides Instance Key call backs where each instance is in the same equivalence class as all other instances of the
- * same concrete type.
+ * This class provides Instance Key call backs where each instance is in the same equivalence class
+ * as all other instances of the same concrete type.
  */
 public class ClassBasedInstanceKeys implements InstanceKeyFactory {
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
   private final AnalysisOptions options;
 
@@ -52,7 +52,6 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     if (String.valueOf(allocation).contains("java/lang/invoke/DirectMethodHandle$StaticAccessor")) {
       System.err.println("got " + allocation + " in " + node);
     }
-    
 
     if (options.getClassTargetSelector() == null) {
       throw new IllegalStateException("options did not specify class target selector");
@@ -68,17 +67,19 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   }
 
   /**
-   * <p>dim == 0 represents the first dimension, e.g., the [Object; instances in [[Object; e.g., the [[Object; instances in
-   * [[[Object;</p>
+   * dim == 0 represents the first dimension, e.g., the [Object; instances in [[Object; e.g., the
+   * [[Object; instances in [[[Object;
    *
-   * <p>dim == 1 represents the second dimension, e.g., the [Object instances in [[[Object;</p>
+   * <p>dim == 1 represents the second dimension, e.g., the [Object instances in [[[Object;
    */
   @Override
-  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+  public InstanceKey getInstanceKeyForMultiNewArray(
+      CGNode node, NewSiteReference allocation, int dim) {
     if (DEBUG) {
       System.err.println(("getInstanceKeyForMultiNewArray " + allocation + ' ' + dim));
     }
-    ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
+    ArrayClass type =
+        (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     assert (type != null);
     if (DEBUG) {
       System.err.println(("type: " + type));
@@ -119,9 +120,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  /**
-   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
-   */
+  /** @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw. */
   @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
     IClass klass = cha.lookupClass(type);
@@ -135,9 +134,9 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
     IClass cls = cha.lookupClass(objType);
     assert cls != null : objType;
-    
+
     if (obj instanceof TypeReference) {
-      IClass klass = cha.lookupClass((TypeReference)obj);
+      IClass klass = cha.lookupClass((TypeReference) obj);
       if (klass == null) {
         return new ConcreteTypeKey(cls);
       } else {
@@ -145,25 +144,22 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
         return new ConstantKey<>(klass, cls);
       }
     } else if (obj instanceof MethodReference) {
-      IMethod m = cha.resolveMethod((MethodReference)obj);
+      IMethod m = cha.resolveMethod((MethodReference) obj);
       if (m == null) {
-         return new ConcreteTypeKey(cls);
+        return new ConcreteTypeKey(cls);
       } else {
         return new ConstantKey<>(m, cls);
       }
     } else if (obj instanceof Descriptor) {
-      return new ConstantKey<>((Descriptor)obj, cls);
+      return new ConstantKey<>((Descriptor) obj, cls);
     } else {
       // other cases
       throw new Error();
     }
   }
 
-  /**
-   * @return Returns the class hierarchy.
-   */
+  /** @return Returns the class hierarchy. */
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
-
 }

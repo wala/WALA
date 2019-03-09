@@ -10,15 +10,18 @@
  */
 package annotations;
 
-@AnnotationWithParams(strParam="classStrParam")
+@AnnotationWithParams(strParam = "classStrParam")
 public class AnnotatedClass3 {
 
-  @AnnotationWithParams(enumParam=AnnotationEnum.VAL1,strArrParam={"biz","boz"},annotParam=@AnnotationWithSingleParam("sdfevs"),strParam="sdfsevs",intParam=25,klassParam=Integer.class)
-  public static void foo() {
-    
-  }
-  
-  @AnnotationWithParams(strArrParam={})
+  @AnnotationWithParams(
+      enumParam = AnnotationEnum.VAL1,
+      strArrParam = {"biz", "boz"},
+      annotParam = @AnnotationWithSingleParam("sdfevs"),
+      strParam = "sdfsevs",
+      intParam = 25,
+      klassParam = Integer.class)
+  public static void foo() {}
+
+  @AnnotationWithParams(strArrParam = {})
   public static void emptyArray() {}
-  
 }

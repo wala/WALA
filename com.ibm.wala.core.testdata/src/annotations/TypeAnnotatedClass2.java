@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TypeAnnotatedClass2 extends @TypeAnnotationTypeUse Object {
-  
+
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.TYPE_USE})
   @interface A {}
@@ -70,30 +70,27 @@ public class TypeAnnotatedClass2 extends @TypeAnnotationTypeUse Object {
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.TYPE_USE})
   @interface M {}
-  
-  @A Map<@B ? extends @C String, @D List<@E Object>>        field1;
-  @I String @F [] @G [] @H []                               field2;
-  @A List<@B Comparable<@F Object @C [] @D [] @E []>>       field3;
-  @C Outer . @B Middle . @A Inner                           field4;
-  Outer2 . Middle<@D Foo . @C Bar> . Inner<@B String @A []> field5;
+
+  @A Map<@B ? extends @C String, @D List<@E Object>> field1;
+  @I String @F [] @G [] @H [] field2;
+  @A List<@B Comparable<@F Object @C [] @D [] @E []>> field3;
+  @C Outer.@B Middle.@A Inner field4;
+  Outer2.Middle<@D Foo.@C Bar>.Inner<@B String @A []> field5;
 }
 
 class Outer {
   class Middle {
-    class Inner {
-    }
+    class Inner {}
   }
 }
 
 class Outer2 {
   @SuppressWarnings("unused")
   class Middle<S> {
-    class Inner<T> {
-    }
+    class Inner<T> {}
   }
 }
 
 class Foo {
-  class Bar {
-  }
+  class Bar {}
 }

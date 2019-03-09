@@ -10,18 +10,16 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
-
-/**
- * Utilities for dealing with {@link IntSet}s
- */
+/** Utilities for dealing with {@link IntSet}s */
 public class IntSetUtil {
 
-  public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME = "com.ibm.wala.mutableIntSetFactory";
+  public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME =
+      "com.ibm.wala.mutableIntSetFactory";
 
   private static MutableIntSetFactory<?> defaultIntSetFactory;
 
@@ -30,11 +28,15 @@ public class IntSetUtil {
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
         @SuppressWarnings("unchecked")
-        Class<? extends MutableIntSetFactory<?>> intSetFactoryClass = (Class<? extends MutableIntSetFactory<?>>) Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        Class<? extends MutableIntSetFactory<?>> intSetFactoryClass =
+            (Class<? extends MutableIntSetFactory<?>>)
+                Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
         MutableIntSetFactory<?> intSetFactory = intSetFactoryClass.newInstance();
         setDefaultIntSetFactory(intSetFactory);
       } catch (Exception e) {
-        System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
+        System.err.println(
+            ("Cannot use int set factory "
+                + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
         setDefaultIntSetFactory(defaultFactory);
       }
     } else {
@@ -48,32 +50,32 @@ public class IntSetUtil {
   }
 
   public static MutableIntSet make(int[] initial) {
-	    return defaultIntSetFactory.make(initial);
+    return defaultIntSetFactory.make(initial);
   }
 
   public static IntSet make(Set<Integer> x) {
-    int[] vals = new int[ x.size() ];
+    int[] vals = new int[x.size()];
     Iterator<Integer> vs = x.iterator();
-    for(int i = 0; i < vals.length; i++) {
+    for (int i = 0; i < vals.length; i++) {
       vals[i] = vs.next();
     }
     return make(vals);
   }
 
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
   // there's no reason to instantiate this class
-  private IntSetUtil() {
-  }
-  
+  private IntSetUtil() {}
+
   /**
    * This method constructs an appropriate mutable copy of set.
-   * 
+   *
    * @return a new {@link MutableIntSet} object with the same value as set
    * @throws UnimplementedError if we haven't supported the set type yet.
    * @throws IllegalArgumentException if set == null
    */
-  public static MutableIntSet makeMutableCopy(IntSet set) throws IllegalArgumentException, UnimplementedError {
+  public static MutableIntSet makeMutableCopy(IntSet set)
+      throws IllegalArgumentException, UnimplementedError {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
@@ -99,9 +101,7 @@ public class IntSetUtil {
     }
   }
 
-  /**
-   * Compute the asymmetric difference of two sets, a \ b.
-   */
+  /** Compute the asymmetric difference of two sets, a \ b. */
   public static IntSet diff(IntSet A, IntSet B) {
     if (A == null) {
       throw new IllegalArgumentException("null A");
@@ -118,7 +118,7 @@ public class IntSetUtil {
     if (DEBUG) {
       System.err.println(("initial result " + result + ' ' + result.getClass()));
     }
-    for (IntIterator it = B.intIterator(); it.hasNext();) {
+    for (IntIterator it = B.intIterator(); it.hasNext(); ) {
       int I = it.next();
       result.remove(I);
       if (DEBUG) {
@@ -131,9 +131,7 @@ public class IntSetUtil {
     return result;
   }
 
-  /**
-   * Compute the asymmetric difference of two sets, a \ b.
-   */
+  /** Compute the asymmetric difference of two sets, a \ b. */
   public static IntSet diff(IntSet A, IntSet B, MutableIntSetFactory<?> factory) {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
@@ -147,7 +145,8 @@ public class IntSetUtil {
     if (A instanceof SparseIntSet && B instanceof SparseIntSet) {
       return SparseIntSet.diff((SparseIntSet) A, (SparseIntSet) B);
     } else if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
-      IntSet d = SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
+      IntSet d =
+          SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
       return d;
     } else {
       return defaultSlowDiff(A, B, factory);
@@ -156,7 +155,7 @@ public class IntSetUtil {
 
   /**
    * Subtract two sets, i.e. a = a \ b.
-   * 
+   *
    * @throws IllegalArgumentException if B == null
    */
   public static MutableIntSet removeAll(MutableIntSet A, IntSet B) throws IllegalArgumentException {
@@ -172,7 +171,7 @@ public class IntSetUtil {
       }
       return ((SemiSparseMutableIntSet) A).removeAll((SemiSparseMutableIntSet) B);
     } else {
-      for (IntIterator it = B.intIterator(); it.hasNext();) {
+      for (IntIterator it = B.intIterator(); it.hasNext(); ) {
         int I = it.next();
         A.remove(I);
         if (DEBUG) {
@@ -186,10 +185,9 @@ public class IntSetUtil {
     }
   }
 
-  /**
-   * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
-   */
-  public static int binarySearch(int[] data, int key, int low, int high) throws IllegalArgumentException {
+  /** @return index \in [low,high] s.t. data[index] = key, or -1 if not found */
+  public static int binarySearch(int[] data, int key, int low, int high)
+      throws IllegalArgumentException {
     if (data == null) {
       throw new IllegalArgumentException("null array");
     }
@@ -217,16 +215,12 @@ public class IntSetUtil {
     }
   }
 
-  /**
-   * @return Returns the defaultIntSetFactory.
-   */
+  /** @return Returns the defaultIntSetFactory. */
   public static MutableIntSetFactory<?> getDefaultIntSetFactory() {
     return defaultIntSetFactory;
   }
 
-  /**
-   * @param defaultIntSetFactory The defaultIntSetFactory to set.
-   */
+  /** @param defaultIntSetFactory The defaultIntSetFactory to set. */
   public static void setDefaultIntSetFactory(MutableIntSetFactory<?> defaultIntSetFactory) {
     if (defaultIntSetFactory == null) {
       throw new IllegalArgumentException("null defaultIntSetFactory");
@@ -252,16 +246,15 @@ public class IntSetUtil {
       return result;
     }
   }
-  
+
   public static int[] toArray(IntSet s) {
     int i = 0;
-    int[] result = new int[ s.size() ];
+    int[] result = new int[s.size()];
     IntIterator x = s.intIterator();
     while (x.hasNext()) {
       result[i++] = x.next();
     }
-    assert ! x.hasNext();
+    assert !x.hasNext();
     return result;
   }
-
 }

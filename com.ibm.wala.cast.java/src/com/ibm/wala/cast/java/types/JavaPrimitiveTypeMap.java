@@ -13,12 +13,11 @@
  */
 package com.ibm.wala.cast.java.types;
 
+import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
-import com.ibm.wala.cast.tree.CAstType;
-import com.ibm.wala.util.collections.HashMapFactory;
 
 public class JavaPrimitiveTypeMap {
   public static final Map<String, JavaPrimitiveType> primNameMap = HashMapFactory.make();

@@ -41,13 +41,15 @@ import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 
 /**
- * This method annotation counts the number of instructions of each type (according to each Instruction subclass).
- * 
- * The get...Count methods are the only methods needed by clients. These methods check to see if the MethodData object already has
- * an InstructionTypeCounter annotation before recomputing the counts and returning the desired count.
+ * This method annotation counts the number of instructions of each type (according to each
+ * Instruction subclass).
+ *
+ * <p>The get...Count methods are the only methods needed by clients. These methods check to see if
+ * the MethodData object already has an InstructionTypeCounter annotation before recomputing the
+ * counts and returning the desired count.
  */
 public class InstructionTypeCounter implements MethodData.Results {
-  private final static String key = InstructionTypeCounter.class.getName();
+  private static final String key = InstructionTypeCounter.class.getName();
 
   private int countMonitors;
 
@@ -133,137 +135,138 @@ public class InstructionTypeCounter implements MethodData.Results {
     countThrows = 0;
     countUnaryOps = 0;
 
-    IInstruction.Visitor visitor = new IInstruction.Visitor() {
-      @Override
-      public void visitArrayLength(ArrayLengthInstruction instruction) {
-        countArrayLengths++;
-      }
+    IInstruction.Visitor visitor =
+        new IInstruction.Visitor() {
+          @Override
+          public void visitArrayLength(ArrayLengthInstruction instruction) {
+            countArrayLengths++;
+          }
 
-      @Override
-      public void visitBinaryOp(IBinaryOpInstruction instruction) {
-        countBinaryOps++;
-      }
+          @Override
+          public void visitBinaryOp(IBinaryOpInstruction instruction) {
+            countBinaryOps++;
+          }
 
-      @Override
-      public void visitCheckCast(ITypeTestInstruction instruction) {
-        countCheckCasts++;
-      }
+          @Override
+          public void visitCheckCast(ITypeTestInstruction instruction) {
+            countCheckCasts++;
+          }
 
-      @Override
-      public void visitComparison(IComparisonInstruction instruction) {
-        countComparisons++;
-      }
+          @Override
+          public void visitComparison(IComparisonInstruction instruction) {
+            countComparisons++;
+          }
 
-      @Override
-      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
-        countConditionalBranches++;
-      }
+          @Override
+          public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
+            countConditionalBranches++;
+          }
 
-      @Override
-      public void visitConstant(ConstantInstruction instruction) {
-        countConstants++;
-      }
+          @Override
+          public void visitConstant(ConstantInstruction instruction) {
+            countConstants++;
+          }
 
-      @Override
-      public void visitConversion(IConversionInstruction instruction) {
-        countConversions++;
-      }
+          @Override
+          public void visitConversion(IConversionInstruction instruction) {
+            countConversions++;
+          }
 
-      @Override
-      public void visitDup(DupInstruction instruction) {
-        countDups++;
-      }
+          @Override
+          public void visitDup(DupInstruction instruction) {
+            countDups++;
+          }
 
-      @Override
-      public void visitGoto(GotoInstruction instruction) {
-        countGotos++;
-      }
+          @Override
+          public void visitGoto(GotoInstruction instruction) {
+            countGotos++;
+          }
 
-      @Override
-      public void visitInstanceof(IInstanceofInstruction instruction) {
-        countInstanceOfs++;
-      }
+          @Override
+          public void visitInstanceof(IInstanceofInstruction instruction) {
+            countInstanceOfs++;
+          }
 
-      @Override
-      public void visitLocalLoad(ILoadInstruction instruction) {
-        countLocalLoads++;
-      }
+          @Override
+          public void visitLocalLoad(ILoadInstruction instruction) {
+            countLocalLoads++;
+          }
 
-      @Override
-      public void visitLocalStore(IStoreInstruction instruction) {
-        countLocalStores++;
-      }
+          @Override
+          public void visitLocalStore(IStoreInstruction instruction) {
+            countLocalStores++;
+          }
 
-      @Override
-      public void visitNew(NewInstruction instruction) {
-        countNews++;
-      }
+          @Override
+          public void visitNew(NewInstruction instruction) {
+            countNews++;
+          }
 
-      @Override
-      public void visitPop(PopInstruction instruction) {
-        countPops++;
-      }
+          @Override
+          public void visitPop(PopInstruction instruction) {
+            countPops++;
+          }
 
-      @Override
-      public void visitReturn(ReturnInstruction instruction) {
-        countReturns++;
-      }
+          @Override
+          public void visitReturn(ReturnInstruction instruction) {
+            countReturns++;
+          }
 
-      @Override
-      public void visitShift(IShiftInstruction instruction) {
-        countShifts++;
-      }
+          @Override
+          public void visitShift(IShiftInstruction instruction) {
+            countShifts++;
+          }
 
-      @Override
-      public void visitSwap(SwapInstruction instruction) {
-        countSwaps++;
-      }
+          @Override
+          public void visitSwap(SwapInstruction instruction) {
+            countSwaps++;
+          }
 
-      @Override
-      public void visitSwitch(SwitchInstruction instruction) {
-        countSwitches++;
-      }
+          @Override
+          public void visitSwitch(SwitchInstruction instruction) {
+            countSwitches++;
+          }
 
-      @Override
-      public void visitThrow(ThrowInstruction instruction) {
-        countThrows++;
-      }
+          @Override
+          public void visitThrow(ThrowInstruction instruction) {
+            countThrows++;
+          }
 
-      @Override
-      public void visitUnaryOp(IUnaryOpInstruction instruction) {
-        countUnaryOps++;
-      }
+          @Override
+          public void visitUnaryOp(IUnaryOpInstruction instruction) {
+            countUnaryOps++;
+          }
 
-      @Override
-      public void visitArrayLoad(IArrayLoadInstruction instruction) {
-        countArrayLoads++;
-      }
+          @Override
+          public void visitArrayLoad(IArrayLoadInstruction instruction) {
+            countArrayLoads++;
+          }
 
-      @Override
-      public void visitArrayStore(IArrayStoreInstruction instruction) {
-        countArrayStores++;
-      }
+          @Override
+          public void visitArrayStore(IArrayStoreInstruction instruction) {
+            countArrayStores++;
+          }
 
-      @Override
-      public void visitGet(IGetInstruction instruction) {
-        countGets++;
-      }
+          @Override
+          public void visitGet(IGetInstruction instruction) {
+            countGets++;
+          }
 
-      @Override
-      public void visitPut(IPutInstruction instruction) {
-        countPuts++;
-      }
+          @Override
+          public void visitPut(IPutInstruction instruction) {
+            countPuts++;
+          }
 
-      @Override
-      public void visitMonitor(MonitorInstruction instruction) {
-        countMonitors++;
-      }
+          @Override
+          public void visitMonitor(MonitorInstruction instruction) {
+            countMonitors++;
+          }
 
-      @Override
-      public void visitInvoke(IInvokeInstruction instruction) {
-        countInvokes++;
-      }
-    };
+          @Override
+          public void visitInvoke(IInvokeInstruction instruction) {
+            countInvokes++;
+          }
+        };
 
     for (IInstruction instruction : instructions) {
       instruction.visit(visitor);
@@ -271,12 +274,16 @@ public class InstructionTypeCounter implements MethodData.Results {
   }
 
   /**
-   * Whenever the underlying method is updated, we'll throw away our counts so they can be reconstructed from scratch next time.
-   * 
-   * This is not to be called by clients.
+   * Whenever the underlying method is updated, we'll throw away our counts so they can be
+   * reconstructed from scratch next time.
+   *
+   * <p>This is not to be called by clients.
    */
   @Override
-  public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
+  public boolean notifyUpdate(
+      MethodData info,
+      IInstruction[] newInstructions,
+      ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     // just throw this away and we'll recalculate from scratch if necessary
     return true;

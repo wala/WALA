@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
-
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
 import com.ibm.wala.shrikeBT.Disassembler;
@@ -34,39 +28,40 @@ import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
 
 /**
- * This class prints the contents of a class file. It's like an alternative to javap that shows more information.
- * 
- * In Unix I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will
- * print the contents of every class in the JAR file.
- * 
+ * This class prints the contents of a class file. It's like an alternative to javap that shows more
+ * information.
+ *
+ * <p>In Unix I run it like this: java -cp ~/dev/shrike/shrike
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will print the contents of every
+ * class in the JAR file.
+ *
  * @author roca
  */
 public class ClassPrinter {
-  final private PrintWriter w;
+  private final PrintWriter w;
 
   private boolean printLineNumberInfo = true;
 
   private boolean printConstantPool = true;
 
-  /**
-   * Get ready to print a class to the given output stream.
-   */
+  /** Get ready to print a class to the given output stream. */
   public ClassPrinter(PrintWriter w) {
     this.w = w;
   }
 
-  /**
-   * Controls whether to print line number information. The default is 'true'.
-   */
+  /** Controls whether to print line number information. The default is 'true'. */
   public void setPrintLineNumberInfo(boolean b) {
     printLineNumberInfo = b;
   }
 
-  /**
-   * Controls whether to print all the constant pool entries. The default is 'true'.
-   */
+  /** Controls whether to print all the constant pool entries. The default is 'true'. */
   public void setPrintConstantPool(boolean b) {
     printConstantPool = b;
   }
@@ -92,7 +87,9 @@ public class ClassPrinter {
     oi.close();
   }
 
-  private static final char[] hexChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+  private static final char[] hexChars = {
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+  };
 
   private static String makeHex(byte[] bytes, int pos, int len, int padTo) {
     StringBuilder b = new StringBuilder();
@@ -154,8 +151,8 @@ public class ClassPrinter {
     return "0x" + Integer.toString(16, flags) + '(' + buf + ')';
   }
 
-  private void dumpAttributes(ClassReader cr, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
-      InvalidBytecodeException, IOException {
+  private void dumpAttributes(ClassReader cr, ClassReader.AttrIterator attrs)
+      throws InvalidClassFileException, InvalidBytecodeException, IOException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();
       w.write("  " + name + ": @" + Integer.toString(attrs.getRawOffset(), 16) + '\n');
@@ -169,14 +166,25 @@ public class ClassPrinter {
         int[] rawHandlers = code.getRawHandlers();
         CTDecoder decoder = new CTDecoder(code);
         decoder.decode();
-        Disassembler disasm = new Disassembler(decoder.getInstructions(), decoder.getHandlers(), decoder
-            .getInstructionsToBytecodes());
+        Disassembler disasm =
+            new Disassembler(
+                decoder.getInstructions(),
+                decoder.getHandlers(),
+                decoder.getInstructionsToBytecodes());
         disasm.disassembleTo("      ", w);
 
         w.write("    exception handlers:\n");
         for (int e = 0; e < rawHandlers.length; e += 4) {
-          w.write("      " + rawHandlers[e] + " to " + rawHandlers[e + 1] + " catch " + getClassName(cr, rawHandlers[e + 3])
-              + " at " + rawHandlers[e + 2] + '\n');
+          w.write(
+              "      "
+                  + rawHandlers[e]
+                  + " to "
+                  + rawHandlers[e + 1]
+                  + " catch "
+                  + getClassName(cr, rawHandlers[e + 3])
+                  + " at "
+                  + rawHandlers[e + 2]
+                  + '\n');
         }
 
         ClassReader.AttrIterator codeAttrs = new ClassReader.AttrIterator();
@@ -194,7 +202,10 @@ public class ClassPrinter {
             int count = 0;
             for (int j = 0; j < map.length; j++) {
               String line2 = "      " + j + ": " + map[j];
-              if (line == null || !line2.substring(line2.indexOf(':')).equals(line.substring(line.indexOf(':')))) {
+              if (line == null
+                  || !line2
+                      .substring(line2.indexOf(':'))
+                      .equals(line.substring(line.indexOf(':')))) {
                 if (count > 1) {
                   w.write(" (" + count + " times)\n");
                 } else if (count > 0) {
@@ -227,13 +238,16 @@ public class ClassPrinter {
               buf.append("      ").append(j).append(':');
               for (int k = 0; k < vars.length; k += 2) {
                 if (vars[k] != 0) {
-                  String n = cr.getCP().getCPUtf8(vars[k]) + '(' + cr.getCP().getCPUtf8(vars[k + 1]) + ')';
+                  String n =
+                      cr.getCP().getCPUtf8(vars[k]) + '(' + cr.getCP().getCPUtf8(vars[k + 1]) + ')';
                   buf.append(' ').append(k / 2).append(':').append(n);
                 }
               }
               line2 = buf.toString();
             }
-            if (line == null || line2 == null || !line2.substring(line2.indexOf(':')).equals(line.substring(line.indexOf(':')))) {
+            if (line == null
+                || line2 == null
+                || !line2.substring(line2.indexOf(':')).equals(line.substring(line.indexOf(':')))) {
               if (count > 1) {
                 w.write(" (" + count + " times)\n");
               } else if (count > 0) {
@@ -272,7 +286,12 @@ public class ClassPrinter {
         int pos = attrs.getDataOffset();
         while (len > 0) {
           int amount = Math.min(16, len);
-          w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + ' ' + makeChars(cr.getBytes(), pos, amount) + '\n');
+          w.write(
+              "    "
+                  + makeHex(cr.getBytes(), pos, amount, 32)
+                  + ' '
+                  + makeChars(cr.getBytes(), pos, amount)
+                  + '\n');
           len -= amount;
           pos += amount;
         }
@@ -280,40 +299,50 @@ public class ClassPrinter {
     }
   }
 
-  private void printAnnotations(AnnotationsReader r)
-      throws InvalidClassFileException {
+  private void printAnnotations(AnnotationsReader r) throws InvalidClassFileException {
     for (AnnotationAttribute annot : r.getAllAnnotations()) {
       w.write("    Annotation type: " + annot.type + '\n');
     }
   }
 
-  private static String getCPItemString(ConstantPoolParser cp, int i) throws InvalidClassFileException {
+  private static String getCPItemString(ConstantPoolParser cp, int i)
+      throws InvalidClassFileException {
     int t = cp.getItemType(i);
     switch (t) {
-    case ClassConstants.CONSTANT_Utf8:
-      return "Utf8 " + quoteString(cp.getCPUtf8(i));
-    case ClassConstants.CONSTANT_Class:
-      return "Class " + cp.getCPClass(i);
-    case ClassConstants.CONSTANT_String:
-      return "String " + quoteString(cp.getCPString(i));
-    case ClassConstants.CONSTANT_Integer:
-      return "Integer " + cp.getCPInt(i);
-    case ClassConstants.CONSTANT_Float:
-      return "Float " + cp.getCPFloat(i);
-    case ClassConstants.CONSTANT_Double:
-      return "Double " + cp.getCPDouble(i);
-    case ClassConstants.CONSTANT_Long:
-      return "Long " + cp.getCPLong(i);
-    case ClassConstants.CONSTANT_MethodRef:
-      return "Method " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
-    case ClassConstants.CONSTANT_FieldRef:
-      return "Field " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
-    case ClassConstants.CONSTANT_InterfaceMethodRef:
-      return "InterfaceMethod " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
-    case ClassConstants.CONSTANT_NameAndType:
-      return "NameAndType " + cp.getCPNATType(i) + ' ' + cp.getCPNATName(i);
-    default:
-      return "Unknown type " + t;
+      case ClassConstants.CONSTANT_Utf8:
+        return "Utf8 " + quoteString(cp.getCPUtf8(i));
+      case ClassConstants.CONSTANT_Class:
+        return "Class " + cp.getCPClass(i);
+      case ClassConstants.CONSTANT_String:
+        return "String " + quoteString(cp.getCPString(i));
+      case ClassConstants.CONSTANT_Integer:
+        return "Integer " + cp.getCPInt(i);
+      case ClassConstants.CONSTANT_Float:
+        return "Float " + cp.getCPFloat(i);
+      case ClassConstants.CONSTANT_Double:
+        return "Double " + cp.getCPDouble(i);
+      case ClassConstants.CONSTANT_Long:
+        return "Long " + cp.getCPLong(i);
+      case ClassConstants.CONSTANT_MethodRef:
+        return "Method "
+            + cp.getCPRefClass(i)
+            + ' '
+            + cp.getCPRefName(i)
+            + ' '
+            + cp.getCPRefType(i);
+      case ClassConstants.CONSTANT_FieldRef:
+        return "Field " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
+      case ClassConstants.CONSTANT_InterfaceMethodRef:
+        return "InterfaceMethod "
+            + cp.getCPRefClass(i)
+            + ' '
+            + cp.getCPRefName(i)
+            + ' '
+            + cp.getCPRefType(i);
+      case ClassConstants.CONSTANT_NameAndType:
+        return "NameAndType " + cp.getCPNATType(i) + ' ' + cp.getCPNATName(i);
+      default:
+        return "Unknown type " + t;
     }
   }
 
@@ -323,32 +352,32 @@ public class ClassPrinter {
     for (int i = 0; i < string.length(); i++) {
       char ch = string.charAt(i);
       switch (ch) {
-      case '\r':
-        buf.append("\\r");
-        break;
-      case '\n':
-        buf.append("\\n");
-        break;
-      case '\\':
-        buf.append("\\\\");
-        break;
-      case '\t':
-        buf.append("\\t");
-        break;
-      case '\"':
-        buf.append("\\\"");
-        break;
-      default:
-        if (ch >= 32 && ch <= 127) {
-          buf.append(ch);
-        } else {
-          buf.append("\\u");
-          String h = makeHex(new byte[] { (byte) (ch >> 8), (byte) ch }, 0, 2, 0);
-          for (int j = 4 - h.length(); j > 0; j--) {
-            buf.append('0');
+        case '\r':
+          buf.append("\\r");
+          break;
+        case '\n':
+          buf.append("\\n");
+          break;
+        case '\\':
+          buf.append("\\\\");
+          break;
+        case '\t':
+          buf.append("\\t");
+          break;
+        case '\"':
+          buf.append("\\\"");
+          break;
+        default:
+          if (ch >= 32 && ch <= 127) {
+            buf.append(ch);
+          } else {
+            buf.append("\\u");
+            String h = makeHex(new byte[] {(byte) (ch >> 8), (byte) ch}, 0, 2, 0);
+            for (int j = 4 - h.length(); j > 0; j--) {
+              buf.append('0');
+            }
+            buf.append(h);
           }
-          buf.append(h);
-        }
       }
     }
     buf.append('"');
@@ -357,10 +386,11 @@ public class ClassPrinter {
 
   /**
    * Print a class.
-   * 
+   *
    * @throws IllegalArgumentException if cr is null
    */
-  public void doClass(final ClassReader cr) throws InvalidClassFileException, InvalidBytecodeException, IOException {
+  public void doClass(final ClassReader cr)
+      throws InvalidClassFileException, InvalidBytecodeException, IOException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
@@ -386,7 +416,13 @@ public class ClassPrinter {
     int fieldCount = cr.getFieldCount();
     w.write(fieldCount + " fields:\n");
     for (int i = 0; i < fieldCount; i++) {
-      w.write(cr.getFieldName(i) + ' ' + cr.getFieldType(i) + ' ' + dumpFlags(cr.getFieldAccessFlags(i)) + '\n');
+      w.write(
+          cr.getFieldName(i)
+              + ' '
+              + cr.getFieldType(i)
+              + ' '
+              + dumpFlags(cr.getFieldAccessFlags(i))
+              + '\n');
       cr.initFieldAttributeIterator(i, attrs);
       dumpAttributes(cr, attrs);
     }
@@ -395,7 +431,13 @@ public class ClassPrinter {
     int methodCount = cr.getMethodCount();
     w.write(methodCount + " methods:\n");
     for (int i = 0; i < methodCount; i++) {
-      w.write(cr.getMethodName(i) + ' ' + cr.getMethodType(i) + ' ' + dumpFlags(cr.getMethodAccessFlags(i)) + '\n');
+      w.write(
+          cr.getMethodName(i)
+              + ' '
+              + cr.getMethodType(i)
+              + ' '
+              + dumpFlags(cr.getMethodAccessFlags(i))
+              + '\n');
       cr.initMethodAttributeIterator(i, attrs);
       dumpAttributes(cr, attrs);
     }

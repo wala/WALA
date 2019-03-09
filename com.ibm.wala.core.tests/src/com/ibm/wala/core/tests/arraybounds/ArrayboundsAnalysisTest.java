@@ -3,15 +3,6 @@ package com.ibm.wala.core.tests.arraybounds;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 
-import java.io.IOException;
-
-import org.hamcrest.Matcher;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis;
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis.UnnecessaryCheck;
 import com.ibm.wala.classLoader.IClass;
@@ -32,19 +23,24 @@ import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import java.io.IOException;
+import org.hamcrest.Matcher;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
 /**
- * The test data should be grouped, according to the behavior of the analysis.
- * All array accesses of a class are to be detected as "in bound" or all are to
- * be detected as "not in bound".
- * 
- * This test will only check if all found accesses behave accordingly and if the
- * number of array accesses is as expected.
- * 
- * So there is no explicit check for specific lines.
- * 
- * @author Stephan Gocht {@code <stephan@gobro.de>}
+ * The test data should be grouped, according to the behavior of the analysis. All array accesses of
+ * a class are to be detected as "in bound" or all are to be detected as "not in bound".
  *
+ * <p>This test will only check if all found accesses behave accordingly and if the number of array
+ * accesses is as expected.
+ *
+ * <p>So there is no explicit check for specific lines.
+ *
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ArrayboundsAnalysisTest {
   private static ClassLoader CLASS_LOADER = ArrayboundsAnalysisTest.class.getClassLoader();
@@ -63,8 +59,7 @@ public class ArrayboundsAnalysisTest {
   private static AnalysisScope scope;
   private static ClassHierarchy cha;
 
-  @Rule
-  public ErrorCollector collector = new ErrorCollector();
+  @Rule public ErrorCollector collector = new ErrorCollector();
 
   @BeforeClass
   public static void init() throws IOException, ClassHierarchyException {
@@ -88,22 +83,26 @@ public class ArrayboundsAnalysisTest {
   @Test
   public void detectable() {
     IClass iClass = getIClass(DETECTABLE_TESTDATA);
-    assertAllSameNecessity(iClass, DETECTABLE_NUMBER_OF_ARRAY_ACCESS, equalTo(UnnecessaryCheck.BOTH));
+    assertAllSameNecessity(
+        iClass, DETECTABLE_NUMBER_OF_ARRAY_ACCESS, equalTo(UnnecessaryCheck.BOTH));
   }
 
   @Test
   public void notDetectable() {
     IClass iClass = getIClass(NOT_DETECTABLE_TESTDATA);
-    assertAllSameNecessity(iClass, NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
+    assertAllSameNecessity(
+        iClass, NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
   }
 
   @Test
   public void notInBound() {
     IClass iClass = getIClass(NOT_IN_BOUND_TESTDATA);
-    assertAllSameNecessity(iClass, NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
+    assertAllSameNecessity(
+        iClass, NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
   }
 
-  public void assertAllSameNecessity(IClass iClass, int expectedNumberOfArrayAccesses, Matcher<UnnecessaryCheck> matcher) {
+  public void assertAllSameNecessity(
+      IClass iClass, int expectedNumberOfArrayAccesses, Matcher<UnnecessaryCheck> matcher) {
     int numberOfArrayAccesses = 0;
     for (IMethod method : iClass.getAllMethods()) {
       if (method.getDeclaringClass().equals(iClass)) {
@@ -116,31 +115,39 @@ public class ArrayboundsAnalysisTest {
           }
         }
 
-        String identifyer = method.getDeclaringClass().getName().toString() + "#" + method.getName().toString();
+        String identifyer =
+            method.getDeclaringClass().getName().toString() + "#" + method.getName().toString();
 
         ArrayOutOfBoundsAnalysis analysis = new ArrayOutOfBoundsAnalysis(ir);
         for (SSAArrayReferenceInstruction key : analysis.getBoundsCheckNecessary().keySet()) {
           numberOfArrayAccesses++;
           UnnecessaryCheck unnecessary = analysis.getBoundsCheckNecessary().get(key);
-          collector.checkThat("Unexpected necessity for bounds check in " + identifyer + ":" + method.getLineNumber(key.iindex),
-              unnecessary, matcher);
+          collector.checkThat(
+              "Unexpected necessity for bounds check in "
+                  + identifyer
+                  + ":"
+                  + method.getLineNumber(key.iindex),
+              unnecessary,
+              matcher);
         }
       }
     }
 
     /*
      * Possible reasons for this to fail are:
-     * 
-     * 
+     *
+     *
      * *_NUMBER_OF_ARRAY_ACCESS is not set to the correct value (maybe the test
      * data has changed).
-     * 
+     *
      * Not all methods of the class analyzed.
-     * 
+     *
      * There is a bug, so not all array accesses are found.
      */
-    collector.checkThat("Number of found array accesses is not as expected for " + iClass.getName().toString(),
-        numberOfArrayAccesses, equalTo(expectedNumberOfArrayAccesses));
+    collector.checkThat(
+        "Number of found array accesses is not as expected for " + iClass.getName().toString(),
+        numberOfArrayAccesses,
+        equalTo(expectedNumberOfArrayAccesses));
   }
 
   @AfterClass

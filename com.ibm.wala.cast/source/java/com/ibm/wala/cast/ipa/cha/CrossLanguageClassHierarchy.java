@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.cha;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -35,21 +30,23 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * This class hierarchy represents a family of disjoint class hierarchies, one
- * for each of a selection of languages. The implementation creates a separate
- * ClassHierarchy object for each language, and this overall IClassHierarchy
- * implementation delegates to the appropriate language class hierarchy based on
- * the language associated with the class loader of the given TypeReference or
- * IClass object.
- * 
- * Note that, because of this delegating structure and representation of
- * multiple languages, the getRootClass API call does not make sense for this
- * hierarchy. In general, any code that wants to use multiple language must deal
- * with the fact that there is no longer a single root type. Each individual
- * language is still expected to have a root type, however.
- * 
+ * This class hierarchy represents a family of disjoint class hierarchies, one for each of a
+ * selection of languages. The implementation creates a separate ClassHierarchy object for each
+ * language, and this overall IClassHierarchy implementation delegates to the appropriate language
+ * class hierarchy based on the language associated with the class loader of the given TypeReference
+ * or IClass object.
+ *
+ * <p>Note that, because of this delegating structure and representation of multiple languages, the
+ * getRootClass API call does not make sense for this hierarchy. In general, any code that wants to
+ * use multiple language must deal with the fact that there is no longer a single root type. Each
+ * individual language is still expected to have a root type, however.
+ *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class CrossLanguageClassHierarchy implements IClassHierarchy {
@@ -179,9 +176,9 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(A).lookupClass(A);
   }
 
-//  public boolean isSyntheticClass(IClass c) {
-//    return getHierarchy(c).isSyntheticClass(c);
-//  }
+  //  public boolean isSyntheticClass(IClass c) {
+  //    return getHierarchy(c).isSyntheticClass(c);
+  //  }
 
   @Override
   public boolean isInterface(TypeReference type) {
@@ -245,7 +242,8 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   @Override
   public Iterator<IClass> iterator() {
-    return new ComposedIterator<ClassLoaderReference, IClass>(analysisScope.getLoaders().iterator()) {
+    return new ComposedIterator<ClassLoaderReference, IClass>(
+        analysisScope.getLoaders().iterator()) {
       @Override
       public Iterator<IClass> makeInner(ClassLoaderReference o) {
         IClassLoader ldr = getLoader(o);
@@ -254,7 +252,8 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     };
   }
 
-  private CrossLanguageClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Map<Atom, IClassHierarchy> hierarchies) {
+  private CrossLanguageClassHierarchy(
+      AnalysisScope scope, ClassLoaderFactory factory, Map<Atom, IClassHierarchy> hierarchies) {
     this.analysisScope = scope;
     this.loaderFactory = factory;
     this.hierarchies = hierarchies;
@@ -273,11 +272,10 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);
   }
 
-/** BEGIN Custom change: unresolved classes */
+  /** BEGIN Custom change: unresolved classes */
   @Override
   public Set<TypeReference> getUnresolvedClasses() {
     return HashSetFactory.make();
   }
-/** END Custom change: unresolved classes */
-
+  /** END Custom change: unresolved classes */
 }

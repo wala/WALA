@@ -11,10 +11,9 @@
 package com.ibm.wala.properties;
 
 public final class DefaultPropertiesValues {
-  
-  //--- Common options
- 
-  public static final String DEFAULT_WALA_REPORT_FILENAME = "wala_report.txt"; //$NON-NLS-1$
-  public static final String DEFAULT_OUTPUT_DIR = "results"; //$NON-NLS-1$
-  
+
+  // --- Common options
+
+  public static final String DEFAULT_WALA_REPORT_FILENAME = "wala_report.txt"; // $NON-NLS-1$
+  public static final String DEFAULT_OUTPUT_DIR = "results"; // $NON-NLS-1$
 }

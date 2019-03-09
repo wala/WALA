@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents get and getstatic instructions.
- */
+/** This class represents get and getstatic instructions. */
 public class GetInstruction extends Instruction implements IGetInstruction {
   protected String type;
 
@@ -31,10 +29,10 @@ public class GetInstruction extends Instruction implements IGetInstruction {
     return null;
   }
 
-  final static class Lazy extends GetInstruction {
-    final private ConstantPoolReader cp;
+  static final class Lazy extends GetInstruction {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null, null, null);
@@ -80,7 +78,8 @@ public class GetInstruction extends Instruction implements IGetInstruction {
     return new Lazy(isStatic ? OP_getstatic : OP_getfield, cp, index);
   }
 
-  public static GetInstruction make(String type, String className, String fieldName, boolean isStatic) {
+  public static GetInstruction make(
+      String type, String className, String fieldName, boolean isStatic) {
     if (type == null) {
       throw new IllegalArgumentException("type must not be null");
     }
@@ -94,11 +93,13 @@ public class GetInstruction extends Instruction implements IGetInstruction {
   }
 
   @Override
-  final public boolean equals(Object o) {
+  public final boolean equals(Object o) {
     if (o instanceof GetInstruction) {
       GetInstruction i = (GetInstruction) o;
-      return i.getFieldType().equals(getFieldType()) && i.getClassType().equals(getClassType())
-          && i.getFieldName().equals(getFieldName()) && i.opcode == opcode;
+      return i.getFieldType().equals(getFieldType())
+          && i.getClassType().equals(getClassType())
+          && i.getFieldName().equals(getFieldName())
+          && i.opcode == opcode;
     } else {
       return false;
     }
@@ -120,33 +121,43 @@ public class GetInstruction extends Instruction implements IGetInstruction {
   }
 
   @Override
-  final public boolean isStatic() {
+  public final boolean isStatic() {
     return opcode == OP_getstatic;
   }
 
   @Override
-  final public int hashCode() {
-    return getClassType().hashCode() + 11113 * getFieldType().hashCode() + 398011 * getFieldName().hashCode() + opcode;
+  public final int hashCode() {
+    return getClassType().hashCode()
+        + 11113 * getFieldType().hashCode()
+        + 398011 * getFieldName().hashCode()
+        + opcode;
   }
 
   @Override
-  final public int getPoppedCount() {
+  public final int getPoppedCount() {
     return isStatic() ? 0 : 1;
   }
 
   @Override
-  final public String getPushedType(String[] types) {
+  public final String getPushedType(String[] types) {
     return getFieldType();
   }
 
   @Override
-  final public byte getPushedWordSize() {
+  public final byte getPushedWordSize() {
     return Util.getWordSize(getFieldType());
   }
 
   @Override
   public String toString() {
-    return "Get(" + getFieldType() + ',' + (isStatic() ? "STATIC" : "NONSTATIC") + ',' + getClassType() + ',' + getFieldName()
+    return "Get("
+        + getFieldType()
+        + ','
+        + (isStatic() ? "STATIC" : "NONSTATIC")
+        + ','
+        + getClassType()
+        + ','
+        + getFieldName()
         + ')';
   }
 
@@ -163,12 +174,9 @@ public class GetInstruction extends Instruction implements IGetInstruction {
     return !isStatic();
   }
 
-  /**
-   * Java does not permit this
-   */
+  /** Java does not permit this */
   @Override
   public boolean isAddressOf() {
     return false;
   }
-
 }

@@ -22,26 +22,20 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * This class provides instance keys where for a given type T in a CGNode N, there is one "abstract allocation site" instance for
- * all T allocations in node N.
+ * This class provides instance keys where for a given type T in a CGNode N, there is one "abstract
+ * allocation site" instance for all T allocations in node N.
  */
 public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
 
-  /**
-   * Governing call graph construction options
-   */
+  /** Governing call graph construction options */
   private final AnalysisOptions options;
 
-  /**
-   * Governing class hierarchy
-   */
+  /** Governing class hierarchy */
   private final IClassHierarchy cha;
 
   private final ClassBasedInstanceKeys classBased;
 
-  /**
-   * @param options Governing call graph construction options
-   */
+  /** @param options Governing call graph construction options */
   public SmushedAllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;
@@ -70,8 +64,10 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
-    ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
+  public InstanceKey getInstanceKeyForMultiNewArray(
+      CGNode node, NewSiteReference allocation, int dim) {
+    ArrayClass type =
+        (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
       return null;
     }
@@ -82,10 +78,8 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
 
   @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
-    if (options.getUseConstantSpecificKeys())
-      return new ConstantKey<>(S, cha.lookupClass(type));
-    else
-      return new ConcreteTypeKey(cha.lookupClass(type));
+    if (options.getUseConstantSpecificKeys()) return new ConstantKey<>(S, cha.lookupClass(type));
+    else return new ConcreteTypeKey(cha.lookupClass(type));
   }
 
   @Override
@@ -97,5 +91,4 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
     return classBased.getInstanceKeyForMetadataObject(obj, objType);
   }
-
 }

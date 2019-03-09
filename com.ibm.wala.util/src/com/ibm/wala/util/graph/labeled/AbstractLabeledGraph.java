@@ -14,9 +14,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -31,13 +31,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -48,16 +48,14 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import com.ibm.wala.util.graph.AbstractGraph;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.util.graph.AbstractGraph;
+public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T>
+    implements LabeledGraph<T, U> {
 
-public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T> implements LabeledGraph<T, U> {
-
-  /**
-   * @return the object which manages edges in the graph
-   */
+  /** @return the object which manages edges in the graph */
   @Override
   protected abstract LabeledEdgeManager<T, U> getEdgeManager();
 
@@ -110,5 +108,4 @@ public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T> implem
   public Set<? extends U> getEdgeLabels(T src, T dst) {
     return getEdgeManager().getEdgeLabels(src, dst);
   }
-
 }

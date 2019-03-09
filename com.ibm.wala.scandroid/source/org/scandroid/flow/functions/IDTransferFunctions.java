@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -46,7 +46,6 @@
  */
 package org.scandroid.flow.functions;
 
-
 import com.ibm.wala.dataflow.IFDS.IFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IReversibleFlowFunction;
@@ -57,42 +56,40 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
+public class IDTransferFunctions<E extends ISSABasicBlock>
+    implements IFlowFunctionMap<BasicBlockInContext<E>> {
+  public static final IntSet EMPTY_SET = new SparseIntSet();
+  public static final IntSet ZERO_SET = SparseIntSet.singleton(0);
 
-public class IDTransferFunctions <E extends ISSABasicBlock> implements
-        IFlowFunctionMap<BasicBlockInContext<E>> {
-	public static final IntSet EMPTY_SET = new SparseIntSet();
-	public static final IntSet ZERO_SET = SparseIntSet.singleton(0);
+  private static final IReversibleFlowFunction IDENTITY_FN = new IdentityFlowFunction();
 
-    private static final IReversibleFlowFunction IDENTITY_FN = new IdentityFlowFunction();
-    
-	@Override
-	public IUnaryFlowFunction getNormalFlowFunction(BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest) {
-		return IDENTITY_FN;
-	}
+  @Override
+  public IUnaryFlowFunction getNormalFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    return IDENTITY_FN;
+  }
 
-	@Override
-	public IUnaryFlowFunction getCallFlowFunction(BasicBlockInContext<E> src,
-			BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
-		return IDENTITY_FN;
-	}
+  @Override
+  public IUnaryFlowFunction getCallFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
+    return IDENTITY_FN;
+  }
 
-	@Override
-	public IFlowFunction getReturnFlowFunction(BasicBlockInContext<E> call,
-			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		return IDENTITY_FN;
-	}
+  @Override
+  public IFlowFunction getReturnFlowFunction(
+      BasicBlockInContext<E> call, BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    return IDENTITY_FN;
+  }
 
-	@Override
-	public IUnaryFlowFunction getCallToReturnFlowFunction(
-			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		return IDENTITY_FN;
-	}
+  @Override
+  public IUnaryFlowFunction getCallToReturnFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    return IDENTITY_FN;
+  }
 
-	@Override
-	public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
-			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		return IDENTITY_FN;
-	}
-
+  @Override
+  public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
+      BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
+    return IDENTITY_FN;
+  }
 }

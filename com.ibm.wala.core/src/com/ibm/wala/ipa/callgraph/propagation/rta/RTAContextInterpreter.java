@@ -10,17 +10,14 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.cha.CHAContextInterpreter;
 import com.ibm.wala.types.FieldReference;
+import java.util.Iterator;
 
-/**
- * This object will analyze a method in a context and return information needed for RTA.
- */
+/** This object will analyze a method in a context and return information needed for RTA. */
 public interface RTAContextInterpreter extends CHAContextInterpreter {
 
   /**
@@ -29,21 +26,18 @@ public interface RTAContextInterpreter extends CHAContextInterpreter {
   @Override
   public abstract Iterator<NewSiteReference> iterateNewSites(CGNode node);
 
-  /**
-   * @return iterator of FieldReference
-   */
+  /** @return iterator of FieldReference */
   public Iterator<FieldReference> iterateFieldsRead(CGNode node);
 
-  /**
-   * @return iterator of FieldReference
-   */
+  /** @return iterator of FieldReference */
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node);
 
   /**
-   * record that the "factory" method of a node should be interpreted to allocate a particular class.
-   * 
-   * TODO: this is a little ugly, is there a better place to move this?
-   * 
+   * record that the "factory" method of a node should be interpreted to allocate a particular
+   * class.
+   *
+   * <p>TODO: this is a little ugly, is there a better place to move this?
+   *
    * @return true iff a NEW type was recorded, false if the type was previously recorded.
    */
   public boolean recordFactoryType(CGNode node, IClass klass);

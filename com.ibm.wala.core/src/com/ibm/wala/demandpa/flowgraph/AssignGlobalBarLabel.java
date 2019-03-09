@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -37,16 +37,12 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-/**
- * @author Manu Sridharan
- * 
- */
+/** @author Manu Sridharan */
 public class AssignGlobalBarLabel implements IFlowLabel {
 
   private static final AssignGlobalBarLabel theInstance = new AssignGlobalBarLabel();
 
-  private AssignGlobalBarLabel() {
-  }
+  private AssignGlobalBarLabel() {}
 
   public static AssignGlobalBarLabel v() {
     return theInstance;
@@ -54,7 +50,7 @@ public class AssignGlobalBarLabel implements IFlowLabel {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see demandGraph.IFlowLabel#bar()
    */
   @Override
@@ -64,7 +60,7 @@ public class AssignGlobalBarLabel implements IFlowLabel {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */
@@ -85,5 +81,4 @@ public class AssignGlobalBarLabel implements IFlowLabel {
   public String toString() {
     return "assignGlobalBar";
   }
-
 }

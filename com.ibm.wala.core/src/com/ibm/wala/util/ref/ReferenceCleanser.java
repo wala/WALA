@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.ref;
 
-import java.lang.ref.WeakReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
@@ -18,17 +17,17 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import java.lang.ref.WeakReference;
 
 /**
- * For some reason (either a bug in our code that defeats soft references, or a
- * bad policy in the GC), leaving soft reference caches to clear themselves out
- * doesn't work. Help it out.
- * 
- * It's unfortunate that this class exists.
+ * For some reason (either a bug in our code that defeats soft references, or a bad policy in the
+ * GC), leaving soft reference caches to clear themselves out doesn't work. Help it out.
+ *
+ * <p>It's unfortunate that this class exists.
  */
 public class ReferenceCleanser {
-  
-  private final static float OCCUPANCY_TRIGGER = 0.5f;
+
+  private static final float OCCUPANCY_TRIGGER = 0.5f;
 
   private static WeakReference<IClassHierarchy> cha;
 
@@ -60,11 +59,12 @@ public class ReferenceCleanser {
     return result;
   }
 
-  /**
-   * A debugging aid. TODO: move this elsewhere
-   */
+  /** A debugging aid. TODO: move this elsewhere */
   public static void clearSoftCaches() {
-    float occupancy = 1f - ((float)Runtime.getRuntime().freeMemory() / (float)Runtime.getRuntime().totalMemory());
+    float occupancy =
+        1f
+            - ((float) Runtime.getRuntime().freeMemory()
+                / (float) Runtime.getRuntime().totalMemory());
     if (occupancy < OCCUPANCY_TRIGGER) {
       return;
     }
@@ -82,7 +82,7 @@ public class ReferenceCleanser {
           if (klass.getDeclaredMethods() != null) {
             for (IMethod m : klass.getDeclaredMethods()) {
               if (m instanceof ShrikeCTMethod) {
-                ((ShrikeCTMethod)m).clearCaches();
+                ((ShrikeCTMethod) m).clearCaches();
               }
             }
           }
@@ -90,5 +90,4 @@ public class ReferenceCleanser {
       }
     }
   }
-
 }

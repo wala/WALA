@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Map;
-
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -19,20 +17,20 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Map;
 
 /**
- * An InstanceKeyFactory implementation that is designed to support
- * multiple languages.  This implementation delegates to one of several
- * child instance key factories based on the language associated with
- * the IClass or TypeReference for which an instance key is being chosen.
+ * An InstanceKeyFactory implementation that is designed to support multiple languages. This
+ * implementation delegates to one of several child instance key factories based on the language
+ * associated with the IClass or TypeReference for which an instance key is being chosen.
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
 
-  private final Map<Atom,InstanceKeyFactory> languageSelectors;
+  private final Map<Atom, InstanceKeyFactory> languageSelectors;
 
-  public CrossLanguageInstanceKeys(Map<Atom,InstanceKeyFactory> languageSelectors) {
+  public CrossLanguageInstanceKeys(Map<Atom, InstanceKeyFactory> languageSelectors) {
     this.languageSelectors = languageSelectors;
   }
 
@@ -44,9 +42,9 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
     return getLanguage(site.getDeclaredType());
   }
 
-//  private static Atom getLanguage(CGNode node) {
-//    return getLanguage(node.getMethod().getDeclaringClass().getReference());
-//  }
+  //  private static Atom getLanguage(CGNode node) {
+  //    return getLanguage(node.getMethod().getDeclaringClass().getReference());
+  //  }
 
   private InstanceKeyFactory getSelector(NewSiteReference site) {
     return languageSelectors.get(getLanguage(site));
@@ -56,14 +54,14 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
     return languageSelectors.get(getLanguage(type));
   }
 
-
   @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     return getSelector(allocation).getInstanceKeyForAllocation(node, allocation);
   }
 
   @Override
-  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+  public InstanceKey getInstanceKeyForMultiNewArray(
+      CGNode node, NewSiteReference allocation, int dim) {
     return getSelector(allocation).getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
@@ -82,5 +80,4 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
     return getSelector(objType).getInstanceKeyForMetadataObject(obj, objType);
   }
-
 }

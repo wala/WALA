@@ -10,52 +10,35 @@
  */
 package com.ibm.wala.ssa;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.types.TypeReference;
+import java.util.Iterator;
 
-/**
- * Common interface to all SSA BasicBlocks
- */
+/** Common interface to all SSA BasicBlocks */
 public interface ISSABasicBlock extends IBasicBlock<SSAInstruction> {
-  
-  /**
-   * Is this block a catch block
-   */
+
+  /** Is this block a catch block */
   @Override
   public boolean isCatchBlock();
 
-  /**
-   * Does this block represent the unique exit from a {@link ControlFlowGraph}?
-   */
+  /** Does this block represent the unique exit from a {@link ControlFlowGraph}? */
   @Override
   public boolean isExitBlock();
 
-  /**
-   * Does this block represent the unique entry to a {@link ControlFlowGraph}
-   */
+  /** Does this block represent the unique entry to a {@link ControlFlowGraph} */
   @Override
   public boolean isEntryBlock();
 
-  /**
-   * @return the phi instructions incoming to this block
-   */
+  /** @return the phi instructions incoming to this block */
   public Iterator<SSAPhiInstruction> iteratePhis();
 
-  /**
-   * @return the pi instructions incoming to this block
-   */
+  /** @return the pi instructions incoming to this block */
   public Iterator<SSAPiInstruction> iteratePis();
 
-  /**
-   * @return the last instruction in this block.
-   */
+  /** @return the last instruction in this block. */
   public SSAInstruction getLastInstruction();
-  
-  /**
-   * @return the set of exception types this block may catch.
-   */
+
+  /** @return the set of exception types this block may catch. */
   public Iterator<TypeReference> getCaughtExceptionTypes();
 }

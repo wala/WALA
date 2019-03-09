@@ -10,25 +10,21 @@
  */
 package com.ibm.wala.util.graph;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.Iterator;
 
 /**
  * Basic functionality for a graph that delegates node and edge management, and tracks node numbers
  */
-public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implements NumberedGraph<T> {
+public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
+    implements NumberedGraph<T> {
 
-  /**
-   * @return the object which manages nodes in the graph
-   */
+  /** @return the object which manages nodes in the graph */
   @Override
   protected abstract NumberedNodeManager<T> getNodeManager();
 
-  /**
-   * @return the object which manages edges in the graph
-   */
+  /** @return the object which manages edges in the graph */
   @Override
   protected abstract NumberedEdgeManager<T> getEdgeManager();
 
@@ -67,7 +63,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
     return new NumberedNodeIterator<>(s, this);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getPredNodeNumbers(java.lang.Object)
    */
   @Override
@@ -76,7 +72,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
     return getEdgeManager().getPredNodeNumbers(node);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
    */
   @Override

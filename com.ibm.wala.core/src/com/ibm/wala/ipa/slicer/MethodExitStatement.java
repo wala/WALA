@@ -13,8 +13,8 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * A {@link Statement} representing method exit used as a dummy exit for starting propagation to a seed statement in backwards
- * slicing.
+ * A {@link Statement} representing method exit used as a dummy exit for starting propagation to a
+ * seed statement in backwards slicing.
  */
 public class MethodExitStatement extends Statement {
 
@@ -49,5 +49,4 @@ public class MethodExitStatement extends Statement {
   public String toString() {
     return getKind() + ":" + getNode();
   }
-
 }

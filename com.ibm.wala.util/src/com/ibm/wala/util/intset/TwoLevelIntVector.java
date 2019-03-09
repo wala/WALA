@@ -10,14 +10,11 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.math.Logs;
 import java.io.Serializable;
 import java.util.Vector;
 
-import com.ibm.wala.util.math.Logs;
-
-/**
- * an int vector implementation which delegates to pages of int vectors.
- */
+/** an int vector implementation which delegates to pages of int vectors. */
 public class TwoLevelIntVector implements IntVector, Serializable {
 
   private static final long serialVersionUID = -7383053435395846217L;
@@ -28,10 +25,8 @@ public class TwoLevelIntVector implements IntVector, Serializable {
 
   int maxIndex = -1;
 
-  /**
-   * Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1]
-   */
-  final private Vector<SparseIntVector> data = new Vector<>();
+  /** Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1] */
+  private final Vector<SparseIntVector> data = new Vector<>();
 
   private final int defaultValue;
 
@@ -70,7 +65,7 @@ public class TwoLevelIntVector implements IntVector, Serializable {
 
   /*
    * TODO: this can be optimized
-   * 
+   *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
@@ -110,5 +105,4 @@ public class TwoLevelIntVector implements IntVector, Serializable {
   public int getMaxIndex() {
     return maxIndex;
   }
-
 }

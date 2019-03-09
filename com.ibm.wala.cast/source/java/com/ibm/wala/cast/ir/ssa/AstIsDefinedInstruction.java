@@ -10,46 +10,38 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
- * IR instruction to check whether a field is defined on some object. The field
- * is represented either by a {@link FieldReference} or by a local value number.  
+ * IR instruction to check whether a field is defined on some object. The field is represented
+ * either by a {@link FieldReference} or by a local value number.
  */
 public class AstIsDefinedInstruction extends SSAInstruction {
-  /**
-   * name of the field.  If non-null, fieldVal should be -1.
-   */
+  /** name of the field. If non-null, fieldVal should be -1. */
   private final FieldReference fieldRef;
 
-  /**
-   * value number holding the field string.  If non-negative,
-   * fieldRef should be null.
-   */
+  /** value number holding the field string. If non-negative, fieldRef should be null. */
   private final int fieldVal;
 
-  /**
-   * the base pointer
-   */
+  /** the base pointer */
   private final int rval;
 
-  /**
-   * gets 1 if the field is defined, 0 otherwise.
-   */
+  /** gets 1 if the field is defined, 0 otherwise. */
   private final int lval;
 
   /**
-   * This constructor should only be used from {@link SSAInstruction#copyForSSA(SSAInstructionFactory, int[], int[])}
+   * This constructor should only be used from {@link
+   * SSAInstruction#copyForSSA(SSAInstructionFactory, int[], int[])}
    */
-  public AstIsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
+  public AstIsDefinedInstruction(
+      int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
     super(iindex);
     this.lval = lval;
     this.rval = rval;
@@ -85,20 +77,36 @@ public class AstIsDefinedInstruction extends SSAInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert fieldVal == -1 || fieldRef == null;
 
-    return ((AstInstructionFactory) insts).IsDefinedInstruction(iindex, (defs == null) ? lval : defs[0], (uses == null) ? rval : uses[0],
-        (uses == null || fieldVal == -1) ? fieldVal : uses[1], fieldRef);
+    return ((AstInstructionFactory) insts)
+        .IsDefinedInstruction(
+            iindex,
+            (defs == null) ? lval : defs[0],
+            (uses == null) ? rval : uses[0],
+            (uses == null || fieldVal == -1) ? fieldVal : uses[1],
+            fieldRef);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
     if (fieldVal == -1 && fieldRef == null) {
-      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ')';
+      return getValueString(symbolTable, lval)
+          + " = isDefined("
+          + getValueString(symbolTable, rval)
+          + ')';
     } else if (fieldVal == -1) {
-      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ',' + fieldRef.getName()
+      return getValueString(symbolTable, lval)
+          + " = isDefined("
+          + getValueString(symbolTable, rval)
+          + ','
+          + fieldRef.getName()
           + ')';
     } else if (fieldRef == null) {
-      return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ','
-          + getValueString(symbolTable, fieldVal) + ')';
+      return getValueString(symbolTable, lval)
+          + " = isDefined("
+          + getValueString(symbolTable, rval)
+          + ','
+          + getValueString(symbolTable, fieldVal)
+          + ')';
     } else {
       Assertions.UNREACHABLE();
       return null;

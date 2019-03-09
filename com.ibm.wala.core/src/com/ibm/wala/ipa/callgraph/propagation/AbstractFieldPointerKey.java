@@ -10,12 +10,10 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-/**
- * Common implementation for {@link InstanceFieldPointerKey} implementations.
- *
- */
-public abstract class AbstractFieldPointerKey extends AbstractPointerKey implements InstanceFieldPointerKey {
-  final protected InstanceKey instance;
+/** Common implementation for {@link InstanceFieldPointerKey} implementations. */
+public abstract class AbstractFieldPointerKey extends AbstractPointerKey
+    implements InstanceFieldPointerKey {
+  protected final InstanceKey instance;
 
   protected AbstractFieldPointerKey(InstanceKey container) {
     if (container == null) {

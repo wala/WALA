@@ -13,16 +13,15 @@ package com.ibm.wala.cast.js.html;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 /**
- * A {@link Position} for source code that has been included in some enclosing
- * file, e.g., JavaScript code included in an HTML file via a script node.
+ * A {@link Position} for source code that has been included in some enclosing file, e.g.,
+ * JavaScript code included in an HTML file via a script node.
  */
 public interface IncludedPosition extends Position {
 
   /**
-   * get the position of the containing script within the enclosing file. E.g.,
-   * for a position in JavaScript code included in an HTML file, returns the
-   * position of the relevant {@code <script>} tag in the HTML
+   * get the position of the containing script within the enclosing file. E.g., for a position in
+   * JavaScript code included in an HTML file, returns the position of the relevant {@code <script>}
+   * tag in the HTML
    */
   Position getIncludePosition();
-  
 }

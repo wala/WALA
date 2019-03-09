@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -51,68 +51,64 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 
-/** A flow to or from the parameter of a method. This can represent formal
- * parameters of methods being analyzed, or actual parameters of methods
- * being called. In the former case, the associated block is the entry
- * block of the method. In the latter case, the block is the block containing
- * the invoke instruction.
+/**
+ * A flow to or from the parameter of a method. This can represent formal parameters of methods
+ * being analyzed, or actual parameters of methods being called. In the former case, the associated
+ * block is the entry block of the method. In the latter case, the block is the block containing the
+ * invoke instruction.
  *
  * @author atomb
  */
-public class ParameterFlow <E extends ISSABasicBlock> extends FlowType<E> {
+public class ParameterFlow<E extends ISSABasicBlock> extends FlowType<E> {
 
-    private final int argNum;
-    
-    public ParameterFlow(BasicBlockInContext<E> block, 
-            int argNum, boolean source) {
-        super(block, source);
-    	this.argNum = argNum;
-    }
-    
-    public int getArgNum() {
-        return argNum;
-    }
-    
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + argNum;
-        return result;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        @SuppressWarnings("unchecked")
-        ParameterFlow<E> other = (ParameterFlow<E>) obj;
-        if (argNum != other.argNum)
-            return false;
-        return true;
-    }
+  private final int argNum;
 
-    @Override
-    public String toString() {
-        return "ParameterFlow( argNum="+argNum+ ' ' +super.toString()+ ')';
-    }
+  public ParameterFlow(BasicBlockInContext<E> block, int argNum, boolean source) {
+    super(block, source);
+    this.argNum = argNum;
+  }
 
-    @Override
-    public String descString() {
-        String s = "arg(" + argNum + ')';
-        if(!getBlock().isEntryBlock()) {
-            SSAInvokeInstruction inv = (SSAInvokeInstruction) ((IExplodedBasicBlock) getBlock().getDelegate()).getInstruction();
-            s = s + ':' + inv.getDeclaredTarget().getSignature();
-        }
-        return s;
-    }
+  public int getArgNum() {
+    return argNum;
+  }
 
-	@Override
-	public <R> R visit(FlowTypeVisitor<E, R> v) {
-		return v.visitParameterFlow(this);
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + argNum;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
+    @SuppressWarnings("unchecked")
+    ParameterFlow<E> other = (ParameterFlow<E>) obj;
+    if (argNum != other.argNum) return false;
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return "ParameterFlow( argNum=" + argNum + ' ' + super.toString() + ')';
+  }
+
+  @Override
+  public String descString() {
+    String s = "arg(" + argNum + ')';
+    if (!getBlock().isEntryBlock()) {
+      SSAInvokeInstruction inv =
+          (SSAInvokeInstruction) ((IExplodedBasicBlock) getBlock().getDelegate()).getInstruction();
+      s = s + ':' + inv.getDeclaredTarget().getSignature();
+    }
+    return s;
+  }
+
+  @Override
+  public <R> R visit(FlowTypeVisitor<E, R> v) {
+    return v.visitParameterFlow(this);
+  }
 }

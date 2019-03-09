@@ -10,13 +10,6 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -37,19 +30,25 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.FileProvider;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * Test integrity of CFGs
- */
+/** Test integrity of CFGs */
 public class CFGSanitizerTest extends WalaTestCase {
 
   /**
-   * check that for all synthetic methods coming from the native specifications, the exit block is not disconnected from the rest of
-   * the sanitized graph
+   * check that for all synthetic methods coming from the native specifications, the exit block is
+   * not disconnected from the rest of the sanitized graph
    */
   @Test
-  public void testSyntheticEdgeToExit() throws IOException, IllegalArgumentException, WalaException {
-    AnalysisScope scope = AnalysisScopeReader.makePrimordialScope((new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+  public void testSyntheticEdgeToExit()
+      throws IOException, IllegalArgumentException, WalaException {
+    AnalysisScope scope =
+        AnalysisScopeReader.makePrimordialScope(
+            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     ClassLoader cl = CFGSanitizerTest.class.getClassLoader();
@@ -78,5 +77,4 @@ public class CFGSanitizerTest extends WalaTestCase {
       }
     }
   }
-
 }

@@ -10,10 +10,7 @@
  */
 package staticInit;
 
-/**
- * @author manu
- * 
- */
+/** @author manu */
 public class TestStaticInit {
 
   private static class A {
@@ -22,9 +19,7 @@ public class TestStaticInit {
       doNothing();
     }
 
-    private static void doNothing() {
-
-    }
+    private static void doNothing() {}
   }
 
   public static void main(String[] args) {

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -52,32 +52,30 @@ import org.scandroid.prefixtransfer.PrefixVariable;
 
 public class ConstantString extends InstanceKeySite {
 
-    final String constantValue;
-    final int instanceID;
+  final String constantValue;
+  final int instanceID;
 
-    public ConstantString(int instanceID, String constantValue)
-    {
-        this.constantValue = constantValue;
-        this.instanceID = instanceID;
-    }
+  public ConstantString(int instanceID, String constantValue) {
+    this.constantValue = constantValue;
+    this.instanceID = instanceID;
+  }
 
-    @Override
-    public PrefixVariable propagate(PrefixVariable input) {
-//      System.out.println("Propagating at: " + instanceID + " (" + constantValue + ")");
-        PrefixVariable retVal = new PrefixVariable();
-        retVal.update(instanceID, constantValue);
-        retVal.include(instanceID);
-        return retVal;
-    }
+  @Override
+  public PrefixVariable propagate(PrefixVariable input) {
+    //      System.out.println("Propagating at: " + instanceID + " (" + constantValue + ")");
+    PrefixVariable retVal = new PrefixVariable();
+    retVal.update(instanceID, constantValue);
+    retVal.include(instanceID);
+    return retVal;
+  }
 
-    @Override
-    public String toString() {
-        return ("ConstantString(instanceID = " + instanceID + "; value = " + constantValue + ')');
-    }
+  @Override
+  public String toString() {
+    return ("ConstantString(instanceID = " + instanceID + "; value = " + constantValue + ')');
+  }
 
-    @Override
-    public int instanceID() {
-        return instanceID;
-    }
-
+  @Override
+  public int instanceID() {
+    return instanceID;
+  }
 }

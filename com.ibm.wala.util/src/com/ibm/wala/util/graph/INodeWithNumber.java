@@ -10,23 +10,20 @@
  */
 package com.ibm.wala.util.graph;
 
-
 /**
- * Basic interface for a node which lives in one graph ... it's id is used
- * to implement the {@link NumberedGraph} interface.
+ * Basic interface for a node which lives in one graph ... it's id is used to implement the {@link
+ * NumberedGraph} interface.
  */
-
 public interface INodeWithNumber {
 
   /**
-   * A non-negative integer which serves as an identifier for this node in
-   * it's "dominant" graph.  Initially this number is -1; a NumberedGraph
-   * will set it to a non-negative value when this node is inserted into
-   * the graph
+   * A non-negative integer which serves as an identifier for this node in it's "dominant" graph.
+   * Initially this number is -1; a NumberedGraph will set it to a non-negative value when this node
+   * is inserted into the graph
+   *
    * @return the identifier
    */
   public int getGraphNodeId();
 
   void setGraphNodeId(int number);
-
 }

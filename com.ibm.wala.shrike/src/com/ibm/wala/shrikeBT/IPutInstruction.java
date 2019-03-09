@@ -19,5 +19,4 @@ public interface IPutInstruction extends IInstruction {
   public String getFieldName();
 
   public boolean isStatic();
-
 }

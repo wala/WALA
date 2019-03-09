@@ -15,20 +15,18 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 
-
-/**
- * Operator OUT = IN / v
- */
+/** Operator OUT = IN / v */
 public class BitVectorMinusVector extends UnaryOperator<BitVectorVariable> {
-  
+
   private final BitVectorIntSet v;
+
   public BitVectorMinusVector(BitVector v) {
     this.v = new BitVectorIntSet(v);
   }
-  
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException, IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+      throws IllegalArgumentException, IllegalArgumentException {
 
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
@@ -62,7 +60,7 @@ public class BitVectorMinusVector extends UnaryOperator<BitVectorVariable> {
   @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorMinusVector) {
-      BitVectorMinusVector other = (BitVectorMinusVector)o;
+      BitVectorMinusVector other = (BitVectorMinusVector) o;
       return v.sameValue(other.v);
     } else {
       return false;

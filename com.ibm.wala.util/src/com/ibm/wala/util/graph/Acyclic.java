@@ -10,33 +10,27 @@
  */
 package com.ibm.wala.util.graph;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Stack;
-
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntPair;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
 
-/**
- * Utilities for dealing with acyclic subgraphs
- */
+/** Utilities for dealing with acyclic subgraphs */
 public class Acyclic {
 
   /*
-   * prevent instantiation 
+   * prevent instantiation
    */
-  private Acyclic() {
-  }
-  
-  /**
-   * This is slow. Fix it.
-   */
+  private Acyclic() {}
+
+  /** This is slow. Fix it. */
   public static <T> boolean isAcyclic(NumberedGraph<T> G, T root) {
     IBinaryNaturalRelation r = computeBackEdges(G, root);
     Iterator<IntPair> it = r.iterator();
@@ -44,34 +38,37 @@ public class Acyclic {
   }
 
   public static final int THRESHOLD_FOR_NONRECURSIVE_DFS = 1000;
-  
+
   /**
-   * Compute a relation R s.t. (i,j) \in R iff (i,j) is a backedge according to a DFS of a numbered graph starting from some root.
-   * 
-   * Not efficient. Recursive and uses hash sets.
+   * Compute a relation R s.t. (i,j) \in R iff (i,j) is a backedge according to a DFS of a numbered
+   * graph starting from some root.
+   *
+   * <p>Not efficient. Recursive and uses hash sets.
    */
   public static <T> IBinaryNaturalRelation computeBackEdges(NumberedGraph<T> G, T root) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    
+
     final BasicNaturalRelation result = new BasicNaturalRelation();
 
-    // for large methods (e.g. obfuscated library code as found in android libraries 'com.google.ads.ad.a([B[B)V')
+    // for large methods (e.g. obfuscated library code as found in android libraries
+    // 'com.google.ads.ad.a([B[B)V')
     // the recursive dfs can lead to a stack overflow error.
     // for smaller methods the recursive solution seems to be faster, so we keep it.
     if (G.getNumberOfNodes() <= THRESHOLD_FOR_NONRECURSIVE_DFS) {
       final Set<T> visited = HashSetFactory.make();
       final Set<T> onstack = HashSetFactory.make();
       dfs(result, root, G, visited, onstack);
-    } else { 
+    } else {
       dfsNonRecursive(result, root, G);
     }
-    
+
     return result;
   }
-  
-  private static <T> void dfs(BasicNaturalRelation result, T root, NumberedGraph<T> G, Set<T> visited, Set<T> onstack) {
+
+  private static <T> void dfs(
+      BasicNaturalRelation result, T root, NumberedGraph<T> G, Set<T> visited, Set<T> onstack) {
     visited.add(root);
     onstack.add(root);
     for (T dstNode : Iterator2Iterable.make(G.getSuccNodes(root))) {
@@ -87,7 +84,8 @@ public class Acyclic {
     onstack.remove(root);
   }
 
-  private static <T> void dfsNonRecursive(final BasicNaturalRelation result, final T root, final NumberedGraph<T> G) {
+  private static <T> void dfsNonRecursive(
+      final BasicNaturalRelation result, final T root, final NumberedGraph<T> G) {
     final Stack<T> stack = new Stack<>();
     final Set<T> stackSet = new HashSet<>();
     final Stack<Iterator<? extends T>> stackIt = new Stack<>();
@@ -95,15 +93,17 @@ public class Acyclic {
     stack.push(root);
     stackSet.add(root);
     stackIt.push(G.getSuccNodes(root));
-    
+
     while (!stack.isEmpty()) {
       final T current = stack.pop();
       stackSet.remove(current);
       final Iterator<? extends T> currentIt = stackIt.pop();
-      if (finished.contains(current)) { continue; }
-      
+      if (finished.contains(current)) {
+        continue;
+      }
+
       boolean isFinished = true;
-      while (isFinished && currentIt.hasNext() ) {
+      while (isFinished && currentIt.hasNext()) {
         final T succ = currentIt.next();
         if (!finished.contains(succ)) {
           if (succ == current || !stackSet.add(succ)) {
@@ -121,7 +121,7 @@ public class Acyclic {
           }
         }
       }
-      
+
       if (isFinished) {
         finished.add(current);
       }
@@ -137,8 +137,7 @@ public class Acyclic {
       int gn = p.get(index);
       Iterator<? extends T> predIter = G.getPredNodes(G.getNode(gn));
       while (predIter.hasNext()) {
-        if (backedges.contains(G.getNumber(predIter.next()), gn))
-          return true;
+        if (backedges.contains(G.getNumber(predIter.next()), gn)) return true;
       }
     }
     return false;
@@ -146,14 +145,16 @@ public class Acyclic {
 
   /**
    * Compute a set of acyclic paths through a graph G from a node src to a node sink.
-   * 
-   * This is not terribly efficient.
-   * 
+   *
+   * <p>This is not terribly efficient.
+   *
    * @param max the max number of paths to return.
    */
-  public static <T> Collection<Path> computeAcyclicPaths(NumberedGraph<T> G, T root, T src, T sink, int max) {
+  public static <T> Collection<Path> computeAcyclicPaths(
+      NumberedGraph<T> G, T root, T src, T sink, int max) {
     Collection<Path> result = HashSetFactory.make();
-    EdgeFilteredNumberedGraph<T> acyclic = new EdgeFilteredNumberedGraph<>(G, computeBackEdges(G, root));
+    EdgeFilteredNumberedGraph<T> acyclic =
+        new EdgeFilteredNumberedGraph<>(G, computeBackEdges(G, root));
 
     Collection<Path> worklist = HashSetFactory.make();
     Path sinkPath = Path.make(G.getNumber(sink));
@@ -165,7 +166,8 @@ public class Acyclic {
       if (first == G.getNumber(src)) {
         result.add(p);
       } else {
-        for (IntIterator it = acyclic.getPredNodeNumbers(acyclic.getNode(first)).intIterator(); it.hasNext();) {
+        for (IntIterator it = acyclic.getPredNodeNumbers(acyclic.getNode(first)).intIterator();
+            it.hasNext(); ) {
           worklist.add(Path.prepend(it.next(), p));
         }
       }

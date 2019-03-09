@@ -14,39 +14,30 @@ import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 
 /**
- * The {@link DataflowSolver} builds system over graphs, with dataflow transfer
- * functions on the nodes, the edges or both. In any case, it takes an
- * {@link ITransferFunctionProvider} to tell it what functions to use.
- * 
- * @param <T> type of node in the graph 
- * @param <V> type of abstract states computed 
+ * The {@link DataflowSolver} builds system over graphs, with dataflow transfer functions on the
+ * nodes, the edges or both. In any case, it takes an {@link ITransferFunctionProvider} to tell it
+ * what functions to use.
+ *
+ * @param <T> type of node in the graph
+ * @param <V> type of abstract states computed
  */
 public interface ITransferFunctionProvider<T, V extends IVariable<V>> {
 
-  /**
-   * @return the transfer function from IN_node -&gt; OUT_node
-   */
+  /** @return the transfer function from IN_node -&gt; OUT_node */
   public UnaryOperator<V> getNodeTransferFunction(T node);
 
-  /**
-   * @return true if this provider provides node transfer functions
-   */
+  /** @return true if this provider provides node transfer functions */
   public boolean hasNodeTransferFunctions();
 
-  /**
-   * @return the transfer function from OUT_src -&gt; EDGE_&lt;src,dst&gt;
-   */
+  /** @return the transfer function from OUT_src -&gt; EDGE_&lt;src,dst&gt; */
   public UnaryOperator<V> getEdgeTransferFunction(T src, T dst);
 
-  /**
-   * @return true if this provider provides edge transfer functions
-   */
+  /** @return true if this provider provides edge transfer functions */
   public boolean hasEdgeTransferFunctions();
 
   /**
-   * TODO: perhaps this should go with a Lattice object instead. TODO: provide
-   * an API to allow composition of the meet operator with the flow operator for
-   * a given block, as an optimization?
+   * TODO: perhaps this should go with a Lattice object instead. TODO: provide an API to allow
+   * composition of the meet operator with the flow operator for a given block, as an optimization?
    */
   public AbstractMeetOperator<V> getMeetOperator();
 }

@@ -12,9 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/**
- * A key which represents the return value for a node.
- */
+/** A key which represents the return value for a node. */
 public class ReturnValueKey extends NodeKey {
   public ReturnValueKey(CGNode node) {
     super(node);

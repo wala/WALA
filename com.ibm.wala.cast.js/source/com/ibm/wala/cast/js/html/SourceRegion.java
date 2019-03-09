@@ -10,35 +10,31 @@
  */
 package com.ibm.wala.cast.js.html;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-
 /**
- * Represents a region of source code, with source locations. Regions can be
- * added to other {@link SourceRegion}s, with nested source location information
- * maintained.
+ * Represents a region of source code, with source locations. Regions can be added to other {@link
+ * SourceRegion}s, with nested source location information maintained.
  */
 public class SourceRegion {
 
   private final StringBuilder source = new StringBuilder();
-  
-  /**
-   * source location information
-   */
-  private FileMapping fileMapping;
-  private int currentLine = 1;
-  
-  public SourceRegion() {
-  }
 
-  public void print(final String text, Position originalPos, URL url, boolean bogusURL){
+  /** source location information */
+  private FileMapping fileMapping;
+
+  private int currentLine = 1;
+
+  public SourceRegion() {}
+
+  public void print(final String text, Position originalPos, URL url, boolean bogusURL) {
     int startOffset = source.length();
-    source.append(text);      
+    source.append(text);
     int endOffset = source.length();
 
     int numberOfLineDrops = getNumberOfLineDrops(text);
@@ -46,14 +42,28 @@ public class SourceRegion {
     if (originalPos != null) {
       RangeFileMapping map;
       if (bogusURL) {
-        map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url) {
-          @Override
-          public Reader getInputStream() throws IOException {
-            return new StringReader(text);
-          }
-        }; 
+        map =
+            new RangeFileMapping(
+                startOffset,
+                endOffset,
+                currentLine,
+                currentLine + numberOfLineDrops,
+                originalPos,
+                url) {
+              @Override
+              public Reader getInputStream() throws IOException {
+                return new StringReader(text);
+              }
+            };
       } else {
-        map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url);
+        map =
+            new RangeFileMapping(
+                startOffset,
+                endOffset,
+                currentLine,
+                currentLine + numberOfLineDrops,
+                originalPos,
+                url);
       }
       if (fileMapping == null) {
         fileMapping = map;
@@ -61,29 +71,29 @@ public class SourceRegion {
         fileMapping = new CompositeFileMapping(map, fileMapping);
       }
     }
-    
+
     currentLine += numberOfLineDrops;
   }
 
-  public void println(String text, Position originalPos, URL url, boolean bogusURL){
+  public void println(String text, Position originalPos, URL url, boolean bogusURL) {
     print(text + '\n', originalPos, url, bogusURL);
   }
-  
-  public void print(String text){
+
+  public void print(String text) {
     print(text, null, null, true);
   }
 
-  public void println(String text){
+  public void println(String text) {
     print(text + '\n');
   }
-  
-  public FileMapping writeToFile(PrintWriter ps){
+
+  public FileMapping writeToFile(PrintWriter ps) {
     ps.print(source.toString());
     ps.flush();
     return fileMapping;
   }
-  
-  public void write(SourceRegion otherRegion){
+
+  public void write(SourceRegion otherRegion) {
     int rangeStart = source.length();
     String text = otherRegion.source.toString();
     source.append(text);
@@ -92,7 +102,13 @@ public class SourceRegion {
     int numberOfLineDrops = getNumberOfLineDrops(text);
 
     if (otherRegion.fileMapping != null) {
-      FileMapping map = new NestedRangeMapping(rangeStart, rangeEnd, currentLine, currentLine+numberOfLineDrops, otherRegion.fileMapping);
+      FileMapping map =
+          new NestedRangeMapping(
+              rangeStart,
+              rangeEnd,
+              currentLine,
+              currentLine + numberOfLineDrops,
+              otherRegion.fileMapping);
       if (fileMapping == null) {
         fileMapping = map;
       } else {
@@ -102,17 +118,17 @@ public class SourceRegion {
 
     currentLine += numberOfLineDrops;
   }
-  
-  public void dump(PrintWriter ps){
+
+  public void dump(PrintWriter ps) {
     ps.println(source.toString());
   }
-  
+
   private static int getNumberOfLineDrops(String text) {
     int ret = 0;
     int i = text.indexOf('\n');
-    while (i != -1){
+    while (i != -1) {
       ret++;
-      if (i < text.length()-1){
+      if (i < text.length() - 1) {
         i = text.indexOf('\n', i + 1);
       } else {
         break; // CR was the the last character.

@@ -10,21 +10,21 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
-import java.util.Iterator;
-
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
+import java.util.Iterator;
 
 /**
- * 
  * A supergraph as defined by Reps, Horwitz, and Sagiv POPL95
- * <p>
- * In our implementation we don't require explicit entry and exit nodes. So, the first basic block in a method is implicitly the
- * entry node, but might also be a call node too. Similarly for exit nodes. The solver is coded to deal with this appropriately.
- * <p>
- * Additionally, due to exceptional control flow, each method might have multiple exits or multiple entries.
- * 
- * T type of node in the supergraph P type of a procedure (like a box in an RSM)
+ *
+ * <p>In our implementation we don't require explicit entry and exit nodes. So, the first basic
+ * block in a method is implicitly the entry node, but might also be a call node too. Similarly for
+ * exit nodes. The solver is coded to deal with this appropriately.
+ *
+ * <p>Additionally, due to exceptional control flow, each method might have multiple exits or
+ * multiple entries.
+ *
+ * <p>T type of node in the supergraph P type of a procedure (like a box in an RSM)
  */
 public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
@@ -36,9 +36,7 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
   public static final byte OTHER = 3;
 
-  /**
-   * @return the graph of procedures (e.g. a call graph) over which this supergraph is induced.
-   */
+  /** @return the graph of procedures (e.g. a call graph) over which this supergraph is induced. */
   Graph<P> getProcedureGraph();
 
   /**
@@ -55,21 +53,24 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
   /**
    * @param call a "call" node in the supergraph
-   * @return an Iterator of nodes that are normal (non-call) successors of this call. This should only apply to backwards problems,
-   *         where we might have, say, a call and a goto flow into a return site.
+   * @return an Iterator of nodes that are normal (non-call) successors of this call. This should
+   *     only apply to backwards problems, where we might have, say, a call and a goto flow into a
+   *     return site.
    */
   Iterator<T> getNormalSuccessors(T call);
 
   /**
    * @param call a "call" node in the supergraph
-   * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites for which no callee was found.
+   * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites
+   *     for which no callee was found.
    * @return the corresponding return nodes. There may be many, because of exceptional control flow.
    */
   Iterator<? extends T> getReturnSites(T call, P callee);
 
   /**
    * @param ret a "return" node in the supergraph
-   * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites for which no callee was found.
+   * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites
+   *     for which no callee was found.
    * @return the corresponding call nodes. There may be many.
    */
   Iterator<? extends T> getCallSites(T ret, P callee);
@@ -86,14 +87,10 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
    */
   P getProcOf(T n);
 
-  /**
-   * @return the blocks in the supergraph that represents entry nodes for procedure p
-   */
+  /** @return the blocks in the supergraph that represents entry nodes for procedure p */
   T[] getEntriesForProcedure(P procedure);
 
-  /**
-   * @return the blocks in the supergraph that represents exit nodes for procedure p
-   */
+  /** @return the blocks in the supergraph that represents exit nodes for procedure p */
   T[] getExitsForProcedure(P procedure);
 
   /**
@@ -121,9 +118,7 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
    */
   boolean isReturn(T n);
 
-  /**
-   * @return true iff this node is an entry node s_p for a procedure
-   */
+  /** @return true iff this node is an entry node s_p for a procedure */
   boolean isEntry(T n);
 
   /**
@@ -132,5 +127,4 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
    * @return one of CALL_EDGE, RETURN_EDGE, CALL_TO_RETURN_EDGE, or OTHER
    */
   byte classifyEdge(T src, T dest);
-
 }

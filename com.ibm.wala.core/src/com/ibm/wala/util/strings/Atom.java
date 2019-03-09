@@ -10,18 +10,19 @@
  */
 package com.ibm.wala.util.strings;
 
+import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import com.ibm.wala.util.collections.HashMapFactory;
-
 /**
  * An utf8-encoded byte string.
- * 
- * Atom's are interned (canonicalized) so they may be compared for equality using the "==" operator.
- * 
- * Atoms are used to represent names, descriptors, and string literals appearing in a class's constant pool.
+ *
+ * <p>Atom's are interned (canonicalized) so they may be compared for equality using the "=="
+ * operator.
+ *
+ * <p>Atoms are used to represent names, descriptors, and string literals appearing in a class's
+ * constant pool.
  */
 public final class Atom implements Serializable {
 
@@ -29,23 +30,20 @@ public final class Atom implements Serializable {
   private static final long serialVersionUID = -3256390509887654329L;
 
   /**
-   * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but Atoms are.
+   * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
+   * Atoms are.
    */
-  final private static HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
 
-  /**
-   * The utf8 value this atom represents
-   */
+  /** The utf8 value this atom represents */
   private final byte val[];
 
-  /**
-   * Cached hash code for this atom key.
-   */
+  /** Cached hash code for this atom key. */
   private final int hash;
 
   /**
    * Find or create an atom.
-   * 
+   *
    * @param str atom value, as string literal whose characters are unicode
    * @return atom
    */
@@ -56,8 +54,9 @@ public final class Atom implements Serializable {
 
   /**
    * Find or create an atom.
-   * 
-   * @param str atom value, as string literal whose characters are from ascii subset of unicode (not including null)
+   *
+   * @param str atom value, as string literal whose characters are from ascii subset of unicode (not
+   *     including null)
    * @return atom
    * @throws IllegalArgumentException if str is null
    */
@@ -71,7 +70,7 @@ public final class Atom implements Serializable {
 
   /**
    * Find or create an atom.
-   * 
+   *
    * @param utf8 atom value, as utf8 encoded bytes
    * @return atom
    * @throws IllegalArgumentException if utf8 is null
@@ -85,11 +84,11 @@ public final class Atom implements Serializable {
 
   /**
    * create an Atom from utf8[off] of length len
-   * 
+   *
    * @throws IllegalArgumentException if utf8.length &lt;= off
    */
-  public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException, IllegalArgumentException,
-      IllegalArgumentException {
+  public static Atom findOrCreate(byte utf8[], int off, int len)
+      throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
 
     if (utf8 == null) {
       throw new IllegalArgumentException("utf8 == null");
@@ -111,7 +110,6 @@ public final class Atom implements Serializable {
       val[i] = utf8[off++];
     }
     return findOrCreate(val);
-
   }
 
   public static synchronized Atom findOrCreate(byte[] bytes) {
@@ -142,68 +140,57 @@ public final class Atom implements Serializable {
     return findOrCreate(b.b, start, length);
   }
 
-  /**
-   * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
-   */
+  /** Return printable representation of "this" atom. Does not correctly handle UTF8 translation. */
   @Override
   public final String toString() {
     return new String(val);
   }
 
-  /**
-   * Return printable representation of "this" atom.
-   */
+  /** Return printable representation of "this" atom. */
   public final String toUnicodeString() throws java.io.UTFDataFormatException {
     return UTF8Convert.fromUTF8(val);
   }
 
-  /**
-   * New Atom containing first count bytes
-   */
+  /** New Atom containing first count bytes */
   public final Atom left(int count) {
-    return findOrCreate(val, 0, count);  
+    return findOrCreate(val, 0, count);
   }
 
-  /**
-   * New Atom containing last count bytes
-   */
+  /** New Atom containing last count bytes */
   public final Atom right(int count) {
-    return findOrCreate(val, val.length - count, count);  
+    return findOrCreate(val, val.length - count, count);
   }
 
   public final boolean startsWith(Atom start) {
-      assert (start != null);
+    assert (start != null);
 
-      // can't start with something that's longer.
-      if (val.length < start.val.length)
-        return false;
+    // can't start with something that's longer.
+    if (val.length < start.val.length) return false;
 
-      // otherwise, we know that this length is greater than or equal to the length of start.
-      for (int i = 0; i < start.val.length; ++i) {
-          if (val[i] != start.val[i])
-              return false;
-      }
+    // otherwise, we know that this length is greater than or equal to the length of start.
+    for (int i = 0; i < start.val.length; ++i) {
+      if (val[i] != start.val[i]) return false;
+    }
 
-      return true;
+    return true;
   }
 
   /**
-   * Return array descriptor corresponding to "this" array-element descriptor. this: array-element descriptor - something like "I"
-   * or "Ljava/lang/Object;"
-   * 
+   * Return array descriptor corresponding to "this" array-element descriptor. this: array-element
+   * descriptor - something like "I" or "Ljava/lang/Object;"
+   *
    * @return array descriptor - something like "[I" or "[Ljava/lang/Object;"
    */
   public final Atom arrayDescriptorFromElementDescriptor() {
     byte sig[] = new byte[1 + val.length];
     sig[0] = (byte) '[';
-    for (int i = 0, n = val.length; i < n; ++i)
-      sig[i + 1] = val[i];
+    for (int i = 0, n = val.length; i < n; ++i) sig[i + 1] = val[i];
     return findOrCreate(sig);
   }
 
-/**
-   * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with '&lt;' for future use. At present,
-   * only &lt;init&gt; and &lt;clinit&gt; are used.
+  /**
+   * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with
+   * '&lt;' for future use. At present, only &lt;init&gt; and &lt;clinit&gt; are used.
    */
   public final boolean isReservedMemberName() {
     if (length() == 0) {
@@ -212,9 +199,7 @@ public final class Atom implements Serializable {
     return val[0] == '<';
   }
 
-  /**
-   * Is "this" atom a class descriptor?
-   */
+  /** Is "this" atom a class descriptor? */
   public final boolean isClassDescriptor() {
     if (length() == 0) {
       return false;
@@ -222,9 +207,7 @@ public final class Atom implements Serializable {
     return val[0] == 'L';
   }
 
-  /**
-   * Is "this" atom an array descriptor?
-   */
+  /** Is "this" atom an array descriptor? */
   public final boolean isArrayDescriptor() {
     if (length() == 0) {
       return false;
@@ -232,9 +215,7 @@ public final class Atom implements Serializable {
     return val[0] == '[';
   }
 
-  /**
-   * Is "this" atom a method descriptor?
-   */
+  /** Is "this" atom a method descriptor? */
   public final boolean isMethodDescriptor() throws IllegalArgumentException {
     if (length() == 0) {
       return false;
@@ -246,17 +227,16 @@ public final class Atom implements Serializable {
     return val.length;
   }
 
-  /**
-   * Create atom from given utf8 sequence.
-   */
+  /** Create atom from given utf8 sequence. */
   private Atom(AtomKey key) {
     this.val = key.val;
     this.hash = key.hash;
   }
 
   /**
-   * Parse "this" array descriptor to obtain descriptor for array's element type. this: array descriptor - something like "[I"
-   * 
+   * Parse "this" array descriptor to obtain descriptor for array's element type. this: array
+   * descriptor - something like "[I"
+   *
    * @return array element descriptor - something like "I"
    */
   public final Atom parseForArrayElementDescriptor() throws IllegalArgumentException {
@@ -267,9 +247,9 @@ public final class Atom implements Serializable {
   }
 
   /**
-   * Parse "this" array descriptor to obtain number of dimensions in corresponding array type. this: descriptor - something like
-   * "[Ljava/lang/String;" or "[[I"
-   * 
+   * Parse "this" array descriptor to obtain number of dimensions in corresponding array type. this:
+   * descriptor - something like "[Ljava/lang/String;" or "[[I"
+   *
    * @return dimensionality - something like "1" or "2"
    * @throws IllegalStateException if this Atom does not represent an array
    */
@@ -278,7 +258,7 @@ public final class Atom implements Serializable {
       throw new IllegalArgumentException("empty atom is not an array");
     }
     try {
-      for (int i = 0;; ++i) {
+      for (int i = 0; ; ++i) {
         if (val[i] != '[') {
           return i;
         }
@@ -286,12 +266,11 @@ public final class Atom implements Serializable {
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalStateException("not an array: " + this, e);
     }
-
   }
 
   /**
    * Return the innermost element type reference for an array
-   * 
+   *
    * @throws IllegalStateException if this Atom does not represent an array descriptor
    */
   public final Atom parseForInnermostArrayElementDescriptor() throws IllegalArgumentException {
@@ -309,26 +288,18 @@ public final class Atom implements Serializable {
     }
   }
 
-  /**
-   * key for the dictionary.
-   */
-  private final static class AtomKey {
-    /**
-     * The utf8 value this atom key represents
-     */
+  /** key for the dictionary. */
+  private static final class AtomKey {
+    /** The utf8 value this atom key represents */
     private final byte val[];
 
-    /**
-     * Cached hash code for this atom key.
-     */
+    /** Cached hash code for this atom key. */
     private final int hash;
 
-    /**
-     * Create atom from given utf8 sequence.
-     */
+    /** Create atom from given utf8 sequence. */
     private AtomKey(byte utf8[]) {
       int tmp = 99989;
-      for (int i = utf8.length; --i >= 0;) {
+      for (int i = utf8.length; --i >= 0; ) {
         tmp = 99991 * tmp + utf8[i];
       }
       this.val = utf8;
@@ -344,17 +315,13 @@ public final class Atom implements Serializable {
       }
 
       AtomKey that = (AtomKey) other;
-      if (hash != that.hash)
-        return false;
-      if (val.length != that.val.length)
-        return false;
+      if (hash != that.hash) return false;
+      if (val.length != that.val.length) return false;
       for (int i = 0; i < val.length; i++) {
-        if (val[i] != that.val[i])
-          return false;
+        if (val[i] != that.val[i]) return false;
       }
 
       return true;
-
     }
 
     /**
@@ -369,7 +336,6 @@ public final class Atom implements Serializable {
     public final int hashCode() {
       return hash;
     }
-
   }
 
   @Override
@@ -379,7 +345,7 @@ public final class Atom implements Serializable {
 
   /*
    * These are canonical
-   * 
+   *
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -387,13 +353,11 @@ public final class Atom implements Serializable {
     return this == obj;
   }
 
-  /**
-   * return an array of bytes representing the utf8 characters in this
-   */
+  /** return an array of bytes representing the utf8 characters in this */
   public byte[] getValArray() {
     return val.clone();
   }
-  
+
   public byte getVal(int i) throws IllegalArgumentException {
     try {
       return val[i];
@@ -402,9 +366,7 @@ public final class Atom implements Serializable {
     }
   }
 
-  /**
-   * @return true iff this atom contains the specified byte
-   */
+  /** @return true iff this atom contains the specified byte */
   public boolean contains(byte b) {
     for (byte element : val) {
       if (element == b) {
@@ -415,7 +377,7 @@ public final class Atom implements Serializable {
   }
 
   public int rIndex(byte b) {
-    for (int i = val.length - 1; i >=0; --i) {
+    for (int i = val.length - 1; i >= 0; --i) {
       if (val[i] == b) {
         return val.length - i;
       }
@@ -438,7 +400,7 @@ public final class Atom implements Serializable {
   }
 
   public static Atom concat(Atom ma, Atom mb) {
-     if ((ma == null ) || (mb == null)) {
+    if ((ma == null) || (mb == null)) {
       throw new IllegalArgumentException("argument may not be null!");
     }
 
@@ -459,11 +421,10 @@ public final class Atom implements Serializable {
   }
 
   /**
-   * Special method that is called by Java deserialization process. Any HashCons'ed object should implement it, in order to make
-   * sure that all equal objects are consolidated.
+   * Special method that is called by Java deserialization process. Any HashCons'ed object should
+   * implement it, in order to make sure that all equal objects are consolidated.
    */
   private Object readResolve() {
     return findOrCreate(this.val);
   }
-
 }

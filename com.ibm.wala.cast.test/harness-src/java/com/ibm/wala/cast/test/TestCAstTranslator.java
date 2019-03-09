@@ -10,15 +10,6 @@
  */
 package com.ibm.wala.cast.test;
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Assert;
-
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
@@ -36,6 +27,13 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import org.junit.Assert;
 
 public abstract class TestCAstTranslator extends WalaTestCase {
 
@@ -101,7 +99,8 @@ public abstract class TestCAstTranslator extends WalaTestCase {
         Pair<?, ?>[] instanceMethods = (Pair<?, ?>[]) entry[4];
         if (instanceMethods != null) {
           for (Pair<?, ?> instanceMethod : instanceMethods) {
-            this.instanceMethods.put(Pair.make(clsName, (Object) instanceMethod.fst), instanceMethod.snd);
+            this.instanceMethods.put(
+                Pair.make(clsName, (Object) instanceMethod.fst), instanceMethod.snd);
           }
         }
 
@@ -149,9 +148,9 @@ public abstract class TestCAstTranslator extends WalaTestCase {
       }
       for (Object name2 : cls.getDeclaredMethods()) {
         IMethod mth = (IMethod) name2;
-        if (mth.isStatic())
-          System.err.print("static ");
-        System.err.println(("method " + mth + " with " + mth.getNumberOfParameters() + " parameters"));
+        if (mth.isStatic()) System.err.print("static ");
+        System.err.println(
+            ("method " + mth + " with " + mth.getNumberOfParameters() + " parameters"));
         for (int i = 0; i < mth.getNumberOfParameters(); i++) {
           System.err.println(("param " + i + ": " + mth.getParameterType(i)));
         }
@@ -172,25 +171,30 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     for (Object name : cha) {
       IClass cls = (IClass) name;
       clsCount++;
-      Assert.assertTrue("found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
+      Assert.assertTrue(
+          "found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
 
       if (cls.getSuperclass() == null) {
-        Assert.assertTrue(cls.getName() + " has no superclass", supers.get(cls.getName().toString()) == null);
+        Assert.assertTrue(
+            cls.getName() + " has no superclass", supers.get(cls.getName().toString()) == null);
       } else {
-        Assert.assertTrue("super of " + cls.getName() + " is " + cls.getSuperclass().getName(), supers
-            .get(cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));
+        Assert.assertTrue(
+            "super of " + cls.getName() + " is " + cls.getSuperclass().getName(),
+            supers.get(cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));
       }
 
       for (Object name2 : cls.getDeclaredInstanceFields()) {
         IField fld = (IField) name2;
-        Assert.assertTrue(cls.getName() + " has field " + fld.getName(), instanceFields.contains(Pair.make(
-            cls.getName().toString(), fld.getName().toString())));
+        Assert.assertTrue(
+            cls.getName() + " has field " + fld.getName(),
+            instanceFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())));
       }
 
       for (Object name2 : cls.getDeclaredStaticFields()) {
         IField fld = (IField) name2;
-        Assert.assertTrue(cls.getName() + " has static field " + fld.getName(), staticFields.contains(Pair.make(cls.getName()
-            .toString(), fld.getName().toString())));
+        Assert.assertTrue(
+            cls.getName() + " has static field " + fld.getName(),
+            staticFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())));
       }
 
       for (Object name2 : cls.getDeclaredMethods()) {
@@ -199,12 +203,18 @@ public abstract class TestCAstTranslator extends WalaTestCase {
         Pair<String, String> key = Pair.make(cls.getName().toString(), mth.getName().toString());
 
         if (mth.isStatic()) {
-          Assert.assertTrue(cls.getName() + " has static method " + mth.getName(), staticMethods.containsKey(key));
-          Assert.assertTrue(cls.getName() + "::" + mth.getName() + " has " + np + " parameters", staticMethods.get(key).equals(np));
+          Assert.assertTrue(
+              cls.getName() + " has static method " + mth.getName(),
+              staticMethods.containsKey(key));
+          Assert.assertTrue(
+              cls.getName() + "::" + mth.getName() + " has " + np + " parameters",
+              staticMethods.get(key).equals(np));
         } else {
-          Assert.assertTrue(cls.getName() + " has method " + mth.getName(), instanceMethods.containsKey(key));
-          Assert.assertTrue(cls.getName() + "::" + mth.getName() + " has " + np + " parameters", instanceMethods.get(key)
-              .equals(np));
+          Assert.assertTrue(
+              cls.getName() + " has method " + mth.getName(), instanceMethods.containsKey(key));
+          Assert.assertTrue(
+              cls.getName() + "::" + mth.getName() + " has " + np + " parameters",
+              instanceMethods.get(key).equals(np));
         }
       }
     }
@@ -217,9 +227,12 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     SourceFileModule[] fileNames = new SourceFileModule[args.length];
     for (int i = 0; i < args.length; i++) {
       if (new File(args[i]).exists()) {
-        fileNames[i] = CAstCallGraphUtil.makeSourceModule(new File(args[i]).toURI().toURL(), args[i]);
+        fileNames[i] =
+            CAstCallGraphUtil.makeSourceModule(new File(args[i]).toURI().toURL(), args[i]);
       } else if (new File(testPath + args[i]).exists()) {
-        fileNames[i] = CAstCallGraphUtil.makeSourceModule(new File(testPath + args[i]).toURI().toURL(), args[i]);
+        fileNames[i] =
+            CAstCallGraphUtil.makeSourceModule(
+                new File(testPath + args[i]).toURI().toURL(), args[i]);
       } else {
         URL url = getClass().getClassLoader().getResource(args[i]);
         fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, args[i]);
@@ -238,7 +251,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
 
   protected void testInternal(String arg, TranslatorAssertions assertions) {
     try {
-      testInternal(new String[] { arg }, assertions);
+      testInternal(new String[] {arg}, assertions);
     } catch (Exception e) {
       e.printStackTrace();
       Assert.assertTrue(e.toString(), false);

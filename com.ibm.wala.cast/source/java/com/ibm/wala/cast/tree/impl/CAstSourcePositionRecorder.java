@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -20,13 +24,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.Iterator2Iterable;
-
 public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
- 
+
   private final Map<CAstNode, Position> positions = HashMapFactory.make();
 
   @Override
@@ -43,56 +42,78 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
     positions.put(n, p);
   }
 
-  public void setPosition(CAstNode n, 
-			  final int fl, 
-			  final int fc, 
-			  final int ll,
-			  final int lc,
-			  final String url,
-			  final String file)
-      throws MalformedURLException
-  {
+  public void setPosition(
+      CAstNode n,
+      final int fl,
+      final int fc,
+      final int ll,
+      final int lc,
+      final String url,
+      final String file)
+      throws MalformedURLException {
     setPosition(n, fl, fc, ll, lc, new URL(url), new URL(file));
   }
 
-  public void setPosition(CAstNode n, 
-			  final int fl, 
-			  final int fc, 
-			  final int ll,
-			  final int lc,
-			  final URL url,
-			  final URL file)
-  {
-    setPosition(n,
-      new AbstractSourcePosition() {
-	@Override
-  public int getFirstLine() { return fl; }
-	@Override
-  public int getLastLine() { return ll; }
-	@Override
-  public int getFirstCol() { return fc; }
-	@Override
-  public int getLastCol() { return lc; }
-	@Override
-  public int getFirstOffset() { return -1; }
-	@Override
-  public int getLastOffset() { return -1; }
-	@Override
-  public URL getURL() { return url; }
-	@Override
-  public Reader getReader() throws IOException { 
-	  return new InputStreamReader(file.openConnection().getInputStream());
-	}
-	@Override
-  public String toString() {
-	  return "["+fl+ ':' +fc+"]->["+ll+ ':' +lc+ ']';
-	}
-      });
+  public void setPosition(
+      CAstNode n,
+      final int fl,
+      final int fc,
+      final int ll,
+      final int lc,
+      final URL url,
+      final URL file) {
+    setPosition(
+        n,
+        new AbstractSourcePosition() {
+          @Override
+          public int getFirstLine() {
+            return fl;
+          }
+
+          @Override
+          public int getLastLine() {
+            return ll;
+          }
+
+          @Override
+          public int getFirstCol() {
+            return fc;
+          }
+
+          @Override
+          public int getLastCol() {
+            return lc;
+          }
+
+          @Override
+          public int getFirstOffset() {
+            return -1;
+          }
+
+          @Override
+          public int getLastOffset() {
+            return -1;
+          }
+
+          @Override
+          public URL getURL() {
+            return url;
+          }
+
+          @Override
+          public Reader getReader() throws IOException {
+            return new InputStreamReader(file.openConnection().getInputStream());
+          }
+
+          @Override
+          public String toString() {
+            return "[" + fl + ':' + fc + "]->[" + ll + ':' + lc + ']';
+          }
+        });
   }
-    
+
   public void setPosition(CAstNode n, int lineNumber, String url, String file)
-    throws MalformedURLException
-  {
+      throws MalformedURLException {
     setPosition(n, lineNumber, new URL(url), new URL(file));
   }
 
@@ -101,7 +122,7 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
   }
 
   public void addAll(CAstSourcePositionMap other) {
-    for(CAstNode node : Iterator2Iterable.make(other.getMappedNodes())) {
+    for (CAstNode node : Iterator2Iterable.make(other.getMappedNodes())) {
       setPosition(node, other.getPosition(node));
     }
   }

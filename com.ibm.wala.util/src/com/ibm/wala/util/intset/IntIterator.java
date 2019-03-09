@@ -10,19 +10,12 @@
  */
 package com.ibm.wala.util.intset;
 
-
-/**
- * a more efficient iterator for sets of integers
- */
+/** a more efficient iterator for sets of integers */
 public interface IntIterator {
 
-  /**
-   * @return true iff this iterator has a next element
-   */
+  /** @return true iff this iterator has a next element */
   public boolean hasNext();
-  
-  /**
-   * @return next integer in the iteration
-   */
+
+  /** @return next integer in the iteration */
   public int next();
 }

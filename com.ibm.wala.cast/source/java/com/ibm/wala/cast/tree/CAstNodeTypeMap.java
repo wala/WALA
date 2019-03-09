@@ -16,8 +16,8 @@ package com.ibm.wala.cast.tree;
 import java.util.Collection;
 
 public interface CAstNodeTypeMap {
-  
-    Collection<CAstNode> getMappedNodes();
-    
-	CAstType getNodeType(CAstNode node);
+
+  Collection<CAstNode> getMappedNodes();
+
+  CAstType getNodeType(CAstNode node);
 }

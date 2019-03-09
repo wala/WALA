@@ -11,16 +11,6 @@
 
 package com.ibm.wala.cast.js.ipa.summaries;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
@@ -48,6 +38,15 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class JavaScriptConstructorFunctions {
 
@@ -62,14 +61,23 @@ public class JavaScriptConstructorFunctions {
   public static class JavaScriptConstructor extends JavaScriptSummarizedFunction {
     private final String toStringExtra;
     private final IClass constructorForType;
-    
-    private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass, IClass constructorForType, String toStringExtra) {
+
+    private JavaScriptConstructor(
+        MethodReference ref,
+        MethodSummary summary,
+        IClass declaringClass,
+        IClass constructorForType,
+        String toStringExtra) {
       super(ref, summary, declaringClass);
       this.toStringExtra = toStringExtra;
       this.constructorForType = constructorForType;
     }
 
-    private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass, IClass constructorForType) {
+    private JavaScriptConstructor(
+        MethodReference ref,
+        MethodSummary summary,
+        IClass declaringClass,
+        IClass constructorForType) {
       this(ref, summary, declaringClass, constructorForType, "");
     }
 
@@ -77,7 +85,7 @@ public class JavaScriptConstructorFunctions {
     public String toString() {
       return "<ctor for " + getReference().getDeclaringClass() + toStringExtra + '>';
     }
-    
+
     public IClass constructedType() {
       return constructorForType;
     }
@@ -89,19 +97,24 @@ public class JavaScriptConstructorFunctions {
   }
 
   private static IMethod makeNullaryValueConstructor(IClass cls, Object value) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 1, "prototype"));
     S.getNextProgramCounter();
-    
-    S.addStatement(insts.NewInstruction(S.getNumberOfStatements(), 5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+
+    S.addStatement(
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            5,
+            NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 5, 4));
-    //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
+    // S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
-    
+
     S.addConstant(Integer.valueOf(8), new ConstantValue(value));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 8, "$value"));
     if (value instanceof String) {
@@ -109,36 +122,41 @@ public class JavaScriptConstructorFunctions {
       S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 9, "length"));
     }
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
-    
-    //S.addConstant(9, new ConstantValue("__proto__"));
-    
+
+    // S.addConstant(9, new ConstantValue("__proto__"));
+
     return new JavaScriptConstructor(ref, S, cls, cls);
   }
 
   private static IMethod makeUnaryValueConstructor(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
+    MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 5, 1, "prototype"));
     S.getNextProgramCounter();
-    
-    S.addStatement(insts.NewInstruction(S.getNumberOfStatements(), 6, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+
+    S.addStatement(
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            6,
+            NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 6, 5));
-    //S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
+    // S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 6, 2, "$value"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 6, false));
     S.getNextProgramCounter();
- 
-    //S.addConstant(7, new ConstantValue("__proto__"));
+
+    // S.addConstant(7, new ConstantValue("__proto__"));
 
     return new JavaScriptConstructor(ref, S, cls, cls);
   }
@@ -147,50 +165,56 @@ public class JavaScriptConstructorFunctions {
     if (nargs == 0 || nargs == 1) {
 
       Object key = Pair.make(cls, Integer.valueOf(nargs));
-      if (constructors.containsKey(key))
-        return constructors.get(key);
-
+      if (constructors.containsKey(key)) return constructors.get(key);
       else
-        return record(key, (nargs == 0) ? makeNullaryValueConstructor(cls, value) : makeUnaryValueConstructor(cls));
+        return record(
+            key,
+            (nargs == 0)
+                ? makeNullaryValueConstructor(cls, value)
+                : makeUnaryValueConstructor(cls));
     } else {
-        // not a legal call, likely due to dataflow imprecision
-        return null;
+      // not a legal call, likely due to dataflow imprecision
+      return null;
     }
   }
 
-  /**
-   * create a method for constructing an Object with no arguments passed
-   */
+  /** create a method for constructing an Object with no arguments passed */
   private IMethod makeNullaryObjectConstructor(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Object);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 1, "prototype"));
     S.getNextProgramCounter();
-    
-    S.addStatement(insts.NewInstruction(S.getNumberOfStatements(), 5, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+
+    S.addStatement(
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            5,
+            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 5, 4));
-    //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
+    // S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
-    
-    //S.addConstant(6, new ConstantValue("__proto__"));
+
+    // S.addConstant(6, new ConstantValue("__proto__"));
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Object));
   }
 
   private IMethod makeUnaryObjectConstructor(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Object);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
-    
+
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Object));
   }
 
@@ -198,101 +222,109 @@ public class JavaScriptConstructorFunctions {
     if (nargs == 0 || nargs == 1) {
 
       Object key = Pair.make(cls, Integer.valueOf(nargs));
-      if (constructors.containsKey(key))
-        return constructors.get(key);
-
+      if (constructors.containsKey(key)) return constructors.get(key);
       else
-        return record(key, (nargs == 0) ? makeNullaryObjectConstructor(cls) : makeUnaryObjectConstructor(cls));
-    
+        return record(
+            key,
+            (nargs == 0) ? makeNullaryObjectConstructor(cls) : makeUnaryObjectConstructor(cls));
+
     } else {
       // not a legal call, likely the result of analysis imprecision
       return null;
     }
   }
-  
+
   private IMethod makeObjectCall(IClass cls, int nargs) {
     assert nargs == 0;
 
     Object key = Pair.make(cls, Integer.valueOf(nargs));
-    if (constructors.containsKey(key))
-      return constructors.get(key);
-
-    else
-      return record(key, makeNullaryObjectConstructor(cls));
+    if (constructors.containsKey(key)) return constructors.get(key);
+    else return record(key, makeNullaryObjectConstructor(cls));
   }
 
   private IMethod makeArrayLengthConstructor(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
+    MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 5, 1, "prototype"));
     S.getNextProgramCounter();
-    
-    S.addStatement(insts.NewInstruction(S.getNumberOfStatements(), 6, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
+
+    S.addStatement(
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            6,
+            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 6, 5));
-    //S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
+    // S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 6, 2, "length"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 6, false));
     S.getNextProgramCounter();
-  
-    //S.addConstant(7, new ConstantValue("__proto__"));
+
+    // S.addConstant(7, new ConstantValue("__proto__"));
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Array));
   }
 
   private IMethod makeArrayContentsConstructor(IClass cls, int nargs) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
 
     S.addConstant(Integer.valueOf(nargs + 3), new ConstantValue("prototype"));
     S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), nargs + 4, 1, nargs + 3));
     S.getNextProgramCounter();
-    
+
     S.addStatement(
-        insts.NewInstruction(S.getNumberOfStatements(), nargs + 5, NewSiteReference.make(S.getNextProgramCounter(),
-            JavaScriptTypes.Array)));
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            nargs + 5,
+            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), nargs + 5, nargs + 4));
-    //S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
+    // S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
-    
+
     S.addConstant(Integer.valueOf(nargs + 7), new ConstantValue(nargs));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), nargs + 5, nargs + 7, "length"));
     S.getNextProgramCounter();
-    
+
     int vn = nargs + 9;
     for (int i = 0; i < nargs; i++, vn += 2) {
       S.addConstant(Integer.valueOf(vn), new ConstantValue(i));
       S.addStatement(insts.PropertyWrite(S.getNumberOfStatements(), nargs + 5, vn, i + 1));
       S.getNextProgramCounter();
-      }
+    }
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
-    
-    //S.addConstant(vn, new ConstantValue("__proto__"));
+
+    // S.addConstant(vn, new ConstantValue("__proto__"));
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Array));
   }
 
   private IMethod makeArrayConstructor(IClass cls, int nargs) {
     Object key = Pair.make(cls, Integer.valueOf(nargs));
-    if (constructors.containsKey(key))
-      return constructors.get(key);
-
+    if (constructors.containsKey(key)) return constructors.get(key);
     else
-      return record(key, (nargs == 1) ? makeArrayLengthConstructor(cls) : makeArrayContentsConstructor(cls, nargs));
+      return record(
+          key,
+          (nargs == 1)
+              ? makeArrayLengthConstructor(cls)
+              : makeArrayContentsConstructor(cls, nargs));
   }
 
   private IMethod makeNullaryStringCall(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
     MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
@@ -304,24 +336,26 @@ public class JavaScriptConstructorFunctions {
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
-    
+
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.String));
   }
 
   private IMethod makeUnaryStringCall(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
+    MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 2, "toString"));
     S.getNextProgramCounter();
-    
-    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
-    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] { 2 }, 6, cs));
+
+    CallSiteReference cs =
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] {2}, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
-    
+
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.String));
   }
 
@@ -329,39 +363,39 @@ public class JavaScriptConstructorFunctions {
     assert nargs == 0 || nargs == 1;
 
     Object key = Pair.make(cls, Integer.valueOf(nargs));
-    if (constructors.containsKey(key))
-      return constructors.get(key);
-
-    else
-      return record(key, (nargs == 0) ? makeNullaryStringCall(cls) : makeUnaryStringCall(cls));
+    if (constructors.containsKey(key)) return constructors.get(key);
+    else return record(key, (nargs == 0) ? makeNullaryStringCall(cls) : makeUnaryStringCall(cls));
   }
 
   private IMethod makeNullaryNumberCall(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
     MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addConstant(Integer.valueOf(2), new ConstantValue(0.0));
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
-    
+
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Number));
   }
 
   private IMethod makeUnaryNumberCall(IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
+    MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 2, "toNumber"));
     S.getNextProgramCounter();
-    
-    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
-    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] { 2 }, 6, cs));
+
+    CallSiteReference cs =
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] {2}, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
-    
+
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Number));
   }
 
@@ -369,54 +403,62 @@ public class JavaScriptConstructorFunctions {
     assert nargs == 0 || nargs == 1;
 
     Object key = Pair.make(cls, Integer.valueOf(nargs));
-    if (constructors.containsKey(key))
-      return constructors.get(key);
-
-    else
-      return record(key, (nargs == 0) ? makeNullaryNumberCall(cls) : makeUnaryNumberCall(cls));
+    if (constructors.containsKey(key)) return constructors.get(key);
+    else return record(key, (nargs == 0) ? makeNullaryNumberCall(cls) : makeUnaryNumberCall(cls));
   }
 
   private IMethod makeFunctionConstructor(IClass receiver, IClass cls) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   Pair<IClass, IClass> tableKey = Pair.make(receiver, cls);
-    if (constructors.containsKey(tableKey))
-      return constructors.get(tableKey);
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
+    Pair<IClass, IClass> tableKey = Pair.make(receiver, cls);
+    if (constructors.containsKey(tableKey)) return constructors.get(tableKey);
 
     MethodReference ref = JavaScriptMethods.makeCtorReference(receiver.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 1, "prototype"));
     S.getNextProgramCounter();
-    
-    S.addStatement(insts.NewInstruction(S.getNumberOfStatements(), 5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(insts.NewInstruction(S.getNumberOfStatements(), 7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+    S.addStatement(
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            5,
+            NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+
+    S.addStatement(
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            7,
+            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 5, 4));
-    //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
+    // S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 7, "prototype"));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 7, 5, "constructor"));
     S.getNextProgramCounter();
-    
+
     // TODO we need to set v7.__proto__ to Object.prototype
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
-    
-    //S.addConstant(8, new ConstantValue("__proto__"));
+
+    // S.addConstant(8, new ConstantValue("__proto__"));
 
     if (receiver != cls)
-      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls, "(" + cls.getReference().getName() + ')'));
-    else
-      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls));
+      return record(
+          tableKey,
+          new JavaScriptConstructor(
+              ref, S, receiver, cls, "(" + cls.getReference().getName() + ')'));
+    else return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls));
   }
 
   private int ctorCount = 0;
 
-  private IMethod makeFunctionConstructor(IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass cls, int nargs) {
+  private IMethod makeFunctionConstructor(
+      IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass cls, int nargs) {
     SymbolTable ST = callerIR.getSymbolTable();
 
     switch (nargs) {
@@ -424,8 +466,10 @@ public class JavaScriptConstructorFunctions {
         return makeFunctionConstructor(cls, cls);
       case 1:
         if (ST.isStringConstant(callStmt.getUse(1))) {
-          TypeReference ref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(ST
-              .getStringValue(callStmt.getUse(1))));
+          TypeReference ref =
+              TypeReference.findOrCreate(
+                  JavaScriptTypes.jsLoader,
+                  TypeName.string2TypeName(ST.getStringValue(callStmt.getUse(1))));
 
           IClass cls2 = cha.lookupClass(ref);
           if (cls2 != null) {
@@ -439,13 +483,11 @@ public class JavaScriptConstructorFunctions {
         JavaScriptLoader cl = (JavaScriptLoader) cha.getLoader(JavaScriptTypes.jsLoader);
 
         for (int i = 1; i < callStmt.getNumberOfUses(); i++)
-          if (!ST.isStringConstant(callStmt.getUse(i)))
-            return makeFunctionConstructor(cls, cls);
+          if (!ST.isStringConstant(callStmt.getUse(i))) return makeFunctionConstructor(cls, cls);
 
         final StringBuilder fun = new StringBuilder("function _fromctor (");
         for (int j = 1; j < callStmt.getNumberOfUses() - 1; j++) {
-          if (j != 1)
-            fun.append(',');
+          if (j != 1) fun.append(',');
           fun.append(ST.getStringValue(callStmt.getUse(j)));
         }
 
@@ -455,81 +497,80 @@ public class JavaScriptConstructorFunctions {
 
         try {
           final String fileName = "ctor$" + ++ctorCount;
-          ModuleEntry ME = new SourceModule() {
-
-            @Override
-            public String getName() {
-              return fileName;
-            }
-
-            @Override
-            public boolean isClassFile() {
-              return false;
-            }
-
-            @Override
-            public boolean isSourceFile() {
-              return true;
-            }
-
-            @Override
-            public InputStream getInputStream() {
-              return new InputStream() {
-                private int i = 0;
+          ModuleEntry ME =
+              new SourceModule() {
 
                 @Override
-                public int read() throws IOException {
-                  if (i >= fun.length()) {
-                    return -1;
-                  } else {
-                    return fun.codePointAt(i++);
-                  }
+                public String getName() {
+                  return fileName;
                 }
 
+                @Override
+                public boolean isClassFile() {
+                  return false;
+                }
+
+                @Override
+                public boolean isSourceFile() {
+                  return true;
+                }
+
+                @Override
+                public InputStream getInputStream() {
+                  return new InputStream() {
+                    private int i = 0;
+
+                    @Override
+                    public int read() throws IOException {
+                      if (i >= fun.length()) {
+                        return -1;
+                      } else {
+                        return fun.codePointAt(i++);
+                      }
+                    }
+                  };
+                }
+
+                @Override
+                public boolean isModuleFile() {
+                  return false;
+                }
+
+                @Override
+                public Module asModule() {
+                  return null;
+                }
+
+                @Override
+                public String getClassName() {
+                  return fileName;
+                }
+
+                @Override
+                public Module getContainer() {
+                  return null;
+                }
+
+                @Override
+                public Iterator<? extends ModuleEntry> getEntries() {
+                  return new NonNullSingletonIterator<ModuleEntry>(this);
+                }
+
+                @Override
+                public Reader getInputReader() {
+                  return new StringReader(fun.toString());
+                }
+
+                @Override
+                public URL getURL() {
+                  try {
+                    return new URL("file://" + fileName);
+                  } catch (MalformedURLException e) {
+                    assert false;
+                    return null;
+                  }
+                }
               };
-            }
-
-            @Override
-            public boolean isModuleFile() {
-              return false;
-            }
-
-            @Override
-            public Module asModule() {
-              return null;
-            }
-
-            @Override
-            public String getClassName() {
-              return fileName;
-            }
-
-            @Override
-            public Module getContainer() {
-              return null;
-            }
-
-            @Override
-            public Iterator<? extends ModuleEntry> getEntries() {
-              return new NonNullSingletonIterator<ModuleEntry>(this);
-            }
-
-            @Override
-            public Reader getInputReader() {
-              return new StringReader(fun.toString());
-            }
-
-            @Override
-            public URL getURL() {
-              try {
-                return new URL("file://" + fileName);
-              } catch (MalformedURLException e) {
-                assert false;
-                return null;
-              }
-            }
-
-          };
 
           Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, ME);
           IClass fcls = null;
@@ -551,48 +592,56 @@ public class JavaScriptConstructorFunctions {
     }
   }
 
- 
   private IMethod makeFunctionObjectConstructor(IClass cls, int nargs) {
-    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
-   Object key = Pair.make(cls, Integer.valueOf(nargs));
-    if (constructors.containsKey(key))
-      return constructors.get(key);
-    
+    JSInstructionFactory insts =
+        (JSInstructionFactory) cls.getClassLoader().getInstructionFactory();
+    Object key = Pair.make(cls, Integer.valueOf(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
+
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), nargs + 4, 1, "prototype"));
     S.getNextProgramCounter();
-      
+
     S.addStatement(
-        insts.NewInstruction(S.getNumberOfStatements(), nargs + 5, 
-                                     NewSiteReference.make(S.getNextProgramCounter(),
-                                     JavaScriptTypes.Object)));
+        insts.NewInstruction(
+            S.getNumberOfStatements(),
+            nargs + 5,
+            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), nargs + 5, nargs + 4));
     S.getNextProgramCounter();
-    
-    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+
+    CallSiteReference cs =
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     int[] args = new int[nargs + 1];
     args[0] = nargs + 5;
-    for (int i = 0; i < nargs; i++)
-      args[i + 1] = i + 2;
+    for (int i = 0; i < nargs; i++) args[i + 1] = i + 2;
     S.addStatement(insts.Invoke(S.getNumberOfStatements(), 1, nargs + 7, args, nargs + 8, cs));
     int pc = S.getNextProgramCounter();
 
     S.addConstant(nargs + 9, null);
-    S.addStatement(insts.ConditionalBranchInstruction(S.getNumberOfStatements(), Operator.EQ, JavaScriptTypes.Root, nargs + 7, nargs + 9, pc+2));
+    S.addStatement(
+        insts.ConditionalBranchInstruction(
+            S.getNumberOfStatements(),
+            Operator.EQ,
+            JavaScriptTypes.Root,
+            nargs + 7,
+            nargs + 9,
+            pc + 2));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), nargs + 7, false));
     S.getNextProgramCounter();
-    
+
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), nargs + 5, false));
     S.getNextProgramCounter();
-    
+
     return record(key, new JavaScriptConstructor(ref, S, cls, cls));
   }
 
-  public IMethod findOrCreateConstructorMethod(IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass receiver, int nargs) {
+  public IMethod findOrCreateConstructorMethod(
+      IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass receiver, int nargs) {
     if (receiver.getReference().equals(JavaScriptTypes.Object))
       return makeObjectConstructor(receiver, nargs);
     else if (receiver.getReference().equals(JavaScriptTypes.Array))
@@ -608,13 +657,13 @@ public class JavaScriptConstructorFunctions {
       return makeFunctionConstructor(callerIR, callStmt, receiver, nargs);
     else if (cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.CodeBody)))
       return makeFunctionObjectConstructor(receiver, nargs);
-
     else {
       return null;
     }
   }
 
-  public IMethod findOrCreateCallMethod(IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass receiver, int nargs) {
+  public IMethod findOrCreateCallMethod(
+      IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass receiver, int nargs) {
     if (receiver.getReference().equals(JavaScriptTypes.Object))
       return makeObjectCall(receiver, nargs);
     else if (receiver.getReference().equals(JavaScriptTypes.Array))
@@ -629,5 +678,4 @@ public class JavaScriptConstructorFunctions {
       return null;
     }
   }
-
 }

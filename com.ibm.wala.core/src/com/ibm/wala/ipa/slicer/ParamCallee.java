@@ -12,13 +12,9 @@ package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/**
- * A {@link Statement} representing a formal parameter
- */
+/** A {@link Statement} representing a formal parameter */
 public class ParamCallee extends Statement implements ValueNumberCarrier {
-  /**
-   * Value number of the parameter
-   */
+  /** Value number of the parameter */
   protected final int valueNumber;
 
   public ParamCallee(CGNode node, int valueNumber) {
@@ -51,17 +47,11 @@ public class ParamCallee extends Statement implements ValueNumberCarrier {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
     final ParamCallee other = (ParamCallee) obj;
-    if (valueNumber != other.valueNumber)
-      return false;
+    if (valueNumber != other.valueNumber) return false;
     return true;
   }
-  
-  
 }

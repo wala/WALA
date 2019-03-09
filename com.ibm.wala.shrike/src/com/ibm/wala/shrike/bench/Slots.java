@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrike.bench;
 
-/**
- * @author roca@us.ibm.com
- */
+/** @author roca@us.ibm.com */
 public class Slots {
   public static Object o;
 

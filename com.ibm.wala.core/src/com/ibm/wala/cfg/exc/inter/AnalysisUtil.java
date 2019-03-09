@@ -11,21 +11,20 @@
 
 package com.ibm.wala.cfg.exc.inter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utility class for the exception pruning analysis.
- * 
- * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
- * It has been adapted and integrated into the WALA project by Juergen Graf.
+ *
+ * <p>This class has been developed as part of a student project "Studienarbeit" by Markus
+ * Herhoffer. It has been adapted and integrated into the WALA project by Juergen Graf.
  *
  * @author Markus Herhoffer &lt;markus.herhoffer@student.kit.edu&gt;
  * @author Juergen Graf &lt;graf@kit.edu&gt;
@@ -35,26 +34,23 @@ public final class AnalysisUtil {
   private AnalysisUtil() {
     throw new IllegalStateException("No instances of this class allowed.");
   }
-  
+
   /**
    * Checks if a node is FakeRoot
-   * 
-   * @param node
-   *          the node to check
+   *
+   * @param node the node to check
    * @return true if node is FakeRoot
    */
   public static boolean isFakeRoot(CallGraph CG, CGNode node) {
     return (node.equals(CG.getFakeRootNode()));
   }
-  
+
   /**
-   * Returns an array of {@code int} with the parameter's var nums of the
-   * invoked method in {@code invokeInstruction}.
-   * 
-   * @param invokeInstruction
-   *          The instruction that invokes the method.
-   * @return an array of {@code int} with all parameter's var nums
-   *         including the this pointer.
+   * Returns an array of {@code int} with the parameter's var nums of the invoked method in {@code
+   * invokeInstruction}.
+   *
+   * @param invokeInstruction The instruction that invokes the method.
+   * @return an array of {@code int} with all parameter's var nums including the this pointer.
    */
   public static int[] getParameterNumbers(SSAAbstractInvokeInstruction invokeInstruction) {
     final int number = invokeInstruction.getNumberOfPositionalParameters();
@@ -70,12 +66,12 @@ public final class AnalysisUtil {
 
   /**
    * Returns a Set of all blocks that invoke another method.
-   * 
-   * @param cfg
-   *          The Control Flow Graph to analyze
+   *
+   * @param cfg The Control Flow Graph to analyze
    * @return a Set of all blocks that contain an invoke
    */
-  public static Set<IExplodedBasicBlock> extractInvokeBlocks(final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg) {
+  public static Set<IExplodedBasicBlock> extractInvokeBlocks(
+      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg) {
     final HashSet<IExplodedBasicBlock> invokeBlocks = new HashSet<>();
 
     for (final IExplodedBasicBlock block : cfg) {
@@ -86,5 +82,4 @@ public final class AnalysisUtil {
 
     return invokeBlocks;
   }
-
 }

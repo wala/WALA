@@ -10,16 +10,6 @@
  */
 package com.ibm.wala.util.config;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.StringTokenizer;
-import java.util.jar.JarFile;
-
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -30,10 +20,17 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.StringTokenizer;
+import java.util.jar.JarFile;
 
-/**
- * Reads {@link AnalysisScope} from a text file.
- */
+/** Reads {@link AnalysisScope} from a text file. */
 public class AnalysisScopeReader {
 
   private static final ClassLoader MY_CLASSLOADER = AnalysisScopeReader.class.getClassLoader();
@@ -42,24 +39,32 @@ public class AnalysisScopeReader {
 
   /**
    * read in an analysis scope for a Java application from a text file
+   *
    * @param scopeFileName the text file specifying the scope
    * @param exclusionsFile a file specifying code to be excluded from the scope; can be {@code null}
-   * @param javaLoader the class loader used to read in files referenced in the scope file, via {@link ClassLoader#getResource(String)}
+   * @param javaLoader the class loader used to read in files referenced in the scope file, via
+   *     {@link ClassLoader#getResource(String)}
    * @return the analysis scope
    */
-  public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
+  public static AnalysisScope readJavaScope(
+      String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
     return read(scope, scopeFileName, exclusionsFile, javaLoader);
   }
 
-
-  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
+  public static AnalysisScope read(
+      AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader)
+      throws IOException {
     BufferedReader r = null;
     try {
-      // Now reading from jar is included in WALA, but we can't use their version, because they load from
-      // jar by default and use filesystem as fallback. We want it the other way round. E.g. to deliver default
-      // configuration files with the jar, but use userprovided ones if present in the working directory.
-      // InputStream scopeFileInputStream = fp.getInputStreamFromClassLoader(scopeFileName, javaLoader);
+      // Now reading from jar is included in WALA, but we can't use their version, because they load
+      // from
+      // jar by default and use filesystem as fallback. We want it the other way round. E.g. to
+      // deliver default
+      // configuration files with the jar, but use userprovided ones if present in the working
+      // directory.
+      // InputStream scopeFileInputStream = fp.getInputStreamFromClassLoader(scopeFileName,
+      // javaLoader);
       File scopeFile = new File(scopeFileName);
 
       String line;
@@ -71,7 +76,8 @@ public class AnalysisScopeReader {
         // try to read from jar
         InputStream inFromJar = javaLoader.getResourceAsStream(scopeFileName);
         if (inFromJar == null) {
-            throw new IllegalArgumentException("Unable to retreive " + scopeFileName + " from the jar using " + javaLoader);
+          throw new IllegalArgumentException(
+              "Unable to retreive " + scopeFileName + " from the jar using " + javaLoader);
         }
         r = new BufferedReader(new InputStreamReader(inFromJar));
       }
@@ -80,7 +86,12 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        try (InputStream fs = exclusionsFile.exists()? new FileInputStream(exclusionsFile): FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName())) {
+        try (InputStream fs =
+            exclusionsFile.exists()
+                ? new FileInputStream(exclusionsFile)
+                : FileProvider.class
+                    .getClassLoader()
+                    .getResourceAsStream(exclusionsFile.getName())) {
           scope.setExclusions(new FileOfClasses(fs));
         }
       }
@@ -98,7 +109,12 @@ public class AnalysisScopeReader {
     return scope;
   }
 
-  protected static AnalysisScope read(AnalysisScope scope, final URI scopeFileURI, final File exclusionsFile, ClassLoader javaLoader) throws IOException {
+  protected static AnalysisScope read(
+      AnalysisScope scope,
+      final URI scopeFileURI,
+      final File exclusionsFile,
+      ClassLoader javaLoader)
+      throws IOException {
     BufferedReader r = null;
     try {
       String line;
@@ -113,9 +129,12 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        try (final InputStream fs = exclusionsFile.exists()
-            ? new FileInputStream(exclusionsFile)
-            : FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName())) {
+        try (final InputStream fs =
+            exclusionsFile.exists()
+                ? new FileInputStream(exclusionsFile)
+                : FileProvider.class
+                    .getClassLoader()
+                    .getResourceAsStream(exclusionsFile.getName())) {
           scope.setExclusions(new FileOfClasses(fs));
         }
       }
@@ -133,7 +152,8 @@ public class AnalysisScopeReader {
     return scope;
   }
 
-  public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line) throws IOException {
+  public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line)
+      throws IOException {
     if (line == null) {
       throw new IllegalArgumentException("null line");
     }
@@ -190,14 +210,13 @@ public class AnalysisScopeReader {
     return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
   }
 
-
-
   /**
    * @param classPath class path to analyze, delimited by {@link File#pathSeparator}
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
    * @throws IllegalStateException if there are problems reading wala properties
    */
-  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) throws IOException {
+  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile)
+      throws IOException {
     if (classPath == null) {
       throw new IllegalArgumentException("classPath null");
     }
@@ -209,7 +228,8 @@ public class AnalysisScopeReader {
     return scope;
   }
 
-  public static void addClassPathToScope(String classPath, AnalysisScope scope, ClassLoaderReference loader) {
+  public static void addClassPathToScope(
+      String classPath, AnalysisScope scope, ClassLoaderReference loader) {
     if (classPath == null) {
       throw new IllegalArgumentException("null classPath");
     }
@@ -224,8 +244,9 @@ public class AnalysisScopeReader {
             if (jar.getManifest() != null) {
               String cp = jar.getManifest().getMainAttributes().getValue("Class-Path");
               if (cp != null) {
-                for(String cpEntry : cp.split(" ")) { 
-                  addClassPathToScope(new File(path).getParent() + File.separator + cpEntry, scope, loader);
+                for (String cpEntry : cp.split(" ")) {
+                  addClassPathToScope(
+                      new File(path).getParent() + File.separator + cpEntry, scope, loader);
                 }
               }
             }

@@ -10,13 +10,12 @@
  */
 package com.ibm.wala.ipa.cfg.exceptionpruning.filter;
 
+import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
+import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
-import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
-
-public class DummyFilter<Instruction> implements ExceptionFilter<Instruction>{
+public class DummyFilter<Instruction> implements ExceptionFilter<Instruction> {
   @Override
   public boolean alwaysThrowsException(Instruction instruction) {
     return false;

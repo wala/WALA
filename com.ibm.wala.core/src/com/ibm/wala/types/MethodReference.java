@@ -10,104 +10,102 @@
  */
 package com.ibm.wala.types;
 
-import java.util.HashMap;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
+import java.util.HashMap;
 
-/**
- * A class to represent the reference in a class file to a method.
- */
+/** A class to represent the reference in a class file to a method. */
 public final class MethodReference extends MemberReference {
-  /**
-   * Used to canonicalize MethodReferences a mapping from Key -&gt; MethodReference
-   */
-  final private static HashMap<Key, MethodReference> dictionary = HashMapFactory.make();
+  /** Used to canonicalize MethodReferences a mapping from Key -&gt; MethodReference */
+  private static final HashMap<Key, MethodReference> dictionary = HashMapFactory.make();
 
-  public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
+  public static final Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
-  private final static Descriptor newInstanceDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
+  private static final Descriptor newInstanceDesc =
+      Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
 
-  public final static MethodReference JavaLangClassNewInstance = findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
-      newInstanceDesc);
+  public static final MethodReference JavaLangClassNewInstance =
+      findOrCreate(TypeReference.JavaLangClass, newInstanceAtom, newInstanceDesc);
 
-  private final static Atom ctorNewInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
+  private static final Atom ctorNewInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
-  private final static Descriptor ctorNewInstanceDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/Object;)Ljava/lang/Object;");
+  private static final Descriptor ctorNewInstanceDesc =
+      Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/Object;)Ljava/lang/Object;");
 
-  public final static MemberReference JavaLangReflectCtorNewInstance = findOrCreate(TypeReference.JavaLangReflectConstructor,
-      ctorNewInstanceAtom, ctorNewInstanceDesc);
-
-  public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
-
-  private final static Descriptor forNameDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/String;)Ljava/lang/Class;");
-
-  public final static MethodReference JavaLangClassForName = findOrCreate(TypeReference.JavaLangClass, forNameAtom, forNameDesc);
-
-  public final static Atom initAtom = Atom.findOrCreateUnicodeAtom("<init>");
-
-  public final static Descriptor defaultInitDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()V");
-
-  public final static Selector initSelector = new Selector(initAtom, defaultInitDesc);
-
-  public final static Atom clinitName = Atom.findOrCreateUnicodeAtom("<clinit>");
-
-  public final static Selector clinitSelector = new Selector(clinitName, defaultInitDesc);
-
-  public final static Atom finalizeName = Atom.findOrCreateUnicodeAtom("finalize");
-
-  public final static Selector finalizeSelector = new Selector(finalizeName, defaultInitDesc);
-
-  public final static Atom runAtom = Atom.findOrCreateUnicodeAtom("run");
-
-  public final static Descriptor runDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
-
-  public final static Selector runSelector = new Selector(runAtom, runDesc);
-
-  public final static Atom equalsAtom = Atom.findOrCreateUnicodeAtom("equals");
-
-  public final static Descriptor equalsDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z");
-
-  public final static Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
-
-  public final static MethodReference lambdaMetafactory = 
+  public static final MemberReference JavaLangReflectCtorNewInstance =
       findOrCreate(
-          TypeReference.LambdaMetaFactory, 
-          Atom.findOrCreateUnicodeAtom("metafactory"), 
-          Descriptor.findOrCreateUTF8("(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"));
-  
-  /**
-   * types of parameters to this method.
-   */
-  final private TypeReference[] parameterTypes;
+          TypeReference.JavaLangReflectConstructor, ctorNewInstanceAtom, ctorNewInstanceDesc);
 
-  /**
-   * return type.
-   */
+  public static final Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
+
+  private static final Descriptor forNameDesc =
+      Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/String;)Ljava/lang/Class;");
+
+  public static final MethodReference JavaLangClassForName =
+      findOrCreate(TypeReference.JavaLangClass, forNameAtom, forNameDesc);
+
+  public static final Atom initAtom = Atom.findOrCreateUnicodeAtom("<init>");
+
+  public static final Descriptor defaultInitDesc =
+      Descriptor.findOrCreateUTF8(Language.JAVA, "()V");
+
+  public static final Selector initSelector = new Selector(initAtom, defaultInitDesc);
+
+  public static final Atom clinitName = Atom.findOrCreateUnicodeAtom("<clinit>");
+
+  public static final Selector clinitSelector = new Selector(clinitName, defaultInitDesc);
+
+  public static final Atom finalizeName = Atom.findOrCreateUnicodeAtom("finalize");
+
+  public static final Selector finalizeSelector = new Selector(finalizeName, defaultInitDesc);
+
+  public static final Atom runAtom = Atom.findOrCreateUnicodeAtom("run");
+
+  public static final Descriptor runDesc =
+      Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
+
+  public static final Selector runSelector = new Selector(runAtom, runDesc);
+
+  public static final Atom equalsAtom = Atom.findOrCreateUnicodeAtom("equals");
+
+  public static final Descriptor equalsDesc =
+      Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z");
+
+  public static final Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
+
+  public static final MethodReference lambdaMetafactory =
+      findOrCreate(
+          TypeReference.LambdaMetaFactory,
+          Atom.findOrCreateUnicodeAtom("metafactory"),
+          Descriptor.findOrCreateUTF8(
+              "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"));
+
+  /** types of parameters to this method. */
+  private final TypeReference[] parameterTypes;
+
+  /** return type. */
   private final TypeReference returnType;
 
-  /**
-   * Name and descriptor
-   */
+  /** Name and descriptor */
   private final Selector selector;
 
   /**
    * Find or create the canonical MethodReference instance for the given tuple.
-   * 
+   *
    * @param mn the name of the member
    * @param md the descriptor of the member
    */
-  public static synchronized MethodReference findOrCreate(TypeReference tref, Atom mn, Descriptor md) {
+  public static synchronized MethodReference findOrCreate(
+      TypeReference tref, Atom mn, Descriptor md) {
     if (tref == null) {
       throw new IllegalArgumentException("null tref");
     }
     Key key = new Key(tref, mn, md);
 
     MethodReference val = dictionary.get(key);
-    if (val != null)
-      return val;
+    if (val != null) return val;
     val = new MethodReference(key);
     dictionary.put(key, val);
     return val;
@@ -115,7 +113,7 @@ public final class MethodReference extends MemberReference {
 
   /**
    * Find or create the canonical MethodReference instance for the given tuple.
-   * 
+   *
    * @param tref the type reference
    * @param selector the selector for the method
    * @throws IllegalArgumentException if selector is null
@@ -127,38 +125,51 @@ public final class MethodReference extends MemberReference {
     return findOrCreate(tref, selector.getName(), selector.getDescriptor());
   }
 
-  public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
+  public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor)
+      throws IllegalArgumentException {
     return findOrCreate(Language.JAVA, t, methodName, descriptor);
   }
-  
-  public static MethodReference findOrCreate(Language l, TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
+
+  public static MethodReference findOrCreate(
+      Language l, TypeReference t, String methodName, String descriptor)
+      throws IllegalArgumentException {
     Descriptor d = Descriptor.findOrCreateUTF8(l, descriptor);
     return findOrCreate(t, Atom.findOrCreateUnicodeAtom(methodName), d);
   }
-  
-  public static MethodReference findOrCreate(ClassLoaderReference loader, String methodClass, String methodName,
-      String methodSignature) throws IllegalArgumentException {
+
+  public static MethodReference findOrCreate(
+      ClassLoaderReference loader, String methodClass, String methodName, String methodSignature)
+      throws IllegalArgumentException {
     return findOrCreate(Language.JAVA, loader, methodClass, methodName, methodSignature);
   }
 
-  public static MethodReference findOrCreate(Language l, ClassLoaderReference loader, String methodClass, String methodName,
-      String methodSignature) throws IllegalArgumentException {
+  public static MethodReference findOrCreate(
+      Language l,
+      ClassLoaderReference loader,
+      String methodClass,
+      String methodName,
+      String methodSignature)
+      throws IllegalArgumentException {
     TypeReference t = ShrikeUtil.makeTypeReference(loader, methodClass);
     Atom name = Atom.findOrCreateUnicodeAtom(methodName);
     Descriptor d = Descriptor.findOrCreateUTF8(l, methodSignature);
     return findOrCreate(t, name, d);
   }
 
-  /**
-   * @return the descriptor component of this member reference
-   */
+  /** @return the descriptor component of this member reference */
   public final Descriptor getDescriptor() {
     return selector.getDescriptor();
   }
 
   @Override
   public final String toString() {
-    return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + selector + " >";
+    return "< "
+        + getDeclaringClass().getClassLoader().getName()
+        + ", "
+        + getDeclaringClass().getName()
+        + ", "
+        + selector
+        + " >";
   }
 
   MethodReference(Key key) {
@@ -181,16 +192,12 @@ public final class MethodReference extends MemberReference {
     returnType = TypeReference.findOrCreate(getDeclaringClass().getClassLoader(), r);
   }
 
-  /**
-   * @return return type of the method
-   */
+  /** @return return type of the method */
   public final TypeReference getReturnType() {
     return returnType;
   }
 
-  /**
-   * @return ith parameter to the method. This does NOT include the implicit "this" pointer.
-   */
+  /** @return ith parameter to the method. This does NOT include the implicit "this" pointer. */
   public final TypeReference getParameterType(int i) throws IllegalArgumentException {
     if (parameterTypes == null || i >= parameterTypes.length) {
       throw new IllegalArgumentException("illegal parameter number " + i + " for " + this);
@@ -203,32 +210,34 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * @return something like: com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
+   * @return something like:
+   *     com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
    */
   @Override
   public String getSignature() {
     // TODO: check that we're not calling this often.
-    String s = getDeclaringClass().getName().toString().substring(1).replace('/', '.') + '.' + getName() + getDescriptor();
+    String s =
+        getDeclaringClass().getName().toString().substring(1).replace('/', '.')
+            + '.'
+            + getName()
+            + getDescriptor();
     return s;
   }
 
   /**
-   * @return something like: createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   * @return something like:
+   *     createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    */
   public Selector getSelector() {
     return selector;
   }
 
-  /**
-   * This method does NOT include the implicit "this" parameter
-   */
+  /** This method does NOT include the implicit "this" parameter */
   public int getNumberOfParameters() {
     return parameterTypes == null ? 0 : parameterTypes.length;
   }
 
-  /**
-   * An identifier/selector for methods.
-   */
+  /** An identifier/selector for methods. */
   protected static class Key {
     private final TypeReference type;
 
@@ -255,5 +264,4 @@ public final class MethodReference extends MemberReference {
       return type.equals(that.type) && name.equals(that.name) && descriptor.equals(that.descriptor);
     }
   }
-
 }

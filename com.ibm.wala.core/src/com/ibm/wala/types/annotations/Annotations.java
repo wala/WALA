@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.types.annotations;
 
-import java.util.Collection;
-
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -21,15 +19,16 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
 
 public class Annotations {
-  public static final TypeName INTERNAL = TypeName.findOrCreateClassName("com/ibm/wala/annotations", "Internal");
+  public static final TypeName INTERNAL =
+      TypeName.findOrCreateClassName("com/ibm/wala/annotations", "Internal");
 
-  public static final TypeName NONNULL = TypeName.findOrCreateClassName("com/ibm/wala/annotations", "NonNull");
+  public static final TypeName NONNULL =
+      TypeName.findOrCreateClassName("com/ibm/wala/annotations", "NonNull");
 
-  /**
-   * Does a particular method have a particular annotation?
-   */
+  /** Does a particular method have a particular annotation? */
   public static boolean hasAnnotation(IMethod m, TypeName type) {
     if (m instanceof ShrikeCTMethod) {
       Collection<Annotation> annotations = null;
@@ -38,7 +37,7 @@ public class Annotations {
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
-      } 
+      }
       for (Annotation a : annotations) {
         if (a.getType().getName().equals(type)) {
           return true;
@@ -48,9 +47,7 @@ public class Annotations {
     return false;
   }
 
-  /**
-   * Does a particular class have a particular annotation?
-   */
+  /** Does a particular class have a particular annotation? */
   public static boolean hasAnnotation(IClass c, TypeName type) {
     if (c instanceof ShrikeClass) {
       Collection<Annotation> annotations = null;

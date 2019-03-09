@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.debug.Assertions;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -19,10 +20,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
- * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not time -- use with care.
+ * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not
+ * time -- use with care.
  */
 public class SmallMap<K, V> implements Map<K, V> {
 
@@ -48,7 +48,7 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   /**
    * Use with care.
-   * 
+   *
    * @return the ith key
    */
   @SuppressWarnings("unchecked")
@@ -65,7 +65,7 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   /**
    * Use with care.
-   * 
+   *
    * @return the ith key
    */
   @SuppressWarnings("unchecked")
@@ -142,8 +142,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   }
 
   private void growByOne() {
-    if (keysAndValues == null)
-      keysAndValues = new Object[2];
+    if (keysAndValues == null) keysAndValues = new Object[2];
     else {
       final int oldLength = keysAndValues.length;
       final int oldEntryCount = oldLength / 2;
@@ -156,17 +155,17 @@ public class SmallMap<K, V> implements Map<K, V> {
       final int newFirstValueSlot = newLastKeySlot + 1;
 
       keysAndValues = Arrays.copyOf(keysAndValues, newLength);
-      System.arraycopy(keysAndValues, oldFirstValueSlot, keysAndValues, newFirstValueSlot, oldEntryCount);
+      System.arraycopy(
+          keysAndValues, oldFirstValueSlot, keysAndValues, newFirstValueSlot, oldEntryCount);
       keysAndValues[newLastKeySlot] = null;
     }
-
   }
 
   /*
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
   @Override
-  @SuppressWarnings({ "unchecked", "unused" })
+  @SuppressWarnings({"unchecked", "unused"})
   public V put(Object key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
@@ -246,7 +245,7 @@ public class SmallMap<K, V> implements Map<K, V> {
    *
    * @param <E> the type of elements maintained by this set
    */
-  abstract private class SlotIteratingSet<E> extends AbstractSet<E> {
+  private abstract class SlotIteratingSet<E> extends AbstractSet<E> {
 
     @Override
     public Iterator<E> iterator() {
@@ -278,9 +277,8 @@ public class SmallMap<K, V> implements Map<K, V> {
         ++nextSlot;
         return result;
       }
-
     }
 
-    abstract protected E getItemInSlot(int slot);
+    protected abstract E getItemInSlot(int slot);
   }
 }

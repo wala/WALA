@@ -16,9 +16,8 @@ import com.ibm.wala.classLoader.ModuleEntry;
 
 public class CAstRhinoTranslatorFactory implements JavaScriptTranslatorFactory {
 
-	@Override
+  @Override
   public TranslatorToCAst make(CAst ast, ModuleEntry M) {
-		return new CAstRhinoTranslator(M, false);
-	}
+    return new CAstRhinoTranslator(M, false);
+  }
 }
-

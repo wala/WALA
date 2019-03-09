@@ -12,39 +12,36 @@ package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.util.intset.SparseIntSet;
 
-/**
- * A flow function which has only the edge 0 -&gt; dest
- */
+/** A flow function which has only the edge 0 -&gt; dest */
 public class SingletonFlowFunction implements IReversibleFlowFunction {
 
-	final private static SparseIntSet zeroSet = SparseIntSet.singleton(0);
+  private static final SparseIntSet zeroSet = SparseIntSet.singleton(0);
 
-	final int dest;
-	
-	private SingletonFlowFunction(int dest) {
-		this.dest = dest;
-	}
+  final int dest;
+
+  private SingletonFlowFunction(int dest) {
+    this.dest = dest;
+  }
 
   @Override
   public SparseIntSet getTargets(int i) {
-  	if (i == 0) {
-      return SparseIntSet.add(zeroSet,dest);
-  	} else {
-  		return null;
-  	}
+    if (i == 0) {
+      return SparseIntSet.add(zeroSet, dest);
+    } else {
+      return null;
+    }
   }
-  
+
   @Override
   public SparseIntSet getSources(int i) {
-   	if (i == dest || i == 0) { 
+    if (i == dest || i == 0) {
       return zeroSet;
-   	} else {
-   		return null;
-   	}
+    } else {
+      return null;
+    }
   }
 
   public static SingletonFlowFunction create(int dest) {
     return new SingletonFlowFunction(dest);
   }
-
 }

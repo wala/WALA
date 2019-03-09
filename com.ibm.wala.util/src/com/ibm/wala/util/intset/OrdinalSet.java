@@ -10,16 +10,13 @@
  */
 package com.ibm.wala.util.intset;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Iterator;
 
-/**
- * A Set backed by a set of integers.
- */
+/** A Set backed by a set of integers. */
 public class OrdinalSet<T> implements Iterable<T> {
 
   private final IntSet S;
@@ -27,7 +24,7 @@ public class OrdinalSet<T> implements Iterable<T> {
   private final OrdinalSetMapping<T> mapping;
 
   @SuppressWarnings("rawtypes")
-  private final static OrdinalSet EMPTY = new OrdinalSet();
+  private static final OrdinalSet EMPTY = new OrdinalSet();
 
   public static <T> OrdinalSet<T> empty() {
     return EMPTY;
@@ -102,9 +99,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<>(isect, A.mapping);
   }
 
-  /**
-   * @return true if the contents of two sets are equal
-   */
+  /** @return true if the contents of two sets are equal */
   public static <T> boolean equals(OrdinalSet<T> a, OrdinalSet<T> b) {
     if ((a == null && b == null) || a == b || (a.mapping == b.mapping && a.S == b.S)) {
       return true;
@@ -112,17 +107,18 @@ public class OrdinalSet<T> implements Iterable<T> {
 
     assert a != null && b != null;
     if (a.size() == b.size()) {
-      if (a.mapping == b.mapping || (a.mapping != null && b.mapping != null && a.mapping.equals(b.mapping))) {
+      if (a.mapping == b.mapping
+          || (a.mapping != null && b.mapping != null && a.mapping.equals(b.mapping))) {
         return a.S == b.S || (a.S != null && b.S != null && a.S.sameValue(b.S));
       }
     }
-    
+
     return false;
   }
-  
+
   /**
    * Creates the union of two ordinal sets.
-   * 
+   *
    * @param A ordinal set a
    * @param B ordinal set b
    * @return union of a and b
@@ -140,7 +136,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     }
 
     if (A.S == null) {
-      return (B.S == null) ? OrdinalSet.<T> empty() : new OrdinalSet<>(B.S, B.mapping);
+      return (B.S == null) ? OrdinalSet.<T>empty() : new OrdinalSet<>(B.S, B.mapping);
     } else if (B.S == null) {
       return new OrdinalSet<>(A.S, A.mapping);
     }
@@ -154,8 +150,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     return Iterator2Collection.toSet(iterator()).toString();
   }
 
-  /**
-   */
+  /** */
   public SparseIntSet makeSparseCopy() {
     return (S == null) ? new SparseIntSet() : new SparseIntSet(S);
   }
@@ -167,9 +162,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     return S;
   }
 
-  /**
-   * @return true iff this set contains object
-   */
+  /** @return true iff this set contains object */
   public boolean contains(T object) {
     if (this == EMPTY || S == null || object == null) {
       return false;
@@ -182,17 +175,15 @@ public class OrdinalSet<T> implements Iterable<T> {
     return size() == 0;
   }
 
-  /**
-   * @throws NullPointerException if instances is null
-   */
+  /** @throws NullPointerException if instances is null */
   public static <T> Collection<T> toCollection(OrdinalSet<T> instances) {
     return Iterator2Collection.toSet(instances.iterator());
   }
 
   /**
-   * Precondition: the ordinal set mapping has an index for every element of c Convert a "normal" collection to an OrdinalSet, based
-   * on the given mapping.
-   * 
+   * Precondition: the ordinal set mapping has an index for every element of c Convert a "normal"
+   * collection to an OrdinalSet, based on the given mapping.
+   *
    * @throws IllegalArgumentException if c is null
    */
   public static <T> OrdinalSet<T> toOrdinalSet(Collection<T> c, OrdinalSetMapping<T> m) {
@@ -214,5 +205,4 @@ public class OrdinalSet<T> implements Iterable<T> {
   public OrdinalSetMapping<T> getMapping() {
     return mapping;
   }
-
 }

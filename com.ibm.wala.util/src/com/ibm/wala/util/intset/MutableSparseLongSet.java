@@ -14,23 +14,20 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs. Instances are not canonical, except for EMPTY.
- * 
- * This implementation will be inefficient if these sets get large.
- * 
- * TODO: even for small sets, we probably want to work on this to reduce the allocation activity.
+ * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs. Instances are not
+ * canonical, except for EMPTY.
+ *
+ * <p>This implementation will be inefficient if these sets get large.
+ *
+ * <p>TODO: even for small sets, we probably want to work on this to reduce the allocation activity.
  */
 public final class MutableSparseLongSet extends SparseLongSet implements MutableLongSet {
 
-  /**
-   * If forced to grow the backing array .. then by how much
-   */
-  private final static float EXPANSION_FACTOR = 1.5f;
+  /** If forced to grow the backing array .. then by how much */
+  private static final float EXPANSION_FACTOR = 1.5f;
 
-  /**
-   * Default initial size for a backing array with one element
-   */
-  private final static int INITIAL_NONEMPTY_SIZE = 2;
+  /** Default initial size for a backing array with one element */
+  private static final int INITIAL_NONEMPTY_SIZE = 2;
 
   public static MutableSparseLongSet make(LongSet set) throws UnimplementedError {
     if (!(set instanceof SparseLongSet)) {
@@ -55,9 +52,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     super(backingStore);
   }
 
-  /**
-   * Create an empty set with a non-zero capacity
-   */
+  /** Create an empty set with a non-zero capacity */
   private MutableSparseLongSet(int initialCapacity) {
     super(new long[initialCapacity]);
     size = 0;
@@ -67,8 +62,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     super();
   }
 
-  /**
-   */
+  /** */
   @Override
   public void remove(long value) {
     if (elements != null) {
@@ -95,9 +89,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     }
   }
 
-  /**
-   * @return true iff this value changes
-   */
+  /** @return true iff this value changes */
   @Override
   public boolean add(long value) {
     if (value < 0) {
@@ -176,9 +168,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
       intersectWith((SparseLongSet) set);
     } else {
       int j = 0;
-      for (int i = 0; i < size; i++)
-        if (set.contains(elements[i]))
-          elements[j++] = elements[i];
+      for (int i = 0; i < size; i++) if (set.contains(elements[i])) elements[j++] = elements[i];
 
       size = j;
     }
@@ -259,7 +249,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   /**
    * Add all elements from another int set.
-   * 
+   *
    * @return true iff this set changes
    * @throws UnimplementedError if not ( set instanceof com.ibm.wala.util.intset.SparseLongSet )
    */
@@ -275,7 +265,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   /**
    * Add all elements from another int set.
-   * 
+   *
    * @return true iff this set changes
    */
   public boolean addAll(SparseLongSet that) {

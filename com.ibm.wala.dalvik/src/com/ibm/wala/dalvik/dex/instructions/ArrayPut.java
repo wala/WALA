@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,34 +48,33 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.dalvik.dex.instructions.ArrayGet.Type;
 import com.ibm.wala.types.TypeReference;
+import org.jf.dexlib2.Opcode;
 
 public class ArrayPut extends Instruction {
 
-    public final int array;
-    public final int source;
-    public final int offset;
-    public final Type type;
+  public final int array;
+  public final int source;
+  public final int offset;
+  public final Type type;
 
-    public ArrayPut(int pc, int source, int array, int offset, Type type, Opcode op, DexIMethod method) {
-        super(pc, op, method);
-        this.source = source;
-        this.array = array;
-        this.offset = offset;
-        this.type = type;
-    }
+  public ArrayPut(
+      int pc, int source, int array, int offset, Type type, Opcode op, DexIMethod method) {
+    super(pc, op, method);
+    this.source = source;
+    this.array = array;
+    this.offset = offset;
+    this.type = type;
+  }
 
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitArrayPut(this);
-    }
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitArrayPut(this);
+  }
 
-    public TypeReference getType() {
-        return ArrayGet.getType(type);
-    }
-
+  public TypeReference getType() {
+    return ArrayGet.getType(type);
+  }
 }

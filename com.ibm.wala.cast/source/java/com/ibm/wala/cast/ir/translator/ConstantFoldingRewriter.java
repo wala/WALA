@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.cast.ir.translator;
 
-import java.util.List;
-import java.util.Map;
-
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -20,6 +17,8 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NonCopyingContext;
 import com.ibm.wala.util.collections.Pair;
+import java.util.List;
+import java.util.Map;
 
 public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyingContext> {
 
@@ -28,19 +27,22 @@ public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyi
   }
 
   protected abstract Object eval(CAstOperator op, Object lhs, Object rhs);
-  
+
   @Override
-  protected CAstNode copyNodes(CAstNode root, 
-      CAstControlFlowMap cfg, 
+  protected CAstNode copyNodes(
+      CAstNode root,
+      CAstControlFlowMap cfg,
       NonCopyingContext context,
-      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) 
-  {
+      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode result;
     if (root.getKind() == CAstNode.BINARY_EXPR) {
       CAstNode left = copyNodes(root.getChild(1), cfg, context, nodeMap);
       CAstNode right = copyNodes(root.getChild(2), cfg, context, nodeMap);
       Object v;
-      if (left.getKind() == CAstNode.CONSTANT && right.getKind() == CAstNode.CONSTANT && (v = eval((CAstOperator) root.getChild(0), left.getValue(), right.getValue())) != null) {
+      if (left.getKind() == CAstNode.CONSTANT
+          && right.getKind() == CAstNode.CONSTANT
+          && (v = eval((CAstOperator) root.getChild(0), left.getValue(), right.getValue()))
+              != null) {
         result = Ast.makeConstant(v);
       } else {
         result = Ast.makeNode(CAstNode.BINARY_EXPR, root.getChild(0), left, right);
@@ -50,23 +52,27 @@ public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyi
       CAstNode expr = copyNodes(root.getChild(0), cfg, context, nodeMap);
       if (expr.getKind() == CAstNode.CONSTANT && expr.getValue() == Boolean.TRUE) {
         result = copyNodes(root.getChild(1), cfg, context, nodeMap);
-      } else if (expr.getKind() == CAstNode.CONSTANT && root.getChildCount() > 2 && expr.getValue() == Boolean.FALSE) {
+      } else if (expr.getKind() == CAstNode.CONSTANT
+          && root.getChildCount() > 2
+          && expr.getValue() == Boolean.FALSE) {
         result = copyNodes(root.getChild(2), cfg, context, nodeMap);
       } else {
         CAstNode then = copyNodes(root.getChild(1), cfg, context, nodeMap);
         if (root.getChildCount() == 3) {
-          result = Ast.makeNode(root.getKind(), expr, then, copyNodes(root.getChild(2), cfg, context, nodeMap));
+          result =
+              Ast.makeNode(
+                  root.getKind(), expr, then, copyNodes(root.getChild(2), cfg, context, nodeMap));
         } else {
           result = Ast.makeNode(root.getKind(), expr, then);
         }
       }
-      
+
     } else if (root.getKind() == CAstNode.CONSTANT) {
       result = Ast.makeConstant(root.getValue());
 
     } else if (root.getKind() == CAstNode.OPERATOR) {
       result = root;
-      
+
     } else {
       List<CAstNode> children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
       CAstNode copy = Ast.makeNode(root.getKind(), children);
@@ -76,5 +82,4 @@ public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyi
     nodeMap.put(Pair.make(root, context.key()), result);
     return result;
   }
-
 }

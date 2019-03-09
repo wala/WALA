@@ -12,9 +12,7 @@ package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/**
- * A statement that has a corresponding index in the SSA IR
- */
+/** A statement that has a corresponding index in the SSA IR */
 public class NormalStatement extends StatementWithInstructionIndex {
 
   public NormalStatement(CGNode node, int instructionIndex) {
@@ -30,7 +28,8 @@ public class NormalStatement extends StatementWithInstructionIndex {
   public String toString() {
     StringBuilder name = new StringBuilder();
     if (getInstruction().hasDef()) {
-      String[] names = getNode().getIR().getLocalNames(getInstructionIndex(), getInstruction().getDef());
+      String[] names =
+          getNode().getIR().getLocalNames(getInstructionIndex(), getInstruction().getDef());
       if (names != null && names.length > 0) {
         name = new StringBuilder("[").append(names[0]);
         for (int i = 1; i < names.length; i++) {
@@ -40,7 +39,12 @@ public class NormalStatement extends StatementWithInstructionIndex {
       }
     }
 
-    return "NORMAL " + getNode().getMethod().getName() + ':' + name + getInstruction().toString() + ' ' + getNode();
+    return "NORMAL "
+        + getNode().getMethod().getName()
+        + ':'
+        + name
+        + getInstruction().toString()
+        + ' '
+        + getNode();
   }
-
 }

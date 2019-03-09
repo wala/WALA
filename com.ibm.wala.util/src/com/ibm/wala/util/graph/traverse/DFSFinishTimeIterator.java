@@ -10,56 +10,47 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes of the graph in order of increasing
- * finishing time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by
- * overriding the getConnected method.
+ * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes
+ * of the graph in order of increasing finishing time. This class follows the outNodes of the graph
+ * nodes to define the graph, but this behavior can be changed by overriding the getConnected
+ * method.
  */
 public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
 
   private static final long serialVersionUID = 8440061593631309429L;
 
-  /**
-   * the current next element in finishing time order
-   */
+  /** the current next element in finishing time order */
   private T theNextElement;
 
-  /**
-   * an enumeration of all nodes to search from
-   */
+  /** an enumeration of all nodes to search from */
   private Iterator<? extends T> roots;
 
-  /**
-   * The governing graph.
-   */
+  /** The governing graph. */
   private Graph<T> G;
 
-  /**
-   * Subclasses must call this in the constructor!
-   */
+  /** Subclasses must call this in the constructor! */
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     roots = nodes;
-    if (roots.hasNext())
-      theNextElement = roots.next();
+    if (roots.hasNext()) theNextElement = roots.next();
   }
 
   private boolean empty() {
     return size() == 0;
   }
-  
+
   /**
    * Return whether there are any more nodes left to enumerate.
-   * 
+   *
    * @return true if there nodes left to enumerate.
    */
   @Override
@@ -74,20 +65,20 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private void push(T elt) {
     add(elt);
   }
-  
+
   private T peek() {
-    return get(size()-1); 
+    return get(size() - 1);
   }
-  
+
   private T pop() {
-    T e = get(size()-1);
-    remove(size()-1);
+    T e = get(size() - 1);
+    remove(size() - 1);
     return e;
   }
-  
+
   /**
    * Find the next graph node in finishing time order.
-   * 
+   *
    * @return the next graph node in finishing time order.
    */
   @Override
@@ -101,7 +92,8 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
       setPendingChildren(v, getConnected(v));
       push(v);
     }
-    recurse: while (!empty()) {
+    recurse:
+    while (!empty()) {
       T v = peek();
       Iterator<? extends T> pc = getPendingChildren(v);
       for (T n : Iterator2Iterable.make(pc)) {
@@ -129,10 +121,9 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
 
   /**
    * get the out edges of a given node
-   * 
+   *
    * @param n the node of which to get the out edges
    * @return the out edges
-   * 
    */
   protected Iterator<T> getConnected(T n) {
     return G.getSuccNodes(n);
@@ -142,5 +133,4 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }
-
 }

@@ -13,20 +13,16 @@ package slice;
 public class TestThin1 {
 
   private static void doNothing(Object o) {}
-  
-  /**
-   * slice should not include any statements relating to 
-   * base pointers
-   */
+
+  /** slice should not include any statements relating to base pointers */
   public static void main(String[] args) {
     Object o1 = new Object();
     A a1 = new A();
     A a2 = new A();
     a1.f = a2;
     a2.g = o1;
-    A a3 = (A)a1.f;
+    A a3 = (A) a1.f;
     Object o3 = a3.g;
     doNothing(o3);
   }
-
 }

@@ -13,25 +13,21 @@ package com.ibm.wala.core.tests.plugin;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-
-/**
- * The main plugin class to be used in the desktop.
- */
+/** The main plugin class to be used in the desktop. */
 public class CoreTestsPlugin extends Plugin {
 
   // The shared instance.
   private static CoreTestsPlugin plugin;
 
-  /**
-   * The constructor.
-   */
+  /** The constructor. */
   public CoreTestsPlugin() {
     plugin = this;
   }
 
   /**
    * This method is called upon plug-in activation
-   * @throws IllegalArgumentException  if context is null
+   *
+   * @throws IllegalArgumentException if context is null
    */
   @Override
   public void start(BundleContext context) throws Exception {
@@ -41,20 +37,15 @@ public class CoreTestsPlugin extends Plugin {
     super.start(context);
   }
 
-  /**
-   * This method is called when the plug-in is stopped
-   */
+  /** This method is called when the plug-in is stopped */
   @Override
   public void stop(BundleContext context) throws Exception {
     super.stop(context);
     plugin = null;
   }
 
-  /**
-   * Returns the shared instance.
-   */
+  /** Returns the shared instance. */
   public static CoreTestsPlugin getDefault() {
     return plugin;
   }
-
 }

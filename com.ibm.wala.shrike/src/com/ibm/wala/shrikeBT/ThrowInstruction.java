@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents the athrow instruction.
- */
+/** This class represents the athrow instruction. */
 public final class ThrowInstruction extends Instruction {
   private static final ThrowInstruction preallocated = new ThrowInstruction(false);
 

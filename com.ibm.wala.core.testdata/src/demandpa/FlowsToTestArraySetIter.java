@@ -10,10 +10,7 @@
  */
 package demandpa;
 
-/**
- * @author manu
- *
- */
+/** @author manu */
 public class FlowsToTestArraySetIter {
 
   public static void main(String[] args) {

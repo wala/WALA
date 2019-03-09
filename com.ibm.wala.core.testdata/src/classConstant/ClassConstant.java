@@ -16,5 +16,4 @@ class ClassConstant {
     Class<ClassConstant> x = ClassConstant.class;
     x.hashCode();
   }
-
 }

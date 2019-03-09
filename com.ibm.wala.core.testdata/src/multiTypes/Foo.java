@@ -11,23 +11,21 @@
 package multiTypes;
 
 /**
- * Test designed to exercise SubtypesEntrypoint when there is more than one possible type for an argument
- * 
+ * Test designed to exercise SubtypesEntrypoint when there is more than one possible type for an
+ * argument
+ *
  * @author sjfink
- * 
  */
 public class Foo {
 
   private static class A {
-    public void bar() {
-    }
+    public void bar() {}
   }
 
   @SuppressWarnings("unused")
   private static class B extends A {
     @Override
-    public void bar() {
-    }
+    public void bar() {}
   }
 
   public static void foo(A a) {

@@ -10,19 +10,17 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents goto and goto_w instructions.
- */
+/** This class represents goto and goto_w instructions. */
 public final class GotoInstruction extends Instruction {
-  final private int[] label;
+  private final int[] label;
 
   protected GotoInstruction(int label) {
     super(OP_goto);
-    int[] l = { label };
+    int[] l = {label};
     this.label = l;
   }
 
-  private final static GotoInstruction[] preallocated = preallocate();
+  private static final GotoInstruction[] preallocated = preallocate();
 
   private static GotoInstruction[] preallocate() {
     GotoInstruction[] r = new GotoInstruction[256];

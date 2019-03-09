@@ -11,22 +11,20 @@
 
 package com.ibm.wala.cfg.exc.inter;
 
-import java.util.Map;
-
 import com.ibm.wala.cfg.exc.intra.MethodState;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import java.util.Map;
 
 /**
  * A MethodState for the interprocedural analysis.
- * 
- * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
- * It has been adapted and integrated into the WALA project by Juergen Graf.
- * 
+ *
+ * <p>This class has been developed as part of a student project "Studienarbeit" by Markus
+ * Herhoffer. It has been adapted and integrated into the WALA project by Juergen Graf.
+ *
  * @author Markus Herhoffer &lt;markus.herhoffer@student.kit.edu&gt;
  * @author Juergen Graf &lt;graf@kit.edu&gt;
- * 
  */
 class InterprocMethodState extends MethodState {
 
@@ -34,7 +32,8 @@ class InterprocMethodState extends MethodState {
   private final CGNode method;
   private final CallGraph cg;
 
-  InterprocMethodState(final CGNode method, final CallGraph cg, final Map<CGNode, IntraprocAnalysisState> map) {
+  InterprocMethodState(
+      final CGNode method, final CallGraph cg, final Map<CGNode, IntraprocAnalysisState> map) {
     this.map = map;
     this.method = method;
     this.cg = cg;
@@ -42,14 +41,14 @@ class InterprocMethodState extends MethodState {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see edu.kit.ipd.wala.intra.MethodState#throwsException(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean throwsException(final SSAAbstractInvokeInstruction node) {
     for (final CGNode called : cg.getPossibleTargets(method, node.getCallSite())) {
       final IntraprocAnalysisState info = map.get(called);
-      
+
       if (info == null || info.hasExceptions()) {
         return true;
       }
@@ -57,5 +56,4 @@ class InterprocMethodState extends MethodState {
 
     return false;
   }
-
 }

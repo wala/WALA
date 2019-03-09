@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.cast.java.loader;
 
-
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.types.Descriptor;
@@ -21,24 +20,21 @@ import com.ibm.wala.util.strings.Atom;
 public class Util {
 
   public static Selector methodEntityToSelector(CAstEntity methodEntity) {
-    Atom name= Atom.findOrCreateUnicodeAtom(methodEntity.getName());
-    CAstType.Function signature= (CAstType.Function) methodEntity.getType();
+    Atom name = Atom.findOrCreateUnicodeAtom(methodEntity.getName());
+    CAstType.Function signature = (CAstType.Function) methodEntity.getType();
     // Use signature to determine # of args; (entity's args includes 'this')
-    TypeName retTypeName= 
-      TypeName.string2TypeName(signature.getReturnType().getName());
-    TypeName[] argTypeNames= 
-      (signature.getArgumentCount() == 0) ? 
-      null :
-      new TypeName[signature.getArgumentCount()];
+    TypeName retTypeName = TypeName.string2TypeName(signature.getReturnType().getName());
+    TypeName[] argTypeNames =
+        (signature.getArgumentCount() == 0) ? null : new TypeName[signature.getArgumentCount()];
 
-    int i= 0;
+    int i = 0;
     for (CAstType argType : signature.getArgumentTypes()) {
-      argTypeNames[i]= TypeName.string2TypeName(argType.getName());
+      argTypeNames[i] = TypeName.string2TypeName(argType.getName());
       ++i;
     }
 
-    Descriptor desc= Descriptor.findOrCreate(argTypeNames, retTypeName);
-    
+    Descriptor desc = Descriptor.findOrCreate(argTypeNames, retTypeName);
+
     return new Selector(name, desc);
   }
 

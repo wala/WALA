@@ -46,7 +46,7 @@ public class DynamicCallSiteReference extends CallSiteReference {
   protected String getInvocationString(IInvokeInstruction.IDispatch invocationCode) {
     return "Function";
   }
-  
+
   @Override
   public String toString() {
     return "JSCall@" + getProgramCounter();
@@ -70,6 +70,4 @@ public class DynamicCallSiteReference extends CallSiteReference {
   public boolean isFixed() {
     return false;
   }
-
-  
 }

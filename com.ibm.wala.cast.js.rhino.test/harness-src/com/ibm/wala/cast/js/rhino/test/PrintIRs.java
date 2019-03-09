@@ -10,14 +10,6 @@
  */
 package com.ibm.wala.cast.js.rhino.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -43,12 +35,17 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class PrintIRs {
 
-  /**
-   * prints the IR of each function in the script
-   */
+  /** prints the IR of each function in the script */
   public static void printIRsForJS(String filename) throws ClassHierarchyException {
     // use Rhino to parse JavaScript
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
@@ -78,30 +75,32 @@ public class PrintIRs {
     }
   }
 
-  private static void printIRsForHTML(String filename) throws IllegalArgumentException, MalformedURLException, IOException,
-      WalaException, Error {
+  private static void printIRsForHTML(String filename)
+      throws IllegalArgumentException, MalformedURLException, IOException, WalaException, Error {
     // use Rhino to parse JavaScript
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     // add model for DOM APIs
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     URL url = (new File(filename)).toURI().toURL();
-    Pair<Set<MappedSourceModule>, File> p = WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory);
+    Pair<Set<MappedSourceModule>, File> p =
+        WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory);
     SourceModule[] scripts = p.fst.toArray(new SourceModule[] {});
-    JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(JSCallGraphUtil.getTranslatorFactory());
-    CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
+    JavaScriptLoaderFactory loaders =
+        new WebPageLoaderFactory(JSCallGraphUtil.getTranslatorFactory());
+    CAstAnalysisScope scope =
+        new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
     com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
     printIRsForCHA(cha, t -> t.startsWith("Lprologue.js") || t.startsWith("Lpreamble.js"));
   }
 
-  public static void main(String[] args) throws IOException, IllegalArgumentException, WalaException, Error {
+  public static void main(String[] args)
+      throws IOException, IllegalArgumentException, WalaException, Error {
     String filename = args[0];
     if (filename.endsWith(".js")) {
       printIRsForJS(filename);
     } else if (filename.endsWith(".html")) {
       printIRsForHTML(filename);
     }
-
   }
-
 }

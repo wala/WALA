@@ -10,14 +10,11 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import com.ibm.wala.util.graph.Graph;
-
-/**
- * A utility class.
- */
+/** A utility class. */
 public class DelegatingGraph<T> implements Graph<T> {
 
   private final Graph<T> delegate;
@@ -118,5 +115,4 @@ public class DelegatingGraph<T> implements Graph<T> {
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     delegate.removeOutgoingEdges(node);
   }
-
 }

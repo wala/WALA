@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -26,6 +22,9 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   private final PointerKeyFactory base;
@@ -40,7 +39,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   }
 
   @Override
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(
+      CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     return base.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
@@ -90,15 +90,14 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return result.iterator();
   }
 
-  /**
-   * get type for F appropriate for use in a field name.
-   */
+  /** get type for F appropriate for use in a field name. */
   protected IClass getFieldNameType(InstanceKey F) {
     return F.getConcreteType();
   }
 
   /**
-   * if F is a supported constant representing a field, return the corresponding {@link InstanceFieldKey} for I.  Otherwise, return {@code null}.
+   * if F is a supported constant representing a field, return the corresponding {@link
+   * InstanceFieldKey} for I. Otherwise, return {@code null}.
    */
   protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
     Object v = F.getValue();
@@ -109,7 +108,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     }
     return null;
   }
-  
+
   @Override
   public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
     if (F instanceof ConstantKey) {

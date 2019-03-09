@@ -14,15 +14,16 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**
- * Extend {@link CAstVisitor}{@code <C>} to delegate unimplemented functionality to another
- * visitor.  Needed to work around Java's retarded multiple inheritance rules.
- * TODO: document me.
+ * Extend {@link CAstVisitor}{@code <C>} to delegate unimplemented functionality to another visitor.
+ * Needed to work around Java's retarded multiple inheritance rules. TODO: document me.
+ *
  * @author Igor Peshansky
  */
 public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> extends CAstVisitor<C> {
 
   /**
    * Construct a context for a File entity or delegate by default.
+   *
    * @param context a visitor-specific context in which this file was visited
    * @param n the file entity
    */
@@ -32,6 +33,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Construct a context for a Type entity or delegate by default.
+   *
    * @param context a visitor-specific context in which this type was visited
    * @param n the type entity
    */
@@ -41,6 +43,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Construct a context for a Code entity or delegate by default.
+   *
    * @param context a visitor-specific context in which the code was visited
    * @param n the code entity
    */
@@ -51,6 +54,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Construct a context for a LocalScope node or delegate by default.
+   *
    * @param context a visitor-specific context in which the local scope was visited
    * @param n the local scope node
    */
@@ -60,6 +64,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Construct a context for an Unwind node or delegate by default.
+   *
    * @param context a visitor-specific context in which the unwind was visited
    * @param n the unwind node
    */
@@ -70,6 +75,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Get the parent entity for a given entity.
+   *
    * @param entity the child entity
    * @return the parent entity for the given entity
    */
@@ -80,6 +86,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Set the parent entity for a given entity.
+   *
    * @param entity the child entity
    * @param parent the parent entity
    */
@@ -90,11 +97,14 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   private final CAstVisitor<C> delegate;
 
-  protected final CAstVisitor<C> delegate() { return delegate; }
+  protected final CAstVisitor<C> delegate() {
+    return delegate;
+  }
 
   /**
-   * Delegating {@link CAstVisitor}{@code <C>} constructor.
-   * Needs to have a valid (non-null) delegate visitor.
+   * Delegating {@link CAstVisitor}{@code <C>} constructor. Needs to have a valid (non-null)
+   * delegate visitor.
+   *
    * @param delegate the visitor to delegate to for default implementation
    */
   protected DelegatingCAstVisitor(CAstVisitor<C> delegate) {
@@ -103,9 +113,9 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
 
   /**
-   * Entity processing hook; sub-classes are expected to override if they
-   * introduce new entity types.
-   * Should invoke super.doVisitEntity() for unprocessed entities.
+   * Entity processing hook; sub-classes are expected to override if they introduce new entity
+   * types. Should invoke super.doVisitEntity() for unprocessed entities.
+   *
    * @return true if entity was handled
    */
   @Override
@@ -115,6 +125,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Enter the entity visitor.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @return true if no further processing is needed
@@ -125,6 +136,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Post-process an entity after visiting it.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    */
@@ -134,7 +146,8 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
 
   /**
-   * Visit any entity.  Override only this to change behavior for all entities.
+   * Visit any entity. Override only this to change behavior for all entities.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @return true if no further processing is needed
@@ -144,7 +157,8 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
     return delegate.visitEntity(n, context, visitor);
   }
   /**
-   * Leave any entity.  Override only this to change behavior for all entities.
+   * Leave any entity. Override only this to change behavior for all entities.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    */
@@ -155,17 +169,20 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Visit a File entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param fileContext a visitor-specific context for this file
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitFileEntity(CAstEntity n, C context, C fileContext, CAstVisitor<C> visitor) {
+  protected boolean visitFileEntity(
+      CAstEntity n, C context, C fileContext, CAstVisitor<C> visitor) {
     return delegate.visitFileEntity(n, context, fileContext, visitor);
   }
   /**
    * Leave a File entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param fileContext a visitor-specific context for this file
@@ -176,6 +193,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Field entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @return true if no further processing is needed
@@ -186,6 +204,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Field entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    */
@@ -195,17 +214,20 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Type entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param typeContext a visitor-specific context for this type
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitTypeEntity(CAstEntity n, C context, C typeContext, CAstVisitor<C> visitor) {
+  protected boolean visitTypeEntity(
+      CAstEntity n, C context, C typeContext, CAstVisitor<C> visitor) {
     return delegate.visitTypeEntity(n, context, typeContext, visitor);
   }
   /**
    * Leave a Type entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param typeContext a visitor-specific context for this type
@@ -216,38 +238,45 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Function entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param codeContext a visitor-specific context for this function
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitFunctionEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
+  protected boolean visitFunctionEntity(
+      CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return delegate.visitFunctionEntity(n, context, codeContext, visitor);
   }
   /**
    * Leave a Function entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param codeContext a visitor-specific context for this function
    */
   @Override
-  protected void leaveFunctionEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
+  protected void leaveFunctionEntity(
+      CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     delegate.leaveFunctionEntity(n, context, codeContext, visitor);
   }
   /**
    * Visit a Script entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param codeContext a visitor-specific context for this script
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitScriptEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
+  protected boolean visitScriptEntity(
+      CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return delegate.visitScriptEntity(n, context, codeContext, visitor);
   }
   /**
    * Leave a Script entity.
+   *
    * @param n the entity to process
    * @param context a visitor-specific context
    * @param codeContext a visitor-specific context for this script
@@ -258,9 +287,9 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
 
   /**
-   * Node processing hook; sub-classes are expected to override if they
-   * introduce new node types.
+   * Node processing hook; sub-classes are expected to override if they introduce new node types.
    * Should invoke super.doVisit() for unprocessed nodes.
+   *
    * @return true if node was handled
    */
   @Override
@@ -270,6 +299,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Enter the node visitor.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -280,6 +310,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Post-process a node after visiting it.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -289,7 +320,8 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
 
   /**
-   * Visit any node.  Override only this to change behavior for all nodes.
+   * Visit any node. Override only this to change behavior for all nodes.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -299,7 +331,8 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
     return delegate.visitNode(n, c, visitor);
   }
   /**
-   * Leave any node.  Override only this to change behavior for all nodes.
+   * Leave any node. Override only this to change behavior for all nodes.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -310,6 +343,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
 
   /**
    * Visit a FunctionExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -320,6 +354,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a FunctionExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -329,6 +364,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a FunctionStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -339,6 +375,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a FunctionStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -348,6 +385,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a LocalScope node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -358,6 +396,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a LocalScope node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -367,6 +406,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a BlockExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -377,6 +417,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a BlockExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -386,6 +427,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a BlockStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -396,6 +438,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a BlockStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -405,6 +448,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Loop node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -415,6 +459,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Loop node after processing the loop header.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -424,6 +469,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Loop node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -433,6 +479,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a GetCaughtException node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -443,6 +490,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a GetCaughtException node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -452,6 +500,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a This node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -462,6 +511,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a This node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -471,6 +521,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Super node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -481,6 +532,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Super node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -490,6 +542,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Call node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -500,6 +553,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Call node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -509,6 +563,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Var node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -519,6 +574,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Var node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -528,6 +584,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Constant node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -538,6 +595,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Constant node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -547,6 +605,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a BinaryExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -557,6 +616,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a BinaryExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -566,6 +626,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a UnaryExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -576,6 +637,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a UnaryExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -585,6 +647,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ArrayLength node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -595,6 +658,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an ArrayLength node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -604,6 +668,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ArrayRef node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -614,6 +679,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an ArrayRef node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -623,6 +689,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a DeclStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -633,6 +700,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a DeclStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -642,6 +710,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Return node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -652,6 +721,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Return node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -661,6 +731,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an Ifgoto node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -671,6 +742,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an Ifgoto node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -680,6 +752,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Goto node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -690,6 +763,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Goto node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -699,6 +773,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a LabelStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -709,6 +784,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a LabelStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -718,6 +794,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an IfStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -728,6 +805,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an IfStmt node after processing the condition.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -737,6 +815,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an IfStmt node after processing the true clause.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -746,6 +825,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an IfStmt node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -755,6 +835,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an IfExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -765,6 +846,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an IfExpr node after processing the condition.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -774,6 +856,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an IfExpr node after processing the true clause.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -783,6 +866,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an IfExpr node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -792,6 +876,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a New node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -802,6 +887,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a New node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -811,6 +897,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ObjectLiteral node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -821,6 +908,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ObjectLiteral node after processing the {i}th field initializer.
+   *
    * @param n the node to process
    * @param i the field position that was initialized
    * @param c a visitor-specific context
@@ -831,6 +919,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an ObjectLiteral node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -840,6 +929,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ArrayLiteral node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -850,6 +940,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ArrayLiteral node after processing the array object.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -859,6 +950,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ArrayLiteral node after processing the {i}th element initializer.
+   *
    * @param n the node to process
    * @param i the index that was initialized
    * @param c a visitor-specific context
@@ -869,6 +961,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a ArrayLiteral node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -878,6 +971,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ObjectRef node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -888,6 +982,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an ObjectRef node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -896,7 +991,8 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
     delegate.leaveObjectRef(n, c, visitor);
   }
   /**
-   * Visit an Assign node.  Override only this to change behavior for all assignment nodes.
+   * Visit an Assign node. Override only this to change behavior for all assignment nodes.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -906,7 +1002,8 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
     return delegate.visitAssign(n, c, visitor);
   }
   /**
-   * Leave an Assign node.  Override only this to change behavior for all assignment nodes.
+   * Leave an Assign node. Override only this to change behavior for all assignment nodes.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -916,6 +1013,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an ArrayRef Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -923,22 +1021,26 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitArrayRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected boolean visitArrayRefAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayRefAssign(n, v, a, c, visitor);
   }
   /**
    * Visit an ArrayRef Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveArrayRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected void leaveArrayRefAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayRefAssign(n, v, a, c, visitor);
   }
   /**
    * Visit an ArrayRef Op/Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -947,11 +1049,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitArrayRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected boolean visitArrayRefAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayRefAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit an ArrayRef Op/Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -959,11 +1063,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveArrayRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected void leaveArrayRefAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayRefAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit an ObjectRef Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -971,22 +1077,26 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitObjectRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected boolean visitObjectRefAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitObjectRefAssign(n, v, a, c, visitor);
   }
   /**
    * Visit an ObjectRef Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveObjectRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected void leaveObjectRefAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectRefAssign(n, v, a, c, visitor);
   }
   /**
    * Visit an ObjectRef Op/Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -995,11 +1105,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitObjectRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected boolean visitObjectRefAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitObjectRefAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit an ObjectRef Op/Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1007,11 +1119,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveObjectRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected void leaveObjectRefAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectRefAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit a BlockExpr Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1019,22 +1133,26 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitBlockExprAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected boolean visitBlockExprAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitBlockExprAssign(n, v, a, c, visitor);
   }
   /**
    * Visit a BlockExpr Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveBlockExprAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected void leaveBlockExprAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveBlockExprAssign(n, v, a, c, visitor);
   }
   /**
    * Visit a BlockExpr Op/Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1043,11 +1161,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitBlockExprAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected boolean visitBlockExprAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitBlockExprAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit a BlockExpr Op/Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1055,11 +1175,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveBlockExprAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected void leaveBlockExprAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveBlockExprAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit a Var Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1067,11 +1189,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitVarAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
+  protected boolean visitVarAssign(
+      CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitVarAssign(n, v, a, c, visitor);
   }
   /**
    * Visit a Var Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1083,6 +1207,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Var Op/Assignment node after visiting the RHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1091,11 +1216,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @return true if no further processing is needed
    */
   @Override
-  protected boolean visitVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected boolean visitVarAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitVarAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit a Var Op/Assignment node after visiting the LHS.
+   *
    * @param n the LHS node to process
    * @param v the RHS node to process
    * @param a the assignment node to process
@@ -1103,11 +1230,13 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    */
   @Override
-  protected void leaveVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
+  protected void leaveVarAssignOp(
+      CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveVarAssignOp(n, v, a, pre, c, visitor);
   }
   /**
    * Visit a Switch node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1118,6 +1247,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Switch node after processing the switch value.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1127,6 +1257,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Switch node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1136,6 +1267,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Throw node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1146,6 +1278,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Throw node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1155,6 +1288,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Catch node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1165,6 +1299,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Catch node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1174,6 +1309,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an Unwind node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1184,6 +1320,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an Unwind node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1193,6 +1330,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Try node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1203,6 +1341,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Try node after processing the try block.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1212,6 +1351,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Try node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1221,6 +1361,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an Empty node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1231,6 +1372,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an Empty node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1240,6 +1382,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Primitive node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1250,6 +1393,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Primitive node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1259,6 +1403,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Void node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1269,6 +1414,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Void node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1278,6 +1424,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit a Cast node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1288,6 +1435,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a Cast node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1297,6 +1445,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Visit an InstanceOf node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1307,6 +1456,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave an InstanceOf node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1314,9 +1464,10 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   protected void leaveInstanceOf(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveInstanceOf(n, c, visitor);
   }
-  
+
   /**
    * Visit a LocalScope node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    * @return true if no further processing is needed
@@ -1327,6 +1478,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   }
   /**
    * Leave a LocalScope node.
+   *
    * @param n the node to process
    * @param c a visitor-specific context
    */
@@ -1334,5 +1486,4 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   protected void leaveSpecialParentScope(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveSpecialParentScope(n, c, visitor);
   }
-
 }

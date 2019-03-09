@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -46,59 +46,51 @@
  *
  */
 
-/**
- *
- */
+/** */
 package com.ibm.wala.dalvik.dex.instructions;
-
-import org.jf.dexlib2.Opcode;
-import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.types.TypeReference;
-
+import org.jf.dexlib2.Opcode;
+import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
 
 public class ArrayFill extends Instruction {
 
-    public final int array;
-    public final int tableAddressOffset;
-    public int registerIndex;
-    private ArrayPayload table;
-    public final TypeReference type;
+  public final int array;
+  public final int tableAddressOffset;
+  public int registerIndex;
+  private ArrayPayload table;
+  public final TypeReference type;
 
+  public ArrayFill(
+      int pc, int array, int offset, TypeReference type, Opcode op, DexIMethod method) {
+    super(pc, op, method);
+    this.array = array;
+    this.tableAddressOffset = offset;
+    this.type = type;
+  }
 
-    public ArrayFill(int pc, int array, int offset, TypeReference type, Opcode op, DexIMethod method) {
-        super(pc, op, method);
-        this.array = array;
-        this.tableAddressOffset = offset;
-        this.type = type;
+  /* (non-Javadoc)
+   * @see wala.dex.instructions.Instruction#visit(wala.dex.instructions.Instruction.Visitor)
+   */
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitArrayFill(this);
+  }
 
-    }
+  public void setArrayDataTable(ArrayPayload inst) {
+    this.table = inst;
+  }
 
+  public ArrayPayload getTable() {
+    return table;
+  }
 
-    /* (non-Javadoc)
-     * @see wala.dex.instructions.Instruction#visit(wala.dex.instructions.Instruction.Visitor)
-     */
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitArrayFill(this);
-    }
+  public int getElementCount() {
+    return table.getArrayElements().size();
+  }
 
-
-    public void setArrayDataTable(ArrayPayload inst) {
-        this.table = inst;
-    }
-
-    public ArrayPayload getTable() {
-        return table;
-    }
-
-    public int getElementCount() {
-        return table.getArrayElements().size();
-    }
-
-    public TypeReference getType() {
-        return type;
-    }
-
+  public TypeReference getType() {
+    return type;
+  }
 }

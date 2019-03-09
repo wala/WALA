@@ -54,15 +54,17 @@ import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.shrike.ShrikeUtil;
-
 import java.util.Arrays;
 
 /**
- * Skeleton of functionality to propagate information through the Java bytecode stack machine using ShrikeBT.
- * <p>
- * This class computes properties the Java operand stack and of the local variables at the beginning of each basic block.
- * <p>
- * In this implementation, each dataflow variable value is an integer, and the "meeter" object provides the meets
+ * Skeleton of functionality to propagate information through the Java bytecode stack machine using
+ * ShrikeBT.
+ *
+ * <p>This class computes properties the Java operand stack and of the local variables at the
+ * beginning of each basic block.
+ *
+ * <p>In this implementation, each dataflow variable value is an integer, and the "meeter" object
+ * provides the meets
  */
 public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
@@ -76,20 +78,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   public static final int IGNORE = -4;
 
-  /**
-   * The solver
-   */
-  private DataflowSolver<BasicBlock,MachineState> solver;
+  /** The solver */
+  private DataflowSolver<BasicBlock, MachineState> solver;
 
-  /**
-   * The control flow graph to analyze
-   */
-  final private ShrikeCFG cfg;
+  /** The control flow graph to analyze */
+  private final ShrikeCFG cfg;
 
-  /**
-   * Should uninitialized variables be considered TOP (optimistic) or BOTTOM (pessimistic);
-   */
-  final public static boolean OPTIMISTIC = true;
+  /** Should uninitialized variables be considered TOP (optimistic) or BOTTOM (pessimistic); */
+  public static final boolean OPTIMISTIC = true;
 
   protected AbstractIntStackMachine(final ShrikeCFG G) {
     if (G == null) {
@@ -100,139 +96,142 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   protected void init(Meeter meeter, final FlowProvider flow) {
     final MeetOperator meet = new MeetOperator(meeter);
-    ITransferFunctionProvider<BasicBlock, MachineState> xferFunctions = new ITransferFunctionProvider<BasicBlock, MachineState>() {
-      @Override
-      public boolean hasNodeTransferFunctions() {
-        return flow.needsNodeFlow();
-      }
-
-      @Override
-      public boolean hasEdgeTransferFunctions() {
-        return flow.needsEdgeFlow();
-      }
-
-      @Override
-      public UnaryOperator<MachineState> getNodeTransferFunction(final BasicBlock node) {
-        return new UnaryOperator<MachineState>() {
+    ITransferFunctionProvider<BasicBlock, MachineState> xferFunctions =
+        new ITransferFunctionProvider<BasicBlock, MachineState>() {
           @Override
-          public byte evaluate(MachineState lhs, MachineState rhs) {
-
-            MachineState exit = lhs;
-            MachineState entry = rhs;
-
-            MachineState newExit = flow.flow(entry, node);
-            if (newExit.stateEquals(exit)) {
-              return NOT_CHANGED;
-            } else {
-              exit.copyState(newExit);
-              return CHANGED;
-            }
+          public boolean hasNodeTransferFunctions() {
+            return flow.needsNodeFlow();
           }
 
           @Override
-          public String toString() {
-            return "NODE-FLOW";
+          public boolean hasEdgeTransferFunctions() {
+            return flow.needsEdgeFlow();
           }
 
           @Override
-          public int hashCode() {
-            return 9973 * node.hashCode();
+          public UnaryOperator<MachineState> getNodeTransferFunction(final BasicBlock node) {
+            return new UnaryOperator<MachineState>() {
+              @Override
+              public byte evaluate(MachineState lhs, MachineState rhs) {
+
+                MachineState exit = lhs;
+                MachineState entry = rhs;
+
+                MachineState newExit = flow.flow(entry, node);
+                if (newExit.stateEquals(exit)) {
+                  return NOT_CHANGED;
+                } else {
+                  exit.copyState(newExit);
+                  return CHANGED;
+                }
+              }
+
+              @Override
+              public String toString() {
+                return "NODE-FLOW";
+              }
+
+              @Override
+              public int hashCode() {
+                return 9973 * node.hashCode();
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                return this == o;
+              }
+            };
           }
 
           @Override
-          public boolean equals(Object o) {
-            return this == o;
+          public UnaryOperator<MachineState> getEdgeTransferFunction(
+              final BasicBlock from, final BasicBlock to) {
+            return new UnaryOperator<MachineState>() {
+              @Override
+              public byte evaluate(MachineState lhs, MachineState rhs) {
+
+                MachineState exit = lhs;
+                MachineState entry = rhs;
+
+                MachineState newExit = flow.flow(entry, from, to);
+                if (newExit.stateEquals(exit)) {
+                  return NOT_CHANGED;
+                } else {
+                  exit.copyState(newExit);
+                  return CHANGED;
+                }
+              }
+
+              @Override
+              public String toString() {
+                return "EDGE-FLOW";
+              }
+
+              @Override
+              public int hashCode() {
+                return 9973 * (from.hashCode() ^ to.hashCode());
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                return this == o;
+              }
+            };
+          }
+
+          @Override
+          public AbstractMeetOperator<MachineState> getMeetOperator() {
+            return meet;
           }
         };
-      }
-
-      @Override
-      public UnaryOperator<MachineState> getEdgeTransferFunction(final BasicBlock from, final BasicBlock to) {
-        return new UnaryOperator<MachineState>() {
-          @Override
-          public byte evaluate(MachineState lhs, MachineState rhs) {
-
-            MachineState exit = lhs;
-            MachineState entry = rhs;
-
-            MachineState newExit = flow.flow(entry, from, to);
-            if (newExit.stateEquals(exit)) {
-              return NOT_CHANGED;
-            } else {
-              exit.copyState(newExit);
-              return CHANGED;
-            }
-          }
-
-          @Override
-          public String toString() {
-            return "EDGE-FLOW";
-          }
-
-          @Override
-          public int hashCode() {
-            return 9973 * (from.hashCode() ^ to.hashCode());
-          }
-
-          @Override
-          public boolean equals(Object o) {
-            return this == o;
-          }
-        };
-      }
-
-      @Override
-      public AbstractMeetOperator<MachineState> getMeetOperator() {
-        return meet;
-      }
-    };
 
     IKilldallFramework<BasicBlock, MachineState> problem = new BasicFramework<>(cfg, xferFunctions);
-    solver = new DataflowSolver<BasicBlock, MachineState>(problem) {
-      private MachineState entry;
+    solver =
+        new DataflowSolver<BasicBlock, MachineState>(problem) {
+          private MachineState entry;
 
-      @Override
-      protected MachineState makeNodeVariable(BasicBlock n, boolean IN) {
-        assert n != null;
-        MachineState result = new MachineState(n);
-        if (IN && n.equals(cfg.entry())) {
-          entry = result;
-        }
-        return result;
-      }
+          @Override
+          protected MachineState makeNodeVariable(BasicBlock n, boolean IN) {
+            assert n != null;
+            MachineState result = new MachineState(n);
+            if (IN && n.equals(cfg.entry())) {
+              entry = result;
+            }
+            return result;
+          }
 
-      @Override
-      protected MachineState makeEdgeVariable(BasicBlock from, BasicBlock to) {
-        assert from != null;
-        assert to != null;
-        MachineState result = new MachineState(from);
+          @Override
+          protected MachineState makeEdgeVariable(BasicBlock from, BasicBlock to) {
+            assert from != null;
+            assert to != null;
+            MachineState result = new MachineState(from);
 
-        return result;
-      }
+            return result;
+          }
 
-      @Override
-      protected void initializeWorkList() {
-        super.buildEquations(false, false);
-        /*
-         * Add only the entry variable to the work list.
-         */
-        for (INodeWithNumber s : Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(entry))) {
-          addToWorkList((AbstractStatement<?, ?>) s);
-        }
-      }
+          @Override
+          protected void initializeWorkList() {
+            super.buildEquations(false, false);
+            /*
+             * Add only the entry variable to the work list.
+             */
+            for (INodeWithNumber s :
+                Iterator2Iterable.make(getFixedPointSystem().getStatementsThatUse(entry))) {
+              addToWorkList((AbstractStatement<?, ?>) s);
+            }
+          }
 
-      @Override
-      protected void initializeVariables() {
-        super.initializeVariables();
-        AbstractIntStackMachine.this.initializeVariables();
-      }
+          @Override
+          protected void initializeVariables() {
+            super.initializeVariables();
+            AbstractIntStackMachine.this.initializeVariables();
+          }
 
-      @Override
-      protected MachineState[] makeStmtRHS(int size) {
-        return new MachineState[size];
-      }
-    };
-
+          @Override
+          protected MachineState[] makeStmtRHS(int size) {
+            return new MachineState[size];
+          }
+        };
   }
 
   public boolean solve() {
@@ -243,19 +242,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
   }
 
-  /**
-   * Convenience method ... a little ugly .. perhaps delete later.
-   */
-  protected void initializeVariables() {
-  }
+  /** Convenience method ... a little ugly .. perhaps delete later. */
+  protected void initializeVariables() {}
 
   public MachineState getEntryState() {
     return solver.getIn(cfg.entry());
   }
 
-  /**
-   * @return the state at the entry to a given block
-   */
+  /** @return the state at the entry to a given block */
   public MachineState getIn(ShrikeCFG.BasicBlock bb) {
     return solver.getIn(bb);
   }
@@ -305,13 +299,15 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * A Meeter object provides the dataflow logic needed to meet the abstract machine state for a dataflow meet.
+   * A Meeter object provides the dataflow logic needed to meet the abstract machine state for a
+   * dataflow meet.
    */
   protected interface Meeter {
 
     /**
-     * Return the integer that represents the meet of a particular stack slot at the entry to a basic block.
-     * 
+     * Return the integer that represents the meet of a particular stack slot at the entry to a
+     * basic block.
+     *
      * @param slot The stack slot to meet
      * @param rhs The values to meet
      * @param bb The basic block at whose entry this meet occurs
@@ -321,15 +317,16 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     /**
      * Return the integer that represents stack slot 0 after a meet at the entry to a catch block.
-     * 
+     *
      * @param bb The basic block at whose entry this meet occurs
      * @return The value of stack slot 0 after the meet
      */
     int meetStackAtCatchBlock(BasicBlock bb);
 
     /**
-     * Return the integer that represents the meet of a particular local at the entry to a basic block.
-     * 
+     * Return the integer that represents the meet of a particular local at the entry to a basic
+     * block.
+     *
      * @param n The number of the local
      * @param rhs The values to meet
      * @param bb The basic block at whose entry this meet occurs
@@ -340,9 +337,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   /**
    * Evaluate a meet of machine states.
-   * 
-   * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   * 
+   *
+   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+   *
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
@@ -356,13 +353,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   /**
    * Evaluate a meet of machine states at a catch block.
-   * 
-   * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   * 
+   *
+   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+   *
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetForCatchBlock(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetForCatchBlock(
+      MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = meetStacksAtCatchBlock(lhs, bb, meeter);
     changed |= meetLocals(lhs, rhs, bb, meeter);
@@ -371,9 +369,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   /**
    * Evaluate a meet of the stacks of machine states at the entry of a catch block.
-   * 
-   * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   * 
+   *
+   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+   *
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
@@ -405,13 +403,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   /**
    * Evaluate a meet of the stacks of machine states at the entry of a basic block.
-   * 
-   * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   * 
+   *
+   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+   *
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetStacks(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetStacks(
+      MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
     boolean changed = false;
 
     // evaluate the element-wise meet over the stacks
@@ -432,7 +431,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       int[] R = new int[rhs.length];
       for (int j = 0; j < R.length; j++) {
         MachineState m = rhs[j];
-        if (m.stack == null || m.stack.length < i+1) {
+        if (m.stack == null || m.stack.length < i + 1) {
           R[j] = TOP;
         } else {
           R[j] = m.stack[i];
@@ -457,13 +456,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   /**
    * Evaluate a meet of locals of machine states at the entry to a basic block.
-   * 
-   * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   * 
+   *
+   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+   *
    * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
-  private static boolean meetLocals(MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
+  private static boolean meetLocals(
+      MachineState lhs, MachineState[] rhs, BasicBlock bb, Meeter meeter) {
 
     boolean changed = false;
     // need we allocate lhs.locals?
@@ -514,7 +514,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * @return the height of stacks that are being meeted. Return -1 if there is no stack meet necessary.
+   * @return the height of stacks that are being meeted. Return -1 if there is no stack meet
+   *     necessary.
    * @param operands The operands for this operator. operands[0] is the left-hand side.
    */
   private static int computeMeetStackHeight(MachineState[] operands) {
@@ -534,9 +535,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     return height;
   }
 
-  /**
-   * Representation of the state of the JVM stack machine at some program point.
-   */
+  /** Representation of the state of the JVM stack machine at some program point. */
   public class MachineState extends AbstractVariable<MachineState> {
     private int[] stack;
 
@@ -548,7 +547,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     private final BasicBlock bb;
 
     /**
-     * I'm not using clone because I don't want to necessarily inherit the AbstractVariable state from the superclass
+     * I'm not using clone because I don't want to necessarily inherit the AbstractVariable state
+     * from the superclass
      */
     public MachineState duplicate() {
       MachineState result = new MachineState(bb);
@@ -575,8 +575,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     public void push(int i) {
-      if (stack == null || stackHeight >= stack.length)
-        allocateStack(stackHeight+1);
+      if (stack == null || stackHeight >= stack.length) allocateStack(stackHeight + 1);
       stack[stackHeight++] = i;
     }
 
@@ -600,7 +599,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     private void allocateStack(int stackHeight) {
       if (stack == null) {
-        stack = new int[stackHeight + 1 ];
+        stack = new int[stackHeight + 1];
         this.stackHeight = 0;
       } else {
         stack = Arrays.copyOf(stack, Math.max(stack.length, stackHeight) * 2 + 1);
@@ -613,12 +612,12 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       if (locals != null) {
         System.arraycopy(locals, 0, result, 0, locals.length);
         start = locals.length;
-      } 
-      
+      }
+
       for (int i = start; i < maxLocals; i++) {
         result[i] = OPTIMISTIC ? TOP : BOTTOM;
       }
-      
+
       locals = result;
     }
 
@@ -626,25 +625,21 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       stackHeight = 0;
     }
 
-    /**
-     * set the value of local i to symbol j
-     */
+    /** set the value of local i to symbol j */
     public void setLocal(int i, int j) {
-      if (locals == null || locals.length < i+1) {
+      if (locals == null || locals.length < i + 1) {
         if (OPTIMISTIC && (j == TOP)) {
           return;
         } else {
-          allocateLocals(i+1);
+          allocateLocals(i + 1);
         }
       }
       locals[i] = j;
     }
 
-    /**
-     * @return the number of the symbol corresponding to local i
-     */
+    /** @return the number of the symbol corresponding to local i */
     public int getLocal(int i) {
-      if (locals == null || locals.length < i+1) {
+      if (locals == null || locals.length < i + 1) {
         if (OPTIMISTIC) {
           return TOP;
         } else {
@@ -656,27 +651,16 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     public void replaceValue(int from, int to) {
-      if (stack != null)
-        for (int i = 0; i < stackHeight; i++)
-          if (stack[i] == from)
-            stack[i] = to;
+      if (stack != null) for (int i = 0; i < stackHeight; i++) if (stack[i] == from) stack[i] = to;
 
       if (locals != null)
-        for (int i = 0; i < locals.length; i++)
-          if (locals[i] == from)
-            locals[i] = to;
+        for (int i = 0; i < locals.length; i++) if (locals[i] == from) locals[i] = to;
     }
 
     public boolean hasValue(int val) {
-      if (stack != null)
-        for (int i = 0; i < stackHeight; i++)
-          if (stack[i] == val)
-            return true;
+      if (stack != null) for (int i = 0; i < stackHeight; i++) if (stack[i] == val) return true;
 
-      if (locals != null)
-        for (int local : locals)
-          if (local == val)
-            return true;
+      if (locals != null) for (int local : locals) if (local == val) return true;
 
       return false;
     }
@@ -694,7 +678,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         result.append(array2StringBuffer(stack, stackHeight));
       }
       result.append('L');
-      result.append(array2StringBuffer(locals, locals==null?0:locals.length));
+      result.append(array2StringBuffer(locals, locals == null ? 0 : locals.length));
       result.append('>');
       return result.toString();
     }
@@ -721,30 +705,23 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     boolean stateEquals(MachineState exit) {
-      if (stackHeight != exit.stackHeight)
-        return false;
+      if (stackHeight != exit.stackHeight) return false;
       if (locals == null) {
-        if (exit.locals != null)
-          return false;
+        if (exit.locals != null) return false;
       } else {
-        if (exit.locals == null)
-          return false;
-        else if (locals.length != exit.locals.length)
-          return false;
+        if (exit.locals == null) return false;
+        else if (locals.length != exit.locals.length) return false;
       }
 
       for (int i = 0; i < stackHeight; i++) {
-        if (stack[i] != exit.stack[i])
-          return false;
+        if (stack[i] != exit.stack[i]) return false;
       }
       if (locals != null) {
         for (int i = 0; i < locals.length; i++) {
           if (locals[i] == TOP) {
-            if (exit.locals[i] != TOP)
-              return false;
+            if (exit.locals[i] != TOP) return false;
           }
-          if (locals[i] != exit.locals[i])
-            return false;
+          if (locals[i] != exit.locals[i]) return false;
         }
       }
       return true;
@@ -752,25 +729,20 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     /**
      * Returns the stackHeight.
-     * 
+     *
      * @return int
      */
     public int getStackHeight() {
       return stackHeight;
     }
 
-    /**
-     * Use with care.
-     */
+    /** Use with care. */
     public int[] getLocals() {
       return locals;
     }
-
   }
 
-  /**
-   * Interface which defines a flow function for a basic block
-   */
+  /** Interface which defines a flow function for a basic block */
   public interface FlowProvider {
 
     public boolean needsNodeFlow();
@@ -778,7 +750,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     public boolean needsEdgeFlow();
 
     /**
-     * Compute the MachineState at the exit of a basic block, given a MachineState at the block's entry.
+     * Compute the MachineState at the exit of a basic block, given a MachineState at the block's
+     * entry.
      */
     public MachineState flow(MachineState entry, BasicBlock basicBlock);
 
@@ -789,9 +762,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * This gives some basic facilities for shoving things around on the stack. Client analyses should subclass this as needed.
+   * This gives some basic facilities for shoving things around on the stack. Client analyses should
+   * subclass this as needed.
    */
-  protected static abstract class BasicStackFlowProvider implements FlowProvider, Constants {
+  protected abstract static class BasicStackFlowProvider implements FlowProvider, Constants {
     private final ShrikeCFG cfg;
 
     protected MachineState workingState;
@@ -806,16 +780,12 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     private BasicBlock currentSuccessorBlock;
 
-    /**
-     * Only subclasses can instantiate
-     */
+    /** Only subclasses can instantiate */
     protected BasicStackFlowProvider(ShrikeCFG cfg) {
       this.cfg = cfg;
     }
 
-    /**
-     * Initialize the visitors used to perform the flow functions
-     */
+    /** Initialize the visitors used to perform the flow functions */
     protected void init(BasicStackMachineVisitor v, com.ibm.wala.shrikeBT.IInstruction.Visitor ev) {
       this.visitor = v;
       this.edgeVisitor = ev;
@@ -840,7 +810,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       if (DEBUG) {
         System.err.println(("Entry to BB" + cfg.getNumber(basicBlock) + ' ' + workingState));
       }
-      for (int i = basicBlock.getFirstInstructionIndex(); i <= basicBlock.getLastInstructionIndex(); i++) {
+      for (int i = basicBlock.getFirstInstructionIndex();
+          i <= basicBlock.getLastInstructionIndex();
+          i++) {
         currentInstructionIndex = i;
         instructions[i].visit(visitor);
 
@@ -888,9 +860,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     public abstract IInstruction[] getInstructions();
 
-    /**
-     * Update the machine state to account for an instruction
-     */
+    /** Update the machine state to account for an instruction */
     protected class BasicStackMachineVisitor extends IInstruction.Visitor {
 
       @Override
@@ -970,7 +940,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
           workingState.push(v2);
         }
         workingState.push(v1);
-
       }
 
       @Override
@@ -994,8 +963,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       @Override
       public void visitInvoke(IInvokeInstruction instruction) {
         popN(instruction);
-        ClassLoaderReference loader = cfg.getMethod().getDeclaringClass().getClassLoader().getReference();
-        TypeReference returnType = ShrikeUtil.makeTypeReference(loader, Util.getReturnType(instruction.getMethodSignature()));
+        ClassLoaderReference loader =
+            cfg.getMethod().getDeclaringClass().getClassLoader().getReference();
+        TypeReference returnType =
+            ShrikeUtil.makeTypeReference(
+                loader, Util.getReturnType(instruction.getMethodSignature()));
         if (!returnType.equals(TypeReference.Void)) {
           workingState.push(UNANALYZED);
         }

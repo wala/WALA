@@ -12,14 +12,13 @@ package com.ibm.wala.shrikeCT;
 
 /**
  * This class reads LineNumberTable attributes.
- * 
- * Instead of constructing a LineNumberTableReader directly, consider just calling LineNumberTableReader.makeBytecodeToSourceMap for
- * convenient access to aggregate line number data from all the LineNumberTable attributes for a given Code.
+ *
+ * <p>Instead of constructing a LineNumberTableReader directly, consider just calling
+ * LineNumberTableReader.makeBytecodeToSourceMap for convenient access to aggregate line number data
+ * from all the LineNumberTable attributes for a given Code.
  */
 public final class LineNumberTableReader extends AttributeReader {
-  /**
-   * Build a reader for a LineNumberTable attribute.
-   */
+  /** Build a reader for a LineNumberTable attribute. */
   public LineNumberTableReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, "LineNumberTable");
 
@@ -30,9 +29,7 @@ public final class LineNumberTableReader extends AttributeReader {
     checkSize(offset, count * 4);
   }
 
-  /**
-   * @return the raw line number table data, a flattened sequence of (startPC, lineNumber) pairs
-   */
+  /** @return the raw line number table data, a flattened sequence of (startPC, lineNumber) pairs */
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
     int[] r = new int[count * 2];
@@ -45,13 +42,14 @@ public final class LineNumberTableReader extends AttributeReader {
   }
 
   /**
-   * Construct a "bytecode to source" map for the given code. This method aggregates all the LineNumberTable attributes for the code
-   * into one handy data structure.
-   * 
-   * @return an array mapping each byte of the bytecode bytes to the line number that that byte belongs to, or null if there is no
-   *         line number data in the Code
+   * Construct a "bytecode to source" map for the given code. This method aggregates all the
+   * LineNumberTable attributes for the code into one handy data structure.
+   *
+   * @return an array mapping each byte of the bytecode bytes to the line number that that byte
+   *     belongs to, or null if there is no line number data in the Code
    */
-  public static int[] makeBytecodeToSourceMap(CodeReader code) throws InvalidClassFileException, IllegalArgumentException {
+  public static int[] makeBytecodeToSourceMap(CodeReader code)
+      throws InvalidClassFileException, IllegalArgumentException {
 
     if (code == null) {
       throw new IllegalArgumentException();
@@ -79,7 +77,8 @@ public final class LineNumberTableReader extends AttributeReader {
           offset += 4;
 
           if (startPC < 0 || startPC >= r.length) {
-            throw new InvalidClassFileException(offset, "Invalid bytecode offset " + startPC + " in LineNumberTable");
+            throw new InvalidClassFileException(
+                offset, "Invalid bytecode offset " + startPC + " in LineNumberTable");
           }
           r[startPC] = lineNum;
         }

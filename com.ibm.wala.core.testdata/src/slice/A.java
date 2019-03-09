@@ -11,10 +11,10 @@
 package slice;
 
 class A {
-  
+
   Object f;
   Object g;
-  
+
   Object foo() {
     return new Integer(3);
   }

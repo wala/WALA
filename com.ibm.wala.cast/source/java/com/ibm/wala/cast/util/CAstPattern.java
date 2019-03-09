@@ -10,6 +10,14 @@
  */
 package com.ibm.wala.cast.util;
 
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
+import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,33 +27,24 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.cast.tree.visit.CAstVisitor;
-import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
-
 public class CAstPattern {
   private static boolean DEBUG_PARSER = false;
 
   private static boolean DEBUG_MATCH = false;
 
-  private final static int CHILD_KIND = -1;
+  private static final int CHILD_KIND = -1;
 
-  private final static int CHILDREN_KIND = -2;
+  private static final int CHILDREN_KIND = -2;
 
-  private final static int REPEATED_PATTERN_KIND = -3;
+  private static final int REPEATED_PATTERN_KIND = -3;
 
-  private final static int ALTERNATIVE_PATTERN_KIND = -4;
+  private static final int ALTERNATIVE_PATTERN_KIND = -4;
 
-  private final static int OPTIONAL_PATTERN_KIND = -5;
+  private static final int OPTIONAL_PATTERN_KIND = -5;
 
-  private final static int REFERENCE_PATTERN_KIND = -6;
-  
-  private final static int IGNORE_KIND = -99;
+  private static final int REFERENCE_PATTERN_KIND = -6;
+
+  private static final int IGNORE_KIND = -99;
 
   private final String name;
 
@@ -57,7 +56,7 @@ public class CAstPattern {
 
   private final Map<String, CAstPattern> references;
 
-  public static class Segments extends TreeMap<String,Object> {
+  public static class Segments extends TreeMap<String, Object> {
 
     private static final long serialVersionUID = 4119719848336209576L;
 
@@ -73,7 +72,7 @@ public class CAstPattern {
       } else {
         Object o = get(name);
         if (o instanceof CAstNode) {
-          return Collections.singletonList((CAstNode)o);
+          return Collections.singletonList((CAstNode) o);
         } else {
           assert o instanceof List;
           return (List<CAstNode>) o;
@@ -191,18 +190,17 @@ public class CAstPattern {
       return false;
     } else if (i >= tree.getChildCount() && j < cs.length) {
       switch (cs[j].kind) {
-      case CHILDREN_KIND:
-      case OPTIONAL_PATTERN_KIND:
-      case REPEATED_PATTERN_KIND:
-        return matchChildren(tree, i, cs, j + 1, s);
+        case CHILDREN_KIND:
+        case OPTIONAL_PATTERN_KIND:
+        case REPEATED_PATTERN_KIND:
+          return matchChildren(tree, i, cs, j + 1, s);
 
-      default:
-        return false;
+        default:
+          return false;
       }
     } else {
       switch (cs[j].kind) {
         case CHILD_KIND:
-
           if (DEBUG_MATCH) {
             System.err.println(("* matches " + CAstPrinter.print(tree.getChild(i))));
           }
@@ -297,8 +295,7 @@ public class CAstPattern {
         for (CAstPattern element : children) {
           if (element.tryMatch(tree, s)) {
 
-            if (s != null && name != null)
-              s.add(name, tree);
+            if (s != null && name != null) s.add(name, tree);
 
             return true;
           }
@@ -310,11 +307,12 @@ public class CAstPattern {
         return false;
 
       default:
-        if ((value == null) ? tree.getKind() != kind :
-                (tree.getKind() != CAstNode.CONSTANT ||
-                        (value instanceof Pattern
-                                ? !((Pattern) value).matcher(tree.getValue().toString()).matches()
-                                : !value.equals(tree.getValue().toString())))) {
+        if ((value == null)
+            ? tree.getKind() != kind
+            : (tree.getKind() != CAstNode.CONSTANT
+                || (value instanceof Pattern
+                    ? !((Pattern) value).matcher(tree.getValue().toString()).matches()
+                    : !value.equals(tree.getValue().toString())))) {
           if (DEBUG_MATCH) {
             System.err.println("match failed (b)");
           }
@@ -322,8 +320,7 @@ public class CAstPattern {
           return false;
         }
 
-        if (s != null && name != null)
-          s.add(name, tree);
+        if (s != null && name != null) s.add(name, tree);
 
         if (children == null || children.length == 0) {
           if (DEBUG_MATCH && tree.getChildCount() != 0) {
@@ -336,14 +333,14 @@ public class CAstPattern {
     }
   }
 
-  private static boolean tryMatchChildren(CAstNode tree, int i, CAstPattern[] cs, int j, Segments s) {
+  private static boolean tryMatchChildren(
+      CAstNode tree, int i, CAstPattern[] cs, int j, Segments s) {
     if (s == null) {
       return matchChildren(tree, i, cs, j, s);
     } else {
       Segments ss = new Segments();
       boolean result = matchChildren(tree, i, cs, j, ss);
-      if (result)
-        s.addAll(ss);
+      if (result) s.addAll(ss);
       return result;
     }
   }
@@ -354,8 +351,7 @@ public class CAstPattern {
     } else {
       Segments ss = new Segments();
       boolean result = match(tree, ss);
-      if (result)
-        s.addAll(ss);
+      if (result) s.addAll(ss);
       return result;
     }
   }
@@ -382,21 +378,25 @@ public class CAstPattern {
   }
 
   public static Collection<Segments> findAll(final CAstPattern p, final CAstEntity e) {
-    return p.new Matcher().findAll(new Context() {
-      @Override
-      public CAstEntity top() {
-        return e;
-      }
-      @Override
-      public CAstSourcePositionMap getSourceMap() {
-        return e.getSourceMap();
-      }
-    }, e.getAST());
+    return p.new Matcher()
+        .findAll(
+            new Context() {
+              @Override
+              public CAstEntity top() {
+                return e;
+              }
+
+              @Override
+              public CAstSourcePositionMap getSourceMap() {
+                return e.getSourceMap();
+              }
+            },
+            e.getAST());
   }
-  
+
   public class Matcher extends CAstVisitor<Context> {
     private final Collection<Segments> result = HashSetFactory.make();
-    
+
     @Override
     public void leaveNode(CAstNode n, Context c, CAstVisitor<Context> visitor) {
       Segments s = match(CAstPattern.this, n);
@@ -406,7 +406,7 @@ public class CAstPattern {
     }
 
     public Collection<Segments> findAll(final Context c, final CAstNode top) {
-      visit(top, c, this);   
+      visit(top, c, this);
       return result;
     }
 
@@ -420,12 +420,12 @@ public class CAstPattern {
     }
 
     @Override
-    protected boolean doVisitAssignNodes(CAstNode n, Context context, CAstNode v, CAstNode a, CAstVisitor<Context> visitor) {
+    protected boolean doVisitAssignNodes(
+        CAstNode n, Context context, CAstNode v, CAstNode a, CAstVisitor<Context> visitor) {
       return true;
     }
-        
   }
-    
+
   private static class Parser {
     private final Map<String, CAstPattern> namedPatterns = HashMapFactory.make();
 
@@ -498,11 +498,13 @@ public class CAstPattern {
         } while (patternString.startsWith("||", end));
         assert patternString.startsWith(")|", end) : patternString;
         end += 2;
-        result = new CAstPattern(name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[0]));
+        result =
+            new CAstPattern(
+                name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[0]));
 
       } else if (patternString.startsWith("@(", start)) {
         start += 2;
-        CAstPattern children[] = new CAstPattern[] { parse() };
+        CAstPattern children[] = new CAstPattern[] {parse()};
         assert patternString.startsWith(")@", end);
         end += 2;
 
@@ -514,7 +516,7 @@ public class CAstPattern {
 
       } else if (patternString.startsWith("?(", start)) {
         start += 2;
-        CAstPattern children[] = new CAstPattern[] { parse() };
+        CAstPattern children[] = new CAstPattern[] {parse()};
         assert patternString.startsWith(")?", end);
         end += 2;
 

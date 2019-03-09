@@ -10,20 +10,18 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.util.HashSet;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import java.util.HashSet;
 
-/**
- * Includes all application methods in an analysis scope as entrypoints.
- */
+/** Includes all application methods in an analysis scope as entrypoints. */
 public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
 
   private static final long serialVersionUID = 6541081454519490199L;
-  private final static boolean DEBUG = false;
+  private static final boolean DEBUG = false;
 
   /**
    * @param scope governing analyais scope
@@ -49,12 +47,9 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
     if (DEBUG) {
       System.err.println((getClass() + "Number of EntryPoints:" + size()));
     }
-
   }
 
-  /**
-   * @return true iff klass is loaded by the application loader.
-   */
+  /** @return true iff klass is loaded by the application loader. */
   private static boolean isApplicationClass(AnalysisScope scope, IClass klass) {
     return scope.getApplicationLoader().equals(klass.getClassLoader().getReference());
   }

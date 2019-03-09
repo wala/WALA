@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,64 +48,58 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.types.TypeReference;
+import org.jf.dexlib2.Opcode;
 
 public abstract class Constant extends Instruction {
 
-    public final int destination;
+  public final int destination;
 
-    public static class LongConstant extends Constant {
-        public final long value;
-        public LongConstant(int pc, long value, int destination, Opcode opcode, DexIMethod method)
-        {
-            super(pc, destination, opcode, method);
-            this.value = value;
-        }
+  public static class LongConstant extends Constant {
+    public final long value;
 
+    public LongConstant(int pc, long value, int destination, Opcode opcode, DexIMethod method) {
+      super(pc, destination, opcode, method);
+      this.value = value;
     }
+  }
 
-    protected Constant(int pc, int destination, Opcode opcode, DexIMethod method) {
-        super(pc, opcode, method);
-        this.destination = destination;
+  protected Constant(int pc, int destination, Opcode opcode, DexIMethod method) {
+    super(pc, opcode, method);
+    this.destination = destination;
+  }
+
+  public static class IntConstant extends Constant {
+    public final int value;
+
+    public IntConstant(int pc, int value, int destination, Opcode opcode, DexIMethod method) {
+      super(pc, destination, opcode, method);
+      this.value = value;
     }
+  }
 
-    public static class IntConstant extends Constant
-    {
-        public final int value;
-        public IntConstant(int pc, int value, int destination, Opcode opcode, DexIMethod method)
-        {
-            super(pc, destination, opcode, method);
-            this.value = value;
-        }
+  public static class StringConstant extends Constant {
+    public final String value;
+
+    public StringConstant(int pc, String value, int destination, Opcode opcode, DexIMethod method) {
+      super(pc, destination, opcode, method);
+      this.value = value;
     }
+  }
 
-    public static class StringConstant extends Constant
-    {
-        public final String value;
-        public StringConstant(int pc, String value, int destination, Opcode opcode, DexIMethod method)
-        {
-            super(pc, destination, opcode, method);
-            this.value = value;
-        }
+  public static class ClassConstant extends Constant {
+    public final TypeReference value;
+
+    public ClassConstant(
+        int pc, TypeReference value, int destination, Opcode opcode, DexIMethod method) {
+      super(pc, destination, opcode, method);
+      this.value = value;
     }
+  }
 
-    public static class ClassConstant extends Constant
-    {
-        public final TypeReference value;
-
-        public ClassConstant(int pc, TypeReference value, int destination, Opcode opcode, DexIMethod method)
-        {
-            super(pc, destination, opcode, method);
-            this.value = value;
-        }
-    }
-
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.visitConstant(this);
-    }
-
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visitConstant(this);
+  }
 }

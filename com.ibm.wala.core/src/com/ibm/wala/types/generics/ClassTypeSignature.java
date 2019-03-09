@@ -10,28 +10,23 @@
  */
 package com.ibm.wala.types.generics;
 
-import java.util.StringTokenizer;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import java.util.StringTokenizer;
 
 /**
  * Under construction.
- * 
- * ClassTypeSignature:
- *   L PackageSpecifier* SimpleClassTypeSignature ClassTypeSignatureSuffix* ;
- *   
- * SimpleClassTypeSignature:
- *   Identifier TypeArguments?
- *   
- * TypeArguments:
- *   &lt;TypeArguments+&gt;
- * 
+ *
+ * <p>ClassTypeSignature: L PackageSpecifier* SimpleClassTypeSignature ClassTypeSignatureSuffix* ;
+ *
+ * <p>SimpleClassTypeSignature: Identifier TypeArguments?
+ *
+ * <p>TypeArguments: &lt;TypeArguments+&gt;
+ *
  * @author sjfink
- * 
  */
 public class ClassTypeSignature extends TypeSignature {
 
@@ -43,7 +38,7 @@ public class ClassTypeSignature extends TypeSignature {
     if (s.charAt(0) != 'L') {
       throw new IllegalArgumentException(s);
     }
-    if (s.charAt(s.length()-1) != ';') {
+    if (s.charAt(s.length() - 1) != ';') {
       throw new IllegalArgumentException(s);
     }
   }
@@ -64,23 +59,21 @@ public class ClassTypeSignature extends TypeSignature {
   public boolean isClassTypeSignature() {
     return true;
   }
-  
+
   @Override
   public boolean isArrayTypeSignature() {
     return false;
   }
 
-  /**
-   * Return the name of the raw type for this signature
-   */
+  /** Return the name of the raw type for this signature */
   public TypeName getRawName() {
     // note: need to handle type arguments for raw signatures like the following:
     // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
     StringBuilder s = new StringBuilder();
-    StringTokenizer t = new StringTokenizer(rawString(),".");
+    StringTokenizer t = new StringTokenizer(rawString(), ".");
     while (t.hasMoreTokens()) {
       String x = t.nextToken();
-      s.append(x.replaceAll("<.*>","").replace(";",""));
+      s.append(x.replaceAll("<.*>", "").replace(";", ""));
       if (t.hasMoreElements()) {
         // note that '$' is the canonical separator for inner class names
         s.append('$');
@@ -93,20 +86,20 @@ public class ClassTypeSignature extends TypeSignature {
     // note: need to handle type arguments for raw signatures like the following:
     // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
     int lastDot = rawString().lastIndexOf('.');
-    if (rawString().indexOf('<',lastDot) == -1) {
+    if (rawString().indexOf('<', lastDot) == -1) {
       return null;
     } else {
-      int start = rawString().indexOf('<',lastDot);
+      int start = rawString().indexOf('<', lastDot);
       int end = endOfTypeArguments();
-      return TypeArgument.make(rawString().substring(start,end));
+      return TypeArgument.make(rawString().substring(start, end));
     }
   }
-  
+
   private int endOfTypeArguments() {
     // note: need to handle type arguments for raw signatures like the following:
     // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
     int lastDot = rawString().lastIndexOf('.');
-    int i = rawString().indexOf('<',lastDot) + 1;
+    int i = rawString().indexOf('<', lastDot) + 1;
     assert (i > 0);
     int depth = 1;
     while (depth > 0) {
@@ -120,12 +113,12 @@ public class ClassTypeSignature extends TypeSignature {
     }
     return i;
   }
-  
+
   @Override
   public boolean isBaseType() {
     return false;
   }
-  
+
   public static IClass lookupClass(IClassHierarchy cha, ClassTypeSignature sig) {
     if (sig == null) {
       throw new IllegalArgumentException("sig is null");
@@ -133,8 +126,8 @@ public class ClassTypeSignature extends TypeSignature {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
-    TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, sig.getRawName());
+    TypeReference t =
+        TypeReference.findOrCreate(ClassLoaderReference.Application, sig.getRawName());
     return cha.lookupClass(t);
   }
-
 }

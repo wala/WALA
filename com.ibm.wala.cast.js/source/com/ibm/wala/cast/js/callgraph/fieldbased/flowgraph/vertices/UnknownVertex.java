@@ -11,24 +11,23 @@
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 /**
- * The unknown vertex is used to model complicated data flow. For instance, thrown
- * exceptions flow into Unknown, and catch blocks read their values from it.
- * 
- * @author mschaefer
+ * The unknown vertex is used to model complicated data flow. For instance, thrown exceptions flow
+ * into Unknown, and catch blocks read their values from it.
  *
+ * @author mschaefer
  */
 public class UnknownVertex extends Vertex {
-	public static final UnknownVertex INSTANCE = new UnknownVertex();
-	
-	private UnknownVertex() {}
+  public static final UnknownVertex INSTANCE = new UnknownVertex();
 
-	@Override
-	public <T> T accept(VertexVisitor<T> visitor) {
-		return visitor.visitUnknownVertex(this);
-	}
-	
-	@Override
-	public String toString() {
-		return "Unknown";
-	}
+  private UnknownVertex() {}
+
+  @Override
+  public <T> T accept(VertexVisitor<T> visitor) {
+    return visitor.visitUnknownVertex(this);
+  }
+
+  @Override
+  public String toString() {
+    return "Unknown";
+  }
 }

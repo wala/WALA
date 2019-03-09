@@ -10,40 +10,40 @@
  */
 package com.ibm.wala.shrikeBT;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
 import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeBT.analysis.Verifier;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
 
 /**
  * This class generates Java bytecode from ShrikeBT Instructions.
- * 
- * If there are too many instructions to fit into 64K bytecodes, then we break the method up, generating auxiliary methods called by
- * the main method.
- * 
- * This class is abstract; there are subclasses for specific class file access toolkits. These toolkits are responsible for
- * providing ways to allocate constant pool entries.
+ *
+ * <p>If there are too many instructions to fit into 64K bytecodes, then we break the method up,
+ * generating auxiliary methods called by the main method.
+ *
+ * <p>This class is abstract; there are subclasses for specific class file access toolkits. These
+ * toolkits are responsible for providing ways to allocate constant pool entries.
  */
 public abstract class Compiler implements Constants {
   // input
-  final private boolean isConstructor;
-  
-  final private boolean isStatic;
+  private final boolean isConstructor;
 
-  final private String classType;
+  private final boolean isStatic;
 
-  final private String signature;
+  private final String classType;
+
+  private final String signature;
 
   private final IInstruction[] instructions;
 
-  final private ExceptionHandler[][] handlers;
+  private final ExceptionHandler[][] handlers;
 
-  final private int[] instructionsToBytecodes;
+  private final int[] instructionsToBytecodes;
 
   private static final int[] noRawHandlers = new int[0];
 
@@ -82,7 +82,7 @@ public abstract class Compiler implements Constants {
 
   /**
    * Initialize a Compiler for the given method data.
-   * 
+   *
    * @param isStatic true iff the method is static
    * @param classType the JVM type of the class the method belongs to
    * @param signature the JVM signature of the method
@@ -93,7 +93,13 @@ public abstract class Compiler implements Constants {
    * @throws IllegalArgumentException if instructions is null
    * @throws IllegalArgumentException if instructionsToBytecodes is null
    */
-  public Compiler(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers,
+  public Compiler(
+      boolean isConstructor,
+      boolean isStatic,
+      String classType,
+      String signature,
+      IInstruction[] instructions,
+      ExceptionHandler[][] handlers,
       int[] instructionsToBytecodes) {
     if (instructionsToBytecodes == null) {
       throw new IllegalArgumentException("instructionsToBytecodes is null");
@@ -120,32 +126,36 @@ public abstract class Compiler implements Constants {
     this.instructionsToBytecodes = instructionsToBytecodes;
   }
 
-  /**
-   * Extract the data for the method to be compiled from the MethodData container.
-   */
+  /** Extract the data for the method to be compiled from the MethodData container. */
   protected Compiler(MethodData info) {
-    this(info.getName().equals("<init>"), info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info
-        .getInstructionsToBytecodes());
+    this(
+        info.getName().equals("<init>"),
+        info.getIsStatic(),
+        info.getClassType(),
+        info.getSignature(),
+        info.getInstructions(),
+        info.getHandlers(),
+        info.getInstructionsToBytecodes());
   }
 
-  /**
-   * @return the JVM type for the class this method belongs to
-   */
-  final public String getClassType() {
+  /** @return the JVM type for the class this method belongs to */
+  public final String getClassType() {
     return classType;
   }
 
   /**
-   * Notify the compiler that the constants appearing in the ConstantPoolReader cp will appear in the final class file.
-   * 
-   * Instructions which were extracted from a class file with the same ConstantPoolReader can be written back much more efficiently
-   * if the same constant pool indices are valid in the new class file.
+   * Notify the compiler that the constants appearing in the ConstantPoolReader cp will appear in
+   * the final class file.
+   *
+   * <p>Instructions which were extracted from a class file with the same ConstantPoolReader can be
+   * written back much more efficiently if the same constant pool indices are valid in the new class
+   * file.
    */
-  final public void setPresetConstants(ConstantPoolReader cp) {
+  public final void setPresetConstants(ConstantPoolReader cp) {
     presetConstants = cp;
   }
 
-  final public void setClassHierarchy(ClassHierarchyProvider h) {
+  public final void setClassHierarchy(ClassHierarchyProvider h) {
     this.hierarchy = h;
   }
 
@@ -171,47 +181,49 @@ public abstract class Compiler implements Constants {
 
   protected abstract int allocateConstantPoolInterfaceMethod(String c, String name, String sig);
 
-  protected abstract int allocateConstantPoolInvokeDynamic(BootstrapMethod b, String name, String type);
+  protected abstract int allocateConstantPoolInvokeDynamic(
+      BootstrapMethod b, String name, String type);
 
   protected abstract String createHelperMethod(boolean isStatic, String sig);
-  
+
   private void collectInstructionInfo() {
     final BitSet s = new BitSet(instructions.length);
     final BitSet localsUsed = new BitSet(32);
     final BitSet localsWide = new BitSet(32);
 
-    IInstruction.Visitor visitor = new IInstruction.Visitor() {
-      private void visitTargets(IInstruction instr) {
-        int[] ts = instr.getBranchTargets();
-        for (int element : ts) {
-          s.set(element);
-        }
-      }
+    IInstruction.Visitor visitor =
+        new IInstruction.Visitor() {
+          private void visitTargets(IInstruction instr) {
+            int[] ts = instr.getBranchTargets();
+            for (int element : ts) {
+              s.set(element);
+            }
+          }
 
-      @Override
-      public void visitGoto(GotoInstruction instruction) {
-        visitTargets(instruction);
-      }
+          @Override
+          public void visitGoto(GotoInstruction instruction) {
+            visitTargets(instruction);
+          }
 
-      @Override
-      public void visitLocalStore(IStoreInstruction instruction) {
-        localsUsed.set(instruction.getVarIndex());
-        String t = instruction.getType();
-        if (t.equals(TYPE_long) || t.equals(TYPE_double)) {
-          localsWide.set(instruction.getVarIndex());
-        }
-      }
+          @Override
+          public void visitLocalStore(IStoreInstruction instruction) {
+            localsUsed.set(instruction.getVarIndex());
+            String t = instruction.getType();
+            if (t.equals(TYPE_long) || t.equals(TYPE_double)) {
+              localsWide.set(instruction.getVarIndex());
+            }
+          }
 
-      @Override
-      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
-        visitTargets(instruction);
-      }
+          @Override
+          public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
+            visitTargets(instruction);
+          }
 
-      @Override
-      public void visitSwitch(SwitchInstruction instruction) {
-        visitTargets(instruction);
-      }
-    };
+          @Override
+          public void visitSwitch(SwitchInstruction instruction) {
+            visitTargets(instruction);
+          }
+        };
 
     for (IInstruction instruction : instructions) {
       instruction.visit(visitor);
@@ -327,7 +339,8 @@ public abstract class Compiler implements Constants {
         int size = d.getSize();
         int delta = d.getDelta();
 
-        System.arraycopy(stackWords, stackLen - size - delta, stackWords, stackLen - delta, delta + size);
+        System.arraycopy(
+            stackWords, stackLen - size - delta, stackWords, stackLen - delta, delta + size);
         System.arraycopy(stackWords, stackLen, stackWords, stackLen - size - delta, size);
         stackLen += size;
         checkStackWordSize(stackWords, stackLen);
@@ -361,8 +374,14 @@ public abstract class Compiler implements Constants {
       for (int element : bt) {
         int t = element;
         if (t < 0 || t >= visited.length) {
-          throw new IllegalArgumentException("Branch target at offset " + i + " is out of bounds: " + t + " (max " + visited.length
-              + ')');
+          throw new IllegalArgumentException(
+              "Branch target at offset "
+                  + i
+                  + " is out of bounds: "
+                  + t
+                  + " (max "
+                  + visited.length
+                  + ')');
         }
         if (!visited[t]) {
           computeStackWordsAt(element, stackLen, stackWords.clone(), visited);
@@ -439,7 +458,8 @@ public abstract class Compiler implements Constants {
     }
   }
 
-  private void insertBranchOffsetInt(ArrayList<Patch> patches, int instrStart, int instrOffset, int targetLabel) {
+  private void insertBranchOffsetInt(
+      ArrayList<Patch> patches, int instrStart, int instrOffset, int targetLabel) {
     if (instructionsToOffsets[targetLabel] > 0 || targetLabel == 0) {
       writeInt(instrOffset, instructionsToOffsets[targetLabel] - instrStart);
     } else {
@@ -472,7 +492,11 @@ public abstract class Compiler implements Constants {
     cachedBuf = buf;
   }
 
-  private boolean outputInstructions(int startInstruction, int endInstruction, int startOffset, boolean farBranches,
+  private boolean outputInstructions(
+      int startInstruction,
+      int endInstruction,
+      int startOffset,
+      boolean farBranches,
       byte[] initialStack) {
     instructionsToOffsets = new int[instructions.length];
     code = makeCodeBuf();
@@ -489,66 +513,67 @@ public abstract class Compiler implements Constants {
     }
     final int[] instrRef = new int[1];
 
-    IInstruction.Visitor noOpcodeHandler = new IInstruction.Visitor() {
-      @Override
-      public void visitPop(PopInstruction instruction) {
-        int count = instruction.getPoppedCount();
-        int offset = curOffsetRef[0];
-        int stackLen = stackLenRef[0];
+    IInstruction.Visitor noOpcodeHandler =
+        new IInstruction.Visitor() {
+          @Override
+          public void visitPop(PopInstruction instruction) {
+            int count = instruction.getPoppedCount();
+            int offset = curOffsetRef[0];
+            int stackLen = stackLenRef[0];
 
-        while (count > 0) {
-          code[offset] = (byte) (stackWords[stackLen - 1] == 1 ? OP_pop : OP_pop2);
-          count--;
-          stackLen--;
-          offset++;
-        }
+            while (count > 0) {
+              code[offset] = (byte) (stackWords[stackLen - 1] == 1 ? OP_pop : OP_pop2);
+              count--;
+              stackLen--;
+              offset++;
+            }
 
-        curOffsetRef[0] = offset;
-      }
+            curOffsetRef[0] = offset;
+          }
 
-      @Override
-      public void visitDup(DupInstruction instruction) {
-        int size = instruction.getSize();
-        int delta = instruction.getDelta();
-        int offset = curOffsetRef[0];
-        int stackLen = stackLenRef[0];
+          @Override
+          public void visitDup(DupInstruction instruction) {
+            int size = instruction.getSize();
+            int delta = instruction.getDelta();
+            int offset = curOffsetRef[0];
+            int stackLen = stackLenRef[0];
 
-        int sizeWords = stackWords[stackLen - 1];
-        if (size == 2) {
-          sizeWords += stackWords[stackLen - 2];
-        }
-        int deltaWords = delta == 0 ? 0 : stackWords[stackLen - 1 - size];
-        if (delta == 2) {
-          deltaWords += stackWords[stackLen - 1 - size - 1];
-        }
-        if (sizeWords > 2 || deltaWords > 2) {
-          throw new IllegalArgumentException("Invalid dup size");
-        }
+            int sizeWords = stackWords[stackLen - 1];
+            if (size == 2) {
+              sizeWords += stackWords[stackLen - 2];
+            }
+            int deltaWords = delta == 0 ? 0 : stackWords[stackLen - 1 - size];
+            if (delta == 2) {
+              deltaWords += stackWords[stackLen - 1 - size - 1];
+            }
+            if (sizeWords > 2 || deltaWords > 2) {
+              throw new IllegalArgumentException("Invalid dup size");
+            }
 
-        code[offset] = (byte) (OP_dup + (3 * (sizeWords - 1)) + deltaWords);
-        offset++;
-        curOffsetRef[0] = offset;
-      }
+            code[offset] = (byte) (OP_dup + (3 * (sizeWords - 1)) + deltaWords);
+            offset++;
+            curOffsetRef[0] = offset;
+          }
 
-      @Override
-      public void visitSwap(SwapInstruction instruction) {
-        int offset = curOffsetRef[0];
-        int stackLen = stackLenRef[0];
-        int topSize = stackWords[stackLen - 1];
-        int nextSize = stackWords[stackLen - 2];
+          @Override
+          public void visitSwap(SwapInstruction instruction) {
+            int offset = curOffsetRef[0];
+            int stackLen = stackLenRef[0];
+            int topSize = stackWords[stackLen - 1];
+            int nextSize = stackWords[stackLen - 2];
 
-        if (topSize == 1 && nextSize == 1) {
-          code[offset] = (byte) OP_swap;
-          offset++;
-        } else {
-          code[offset] = (byte) (OP_dup + (3 * (topSize - 1)) + nextSize);
-          code[offset + 1] = (byte) (topSize == 1 ? OP_pop : OP_pop2);
-          offset += 2;
-        }
+            if (topSize == 1 && nextSize == 1) {
+              code[offset] = (byte) OP_swap;
+              offset++;
+            } else {
+              code[offset] = (byte) (OP_dup + (3 * (topSize - 1)) + nextSize);
+              code[offset + 1] = (byte) (topSize == 1 ? OP_pop : OP_pop2);
+              offset += 2;
+            }
 
-        curOffsetRef[0] = offset;
-      }
-    };
+            curOffsetRef[0] = offset;
+          }
+        };
 
     for (int i = startInstruction; i < endInstruction; i++) {
       Instruction instr = (Instruction) instructions[i];
@@ -564,461 +589,522 @@ public abstract class Compiler implements Constants {
         curOffset++;
 
         switch (opcode) {
-        case OP_iconst_0:
-          if (inBasicBlock(i, 2) && instructions[i + 1] instanceof ConditionalBranchInstruction) {
-            ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
-            if (cbr.getType().equals(TYPE_int)) {
-              code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifeq);
-              fallToConditional = true;
-              i++;
-              instr = (Instruction) instructions[i];
+          case OP_iconst_0:
+            if (inBasicBlock(i, 2) && instructions[i + 1] instanceof ConditionalBranchInstruction) {
+              ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
+              if (cbr.getType().equals(TYPE_int)) {
+                code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifeq);
+                fallToConditional = true;
+                i++;
+                instr = (Instruction) instructions[i];
+              }
             }
-          }
-          if (!fallToConditional) {
-            break;
-          }
-          //$FALL-THROUGH$
-        case OP_aconst_null:
-          if (!fallToConditional && inBasicBlock(i, 2) && instructions[i + 1] instanceof ConditionalBranchInstruction) {
-            ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
-            if (cbr.getType().equals(TYPE_Object)) {
-              code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifnull);
-              fallToConditional = true;
-              i++;
-              instr = (Instruction) instructions[i];
+            if (!fallToConditional) {
+              break;
             }
-          }
-          if (!fallToConditional) {
-            break;
-          }
-          // by Xiangyu
-          //$FALL-THROUGH$
-        case OP_ifeq:
-        case OP_ifge:
-        case OP_ifgt:
-        case OP_ifle:
-        case OP_iflt:
-        case OP_ifne: {
-          int targetI = instr.getBranchTargets()[0];
-          boolean invert = false;
-          int iStart = curOffset - 1;
-
-          if (inBasicBlock(i, 2) && instr.getBranchTargets()[0] == i + 2 && instructions[i + 1] instanceof GotoInstruction) {
-            invert = true;
-            targetI = instructions[i + 1].getBranchTargets()[0];
-            i++;
-          }
-
-          if (targetI <= i) {
-            int delta = instructionsToOffsets[targetI] - iStart;
-            if ((short) delta != delta) {
-              // emit "if_!XX TMP; goto_w L; TMP:"
-              invert = !invert;
-              writeShort(curOffset, 8);
-              code[curOffset + 2] = (byte) OP_goto_w;
-              writeInt(curOffset + 3, delta - 3);
-              curOffset += 7;
-            } else {
-              writeShort(curOffset, (short) delta);
-              curOffset += 2;
+            // $FALL-THROUGH$
+          case OP_aconst_null:
+            if (!fallToConditional
+                && inBasicBlock(i, 2)
+                && instructions[i + 1] instanceof ConditionalBranchInstruction) {
+              ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
+              if (cbr.getType().equals(TYPE_Object)) {
+                code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifnull);
+                fallToConditional = true;
+                i++;
+                instr = (Instruction) instructions[i];
+              }
             }
-          } else {
-            Patch p;
-            if (farBranches) {
-              // emit "if_!XX TMP; goto_w L; TMP:"
-              invert = !invert;
-              writeShort(curOffset, 8);
-              code[curOffset + 2] = (byte) OP_goto_w;
-              p = new IntPatch(curOffset + 2, curOffset + 3, targetI);
-              curOffset += 7;
-            } else {
-              p = new ShortPatch(iStart, curOffset, targetI);
-              curOffset += 2;
+            if (!fallToConditional) {
+              break;
             }
-            patches.add(p);
-          }
+            // by Xiangyu
+            // $FALL-THROUGH$
+          case OP_ifeq:
+          case OP_ifge:
+          case OP_ifgt:
+          case OP_ifle:
+          case OP_iflt:
+          case OP_ifne:
+            {
+              int targetI = instr.getBranchTargets()[0];
+              boolean invert = false;
+              int iStart = curOffset - 1;
 
-          if (invert) {
-            code[iStart] = (byte) (((code[iStart] - OP_ifeq) ^ 1) + OP_ifeq);
-          }
-          break;
-        }
-          // by Xiangyu
+              if (inBasicBlock(i, 2)
+                  && instr.getBranchTargets()[0] == i + 2
+                  && instructions[i + 1] instanceof GotoInstruction) {
+                invert = true;
+                targetI = instructions[i + 1].getBranchTargets()[0];
+                i++;
+              }
 
-        case OP_if_icmpeq:
-        case OP_if_icmpge:
-        case OP_if_icmpgt:
-        case OP_if_icmple:
-        case OP_if_icmplt:
-        case OP_if_icmpne:
-        case OP_if_acmpeq:
-        case OP_if_acmpne: {
-          int targetI = instr.getBranchTargets()[0];
-          boolean invert = false;
-          int iStart = curOffset - 1;
-
-          if (inBasicBlock(i, 2) && instr.getBranchTargets()[0] == i + 2 && instructions[i + 1] instanceof GotoInstruction) {
-            invert = true;
-            targetI = instructions[i + 1].getBranchTargets()[0];
-            i++;
-          }
-
-          if (targetI <= i) {
-            int delta = instructionsToOffsets[targetI] - iStart;
-            if ((short) delta != delta) {
-              // emit "if_!XX TMP; goto_w L; TMP:"
-              invert = !invert;
-              writeShort(curOffset, 8);
-              code[curOffset + 2] = (byte) OP_goto_w;
-              writeInt(curOffset + 3, delta - 3);
-              curOffset += 7;
-            } else {
-              writeShort(curOffset, (short) delta);
-              curOffset += 2;
-            }
-          } else {
-            Patch p;
-            if (farBranches) {
-              // emit "if_!XX TMP; goto_w L; TMP:"
-              invert = !invert;
-              writeShort(curOffset, 8);
-              code[curOffset + 2] = (byte) OP_goto_w;
-              p = new IntPatch(curOffset + 2, curOffset + 3, targetI);
-              curOffset += 7;
-            } else {
-              p = new ShortPatch(iStart, curOffset, targetI);
-              curOffset += 2;
-            }
-            patches.add(p);
-          }
-
-          if (invert) {
-            code[iStart] = (byte) (((code[iStart] - OP_if_icmpeq) ^ 1) + OP_if_icmpeq);
-          }
-          break;
-        }
-        case OP_bipush:
-          writeByte(curOffset, ((ConstantInstruction.ConstInt) instr).getIntValue());
-          curOffset++;
-          break;
-        case OP_sipush:
-          writeShort(curOffset, ((ConstantInstruction.ConstInt) instr).getIntValue());
-          curOffset += 2;
-          break;
-        case OP_ldc_w: {
-          int cpIndex;
-          ConstantInstruction ci = (ConstantInstruction) instr;
-          if (presetConstants != null && ci.getLazyConstantPool() == presetConstants) {
-            cpIndex = ci.getCPIndex();
-          } else {
-            String t = instr.getPushedType(null);
-            switch (t) {
-              case TYPE_int:
-                cpIndex = allocateConstantPoolInteger(((ConstantInstruction.ConstInt) instr).getIntValue());
-                break;
-              case TYPE_String:
-                cpIndex = allocateConstantPoolString((String) ((ConstantInstruction.ConstString) instr).getValue());
-                break;
-              case TYPE_Class:
-                cpIndex = allocateConstantPoolClassType(((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue()).getTypeName());
-                break;
-              case TYPE_MethodType:
-                cpIndex = allocateConstantPoolMethodType(((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
-                break;
-              case TYPE_MethodHandle:
-                cpIndex = allocateConstantPoolMethodHandle(((ReferenceToken) ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
-                break;
-              default:
-                cpIndex = allocateConstantPoolFloat(((ConstantInstruction.ConstFloat) instr).getFloatValue());
-                break;
-            }
-          }
-
-          if (cpIndex < 256) {
-            code[curOffset - 1] = (byte) OP_ldc;
-            code[curOffset] = (byte) cpIndex;
-            curOffset++;
-          } else {
-            writeShort(curOffset, cpIndex);
-            curOffset += 2;
-          }
-          break;
-        }
-        case OP_ldc2_w: {
-          int cpIndex;
-          ConstantInstruction ci = (ConstantInstruction) instr;
-          if (presetConstants != null && ci.getLazyConstantPool() == presetConstants) {
-            cpIndex = ci.getCPIndex();
-          } else {
-            String t = instr.getPushedType(null);
-            if (t.equals(TYPE_long)) {
-              cpIndex = allocateConstantPoolLong(((ConstantInstruction.ConstLong) instr).getLongValue());
-            } else {
-              cpIndex = allocateConstantPoolDouble(((ConstantInstruction.ConstDouble) instr).getDoubleValue());
-            }
-          }
-
-          writeShort(curOffset, cpIndex);
-          curOffset += 2;
-          break;
-        }
-        case OP_iload_0:
-        case OP_iload_1:
-        case OP_iload_2:
-        case OP_iload_3:
-        case OP_iload: {
-          if (inBasicBlock(i, 4)) {
-            // try to generate an OP_iinc
-            if (instructions[i + 1] instanceof ConstantInstruction.ConstInt && instructions[i + 2] instanceof BinaryOpInstruction
-                && instructions[i + 3] instanceof StoreInstruction) {
-              LoadInstruction i0 = (LoadInstruction) instr;
-              ConstantInstruction.ConstInt i1 = (ConstantInstruction.ConstInt) instructions[i + 1];
-              BinaryOpInstruction i2 = (BinaryOpInstruction) instructions[i + 2];
-              StoreInstruction i3 = (StoreInstruction) instructions[i + 3];
-
-              int c = i1.getIntValue();
-              int v = i0.getVarIndex();
-              BinaryOpInstruction.Operator op = i2.getOperator();
-              if ((short) c == c && i3.getVarIndex() == v && (op == Operator.ADD || op == Operator.SUB)
-                  && i2.getType().equals(TYPE_int) && i3.getType().equals(TYPE_int)) {
-                if (v < 256 && (byte) c == c) {
-                  code[curOffset - 1] = (byte) OP_iinc;
-                  writeByte(curOffset, v);
-                  writeByte(curOffset + 1, c);
-                  curOffset += 2;
+              if (targetI <= i) {
+                int delta = instructionsToOffsets[targetI] - iStart;
+                if ((short) delta != delta) {
+                  // emit "if_!XX TMP; goto_w L; TMP:"
+                  invert = !invert;
+                  writeShort(curOffset, 8);
+                  code[curOffset + 2] = (byte) OP_goto_w;
+                  writeInt(curOffset + 3, delta - 3);
+                  curOffset += 7;
                 } else {
-                  code[curOffset - 1] = (byte) OP_wide;
-                  code[curOffset] = (byte) OP_iinc;
-                  writeShort(curOffset + 1, v);
-                  writeShort(curOffset + 3, c);
-                  curOffset += 5;
+                  writeShort(curOffset, (short) delta);
+                  curOffset += 2;
                 }
-                instructionsToOffsets[i + 1] = -1;
-                instructionsToOffsets[i + 2] = -1;
-                instructionsToOffsets[i + 3] = -1;
-                i += 3;
+              } else {
+                Patch p;
+                if (farBranches) {
+                  // emit "if_!XX TMP; goto_w L; TMP:"
+                  invert = !invert;
+                  writeShort(curOffset, 8);
+                  code[curOffset + 2] = (byte) OP_goto_w;
+                  p = new IntPatch(curOffset + 2, curOffset + 3, targetI);
+                  curOffset += 7;
+                } else {
+                  p = new ShortPatch(iStart, curOffset, targetI);
+                  curOffset += 2;
+                }
+                patches.add(p);
+              }
+
+              if (invert) {
+                code[iStart] = (byte) (((code[iStart] - OP_ifeq) ^ 1) + OP_ifeq);
+              }
+              break;
+            }
+            // by Xiangyu
+
+          case OP_if_icmpeq:
+          case OP_if_icmpge:
+          case OP_if_icmpgt:
+          case OP_if_icmple:
+          case OP_if_icmplt:
+          case OP_if_icmpne:
+          case OP_if_acmpeq:
+          case OP_if_acmpne:
+            {
+              int targetI = instr.getBranchTargets()[0];
+              boolean invert = false;
+              int iStart = curOffset - 1;
+
+              if (inBasicBlock(i, 2)
+                  && instr.getBranchTargets()[0] == i + 2
+                  && instructions[i + 1] instanceof GotoInstruction) {
+                invert = true;
+                targetI = instructions[i + 1].getBranchTargets()[0];
+                i++;
+              }
+
+              if (targetI <= i) {
+                int delta = instructionsToOffsets[targetI] - iStart;
+                if ((short) delta != delta) {
+                  // emit "if_!XX TMP; goto_w L; TMP:"
+                  invert = !invert;
+                  writeShort(curOffset, 8);
+                  code[curOffset + 2] = (byte) OP_goto_w;
+                  writeInt(curOffset + 3, delta - 3);
+                  curOffset += 7;
+                } else {
+                  writeShort(curOffset, (short) delta);
+                  curOffset += 2;
+                }
+              } else {
+                Patch p;
+                if (farBranches) {
+                  // emit "if_!XX TMP; goto_w L; TMP:"
+                  invert = !invert;
+                  writeShort(curOffset, 8);
+                  code[curOffset + 2] = (byte) OP_goto_w;
+                  p = new IntPatch(curOffset + 2, curOffset + 3, targetI);
+                  curOffset += 7;
+                } else {
+                  p = new ShortPatch(iStart, curOffset, targetI);
+                  curOffset += 2;
+                }
+                patches.add(p);
+              }
+
+              if (invert) {
+                code[iStart] = (byte) (((code[iStart] - OP_if_icmpeq) ^ 1) + OP_if_icmpeq);
+              }
+              break;
+            }
+          case OP_bipush:
+            writeByte(curOffset, ((ConstantInstruction.ConstInt) instr).getIntValue());
+            curOffset++;
+            break;
+          case OP_sipush:
+            writeShort(curOffset, ((ConstantInstruction.ConstInt) instr).getIntValue());
+            curOffset += 2;
+            break;
+          case OP_ldc_w:
+            {
+              int cpIndex;
+              ConstantInstruction ci = (ConstantInstruction) instr;
+              if (presetConstants != null && ci.getLazyConstantPool() == presetConstants) {
+                cpIndex = ci.getCPIndex();
+              } else {
+                String t = instr.getPushedType(null);
+                switch (t) {
+                  case TYPE_int:
+                    cpIndex =
+                        allocateConstantPoolInteger(
+                            ((ConstantInstruction.ConstInt) instr).getIntValue());
+                    break;
+                  case TYPE_String:
+                    cpIndex =
+                        allocateConstantPoolString(
+                            (String) ((ConstantInstruction.ConstString) instr).getValue());
+                    break;
+                  case TYPE_Class:
+                    cpIndex =
+                        allocateConstantPoolClassType(
+                            ((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue())
+                                .getTypeName());
+                    break;
+                  case TYPE_MethodType:
+                    cpIndex =
+                        allocateConstantPoolMethodType(
+                            ((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
+                    break;
+                  case TYPE_MethodHandle:
+                    cpIndex =
+                        allocateConstantPoolMethodHandle(
+                            ((ReferenceToken)
+                                ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
+                    break;
+                  default:
+                    cpIndex =
+                        allocateConstantPoolFloat(
+                            ((ConstantInstruction.ConstFloat) instr).getFloatValue());
+                    break;
+                }
+              }
+
+              if (cpIndex < 256) {
+                code[curOffset - 1] = (byte) OP_ldc;
+                code[curOffset] = (byte) cpIndex;
+                curOffset++;
+              } else {
+                writeShort(curOffset, cpIndex);
+                curOffset += 2;
+              }
+              break;
+            }
+          case OP_ldc2_w:
+            {
+              int cpIndex;
+              ConstantInstruction ci = (ConstantInstruction) instr;
+              if (presetConstants != null && ci.getLazyConstantPool() == presetConstants) {
+                cpIndex = ci.getCPIndex();
+              } else {
+                String t = instr.getPushedType(null);
+                if (t.equals(TYPE_long)) {
+                  cpIndex =
+                      allocateConstantPoolLong(
+                          ((ConstantInstruction.ConstLong) instr).getLongValue());
+                } else {
+                  cpIndex =
+                      allocateConstantPoolDouble(
+                          ((ConstantInstruction.ConstDouble) instr).getDoubleValue());
+                }
+              }
+
+              writeShort(curOffset, cpIndex);
+              curOffset += 2;
+              break;
+            }
+          case OP_iload_0:
+          case OP_iload_1:
+          case OP_iload_2:
+          case OP_iload_3:
+          case OP_iload:
+            {
+              if (inBasicBlock(i, 4)) {
+                // try to generate an OP_iinc
+                if (instructions[i + 1] instanceof ConstantInstruction.ConstInt
+                    && instructions[i + 2] instanceof BinaryOpInstruction
+                    && instructions[i + 3] instanceof StoreInstruction) {
+                  LoadInstruction i0 = (LoadInstruction) instr;
+                  ConstantInstruction.ConstInt i1 =
+                      (ConstantInstruction.ConstInt) instructions[i + 1];
+                  BinaryOpInstruction i2 = (BinaryOpInstruction) instructions[i + 2];
+                  StoreInstruction i3 = (StoreInstruction) instructions[i + 3];
+
+                  int c = i1.getIntValue();
+                  int v = i0.getVarIndex();
+                  BinaryOpInstruction.Operator op = i2.getOperator();
+                  if ((short) c == c
+                      && i3.getVarIndex() == v
+                      && (op == Operator.ADD || op == Operator.SUB)
+                      && i2.getType().equals(TYPE_int)
+                      && i3.getType().equals(TYPE_int)) {
+                    if (v < 256 && (byte) c == c) {
+                      code[curOffset - 1] = (byte) OP_iinc;
+                      writeByte(curOffset, v);
+                      writeByte(curOffset + 1, c);
+                      curOffset += 2;
+                    } else {
+                      code[curOffset - 1] = (byte) OP_wide;
+                      code[curOffset] = (byte) OP_iinc;
+                      writeShort(curOffset + 1, v);
+                      writeShort(curOffset + 3, c);
+                      curOffset += 5;
+                    }
+                    instructionsToOffsets[i + 1] = -1;
+                    instructionsToOffsets[i + 2] = -1;
+                    instructionsToOffsets[i + 3] = -1;
+                    i += 3;
+                    break;
+                  }
+                }
+              }
+              if (opcode != OP_iload) {
                 break;
               }
             }
-          }
-          if (opcode != OP_iload) {
+            // $FALL-THROUGH$
+          case OP_lload:
+          case OP_fload:
+          case OP_dload:
+          case OP_aload:
+            {
+              int v = ((LoadInstruction) instr).getVarIndex();
+
+              if (v < 256) {
+                writeByte(curOffset, v);
+                curOffset++;
+              } else {
+                code[curOffset - 1] = (byte) OP_wide;
+                code[curOffset] = (byte) opcode;
+                writeShort(curOffset + 1, v);
+                curOffset += 3;
+              }
+              break;
+            }
+          case OP_istore:
+          case OP_lstore:
+          case OP_fstore:
+          case OP_dstore:
+          case OP_astore:
+            {
+              int v = ((StoreInstruction) instr).getVarIndex();
+
+              if (v < 256) {
+                writeByte(curOffset, v);
+                curOffset++;
+              } else {
+                code[curOffset - 1] = (byte) OP_wide;
+                code[curOffset] = (byte) opcode;
+                writeShort(curOffset + 1, v);
+                curOffset += 3;
+              }
+              break;
+            }
+          case OP_goto:
+            {
+              int targetI = instr.getBranchTargets()[0];
+              if (targetI <= i) {
+                int delta = instructionsToOffsets[targetI] - (curOffset - 1);
+                if ((short) delta != delta) {
+                  code[curOffset - 1] = (byte) OP_goto_w;
+                  writeInt(curOffset, delta);
+                  curOffset += 4;
+                } else {
+                  writeShort(curOffset, (short) delta);
+                  curOffset += 2;
+                }
+              } else if (targetI == i + 1) {
+                // ignore noop gotos
+                curOffset--;
+              } else {
+                Patch p;
+                if (farBranches) {
+                  code[curOffset - 1] = (byte) OP_goto_w;
+                  p = new IntPatch(curOffset - 1, curOffset, instr.getBranchTargets()[0]);
+                  curOffset += 4;
+                } else {
+                  p = new ShortPatch(curOffset - 1, curOffset, instr.getBranchTargets()[0]);
+                  curOffset += 2;
+                }
+                patches.add(p);
+              }
+              break;
+            }
+          case OP_lookupswitch:
+            {
+              int start = curOffset - 1;
+              SwitchInstruction sw = (SwitchInstruction) instr;
+              int[] casesAndLabels = sw.getCasesAndLabels();
+
+              while ((curOffset & 3) != 0) {
+                writeByte(curOffset, 0);
+                curOffset++;
+              }
+
+              if (curOffset + 4 * casesAndLabels.length + 8 > code.length) {
+                return false;
+              }
+              insertBranchOffsetInt(patches, start, curOffset, sw.getDefaultLabel());
+              writeInt(curOffset + 4, casesAndLabels.length / 2);
+              curOffset += 8;
+              for (int j = 0; j < casesAndLabels.length; j += 2) {
+                writeInt(curOffset, casesAndLabels[j]);
+                insertBranchOffsetInt(patches, start, curOffset + 4, casesAndLabels[j + 1]);
+                curOffset += 8;
+              }
+              break;
+            }
+          case OP_tableswitch:
+            {
+              int start = curOffset - 1;
+              SwitchInstruction sw = (SwitchInstruction) instr;
+              int[] casesAndLabels = sw.getCasesAndLabels();
+
+              while ((curOffset & 3) != 0) {
+                writeByte(curOffset, 0);
+                curOffset++;
+              }
+              if (curOffset + 2 * casesAndLabels.length + 12 > code.length) {
+                return false;
+              }
+              insertBranchOffsetInt(patches, start, curOffset, sw.getDefaultLabel());
+              writeInt(curOffset + 4, casesAndLabels[0]);
+              writeInt(curOffset + 8, casesAndLabels[casesAndLabels.length - 2]);
+              curOffset += 12;
+              for (int j = 0; j < casesAndLabels.length; j += 2) {
+                insertBranchOffsetInt(patches, start, curOffset, casesAndLabels[j + 1]);
+                curOffset += 4;
+              }
+              break;
+            }
+          case OP_getfield:
+          case OP_getstatic:
+            {
+              GetInstruction g = (GetInstruction) instr;
+              int cpIndex;
+
+              if (presetConstants != null && presetConstants == g.getLazyConstantPool()) {
+                cpIndex = ((GetInstruction.Lazy) g).getCPIndex();
+              } else {
+                cpIndex =
+                    allocateConstantPoolField(g.getClassType(), g.getFieldName(), g.getFieldType());
+              }
+              writeShort(curOffset, cpIndex);
+              curOffset += 2;
+              break;
+            }
+          case OP_putfield:
+          case OP_putstatic:
+            {
+              PutInstruction p = (PutInstruction) instr;
+              int cpIndex;
+
+              if (presetConstants != null && presetConstants == p.getLazyConstantPool()) {
+                cpIndex = ((PutInstruction.Lazy) p).getCPIndex();
+              } else {
+                cpIndex =
+                    allocateConstantPoolField(p.getClassType(), p.getFieldName(), p.getFieldType());
+              }
+              writeShort(curOffset, cpIndex);
+              curOffset += 2;
+              break;
+            }
+          case OP_invokespecial:
+          case OP_invokestatic:
+          case OP_invokevirtual:
+            {
+              InvokeInstruction inv = (InvokeInstruction) instr;
+              int cpIndex;
+
+              if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
+                cpIndex = ((InvokeInstruction.Lazy) inv).getCPIndex();
+              } else {
+                cpIndex =
+                    allocateConstantPoolMethod(
+                        inv.getClassType(), inv.getMethodName(), inv.getMethodSignature());
+              }
+              writeShort(curOffset, cpIndex);
+              curOffset += 2;
+              break;
+            }
+          case OP_invokedynamic:
+            {
+              InvokeDynamicInstruction inv = (InvokeDynamicInstruction) instr;
+
+              int cpIndex;
+              if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
+                cpIndex = ((InvokeDynamicInstruction.Lazy) inv).getCPIndex();
+              } else {
+                cpIndex =
+                    allocateConstantPoolInvokeDynamic(
+                        inv.getBootstrap(), inv.getMethodName(), inv.getMethodSignature());
+              }
+
+              writeShort(curOffset, cpIndex);
+              code[curOffset + 2] = 0;
+              code[curOffset + 3] = 0;
+              curOffset += 4;
+              break;
+            }
+          case OP_invokeinterface:
+            {
+              InvokeInstruction inv = (InvokeInstruction) instr;
+              String sig = inv.getMethodSignature();
+              int cpIndex;
+
+              if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
+                cpIndex = ((InvokeInstruction.Lazy) inv).getCPIndex();
+              } else {
+                cpIndex =
+                    allocateConstantPoolInterfaceMethod(
+                        inv.getClassType(), inv.getMethodName(), sig);
+              }
+              writeShort(curOffset, cpIndex);
+              code[curOffset + 2] = (byte) (Util.getParamsWordSize(sig) + 1);
+              code[curOffset + 3] = 0;
+              curOffset += 4;
+              break;
+            }
+          case OP_new:
+            writeShort(
+                curOffset, allocateConstantPoolClassType(((NewInstruction) instr).getType()));
+            curOffset += 2;
             break;
-          }
-        }
-          //$FALL-THROUGH$
-        case OP_lload:
-        case OP_fload:
-        case OP_dload:
-        case OP_aload: {
-          int v = ((LoadInstruction) instr).getVarIndex();
-
-          if (v < 256) {
-            writeByte(curOffset, v);
+          case OP_newarray:
+            code[curOffset] =
+                indexedTypes_T[Util.getTypeIndex(((NewInstruction) instr).getType().substring(1))];
             curOffset++;
-          } else {
-            code[curOffset - 1] = (byte) OP_wide;
-            code[curOffset] = (byte) opcode;
-            writeShort(curOffset + 1, v);
-            curOffset += 3;
-          }
-          break;
-        }
-        case OP_istore:
-        case OP_lstore:
-        case OP_fstore:
-        case OP_dstore:
-        case OP_astore: {
-          int v = ((StoreInstruction) instr).getVarIndex();
-
-          if (v < 256) {
-            writeByte(curOffset, v);
-            curOffset++;
-          } else {
-            code[curOffset - 1] = (byte) OP_wide;
-            code[curOffset] = (byte) opcode;
-            writeShort(curOffset + 1, v);
-            curOffset += 3;
-          }
-          break;
-        }
-        case OP_goto: {
-          int targetI = instr.getBranchTargets()[0];
-          if (targetI <= i) {
-            int delta = instructionsToOffsets[targetI] - (curOffset - 1);
-            if ((short) delta != delta) {
-              code[curOffset - 1] = (byte) OP_goto_w;
-              writeInt(curOffset, delta);
-              curOffset += 4;
-            } else {
-              writeShort(curOffset, (short) delta);
-              curOffset += 2;
+            break;
+          case OP_anewarray:
+            writeShort(
+                curOffset,
+                allocateConstantPoolClassType(((NewInstruction) instr).getType().substring(1)));
+            curOffset += 2;
+            break;
+          case OP_multianewarray:
+            {
+              NewInstruction n = (NewInstruction) instr;
+              writeShort(curOffset, allocateConstantPoolClassType(n.getType()));
+              code[curOffset + 2] = (byte) n.getArrayBoundsCount();
+              curOffset += 3;
+              break;
             }
-          } else if (targetI == i + 1) {
-            // ignore noop gotos
-            curOffset--;
-          } else {
-            Patch p;
-            if (farBranches) {
-              code[curOffset - 1] = (byte) OP_goto_w;
-              p = new IntPatch(curOffset - 1, curOffset, instr.getBranchTargets()[0]);
-              curOffset += 4;
-            } else {
-              p = new ShortPatch(curOffset - 1, curOffset, instr.getBranchTargets()[0]);
-              curOffset += 2;
-            }
-            patches.add(p);
-          }
-          break;
-        }
-        case OP_lookupswitch: {
-          int start = curOffset - 1;
-          SwitchInstruction sw = (SwitchInstruction) instr;
-          int[] casesAndLabels = sw.getCasesAndLabels();
-
-          while ((curOffset & 3) != 0) {
-            writeByte(curOffset, 0);
-            curOffset++;
-          }
-
-          if (curOffset + 4 * casesAndLabels.length + 8 > code.length) {
-            return false;
-          }
-          insertBranchOffsetInt(patches, start, curOffset, sw.getDefaultLabel());
-          writeInt(curOffset + 4, casesAndLabels.length / 2);
-          curOffset += 8;
-          for (int j = 0; j < casesAndLabels.length; j += 2) {
-            writeInt(curOffset, casesAndLabels[j]);
-            insertBranchOffsetInt(patches, start, curOffset + 4, casesAndLabels[j + 1]);
-            curOffset += 8;
-          }
-          break;
-        }
-        case OP_tableswitch: {
-          int start = curOffset - 1;
-          SwitchInstruction sw = (SwitchInstruction) instr;
-          int[] casesAndLabels = sw.getCasesAndLabels();
-
-          while ((curOffset & 3) != 0) {
-            writeByte(curOffset, 0);
-            curOffset++;
-          }
-          if (curOffset + 2 * casesAndLabels.length + 12 > code.length) {
-            return false;
-          }
-          insertBranchOffsetInt(patches, start, curOffset, sw.getDefaultLabel());
-          writeInt(curOffset + 4, casesAndLabels[0]);
-          writeInt(curOffset + 8, casesAndLabels[casesAndLabels.length - 2]);
-          curOffset += 12;
-          for (int j = 0; j < casesAndLabels.length; j += 2) {
-            insertBranchOffsetInt(patches, start, curOffset, casesAndLabels[j + 1]);
-            curOffset += 4;
-          }
-          break;
-        }
-        case OP_getfield:
-        case OP_getstatic: {
-          GetInstruction g = (GetInstruction) instr;
-          int cpIndex;
-
-          if (presetConstants != null && presetConstants == g.getLazyConstantPool()) {
-            cpIndex = ((GetInstruction.Lazy) g).getCPIndex();
-          } else {
-            cpIndex = allocateConstantPoolField(g.getClassType(), g.getFieldName(), g.getFieldType());
-          }
-          writeShort(curOffset, cpIndex);
-          curOffset += 2;
-          break;
-        }
-        case OP_putfield:
-        case OP_putstatic: {
-          PutInstruction p = (PutInstruction) instr;
-          int cpIndex;
-
-          if (presetConstants != null && presetConstants == p.getLazyConstantPool()) {
-            cpIndex = ((PutInstruction.Lazy) p).getCPIndex();
-          } else {
-            cpIndex = allocateConstantPoolField(p.getClassType(), p.getFieldName(), p.getFieldType());
-          }
-          writeShort(curOffset, cpIndex);
-          curOffset += 2;
-          break;
-        }
-        case OP_invokespecial:
-        case OP_invokestatic:
-        case OP_invokevirtual: {
-          InvokeInstruction inv = (InvokeInstruction) instr;
-          int cpIndex;
-
-          if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
-            cpIndex = ((InvokeInstruction.Lazy) inv).getCPIndex();
-          } else {
-            cpIndex = allocateConstantPoolMethod(inv.getClassType(), inv.getMethodName(), inv.getMethodSignature());
-          }
-          writeShort(curOffset, cpIndex);
-          curOffset += 2;
-          break;
-        }
-        case OP_invokedynamic: {
-          InvokeDynamicInstruction inv = (InvokeDynamicInstruction) instr;
-          
-          int cpIndex;
-          if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
-            cpIndex = ((InvokeDynamicInstruction.Lazy) inv).getCPIndex();
-          } else {
-            cpIndex = allocateConstantPoolInvokeDynamic(inv.getBootstrap(), inv.getMethodName(), inv.getMethodSignature());
-          }
-
-          writeShort(curOffset, cpIndex);
-          code[curOffset + 2] = 0;
-          code[curOffset + 3] = 0;
-          curOffset += 4;
-          break;
-        }
-        case OP_invokeinterface: {
-          InvokeInstruction inv = (InvokeInstruction) instr;
-          String sig = inv.getMethodSignature();
-          int cpIndex;
-
-          if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
-            cpIndex = ((InvokeInstruction.Lazy) inv).getCPIndex();
-          } else {
-            cpIndex = allocateConstantPoolInterfaceMethod(inv.getClassType(), inv.getMethodName(), sig);
-          }
-          writeShort(curOffset, cpIndex);
-          code[curOffset + 2] = (byte) (Util.getParamsWordSize(sig) + 1);
-          code[curOffset + 3] = 0;
-          curOffset += 4;
-          break;
-        }
-       case OP_new:
-          writeShort(curOffset, allocateConstantPoolClassType(((NewInstruction) instr).getType()));
-          curOffset += 2;
-          break;
-        case OP_newarray:
-          code[curOffset] = indexedTypes_T[Util.getTypeIndex(((NewInstruction) instr).getType().substring(1))];
-          curOffset++;
-          break;
-        case OP_anewarray:
-          writeShort(curOffset, allocateConstantPoolClassType(((NewInstruction) instr).getType().substring(1)));
-          curOffset += 2;
-          break;
-        case OP_multianewarray: {
-          NewInstruction n = (NewInstruction) instr;
-          writeShort(curOffset, allocateConstantPoolClassType(n.getType()));
-          code[curOffset + 2] = (byte) n.getArrayBoundsCount();
-          curOffset += 3;
-          break;
-        }
-        case OP_checkcast:
-          writeShort(curOffset, allocateConstantPoolClassType(((CheckCastInstruction) instr).getTypes()[0]));
-          curOffset += 2;
-          break;
-        case OP_instanceof:
-          writeShort(curOffset, allocateConstantPoolClassType(((InstanceofInstruction) instr).getType()));
-          curOffset += 2;
-          break;
-        default:
-          // do nothing
+          case OP_checkcast:
+            writeShort(
+                curOffset,
+                allocateConstantPoolClassType(((CheckCastInstruction) instr).getTypes()[0]));
+            curOffset += 2;
+            break;
+          case OP_instanceof:
+            writeShort(
+                curOffset,
+                allocateConstantPoolClassType(((InstanceofInstruction) instr).getType()));
+            curOffset += 2;
+            break;
+          default:
+            // do nothing
         }
       } else {
         stackLenRef[0] = stackLen;
@@ -1035,7 +1121,8 @@ public abstract class Compiler implements Constants {
         instr = (Instruction) instructions[startI];
         if (instr.isFallThrough() && haveStack) {
           if (stackLen < instr.getPoppedCount()) {
-            throw new IllegalArgumentException("Stack underflow in intermediate code, at offset " + startI);
+            throw new IllegalArgumentException(
+                "Stack underflow in intermediate code, at offset " + startI);
           }
 
           if (instr instanceof DupInstruction) {
@@ -1043,7 +1130,8 @@ public abstract class Compiler implements Constants {
             int size = d.getSize();
             int delta = d.getDelta();
 
-            System.arraycopy(stackWords, stackLen - size - delta, stackWords, stackLen - delta, delta + size);
+            System.arraycopy(
+                stackWords, stackLen - size - delta, stackWords, stackLen - delta, delta + size);
             System.arraycopy(stackWords, stackLen, stackWords, stackLen - size - delta, size);
             stackLen += size;
           } else if (instr instanceof SwapInstruction) {
@@ -1107,7 +1195,8 @@ public abstract class Compiler implements Constants {
       if (farBranches) {
         throw new Error("Failed to apply patches even with farBranches on");
       } else {
-        return outputInstructions(startInstruction, endInstruction, startOffset, true, initialStack);
+        return outputInstructions(
+            startInstruction, endInstruction, startOffset, true, initialStack);
       }
     }
 
@@ -1140,11 +1229,18 @@ public abstract class Compiler implements Constants {
             do {
               handlerCounts[j - start]--;
               j++;
-            } while (j < end && handlerCounts[j - start] == i && handlers[j][handlers[j].length - i].equals(h));
+            } while (j < end
+                && handlerCounts[j - start] == i
+                && handlers[j][handlers[j].length - i].equals(h));
 
             if (h.handler >= start && h.handler < end) {
-              rawHandlerList.add(new int[] { instructionsToOffsets[first], j < end ? instructionsToOffsets[j] : code.length,
-                  instructionsToOffsets[h.handler], h.catchClass == null ? 0 : allocateConstantPoolClassType(h.catchClass) });
+              rawHandlerList.add(
+                  new int[] {
+                    instructionsToOffsets[first],
+                    j < end ? instructionsToOffsets[j] : code.length,
+                    instructionsToOffsets[h.handler],
+                    h.catchClass == null ? 0 : allocateConstantPoolClassType(h.catchClass)
+                  });
             }
 
             j--;
@@ -1199,7 +1295,7 @@ public abstract class Compiler implements Constants {
   private void addBackEdge(int from, int to) {
     int[] oldEdges = backEdges[from];
     if (oldEdges == null) {
-      backEdges[from] = new int[] { to };
+      backEdges[from] = new int[] {to};
     } else if (oldEdges[oldEdges.length - 1] < 0) {
       int left = 1;
       int right = oldEdges.length - 1;
@@ -1208,8 +1304,7 @@ public abstract class Compiler implements Constants {
           if (oldEdges[left] < 0) {
             break;
           } else {
-            if (oldEdges[right] >= 0)
-              throw new Error("Failed binary search");
+            if (oldEdges[right] >= 0) throw new Error("Failed binary search");
             left = right;
             break;
           }
@@ -1305,7 +1400,8 @@ public abstract class Compiler implements Constants {
       t = lts[l];
     }
     if (t.equals(TYPE_null) || t.equals(TYPE_unknown)) {
-      throw new IllegalArgumentException("Cannot split oversized method because local " + l + " is undefined at " + i);
+      throw new IllegalArgumentException(
+          "Cannot split oversized method because local " + l + " is undefined at " + i);
     }
     return t;
   }
@@ -1316,7 +1412,8 @@ public abstract class Compiler implements Constants {
     }
   }
 
-  private HelperPatch makeHelperPatch(int start, int len, int retVar, int unreadStack, int untouchedStack) {
+  private HelperPatch makeHelperPatch(
+      int start, int len, int retVar, int unreadStack, int untouchedStack) {
     String retType = retVar >= 0 ? getAndCheckLocalType(start + len, retVar) : "V";
 
     ArrayList<Instruction> callWrapper = new ArrayList<>();
@@ -1330,7 +1427,8 @@ public abstract class Compiler implements Constants {
       if (i < untouchedStack) {
         callWrapper.add(DupInstruction.make(0));
       }
-      callWrapper.add(StoreInstruction.make(stackTypes[start][i], allocatedLocals + 2 * (i - unreadStack)));
+      callWrapper.add(
+          StoreInstruction.make(stackTypes[start][i], allocatedLocals + 2 * (i - unreadStack)));
     }
     // push needed locals
     BitSet liveVars = liveLocals[start];
@@ -1350,7 +1448,8 @@ public abstract class Compiler implements Constants {
     }
     // push stack variables
     for (int i = unreadStack; i < curStackLen; i++) {
-      callWrapper.add(LoadInstruction.make(stackTypes[start][i], allocatedLocals + 2 * (i - unreadStack)));
+      callWrapper.add(
+          LoadInstruction.make(stackTypes[start][i], allocatedLocals + 2 * (i - unreadStack)));
       sigBuf.append(stackTypes[start][i]);
       if (Util.getWordSize(stackTypes[start][i]) == 2) {
         sigBuf.append('I');
@@ -1363,7 +1462,8 @@ public abstract class Compiler implements Constants {
 
     String name = createHelperMethod(true, sig);
 
-    callWrapper.add(InvokeInstruction.make(sig, classType, name, IInvokeInstruction.Dispatch.STATIC));
+    callWrapper.add(
+        InvokeInstruction.make(sig, classType, name, IInvokeInstruction.Dispatch.STATIC));
 
     int savedMaxStack = maxStack;
     maxStack += curStackLen - unreadStack;
@@ -1380,7 +1480,8 @@ public abstract class Compiler implements Constants {
     for (int i = 0; i < curStackLen - unreadStack; i++) {
       int local = allocatedLocals + i * 2;
       newCode[i * 4] = (byte) OP_wide;
-      newCode[i * 4 + 1] = (byte) LoadInstruction.make(stackTypes[start][i + unreadStack], 500).getOpcode();
+      newCode[i * 4 + 1] =
+          (byte) LoadInstruction.make(stackTypes[start][i + unreadStack], 500).getOpcode();
       newCode[i * 4 + 2] = (byte) (local >> 8);
       newCode[i * 4 + 3] = (byte) local;
     }
@@ -1404,7 +1505,8 @@ public abstract class Compiler implements Constants {
     int[] rawHandlers = buildRawHandlers(start, start + len);
     int[] bytecodeMap = buildBytecodeMap(start, start + len);
 
-    auxMethods.add(new Output(name, sig, newCode, rawHandlers, bytecodeMap, maxLocals, maxStack, true, null));
+    auxMethods.add(
+        new Output(name, sig, newCode, rawHandlers, bytecodeMap, maxLocals, maxStack, true, null));
 
     maxStack = savedMaxStack;
 
@@ -1536,7 +1638,8 @@ public abstract class Compiler implements Constants {
         untouchedStack = Math.min(untouchedStack, lowWaterMark);
       }
 
-      if (untouchedStack > unreadStack + 1 || (untouchedStack == unreadStack + 1 && untouchedStack < stackTypes[start].length)) {
+      if (untouchedStack > unreadStack + 1
+          || (untouchedStack == unreadStack + 1 && untouchedStack < stackTypes[start].length)) {
         // we can only handle 1 read-but-untouched element
         start++;
         len--;
@@ -1566,7 +1669,9 @@ public abstract class Compiler implements Constants {
         // extractable method, because changing 'len' might mean we have more
         // untouched stack elements. But we'll do this in a dumb way to avoid
         // being caught in some N^2 loop looking for extractable code.
-        while (len > 0 && (stackTypes[start + len] == null || stackTypes[start + len].length > untouchedStack)) {
+        while (len > 0
+            && (stackTypes[start + len] == null
+                || stackTypes[start + len].length > untouchedStack)) {
           len--;
         }
         continue;
@@ -1698,14 +1803,24 @@ public abstract class Compiler implements Constants {
   }
 
   private void makeTypes() {
-    Verifier v = new Verifier(isConstructor, isStatic, classType, signature, instructions, handlers, instructionsToBytecodes, null);
+    Verifier v =
+        new Verifier(
+            isConstructor,
+            isStatic,
+            classType,
+            signature,
+            instructions,
+            handlers,
+            instructionsToBytecodes,
+            null);
     if (hierarchy != null) {
       v.setClassHierarchy(hierarchy);
     }
     try {
       v.computeTypes();
     } catch (Verifier.FailureException ex) {
-      throw new IllegalArgumentException("Cannot split oversized method because verification failed: " + ex.getMessage());
+      throw new IllegalArgumentException(
+          "Cannot split oversized method because verification failed: " + ex.getMessage());
     }
     localTypes = v.getLocalTypes();
     stackTypes = v.getStackTypes();
@@ -1713,12 +1828,12 @@ public abstract class Compiler implements Constants {
 
   /**
    * Do the work of generating new bytecodes.
-   * 
-   * In pathological cases this could throw an Error, when the code you passed in is too large to fit into a single JVM method and
-   * Compiler can't find a way to break it up into helper methods. You probably won't encounter this unless you try to make it
-   * happen :-).
+   *
+   * <p>In pathological cases this could throw an Error, when the code you passed in is too large to
+   * fit into a single JVM method and Compiler can't find a way to break it up into helper methods.
+   * You probably won't encounter this unless you try to make it happen :-).
    */
-  final public void compile() {
+  public final void compile() {
     collectInstructionInfo();
 
     computeStackWords();
@@ -1735,8 +1850,17 @@ public abstract class Compiler implements Constants {
         throw new Error("Input code too large; consider breaking up your code");
       }
     }
-    mainMethod = new Output(null, null, code, buildRawHandlers(0, instructions.length), buildBytecodeMap(0, instructions.length),
-        maxLocals, maxStack, isStatic, instructionsToOffsets);
+    mainMethod =
+        new Output(
+            null,
+            null,
+            code,
+            buildRawHandlers(0, instructions.length),
+            buildBytecodeMap(0, instructions.length),
+            maxLocals,
+            maxStack,
+            isStatic,
+            instructionsToOffsets);
 
     instructionsToOffsets = null;
     branchTargets = null;
@@ -1744,18 +1868,17 @@ public abstract class Compiler implements Constants {
     code = null;
   }
 
-  /**
-   * Get the output bytecodes and other information for the method.
-   */
-  final public Output getOutput() {
+  /** Get the output bytecodes and other information for the method. */
+  public final Output getOutput() {
     return mainMethod;
   }
 
   /**
-   * Get bytecodes and other information for any helper methods that are required to implement the main method. These helpers
-   * represent code that could not be fit into the main method because of JVM method size constraints.
+   * Get bytecodes and other information for any helper methods that are required to implement the
+   * main method. These helpers represent code that could not be fit into the main method because of
+   * JVM method size constraints.
    */
-  final public Output[] getAuxiliaryMethods() {
+  public final Output[] getAuxiliaryMethods() {
     if (auxMethods == null) {
       return null;
     } else {
@@ -1766,30 +1889,39 @@ public abstract class Compiler implements Constants {
   }
 
   /**
-   * This class represents a method generated by a Compiler. One input method to the Compiler can generate multiple Outputs (if the
-   * input method is too big to be represented by a single method in the JVM, say if it requires more than 64K bytecodes).
+   * This class represents a method generated by a Compiler. One input method to the Compiler can
+   * generate multiple Outputs (if the input method is too big to be represented by a single method
+   * in the JVM, say if it requires more than 64K bytecodes).
    */
-  public final static class Output {
-    final private byte[] code;
+  public static final class Output {
+    private final byte[] code;
 
-    final private int[] rawHandlers;
+    private final int[] rawHandlers;
 
-    final private int[] newBytecodesToOldBytecodes;
+    private final int[] newBytecodesToOldBytecodes;
 
-    final private String name;
+    private final String name;
 
-    final private String signature;
+    private final String signature;
 
-    final private boolean isStatic;
+    private final boolean isStatic;
 
-    final private int maxLocals;
+    private final int maxLocals;
 
-    final private int maxStack;
+    private final int maxStack;
 
-    final private int[] instructionsToOffsets;
-    
-    Output(String name, String signature, byte[] code, int[] rawHandlers, int[] newBytecodesToOldBytecodes, int maxLocals,
-        int maxStack, boolean isStatic, int[] instructionsToOffsets) {
+    private final int[] instructionsToOffsets;
+
+    Output(
+        String name,
+        String signature,
+        byte[] code,
+        int[] rawHandlers,
+        int[] newBytecodesToOldBytecodes,
+        int maxLocals,
+        int maxStack,
+        boolean isStatic,
+        int[] instructionsToOffsets) {
       this.code = code;
       this.name = name;
       this.signature = signature;
@@ -1801,9 +1933,7 @@ public abstract class Compiler implements Constants {
       this.instructionsToOffsets = instructionsToOffsets;
     }
 
-    /**
-     * @return the actual bytecodes
-     */
+    /** @return the actual bytecodes */
     public byte[] getCode() {
       return code;
     }
@@ -1811,61 +1941,52 @@ public abstract class Compiler implements Constants {
     public int[] getInstructionOffsets() {
       return instructionsToOffsets;
     }
-    
+
     /**
-     * @return the name of the method; either "null", if this code takes the place of the original method, or some string
-     *         representing the name of a helper method
+     * @return the name of the method; either "null", if this code takes the place of the original
+     *     method, or some string representing the name of a helper method
      */
     public String getMethodName() {
       return name;
     }
 
-    /**
-     * @return the method signature in JVM format
-     */
+    /** @return the method signature in JVM format */
     public String getMethodSignature() {
       return signature;
     }
 
     /**
-     * @return the access flags that should be used for this method, or 0 if this is the code for the original method
+     * @return the access flags that should be used for this method, or 0 if this is the code for
+     *     the original method
      */
     public int getAccessFlags() {
       return name != null ? (ACC_PRIVATE | (isStatic ? ACC_STATIC : 0)) : 0;
     }
 
-    /**
-     * @return the raw exception handler table in JVM format
-     */
+    /** @return the raw exception handler table in JVM format */
     public int[] getRawHandlers() {
       return rawHandlers;
     }
 
-    /**
-     * @return whether the method is static
-     */
+    /** @return whether the method is static */
     public boolean isStatic() {
       return isStatic;
     }
 
     /**
-     * @return a map m such that the new bytecode instruction at offset i corresponds to the bytecode instruction at m[i] in the
-     *         original method
+     * @return a map m such that the new bytecode instruction at offset i corresponds to the
+     *     bytecode instruction at m[i] in the original method
      */
     public int[] getNewBytecodesToOldBytecodes() {
       return newBytecodesToOldBytecodes;
     }
 
-    /**
-     * @return the maximum stack size in words as required by the JVM
-     */
+    /** @return the maximum stack size in words as required by the JVM */
     public int getMaxStack() {
       return maxStack;
     }
 
-    /**
-     * @return the maximum local variable size in words as required by the JVM
-     */
+    /** @return the maximum local variable size in words as required by the JVM */
     public int getMaxLocals() {
       return maxLocals;
     }

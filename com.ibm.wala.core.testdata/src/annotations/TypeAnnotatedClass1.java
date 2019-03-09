@@ -14,29 +14,26 @@ import java.util.List;
 import java.util.Set;
 
 public class TypeAnnotatedClass1 extends @TypeAnnotationTypeUse Object {
-  
-  
+
+  @TypeAnnotationTypeUse List<Set<@TypeAnnotationTypeUse TypeAnnotatedClass1>> field;
+
   @TypeAnnotationTypeUse
-  List<Set<@TypeAnnotationTypeUse TypeAnnotatedClass1>> field;
-  
-  @TypeAnnotationTypeUse Integer foo(@TypeAnnotationTypeUse int a, @TypeAnnotationTypeUse Object b) {
-    
-    @TypeAnnotationTypeUse
-    int x = 3;
-    
-    @TypeAnnotationTypeUse
-    Object y = new Object();
-    
+  Integer foo(@TypeAnnotationTypeUse int a, @TypeAnnotationTypeUse Object b) {
+
+    @TypeAnnotationTypeUse int x = 3;
+
+    @TypeAnnotationTypeUse Object y = new Object();
+
     if (y instanceof @TypeAnnotationTypeUse(someKey = "lul") String) {
       x = 7;
     }
-    
+
     try {
       throw new NullPointerException();
     } catch (@TypeAnnotationTypeUse RuntimeException e) {
       x = 911;
     }
-    
+
     return x;
   }
 }

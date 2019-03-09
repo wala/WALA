@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * WALA JDT Frontend is Copyright (c) 2008 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.cast.java.translator.jdt;
 
+import com.ibm.wala.util.debug.Assertions;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IBinding;
@@ -45,30 +46,33 @@ import org.eclipse.jdt.core.dom.IPackageBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
- * This is a hack to get around the fact that AST.resolveWellKnownTypes() doesn't know about some implicitly declared exceptions,
- * such as ArithmeticException (implicitly thrown in a division operation) and NullPointerException (implicitly thrown in a field
- * access). We need to know the lineage of these types to determine possible catch targets.
- * 
+ * This is a hack to get around the fact that AST.resolveWellKnownTypes() doesn't know about some
+ * implicitly declared exceptions, such as ArithmeticException (implicitly thrown in a division
+ * operation) and NullPointerException (implicitly thrown in a field access). We need to know the
+ * lineage of these types to determine possible catch targets.
+ *
  * @author evan
- * 
  */
 public class FakeExceptionTypeBinding implements ITypeBinding {
 
-  static public final FakeExceptionTypeBinding arithmetic = new FakeExceptionTypeBinding("Ljava/lang/ArithmeticException;");
+  public static final FakeExceptionTypeBinding arithmetic =
+      new FakeExceptionTypeBinding("Ljava/lang/ArithmeticException;");
 
-  static public final FakeExceptionTypeBinding nullPointer = new FakeExceptionTypeBinding("Ljava/lang/NullPointerException;");
+  public static final FakeExceptionTypeBinding nullPointer =
+      new FakeExceptionTypeBinding("Ljava/lang/NullPointerException;");
 
-  static public final FakeExceptionTypeBinding classCast = new FakeExceptionTypeBinding("Ljava/lang/ClassCastException;");
+  public static final FakeExceptionTypeBinding classCast =
+      new FakeExceptionTypeBinding("Ljava/lang/ClassCastException;");
 
-  static public final FakeExceptionTypeBinding noClassDef = new FakeExceptionTypeBinding("Ljava/lang/NoClassDefFoundError;");
+  public static final FakeExceptionTypeBinding noClassDef =
+      new FakeExceptionTypeBinding("Ljava/lang/NoClassDefFoundError;");
 
-  static public final FakeExceptionTypeBinding initException = new FakeExceptionTypeBinding(
-      "Ljava/lang/ExceptionInInitializerError;");
+  public static final FakeExceptionTypeBinding initException =
+      new FakeExceptionTypeBinding("Ljava/lang/ExceptionInInitializerError;");
 
-  static public final FakeExceptionTypeBinding outOfMemory = new FakeExceptionTypeBinding("Ljava/lang/OutOfMemoryError;");
+  public static final FakeExceptionTypeBinding outOfMemory =
+      new FakeExceptionTypeBinding("Ljava/lang/OutOfMemoryError;");
 
   private final String exceptionBinaryName;
 
@@ -84,8 +88,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof FakeExceptionTypeBinding)
-      return this == o;
+    if (o instanceof FakeExceptionTypeBinding) return this == o;
     if (o instanceof ITypeBinding)
       return ((ITypeBinding) o).getBinaryName().equals(exceptionBinaryName);
     return false;
@@ -93,7 +96,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public int hashCode() {
-	return exceptionBinaryName.hashCode();
+    return exceptionBinaryName.hashCode();
   }
 
   // --- rest not needed
@@ -355,13 +358,17 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   public boolean isSubTypeCompatible(ITypeBinding type) {
     String name = type.getBinaryName();
     if (exceptionBinaryName.endsWith("Error;")) {
-      if (name.equals("Ljava/lang/Throwable;") || name.equals("Ljava/lang/Error;") || name.equals(exceptionBinaryName)) {
+      if (name.equals("Ljava/lang/Throwable;")
+          || name.equals("Ljava/lang/Error;")
+          || name.equals(exceptionBinaryName)) {
         return true;
       }
 
     } else {
-      if (name.equals("Ljava/lang/Throwable;") || name.equals("Ljava/lang/Exception;")
-          || name.equals("Ljava/lang/RuntimeException;") || name.equals(exceptionBinaryName)) {
+      if (name.equals("Ljava/lang/Throwable;")
+          || name.equals("Ljava/lang/Exception;")
+          || name.equals("Ljava/lang/RuntimeException;")
+          || name.equals(exceptionBinaryName)) {
         return true;
       }
     }
@@ -471,5 +478,4 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     // TODO Auto-generated method stub
     return null;
   }
-
 }

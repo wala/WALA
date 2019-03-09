@@ -12,17 +12,17 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/**
- * A key which represents a set corresponding to a call graph node.
- */
+/** A key which represents a set corresponding to a call graph node. */
 public abstract class NodeKey extends AbstractLocalPointerKey {
   private final CGNode node;
+
   protected NodeKey(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("null node");
     }
     this.node = node;
   }
+
   protected boolean internalEquals(Object obj) {
     if (obj instanceof NodeKey) {
       NodeKey other = (NodeKey) obj;
@@ -31,12 +31,11 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
       return false;
     }
   }
+
   protected int internalHashCode() {
     return node.hashCode() * 1621;
   }
-  /**
-   * @return the node this key represents
-   */
+  /** @return the node this key represents */
   @Override
   public CGNode getNode() {
     return node;
@@ -47,5 +46,4 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
 
   @Override
   public abstract int hashCode();
-
 }

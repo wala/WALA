@@ -10,12 +10,12 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.dataflow.IFDS.TabulationSolver;
 import com.ibm.wala.util.CancelException;
 
 /**
- * A {@link CancelException} thrown during tabulation; holds a pointer to a partial {@link TabulationSolver.Result}. Use with care, this can hold on
- * to a lot of memory.
+ * A {@link CancelException} thrown during tabulation; holds a pointer to a partial {@link
+ * com.ibm.wala.dataflow.IFDS.TabulationSolver.Result}. Use with care, this can hold on to a lot of
+ * memory.
  */
 public class TabulationCancelException extends CancelException {
 
@@ -30,5 +30,4 @@ public class TabulationCancelException extends CancelException {
   public TabulationSolver<?, ?, ?>.Result getResult() {
     return result;
   }
-
 }

@@ -12,12 +12,10 @@ package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.util.intset.SparseIntSet;
 
-/**
- * A flow function where out == in
- */
+/** A flow function where out == in */
 public class IdentityFlowFunction implements IReversibleFlowFunction {
 
-  private final static IdentityFlowFunction singleton = new IdentityFlowFunction();
+  private static final IdentityFlowFunction singleton = new IdentityFlowFunction();
 
   @Override
   public SparseIntSet getTargets(int i) {
@@ -37,5 +35,4 @@ public class IdentityFlowFunction implements IReversibleFlowFunction {
   public String toString() {
     return "Identity Flow";
   }
-
 }

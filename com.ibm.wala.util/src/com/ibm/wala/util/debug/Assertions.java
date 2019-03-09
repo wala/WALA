@@ -12,34 +12,34 @@ package com.ibm.wala.util.debug;
 
 /**
  * WALA-specific assertion checking.
- * 
- * This may go away in favor of Java language-level assertions.
+ *
+ * <p>This may go away in favor of Java language-level assertions.
  */
 public class Assertions {
 
   /**
-   * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
-   * 
+   * An assertion which does not need to be guarded by verifyAssertions. These assertions will be
+   * enabled in production!
+   *
    * @throws UnimplementedError if b == false
    */
   public static void productionAssertion(boolean b, String string) throws UnimplementedError {
-    if (!b)
-      throw new UnimplementedError(string);
+    if (!b) throw new UnimplementedError(string);
   }
 
   /**
-   * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
-   * 
+   * An assertion which does not need to be guarded by verifyAssertions. These assertions will be
+   * enabled in production!
+   *
    * @throws UnimplementedError if b == false
    */
   public static void productionAssertion(boolean b) throws UnimplementedError {
-    if (!b)
-      throw new UnimplementedError();
+    if (!b) throw new UnimplementedError();
   }
 
   /**
    * An assertion to call when reaching a point that should not be reached.
-   * 
+   *
    * @throws UnimplementedError unconditionally
    */
   public static void UNREACHABLE() {
@@ -48,7 +48,7 @@ public class Assertions {
 
   /**
    * An assertion to call when reaching a point that should not be reached.
-   * 
+   *
    * @throws UnimplementedError unconditionally
    */
   public static void UNREACHABLE(String string) {
@@ -57,7 +57,7 @@ public class Assertions {
 
   /**
    * An assertion to call when reaching a point that should not be reached.
-   * 
+   *
    * @throws UnimplementedError unconditionally
    */
   public static void UNREACHABLE(Object o) {

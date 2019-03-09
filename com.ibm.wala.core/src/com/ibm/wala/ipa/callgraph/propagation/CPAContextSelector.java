@@ -22,7 +22,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
 public class CPAContextSelector implements ContextSelector {
 
   private final ContextSelector base;
-  
+
   public CPAContextSelector(ContextSelector base) {
     this.base = base;
   }
@@ -32,36 +32,41 @@ public class CPAContextSelector implements ContextSelector {
     public CPAContext(Context base, InstanceKey[] x) {
       super(base, x);
     }
-    
   }
-  
+
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
-     Context target = base.getCalleeTarget(caller, site, callee, actualParameters);
-     if (actualParameters != null && actualParameters.length > 0) {
-    return new CPAContext(target, actualParameters);
-     } else {
-       return target;
-     }
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
+    Context target = base.getCalleeTarget(caller, site, callee, actualParameters);
+    if (actualParameters != null && actualParameters.length > 0) {
+      return new CPAContext(target, actualParameters);
+    } else {
+      return target;
+    }
   }
 
   private static boolean dispatchIndex(CallSiteReference ref, int i) {
     if (ref.isStatic()) {
-      return ! ref.getDeclaredTarget().getParameterType(i).isPrimitiveType();
+      return !ref.getDeclaredTarget().getParameterType(i).isPrimitiveType();
     } else {
-      return i==0 || ! ref.getDeclaredTarget().getParameterType(i-1).isPrimitiveType();
+      return i == 0 || !ref.getDeclaredTarget().getParameterType(i - 1).isPrimitiveType();
     }
   }
-  
+
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     MutableIntSet s = IntSetUtil.make();
-    for(int i = 0; i < caller.getIR().getCalls(site)[0].getNumberOfUses(); i++) {
-      if (!caller.getMethod().getDeclaringClass().getClassLoader().getLanguage().methodsHaveDeclaredParameterTypes() || dispatchIndex(site, i)) {
+    for (int i = 0; i < caller.getIR().getCalls(site)[0].getNumberOfUses(); i++) {
+      if (!caller
+              .getMethod()
+              .getDeclaringClass()
+              .getClassLoader()
+              .getLanguage()
+              .methodsHaveDeclaredParameterTypes()
+          || dispatchIndex(site, i)) {
         s.add(i);
       }
     }
     return s;
   }
-
 }

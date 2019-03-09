@@ -13,10 +13,18 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 
 public enum CAstBinaryOp implements IBinaryOpInstruction.IOperator {
-    CONCAT, EQ, NE, LT, GE, GT, LE, STRICT_EQ, STRICT_NE;
+  CONCAT,
+  EQ,
+  NE,
+  LT,
+  GE,
+  GT,
+  LE,
+  STRICT_EQ,
+  STRICT_NE;
 
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
+  @Override
+  public String toString() {
+    return super.toString().toLowerCase();
+  }
 }

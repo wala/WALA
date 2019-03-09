@@ -1,5 +1,9 @@
 package com.ibm.wala.cast.ir.translator;
 
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,18 +12,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
-
-/**
- * common functionality for any {@link TranslatorToCAst} making use of native code
- */
-public abstract class NativeTranslatorToCAst 
-  extends NativeBridge 
-  implements TranslatorToCAst
-{
+/** common functionality for any {@link TranslatorToCAst} making use of native code */
+public abstract class NativeTranslatorToCAst extends NativeBridge implements TranslatorToCAst {
 
   protected final URL sourceURL;
 
@@ -70,7 +64,7 @@ public abstract class NativeTranslatorToCAst
       public int getLastOffset() {
         return -1;
       }
-      
+
       @Override
       public URL getURL() {
         return sourceURL;
@@ -86,18 +80,25 @@ public abstract class NativeTranslatorToCAst
         if (urlString.lastIndexOf(File.separator) == -1)
           return "[" + fl + ':' + fc + "]->[" + ll + ':' + lc + ']';
         else
-          return urlString.substring(urlString.lastIndexOf(File.separator) + 1) + "@[" + fl + ':' + fc + "]->[" + ll + ':' + lc
+          return urlString.substring(urlString.lastIndexOf(File.separator) + 1)
+              + "@["
+              + fl
+              + ':'
+              + fc
+              + "]->["
+              + ll
+              + ':'
+              + lc
               + ']';
       }
 
       @Override
       public Reader getReader() throws IOException {
-         return new InputStreamReader(getInputStream());
+        return new InputStreamReader(getInputStream());
       }
     };
   }
 
   @Override
   public abstract CAstEntity translateToCAst();
-
 }

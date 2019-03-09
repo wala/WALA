@@ -17,7 +17,7 @@ import java.util.Set;
 public class Iterator2Set<T> extends Iterator2Collection<T> implements Set<T> {
 
   private final Set<T> delegate;
-  
+
   protected Iterator2Set(Iterator<? extends T> i, Set<T> delegate) {
     this.delegate = delegate;
     while (i.hasNext()) {
@@ -29,6 +29,4 @@ public class Iterator2Set<T> extends Iterator2Collection<T> implements Set<T> {
   protected Collection<T> getDelegate() {
     return delegate;
   }
-
-
 }

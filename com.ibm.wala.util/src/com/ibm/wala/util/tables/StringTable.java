@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.tables;
 
+import com.ibm.wala.util.collections.SimpleVector;
+import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,40 +22,31 @@ import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-import com.ibm.wala.util.collections.SimpleVector;
-import com.ibm.wala.util.debug.Assertions;
-
-/**
- */
+/** */
 public class StringTable extends Table<String> implements Cloneable {
 
-  /**
-   * create an empty table
-   */
+  /** create an empty table */
   public StringTable() {
     super();
   }
 
-  /**
-   * create an empty table with the same column headings as t
-   */
+  /** create an empty table with the same column headings as t */
   public StringTable(StringTable t) {
     super(t);
   }
 
-  /**
-   * create an empty table with the given column headings
-   */
+  /** create an empty table with the given column headings */
   public StringTable(String[] columns) {
     super(columns);
   }
 
   /**
    * read from a direct (native) text file
-   * 
+   *
    * @throws IllegalArgumentException if fileName is null
    */
-  public static StringTable readFromDirectTextFile(String fileName, Character comment) throws FileNotFoundException, IOException {
+  public static StringTable readFromDirectTextFile(String fileName, Character comment)
+      throws FileNotFoundException, IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("fileName is null");
     }
@@ -61,21 +54,21 @@ public class StringTable extends Table<String> implements Cloneable {
     return readFromTextFile(f, comment);
   }
 
-//  /**
-//   * read from a text file obtained as a resource
-//   */
-//  public static StringTable readFromTextFile(String fileName, Character comment) throws IOException {
-//    if (fileName == null) {
-//      throw new IllegalArgumentException("null fileName");
-//    }
-//    File f = FileProvider.getFile(fileName);
-//    return readFromTextFile(f, comment);
-//  }
+  //  /**
+  //   * read from a text file obtained as a resource
+  //   */
+  //  public static StringTable readFromTextFile(String fileName, Character comment) throws
+  // IOException {
+  //    if (fileName == null) {
+  //      throw new IllegalArgumentException("null fileName");
+  //    }
+  //    File f = FileProvider.getFile(fileName);
+  //    return readFromTextFile(f, comment);
+  //  }
 
-  /**
-   * @param f a file containing a table in text format, whitespace delimited
-   */
-  public static StringTable readFromTextFile(File f, Character comment) throws FileNotFoundException, IOException {
+  /** @param f a file containing a table in text format, whitespace delimited */
+  public static StringTable readFromTextFile(File f, Character comment)
+      throws FileNotFoundException, IOException {
     if (f == null) {
       throw new IllegalArgumentException("null f");
     }
@@ -88,7 +81,8 @@ public class StringTable extends Table<String> implements Cloneable {
    * @param s a stream containing a table in text format, whitespace delimited
    * @throws IllegalArgumentException if s is null
    */
-  public static StringTable readFromStream(InputStream s, Character commentToken) throws IOException {
+  public static StringTable readFromStream(InputStream s, Character commentToken)
+      throws IOException {
     return readFromStream(s, commentToken, null);
   }
 
@@ -96,13 +90,15 @@ public class StringTable extends Table<String> implements Cloneable {
    * @param s a stream containing a table in text format, whitespace delimited
    * @throws IllegalArgumentException if s is null
    */
-  public static StringTable readFromStream(InputStream s, Character commentToken, Character delimiter) throws IOException {
+  public static StringTable readFromStream(
+      InputStream s, Character commentToken, Character delimiter) throws IOException {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
     StringTable result = new StringTable();
 
-    LineNumberReader reader = new LineNumberReader(new InputStreamReader(s, StandardCharsets.UTF_8));
+    LineNumberReader reader =
+        new LineNumberReader(new InputStreamReader(s, StandardCharsets.UTF_8));
 
     // LineNumberReader reader = new LineNumberReader(new
     // InputStreamReader(new FileInputStream(f)));
@@ -123,7 +119,8 @@ public class StringTable extends Table<String> implements Cloneable {
     return result;
   }
 
-  public static String readNextNonCommentLine(LineNumberReader reader, Character commentToken) throws IOException {
+  public static String readNextNonCommentLine(LineNumberReader reader, Character commentToken)
+      throws IOException {
     if (reader == null) {
       throw new IllegalArgumentException("reader is null");
     }
@@ -145,10 +142,23 @@ public class StringTable extends Table<String> implements Cloneable {
   }
 
   private void populateRow(int row, String line, Character delimiter) {
-    StringTokenizer st = delimiter == null ? new StringTokenizer(line) : new StringTokenizer(line, delimiter.toString());
+    StringTokenizer st =
+        delimiter == null
+            ? new StringTokenizer(line)
+            : new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
-    Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
-        + " row " + row + ' ' + line.length() + ' ' + line);
+    Assertions.productionAssertion(
+        nColumns == getNumberOfColumns(),
+        "expected "
+            + getNumberOfColumns()
+            + " got "
+            + nColumns
+            + " row "
+            + row
+            + ' '
+            + line.length()
+            + ' '
+            + line);
     SimpleVector<String> r = new SimpleVector<>();
     rows.add(row, r);
     for (int i = 0; i < nColumns; i++) {
@@ -156,11 +166,12 @@ public class StringTable extends Table<String> implements Cloneable {
     }
   }
 
-  /**
-   * @param line a whitespace-delimited string of column names
-   */
+  /** @param line a whitespace-delimited string of column names */
   private void populateColumnHeadings(String line, Character delimiter) {
-    StringTokenizer st = delimiter == null ? new StringTokenizer(line) : new StringTokenizer(line, delimiter.toString());
+    StringTokenizer st =
+        delimiter == null
+            ? new StringTokenizer(line)
+            : new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
     for (int i = 0; i < nColumns; i++) {
       columnHeadings.set(i, (String) st.nextElement());

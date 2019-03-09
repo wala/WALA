@@ -15,5 +15,4 @@ import com.ibm.wala.classLoader.SourceModule;
 public interface MappedSourceModule extends SourceModule {
 
   FileMapping getMapping();
-  
 }

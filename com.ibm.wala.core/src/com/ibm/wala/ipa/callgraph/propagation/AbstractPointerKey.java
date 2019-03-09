@@ -11,8 +11,8 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 /**
- * This class exists to force {@link PointerKey} implementations to implement equals() and hashCode()s.
- *
+ * This class exists to force {@link PointerKey} implementations to implement equals() and
+ * hashCode()s.
  */
 public abstract class AbstractPointerKey implements PointerKey {
   @Override

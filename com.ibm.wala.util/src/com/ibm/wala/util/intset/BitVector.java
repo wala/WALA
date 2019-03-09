@@ -12,13 +12,12 @@ package com.ibm.wala.util.intset;
 
 import java.util.Arrays;
 
-/**
- */
+/** */
 public class BitVector extends BitVectorBase<BitVector> {
 
   private static final long serialVersionUID = 9087259335807761617L;
 
-  private final static int MAX_BITS = Integer.MAX_VALUE / 4;
+  private static final int MAX_BITS = Integer.MAX_VALUE / 4;
 
   public BitVector() {
     this(1);
@@ -26,7 +25,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Creates an empty string with the specified size.
-   * 
+   *
    * @param nbits the size of the string
    */
   public BitVector(int nbits) {
@@ -36,16 +35,14 @@ public class BitVector extends BitVectorBase<BitVector> {
     bits = new int[subscript(nbits) + 1];
   }
 
-  /**
-   * Expand this bit vector to size newCapacity.
-   */
+  /** Expand this bit vector to size newCapacity. */
   void expand(int newCapacity) {
     bits = Arrays.copyOf(bits, subscript(newCapacity) + 1);
   }
 
   /**
    * Creates a copy of a Bit String
-   * 
+   *
    * @param s the string to copy
    * @throws IllegalArgumentException if s is null
    */
@@ -59,7 +56,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Sets a bit.
-   * 
+   *
    * @param bit the bit to be set
    */
   @Override
@@ -80,7 +77,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Clears a bit.
-   * 
+   *
    * @param bit the bit to be cleared
    */
   @Override
@@ -98,7 +95,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Gets a bit.
-   * 
+   *
    * @param bit the bit to be gotten
    */
   @Override
@@ -114,9 +111,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     return ((bits[ss] & (1 << shiftBits)) != 0);
   }
 
-  /**
-   * Return the NOT of a bit string
-   */
+  /** Return the NOT of a bit string */
   public static BitVector not(BitVector s) {
     BitVector b = new BitVector(s);
     b.not();
@@ -125,7 +120,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Logically ANDs this bit set with the specified set of bits.
-   * 
+   *
    * @param set the bit set to be ANDed with
    */
   @Override
@@ -137,7 +132,7 @@ public class BitVector extends BitVectorBase<BitVector> {
       return;
     }
     int n = Math.min(bits.length, set.bits.length);
-    for (int i = n - 1; i >= 0;) {
+    for (int i = n - 1; i >= 0; ) {
       bits[i] &= set.bits[i];
       i--;
     }
@@ -146,9 +141,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     }
   }
 
-  /**
-   * Return a new bit string as the AND of two others.
-   */
+  /** Return a new bit string as the AND of two others. */
   public static BitVector and(BitVector b1, BitVector b2) {
     if (b1 == null) {
       throw new IllegalArgumentException("null b1");
@@ -163,7 +156,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Logically ORs this bit set with the specified set of bits.
-   * 
+   *
    * @param set the bit set to be ORed with
    */
   @Override
@@ -176,7 +169,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     }
     ensureCapacity(set);
     int n = Math.min(bits.length, set.bits.length);
-    for (int i = n - 1; i >= 0;) {
+    for (int i = n - 1; i >= 0; ) {
       bits[i] |= set.bits[i];
       i--;
     }
@@ -189,9 +182,9 @@ public class BitVector extends BitVectorBase<BitVector> {
   }
 
   /**
-   * Logically ORs this bit set with the specified set of bits. This is performance-critical, and so, a little ugly in an attempt to
-   * help out the compiler.
-   * 
+   * Logically ORs this bit set with the specified set of bits. This is performance-critical, and
+   * so, a little ugly in an attempt to help out the compiler.
+   *
    * @return the number of bits added to this.
    * @throws IllegalArgumentException if set is null
    */
@@ -204,7 +197,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     ensureCapacity(set);
     int[] otherBits = set.bits;
     int n = Math.min(bits.length, otherBits.length);
-    for (int i = n - 1; i >= 0;) {
+    for (int i = n - 1; i >= 0; ) {
       int v1 = bits[i];
       int v2 = otherBits[i];
       if (v1 != v2) {
@@ -218,9 +211,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     return delta;
   }
 
-  /**
-   * Return a new FixedSizeBitVector as the OR of two others
-   */
+  /** Return a new FixedSizeBitVector as the OR of two others */
   public static BitVector or(BitVector b1, BitVector b2) {
     if (b1 == null) {
       throw new IllegalArgumentException("null b1");
@@ -233,9 +224,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     return b;
   }
 
-  /**
-   * Return a new FixedSizeBitVector as the XOR of two others
-   */
+  /** Return a new FixedSizeBitVector as the XOR of two others */
   public static BitVector xor(BitVector b1, BitVector b2) {
     if (b1 == null) {
       throw new IllegalArgumentException("null b1");
@@ -250,7 +239,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Logically XORs this bit set with the specified set of bits.
-   * 
+   *
    * @param set the bit set to be XORed with
    * @throws IllegalArgumentException if set is null
    */
@@ -261,7 +250,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     }
     ensureCapacity(set);
     int n = Math.min(bits.length, set.bits.length);
-    for (int i = n - 1; i >= 0;) {
+    for (int i = n - 1; i >= 0; ) {
       bits[i] ^= set.bits[i];
       i--;
     }
@@ -269,7 +258,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Check if the intersection of the two sets is empty
-   * 
+   *
    * @param other the set to check intersection with
    * @throws IllegalArgumentException if other is null
    */
@@ -279,7 +268,7 @@ public class BitVector extends BitVectorBase<BitVector> {
       throw new IllegalArgumentException("other is null");
     }
     int n = Math.min(bits.length, other.bits.length);
-    for (int i = n - 1; i >= 0;) {
+    for (int i = n - 1; i >= 0; ) {
       if ((bits[i] & other.bits[i]) != 0) {
         return false;
       }
@@ -289,7 +278,8 @@ public class BitVector extends BitVectorBase<BitVector> {
   }
 
   /**
-   * Calculates and returns the set's size in bits. The maximum element in the set is the size - 1st element.
+   * Calculates and returns the set's size in bits. The maximum element in the set is the size - 1st
+   * element.
    */
   @Override
   public final int length() {
@@ -298,7 +288,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Compares this object against the specified object.
-   * 
+   *
    * @param B the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
@@ -313,16 +303,14 @@ public class BitVector extends BitVectorBase<BitVector> {
     int n = Math.min(bits.length, B.bits.length);
     if (bits.length > B.bits.length) {
       for (int i = n; i < bits.length; i++) {
-        if (bits[i] != 0)
-          return false;
+        if (bits[i] != 0) return false;
       }
     } else if (B.bits.length > bits.length) {
       for (int i = n; i < B.bits.length; i++) {
-        if (B.bits[i] != 0)
-          return false;
+        if (B.bits[i] != 0) return false;
       }
     }
-    for (int i = n - 1; i >= 0;) {
+    for (int i = n - 1; i >= 0; ) {
       if (bits[i] != B.bits[i]) {
         return false;
       }
@@ -331,9 +319,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     return true;
   }
 
-  /**
-   * @return true iff this is a subset of other
-   */
+  /** @return true iff this is a subset of other */
   @Override
   public boolean isSubset(BitVector other) {
     if (other == null) {
@@ -370,7 +356,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /**
    * Compares this object against the specified object.
-   * 
+   *
    * @param obj the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
@@ -386,31 +372,24 @@ public class BitVector extends BitVectorBase<BitVector> {
     return false;
   }
 
-  /**
-   * Sets all bits.
-   */
+  /** Sets all bits. */
   public final void setAll() {
     for (int i = 0; i < bits.length; i++) {
       bits[i] = MASK;
     }
   }
 
-  /**
-   * Logically NOT this bit string
-   */
+  /** Logically NOT this bit string */
   public final void not() {
     for (int i = 0; i < bits.length; i++) {
       bits[i] ^= MASK;
     }
   }
 
-  /**
-   * Return a new bit string as the AND of two others.
-   */
+  /** Return a new bit string as the AND of two others. */
   public static BitVector andNot(BitVector b1, BitVector b2) {
     BitVector b = new BitVector(b1);
     b.andNot(b2);
     return b;
   }
-
 }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,8 +48,6 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -63,81 +61,81 @@ import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.FieldReference;
+import java.util.Iterator;
 
 public class DexIContextInterpreter implements SSAContextInterpreter {
 
-    public DexIContextInterpreter(IAnalysisCacheView cache)
-    {
-        this.cache = cache;
-    }
+  public DexIContextInterpreter(IAnalysisCacheView cache) {
+    this.cache = cache;
+  }
 
-    private final IAnalysisCacheView cache;
+  private final IAnalysisCacheView cache;
 
+  @Override
+  public boolean understands(CGNode node) {
+    if (node.getMethod() instanceof DexIMethod) return true;
+    return false;
+  }
 
-    @Override
-    public boolean understands(CGNode node) {
-        if(node.getMethod() instanceof DexIMethod)
-            return true;
-        return false;
-    }
+  @Override
+  public boolean recordFactoryType(CGNode node, IClass klass) {
+    // TODO what the heck does this mean?
+    // com.ibm.wala.core/src/com/ibm/wala/analysis/reflection/JavaLangClassContextInterpreter.java
+    // has this set to false
+    return false;
+    //      throw new RuntimeException("not yet implemented");
+  }
 
-    @Override
-    public boolean recordFactoryType(CGNode node, IClass klass) {
-        // TODO what the heck does this mean?
-        //com.ibm.wala.core/src/com/ibm/wala/analysis/reflection/JavaLangClassContextInterpreter.java has this set to false
-        return false;
-//      throw new RuntimeException("not yet implemented");
-    }
+  @Override
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
+    return getIR(node).iterateNewSites();
+  }
 
-    @Override
-    public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-        return getIR(node).iterateNewSites();
-    }
+  @Override
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
+    // TODO implement this!
+    throw new RuntimeException("not yet implemented");
+  }
 
-    @Override
-    public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-        // TODO implement this!
-        throw new RuntimeException("not yet implemented");
-    }
+  @Override
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
+    // TODO implement this!
+    throw new RuntimeException("not yet implemented");
+  }
 
-    @Override
-    public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-        // TODO implement this!
-        throw new RuntimeException("not yet implemented");
-    }
+  @Override
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
+    return getIR(node).iterateCallSites();
+  }
 
-    @Override
-    public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-        return getIR(node).iterateCallSites();
-    }
+  @Override
+  public int getNumberOfStatements(CGNode node) {
+    // TODO verify this is correct
+    assert understands(node);
+    return getIR(node).getInstructions().length;
+  }
 
-    @Override
-    public int getNumberOfStatements(CGNode node) {
-        // TODO verify this is correct
-        assert understands(node);
-        return getIR(node).getInstructions().length;
-    }
+  @Override
+  public IR getIR(CGNode node) {
+    //      new Exception("getting IR for method
+    // "+node.getMethod().getReference().toString()).printStackTrace();
+    return cache.getIR(node.getMethod(), node.getContext());
+  }
 
-    @Override
-    public IR getIR(CGNode node) {
-//      new Exception("getting IR for method "+node.getMethod().getReference().toString()).printStackTrace();
-        return cache.getIR(node.getMethod(), node.getContext());
-    }
+  @Override
+  public IRView getIRView(CGNode node) {
+    return getIR(node);
+  }
 
-    @Override
-    public IRView getIRView(CGNode node) {
-      return getIR(node);
-    }
+  @Override
+  public DefUse getDU(CGNode node) {
+    return cache.getDefUse(getIR(node));
+    //      return new DefUse(getIR(node));
+  }
 
-    @Override
-    public DefUse getDU(CGNode node) {
-        return cache.getDefUse(getIR(node));
-//      return new DefUse(getIR(node));
-    }
-
-    @Override
-    public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) {
-        IR ir = getIR(n);
-        return ir.getControlFlowGraph();
-    }    
+  @Override
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) {
+    IR ir = getIR(n);
+    return ir.getControlFlowGraph();
+  }
 }

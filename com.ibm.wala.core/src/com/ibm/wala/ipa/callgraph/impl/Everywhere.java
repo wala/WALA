@@ -14,19 +14,14 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
-/**
- * An object that represent the context everywhere; used for context-insensitive analysis
- */
+/** An object that represent the context everywhere; used for context-insensitive analysis */
 public class Everywhere implements Context {
 
   public static final Everywhere EVERYWHERE = new Everywhere();
 
-  private Everywhere() {
-  }
+  private Everywhere() {}
 
-  /**
-   * This context gives no information.
-   */
+  /** This context gives no information. */
   @Override
   public ContextItem get(ContextKey name) {
     return null;
@@ -37,9 +32,7 @@ public class Everywhere implements Context {
     return "Everywhere";
   }
 
-  /**
-   * Don't use default hashCode (java.lang.Object) as it's nondeterministic.
-   */
+  /** Don't use default hashCode (java.lang.Object) as it's nondeterministic. */
   @Override
   public int hashCode() {
     return 9851;

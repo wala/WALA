@@ -10,10 +10,7 @@
  */
 package com.ibm.wala.fixpoint;
 
-
-/**
- * Operator U(n) = true
- */
+/** Operator U(n) = true */
 public final class TrueOperator extends UnaryOperator<BooleanVariable> {
 
   private static final TrueOperator SINGLETON = new TrueOperator();
@@ -22,8 +19,7 @@ public final class TrueOperator extends UnaryOperator<BooleanVariable> {
     return TrueOperator.SINGLETON;
   }
 
-  private TrueOperator() {
-  }
+  private TrueOperator() {}
 
   @Override
   public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {

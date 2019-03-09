@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,134 +48,102 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
-
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
+import org.jf.dexlib2.Opcode;
 
 public abstract class Instruction {
 
-    @SuppressWarnings("unused")
-    public static class Visitor {
- 
-		public void visitArrayLength(ArrayLength instruction) {
-         }
+  @SuppressWarnings("unused")
+  public static class Visitor {
 
-        public void visitArrayGet(ArrayGet instruction) {
-        }
+    public void visitArrayLength(ArrayLength instruction) {}
 
-        public void visitArrayPut(ArrayPut instruction) {
-         }
+    public void visitArrayGet(ArrayGet instruction) {}
 
-        public void visitArrayFill(ArrayFill instruction) {
-        }
+    public void visitArrayPut(ArrayPut instruction) {}
 
-        public void visitBinaryOperation(BinaryOperation instruction) {
-        }
+    public void visitArrayFill(ArrayFill instruction) {}
 
-        public void visitBinaryLiteral(BinaryLiteralOperation binaryLiteralOperation) {
-        }
+    public void visitBinaryOperation(BinaryOperation instruction) {}
 
-        public void visitBranch(Branch instruction) {
-        }
+    public void visitBinaryLiteral(BinaryLiteralOperation binaryLiteralOperation) {}
 
-        public void visitCheckCast(CheckCast checkCast) {
-        }
+    public void visitBranch(Branch instruction) {}
 
-        public void visitConstant(Constant instruction) {
-        }
+    public void visitCheckCast(CheckCast checkCast) {}
 
-        public void visitGetField(GetField instruction) {
-        }
+    public void visitConstant(Constant instruction) {}
 
-        public void visitGoto(Goto inst) {
-        }
+    public void visitGetField(GetField instruction) {}
 
-        public void visitInstanceof(InstanceOf instruction) {
-        }
+    public void visitGoto(Goto inst) {}
 
-        public void visitInvoke(Invoke instruction) {
-        }
+    public void visitInstanceof(InstanceOf instruction) {}
 
-        public void visitMonitor(Monitor instruction) {
-        }
+    public void visitInvoke(Invoke instruction) {}
 
-        public void visitNew(New instruction) {
-        }
+    public void visitMonitor(Monitor instruction) {}
 
-        public void visitNewArray(NewArray newArray) {
-        }
+    public void visitNew(New instruction) {}
 
-        public void visitNewArrayFilled(NewArrayFilled newArrayFilled) {
-        }
+    public void visitNewArray(NewArray newArray) {}
 
-        public void visitPutField(PutField instruction) {
-        }
+    public void visitNewArrayFilled(NewArrayFilled newArrayFilled) {}
 
-        public void visitReturn(Return return1) {
-        }
+    public void visitPutField(PutField instruction) {}
 
-        public void visitSwitch(Switch instruction) {
-        }
+    public void visitReturn(Return return1) {}
 
-        public void visitThrow(Throw instruction) {
-        }
+    public void visitSwitch(Switch instruction) {}
 
-        public void visitUnaryOperation(UnaryOperation instruction) {
-        }
+    public void visitThrow(Throw instruction) {}
 
+    public void visitUnaryOperation(UnaryOperation instruction) {}
+  }
 
+  public final int pc;
+  protected final Opcode opcode;
+  protected final DexIMethod method;
 
-    }
+  public static final int[] noInstructions = new int[0];
 
-    public final int pc;
-    final protected Opcode opcode;
-    final protected DexIMethod method;
+  protected Instruction(int pc, Opcode op, DexIMethod method) {
+    this.pc = pc;
+    this.opcode = op;
+    this.method = method;
+  }
 
+  /**
+   * True if the instruction can continue.
+   *
+   * @see com.ibm.wala.shrikeBT.IInstruction#isFallThrough()
+   */
+  public boolean isFallThrough() {
+    return opcode.canContinue();
+  }
 
-    public final static int[] noInstructions = new int[0];
+  /**
+   * True if the instruction can throw an exception
+   *
+   * @see com.ibm.wala.shrikeBT.IInstruction#isPEI()
+   */
+  public boolean isPEI() {
+    return opcode.canThrow();
+  }
 
-    protected Instruction(int pc, Opcode op, DexIMethod method)
-    {
-        this.pc = pc;
-        this.opcode = op;
-        this.method = method;
-    }
+  /** @return The DexIMethod which contains this instruction. */
+  public DexIMethod getParentMethod() {
+    return method;
+  }
 
+  /** @return The opcode associated with this instruction. */
+  public Opcode getOpcode() {
+    return opcode;
+  }
 
-    /**
-     * True if the instruction can continue.
-     * @see com.ibm.wala.shrikeBT.IInstruction#isFallThrough()
-     */
-	public boolean isFallThrough() {
-        return opcode.canContinue();
-    }
+  public int[] getBranchTargets() {
+    return noInstructions;
+  }
 
-    /**
-     * True if the instruction can throw an exception
-     * @see com.ibm.wala.shrikeBT.IInstruction#isPEI()
-     */
-	public boolean isPEI() {
-        return opcode.canThrow();
-    }
-
-    /**
-     * @return The DexIMethod which contains this instruction.
-     */
-    public DexIMethod getParentMethod(){
-        return method;
-    }
-
-    /**
-     * @return The opcode associated with this instruction.
-     */
-    public Opcode getOpcode(){
-        return opcode;
-    }
-
-	public int[] getBranchTargets() {
-        return noInstructions;
-    }
-
-    public abstract void visit(Visitor visitor);
-
+  public abstract void visit(Visitor visitor);
 }

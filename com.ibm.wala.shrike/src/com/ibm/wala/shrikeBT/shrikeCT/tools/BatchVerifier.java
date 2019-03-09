@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.MethodData;
@@ -27,23 +23,27 @@ import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 /**
  * This is a demo class.
- * 
- * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
- * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
- * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.BatchVerifier test.jar -o
- * output.jar
- * 
- * The instrumented classes are placed in the directory "output" under the current directory. Disassembled code is written to the
- * file "report" under the current directory.
+ *
+ * <p>Class files are taken as input arguments (or if there are none, from standard input). The
+ * methods in those files are instrumented: we insert a System.err.println() at ever method call,
+ * and a System.err.println() at every method entry.
+ *
+ * <p>In Unix, I run it like this: java -cp ~/dev/shrike/shrike
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.BatchVerifier test.jar -o output.jar
+ *
+ * <p>The instrumented classes are placed in the directory "output" under the current directory.
+ * Disassembled code is written to the file "report" under the current directory.
  */
 public class BatchVerifier {
   private static boolean disasm = false;
 
-  final private static ClassHierarchyStore store = new ClassHierarchyStore();
+  private static final ClassHierarchyStore store = new ClassHierarchyStore();
 
   private static int errors = 0;
 
@@ -57,7 +57,8 @@ public class BatchVerifier {
       }
     }
 
-    try (final PrintWriter w = new PrintWriter(new BufferedWriter(new FileWriter("report", false)))) {
+    try (final PrintWriter w =
+        new PrintWriter(new BufferedWriter(new FileWriter("report", false)))) {
 
       oi.beginTraversal();
       ClassInstrumenter ci;
@@ -90,7 +91,14 @@ public class BatchVerifier {
       cr.initMethodAttributeIterator(i, iter);
       for (; iter.isValid(); iter.advance()) {
         if (iter.getName().equals("Code")) {
-          w.write("Verifying " + cr.getName() + '.' + cr.getMethodName(i) + ' ' + cr.getMethodType(i) + ":\n");
+          w.write(
+              "Verifying "
+                  + cr.getName()
+                  + '.'
+                  + cr.getMethodName(i)
+                  + ' '
+                  + cr.getMethodType(i)
+                  + ":\n");
           w.flush();
 
           CodeReader code = new CodeReader(iter);
@@ -100,8 +108,13 @@ public class BatchVerifier {
           } catch (Decoder.InvalidBytecodeException e) {
             throw new InvalidClassFileException(code.getRawOffset(), e.getMessage());
           }
-          MethodData md = new MethodData(d, cr.getMethodAccessFlags(i), CTDecoder.convertClassToType(cr.getName()), cr
-              .getMethodName(i), cr.getMethodType(i));
+          MethodData md =
+              new MethodData(
+                  d,
+                  cr.getMethodAccessFlags(i),
+                  CTDecoder.convertClassToType(cr.getName()),
+                  cr.getMethodName(i),
+                  cr.getMethodType(i));
 
           if (disasm) {
             w.write("ShrikeBT code:\n");

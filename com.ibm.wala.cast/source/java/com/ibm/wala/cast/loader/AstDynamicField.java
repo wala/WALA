@@ -1,8 +1,5 @@
 package com.ibm.wala.cast.loader;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -10,6 +7,8 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
+import java.util.Collections;
 
 public class AstDynamicField implements IField {
   private final boolean isStatic;
@@ -102,31 +101,20 @@ public class AstDynamicField implements IField {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     AstDynamicField other = (AstDynamicField) obj;
     if (cls == null) {
-      if (other.cls != null)
-        return false;
-    } else if (!cls.equals(other.cls))
-      return false;
+      if (other.cls != null) return false;
+    } else if (!cls.equals(other.cls)) return false;
     if (descriptor == null) {
-      if (other.descriptor != null)
-        return false;
-    } else if (!descriptor.equals(other.descriptor))
-      return false;
-    if (isStatic != other.isStatic)
-      return false;
+      if (other.descriptor != null) return false;
+    } else if (!descriptor.equals(other.descriptor)) return false;
+    if (isStatic != other.isStatic) return false;
     if (name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!name.equals(other.name))
-      return false;
+      if (other.name != null) return false;
+    } else if (!name.equals(other.name)) return false;
     return true;
   }
-  
 }

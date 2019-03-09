@@ -11,6 +11,11 @@
 
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.util.warnings.Warning;
+import com.ibm.wala.util.warnings.Warnings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,15 +25,10 @@ import java.util.Iterator;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
-
 /**
  * Read in a jar file from an input stream. Most parts are copied from the NestedJarFileModule class
- * and adapted to work with an input stream. 
+ * and adapted to work with an input stream.
+ *
  * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
  */
 public class JarStreamModule extends JarInputStream implements Module {
@@ -36,8 +36,8 @@ public class JarStreamModule extends JarInputStream implements Module {
   private static final boolean DEBUG = false;
 
   /**
-   * For efficiency, we cache the byte[] holding each ZipEntry's contents; this will help avoid multiple unzipping TODO: use a soft
-   * reference?
+   * For efficiency, we cache the byte[] holding each ZipEntry's contents; this will help avoid
+   * multiple unzipping TODO: use a soft reference?
    */
   private HashMap<String, byte[]> cache = null;
 
@@ -76,15 +76,15 @@ public class JarStreamModule extends JarInputStream implements Module {
       }
     } catch (IOException e) {
       // just go with what we have
-      Warnings.add(new Warning() {
+      Warnings.add(
+          new Warning() {
 
-        @Override
-        public String getMsg() {
-          return "could not read contents of jar input stream.";
-        }
-      });
+            @Override
+            public String getMsg() {
+              return "could not read contents of jar input stream.";
+            }
+          });
     }
-
   }
 
   protected long getEntrySize(String name) {
@@ -102,6 +102,7 @@ public class JarStreamModule extends JarInputStream implements Module {
     final Iterator<String> it = cache.keySet().iterator();
     return new Iterator<ModuleEntry>() {
       String next = null;
+
       {
         advance();
       }
@@ -133,9 +134,7 @@ public class JarStreamModule extends JarInputStream implements Module {
     };
   }
 
-  /**
-   * @author sfink an entry in a nested jar file.
-   */
+  /** @author sfink an entry in a nested jar file. */
   private class Entry implements ModuleEntry {
 
     private final String name;
@@ -217,20 +216,14 @@ public class JarStreamModule extends JarInputStream implements Module {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       Entry other = (Entry) obj;
-      if (!getOuterType().equals(other.getOuterType()))
-        return false;
+      if (!getOuterType().equals(other.getOuterType())) return false;
       if (name == null) {
-        if (other.name != null)
-          return false;
-      } else if (!name.equals(other.name))
-        return false;
+        if (other.name != null) return false;
+      } else if (!name.equals(other.name)) return false;
       return true;
     }
 
@@ -242,7 +235,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     public Module getContainer() {
       return JarStreamModule.this;
     }
-
   }
 
   @Override
@@ -260,14 +252,10 @@ public class JarStreamModule extends JarInputStream implements Module {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     JarStreamModule other = (JarStreamModule) obj;
     return super.equals(other);
   }
-
 }

@@ -3,9 +3,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
+ *
  * This file is a derivative of code released by the University of
- * California under the terms listed below.  
+ * California under the terms listed below.
  *
  * WALA JDT Frontend is Copyright (c) 2008 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -20,13 +20,13 @@
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
  * of Regents or Regents' employees.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
  * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
  * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *   
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
@@ -36,13 +36,6 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 package com.ibm.wala.cast.java.translator.jdt;
-
-import java.util.Map;
-
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
 
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -54,15 +47,21 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Map;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
 
 /**
- * Class responsible for mapping JDT type system objects representing types, methods and fields to the corresponding WALA
- * TypeReferences, MethodReferences and FieldReferences. Used during translation and by clients to help correlate WALA analysis
- * results to the various AST nodes.
- * 
- * In English: keeps a hashtable of WALA "type references", "field references", etc. which describe types, fields, etc. Creates
- * these from their JDT equivalents and keeps the hashtable linking the two representations.
- * 
+ * Class responsible for mapping JDT type system objects representing types, methods and fields to
+ * the corresponding WALA TypeReferences, MethodReferences and FieldReferences. Used during
+ * translation and by clients to help correlate WALA analysis results to the various AST nodes.
+ *
+ * <p>In English: keeps a hashtable of WALA "type references", "field references", etc. which
+ * describe types, fields, etc. Creates these from their JDT equivalents and keeps the hashtable
+ * linking the two representations.
+ *
  * @author rfuhrer
  */
 public class JDTIdentityMapper {
@@ -101,23 +100,27 @@ public class JDTIdentityMapper {
   }
 
   /**
-   * Translates the given Polyglot type to a name suitable for use in a DOMO TypeReference (i.e. a bytecode-compliant type name).
+   * Translates the given Polyglot type to a name suitable for use in a DOMO TypeReference (i.e. a
+   * bytecode-compliant type name).
    */
   public String typeToTypeID(ITypeBinding type) {
-    if (type.isPrimitive())
-      return type.getBinaryName();
+    if (type.isPrimitive()) return type.getBinaryName();
     else if (type.isArray())
       // arrays' binary names in JDT are like "[Ljava.lang.String;"
       return type.getBinaryName().replace('.', '/').replace(";", "");
-    else if (type.isLocal() || type.isAnonymous())
-      return anonLocalTypeToTypeID(type);
-    else if (type.isClass() || type.isEnum() || type.isInterface()) // in polyglot interfaces are classes too. not in JDT
+    else if (type.isLocal() || type.isAnonymous()) return anonLocalTypeToTypeID(type);
+    else if (type.isClass()
+        || type.isEnum()
+        || type.isInterface()) // in polyglot interfaces are classes too. not in JDT
       // class binary names in JDT are like "java.lang.String"
       return 'L' + type.getBinaryName().replace('.', '/'); // TODO:
     else if (type.isTypeVariable()) {
       return typeToTypeID(JDT2CAstUtils.getTypesVariablesBase(type, fAst));
     }
-    Assertions.UNREACHABLE("typeToTypeID() encountered the type " + type + " that is neither primitive, array, nor class!");
+    Assertions.UNREACHABLE(
+        "typeToTypeID() encountered the type "
+            + type
+            + " that is neither primitive, array, nor class!");
     return null;
   }
 
@@ -126,10 +129,10 @@ public class JDTIdentityMapper {
 
     String metSelectorName;
     IMethodBinding metBinding = type.getDeclaringMethod();
-    if (metBinding == null) // anonymous class declared in initializer or static initializer (rare case...)
-      metSelectorName = "<init>";
-    else
-      metSelectorName = getMethodRef(metBinding).getSelector().toString();
+    if (metBinding
+        == null) // anonymous class declared in initializer or static initializer (rare case...)
+    metSelectorName = "<init>";
+    else metSelectorName = getMethodRef(metBinding).getSelector().toString();
 
     String shortName = (type.isAnonymous()) ? JDT2CAstUtils.anonTypeName(type) : type.getName();
 
@@ -142,9 +145,11 @@ public class JDTIdentityMapper {
     if (!fFieldMap.containsKey(field.getKey())) {
       // create one
       ITypeBinding targetType = field.getDeclaringClass();
-      TypeReference targetTypeRef = TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
+      TypeReference targetTypeRef =
+          TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
       ITypeBinding fieldType = field.getType();
-      TypeReference fieldTypeRef = TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(fieldType));
+      TypeReference fieldTypeRef =
+          TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(fieldType));
       Atom fieldName = Atom.findOrCreateUnicodeAtom(field.getName());
       FieldReference ref = FieldReference.findOrCreate(targetTypeRef, fieldName, fieldTypeRef);
 
@@ -154,7 +159,8 @@ public class JDTIdentityMapper {
     return fFieldMap.get(field.getKey());
   }
 
-  public MethodReference fakeMethodRefNoArgs(String key, String typeID, String metName, String returnTypeID) {
+  public MethodReference fakeMethodRefNoArgs(
+      String key, String typeID, String metName, String returnTypeID) {
     if (!fMethodMap.containsKey(key)) {
       // create one
       TypeName ownerType = TypeName.string2TypeName(typeID);
@@ -192,7 +198,10 @@ public class JDTIdentityMapper {
   private Selector selectorForMethod(IMethodBinding met) {
     // TODO: have to handle default constructors?
     // TODO: generics...
-    Atom name = (met.isConstructor()) ? MethodReference.initAtom : Atom.findOrCreateUnicodeAtom(met.getName());
+    Atom name =
+        (met.isConstructor())
+            ? MethodReference.initAtom
+            : Atom.findOrCreateUnicodeAtom(met.getName());
 
     TypeName[] argTypeNames = null;
     ITypeBinding[] formalTypes = met.getParameterTypes();
@@ -200,15 +209,15 @@ public class JDTIdentityMapper {
     int length = formalTypes.length;
 
     // ENUMS: hidden name and ID in constructor
-    if (met.isConstructor() && met.getDeclaringClass().isEnum())
-      length += 2;
+    if (met.isConstructor() && met.getDeclaringClass().isEnum()) length += 2;
 
     // Descriptor prefers null to an empty array
     if (length > 0) {
       argTypeNames = new TypeName[length];
       int i = 0;
       if (met.isConstructor() && met.getDeclaringClass().isEnum()) {
-        argTypeNames[0] = TypeName.string2TypeName(typeToTypeID(fAst.resolveWellKnownType("java.lang.String")));
+        argTypeNames[0] =
+            TypeName.string2TypeName(typeToTypeID(fAst.resolveWellKnownType("java.lang.String")));
         argTypeNames[1] = TypeName.string2TypeName(typeToTypeID(fAst.resolveWellKnownType("int")));
         i = 2;
       }

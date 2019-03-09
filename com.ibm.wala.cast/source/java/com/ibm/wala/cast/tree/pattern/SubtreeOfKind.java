@@ -15,17 +15,16 @@ import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  * A node pattern matching a node of a given kind, without regard to its children.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public class SubtreeOfKind extends NodeOfKind {
-	public SubtreeOfKind(int kind) {
-		super(kind);
-	}
-	
-	@Override
-	public boolean matches(CAstNode node) {
-		return node != null && node.getKind() == this.kind;
-	}
+  public SubtreeOfKind(int kind) {
+    super(kind);
+  }
+
+  @Override
+  public boolean matches(CAstNode node) {
+    return node != null && node.getKind() == this.kind;
+  }
 }

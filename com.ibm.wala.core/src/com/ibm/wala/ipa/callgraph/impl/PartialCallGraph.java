@@ -10,10 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -31,17 +27,19 @@ import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
-/**
- * a view of a portion of a call graph.
- */
+/** a view of a portion of a call graph. */
 public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGraph {
 
   protected final CallGraph cg;
 
   protected final Collection<CGNode> partialRoots;
 
-  protected PartialCallGraph(CallGraph cg, Collection<CGNode> partialRoots, Graph<CGNode> partialGraph) {
+  protected PartialCallGraph(
+      CallGraph cg, Collection<CGNode> partialRoots, Graph<CGNode> partialGraph) {
     super(partialGraph);
     this.cg = cg;
     this.partialRoots = partialRoots;
@@ -52,7 +50,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    * @param partialRoots roots of the new, partial graph
    * @param nodes set of nodes that will be included in the new, partial call graph
    */
-  public static PartialCallGraph make(final CallGraph cg, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
+  public static PartialCallGraph make(
+      final CallGraph cg, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
     Graph<CGNode> partialGraph = GraphSlicer.prune(cg, nodes::contains);
 
     return new PartialCallGraph(cg, partialRoots, partialGraph);
@@ -60,8 +59,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
 
   /**
    * @param cg the original call graph
-   * @param partialRoots roots of the new, partial graph
-   * the result contains only nodes reachable from the partialRoots in the original call graph.
+   * @param partialRoots roots of the new, partial graph the result contains only nodes reachable
+   *     from the partialRoots in the original call graph.
    */
   public static PartialCallGraph make(CallGraph cg, Collection<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(cg, partialRoots);

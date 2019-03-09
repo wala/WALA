@@ -11,22 +11,24 @@
 package com.ibm.wala.shrikeCT;
 
 /**
- * This is a base class for "attribute readers", the classes which provide access to the contents of attributes.
+ * This is a base class for "attribute readers", the classes which provide access to the contents of
+ * attributes.
  */
 public abstract class AttributeReader {
   protected final ClassReader cr;
 
-  final protected int attr;
+  protected final int attr;
 
-  final protected int length;
+  protected final int length;
 
   /**
    * Construct a reader for a particular attribute.
-   * 
+   *
    * @param attr a valid attribute iterator pointing at the attribute to read
    * @param expectedName the name the attribute must have
    */
-  protected AttributeReader(ClassReader.AttrIterator attr, String expectedName) throws InvalidClassFileException {
+  protected AttributeReader(ClassReader.AttrIterator attr, String expectedName)
+      throws InvalidClassFileException {
     if (attr == null) {
       throw new IllegalArgumentException("attr cannot be null");
     }
@@ -37,52 +39,52 @@ public abstract class AttributeReader {
 
     String n = attr.getName();
     if (expectedName != n && !expectedName.equals(n)) {
-      throw new IllegalArgumentException("Attribute " + n + " is not a " + expectedName + " attribute");
+      throw new IllegalArgumentException(
+          "Attribute " + n + " is not a " + expectedName + " attribute");
     }
   }
 
-  /**
-   * @return the class reader the attribute belongs to
-   */
+  /** @return the class reader the attribute belongs to */
   public final ClassReader getClassReader() {
     return cr;
   }
 
-  /**
-   * @return the offset of the raw attribute data (including the attribute header)
-   */
+  /** @return the offset of the raw attribute data (including the attribute header) */
   public final int getRawOffset() {
     return attr;
   }
 
-  /**
-   * @return the size of the raw attribute data (including the attribute header)
-   */
+  /** @return the size of the raw attribute data (including the attribute header) */
   public final int getRawSize() {
     return length;
   }
 
   /**
    * Ensure that the len bytes starting at offset fall within the attribute data.
-   * 
+   *
    * @throws InvalidClassFileException if the bytes fall outside the data
    */
   protected final void checkSize(int offset, int len) throws InvalidClassFileException {
     if (length < offset - attr + len) {
-      throw new InvalidClassFileException(offset, "Attribute data too short, expected " + len + " bytes, got "
-          + (length + attr - offset));
+      throw new InvalidClassFileException(
+          offset,
+          "Attribute data too short, expected " + len + " bytes, got " + (length + attr - offset));
     }
   }
 
   /**
    * Ensure that the len bytes starting at offset end at the end of the attribute data.
-   * 
+   *
    * @throws InvalidClassFileException if the bytes do not end at the end of the attribute
    */
   protected final void checkSizeEquals(int offset, int len) throws InvalidClassFileException {
     if (length != offset - attr + len) {
-      throw new InvalidClassFileException(offset, "Attribute data invalid length, expected " + len + " bytes, got "
-          + (length + attr - offset));
+      throw new InvalidClassFileException(
+          offset,
+          "Attribute data invalid length, expected "
+              + len
+              + " bytes, got "
+              + (length + attr - offset));
     }
   }
 }

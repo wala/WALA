@@ -11,8 +11,8 @@
 package com.ibm.wala.util;
 
 /**
- * An exception for when work is canceled in eclipse. This version forces every API that uses it to declare it. Use
- * {@code CancelRuntimeException} to avoid the need to declare a cancel exception.
+ * An exception for when work is canceled in eclipse. This version forces every API that uses it to
+ * declare it. Use {@code CancelRuntimeException} to avoid the need to declare a cancel exception.
  */
 public class CancelException extends Exception {
 
@@ -29,5 +29,4 @@ public class CancelException extends Exception {
   public static CancelException make(String msg) {
     return new CancelException(msg);
   }
-
 }

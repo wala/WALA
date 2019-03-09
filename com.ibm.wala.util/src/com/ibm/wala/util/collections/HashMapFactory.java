@@ -15,15 +15,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * A debugging aid.  When HashSetFactory.DEBUG is set, this class creates ParanoidHashMaps.  Otherwise,
- * it returns {@link LinkedHashMap}
+ * A debugging aid. When HashSetFactory.DEBUG is set, this class creates ParanoidHashMaps.
+ * Otherwise, it returns {@link LinkedHashMap}
  */
 public class HashMapFactory {
 
-  /**
-   * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
-   */
-  public static <K,V> HashMap<K,V> make(int size) {
+  /** @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise */
+  public static <K, V> HashMap<K, V> make(int size) {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>(size);
     } else {
@@ -31,10 +29,8 @@ public class HashMapFactory {
     }
   }
 
-  /**
-   * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
-   */
-  public static <K,V> HashMap<K,V> make() {
+  /** @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise */
+  public static <K, V> HashMap<K, V> make() {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>();
     } else {
@@ -42,11 +38,8 @@ public class HashMapFactory {
     }
   }
 
-
-  /**
-   * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
-   */
-  public static <K,V> HashMap<K,V> make(Map<K,V> t) {
+  /** @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise */
+  public static <K, V> HashMap<K, V> make(Map<K, V> t) {
     if (t == null) {
       throw new IllegalArgumentException("null t");
     }

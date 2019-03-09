@@ -25,12 +25,12 @@ public class JavaScriptSummary extends MethodSummary {
     super(ref);
     this.declaredParameters = declaredParameters;
     addStatement(
-      JavaScriptLoader.JS.instructionFactory().NewInstruction(getNumberOfStatements(),
-        declaredParameters+1,
-	NewSiteReference.make(
-          getNextProgramCounter(),
-	  JavaScriptTypes.Array)));
-
+        JavaScriptLoader.JS
+            .instructionFactory()
+            .NewInstruction(
+                getNumberOfStatements(),
+                declaredParameters + 1,
+                NewSiteReference.make(getNextProgramCounter(), JavaScriptTypes.Array)));
   }
 
   @Override
@@ -42,6 +42,4 @@ public class JavaScriptSummary extends MethodSummary {
   public TypeReference getParameterType(int i) {
     return JavaScriptTypes.Root;
   }
-
 }
-

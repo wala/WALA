@@ -21,12 +21,11 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
- * Adds one-level of {@link ArgumentInstanceContext} on the function argument
- * for functions that perform lexical accesses (i.e., those functions
- * represented by a {@link ScopeMappingInstanceKey}). In essence, this
- * guarantees that when a function is cloned according to some
- * {@link ContextSelector}, its nested functions that may do lexical accesses if
- * its variables have corresponding clones.
+ * Adds one-level of {@link ArgumentInstanceContext} on the function argument for functions that
+ * perform lexical accesses (i.e., those functions represented by a {@link
+ * ScopeMappingInstanceKey}). In essence, this guarantees that when a function is cloned according
+ * to some {@link ContextSelector}, its nested functions that may do lexical accesses if its
+ * variables have corresponding clones.
  */
 public class OneLevelForLexicalAccessFunctions implements ContextSelector {
 
@@ -37,7 +36,8 @@ public class OneLevelForLexicalAccessFunctions implements ContextSelector {
   }
 
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     final Context base = baseSelector.getCalleeTarget(caller, site, callee, receiver);
     if (receiver != null && receiver[0] != null && receiver[0] instanceof ScopeMappingInstanceKey) {
       final ScopeMappingInstanceKey smik = (ScopeMappingInstanceKey) receiver[0];
@@ -49,7 +49,6 @@ public class OneLevelForLexicalAccessFunctions implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    return IntSetUtil.make(new int[] { 0 }).union(baseSelector.getRelevantParameters(caller, site));
+    return IntSetUtil.make(new int[] {0}).union(baseSelector.getRelevantParameters(caller, site));
   }
-
 }

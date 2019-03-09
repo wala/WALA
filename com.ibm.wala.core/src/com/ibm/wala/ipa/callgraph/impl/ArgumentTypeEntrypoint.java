@@ -10,28 +10,26 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.util.Collection;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
+import java.util.Collection;
+import java.util.Set;
 
 /**
- * An entrypoint which chooses some valid (non-interface) concrete type for each argument, if one is available.
+ * An entrypoint which chooses some valid (non-interface) concrete type for each argument, if one is
+ * available.
  */
 public class ArgumentTypeEntrypoint extends Entrypoint {
 
-  final private TypeReference[][] paramTypes;
+  private final TypeReference[][] paramTypes;
 
   private final IClassHierarchy cha;
 
-  /**
-   * @throws IllegalArgumentException if method == null
-   */
+  /** @throws IllegalArgumentException if method == null */
   protected TypeReference[][] makeParameterTypes(IMethod method) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method == null");
@@ -65,7 +63,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
         }
       }
 
-      result[i] = (t == null) ? new TypeReference[0] : new TypeReference[] { t };
+      result[i] = (t == null) ? new TypeReference[0] : new TypeReference[] {t};
     }
     return result;
   }
@@ -107,5 +105,4 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
   public int getNumberOfParameters() {
     return paramTypes.length;
   }
-
 }

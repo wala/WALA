@@ -14,14 +14,14 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * A flow function corresponding to an edge in the supergraph.
- * 
- * This function should be distributive for use with the Tabulation algorithm.
+ *
+ * <p>This function should be distributive for use with the Tabulation algorithm.
  */
 public interface IUnaryFlowFunction extends IFlowFunction {
 
   /**
-   * @return set of d2 such that (d1,d2) is an edge in this distributive function's graph representation, or null if there are none
+   * @return set of d2 such that (d1,d2) is an edge in this distributive function's graph
+   *     representation, or null if there are none
    */
   public IntSet getTargets(int d1);
-
 }

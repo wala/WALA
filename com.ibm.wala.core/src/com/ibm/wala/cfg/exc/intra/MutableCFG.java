@@ -11,39 +11,39 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A modifiable control flow graph.
- * 
- * @author Juergen Graf &lt;graf@kit.edu&gt;
  *
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
  */
-public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph<T> implements ControlFlowGraph<X, T> {
+public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph<T>
+    implements ControlFlowGraph<X, T> {
 
   private final ControlFlowGraph<X, T> orig;
-  
+
   private MutableCFG(final ControlFlowGraph<X, T> orig) {
     this.orig = orig;
   }
-  
-  public static <I, T extends IBasicBlock<I>> MutableCFG<I, T> copyFrom(ControlFlowGraph<I, T> cfg) {
+
+  public static <I, T extends IBasicBlock<I>> MutableCFG<I, T> copyFrom(
+      ControlFlowGraph<I, T> cfg) {
     MutableCFG<I, T> mutable = new MutableCFG<>(cfg);
-    
+
     for (T node : cfg) {
       mutable.addNode(node);
     }
-    
+
     for (T node : cfg) {
       for (T succ : cfg.getNormalSuccessors(node)) {
         mutable.addEdge(node, succ);
@@ -53,7 +53,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
         mutable.addEdge(node, succ);
       }
     }
-    
+
     return mutable;
   }
 
@@ -72,20 +72,20 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public BitVector getCatchBlocks() {
     final BitVector bvOrig = orig.getCatchBlocks();
     final BitVector bvThis = new BitVector();
-    
+
     for (final T block : this) {
       bvThis.set(block.getNumber());
     }
-    
+
     bvThis.and(bvOrig);
-    
+
     return bvThis;
   }
 
   @Override
   public T getBlockForInstruction(int index) {
-    final T block =  orig.getBlockForInstruction(index);
-    
+    final T block = orig.getBlockForInstruction(index);
+
     return (containsNode(block) ? block : null);
   }
 
@@ -109,13 +109,13 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     final List<T> origSucc = orig.getExceptionalSuccessors(b);
     final IntSet allSuccs = this.getSuccNodeNumbers(b);
     final List<T> thisSuccs = new LinkedList<>();
-    
+
     for (final T block : origSucc) {
       if (allSuccs.contains(block.getNumber())) {
         thisSuccs.add(block);
       }
     }
-    
+
     return thisSuccs;
   }
 
@@ -123,7 +123,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public Collection<T> getNormalSuccessors(T b) {
     final List<T> excSuccs = getExceptionalSuccessors(b);
     final List<T> thisSuccs = new LinkedList<>();
-    
+
     final Iterator<T> succs = getSuccNodes(b);
     while (succs.hasNext()) {
       final T succ = succs.next();
@@ -131,7 +131,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
         thisSuccs.add(succ);
       }
     }
-    
+
     return thisSuccs;
   }
 
@@ -140,13 +140,13 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     final Collection<T> origPreds = orig.getExceptionalPredecessors(b);
     final IntSet allPreds = this.getPredNodeNumbers(b);
     final List<T> thisPreds = new LinkedList<>();
-    
+
     for (final T block : origPreds) {
       if (allPreds.contains(block.getNumber())) {
         thisPreds.add(block);
       }
     }
-    
+
     return thisPreds;
   }
 
@@ -154,7 +154,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public Collection<T> getNormalPredecessors(T b) {
     final Collection<T> excPreds = getExceptionalPredecessors(b);
     final List<T> thisPreds = new LinkedList<>();
-    
+
     final Iterator<T> preds = getPredNodes(b);
     while (preds.hasNext()) {
       final T pred = preds.next();
@@ -162,8 +162,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
         thisPreds.add(pred);
       }
     }
-    
+
     return thisPreds;
   }
-  
 }

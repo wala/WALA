@@ -10,23 +10,20 @@
  */
 package com.ibm.wala.shrike.bench;
 
+import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.shrikeBT.Util;
+import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
+import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
+import com.ibm.wala.shrikeCT.ClassReader;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.Util;
-import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
-import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
-import com.ibm.wala.shrikeCT.ClassReader;
-
-/**
- * @author roca
- */
+/** @author roca */
 public class InterfaceAnalyzer {
-  final static class TypeStats {
+  static final class TypeStats {
     int totalOccurrences;
 
     int methodOccurrences;
@@ -38,7 +35,7 @@ public class InterfaceAnalyzer {
     int lastMUID;
   }
 
-  final static HashMap<String, TypeStats> typeStats = new HashMap<>();
+  static final HashMap<String, TypeStats> typeStats = new HashMap<>();
 
   public static void main(String[] args) throws Exception {
     OfflineInstrumenter instrumenter = new OfflineInstrumenter();
@@ -57,8 +54,17 @@ public class InterfaceAnalyzer {
       w.write("Type\t# Total\t# Method\t# Public Method\t# Public Method as Foreign\n");
       for (Map.Entry<String, TypeStats> entry : typeStats.entrySet()) {
         TypeStats t = entry.getValue();
-        w.write(entry.getKey() + '\t' + t.totalOccurrences + '\t' + t.methodOccurrences + '\t' + t.publicMethodOccurrences + '\t'
-            + t.foreignPublicMethodOccurrences + '\n');
+        w.write(
+            entry.getKey()
+                + '\t'
+                + t.totalOccurrences
+                + '\t'
+                + t.methodOccurrences
+                + '\t'
+                + t.publicMethodOccurrences
+                + '\t'
+                + t.foreignPublicMethodOccurrences
+                + '\n');
       }
     }
   }
@@ -66,7 +72,8 @@ public class InterfaceAnalyzer {
   static int methodUID = 0;
 
   private static void doClass(ClassReader reader) throws Exception {
-    if ((reader.getAccessFlags() & Constants.ACC_INTERFACE) != 0 && (reader.getAccessFlags() & Constants.ACC_PUBLIC) != 0) {
+    if ((reader.getAccessFlags() & Constants.ACC_INTERFACE) != 0
+        && (reader.getAccessFlags() & Constants.ACC_PUBLIC) != 0) {
       String cType = Util.makeType(reader.getName());
       for (int m = 0; m < reader.getMethodCount(); m++) {
         String sig = reader.getMethodType(m);
@@ -96,7 +103,8 @@ public class InterfaceAnalyzer {
         while (Util.isArrayType(elemType)) {
           elemType = elemType.substring(1);
         }
-        if (!Util.isPrimitiveType(elemType) && !packagePart(elemType, 2).equals(packagePart(containerType, 2))) {
+        if (!Util.isPrimitiveType(elemType)
+            && !packagePart(elemType, 2).equals(packagePart(containerType, 2))) {
           t.foreignPublicMethodOccurrences++;
         }
       }

@@ -49,7 +49,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   private final boolean assertDisjoint() {
     if (DEBUG) {
       if (densePart != null) {
-        for (IntIterator sparseBits = sparsePart.intIterator(); sparseBits.hasNext();) {
+        for (IntIterator sparseBits = sparsePart.intIterator(); sparseBits.hasNext(); ) {
           int bit = sparseBits.next();
           if (densePart.contains(bit)) {
             return false;
@@ -66,7 +66,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   private void fixAfterSparseInsert() {
     if (sparsePart.size() % FIX_SPARSE_MOD == FIX_SPARSE_MOD - 1
-        && (densePart == null || (densePart != null && sparsePart.size() > FIX_SPARSE_RATIO * densePart.getSize()))) {
+        && (densePart == null
+            || (densePart != null && sparsePart.size() > FIX_SPARSE_RATIO * densePart.getSize()))) {
       assert assertDisjoint() : this.toString();
 
       if (densePart == null) {
@@ -117,7 +118,14 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           sparsePart.removeAll(densePart);
         }
 
-        assert assertDisjoint() : this.toString() + ", maxOffset=" + maxOffset + ", maxMax=" + maxMax + ", maxCount=" + maxCount;
+        assert assertDisjoint()
+            : this.toString()
+                + ", maxOffset="
+                + maxOffset
+                + ", maxMax="
+                + maxMax
+                + ", maxCount="
+                + maxCount;
 
       } else {
         IntIterator sparseBits = sparsePart.intIterator();
@@ -191,7 +199,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         if (moveCount > 0) {
           int index = 0;
           int[] bits = new int[moveCount];
-          for (sparseBits = sparsePart.intIterator(); sparseBits.hasNext();) {
+          for (sparseBits = sparsePart.intIterator(); sparseBits.hasNext(); ) {
             int bit = sparseBits.next();
             if (newOffset != -1 && bit >= newOffset && bit < densePart.getOffset()) {
               bits[index++] = bit;
@@ -202,7 +210,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           }
 
           if (index != moveCount) {
-            assert index == moveCount : "index is " + index + ", but moveCount is " + moveCount + " for " + this;
+            assert index == moveCount
+                : "index is " + index + ", but moveCount is " + moveCount + " for " + this;
           }
 
           if (newLength != -1 && bits[index - 1] == sparsePart.max()) {
@@ -220,13 +229,23 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           }
         }
 
-        assert assertDisjoint() : this.toString() + ", densePart.length()=" + densePart.length() + ", newOffset=" + newOffset
-            + ", newLength=" + newLength + ", newCount=" + newCount + ", moveCount=" + moveCount;
+        assert assertDisjoint()
+            : this.toString()
+                + ", densePart.length()="
+                + densePart.length()
+                + ", newOffset="
+                + newOffset
+                + ", newLength="
+                + newLength
+                + ", newCount="
+                + newCount
+                + ", moveCount="
+                + moveCount;
       }
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.util.intset.MutableIntSet#clear()
    */
   @Override
@@ -234,10 +253,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     sparsePart.clear();
     densePart = null;
   }
-  
-  /**
-   * @return true iff this set contains integer i
-   */
+
+  /** @return true iff this set contains integer i */
   @Override
   public boolean contains(int i) {
     if (densePart != null && inDenseRange(i)) {
@@ -247,9 +264,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @return true iff this set contains integer i
-   */
+  /** @return true iff this set contains integer i */
   @Override
   public boolean containsAny(IntSet set) {
     if (set == null) {
@@ -259,10 +274,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       return true;
     } else if (densePart != null) {
       int lower = densePart.getOffset();
-      for (IntIterator is = set.intIterator(); is.hasNext();) {
+      for (IntIterator is = set.intIterator(); is.hasNext(); ) {
         int i = is.next();
-        if (i < lower)
-          continue;
+        if (i < lower) continue;
         if (densePart.get(i)) {
           return true;
         }
@@ -274,7 +288,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * This implementation must not despoil the original value of "this"
-   * 
+   *
    * @return a new IntSet which is the intersection of this and that
    */
   @Override
@@ -283,7 +297,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       throw new IllegalArgumentException("null that");
     }
     SemiSparseMutableIntSet newThis = new SemiSparseMutableIntSet();
-    for (IntIterator bits = intIterator(); bits.hasNext();) {
+    for (IntIterator bits = intIterator(); bits.hasNext(); ) {
       int bit = bits.next();
       if (that.contains(bit)) {
         newThis.add(bit);
@@ -304,25 +318,19 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return temp;
   }
 
-  /**
-   * @return true iff this set is empty
-   */
+  /** @return true iff this set is empty */
   @Override
   public boolean isEmpty() {
     return sparsePart.isEmpty() && (densePart == null || densePart.isZero());
   }
 
-  /**
-   * @return the number of elements in this set
-   */
+  /** @return the number of elements in this set */
   @Override
   public int size() {
     return sparsePart.size() + (densePart == null ? 0 : densePart.populationCount());
   }
 
-  /**
-   * @return a perhaps more efficient iterator
-   */
+  /** @return a perhaps more efficient iterator */
   @Override
   public IntIterator intIterator() {
     class DensePartIterator implements IntIterator {
@@ -356,9 +364,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * Invoke an action on each element of the Set
-   */
+  /** Invoke an action on each element of the Set */
   @Override
   public void foreach(IntSetAction action) {
     if (action == null) {
@@ -372,9 +378,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * Invoke an action on each element of the Set, excluding elements of Set X
-   */
+  /** Invoke an action on each element of the Set, excluding elements of Set X */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     sparsePart.foreachExcluding(X, action);
@@ -387,9 +391,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @return maximum integer in this set.
-   */
+  /** @return maximum integer in this set. */
   @Override
   public int max() throws IllegalStateException {
     if (densePart == null) {
@@ -418,7 +420,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
       }
     }
-    for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+    for (IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
       if (!that.contains(bits.next())) {
         return false;
       }
@@ -439,7 +441,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       return false;
     }
 
-    for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+    for (IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
       if (!that.contains(bits.next())) {
         return false;
       }
@@ -458,7 +460,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Set the value of this to be the same as the value of set
-   * 
+   *
    * @throws IllegalArgumentException if set == null
    */
   @Override
@@ -477,7 +479,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     } else {
       densePart = null;
       sparsePart = MutableSparseIntSet.makeEmpty();
-      for (IntIterator bits = set.intIterator(); bits.hasNext();) {
+      for (IntIterator bits = set.intIterator(); bits.hasNext(); ) {
         add(bits.next());
       }
     }
@@ -489,7 +491,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Add all members of set to this.
-   * 
+   *
    * @return true iff the value of this changes.
    * @throws IllegalArgumentException if set == null
    */
@@ -509,7 +511,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           int oldSize = size();
           densePart = new OffsetBitVector(that.densePart);
 
-          for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+          for (IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
             int bit = bits.next();
             if (inDenseRange(bit)) {
               densePart.set(bit);
@@ -536,7 +538,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
           sparsePart.addAll(that.sparsePart);
 
-          for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+          for (IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
             int bit = bits.next();
             if (inDenseRange(bit)) {
               densePart.set(bit);
@@ -549,13 +551,13 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
           // this dense part only
         } else {
-          for (IntIterator bs = that.sparsePart.intIterator(); bs.hasNext();) {
+          for (IntIterator bs = that.sparsePart.intIterator(); bs.hasNext(); ) {
             change |= add(bs.next());
           }
         }
       }
     } else {
-      for (IntIterator bs = set.intIterator(); bs.hasNext();) {
+      for (IntIterator bs = set.intIterator(); bs.hasNext(); ) {
         change |= add(bs.next());
       }
     }
@@ -567,7 +569,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Add an integer value to this set.
-   * 
+   *
    * @param i integer to add
    * @return true iff the value of this changes.
    */
@@ -591,7 +593,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Remove an integer from this set.
-   * 
+   *
    * @param i integer to remove
    * @return true iff the value of this changes.
    */
@@ -611,9 +613,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * Interset this with another set.
-   */
+  /** Interset this with another set. */
   @Override
   public void intersectWith(IntSet set) {
     sparsePart.intersectWith(set);
@@ -626,9 +626,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @throws IllegalArgumentException if other is null
-   */
+  /** @throws IllegalArgumentException if other is null */
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other == null) {
@@ -638,7 +636,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       throw new IllegalArgumentException("null filter");
     }
     boolean change = false;
-    for (IntIterator bits = other.intIterator(); bits.hasNext();) {
+    for (IntIterator bits = other.intIterator(); bits.hasNext(); ) {
       int bit = bits.next();
       if (filter.contains(bit)) {
         change |= add(bit);
@@ -667,7 +665,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         sparsePart = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
       } else {
         MutableSparseIntSet C = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
-        for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
           int bit = bits.next();
           if (B.densePart.get(bit)) {
             C.remove(bit);
@@ -677,18 +675,18 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       }
     } else {
       if (B.densePart == null) {
-        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           densePart.clear(bits.next());
         }
         sparsePart = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
       } else {
         densePart.andNot(B.densePart);
-        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           densePart.clear(bits.next());
         }
 
         MutableSparseIntSet C = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
-        for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
           int bit = bits.next();
           if (B.densePart.get(bit)) {
             C.remove(bit);
@@ -715,7 +713,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
       } else {
         MutableSparseIntSet C = MutableSparseIntSet.diff(A.sparsePart, B.sparsePart);
-        for (IntIterator bits = A.sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = A.sparsePart.intIterator(); bits.hasNext(); ) {
           int bit = bits.next();
           if (B.densePart.get(bit)) {
             C.remove(bit);
@@ -728,21 +726,22 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     } else {
       if (B.densePart == null) {
         OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
-        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           newDensePart.clear(bits.next());
         }
 
-        return new SemiSparseMutableIntSet(MutableSparseIntSet.diff(A.sparsePart, B.sparsePart), newDensePart);
+        return new SemiSparseMutableIntSet(
+            MutableSparseIntSet.diff(A.sparsePart, B.sparsePart), newDensePart);
 
       } else {
         OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
         newDensePart.andNot(B.densePart);
-        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           newDensePart.clear(bits.next());
         }
 
         MutableSparseIntSet C = MutableSparseIntSet.diff(A.sparsePart, B.sparsePart);
-        for (IntIterator bits = A.sparsePart.intIterator(); bits.hasNext();) {
+        for (IntIterator bits = A.sparsePart.intIterator(); bits.hasNext(); ) {
           int bit = bits.next();
           if (B.densePart.get(bit)) {
             C.remove(bit);
@@ -753,5 +752,4 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       }
     }
   }
-
 }

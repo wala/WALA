@@ -12,17 +12,16 @@ package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
-/**
- * Represents a single variable in a fixed-point system.
- */
-public abstract class AbstractVariable<T extends AbstractVariable<T>> extends NodeWithNumber implements IVariable<T> {
+/** Represents a single variable in a fixed-point system. */
+public abstract class AbstractVariable<T extends AbstractVariable<T>> extends NodeWithNumber
+    implements IVariable<T> {
 
   private static int nextHashCode = 0;
-  
+
   private int orderNumber;
-  
+
   private final int hashCode;
-  
+
   protected AbstractVariable() {
     this.hashCode = nextHash();
   }
@@ -32,14 +31,15 @@ public abstract class AbstractVariable<T extends AbstractVariable<T>> extends No
     // we assume the solver manages these canonically
     return this == obj;
   }
-  
+
   /**
-   * I know this is theoretically bad.   However,
+   * I know this is theoretically bad. However,
+   *
    * <ul>
-   * <li> we need this to be extremely fast .. it's in the inner loop of lots of stuff.
-   * <li> these objects will probably only be hashed with each other {@link AbstractVariable}s, 
-   * in which case incrementing hash codes is OK.
-   * <li> we want determinism, so we don't want to rely on System.identityHashCode
+   *   <li>we need this to be extremely fast .. it's in the inner loop of lots of stuff.
+   *   <li>these objects will probably only be hashed with each other {@link AbstractVariable}s, in
+   *       which case incrementing hash codes is OK.
+   *   <li>we want determinism, so we don't want to rely on System.identityHashCode
    * </ul>
    */
   public static synchronized int nextHash() {

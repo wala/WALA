@@ -16,13 +16,14 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
-/**
- * Common utilities for CFA-style call graph builders.
- */
+/** Common utilities for CFA-style call graph builders. */
 public class AstJavaCFABuilder extends AstJavaSSAPropagationCallGraphBuilder {
 
   public AstJavaCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    super(Language.JAVA.getFakeRootMethod(cha, options, cache), options, cache, new DefaultPointerKeyFactory());
+    super(
+        Language.JAVA.getFakeRootMethod(cha, options, cache),
+        options,
+        cache,
+        new DefaultPointerKeyFactory());
   }
-
 }

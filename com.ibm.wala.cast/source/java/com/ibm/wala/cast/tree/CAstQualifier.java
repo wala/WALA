@@ -13,13 +13,12 @@
  */
 package com.ibm.wala.cast.tree;
 
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.Set;
 
-import com.ibm.wala.util.collections.HashSetFactory;
-
 public class CAstQualifier {
-  public static final Set/* <CAstQualifier> */<CAstQualifier>sQualifiers = HashSetFactory.make();
-    
+  public static final Set /* <CAstQualifier> */<CAstQualifier> sQualifiers = HashSetFactory.make();
+
   public static final CAstQualifier CONST = new CAstQualifier("const");
   public static final CAstQualifier STRICTFP = new CAstQualifier("strictfp");
   public static final CAstQualifier VOLATILE = new CAstQualifier("volatile");
@@ -75,8 +74,7 @@ public class CAstQualifier {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof CAstQualifier))
-      return false;
+    if (!(o instanceof CAstQualifier)) return false;
     CAstQualifier other = (CAstQualifier) o;
     return other.fName.equals(fName) && (fBit == other.fBit);
   }

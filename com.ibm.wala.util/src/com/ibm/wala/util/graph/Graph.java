@@ -12,18 +12,19 @@ package com.ibm.wala.util.graph;
 
 /**
  * Basic interface for a directed graph.
- * 
- * We choose to define a {@link Graph} as a composition of a {@link NodeManager} and an {@link EdgeManager}, which
- * track nodes and edges, respectively.   This way, in many cases we can compose separate {@link NodeManager} and
- * {@link EdgeManager} implementations to create {@link Graph} implementations, using delegation.
- * 
+ *
+ * <p>We choose to define a {@link Graph} as a composition of a {@link NodeManager} and an {@link
+ * EdgeManager}, which track nodes and edges, respectively. This way, in many cases we can compose
+ * separate {@link NodeManager} and {@link EdgeManager} implementations to create {@link Graph}
+ * implementations, using delegation.
+ *
  * @param <T> the type of nodes in this graph.
  */
 public interface Graph<T> extends NodeManager<T>, EdgeManager<T> {
   /**
    * remove a node and all its incident edges
+   *
    * @throws UnsupportedOperationException if the graph implementation does not allow removal
    */
   public void removeNodeAndEdges(T n) throws UnsupportedOperationException;
-
 }

@@ -12,8 +12,7 @@ package cornerCases;
 
 /**
  * @author sfink
- *
- * Simple input test for local variable table
+ *     <p>Simple input test for local variable table
  */
 public class Locals {
 

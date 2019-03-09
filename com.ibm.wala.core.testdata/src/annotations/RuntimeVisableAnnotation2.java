@@ -14,6 +14,4 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RuntimeVisableAnnotation2 {
-
-}
+public @interface RuntimeVisableAnnotation2 {}

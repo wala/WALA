@@ -24,38 +24,39 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-
-/**
- * Check properties of a call to clone() in RTA
- */
+/** Check properties of a call to clone() in RTA */
 public class LibModelsTest extends WalaTestCase {
 
-  @Test public void testLibModels() throws ClassHierarchyException, IllegalArgumentException,
-      CancelException, IOException {
+  @Test
+  public void testLibModels()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     String libModelsTestClass = "Llibmodels/LibModels";
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        libModelsTestClass);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, libModelsTestClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg =
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
 
-    //System.err.println(cg);
+    // System.err.println(cg);
 
     // Find node corresponding to finalize
-    TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, libModelsTestClass);
+    TypeReference t =
+        TypeReference.findOrCreate(ClassLoaderReference.Application, libModelsTestClass);
     MethodReference m = MethodReference.findOrCreate(t, "reachable1", "()V");
-    Assert.assertTrue("expect reachable1 from addShutdownHook",
-        cg.getNodes(m).iterator().hasNext());
+    Assert.assertTrue(
+        "expect reachable1 from addShutdownHook", cg.getNodes(m).iterator().hasNext());
     MethodReference m2 = MethodReference.findOrCreate(t, "reachable2", "()V");
-    Assert.assertTrue("expect reachable2 from uncaught exception handler",
-        cg.getNodes(m2).iterator().hasNext());
+    Assert.assertTrue(
+        "expect reachable2 from uncaught exception handler", cg.getNodes(m2).iterator().hasNext());
   }
 }

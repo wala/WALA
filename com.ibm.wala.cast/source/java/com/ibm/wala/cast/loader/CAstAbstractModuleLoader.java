@@ -10,18 +10,6 @@
  */
 package com.ibm.wala.cast.loader;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.ir.translator.AstTranslator.WalkContext;
@@ -55,12 +43,21 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.TemporaryFile;
 import com.ibm.wala.util.warnings.Warning;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * abstract class loader that performs CAst and IR generation for relevant
- * entities in a list of {@link Module}s. Subclasses provide the CAst / IR
- * translators appropriate for the language.
- * 
+ * abstract class loader that performs CAst and IR generation for relevant entities in a list of
+ * {@link Module}s. Subclasses provide the CAst / IR translators appropriate for the language.
  */
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
@@ -74,19 +71,14 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     this(cha, null);
   }
 
-  /**
-   * create the appropriate CAst translator for the language and source module
-   */
-  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M) throws IOException;
+  /** create the appropriate CAst translator for the language and source module */
+  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M)
+      throws IOException;
 
-  /**
-   * should IR be generated for entity?
-   */
+  /** should IR be generated for entity? */
   protected abstract boolean shouldTranslate(CAstEntity entity);
 
-  /**
-   * create the appropriate IR translator for the language
-   */
+  /** create the appropriate IR translator for the language */
   protected abstract TranslatorToIR initTranslator();
 
   protected File getLocalFile(SourceModule M) throws IOException {
@@ -101,12 +93,10 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   }
 
   /**
-   * subclasses should override to perform actions after CAst and IR have been
-   * generated. by default, do nothing
+   * subclasses should override to perform actions after CAst and IR have been generated. by
+   * default, do nothing
    */
-  protected void finishTranslation() {
-
-  }
+  protected void finishTranslation() {}
 
   @Override
   public void init(final List<Module> modules) {
@@ -132,7 +122,8 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       for (Map.Entry<TypeName, IClass> entry : types.entrySet()) {
         try {
           final IClass value = entry.getValue();
-          System.err.println(("found type " + entry.getKey() + " : " + value + " < " + value.getSuperclass()));
+          System.err.println(
+              ("found type " + entry.getKey() + " : " + value + " < " + value.getSuperclass()));
         } catch (Exception e) {
           System.err.println(e);
         }
@@ -142,10 +133,9 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     finishTranslation();
   }
 
-  /**
-   * translate moduleEntry to CAst and store result in topLevelEntities
-   */
-  private void translateModuleEntryToCAst(ModuleEntry moduleEntry, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
+  /** translate moduleEntry to CAst and store result in topLevelEntities */
+  private void translateModuleEntryToCAst(
+      ModuleEntry moduleEntry, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
     try {
       if (moduleEntry.isModuleFile()) {
         // nested module
@@ -156,7 +146,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
         CAstEntity fileEntity = null;
         try {
           fileEntity = xlatorToCAst.translateToCAst();
-        
+
           if (DEBUG) {
             CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
           }
@@ -167,30 +157,34 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
         }
       }
     } catch (final IOException e) {
-      addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-        @Override
-        public String getMsg() {
-          return "I/O issue: " + e.getMessage();
-        }
-      });
+      addMessage(
+          moduleEntry,
+          new Warning(Warning.SEVERE) {
+            @Override
+            public String getMsg() {
+              return "I/O issue: " + e.getMessage();
+            }
+          });
     } catch (final RuntimeException e) {
       final ByteArrayOutputStream s = new ByteArrayOutputStream();
       PrintStream ps = new PrintStream(s);
       e.printStackTrace(ps);
-      addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-        @Override
-        public String getMsg() {
-          return "Parsing issue: " + new String(s.toByteArray());
-        }
-      });
+      addMessage(
+          moduleEntry,
+          new Warning(Warning.SEVERE) {
+            @Override
+            public String getMsg() {
+              return "Parsing issue: " + new String(s.toByteArray());
+            }
+          });
     }
   }
 
   /**
-   * translate all relevant entities in the module to CAst, storing the results
-   * in topLevelEntities
+   * translate all relevant entities in the module to CAst, storing the results in topLevelEntities
    */
-  private void translateModuleToCAst(Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
+  private void translateModuleToCAst(
+      Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
     for (ModuleEntry me : Iterator2Iterable.make(module.getEntries())) {
       translateModuleEntryToCAst(me, ast, topLevelEntities);
     }
@@ -199,9 +193,14 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   public class DynamicCodeBody extends AstFunctionClass {
     private final WalkContext translationContext;
     private final CAstEntity entity;
-    
-    public DynamicCodeBody(TypeReference codeName, TypeReference parent, IClassLoader loader,
-        CAstSourcePositionMap.Position sourcePosition, CAstEntity entity, WalkContext context) {
+
+    public DynamicCodeBody(
+        TypeReference codeName,
+        TypeReference parent,
+        IClassLoader loader,
+        CAstSourcePositionMap.Position sourcePosition,
+        CAstEntity entity,
+        WalkContext context) {
       super(codeName, parent, loader, sourcePosition);
       types.put(codeName.getName(), this);
       this.translationContext = context;
@@ -212,14 +211,14 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     public IClassHierarchy getClassHierarchy() {
       return cha;
     }
-    
+
     public IMethod setCodeBody(DynamicMethodObject codeBody) {
       this.functionBody = codeBody;
       codeBody.entity = entity;
       codeBody.translationContext = translationContext;
       return codeBody;
     }
-    
+
     @Override
     public Collection<Annotation> getAnnotations() {
       return Collections.emptySet();
@@ -230,21 +229,37 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     private WalkContext translationContext;
     private CAstEntity entity;
 
-    public DynamicMethodObject(IClass cls, Collection<CAstQualifier> qualifiers, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-      super(cls, qualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
-          hasMonitorOp, lexicalInfo, debugInfo, null);
+    public DynamicMethodObject(
+        IClass cls,
+        Collection<CAstQualifier> qualifiers,
+        AbstractCFG<?, ?> cfg,
+        SymbolTable symtab,
+        boolean hasCatchBlock,
+        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        boolean hasMonitorOp,
+        AstLexicalInformation lexicalInfo,
+        DebuggingInformation debugInfo) {
+      super(
+          cls,
+          qualifiers,
+          cfg,
+          symtab,
+          AstMethodReference.fnReference(cls.getReference()),
+          hasCatchBlock,
+          caughtTypes,
+          hasMonitorOp,
+          lexicalInfo,
+          debugInfo,
+          null);
 
       // force creation of these constants by calling the getter methods
       symtab.getNullConstant();
     }
 
-    
     @Override
     public CAstEntity getEntity() {
       return entity;
     }
-
 
     @Override
     public void retranslate(AstTranslator xlator) {
@@ -268,30 +283,30 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
     @Override
     public LexicalParent[] getParents() {
-      if (lexicalInfo() == null)
-        return new LexicalParent[0];
+      if (lexicalInfo() == null) return new LexicalParent[0];
 
       final String[] parents = lexicalInfo().getScopingParents();
 
-      if (parents == null)
-        return new LexicalParent[0];
+      if (parents == null) return new LexicalParent[0];
 
       LexicalParent result[] = new LexicalParent[parents.length];
 
       for (int i = 0; i < parents.length; i++) {
         final int hack = i;
-        final AstMethod method = (AstMethod) lookupClass(parents[i], cha).getMethod(AstMethodReference.fnSelector);
-        result[i] = new LexicalParent() {
-          @Override
-          public String getName() {
-            return parents[hack];
-          }
+        final AstMethod method =
+            (AstMethod) lookupClass(parents[i], cha).getMethod(AstMethodReference.fnSelector);
+        result[i] =
+            new LexicalParent() {
+              @Override
+              public String getName() {
+                return parents[hack];
+              }
 
-          @Override
-          public AstMethod getMethod() {
-            return method;
-          }
-        };
+              @Override
+              public AstMethod getMethod() {
+                return method;
+              }
+            };
 
         if (AstTranslator.DEBUG_LEXICAL) {
           System.err.println(("parent " + result[i].getName() + " is " + result[i].getMethod()));
@@ -333,38 +348,46 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
   public class CoreClass extends AstDynamicPropertyClass {
     private final TypeName superName;
-    
-      public CoreClass(TypeName name, TypeName superName, IClassLoader loader, CAstSourcePositionMap.Position sourcePosition) {
-        super(sourcePosition, name, loader, (short) 0, Collections.emptyMap(), CAstAbstractModuleLoader.this.getLanguage().getRootType());
-        types.put(name, this);
-        this.superName = superName;
-      }
 
-      @Override
-      public IClassHierarchy getClassHierarchy() {
-        return cha;
-      }
-
-      @Override
-      public String toString() {
-        return "Core[" + getReference().getName().toString().substring(1) + ']';
-      }
-
-      @Override
-      public Collection<IClass> getDirectInterfaces() {
-        return Collections.emptySet();
-      }
-
-      @Override
-      public IClass getSuperclass() {
-        return superName==null? null: types.get(superName);
-      }
-      
-      @Override
-      public Collection<Annotation> getAnnotations() {
-        return Collections.emptySet();
-      }
+    public CoreClass(
+        TypeName name,
+        TypeName superName,
+        IClassLoader loader,
+        CAstSourcePositionMap.Position sourcePosition) {
+      super(
+          sourcePosition,
+          name,
+          loader,
+          (short) 0,
+          Collections.emptyMap(),
+          CAstAbstractModuleLoader.this.getLanguage().getRootType());
+      types.put(name, this);
+      this.superName = superName;
     }
 
-  
+    @Override
+    public IClassHierarchy getClassHierarchy() {
+      return cha;
+    }
+
+    @Override
+    public String toString() {
+      return "Core[" + getReference().getName().toString().substring(1) + ']';
+    }
+
+    @Override
+    public Collection<IClass> getDirectInterfaces() {
+      return Collections.emptySet();
+    }
+
+    @Override
+    public IClass getSuperclass() {
+      return superName == null ? null : types.get(superName);
+    }
+
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
+    }
+  }
 }

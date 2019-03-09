@@ -11,16 +11,17 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This class represents binary operator instructions for which the operands and the result all have the same type.
+ * This class represents binary operator instructions for which the operands and the result all have
+ * the same type.
  */
-final public class BinaryOpInstruction extends Instruction implements IBinaryOpInstruction {
+public final class BinaryOpInstruction extends Instruction implements IBinaryOpInstruction {
   protected BinaryOpInstruction(short opcode) {
     super(opcode);
   }
 
-  private final static BinaryOpInstruction[] arithmeticOps = preallocateArithmeticOps();
+  private static final BinaryOpInstruction[] arithmeticOps = preallocateArithmeticOps();
 
-  private final static BinaryOpInstruction[] logicalOps = preallocateLogicalOps();
+  private static final BinaryOpInstruction[] logicalOps = preallocateLogicalOps();
 
   private static BinaryOpInstruction[] preallocateArithmeticOps() {
     BinaryOpInstruction[] r = new BinaryOpInstruction[OP_drem - OP_iadd + 1];
@@ -38,7 +39,8 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
     return r;
   }
 
-  public static BinaryOpInstruction make(String type, Operator operator) throws IllegalArgumentException {
+  public static BinaryOpInstruction make(String type, Operator operator)
+      throws IllegalArgumentException {
     if (operator == null) {
       throw new IllegalArgumentException("operator is null");
     }
@@ -54,7 +56,8 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
       return arithmeticOps[(operator.ordinal() - Operator.ADD.ordinal()) * 4 + t];
     } else {
       if (t > TYPE_long_index) {
-        throw new IllegalArgumentException("Cannot use logical binaryOps on floating point type: " + type);
+        throw new IllegalArgumentException(
+            "Cannot use logical binaryOps on floating point type: " + type);
       }
       return logicalOps[(operator.ordinal() - Operator.AND.ordinal()) * 2 + t];
     }
@@ -125,7 +128,10 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
 
   @Override
   public boolean isPEI() {
-    return opcode == Constants.OP_idiv || opcode == Constants.OP_ldiv || opcode == Constants.OP_irem || opcode == Constants.OP_lrem;
+    return opcode == Constants.OP_idiv
+        || opcode == Constants.OP_ldiv
+        || opcode == Constants.OP_irem
+        || opcode == Constants.OP_lrem;
   }
 
   @Override

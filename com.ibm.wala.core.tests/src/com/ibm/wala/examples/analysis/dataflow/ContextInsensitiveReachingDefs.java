@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.examples.analysis.dataflow;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
@@ -39,30 +36,29 @@ import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Computes interprocedural reaching definitions for static fields in a context-insensitive manner.
  */
 public class ContextInsensitiveReachingDefs {
 
-  /**
-   * the exploded interprocedural control-flow graph on which to compute the analysis
-   */
+  /** the exploded interprocedural control-flow graph on which to compute the analysis */
   private final ExplodedInterproceduralCFG icfg;
 
   /**
-   * maps call graph node and instruction index of putstatic instructions to more compact numbering for bitvectors
+   * maps call graph node and instruction index of putstatic instructions to more compact numbering
+   * for bitvectors
    */
   private final OrdinalSetMapping<Pair<CGNode, Integer>> putInstrNumbering;
 
-  /**
-   * for resolving field references in putstatic instructions
-   */
+  /** for resolving field references in putstatic instructions */
   private final IClassHierarchy cha;
 
   /**
-   * maps each static field to the numbers of the statements (in {@link #putInstrNumbering}) that define it; used for kills in flow
-   * functions
+   * maps each static field to the numbers of the statements (in {@link #putInstrNumbering}) that
+   * define it; used for kills in flow functions
    */
   private final Map<IField, BitVector> staticField2DefStatements = HashMapFactory.make();
 
@@ -74,9 +70,7 @@ public class ContextInsensitiveReachingDefs {
     this.putInstrNumbering = numberPutStatics();
   }
 
-  /**
-   * generate a numbering of the putstatic instructions
-   */
+  /** generate a numbering of the putstatic instructions */
   private OrdinalSetMapping<Pair<CGNode, Integer>> numberPutStatics() {
     ArrayList<Pair<CGNode, Integer>> putInstrs = new ArrayList<>();
     for (CGNode node : icfg.getCallGraph()) {
@@ -87,7 +81,8 @@ public class ContextInsensitiveReachingDefs {
       SSAInstruction[] instructions = ir.getInstructions();
       for (int i = 0; i < instructions.length; i++) {
         SSAInstruction instruction = instructions[i];
-        if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
+        if (instruction instanceof SSAPutInstruction
+            && ((SSAPutInstruction) instruction).isStatic()) {
           SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
           // instrNum is the number that will be assigned to this putstatic
           int instrNum = putInstrs.size();
@@ -107,23 +102,25 @@ public class ContextInsensitiveReachingDefs {
     return new ObjectArrayMapping<>(putInstrs.toArray(new Pair[0]));
   }
 
-  private class TransferFunctions implements ITransferFunctionProvider<BasicBlockInContext<IExplodedBasicBlock>, BitVectorVariable> {
+  private class TransferFunctions
+      implements ITransferFunctionProvider<
+          BasicBlockInContext<IExplodedBasicBlock>, BitVectorVariable> {
 
-    /**
-     * our meet operator is set union
-     */
+    /** our meet operator is set union */
     @Override
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
     @Override
-    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(BasicBlockInContext<IExplodedBasicBlock> node) {
+    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(
+        BasicBlockInContext<IExplodedBasicBlock> node) {
       IExplodedBasicBlock ebb = node.getDelegate();
       SSAInstruction instruction = ebb.getInstruction();
       int instructionIndex = ebb.getFirstInstructionIndex();
       CGNode cgNode = node.getNode();
-      if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
+      if (instruction instanceof SSAPutInstruction
+          && ((SSAPutInstruction) instruction).isStatic()) {
         // kill all defs of the same static field, and gen this instruction
         final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
         final IField field = cha.resolveField(putInstr.getDeclaredField());
@@ -139,8 +136,8 @@ public class ContextInsensitiveReachingDefs {
     }
 
     /**
-     * here we need an edge transfer function for call-to-return edges (see
-     * {@link #getEdgeTransferFunction(BasicBlockInContext, BasicBlockInContext)})
+     * here we need an edge transfer function for call-to-return edges (see {@link
+     * #getEdgeTransferFunction(BasicBlockInContext, BasicBlockInContext)})
      */
     @Override
     public boolean hasEdgeTransferFunctions() {
@@ -153,11 +150,12 @@ public class ContextInsensitiveReachingDefs {
     }
 
     /**
-     * for direct call-to-return edges at a call site, the edge transfer function will kill all facts, since we only want to
-     * consider facts that arise from going through the callee
+     * for direct call-to-return edges at a call site, the edge transfer function will kill all
+     * facts, since we only want to consider facts that arise from going through the callee
      */
     @Override
-    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(BasicBlockInContext<IExplodedBasicBlock> src,
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(
+        BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dst) {
       if (isCallToReturnEdge(src, dst)) {
         return BitVectorKillAll.instance();
@@ -166,24 +164,26 @@ public class ContextInsensitiveReachingDefs {
       }
     }
 
-    private boolean isCallToReturnEdge(BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst) {
+    private boolean isCallToReturnEdge(
+        BasicBlockInContext<IExplodedBasicBlock> src,
+        BasicBlockInContext<IExplodedBasicBlock> dst) {
       SSAInstruction srcInst = src.getDelegate().getInstruction();
       return srcInst instanceof SSAAbstractInvokeInstruction && src.getNode().equals(dst.getNode());
     }
-
   }
 
   /**
    * run the analysis
-   * 
+   *
    * @return the solver used for the analysis, which contains the analysis result
    */
   public BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> analyze() {
-    // the framework describes the dataflow problem, in particular the underlying graph and the transfer functions
-    BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>> framework = new BitVectorFramework<>(
-        icfg, new TransferFunctions(), putInstrNumbering);
-    BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = new BitVectorSolver<>(
-        framework);
+    // the framework describes the dataflow problem, in particular the underlying graph and the
+    // transfer functions
+    BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>> framework =
+        new BitVectorFramework<>(icfg, new TransferFunctions(), putInstrNumbering);
+    BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver =
+        new BitVectorSolver<>(framework);
     try {
       solver.solve(null);
     } catch (CancelException e) {
@@ -202,7 +202,8 @@ public class ContextInsensitiveReachingDefs {
   }
 
   /**
-   * gets putstatic instruction corresponding to some fact number from a bitvector in the analysis result
+   * gets putstatic instruction corresponding to some fact number from a bitvector in the analysis
+   * result
    */
   public Pair<CGNode, Integer> getNodeAndInstrForNumber(int num) {
     return putInstrNumbering.getMappedObject(num);

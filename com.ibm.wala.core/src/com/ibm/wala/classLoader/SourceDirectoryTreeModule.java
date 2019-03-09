@@ -12,14 +12,10 @@ package com.ibm.wala.classLoader;
 
 import java.io.File;
 
-/**
- * a module representing a directory tree of source files.
- */
+/** a module representing a directory tree of source files. */
 public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
-  /**
-   * file extension of source files in directory tree (defaults to "java" for Java source files)
-   */
+  /** file extension of source files in directory tree (defaults to "java" for Java source files) */
   String fileExt = "java";
 
   public SourceDirectoryTreeModule(File root) {
@@ -28,8 +24,7 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
   public SourceDirectoryTreeModule(File root, String fileExt) {
     super(root);
-    if (fileExt != null)
-      this.fileExt = fileExt;
+    if (fileExt != null) this.fileExt = fileExt;
   }
 
   @Override
@@ -50,10 +45,9 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
     return new SourceFileModule(file, filePath.substring(rootPath.length()), this);
   }
-  
+
   @Override
   public String toString() {
     return "SourceDirectoryTreeModule:" + getPath();
   }
-
 }

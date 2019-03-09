@@ -1,11 +1,5 @@
 package com.ibm.wala.cast.java.test;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-
-import org.junit.Test;
-
 import com.ibm.wala.cast.java.client.ECJJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -31,6 +25,10 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.strings.Atom;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import org.junit.Test;
 
 public class ECJTestComments extends IRTests {
 
@@ -39,36 +37,44 @@ public class ECJTestComments extends IRTests {
   }
 
   @Override
-  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    JavaSourceAnalysisEngine engine = new ECJJavaSourceAnalysisEngine() {
-      @Override
-      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
-      }
-    };
+  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
+      final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+    JavaSourceAnalysisEngine engine =
+        new ECJJavaSourceAnalysisEngine() {
+          @Override
+          protected Iterable<Entrypoint> makeDefaultEntrypoints(
+              AnalysisScope scope, IClassHierarchy cha) {
+            return Util.makeMainEntrypoints(
+                JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
+          }
+        };
     engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     populateScope(engine, sources, libs);
     return engine;
   }
 
-  protected final static MethodReference testMethod = MethodReference.findOrCreate(TypeReference
-      .findOrCreate(JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LComments")), Atom.findOrCreateUnicodeAtom("main"),
-      Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/String;)V"));
+  protected static final MethodReference testMethod =
+      MethodReference.findOrCreate(
+          TypeReference.findOrCreate(
+              JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LComments")),
+          Atom.findOrCreateUnicodeAtom("main"),
+          Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/String;)V"));
 
-  @Test public void testComments() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
-    for(CGNode node : result.fst.getNodes(testMethod)) {
+  @Test
+  public void testComments() throws IllegalArgumentException, CancelException, IOException {
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result =
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+    for (CGNode node : result.fst.getNodes(testMethod)) {
       if (node.getMethod() instanceof AstMethod) {
         AstMethod m = (AstMethod) node.getMethod();
         DebuggingInformation dbg = m.debugInfo();
-        for(SSAInstruction inst : node.getIR().getInstructions()) {
+        for (SSAInstruction inst : node.getIR().getInstructions()) {
           System.err.println("leading for " + inst.toString(node.getIR().getSymbolTable()));
           System.err.println(dbg.getLeadingComment(inst.iindex));
           System.err.println("following for " + inst.toString(node.getIR().getSymbolTable()));
-          System.err.println(dbg.getFollowingComment(inst.iindex));          
+          System.err.println(dbg.getFollowingComment(inst.iindex));
         }
       }
     }
   }
-
 }

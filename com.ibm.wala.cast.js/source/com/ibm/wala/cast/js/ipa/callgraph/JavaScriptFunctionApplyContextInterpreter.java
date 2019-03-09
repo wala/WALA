@@ -30,14 +30,19 @@ import com.ibm.wala.types.TypeName;
 
 /**
  * TODO cache generated IRs
- * 
- * @see <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN Function.apply() docs</a>
+ *
+ * @see <a
+ *     href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
+ *     Function.apply() docs</a>
  */
-public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensitiveSSAContextInterpreter {
+public class JavaScriptFunctionApplyContextInterpreter
+    extends AstContextInsensitiveSSAContextInterpreter {
 
-  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
+  private static final TypeName APPLY_TYPE_NAME =
+      TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
 
-  public JavaScriptFunctionApplyContextInterpreter(AnalysisOptions options, IAnalysisCacheView cache) {
+  public JavaScriptFunctionApplyContextInterpreter(
+      AnalysisOptions options, IAnalysisCacheView cache) {
     super(options, cache);
   }
 
@@ -50,7 +55,9 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   public IR getIR(CGNode node) {
     assert understands(node);
     @SuppressWarnings("unchecked")
-    ContextItem.Value<Boolean> isNonNullArray = (ContextItem.Value<Boolean>) node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS);
+    ContextItem.Value<Boolean> isNonNullArray =
+        (ContextItem.Value<Boolean>)
+            node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS);
     // isNonNullArray can be null if, e.g., due to recursion bounding we have no
     // information on the arguments parameter
     if (isNonNullArray == null || isNonNullArray.getValue()) {
@@ -90,7 +97,8 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     // is not modeled in WALA as of now, using the instruction is ok.
     MethodReference ref = node.getMethod().getReference();
     IClass declaringClass = node.getMethod().getDeclaringClass();
-    JSInstructionFactory insts = (JSInstructionFactory) declaringClass.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) declaringClass.getClassLoader().getInstructionFactory();
     // nargs needs to match that of Function.apply(), even though no argsList
     // argument was passed in this case
     int nargs = 4;
@@ -101,15 +109,17 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     // pass the 'this' argument first
     paramsToPassToInvoked[0] = 3;
 
-//    int curValNum = passArbitraryPropertyValAsParams(insts, nargs, S, paramsToPassToInvoked);
+    //    int curValNum = passArbitraryPropertyValAsParams(insts, nargs, S, paramsToPassToInvoked);
     int curValNum = passActualPropertyValsAsParams(insts, nargs, S, paramsToPassToInvoked);
-    
-    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+
+    CallSiteReference cs =
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
 
     // function being invoked is in v2
     int resultVal = curValNum++;
     int excVal = curValNum++;
-    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 2, resultVal, paramsToPassToInvoked, excVal, cs));
+    S.addStatement(
+        insts.Invoke(S.getNumberOfStatements(), 2, resultVal, paramsToPassToInvoked, excVal, cs));
     S.getNextProgramCounter();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
@@ -120,25 +130,30 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   }
 
   @SuppressWarnings("unused")
-  private static int passArbitraryPropertyValAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
+  private static int passArbitraryPropertyValAsParams(
+      JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
     int curValNum = nargs + 2;
     int eachElementGetResult = curValNum++;
     int nullPredVn = curValNum++;
     S.addConstant(nullPredVn, new ConstantValue(null));
-    S.addStatement(insts.EachElementGetInstruction(S.getNumberOfStatements(), eachElementGetResult, 4, nullPredVn));
+    S.addStatement(
+        insts.EachElementGetInstruction(
+            S.getNumberOfStatements(), eachElementGetResult, 4, nullPredVn));
     S.getNextProgramCounter();
     // read value from the arbitrary property name
     int propertyReadResult = curValNum++;
-    S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, eachElementGetResult));
+    S.addStatement(
+        insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, eachElementGetResult));
     S.getNextProgramCounter();
     for (int i = 1; i < paramsToPassToInvoked.length; i++) {
       paramsToPassToInvoked[i] = propertyReadResult;
     }
     return curValNum;
   }
-  
-  private static int passActualPropertyValsAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
+
+  private static int passActualPropertyValsAsParams(
+      JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
     int nullVn = nargs + 2;
     S.addConstant(nullVn, new ConstantValue(null));
@@ -149,16 +164,16 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
       // the commented line is correct, but it doesn't work because
       // of our broken handling of int constants as properties.
       // TODO fix property handling, and then fix this
-      S.addConstant(constVN, new ConstantValue(Integer.toString(i-1)));
-      //S.addConstant(constVN, new ConstantValue(i-1));
+      S.addConstant(constVN, new ConstantValue(Integer.toString(i - 1)));
+      // S.addConstant(constVN, new ConstantValue(i-1));
       int propertyReadResult = curValNum++;
       // 4 is position of arguments array
       S.addStatement(insts.PropertyWrite(S.getNumberOfStatements(), 4, constVN, nullVn));
       S.getNextProgramCounter();
-      
+
       S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, constVN));
       S.getNextProgramCounter();
-     
+
       paramsToPassToInvoked[i] = propertyReadResult;
     }
     return curValNum;
@@ -168,7 +183,8 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     // kind of a hack; re-use the summarized function infrastructure
     MethodReference ref = node.getMethod().getReference();
     IClass declaringClass = node.getMethod().getDeclaringClass();
-    JSInstructionFactory insts = (JSInstructionFactory) declaringClass.getClassLoader().getInstructionFactory();
+    JSInstructionFactory insts =
+        (JSInstructionFactory) declaringClass.getClassLoader().getInstructionFactory();
     // nargs needs to match that of Function.apply(), even though no argsList
     // argument was passed in this case
     int nargs = 4;
@@ -176,11 +192,13 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
 
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
-    CallSiteReference cs = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+    CallSiteReference cs =
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
     int[] params = new int[1];
     params[0] = 3;
     // function being invoked is in v2
-    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
+    S.addStatement(
+        insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
     S.getNextProgramCounter();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
@@ -195,5 +213,4 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     assert understands(node);
     return new DefUse(getIR(node));
   }
-
 }

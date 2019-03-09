@@ -11,14 +11,14 @@
 package com.ibm.wala.ssa;
 
 /**
- * <p>A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order
- * to get a new variable name to associate with some flow-insensitive dataflow fact.
- * You can build an {@link IR} with or without Pi instructions, depending on {@link SSAOptions} selected.</p>
- * 
- * <p>A Pi instruction is linked to its "cause" instruction, which is usually a conditional
- * branch.</p>
- * 
- * <p>For example, the following pseudo-code</p>
+ * A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order to get a
+ * new variable name to associate with some flow-insensitive dataflow fact. You can build an {@link
+ * IR} with or without Pi instructions, depending on {@link SSAOptions} selected.
+ *
+ * <p>A Pi instruction is linked to its "cause" instruction, which is usually a conditional branch.
+ *
+ * <p>For example, the following pseudo-code
+ *
  * <pre>
  *     boolean condition = (x instanceof Integer);
  *     if (condition) {
@@ -27,9 +27,9 @@ package com.ibm.wala.ssa;
  *        S2;
  *     }
  * </pre>
- * 
- * <p>could be translated roughly as follows:</p>
- * 
+ *
+ * <p>could be translated roughly as follows:
+ *
  * <pre>
  *     boolean condition = (x instanceof Integer);
  *     LABEL1: if (condition) {
@@ -45,14 +45,15 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   private final SSAInstruction cause;
 
   private final int successorBlock;
-  
+
   private final int piBlock;
 
   /**
-   * @param successorBlock the successor block; this PI assignment happens on the transition between this basic block and
-   * the successor block.
+   * @param successorBlock the successor block; this PI assignment happens on the transition between
+   *     this basic block and the successor block.
    */
-  public SSAPiInstruction(int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
+  public SSAPiInstruction(
+      int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
     super(iindex, null, result, val);
     this.cause = cause;
     this.successorBlock = successorBlock;
@@ -63,12 +64,24 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert defs == null || defs.length == 1;
     assert uses == null || uses.length == 1;
-    return insts.PiInstruction(iindex, defs == null ? result : defs[0], uses == null ? val : uses[0], piBlock, successorBlock, cause);
+    return insts.PiInstruction(
+        iindex,
+        defs == null ? result : defs[0],
+        uses == null ? val : uses[0],
+        piBlock,
+        successorBlock,
+        cause);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = pi " + getValueString(symbolTable, val) + " for BB" + successorBlock + ", cause " + cause;
+    return getValueString(symbolTable, result)
+        + " = pi "
+        + getValueString(symbolTable, val)
+        + " for BB"
+        + successorBlock
+        + ", cause "
+        + cause;
   }
 
   @Override
@@ -86,7 +99,7 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   public int getPiBlock() {
     return piBlock;
   }
-  
+
   public SSAInstruction getCause() {
     return cause;
   }
@@ -94,5 +107,4 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   public int getVal() {
     return getUse(0);
   }
-
 }

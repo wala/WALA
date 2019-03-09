@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,17 +47,6 @@
 
 package org.scandroid.spec;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
-import org.scandroid.domain.CodeElement;
-import org.scandroid.flow.InflowAnalysis;
-import org.scandroid.flow.types.FlowType;
-import org.scandroid.flow.types.ReturnFlow;
-import org.scandroid.util.CGAnalysisContext;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -67,42 +56,56 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import org.scandroid.domain.CodeElement;
+import org.scandroid.flow.InflowAnalysis;
+import org.scandroid.flow.types.FlowType;
+import org.scandroid.flow.types.ReturnFlow;
+import org.scandroid.util.CGAnalysisContext;
 
 /**
- * CallRetSourceSpecs represent sources from invocations of other methods 
- * (eg: API methods).
- * 
- * reading file contents, and returning bytes eg: via {@code int read(...)} is
- * an example of a call return source.
+ * CallRetSourceSpecs represent sources from invocations of other methods (eg: API methods).
+ *
+ * <p>reading file contents, and returning bytes eg: via {@code int read(...)} is an example of a
+ * call return source.
  */
 public class CallRetSourceSpec extends SourceSpec {
-	final String sig = "CallRetSource";
-	public CallRetSourceSpec(MethodNamePattern name, int[] args) {
-		namePattern = name;
-		argNums = args;
-	}
+  final String sig = "CallRetSource";
 
-	@Override
-	public<E extends ISSABasicBlock> void addDomainElements(CGAnalysisContext<E> ctx,
-			Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap, IMethod im,
-			BasicBlockInContext<E> block, SSAInvokeInstruction invInst, int[] newArgNums,
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis<InstanceKey> pa, CallGraph cg) {
+  public CallRetSourceSpec(MethodNamePattern name, int[] args) {
+    namePattern = name;
+    argNums = args;
+  }
 
-		for (FlowType<E> ft:getFlowType(block)) {
-			InflowAnalysis.addDomainElements(taintMap, block, ft, 
-			        CodeElement.valueElements(invInst.getDef(0)));
-		}
-	}
+  @Override
+  public <E extends ISSABasicBlock> void addDomainElements(
+      CGAnalysisContext<E> ctx,
+      Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
+      IMethod im,
+      BasicBlockInContext<E> block,
+      SSAInvokeInstruction invInst,
+      int[] newArgNums,
+      ISupergraph<BasicBlockInContext<E>, CGNode> graph,
+      PointerAnalysis<InstanceKey> pa,
+      CallGraph cg) {
 
-	private static <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
-																				  BasicBlockInContext<E> block) {
+    for (FlowType<E> ft : getFlowType(block)) {
+      InflowAnalysis.addDomainElements(
+          taintMap, block, ft, CodeElement.valueElements(invInst.getDef(0)));
+    }
+  }
 
-		return Collections.singleton(new ReturnFlow<>(block, true));
-	}
+  private static <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
+      BasicBlockInContext<E> block) {
 
-	@Override
-	public String toString() {
-		return String.format("CallRetSourceSpec(%s)", namePattern);
-	}
+    return Collections.singleton(new ReturnFlow<>(block, true));
+  }
+
+  @Override
+  public String toString() {
+    return String.format("CallRetSourceSpec(%s)", namePattern);
+  }
 }

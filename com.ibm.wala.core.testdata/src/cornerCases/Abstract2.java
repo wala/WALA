@@ -10,11 +10,8 @@
  */
 package cornerCases;
 
-/**
- * @author sfink
- *
- */
+/** @author sfink */
 public abstract class Abstract2 {
 
-   void foo() {}
+  void foo() {}
 }

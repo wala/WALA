@@ -13,53 +13,43 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * an Iterator of array elements
- */
+/** an Iterator of array elements */
 public class ArrayIterator<T> implements Iterator<T> {
 
-  /**
-   * The index of the next array element to return
-   */
+  /** The index of the next array element to return */
   protected int _cnt;
-  
-  /**
-   * The index of the last array element to return
-   */
+
+  /** The index of the last array element to return */
   protected final int last;
 
-  /**
-   * The array source for the iterator
-   */
+  /** The array source for the iterator */
   protected final T[] _elts;
-  
-  
-  /**
-   * @param elts the array which should be iterated over
-   */
+
+  /** @param elts the array which should be iterated over */
   public ArrayIterator(T[] elts) {
     this(elts, 0);
   }
 
   /**
    * @param elts the array which should be iterated over
-   * @param start the first array index to return 
+   * @param start the first array index to return
    */
   public ArrayIterator(T[] elts, int start) {
     if (elts == null) {
       throw new IllegalArgumentException("null elts");
     }
     if (start < 0 || start > elts.length) {
-      throw new IllegalArgumentException("invalid start: " + start + ", arrray length " + elts.length);
+      throw new IllegalArgumentException(
+          "invalid start: " + start + ", arrray length " + elts.length);
     }
     _elts = elts;
     _cnt = start;
     last = _elts.length - 1;
   }
-  
+
   /**
    * @param elts the array which should be iterated over
-   * @param start the first array index to return 
+   * @param start the first array index to return
    */
   public ArrayIterator(T[] elts, int start, int last) {
     if (elts == null) {

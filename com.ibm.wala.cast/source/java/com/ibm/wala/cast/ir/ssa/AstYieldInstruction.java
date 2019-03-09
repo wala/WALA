@@ -15,16 +15,15 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 
 public class AstYieldInstruction extends AstConsumeInstruction {
-  
+
   public AstYieldInstruction(int iindex, int[] rvals) {
     super(iindex, rvals);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).EchoInstruction(iindex, uses==null? rvals: uses);
+    return ((AstInstructionFactory) insts).EchoInstruction(iindex, uses == null ? rvals : uses);
   }
-
 
   @Override
   public String toString(SymbolTable symbolTable) {
@@ -38,7 +37,6 @@ public class AstYieldInstruction extends AstConsumeInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    ((AstInstructionVisitor)v).visitYield(this);
+    ((AstInstructionVisitor) v).visitYield(this);
   }
-
 }

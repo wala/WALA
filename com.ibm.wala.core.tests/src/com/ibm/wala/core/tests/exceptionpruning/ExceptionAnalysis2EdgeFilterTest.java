@@ -3,16 +3,6 @@ package com.ibm.wala.core.tests.exceptionpruning;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis;
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis2EdgeFilter;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -48,15 +38,21 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.ref.ReferenceCleanser;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 
 /**
- * This Test checks, if the number of deleted edges is correct for TestPruning,
- * it is also doing a plausibility check for deleted edges (only edges after
- * exceptional instructions should be deleted) and that no new edges are
- * inserted.
- * 
- * @author Stephan Gocht {@code <stephan@gobro.de>}
+ * This Test checks, if the number of deleted edges is correct for TestPruning, it is also doing a
+ * plausibility check for deleted edges (only edges after exceptional instructions should be
+ * deleted) and that no new edges are inserted.
  *
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysis2EdgeFilterTest {
   private static ClassLoader CLASS_LOADER = ExceptionAnalysis2EdgeFilterTest.class.getClassLoader();
@@ -67,25 +63,30 @@ public class ExceptionAnalysis2EdgeFilterTest {
   private static PointerAnalysis<InstanceKey> pointerAnalysis;
   private static CombinedInterproceduralExceptionFilter<SSAInstruction> filter;
 
-  @Rule
-  public ErrorCollector collector = new ErrorCollector();
+  @Rule public ErrorCollector collector = new ErrorCollector();
 
   @BeforeClass
-  public static void init() throws IOException, ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException {
+  public static void init()
+      throws IOException, ClassHierarchyException, IllegalArgumentException,
+          CallGraphBuilderCancelException {
     AnalysisOptions options;
     AnalysisScope scope;
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
+    scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
     cha = ClassHierarchyFactory.make(scope);
 
-    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
+    Iterable<Entrypoint> entrypoints =
+        Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
     options = new AnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
     ReferenceCleanser.registerClassHierarchy(cha);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
     cg = builder.makeCallGraph(options, null);
     pointerAnalysis = builder.getPointerAnalysis();
 
@@ -94,13 +95,18 @@ public class ExceptionAnalysis2EdgeFilterTest {
      * raise (OwnException, ArrayIndexOutOfBoundException)
      */
     filter = new CombinedInterproceduralExceptionFilter<>();
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangNullPointerException)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangExceptionInInitializerError)));
-    filter.add(new IgnoreExceptionsInterFilter<>(new IgnoreExceptionsFilter(
-        TypeReference.JavaLangNegativeArraySizeException)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangOutOfMemoryError)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangNullPointerException)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangExceptionInInitializerError)));
+    filter.add(
+        new IgnoreExceptionsInterFilter<>(
+            new IgnoreExceptionsFilter(TypeReference.JavaLangNegativeArraySizeException)));
   }
 
   @Test
@@ -113,20 +119,28 @@ public class ExceptionAnalysis2EdgeFilterTest {
 
     for (CGNode node : cg) {
       if (node.getIR() != null && !node.getIR().isEmptyIR()) {
-        EdgeFilter<ISSABasicBlock> exceptionAnalysedEdgeFilter = new ExceptionAnalysis2EdgeFilter(analysis, node);
+        EdgeFilter<ISSABasicBlock> exceptionAnalysedEdgeFilter =
+            new ExceptionAnalysis2EdgeFilter(analysis, node);
 
         SSACFG cfg_orig = node.getIR().getControlFlowGraph();
-        ExceptionFilter2EdgeFilter<ISSABasicBlock> filterOnlyEdgeFilter = new ExceptionFilter2EdgeFilter<>(
-            filter.getFilter(node), cha, cfg_orig);
-        ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = PrunedCFG.make(cfg_orig, filterOnlyEdgeFilter);
-        ControlFlowGraph<SSAInstruction, ISSABasicBlock> exceptionPruned = PrunedCFG.make(cfg_orig, exceptionAnalysedEdgeFilter);
+        ExceptionFilter2EdgeFilter<ISSABasicBlock> filterOnlyEdgeFilter =
+            new ExceptionFilter2EdgeFilter<>(filter.getFilter(node), cha, cfg_orig);
+        ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg =
+            PrunedCFG.make(cfg_orig, filterOnlyEdgeFilter);
+        ControlFlowGraph<SSAInstruction, ISSABasicBlock> exceptionPruned =
+            PrunedCFG.make(cfg_orig, exceptionAnalysedEdgeFilter);
 
         for (ISSABasicBlock block : cfg) {
           if (exceptionPruned.containsNode(block)) {
             for (ISSABasicBlock normalSucc : cfg.getNormalSuccessors(block)) {
               if (!exceptionPruned.getNormalSuccessors(block).contains(normalSucc)) {
                 checkRemovingNormalOk(node, cfg, block, normalSucc);
-                if (node.getMethod().getDeclaringClass().getName().getClassName().toString().equals("TestPruning")) {
+                if (node.getMethod()
+                    .getDeclaringClass()
+                    .getName()
+                    .getClassName()
+                    .toString()
+                    .equals("TestPruning")) {
                   deletedNormal += 1;
                 }
               }
@@ -134,10 +148,16 @@ public class ExceptionAnalysis2EdgeFilterTest {
 
             for (ISSABasicBlock exceptionalSucc : cfg.getExceptionalSuccessors(block)) {
               if (!exceptionPruned.getExceptionalSuccessors(block).contains(exceptionalSucc)) {
-                if (node.getMethod().getDeclaringClass().getName().getClassName().toString().equals("TestPruning")) {
+                if (node.getMethod()
+                    .getDeclaringClass()
+                    .getName()
+                    .getClassName()
+                    .toString()
+                    .equals("TestPruning")) {
                   boolean count = true;
                   SSAInstruction instruction = block.getLastInstruction();
-                  if (instruction instanceof SSAInvokeInstruction && ((SSAInvokeInstruction) instruction).isSpecial()) {
+                  if (instruction instanceof SSAInvokeInstruction
+                      && ((SSAInvokeInstruction) instruction).isSpecial()) {
                     count = false;
                   }
 
@@ -187,9 +207,13 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
   }
 
-  private static void checkRemovingNormalOk(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock block,
+  private static void checkRemovingNormalOk(
+      CGNode node,
+      ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg,
+      ISSABasicBlock block,
       ISSABasicBlock normalSucc) {
-    if (!block.getLastInstruction().isPEI() || !filter.getFilter(node).alwaysThrowsException(block.getLastInstruction())) {
+    if (!block.getLastInstruction().isPEI()
+        || !filter.getFilter(node).alwaysThrowsException(block.getLastInstruction())) {
       specialCaseThrowFiltered(cfg, normalSucc);
     } else {
       assertTrue(block.getLastInstruction().isPEI());
@@ -198,13 +222,14 @@ public class ExceptionAnalysis2EdgeFilterTest {
   }
 
   /**
-   * If a filtered exception is thrown explicit with a throw command, all
-   * previous nodes, which only have normal edges to the throw statement will be
-   * deleted. They don't have a connection to the exit node anymore.
-   * 
-   * So, if there is a throw statement as normal successor, evrything is fine.
+   * If a filtered exception is thrown explicit with a throw command, all previous nodes, which only
+   * have normal edges to the throw statement will be deleted. They don't have a connection to the
+   * exit node anymore.
+   *
+   * <p>So, if there is a throw statement as normal successor, evrything is fine.
    */
-  private static void specialCaseThrowFiltered(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
+  private static void specialCaseThrowFiltered(
+      ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
     ISSABasicBlock next = normalSucc;
     while (!(next.getLastInstruction() instanceof SSAThrowInstruction)) {
       assertTrue(cfg.getNormalSuccessors(next).iterator().hasNext());
@@ -212,7 +237,8 @@ public class ExceptionAnalysis2EdgeFilterTest {
     }
   }
 
-  private static void checkNoNewEdges(ControlFlowGraph<SSAInstruction, ISSABasicBlock> original,
+  private static void checkNoNewEdges(
+      ControlFlowGraph<SSAInstruction, ISSABasicBlock> original,
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> filtered) {
     for (ISSABasicBlock block : filtered) {
       for (ISSABasicBlock normalSucc : filtered.getNormalSuccessors(block)) {

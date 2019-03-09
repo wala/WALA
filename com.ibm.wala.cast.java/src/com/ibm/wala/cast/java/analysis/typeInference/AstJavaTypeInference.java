@@ -33,14 +33,21 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   protected IClass stringClass;
 
-  protected class AstJavaTypeOperatorFactory extends AstTypeOperatorFactory implements AstJavaInstructionVisitor {
+  protected class AstJavaTypeOperatorFactory extends AstTypeOperatorFactory
+      implements AstJavaInstructionVisitor {
     @Override
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       if (doPrimitives) {
         IBinaryOpInstruction.IOperator op = instruction.getOperator();
-        if (op == CAstBinaryOp.EQ || op == CAstBinaryOp.NE || op == CAstBinaryOp.LT
-            || op == CAstBinaryOp.GE || op == CAstBinaryOp.GT || op == CAstBinaryOp.LE) {
-          result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
+        if (op == CAstBinaryOp.EQ
+            || op == CAstBinaryOp.NE
+            || op == CAstBinaryOp.LT
+            || op == CAstBinaryOp.GE
+            || op == CAstBinaryOp.GT
+            || op == CAstBinaryOp.LE) {
+          result =
+              new DeclaredTypeOperator(
+                  language.getPrimitive(language.getConstantType(Boolean.TRUE)));
         } else {
           result = new PrimAndStringOp();
         }
@@ -93,7 +100,6 @@ public class AstJavaTypeInference extends AstTypeInference {
         return super.makeVariable(valueNumber);
       }
     }
-
   }
 
   public AstJavaTypeInference(IR ir, boolean doPrimitives) {
@@ -124,8 +130,7 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   protected class PrimAndStringOp extends PrimitivePropagateOperator {
 
-    private PrimAndStringOp() {
-    }
+    private PrimAndStringOp() {}
 
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
@@ -165,7 +170,7 @@ public class AstJavaTypeInference extends AstTypeInference {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
     @Override
@@ -175,7 +180,7 @@ public class AstJavaTypeInference extends AstTypeInference {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
     @Override
@@ -183,5 +188,4 @@ public class AstJavaTypeInference extends AstTypeInference {
       return o != null && o.getClass().equals(getClass());
     }
   }
-
 }

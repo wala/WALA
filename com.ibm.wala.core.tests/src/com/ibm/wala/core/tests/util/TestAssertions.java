@@ -3,7 +3,6 @@ package com.ibm.wala.core.tests.util;
 import java.util.Collection;
 import java.util.Collections;
 
-
 public abstract class TestAssertions {
 
   public abstract void assertEquals(Object findOrCreate, Object type);
@@ -39,5 +38,4 @@ public abstract class TestAssertions {
     System.err.println(msg);
     assertTrue(msg, quantity <= bound);
   }
-
 }

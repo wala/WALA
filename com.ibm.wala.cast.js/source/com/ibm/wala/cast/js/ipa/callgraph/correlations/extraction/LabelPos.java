@@ -15,9 +15,8 @@ import com.ibm.wala.cast.tree.CAstNode;
 /**
  * A {@link NodePos} for a node that labels a CFG edge; currently only seems to occur with 'switch'
  * statements.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public class LabelPos extends NodePos {
   private final CAstNode parent;
@@ -40,5 +39,4 @@ public class LabelPos extends NodePos {
   public <A> A accept(PosSwitch<A> ps) {
     return ps.caseLabelPos(this);
   }
-
 }

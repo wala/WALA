@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,12 +47,7 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-
 import static org.jf.dexlib2.AccessFlags.*;
-
-import java.util.Collection;
-
-import org.jf.dexlib2.iface.Field;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -62,122 +57,116 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Collection;
+import org.jf.dexlib2.iface.Field;
 
 public class DexIField implements IField {
 
-/*
- * The EncodedFied object for which this DexIField is a wrapper
- */
-    private final Field eField;
+  /*
+   * The EncodedFied object for which this DexIField is a wrapper
+   */
+  private final Field eField;
 
-    /**
-     * The declaring class for this method.
-     */
-    private final DexIClass myClass;
+  /** The declaring class for this method. */
+  private final DexIClass myClass;
 
-    /**
-     * name of the return type for this method,
-     * construct in the get return type method.
-     */
-    //private TypeReference typeReference;
+  /** name of the return type for this method, construct in the get return type method. */
+  // private TypeReference typeReference;
 
-    /**
-     * canonical FieldReference corresponding to this method,
-     * construct in the getReference method.
-     */
-    private FieldReference fieldReference, myFieldRef;
+  /**
+   * canonical FieldReference corresponding to this method, construct in the getReference method.
+   */
+  private FieldReference fieldReference, myFieldRef;
 
-    private Atom name;
+  private Atom name;
 
+  public DexIField(Field encodedField, DexIClass klass) {
+    // public DexIField(EncodedField encodedField) {
+    eField = encodedField;
+    myClass = klass;
+    String fieldName = eField.getName();
+    name = Atom.findOrCreateUnicodeAtom(fieldName);
 
-    public DexIField(Field encodedField, DexIClass klass) {
-    //public DexIField(EncodedField encodedField) {
-        eField = encodedField;
-        myClass = klass;
-        String fieldName = eField.getName();
-		name = Atom.findOrCreateUnicodeAtom(fieldName);
+    String fieldType = eField.getType();
+    TypeName T = DexUtil.getTypeName(fieldType);
+    TypeReference type = TypeReference.findOrCreate(myClass.getClassLoader().getReference(), T);
+    myFieldRef = FieldReference.findOrCreate(myClass.getReference(), name, type);
+  }
 
-        String fieldType = eField.getType();
-		TypeName T = DexUtil.getTypeName(fieldType);
-        TypeReference type = TypeReference.findOrCreate(myClass.getClassLoader().getReference(), T);
-        myFieldRef = FieldReference.findOrCreate(myClass.getReference(), name, type);
+  @Override
+  public TypeReference getFieldTypeReference() {
+
+    // compute the typeReference from the EncodedField
+    //      if (typeReference == null) {
+    //          typeReference = TypeReference.findOrCreate(myClass.getClassLoader()
+    //                  .getReference(), eField.field.getFieldType().getTypeDescriptor());
+    //      }
+    //      return typeReference;
+    return myFieldRef.getFieldType();
+  }
+
+  @Override
+  public FieldReference getReference() {
+
+    if (fieldReference == null) {
+      //          fieldReference = FieldReference.findOrCreate(myClass.getReference(),
+      //                  eField.field.getContainingClass().getTypeDescriptor(),
+      // eField.field.getFieldName().getStringValue(),
+      //                  eField.field.getFieldType().getTypeDescriptor());
+      fieldReference =
+          FieldReference.findOrCreate(myClass.getReference(), getName(), getFieldTypeReference());
     }
 
-	@Override
-	public TypeReference getFieldTypeReference() {
+    return fieldReference;
+  }
 
-        //compute the typeReference from the EncodedField
-//      if (typeReference == null) {
-//          typeReference = TypeReference.findOrCreate(myClass.getClassLoader()
-//                  .getReference(), eField.field.getFieldType().getTypeDescriptor());
-//      }
-//      return typeReference;
-        return myFieldRef.getFieldType();
+  @Override
+  public Atom getName() {
+    return name;
+  }
 
-    }
+  @Override
+  public boolean isFinal() {
+    return (eField.getAccessFlags() & FINAL.getValue()) != 0;
+  }
 
-    @Override
-    public FieldReference getReference() {
+  @Override
+  public boolean isPrivate() {
+    return (eField.getAccessFlags() & PRIVATE.getValue()) != 0;
+  }
 
-        if (fieldReference == null) {
-//          fieldReference = FieldReference.findOrCreate(myClass.getReference(),
-//                  eField.field.getContainingClass().getTypeDescriptor(), eField.field.getFieldName().getStringValue(),
-//                  eField.field.getFieldType().getTypeDescriptor());
-            fieldReference = FieldReference.findOrCreate(myClass.getReference(), getName(), getFieldTypeReference());
-        }
+  @Override
+  public boolean isProtected() {
+    return (eField.getAccessFlags() & PROTECTED.getValue()) != 0;
+  }
 
-        return fieldReference;
+  @Override
+  public boolean isPublic() {
+    return (eField.getAccessFlags() & PUBLIC.getValue()) != 0;
+  }
 
-    }
+  @Override
+  public boolean isStatic() {
+    return (eField.getAccessFlags() & STATIC.getValue()) != 0;
+  }
 
-    @Override
-    public Atom getName() {
-        return name;
-    }
+  @Override
+  public IClass getDeclaringClass() {
+    return myClass;
+  }
 
-    @Override
-    public boolean isFinal() {
-        return (eField.getAccessFlags() & FINAL.getValue()) != 0;
-    }
+  @Override
+  public boolean isVolatile() {
+    return (eField.getAccessFlags() & VOLATILE.getValue()) != 0;
+  }
 
-    @Override
-    public boolean isPrivate() {
-        return (eField.getAccessFlags() & PRIVATE.getValue()) != 0;
-    }
+  @Override
+  public IClassHierarchy getClassHierarchy() {
+    return myClass.getClassHierarchy();
+  }
 
-    @Override
-    public boolean isProtected() {
-        return (eField.getAccessFlags() & PROTECTED.getValue()) != 0;
-    }
-
-    @Override
-    public boolean isPublic() {
-        return (eField.getAccessFlags() & PUBLIC.getValue()) != 0;
-    }
-
-    @Override
-    public boolean isStatic() {
-        return (eField.getAccessFlags() & STATIC.getValue()) != 0;
-    }
-
-    @Override
-    public IClass getDeclaringClass() {
-        return myClass;
-    }
-
-    @Override
-    public boolean isVolatile() {
-        return (eField.getAccessFlags() & VOLATILE.getValue()) != 0;
-    }
-
-    @Override
-    public IClassHierarchy getClassHierarchy() {
-        return myClass.getClassHierarchy();
-    }
-
-	@Override
-	public Collection<Annotation> getAnnotations() {
-		return myClass.getAnnotations(eField);
-	}
-
+  @Override
+  public Collection<Annotation> getAnnotations() {
+    return myClass.getAnnotations(eField);
+  }
 }

@@ -10,13 +10,12 @@
  */
 package com.ibm.wala.ssa;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
+import java.util.Iterator;
 
 public interface IRView {
 
@@ -41,5 +40,4 @@ public interface IRView {
   Iterator<ISSABasicBlock> getBlocks();
 
   String[] getLocalNames(int i, int v);
-  
 }

@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintStream;
-import java.io.Writer;
-
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -26,26 +21,31 @@ import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.analysis.Verifier;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintStream;
+import java.io.Writer;
 
 /**
  * This is a demo class.
- * 
- * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
- * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
- * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.MethodTracer test.jar -o
- * output.jar
- * 
- * All modified classes are copied into "output.jar". Some classes may not be modified. To run the resulting code, you should put
- * output.jar and test.jar on the classpath, and put output.jar before test.jar. Disassembled code is written to the file "report"
- * under the current directory.
+ *
+ * <p>Class files are taken as input arguments (or if there are none, from standard input). The
+ * methods in those files are instrumented: we insert a System.err.println() at ever method call,
+ * and a System.err.println() at every method entry.
+ *
+ * <p>In Unix, I run it like this: java -cp ~/dev/shrike/shrike
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.MethodTracer test.jar -o output.jar
+ *
+ * <p>All modified classes are copied into "output.jar". Some classes may not be modified. To run
+ * the resulting code, you should put output.jar and test.jar on the classpath, and put output.jar
+ * before test.jar. Disassembled code is written to the file "report" under the current directory.
  */
 public class MethodTracer {
-  private final static boolean disasm = true;
+  private static final boolean disasm = true;
 
-  private final static boolean verify = true;
+  private static final boolean verify = true;
 
-  private final static boolean INSTRUMENT_CALLERS = false;
+  private static final boolean INSTRUMENT_CALLERS = false;
 
   private static OfflineInstrumenter instrumenter;
 
@@ -72,7 +72,8 @@ public class MethodTracer {
   // are always immutable and shareable.
   static final Instruction getSysErr = Util.makeGet(System.class, "err");
 
-  static final Instruction callPrintln = Util.makeInvoke(PrintStream.class, "println", new Class[] { String.class });
+  static final Instruction callPrintln =
+      Util.makeInvoke(PrintStream.class, "println", new Class[] {String.class});
 
   private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {
     w.write("Class: " + ci.getReader().getName() + '\n');
@@ -83,7 +84,12 @@ public class MethodTracer {
 
       // d could be null, e.g., if the method is abstract or native
       if (d != null) {
-        w.write("Instrumenting " + ci.getReader().getMethodName(i) + ' ' + ci.getReader().getMethodType(i) + ":\n");
+        w.write(
+            "Instrumenting "
+                + ci.getReader().getMethodName(i)
+                + ' '
+                + ci.getReader().getMethodType(i)
+                + ":\n");
         w.flush();
 
         if (disasm) {
@@ -100,33 +106,47 @@ public class MethodTracer {
 
         MethodEditor me = new MethodEditor(d);
         me.beginPass();
-        final String msg0 = "Call to " + Util.makeClass('L' + ci.getReader().getName() + ';') + '.'
-            + ci.getReader().getMethodName(i);
+        final String msg0 =
+            "Call to "
+                + Util.makeClass('L' + ci.getReader().getName() + ';')
+                + '.'
+                + ci.getReader().getMethodName(i);
 
-        me.insertAtStart(new MethodEditor.Patch() {
-          @Override
-          public void emitTo(MethodEditor.Output w) {
-            w.emit(getSysErr);
-            w.emit(ConstantInstruction.makeString(msg0));
-            w.emit(callPrintln);
-          }
-        });
+        me.insertAtStart(
+            new MethodEditor.Patch() {
+              @Override
+              public void emitTo(MethodEditor.Output w) {
+                w.emit(getSysErr);
+                w.emit(ConstantInstruction.makeString(msg0));
+                w.emit(callPrintln);
+              }
+            });
         if (INSTRUMENT_CALLERS) {
           IInstruction[] ins = d.getInstructions();
           for (int k = 0; k < ins.length; k++) {
             if (ins[k] instanceof InvokeInstruction) {
               InvokeInstruction instr = (InvokeInstruction) ins[k];
-              final String msg = "Call from " + Util.makeClass('L' + ci.getReader().getName() + ';') + '.'
-                  + ci.getReader().getMethodName(i) + ':' + k + " to target " + Util.makeClass(instr.getClassType()) + '.'
-                  + instr.getMethodName();
-              me.insertBefore(k, new MethodEditor.Patch() {
-                @Override
-                public void emitTo(MethodEditor.Output w) {
-                  w.emit(getSysErr);
-                  w.emit(ConstantInstruction.makeString(msg));
-                  w.emit(callPrintln);
-                }
-              });
+              final String msg =
+                  "Call from "
+                      + Util.makeClass('L' + ci.getReader().getName() + ';')
+                      + '.'
+                      + ci.getReader().getMethodName(i)
+                      + ':'
+                      + k
+                      + " to target "
+                      + Util.makeClass(instr.getClassType())
+                      + '.'
+                      + instr.getMethodName();
+              me.insertBefore(
+                  k,
+                  new MethodEditor.Patch() {
+                    @Override
+                    public void emitTo(MethodEditor.Output w) {
+                      w.emit(getSysErr);
+                      w.emit(ConstantInstruction.makeString(msg));
+                      w.emit(callPrintln);
+                    }
+                  });
             }
           }
         }

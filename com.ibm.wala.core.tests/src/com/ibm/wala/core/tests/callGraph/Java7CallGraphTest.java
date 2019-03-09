@@ -11,12 +11,6 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.jar.JarFile;
-
-import org.junit.Test;
-
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
@@ -36,43 +30,61 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.io.TemporaryFile;
+import java.io.File;
+import java.io.IOException;
+import java.util.jar.JarFile;
+import org.junit.Test;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
-  @Test public void testOcamlHelloHash() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, InterruptedException {
+  @Test
+  public void testOcamlHelloHash()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
+          ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException,
+          InterruptedException {
     if (!"True".equals(System.getenv("APPVEYOR"))) {
       testOCamlJar("hello_hash.jar");
     }
   }
 
-  private void testOCamlJar(String jarFile, String... args) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, InterruptedException {   
-    File F = TemporaryFile.urlToFile(jarFile.replace('.',  '_') + ".jar", getClass().getClassLoader().getResource(jarFile));
+  private void testOCamlJar(String jarFile, String... args)
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
+          ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException,
+          InterruptedException {
+    File F =
+        TemporaryFile.urlToFile(
+            jarFile.replace('.', '_') + ".jar", getClass().getClassLoader().getResource(jarFile));
     F.deleteOnExit();
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            "base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     scope.addToScope(ClassLoaderReference.Application, new JarFile(F, false));
-    
+
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lpack/ocamljavaMain");
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lpack/ocamljavaMain");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     options.setUseConstantSpecificKeys(true);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
-    
-    SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+
+    SSAPropagationCallGraphBuilder builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
 
     MethodHandles.analyzeMethodHandles(options, builder);
-    
-    CallGraph cg = builder.makeCallGraph(options, null); 
-    
+
+    CallGraph cg = builder.makeCallGraph(options, null);
+
     System.err.println(cg);
 
     instrument(F.getAbsolutePath());
     run("pack.ocamljavaMain", null, args);
-    
-    checkNodes(cg, t -> {
-      String s = t.toString();
-      return s.contains("Lpack/") || s.contains("Locaml/stdlib/");
-    });
-  }
 
+    checkNodes(
+        cg,
+        t -> {
+          String s = t.toString();
+          return s.contains("Lpack/") || s.contains("Locaml/stdlib/");
+        });
+  }
 }

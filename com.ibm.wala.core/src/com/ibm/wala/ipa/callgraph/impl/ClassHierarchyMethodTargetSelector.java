@@ -19,20 +19,18 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A {@link MethodTargetSelector} that simply looks up the declared type, name and descriptor of a {@link CallSiteReference} in the
- * appropriate class hierarchy.
+ * A {@link MethodTargetSelector} that simply looks up the declared type, name and descriptor of a
+ * {@link CallSiteReference} in the appropriate class hierarchy.
  */
 public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector {
 
-  /**
-   * Governing class hierarchy
-   */
+  /** Governing class hierarchy */
   private final IClassHierarchy classHierarchy;
 
   /**
-   * Initialization. The class hierarchy is needed for lookups and the warnings are used when the lookups fails (which should never
-   * happen).
-   * 
+   * Initialization. The class hierarchy is needed for lookups and the warnings are used when the
+   * lookups fails (which should never happen).
+   *
    * @param cha The class hierarchy to use.
    */
   public ClassHierarchyMethodTargetSelector(IClassHierarchy cha) {
@@ -40,9 +38,9 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   }
 
   /**
-   * This target selector searches the class hierarchy for the method matching the signature of the call that is appropriate for the
-   * receiver type.
-   * 
+   * This target selector searches the class hierarchy for the method matching the signature of the
+   * call that is appropriate for the receiver type.
+   *
    * @throws IllegalArgumentException if call is null
    */
   @Override

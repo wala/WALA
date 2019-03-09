@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -47,19 +47,6 @@
 
 package org.scandroid.spec;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.scandroid.domain.CodeElement;
-import org.scandroid.domain.InstanceKeyElement;
-import org.scandroid.flow.InflowAnalysis;
-import org.scandroid.flow.types.FlowType;
-import org.scandroid.flow.types.ParameterFlow;
-import org.scandroid.util.CGAnalysisContext;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -71,62 +58,73 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.collections.HashSetFactory;
-
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import org.scandroid.domain.CodeElement;
+import org.scandroid.domain.InstanceKeyElement;
+import org.scandroid.flow.InflowAnalysis;
+import org.scandroid.flow.types.FlowType;
+import org.scandroid.flow.types.ParameterFlow;
+import org.scandroid.util.CGAnalysisContext;
 
 /**
  * CallArgSourceSpecs represent sources that are arguments to another function.
- * 
- * For example, if code you analyze invokes a function {@code foo(Object obj)}
- * and foo <em>writes</em> to the argument, then {@code obj} would be a source.
- * 
+ *
+ * <p>For example, if code you analyze invokes a function {@code foo(Object obj)} and foo
+ * <em>writes</em> to the argument, then {@code obj} would be a source.
  */
 public class CallArgSourceSpec extends SourceSpec {
-	final String name = "CallArgSource";
+  final String name = "CallArgSource";
 
-	public CallArgSourceSpec(MethodNamePattern name, int[] args) {
-		namePattern = name;
-		argNums = args;
-	}
+  public CallArgSourceSpec(MethodNamePattern name, int[] args) {
+    namePattern = name;
+    argNums = args;
+  }
 
-	@Override
-	public <E extends ISSABasicBlock> void addDomainElements(
-			CGAnalysisContext<E> ctx,
-			Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
-			IMethod target, BasicBlockInContext<E> block,
-			SSAInvokeInstruction invInst, int[] newArgNums,
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-			PointerAnalysis<InstanceKey> pa, CallGraph cg) {
+  @Override
+  public <E extends ISSABasicBlock> void addDomainElements(
+      CGAnalysisContext<E> ctx,
+      Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
+      IMethod target,
+      BasicBlockInContext<E> block,
+      SSAInvokeInstruction invInst,
+      int[] newArgNums,
+      ISupergraph<BasicBlockInContext<E>, CGNode> graph,
+      PointerAnalysis<InstanceKey> pa,
+      CallGraph cg) {
 
-		for (int newArgNum : newArgNums) {
-			for (FlowType<E> ft : getFlowType(block)) {
-				// a collection of a LocalElement for this argument's SSA value,
-				// along with a set of InstanceKeyElements for each instance
-				// that this SSA value might point to
-				final int ssaVal = invInst.getUse(newArgNum);
-				final CGNode node = block.getNode();
-				Set<CodeElement> valueElements = CodeElement.valueElements(ssaVal);
-				PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, ssaVal);
-				for (InstanceKey ik : pa.getPointsToSet(pk)) {
-					valueElements.add(new InstanceKeyElement(ik));
-				}
-				
-				InflowAnalysis.addDomainElements(taintMap, block, ft,
-						valueElements);
-			}
-		}
-	}
+    for (int newArgNum : newArgNums) {
+      for (FlowType<E> ft : getFlowType(block)) {
+        // a collection of a LocalElement for this argument's SSA value,
+        // along with a set of InstanceKeyElements for each instance
+        // that this SSA value might point to
+        final int ssaVal = invInst.getUse(newArgNum);
+        final CGNode node = block.getNode();
+        Set<CodeElement> valueElements = CodeElement.valueElements(ssaVal);
+        PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, ssaVal);
+        for (InstanceKey ik : pa.getPointsToSet(pk)) {
+          valueElements.add(new InstanceKeyElement(ik));
+        }
 
-	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
-			BasicBlockInContext<E> block) {
-		HashSet<FlowType<E>> flowSet = HashSetFactory.make();
-		for (int i : argNums) {
-			flowSet.add(new ParameterFlow<>(block, i, true));
-		}
-		return flowSet;
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("CallArgSourceSpec(%s, %s)", namePattern, Arrays.toString(argNums));
-	}
+        InflowAnalysis.addDomainElements(taintMap, block, ft, valueElements);
+      }
+    }
+  }
+
+  public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
+      BasicBlockInContext<E> block) {
+    HashSet<FlowType<E>> flowSet = HashSetFactory.make();
+    for (int i : argNums) {
+      flowSet.add(new ParameterFlow<>(block, i, true));
+    }
+    return flowSet;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("CallArgSourceSpec(%s, %s)", namePattern, Arrays.toString(argNums));
+  }
 }

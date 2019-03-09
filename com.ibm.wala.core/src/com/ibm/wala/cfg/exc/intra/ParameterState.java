@@ -11,56 +11,54 @@
 
 package com.ibm.wala.cfg.exc.intra;
 
+import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.fixpoint.AbstractVariable;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.fixpoint.AbstractVariable;
 /**
  * Encapsulates the state of all parameters of an invoked method
- * 
- * @author markus
  *
+ * @author markus
  */
 public class ParameterState extends AbstractVariable<ParameterState> {
   /*
    * Inital state is UNKNOWN.
-   * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN 
-   * 
+   * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN
+   *
    * public enum State { UNKNOWN, BOTH, NULL, NOT_NULL }; as defined in NullPointerState
-   * 
+   *
    */
-  
+
   public static final int NO_THIS_PTR = -1;
-  
+
   // maps the parmeter's varNum --> State
   private final HashMap<Integer, State> params = new HashMap<>();
-  
+
   public static ParameterState createDefault(IMethod m) {
     ParameterState p = new ParameterState();
-    
+
     if (!m.isStatic()) {
       // set this pointer to NOT_NULL
       p.setState(0, State.NOT_NULL);
     }
-    
+
     return p;
   }
-  
-  public ParameterState() {
-  }
-  
+
+  public ParameterState() {}
+
   /**
    * Constructor to make a {@code ParameteState} out of a regular {@code NullPointerState}.
-   * 
+   *
    * @param state The {@code NullPointerState} to parse.
    * @param parameterNumbers The numbers of parameters in {@code state}
    */
   public ParameterState(NullPointerState state, int[] parameterNumbers) {
-    //by convention the first ssa vars are the parameters
-    for (int i=0; i < parameterNumbers.length; i++){
+    // by convention the first ssa vars are the parameters
+    for (int i = 0; i < parameterNumbers.length; i++) {
       params.put(i, state.getState(parameterNumbers[i]));
     }
   }
@@ -69,42 +67,44 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     State prev = params.get(varNum);
     if (prev != null) {
       switch (prev) {
-      case UNKNOWN:
-        if (state != State.UNKNOWN) {
-          throw new IllegalArgumentException("Try to set " + prev + " to " + state);
-        }
-        break;
-      case NULL:
-        if (!(state == State.BOTH || state == State.NULL)) {
-          throw new IllegalArgumentException("Try to set " + prev + " to " + state);
-        }
-        break;
-      case NOT_NULL:
-        if (!(state == State.BOTH || state == State.NOT_NULL)) {
-          throw new IllegalArgumentException("Try to set " + prev + " to " + state);
-        }
-        break;
-      default:
-        throw new UnsupportedOperationException(String.format("unexpected previous state %s", prev));
+        case UNKNOWN:
+          if (state != State.UNKNOWN) {
+            throw new IllegalArgumentException("Try to set " + prev + " to " + state);
+          }
+          break;
+        case NULL:
+          if (!(state == State.BOTH || state == State.NULL)) {
+            throw new IllegalArgumentException("Try to set " + prev + " to " + state);
+          }
+          break;
+        case NOT_NULL:
+          if (!(state == State.BOTH || state == State.NOT_NULL)) {
+            throw new IllegalArgumentException("Try to set " + prev + " to " + state);
+          }
+          break;
+        default:
+          throw new UnsupportedOperationException(
+              String.format("unexpected previous state %s", prev));
       }
     }
     params.put(varNum, state);
   }
-  
+
   public HashMap<Integer, State> getStates() {
     return this.params;
   }
-  
+
   /**
    * Returns the state of an specified parameter.
-   * 
+   *
    * @param varNum The SSA var num of the parameter
    * @return the state of the parameter defined with {@code varNum}
    */
   public State getState(int varNum) {
     State state = params.get(varNum);
     if (state == null) {
-      throw new IllegalArgumentException("No mapping for variable " + varNum + "in ParameterState " + this.toString());
+      throw new IllegalArgumentException(
+          "No mapping for variable " + varNum + "in ParameterState " + this.toString());
     }
     return state;
   }
@@ -113,32 +113,32 @@ public class ParameterState extends AbstractVariable<ParameterState> {
   public void copyState(ParameterState v) {
     throw new UnsupportedOperationException();
   }
-  
+
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder("<");
     Set<Entry<Integer, State>> paramsSet = params.entrySet();
-        
-    for (Entry<Integer, State> param : paramsSet){
+
+    for (Entry<Integer, State> param : paramsSet) {
       switch (param.getValue()) {
-      case BOTH:
-        buf.append('*');
-        break;
-      case NOT_NULL:
-        buf.append('1');
-        break;
-      case NULL:
-        buf.append('0');
-        break;
-      case UNKNOWN:
-        buf.append('?');
-        break;
-      default:
-        throw new IllegalStateException();
+        case BOTH:
+          buf.append('*');
+          break;
+        case NOT_NULL:
+          buf.append('1');
+          break;
+        case NULL:
+          buf.append('0');
+          break;
+        case UNKNOWN:
+          buf.append('?');
+          break;
+        default:
+          throw new IllegalStateException();
       }
     }
     buf.append('>');
-    
+
     return buf.toString();
   }
 }

@@ -12,7 +12,8 @@ package reflection;
 
 public class Reflect2 {
 
-  public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public static void main(String[] args)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     Class.forName("java.lang.Integer");
   }
 }

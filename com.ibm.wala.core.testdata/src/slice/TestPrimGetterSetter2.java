@@ -14,15 +14,18 @@ public class TestPrimGetterSetter2 {
 
   static class IntWrapper {
     int i;
-   
-    int getI() { return i; }
-   
+
+    int getI() {
+      return i;
+    }
+
     void setI(int i) {
       this.i = i;
     }
   }
- 
+
   public static void doNothing(int i) {}
+
   public static void main(String[] args) {
     IntWrapper w1 = new IntWrapper();
     w1.setI(4);

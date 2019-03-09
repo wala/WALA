@@ -10,40 +10,33 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
-
-/**
- * A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable
- */
+/** A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable */
 public class SparseIntSet implements IntSet {
 
   private static final long serialVersionUID = 2394141733718319022L;
 
-  private final static int SINGLETON_CACHE_SIZE = 5000;
+  private static final int SINGLETON_CACHE_SIZE = 5000;
 
-  private final static SparseIntSet[] singletonCache = new SparseIntSet[SINGLETON_CACHE_SIZE];
+  private static final SparseIntSet[] singletonCache = new SparseIntSet[SINGLETON_CACHE_SIZE];
 
   static {
     for (int i = 0; i < SINGLETON_CACHE_SIZE; i++) {
-      singletonCache[i] = new SparseIntSet(new int[] { i });
+      singletonCache[i] = new SparseIntSet(new int[] {i});
     }
   }
 
   // TODO: I'm not thrilled with exposing these to subclasses, but
   // it seems expedient for now.
-  /**
-   * The backing store of int arrays
-   */
+  /** The backing store of int arrays */
   protected int[] elements;
 
-  /**
-   * The number of entries in the backing store that are valid.
-   */
+  /** The number of entries in the backing store that are valid. */
   protected int size = 0;
 
   protected SparseIntSet(int size) {
@@ -52,7 +45,8 @@ public class SparseIntSet implements IntSet {
   }
 
   /**
-   * Subclasses should use this with extreme care. Do not allow the backing array to escape elsewhere.
+   * Subclasses should use this with extreme care. Do not allow the backing array to escape
+   * elsewhere.
    */
   protected SparseIntSet(int[] backingArray) {
     if (backingArray == null) {
@@ -62,9 +56,7 @@ public class SparseIntSet implements IntSet {
     this.size = backingArray.length;
   }
 
-  /**
-   * Subclasses should use this with extreme care.
-   */
+  /** Subclasses should use this with extreme care. */
   public SparseIntSet() {
     elements = null;
     this.size = 0;
@@ -73,7 +65,6 @@ public class SparseIntSet implements IntSet {
   protected SparseIntSet(SparseIntSet S) {
     cloneState(S);
   }
-
 
   private void cloneState(SparseIntSet S) {
     if (S.elements != null) {
@@ -93,21 +84,19 @@ public class SparseIntSet implements IntSet {
     } else {
       elements = new int[S.size()];
       size = S.size();
-      S.foreach(new IntSetAction() {
-        private int index = 0;
+      S.foreach(
+          new IntSetAction() {
+            private int index = 0;
 
-        @Override
-        public void act(int i) {
-          elements[index++] = i;
-        }
-      });
+            @Override
+            public void act(int i) {
+              elements[index++] = i;
+            }
+          });
     }
   }
 
-  /**
-   * Does this set contain value x?
-   *
-   */
+  /** Does this set contain value x? */
   @Override
   public final boolean contains(int x) {
     if (elements == null) {
@@ -116,9 +105,7 @@ public class SparseIntSet implements IntSet {
     return IntSetUtil.binarySearch(elements, x, 0, size - 1) >= 0;
   }
 
-  /**
-   * @return index i s.t. elements[i] == x, or -1 if not found.
-   */
+  /** @return index i s.t. elements[i] == x, or -1 if not found. */
   public final int getIndex(int x) {
     if (elements == null) {
       return -1;
@@ -180,17 +167,13 @@ public class SparseIntSet implements IntSet {
 
   /**
    * @return true iff {@code this} is a subset of {@code that}.
-   * 
-   * Faster than: {@code this.diff(that) == EMPTY}.
+   *     <p>Faster than: {@code this.diff(that) == EMPTY}.
    */
   private boolean isSubsetInternal(SparseIntSet that) {
 
-    if (elements == null)
-      return true;
-    if (that.elements == null)
-      return false;
-    if (this.equals(that))
-      return true;
+    if (elements == null) return true;
+    if (that.elements == null) return false;
+    if (this.equals(that)) return true;
     if (this.sameValue(that)) {
       return true;
     }
@@ -222,9 +205,7 @@ public class SparseIntSet implements IntSet {
     return true;
   }
 
-  /**
-   * Compute the asymmetric difference of two sets, a \ b.
-   */
+  /** Compute the asymmetric difference of two sets, a \ b. */
   public static SparseIntSet diff(SparseIntSet A, SparseIntSet B) {
     return new SparseIntSet(diffInternal(A, B));
   }
@@ -302,9 +283,10 @@ public class SparseIntSet implements IntSet {
 
   /**
    * Reverse of toString(): "{2,3}" -&gt; [2,3]
+   *
    * @throws IllegalArgumentException if str is null
    */
-  public static int[] parseIntArray(String str)  {
+  public static int[] parseIntArray(String str) {
     if (str == null) {
       throw new IllegalArgumentException("str is null");
     }
@@ -332,7 +314,7 @@ public class SparseIntSet implements IntSet {
     if (i >= 0 && i < SINGLETON_CACHE_SIZE) {
       return singletonCache[i];
     } else {
-      return new SparseIntSet(new int[] { i });
+      return new SparseIntSet(new int[] {i});
     }
   }
 
@@ -341,9 +323,9 @@ public class SparseIntSet implements IntSet {
       return SparseIntSet.singleton(i);
     }
     if (j > i) {
-      return new SparseIntSet(new int[] { i, j });
+      return new SparseIntSet(new int[] {i, j});
     } else {
-      return new SparseIntSet(new int[] { j, i });
+      return new SparseIntSet(new int[] {j, i});
     }
   }
 
@@ -368,7 +350,7 @@ public class SparseIntSet implements IntSet {
     } else {
       // this is really slow. optimize as needed.
       MutableSparseIntSet temp = MutableSparseIntSet.makeEmpty();
-      for (IntIterator it = intIterator(); it.hasNext();) {
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
         int x = it.next();
         if (that.contains(x)) {
           temp.add(x);
@@ -376,7 +358,6 @@ public class SparseIntSet implements IntSet {
       }
       return temp;
     }
-
   }
 
   /*
@@ -414,9 +395,7 @@ public class SparseIntSet implements IntSet {
     };
   }
 
-  /**
-   * @return the largest element in the set
-   */
+  /** @return the largest element in the set */
   @Override
   public final int max() throws IllegalStateException {
     if (elements == null) {
@@ -433,8 +412,7 @@ public class SparseIntSet implements IntSet {
     if (action == null) {
       throw new IllegalArgumentException("null action");
     }
-    for (int i = 0; i < size; i++)
-      action.act(elements[i]);
+    for (int i = 0; i < size; i++) action.act(elements[i]);
   }
 
   /*
@@ -499,7 +477,7 @@ public class SparseIntSet implements IntSet {
       return isSubsetInternal((BitVectorIntSet) that);
     } else {
       // really slow. optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext();) {
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
         if (!that.contains(it.next())) {
           return false;
         }
@@ -555,9 +533,7 @@ public class SparseIntSet implements IntSet {
     return false;
   }
 
-  /**
-   * @return contents as an int[]
-   */
+  /** @return contents as an int[] */
   public int[] toIntArray() {
     int[] result = new int[size];
     if (size > 0) {

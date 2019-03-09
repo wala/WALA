@@ -42,6 +42,5 @@ public class MonitorTest {
     }
   }
 
-  void dummy() {
-  }
+  void dummy() {}
 }

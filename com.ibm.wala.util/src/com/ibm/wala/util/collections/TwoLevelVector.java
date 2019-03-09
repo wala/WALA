@@ -10,16 +10,13 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.math.Logs;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.math.Logs;
-
-/**
- * An {@link IVector} implementation which delegates to pages of int vectors.
- */
+/** An {@link IVector} implementation which delegates to pages of int vectors. */
 public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
   private static final long serialVersionUID = -835376054736611070L;
@@ -28,11 +25,8 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
   private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
 
-  /**
-   * Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ...
-   * data[(i+1)*PAGESIZE - 1]
-   */
-  final private Vector<SparseVector<T>> data = new Vector<>(0);
+  /** Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1] */
+  private final Vector<SparseVector<T>> data = new Vector<>(0);
 
   private int maxPage = -1;
 
@@ -66,7 +60,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
   /*
    * TODO: this can be optimized
-   * 
+   *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
@@ -119,6 +113,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
       final Iterator<SparseVector<T>> outer = data.iterator();
 
       Iterator<T> inner;
+
       {
         while (outer.hasNext()) {
           IVector<T> v = outer.next();
@@ -173,7 +168,5 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
       int localMax = v.getMaxIndex();
       return maxPage * PAGE_SIZE + localMax;
     }
-
   }
-
 }

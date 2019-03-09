@@ -11,14 +11,15 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This instruction represents the swap instruction, which swaps the two values on top of the working stack.
+ * This instruction represents the swap instruction, which swaps the two values on top of the
+ * working stack.
  */
 public final class SwapInstruction extends Instruction {
   protected SwapInstruction() {
     super((short) -1);
   }
 
-  private final static SwapInstruction preallocated = new SwapInstruction();
+  private static final SwapInstruction preallocated = new SwapInstruction();
 
   public static SwapInstruction make() {
     return preallocated;

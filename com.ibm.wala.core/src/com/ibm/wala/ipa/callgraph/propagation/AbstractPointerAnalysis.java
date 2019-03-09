@@ -10,34 +10,25 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.Collection;
+import java.util.Collections;
 
-/**
- * Abstract superclass for {@link PointerAnalysis} implementations.
- */
+/** Abstract superclass for {@link PointerAnalysis} implementations. */
 public abstract class AbstractPointerAnalysis implements PointerAnalysis<InstanceKey> {
 
-  /**
-   * graph representation of pointer-analysis results
-   */
+  /** graph representation of pointer-analysis results */
   private HeapGraph<InstanceKey> heapGraph;
-  /**
-   * Governing call graph.
-   */
+  /** Governing call graph. */
   private final CallGraph cg;
 
-  /**
-   * bijection from InstanceKey &lt;=&gt; Integer
-   */
+  /** bijection from InstanceKey &lt;=&gt; Integer */
   protected final MutableMapping<InstanceKey> instanceKeys;
-  
+
   protected AbstractPointerAnalysis(CallGraph cg, MutableMapping<InstanceKey> instanceKeys) {
     this.cg = cg;
     this.instanceKeys = instanceKeys;

@@ -14,7 +14,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * An implementation of {@link MutableIntSet} that delegates to either a {@link MutableSparseIntSet} or a {@link BitVectorIntSet}
+ * An implementation of {@link MutableIntSet} that delegates to either a {@link MutableSparseIntSet}
+ * or a {@link BitVectorIntSet}
  */
 public class BimodalMutableIntSet implements MutableIntSet {
 
@@ -45,9 +46,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
   }
 
-  /**
-   * @return true iff we would like to use the same representation for V as we do for W
-   */
+  /** @return true iff we would like to use the same representation for V as we do for W */
   private static boolean sameRepresentation(IntSet V, IntSet W) {
     // for now we assume that we always want to use the same representation for
     // V as
@@ -89,10 +88,10 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * If appropriate, change the representation of V.
-   * 
-   * For now, this method will change a MutableSparseIntSet to a BitVector if it saves space.
-   * 
-   * TODO: add more variants.
+   *
+   * <p>For now, this method will change a MutableSparseIntSet to a BitVector if it saves space.
+   *
+   * <p>TODO: add more variants.
    */
   private void maybeChangeRepresentation() {
     assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
@@ -240,7 +239,8 @@ public class BimodalMutableIntSet implements MutableIntSet {
     return impl.max();
   }
 
-  public static BimodalMutableIntSet makeCopy(IntSet B) throws UnimplementedError, IllegalArgumentException {
+  public static BimodalMutableIntSet makeCopy(IntSet B)
+      throws UnimplementedError, IllegalArgumentException {
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }
@@ -261,7 +261,6 @@ public class BimodalMutableIntSet implements MutableIntSet {
       assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
       return result;
     }
-
   }
 
   public BimodalMutableIntSet() {
@@ -272,17 +271,15 @@ public class BimodalMutableIntSet implements MutableIntSet {
     impl = new TunedMutableSparseIntSet(initialSize, expansionFactor);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.util.intset.MutableIntSet#clear()
    */
   @Override
   public void clear() {
     impl = MutableSparseIntSet.makeEmpty();
   }
-  
-  /**
-   * @throws IllegalArgumentException if x is null
-   */
+
+  /** @throws IllegalArgumentException if x is null */
   public BimodalMutableIntSet(BimodalMutableIntSet x) {
     if (x == null) {
       throw new IllegalArgumentException("x is null");
@@ -318,10 +315,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * use with care
-   * 
-   */
+  /** use with care */
   public IntSet getBackingStore() {
     return impl;
   }
@@ -354,7 +348,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * TODO: optimize ME!
-   * 
+   *
    * @throws IllegalArgumentException if that is null
    */
   public boolean removeAll(IntSet that) {
@@ -362,23 +356,22 @@ public class BimodalMutableIntSet implements MutableIntSet {
       throw new IllegalArgumentException("that is null");
     }
     boolean result = false;
-    for (IntIterator it = that.intIterator(); it.hasNext();) {
+    for (IntIterator it = that.intIterator(); it.hasNext(); ) {
       result |= remove(it.next());
     }
     return result;
-
   }
 
   /**
    * TODO: optimize ME!
-   * 
+   *
    * @throws IllegalArgumentException if that is null
    */
   public boolean containsAll(BimodalMutableIntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("that is null");
     }
-    for (IntIterator it = that.intIterator(); it.hasNext();) {
+    for (IntIterator it = that.intIterator(); it.hasNext(); ) {
       if (!contains(it.next())) {
         return false;
       }

@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -50,33 +50,30 @@ package org.scandroid.domain;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 public class InstanceKeyElement extends CodeElement {
-    private InstanceKey ik;
-    public InstanceKeyElement(InstanceKey ik)
-    {
-        this.ik = ik;
-    }
+  private InstanceKey ik;
 
-    @Override
-    public boolean equals(Object other)
-    {
-        if(other != null && other instanceof InstanceKeyElement)
-            return ((InstanceKeyElement)other).ik.equals(this.ik);
-        return false;
-    }
+  public InstanceKeyElement(InstanceKey ik) {
+    this.ik = ik;
+  }
 
-    @Override
-    public int hashCode()
-    {
-        return ik.hashCode();
-    }
+  @Override
+  public boolean equals(Object other) {
+    if (other != null && other instanceof InstanceKeyElement)
+      return ((InstanceKeyElement) other).ik.equals(this.ik);
+    return false;
+  }
 
-    @Override
-    public String toString()
-    {
-        return "InstanceKeyElement("+ik+ ')';
-    }
-    
-    public InstanceKey getInstanceKey() {
-		return ik;
-	}
+  @Override
+  public int hashCode() {
+    return ik.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "InstanceKeyElement(" + ik + ')';
+  }
+
+  public InstanceKey getInstanceKey() {
+    return ik;
+  }
 }

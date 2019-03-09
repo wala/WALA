@@ -9,15 +9,12 @@
  *     IBM Corporation - initial API and implementation
  */
 
-/**
- * 
- */
+/** */
 package com.ibm.wala.cast.ir.translator;
-
-import java.util.Collection;
 
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
+import java.util.Collection;
 
 public abstract class AbstractClassEntity extends AbstractDataEntity {
   private final CAstType.Class type;

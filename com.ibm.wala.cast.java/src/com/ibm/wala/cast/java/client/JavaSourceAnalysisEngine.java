@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.cast.java.client;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Set;
-
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -40,24 +34,23 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.io.FileProvider;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Set;
 
-/**
- */
-public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {
+/** */
+public abstract class JavaSourceAnalysisEngine
+    extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {
 
-  /**
-   * Modules which are user-space code
-   */
+  /** Modules which are user-space code */
   private final Set<Module> userEntries = HashSetFactory.make();
 
-  /**
-   * Modules which are source code
-   */
+  /** Modules which are source code */
   private final Set<Module> sourceEntries = HashSetFactory.make();
 
-  /**
-   * Modules which are system or library code TODO: what about extension loader?
-   */
+  /** Modules which are system or library code TODO: what about extension loader? */
   private final Set<Module> systemEntries = HashSetFactory.make();
 
   public JavaSourceAnalysisEngine() {
@@ -65,27 +58,24 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine<In
   }
 
   /**
-   * Adds the given source module to the source loader's module list. Clients
-   * should/may call this method if they don't supply an IJavaProject to the
-   * constructor.
+   * Adds the given source module to the source loader's module list. Clients should/may call this
+   * method if they don't supply an IJavaProject to the constructor.
    */
   public void addSourceModule(Module M) {
     sourceEntries.add(M);
   }
 
   /**
-   * Adds the given compiled module to the application loader's module list.
-   * Clients should/may call this method if they don't supply an IJavaProject to
-   * the constructor.
+   * Adds the given compiled module to the application loader's module list. Clients should/may call
+   * this method if they don't supply an IJavaProject to the constructor.
    */
   public void addCompiledModule(Module M) {
     userEntries.add(M);
   }
 
   /**
-   * Adds the given module to the primordial loader's module list. Clients
-   * should/may call this method if they don't supply an IJavaProject to the
-   * constructor.
+   * Adds the given module to the primordial loader's module list. Clients should/may call this
+   * method if they don't supply an IJavaProject to the constructor.
    */
   public void addSystemModule(Module M) {
     systemEntries.add(M);
@@ -110,7 +100,10 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine<In
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
-      try (final InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile())) {
+      try (final InputStream is =
+          new File(getExclusionsFile()).exists()
+              ? new FileInputStream(getExclusionsFile())
+              : FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile())) {
         scope.setExclusions(new FileOfClasses(is));
       }
     }
@@ -128,7 +121,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine<In
   }
 
   protected abstract ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions);
-  
+
   @Override
   public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
@@ -167,7 +160,8 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine<In
   }
 
   @Override
-  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
+      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
   }
 }

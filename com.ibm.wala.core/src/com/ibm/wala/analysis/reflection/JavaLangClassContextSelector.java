@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.analysis.reflection;
 
-import java.util.Collection;
-
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -27,29 +25,33 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
+import java.util.Collection;
 
 /**
- * A {@link ContextSelector} to intercept calls to certain methods on java.lang.Class when the receiver is a type constant
- * 
- * Currently supported methods:
+ * A {@link ContextSelector} to intercept calls to certain methods on java.lang.Class when the
+ * receiver is a type constant
+ *
+ * <p>Currently supported methods:
+ *
  * <ul>
- * <li>getConstructor
- * <li>getConstructors
- * <li>getDeclaredMethod
- * <li>getMethods
+ *   <li>getConstructor
+ *   <li>getConstructors
+ *   <li>getDeclaredMethod
+ *   <li>getMethods
  * </ul>
  */
 class JavaLangClassContextSelector implements ContextSelector {
 
-  public JavaLangClassContextSelector() {
-  }
+  public JavaLangClassContextSelector() {}
 
   /**
-   * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a {@link JavaTypeContext}
-   * representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
+   * If the {@link CallSiteReference} invokes a method we understand and c is a type constant,
+   * return a {@link JavaTypeContext} representing the type named by s, if we can resolve it in the
+   * {@link IClassHierarchy}.
    */
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver != null && receiver.length > 0 && mayUnderstand(callee, receiver[0])) {
       return new JavaTypeContext(new PointType(getTypeConstant(receiver[0])));
     }
@@ -80,13 +82,15 @@ class JavaLangClassContextSelector implements ContextSelector {
   }
 
   /**
-   * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
+   * This object may understand a dispatch to Class.getContructor when the receiver is a type
+   * constant.
    */
   private static boolean mayUnderstand(IMethod targetMethod, InstanceKey instance) {
-    return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference()) && getTypeConstant(instance) != null;
+    return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference())
+        && getTypeConstant(instance) != null;
   }
 
-  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+  private static final IntSet thisParameter = IntSetUtil.make(new int[] {0});
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {

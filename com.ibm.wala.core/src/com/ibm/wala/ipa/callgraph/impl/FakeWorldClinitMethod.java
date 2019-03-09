@@ -19,16 +19,20 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
-/**
- * A synthetic method that calls all class initializers
- */
+/** A synthetic method that calls all class initializers */
 public class FakeWorldClinitMethod extends AbstractRootMethod {
 
   private static final Atom name = Atom.findOrCreateAsciiAtom("fakeWorldClinit");
 
-  private static final Descriptor descr = Descriptor.findOrCreate(new TypeName[0], TypeReference.VoidName);
-  
-  public FakeWorldClinitMethod(final IClass fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
-    super(MethodReference.findOrCreate(fakeRootClass.getReference(), name, descr), fakeRootClass.getClassHierarchy(), options, cache);
+  private static final Descriptor descr =
+      Descriptor.findOrCreate(new TypeName[0], TypeReference.VoidName);
+
+  public FakeWorldClinitMethod(
+      final IClass fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
+    super(
+        MethodReference.findOrCreate(fakeRootClass.getReference(), name, descr),
+        fakeRootClass.getClassHierarchy(),
+        options,
+        cache);
   }
 }

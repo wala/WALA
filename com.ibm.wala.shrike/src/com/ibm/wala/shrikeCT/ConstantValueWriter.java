@@ -11,20 +11,21 @@
 package com.ibm.wala.shrikeCT;
 
 /**
- * This class builds serializable ConstantValue attributes. These attributes are associated with final fields.
- * 
- * After constructing a ConstantValueWriter, you must call setValueCPIndex.
+ * This class builds serializable ConstantValue attributes. These attributes are associated with
+ * final fields.
+ *
+ * <p>After constructing a ConstantValueWriter, you must call setValueCPIndex.
  */
 public final class ConstantValueWriter extends ClassWriter.Element {
-  final private int attrID;
+  private final int attrID;
 
   private int index = -1;
 
-  final private ClassWriter w;
+  private final ClassWriter w;
 
   /**
    * Build an empty writer.
-   * 
+   *
    * @throws IllegalArgumentException if w is null
    */
   public ConstantValueWriter(ClassWriter w) {
@@ -35,41 +36,31 @@ public final class ConstantValueWriter extends ClassWriter.Element {
     attrID = w.addCPUtf8("ConstantValue");
   }
 
-  /**
-   * Build an writer for a 'long' constant value.
-   */
+  /** Build an writer for a 'long' constant value. */
   public ConstantValueWriter(ClassWriter w, long v) {
     this(w);
     setLong(v);
   }
 
-  /**
-   * Build an writer for an 'int' constant value.
-   */
+  /** Build an writer for an 'int' constant value. */
   public ConstantValueWriter(ClassWriter w, int v) {
     this(w);
     setInt(v);
   }
 
-  /**
-   * Build an writer for a 'float' constant value.
-   */
+  /** Build an writer for a 'float' constant value. */
   public ConstantValueWriter(ClassWriter w, float v) {
     this(w);
     setFloat(v);
   }
 
-  /**
-   * Build an writer for a 'double' constant value.
-   */
+  /** Build an writer for a 'double' constant value. */
   public ConstantValueWriter(ClassWriter w, double v) {
     this(w);
     setDouble(v);
   }
 
-  /**
-   * Build an writer for a 'String' constant value.
-   */
+  /** Build an writer for a 'String' constant value. */
   public ConstantValueWriter(ClassWriter w, String v) {
     this(w);
     setString(v);
@@ -96,37 +87,27 @@ public final class ConstantValueWriter extends ClassWriter.Element {
     return offset + 8;
   }
 
-  /**
-   * Set the constant value to a long.
-   */
+  /** Set the constant value to a long. */
   public void setLong(long value) {
     this.index = w.addCPLong(value);
   }
 
-  /**
-   * Set the constant value to a double.
-   */
+  /** Set the constant value to a double. */
   public void setDouble(double value) {
     this.index = w.addCPDouble(value);
   }
 
-  /**
-   * Set the constant value to an int.
-   */
+  /** Set the constant value to an int. */
   public void setInt(int value) {
     this.index = w.addCPInt(value);
   }
 
-  /**
-   * Set the constant value to a float.
-   */
+  /** Set the constant value to a float. */
   public void setFloat(float value) {
     this.index = w.addCPFloat(value);
   }
 
-  /**
-   * Set the constant value to a String.
-   */
+  /** Set the constant value to a String. */
   public void setString(String value) {
     if (value == null) {
       throw new IllegalArgumentException("null value");
@@ -134,9 +115,7 @@ public final class ConstantValueWriter extends ClassWriter.Element {
     this.index = w.addCPString(value);
   }
 
-  /**
-   * Set the index of the constant pool item holding the constant value.
-   */
+  /** Set the index of the constant pool item holding the constant value. */
   public void setValueCPIndex(int index) throws IllegalArgumentException {
     if (index < 1 || index > 0xFFFF) {
       throw new IllegalArgumentException("Invalid CP index: " + index);

@@ -10,22 +10,17 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.util.collections.HashSetFactory;
-
-/**
- * A module containing files under some directory.
- */
+/** A module containing files under some directory. */
 public abstract class DirectoryTreeModule implements Module {
 
   protected final File root;
 
-  /**
-   * @param root a directory
-   */
+  /** @param root a directory */
   DirectoryTreeModule(File root) throws IllegalArgumentException {
     this.root = root;
     if (root == null) {
@@ -39,9 +34,7 @@ public abstract class DirectoryTreeModule implements Module {
     }
   }
 
-  /**
-   * returns null if unsuccessful in creating FileModule
-   */
+  /** returns null if unsuccessful in creating FileModule */
   protected abstract FileModule makeFile(File file);
 
   protected abstract boolean includeFile(File file);
@@ -93,18 +86,13 @@ public abstract class DirectoryTreeModule implements Module {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final DirectoryTreeModule other = (DirectoryTreeModule) obj;
     if (root == null) {
-      if (other.root != null)
-        return false;
-    } else if (!root.equals(other.root))
-      return false;
+      if (other.root != null) return false;
+    } else if (!root.equals(other.root)) return false;
     return true;
   }
 }

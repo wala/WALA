@@ -11,12 +11,11 @@
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 /**
- * Class representing a flow graph vertex. Vertices should never be instantiated
- * directly, but rather generated through a {@link VertexFactory}.
- * 
- * @author mschaefer
+ * Class representing a flow graph vertex. Vertices should never be instantiated directly, but
+ * rather generated through a {@link VertexFactory}.
  *
+ * @author mschaefer
  */
 public abstract class Vertex {
-	public abstract <T> T accept(VertexVisitor<T> visitor);
+  public abstract <T> T accept(VertexVisitor<T> visitor);
 }

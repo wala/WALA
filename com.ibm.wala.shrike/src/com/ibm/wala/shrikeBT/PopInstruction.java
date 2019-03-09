@@ -10,20 +10,16 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * PopInstructions pop one or two elements off the working stack.
- */
+/** PopInstructions pop one or two elements off the working stack. */
 public final class PopInstruction extends Instruction {
-  final private byte size;
+  private final byte size;
 
   protected PopInstruction(byte size) {
     super((short) -1);
     this.size = size;
   }
 
-  /**
-   * @param size 1 or 2, the number of elements to pop
-   */
+  /** @param size 1 or 2, the number of elements to pop */
   public static PopInstruction make(int size) {
     if (size < 0 || size > 2) {
       throw new IllegalArgumentException("Invalid pop size: " + size);

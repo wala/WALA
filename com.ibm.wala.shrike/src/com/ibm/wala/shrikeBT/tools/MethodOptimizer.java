@@ -10,9 +10,6 @@
  */
 package com.ibm.wala.shrikeBT.tools;
 
-import java.util.Arrays;
-import java.util.BitSet;
-
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -24,10 +21,12 @@ import com.ibm.wala.shrikeBT.PopInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.info.LocalAllocator;
+import java.util.Arrays;
+import java.util.BitSet;
 
 @Deprecated
 public final class MethodOptimizer {
-  final private MethodData data;
+  private final MethodData data;
 
   private IInstruction[] instructions;
 
@@ -59,7 +58,7 @@ public final class MethodOptimizer {
   // instruction
   // or -1 if there is more than one such instruction.
 
-  final static int[] noEdges = new int[0];
+  static final int[] noEdges = new int[0];
 
   public MethodOptimizer(MethodData d, MethodEditor e) {
     if (d == null) {
@@ -81,7 +80,8 @@ public final class MethodOptimizer {
     }
   }
 
-  public int findUniqueStackDef(final int instr, final int stack) throws UnoptimizableCodeException {
+  public int findUniqueStackDef(final int instr, final int stack)
+      throws UnoptimizableCodeException {
     instructions = editor.getInstructions();
     handlers = editor.getHandlers();
     checkConsistentStackSizes();
@@ -168,8 +168,13 @@ public final class MethodOptimizer {
       }
       if (stackSizes[instruction] != -1) {
         if (stackSizes[instruction] != stackSize) {
-          throw new UnoptimizableCodeException("Mismatched stack sizes at " + instruction + ": " + stackSize + " and "
-              + stackSizes[instruction]);
+          throw new UnoptimizableCodeException(
+              "Mismatched stack sizes at "
+                  + instruction
+                  + ": "
+                  + stackSize
+                  + " and "
+                  + stackSizes[instruction]);
         } else {
           return;
         }
@@ -209,7 +214,8 @@ public final class MethodOptimizer {
   private static boolean instructionKillsVar(IInstruction instr, int v) {
     if (instr instanceof StoreInstruction) {
       StoreInstruction st = (StoreInstruction) instr;
-      return st.getVarIndex() == v || (Util.getWordSize(st.getType()) == 2 && st.getVarIndex() + 1 == v);
+      return st.getVarIndex() == v
+          || (Util.getWordSize(st.getType()) == 2 && st.getVarIndex() + 1 == v);
     } else {
       return false;
     }
@@ -218,7 +224,9 @@ public final class MethodOptimizer {
   private void forwardDups() {
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof DupInstruction && ((DupInstruction) instr).getDelta() == 0 && uniqueStackDefLocations[i][0] >= 0
+      if (instr instanceof DupInstruction
+          && ((DupInstruction) instr).getDelta() == 0
+          && uniqueStackDefLocations[i][0] >= 0
           && instructions[uniqueStackDefLocations[i][0]] instanceof LoadInstruction) {
         int source = uniqueStackDefLocations[i][0];
         final LoadInstruction li = (LoadInstruction) instructions[source];
@@ -241,13 +249,15 @@ public final class MethodOptimizer {
             }
 
             if (!killed) {
-              editor.insertBefore(j, new MethodEditor.Patch() {
-                @Override
-                public void emitTo(Output w) {
-                  w.emit(PopInstruction.make(1));
-                  w.emit(li);
-                }
-              });
+              editor.insertBefore(
+                  j,
+                  new MethodEditor.Patch() {
+                    @Override
+                    public void emitTo(Output w) {
+                      w.emit(PopInstruction.make(1));
+                      w.emit(li);
+                    }
+                  });
             }
           }
         }
@@ -258,7 +268,9 @@ public final class MethodOptimizer {
   private void pushBackLocalStores() {
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof StoreInstruction && uniqueStackDefLocations[i][0] >= 0 && uniqueStackDefLocations[i][0] != i - 1
+      if (instr instanceof StoreInstruction
+          && uniqueStackDefLocations[i][0] >= 0
+          && uniqueStackDefLocations[i][0] != i - 1
           && uniqueStackUseLocations[uniqueStackDefLocations[i][0]] == i) {
         final StoreInstruction s = (StoreInstruction) instr;
         int source = uniqueStackDefLocations[i][0];
@@ -280,33 +292,40 @@ public final class MethodOptimizer {
           final String type = s.getType();
           final int newVar = LocalAllocator.allocate(data, type);
           // put a store to the newVar right after the source
-          editor.insertAfter(source, new MethodEditor.Patch() {
-            @Override
-            public void emitTo(Output w) {
-              w.emit(StoreInstruction.make(type, newVar));
-            }
-          });
+          editor.insertAfter(
+              source,
+              new MethodEditor.Patch() {
+                @Override
+                public void emitTo(Output w) {
+                  w.emit(StoreInstruction.make(type, newVar));
+                }
+              });
           // load newVar before storing to correct variable
-          editor.insertBefore(i, new MethodEditor.Patch() {
-            @Override
-            public void emitTo(Output w) {
-              w.emit(LoadInstruction.make(type, newVar));
-            }
-          });
+          editor.insertBefore(
+              i,
+              new MethodEditor.Patch() {
+                @Override
+                public void emitTo(Output w) {
+                  w.emit(LoadInstruction.make(type, newVar));
+                }
+              });
         } else {
           // remove store instruction
-          editor.replaceWith(i, new MethodEditor.Patch() {
-            @Override
-            public void emitTo(Output w) {
-            }
-          });
+          editor.replaceWith(
+              i,
+              new MethodEditor.Patch() {
+                @Override
+                public void emitTo(Output w) {}
+              });
           // replace it right after the source
-          editor.insertAfter(source, new MethodEditor.Patch() {
-            @Override
-            public void emitTo(Output w) {
-              w.emit(s);
-            }
-          });
+          editor.insertAfter(
+              source,
+              new MethodEditor.Patch() {
+                @Override
+                public void emitTo(Output w) {
+                  w.emit(s);
+                }
+              });
         }
       }
     }
@@ -335,7 +354,8 @@ public final class MethodOptimizer {
     for (int i = 0; i < instructions.length; i++) {
       uniqueStackDefLocations[i] = new int[instructions[i].getPoppedCount()];
       int popped = instructions[i].getPoppedCount();
-      System.arraycopy(abstractStacks[i], stackSizes[i] - popped, uniqueStackDefLocations[i], 0, popped);
+      System.arraycopy(
+          abstractStacks[i], stackSizes[i] - popped, uniqueStackDefLocations[i], 0, popped);
     }
 
     uniqueStackUseLocations = new int[instructions.length];
@@ -364,7 +384,8 @@ public final class MethodOptimizer {
     }
   }
 
-  private void followStackDef(int[][] abstractDefStacks, int def, int instruction, int stackPointer) {
+  private void followStackDef(
+      int[][] abstractDefStacks, int def, int instruction, int stackPointer) {
     while (true) {
       int[] stack = abstractDefStacks[instruction];
       if (stackPointer >= stack.length) {
@@ -400,7 +421,8 @@ public final class MethodOptimizer {
     }
   }
 
-  private void followStackUse(int[][] abstractUseStacks, int use, int instruction, int stackPointer) {
+  private void followStackUse(
+      int[][] abstractUseStacks, int use, int instruction, int stackPointer) {
     while (true) {
       int[] stack = abstractUseStacks[instruction];
       if (stackPointer >= stack.length) {

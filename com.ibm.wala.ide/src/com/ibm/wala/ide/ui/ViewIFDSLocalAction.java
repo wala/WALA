@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.ide.ui;
 
-import java.util.function.Predicate;
-
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IStructuredSelection;
-
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
@@ -31,48 +26,45 @@ import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.NodeDecorator;
 import com.ibm.wala.viz.PDFViewUtil;
+import java.util.function.Predicate;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
- * An SWT action that spawns spawns a ghostview to see the local supergraph for a procedure node which is the current selection in a
- * tree viewer.
- * 
+ * An SWT action that spawns spawns a ghostview to see the local supergraph for a procedure node
+ * which is the current selection in a tree viewer.
+ *
  * @author sfink
  */
 public class ViewIFDSLocalAction<T, P, F> extends Action {
-  /**
-   * Governing tree viewer
-   */
+  /** Governing tree viewer */
   private final SWTTreeViewer<P> viewer;
 
-  /**
-   * Governing supergraph
-   */
+  /** Governing supergraph */
   private final ISupergraph<T, P> supergraph;
 
-  /**
-   * name of PDF file to generate
-   */
+  /** name of PDF file to generate */
   private final String pdfFile;
 
-  /**
-   * name of dot file to generate
-   */
+  /** name of dot file to generate */
   private final String dotFile;
 
-  /**
-   * path to dot.exe
-   */
+  /** path to dot.exe */
   private final String dotExe;
 
-  /**
-   * path to pdf view executable
-   */
+  /** path to pdf view executable */
   private final String pdfViewExe;
 
   private final NodeDecorator<T> labels;
 
-  public ViewIFDSLocalAction(SWTTreeViewer<P> viewer, TabulationResult<T, P, F> result, String pdfFile, String dotFile, String dotExe,
-      String pdfViewExe, NodeDecorator<T> labels) {
+  public ViewIFDSLocalAction(
+      SWTTreeViewer<P> viewer,
+      TabulationResult<T, P, F> result,
+      String pdfFile,
+      String dotFile,
+      String dotExe,
+      String pdfViewExe,
+      NodeDecorator<T> labels) {
     if (result == null) {
       throw new IllegalArgumentException("null result");
     }
@@ -86,7 +78,12 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     setText("View Local Supergraph");
   }
 
-  public ViewIFDSLocalAction(SWTTreeViewer<P> viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
+  public ViewIFDSLocalAction(
+      SWTTreeViewer<P> viewer,
+      TabulationResult<T, P, F> result,
+      String psFile,
+      String dotFile,
+      String dotExe,
       String gvExe) {
     if (result == null) {
       throw new IllegalArgumentException("null result");
@@ -116,8 +113,12 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
         BasicBlockInContext<?> bb = (BasicBlockInContext<?>) t;
         if (bb.getDelegate() instanceof IExplodedBasicBlock) {
           IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();
-          final StringBuilder s = new StringBuilder(delegate.getNumber()).append(' ').append(result.getResult(t))
-                  .append("\\n").append(stringify(delegate.getInstruction()));
+          final StringBuilder s =
+              new StringBuilder(delegate.getNumber())
+                  .append(' ')
+                  .append(result.getResult(t))
+                  .append("\\n")
+                  .append(stringify(delegate.getInstruction()));
           for (SSAPhiInstruction phi : Iterator2Iterable.make(delegate.iteratePhis())) {
             s.append(' ').append(phi);
           }
@@ -131,9 +132,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     }
   }
 
-  /**
-   * Print a short-ish representation of s as a String
-   */
+  /** Print a short-ish representation of s as a String */
   public static String stringify(SSAInstruction s) {
     if (s == null) {
       return null;
@@ -141,8 +140,11 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     if (s instanceof SSAAbstractInvokeInstruction) {
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
       String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
-      final StringBuilder result = new StringBuilder(def).append("call ")
-              .append(call.getDeclaredTarget().getDeclaringClass().getName().getClassName()).append('.')
+      final StringBuilder result =
+          new StringBuilder(def)
+              .append("call ")
+              .append(call.getDeclaredTarget().getDeclaringClass().getName().getClassName())
+              .append('.')
               .append(call.getDeclaredTarget().getName());
       result.append(" exc:").append(call.getException());
       for (int i = 0; i < s.getNumberOfUses(); i++) {
@@ -197,7 +199,8 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     // we assume the tree viewer's current selection is a P
     IStructuredSelection selection = viewer.getSelection();
     if (selection.size() != 1) {
-      throw new UnsupportedOperationException("did not expect selection of size " + selection.size());
+      throw new UnsupportedOperationException(
+          "did not expect selection of size " + selection.size());
     }
     P first = (P) selection.getFirstElement();
 

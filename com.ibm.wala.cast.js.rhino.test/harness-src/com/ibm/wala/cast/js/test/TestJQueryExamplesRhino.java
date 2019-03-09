@@ -10,21 +10,19 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import org.junit.Before;
-
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import org.junit.Before;
 
 public class TestJQueryExamplesRhino extends TestJQueryExamples {
 
-	  public static void main(String[] args) {
-		    justThisTest(TestJQueryExamplesRhino.class);
-		  }
+  public static void main(String[] args) {
+    justThisTest(TestJQueryExamplesRhino.class);
+  }
 
-	  @Override
-    @Before
-	  public void setUp() {
-		  JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-	  }
-
+  @Override
+  @Before
+  public void setUp() {
+    JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+  }
 }

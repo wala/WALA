@@ -1,20 +1,17 @@
 package arraybounds;
 
 /**
- * 
- * All array accesses in the following class are unnecessary but they will not
- * be detected correctly by the array bounds analysis.
- * 
- * @author Stephan Gocht {@code <stephan@gobro.de>}
+ * All array accesses in the following class are unnecessary but they will not be detected correctly
+ * by the array bounds analysis.
  *
+ * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class NotDetectable {
   private final int[] memberArr = new int[5];
 
   /**
-   * Member calls are not supported. See {@link Detectable#memberLocalGet(int)}
-   * for workaround.
-   * 
+   * Member calls are not supported. See {@link Detectable#memberLocalGet(int)} for workaround.
+   *
    * @return memberArr[i]
    */
   public int memberGet(int i) {
@@ -31,7 +28,7 @@ public class NotDetectable {
 
   /**
    * Interprocedural analysis is not supported.
-   * 
+   *
    * @return memberArr[i]
    */
   public int interproceduralGet(int i) {
@@ -43,22 +40,19 @@ public class NotDetectable {
   }
 
   /**
-   * This example does not work: We know 5 &gt; 3 and sometimes length &gt; 5 &gt; 3. In
-   * case of variables this conditional relation is resolved by introducing pi
-   * nodes. For constants pi nodes can be generated, but the pi variables will
-   * not be used (maybe due to constant propagation?). Additionally 5 != 3, so
-   * even if we would use pi-variables for 5, there would be no relation to 3: 0
-   * -(5)-&gt; 5, 5 -(-5)-&gt; 0, {5,length} -(0)-&gt; 5', 0 -(3)-&gt; 3, 3 -(-3)-&gt; 0 Given
-   * the inequality graph above, we know that 5,5',3 are larger than 0 and 5
-   * larger 3 and length is larger than 5', but not 5' larger than 3. Which is
-   * not always the case in general anyway.
-   * 
-   * This may be implemented by replacing each use of a constant dominated by a
-   * definition of a pi of a constant, with a fresh variable, that is connected
-   * to the inequality graph accordingly.
-   * 
-   * For a workaround see {@link Detectable#nonFinalConstant(int[])}
-   * 
+   * This example does not work: We know 5 &gt; 3 and sometimes length &gt; 5 &gt; 3. In case of
+   * variables this conditional relation is resolved by introducing pi nodes. For constants pi nodes
+   * can be generated, but the pi variables will not be used (maybe due to constant propagation?).
+   * Additionally 5 != 3, so even if we would use pi-variables for 5, there would be no relation to
+   * 3: 0 -(5)-&gt; 5, 5 -(-5)-&gt; 0, {5,length} -(0)-&gt; 5', 0 -(3)-&gt; 3, 3 -(-3)-&gt; 0 Given
+   * the inequality graph above, we know that 5,5',3 are larger than 0 and 5 larger 3 and length is
+   * larger than 5', but not 5' larger than 3. Which is not always the case in general anyway.
+   *
+   * <p>This may be implemented by replacing each use of a constant dominated by a definition of a
+   * pi of a constant, with a fresh variable, that is connected to the inequality graph accordingly.
+   *
+   * <p>For a workaround see {@link Detectable#nonFinalConstant(int[])}
+   *
    * @return arr[3]
    */
   public int constants(int[] arr) {
@@ -70,10 +64,10 @@ public class NotDetectable {
   }
 
   /**
-   * As the variable i is final, constant propagation will prevent the detection
-   * (See also {@link NotDetectable#constants(int[])}), for a working example
-   * see {@link Detectable#nonFinalConstant(int[])}.
-   * 
+   * As the variable i is final, constant propagation will prevent the detection (See also {@link
+   * NotDetectable#constants(int[])}), for a working example see {@link
+   * Detectable#nonFinalConstant(int[])}.
+   *
    * @return arr[3]
    */
   public int dueToConstantPropagation(int[] arr) {
@@ -97,10 +91,9 @@ public class NotDetectable {
 
   /**
    * Neither modulo, multiplication or division with constants will work.
-   * 
-   * Note: Any operation can be performed BEFORE comparing a variable to the
-   * array length.
-   * 
+   *
+   * <p>Note: Any operation can be performed BEFORE comparing a variable to the array length.
+   *
    * @return arr[i]
    */
   public int modulo(int[] arr, int i) {
@@ -113,10 +106,9 @@ public class NotDetectable {
 
   /**
    * Neither subtraction of variables nor inverting variables will work.
-   * 
-   * Note: Any operation can be performed BEFORE comparing a variable to the
-   * array length.
-   * 
+   *
+   * <p>Note: Any operation can be performed BEFORE comparing a variable to the array length.
+   *
    * @return arr[i]
    */
   public int variableSubtraction(int[] arr, int i) {
@@ -130,12 +122,11 @@ public class NotDetectable {
   }
 
   /**
-   * The analysis can not detect, that forward is false every other iteration.
-   * So there is a positive and a negative loop. The positive loop is bound by
-   * the loop condition, while the negative loop is unbound, so index might be
-   * smaller than zero. This should result in the lower bound check beeing
-   * necessary.
-   * 
+   * The analysis can not detect, that forward is false every other iteration. So there is a
+   * positive and a negative loop. The positive loop is bound by the loop condition, while the
+   * negative loop is unbound, so index might be smaller than zero. This should result in the lower
+   * bound check beeing necessary.
+   *
    * @return sum of all elements in arr
    */
   public int nonMonotounous(int arr[]) {
@@ -153,11 +144,9 @@ public class NotDetectable {
     }
     return sum;
   }
-  
-  /**
-   * Multidimensional Arrays are not supported yet.
-   */  
-  public int multiDimensional(){
+
+  /** Multidimensional Arrays are not supported yet. */
+  public int multiDimensional() {
     int arr[][] = new int[5][10];
     return arr[2][3];
   }

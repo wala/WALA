@@ -13,6 +13,5 @@ package com.ibm.wala.util.intset;
 
 public interface IntSetAction {
 
-    void act(int x);
-
+  void act(int x);
 }

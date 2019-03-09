@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Map;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -20,16 +18,15 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Map;
 
 /**
- * A ContextSelector implementation adapted to work for analysis across
- * multiple languages.  This context selector delegates to one of several
- * child selectors based on the language of the code body for which a 
- * context is being selected.  
+ * A ContextSelector implementation adapted to work for analysis across multiple languages. This
+ * context selector delegates to one of several child selectors based on the language of the code
+ * body for which a context is being selected.
  *
- *  This provides a convenient way to integrate multiple, language-specific
- * specialized context policies---such as the ones used for clone() in
- * Java and runtime primitives in JavaScript.
+ * <p>This provides a convenient way to integrate multiple, language-specific specialized context
+ * policies---such as the ones used for clone() in Java and runtime primitives in JavaScript.
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
@@ -42,11 +39,7 @@ public class CrossLanguageContextSelector implements ContextSelector {
   }
 
   private static Atom getLanguage(CallSiteReference site) {
-    return site
-	.getDeclaredTarget()
-	.getDeclaringClass()
-	.getClassLoader()
-	.getLanguage();
+    return site.getDeclaredTarget().getDeclaringClass().getClassLoader().getLanguage();
   }
 
   private ContextSelector getSelector(CallSiteReference site) {
@@ -54,7 +47,8 @@ public class CrossLanguageContextSelector implements ContextSelector {
   }
 
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     return getSelector(site).getCalleeTarget(caller, site, callee, receiver);
   }
 

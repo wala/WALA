@@ -12,83 +12,78 @@ package com.ibm.wala.util.intset;
 
 import java.util.NoSuchElementException;
 
-
 public class EmptyIntSet implements IntSet {
 
-	private static final long serialVersionUID = 5116475799916663164L;
-	public static EmptyIntSet instance = new EmptyIntSet();
-	
-	@Override
-	public boolean contains(int i) {
-		return false;
-	}
+  private static final long serialVersionUID = 5116475799916663164L;
+  public static EmptyIntSet instance = new EmptyIntSet();
 
-	@Override
-	public boolean containsAny(IntSet set) {
-		return false;
-	}
+  @Override
+  public boolean contains(int i) {
+    return false;
+  }
 
-	@Override
-	public IntSet intersection(IntSet that) {
-		return this;
-	}
+  @Override
+  public boolean containsAny(IntSet set) {
+    return false;
+  }
 
-	@Override
-	public IntSet union(IntSet that) {
-		return that;
-	}
+  @Override
+  public IntSet intersection(IntSet that) {
+    return this;
+  }
 
-	@Override
-	public boolean isEmpty() {
-		return true;
-	}
+  @Override
+  public IntSet union(IntSet that) {
+    return that;
+  }
 
-	@Override
-	public int size() {
-		return 0;
-	}
+  @Override
+  public boolean isEmpty() {
+    return true;
+  }
 
-	private static final IntIterator emptyIter = new IntIterator() {
+  @Override
+  public int size() {
+    return 0;
+  }
 
-		@Override
-		public boolean hasNext() {
-			return false;
-		}
+  private static final IntIterator emptyIter =
+      new IntIterator() {
 
-		@Override
-		public int next() {
-			throw new NoSuchElementException();
-		}
-		
-	};
-	
-	@Override
-	public IntIterator intIterator() {
-		return emptyIter;
-	}
+        @Override
+        public boolean hasNext() {
+          return false;
+        }
 
-	@Override
-	public void foreach(IntSetAction action) {
+        @Override
+        public int next() {
+          throw new NoSuchElementException();
+        }
+      };
 
-	}
+  @Override
+  public IntIterator intIterator() {
+    return emptyIter;
+  }
 
-	@Override
-	public void foreachExcluding(IntSet X, IntSetAction action) {
+  @Override
+  public void foreach(IntSetAction action) {}
 
-	}
+  @Override
+  public void foreachExcluding(IntSet X, IntSetAction action) {}
 
-	@Override
-	public int max() {
-		throw new NoSuchElementException();
-	}
+  @Override
+  public int max() {
+    throw new NoSuchElementException();
+  }
 
-	@Override
-	public boolean sameValue(IntSet that) {
-		return that.isEmpty();
-	}
+  @Override
+  public boolean sameValue(IntSet that) {
+    return that.isEmpty();
+  }
 
-	@Override
-	public boolean isSubset(IntSet that) {
-		return true;
-	}
+  @Override
+  public boolean isSubset(IntSet that) {
+    return true;
+  }
 }

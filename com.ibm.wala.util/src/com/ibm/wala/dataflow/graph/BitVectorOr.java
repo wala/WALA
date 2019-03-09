@@ -14,23 +14,21 @@ import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 
-
-/**
- * Operator OUT = IN U v
- */
+/** Operator OUT = IN U v */
 public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
-  
+
   private final BitVector v;
+
   public BitVectorOr(BitVector v) {
     if (v == null) {
       throw new IllegalArgumentException("null v");
     }
     this.v = v;
   }
-  
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+      throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }
@@ -62,7 +60,7 @@ public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
   @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorOr) {
-      BitVectorOr other = (BitVectorOr)o;
+      BitVectorOr other = (BitVectorOr) o;
       return v.equals(other.v);
     } else {
       return false;

@@ -12,14 +12,12 @@ package com.ibm.wala.util;
 
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
-/**
- * Dummy {@link IProgressMonitor} 
- */
+/** Dummy {@link IProgressMonitor} */
 public class NullProgressMonitor implements IProgressMonitor {
 
   @Override
   public void beginTask(String task, int totalWork) {
-    // do nothing    
+    // do nothing
   }
 
   @Override
@@ -38,7 +36,7 @@ public class NullProgressMonitor implements IProgressMonitor {
     // do nothing
   }
 
-/** BEGIN Custom change: subtasks and canceling */
+  /** BEGIN Custom change: subtasks and canceling */
   @Override
   public void subTask(String subTask) {
     // do nothing
@@ -49,11 +47,10 @@ public class NullProgressMonitor implements IProgressMonitor {
     // do nothing
   }
 
-/** END Custom change: subtasks and canceling */
+  /** END Custom change: subtasks and canceling */
   @Override
   public String getCancelMessage() {
     assert false;
     return "never cqncels";
   }
-
 }

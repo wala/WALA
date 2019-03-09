@@ -28,28 +28,28 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * 
  * @see <a
- *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
- *      Function.prototype.apply() docs</a>
+ *     href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
+ *     Function.prototype.apply() docs</a>
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   /* whether to use a one-level callstring context in addition to the apply context */
-  private static final boolean USE_ONE_LEVEL = true; 
+  private static final boolean USE_ONE_LEVEL = true;
 
-  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
+  private static final TypeName APPLY_TYPE_NAME =
+      TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
 
-  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
+  private static final TypeName CALL_TYPE_NAME =
+      TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
 
-  public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
-  };
+  public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {};
 
   private final ContextSelector base;
   private ContextSelector oneLevel;
 
   public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
     this.base = base;
-//    this.oneLevel = new nCFAContextSelector(1, base);
+    //    this.oneLevel = new nCFAContextSelector(1, base);
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
 
@@ -59,7 +59,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     // for this arg of function being invoked,
     // 3 for arguments array
     MutableIntSet params = IntSetUtil.make();
-    for(int i = 0; i < 4 && i < caller.getIR().getCalls(site)[0].getNumberOfUses(); i++) {
+    for (int i = 0; i < 4 && i < caller.getIR().getCalls(site)[0].getNumberOfUses(); i++) {
       params.add(i);
     }
     return params.union(base.getRelevantParameters(caller, site));
@@ -68,9 +68,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   public static class ApplyContext implements Context {
     private final Context delegate;
 
-    /**
-     * was the argsList argument a non-null Array?
-     */
+    /** was the argsList argument a non-null Array? */
     private final ContextItem.Value<Boolean> isNonNullArray;
 
     ApplyContext(Context delegate, boolean isNonNullArray) {
@@ -98,17 +96,12 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
     @Override
     public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
       ApplyContext other = (ApplyContext) obj;
-      if (!delegate.equals(other.delegate))
-        return false;
-      if (!isNonNullArray.equals(other.isNonNullArray))
-        return false;
+      if (!delegate.equals(other.delegate)) return false;
+      if (!isNonNullArray.equals(other.isNonNullArray)) return false;
       return true;
     }
 
@@ -116,11 +109,11 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     public String toString() {
       return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + ']';
     }
-
   }
 
   @Override
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+  public Context getCalleeTarget(
+      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
     Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
@@ -130,7 +123,10 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
         boolean isNonNullArray = false;
         if (receiver.length >= 4) {
           InstanceKey argsList = receiver[3];
-          if (argsList != null && argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
+          if (argsList != null
+              && argsList
+                  .getConcreteType()
+                  .equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
             isNonNullArray = true;
           }
         }
@@ -143,5 +139,4 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     }
     return baseCtxt;
   }
-
 }

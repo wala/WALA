@@ -15,15 +15,13 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.debug.Assertions;
 
-/**
- * misc utilities for dealing with contexts
- */
+/** misc utilities for dealing with contexts */
 public class ContextUtil {
 
   /**
    * @param c a context
-   * @return If this is an object-sensitive context that identifies a unique class for the receiver object, then return the unique
-   *         class. Else, return null.
+   * @return If this is an object-sensitive context that identifies a unique class for the receiver
+   *     object, then return the unique class. Else, return null.
    * @throws IllegalArgumentException if c is null
    */
   public static IClass getConcreteClassFromContext(Context c) {
@@ -44,5 +42,4 @@ public class ContextUtil {
       }
     }
   }
-
 }

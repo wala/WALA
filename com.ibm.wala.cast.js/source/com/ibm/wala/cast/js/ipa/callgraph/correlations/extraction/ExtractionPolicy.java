@@ -11,15 +11,14 @@
 
 package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
+import com.ibm.wala.cast.tree.CAstNode;
 import java.util.List;
 
-import com.ibm.wala.cast.tree.CAstNode;
-
 /**
- * An extraction policy tells a {@link ClosureExtractor} which bits of code to extract into closures.
- * 
- * @author mschaefer
+ * An extraction policy tells a {@link ClosureExtractor} which bits of code to extract into
+ * closures.
  *
+ * @author mschaefer
  */
 public abstract class ExtractionPolicy {
   public abstract List<ExtractionRegion> extract(CAstNode node);

@@ -12,10 +12,7 @@ package demandpa;
 
 /**
  * A dummy type used for testing flows-to queries.
- * 
- * @author manu
  *
+ * @author manu
  */
-public class FlowsToType {
-
-}
+public class FlowsToType {}

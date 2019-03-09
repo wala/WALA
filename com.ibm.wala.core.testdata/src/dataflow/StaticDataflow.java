@@ -10,20 +10,18 @@
  */
 package dataflow;
 
-/**
- * test cases for dataflow analysis involving static fields.
- */
+/** test cases for dataflow analysis involving static fields. */
 public class StaticDataflow {
 
   static int f;
-  
+
   static int g;
-  
+
   public static void test1() {
     f = 3;
     f = 3;
   }
-  
+
   public static void test2() {
     f = 4;
     g = 3;
@@ -33,7 +31,7 @@ public class StaticDataflow {
       g = 7;
     }
   }
-  
+
   public static void main(String[] args) {
     testInterproc();
   }

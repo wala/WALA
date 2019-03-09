@@ -17,5 +17,4 @@ public class AstCFAPointerKeys extends DelegatingAstPointerKeys {
   public AstCFAPointerKeys() {
     super(new DefaultPointerKeyFactory());
   }
-
 }

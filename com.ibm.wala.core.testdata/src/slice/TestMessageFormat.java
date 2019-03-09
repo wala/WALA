@@ -15,6 +15,6 @@ import java.text.MessageFormat;
 public class TestMessageFormat {
 
   public static void main(String args[]) {
-    MessageFormat.format(null, (Object[])null);
+    MessageFormat.format(null, (Object[]) null);
   }
 }

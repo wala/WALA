@@ -21,15 +21,16 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
- * 
- * A factory to create call graph builders using 0-CFA
+ *     <p>A factory to create call graph builders using 0-CFA
  */
-public class OneCFABuilderFactory  {
+public class OneCFABuilderFactory {
 
-  public CallGraphBuilder<InstanceKey> make(JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+  public CallGraphBuilder<InstanceKey> make(
+      JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
-    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.NONE, true);
+    return new JSZeroOrOneXCFABuilder(
+        cha, options, cache, null, null, ZeroXInstanceKeys.NONE, true);
   }
 }

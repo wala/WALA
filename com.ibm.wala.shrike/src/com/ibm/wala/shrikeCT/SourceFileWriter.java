@@ -12,17 +12,17 @@ package com.ibm.wala.shrikeCT;
 
 /**
  * This class builds serializable SourceFile attributes.
- * 
- * After constructing a SourceFileWriter, you must call setSourceFileCPIndex.
+ *
+ * <p>After constructing a SourceFileWriter, you must call setSourceFileCPIndex.
  */
 public final class SourceFileWriter extends ClassWriter.Element {
-  final private int attrID;
+  private final int attrID;
 
   private int index = -1;
 
   /**
    * Build an empty writer.
-   * 
+   *
    * @throws IllegalArgumentException if w is null
    */
   public SourceFileWriter(ClassWriter w) {
@@ -53,9 +53,7 @@ public final class SourceFileWriter extends ClassWriter.Element {
     return offset + 8;
   }
 
-  /**
-   * Set the index of the constant pool item holding the source file name.
-   */
+  /** Set the index of the constant pool item holding the source file name. */
   public void setSourceFileCPIndex(int index) throws IllegalArgumentException {
     if (index < 1 || index > 0xFFFF) {
       throw new IllegalArgumentException("Invalid CP index: " + index);

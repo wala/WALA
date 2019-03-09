@@ -27,28 +27,42 @@ public class LineNumberPosition extends AbstractSourcePosition {
   }
 
   @Override
-  public int getFirstLine() { return lineNumber; }
+  public int getFirstLine() {
+    return lineNumber;
+  }
 
   @Override
-  public int getLastLine() { return lineNumber; }
+  public int getLastLine() {
+    return lineNumber;
+  }
 
   @Override
-  public int getFirstCol() { return -1; }
+  public int getFirstCol() {
+    return -1;
+  }
 
   @Override
-  public int getLastCol() { return -1; }
-  
-  @Override
-  public int getFirstOffset() { return -1; }
- 
-  @Override
-  public int getLastOffset() { return -1; }
+  public int getLastCol() {
+    return -1;
+  }
 
   @Override
-  public URL getURL() { return url; }
-	
+  public int getFirstOffset() {
+    return -1;
+  }
+
   @Override
-  public Reader getReader() throws IOException { 
+  public int getLastOffset() {
+    return -1;
+  }
+
+  @Override
+  public URL getURL() {
+    return url;
+  }
+
+  @Override
+  public Reader getReader() throws IOException {
     return new InputStreamReader(localFile.openConnection().getInputStream());
   }
 
@@ -56,6 +70,6 @@ public class LineNumberPosition extends AbstractSourcePosition {
   public String toString() {
     String nm = url.getFile();
     nm = nm.substring(nm.lastIndexOf('/') + 1);
-    return '[' + nm + ':' +lineNumber+ ']';
+    return '[' + nm + ':' + lineNumber + ']';
   }
 }

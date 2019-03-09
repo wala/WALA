@@ -20,9 +20,9 @@ package com.ibm.wala.sourcepos;
 import java.util.LinkedList;
 
 /**
- * This class represents the flags which a entry in the CharacterRangeTable can
- * have. The flags are bitwise ORed.
- * 
+ * This class represents the flags which a entry in the CharacterRangeTable can have. The flags are
+ * bitwise ORed.
+ *
  * @see CRTData
  * @see CRTable
  * @author Siegfried Weber
@@ -34,16 +34,18 @@ public final class CRTFlags {
   static final short CRT_SOURCE_INFO = 0x0200;
 
   /** Stores the names of the flags. */
-  private static final String[] flagNames = { "CRT_STATEMENT", // 0x0001
-      "CRT_BLOCK", // 0x0002
-      "CRT_ASSIGNMENT", // 0x0004
-      "CRT_FLOW_CONTROLLER", // 0x0008
-      "CRT_FLOW_TARGET", // 0x0010
-      "CRT_INVOKE", // 0x0020
-      "CRT_CREATE", // 0x0040
-      "CRT_BRANCH_TRUE", // 0x0080
-      "CRT_BRANCH_FALSE", // 0x0100
-      "CRT_SOURCE_INFO" }; // 0x0200
+  private static final String[] flagNames = {
+    "CRT_STATEMENT", // 0x0001
+    "CRT_BLOCK", // 0x0002
+    "CRT_ASSIGNMENT", // 0x0004
+    "CRT_FLOW_CONTROLLER", // 0x0008
+    "CRT_FLOW_TARGET", // 0x0010
+    "CRT_INVOKE", // 0x0020
+    "CRT_CREATE", // 0x0040
+    "CRT_BRANCH_TRUE", // 0x0080
+    "CRT_BRANCH_FALSE", // 0x0100
+    "CRT_SOURCE_INFO"
+  }; // 0x0200
 
   private static final String WARN_INVALID_FLAG = "Error at CRT entry %1$s: invalid flag %2$s";
 
@@ -52,11 +54,10 @@ public final class CRTFlags {
 
   /**
    * Creates a new instance of CRTFlags.
-   * 
-   * @param flags
-   *          the flags
-   * @throws InvalidCRTDataException
-   *           An InvalidCRTDataException is thrown if the flags are not valid.
+   *
+   * @param flags the flags
+   * @throws InvalidCRTDataException An InvalidCRTDataException is thrown if the flags are not
+   *     valid.
    */
   CRTFlags(short flags) throws InvalidCRTDataException {
     this.flags = flags;
@@ -66,7 +67,7 @@ public final class CRTFlags {
 
   /**
    * Returns the flag names of this instance.
-   * 
+   *
    * @return An array of Strings containing the flag names.
    */
   public final String[] getFlagNames() {
@@ -75,8 +76,7 @@ public final class CRTFlags {
     short tFlags = flags;
     while (tFlags > 0) {
       if (tFlags % 2 == 1) {
-        if (index < flagNames.length)
-          names.add(flagNames[index]);
+        if (index < flagNames.length) names.add(flagNames[index]);
         else {
           // assert false
           // because exception was thrown in the constructor.
@@ -91,11 +91,10 @@ public final class CRTFlags {
 
   /**
    * Tests whether the flags are valid.
-   * 
+   *
    * @return whether the flags are valid.
    */
   private boolean isFlagValid() {
     return 0 < flags && flags < 2 << flagNames.length - 1;
   }
-
 }

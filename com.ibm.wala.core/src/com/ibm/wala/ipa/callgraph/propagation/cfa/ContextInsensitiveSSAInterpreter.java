@@ -24,10 +24,9 @@ import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
-/**
- * Default implementation of SSAContextInterpreter for context-insensitive analysis.
- */
-public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInterpreter implements SSAContextInterpreter {
+/** Default implementation of SSAContextInterpreter for context-insensitive analysis. */
+public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInterpreter
+    implements SSAContextInterpreter {
 
   protected final AnalysisOptions options;
 
@@ -45,12 +44,11 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     // EVERYWHERE context
     return getAnalysisCache().getIR(node.getMethod(), Everywhere.EVERYWHERE);
   }
-  
+
   @Override
   public IRView getIRView(CGNode node) {
     return getIR(node);
   }
-
 
   @Override
   public int getNumberOfStatements(CGNode node) {
@@ -80,6 +78,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return getAnalysisCache().getDefUse(getAnalysisCache().getIR(node.getMethod(), Everywhere.EVERYWHERE));
+    return getAnalysisCache()
+        .getDefUse(getAnalysisCache().getIR(node.getMethod(), Everywhere.EVERYWHERE));
   }
 }

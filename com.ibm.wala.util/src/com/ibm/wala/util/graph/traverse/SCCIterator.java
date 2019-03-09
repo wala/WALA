@@ -10,40 +10,36 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
-
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.ReverseIterator;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.GraphInverter;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
- * This class computes strongly connected components for a Graph (or a subset of
- * it). It does not store the SCCs in any lookaside structure, but rather simply
- * generates an enumeration of them. See Cormen, Leiserson, Rivest Ch. 23 Sec. 5
+ * This class computes strongly connected components for a Graph (or a subset of it). It does not
+ * store the SCCs in any lookaside structure, but rather simply generates an enumeration of them.
+ * See Cormen, Leiserson, Rivest Ch. 23 Sec. 5
  */
 public class SCCIterator<T> implements Iterator<Set<T>> {
-  /**
-   * The second DFS (the reverse one) needed while computing SCCs
-   */
-  final private DFSFinishTimeIterator<T> rev;
+  /** The second DFS (the reverse one) needed while computing SCCs */
+  private final DFSFinishTimeIterator<T> rev;
 
   /**
    * Construct an enumeration across the SCCs of a given graph.
-   * 
-   * @param G
-   *          The graph over which to construct SCCs
-   * @throws NullPointerException  if G is null
+   *
+   * @param G The graph over which to construct SCCs
+   * @throws NullPointerException if G is null
    */
   public SCCIterator(Graph<T> G) throws NullPointerException {
     this(G, G == null ? null : G.iterator());
   }
 
   /**
-   * Construct an enumeration of the SCCs of the subset of a given graph
-   * determined by starting at a given set of nodes.
+   * Construct an enumeration of the SCCs of the subset of a given graph determined by starting at a
+   * given set of nodes.
    */
   public SCCIterator(Graph<T> G, Iterator<T> nodes) {
     if (G == null) {
@@ -54,17 +50,13 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
     rev = DFS.iterateFinishTime(GraphInverter.invert(G), reverseFinishTime);
   }
 
-  /**
-   * Determine whether there are any more SCCs remaining in this enumeration.
-   */
+  /** Determine whether there are any more SCCs remaining in this enumeration. */
   @Override
   public boolean hasNext() {
     return rev.hasNext();
   }
 
-  /**
-   * Find the next SCC in this enumeration
-   */
+  /** Find the next SCC in this enumeration */
   @Override
   public Set<T> next() throws NoSuchElementException {
     Set<T> currentSCC = HashSetFactory.make();
@@ -79,10 +71,8 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
     return currentSCC;
   }
 
-
   @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
-
 }

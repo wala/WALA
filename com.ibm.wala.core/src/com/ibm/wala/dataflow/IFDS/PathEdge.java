@@ -10,10 +10,9 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
-
 /**
  * an individual edge &lt;entry, d1&gt; -&gt; &lt;target, d2&gt;
- * 
+ *
  * @param <T> node type in the supergraph
  */
 public final class PathEdge<T> {
@@ -32,7 +31,7 @@ public final class PathEdge<T> {
     }
     return new PathEdge<>(s_p, d1, n, d2);
   }
-  
+
   private PathEdge(T s_p, int d1, T n, int d2) {
     this.entry = s_p;
     this.d1 = d1;
@@ -58,27 +57,18 @@ public final class PathEdge<T> {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     final PathEdge<?> other = (PathEdge<?>) obj;
-    if (d1 != other.d1)
-      return false;
-    if (d2 != other.d2)
-      return false;
+    if (d1 != other.d1) return false;
+    if (d2 != other.d2) return false;
     if (target == null) {
-      if (other.target != null)
-        return false;
-    } else if (!target.equals(other.target))
-      return false;
+      if (other.target != null) return false;
+    } else if (!target.equals(other.target)) return false;
     if (entry == null) {
-      if (other.entry != null)
-        return false;
-    } else if (!entry.equals(other.entry))
-      return false;
+      if (other.entry != null) return false;
+    } else if (!entry.equals(other.entry)) return false;
     return true;
   }
 

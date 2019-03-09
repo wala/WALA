@@ -10,9 +10,7 @@
  */
 package slice;
 
-/**
- * Test for bug described on mailing list by Ravi Chandhran.
- */
+/** Test for bug described on mailing list by Ravi Chandhran. */
 public class Slice8 {
 
   public static void main(String[] args) {
@@ -28,8 +26,5 @@ public class Slice8 {
     return 3;
   }
 
-  private static void doNothing(int x) {
-
-  }
-
+  private static void doNothing(int x) {}
 }

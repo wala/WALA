@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.shrikeBT;
 
-/**
- * This class represents method invocation instructions.
- */
+/** This class represents method invocation instructions. */
 public class InvokeInstruction extends Instruction implements IInvokeInstruction {
   protected String type;
 
@@ -27,7 +25,8 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     this.methodName = methodName;
   }
 
-  public static InvokeInstruction make(String type, String className, String methodName, Dispatch mode) throws NullPointerException {
+  public static InvokeInstruction make(
+      String type, String className, String methodName, Dispatch mode) throws NullPointerException {
     if (type == null) {
       throw new NullPointerException("type must not be null");
     }
@@ -42,20 +41,20 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     }
     short opcode = 0;
     switch (mode) {
-    case VIRTUAL:
-      opcode = OP_invokevirtual;
-      break;
-    case SPECIAL:
-      opcode = OP_invokespecial;
-      break;
-    case STATIC:
-      opcode = OP_invokestatic;
-      break;
-    case INTERFACE:
-      opcode = OP_invokeinterface;
-      break;
-    default:
-      assert false;
+      case VIRTUAL:
+        opcode = OP_invokevirtual;
+        break;
+      case SPECIAL:
+        opcode = OP_invokespecial;
+        break;
+      case STATIC:
+        opcode = OP_invokestatic;
+        break;
+      case INTERFACE:
+        opcode = OP_invokeinterface;
+        break;
+      default:
+        assert false;
     }
     return new InvokeInstruction(opcode, type, className, methodName);
   }
@@ -64,10 +63,10 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return null;
   }
 
-  final static class Lazy extends InvokeInstruction {
-    final private ConstantPoolReader cp;
+  static final class Lazy extends InvokeInstruction {
+    private final ConstantPoolReader cp;
 
-    final private int index;
+    private final int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null, null, null);
@@ -117,11 +116,13 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   }
 
   @Override
-  final public boolean equals(Object o) {
+  public final boolean equals(Object o) {
     if (o instanceof InvokeInstruction) {
       InvokeInstruction i = (InvokeInstruction) o;
-      return i.getMethodSignature().equals(getMethodSignature()) && i.getClassType().equals(getClassType())
-          && i.getMethodName().equals(getMethodName()) && i.opcode == opcode;
+      return i.getMethodSignature().equals(getMethodSignature())
+          && i.getClassType().equals(getClassType())
+          && i.getMethodName().equals(getMethodName())
+          && i.opcode == opcode;
     } else {
       return false;
     }
@@ -142,37 +143,41 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return type;
   }
 
-  final public int getInvocationMode() {
+  public final int getInvocationMode() {
     return opcode;
   }
 
-  final public String getInvocationModeString() {
+  public final String getInvocationModeString() {
     switch (opcode) {
-    case Constants.OP_invokestatic:
-      return "STATIC";
-    case Constants.OP_invokeinterface:
-      return "INTERFACE";
-    case Constants.OP_invokespecial:
-      return "SPECIAL";
-    case Constants.OP_invokevirtual:
-      return "VIRTUAL";
-    default:
-      throw new Error("Unknown mode: " + opcode);
+      case Constants.OP_invokestatic:
+        return "STATIC";
+      case Constants.OP_invokeinterface:
+        return "INTERFACE";
+      case Constants.OP_invokespecial:
+        return "SPECIAL";
+      case Constants.OP_invokevirtual:
+        return "VIRTUAL";
+      default:
+        throw new Error("Unknown mode: " + opcode);
     }
   }
 
   @Override
-  final public int hashCode() {
-    return getMethodSignature().hashCode() + 9011 * getClassType().hashCode() + 317 * getMethodName().hashCode() + opcode * 3188;
+  public final int hashCode() {
+    return getMethodSignature().hashCode()
+        + 9011 * getClassType().hashCode()
+        + 317 * getMethodName().hashCode()
+        + opcode * 3188;
   }
 
   @Override
-  final public int getPoppedCount() {
-    return (opcode == Constants.OP_invokestatic ? 0 : 1) + Util.getParamsCount(getMethodSignature());
+  public final int getPoppedCount() {
+    return (opcode == Constants.OP_invokestatic ? 0 : 1)
+        + Util.getParamsCount(getMethodSignature());
   }
 
   @Override
-  final public String getPushedType(String[] types) {
+  public final String getPushedType(String[] types) {
     String t = Util.getReturnType(getMethodSignature());
     if (t.equals(Constants.TYPE_void)) {
       return null;
@@ -182,20 +187,28 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   }
 
   @Override
-  final public byte getPushedWordSize() {
+  public final byte getPushedWordSize() {
     String t = getMethodSignature();
     int index = t.lastIndexOf(')');
     return Util.getWordSize(t, index + 1);
   }
 
   @Override
-  final public void visit(IInstruction.Visitor v) throws NullPointerException {
+  public final void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitInvoke(this);
   }
 
   @Override
-  final public String toString() {
-    return "Invoke(" + getInvocationModeString() + ',' + getClassType() + ',' + getMethodName() + ',' + getMethodSignature() + ')';
+  public final String toString() {
+    return "Invoke("
+        + getInvocationModeString()
+        + ','
+        + getClassType()
+        + ','
+        + getMethodName()
+        + ','
+        + getMethodSignature()
+        + ')';
   }
 
   @Override
@@ -206,16 +219,16 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   @Override
   public Dispatch getInvocationCode() {
     switch (opcode) {
-    case Constants.OP_invokestatic:
-      return Dispatch.STATIC;
-    case Constants.OP_invokeinterface:
-      return Dispatch.INTERFACE;
-    case Constants.OP_invokespecial:
-      return Dispatch.SPECIAL;
-    case Constants.OP_invokevirtual:
-      return Dispatch.VIRTUAL;
-    default:
-      throw new Error("Unknown mode: " + opcode);
+      case Constants.OP_invokestatic:
+        return Dispatch.STATIC;
+      case Constants.OP_invokeinterface:
+        return Dispatch.INTERFACE;
+      case Constants.OP_invokespecial:
+        return Dispatch.SPECIAL;
+      case Constants.OP_invokevirtual:
+        return Dispatch.VIRTUAL;
+      default:
+        throw new Error("Unknown mode: " + opcode);
     }
   }
 }

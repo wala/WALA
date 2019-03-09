@@ -10,12 +10,8 @@
  */
 package annotations;
 
-/**
- * class with annotated fields
- */
+/** class with annotated fields */
 public class AnnotatedClass4 {
 
-  @RuntimeInvisableAnnotation
-  @RuntimeVisableAnnotation
-  public static int foo;
+  @RuntimeInvisableAnnotation @RuntimeVisableAnnotation public static int foo;
 }

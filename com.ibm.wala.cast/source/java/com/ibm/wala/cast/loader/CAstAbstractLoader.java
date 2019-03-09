@@ -10,15 +10,6 @@
  */
 package com.ibm.wala.cast.loader;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -29,27 +20,28 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * basic abstract class loader implementation
- *
- */
+/** basic abstract class loader implementation */
 public abstract class CAstAbstractLoader implements IClassLoader {
 
-  /**
-   * types loaded by this
-   */
-  protected final Map<TypeName,IClass> types = HashMapFactory.make();
+  /** types loaded by this */
+  protected final Map<TypeName, IClass> types = HashMapFactory.make();
 
   protected final IClassHierarchy cha;
 
   protected final IClassLoader parent;
 
-  /**
-   * warnings generated while loading each module
-   */
+  /** warnings generated while loading each module */
   private final Map<ModuleEntry, Set<Warning>> errors = new HashMap<>();
-  
+
   public CAstAbstractLoader(IClassHierarchy cha, IClassLoader parent) {
     this.cha = cha;
     this.parent = parent;
@@ -73,14 +65,13 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   private Iterator<ModuleEntry> getMessages(final byte severity) {
     return errors.entrySet().stream()
-            .filter(entry -> entry.getValue().stream()
-                    .anyMatch(w -> w.getLevel() == severity))
-            .map(Map.Entry::getKey)
-            .iterator();
+        .filter(entry -> entry.getValue().stream().anyMatch(w -> w.getLevel() == severity))
+        .map(Map.Entry::getKey)
+        .iterator();
   }
-  
+
   public Iterator<ModuleEntry> getModulesWithParseErrors() {
-     return getMessages(Warning.SEVERE);
+    return getMessages(Warning.SEVERE);
   }
 
   public Iterator<ModuleEntry> getModulesWithWarnings() {
@@ -90,12 +81,11 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   public Set<Warning> getMessages(ModuleEntry m) {
     return errors.get(m);
   }
-  
-  
+
   public void clearMessages() {
     errors.clear();
   }
-  
+
   public IClass lookupClass(String className, IClassHierarchy cha) {
     assert this.cha == cha;
     return types.get(TypeName.string2TypeName(className));
@@ -123,32 +113,30 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public int getNumberOfMethods() {
-    return types.values().stream()
-            .mapToInt(cls -> cls.getDeclaredMethods().size())
-            .sum();
+    return types.values().stream().mapToInt(cls -> cls.getDeclaredMethods().size()).sum();
   }
 
   @Override
   public String getSourceFileName(IMethod method, int bcOffset) {
-    if (!(method instanceof AstMethod)){
+    if (!(method instanceof AstMethod)) {
       return null;
     }
-    Position pos = ((AstMethod)method).getSourcePosition(bcOffset);
-    if (null == pos){
+    Position pos = ((AstMethod) method).getSourcePosition(bcOffset);
+    if (null == pos) {
       return null;
-    } 
+    }
     return pos.getURL().getFile();
   }
-  
+
   @Override
   public String getSourceFileName(IClass klass) {
-    return ((AstClass)klass).getSourcePosition().getURL().getFile();
+    return ((AstClass) klass).getSourcePosition().getURL().getFile();
   }
-  
+
   @Override
   public Reader getSource(IClass klass) {
     try {
-      return ((AstClass)klass).getSourcePosition().getReader();
+      return ((AstClass) klass).getSourcePosition().getReader();
     } catch (IOException e) {
       return null;
     }
@@ -157,7 +145,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   @Override
   public Reader getSource(IMethod method, int bcOffset) {
     try {
-      return ((AstMethod)method).getSourcePosition(bcOffset).getReader();
+      return ((AstMethod) method).getSourcePosition(bcOffset).getReader();
     } catch (IOException e) {
       return null;
     }
@@ -173,5 +161,4 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   public void removeAll(Collection<IClass> toRemove) {
     types.values().removeIf(toRemove::contains);
   }
-
 }

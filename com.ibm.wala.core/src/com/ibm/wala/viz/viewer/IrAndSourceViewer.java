@@ -10,60 +10,58 @@
  */
 package com.ibm.wala.viz.viewer;
 
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ssa.IR;
 import java.awt.Component;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import javax.swing.JSplitPane;
-
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ssa.IR;
 
 public class IrAndSourceViewer {
 
   private IrViewer irViewer;
   private SourceViewer sourceViewer;
-  
-  private IR ir;
-  
-  public Component getComponent() {
 
+  private IR ir;
+
+  public Component getComponent() {
 
     JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     irViewer = new IrViewer();
     splitPane.setLeftComponent(irViewer);
 
-    sourceViewer = new SourceViewer();    
+    sourceViewer = new SourceViewer();
     splitPane.setRightComponent(sourceViewer);
 
-    irViewer.addSelectedPcListner(pc -> {
-      IMethod method = ir.getMethod();
-      int sourceLineNumber = IrViewer.NA;
-      String sourceFileName = null;
-      if (pc != IrViewer.NA){
-        try{
-          sourceLineNumber = method.getLineNumber(pc);
-          IClassLoader loader = method.getDeclaringClass().getClassLoader();
-          sourceFileName = loader.getSourceFileName(method, pc);
-        } catch (Exception e1){
-          e1.printStackTrace();
-        }
-      }
-      if (sourceFileName != null){
-        URL url;
-        try {
-          url = (new File(sourceFileName)).toURI().toURL();
-          sourceViewer.setSource(url, sourceLineNumber);
-        } catch (MalformedURLException e2) {
-          e2.printStackTrace();
-        }
-      } else {
-         sourceViewer.removeSource();
-      }
-    });
-    
+    irViewer.addSelectedPcListner(
+        pc -> {
+          IMethod method = ir.getMethod();
+          int sourceLineNumber = IrViewer.NA;
+          String sourceFileName = null;
+          if (pc != IrViewer.NA) {
+            try {
+              sourceLineNumber = method.getLineNumber(pc);
+              IClassLoader loader = method.getDeclaringClass().getClassLoader();
+              sourceFileName = loader.getSourceFileName(method, pc);
+            } catch (Exception e1) {
+              e1.printStackTrace();
+            }
+          }
+          if (sourceFileName != null) {
+            URL url;
+            try {
+              url = (new File(sourceFileName)).toURI().toURL();
+              sourceViewer.setSource(url, sourceLineNumber);
+            } catch (MalformedURLException e2) {
+              e2.printStackTrace();
+            }
+          } else {
+            sourceViewer.removeSource();
+          }
+        });
+
     return splitPane;
   }
 
@@ -76,5 +74,4 @@ public class IrAndSourceViewer {
     this.ir = ir;
     irViewer.setIR(ir);
   }
-
 }

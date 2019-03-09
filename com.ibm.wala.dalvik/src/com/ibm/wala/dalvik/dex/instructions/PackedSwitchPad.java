@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -53,65 +53,56 @@ import org.jf.dexlib2.iface.instruction.SwitchPayload;
 
 public class PackedSwitchPad implements SwitchPad {
 
-    public int firstValue;
-    public final int[] offsets;
-    public final int defaultOffset;
-    private int [] labelsAndOffsets;
-    private int[] values;
+  public int firstValue;
+  public final int[] offsets;
+  public final int defaultOffset;
+  private int[] labelsAndOffsets;
+  private int[] values;
 
-    public PackedSwitchPad(SwitchPayload inst, int defaultOffset) {
-    	int i = 0;
-    	this.offsets = new int[inst.getSwitchElements().size()];
-    	for(SwitchElement elt : inst.getSwitchElements()) {
-    		if (i == 0) {
-    			firstValue = elt.getKey();
-    		}
-    		offsets[i++] = elt.getOffset();
-    	}
-        this.defaultOffset = defaultOffset;
+  public PackedSwitchPad(SwitchPayload inst, int defaultOffset) {
+    int i = 0;
+    this.offsets = new int[inst.getSwitchElements().size()];
+    for (SwitchElement elt : inst.getSwitchElements()) {
+      if (i == 0) {
+        firstValue = elt.getKey();
+      }
+      offsets[i++] = elt.getOffset();
     }
+    this.defaultOffset = defaultOffset;
+  }
 
-    @Override
-    public int[] getOffsets()
-    {
-        return offsets;
+  @Override
+  public int[] getOffsets() {
+    return offsets;
+  }
+
+  @Override
+  public int[] getValues() {
+    if (values != null) return values;
+    values = new int[offsets.length];
+    for (int i = 0; i < offsets.length; i++) {
+      values[i] = firstValue + i;
     }
+    return values;
+  }
 
-    @Override
-    public int[] getValues()
-    {
-        if (values != null)
-            return values;
-        values = new int[offsets.length];
-        for (int i = 0; i < offsets.length; i++)
-        {
-            values[i] = firstValue + i;
-        }
-        return values;
+  @Override
+  public int getDefaultOffset() {
+    // return Integer.MIN_VALUE;
+    return defaultOffset;
+  }
+
+  @Override
+  public int[] getLabelsAndOffsets() {
+    if (labelsAndOffsets != null) return labelsAndOffsets;
+    //      labelsAndOffsets = new int[offsets.length * 2 + 2];
+    labelsAndOffsets = new int[offsets.length * 2];
+    for (int i = 0; i < offsets.length; i++) {
+      labelsAndOffsets[i * 2] = firstValue + i;
+      labelsAndOffsets[i * 2 + 1] = offsets[i];
     }
-
-
-
-    @Override
-    public int getDefaultOffset() {
-        //return Integer.MIN_VALUE;
-        return defaultOffset;
-    }
-
-    @Override
-    public int[] getLabelsAndOffsets() {
-        if(labelsAndOffsets != null)
-            return labelsAndOffsets;
-//      labelsAndOffsets = new int[offsets.length * 2 + 2];
-        labelsAndOffsets = new int[offsets.length * 2];
-        for(int i = 0; i < offsets.length; i++)
-        {
-            labelsAndOffsets[i*2] = firstValue + i;
-            labelsAndOffsets[i*2 + 1] = offsets[i];
-        }
-//      labelsAndOffsets[offsets.length*2] = getDefaultLabel();
-//      labelsAndOffsets[offsets.length*2+1] = defaultOffset;
-        return labelsAndOffsets;
-    }
-
+    //      labelsAndOffsets[offsets.length*2] = getDefaultLabel();
+    //      labelsAndOffsets[offsets.length*2+1] = defaultOffset;
+    return labelsAndOffsets;
+  }
 }

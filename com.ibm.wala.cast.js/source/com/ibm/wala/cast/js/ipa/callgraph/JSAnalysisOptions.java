@@ -14,26 +14,21 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 
-/**
- * call graph construction options specific to JavaScript.
- */
+/** call graph construction options specific to JavaScript. */
 public class JSAnalysisOptions extends AnalysisOptions {
 
   /**
-   * should the analysis model the semantics of Function.prototype.call / apply?
-   * Defaults to true.
+   * should the analysis model the semantics of Function.prototype.call / apply? Defaults to true.
    */
   private boolean handleCallApply = true;
-  
+
   private boolean useLoadFileTargetSelector = true;
 
   public JSAnalysisOptions(AnalysisScope scope, Iterable<? extends Entrypoint> e) {
     super(scope, e);
   }
-  
-  /**
-   * should the analysis model the semantics of Function.prototype.call / apply?
-   */
+
+  /** should the analysis model the semantics of Function.prototype.call / apply? */
   public boolean handleCallApply() {
     return handleCallApply;
   }
@@ -49,5 +44,4 @@ public class JSAnalysisOptions extends AnalysisOptions {
   public void setUseLoadFileTargetSelector(boolean useIt) {
     this.useLoadFileTargetSelector = useIt;
   }
-
 }

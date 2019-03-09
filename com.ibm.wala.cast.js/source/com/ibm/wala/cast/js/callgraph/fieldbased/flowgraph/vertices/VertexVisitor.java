@@ -10,18 +10,28 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
-
 public interface VertexVisitor<T> {
-	public abstract T visitVarVertex(VarVertex varVertex);
-	public abstract T visitPropVertex(PropVertex propVertex);
-	public abstract T visitUnknownVertex(UnknownVertex unknownVertex);
-	public abstract T visitFuncVertex(FuncVertex funcVertex);
+  public abstract T visitVarVertex(VarVertex varVertex);
+
+  public abstract T visitPropVertex(PropVertex propVertex);
+
+  public abstract T visitUnknownVertex(UnknownVertex unknownVertex);
+
+  public abstract T visitFuncVertex(FuncVertex funcVertex);
+
   public abstract T visitCreationSiteVertex(CreationSiteVertex csVertex);
-	public abstract T visitParamVertex(ParamVertex paramVertex);
-	public abstract T visitRetVertex(RetVertex retVertex);
-	public abstract T visitCalleeVertex(CallVertex calleeVertex);
-	public abstract T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex);
+
+  public abstract T visitParamVertex(ParamVertex paramVertex);
+
+  public abstract T visitRetVertex(RetVertex retVertex);
+
+  public abstract T visitCalleeVertex(CallVertex calleeVertex);
+
+  public abstract T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex);
+
   public abstract T visitArgVertex(ArgVertex argVertex);
+
   public abstract T visitGlobalVertex(GlobalVertex globalVertex);
+
   public abstract T visitPrototypeVertex(PrototypeFieldVertex protoVertex);
 }

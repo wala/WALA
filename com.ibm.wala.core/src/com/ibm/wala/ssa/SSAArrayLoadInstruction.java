@@ -12,39 +12,46 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
 
-/**
- * SSA instruction representing an array load.
- */
+/** SSA instruction representing an array load. */
 public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
 
-  protected SSAArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference elementType) {
+  protected SSAArrayLoadInstruction(
+      int iindex, int result, int arrayref, int index, TypeReference elementType) {
     super(iindex, arrayref, index, elementType);
     this.result = result;
   }
 
   @Override
-  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
+      throws IllegalArgumentException {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("defs.length == 0");
     }
     if (uses != null && uses.length < 2) {
       throw new IllegalArgumentException("uses.length < 2");
     }
-    return insts.ArrayLoadInstruction(iindex, defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
-        uses == null ? getIndex() : uses[1], getElementType());
+    return insts.ArrayLoadInstruction(
+        iindex,
+        defs == null ? result : defs[0],
+        uses == null ? getArrayRef() : uses[0],
+        uses == null ? getIndex() : uses[1],
+        getElementType());
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = arrayload " + getValueString(symbolTable, getArrayRef()) + '['
-        + getValueString(symbolTable, getIndex()) + ']';
+    return getValueString(symbolTable, result)
+        + " = arrayload "
+        + getValueString(symbolTable, getArrayRef())
+        + '['
+        + getValueString(symbolTable, getIndex())
+        + ']';
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -54,9 +61,7 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
     v.visitArrayLoad(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
   @Override
   public boolean hasDef() {
     return true;
@@ -84,6 +89,4 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
   public int hashCode() {
     return 6311 * result ^ 2371 * getArrayRef() + getIndex();
   }
-
-
 }

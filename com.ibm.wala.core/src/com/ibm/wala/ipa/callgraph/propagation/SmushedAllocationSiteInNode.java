@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -19,12 +17,12 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
+import java.util.Iterator;
 
 /**
- * An {@link InstanceKey} which represents the set of all allocation sites
- * of a given type in a {@link CGNode}.
- * An instance key which represents a unique set for ALL allocation sites of a
- * given type in a CGNode
+ * An {@link InstanceKey} which represents the set of all allocation sites of a given type in a
+ * {@link CGNode}. An instance key which represents a unique set for ALL allocation sites of a given
+ * type in a CGNode
  */
 public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
   public SmushedAllocationSiteInNode(CGNode node, IClass type) {
@@ -56,8 +54,8 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return new MapIterator<>(
         new FilterIterator<>(
-          getNode().iterateNewSites(),
-          o -> o.getDeclaredType().equals(getConcreteType().getReference())),
+            getNode().iterateNewSites(),
+            o -> o.getDeclaredType().equals(getConcreteType().getReference())),
         object -> Pair.make(getNode(), object));
   }
 }

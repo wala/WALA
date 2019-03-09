@@ -15,9 +15,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.collections.Pair;
 
-/**
- * A utility class consisting of a pair CallSiteReference x CGNode
- */
+/** A utility class consisting of a pair CallSiteReference x CGNode */
 public final class CallSite extends Pair<CallSiteReference, CGNode> {
 
   private static final long serialVersionUID = -5277592800329960642L;
@@ -40,11 +38,8 @@ public final class CallSite extends Pair<CallSiteReference, CGNode> {
     return fst;
   }
 
-  /**
-   * @return the Selector that identifies this site
-   */
+  /** @return the Selector that identifies this site */
   public Selector getSelector() {
     return getSite().getDeclaredTarget().getSelector();
   }
-
 }

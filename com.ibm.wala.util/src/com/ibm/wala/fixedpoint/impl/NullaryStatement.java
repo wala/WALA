@@ -13,21 +13,16 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IVariable;
 
-/**
- * Represents a single step, restricted to a nullary
- * operator.
- */
-public abstract class NullaryStatement<T extends IVariable<T>> extends AbstractStatement<T, NullaryOperator<T>> {
+/** Represents a single step, restricted to a nullary operator. */
+public abstract class NullaryStatement<T extends IVariable<T>>
+    extends AbstractStatement<T, NullaryOperator<T>> {
+
+  /** The operands */
+  protected final T lhs;
 
   /**
-   * The operands
-   */
-  final protected T lhs;
-
-  /** 
-   * Evaluate this equation, setting a new value for the
-   * left-hand side. 
-   * 
+   * Evaluate this equation, setting a new value for the left-hand side.
+   *
    * @return true if the lhs value changed. false otherwise
    */
   @Override
@@ -36,9 +31,9 @@ public abstract class NullaryStatement<T extends IVariable<T>> extends AbstractS
     return op.evaluate(lhs);
   }
 
-  /** 
+  /**
    * Return the left-hand side of this equation.
-   * 
+   *
    * @return the lattice cell this equation computes
    */
   @Override
@@ -46,8 +41,9 @@ public abstract class NullaryStatement<T extends IVariable<T>> extends AbstractS
     return lhs;
   }
 
-  /** 
+  /**
    * Does this equation contain an appearance of a given cell?
+   *
    * @param cell the cell in question
    * @return true or false
    */
@@ -56,7 +52,7 @@ public abstract class NullaryStatement<T extends IVariable<T>> extends AbstractS
     return lhs == cell;
   }
 
-  /** 
+  /**
    * Constructor for case of one operand on the right-hand side.
    *
    * @param lhs the lattice cell set by this equation
@@ -100,7 +96,7 @@ public abstract class NullaryStatement<T extends IVariable<T>> extends AbstractS
     }
     return result;
   }
-  
+
   @Override
   public T[] getRHS() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();

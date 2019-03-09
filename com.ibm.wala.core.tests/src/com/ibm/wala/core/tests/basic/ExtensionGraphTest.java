@@ -11,20 +11,19 @@
 
 package com.ibm.wala.core.tests.basic;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.ExtensionGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.SCCIterator;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ExtensionGraphTest {
 
   private static NumberedGraph<String> makeBaseGraph() {
     NumberedGraph<String> base = SlowSparseNumberedGraph.make();
-    
+
     base.addNode("A");
     base.addNode("B");
     base.addNode("C");
@@ -33,7 +32,7 @@ public class ExtensionGraphTest {
     base.addNode("F");
     base.addNode("G");
     base.addNode("H");
-    
+
     base.addEdge("A", "B");
     base.addEdge("B", "C");
     base.addEdge("A", "D");
@@ -46,26 +45,26 @@ public class ExtensionGraphTest {
 
     return base;
   }
-  
+
   private static void augmentA(NumberedGraph<String> base) {
     base.addEdge("C", "B");
     base.addEdge("E", "D");
     base.addEdge("G", "F");
   }
-  
+
   private static void augmentB(NumberedGraph<String> base) {
     base.addNode("I");
     base.addNode("J");
-    
+
     base.addEdge("I", "J");
     base.addEdge("A", "I");
     base.addEdge("H", "J");
   }
-  
+
   private static void augmentC(NumberedGraph<String> base) {
     base.addEdge("H", "A");
   }
-  
+
   @Test
   public void testAugment() {
     NumberedGraph<String> base = makeBaseGraph();

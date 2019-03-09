@@ -13,14 +13,10 @@ package com.ibm.wala.util.shrike;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.warnings.Warning;
 
-/**
- * Utility class to help deal with analysis of exceptions.
- */
+/** Utility class to help deal with analysis of exceptions. */
 public class Exceptions {
 
-  /**
-   * A warning for when we fail to resolve the type for a checkcast
-   */
+  /** A warning for when we fail to resolve the type for a checkcast */
   public static class MethodResolutionFailure extends Warning {
 
     final MemberReference method;
@@ -43,5 +39,4 @@ public class Exceptions {
       return new MethodResolutionFailure(Warning.SEVERE, method);
     }
   }
-  
 }

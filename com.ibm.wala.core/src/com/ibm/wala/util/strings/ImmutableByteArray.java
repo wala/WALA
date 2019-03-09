@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.util.strings;
 
-/**
- * A read-only byte array.
- */
+/** A read-only byte array. */
 public final class ImmutableByteArray {
 
   // allow "friends" in this package to access
@@ -39,7 +37,8 @@ public final class ImmutableByteArray {
     try {
       System.arraycopy(b, start, this.b, 0, length);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("illegal parameters " + b.length + ' ' + start + ' ' + length, e);
+      throw new IllegalArgumentException(
+          "illegal parameters " + b.length + ' ' + start + ' ' + length, e);
     }
   }
 
@@ -88,5 +87,4 @@ public final class ImmutableByteArray {
   public static ImmutableByteArray make(String s) {
     return new ImmutableByteArray(UTF8Convert.toUTF8(s));
   }
-
 }

@@ -12,19 +12,12 @@ package com.ibm.wala.cast.java.ssa;
 
 import com.ibm.wala.cast.ir.ssa.AstAbstractInstructionVisitor;
 
-public class AstJavaAbstractInstructionVisitor 
-    extends AstAbstractInstructionVisitor 
-    implements AstJavaInstructionVisitor 
-{
+public class AstJavaAbstractInstructionVisitor extends AstAbstractInstructionVisitor
+    implements AstJavaInstructionVisitor {
 
   @Override
-  public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
-
-  }
+  public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {}
 
   @Override
-  public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
-
-  }
-
+  public void visitEnclosingObjectReference(EnclosingObjectReference inst) {}
 }

@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.util.Set;
-
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph;
 import com.ibm.wala.cast.js.cfg.JSInducedCFG;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
@@ -31,6 +29,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Set;
 
 public class JSCallGraph extends AstCallGraph {
 
@@ -38,8 +37,9 @@ public class JSCallGraph extends AstCallGraph {
     super(fakeRootClass, options, cache);
   }
 
-  public final static MethodReference fakeRoot = MethodReference.findOrCreate(JavaScriptTypes.FakeRoot, FakeRootMethod.name,
-      FakeRootMethod.descr);
+  public static final MethodReference fakeRoot =
+      MethodReference.findOrCreate(
+          JavaScriptTypes.FakeRoot, FakeRootMethod.name, FakeRootMethod.descr);
 
   public static class JSFakeRoot extends ScriptFakeRoot {
 
@@ -53,10 +53,14 @@ public class JSCallGraph extends AstCallGraph {
     }
 
     @Override
-    public SSAAbstractInvokeInstruction addDirectCall(int function, int[] params, CallSiteReference site) {
-      CallSiteReference newSite = new DynamicCallSiteReference(JavaScriptTypes.CodeBody, statements.size());
+    public SSAAbstractInvokeInstruction addDirectCall(
+        int function, int[] params, CallSiteReference site) {
+      CallSiteReference newSite =
+          new DynamicCallSiteReference(JavaScriptTypes.CodeBody, statements.size());
 
-      JavaScriptInvoke s = new JavaScriptInvoke(statements.size(), function, nextLocal++, params, nextLocal++, newSite);
+      JavaScriptInvoke s =
+          new JavaScriptInvoke(
+              statements.size(), function, nextLocal++, params, nextLocal++, newSite);
       statements.add(s);
 
       return s;
@@ -69,8 +73,9 @@ public class JSCallGraph extends AstCallGraph {
   }
 
   @Override
-  protected CGNode makeFakeRootNode() throws com.ibm.wala.util.CancelException  {
-    return findOrCreateNode(new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
+  protected CGNode makeFakeRootNode() throws com.ibm.wala.util.CancelException {
+    return findOrCreateNode(
+        new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 
   @Override
@@ -80,14 +85,14 @@ public class JSCallGraph extends AstCallGraph {
       Set<CGNode> result = HashSetFactory.make(1);
       for (CGNode n : this) {
         IMethod method = n.getMethod();
-        if (method.getName().equals(JavaScriptMethods.ctorAtom) && method.getDeclaringClass().getReference().equals(m.getDeclaringClass())) {
+        if (method.getName().equals(JavaScriptMethods.ctorAtom)
+            && method.getDeclaringClass().getReference().equals(m.getDeclaringClass())) {
           result.add(n);
         }
       }
-      return result;      
+      return result;
     } else {
       return super.getNodes(m);
     }
   }
-  
 }

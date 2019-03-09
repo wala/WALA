@@ -3,8 +3,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
+ *
+ * This file is a derivative of code released under the terms listed below.
  *
  */
 /*
@@ -48,43 +48,32 @@
 package org.scandroid.domain;
 
 public final class LocalElement extends CodeElement {
-    private final int id;
-    
-    public LocalElement(int id)
-    {
-        this.id = id;
-    }
+  private final int id;
 
-    @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
+  public LocalElement(int id) {
+    this.id = id;
+  }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + id;
+    return result;
+  }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    LocalElement other = (LocalElement) obj;
+    if (id != other.id) return false;
+    return true;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		LocalElement other = (LocalElement) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
-
-
-
-	@Override
-    public String toString()
-    {
-        return "LocalElement("+id+ ')';
-    }
-
+  @Override
+  public String toString() {
+    return "LocalElement(" + id + ')';
+  }
 }

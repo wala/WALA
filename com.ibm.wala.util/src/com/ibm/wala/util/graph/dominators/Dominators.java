@@ -10,11 +10,6 @@
  */
 package com.ibm.wala.util.graph.dominators;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -28,36 +23,31 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
- * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This implementation uses path
- * compression and results in a O(e * alpha(e,n)) complexity, where e is the number of edges in the CFG and n is the number of
- * nodes.
- * 
- * Sources: TOPLAS article, Muchnick book
+ * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
+ * implementation uses path compression and results in a O(e * alpha(e,n)) complexity, where e is
+ * the number of edges in the CFG and n is the number of nodes.
+ *
+ * <p>Sources: TOPLAS article, Muchnick book
  */
-
 public abstract class Dominators<T> {
   static final boolean DEBUG = false;
 
-  /**
-   * a mapping from DFS number to node
-   */
+  /** a mapping from DFS number to node */
   private final T[] vertex;
 
-  /**
-   * a convenient place to locate the graph to avoid passing it internally
-   */
+  /** a convenient place to locate the graph to avoid passing it internally */
   protected final Graph<T> G;
 
-  /**
-   * the root node from which to build dominators
-   */
+  /** the root node from which to build dominators */
   protected final T root;
 
-  /**
-   * the number of nodes reachable from the root
-   */
+  /** the number of nodes reachable from the root */
   protected int reachableNodeCount = 0;
 
   /**
@@ -86,29 +76,22 @@ public abstract class Dominators<T> {
     }
   }
 
-  /**
-   * is node dominated by master?
-   */
+  /** is node dominated by master? */
   public boolean isDominatedBy(T node, T master) {
     for (T ptr = node; ptr != null; ptr = getIdom(ptr))
       // use equals() since sometimes the CFGs get
       // reconstructed --MS
-      if (ptr.equals(master))
-        return true;
+      if (ptr.equals(master)) return true;
 
     return false;
   }
 
-  /**
-   * return the immediate dominator of node
-   */
+  /** return the immediate dominator of node */
   public T getIdom(T node) {
     return getInfo(node).dominator;
   }
 
-  /**
-   * return an Iterator over all nodes that dominate node
-   */
+  /** return an Iterator over all nodes that dominate node */
   public Iterator<T> dominators(final T node) {
     return new Iterator<T>() {
       private T current = node;
@@ -125,8 +108,7 @@ public abstract class Dominators<T> {
 
       @Override
       public T next() {
-        if (current == null)
-          throw new NoSuchElementException();
+        if (current == null) throw new NoSuchElementException();
         T nextNode = current;
         current = getIdom(current);
         return nextNode;
@@ -134,9 +116,7 @@ public abstract class Dominators<T> {
     };
   }
 
-  /**
-   * return the dominator tree, which has an edge from n to n' if n dominates n'
-   */
+  /** return the dominator tree, which has an edge from n to n' if n dominates n' */
   public Graph<T> dominatorTree() {
     return new AbstractGraph<T>() {
       @Override
@@ -149,86 +129,78 @@ public abstract class Dominators<T> {
         return edges;
       }
 
-      private final EdgeManager<T> edges = new EdgeManager<T>() {
-        private final Map<T, Set<T>> nextMap = HashMapFactory.make();
+      private final EdgeManager<T> edges =
+          new EdgeManager<T>() {
+            private final Map<T, Set<T>> nextMap = HashMapFactory.make();
 
-        {
-          for (T n : G) {
-            if (n != root) {
-              T prev = getIdom(n);
-              Set<T> next = nextMap.get(prev);
-              if (next == null)
-                nextMap.put(prev, next = HashSetFactory.make(2));
-              next.add(n);
+            {
+              for (T n : G) {
+                if (n != root) {
+                  T prev = getIdom(n);
+                  Set<T> next = nextMap.get(prev);
+                  if (next == null) nextMap.put(prev, next = HashSetFactory.make(2));
+                  next.add(n);
+                }
+              }
             }
-          }
-        }
 
-        @Override
-        public Iterator<T> getPredNodes(T N) {
-          if (N == root)
-            return EmptyIterator.instance();
-          else
-            return new NonNullSingletonIterator<>(getIdom(N));
-        }
+            @Override
+            public Iterator<T> getPredNodes(T N) {
+              if (N == root) return EmptyIterator.instance();
+              else return new NonNullSingletonIterator<>(getIdom(N));
+            }
 
-        @Override
-        public int getPredNodeCount(Object N) {
-          return (N == root) ? 0 : 1;
-        }
+            @Override
+            public int getPredNodeCount(Object N) {
+              return (N == root) ? 0 : 1;
+            }
 
-        @Override
-        public Iterator<T> getSuccNodes(Object N) {
-          if (nextMap.containsKey(N))
-            return nextMap.get(N).iterator();
-          else
-            return EmptyIterator.instance();
-        }
+            @Override
+            public Iterator<T> getSuccNodes(Object N) {
+              if (nextMap.containsKey(N)) return nextMap.get(N).iterator();
+              else return EmptyIterator.instance();
+            }
 
-        @Override
-        public int getSuccNodeCount(Object N) {
-          if (nextMap.containsKey(N))
-            return nextMap.get(N).size();
-          else
-            return 0;
-        }
+            @Override
+            public int getSuccNodeCount(Object N) {
+              if (nextMap.containsKey(N)) return nextMap.get(N).size();
+              else return 0;
+            }
 
-        @Override
-        public void addEdge(Object src, Object dst) {
-          Assertions.UNREACHABLE();
-        }
+            @Override
+            public void addEdge(Object src, Object dst) {
+              Assertions.UNREACHABLE();
+            }
 
-        @Override
-        public void removeEdge(Object src, Object dst) {
-          Assertions.UNREACHABLE();
-        }
+            @Override
+            public void removeEdge(Object src, Object dst) {
+              Assertions.UNREACHABLE();
+            }
 
-        @Override
-        public void removeAllIncidentEdges(Object node) {
-          Assertions.UNREACHABLE();
-        }
+            @Override
+            public void removeAllIncidentEdges(Object node) {
+              Assertions.UNREACHABLE();
+            }
 
-        @Override
-        public void removeIncomingEdges(Object node) {
-          // TODO Auto-generated method stub
-          Assertions.UNREACHABLE();
+            @Override
+            public void removeIncomingEdges(Object node) {
+              // TODO Auto-generated method stub
+              Assertions.UNREACHABLE();
+            }
 
-        }
+            @Override
+            public void removeOutgoingEdges(Object node) {
+              // TODO Auto-generated method stub
+              Assertions.UNREACHABLE();
+            }
 
-        @Override
-        public void removeOutgoingEdges(Object node) {
-          // TODO Auto-generated method stub
-          Assertions.UNREACHABLE();
-
-        }
-
-        @Override
-        public boolean hasEdge(Object src, Object dst) {
-          // TODO Auto-generated method stub
-          Assertions.UNREACHABLE();
-          return false;
-        }
-      };
+            @Override
+            public boolean hasEdge(Object src, Object dst) {
+              // TODO Auto-generated method stub
+              Assertions.UNREACHABLE();
+              return false;
+            }
+          };
     };
   }
 
@@ -236,12 +208,9 @@ public abstract class Dominators<T> {
   // IMPLEMENTATION -- MAIN ALGORITHM
   //
 
-  /**
-   * analyze dominators
-   */
+  /** analyze dominators */
   protected void analyze() {
-    if (DEBUG)
-      System.out.println("Dominators for " + G);
+    if (DEBUG) System.out.println("Dominators for " + G);
 
     // Step 1: Perform a DFS numbering
     step1();
@@ -254,40 +223,37 @@ public abstract class Dominators<T> {
     // number of the node's semidominator.
     step3();
 
-    if (DEBUG)
-      System.err.println(this);
+    if (DEBUG) System.err.println(this);
   }
 
   /**
-   * The goal of this step is to perform a DFS numbering on the CFG, starting at the root. The exit node is not included.
+   * The goal of this step is to perform a DFS numbering on the CFG, starting at the root. The exit
+   * node is not included.
    */
   private void step1() {
     reachableNodeCount = 0;
 
-    DFSDiscoverTimeIterator<T> dfs = new SlowDFSDiscoverTimeIterator<T>(G, root) {
-      public static final long serialVersionUID = 88831771771711L;
+    DFSDiscoverTimeIterator<T> dfs =
+        new SlowDFSDiscoverTimeIterator<T>(G, root) {
+          public static final long serialVersionUID = 88831771771711L;
 
-      @Override
-      protected void visitEdge(T from, T to) {
-        if (DEBUG)
-          System.out.println("visiting edge " + from + " --> " + to);
-        setParent(to, from);
-      }
-    };
+          @Override
+          protected void visitEdge(T from, T to) {
+            if (DEBUG) System.out.println("visiting edge " + from + " --> " + to);
+            setParent(to, from);
+          }
+        };
 
     while (dfs.hasNext()) {
       T node = dfs.next();
       assert node != null;
       vertex[++reachableNodeCount] = node;
       setSemi(node, reachableNodeCount);
-      if (DEBUG)
-        System.out.println(node + " is DFS number " + reachableNodeCount);
+      if (DEBUG) System.out.println(node + " is DFS number " + reachableNodeCount);
     }
   }
 
-  /**
-   * This is the heart of the algorithm. See sources for details.
-   */
+  /** This is the heart of the algorithm. See sources for details. */
   private void step2() {
     if (DEBUG) {
       System.out.println(" ******* Beginning STEP 2 *******\n");
@@ -350,12 +316,14 @@ public abstract class Dominators<T> {
   } // method
 
   /**
-   * This method inspects the passed node and returns the following: node, if node is a root of a tree in the forest
-   * 
-   * any vertex, u != r such that otherwise r is the root of the tree containing node and * semi(u) is minimum on the path r -&gt; v
-   * 
-   * See TOPLAS 1(1), July 1979, p 128 for details.
-   * 
+   * This method inspects the passed node and returns the following: node, if node is a root of a
+   * tree in the forest
+   *
+   * <p>any vertex, u != r such that otherwise r is the root of the tree containing node and *
+   * semi(u) is minimum on the path r -&gt; v
+   *
+   * <p>See TOPLAS 1(1), July 1979, p 128 for details.
+   *
    * @param node the node to evaluate
    * @return the node as described above
    */
@@ -377,7 +345,7 @@ public abstract class Dominators<T> {
 
   /**
    * This recursive method performs the path compression
-   * 
+   *
    * @param node node of interest
    */
   private void compress(T node) {
@@ -391,9 +359,10 @@ public abstract class Dominators<T> {
   }
 
   /**
-   * Adds edge (node1, node2) to the forest maintained as an auxiliary data structure. This implementation uses path compression and
-   * results in a O(e * alpha(e,n)) complexity, where e is the number of edges in the CFG and n is the number of nodes.
-   * 
+   * Adds edge (node1, node2) to the forest maintained as an auxiliary data structure. This
+   * implementation uses path compression and results in a O(e * alpha(e,n)) complexity, where e is
+   * the number of edges in the CFG and n is the number of nodes.
+   *
    * @param node1 a basic node corresponding to the source of the new edge
    * @param node2 a basic node corresponding to the source of the new edge
    */
@@ -428,9 +397,7 @@ public abstract class Dominators<T> {
     }
   }
 
-  /**
-   * This final step sets the final dominator information.
-   */
+  /** This final step sets the final dominator information. */
   private void step3() {
     // Visit each node in DFS order, except for the root, which has number 1
     for (int i = 2; i <= reachableNodeCount; i++) {
@@ -443,9 +410,7 @@ public abstract class Dominators<T> {
     }
   }
 
-  /**
-   * LOOK-ASIDE TABLE FOR PER-NODE STATE AND ITS ACCESSORS
-   */
+  /** LOOK-ASIDE TABLE FOR PER-NODE STATE AND ITS ACCESSORS */
   protected final class DominatorInfo {
     /*
      * The result of this computation: the immediate dominator of this node
@@ -465,7 +430,7 @@ public abstract class Dominators<T> {
     /*
      * The buckets used in step 2
      */
-    final private Set<T> bucket;
+    private final Set<T> bucket;
 
     /*
      * the labels used in the fast union-find structure
@@ -538,10 +503,8 @@ public abstract class Dominators<T> {
   }
 
   private T getLabel(T node) {
-    if (node == null)
-      return null;
-    else
-      return getInfo(node).label;
+    if (node == null) return null;
+    else return getInfo(node).label;
   }
 
   private void setLabel(T node, T label) {
@@ -549,10 +512,8 @@ public abstract class Dominators<T> {
   }
 
   private int getSize(T node) {
-    if (node == null)
-      return 0;
-    else
-      return getInfo(node).size;
+    if (node == null) return 0;
+    else return getInfo(node).size;
   }
 
   private void setSize(T node, int size) {
@@ -568,10 +529,8 @@ public abstract class Dominators<T> {
   }
 
   private int getSemi(T node) {
-    if (node == null)
-      return 0;
-    else
-      return getInfo(node).semiDominator;
+    if (node == null) return 0;
+    else return getInfo(node).semiDominator;
   }
 
   private void setSemi(T node, int semi) {
@@ -589,5 +548,4 @@ public abstract class Dominators<T> {
     }
     return sb.toString();
   }
-
 }

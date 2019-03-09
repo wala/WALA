@@ -12,37 +12,35 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
-
 /**
  * A variable vertex represents an SSA variable inside a given function.
- * 
- * @author mschaefer
  *
+ * @author mschaefer
  */
 public final class VarVertex extends Vertex implements PointerKey {
-	private final FuncVertex func;
-	private final int valueNumber;
-	
-	VarVertex(FuncVertex func, int valueNumber) {
-		this.func = func;
-		this.valueNumber = valueNumber;
-	}
-	
-	public FuncVertex getFunction() {
-	  return func;
-	}
-	
-	public int getValueNumber() {
-	  return valueNumber;
-	}
+  private final FuncVertex func;
+  private final int valueNumber;
 
-	@Override
-	public <T> T accept(VertexVisitor<T> visitor) {
-		return visitor.visitVarVertex(this);
-	}
+  VarVertex(FuncVertex func, int valueNumber) {
+    this.func = func;
+    this.valueNumber = valueNumber;
+  }
 
-	@Override
-	public String toString() {
-	  return "Var(" + func + ", " + valueNumber + ')';
-	}
+  public FuncVertex getFunction() {
+    return func;
+  }
+
+  public int getValueNumber() {
+    return valueNumber;
+  }
+
+  @Override
+  public <T> T accept(VertexVisitor<T> visitor) {
+    return visitor.visitVarVertex(this);
+  }
+
+  @Override
+  public String toString() {
+    return "Var(" + func + ", " + valueNumber + ')';
+  }
 }

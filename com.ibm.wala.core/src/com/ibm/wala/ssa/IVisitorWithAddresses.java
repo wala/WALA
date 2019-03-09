@@ -14,18 +14,15 @@ import com.ibm.wala.ssa.SSAInstruction.IVisitor;
 
 /**
  * @author omert
- *
- * Temporary interface to accomodate the newly added {@link SSAAddressOfInstruction}
- * instruction. Ultimately, this interface should be merged into {@link IVisitor}.
- * 
- *  TODO: Add 'visitAddressOf' to {@link IVisitor}.
+ *     <p>Temporary interface to accomodate the newly added {@link SSAAddressOfInstruction}
+ *     instruction. Ultimately, this interface should be merged into {@link IVisitor}.
+ *     <p>TODO: Add 'visitAddressOf' to {@link IVisitor}.
  */
 public interface IVisitorWithAddresses extends IVisitor {
-  
+
   void visitAddressOf(SSAAddressOfInstruction instruction);
-  
+
   void visitLoadIndirect(SSALoadIndirectInstruction instruction);
 
   void visitStoreIndirect(SSAStoreIndirectInstruction instruction);
-
 }

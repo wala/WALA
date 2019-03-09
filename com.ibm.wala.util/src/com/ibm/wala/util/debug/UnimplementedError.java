@@ -11,12 +11,9 @@
 
 package com.ibm.wala.util.debug;
 
-/**
- * Something that's not implemented yet.
- */
+/** Something that's not implemented yet. */
 public class UnimplementedError extends Error {
   public static final long serialVersionUID = 20981098918191L;
-  	
 
   public UnimplementedError() {
     super();
@@ -25,5 +22,4 @@ public class UnimplementedError extends Error {
   public UnimplementedError(String s) {
     super(s);
   }
-
 }
