@@ -191,3 +191,9 @@ tasks.register('cleanTestExtras', Delete) {
 tasks.named('cleanTest') {
 	dependsOn 'cleanTestExtras'
 }
+
+googleJavaFormat {
+	// generated files
+	exclude "$name/parser.java"
+	exclude "$name/sym.java"
+}
