@@ -475,10 +475,6 @@ public class SSABuilder extends AbstractIntStackMachine {
                 getCurrentInstructionIndex(), instruction.getOperator(), result, val1, val2));
       }
 
-      /**
-       * @see
-       *     com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
-       */
       @Override
       public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
         int val2 = workingState.pop();
