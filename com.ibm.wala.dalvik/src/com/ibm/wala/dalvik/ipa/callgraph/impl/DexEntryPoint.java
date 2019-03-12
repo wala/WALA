@@ -7,7 +7,7 @@
  * This file is a derivative of code released under the terms listed below.
  *
  */
-/**
+/*
  * Copyright (c) 2009-2012,
  *
  * <p>Galois, Inc. (Aaron Tomb <atomb@galois.com>, Rogan Creswick <creswick@galois.com>) Steve Suh

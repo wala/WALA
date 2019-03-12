@@ -7,7 +7,7 @@
  * This file is a derivative of code released under the terms listed below.
  *
  */
-/**
+/*
  * Copyright (c) 2009-2012,
  *
  * <p>Adam Fuchs <afuchs@cs.umd.edu> Avik Chaudhuri <avik@cs.umd.edu> Steve Suh <suhsteve@gmail.com>
