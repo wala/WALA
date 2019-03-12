@@ -46,7 +46,6 @@
  *
  */
 
-/** */
 package com.ibm.wala.dalvik.dex.instructions;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
