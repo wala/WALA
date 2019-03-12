@@ -35,7 +35,7 @@ public final class TypeReference implements Serializable {
   /* Serial version */
   private static final long serialVersionUID = -3256390509887654327L;
 
-  /**
+  /*
    * NOTE: initialisation order is important!
    *
    * <p>TypeReferences are canonical.

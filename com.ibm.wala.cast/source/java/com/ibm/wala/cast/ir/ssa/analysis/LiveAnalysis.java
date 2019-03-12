@@ -194,7 +194,7 @@ public class LiveAnalysis {
       }
     }
 
-    /** Create the solver */
+    /* Create the solver */
     final BitVectorSolver<ISSABasicBlock> S =
         new BitVectorSolver<>(
             new IKilldallFramework<ISSABasicBlock, BitVectorVariable>() {
@@ -247,14 +247,14 @@ public class LiveAnalysis {
               }
             });
 
-    /** Solve the analysis problem */
+    /* Solve the analysis problem */
     try {
       S.solve(null);
     } catch (CancelException e) {
       throw new CancelRuntimeException(e);
     }
 
-    /** Prepare the lazy result with a closure. */
+    /* Prepare the lazy result with a closure. */
     return new Result() {
 
       @Override

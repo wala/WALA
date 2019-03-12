@@ -57,7 +57,7 @@ public class Util {
   /** TODO: Make these properties? */
   public static String nativeSpec = "natives.xml";
 
-  /** BEGIN Custom change: change native spec */
+  /* BEGIN Custom change: change native spec */
   public static void setNativeSpec(String xmlFile) {
     nativeSpec = xmlFile;
   }
@@ -65,7 +65,7 @@ public class Util {
   public static String getNativeSpec() {
     return nativeSpec;
   }
-  /** END Custom change: change native spec */
+  /* END Custom change: change native spec */
   /**
    * Set up an AnalysisOptions object with default selectors, corresponding to class hierarchy
    * lookup

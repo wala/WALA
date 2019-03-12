@@ -45,10 +45,10 @@ import java.util.Map;
  */
 public class GetClassContextInterpeter implements SSAContextInterpreter {
 
-  /** BEGIN Custom change: caching */
+  /* BEGIN Custom change: caching */
   private final Map<String, IR> cache = HashMapFactory.make();
 
-  /** END Custom change: caching */
+  /* END Custom change: caching */
   private static final boolean DEBUG = false;
 
   @Override
@@ -60,7 +60,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    /** BEGIN Custom change: caching */
+    /* BEGIN Custom change: caching */
     final Context context = node.getContext();
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + context.toString();
@@ -72,7 +72,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
       cache.put(hashKey, result);
     }
 
-    /** END Custom change: caching */
+    /* END Custom change: caching */
     return result;
   }
 

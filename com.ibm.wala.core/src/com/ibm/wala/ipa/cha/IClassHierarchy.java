@@ -50,10 +50,10 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   public int getNumber(IClass c);
 
-  /** BEGIN Custom change: remember unresolved classes */
+  /* BEGIN Custom change: remember unresolved classes */
   public Set<TypeReference> getUnresolvedClasses();
 
-  /** END Custom change: remember unresolved classes */
+  /* END Custom change: remember unresolved classes */
   /**
    * Find the possible targets of a call to a method reference
    *

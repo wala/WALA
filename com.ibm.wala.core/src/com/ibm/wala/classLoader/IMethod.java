@@ -89,7 +89,7 @@ public interface IMethod extends IMember, ContextItem {
    *     information is not available.
    */
   int getLineNumber(int bcIndex);
-  /** BEGIN Custom change: precise positions */
+  /* BEGIN Custom change: precise positions */
   public interface SourcePosition extends Comparable<SourcePosition> {
     int getFirstLine();
 
@@ -107,7 +107,7 @@ public interface IMethod extends IMember, ContextItem {
   SourcePosition getSourcePosition(int instructionIndex) throws InvalidClassFileException;
 
   SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException;
-  /** END Custom change: precise positions */
+  /* END Custom change: precise positions */
 
   /**
    * @return the (source code) name of the local variable of a given number at the specified program

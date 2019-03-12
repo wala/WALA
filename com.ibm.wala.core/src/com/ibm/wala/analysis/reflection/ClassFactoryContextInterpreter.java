@@ -50,10 +50,10 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
-  /** BEGIN Custom change: caching */
+  /* BEGIN Custom change: caching */
   private final Map<String, IR> cache = HashMapFactory.make();
 
-  /** END Custom change: caching */
+  /* END Custom change: caching */
   @Override
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -63,7 +63,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    /** BEGIN Custom change: caching */
+    /* BEGIN Custom change: caching */
     final Context context = node.getContext();
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + context.toString();
@@ -75,7 +75,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
       cache.put(hashKey, result);
     }
 
-    /** END Custom change: caching */
+    /* END Custom change: caching */
     return result;
   }
 
