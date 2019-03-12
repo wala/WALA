@@ -111,7 +111,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /** Counter for wiping soft caches */
   private static int wipeCount = 0;
 
-  /** use type inference to avoid unnecessary filter constraints? */
+  // /** use type inference to avoid unnecessary filter constraints? */
   // private final static boolean OPTIMIZE_WITH_TYPE_INFERENCE = true;
   /**
    * An optimization: if we can locally determine the final solution for a points-to set, then don't

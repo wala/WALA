@@ -89,8 +89,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
   /** The control flow graph to analyze */
   private final DexCFG cfg;
 
-  /** The max height of the stack. */
-  //  final private int maxStackHeight;
+  // /** The max height of the stack. */
+  // final private int maxStackHeight;
 
   /** the max number of locals in play */
   protected final int maxLocals;
@@ -369,14 +369,14 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
     return changed;
   }
 
-  /**
-   * Evaluate a meet of the stacks of machine states at the entry of a catch block.
-   *
-   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   *
-   * @param bb the basic block at whose entry the meet occurs
-   * @return true if the lhs value changes. false otherwise.
-   */
+  //  /**
+  //   * Evaluate a meet of the stacks of machine states at the entry of a catch block.
+  //   *
+  //   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+  //   *
+  //   * @param bb the basic block at whose entry the meet occurs
+  //   * @return true if the lhs value changes. false otherwise.
+  //   */
   //  private boolean meetStacksAtCatchBlock(IVariable lhs, IBasicBlock<Instruction> bb, Meeter
   // meeter) {
   //      boolean changed = false;
@@ -405,14 +405,14 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
   //      return changed;
   //  }
 
-  /**
-   * Evaluate a meet of the stacks of machine states at the entry of a basic block.
-   *
-   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-   *
-   * @param bb the basic block at whose entry the meet occurs
-   * @return true if the lhs value changes. false otherwise.
-   */
+  //  /**
+  //   * Evaluate a meet of the stacks of machine states at the entry of a basic block.
+  //   *
+  //   * <p>TODO: add some efficiency shortcuts. TODO: clean up and refactor.
+  //   *
+  //   * @param bb the basic block at whose entry the meet occurs
+  //   * @return true if the lhs value changes. false otherwise.
+  //   */
   //  private boolean meetStacks(IVariable lhs, IVariable[] rhs, IBasicBlock<Instruction> bb, Meeter
   // meeter) {
   //      boolean changed = false;

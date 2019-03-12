@@ -70,7 +70,7 @@ public class DexIField implements IField {
   /** The declaring class for this method. */
   private final DexIClass myClass;
 
-  /** name of the return type for this method, construct in the get return type method. */
+  // /** name of the return type for this method, construct in the get return type method. */
   // private TypeReference typeReference;
 
   /**

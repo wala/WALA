@@ -104,7 +104,7 @@ public final class ApplicationEP {
                 ExecutionOrder.AFTER_LOOP, onConfigurationChanged // XXX ??!
               }));
 
-  /** This method is for use in emulated process environments. */
+  // /** This method is for use in emulated process environments. */
   /*
   public static final AndroidPossibleEntryPoint onTerminate = new AndroidPossibleEntryPoint(AndroidComponent.APPLICATION,
              "onTerminate",
