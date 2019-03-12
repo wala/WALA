@@ -66,22 +66,22 @@ public class SSAValueManager {
   private final boolean AUTOMAKE_NAMES = true;
 
   private enum ValueStatus {
-    UNUSED,
     /** Value has never been mentioned before */
-    UNALLOCATED,
+    UNUSED,
     /** Awaiting to be set using setAllocation */
-    ALLOCATED,
+    UNALLOCATED,
     /** Set and ready to use */
-    FREE,
+    ALLOCATED,
     /** Has to be assigned using a Phi-Instruction */
-    INVALIDATED,
+    FREE,
     /** Should only be used as argument to a Phi Instruction */
-    CLOSED,
+    INVALIDATED,
     /** Should not be referenced any more */
-    FREE_INVALIDATED,
+    CLOSED,
     /** Well FREE and INVALIDATED */
-    FREE_CLOSED
+    FREE_INVALIDATED,
     /** Well FREE and CLOSED */
+    FREE_CLOSED
   }
 
   // TODO: nextLocal may be 0 on getUnamanged!
