@@ -384,12 +384,12 @@ public class FlatInstantiator implements IInstantiator {
     return newInstr;
   }
 
-  /**
-   * Add a call to a single clinit to the body.
-   *
-   * @param val the "this" to call clinit on
-   * @param inClass the class to call its clinit of
-   */
+  //  /**
+  //   * Add a call to a single clinit to the body.
+  //   *
+  //   * @param val the "this" to call clinit on
+  //   * @param inClass the class to call its clinit of
+  //   */
   /*private void addCallCLinit(SSAValue val, TypeReference inClass) {
       final int pc = this.body.getNextProgramCounter();
       final MethodReference mRef = MethodReference.findOrCreate(inClass, MethodReference.clinitSelector);
@@ -566,7 +566,7 @@ public class FlatInstantiator implements IInstantiator {
     return ret;
   }
 
-  /** Path back to Object (including T itself). */
+  // /** Path back to Object (including T itself). */
   //    private List<TypeReference> getAllSuper(final TypeReference T) {
   //        if (T.isPrimitiveType()) {
   //            throw new IllegalArgumentException("Not you that call primitive type on :P");
@@ -587,7 +587,7 @@ public class FlatInstantiator implements IInstantiator {
   //        return ret;
   //    }
 
-  /** The Constructor starts with 'this()' or 'super()'. */
+  // /** The Constructor starts with 'this()' or 'super()'. */
   /*private boolean callsCtor(MethodReference ctor) {
       if (ctor == null) {
           throw new IllegalArgumentException("Null ctor");
