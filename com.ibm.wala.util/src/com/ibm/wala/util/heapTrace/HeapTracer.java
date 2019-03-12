@@ -125,11 +125,6 @@ public class HeapTracer {
   }
 
   /**
-   * @param fdir
-   * @return {@link Collection}&lt;{@link String}&gt; representing the class names in a particular
-   *     file
-   */
-  /**
    * @param rootDir root of the classpath governing file f
    * @param f a File or directory
    * @return {@link Collection}&lt;{@link String}&gt; representing the class names in f
