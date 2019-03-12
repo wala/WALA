@@ -228,10 +228,6 @@ public class TypeBasedHeapModel implements HeapModel {
   /**
    * Note that this always returns a {@link FilteredPointerKey}, since the {@link
    * TypeBasedPointerAnalysis} relies on the type filter to compute points to sets.
-   *
-   * @see
-   *     com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode,
-   *     int)
    */
   @Override
   public FilteredPointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {

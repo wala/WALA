@@ -119,10 +119,6 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     return getIR(node).getInstructions().length;
   }
 
-  /**
-   * @see
-   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public boolean understands(CGNode node) {
     if (node == null) {

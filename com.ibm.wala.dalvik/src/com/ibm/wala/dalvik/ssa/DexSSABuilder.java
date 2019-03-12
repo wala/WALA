@@ -48,7 +48,6 @@ import com.ibm.wala.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
@@ -616,10 +615,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 getCurrentInstructionIndex(), result, val, instruction.type, instruction.isPEI()));
       }
 
-      /**
-       * @see
-       *     com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
-       */
       @Override
       public void visitBranch(Branch instruction) {
         if (instruction instanceof Branch.BinaryBranch) {
@@ -705,7 +700,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         //              workingState.push(symbol);
       }
 
-      /** @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConversion(IConversionInstruction) */
       // TODO: is this just a unary operation?
       //          @Override
       //          public void visitConversion(IConversionInstruction instruction) {
@@ -1041,7 +1035,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         //              }
       }
 
-      /** @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitShift(IShiftInstruction) */
       // TODO: this is just a binary operation
       //          @Override
       //          public void visitShift(IShiftInstruction instruction) {
