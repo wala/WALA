@@ -143,7 +143,6 @@
     <inspection_tool class="CssUnusedSymbol" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CsvValidation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CythonUsageBeforeDeclarationInspection" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="DanglingJavadoc" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DefaultAnnotationParam" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DefaultFileTemplate" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="CHECK_FILE_HEADER" value="true" />
