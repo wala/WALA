@@ -197,13 +197,13 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
   @Override
   public TypeReference[] getDeclaredExceptions() throws UnsupportedOperationException {
-    /** BEGIN Custom change: Variable Names in synth. methods */
+    /* BEGIN Custom change: Variable Names in synth. methods */
     if (myClass.getClassDefItem().getAnnotations() == null) {
       return null;
     }
     ArrayList<String> strings = new ArrayList<>();
     Set<? extends org.jf.dexlib2.iface.Annotation> annotationSet = eMethod.getAnnotations();
-    /** END Custom change: Variable Names in synth. methods */
+    /* END Custom change: Variable Names in synth. methods */
     if (annotationSet != null) {
       for (org.jf.dexlib2.iface.Annotation annotationItem : annotationSet) {
         if (annotationItem.getType().contentEquals("Ldalvik/annotation/Throws;")) {
@@ -637,14 +637,14 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     for (TryBlock<? extends org.jf.dexlib2.iface.ExceptionHandler> tryItem : tryBlocks) {
       int startAddress = tryItem.getStartCodeAddress();
       int endAddress = tryItem.getStartCodeAddress() + tryItem.getCodeUnitCount();
-      /**
+      /*
        * The end address points to the address immediately after the end of the last instruction
        * that the try block covers. We want the .catch directive and end_try label to be associated
        * with the last covered instruction, so we need to get the address for that instruction
        */
       int startInst = getInstructionIndex(startAddress);
       int endInst;
-      /**
+      /*
        * The try block can extend to the last instruction in the method. If this is the case then
        * endAddress will be the address immediately following the last instruction. Check to make
        * sure this is the case.

@@ -65,7 +65,7 @@ public class DalvikTypeInference extends TypeInference {
 
     @Override
     public byte evaluate(TypeVariable _lhs, TypeVariable[] _rhs) {
-      /**
+      /*
        * TODO: Find a better solution than downcasting. Downcasting is really ugly, although I can
        * be sure here that it succeeds because I control what type the parameters have. There must
        * be a cleaner solution which does not cause tons of changes in WALA's code, but I don't see

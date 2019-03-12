@@ -109,10 +109,10 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
-  /** BEGIN Custom change: caching */
+  /* BEGIN Custom change: caching */
   private final Map<String, IR> cache = HashMapFactory.make();
 
-  /** END Custom change: caching */
+  /* END Custom change: caching */
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -125,7 +125,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    /** BEGIN Custom change: caching */
+    /* BEGIN Custom change: caching */
     final Context context = node.getContext();
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + context.toString();
@@ -233,7 +233,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     Assertions.UNREACHABLE("Unexpected method " + method);
     return null;
   }
-  /** END Custom change: caching */
+  /* END Custom change: caching */
 
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)

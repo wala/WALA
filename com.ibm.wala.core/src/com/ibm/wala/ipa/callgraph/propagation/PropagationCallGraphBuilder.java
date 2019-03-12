@@ -232,7 +232,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       }
     }
 
-    /**
+    /*
      * BEGIN Custom change: throw exception on empty entry points. This is a severe issue that
      * should not go undetected!
      */
@@ -240,7 +240,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       throw new IllegalStateException(
           "Could not create a entrypoint callsites: " + Warnings.asString());
     }
-    /**
+    /*
      * END Custom change: throw exception on empty entry points. This is a severe issue that should
      * not go undetected!
      */
@@ -678,12 +678,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return pointerKeyFactory;
   }
 
-  /** BEGIN Custom change: setter for pointerkey factory */
+  /* BEGIN Custom change: setter for pointerkey factory */
   public void setPointerKeyFactory(PointerKeyFactory pkFact) {
     pointerKeyFactory = pkFact;
   }
 
-  /** END Custom change: setter for pointerkey factory */
+  /* END Custom change: setter for pointerkey factory */
   public RTAContextInterpreter getContextInterpreter() {
     return contextInterpreter;
   }

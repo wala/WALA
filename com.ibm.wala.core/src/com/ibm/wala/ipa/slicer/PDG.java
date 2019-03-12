@@ -69,7 +69,7 @@ import java.util.stream.Stream;
 /** Program dependence graph for a single call graph node */
 public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
-  /** BEGIN Custom change: control deps */
+  /* BEGIN Custom change: control deps */
   public enum Dependency {
     CONTROL_DEP,
     DATA_AND_CONTROL_DEP
@@ -77,7 +77,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
   private final SlowSparseNumberedLabeledGraph<Statement, Dependency> delegate =
       new SlowSparseNumberedLabeledGraph<>(Dependency.DATA_AND_CONTROL_DEP);
-  /** END Custom change: control deps */
+  /* END Custom change: control deps */
   private static final boolean VERBOSE = false;
 
   private final CGNode node;
@@ -313,9 +313,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
               delegate.addEdge(src, dest);
-              /** BEGIN Custom change: control deps */
+              /* BEGIN Custom change: control deps */
               delegate.addEdge(src, dest, Dependency.CONTROL_DEP);
-              /** END Custom change: control deps */
+              /* END Custom change: control deps */
             }
           }
         }
@@ -332,9 +332,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       for (SSAInstruction st : exitDom) {
         Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
         delegate.addEdge(methodEntry, dest);
-        /** BEGIN Custom change: control deps */
+        /* BEGIN Custom change: control deps */
         delegate.addEdge(methodEntry, dest, Dependency.CONTROL_DEP);
-        /** END Custom change: control deps */
+        /* END Custom change: control deps */
       }
     }
     // add CD from method entry to all callee parameter assignments
@@ -345,7 +345,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     // addEdge(methodEntry, paramCalleeStatements[i]);
     // }
 
-    /**
+    /*
      * JTD: While phi nodes live in a particular basic block, they represent a meet of values from
      * multiple blocks. Hence, they are really like multiple statements that are control dependent
      * in the manner of the predecessor blocks. When the slicer is following both data and control
@@ -374,16 +374,16 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
               assert pss != null;
               Statement pst = ssaInstruction2Statement(pss, ir, instructionIndices);
               delegate.addEdge(pst, phiSt);
-              /** BEGIN Custom change: control deps */
+              /* BEGIN Custom change: control deps */
               delegate.addEdge(pst, phiSt, Dependency.CONTROL_DEP);
-              /** END Custom change: control deps */
+              /* END Custom change: control deps */
             } else {
               for (ISSABasicBlock cpb : Iterator2Iterable.make(cdg.getPredNodes(pb))) {
-                /** BEGIN Custom change: control deps */
+                /* BEGIN Custom change: control deps */
                 if (cpb.getLastInstructionIndex() < 0) {
                   continue;
                 }
-                /** END Custom change: control deps */
+                /* END Custom change: control deps */
                 SSAInstruction cps = ir.getInstructions()[cpb.getLastInstructionIndex()];
                 assert cps != null
                     : "unexpected null final instruction for CDG predecessor "
@@ -392,9 +392,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
                         + node;
                 Statement cpst = ssaInstruction2Statement(cps, ir, instructionIndices);
                 delegate.addEdge(cpst, phiSt);
-                /** BEGIN Custom change: control deps */
+                /* BEGIN Custom change: control deps */
                 delegate.addEdge(cpst, phiSt, Dependency.CONTROL_DEP);
-                /** END Custom change: control deps */
+                /* END Custom change: control deps */
               }
             }
             phiUseIndex++;
@@ -1288,9 +1288,9 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     Assertions.UNREACHABLE();
     return null;
   }
-  /** BEGIN Custom change: control deps */
+  /* BEGIN Custom change: control deps */
   public boolean isControlDependend(Statement from, Statement to) {
     return delegate.hasEdge(from, to, Dependency.CONTROL_DEP);
   }
-  /** END Custom change: control deps */
+  /* END Custom change: control deps */
 }

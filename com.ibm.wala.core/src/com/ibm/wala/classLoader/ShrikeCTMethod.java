@@ -143,7 +143,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return reader.getClasses();
     }
   }
-  /** BEGIN Custom change: precise positions */
+  /* BEGIN Custom change: precise positions */
   private static final class SPos implements SourcePosition {
     String fileName;
     final int firstLine;
@@ -213,13 +213,13 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return fileName + '(' + firstLine + ',' + firstCol + '-' + lastLine + ',' + lastCol + ')';
     }
   }
-  /** END Custom change: precise positions */
+  /* END Custom change: precise positions */
   @Override
   protected void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException {
     CodeReader cr = getCodeReader();
     bcInfo.lineNumberMap = LineNumberTableReader.makeBytecodeToSourceMap(cr);
     bcInfo.localVariableMap = LocalVariableTableReader.makeVarMap(cr);
-    /** BEGIN Custom change: precise bytecode positions */
+    /* BEGIN Custom change: precise bytecode positions */
     Position param = null;
     try {
       param = SourcePositionTableReader.findParameterPosition(shrikeMethodIndex, cr);
@@ -261,7 +261,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
             new SPos(sourceFile, p.firstLine, p.lastLine, p.firstCol, p.lastCol);
       }
     }
-    /** END Custom change: : precise bytecode positions */
+    /* END Custom change: : precise bytecode positions */
   }
 
   @Override

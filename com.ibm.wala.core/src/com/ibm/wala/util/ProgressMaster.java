@@ -114,7 +114,7 @@ public class ProgressMaster implements IProgressMonitor {
     killNanny();
   }
 
-  /** BEGIN Custom change: subtasks and canceling */
+  /* BEGIN Custom change: subtasks and canceling */
   @Override
   public void subTask(String subTask) {
     delegate.subTask(subTask);
@@ -124,7 +124,7 @@ public class ProgressMaster implements IProgressMonitor {
   public void cancel() {
     setCanceled();
   }
-  /** END Custom change: subtasks and canceling */
+  /* END Custom change: subtasks and canceling */
   @Override
   public synchronized void worked(int work) {
     killNanny();

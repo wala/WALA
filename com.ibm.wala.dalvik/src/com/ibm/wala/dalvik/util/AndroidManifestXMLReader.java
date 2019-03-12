@@ -632,7 +632,7 @@ public class AndroidManifestXMLReader {
           }
         }
       } else {
-        /**
+        /*
          * Previously, an exception was thrown but in fact there is no need to crash here. Actions
          * are required, but if there is no action in a particular intent-filter, then no intent
          * will pass the intent filter. See also

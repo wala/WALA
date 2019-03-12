@@ -60,10 +60,10 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
           "invoke",
           "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;");
 
-  /** BEGIN Custom change: caching */
+  /* BEGIN Custom change: caching */
   private final Map<String, IR> cache = HashMapFactory.make();
 
-  /** END Custom change: caching */
+  /* END Custom change: caching */
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -80,7 +80,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     @SuppressWarnings("unchecked")
     ConstantKey<IMethod> c = (ConstantKey<IMethod>) recv.get(ContextKey.RECEIVER);
     IMethod m = c.getValue();
-    /** BEGIN Custom change: caching */
+    /* BEGIN Custom change: caching */
     final IMethod method = node.getMethod();
     final String hashKey = method.toString() + '@' + recv.toString();
 
@@ -91,7 +91,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       cache.put(hashKey, result);
     }
 
-    /** END Custom change: caching */
+    /* END Custom change: caching */
     return result;
   }
 

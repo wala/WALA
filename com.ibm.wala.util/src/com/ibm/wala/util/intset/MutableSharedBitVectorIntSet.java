@@ -1043,13 +1043,13 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         checkOverflow();
         return size() > 0;
       } else {
-        /** sharedPart == null, privatePart != null */
+        // sharedPart == null, privatePart != null
         boolean result = privatePart.addAllInIntersection(other, filter);
         checkOverflow();
         return result;
       }
     } else {
-      /** sharedPart != null */
+      // sharedPart != null
       if (privatePart == null) {
         privatePart = MutableSparseIntSet.make(sharedPart);
         sharedPart = null;
@@ -1057,7 +1057,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         checkOverflow();
         return result;
       } else {
-        /** sharedPart != null, privatePart != null */
+        // sharedPart != null, privatePart != null
         // note that "other" is likely small
         MutableSparseIntSet temp = MutableSparseIntSet.make(other);
         temp.intersectWith(filter);

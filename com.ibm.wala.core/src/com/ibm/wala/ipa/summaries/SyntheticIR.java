@@ -96,7 +96,7 @@ public class SyntheticIR extends IR {
       }
     }
 
-    /**
+    /*
      * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back
      * and retrieve them now.
      */

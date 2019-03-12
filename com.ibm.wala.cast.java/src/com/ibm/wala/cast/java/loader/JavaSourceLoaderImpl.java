@@ -84,10 +84,10 @@ import java.util.Set;
 /** A {@link ClassLoaderImpl} that processes source file entities in the compile-time classpath. */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
-  /** BEGIN Custom change: Common superclass is optional */
+  /* BEGIN Custom change: Common superclass is optional */
   private final boolean
       existsCommonSuperclass; // extension to deal with X10 that has no common superclass
-  /** END Custom change: Common superclass is optional */
+  /* END Custom change: Common superclass is optional */
 
   /**
    * WALA representation of a Java class residing in a source file
@@ -151,12 +151,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       // The following test allows the root class to reside in source; without
       // it, the assertion requires all classes represented by a JavaClass to
       // have a superclass.
-      /** BEGIN Custom change: Common superclass is optional */
+      /* BEGIN Custom change: Common superclass is optional */
       // Is no longer true in new X10 - no common object super class
       if (existsCommonSuperclass
           && !getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())
           && !excludedSupertype) {
-        /** END Custom change: Common superclass is optional */
+        /* END Custom change: Common superclass is optional */
         Assertions.UNREACHABLE("Cannot find super class for " + this + " in " + superTypeNames);
       }
 
@@ -571,7 +571,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     return result;
   }
 
-  /** BEGIN Custom change: Common superclass is optional */
+  /* BEGIN Custom change: Common superclass is optional */
   public JavaSourceLoaderImpl(
       boolean existsCommonSuperClass,
       ClassLoaderReference loaderRef,
@@ -591,7 +591,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     // standard case: we have a common super class
     this(true, loaderRef, parent, cha);
   }
-  /** END Custom change: Common superclass is optional */
+  /* END Custom change: Common superclass is optional */
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
@@ -602,17 +602,17 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   protected abstract SourceModuleTranslator getTranslator();
-  /** BEGIN Custom change: Optional deletion of fTypeMap */
+  /* BEGIN Custom change: Optional deletion of fTypeMap */
   public static volatile boolean deleteTypeMapAfterInit = true;
-  /** END Custom change: Optional deletion of fTypeMap */
+  /* END Custom change: Optional deletion of fTypeMap */
   @Override
   public void init(List<Module> modules) throws IOException {
     super.init(modules);
-    /** BEGIN Custom change: Optional deletion of fTypeMap */
+    /* BEGIN Custom change: Optional deletion of fTypeMap */
     if (deleteTypeMapAfterInit) {
       fTypeMap = null;
     }
-    /** END Custom change: Optional deletion of fTypeMap */
+    /* END Custom change: Optional deletion of fTypeMap */
   }
 
   public void defineFunction(

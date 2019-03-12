@@ -47,31 +47,31 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyDweller {
-  /** BEGIN Custom change */
+  /* BEGIN Custom change */
   private IClassHierarchy cha;
-  /** END Custom change */
+  /* END Custom change */
   public DexEntryPoint(IMethod method, IClassHierarchy cha) {
     super(method, cha);
-    /** BEGIN Custom change */
+    /* BEGIN Custom change */
     this.cha = cha;
-    /** END Custom change */
+    /* END Custom change */
     // TODO Auto-generated constructor stub
   }
 
   public DexEntryPoint(MethodReference method, IClassHierarchy cha) {
     super(method, cha);
-    /** BEGIN Custom change */
+    /* BEGIN Custom change */
     this.cha = cha;
-    /** END Custom change */
+    /* END Custom change */
     // TODO Auto-generated constructor stub
   }
 
-  /** BEGIN Custom change */
+  /* BEGIN Custom change */
   @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
-  /** END Custom change */
+  /* END Custom change */
   @Override
   protected TypeReference[] makeParameterTypes(IMethod method, int i) {
     TypeReference[] trA = new TypeReference[] {method.getParameterType(i)};

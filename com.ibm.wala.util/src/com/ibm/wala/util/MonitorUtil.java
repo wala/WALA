@@ -21,12 +21,12 @@ public class MonitorUtil {
 
     void beginTask(String task, int totalWork);
 
-    /** BEGIN Custom change: subtasks and canceling */
+    /* BEGIN Custom change: subtasks and canceling */
     void subTask(String subTask);
 
     void cancel();
 
-    /** END Custom change: subtasks and canceling */
+    /* END Custom change: subtasks and canceling */
     boolean isCanceled();
 
     void done();
@@ -72,7 +72,7 @@ public class MonitorUtil {
       }
     }
   }
-  /** BEGIN Custom change: more on subtasks */
+  /* BEGIN Custom change: more on subtasks */
   public static void subTask(IProgressMonitor progressMonitor, String subTask)
       throws CancelException {
     if (progressMonitor != null) {
@@ -96,7 +96,7 @@ public class MonitorUtil {
       progress.cancel();
     }
   }
-  /** END Custom change: more on subtasks */
+  /* END Custom change: more on subtasks */
 
   //  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
   //    if (progress == null) {

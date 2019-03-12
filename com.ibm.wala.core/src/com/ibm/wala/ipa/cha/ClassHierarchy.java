@@ -884,7 +884,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
-    /** BEGIN Custom change: remember unresolved classes */
+    /* BEGIN Custom change: remember unresolved classes */
     final IClass cls = lookupClassRecursive(a);
 
     if (cls == null) {
@@ -895,7 +895,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   private IClass lookupClassRecursive(TypeReference a) {
-    /** END Custom change: remember unresolved classes */
+    /* END Custom change: remember unresolved classes */
     ClassLoaderReference loader = a.getClassLoader();
 
     ClassLoaderReference parent = loader.getParent();
@@ -1307,7 +1307,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
-  /** BEGIN Custom change: remember unresolved classes */
+  /* BEGIN Custom change: remember unresolved classes */
   private final Set<TypeReference> unresolved = HashSetFactory.make();
 
   @Override
@@ -1315,7 +1315,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return unresolved;
   }
 
-  /** END Custom change: remember unresolved classes */
+  /* END Custom change: remember unresolved classes */
   public MissingSuperClassHandling getSuperClassHandling() {
     return superClassHandling;
   }

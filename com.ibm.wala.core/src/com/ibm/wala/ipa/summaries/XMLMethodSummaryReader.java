@@ -723,7 +723,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (V == null) {
         Assertions.UNREACHABLE("Must specify value for aastore " + governingMethod);
       }
-      /** BEGIN Custom change: expect type information in array-store instructions */
+      /* BEGIN Custom change: expect type information in array-store instructions */
       String strType = atts.getValue(A_TYPE);
       TypeReference type;
       if (strType == null) {
@@ -731,12 +731,12 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       } else {
         type = TypeReference.findOrCreate(governingLoader, strType);
       }
-      /** END Custom change: get type information in array-store instructions */
+      /* END Custom change: get type information in array-store instructions */
       Integer valueNumber = symbolTable.get(V);
       if (valueNumber == null) {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
-      /** BEGIN Custom change: expect type information in array-store instructions */
+      /* BEGIN Custom change: expect type information in array-store instructions */
       SSAArrayStoreInstruction S =
           insts.ArrayStoreInstruction(
               governingMethod.getNumberOfStatements(),
@@ -744,7 +744,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
               0,
               valueNumber.intValue(),
               type);
-      /** END Custom change: get type information in array-store instructions */
+      /* END Custom change: get type information in array-store instructions */
       governingMethod.addStatement(S);
     }
 

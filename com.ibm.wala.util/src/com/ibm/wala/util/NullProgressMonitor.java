@@ -36,7 +36,7 @@ public class NullProgressMonitor implements IProgressMonitor {
     // do nothing
   }
 
-  /** BEGIN Custom change: subtasks and canceling */
+  /* BEGIN Custom change: subtasks and canceling */
   @Override
   public void subTask(String subTask) {
     // do nothing
@@ -47,7 +47,7 @@ public class NullProgressMonitor implements IProgressMonitor {
     // do nothing
   }
 
-  /** END Custom change: subtasks and canceling */
+  /* END Custom change: subtasks and canceling */
   @Override
   public String getCancelMessage() {
     assert false;

@@ -190,7 +190,7 @@ public final class AndroidEntryPointLocator {
           // Restrict the set
           bases.add(AndroidTypes.Application);
           bases.add(AndroidTypes.Activity);
-          /** TODO: TODO: add Fragments in getEntryPoints */
+          // TODO: add Fragments in getEntryPoints
           // bases.add(AndroidTypes.Fragment);
           bases.add(AndroidTypes.Service);
           bases.add(AndroidTypes.ContentProvider);

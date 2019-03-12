@@ -337,7 +337,7 @@ public abstract class AstMethod implements IMethod {
   public int getNumberOfParameters() {
     return symtab.getParameterValueNumbers().length;
   }
-  /** BEGIN Custom change: precise bytecode positions */
+  /* BEGIN Custom change: precise bytecode positions */
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
@@ -346,7 +346,7 @@ public abstract class AstMethod implements IMethod {
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }
-  /** END Custom change: precise bytecode positions */
+  /* END Custom change: precise bytecode positions */
   @Override
   public int getLineNumber(int instructionIndex) {
     Position pos = debugInfo.getInstructionPosition(instructionIndex);
