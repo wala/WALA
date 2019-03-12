@@ -77,7 +77,7 @@ public class LiveAnalysis {
     final BitVectorIntSet liveAtExit = new BitVectorIntSet(considerLiveAtExit);
     final SSAInstruction[] instructions = cfg.getInstructions();
 
-    /** Gen/kill operator specific to exit basic blocks */
+    /* Gen/kill operator specific to exit basic blocks */
     final class ExitBlockGenKillOperator extends UnaryOperator<BitVectorVariable> {
       @Override
       public String toString() {
@@ -108,7 +108,7 @@ public class LiveAnalysis {
       }
     }
 
-    /** Gen/kill operator for a regular basic block. */
+    /* Gen/kill operator for a regular basic block. */
     final class BlockValueGenKillOperator extends UnaryOperator<BitVectorVariable> {
       private final ISSABasicBlock block;
 
