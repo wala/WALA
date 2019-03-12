@@ -7,7 +7,7 @@
  * This file is a derivative of code released under the terms listed below.
  *
  */
-/**
+/*
  * Copyright (c) 2009-2012,
  *
  * <p>Jonathan Bardin <astrosus@gmail.com> Steve Suh <suhsteve@gmail.com>

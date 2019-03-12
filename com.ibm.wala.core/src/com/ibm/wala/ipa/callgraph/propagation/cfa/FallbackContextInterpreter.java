@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  */
 
-/**
+/*
  * This file is part of the Joana IFC project. It is developed at the Programming Paradigms Group of
  * the Karlsruhe Institute of Technology.
  *
