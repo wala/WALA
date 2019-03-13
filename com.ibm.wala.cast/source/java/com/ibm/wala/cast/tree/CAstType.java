@@ -62,6 +62,11 @@ public interface CAstType {
     CAstType getType();
   }
 
+  public interface Union extends Complex {
+
+	  Iterable<CAstType> getConstituents(); 
+  }
+  
   public static final CAstType DYNAMIC =
       new CAstType() {
 

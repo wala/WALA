@@ -41,13 +41,20 @@ import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
 import com.ibm.wala.cast.java.types.JavaType;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.CAstType.Union;
 import com.ibm.wala.cast.tree.impl.CAstTypeDictionaryImpl;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.UnionType;
 
 public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
@@ -64,6 +71,16 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     fIdentityMapper = identityMapper;
   }
 
+  public CAstType getCAstTypeForUnion(UnionType astType) {
+	  List<?> types = astType.types();
+	  Set<CAstType> elts = HashSetFactory.make();
+	  types.forEach((type) -> {
+		  elts.add(getCAstTypeFor(((Type) type).resolveBinding()));
+	  });
+	  
+	  return new JdtUnionType(elts);
+  }
+  
   @Override
   public CAstType getCAstTypeFor(Object astType) {
 
@@ -192,5 +209,34 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     public boolean isInterface() {
       return fType.isInterface();
     }
+  }
+  
+  public final class JdtUnionType implements Union {
+	  private final Set<CAstType> constituents;
+	  
+	  public JdtUnionType(Set<CAstType> constituents) {
+		  this.constituents = constituents;
+	  }
+	  
+	@Override
+	public CAstType getType() {
+		return this;
+	}
+
+	@Override
+	public String getName() {
+		return "union"+constituents.toString();
+	}
+
+	@Override
+	public Collection<CAstType> getSupertypes() {
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Iterable<CAstType> getConstituents() {
+		return constituents;
+	}
+	  
   }
 }
