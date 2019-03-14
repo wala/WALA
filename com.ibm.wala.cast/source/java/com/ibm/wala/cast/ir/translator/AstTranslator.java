@@ -4899,7 +4899,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     CAstType caughtType = getTypeForNode(context, n);
     if (caughtType != null) {
-    	setType(context, n, caughtType);
+      setType(context, n, caughtType);
     } else {
       context.setCatchType(n, defaultCatchType());
     }
@@ -4908,16 +4908,19 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   private void setType(WalkContext context, CAstNode n, CAstType caughtType) {
-	  if (caughtType instanceof CAstType.Union) {
-		  ((CAstType.Union)caughtType).getConstituents().forEach((type) -> {
-			 setType(context, n, type); 
-		  });
-	  } else {
-		  TypeReference caughtRef = makeType(caughtType);
-		  context.setCatchType(n, caughtRef);	  
-	  }
+    if (caughtType instanceof CAstType.Union) {
+      ((CAstType.Union) caughtType)
+          .getConstituents()
+          .forEach(
+              (type) -> {
+                setType(context, n, type);
+              });
+    } else {
+      TypeReference caughtRef = makeType(caughtType);
+      context.setCatchType(n, caughtRef);
+    }
   }
-  
+
   @Override
   protected void leaveCatch(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     /* empty */

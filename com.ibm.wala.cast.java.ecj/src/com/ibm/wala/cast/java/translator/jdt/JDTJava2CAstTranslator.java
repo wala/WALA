@@ -1502,12 +1502,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private CAstNode visit(VariableDeclarationExpression n, WalkContext context) {
-	    ArrayList<CAstNode> result = new ArrayList<>();
+    ArrayList<CAstNode> result = new ArrayList<>();
 
-	    for (VariableDeclarationFragment o : (Iterable<VariableDeclarationFragment>) n.fragments())
-	      result.add(visit(o, context));
-	    return fFactory.makeNode(CAstNode.BLOCK_EXPR, result);
-	  }
+    for (VariableDeclarationFragment o : (Iterable<VariableDeclarationFragment>) n.fragments())
+      result.add(visit(o, context));
+    return fFactory.makeNode(CAstNode.BLOCK_EXPR, result);
+  }
 
   private CAstNode visit(ArrayInitializer n, WalkContext context) {
     ITypeBinding type = n.resolveTypeBinding();
@@ -3440,53 +3440,57 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // try/resources
     if (resources != null && !resources.isEmpty()) {
-    	
-    	CAstNode[] body = new CAstNode[ resources.size() ];
-    	for(int i = 0; i < resources.size(); i++) {
-    		body[i] = visitNode((ASTNode) resources.get(i), context);
-    	}
-    	
-    	List<CAstNode> fb = new ArrayList<>();
-    	for(Object x : resources) {
-    		if (x instanceof VariableDeclarationExpression) {
-    			for(Object y : ((VariableDeclarationExpression)x).fragments()) {
-    				if (y instanceof VariableDeclarationFragment) {		
-    					ITypeBinding object = ast.resolveWellKnownType("java.lang.Object");
-    					IMethodBinding m = null;
-    					ITypeBinding me = ((VariableDeclarationFragment)y).resolveBinding().getType();
-   				        outer: while (! object.equals(me)) {
-   				        	for (IMethodBinding ourmet : me.getDeclaredMethods())
-   				        		if (ourmet.getName().equals("close")) {
-   				        			m = ourmet;
-   				        			break outer; // there can only be one per class so don't bother looking for more
-   				        		}
-  				      
-   				        	me = me.getSuperclass();
-   				        }
-    					
-     					CAstNode target = fFactory.makeNode(CAstNode.VAR, fFactory.makeConstant(((VariableDeclarationFragment)y).resolveBinding().getName()));
-    					fb.add(createMethodInvocation(n, m, target, Collections.emptyList(), context));
-    				}
-    			}
-    		}
-    	}
 
-    	return
-    		makeNode(
-    			context,
-    			fFactory,
-    			n,
-    			CAstNode.BLOCK_STMT,
-    			fFactory.makeNode(CAstNode.BLOCK_STMT, body),
-    			makeNode(
-    	         context,
-    	          fFactory,
-    	          n,
-    	          CAstNode.UNWIND,
-    	          visitNode(tryBlock, context),
-    	          fFactory.makeNode(CAstNode.BLOCK_STMT, fb)));
-    	
-    // try/finally
+      CAstNode[] body = new CAstNode[resources.size()];
+      for (int i = 0; i < resources.size(); i++) {
+        body[i] = visitNode((ASTNode) resources.get(i), context);
+      }
+
+      List<CAstNode> fb = new ArrayList<>();
+      for (Object x : resources) {
+        if (x instanceof VariableDeclarationExpression) {
+          for (Object y : ((VariableDeclarationExpression) x).fragments()) {
+            if (y instanceof VariableDeclarationFragment) {
+              ITypeBinding object = ast.resolveWellKnownType("java.lang.Object");
+              IMethodBinding m = null;
+              ITypeBinding me = ((VariableDeclarationFragment) y).resolveBinding().getType();
+              outer:
+              while (!object.equals(me)) {
+                for (IMethodBinding ourmet : me.getDeclaredMethods())
+                  if (ourmet.getName().equals("close")) {
+                    m = ourmet;
+                    break outer; // there can only be one per class so don't bother looking for more
+                  }
+
+                me = me.getSuperclass();
+              }
+
+              CAstNode target =
+                  fFactory.makeNode(
+                      CAstNode.VAR,
+                      fFactory.makeConstant(
+                          ((VariableDeclarationFragment) y).resolveBinding().getName()));
+              fb.add(createMethodInvocation(n, m, target, Collections.emptyList(), context));
+            }
+          }
+        }
+      }
+
+      return makeNode(
+          context,
+          fFactory,
+          n,
+          CAstNode.BLOCK_STMT,
+          fFactory.makeNode(CAstNode.BLOCK_STMT, body),
+          makeNode(
+              context,
+              fFactory,
+              n,
+              CAstNode.UNWIND,
+              visitNode(tryBlock, context),
+              fFactory.makeNode(CAstNode.BLOCK_STMT, fb)));
+
+      // try/finally
     } else if (catchBlocks.isEmpty()) {
       return makeNode(
           context,
@@ -3533,13 +3537,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstNode localScope = makeNode(context, fFactory, n, CAstNode.LOCAL_SCOPE, excDecl);
 
     context.cfg().map(n, excDecl);
-    CAstType type = 
-    		n.getException().getType() instanceof UnionType?
-    		fTypeDict.getCAstTypeForUnion((UnionType) n.getException().getType()):
-    		fTypeDict.getCAstTypeFor(n.getException().resolveBinding().getType());
-	context
-        .getNodeTypeMap()
-        .add(excDecl, type);
+    CAstType type =
+        n.getException().getType() instanceof UnionType
+            ? fTypeDict.getCAstTypeForUnion((UnionType) n.getException().getType())
+            : fTypeDict.getCAstTypeFor(n.getException().resolveBinding().getType());
+    context.getNodeTypeMap().add(excDecl, type);
     return localScope;
   }
 
@@ -3784,7 +3786,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof VariableDeclarationExpression) {
       return visit((VariableDeclarationExpression) n, context);
     } else if (n instanceof VariableDeclarationFragment) {
-        return visit((VariableDeclarationFragment) n, context);
+      return visit((VariableDeclarationFragment) n, context);
     } else if (n instanceof WhileStatement) {
       return visit((WhileStatement) n, context);
     }

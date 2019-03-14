@@ -50,7 +50,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Type;
@@ -72,15 +71,16 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
   }
 
   public CAstType getCAstTypeForUnion(UnionType astType) {
-	  List<?> types = astType.types();
-	  Set<CAstType> elts = HashSetFactory.make();
-	  types.forEach((type) -> {
-		  elts.add(getCAstTypeFor(((Type) type).resolveBinding()));
-	  });
-	  
-	  return new JdtUnionType(elts);
+    List<?> types = astType.types();
+    Set<CAstType> elts = HashSetFactory.make();
+    types.forEach(
+        (type) -> {
+          elts.add(getCAstTypeFor(((Type) type).resolveBinding()));
+        });
+
+    return new JdtUnionType(elts);
   }
-  
+
   @Override
   public CAstType getCAstTypeFor(Object astType) {
 
@@ -210,33 +210,32 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
       return fType.isInterface();
     }
   }
-  
+
   public final class JdtUnionType implements Union {
-	  private final Set<CAstType> constituents;
-	  
-	  public JdtUnionType(Set<CAstType> constituents) {
-		  this.constituents = constituents;
-	  }
-	  
-	@Override
-	public CAstType getType() {
-		return this;
-	}
+    private final Set<CAstType> constituents;
 
-	@Override
-	public String getName() {
-		return "union"+constituents.toString();
-	}
+    public JdtUnionType(Set<CAstType> constituents) {
+      this.constituents = constituents;
+    }
 
-	@Override
-	public Collection<CAstType> getSupertypes() {
-		return Collections.emptySet();
-	}
+    @Override
+    public CAstType getType() {
+      return this;
+    }
 
-	@Override
-	public Iterable<CAstType> getConstituents() {
-		return constituents;
-	}
-	  
+    @Override
+    public String getName() {
+      return "union" + constituents.toString();
+    }
+
+    @Override
+    public Collection<CAstType> getSupertypes() {
+      return Collections.emptySet();
+    }
+
+    @Override
+    public Iterable<CAstType> getConstituents() {
+      return constituents;
+    }
   }
 }
