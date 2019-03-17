@@ -17,7 +17,7 @@ case "$SUBMODULE_PREFIX" in
 esac
 
 $headless ./gradlew --continue --no-build-cache --stacktrace \
+	  verifyGoogleJavaFormat \
 	  "$SUBMODULE_PREFIX"build \
 	  ${documentation:+$SUBMODULE_PREFIX$documentation} \
-	  lintGradle \
-	  verifyGoogleJavaFormat
+	  lintGradle
