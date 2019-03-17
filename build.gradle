@@ -286,7 +286,7 @@ final def getNativeLibraryOutput(task) {
 //  Google Java Format pre-commit hook installation
 //
 
-task installGitHooks(type: Copy) {
+tasks.register('installGitHooks', Copy) {
 	from(file('config/hooks/pre-commit-stub')) {
 		rename 'pre-commit-stub', 'pre-commit'
 	}
