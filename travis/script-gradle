@@ -19,4 +19,5 @@ esac
 $headless ./gradlew --continue --no-build-cache --stacktrace \
 	  "$SUBMODULE_PREFIX"build \
 	  ${documentation:+$SUBMODULE_PREFIX$documentation} \
-	  lintGradle
+	  lintGradle \
+	  verifyGoogleJavaFormat

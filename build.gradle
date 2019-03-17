@@ -293,3 +293,14 @@ task installGitHooks(type: Copy) {
 	into file('.git/hooks')
 	fileMode 0777
 }
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Extra downloads pre-fetcher
+//
+
+
+tasks.register('downloads') {
+	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
+}
