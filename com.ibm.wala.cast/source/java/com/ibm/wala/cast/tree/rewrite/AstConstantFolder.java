@@ -51,7 +51,6 @@ public class AstConstantFolder {
                   ((AssignSkipContext) c).skip.add(root.getChild(i));
                 }
               }
-
               if (root.getKind() == CAstNode.VAR
                   && !skip(root)
                   && constants.containsKey(root.getChild(0).getValue())

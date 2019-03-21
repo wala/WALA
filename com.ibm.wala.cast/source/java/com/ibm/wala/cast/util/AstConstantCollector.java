@@ -49,7 +49,7 @@ public class AstConstantCollector {
           Object val = s.getSingle("value").getValue();
           if (!bad.contains(var)) {
             if (values.containsKey(var)) {
-              if (val == null ? values.get(var) != null : !values.get(var).equals(val)) {
+              if (val == null ? values.get(var) != null : !val.equals(values.get(var))) {
                 values.remove(var);
                 bad.add(var);
               }
@@ -67,6 +67,14 @@ public class AstConstantCollector {
       }
     }
 
+    for (Collection<CAstEntity> ces : function.getAllScopedEntities().values()) {
+      for (CAstEntity ce : ces) {
+        for(String s : ce.getArgumentNames()) {
+          values.remove(s);
+        }
+      }
+    }
+    
     return values;
   }
 
