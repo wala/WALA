@@ -69,12 +69,12 @@ public class AstConstantCollector {
 
     for (Collection<CAstEntity> ces : function.getAllScopedEntities().values()) {
       for (CAstEntity ce : ces) {
-        for(String s : ce.getArgumentNames()) {
+        for (String s : ce.getArgumentNames()) {
           values.remove(s);
         }
       }
     }
-    
+
     return values;
   }
 
