@@ -24,9 +24,8 @@ public class AstConstantCollector {
       CAstPattern.parse("ASSIGN(VAR(<name>CONSTANT()),<value>*)");
 
   public static Map<String, Object> collectConstants(
-      CAstEntity function, Map<String, Object> values) {
+      CAstEntity function, Map<String, Object> values, Set<String> bad) {
     if (function.getAST() != null) {
-      Set<String> bad = HashSetFactory.make();
       for (Segments s : CAstPattern.findAll(simplePreUpdatePattern, function)) {
         bad.add((String) s.getSingle("name").getValue());
       }
@@ -63,9 +62,14 @@ public class AstConstantCollector {
 
     for (Collection<CAstEntity> ces : function.getAllScopedEntities().values()) {
       for (CAstEntity ce : ces) {
-        collectConstants(ce, values);
+        collectConstants(ce, values, bad);
       }
     }
+
+    bad.forEach(
+        (n) -> {
+          values.remove(n);
+        });
 
     for (Collection<CAstEntity> ces : function.getAllScopedEntities().values()) {
       for (CAstEntity ce : ces) {
@@ -80,7 +84,8 @@ public class AstConstantCollector {
 
   public static Map<String, Object> collectConstants(CAstEntity function) {
     Map<String, Object> values = HashMapFactory.make();
-    collectConstants(function, values);
+    Set<String> bad = HashSetFactory.make();
+    collectConstants(function, values, bad);
     return values;
   }
 }

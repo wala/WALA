@@ -1763,9 +1763,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
         return getUnderlyingSymtab().getConstant("__default label");
       } else {
-        System.err.println(("cannot handle constant " + o));
-        Assertions.UNREACHABLE();
-        return -1;
+        return getUnderlyingSymtab().getOtherConstant(o);
       }
     }
 
