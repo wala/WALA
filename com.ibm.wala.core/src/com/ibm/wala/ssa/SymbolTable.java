@@ -146,6 +146,10 @@ public class SymbolTable implements Cloneable {
     return findOrCreateConstant(Double.valueOf(d));
   }
 
+  public int getOtherConstant(Object v) {
+    return findOrCreateConstant(v);
+  }
+
   public int getConstant(String s) {
     return findOrCreateConstant(s);
   }
