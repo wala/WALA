@@ -30,7 +30,7 @@ public class JavaScriptSummary extends MethodSummary {
             .NewInstruction(
                 getNumberOfStatements(),
                 declaredParameters + 1,
-                NewSiteReference.make(getNextProgramCounter(), JavaScriptTypes.Array)));
+                NewSiteReference.make(getNumberOfStatements(), JavaScriptTypes.Array)));
   }
 
   @Override

@@ -146,7 +146,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
     CallSiteReference cs =
-        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNumberOfStatements());
     int[] params = new int[nargs - 2];
     for (int i = 0; i < params.length; i++) {
       // add 3 to skip v1 (which points to Function.call() itself) and v2 (the
@@ -156,10 +156,10 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     // function being invoked is in v2
     S.addStatement(
         insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, receiver);
     callModels.put(key, t);

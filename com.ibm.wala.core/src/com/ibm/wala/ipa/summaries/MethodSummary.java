@@ -36,9 +36,6 @@ public class MethodSummary {
   /** Map: value number -&gt; constant */
   private Map<Integer, ConstantValue> constantValues;
 
-  /** The next available program counter value. */
-  private int nextProgramCounter = 0;
-
   /** Some reason this method summary indicates a problem. */
   private String poison;
 
@@ -174,10 +171,6 @@ public class MethodSummary {
         return method.getParameterType(i - 1);
       }
     }
-  }
-
-  public int getNextProgramCounter() {
-    return nextProgramCounter++;
   }
 
   /**

@@ -437,11 +437,11 @@ public class MethodHandles {
           if (handleMethod.getName().toString().contains(selector)) {
             code.addStatement(
                 insts.LoadMetadataInstruction(
-                    code.getNextProgramCounter(),
+                    code.getNumberOfStatements(),
                     vn,
                     TypeReference.JavaLangInvokeMethodHandle,
                     handleMethod.getReference()));
-            code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), vn, false));
+            code.addStatement(insts.ReturnInstruction(code.getNumberOfStatements(), vn, false));
             vn++;
           }
         }
@@ -488,7 +488,7 @@ public class MethodHandles {
                   code.addConstant(i + nargs + 3, new ConstantValue(i));
                   code.addStatement(
                       insts.ArrayLoadInstruction(
-                          code.getNextProgramCounter(),
+                          code.getNumberOfStatements(),
                           i + 3,
                           1,
                           i + nargs + 3,
@@ -500,14 +500,14 @@ public class MethodHandles {
                         nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
                 code.addStatement(
                     insts.InvokeInstruction(
-                        code.getNextProgramCounter(),
+                        code.getNumberOfStatements(),
                         2 * nargs + 3,
                         params,
                         2 * nargs + 4,
                         site,
                         null));
                 code.addStatement(
-                    insts.ReturnInstruction(code.getNextProgramCounter(), 2 * nargs + 3, false));
+                    insts.ReturnInstruction(code.getNumberOfStatements(), 2 * nargs + 3, false));
                 break;
               }
             case "invokeExact":
@@ -523,18 +523,18 @@ public class MethodHandles {
                   if (isVoid) {
                     code.addStatement(
                         insts.InvokeInstruction(
-                            code.getNextProgramCounter(), params, nargs + 2, site, null));
+                            code.getNumberOfStatements(), params, nargs + 2, site, null));
                   } else {
                     code.addStatement(
                         insts.InvokeInstruction(
-                            code.getNextProgramCounter(),
+                            code.getNumberOfStatements(),
                             nargs + 2,
                             params,
                             nargs + 3,
                             site,
                             null));
                     code.addStatement(
-                        insts.ReturnInstruction(code.getNextProgramCounter(), nargs + 2, false));
+                        insts.ReturnInstruction(code.getNumberOfStatements(), nargs + 2, false));
                   }
                 }
                 break;
@@ -544,11 +544,11 @@ public class MethodHandles {
           assert isType(node);
           code.addStatement(
               insts.LoadMetadataInstruction(
-                  code.getNextProgramCounter(),
+                  code.getNumberOfStatements(),
                   2,
                   TypeReference.JavaLangInvokeMethodType,
                   ref.getDescriptor()));
-          code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2, false));
+          code.addStatement(insts.ReturnInstruction(code.getNumberOfStatements(), 2, false));
         }
         irs.put(
             node, new SoftReference<>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));

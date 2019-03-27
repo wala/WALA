@@ -423,7 +423,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         case "virtual":
           site =
               CallSiteReference.make(
-                  governingMethod.getNextProgramCounter(),
+                  governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.VIRTUAL);
           nParams++;
@@ -431,7 +431,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         case "special":
           site =
               CallSiteReference.make(
-                  governingMethod.getNextProgramCounter(),
+                  governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.SPECIAL);
           nParams++;
@@ -439,7 +439,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         case "interface":
           site =
               CallSiteReference.make(
-                  governingMethod.getNextProgramCounter(),
+                  governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.INTERFACE);
           nParams++;
@@ -447,7 +447,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         case "static":
           site =
               CallSiteReference.make(
-                  governingMethod.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.STATIC);
+                  governingMethod.getNumberOfStatements(), ref, IInvokeInstruction.Dispatch.STATIC);
           break;
         default:
           Assertions.UNREACHABLE("Invalid call type " + typeString);
@@ -530,7 +530,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       symbolTable.put(defVar, Integer.valueOf(nextLocal++));
 
       // create the allocation statement and add it to the method summary
-      NewSiteReference ref = NewSiteReference.make(governingMethod.getNextProgramCounter(), type);
+      NewSiteReference ref = NewSiteReference.make(governingMethod.getNumberOfStatements(), type);
 
       SSANewInstruction a = null;
       if (type.isArrayType()) {

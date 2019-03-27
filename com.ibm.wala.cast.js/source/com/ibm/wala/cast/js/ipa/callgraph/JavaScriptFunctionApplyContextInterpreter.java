@@ -113,17 +113,17 @@ public class JavaScriptFunctionApplyContextInterpreter
     int curValNum = passActualPropertyValsAsParams(insts, nargs, S, paramsToPassToInvoked);
 
     CallSiteReference cs =
-        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNumberOfStatements());
 
     // function being invoked is in v2
     int resultVal = curValNum++;
     int excVal = curValNum++;
     S.addStatement(
         insts.Invoke(S.getNumberOfStatements(), 2, resultVal, paramsToPassToInvoked, excVal, cs));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, declaringClass);
     return t.makeIR(node.getContext(), null);
@@ -140,12 +140,12 @@ public class JavaScriptFunctionApplyContextInterpreter
     S.addStatement(
         insts.EachElementGetInstruction(
             S.getNumberOfStatements(), eachElementGetResult, 4, nullPredVn));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
     // read value from the arbitrary property name
     int propertyReadResult = curValNum++;
     S.addStatement(
         insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, eachElementGetResult));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
     for (int i = 1; i < paramsToPassToInvoked.length; i++) {
       paramsToPassToInvoked[i] = propertyReadResult;
     }
@@ -169,10 +169,10 @@ public class JavaScriptFunctionApplyContextInterpreter
       int propertyReadResult = curValNum++;
       // 4 is position of arguments array
       S.addStatement(insts.PropertyWrite(S.getNumberOfStatements(), 4, constVN, nullVn));
-      S.getNextProgramCounter();
+      S.getNumberOfStatements();
 
       S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, constVN));
-      S.getNextProgramCounter();
+      S.getNumberOfStatements();
 
       paramsToPassToInvoked[i] = propertyReadResult;
     }
@@ -193,16 +193,16 @@ public class JavaScriptFunctionApplyContextInterpreter
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
     CallSiteReference cs =
-        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNumberOfStatements());
     int[] params = new int[1];
     params[0] = 3;
     // function being invoked is in v2
     S.addStatement(
         insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, declaringClass);
     return t.makeIR(node.getContext(), null);

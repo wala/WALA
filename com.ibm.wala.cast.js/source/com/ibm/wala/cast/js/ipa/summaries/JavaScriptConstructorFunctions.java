@@ -103,17 +103,17 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 1, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             5,
-            NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+            NewSiteReference.make(S.getNumberOfStatements(), cls.getReference())));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 5, 4));
     // S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addConstant(Integer.valueOf(8), new ConstantValue(value));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 8, "$value"));
@@ -121,10 +121,10 @@ public class JavaScriptConstructorFunctions {
       S.addConstant(9, new ConstantValue(0));
       S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 9, "length"));
     }
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // S.addConstant(9, new ConstantValue("__proto__"));
 
@@ -138,23 +138,23 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 5, 1, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             6,
-            NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+            NewSiteReference.make(S.getNumberOfStatements(), cls.getReference())));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 6, 5));
     // S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 6, 2, "$value"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 6, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // S.addConstant(7, new ConstantValue("__proto__"));
 
@@ -186,20 +186,20 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 1, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             5,
-            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+            NewSiteReference.make(S.getNumberOfStatements(), JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 5, 4));
     // S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // S.addConstant(6, new ConstantValue("__proto__"));
 
@@ -213,7 +213,7 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Object));
   }
@@ -249,23 +249,23 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 5, 1, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             6,
-            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
+            NewSiteReference.make(S.getNumberOfStatements(), JavaScriptTypes.Array)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 6, 5));
     // S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 6, 2, "length"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 6, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // S.addConstant(7, new ConstantValue("__proto__"));
 
@@ -280,31 +280,31 @@ public class JavaScriptConstructorFunctions {
 
     S.addConstant(Integer.valueOf(nargs + 3), new ConstantValue("prototype"));
     S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), nargs + 4, 1, nargs + 3));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             nargs + 5,
-            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
+            NewSiteReference.make(S.getNumberOfStatements(), JavaScriptTypes.Array)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), nargs + 5, nargs + 4));
     // S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addConstant(Integer.valueOf(nargs + 7), new ConstantValue(nargs));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), nargs + 5, nargs + 7, "length"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     int vn = nargs + 9;
     for (int i = 0; i < nargs; i++, vn += 2) {
       S.addConstant(Integer.valueOf(vn), new ConstantValue(i));
       S.addStatement(insts.PropertyWrite(S.getNumberOfStatements(), nargs + 5, vn, i + 1));
-      S.getNextProgramCounter();
+      S.getNumberOfStatements();
     }
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // S.addConstant(vn, new ConstantValue("__proto__"));
 
@@ -332,10 +332,10 @@ public class JavaScriptConstructorFunctions {
 
     S.addConstant(Integer.valueOf(3), new ConstantValue(0));
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 2, 3, "length"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.String));
   }
@@ -347,14 +347,14 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 2, "toString"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     CallSiteReference cs =
-        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNumberOfStatements());
     S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] {2}, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.String));
   }
@@ -375,7 +375,7 @@ public class JavaScriptConstructorFunctions {
 
     S.addConstant(Integer.valueOf(2), new ConstantValue(0.0));
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Number));
   }
@@ -387,14 +387,14 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 2, "toNumber"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     CallSiteReference cs =
-        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNumberOfStatements());
     S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] {2}, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Number));
   }
@@ -417,33 +417,33 @@ public class JavaScriptConstructorFunctions {
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), 4, 1, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             5,
-            NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+            NewSiteReference.make(S.getNumberOfStatements(), cls.getReference())));
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             7,
-            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+            NewSiteReference.make(S.getNumberOfStatements(), JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), 5, 4));
     // S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 5, 7, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.PutInstruction(S.getNumberOfStatements(), 7, 5, "constructor"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // TODO we need to set v7.__proto__ to Object.prototype
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     // S.addConstant(8, new ConstantValue("__proto__"));
 
@@ -601,24 +601,24 @@ public class JavaScriptConstructorFunctions {
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
     S.addStatement(insts.GetInstruction(S.getNumberOfStatements(), nargs + 4, 1, "prototype"));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(
         insts.NewInstruction(
             S.getNumberOfStatements(),
             nargs + 5,
-            NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+            NewSiteReference.make(S.getNumberOfStatements(), JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(S.getNumberOfStatements(), nargs + 5, nargs + 4));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     CallSiteReference cs =
-        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNextProgramCounter());
+        new DynamicCallSiteReference(JavaScriptTypes.CodeBody, S.getNumberOfStatements());
     int[] args = new int[nargs + 1];
     args[0] = nargs + 5;
     for (int i = 0; i < nargs; i++) args[i + 1] = i + 2;
     S.addStatement(insts.Invoke(S.getNumberOfStatements(), 1, nargs + 7, args, nargs + 8, cs));
-    int pc = S.getNextProgramCounter();
+    int pc = S.getNumberOfStatements();
 
     S.addConstant(nargs + 9, null);
     S.addStatement(
@@ -629,13 +629,13 @@ public class JavaScriptConstructorFunctions {
             nargs + 7,
             nargs + 9,
             pc + 2));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), nargs + 7, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), nargs + 5, false));
-    S.getNextProgramCounter();
+    S.getNumberOfStatements();
 
     return record(key, new JavaScriptConstructor(ref, S, cls, cls));
   }
