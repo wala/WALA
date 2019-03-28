@@ -199,7 +199,7 @@ public abstract class JavaIRTests extends IRTests {
         rtJar,
         simpleTestEntryPoint(),
         Collections.singletonList(
-            /**
+            /*
              * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
              * SSAArrayLoadInstruction - 1 SSAArrayStoreInstruction
              */
@@ -382,7 +382,7 @@ public abstract class JavaIRTests extends IRTests {
               // ((JavaSourceLoaderImpl.JavaClass)iClass).getEnclosingClass());
               // todo: is there the concept of CompilationUnit?
 
-              /**
+              /*
                * {@link JavaCAst2IRTranslator#getEnclosingType} return null for static inner
                * classes..?
                */
