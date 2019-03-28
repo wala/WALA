@@ -159,17 +159,9 @@ including downloading some large supporting libraries.  After the
 lengthy import process completes, **use “Run → Run… → After Opening
 Pristine Project” to perform some post-import configuration.** This
 also can take tens of minutes, but is only necessary in a clean,
-never-previously-built tree.  Immediately after importing, you may see
-some Java compilation errors in the IntelliJ IDEA “Messages” view.
-These should all go away after running the “After Opening Pristine
-Project” step.  [Be
+never-previously-built tree.  [Be
 patient](#external-dependencies-patience-is-a-virtue) during the
-initial project open and also during the “After Opening Pristine
-Project” step, especially if you have a slow network connection.
-
-If you prefer a non-interactive approach, instead of using “After
-Opening Pristine Project” you can run `./gradlew prepareIntelliJIDEA`
-either before or after opening WALA in IntelliJ IDEA.
+initial project open, especially if you have a slow network connection.
 
 ### Benign Warning About Non-Managed Maven Project
 

@@ -5,10 +5,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-tasks.named('prepareIntelliJIDEA') {
-	dependsOn 'jarTest'
-}
-
 sourceSets.test.java.srcDirs = ['harness-src/java']
 
 compileTestJava.options.headerOutputDirectory.set file('build/headers')

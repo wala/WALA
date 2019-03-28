@@ -1,4 +1,5 @@
 *.iml
+/compiler.xml
 /libraries/*.xml
 /modules.xml
 /tasks.xml

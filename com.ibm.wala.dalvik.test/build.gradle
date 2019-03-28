@@ -110,10 +110,6 @@ tasks.named('afterEclipseBuildshipImport') {
 	dependsOn 'copyDxJar'
 }
 
-tasks.named('prepareIntelliJIDEA') {
-	dependsOn 'copyDxJar'
-}
-
 tasks.register('copyAndroidJar', Sync) {
 	dependsOn installAndroidSdk
 	from "${installAndroidSdk.get().destinationDir}/platforms/${installAndroidSdk.get().components['platforms']}/android.jar"
