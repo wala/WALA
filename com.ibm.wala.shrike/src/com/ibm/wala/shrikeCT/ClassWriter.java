@@ -849,11 +849,6 @@ public class ClassWriter implements ClassConstants {
                   }
                 case REF_invokeVirtual:
                 case REF_newInvokeSpecial:
-                  {
-                    int x = addCPMethodRef(handle.c, handle.n, handle.t);
-                    setUShort(buf, offset + 2, x);
-                    break;
-                  }
                 case REF_invokeSpecial:
                 case REF_invokeStatic:
                   {

@@ -963,6 +963,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
           }
           break;
         case MOVE:
+        case MOVE_OBJECT:
           instructions.add(
               new UnaryOperation(
                   instLoc,
@@ -973,6 +974,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                   this));
           break;
         case MOVE_FROM16:
+        case MOVE_OBJECT_FROM16:
           instructions.add(
               new UnaryOperation(
                   instLoc,
@@ -1019,26 +1021,6 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                   UnaryOperation.OpID.MOVE_WIDE,
                   ((Instruction32x) inst).getRegisterA(),
                   ((Instruction32x) inst).getRegisterB(),
-                  inst.getOpcode(),
-                  this));
-          break;
-        case MOVE_OBJECT:
-          instructions.add(
-              new UnaryOperation(
-                  instLoc,
-                  UnaryOperation.OpID.MOVE,
-                  ((Instruction12x) inst).getRegisterA(),
-                  ((Instruction12x) inst).getRegisterB(),
-                  inst.getOpcode(),
-                  this));
-          break;
-        case MOVE_OBJECT_FROM16:
-          instructions.add(
-              new UnaryOperation(
-                  instLoc,
-                  UnaryOperation.OpID.MOVE,
-                  ((Instruction22x) inst).getRegisterA(),
-                  ((Instruction22x) inst).getRegisterB(),
                   inst.getOpcode(),
                   this));
           break;

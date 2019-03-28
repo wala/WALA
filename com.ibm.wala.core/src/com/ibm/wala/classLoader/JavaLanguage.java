@@ -720,6 +720,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       case OP_invokevirtual:
       case OP_invokespecial:
       case OP_invokeinterface:
+      case OP_monitorenter:
+      case OP_monitorexit:
+        // we're currently ignoring MonitorStateExceptions, since J2EE stuff
+        // should be
+        // logically single-threaded
+      case OP_athrow:
+        // N.B: the caller must handle the explicitly-thrown exception
+      case OP_arraylength:
         return getNullPointerException();
       case OP_idiv:
       case OP_irem:
@@ -732,19 +740,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       case OP_anewarray:
       case OP_multianewarray:
         return newArrayExceptions;
-      case OP_arraylength:
-        return getNullPointerException();
-      case OP_athrow:
-        // N.B: the caller must handle the explicitly-thrown exception
-        return getNullPointerException();
       case OP_checkcast:
         return getClassCastException();
-      case OP_monitorenter:
-      case OP_monitorexit:
-        // we're currently ignoring MonitorStateExceptions, since J2EE stuff
-        // should be
-        // logically single-threaded
-        return getNullPointerException();
       case OP_ldc_w:
         if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
           return getClassNotFoundException();

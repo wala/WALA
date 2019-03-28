@@ -416,6 +416,8 @@ public class HeapReachingDefs<T extends InstanceKey> {
                   pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
             }
           }
+        case HEAP_PARAM_CALLEE:
+          // no statements in this method will def the heap being passed in
         case NORMAL_RET_CALLEE:
         case NORMAL_RET_CALLER:
         case PARAM_CALLEE:
@@ -427,9 +429,6 @@ public class HeapReachingDefs<T extends InstanceKey> {
         case CATCH:
         case METHOD_ENTRY:
         case METHOD_EXIT:
-          return OrdinalSet.empty();
-        case HEAP_PARAM_CALLEE:
-          // no statements in this method will def the heap being passed in
           return OrdinalSet.empty();
         default:
           Assertions.UNREACHABLE(s.getKind().toString());

@@ -189,13 +189,11 @@ public class ExceptionAnalysis2EdgeFilterTest {
           assertEquals(text, 12, value);
           break;
         case "testTryCatchOwnException":
+        case "testTryCatchImplicitException":
           assertEquals(text, 5, value);
           break;
         case "testTryCatchSuper":
           assertEquals(text, 3, value);
-          break;
-        case "testTryCatchImplicitException":
-          assertEquals(text, 5, value);
           break;
         case "main":
           assertEquals(text, 4, value);

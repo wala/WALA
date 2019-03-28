@@ -333,8 +333,6 @@ public class EntryPoints {
 
   private ArrayList<String[]> chooseIntentList(String name) {
     switch (name) {
-      case "activity":
-        return ActivityIntentList;
       case "receiver":
         return ReceiverIntentList;
       case "service":
