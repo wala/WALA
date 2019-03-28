@@ -127,13 +127,13 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     if (startNodes.size() == 2 && endNodes.equals(startNodes)) {
       startNode = iter.next();
       endNode = iter.next();
-    } else if (startNodes.size() > 1 || startNodes.size() == 0) {
+    } else if (startNodes.size() != 1) {
       if (DEBUG)
         System.err.println(
             "Couldn't find unique start node for correlation "
                 + corr.pp(correlations.getPositions()));
       return false;
-    } else if (endNodes.size() > 1 || endNodes.size() == 0) {
+    } else if (endNodes.size() != 1) {
       if (DEBUG)
         System.err.println(
             "Couldn't find unique end node for correlation "
