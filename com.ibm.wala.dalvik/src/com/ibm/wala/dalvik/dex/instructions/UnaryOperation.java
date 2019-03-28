@@ -148,18 +148,13 @@ public class UnaryOperation extends Instruction {
     switch (op) {
         // SSA unary ops
       case NOT:
-        return DalvikUnaryOp.BITNOT;
-      case NEGINT:
-        return IUnaryOpInstruction.Operator.NEG;
+      case NOTLONG:
       case NOTINT:
         return DalvikUnaryOp.BITNOT;
-      case NEGLONG:
-        return IUnaryOpInstruction.Operator.NEG;
-      case NOTLONG:
-        return DalvikUnaryOp.BITNOT;
-      case NEGFLOAT:
-        return IUnaryOpInstruction.Operator.NEG;
+      case NEGINT:
       case NEGDOUBLE:
+      case NEGFLOAT:
+      case NEGLONG:
         return IUnaryOpInstruction.Operator.NEG;
       default:
         Assertions.UNREACHABLE();

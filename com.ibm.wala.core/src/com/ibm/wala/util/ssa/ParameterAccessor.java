@@ -918,7 +918,6 @@ public class ParameterAccessor {
   public TypeReference getParameterType(final int no) { // XXX Remove?
     switch (this.base) {
       case IMETHOD:
-        return this.method.getParameterType(getParameterNo(no));
       case METHOD_REFERENCE:
         return this.method.getParameterType(getParameterNo(no));
       default:

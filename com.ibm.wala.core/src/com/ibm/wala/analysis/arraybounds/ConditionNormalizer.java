@@ -86,7 +86,6 @@ public class ConditionNormalizer {
   private static Operator swapOperator(Operator op) {
     switch (op) {
       case EQ:
-        return op;
       case NE:
         return op;
       case LT:

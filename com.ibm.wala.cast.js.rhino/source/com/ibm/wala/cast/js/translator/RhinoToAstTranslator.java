@@ -269,11 +269,10 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         return CAstOperator.OP_BIT_XOR;
 
       case Token.EQ:
+      case Token.IFEQ:
         return CAstOperator.OP_EQ;
       case Token.SHEQ:
         return CAstOperator.OP_STRICT_EQ;
-      case Token.IFEQ:
-        return CAstOperator.OP_EQ;
       case Token.GE:
         return CAstOperator.OP_GE;
       case Token.GT:
@@ -283,11 +282,10 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       case Token.LT:
         return CAstOperator.OP_LT;
       case Token.NE:
+      case Token.IFNE:
         return CAstOperator.OP_NE;
       case Token.SHNE:
         return CAstOperator.OP_STRICT_NE;
-      case Token.IFNE:
-        return CAstOperator.OP_NE;
 
       case Token.BITNOT:
         return CAstOperator.OP_BITNOT;
@@ -1301,9 +1299,6 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
             return Ast.makeConstant(false);
           }
         case Token.NULL:
-          {
-            return Ast.makeConstant(null);
-          }
         case Token.DEBUGGER:
           {
             return Ast.makeConstant(null);

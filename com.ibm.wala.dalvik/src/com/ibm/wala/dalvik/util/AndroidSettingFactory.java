@@ -256,13 +256,6 @@ public class AndroidSettingFactory {
           ret = new InternalIntent(action);
         }
         break;
-      case STANDARD_ACTION:
-        if (uri != null) {
-          ret = new StandardIntent(action, mUri);
-        } else {
-          ret = new StandardIntent(action);
-        }
-        break;
       default:
         if (uri != null) {
           ret = new StandardIntent(action, mUri);

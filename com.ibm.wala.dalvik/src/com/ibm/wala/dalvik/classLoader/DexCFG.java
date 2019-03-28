@@ -475,6 +475,18 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           //      case OP_invokevirtual:
           //      case OP_invokespecial:
           //      case OP_invokeinterface:
+        case ARRAY_LENGTH:
+          //      case OP_arraylength:
+        case MONITOR_ENTER:
+        case MONITOR_EXIT:
+          //      case OP_monitorenter:
+          //      case OP_monitorexit:
+          // we're currently ignoring MonitorStateExceptions, since J2EE stuff
+          // should be
+          // logically single-threaded
+        case THROW:
+          //      case OP_athrow:
+          // N.B: the caller must handle the explicitly-thrown exception
           return JavaLanguage.getNullPointerException();
         case DIV_INT:
         case DIV_INT_2ADDR:
@@ -503,24 +515,9 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           //      case OP_anewarray:
           //      case OP_multianewarray:
           return JavaLanguage.getNewArrayExceptions();
-        case ARRAY_LENGTH:
-          //      case OP_arraylength:
-          return JavaLanguage.getNullPointerException();
-        case THROW:
-          //      case OP_athrow:
-          // N.B: the caller must handle the explicitly-thrown exception
-          return JavaLanguage.getNullPointerException();
         case CHECK_CAST:
           //      case OP_checkcast:
           return JavaLanguage.getClassCastException();
-        case MONITOR_ENTER:
-        case MONITOR_EXIT:
-          //      case OP_monitorenter:
-          //      case OP_monitorexit:
-          // we're currently ignoring MonitorStateExceptions, since J2EE stuff
-          // should be
-          // logically single-threaded
-          return JavaLanguage.getNullPointerException();
 
           // I Don't think dalvik has to worry about this?
           //      case OP_ldc_w:

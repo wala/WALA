@@ -131,85 +131,58 @@ public class BinaryOperation extends Instruction {
   public IBinaryOpInstruction.IOperator getOperator() {
     switch (op) {
       case CMPL_FLOAT:
-        return DalvikBinaryOp.LT;
-      case CMPG_FLOAT:
-        return DalvikBinaryOp.GT;
+      case CMPL_INT:
+      case CMPL_LONG:
       case CMPL_DOUBLE:
         return DalvikBinaryOp.LT;
+      case CMPG_FLOAT:
+      case CMPG_INT:
+      case CMPG_LONG:
       case CMPG_DOUBLE:
         return DalvikBinaryOp.GT;
-      case CMPL_LONG:
-        return DalvikBinaryOp.LT;
-      case CMPG_LONG:
-        return DalvikBinaryOp.GT;
-      case CMPL_INT:
-        return DalvikBinaryOp.LT;
-      case CMPG_INT:
-        return DalvikBinaryOp.GT;
       case ADD_INT:
-        return IBinaryOpInstruction.Operator.ADD;
-      case SUB_INT:
-        return IBinaryOpInstruction.Operator.SUB;
-      case MUL_INT:
-        return IBinaryOpInstruction.Operator.MUL;
-      case DIV_INT:
-        return IBinaryOpInstruction.Operator.DIV;
-      case REM_INT:
-        return IBinaryOpInstruction.Operator.REM;
-      case AND_INT:
-        return IBinaryOpInstruction.Operator.AND;
-      case OR_INT:
-        return IBinaryOpInstruction.Operator.OR;
-      case XOR_INT:
-        return IBinaryOpInstruction.Operator.XOR;
-      case SHL_INT:
-        return IShiftInstruction.Operator.SHL;
-      case SHR_INT:
-        return IShiftInstruction.Operator.SHR;
-      case USHR_INT:
-        return IShiftInstruction.Operator.USHR;
+      case ADD_DOUBLE:
+      case ADD_FLOAT:
       case ADD_LONG:
         return IBinaryOpInstruction.Operator.ADD;
+      case SUB_INT:
+      case SUB_DOUBLE:
+      case SUB_FLOAT:
       case SUB_LONG:
         return IBinaryOpInstruction.Operator.SUB;
+      case MUL_INT:
+      case MUL_DOUBLE:
+      case MUL_FLOAT:
       case MUL_LONG:
         return IBinaryOpInstruction.Operator.MUL;
+      case DIV_INT:
+      case DIV_DOUBLE:
+      case DIV_FLOAT:
       case DIV_LONG:
         return IBinaryOpInstruction.Operator.DIV;
+      case REM_INT:
+      case REM_DOUBLE:
+      case REM_FLOAT:
       case REM_LONG:
         return IBinaryOpInstruction.Operator.REM;
+      case AND_INT:
       case AND_LONG:
         return IBinaryOpInstruction.Operator.AND;
+      case OR_INT:
       case OR_LONG:
         return IBinaryOpInstruction.Operator.OR;
+      case XOR_INT:
       case XOR_LONG:
         return IBinaryOpInstruction.Operator.XOR;
+      case SHL_INT:
       case SHL_LONG:
         return IShiftInstruction.Operator.SHL;
+      case SHR_INT:
       case SHR_LONG:
         return IShiftInstruction.Operator.SHR;
+      case USHR_INT:
       case USHR_LONG:
         return IShiftInstruction.Operator.USHR;
-      case ADD_FLOAT:
-        return IBinaryOpInstruction.Operator.ADD;
-      case SUB_FLOAT:
-        return IBinaryOpInstruction.Operator.SUB;
-      case MUL_FLOAT:
-        return IBinaryOpInstruction.Operator.MUL;
-      case DIV_FLOAT:
-        return IBinaryOpInstruction.Operator.DIV;
-      case REM_FLOAT:
-        return IBinaryOpInstruction.Operator.REM;
-      case ADD_DOUBLE:
-        return IBinaryOpInstruction.Operator.ADD;
-      case SUB_DOUBLE:
-        return IBinaryOpInstruction.Operator.SUB;
-      case MUL_DOUBLE:
-        return IBinaryOpInstruction.Operator.MUL;
-      case DIV_DOUBLE:
-        return IBinaryOpInstruction.Operator.DIV;
-      case REM_DOUBLE:
-        return IBinaryOpInstruction.Operator.REM;
       default:
         return null;
     }

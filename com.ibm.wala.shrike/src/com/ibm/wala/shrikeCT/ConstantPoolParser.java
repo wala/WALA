@@ -600,6 +600,7 @@ public final class ConstantPoolParser implements ClassConstants {
       switch (tag) {
         case CONSTANT_String:
         case CONSTANT_Class:
+        case CONSTANT_MethodType:
           itemLen = 2;
           break;
         case CONSTANT_NameAndType:
@@ -608,6 +609,7 @@ public final class ConstantPoolParser implements ClassConstants {
         case CONSTANT_InterfaceMethodRef:
         case CONSTANT_Integer:
         case CONSTANT_Float:
+        case CONSTANT_InvokeDynamic:
           itemLen = 4;
           break;
         case CONSTANT_Long:
@@ -620,12 +622,6 @@ public final class ConstantPoolParser implements ClassConstants {
           break;
         case CONSTANT_MethodHandle:
           itemLen = 3;
-          break;
-        case CONSTANT_MethodType:
-          itemLen = 2;
-          break;
-        case CONSTANT_InvokeDynamic:
-          itemLen = 4;
           break;
         default:
           throw new InvalidClassFileException(offset, "unknown constant pool entry type" + tag);
