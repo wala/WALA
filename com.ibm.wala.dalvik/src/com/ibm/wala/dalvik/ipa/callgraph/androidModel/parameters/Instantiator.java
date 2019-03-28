@@ -418,7 +418,7 @@ public class Instantiator implements IInstantiator {
     final IMethod cTor = lookupConstructor(val.getType());
     final ParameterAccessor ctorAcc = new ParameterAccessor(cTor);
     assert (ctorAcc.hasImplicitThis()) : "CTor detected as not having implicit this pointer";
-    logger.debug("Acc for: %", this.scope);
+    logger.debug("Acc for: {}", this.scope);
     final ParameterAccessor acc =
         new ParameterAccessor(this.scope, false); // TODO pm needs a connectThrough too!
     // TODO false is false
