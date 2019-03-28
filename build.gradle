@@ -97,8 +97,6 @@ subprojects { subproject ->
 		dependsOn 'processTestResources'
 	}
 
-	tasks.register('prepareIntelliJIDEA')
-
 	tasks.named('test') {
 		include '**/*Test.class'
 		include '**/*TestCase.class'
