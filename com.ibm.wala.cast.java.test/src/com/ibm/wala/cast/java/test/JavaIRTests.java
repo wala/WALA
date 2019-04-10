@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Statement;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -53,6 +54,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -665,9 +667,24 @@ public abstract class JavaIRTests extends IRTests {
     runTest(singlePkgTestSrc("p"), rtJar, simplePkgTestEntryPoint("p"), emptyList, true, null);
   }
 
+  private static final List<IRAssertion> MLAssertions =
+      Arrays.asList(
+          new InstructionOperandAssertion(
+              "Source#MiniaturList#main#([Ljava/lang/String;)V",
+              new Predicate<SSAInstruction>() {
+
+                @Override
+                public boolean test(SSAInstruction t) {
+                  return (t instanceof SSAAbstractInvokeInstruction)
+                      && t.toString().contains("cons");
+                }
+              },
+              1,
+              new int[] {53, 38, 53, 60}));
+
   @Test
   public void testMiniaturList() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), MLAssertions, true, null);
   }
 
   @Test

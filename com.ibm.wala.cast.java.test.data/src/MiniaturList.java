@@ -50,8 +50,8 @@ public class MiniaturList {
 	}
 
 	public static void main(String[] args) {
-		MiniaturList l1 = cons(1, cons(2, cons(3, cons(2, null))));
-		MiniaturList l2 = cons(5, null);
+    MiniaturList l1 = cons(1, cons(2, cons(3, cons(2, null))));
+    MiniaturList l2 = cons(5, null);
 
 		l1 = l1.remove(2);
 		//assert 2 !in l1.*next.data

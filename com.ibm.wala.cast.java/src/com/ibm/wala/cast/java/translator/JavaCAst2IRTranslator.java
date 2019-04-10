@@ -248,9 +248,24 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       int[] arguments) {
     assert name.getKind() == CAstNode.CONSTANT;
     CallSiteReference dummySiteRef = (CallSiteReference) name.getValue();
-    int pc = context.cfg().getCurrentInstruction();
+    int instNumber = context.cfg().getCurrentInstruction();
+    int pc = instNumber;
     boolean isStatic = (receiver == -1);
     int[] realArgs = isStatic ? arguments : new int[arguments.length + 1];
+
+    Position[] pos;
+    if (isStatic) {
+      pos = new Position[arguments.length];
+      for (int i = 0; i < arguments.length; i++) {
+        pos[i] = context.getSourceMap().getPosition(call.getChild(i + 2));
+      }
+    } else {
+      pos = new Position[arguments.length + 1];
+      pos[0] = context.getSourceMap().getPosition(call.getChild(0));
+      for (int i = 0; i < arguments.length; i++) {
+        pos[i + 1] = context.getSourceMap().getPosition(call.getChild(i + 2));
+      }
+    }
 
     if (!isStatic) {
       realArgs[0] = receiver;
@@ -264,14 +279,15 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       context
           .cfg()
           .addInstruction(
-              new AstJavaInvokeInstruction(
-                  context.cfg().getCurrentInstruction(), realArgs, exception, realSiteRef));
+              new AstJavaInvokeInstruction(instNumber, realArgs, exception, realSiteRef));
     else
       context
           .cfg()
           .addInstruction(
-              new AstJavaInvokeInstruction(
-                  context.cfg().getCurrentInstruction(), result, realArgs, exception, realSiteRef));
+              new AstJavaInvokeInstruction(instNumber, result, realArgs, exception, realSiteRef));
+
+    context.cfg().noteOperands(instNumber, pos);
+
     processExceptions(call, context);
   }
 

@@ -21,6 +21,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
@@ -30,10 +32,12 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import org.junit.Test;
 
 public class ECJJava17IRTest extends IRTests {
@@ -179,13 +183,28 @@ public class ECJJava17IRTest extends IRTests {
         null);
   }
 
+  private static final List<IRAssertion> SiSAssertions =
+      Arrays.asList(
+          new InstructionOperandAssertion(
+              "Source#" + packageName + "/StringsInSwitch#main#([Ljava/lang/String;)V",
+              new Predicate<SSAInstruction>() {
+
+                @Override
+                public boolean test(SSAInstruction t) {
+                  return (t instanceof SSAAbstractInvokeInstruction)
+                      && t.toString().contains("getTypeOfDayWithSwitchStatement");
+                }
+              },
+              1,
+              new int[] {9, 58, 9, 67}));
+
   @Test
   public void testStringsInSwitch() throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointseven"),
         rtJar,
         simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
+        SiSAssertions,
         true,
         null);
   }

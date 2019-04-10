@@ -17,6 +17,8 @@ import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstClass;
 import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -55,6 +57,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import org.junit.Assert;
 
@@ -207,6 +210,47 @@ public abstract class IRTests {
           System.err.println(("Missing edge: " + srcMethod + " -> " + tgtMethod));
         }
       }
+    }
+  }
+
+  protected static class InstructionOperandAssertion implements IRAssertion {
+    private final String method;
+    private final Predicate<SSAInstruction> findInstruction;
+    private final int operand;
+    private final int[] position;
+
+    public InstructionOperandAssertion(
+        String method, Predicate<SSAInstruction> findInstruction, int operand, int[] position) {
+      this.method = method;
+      this.findInstruction = findInstruction;
+      this.operand = operand;
+      this.position = position;
+    }
+
+    @Override
+    public void check(CallGraph cg) {
+      MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
+
+      boolean found = false;
+      for (CGNode cgNode : cg.getNodes(mref)) {
+        assert cgNode.getMethod() instanceof AstMethod;
+        DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
+        for (SSAInstruction inst : cgNode.getIR().getInstructions()) {
+          if (findInstruction.test(inst)) {
+            Position pos = dbg.getOperandPosition(inst.iindex, operand);
+            if (pos != null) {
+              if (pos.getFirstLine() == position[0]
+                  && pos.getFirstCol() == position[1]
+                  && pos.getLastLine() == position[2]
+                  && pos.getLastCol() == position[3]) {
+                found = true;
+              }
+            }
+          }
+        }
+      }
+
+      assert found;
     }
   }
 

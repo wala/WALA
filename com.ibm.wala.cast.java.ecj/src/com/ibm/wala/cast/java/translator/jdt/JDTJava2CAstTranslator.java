@@ -2103,8 +2103,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return fFactory.makeConstant(null);
   }
 
-  private CAstNode visit(StringLiteral n) {
-    return fFactory.makeConstant(n.getLiteralValue());
+  private CAstNode visit(StringLiteral n, WalkContext context) {
+    CAstNode str = fFactory.makeConstant(n.getLiteralValue());
+    setPos(context, str, n);
+    return str;
   }
 
   private CAstNode visit(TypeLiteral n, WalkContext context) {
@@ -2113,8 +2115,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         context, fFactory, n, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(typeName));
   }
 
-  private CAstNode visit(NumberLiteral n) {
-    return fFactory.makeConstant(n.resolveConstantExpressionValue());
+  private CAstNode visit(NumberLiteral n, WalkContext context) {
+    CAstNode str = fFactory.makeConstant(n.resolveConstantExpressionValue());
+    setPos(context, str, n);
+    return str;
   }
 
   /** SimpleName can be a field access, local, or class name (do nothing case) */
@@ -3744,7 +3748,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof MethodInvocation) {
       return visit((MethodInvocation) n, context);
     } else if (n instanceof NumberLiteral) {
-      return visit((NumberLiteral) n);
+      return visit((NumberLiteral) n, context);
     } else if (n instanceof NullLiteral) {
       return visit();
     } else if (n instanceof ParenthesizedExpression) {
@@ -3760,7 +3764,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof SimpleName) {
       return visit((SimpleName) n, context);
     } else if (n instanceof StringLiteral) {
-      return visit((StringLiteral) n);
+      return visit((StringLiteral) n, context);
     } else if (n instanceof SuperConstructorInvocation) {
       return visit((SuperConstructorInvocation) n, context);
     } else if (n instanceof SuperFieldAccess) {

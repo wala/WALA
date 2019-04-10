@@ -6,7 +6,7 @@ package javaonepointseven;
  */
 public class StringsInSwitch {
 	public static void main(String[] args) {
-		new StringsInSwitch().getTypeOfDayWithSwitchStatement("Tuesday");
+    new StringsInSwitch().getTypeOfDayWithSwitchStatement("Tuesday");
 	}
 	
   public String getTypeOfDayWithSwitchStatement(String dayOfWeekArg) {
