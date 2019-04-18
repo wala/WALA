@@ -9,3 +9,5 @@ rm -rf \
 find "$caches" -name '*.lock' -delete
 find "$caches" -name '*.bin' -delete
 find "$caches" -name 'cache.properties' -delete
+find "$caches" -name workerMain -type d -exec rm -r "{}" \;
+find "$caches" -name buildSrc.jar -delete
