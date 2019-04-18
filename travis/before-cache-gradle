@@ -5,3 +5,6 @@ caches="$HOME/.gradle/caches"
 rm -rf \
    "$caches/modules-2/modules-2.lock" \
    "$caches"/*/plugin-resolution
+
+find "$caches" -name '*.lock' -delete
+find "$caches" -name '*.bin' -delete
