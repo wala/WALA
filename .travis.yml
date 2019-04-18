@@ -26,6 +26,7 @@ cache:
   - "$HOME/.m2"
   - "$HOME/apache-maven-3.5.0"
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
+  - "$TRAVIS_BUILD_DIR/build/p2asmaven"
 env:
   global:
     - secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
