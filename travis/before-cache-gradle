@@ -8,3 +8,4 @@ rm -rf \
 
 find "$caches" -name '*.lock' -delete
 find "$caches" -name '*.bin' -delete
+find "$caches" -name 'cache.properties' -delete
