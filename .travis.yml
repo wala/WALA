@@ -25,6 +25,7 @@ cache:
   - "$HOME/.gradle/wrapper"
   - "$HOME/.m2"
   - "$HOME/apache-maven-3.5.0"
+  - "$TRAVIS_BUILD_DIR/build/p2asmaven"
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
 env:
   global:
