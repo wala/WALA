@@ -2729,9 +2729,34 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       return visitNode(n.getOperand(), context); // drop useless unary plus operator
     } else if (op == PrefixExpression.Operator.MINUS) {
       CAstNode zero;
-      if (JDT2CAstUtils.isLongOrLess(n.getOperand().resolveTypeBinding()))
-        zero = fFactory.makeConstant(0L);
-      else zero = fFactory.makeConstant(0.0);
+      ITypeBinding type = n.getOperand().resolveTypeBinding();
+      switch (type.getBinaryName()) {
+        case "C":
+          zero = fFactory.makeConstant((char) 0);
+          break;
+        case "B":
+          zero = fFactory.makeConstant((byte) 0);
+          break;
+        case "S":
+          zero = fFactory.makeConstant((short) 0);
+          break;
+        case "I":
+          zero = fFactory.makeConstant(0);
+          break;
+        case "J":
+          zero = fFactory.makeConstant(0L);
+          break;
+        case "F":
+          zero = fFactory.makeConstant(0.0);
+          break;
+        case "D":
+          zero = fFactory.makeConstant(0.0D);
+          break;
+        default:
+          zero = null;
+          assert false : "unexpected type " + type.getBinaryName();
+          break;
+      }
       return makeNode(
           context,
           fFactory,
