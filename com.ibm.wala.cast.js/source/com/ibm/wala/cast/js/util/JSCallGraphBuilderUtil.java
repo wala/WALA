@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.cast.js.test;
+package com.ibm.wala.cast.js.util;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -51,7 +51,6 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Set;
 import java.util.function.Supplier;
-import org.junit.Assert;
 
 /** TODO this class is a mess. rewrite. */
 public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil {
@@ -310,8 +309,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
       return builder;
     } catch (ClassHierarchyException e) {
-      Assert.assertTrue("internal error building class hierarchy", false);
-      return null;
+      throw new RuntimeException("internal error building class hierarchy", e);
     }
   }
 

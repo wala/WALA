@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef;
+import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.ipa.callgraph.CGNode;

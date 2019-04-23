@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.ipa.lexical.LexicalModRef;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
