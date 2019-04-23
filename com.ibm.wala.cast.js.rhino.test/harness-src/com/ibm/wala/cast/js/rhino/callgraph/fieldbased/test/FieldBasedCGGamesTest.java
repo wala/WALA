@@ -1,7 +1,7 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.test.FieldBasedCGUtil.BuilderType;
+import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;

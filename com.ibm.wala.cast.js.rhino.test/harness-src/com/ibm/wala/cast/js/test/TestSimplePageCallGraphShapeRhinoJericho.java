@@ -14,6 +14,7 @@ import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
