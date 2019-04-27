@@ -497,8 +497,7 @@ public abstract class OfflineInstrumenterBase {
   public final void writeUnmodifiedClasses() throws IOException, IllegalStateException {
     passUnmodifiedClasses = false;
     makeOutputJar();
-    for (int i = 0; i < inputs.size(); i++) {
-      Input in = inputs.get(i);
+    for (Input in : inputs) {
       if (!in.isClass()) {
         if (in instanceof JarInput) {
           JarInput jin = (JarInput) in;

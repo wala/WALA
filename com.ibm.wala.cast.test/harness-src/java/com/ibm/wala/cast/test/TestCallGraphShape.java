@@ -61,15 +61,15 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                 if (fileName.lastIndexOf('/') >= 0) {
                   fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
                 }
-                for (int j = 0; j < assertionData.length; j++) {
-                  String file = (String) assertionData[j][1];
+                for (Object[] assertionDatum : assertionData) {
+                  String file = (String) assertionDatum[1];
                   if (file.indexOf('/') >= 0) {
                     file = file.substring(file.lastIndexOf('/') + 1);
                   }
                   if (file.equalsIgnoreCase(fileName)) {
-                    if (pos.getFirstLine() >= (Integer) assertionData[j][2]
+                    if (pos.getFirstLine() >= (Integer) assertionDatum[2]
                         && (pos.getLastLine() != -1 ? pos.getLastLine() : pos.getFirstLine())
-                            <= (Integer) assertionData[j][3]) {
+                            <= (Integer) assertionDatum[3]) {
                       System.err.println(
                           "found " + inst + " of " + M + " at expected position " + pos);
                       continue insts;
@@ -135,19 +135,19 @@ public abstract class TestCallGraphShape extends WalaTestCase {
       return;
     }
 
-    for (int i = 0; i < assertionData.length; i++) {
+    for (Object[] assertionDatum : assertionData) {
 
       check_target:
-      for (int j = 0; j < ((String[]) assertionData[i][1]).length; j++) {
+      for (int j = 0; j < ((String[]) assertionDatum[1]).length; j++) {
         Iterator<CGNode> srcs =
-            (assertionData[i][0] instanceof String)
-                ? getNodes(CG, (String) assertionData[i][0]).iterator()
+            (assertionDatum[0] instanceof String)
+                ? getNodes(CG, (String) assertionDatum[0]).iterator()
                 : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
-        Assert.assertTrue("cannot find " + assertionData[i][0], srcs.hasNext());
+        Assert.assertTrue("cannot find " + assertionDatum[0], srcs.hasNext());
 
         boolean checkAbsence = false;
-        String targetName = ((String[]) assertionData[i][1])[j];
+        String targetName = ((String[]) assertionDatum[1])[j];
         if (targetName.startsWith("!")) {
           checkAbsence = true;
           targetName = targetName.substring(1);
@@ -169,7 +169,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                   if (checkAbsence) {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
                     Assert.assertTrue(
-                        "found edge " + assertionData[i][0] + " ---> " + targetName, false);
+                        "found edge " + assertionDatum[0] + " ---> " + targetName, false);
                   } else {
                     System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
                     continue check_target;
@@ -180,9 +180,9 @@ public abstract class TestCallGraphShape extends WalaTestCase {
           }
         }
 
-        System.err.println("cannot find edge " + assertionData[i][0] + " ---> " + targetName);
+        System.err.println("cannot find edge " + assertionDatum[0] + " ---> " + targetName);
         Assert.assertTrue(
-            "cannot find edge " + assertionData[i][0] + " ---> " + targetName, checkAbsence);
+            "cannot find edge " + assertionDatum[0] + " ---> " + targetName, checkAbsence);
       }
     }
   }

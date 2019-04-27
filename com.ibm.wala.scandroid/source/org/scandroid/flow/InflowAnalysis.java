@@ -162,8 +162,8 @@ public class InflowAnalysis {
     Collection<IMethod> targets = new HashSet<>();
     ArrayList<Collection<IMethod>> targetList = new ArrayList<>();
 
-    for (int i = 0; i < ssAL.size(); i++) {
-      Collection<IMethod> tempList = ssAL.get(i).getNamePattern().getPossibleTargets(cha);
+    for (SourceSpec sourceSpec : ssAL) {
+      Collection<IMethod> tempList = sourceSpec.getNamePattern().getPossibleTargets(cha);
       targets.addAll(tempList);
       targetList.add(tempList);
     }

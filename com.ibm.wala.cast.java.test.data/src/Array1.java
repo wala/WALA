@@ -22,8 +22,8 @@ public class Array1 {
 
 	int sum = 0;
 
-	for(int j= 0; j < ary.length; j++) {
-	    sum += ary[j];
+	for (int i : ary) {
+		sum += i;
 	}
     }
 }

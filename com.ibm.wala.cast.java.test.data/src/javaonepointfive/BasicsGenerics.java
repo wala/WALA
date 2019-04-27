@@ -70,6 +70,7 @@ public class BasicsGenerics {
 		
 		for (Iterator<?> iter = ((Iterable<?>)ints).iterator(); iter.hasNext(); iter.next());
 		
+		//noinspection ForLoopReplaceableByForEach
 		for (Iterator<String> iter = strs.iterator(); iter.hasNext();) {
 			qqq = iter.next();
 			System.out.println(qqq);

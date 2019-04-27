@@ -453,8 +453,7 @@ public class Analyzer {
     /** Print the path to the given stream, if there is one. */
     public void printPath(Writer w) throws IOException {
       if (path != null) {
-        for (int i = 0; i < path.size(); i++) {
-          PathElement elem = path.get(i);
+        for (PathElement elem : path) {
           String[] stack = elem.stack;
           String[] locals = elem.locals;
           w.write("Offset " + elem.index + ": [");

@@ -1385,8 +1385,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       init();
 
       if (hasDeadBlocks) {
-        for (int i = 0; i < blocks.size(); i++) {
-          PreBasicBlock src = blocks.get(i);
+        for (PreBasicBlock src : blocks) {
           if (liveBlocks.contains(src)) {
             if (normalEdges.containsKey(src)) {
               for (PreBasicBlock succ : normalEdges.get(src)) {
@@ -1406,25 +1405,22 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       int x = 0;
       instructions = new SSAInstruction[icfg.currentInstruction];
-      for (int i = 0; i < blocks.size(); i++) {
-        if (liveBlocks.contains(blocks.get(i))) {
-          List<SSAInstruction> bi = blocks.get(i).instructions();
-          for (int j = 0; j < bi.size(); j++) {
-            SSAInstruction inst = bi.get(j);
+      for (PreBasicBlock block : blocks) {
+        if (liveBlocks.contains(block)) {
+          List<SSAInstruction> bi = block.instructions();
+          for (SSAInstruction inst : bi) {
             if (inst instanceof SSAGetCaughtExceptionInstruction) {
               SSAGetCaughtExceptionInstruction ci = (SSAGetCaughtExceptionInstruction) inst;
-              if (ci.getBasicBlockNumber() != blocks.get(i).getNumber()) {
-                inst =
-                    insts.GetCaughtExceptionInstruction(
-                        x, blocks.get(i).getNumber(), ci.getException());
+              if (ci.getBasicBlockNumber() != block.getNumber()) {
+                inst = insts.GetCaughtExceptionInstruction(x, block.getNumber(), ci.getException());
               }
             } else if (inst instanceof SSAGotoInstruction) {
-              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(blocks.get(i)).iterator();
+              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               if (succs.hasNext()) {
                 PreBasicBlock target = succs.next();
                 assert !succs.hasNext()
                     : "unexpected successors for block "
-                        + blocks.get(i)
+                        + block
                         + ": "
                         + target
                         + " and "
@@ -1435,7 +1431,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 inst = null;
               }
             } else if (inst instanceof SSAConditionalBranchInstruction) {
-              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(blocks.get(i)).iterator();
+              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               assert succs.hasNext();
               int target;
               int t1 = succs.next().firstIndex;

@@ -641,9 +641,9 @@ public final class Util {
         }
       }
 
-      for (int j = 0; j < targets.length; j++) {
-        if (!r[targets[j]]) {
-          r[targets[j]] = true;
+      for (int target : targets) {
+        if (!r[target]) {
+          r[target] = true;
         }
       }
       if (instructions[i].isPEI()) {
@@ -653,14 +653,14 @@ public final class Util {
           r[i + 1] = true;
         }
         if (hs != null && hs.length > 0) {
-          for (int j = 0; j < hs.length; j++) {
+          for (ExceptionHandler h : hs) {
             // exceptionHandlers.add(hs[j]);
-            if (!r[hs[j].getHandler()]) {
+            if (!r[h.getHandler()]) {
               // we have not discovered the catch block yet.
               // form a new basic block
-              r[hs[j].getHandler()] = true;
+              r[h.getHandler()] = true;
             }
-            catchers[hs[j].getHandler()] = true;
+            catchers[h.getHandler()] = true;
           }
         }
       }

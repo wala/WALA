@@ -572,8 +572,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // this.
 
       List<CAstNode> bodyNodes = new ArrayList<>(staticInits.size());
-      for (int i = 0; i < staticInits.size(); i++)
-        bodyNodes.add(visitFieldInitNode(staticInits.get(i), newContext));
+      for (ASTNode staticInit : staticInits)
+        bodyNodes.add(visitFieldInitNode(staticInit, newContext));
       CAstNode staticInitAst = makeNode(newContext, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
       memberEntities.add(
           new ProcedureEntity(staticInitAst, typeBinding, childEntities, newContext, null));
@@ -681,7 +681,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     bodyNodes.add(makeNode(context, fFactory, n, CAstNode.CALL, children));
     // QUESTION: no handleExceptions?
 
-    for (int i = 0; i < inits.size(); i++) bodyNodes.add(visitFieldInitNode(inits.get(i), context));
+    for (ASTNode init : inits) bodyNodes.add(visitFieldInitNode(init, context));
 
     // finally, make the procedure entity
     CAstNode ast = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
@@ -2959,8 +2959,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     List<Statement> cases = n.statements();
 
     // First compute the control flow edges for the various case labels
-    for (int i = 0; i < cases.size(); i++) {
-      Statement se = cases.get(i);
+    for (Statement se : cases) {
       if (se instanceof SwitchCase) {
         SwitchCase c = (SwitchCase) se;
 
@@ -4638,7 +4637,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     bodyNodes.add(makeNode(context, fFactory, n, CAstNode.CALL, children));
     // QUESTION: no handleExceptions?
 
-    for (int i = 0; i < inits.size(); i++) bodyNodes.add(visitFieldInitNode(inits.get(i), context));
+    for (ASTNode init : inits) bodyNodes.add(visitFieldInitNode(init, context));
 
     if (nonDefaultCtor != null) bodyNodes.add(visitNode(nonDefaultCtor.getBody(), context));
 

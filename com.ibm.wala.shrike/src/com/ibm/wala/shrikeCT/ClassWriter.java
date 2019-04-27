@@ -802,6 +802,7 @@ public class ClassWriter implements ClassConstants {
     char[] chars = noChars;
 
     // BE CAREFUL: the newCPEntries array grows during this loop.
+    //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < newCPEntries.size(); i++) {
       Object o = newCPEntries.get(i);
       if (o instanceof CWItem) {
@@ -987,8 +988,8 @@ public class ClassWriter implements ClassConstants {
     offset = reserveBuf(2);
     int numFields = fields.size();
     setUShort(buf, offset, numFields);
-    for (int i = 0; i < numFields; i++) {
-      emitElement(fields.get(i));
+    for (Element field : fields) {
+      emitElement(field);
     }
 
     offset = reserveBuf(2);
@@ -996,15 +997,15 @@ public class ClassWriter implements ClassConstants {
     // Xiangyu, debug
     // System.out.println("numMethods="+numMethods);
     setUShort(buf, offset, numMethods);
-    for (int i = 0; i < numMethods; i++) {
-      emitElement(methods.get(i));
+    for (Element method : methods) {
+      emitElement(method);
     }
 
     offset = reserveBuf(2);
     int numAttrs = classAttributes.size();
     setUShort(buf, offset, numAttrs);
-    for (int i = 0; i < numAttrs; i++) {
-      emitElement(classAttributes.get(i));
+    for (Element classAttribute : classAttributes) {
+      emitElement(classAttribute);
     }
 
     if (buf.length == bufLen) {

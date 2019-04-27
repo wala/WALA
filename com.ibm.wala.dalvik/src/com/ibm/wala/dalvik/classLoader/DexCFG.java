@@ -154,9 +154,9 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         }
       }
 
-      for (int j = 0; j < targets.length; j++) {
-        if (!r[targets[j]]) {
-          r[targets[j]] = true;
+      for (int target : targets) {
+        if (!r[target]) {
+          r[target] = true;
           blockCount++;
         }
       }
@@ -168,15 +168,15 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           blockCount++;
         }
         if (hs != null && hs.length > 0) {
-          for (int j = 0; j < hs.length; j++) {
-            exceptionHandlers.add(hs[j]);
-            if (!r[hs[j].getHandler()]) {
+          for (ExceptionHandler h : hs) {
+            exceptionHandlers.add(h);
+            if (!r[h.getHandler()]) {
               // we have not discovered the catch block yet.
               // form a new basic block
-              r[hs[j].getHandler()] = true;
+              r[h.getHandler()] = true;
               blockCount++;
             }
-            catchers[hs[j].getHandler()] = true;
+            catchers[h.getHandler()] = true;
           }
         }
       }

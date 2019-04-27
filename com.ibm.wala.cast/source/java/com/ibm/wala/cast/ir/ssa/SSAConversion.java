@@ -569,8 +569,8 @@ public class SSAConversion extends AbstractSSAConversion {
 
     int[] lexicalUses = lexicalInfo.getExposedUses(index);
     if (lexicalUses != null) {
-      for (int j = 0; j < lexicalUses.length; j++) {
-        if (!skip(lexicalUses[j])) {
+      for (int lexicalUs : lexicalUses) {
+        if (!skip(lexicalUs)) {
           return false;
         }
       }
@@ -632,10 +632,10 @@ public class SSAConversion extends AbstractSSAConversion {
     }
 
     int[] params = symtab.getParameterValueNumbers();
-    for (int i = 0; i < params.length; i++) {
-      if (!skip(params[i])) {
-        S[params[i]].push(params[i]);
-        valueMap[params[i]] = params[i];
+    for (int param : params) {
+      if (!skip(param)) {
+        S[param].push(param);
+        valueMap[param] = param;
       }
     }
   }
