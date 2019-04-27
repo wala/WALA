@@ -43,7 +43,7 @@ public class JavaPrimitiveTypeMap {
 
     @Override
     public Collection<CAstType> getSupertypes() {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
   }
 

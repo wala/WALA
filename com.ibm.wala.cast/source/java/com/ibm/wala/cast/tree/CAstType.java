@@ -77,7 +77,7 @@ public interface CAstType {
 
         @Override
         public Collection<CAstType> /*<CAstType>*/ getSupertypes() {
-          return Collections.EMPTY_SET;
+          return Collections.emptySet();
         }
       };
 }
