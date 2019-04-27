@@ -169,7 +169,7 @@ public class CompareToZeroOneCFADriver {
     final class Helper {
       void checkPointersInMethod(CGNode node) {
         // TODO remove this hack
-        if (node.getMethod().getReference().toString().indexOf("clone()Ljava/lang/Object;") != -1) {
+        if (node.getMethod().getReference().toString().contains("clone()Ljava/lang/Object;")) {
           System.err.println(("SKIPPING " + node));
           return;
         }

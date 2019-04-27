@@ -367,7 +367,7 @@ public class HeapTracer {
     } else if (status == BAD) {
       return true;
     } else {
-      if (p.getName() != null && p.getName().indexOf("sun.reflect") != -1) {
+      if (p.getName() != null && p.getName().contains("sun.reflect")) {
         if (DEBUG) {
           System.err.println(("making " + p + " a BAD package"));
         }

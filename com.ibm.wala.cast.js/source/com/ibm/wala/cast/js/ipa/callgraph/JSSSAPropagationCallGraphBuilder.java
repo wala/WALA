@@ -795,7 +795,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
                     }
                     String v1 = (String) ((ConstantKey<?>) element).getValue();
                     String v2 = (String) ((ConstantKey<?>) element2).getValue();
-                    if (v1.indexOf(v2) == -1 && v2.indexOf(v1) == -1) {
+                    if (!v1.contains(v2) && !v2.contains(v1)) {
                       InstanceKey lvalKey = getInstanceKeyForConstant(v1 + v2);
                       if (addKey(lvalKey)) {
                         changed = CHANGED;
