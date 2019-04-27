@@ -21,7 +21,7 @@ public class Reflect19 {
           NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
     Constructor<?> m = c.getConstructor(new Class<?>[] {Integer.class});
-    Integer i = Integer.valueOf(0);
+    Integer i = 0;
     m.newInstance(new Object[] {i});
   }
 }

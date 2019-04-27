@@ -35,7 +35,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     }
     this.array = array;
     for (int i = 0; i < array.length; i++) {
-      map.put(array[i], Integer.valueOf(i));
+      map.put(array[i], i);
     }
   }
 

@@ -210,7 +210,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     for (int j = nextArg; j < nargs; j++) {
       // load the next parameter into v_temp.
       int indexConst = nextLocal++;
-      constants.put(Integer.valueOf(indexConst), new ConstantValue(nextParameter++));
+      constants.put(indexConst, new ConstantValue(nextParameter++));
       int temp = nextLocal++;
       m.addInstruction(
           null,

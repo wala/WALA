@@ -70,7 +70,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder
 
   @Override
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
-    return interesting.get(getLanguage(node), Integer.valueOf(vn));
+    return interesting.get(getLanguage(node), vn);
   }
 
   @Override

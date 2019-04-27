@@ -54,16 +54,16 @@ public abstract class Decoder implements Constants {
 
     table[OP_aconst_null] = ConstantInstruction.make(TYPE_null, null);
     for (int i = OP_iconst_m1; i <= OP_iconst_5; i++) {
-      table[i] = ConstantInstruction.make(TYPE_int, Integer.valueOf(i - OP_iconst_m1 - 1));
+      table[i] = ConstantInstruction.make(TYPE_int, i - OP_iconst_m1 - 1);
     }
     for (int i = OP_lconst_0; i <= OP_lconst_1; i++) {
-      table[i] = ConstantInstruction.make(TYPE_long, Long.valueOf(i - OP_lconst_0));
+      table[i] = ConstantInstruction.make(TYPE_long, (long) (i - OP_lconst_0));
     }
     for (int i = OP_fconst_0; i <= OP_fconst_2; i++) {
-      table[i] = ConstantInstruction.make(TYPE_float, Float.valueOf(i - OP_fconst_0));
+      table[i] = ConstantInstruction.make(TYPE_float, (float) (i - OP_fconst_0));
     }
     for (int i = OP_dconst_0; i <= OP_dconst_1; i++) {
-      table[i] = ConstantInstruction.make(TYPE_double, Double.valueOf(i - OP_dconst_0));
+      table[i] = ConstantInstruction.make(TYPE_double, (double) (i - OP_dconst_0));
     }
 
     for (int i = OP_iload_0; i <= OP_aload_3; i++) {

@@ -2865,7 +2865,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public final int setValue(CAstNode n, int v) {
-      results.put(n, Integer.valueOf(v));
+      results.put(n, v);
       return v;
     }
 
@@ -3779,7 +3779,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 translateConditionOpcode(CAstOperator.OP_EQ),
                 null,
                 c.getValue(n.getChild(0)),
-                context.currentScope().getConstantValue(Integer.valueOf(0)),
+                context.currentScope().getConstantValue(0),
                 -1));
     PreBasicBlock branchB = context.cfg().getCurrentBlock();
 
@@ -4126,7 +4126,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                     translateConditionOpcode(CAstOperator.OP_NE),
                     null,
                     c.getValue(arg),
-                    context.currentScope().getConstantValue(Integer.valueOf(0)),
+                    context.currentScope().getConstantValue(0),
                     -1));
         context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
         break;
@@ -4219,7 +4219,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 translateConditionOpcode(CAstOperator.OP_EQ),
                 null,
                 c.getValue(l),
-                context.currentScope().getConstantValue(Integer.valueOf(0)),
+                context.currentScope().getConstantValue(0),
                 -1));
     context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(l));
     PreBasicBlock srcB = context.cfg().getCurrentBlock();
@@ -4385,7 +4385,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         context,
         c.getValue(n.getChild(0)),
         n,
-        new int[] {context.currentScope().getConstantValue(Integer.valueOf(i - 1))},
+        new int[] {context.currentScope().getConstantValue(i - 1)},
         c.getValue(n.getChild(i)));
   }
 

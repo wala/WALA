@@ -21,6 +21,6 @@ public class Reflect11 {
           NoSuchMethodException {
     Class<?> c = Class.forName("java.lang.Integer");
     Method[] m = c.getMethods();
-    m[0].invoke(new Integer(2), (Object[]) args);
+    m[0].invoke(2, (Object[]) args);
   }
 }

@@ -629,8 +629,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       Map<Integer, ConstantValue> constants = null;
       if (valueNumberForConstantOne > -1) {
         constants = HashMapFactory.make(1);
-        constants.put(
-            Integer.valueOf(valueNumberForConstantOne), new ConstantValue(Integer.valueOf(1)));
+        constants.put(valueNumberForConstantOne, new ConstantValue(Integer.valueOf(1)));
       }
 
       return new SyntheticIR(

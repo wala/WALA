@@ -335,13 +335,13 @@ class DebuggingMutableIntSet implements MutableIntSet {
     final Set<Integer> bits = HashSetFactory.make();
     primaryImpl.foreach(
         x -> {
-          assert !bits.contains(Integer.valueOf(x));
-          bits.add(Integer.valueOf(x));
+          assert !bits.contains(x);
+          bits.add(x);
         });
     secondaryImpl.foreach(
         x -> {
-          assert bits.contains(Integer.valueOf(x));
-          bits.remove(Integer.valueOf(x));
+          assert bits.contains(x);
+          bits.remove(x);
         });
     assert bits.isEmpty();
 
@@ -355,14 +355,14 @@ class DebuggingMutableIntSet implements MutableIntSet {
     primaryImpl.foreachExcluding(
         X,
         x -> {
-          assert !bits.contains(Integer.valueOf(x));
-          bits.add(Integer.valueOf(x));
+          assert !bits.contains(x);
+          bits.add(x);
         });
     secondaryImpl.foreachExcluding(
         X,
         x -> {
-          assert bits.contains(Integer.valueOf(x));
-          bits.remove(Integer.valueOf(x));
+          assert bits.contains(x);
+          bits.remove(x);
         });
     assert bits.isEmpty();
 

@@ -139,7 +139,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     }
     if (s instanceof SSAAbstractInvokeInstruction) {
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
-      String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
+      String def = call.hasDef() ? call.getDef() + "=" : "";
       final StringBuilder result =
           new StringBuilder(def)
               .append("call ")

@@ -221,9 +221,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       if (alloc != null) {
         Integer old = count.get(alloc);
         if (old == null) {
-          count.put(alloc, Integer.valueOf(1));
+          count.put(alloc, 1);
         } else {
-          count.put(alloc, Integer.valueOf(old.intValue() + 1));
+          count.put(alloc, old.intValue() + 1);
         }
       }
     }

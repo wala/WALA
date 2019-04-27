@@ -51,7 +51,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     this.array = new Object[2 * array.length];
     for (int i = 0; i < array.length; i++) {
       this.array[i] = array[i];
-      map.put((T) array[i], Integer.valueOf(i));
+      map.put((T) array[i], i);
     }
     nextIndex = array.length;
   }
@@ -164,7 +164,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     if (i < 0 || i > MAX_SIZE) {
       throw new IllegalArgumentException("invalid i: " + i);
     }
-    Integer I = Integer.valueOf(i);
+    Integer I = i;
     map.put(o, I);
     if (i >= array.length) {
       array = Arrays.copyOf(array, 2 * i);
