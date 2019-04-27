@@ -31,7 +31,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
       }
       BitVectorIntSet result = new BitVectorIntSet();
       for (Integer I : T) {
-        result.add(I.intValue());
+        result.add(I);
       }
       return result;
     }

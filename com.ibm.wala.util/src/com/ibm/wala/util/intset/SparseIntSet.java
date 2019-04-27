@@ -305,7 +305,7 @@ public class SparseIntSet implements IntSet {
     int[] result = new int[set.size()];
     int i = 0;
     for (Integer I : set) {
-      result[i++] = I.intValue();
+      result[i++] = I;
     }
     return result;
   }

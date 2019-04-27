@@ -53,7 +53,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     if (map.get(o) == null) {
       return -1;
     }
-    return map.get(o).intValue();
+    return map.get(o);
   }
 
   @Override

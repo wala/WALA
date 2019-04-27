@@ -304,7 +304,7 @@ public class SparseLongSet implements LongSet {
     long[] result = new long[set.size()];
     int i = 0;
     for (Long L : set) {
-      result[i++] = L.longValue();
+      result[i++] = L;
     }
     return result;
   }

@@ -331,7 +331,7 @@ public class ClassWriter implements ClassConstants {
 
     Integer i = forceAddCPEntries ? null : cachedCPEntries.get(o);
     if (i != null) {
-      return i.intValue();
+      return i;
     } else {
       int index = nextCPIndex;
       nextCPIndex += size;
@@ -923,11 +923,11 @@ public class ClassWriter implements ClassConstants {
         } else if (o instanceof Integer) {
           int offset = reserveBuf(5);
           buf[offset] = CONSTANT_Integer;
-          setInt(buf, offset + 1, ((Integer) o).intValue());
+          setInt(buf, offset + 1, (Integer) o);
         } else if (o instanceof Long) {
           int offset = reserveBuf(9);
           buf[offset] = CONSTANT_Long;
-          setLong(buf, offset + 1, ((Long) o).longValue());
+          setLong(buf, offset + 1, (Long) o);
         } else if (o instanceof Float) {
           int offset = reserveBuf(5);
           buf[offset] = CONSTANT_Float;

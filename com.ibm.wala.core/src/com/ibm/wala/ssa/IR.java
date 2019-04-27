@@ -544,13 +544,13 @@ public abstract class IR implements IRView {
   /** Return the new instruction corresponding to an allocation site */
   public SSANewInstruction getNew(NewSiteReference site) {
     Integer i = newSiteMapping.get(site);
-    return (SSANewInstruction) instructions[i.intValue()];
+    return (SSANewInstruction) instructions[i];
   }
 
   /** Return the instruction index corresponding to an allocation site */
   public int getNewInstructionIndex(NewSiteReference site) {
     Integer i = newSiteMapping.get(site);
-    return i.intValue();
+    return i;
   }
 
   /**
@@ -560,7 +560,7 @@ public abstract class IR implements IRView {
   @Override
   public SSAInstruction getPEI(ProgramCounter pc) {
     Integer i = peiMapping.get(pc);
-    return instructions[i.intValue()];
+    return instructions[i];
   }
 
   /**
