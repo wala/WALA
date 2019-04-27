@@ -97,7 +97,7 @@ public class ReflectionTest extends WalaTestCase {
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }
-      if (w.toString().indexOf("Integer") >= 0) {
+      if (w.toString().contains("Integer")) {
         Assert.assertTrue(w.toString(), false);
       }
     }

@@ -51,7 +51,7 @@ public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
       throw new IllegalArgumentException("callSiteAndCGNode == null");
     }
     MethodReference declaredTarget = callSiteAndCGNode.getCallSite().getDeclaredTarget();
-    if (declaredTarget.toString().indexOf("toString()Ljava/lang/String") != -1) {
+    if (declaredTarget.toString().contains("toString()Ljava/lang/String")) {
       return false;
     }
     return true;

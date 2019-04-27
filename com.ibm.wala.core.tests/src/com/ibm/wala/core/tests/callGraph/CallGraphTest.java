@@ -133,12 +133,11 @@ public class CallGraphTest extends WalaTestCase {
     // subclasses
     String ws = Warnings.asString();
     Assert.assertTrue(
-        "failed to report a warning about Abstract1", ws.indexOf("cornerCases/Abstract1") > -1);
+        "failed to report a warning about Abstract1", ws.contains("cornerCases/Abstract1"));
 
     // we do not expect a warning about class Abstract2, which has a concrete
     // subclasses
-    Assert.assertTrue(
-        "reported a warning about Abstract2", ws.indexOf("cornerCases/Abstract2") == -1);
+    Assert.assertTrue("reported a warning about Abstract2", !ws.contains("cornerCases/Abstract2"));
   }
 
   @Test
@@ -285,9 +284,7 @@ public class CallGraphTest extends WalaTestCase {
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass clazz : cha) {
 
-      if (clazz.getName().toString().indexOf(pkg) != -1
-          && !clazz.isInterface()
-          && !clazz.isAbstract()) {
+      if (clazz.getName().toString().contains(pkg) && !clazz.isInterface() && !clazz.isAbstract()) {
         for (IMethod method : clazz.getDeclaredMethods()) {
           if (method.isPublic() && !method.isAbstract()) {
             System.out.println("Entry:" + method.getReference());
