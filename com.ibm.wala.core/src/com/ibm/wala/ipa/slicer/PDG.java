@@ -852,7 +852,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
       if (x == null) {
         Assertions.UNREACHABLE(s.toString() + "\nnot found in map of\n" + ir);
       }
-      return new NormalStatement(node, x.intValue());
+      return new NormalStatement(node, x);
     }
   }
 

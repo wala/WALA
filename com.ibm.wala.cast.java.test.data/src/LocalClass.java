@@ -16,7 +16,7 @@ public class LocalClass {
 	    int value;
 	    public Foo(int v) { value= v; }
 	    public int getValue() { return value; }
-	    public int getValueBase() { return value - base.intValue(); }
+	    public int getValueBase() { return value - base; }
 	}
 	Foo f= new Foo(3);
 
@@ -33,7 +33,7 @@ public class LocalClass {
 	    int value;
 	    public Foo(int v) { value= v; }
 	    public int getValue() { return value; }
-	    public int getValueBase() { return value - base.intValue(); }
+	    public int getValueBase() { return value - base; }
 	}
 	Foo f= new Foo(3);
 

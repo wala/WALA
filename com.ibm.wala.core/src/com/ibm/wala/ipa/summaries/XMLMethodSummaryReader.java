@@ -259,7 +259,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (element == null) {
         Assertions.UNREACHABLE("Invalid element: " + qName);
       }
-      switch (element.intValue()) {
+      switch (element) {
         case E_CLASSLOADER:
           {
             String clName = atts.getValue(A_NAME);
@@ -349,7 +349,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (element == null) {
         Assertions.UNREACHABLE("Invalid element: " + name);
       }
-      switch (element.intValue()) {
+      switch (element) {
         case E_CLASSLOADER:
           governingLoader = null;
           break;
@@ -473,7 +473,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             valueNumber = Integer.parseInt(argString);
           }
         }
-        params[i] = valueNumber.intValue();
+        params[i] = valueNumber;
       }
 
       // allocate local for exceptions
@@ -546,10 +546,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
                 type.getDerivedMask() == ((ArrayMask << ElementBits) | PrimitiveMask));
         a =
             insts.NewInstruction(
-                governingMethod.getNumberOfStatements(),
-                defNum,
-                ref,
-                new int[] {sNumber.intValue()});
+                governingMethod.getNumberOfStatements(), defNum, ref, new int[] {sNumber});
       } else {
         a = insts.NewInstruction(governingMethod.getNumberOfStatements(), defNum, ref);
       }
@@ -572,7 +569,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
 
       SSAThrowInstruction T =
-          insts.ThrowInstruction(governingMethod.getNumberOfStatements(), valueNumber.intValue());
+          insts.ThrowInstruction(governingMethod.getNumberOfStatements(), valueNumber);
       governingMethod.addStatement(T);
     }
 
@@ -617,8 +614,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
 
       SSAGetInstruction G =
-          insts.GetInstruction(
-              governingMethod.getNumberOfStatements(), defNum, refNumber.intValue(), field);
+          insts.GetInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber, field);
       governingMethod.addStatement(G);
     }
 
@@ -660,10 +656,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       SSAPutInstruction P =
           insts.PutInstruction(
-              governingMethod.getNumberOfStatements(),
-              refNumber.intValue(),
-              valueNumber.intValue(),
-              field);
+              governingMethod.getNumberOfStatements(), refNumber, valueNumber, field);
       governingMethod.addStatement(P);
     }
 
@@ -696,8 +689,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
       SSAPutInstruction P =
-          insts.PutInstruction(
-              governingMethod.getNumberOfStatements(), valueNumber.intValue(), field);
+          insts.PutInstruction(governingMethod.getNumberOfStatements(), valueNumber, field);
       governingMethod.addStatement(P);
     }
 
@@ -739,11 +731,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       /* BEGIN Custom change: expect type information in array-store instructions */
       SSAArrayStoreInstruction S =
           insts.ArrayStoreInstruction(
-              governingMethod.getNumberOfStatements(),
-              refNumber.intValue(),
-              0,
-              valueNumber.intValue(),
-              type);
+              governingMethod.getNumberOfStatements(), refNumber, 0, valueNumber, type);
       /* END Custom change: get type information in array-store instructions */
       governingMethod.addStatement(S);
     }
@@ -815,7 +803,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
           boolean isPrimitive = governingMethod.getReturnType().isPrimitiveType();
           SSAReturnInstruction R =
               insts.ReturnInstruction(
-                  governingMethod.getNumberOfStatements(), valueNumber.intValue(), isPrimitive);
+                  governingMethod.getNumberOfStatements(), valueNumber, isPrimitive);
           governingMethod.addStatement(R);
         }
       }

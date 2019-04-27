@@ -125,7 +125,7 @@ public class DeadAssignmentElimination {
       for (Entry<Integer, BooleanVariable> E : vars.entrySet()) {
         Integer def = E.getKey();
         BooleanVariable B = E.getValue();
-        for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def.intValue()))) {
+        for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def))) {
           SSAPhiInstruction u = (SSAPhiInstruction) use;
           Integer ud = u.getDef();
           if (trivialDead.contains(ud)) {

@@ -291,7 +291,7 @@ public class IntraproceduralExceptionAnalysis {
 
   public boolean hasUncaughtExceptions(SSAInstruction instruction) {
     Boolean allCaught = this.allExceptionsCaught.get(instruction);
-    return (allCaught == null ? true : !allCaught.booleanValue());
+    return (allCaught == null ? true : !allCaught);
   }
 
   /**

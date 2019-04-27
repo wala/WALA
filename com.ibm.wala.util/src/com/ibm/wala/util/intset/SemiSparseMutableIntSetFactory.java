@@ -32,7 +32,7 @@ public class SemiSparseMutableIntSetFactory
       }
       SemiSparseMutableIntSet result = new SemiSparseMutableIntSet();
       for (Integer I : T) {
-        result.add(I.intValue());
+        result.add(I);
       }
       return result;
     }

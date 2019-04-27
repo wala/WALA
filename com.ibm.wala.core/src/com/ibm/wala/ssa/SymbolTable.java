@@ -80,9 +80,9 @@ public class SymbolTable implements Cloneable {
       assert r < nextFreeValueNumber;
       values[r] = v;
     } else {
-      assert values[result.intValue()] instanceof ConstantValue;
+      assert values[result] instanceof ConstantValue;
     }
-    return result.intValue();
+    return result;
   }
 
   public void setConstantValue(int vn, ConstantValue val) {

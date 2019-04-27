@@ -37,7 +37,7 @@
  */
 package javaonepointfive;
 
-@SuppressWarnings("UnnecessaryBoxing")
+@SuppressWarnings({"UnnecessaryBoxing", "UnnecessaryUnboxing"})
 public class ExplicitBoxingTest {
 
 	public static void main(String[] args) {

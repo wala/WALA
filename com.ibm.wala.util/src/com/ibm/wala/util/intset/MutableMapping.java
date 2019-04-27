@@ -77,7 +77,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     if (I == null) {
       return -1;
     } else {
-      return I.intValue();
+      return I;
     }
   }
 
@@ -95,7 +95,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   public int add(T o) {
     Integer I = map.get(o);
     if (I != null) {
-      return I.intValue();
+      return I;
     }
     map.put(o, nextIndex);
     if (nextIndex >= array.length) {

@@ -219,7 +219,7 @@ public class HeapTracer {
         S = computeSizeOf(o);
         sizeMap.put(c, S);
       }
-      return S.intValue();
+      return S;
     }
   }
 
@@ -558,13 +558,13 @@ public class HeapTracer {
      */
     public void registerObject(Object key, Object o) {
       Integer I = instanceCount.get(key);
-      int newCount = (I == null) ? 1 : I.intValue() + 1;
+      int newCount = (I == null) ? 1 : I + 1;
       instanceCount.put(key, newCount);
       totalInstances++;
 
       I = sizeCount.get(key);
       int s = sizeOf(o);
-      int newSizeCount = (I == null) ? s : I.intValue() + s;
+      int newSizeCount = (I == null) ? s : I + s;
       sizeCount.put(key, newSizeCount);
       totalSize += s;
     }
@@ -579,7 +579,7 @@ public class HeapTracer {
         Integer I = instanceCount.get(key);
         Integer bytes = sizeCount.get(key);
         result.append("  ").append(I).append("   ").append(bytes).append("   ");
-        result.append(bytes.intValue() / I.intValue()).append("   ");
+        result.append(bytes / I).append("   ");
         result.append(key);
         result.append('\n');
       }
@@ -596,7 +596,7 @@ public class HeapTracer {
       public int compare(Object o1, Object o2) {
         Integer i1 = sizeCount.get(o1);
         Integer i2 = sizeCount.get(o2);
-        return i2.intValue() - i1.intValue();
+        return i2 - i1;
       }
     }
 

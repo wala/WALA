@@ -1269,7 +1269,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           int sv = instruction.getUse(dim + 1);
           if (ir.getSymbolTable().isIntegerConstant(sv)) {
             Integer c = (Integer) ir.getSymbolTable().getConstantValue(sv);
-            if (c.intValue() == 0) {
+            if (c == 0) {
               break;
             }
           }

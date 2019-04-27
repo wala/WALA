@@ -32,7 +32,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
       long[] copy = new long[T.size()];
       int i = 0;
       for (Long I : T) {
-        copy[i++] = I.longValue();
+        copy[i++] = I;
       }
       MutableSparseLongSet result = new MutableSparseLongSet(copy);
       return result;

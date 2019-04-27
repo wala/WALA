@@ -1737,23 +1737,23 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public int getConstantValue(Object o) {
       if (o instanceof Integer) {
-        return getUnderlyingSymtab().getConstant(((Integer) o).intValue());
+        return getUnderlyingSymtab().getConstant((Integer) o);
       } else if (o instanceof Float) {
-        return getUnderlyingSymtab().getConstant(((Float) o).floatValue());
+        return getUnderlyingSymtab().getConstant((Float) o);
       } else if (o instanceof Double) {
-        return getUnderlyingSymtab().getConstant(((Double) o).doubleValue());
+        return getUnderlyingSymtab().getConstant((Double) o);
       } else if (o instanceof Long) {
-        return getUnderlyingSymtab().getConstant(((Long) o).longValue());
+        return getUnderlyingSymtab().getConstant((Long) o);
       } else if (o instanceof String) {
         return getUnderlyingSymtab().getConstant((String) o);
       } else if (o instanceof Boolean) {
         return getUnderlyingSymtab().getConstant((Boolean) o);
       } else if (o instanceof Character) {
-        return getUnderlyingSymtab().getConstant(((Character) o).charValue());
+        return getUnderlyingSymtab().getConstant((Character) o);
       } else if (o instanceof Byte) {
-        return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
+        return getUnderlyingSymtab().getConstant((Byte) o);
       } else if (o instanceof Short) {
-        return getUnderlyingSymtab().getConstant(((Short) o).shortValue());
+        return getUnderlyingSymtab().getConstant((Short) o);
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -2871,7 +2871,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public final int getValue(CAstNode n) {
-      if (results.containsKey(n)) return results.get(n).intValue();
+      if (results.containsKey(n)) return results.get(n);
       else {
         if (DEBUG) {
           System.err.println(("no value for " + n.getKind()));
