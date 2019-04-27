@@ -59,7 +59,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.scandroid.domain.CodeElement;
@@ -168,14 +167,9 @@ public class InflowAnalysis {
       targetList.add(tempList);
     }
 
-    Iterator<BasicBlockInContext<E>> graphIt = graph.iterator();
-    while (graphIt.hasNext()) {
-      BasicBlockInContext<E> block = graphIt.next();
-      Iterator<SSAInstruction> instructions = block.iterator();
+    for (BasicBlockInContext<E> block : graph) {
 
-      while (instructions.hasNext()) {
-        SSAInstruction inst = instructions.next();
-
+      for (SSAInstruction inst : block) {
         if (!(inst instanceof SSAInvokeInstruction)) {
           continue;
         }

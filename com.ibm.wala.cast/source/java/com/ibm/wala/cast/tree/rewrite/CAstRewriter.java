@@ -206,13 +206,11 @@ public abstract class CAstRewriter<
       }
 
       if (oldSources.contains(oldSource)) {
-        Iterator<Object> LS = orig.getTargetLabels(oldSource).iterator();
         // if (orig.getTarget(oldSource, null) != null) {
         //  LS = IteratorPlusOne.make(LS, null);
         // }
 
-        while (LS.hasNext()) {
-          Object origLabel = LS.next();
+        for (Object origLabel : orig.getTargetLabels(oldSource)) {
           CAstNode oldTarget = orig.getTarget(oldSource, origLabel);
           assert oldTarget != null;
 

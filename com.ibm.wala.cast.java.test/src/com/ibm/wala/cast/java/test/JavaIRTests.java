@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -449,10 +448,7 @@ public abstract class JavaIRTests extends IRTests {
     CallGraph cg = x.fst;
     PointerAnalysis<? extends InstanceKey> pa = x.snd;
 
-    Iterator<CGNode> iter = cg.iterator();
-    while (iter.hasNext()) {
-      CGNode n = iter.next();
-
+    for (CGNode n : cg) {
       // assume in the test we have one enclosing instruction for each of the methods here.
       String methodSigs[] = {
         "InnerClassA$AB.getA_X_from_AB()I",
@@ -484,8 +480,9 @@ public abstract class JavaIRTests extends IRTests {
           for (SSAInstruction instr : n.getIR().getInstructions()) {
             if (instr instanceof EnclosingObjectReference) {
               StringBuilder allIksBuilder = new StringBuilder();
-              for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef())))
+              for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef()))) {
                 allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+              }
               // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
 
               final String allIks = allIksBuilder.toString();
@@ -523,16 +520,15 @@ public abstract class JavaIRTests extends IRTests {
     CallGraph cg = x.fst;
     PointerAnalysis<? extends InstanceKey> pa = x.snd;
 
-    Iterator<CGNode> iter = cg.iterator();
-    while (iter.hasNext()) {
-      CGNode n = iter.next();
+    for (CGNode n : cg) {
       if (n.getMethod().getSignature().equals("LInnerClassSuper$SuperOuter.test()V")) {
         // find enclosing instruction
         for (SSAInstruction instr : n.getIR().getInstructions()) {
           if (instr instanceof EnclosingObjectReference) {
             StringBuilder allIksBuilder = new StringBuilder();
-            for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef())))
+            for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef()))) {
               allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+            }
             final String allIks = allIksBuilder.toString();
             Assert.assertTrue(
                 "assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n",

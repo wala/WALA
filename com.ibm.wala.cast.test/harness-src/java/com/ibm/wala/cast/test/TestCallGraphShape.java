@@ -104,9 +104,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
   protected void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
     for (Object[] element : assertionData) {
-      Iterator<CGNode> NS = getNodes(CG, (String) element[0]).iterator();
-      while (NS.hasNext()) {
-        CGNode N = NS.next();
+      for (CGNode N : getNodes(CG, (String) element[0])) {
         IR ir = N.getIR();
         Name[] names = (Name[]) element[1];
         for (Name name : names) {

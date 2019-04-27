@@ -46,7 +46,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.strings.StringStuff;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /** @author creswick */
@@ -87,9 +86,7 @@ public class StaticSpecs implements ISpecs {
 
   private List<IField> collectFields() {
     List<IField> fields = new ArrayList<>();
-    Iterator<IClass> itr = cha.iterator();
-    while (itr.hasNext()) {
-      IClass cls = itr.next();
+    for (IClass cls : cha) {
       for (IField field : cls.getAllStaticFields()) {
         if (field.getFieldTypeReference().isReferenceType()) {
           fields.add(field);

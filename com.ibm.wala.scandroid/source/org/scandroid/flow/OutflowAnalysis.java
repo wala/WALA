@@ -133,10 +133,7 @@ public class OutflowAnalysis {
 
     // look for all uses of query function and taint the results with the
     // Uri used in those functions
-    Iterator<BasicBlockInContext<IExplodedBasicBlock>> graphIt = graph.iterator();
-    while (graphIt.hasNext()) {
-      BasicBlockInContext<IExplodedBasicBlock> block = graphIt.next();
-
+    for (BasicBlockInContext<IExplodedBasicBlock> block : graph) {
       Iterator<SSAInvokeInstruction> invokeInstrs =
           IteratorUtil.filter(block.iterator(), SSAInvokeInstruction.class);
 
