@@ -153,8 +153,7 @@ public class AppModelMethod {
         insts.SwitchInstruction(
             methodSummary.getNumberOfStatements(), switchValue, defLabel, casesAndLabels));
 
-    for (int i = 0; i < callbackSize; i++) {
-      MethodParams mp = callBacks.get(i);
+    for (MethodParams mp : callBacks) {
       IMethod im = mp.getIMethod();
       IDispatch dispatch;
       if (im.isInit()) {

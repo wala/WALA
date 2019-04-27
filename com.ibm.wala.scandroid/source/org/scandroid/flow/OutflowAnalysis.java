@@ -126,8 +126,8 @@ public class OutflowAnalysis {
       List<SinkSpec> sinkSpecs) {
     List<Collection<IMethod>> targetList = new ArrayList<>();
 
-    for (int i = 0; i < sinkSpecs.size(); i++) {
-      Collection<IMethod> tempList = sinkSpecs.get(i).getNamePattern().getPossibleTargets(cha);
+    for (SinkSpec sinkSpec : sinkSpecs) {
+      Collection<IMethod> tempList = sinkSpec.getNamePattern().getPossibleTargets(cha);
       targetList.add(tempList);
     }
 

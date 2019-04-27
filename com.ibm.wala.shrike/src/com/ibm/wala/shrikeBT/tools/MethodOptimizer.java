@@ -113,12 +113,12 @@ public final class MethodOptimizer {
 
     for (int i = 0; i < instructions.length; i++) {
       int[] targets = instructions[i].getBranchTargets();
-      for (int j = 0; j < targets.length; j++) {
-        backEdgeCount[targets[j]]++;
+      for (int target : targets) {
+        backEdgeCount[target]++;
       }
       ExceptionHandler[] hs = handlers[i];
-      for (int j = 0; j < hs.length; j++) {
-        backEdgeCount[hs[j].getHandler()]++;
+      for (ExceptionHandler h : hs) {
+        backEdgeCount[h.getHandler()]++;
       }
     }
 

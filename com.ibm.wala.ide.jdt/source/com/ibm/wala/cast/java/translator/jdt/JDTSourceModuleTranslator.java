@@ -101,8 +101,8 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
         int length = problems.length;
         if (length > 0) {
           StringBuilder buffer = new StringBuilder();
-          for (int i = 0; i < length; i++) {
-            buffer.append(problems[i].getMessage());
+          for (IProblem problem : problems) {
+            buffer.append(problem.getMessage());
             buffer.append('\n');
           }
           if (length != 0)

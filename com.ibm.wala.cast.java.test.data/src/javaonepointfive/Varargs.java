@@ -48,9 +48,9 @@ public class Varargs {
 	public static void varargs(int x, int y, Object... foo) {
 		System.out.println(x);
 		System.out.println(y);
-		for (int i = 0; i < foo.length; i++)
-			System.out.println(foo[i]);
-		
+		for (Object o : foo)
+			System.out.println(o);
+
 		new Varargs();
 	}
 

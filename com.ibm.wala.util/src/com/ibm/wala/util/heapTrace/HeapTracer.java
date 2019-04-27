@@ -428,9 +428,9 @@ public class HeapTracer {
     Class<?> klass = c;
     while (klass != null) {
       Field[] fields = klass.getDeclaredFields();
-      for (int i = 0; i < fields.length; i++) {
-        if (!isStatic(fields[i])) {
-          result.add(fields[i]);
+      for (Field field : fields) {
+        if (!isStatic(field)) {
+          result.add(field);
         }
       }
       klass = klass.getSuperclass();
@@ -448,11 +448,11 @@ public class HeapTracer {
       Class<?> klass = c;
       while (klass != null) {
         Field[] fields = klass.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-          if (!isStatic(fields[i])) {
-            Class<?> fc = fields[i].getType();
+        for (Field field : fields) {
+          if (!isStatic(field)) {
+            Class<?> fc = field.getType();
             if (!fc.isPrimitive()) {
-              s.add(fields[i]);
+              s.add(field);
             }
           }
         }

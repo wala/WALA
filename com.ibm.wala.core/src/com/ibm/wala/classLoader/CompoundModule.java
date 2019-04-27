@@ -142,11 +142,11 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
 
     public Pair<Integer, URL> getOriginalPosition(int lineNumber) {
       int start = 0;
-      for (int i = 0; i < locations.size(); i++) {
-        if (locations.get(i).fst >= lineNumber) {
-          return Pair.make(lineNumber - start, locations.get(i).snd);
+      for (Pair<Integer, URL> location : locations) {
+        if (location.fst >= lineNumber) {
+          return Pair.make(lineNumber - start, location.snd);
         } else {
-          start = locations.get(i).fst;
+          start = location.fst;
         }
       }
       throw new IllegalArgumentException("line number " + lineNumber + " too high");

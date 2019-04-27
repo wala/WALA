@@ -154,9 +154,9 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
         }
       }
 
-      for (int j = 0; j < targets.length; j++) {
-        if (!r[targets[j]]) {
-          r[targets[j]] = true;
+      for (int target : targets) {
+        if (!r[target]) {
+          r[target] = true;
         }
       }
       if (instructions[i].isPEI()) {
@@ -166,14 +166,14 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
           r[i + 1] = true;
         }
         if (hs != null && hs.length > 0) {
-          for (int j = 0; j < hs.length; j++) {
-            exceptionHandlers.add(hs[j]);
-            if (!r[hs[j].getHandler()]) {
+          for (ExceptionHandler h : hs) {
+            exceptionHandlers.add(h);
+            if (!r[h.getHandler()]) {
               // we have not discovered the catch block yet.
               // form a new basic block
-              r[hs[j].getHandler()] = true;
+              r[h.getHandler()] = true;
             }
-            catchers[hs[j].getHandler()] = true;
+            catchers[h.getHandler()] = true;
           }
         }
       }

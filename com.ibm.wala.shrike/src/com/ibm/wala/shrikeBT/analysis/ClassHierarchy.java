@@ -196,10 +196,9 @@ public final class ClassHierarchy {
       return false;
     } else {
       boolean r = true;
-      for (int i = 0; i < ifaces.length; i++) {
-        String iface = ifaces[i];
+      for (String iface : ifaces) {
         if (supers.add(iface)) {
-          if (!insertSuperInterfaces(hierarchy, ifaces[i], supers)) {
+          if (!insertSuperInterfaces(hierarchy, iface, supers)) {
             r = false;
           }
         }
@@ -255,10 +254,9 @@ public final class ClassHierarchy {
       return false;
     } else {
       boolean r = true;
-      for (int i = 0; i < ifaces.length; i++) {
-        String iface = ifaces[i];
+      for (String iface : ifaces) {
         if (supers.add(iface)) {
-          if (!insertSuperInterfaces(hierarchy, ifaces[i], supers)) {
+          if (!insertSuperInterfaces(hierarchy, iface, supers)) {
             r = false;
           }
         }

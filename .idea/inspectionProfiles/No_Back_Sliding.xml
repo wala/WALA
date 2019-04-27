@@ -226,10 +226,6 @@
     <inspection_tool class="FlowJSConfig" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FlowJSFlagCommentPlacement" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FoldExpressionIntoStream" enabled="false" level="INFORMATION" enabled_by_default="false" />
-    <inspection_tool class="ForCanBeForeach" enabled="false" level="WARNING" enabled_by_default="false">
-      <option name="REPORT_INDEXED_LOOP" value="true" />
-      <option name="ignoreUntypedCollections" value="false" />
-    </inspection_tool>
     <inspection_tool class="ForLoopReplaceableByWhile" enabled="false" level="INFORMATION" enabled_by_default="false">
       <option name="m_ignoreLoopsWithoutConditions" value="false" />
     </inspection_tool>
@@ -419,7 +415,6 @@
     <inspection_tool class="Java8CollectionRemoveIf" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Java8ListSort" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Java8MapApi" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="Java8MapForEach" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Java9CollectionFactory" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Java9ModuleExportsPackageToItself" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Java9RedundantRequiresStatement" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -682,7 +677,6 @@
     <inspection_tool class="SimplifiableIfStatement" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="SimplifiableJUnitAssertion" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SimplifyCollector" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="SimplifyForEach" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="SimplifyOptionalCallChains" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SimplifyStreamApiCallChains" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Since15" enabled="false" level="ERROR" enabled_by_default="false" />

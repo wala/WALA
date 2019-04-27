@@ -505,9 +505,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         system.recordImplicitPointsToSet(objKey);
         final InstanceKey[] objKeys = getInvariantContents(objVn);
 
-        for (int i = 0; i < objKeys.length; i++) {
-          if (!getBuilder().isUncataloguedField(objKeys[i].getConcreteType(), fieldName)) {
-            PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[i]);
+        for (InstanceKey key : objKeys) {
+          if (!getBuilder().isUncataloguedField(key.getConcreteType(), fieldName)) {
+            PointerKey objCatalog = getPointerKeyForObjectCatalog(key);
             if (objCatalog != null) {
               system.newConstraint(objCatalog, fieldNameKeys[0]);
             }
