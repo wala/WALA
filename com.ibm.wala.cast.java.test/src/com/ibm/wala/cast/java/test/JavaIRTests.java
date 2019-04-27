@@ -668,7 +668,7 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   private static final List<IRAssertion> MLAssertions =
-      Arrays.asList(
+      Collections.singletonList(
           new InstructionOperandAssertion(
               "Source#MiniaturList#main#([Ljava/lang/String;)V",
               new Predicate<SSAInstruction>() {
