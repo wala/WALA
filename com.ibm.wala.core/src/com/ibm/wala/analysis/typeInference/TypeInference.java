@@ -494,9 +494,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (!doPrimitives) {
         result = null;
       } else {
-        result =
-            new DeclaredTypeOperator(
-                language.getPrimitive(language.getConstantType(Integer.valueOf(1))));
+        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(1)));
       }
     }
 
@@ -598,9 +596,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
       if (doPrimitives) {
-        result =
-            new DeclaredTypeOperator(
-                language.getPrimitive(language.getConstantType(Integer.valueOf(0))));
+        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(0)));
       }
     }
 

@@ -2918,10 +2918,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // SWITCH_DEFAULT
     // somewhere else
     // polyglot converts all labels to longs. why? who knows...
-    if (constant instanceof Character) constant = new Long(((Character) constant).charValue());
-    else if (constant instanceof Byte) constant = new Long(((Byte) constant).longValue());
-    else if (constant instanceof Integer) constant = new Long(((Integer) constant).longValue());
-    else if (constant instanceof Short) constant = new Long(((Short) constant).longValue());
+    if (constant instanceof Character) constant = (long) ((Character) constant).charValue();
+    else if (constant instanceof Byte) constant = ((Byte) constant).longValue();
+    else if (constant instanceof Integer) constant = ((Integer) constant).longValue();
+    else if (constant instanceof Short) constant = ((Short) constant).longValue();
 
     if (constant != null) {
       return fFactory.makeConstant(constant);

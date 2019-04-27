@@ -108,7 +108,7 @@ public class DFS {
     int i = 0;
     while (dfs.hasNext()) {
       T nxt = dfs.next();
-      order.put(nxt, Integer.valueOf(i++));
+      order.put(nxt, i++);
       result.add(nxt);
     }
     return result;

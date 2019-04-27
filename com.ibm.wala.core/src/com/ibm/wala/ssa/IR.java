@@ -108,10 +108,10 @@ public abstract class IR implements IRView {
               ((SSAAbstractInvokeInstruction) x).getCallSite().getProgramCounter(), i);
         }
         if (x instanceof SSANewInstruction) {
-          newSiteMapping.put(((SSANewInstruction) x).getNewSite(), Integer.valueOf(i));
+          newSiteMapping.put(((SSANewInstruction) x).getNewSite(), i);
         }
         if (x.isPEI()) {
-          peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), Integer.valueOf(i));
+          peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), i);
         }
       }
     }

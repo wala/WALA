@@ -66,7 +66,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   protected int getLocalForType(TypeReference T) {
     Integer I = typeIndexMap.get(T);
     if (I == null) {
-      typeIndexMap.put(T, I = Integer.valueOf(indexLocal += 2));
+      typeIndexMap.put(T, I = indexLocal += 2);
     }
     return I.intValue();
   }

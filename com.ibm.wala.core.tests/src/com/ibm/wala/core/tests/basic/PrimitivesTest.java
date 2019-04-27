@@ -54,6 +54,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /** JUnit tests for some primitive operations. */
+@SuppressWarnings("UnnecessaryBoxing")
 public class PrimitivesTest extends WalaTestCase {
 
   /** Test the MutableSparseIntSet implementation */

@@ -268,49 +268,44 @@ public class ClassWriter implements ClassConstants {
         byte t = cp.getItemType(i);
         switch (t) {
           case CONSTANT_String:
-            cachedCPEntries.put(
-                new CWStringItem(cp.getCPString(i), CONSTANT_String), Integer.valueOf(i));
+            cachedCPEntries.put(new CWStringItem(cp.getCPString(i), CONSTANT_String), i);
             break;
           case CONSTANT_Class:
-            cachedCPEntries.put(
-                new CWStringItem(cp.getCPClass(i), CONSTANT_Class), Integer.valueOf(i));
+            cachedCPEntries.put(new CWStringItem(cp.getCPClass(i), CONSTANT_Class), i);
             break;
           case CONSTANT_MethodType:
-            cachedCPEntries.put(
-                new CWStringItem(cp.getCPMethodType(i), CONSTANT_MethodType), Integer.valueOf(i));
+            cachedCPEntries.put(new CWStringItem(cp.getCPMethodType(i), CONSTANT_MethodType), i);
             break;
           case CONSTANT_MethodHandle:
           case CONSTANT_FieldRef:
           case CONSTANT_InterfaceMethodRef:
           case CONSTANT_MethodRef:
             cachedCPEntries.put(
-                new CWRef(t, cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i)),
-                Integer.valueOf(i));
+                new CWRef(t, cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i)), i);
             break;
           case CONSTANT_NameAndType:
-            cachedCPEntries.put(
-                new CWNAT(cp.getCPNATName(i), cp.getCPNATType(i)), Integer.valueOf(i));
+            cachedCPEntries.put(new CWNAT(cp.getCPNATName(i), cp.getCPNATType(i)), i);
             break;
           case CONSTANT_InvokeDynamic:
             cachedCPEntries.put(
                 new CWInvokeDynamic(
                     cp.getCPDynBootstrap(i), cp.getCPDynName(i), cp.getCPDynType(i)),
-                Integer.valueOf(i));
+                i);
             break;
           case CONSTANT_Integer:
-            cachedCPEntries.put(Integer.valueOf(cp.getCPInt(i)), Integer.valueOf(i));
+            cachedCPEntries.put(cp.getCPInt(i), i);
             break;
           case CONSTANT_Float:
-            cachedCPEntries.put(Float.valueOf(cp.getCPFloat(i)), Integer.valueOf(i));
+            cachedCPEntries.put(cp.getCPFloat(i), i);
             break;
           case CONSTANT_Long:
-            cachedCPEntries.put(Long.valueOf(cp.getCPLong(i)), Integer.valueOf(i));
+            cachedCPEntries.put(cp.getCPLong(i), i);
             break;
           case CONSTANT_Double:
-            cachedCPEntries.put(Double.valueOf(cp.getCPDouble(i)), Integer.valueOf(i));
+            cachedCPEntries.put(cp.getCPDouble(i), i);
             break;
           case CONSTANT_Utf8:
-            cachedCPEntries.put(cp.getCPUtf8(i), Integer.valueOf(i));
+            cachedCPEntries.put(cp.getCPUtf8(i), i);
             break;
           default:
             throw new UnsupportedOperationException(
@@ -340,7 +335,7 @@ public class ClassWriter implements ClassConstants {
     } else {
       int index = nextCPIndex;
       nextCPIndex += size;
-      i = Integer.valueOf(index);
+      i = index;
       cachedCPEntries.put(o, i);
       newCPEntries.add(o);
       if (nextCPIndex > 0xFFFF) {
@@ -365,7 +360,7 @@ public class ClassWriter implements ClassConstants {
    * @return the index of a constant pool item with the right value
    */
   public int addCPInt(int i) {
-    return addCPEntry(Integer.valueOf(i), 1);
+    return addCPEntry(i, 1);
   }
 
   /**
@@ -374,7 +369,7 @@ public class ClassWriter implements ClassConstants {
    * @return the index of a constant pool item with the right value
    */
   public int addCPFloat(float f) {
-    return addCPEntry(Float.valueOf(f), 1);
+    return addCPEntry(f, 1);
   }
 
   /**
@@ -383,7 +378,7 @@ public class ClassWriter implements ClassConstants {
    * @return the index of a constant pool item with the right value
    */
   public int addCPLong(long l) {
-    return addCPEntry(Long.valueOf(l), 2);
+    return addCPEntry(l, 2);
   }
 
   /**
@@ -392,7 +387,7 @@ public class ClassWriter implements ClassConstants {
    * @return the index of a constant pool item with the right value
    */
   public int addCPDouble(double d) {
-    return addCPEntry(Double.valueOf(d), 2);
+    return addCPEntry(d, 2);
   }
 
   private int addCPString(String s, byte type) {

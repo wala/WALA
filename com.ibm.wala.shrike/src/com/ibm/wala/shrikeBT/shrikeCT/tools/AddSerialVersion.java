@@ -111,7 +111,7 @@ public class AddSerialVersion {
           int flags = r.getFieldAccessFlags(f);
           if ((flags & ClassConstants.ACC_PRIVATE) == 0
               || (flags & (ClassConstants.ACC_STATIC | ClassConstants.ACC_TRANSIENT)) == 0) {
-            fields[fieldCount] = Integer.valueOf(f);
+            fields[fieldCount] = f;
             fieldNames[f] = r.getFieldName(f);
             fieldCount++;
           }
@@ -141,7 +141,7 @@ public class AddSerialVersion {
           String name = r.getMethodName(m);
           int flags = r.getMethodAccessFlags(m);
           if (name.equals("<clinit>") || (flags & ClassConstants.ACC_PRIVATE) == 0) {
-            methods[methodCount] = Integer.valueOf(m);
+            methods[methodCount] = m;
             methodSigs[m] = name + r.getMethodType(m);
             switch (name) {
               case "<clinit>":

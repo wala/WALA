@@ -37,6 +37,7 @@
  */
 package javaonepointfive;
 
+@SuppressWarnings("UnnecessaryBoxing")
 public class ExplicitBoxingTest {
 
 	public static void main(String[] args) {

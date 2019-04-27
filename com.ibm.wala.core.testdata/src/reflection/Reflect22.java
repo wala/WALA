@@ -25,7 +25,7 @@ public class Reflect22 {
       if (constr.getParameterTypes().length == 1) {
         Class<?> paramType = constr.getParameterTypes()[0];
         if (paramType.getName().equals("java.lang.Integer")) {
-          Integer i = new Integer(1);
+          Integer i = 1;
           Object[] initArgs = new Object[] {i};
           constr.newInstance(initArgs);
           break;

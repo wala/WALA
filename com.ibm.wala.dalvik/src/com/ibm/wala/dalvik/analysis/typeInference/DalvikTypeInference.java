@@ -35,8 +35,7 @@ public class DalvikTypeInference extends TypeInference {
     public TypeVariable makeVariable(int valueNumber) {
       SymbolTable st = ir.getSymbolTable();
       if (st.isIntegerConstant(valueNumber) && st.isZero(valueNumber)) {
-        return new DalvikTypeVariable(
-            language.getPrimitive(language.getConstantType(Integer.valueOf(0))), true);
+        return new DalvikTypeVariable(language.getPrimitive(language.getConstantType(0)), true);
       } else {
         if (doPrimitives) {
           if (st.isConstant(valueNumber)) {

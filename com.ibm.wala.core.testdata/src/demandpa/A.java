@@ -42,6 +42,7 @@ class A {
   Object f;
 
   Object foo() {
+    //noinspection UnnecessaryBoxing
     return new Integer(3);
   }
 
