@@ -1506,7 +1506,6 @@ public class ParameterAccessor {
    * @param cha Optional class hierarchy for testing assignability
    * @return the parameter-list for the call of toMethod
    */
-  @SuppressWarnings("unchecked") // TODO: Can we do this for overrides and defaults only?
   public List<SSAValue> connectThrough(
       final ParameterAccessor callee,
       Set<? extends SSAValue> overrides,
@@ -1518,10 +1517,10 @@ public class ParameterAccessor {
       throw new IllegalArgumentException("Cannot connect through to null-callee");
     }
     if (overrides == null) {
-      overrides = Collections.EMPTY_SET;
+      overrides = Collections.emptySet();
     }
     if (defaults == null) {
-      defaults = Collections.EMPTY_SET;
+      defaults = Collections.emptySet();
     }
     if (callee.getNumberOfParameters() == 0) {
       return new ArrayList<>(0);

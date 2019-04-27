@@ -113,7 +113,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     if (sourceMap.containsKey(CAstToNode.get(to))) {
       return sourceMap.get(CAstToNode.get(to));
     } else {
-      return Collections.EMPTY_SET;
+      return Collections.emptySet();
     }
   }
 

@@ -163,7 +163,7 @@ public class AndroidManifestXMLReader {
             return EnumSet.of(Tag.ACTIVITY, Tag.SERVICE, Tag.RECEIVER, Tag.PROVIDER, Tag.ALIAS);
           }
         }, // Allowed children..
-        Collections.EMPTY_SET, // Interesting Attributes
+        Collections.emptySet(), // Interesting Attributes
         NoOpItem.class), // Handler
     ACTIVITY(
         "activity",
@@ -223,7 +223,7 @@ public class AndroidManifestXMLReader {
             return EnumSet.of(Tag.ACTION, Tag.DATA);
           }
         },
-        Collections.EMPTY_SET,
+        Collections.emptySet(),
         IntentItem.class),
     ACTION(
         "action",
@@ -238,7 +238,7 @@ public class AndroidManifestXMLReader {
         FinalItem.class), // (new ITagDweller() {
     // public Tag getTag() { return Tag.DATA; }})),
     /** Internal pseudo-tag used for tags in the documents, that have no parser representation. */
-    UNIMPORTANT("UNIMPORTANT", null, Collections.EMPTY_SET, null);
+    UNIMPORTANT("UNIMPORTANT", null, Collections.emptySet(), null);
 
     private final String tagName;
     private final Set<Attr> relevantAttributes;

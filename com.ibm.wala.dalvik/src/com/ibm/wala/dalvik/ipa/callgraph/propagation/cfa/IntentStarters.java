@@ -126,7 +126,7 @@ public class IntentStarters {
 
     public static StartInfo makeContextFree(final AndroidComponent component) {
       final Set<AndroidComponent> compo =
-          (component == null) ? Collections.EMPTY_SET : EnumSet.of(component);
+          (component == null) ? Collections.emptySet() : EnumSet.of(component);
       return new IntentStarters.StartInfo(
           null,
           EnumSet.of(IntentType.UNKNOWN_TARGET),
