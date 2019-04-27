@@ -32,7 +32,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -184,7 +183,7 @@ public class ECJJava17IRTest extends IRTests {
   }
 
   private static final List<IRAssertion> SiSAssertions =
-      Arrays.asList(
+      Collections.singletonList(
           new InstructionOperandAssertion(
               "Source#" + packageName + "/StringsInSwitch#main#([Ljava/lang/String;)V",
               new Predicate<SSAInstruction>() {
