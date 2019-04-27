@@ -46,7 +46,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
 
   private final MethodReference loadFileFunRef = AstMethodReference.fnReference(loadFileRef);
 
-  private final HashSet<URL> loadedFiles = HashSetFactory.make();
+  private final HashSet<String> loadedFiles = HashSetFactory.make();
 
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
@@ -76,12 +76,12 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
             JavaScriptLoader cl =
                 (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
             URL url = new URL(builder.getBaseURL(), str);
-            if (!loadedFiles.contains(url)) {
+            if (!loadedFiles.contains(url.toString())) {
               // try to open the input stream for the URL.  if it fails, we'll get an IOException
               // and fall through to default case
               try (InputStream inputStream = url.openConnection().getInputStream()) {}
               JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy(), cl, url);
-              loadedFiles.add(url);
+              loadedFiles.add(url.toString());
               IClass script =
                   builder
                       .getClassHierarchy()

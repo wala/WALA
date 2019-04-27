@@ -63,7 +63,7 @@ public class SourceViewer extends JPanel {
       }
       return false; // nothing to load
     } else {
-      if (url.equals(sourceURL)) {
+      if (url.toString().equals(sourceURL.toString())) {
         return true; // already loaded
       } else {
         sourceCodeLinesList.clear();

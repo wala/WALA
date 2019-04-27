@@ -59,7 +59,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     Position ndpos = spmap.getPosition(node);
     if (ndpos != null) {
       // if we are in the wrong file or past the position pos, abort search
-      if (!ndpos.getURL().equals(pos.getURL())) return;
+      if (!ndpos.getURL().toString().equals(pos.getURL().toString())) return;
 
       if (pos.getLastLine() >= 0 && ndpos.getFirstLine() > pos.getLastLine()) return;
 
@@ -95,7 +95,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     // assert endPos.getLastLine() != -1;
 
     Set<ChildPos> startNodes = null, endNodes = null;
-    if (!entity.getPosition().getURL().equals(startPos.getURL())) return true;
+    if (!entity.getPosition().getURL().toString().equals(startPos.getURL().toString())) return true;
     startNodes = findNodesAtPos(CAstNode.OBJECT_REF, startPos, entity);
     if (corr instanceof ReadWriteCorrelation) {
       endNodes = findNodesAtPos(CAstNode.ASSIGN, endPos, entity);
