@@ -34,14 +34,15 @@ env:
 matrix:
   include:
     - os: linux
+      dist: xenial
       env: BUILD_SYSTEM=gradle
       language: java
       jdk: openjdk11
-    - os: osx
-      osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle
-      language: java
-      jdk: openjdk11
+    # - os: osx
+    #   osx_image: xcode8.3
+    #   env: BUILD_SYSTEM=gradle
+    #   language: java
+    #   jdk: openjdk11
     - os: linux
       env: BUILD_SYSTEM=gradle
       language: java
