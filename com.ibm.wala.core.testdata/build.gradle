@@ -20,17 +20,22 @@ final def downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
 	checksum '2713e6dfb939274ba3b1d36daea68436'
 }
 
-tasks.register('extractKawa', Sync) {
-	dependsOn downloadKawa
-	from(zipTree(downloadKawa.get().dest)) {
-		include "kawa-${downloadKawa.get().version}/lib/kawa.jar"
-		eachFile {
-			relativePath new RelativePath(!directory, relativePath.lastName)
+tasks.register('extractKawa') {
+	inputs.files downloadKawa.get()
+	outputs.file "$temporaryDir/kawa.jar"
+
+	doLast {
+		copy {
+			from(zipTree(downloadKawa.get().dest)) {
+				include "kawa-${downloadKawa.get().version}/lib/${outputs.files.singleFile.name}"
+				eachFile {
+					relativePath new RelativePath(!directory, relativePath.lastName)
+				}
+			}
+			into outputs.files.singleFile.parent
+			includeEmptyDirs false
 		}
 	}
-	into temporaryDir
-	includeEmptyDirs false
-	outputs.file "$temporaryDir/kawa.jar"
 }
 
 
@@ -44,7 +49,7 @@ class CompileKawaJar extends Jar {
 
 	@Nested final def compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
 		dependsOn project.extractKawa
-		final def kawaJar = project.files(project.extractKawa)[0]
+		final def kawaJar = project.extractKawa.outputs.files.singleFile
 		classpath kawaJar
 		main 'kawa.repl'
 
@@ -84,16 +89,22 @@ final def downloadKawaChess = tasks.register('downloadKawaChess', VerifiedDownlo
 	checksum 'cf29613d2be5f476a475ee28b4df9d9e'
 }
 
-final def unpackKawaChess = tasks.register('unpackKawaChess', Sync) {
-	dependsOn downloadKawaChess
-	from zipTree(downloadKawaChess.get().dest)
-	into temporaryDir
-	ext.top = "$destinationDir/kawa-chess-${downloadKawaChess.get().commitHash}"
+final def unpackKawaChess = tasks.register('unpackKawaChess') {
+	final def downloader = downloadKawaChess.get()
+	inputs.files downloader
+	outputs.dir "$temporaryDir/kawa-chess-$downloader.commitHash"
+
+	doLast {
+		copy {
+			from zipTree(inputs.files.singleFile)
+			into outputs.files.singleFile.parent
+		}
+	}
 }
 
 tasks.register('buildChessJar', CompileKawaJar) {
 	dependsOn unpackKawaChess
-	final def schemePath = { "${unpackKawaChess.get().top}/${it}.scm" }
+	final def schemePath = { "${unpackKawaChess.get().outputs.files.singleFile}/${it}.scm" }
 	final def schemeFiles = files(['chess', 'gui', 'img', 'main', 'pos'].collect(schemePath))
 	args schemePath('main')
 	inputs.files schemeFiles
@@ -120,29 +131,31 @@ tasks.register('buildKawaTestJar', CompileKawaJar) {
 //
 
 final def downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
-	ext.version = '5.2'
-	def archive = "bcel-${version}.tar.gz"
+	ext.basename = 'bcel-5.2'
+	final def archive = "${basename}.tar.gz"
 	src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
 	dest "$temporaryDir/$archive"
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
 	useETag false
 }
 
-tasks.register('extractBcel', Copy) {
-	dependsOn downloadBcel
-	from(tarTree(downloadBcel.get().dest)) {
-		include "bcel-${downloadBcel.get().version}/bcel-${downloadBcel.get().version}.jar"
-		eachFile {
-			relativePath new RelativePath(!directory, relativePath.lastName)
+tasks.register('extractBcel') {
+	final def basename = downloadBcel.get().basename
+	inputs.files downloadBcel
+	outputs.file "${basename}.jar"
+
+	doLast {
+		copy {
+			from(tarTree(inputs.files.singleFile)) {
+				include "$basename/${basename}.jar"
+				eachFile {
+					relativePath new RelativePath(!directory, relativePath.lastName)
+				}
+			}
+			into projectDir
+			includeEmptyDirs false
 		}
 	}
-	into projectDir
-	includeEmptyDirs false
-	outputs.file "bcel-${downloadBcel.get().version}.jar"
-}
-
-tasks.register('cleanExtractBcel', Delete) {
-	delete files(extractBcel)[0]
 }
 
 tasks.named('clean') {
