@@ -116,10 +116,18 @@ tasks.register('copyAndroidJar', Sync) {
 	into temporaryDir
 }
 
-tasks.register('downloadSampleCup', VerifiedDownload) {
-	src 'http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup'
-	dest 'data/sample.cup'
-	checksum '76b549e7c6e802b811a374248175ecf4'
+tasks.register('downloadSampleCup') {
+	inputs.file configurations.sampleCup.singleFile
+	outputs.file 'data/sample.cup'
+
+	doLast {
+		copy {
+			from zipTree(inputs.files.singleFile)
+			include 'parser.cup'
+			rename { outputs.files.singleFile.name }
+			into outputs.files.singleFile.parent
+		}
+	}
 }
 
 tasks.named('clean') {
@@ -142,7 +150,12 @@ publishing.publications {
 	}
 }
 
+configurations {
+	sampleCup
+}
+
 dependencies {
+	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testCompile(
 		'junit:junit:4.12',
 		'org.osgi:org.osgi.core:4.2.0',
