@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import java.util.Objects;
+
 /**
  * An ExceptionHandler represents a single handler covering a single instruction. It simply tells us
  * what kind of exception to catch and where to dispatch the exception to.
@@ -71,8 +73,7 @@ public final class ExceptionHandler {
     if (h == null) {
       throw new IllegalArgumentException("h is null");
     }
-    return h.handler == handler
-        && (catchClass == null ? h.catchClass == null : catchClass.equals(h.catchClass));
+    return h.handler == handler && Objects.equals(catchClass, h.catchClass);
   }
 
   @Override

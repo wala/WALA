@@ -14,6 +14,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class Pair<T, U> implements Serializable {
 
@@ -27,7 +28,7 @@ public class Pair<T, U> implements Serializable {
   }
 
   private static boolean check(Object x, Object y) {
-    return (x == null) ? (y == null) : x.equals(y);
+    return Objects.equals(x, y);
   }
 
   @SuppressWarnings("rawtypes")

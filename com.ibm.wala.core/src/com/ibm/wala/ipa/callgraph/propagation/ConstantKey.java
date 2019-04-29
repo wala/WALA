@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Iterator;
+import java.util.Objects;
 
 /** An instance key which represents a unique, constant object. */
 public final class ConstantKey<T> implements InstanceKey {
@@ -34,9 +35,7 @@ public final class ConstantKey<T> implements InstanceKey {
   public boolean equals(Object obj) {
     if (obj instanceof ConstantKey) {
       ConstantKey<?> other = (ConstantKey<?>) obj;
-      return valueClass.equals(other.valueClass)
-          ? (value == null ? other.value == null : value.equals(other.value))
-          : false;
+      return valueClass.equals(other.valueClass) ? Objects.equals(value, other.value) : false;
     } else {
       return false;
     }
