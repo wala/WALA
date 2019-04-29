@@ -354,9 +354,7 @@ public class SymbolTable implements Cloneable {
   public PhiValue getPhiValue(int valueNumber) {
     try {
       return (PhiValue) values[valueNumber];
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber, e);
-    } catch (ClassCastException e) {
+    } catch (ArrayIndexOutOfBoundsException | ClassCastException e) {
       throw new IllegalArgumentException("invalid valueNumber: " + valueNumber, e);
     }
   }

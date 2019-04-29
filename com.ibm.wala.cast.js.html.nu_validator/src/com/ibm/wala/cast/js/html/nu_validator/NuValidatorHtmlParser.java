@@ -214,9 +214,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                   return v;
                 }
               }));
-    } catch (IOException e) {
-      assert false : e.toString();
-    } catch (SAXException e) {
+    } catch (IOException | SAXException e) {
       assert false : e.toString();
     }
   }

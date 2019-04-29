@@ -73,10 +73,7 @@ public class InitializerTest {
     CallGraph cg = null;
     try {
       cg = builder.makeCallGraph(options, null);
-    } catch (IllegalArgumentException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (CallGraphBuilderCancelException e) {
+    } catch (IllegalArgumentException | CallGraphBuilderCancelException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

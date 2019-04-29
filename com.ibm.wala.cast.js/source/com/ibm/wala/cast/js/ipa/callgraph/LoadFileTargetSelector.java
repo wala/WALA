@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -89,11 +88,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
                           TypeReference.findOrCreate(cl.getReference(), 'L' + url.getFile()));
               return script.getMethod(AstMethodReference.fnSelector);
             }
-          } catch (MalformedURLException e1) {
-            // do nothing, fall through and return 'target'
-          } catch (IOException e) {
-            // do nothing, fall through and return 'target'
-          } catch (RuntimeException e) {
+          } catch (RuntimeException | IOException e1) {
             // do nothing, fall through and return 'target'
           }
         }

@@ -262,9 +262,7 @@ public class AnalysisScopeReader {
           }
         }
       }
-    } catch (IOException e) {
-      Assertions.UNREACHABLE(e.toString());
-    } catch (InvalidClassFileException e) {
+    } catch (IOException | InvalidClassFileException e) {
       Assertions.UNREACHABLE(e.toString());
     }
   }

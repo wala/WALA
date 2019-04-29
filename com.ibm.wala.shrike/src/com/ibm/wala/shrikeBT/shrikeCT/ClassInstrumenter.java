@@ -302,10 +302,7 @@ public final class ClassInstrumenter {
 
           try {
             comp.compile();
-          } catch (Error ex) {
-            ex.printStackTrace();
-            throw new Error("Error compiling method " + md + ": " + ex.getMessage());
-          } catch (Exception ex) {
+          } catch (Error | Exception ex) {
             ex.printStackTrace();
             throw new Error("Error compiling method " + md + ": " + ex.getMessage());
           }

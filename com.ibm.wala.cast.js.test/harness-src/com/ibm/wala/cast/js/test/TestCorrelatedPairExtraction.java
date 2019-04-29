@@ -82,9 +82,7 @@ public abstract class TestCorrelatedPairExtraction {
         Assert.assertEquals(testName, expected, actual);
       }
 
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ClassHierarchyException e) {
+    } catch (IOException | ClassHierarchyException e) {
       e.printStackTrace();
     } finally {
       if (tmp != null && tmp.exists()) tmp.delete();

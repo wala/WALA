@@ -854,10 +854,7 @@ public abstract class Decoder implements Constants {
       } catch (InvalidBytecodeException ex) {
         ex.setIndex(index);
         throw ex;
-      } catch (Error ex) {
-        System.err.println("Fatal error at index " + index);
-        throw ex;
-      } catch (RuntimeException ex) {
+      } catch (Error | RuntimeException ex) {
         System.err.println("Fatal error at index " + index);
         throw ex;
       }

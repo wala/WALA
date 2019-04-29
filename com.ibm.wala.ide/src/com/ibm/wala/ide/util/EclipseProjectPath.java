@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
-import java.util.zip.ZipException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -139,11 +138,8 @@ public abstract class EclipseProjectPath<E, P> {
     JarFile j;
     try {
       j = new JarFile(file);
-    } catch (ZipException z) {
-      // a corrupted file. ignore it.
-      return;
     } catch (IOException z) {
-      // should ignore directories as well..
+      // may be a corrupted zip file or a directory. ignore it.
       return;
     }
     if (isPrimordialJarFile()) {
@@ -191,11 +187,8 @@ public abstract class EclipseProjectPath<E, P> {
                 ? includeSource
                 : false);
       }
-    } catch (CoreException e1) {
+    } catch (CoreException | IOException e1) {
       e1.printStackTrace();
-      Assertions.UNREACHABLE();
-    } catch (IOException e) {
-      e.printStackTrace();
       Assertions.UNREACHABLE();
     }
   }

@@ -53,7 +53,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -141,11 +140,7 @@ public class XMLSummaryWriter {
 
       StreamResult result = new StreamResult(baos);
       transformer.transform(source, result);
-    } catch (TransformerConfigurationException e) {
-      e.printStackTrace();
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (TransformerException e) {
+    } catch (TransformerException | IllegalArgumentException e) {
       e.printStackTrace();
     }
 
