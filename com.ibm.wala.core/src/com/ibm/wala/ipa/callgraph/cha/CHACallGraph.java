@@ -157,7 +157,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
-        new MapIterator<IMethod, CGNode>(
+        new MapIterator<>(
             new FilterIterator<>(getPossibleTargets(site), this::isRelevantMethod),
             object -> {
               try {

@@ -105,10 +105,10 @@ public final class ModRefFieldAccess {
 
     for (CGNode cgNode : cg) {
       if (!refs.containsKey(cgNode)) {
-        refs.put(cgNode, new HashMap<IClass, Set<IField>>());
+        refs.put(cgNode, new HashMap<>());
       }
       if (!mods.containsKey(cgNode)) {
-        mods.put(cgNode, new HashMap<IClass, Set<IField>>());
+        mods.put(cgNode, new HashMap<>());
       }
 
       final IR ir = cgNode.getIR();
@@ -126,7 +126,7 @@ public final class ModRefFieldAccess {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
               if (!refs.get(cgNode).containsKey(cls)) {
-                refs.get(cgNode).put(cls, new HashSet<IField>());
+                refs.get(cgNode).put(cls, new HashSet<>());
               }
               refs.get(cgNode).get(cls).add(field);
             }
@@ -139,7 +139,7 @@ public final class ModRefFieldAccess {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
               if (!mods.get(cgNode).containsKey(cls)) {
-                mods.get(cgNode).put(cls, new HashSet<IField>());
+                mods.get(cgNode).put(cls, new HashSet<>());
               }
               mods.get(cgNode).get(cls).add(field);
             }
@@ -153,10 +153,10 @@ public final class ModRefFieldAccess {
 
   private TwoMaps recAdd(CGNode node) {
     if (!trefs.containsKey(node)) {
-      trefs.put(node, new HashMap<IClass, Set<IField>>());
+      trefs.put(node, new HashMap<>());
     }
     if (!tmods.containsKey(node)) {
-      tmods.put(node, new HashMap<IClass, Set<IField>>());
+      tmods.put(node, new HashMap<>());
     }
 
     final IR ir = node.getIR();
@@ -170,7 +170,7 @@ public final class ModRefFieldAccess {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
               if (!trefs.get(node).containsKey(cls)) {
-                trefs.get(node).put(cls, new HashSet<IField>());
+                trefs.get(node).put(cls, new HashSet<>());
               }
               trefs.get(node).get(cls).add(field);
             }
@@ -183,7 +183,7 @@ public final class ModRefFieldAccess {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
               if (!tmods.get(node).containsKey(cls)) {
-                tmods.get(node).put(cls, new HashSet<IField>());
+                tmods.get(node).put(cls, new HashSet<>());
               }
               tmods.get(node).get(cls).add(field);
             }

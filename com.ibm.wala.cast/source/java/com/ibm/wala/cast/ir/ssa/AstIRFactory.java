@@ -44,7 +44,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     private final AstIRFactory<T> astFactory;
 
     public AstDefaultIRFactory() {
-      this(new AstIRFactory<T>());
+      this(new AstIRFactory<>());
     }
 
     public AstDefaultIRFactory(AstIRFactory<T> astFactory) {

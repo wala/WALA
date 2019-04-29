@@ -631,7 +631,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
     ArrayList<ArrayList<ExceptionHandler>> temp_array = new ArrayList<>();
     for (int i = 0; i < instructions().size(); i++) {
-      temp_array.add(new ArrayList<ExceptionHandler>());
+      temp_array.add(new ArrayList<>());
     }
 
     for (TryBlock<? extends org.jf.dexlib2.iface.ExceptionHandler> tryItem : tryBlocks) {

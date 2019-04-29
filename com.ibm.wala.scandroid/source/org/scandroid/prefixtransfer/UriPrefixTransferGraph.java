@@ -338,8 +338,8 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 
   @Override
   public void addNode(final InstanceKeySite n) {
-    predecessors.put(n, new HashSet<InstanceKeySite>());
-    successors.put(n, new HashSet<InstanceKeySite>());
+    predecessors.put(n, new HashSet<>());
+    successors.put(n, new HashSet<>());
     nodes.add(n);
   }
 

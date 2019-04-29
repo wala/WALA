@@ -356,7 +356,7 @@ public class AnalysisScope {
   /** @return the rt.jar (1.4) or core.jar (1.5) file, or null if not found. */
   private JarFile getRtJar() {
     return RtJar.getRtJar(
-        new MapIterator<Module, JarFile>(
+        new MapIterator<>(
             new FilterIterator<>(
                 getModules(getPrimordialLoader()).iterator(), JarFileModule.class::isInstance),
             M -> ((JarFileModule) M).getJarFile()));

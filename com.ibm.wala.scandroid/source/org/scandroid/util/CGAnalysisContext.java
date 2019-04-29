@@ -107,7 +107,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
   public CGAnalysisContext(AndroidAnalysisContext analysisContext, IEntryPointSpecifier specifier)
       throws IOException {
-    this(analysisContext, specifier, new ArrayList<InputStream>());
+    this(analysisContext, specifier, new ArrayList<>());
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})

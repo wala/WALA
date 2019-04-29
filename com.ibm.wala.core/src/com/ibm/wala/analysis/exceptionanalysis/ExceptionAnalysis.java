@@ -78,7 +78,7 @@ public class ExceptionAnalysis {
     this.cha = cha;
     this.cg = callgraph;
     if (filter == null) {
-      this.filter = new IgnoreExceptionsInterFilter<>(new DummyFilter<SSAInstruction>());
+      this.filter = new IgnoreExceptionsInterFilter<>(new DummyFilter<>());
     } else {
       this.filter = filter;
     }

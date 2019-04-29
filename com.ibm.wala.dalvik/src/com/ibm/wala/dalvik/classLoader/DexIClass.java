@@ -305,7 +305,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     for (MethodParameter as : m.getParameters()) {
       for (org.jf.dexlib2.iface.Annotation a : as.getAnnotations()) {
         if (!result.containsKey(i)) {
-          result.put(i, new ArrayList<Annotation>());
+          result.put(i, new ArrayList<>());
         }
         result.get(i).add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
       }

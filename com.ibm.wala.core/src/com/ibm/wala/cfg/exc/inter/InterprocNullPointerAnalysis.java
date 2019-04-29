@@ -101,7 +101,7 @@ public final class InterprocNullPointerAnalysis {
 
     // we start with the first node
     final CGNode firstNode = cgFiltered.getNode(0);
-    findAndInjectInvokes(firstNode, new ParameterState(), new HashSet<CGNode>(), progress);
+    findAndInjectInvokes(firstNode, new ParameterState(), new HashSet<>(), progress);
   }
 
   /**
