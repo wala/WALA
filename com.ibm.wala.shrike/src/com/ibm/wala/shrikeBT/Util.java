@@ -388,9 +388,7 @@ public final class Util {
       Field f = c.getField(name);
       return GetInstruction.make(
           makeType(f.getType()), makeType(c), name, (f.getModifiers() & Constants.ACC_STATIC) != 0);
-    } catch (SecurityException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    } catch (NoSuchFieldException e) {
+    } catch (SecurityException | NoSuchFieldException e) {
       throw new IllegalArgumentException(e.getMessage());
     }
   }
@@ -409,9 +407,7 @@ public final class Util {
       Field f = c.getField(name);
       return PutInstruction.make(
           makeType(f.getType()), makeType(c), name, (f.getModifiers() & Constants.ACC_STATIC) != 0);
-    } catch (SecurityException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    } catch (NoSuchFieldException e) {
+    } catch (SecurityException | NoSuchFieldException e) {
       throw new IllegalArgumentException(e.getMessage());
     }
   }

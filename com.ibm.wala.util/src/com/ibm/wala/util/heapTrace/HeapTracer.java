@@ -495,11 +495,7 @@ public class HeapTracer {
       HeapTracer.Result r = (new HeapTracer(traceStatics)).perform();
       System.err.println("HeapTracer Analysis:");
       System.err.println(r.toString());
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
+    } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -525,11 +521,7 @@ public class HeapTracer {
       System.err.println("HeapTracer Analysis:");
       System.err.println(r.toString());
       return r;
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
+    } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
       e.printStackTrace();
     }
     return null;

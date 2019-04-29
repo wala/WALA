@@ -606,13 +606,7 @@ public abstract class JavaIRTests extends IRTests {
   public void testSwitch1() {
     try {
       runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
-    } catch (IllegalArgumentException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (CancelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (IllegalArgumentException | IOException | CancelException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

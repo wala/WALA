@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -116,9 +115,7 @@ public class EclipseTestUtil {
     importOp.setOverwriteResources(true);
     try {
       importOp.run(monitor);
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
+    } catch (InvocationTargetException | InterruptedException e) {
       e.printStackTrace();
     }
   }
@@ -145,8 +142,6 @@ public class EclipseTestUtil {
     if (file != null) {
       try {
         return new ZipFile(file);
-      } catch (ZipException e) {
-        reportException(e);
       } catch (IOException e) {
         reportException(e);
       }

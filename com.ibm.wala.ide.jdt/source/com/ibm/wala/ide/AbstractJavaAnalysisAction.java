@@ -189,9 +189,7 @@ public abstract class AbstractJavaAnalysisAction
     IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     try {
       progressService.busyCursorWhile(this);
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
+    } catch (InvocationTargetException | InterruptedException e) {
       e.printStackTrace();
     }
   }

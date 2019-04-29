@@ -191,11 +191,7 @@ public class TabulationSolver<T, P, F> {
       forwardTabulateSLRPs();
       Result r = new Result();
       return r;
-    } catch (CancelException e) {
-      // store a partially-tabulated result in the thrown exception.
-      Result r = new Result();
-      throw new TabulationCancelException(e, r);
-    } catch (CancelRuntimeException e) {
+    } catch (CancelException | CancelRuntimeException e) {
       // store a partially-tabulated result in the thrown exception.
       Result r = new Result();
       throw new TabulationCancelException(e, r);

@@ -121,10 +121,7 @@ public class PDFCallGraph {
       String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       return PDFViewUtil.launchPDFView(pdfFile, gvExe);
 
-    } catch (WalaException e) {
-      e.printStackTrace();
-      return null;
-    } catch (IOException e) {
+    } catch (WalaException | IOException e) {
       e.printStackTrace();
       return null;
     }
