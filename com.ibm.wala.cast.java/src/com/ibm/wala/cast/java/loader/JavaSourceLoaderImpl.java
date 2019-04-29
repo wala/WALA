@@ -48,8 +48,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
@@ -114,8 +112,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
           TypeName.string2TypeName(typeName),
           loader,
           (short) mapToInt(qualifiers),
-          new HashMap<Atom, IField>(),
-          new HashMap<Selector, IMethod>());
+          new HashMap<>(),
+          new HashMap<>());
       this.superTypeNames = superTypeNames;
       this.enclosingClass = enclosingClass;
       this.annotations = annotations;

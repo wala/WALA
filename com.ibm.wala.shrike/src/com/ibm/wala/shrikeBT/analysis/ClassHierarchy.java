@@ -140,7 +140,7 @@ public final class ClassHierarchy {
     } else {
       int v = checkSupertypesContain(hierarchy, t1, t2);
       if (v == MAYBE) {
-        v = checkSubtypesContain(hierarchy, t2, t1, new HashSet<String>());
+        v = checkSubtypesContain(hierarchy, t2, t1, new HashSet<>());
       }
       return v;
     }

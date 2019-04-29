@@ -91,7 +91,7 @@ public class HeadlessUtil {
         EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
         IProject proj = entry.getIFile().getProject();
         if (!projectsFiles.containsKey(proj)) {
-          projectsFiles.put(proj, new HashMap<Unit, EclipseSourceFileModule>());
+          projectsFiles.put(proj, new HashMap<>());
         }
         projectsFiles.get(proj).put(compiler.getCompilationUnit(entry.getIFile()), entry);
       }

@@ -107,7 +107,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       PointerAnalysis<T> pa,
       DataDependenceOptions dOptions,
       ControlDependenceOptions cOptions) {
-    this(cg, pa, new ModRef<T>(), dOptions, cOptions, null);
+    this(cg, pa, new ModRef<>(), dOptions, cOptions, null);
   }
 
   public SDG(

@@ -394,8 +394,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testCastFromNull() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true, null);
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
   }
 
   @Test
@@ -428,20 +427,13 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testNullArrayInit() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true, null);
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
   }
 
   @Test
   public void testInnerClassA() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
-        runTest(
-            singleTestSrc(),
-            rtJar,
-            simpleTestEntryPoint(),
-            new ArrayList<IRAssertion>(),
-            true,
-            null);
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
@@ -507,13 +499,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test
   public void testInnerClassSuper() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
-        runTest(
-            singleTestSrc(),
-            rtJar,
-            simpleTestEntryPoint(),
-            new ArrayList<IRAssertion>(),
-            true,
-            null);
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
 
     // can't do an IRAssertion() -- we need the pointer analysis
 

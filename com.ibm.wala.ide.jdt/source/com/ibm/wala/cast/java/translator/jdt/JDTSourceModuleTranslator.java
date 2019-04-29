@@ -169,7 +169,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
       if (!projectsFiles.containsKey(proj)) {
-        projectsFiles.put(proj, new HashMap<ICompilationUnit, EclipseSourceFileModule>());
+        projectsFiles.put(proj, new HashMap<>());
       }
       projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }

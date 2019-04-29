@@ -833,7 +833,7 @@ public class Analyzer {
   public final void computeTypes(TypeVisitor v, BitSet makeTypesAt, boolean wantPath)
       throws FailureException {
     initTypeInfo();
-    computeTypes(0, v, makeTypesAt, wantPath ? new ArrayList<PathElement>() : null);
+    computeTypes(0, v, makeTypesAt, wantPath ? new ArrayList<>() : null);
   }
 
   public abstract class TypeVisitor extends IInstruction.Visitor {
