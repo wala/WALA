@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 
@@ -73,7 +74,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
       if (!(obj instanceof Edge)) return false;
       Edge that = (Edge) obj;
       return this.from.equals(that.from)
-          && (this.label == null ? that.label == null : this.label.equals(that.label))
+          && Objects.equals(this.label, that.label)
           && this.to.equals(that.to);
     }
   }

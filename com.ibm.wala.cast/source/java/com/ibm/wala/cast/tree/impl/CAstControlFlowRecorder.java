@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -71,9 +72,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof Key)
-          && from == ((Key) o).from
-          && ((label == null) ? ((Key) o).label == null : label.equals(((Key) o).label));
+      return (o instanceof Key) && from == ((Key) o).from && Objects.equals(label, ((Key) o).label);
     }
 
     @Override

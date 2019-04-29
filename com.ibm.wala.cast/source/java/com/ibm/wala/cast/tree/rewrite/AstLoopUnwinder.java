@@ -18,6 +18,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Map;
+import java.util.Objects;
 
 public class AstLoopUnwinder
     extends CAstRewriter<
@@ -46,7 +47,7 @@ public class AstLoopUnwinder
     public boolean equals(Object o) {
       return (o instanceof UnwindKey)
           && ((UnwindKey) o).iteration == iteration
-          && (rest == null ? ((UnwindKey) o).rest == null : rest.equals(((UnwindKey) o).rest));
+          && Objects.equals(rest, ((UnwindKey) o).rest);
     }
 
     @Override
