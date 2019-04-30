@@ -94,7 +94,7 @@ public class CAstDumper {
         scopedEntities.add(scopedEntity);
         m.put(scopedEntity, e.getKey());
       }
-    Collections.sort(scopedEntities, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+    scopedEntities.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
 
     buf.append(indent(indent)).append("> ");
     boolean first = true;

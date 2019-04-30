@@ -61,7 +61,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -243,14 +242,7 @@ public class CorrelationFinder {
     List<Pair<Position, String>> correlations = new ArrayList<>();
     for (CorrelationSummary summary : summaries.values()) correlations.addAll(summary.pp());
 
-    Collections.sort(
-        correlations,
-        new Comparator<Pair<Position, String>>() {
-          @Override
-          public int compare(Pair<Position, String> o1, Pair<Position, String> o2) {
-            return o1.fst.compareTo(o2.fst);
-          }
-        });
+    correlations.sort((o1, o2) -> o1.fst.compareTo(o2.fst));
     int i = 0;
     for (Pair<Position, String> p : correlations)
       System.out.println((i++) + " -- " + p.fst + ": " + p.snd);
