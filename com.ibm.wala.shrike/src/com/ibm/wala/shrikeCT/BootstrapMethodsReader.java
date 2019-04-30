@@ -152,7 +152,7 @@ public class BootstrapMethodsReader extends AttributeReader {
                   | NoSuchMethodException
                   | ClassNotFoundException
                   | InvalidClassFileException e) {
-                assert false : e;
+                throw new RuntimeException(e);
               }
               return null;
             }
