@@ -519,12 +519,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    */
   @Override
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
-    return getPointsTo(
-            pk,
-            k -> {
-              return false;
-            })
-        .snd;
+    return getPointsTo(pk, k -> false).snd;
   }
 
   /**
@@ -533,12 +528,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    *     budget
    */
   public Collection<InstanceKeyAndState> getPointsToWithStates(PointerKey pk) {
-    return getPointsToWithStates(
-            pk,
-            k -> {
-              return false;
-            })
-        .snd;
+    return getPointsToWithStates(pk, k -> false).snd;
   }
 
   /**

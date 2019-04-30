@@ -75,7 +75,6 @@
     <inspection_tool class="ClassInDefaultPackage" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="ClassMayBeInterface" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="CloneDeclaresCloneNotSupported" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="CodeBlock2Expr" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CollectionAddedToSelf" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CollectionContainsUrl" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CollectionsFieldAccessReplaceableByMethodCall" enabled="true" level="WARNING" enabled_by_default="true" />

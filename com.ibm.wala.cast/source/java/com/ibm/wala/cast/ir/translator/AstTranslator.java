@@ -644,20 +644,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public String getFollowingComment(int instructionOffset) throws IOException {
-      return getComment(
-          instructionOffset,
-          (p) -> {
-            return codePositions.tailSet(p);
-          });
+      return getComment(instructionOffset, (p) -> codePositions.tailSet(p));
     }
 
     @Override
     public String getLeadingComment(int instructionOffset) throws IOException {
-      return getComment(
-          instructionOffset,
-          (p) -> {
-            return codePositions.headSet(p);
-          });
+      return getComment(instructionOffset, (p) -> codePositions.headSet(p));
     }
   }
 
@@ -3511,9 +3503,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       Set<String> names = entity2ExposedNames.get(n);
       if (names != null) {
         names.forEach(
-            (String nm) -> {
-              functionContext.currentScope().declare(new CAstSymbolImpl(nm, CAstType.DYNAMIC));
-            });
+            (String nm) ->
+                functionContext.currentScope().declare(new CAstSymbolImpl(nm, CAstType.DYNAMIC)));
       }
     }
     // entry block
@@ -4903,12 +4894,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   private void setType(WalkContext context, CAstNode n, CAstType caughtType) {
     if (caughtType instanceof CAstType.Union) {
-      ((CAstType.Union) caughtType)
-          .getConstituents()
-          .forEach(
-              (type) -> {
-                setType(context, n, type);
-              });
+      ((CAstType.Union) caughtType).getConstituents().forEach((type) -> setType(context, n, type));
     } else {
       TypeReference caughtRef = makeType(caughtType);
       context.setCatchType(n, caughtRef);
