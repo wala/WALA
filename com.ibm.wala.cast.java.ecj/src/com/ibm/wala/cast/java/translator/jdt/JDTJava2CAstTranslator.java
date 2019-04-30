@@ -4483,7 +4483,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       if (var.isEnumConstant()) constants.add(var);
 
     // constants are unsorted by default
-    Collections.sort(constants, (arg0, arg1) -> arg0.getVariableId() - arg1.getVariableId());
+    constants.sort((arg0, arg1) -> arg0.getVariableId() - arg1.getVariableId());
 
     // PART II: create values()
     memberEntities.add(createEnumValuesMethod(typeBinding, constants, context));
