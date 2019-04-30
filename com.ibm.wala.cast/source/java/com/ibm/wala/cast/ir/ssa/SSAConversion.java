@@ -722,28 +722,22 @@ public class SSAConversion extends AbstractSSAConversion {
 
   public static SSAInformation convert(
       AstMethod M, final AstIRFactory.AstIR ir, SSAOptions options, final IntSet values) {
-    try {
-      if (DEBUG) {
-        System.err.println(("starting conversion for " + values));
-        System.err.println(ir);
-      }
-      if (DEBUG_UNDO) System.err.println((">>> starting " + ir.getMethod()));
-      SSAConversion ssa =
-          new SSAConversion(M, ir, options) {
-            final int limit = ir.getSymbolTable().getMaxValueNumber();
-
-            @Override
-            protected boolean skip(int i) {
-              return (i >= 0) && (i <= limit) && (!values.contains(i));
-            }
-          };
-      ssa.perform();
-      if (DEBUG_UNDO) System.err.println(("<<< done " + ir.getMethod()));
-      return ssa.getComputedLocalMap();
-    } catch (RuntimeException | Error e) {
-      //      System.err.println(("exception or error " + e + " while converting:"));
-      //      System.err.println(ir);
-      throw e;
+    if (DEBUG) {
+      System.err.println(("starting conversion for " + values));
+      System.err.println(ir);
     }
+    if (DEBUG_UNDO) System.err.println((">>> starting " + ir.getMethod()));
+    SSAConversion ssa =
+        new SSAConversion(M, ir, options) {
+          final int limit = ir.getSymbolTable().getMaxValueNumber();
+
+          @Override
+          protected boolean skip(int i) {
+            return (i >= 0) && (i <= limit) && (!values.contains(i));
+          }
+        };
+    ssa.perform();
+    if (DEBUG_UNDO) System.err.println(("<<< done " + ir.getMethod()));
+    return ssa.getComputedLocalMap();
   }
 }
