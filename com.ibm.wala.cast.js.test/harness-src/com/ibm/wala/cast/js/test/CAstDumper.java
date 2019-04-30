@@ -25,6 +25,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -94,7 +95,7 @@ public class CAstDumper {
         scopedEntities.add(scopedEntity);
         m.put(scopedEntity, e.getKey());
       }
-    scopedEntities.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+    scopedEntities.sort(Comparator.comparing(CAstEntity::getName));
 
     buf.append(indent(indent)).append("> ");
     boolean first = true;
