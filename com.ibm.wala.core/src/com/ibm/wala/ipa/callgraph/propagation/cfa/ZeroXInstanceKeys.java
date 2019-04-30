@@ -219,12 +219,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     for (NewSiteReference n : Iterator2Iterable.make(contextInterpreter.iterateNewSites(node))) {
       IClass alloc = cha.lookupClass(n.getDeclaredType());
       if (alloc != null) {
-        Integer old = count.get(alloc);
-        if (old == null) {
-          count.put(alloc, 1);
-        } else {
-          count.put(alloc, old + 1);
-        }
+        count.merge(alloc, 1, Integer::sum);
       }
     }
     return count;

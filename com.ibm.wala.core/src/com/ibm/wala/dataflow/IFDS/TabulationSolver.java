@@ -912,11 +912,7 @@ public class TabulationSolver<T, P, F> {
           };
       for (T n : supergraph) {
         P proc = supergraph.getProcOf(n);
-        TreeSet<T> s = map.get(proc);
-        if (s == null) {
-          s = new TreeSet<>(c);
-          map.put(proc, s);
-        }
+        TreeSet<T> s = map.computeIfAbsent(proc, k -> new TreeSet<>(c));
         s.add(n);
       }
 

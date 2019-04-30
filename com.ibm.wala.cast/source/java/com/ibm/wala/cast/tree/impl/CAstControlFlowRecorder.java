@@ -100,20 +100,12 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   @Override
   public Collection<Object> getTargetLabels(CAstNode from) {
     Object node = CAstToNode.get(from);
-    if (labelMap.containsKey(node)) {
-      return labelMap.get(node);
-    } else {
-      return Collections.emptySet();
-    }
+    return labelMap.getOrDefault(node, Collections.emptySet());
   }
 
   @Override
   public Set<Object> getSourceNodes(CAstNode to) {
-    if (sourceMap.containsKey(CAstToNode.get(to))) {
-      return sourceMap.get(CAstToNode.get(to));
-    } else {
-      return Collections.emptySet();
-    }
+    return sourceMap.getOrDefault(CAstToNode.get(to), Collections.emptySet());
   }
 
   @Override
@@ -149,12 +141,10 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
     table.put(new Key(label, from), to);
 
-    Set<Object> ls = labelMap.get(from);
-    if (ls == null) labelMap.put(from, ls = new LinkedHashSet<>(2));
+    Set<Object> ls = labelMap.computeIfAbsent(from, k -> new LinkedHashSet<>(2));
     ls.add(label);
 
-    Set<Object> ss = sourceMap.get(to);
-    if (ss == null) sourceMap.put(to, ss = new LinkedHashSet<>(2));
+    Set<Object> ss = sourceMap.computeIfAbsent(to, k -> new LinkedHashSet<>(2));
     ss.add(from);
   }
 

@@ -163,11 +163,7 @@ public class PrimitiveAssignability {
     final Primitive f = namePrimitiveMap.get(from);
     final Primitive t = namePrimitiveMap.get(to);
 
-    if (assignability.get(f).containsKey(t)) {
-      return assignability.get(f).get(t);
-    } else {
-      return AssignabilityKind.UNASSIGNABLE;
-    }
+    return assignability.get(f).getOrDefault(t, AssignabilityKind.UNASSIGNABLE);
   }
 
   /** Does an expression c1 x := c2 y typecheck? */

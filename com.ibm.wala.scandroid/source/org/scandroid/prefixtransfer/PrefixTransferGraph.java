@@ -231,17 +231,9 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
 
   @Override
   public void addEdge(InstanceKeySite src, InstanceKeySite dst) {
-    Set<InstanceKeySite> predSet = predecessors.get(dst);
-    if (predSet == null) {
-      predSet = new HashSet<>();
-      predecessors.put(dst, predSet);
-    }
+    Set<InstanceKeySite> predSet = predecessors.computeIfAbsent(dst, k -> new HashSet<>());
     predSet.add(src);
-    Set<InstanceKeySite> succSet = successors.get(src);
-    if (succSet == null) {
-      succSet = new HashSet<>();
-      successors.put(src, succSet);
-    }
+    Set<InstanceKeySite> succSet = successors.computeIfAbsent(src, k -> new HashSet<>());
     succSet.add(dst);
   }
 

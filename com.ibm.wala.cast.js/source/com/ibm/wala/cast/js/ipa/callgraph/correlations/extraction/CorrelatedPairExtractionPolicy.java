@@ -158,8 +158,8 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       return false;
     }
 
-    List<ExtractionRegion> regions = region_map.get(region_info.fst);
-    if (regions == null) region_map.put(region_info.fst, regions = new LinkedList<>());
+    List<ExtractionRegion> regions =
+        region_map.computeIfAbsent(region_info.fst, k -> new LinkedList<>());
     for (int i = 0; i < regions.size(); ++i) {
       ExtractionRegion region2 = regions.get(i);
       if (region2.getEnd() <= region_info.snd.getStart()) continue;
