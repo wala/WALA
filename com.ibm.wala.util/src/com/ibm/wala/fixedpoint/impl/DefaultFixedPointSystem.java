@@ -26,6 +26,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.Topological;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 /** Default implementation of a dataflow graph */
@@ -242,7 +243,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
 
   @Override
   public Iterator<? extends INodeWithNumber> getVariables() {
-    return new FilterIterator<>(graph.iterator(), x -> x != null);
+    return new FilterIterator<>(graph.iterator(), Objects::nonNull);
   }
 
   public int getNumberOfNodes() {

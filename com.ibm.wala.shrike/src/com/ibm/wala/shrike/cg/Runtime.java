@@ -88,14 +88,7 @@ public class Runtime {
       handleCallback = new DefaultCallbackPolicy();
     }
 
-    java.lang.Runtime.getRuntime()
-        .addShutdownHook(
-            new Thread() {
-              @Override
-              public void run() {
-                endTrace();
-              }
-            });
+    java.lang.Runtime.getRuntime().addShutdownHook(new Thread(Runtime::endTrace));
   }
 
   public static void endTrace() {

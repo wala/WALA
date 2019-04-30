@@ -63,10 +63,7 @@ public class AstConstantCollector {
       }
     }
 
-    bad.forEach(
-        (n) -> {
-          values.remove(n);
-        });
+    bad.forEach(values::remove);
 
     for (Collection<CAstEntity> ces : function.getAllScopedEntities().values()) {
       for (CAstEntity ce : ces) {
