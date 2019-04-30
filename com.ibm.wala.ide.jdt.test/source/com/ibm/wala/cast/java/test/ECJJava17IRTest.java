@@ -150,23 +150,22 @@ public class ECJJava17IRTest extends IRTests {
 
           cg.getNodes(testMethod)
               .forEach(
-                  (n) -> {
-                    n.getIR()
-                        .getControlFlowGraph()
-                        .forEach(
-                            (bb) -> {
-                              if (bb.isCatchBlock()) {
-                                Set<IClass> foundTypes = HashSetFactory.make();
-                                bb.getCaughtExceptionTypes()
-                                    .forEachRemaining(
-                                        (t) -> {
-                                          foundTypes.add(cg.getClassHierarchy().lookupClass(t));
-                                        });
+                  (n) ->
+                      n.getIR()
+                          .getControlFlowGraph()
+                          .forEach(
+                              (bb) -> {
+                                if (bb.isCatchBlock()) {
+                                  Set<IClass> foundTypes = HashSetFactory.make();
+                                  bb.getCaughtExceptionTypes()
+                                      .forEachRemaining(
+                                          (t) ->
+                                              foundTypes.add(
+                                                  cg.getClassHierarchy().lookupClass(t)));
 
-                                assert foundTypes.equals(expectedTypes) : n.getIR();
-                              }
-                            });
-                  });
+                                  assert foundTypes.equals(expectedTypes) : n.getIR();
+                                }
+                              }));
         }
       };
 

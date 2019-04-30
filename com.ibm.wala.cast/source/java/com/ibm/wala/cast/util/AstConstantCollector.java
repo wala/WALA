@@ -32,10 +32,7 @@ public class AstConstantCollector {
       for (Segments s : CAstPattern.findAll(simpleGlobalPattern, function)) {
         s.getMultiple("name")
             .iterator()
-            .forEachRemaining(
-                (name) -> {
-                  bad.add((String) name.getValue());
-                });
+            .forEachRemaining((name) -> bad.add((String) name.getValue()));
       }
       for (Segments s : CAstPattern.findAll(simplePostUpdatePattern, function)) {
         bad.add((String) s.getSingle("name").getValue());
