@@ -80,17 +80,10 @@ public class InflowAnalysis {
       BasicBlockInContext<E> block,
       FlowType taintType,
       Set<CodeElement> newElements) {
-    Map<FlowType<E>, Set<CodeElement>> blockMap = taintMap.get(block);
-    if (blockMap == null) {
-      blockMap = new HashMap<>();
-      taintMap.put(block, blockMap);
-    }
+    Map<FlowType<E>, Set<CodeElement>> blockMap =
+        taintMap.computeIfAbsent(block, k -> new HashMap<>());
 
-    Set<CodeElement> elements = blockMap.get(taintType);
-    if (elements == null) {
-      elements = new HashSet<>();
-      blockMap.put(taintType, elements);
-    }
+    Set<CodeElement> elements = blockMap.computeIfAbsent(taintType, k -> new HashSet<>());
     elements.addAll(newElements);
   }
 

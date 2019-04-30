@@ -333,11 +333,7 @@ public class AndroidManifestXMLReader {
     public static Tag fromString(String tag) {
       tag = tag.toLowerCase();
 
-      if (reverseMap.containsKey(tag)) {
-        return reverseMap.get(tag);
-      } else {
-        return Tag.UNIMPORTANT;
-      }
+      return reverseMap.getOrDefault(tag, Tag.UNIMPORTANT);
     }
 
     /** The Tag appears in the XML File using this name. */

@@ -468,11 +468,7 @@ public class OfflineDynamicCallGraph {
             }
 
             private int findExistingEntry(Object o) {
-              if (entries.containsKey(o)) {
-                return entries.get(o);
-              } else {
-                return -1;
-              }
+              return entries.getOrDefault(o, -1);
             }
 
             @Override

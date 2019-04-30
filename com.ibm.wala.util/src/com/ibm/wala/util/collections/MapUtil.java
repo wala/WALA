@@ -87,11 +87,7 @@ public class MapUtil {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    List<T> result = M.get(key);
-    if (result == null) {
-      result = new ArrayList<>();
-      M.put(key, result);
-    }
+    List<T> result = M.computeIfAbsent(key, k -> new ArrayList<>());
     return result;
   }
 
@@ -145,11 +141,7 @@ public class MapUtil {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    WeakHashMap<K, V> result = M.get(key);
-    if (result == null) {
-      result = new WeakHashMap<>(2);
-      M.put(key, result);
-    }
+    WeakHashMap<K, V> result = M.computeIfAbsent(key, k -> new WeakHashMap<>(2));
     return result;
   }
 

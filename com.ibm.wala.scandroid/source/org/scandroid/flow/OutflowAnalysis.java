@@ -110,11 +110,7 @@ public class OutflowAnalysis {
       Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> graph,
       FlowType<IExplodedBasicBlock> source,
       FlowType<IExplodedBasicBlock> dest) {
-    Set<FlowType<IExplodedBasicBlock>> dests = graph.get(source);
-    if (dests == null) {
-      dests = new HashSet<>();
-      graph.put(source, dests);
-    }
+    Set<FlowType<IExplodedBasicBlock>> dests = graph.computeIfAbsent(source, k -> new HashSet<>());
     dests.add(dest);
   }
 
