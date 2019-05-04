@@ -4,12 +4,6 @@ plugins {
 
 sourceSets.test.java.srcDirs = ['harness-src']
 
-publishing.publications {
-	mavenJava(MavenPublication) {
-		artifact jarTest
-	}
-}
-
 dependencies {
 	testCompile(
 		'junit:junit:4.12',
