@@ -26,3 +26,5 @@ tasks.named('javadoc') {
 		classpath += files project(rhinoName).compileJava
 	}
 }
+
+apply from: rootProject.file("gradle-mvn-push.gradle")

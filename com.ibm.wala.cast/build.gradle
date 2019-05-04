@@ -45,3 +45,5 @@ tasks.named('assemble') {
 tasks.named('clean') {
 	dependsOn 'cleanCopyJarsIntoLib'
 }
+
+apply from: rootProject.file("gradle-mvn-push.gradle")

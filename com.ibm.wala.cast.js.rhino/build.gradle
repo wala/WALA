@@ -9,3 +9,5 @@ dependencies {
 		project(':com.ibm.wala.util'),
 		)
 }
+
+apply from: rootProject.file("gradle-mvn-push.gradle")
