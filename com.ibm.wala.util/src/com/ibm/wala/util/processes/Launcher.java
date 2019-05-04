@@ -89,7 +89,7 @@ public abstract class Launcher {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     if (logger != null) {
-      logger.info("spawning process " + cmd);
+      logger.finest("spawning process " + cmd);
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
@@ -106,7 +106,7 @@ public abstract class Launcher {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     if (logger != null) {
-      logger.info("spawning process " + Arrays.toString(cmd));
+      logger.finest("spawning process " + Arrays.toString(cmd));
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
@@ -236,7 +236,7 @@ public abstract class Launcher {
             repeat = false;
             blockingDrain();
             if (logger != null) {
-              logger.fine("process terminated with exit code " + p.exitValue());
+              logger.finest("process terminated with exit code " + p.exitValue());
             }
           } catch (IllegalThreadStateException e) {
             // this means the process has not yet terminated.
