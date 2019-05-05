@@ -48,10 +48,6 @@ matrix:
       language: java
       jdk: oraclejdk8
     - os: linux
-      env: BUILD_SYSTEM=gradle JAVA_COMPILER=ecj
-      language: java
-      jdk: oraclejdk8
-    - os: linux
       env: BUILD_SYSTEM=maven
       language: android
       jdk: oraclejdk8
