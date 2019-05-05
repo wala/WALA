@@ -22,9 +22,11 @@ if [ "$MY_JDK_VERSION" = "openjdk11" ]
 then
     # only test WALA core on JDK 11 for now
     $headless ./gradlew --continue --no-build-cache --stacktrace \
+	      -PjavaCompiler="${JAVA_COMPILER-}" \
               :com.ibm.wala.core.tests:test
 else
     $headless ./gradlew --continue --no-build-cache --stacktrace \
+	      -PjavaCompiler="${JAVA_COMPILER-}" \
 	      verifyGoogleJavaFormat \
 	      "$SUBMODULE_PREFIX"build \
 	      ${documentation:+$SUBMODULE_PREFIX$documentation} \
