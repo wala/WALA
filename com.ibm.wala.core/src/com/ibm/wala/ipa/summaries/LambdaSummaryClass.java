@@ -223,35 +223,32 @@ public class LambdaSummaryClass extends SyntheticClass {
           LambdaSummaryClass.this.getReference(),
           invoke.getDeclaredTarget().getName(),
           Descriptor.findOrCreateUTF8(getLambdaDeclaredSignature()));
-    } catch (IllegalArgumentException | InvalidClassFileException e) {
-      assert false : e;
-      return null;
+    } catch (InvalidClassFileException e) {
+      throw new RuntimeException(e);
     }
   }
 
-  private String getLambdaCalleeClass() throws IllegalArgumentException, InvalidClassFileException {
+  private String getLambdaCalleeClass() throws InvalidClassFileException {
     int cpIndex = invoke.getBootstrap().callArgumentIndex(1);
     return 'L' + invoke.getBootstrap().getCP().getCPHandleClass(cpIndex);
   }
 
-  private String getLambdaCalleeName() throws IllegalArgumentException, InvalidClassFileException {
+  private String getLambdaCalleeName() throws InvalidClassFileException {
     int cpIndex = invoke.getBootstrap().callArgumentIndex(1);
     return invoke.getBootstrap().getCP().getCPHandleName(cpIndex);
   }
 
-  private String getLambdaCalleeSignature()
-      throws IllegalArgumentException, InvalidClassFileException {
+  private String getLambdaCalleeSignature() throws InvalidClassFileException {
     int cpIndex = invoke.getBootstrap().callArgumentIndex(1);
     return invoke.getBootstrap().getCP().getCPHandleType(cpIndex);
   }
 
-  private String getLambdaDeclaredSignature()
-      throws IllegalArgumentException, InvalidClassFileException {
+  private String getLambdaDeclaredSignature() throws InvalidClassFileException {
     int cpIndex = invoke.getBootstrap().callArgumentIndex(0);
     return invoke.getBootstrap().getCP().getCPMethodType(cpIndex);
   }
 
-  private int getLambdaCalleeKind() throws IllegalArgumentException, InvalidClassFileException {
+  private int getLambdaCalleeKind() throws InvalidClassFileException {
     int cpIndex = invoke.getBootstrap().callArgumentIndex(1);
     return invoke.getBootstrap().getCP().getCPHandleKind(cpIndex);
   }
@@ -335,8 +332,8 @@ public class LambdaSummaryClass extends SyntheticClass {
         summary.addStatement(
             insts.ReturnInstruction(inst++, ret, callee.getReturnType().isPrimitiveType()));
       }
-    } catch (IllegalArgumentException | InvalidClassFileException e) {
-      assert false : e.toString();
+    } catch (InvalidClassFileException e) {
+      throw new RuntimeException(e);
     }
 
     SummarizedMethod method = new SummarizedMethod(ref, summary, LambdaSummaryClass.this);

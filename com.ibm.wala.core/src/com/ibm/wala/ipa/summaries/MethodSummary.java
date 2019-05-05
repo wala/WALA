@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.summaries;
 
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -91,7 +90,7 @@ public class MethodSummary {
    *
    * @return MethodReference
    */
-  public MemberReference getMethod() {
+  public MethodReference getMethod() {
     return method;
   }
 
