@@ -108,7 +108,8 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     return summary;
   }
 
-  private boolean isNonClinitLambdaMetafactoryMethod(IClassHierarchy cha, MethodReference target) {
+  private static boolean isNonClinitLambdaMetafactoryMethod(
+      IClassHierarchy cha, MethodReference target) {
     return !target.getName().equals(MethodReference.clinitName)
         && Objects.equals(
             cha.lookupClass(TypeReference.LambdaMetaFactory),
