@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.traverse;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedGraph;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedSet;
@@ -85,9 +86,7 @@ public class WelshPowell<T> {
 
   public ColoredVertices<T> color(final NumberedGraph<T> G, Comparator<T> order, int maxColors) {
     int[] colors = new int[G.getMaxNumber() + 1];
-    for (int i = 0; i < colors.length; i++) {
-      colors[i] = -1;
-    }
+    Arrays.fill(colors, -1);
 
     SortedSet<T> vertices = new TreeSet<>(order);
 

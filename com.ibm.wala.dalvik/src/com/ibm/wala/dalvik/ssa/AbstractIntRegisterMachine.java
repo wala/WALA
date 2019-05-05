@@ -59,6 +59,7 @@ import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.INodeWithNumber;
+import java.util.Arrays;
 
 /**
  * Skeleton of functionality to propagate information through the Java bytecode stack machine using
@@ -732,9 +733,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
   public int[] allocateNewLocalsArray() {
     int[] result = new int[maxLocals];
-    for (int i = 0; i < maxLocals; i++) {
-      result[i] = OPTIMISTIC ? TOP : BOTTOM;
-    }
+    Arrays.fill(result, OPTIMISTIC ? TOP : BOTTOM);
     return result;
   }
 
