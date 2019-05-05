@@ -10,7 +10,6 @@ plugins {
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '9.2.0'
 	id 'nebula.source-jar' version '9.5.0' apply false
-	id 'maven-publish'
 }
 
 repositories {
@@ -73,7 +72,6 @@ subprojects { subproject ->
 	}
 
 	apply plugin: 'java'
-	apply plugin: 'maven-publish'
 	apply plugin: 'nebula.source-jar'
 
 	version rootProject.version
@@ -86,12 +84,6 @@ subprojects { subproject ->
 	}
 
 	jar.manifest.from('META-INF/MANIFEST.MF')
-
-	publishing.publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
 
 	tasks.register('afterEclipseBuildshipImport') {
 		dependsOn 'processTestResources'

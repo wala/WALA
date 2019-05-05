@@ -30,3 +30,5 @@ tasks.named('javadoc') {
 		classpath += files project(dalvik).compileJava
 	}
 }
+
+apply from: rootProject.file("gradle-mvn-push.gradle")

@@ -20,3 +20,5 @@ tasks.named('javadoc') {
 		options.linksOffline outputDirectory.path, createPackageList.packageList.parent
 	}
 }
+
+apply from: rootProject.file("gradle-mvn-push.gradle")

@@ -9,12 +9,6 @@ sourceSets.test.java.srcDirs = ['harness-src/java']
 
 compileTestJava.options.headerOutputDirectory.set file('build/headers')
 
-publishing.publications {
-	mavenJava(MavenPublication) {
-		artifact jarTest
-	}
-}
-
 dependencies {
 	testCompile(
 		'junit:junit:4.12',

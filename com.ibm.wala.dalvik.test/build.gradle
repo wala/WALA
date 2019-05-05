@@ -144,12 +144,6 @@ tasks.named('clean') {
 	dependsOn 'cleanDownloadSampleLex'
 }
 
-publishing.publications {
-	mavenJava(MavenPublication) {
-		artifact jarTest
-	}
-}
-
 configurations {
 	sampleCup
 }
