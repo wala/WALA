@@ -94,6 +94,8 @@ afterEvaluate { project ->
   }
 
   signing {
+    // Use external gpg cmd.  This makes it easy to use gpg-agent,
+    // to avoid being prompted for a password once per artifact
     useGpgCmd()
     sign configurations.archives
   }
