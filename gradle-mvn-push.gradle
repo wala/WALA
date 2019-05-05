@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+// This script is derived from the version here:
+// https://github.com/uber/android-template/blob/master/gradle/gradle-mvn-push.gradle
+
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -95,6 +98,7 @@ afterEvaluate { project ->
     sign configurations.archives
   }
 
+  // only sign the archives if we are uploading a release build
   tasks.withType(Sign) {
     onlyIf { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
   }
@@ -207,14 +211,6 @@ afterEvaluate { project ->
       from javadoc.destinationDir
     }
   }
-
-  // if (JavaVersion.current().isJava8Compatible()) {
-  //   allprojects {
-  //     tasks.withType(Javadoc) {
-  //       options.addStringOption('Xdoclint:none', '-quiet')
-  //     }
-  //   }
-  // }
 
   artifacts {
     if (project.getPlugins().hasPlugin('com.android.application') ||
