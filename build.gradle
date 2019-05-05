@@ -7,6 +7,7 @@ plugins {
 	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'com.github.sherter.google-java-format' version '0.8'
+	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '9.2.0'
 	id 'nebula.source-jar' version '9.5.0' apply false
@@ -97,6 +98,32 @@ subprojects { subproject ->
 		exclude '**/*AndroidLibs*.class'
 
 		maxParallelForks = Integer.MAX_VALUE
+	}
+
+	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
+	// :com.ibm.wala.cast.test:compileTestJava, which requires JNI support that ECJ does not offer.
+	tasks.withType(JavaCompile) {
+		it.ext.originalToolChain = it.toolChain
+	}
+
+	// Use ECJ instead of default Java compiler if "javaCompiler" project property is set to either
+	// "ecj" or "eclipse" (case-insensitive).  For example, use "-PjavaCompiler=ecj" on Gradle
+	// command line or add "javaCompiler=ecj" to the "gradle.properties" file.
+	final def javaCompilerProperty = subproject.findProperty('javaCompiler')?.toLowerCase()
+	switch (javaCompilerProperty) {
+		case 'ecj':
+		case 'eclipse':
+			apply plugin: 'de.set.ecj'
+			tasks.withType(JavaCompile) {
+				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
+			}
+			break
+		case 'default':
+		case '':
+		case null:
+			break
+		default:
+			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
 	}
 }
 
