@@ -296,8 +296,8 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
    */
   private Iterator<T> iterateExceptionalSuccessors(int number) {
     if (exceptionalEdgeManager.hasAnySuccessor(number)) {
-      List<T> result = new ArrayList<>();
       SimpleIntVector v = exceptionalSuccessors.get(number);
+      List<T> result = new ArrayList<>(v.getMaxIndex() + 1);
       for (int i = 0; i <= v.getMaxIndex(); i++) {
         result.add(getNode(v.get(i)));
       }
