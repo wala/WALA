@@ -374,9 +374,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /** Sets all bits. */
   public final void setAll() {
-    for (int i = 0; i < bits.length; i++) {
-      bits[i] = MASK;
-    }
+    Arrays.fill(bits, MASK);
   }
 
   /** Logically NOT this bit string */

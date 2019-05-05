@@ -450,7 +450,7 @@ public class SSAConversion extends AbstractSSAConversion {
   @Override
   protected void placeNewPhiAt(int value, SSACFG.BasicBlock Y) {
     int[] params = new int[CFG.getPredNodeCount(Y)];
-    for (int i = 0; i < params.length; i++) params[i] = value;
+    Arrays.fill(params, value);
 
     SSAPhiInstruction phi = new SSAPhiInstruction(SSAInstruction.NO_INDEX, value, params);
 
