@@ -778,9 +778,7 @@ public class Analyzer {
 
     stackSizes = new int[instructions.length];
 
-    for (int i = 0; i < stackSizes.length; i++) {
-      stackSizes[i] = -1;
-    }
+    Arrays.fill(stackSizes, -1);
     computeStackSizesAt(stackSizes, 0, 0);
 
     return stackSizes;

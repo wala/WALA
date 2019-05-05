@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.util.Arrays;
+
 public final class FixedSizeBitVector implements Cloneable, java.io.Serializable {
   public static final long serialVersionUID = 33181877746462822L;
 
@@ -60,9 +62,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
 
   /** Sets all bits. */
   public void setAll() {
-    for (int i = 0; i < bits.length; i++) {
-      bits[i] = MASK;
-    }
+    Arrays.fill(bits, MASK);
   }
 
   /**
@@ -81,9 +81,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
 
   /** Clears all bits. */
   public void clearAll() {
-    for (int i = 0; i < bits.length; i++) {
-      bits[i] = 0;
-    }
+    Arrays.fill(bits, 0);
   }
 
   /**

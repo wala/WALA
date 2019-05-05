@@ -12,6 +12,7 @@ package com.ibm.wala.shrikeBT;
 
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an array of Instruction
@@ -465,9 +466,7 @@ public abstract class Decoder implements Constants {
   private void computeSubroutineMap() {
     belongsToSub = new int[code.length];
 
-    for (int i = 0; i < belongsToSub.length; i++) {
-      belongsToSub[i] = -1;
-    }
+    Arrays.fill(belongsToSub, -1);
 
     assignSubroutine(0);
   }
@@ -1009,9 +1008,7 @@ public abstract class Decoder implements Constants {
 
     decoded = new ArrayList<>();
     decodedOffset = new int[code.length];
-    for (int i = 0; i < decodedOffset.length; i++) {
-      decodedOffset[i] = UNSEEN;
-    }
+    Arrays.fill(decodedOffset, UNSEEN);
     decodedSize = new byte[code.length];
 
     decodeAt(0, 0, stackWords);
