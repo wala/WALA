@@ -1,54 +1,57 @@
 #!/bin/bash
 
-body='{
-"request": {
-"branch":"master"
-}}'
+if [ "$TRAVIS_REPO_SLUG" == "wala/WALA" ] &&
+   [ "$TRAVIS_PULL_REQUEST" == "false" ] &&
+   [ "$TRAVIS_BRANCH" == "master" ]; then
 
-curl -s -X POST \
-   -H "Content-Type: application/json" \
-   -H "Accept: application/json" \
-   -H "Travis-API-Version: 3" \
-   -H "Authorization: token $1" \
-   -d "$body" \
-   https://api.travis-ci.org/repo/wala%2FClient/requests
+    body='{ "request": { "branch":"master" } }'
 
-curl -s -X POST \
-   -H "Content-Type: application/json" \
-   -H "Accept: application/json" \
-   -H "Travis-API-Version: 3" \
-   -H "Authorization: token $1" \
-   -d "$body" \
-   https://api.travis-ci.org/repo/wala%2FWALA-Mobile/requests
+    curl -s -X POST \
+         -H "Content-Type: application/json" \
+         -H "Accept: application/json" \
+         -H "Travis-API-Version: 3" \
+         -H "Authorization: token $1" \
+         -d "$body" \
+         https://api.travis-ci.org/repo/wala%2FClient/requests
 
-curl -s -X POST \
-   -H "Content-Type: application/json" \
-   -H "Accept: application/json" \
-   -H "Travis-API-Version: 3" \
-   -H "Authorization: token $1" \
-   -d "$body" \
-   https://api.travis-ci.org/repo/wala%2FMemSAT/requests
+    curl -s -X POST \
+         -H "Content-Type: application/json" \
+         -H "Accept: application/json" \
+         -H "Travis-API-Version: 3" \
+         -H "Authorization: token $1" \
+         -d "$body" \
+         https://api.travis-ci.org/repo/wala%2FWALA-Mobile/requests
 
-curl -s -X POST \
-   -H "Content-Type: application/json" \
-   -H "Accept: application/json" \
-   -H "Travis-API-Version: 3" \
-   -H "Authorization: token $1" \
-   -d "$body" \
-   https://api.travis-ci.org/repo/april1989%2FIncremental_Points_to_Analysis/requests
+    curl -s -X POST \
+         -H "Content-Type: application/json" \
+         -H "Accept: application/json" \
+         -H "Travis-API-Version: 3" \
+         -H "Authorization: token $1" \
+         -d "$body" \
+         https://api.travis-ci.org/repo/wala%2FMemSAT/requests
 
-curl -s -X POST \
-   -H "Content-Type: application/json" \
-   -H "Accept: application/json" \
-   -H "Travis-API-Version: 3" \
-   -H "Authorization: token $1" \
-   -d "$body" \
-   https://api.travis-ci.org/repo/SunghoLee%2FHybriDroid/requests
+    curl -s -X POST \
+         -H "Content-Type: application/json" \
+         -H "Accept: application/json" \
+         -H "Travis-API-Version: 3" \
+         -H "Authorization: token $1" \
+         -d "$body" \
+         https://api.travis-ci.org/repo/april1989%2FIncremental_Points_to_Analysis/requests
 
-curl -s -X POST \
-   -H "Content-Type: application/json" \
-   -H "Accept: application/json" \
-   -H "Travis-API-Version: 3" \
-   -H "Authorization: token $1" \
-   -d "$body" \
-   https://api.travis-ci.org/repo/wala%2FML/requests
+    curl -s -X POST \
+         -H "Content-Type: application/json" \
+         -H "Accept: application/json" \
+         -H "Travis-API-Version: 3" \
+         -H "Authorization: token $1" \
+         -d "$body" \
+         https://api.travis-ci.org/repo/SunghoLee%2FHybriDroid/requests
+
+    curl -s -X POST \
+         -H "Content-Type: application/json" \
+         -H "Accept: application/json" \
+         -H "Travis-API-Version: 3" \
+         -H "Authorization: token $1" \
+         -d "$body" \
+         https://api.travis-ci.org/repo/wala%2FML/requests
+
+fi
