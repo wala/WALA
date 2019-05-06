@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import java.util.Arrays;
+
 /**
  * ShiftInstructions are distinguished from BinaryOpInstructions because most binary operations in
  * the JVM require both parameters to be the same type, but shifts always take one int parameter.
@@ -23,9 +25,7 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
 
   private static ShiftInstruction[] preallocate() {
     ShiftInstruction[] r = new ShiftInstruction[OP_lushr - OP_ishl + 1];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = new ShiftInstruction((short) (i + OP_ishl));
-    }
+    Arrays.setAll(r, i -> new ShiftInstruction((short) (i + OP_ishl)));
     return r;
   }
 

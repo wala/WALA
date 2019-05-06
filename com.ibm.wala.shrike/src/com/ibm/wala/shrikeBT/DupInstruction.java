@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import java.util.Arrays;
+
 /**
  * This class represents dup instructions. There are two kinds of dup instructions, dup and dup_x1:
  *
@@ -31,9 +33,7 @@ public final class DupInstruction extends Instruction {
   private static DupInstruction[] preallocate() {
     DupInstruction[] r = new DupInstruction[9];
 
-    for (int i = 0; i < r.length; i++) {
-      r[i] = new DupInstruction((byte) (i / 3), (byte) (i % 3));
-    }
+    Arrays.setAll(r, i -> new DupInstruction((byte) (i / 3), (byte) (i % 3)));
     return r;
   }
 

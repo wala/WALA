@@ -167,9 +167,7 @@ public class CFGSanitizer {
     } else {
       TypeReference[] exceptions = new TypeReference[c.size()];
       Iterator<TypeReference> it = c.iterator();
-      for (int i = 0; i < exceptions.length; i++) {
-        exceptions[i] = it.next();
-      }
+      Arrays.setAll(exceptions, i -> it.next());
       return exceptions;
     }
   }

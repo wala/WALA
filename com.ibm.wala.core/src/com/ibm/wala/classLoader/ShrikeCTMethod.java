@@ -38,6 +38,7 @@ import com.ibm.wala.types.generics.MethodTypeSignature;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 /** A wrapper around a Shrike object that represents a method */
@@ -483,9 +484,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     int numAnnotatedParams = isStatic() ? getNumberOfParameters() : getNumberOfParameters() - 1;
     @SuppressWarnings("unchecked")
     Collection<Annotation>[] result = new Collection[numAnnotatedParams];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = HashSetFactory.make();
-    }
+    Arrays.setAll(result, i -> HashSetFactory.make());
     try {
       ClassLoaderReference reference = getDeclaringClass().getClassLoader().getReference();
       AnnotationsReader r =

@@ -59,9 +59,7 @@ public final class MethodData {
     ExceptionHandler[][] handlers = new ExceptionHandler[instructions.length][];
     Arrays.fill(handlers, new ExceptionHandler[0]);
     int[] i2b = new int[instructions.length];
-    for (int i = 0; i < i2b.length; i++) {
-      i2b[i] = i;
-    }
+    Arrays.setAll(i2b, i -> i);
     return new MethodData(access, classType, name, signature, instructions, handlers, i2b);
   }
 

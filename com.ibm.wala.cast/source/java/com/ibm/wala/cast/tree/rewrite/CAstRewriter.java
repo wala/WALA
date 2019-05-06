@@ -25,6 +25,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -393,9 +394,7 @@ public abstract class CAstRewriter<
     final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, cfg, rootContext, nodes);
     final CAstNode newDefaults[] = new CAstNode[defaults == null ? 0 : defaults.length];
-    for (int i = 0; i < newDefaults.length; i++) {
-      newDefaults[i] = copyNodes(defaults[i], cfg, rootContext, nodes);
-    }
+    Arrays.setAll(newDefaults, i -> copyNodes(defaults[i], cfg, rootContext, nodes));
 
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;

@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -153,9 +152,7 @@ public class FormalTypeParameter extends Signature {
     }
     Iterator<String> it = sigs.iterator();
     String[] result = new String[sigs.size()];
-    for (int j = 0; j < result.length; j++) {
-      result[j] = it.next();
-    }
+    Arrays.setAll(result, j -> it.next());
     return result;
   }
 

@@ -12,6 +12,7 @@ package com.ibm.wala.shrikeBT;
 
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser;
+import java.util.Arrays;
 
 /** A ConstantInstruction pushes some constant value onto the stack. */
 public abstract class ConstantInstruction extends Instruction {
@@ -134,9 +135,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private static ConstInt[] preallocate() {
       ConstInt[] r = new ConstInt[256];
-      for (int i = 0; i < r.length; i++) {
-        r[i] = new ConstInt(OP_bipush, i - 128);
-      }
+      Arrays.setAll(r, i -> new ConstInt(OP_bipush, i - 128));
       for (int i = -1; i <= 5; i++) {
         r[i + 128] = new ConstInt((short) (i - (-1) + OP_iconst_m1), i);
       }

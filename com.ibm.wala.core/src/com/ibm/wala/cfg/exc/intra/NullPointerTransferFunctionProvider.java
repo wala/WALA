@@ -49,6 +49,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /** @author Juergen Graf &lt;graf@kit.edu&gt; */
 class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
@@ -139,9 +140,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     final ArrayList<UnaryOperator<NullPointerState>> phiTransferFunctions = new ArrayList<>(1);
     for (SSAPhiInstruction phi : Iterator2Iterable.make(node.iteratePhis())) {
       int[] uses = new int[phi.getNumberOfUses()];
-      for (int i = 0; i < uses.length; i++) {
-        uses[i] = phi.getUse(i);
-      }
+      Arrays.setAll(uses, phi::getUse);
       phiTransferFunctions.add(NullPointerState.phiValueMeetFunction(phi.getDef(), uses));
     }
     if (phiTransferFunctions.size() > 0) {
@@ -416,9 +415,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     public void visitPhi(SSAPhiInstruction instruction) {
       noIdentity = true;
       int[] uses = new int[instruction.getNumberOfUses()];
-      for (int i = 0; i < uses.length; i++) {
-        uses[i] = instruction.getUse(i);
-      }
+      Arrays.setAll(uses, instruction::getUse);
 
       transfer1 = NullPointerState.phiValueMeetFunction(instruction.getDef(), uses);
       // should not be used as no alternative path exists

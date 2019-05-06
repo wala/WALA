@@ -53,6 +53,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PrimitiveAssignability;
 import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1244,9 +1245,7 @@ public class ParameterAccessor {
     // ****
     // Implementation starts here
 
-    for (int i = 0; i < params.length; ++i) {
-      params[i] = args.get(i).getNumber();
-    }
+    Arrays.setAll(params, i -> args.get(i).getNumber());
 
     return params;
   }

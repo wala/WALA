@@ -647,9 +647,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // Make fake args that will be passed
     String[] fakeArguments = new String[superCtor.getParameterTypes().length + 1];
     ArrayList<CAstType> paramTypes = new ArrayList<>(superCtor.getParameterTypes().length);
-    for (int i = 0; i < fakeArguments.length; i++)
-      fakeArguments[i] =
-          (i == 0) ? "this" : ("argument" + i); // TODO: change to invalid name and don't use
+    // TODO: change to invalid name and don't use
+    Arrays.setAll(fakeArguments, i -> (i == 0) ? "this" : ("argument" + i));
     // singlevariabledeclaration below
     for (int i = 1; i < fakeArguments.length; i++) {
       // the name

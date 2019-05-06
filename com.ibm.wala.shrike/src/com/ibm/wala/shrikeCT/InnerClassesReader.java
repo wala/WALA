@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeCT;
 
+import java.util.Arrays;
+
 /** This class reads InnerClasses attributes. */
 public final class InnerClassesReader extends AttributeReader {
   /** Build a reader for the attribute 'iter'. */
@@ -25,9 +27,7 @@ public final class InnerClassesReader extends AttributeReader {
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
     int[] r = new int[count * 4];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = cr.getUShort(attr + 8 + i * 2);
-    }
+    Arrays.setAll(r, i -> cr.getUShort(attr + 8 + i * 2));
     return r;
   }
 

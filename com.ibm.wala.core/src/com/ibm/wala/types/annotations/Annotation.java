@@ -98,9 +98,7 @@ public class Annotation {
     if (r != null) {
       AnnotationAttribute[][] allAnnots = r.getAllParameterAnnotations();
       Collection<Annotation>[] result = new Collection[allAnnots.length];
-      for (int i = 0; i < result.length; i++) {
-        result[i] = convertToAnnotations(clRef, allAnnots[i]);
-      }
+      Arrays.setAll(result, i -> convertToAnnotations(clRef, allAnnots[i]));
       return result;
     } else {
       return null;

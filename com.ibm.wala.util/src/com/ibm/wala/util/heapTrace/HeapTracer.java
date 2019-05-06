@@ -118,9 +118,7 @@ public class HeapTracer {
     }
     String[] result = new String[classFileNames.size()];
     Iterator<String> it = classFileNames.iterator();
-    for (int i = 0; i < result.length; i++) {
-      result[i] = it.next();
-    }
+    Arrays.setAll(result, i -> it.next());
     return result;
   }
 
@@ -460,9 +458,7 @@ public class HeapTracer {
       }
       Field[] result = new Field[s.size()];
       Object[] temp = s.toArray();
-      for (int i = 0; i < result.length; i++) {
-        result[i] = (Field) temp[i];
-      }
+      Arrays.setAll(result, i -> (Field) temp[i]);
       allReferenceFieldsCache.put(c, result);
       return result;
     }

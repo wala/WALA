@@ -2960,9 +2960,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       if (original.exposedNames != null) {
         exposedNames = new Pair[original.exposedNames.length];
-        for (int i = 0; i < exposedNames.length; i++) {
-          exposedNames[i] = Pair.make(original.exposedNames[i].fst, original.exposedNames[i].snd);
-        }
+        Arrays.setAll(
+            exposedNames,
+            i -> Pair.make(original.exposedNames[i].fst, original.exposedNames[i].snd));
       } else {
         exposedNames = null;
       }
@@ -3865,9 +3865,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int fun = c.getValue(n.getChild(0));
     CAstNode functionName = n.getChild(1);
     int[] args = new int[n.getChildCount() - 2];
-    for (int i = 0; i < args.length; i++) {
-      args[i] = c.getValue(n.getChild(i + 2));
-    }
+    Arrays.setAll(args, i -> c.getValue(n.getChild(i + 2)));
     doCall(context, n, result, exp, functionName, fun, args);
   }
 

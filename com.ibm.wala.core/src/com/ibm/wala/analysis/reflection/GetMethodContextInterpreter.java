@@ -222,9 +222,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     Iterator<SSAInstruction> it = statements.iterator();
-    for (int i = 0; i < result.length; i++) {
-      result[i] = it.next();
-    }
+    Arrays.setAll(result, i -> it.next());
     return result;
   }
 

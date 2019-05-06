@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import java.util.Arrays;
+
 /** This class represents unary operators where the result is the same type as the operand. */
 public final class UnaryOpInstruction extends Instruction implements IUnaryOpInstruction {
   protected UnaryOpInstruction(short opcode) {
@@ -20,9 +22,7 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
 
   private static UnaryOpInstruction[] preallocate() {
     UnaryOpInstruction[] r = new UnaryOpInstruction[OP_dneg - OP_ineg + 1];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = new UnaryOpInstruction((short) (OP_ineg + i));
-    }
+    Arrays.setAll(r, i -> new UnaryOpInstruction((short) (OP_ineg + i)));
     return r;
   }
 

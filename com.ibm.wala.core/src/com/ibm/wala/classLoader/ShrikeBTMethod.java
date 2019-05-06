@@ -733,11 +733,11 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       ClassLoaderReference loader = getDeclaringClass().getClassLoader().getReference();
 
       TypeReference[] result = new TypeReference[strings.length];
-      for (int i = 0; i < result.length; i++) {
-        result[i] =
-            TypeReference.findOrCreate(
-                loader, TypeName.findOrCreate(ImmutableByteArray.make('L' + strings[i])));
-      }
+      Arrays.setAll(
+          result,
+          i ->
+              TypeReference.findOrCreate(
+                  loader, TypeName.findOrCreate(ImmutableByteArray.make('L' + strings[i]))));
       return result;
     } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
