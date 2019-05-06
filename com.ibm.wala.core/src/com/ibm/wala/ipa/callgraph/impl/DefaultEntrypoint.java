@@ -47,9 +47,7 @@ public class DefaultEntrypoint extends Entrypoint {
 
   protected TypeReference[][] makeParameterTypes(IMethod method) {
     TypeReference[][] result = new TypeReference[method.getNumberOfParameters()][];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = makeParameterTypes(method, i);
-    }
+    Arrays.setAll(result, i -> makeParameterTypes(method, i));
 
     return result;
   }

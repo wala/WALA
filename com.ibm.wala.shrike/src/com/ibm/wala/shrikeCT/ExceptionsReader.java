@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeCT;
 
+import java.util.Arrays;
+
 /** This class reads Exceptions attributes. */
 public final class ExceptionsReader extends AttributeReader {
   /** Build a reader for the attribute 'iter'. */
@@ -25,9 +27,7 @@ public final class ExceptionsReader extends AttributeReader {
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
     int[] r = new int[count];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = cr.getUShort(attr + 8 + i * 2);
-    }
+    Arrays.setAll(r, i -> cr.getUShort(attr + 8 + i * 2));
     return r;
   }
 

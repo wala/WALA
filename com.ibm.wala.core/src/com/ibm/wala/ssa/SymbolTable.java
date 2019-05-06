@@ -41,9 +41,7 @@ public class SymbolTable implements Cloneable {
       throw new IllegalArgumentException("Illegal numberOfParameters: " + numberOfParameters);
     }
     parameters = new int[numberOfParameters];
-    for (int i = 0; i < parameters.length; i++) {
-      parameters[i] = getNewValueNumber();
-    }
+    Arrays.setAll(parameters, i -> getNewValueNumber());
   }
 
   /**

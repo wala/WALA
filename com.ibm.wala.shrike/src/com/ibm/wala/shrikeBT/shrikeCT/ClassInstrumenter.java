@@ -164,9 +164,7 @@ public final class ClassInstrumenter {
     ExceptionHandler[][] handlers = new ExceptionHandler[instructions.length][];
     Arrays.fill(handlers, noHandlers);
     int[] i2b = new int[instructions.length];
-    for (int i = 0; i < i2b.length; i++) {
-      i2b[i] = i;
-    }
+    Arrays.setAll(i2b, i -> i);
     MethodData md = null;
     try {
       md =
@@ -363,9 +361,7 @@ public final class ClassInstrumenter {
       }
     } else if (createFakeLineNumbers) {
       newLineMap = new int[output.getCode().length];
-      for (int i = 0; i < newLineMap.length; i++) {
-        newLineMap[i] = i + fakeLineOffset;
-      }
+      Arrays.setAll(newLineMap, i -> i + fakeLineOffset);
     } else {
       return null;
     }

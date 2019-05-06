@@ -71,7 +71,7 @@ public class CallArgSinkSpec extends SinkSpec {
     if (argNums == null) {
       SSAInvokeInstruction i = (SSAInvokeInstruction) block.getLastInstruction();
       argNums = new int[i.getDeclaredTarget().getNumberOfParameters()];
-      for (int p = 0; p < argNums.length; p++) argNums[p] = p;
+      Arrays.setAll(argNums, p -> p);
     }
     for (int arg : argNums) {
       flowSet.add(new ParameterFlow<>(block, arg, false));

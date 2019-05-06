@@ -472,9 +472,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   protected void populateFieldArrayFromList(List<FieldImpl> L, IField[] A) {
     Iterator<FieldImpl> it = L.iterator();
-    for (int i = 0; i < A.length; i++) {
-      A[i] = it.next();
-    }
+    Arrays.setAll(A, i -> it.next());
   }
 
   /** @return Collection of IClasses, representing the interfaces this class implements. */

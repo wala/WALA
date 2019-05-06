@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.util.Arrays;
 import java.util.TreeSet;
 
 /** An object that creates mutable sparse int sets. */
@@ -43,7 +44,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
   public MutableLongSet parse(String string) throws NumberFormatException {
     int[] backingStore = SparseIntSet.parseIntArray(string);
     long[] bs = new long[backingStore.length];
-    for (int i = 0; i < bs.length; i++) bs[i] = backingStore[i];
+    Arrays.setAll(bs, i -> backingStore[i]);
     return new MutableSparseLongSet(bs);
   }
 

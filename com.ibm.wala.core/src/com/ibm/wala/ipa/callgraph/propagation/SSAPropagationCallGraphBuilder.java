@@ -1785,9 +1785,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // we better always be interested in the receiver
       // assert this.dispatchIndices[0] == 0;
       previousPtrs = new MutableIntSet[dispatchIndices.size()];
-      for (int i = 0; i < previousPtrs.length; i++) {
-        previousPtrs[i] = IntSetUtil.getDefaultIntSetFactory().make();
-      }
+      Arrays.setAll(previousPtrs, i -> IntSetUtil.getDefaultIntSetFactory().make());
     }
 
     private byte cpa(final PointsToSetVariable[] rhs) {

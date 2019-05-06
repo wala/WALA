@@ -19,6 +19,7 @@ import com.ibm.wala.shrikeCT.ClassWriter.Element;
 import com.ibm.wala.shrikeCT.CodeWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableWriter;
+import java.util.Arrays;
 
 /**
  * This is a dumping ground for useful functions that manipulate class info.
@@ -86,9 +87,7 @@ public class CTUtils {
 
       // WRONG: int[] newLineMap = new int[md.getInstructions().length];
       int[] newLineMap = new int[code.getCodeLength()];
-      for (int i = 0; i < newLineMap.length; i++) {
-        newLineMap[i] = i;
-      }
+      Arrays.setAll(newLineMap, i -> i);
       int[] rawTable = LineNumberTableWriter.makeRawTable(newLineMap);
       lines = new LineNumberTableWriter(classWriter);
       lines.setRawTable(rawTable);

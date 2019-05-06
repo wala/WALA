@@ -18,7 +18,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 /** Summary information for a method. */
@@ -126,9 +125,7 @@ public class MethodSummary {
     } else {
       SSAInstruction[] result = new SSAInstruction[statements.size()];
       Iterator<SSAInstruction> it = statements.iterator();
-      for (int i = 0; i < result.length; i++) {
-        result[i] = it.next();
-      }
+      Arrays.setAll(result, i -> it.next());
       return result;
     }
   }

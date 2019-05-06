@@ -35,6 +35,7 @@ import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -144,9 +145,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     try {
       String[] s = reader.get().getInterfaceNames();
       interfaceNames = new ImmutableByteArray[s.length];
-      for (int i = 0; i < interfaceNames.length; i++) {
-        interfaceNames[i] = ImmutableByteArray.make('L' + s[i]);
-      }
+      Arrays.setAll(interfaceNames, i -> ImmutableByteArray.make('L' + s[i]));
     } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
     }

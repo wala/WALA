@@ -12,6 +12,7 @@ package com.ibm.wala.types.generics;
 
 import com.ibm.wala.types.TypeReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -78,9 +79,7 @@ public class TypeArgument extends Signature {
     }
     String[] args = parseForTypeArguments(s);
     TypeArgument[] result = new TypeArgument[args.length];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = makeTypeArgument(args[i]);
-    }
+    Arrays.setAll(result, i -> makeTypeArgument(args[i]));
     return result;
   }
 

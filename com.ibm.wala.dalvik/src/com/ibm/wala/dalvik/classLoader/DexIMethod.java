@@ -105,6 +105,7 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -223,11 +224,11 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     ClassLoaderReference loader = getDeclaringClass().getClassLoader().getReference();
 
     TypeReference[] result = new TypeReference[strings.size()];
-    for (int i = 0; i < result.length; i++) {
-      result[i] =
-          TypeReference.findOrCreate(
-              loader, TypeName.findOrCreate(ImmutableByteArray.make(strings.get(i))));
-    }
+    Arrays.setAll(
+        result,
+        i ->
+            TypeReference.findOrCreate(
+                loader, TypeName.findOrCreate(ImmutableByteArray.make(strings.get(i)))));
     return result;
   }
 

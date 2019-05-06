@@ -36,6 +36,7 @@ public class Detectable {
   }
 
   public void loop(int[] arr) {
+    //noinspection Java8ArraySetAll
     for (int i = 0; i < arr.length; i++) {
       arr[i] = 0;
     }

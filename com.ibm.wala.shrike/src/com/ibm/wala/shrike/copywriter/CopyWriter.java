@@ -39,6 +39,7 @@ import com.ibm.wala.shrikeCT.SourceFileWriter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.zip.ZipEntry;
 
 public class CopyWriter {
@@ -216,9 +217,7 @@ public class CopyWriter {
           ExceptionsReader lr = new ExceptionsReader(iter);
           ExceptionsWriter lw = new ExceptionsWriter(w);
           int[] table = lr.getRawTable();
-          for (int i = 0; i < table.length; i++) {
-            table[i] = transformCPIndex(table[i]);
-          }
+          Arrays.setAll(table, i -> transformCPIndex(table[i]));
           lw.setRawTable(table);
           return lw;
         }

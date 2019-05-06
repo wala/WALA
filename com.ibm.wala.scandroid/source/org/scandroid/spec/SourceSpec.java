@@ -48,6 +48,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import org.scandroid.domain.CodeElement;
@@ -61,9 +62,7 @@ public abstract class SourceSpec implements ISourceSpec {
 
   public static int[] getNewArgNums(int n) {
     int[] newArgNums = new int[n];
-    for (int i = 0; i < n; i++) {
-      newArgNums[i] = i + 1;
-    }
+    Arrays.setAll(newArgNums, i -> i + 1);
     return newArgNums;
   }
 
