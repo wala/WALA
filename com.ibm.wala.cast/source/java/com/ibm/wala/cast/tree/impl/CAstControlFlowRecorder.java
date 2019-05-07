@@ -100,12 +100,14 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   @Override
   public Collection<Object> getTargetLabels(CAstNode from) {
     Object node = CAstToNode.get(from);
-    return labelMap.getOrDefault(node, Collections.emptySet());
+    Set<Object> found = labelMap.get(node);
+    return found == null ? Collections.emptySet() : found;
   }
 
   @Override
   public Set<Object> getSourceNodes(CAstNode to) {
-    return sourceMap.getOrDefault(CAstToNode.get(to), Collections.emptySet());
+    Set<Object> found = sourceMap.get(CAstToNode.get(to));
+    return found == null ? Collections.emptySet() : found;
   }
 
   @Override
