@@ -58,6 +58,7 @@ matrix:
       osx_image: xcode8.3
       env: BUILD_SYSTEM=gradle
       language: java
+      jdk: oraclejdk8
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast
       language: java
