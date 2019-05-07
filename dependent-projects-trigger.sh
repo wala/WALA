@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ "$TRAVIS_REPO_SLUG" == "wala/WALA" ] &&
-   [ "$TRAVIS_PULL_REQUEST" == "false" ] &&
-   [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$TRAVIS_REPO_SLUG" = "wala/WALA" ] &&
+   [ "$TRAVIS_PULL_REQUEST" = "false" ] &&
+   [ "$TRAVIS_BRANCH" = "master" ]; then
 
     body='{ "request": { "branch":"master" } }'
 
