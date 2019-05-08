@@ -50,7 +50,12 @@
    </target>
 	
    <target name="fetchSampleCup" depends="sampleCupPresent" unless="sample.cup.present">
-     <get src="http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup" dest="${plugin.destination}/data/sample.cup" />
+     <delete dir="${temp.folder}"/>
+     <mkdir dir="${temp.folder}"/>
+     <get src="https://repo1.maven.org/maven2/java_cup/java_cup/0.9e/java_cup-0.9e-sources.jar" dest="${temp.folder}/java_cup-0.9e-sources.jar"/>
+     <unzip src="${temp.folder}/java_cup-0.9e-sources.jar" dest="${temp.folder}" />
+     <copy file="${temp.folder}/parser.cup" tofile="${plugin.destination}/data/sample.cup" failonerror="false" overwrite="false"/>
+     <delete dir="${temp.folder}"/>
    </target>
 
    <target name="sampleCupPresent" depends="init">
