@@ -45,11 +45,15 @@ def getRepositoryPassword() {
   return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
+def needsSigning() {
+  return isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives')
+}
+
 afterEvaluate { project ->
   uploadArchives {
     repositories {
       mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        beforeDeployment { MavenDeployment deployment -> if (needsSigning()) signing.signPom(deployment) }
 
         pom.groupId = GROUP
         pom.artifactId = POM_ARTIFACT_ID
@@ -102,7 +106,7 @@ afterEvaluate { project ->
 
   // only sign the archives if we are uploading a release build
   tasks.withType(Sign) {
-    onlyIf { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+    onlyIf { needsSigning() }
   }
 
   if (project.getPlugins().hasPlugin('com.android.application') ||
