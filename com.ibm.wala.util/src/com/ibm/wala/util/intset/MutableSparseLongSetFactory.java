@@ -43,8 +43,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
   @Override
   public MutableLongSet parse(String string) throws NumberFormatException {
     int[] backingStore = SparseIntSet.parseIntArray(string);
-    long[] bs = new long[backingStore.length];
-    Arrays.setAll(bs, i -> backingStore[i]);
+    long[] bs = Arrays.stream(backingStore).asLongStream().toArray();
     return new MutableSparseLongSet(bs);
   }
 
