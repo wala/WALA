@@ -105,10 +105,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
           addFieldToList(staticList, name, b, accessFlags, annotations, typeAnnotations, sig);
         }
       }
-      instanceFields = new IField[instanceList.size()];
-      populateFieldArrayFromList(instanceList, instanceFields);
-      staticFields = new IField[staticList.size()];
-      populateFieldArrayFromList(staticList, staticFields);
+      instanceFields = instanceList.toArray(new IField[0]);
+      staticFields = staticList.toArray(new IField[0]);
 
     } catch (InvalidClassFileException e) {
       e.printStackTrace();

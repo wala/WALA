@@ -126,10 +126,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
       SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
     }
-    SSAInstruction[] result = new SSAInstruction[statements.size()];
-    Iterator<SSAInstruction> it = statements.iterator();
-    Arrays.setAll(result, i -> it.next());
-    return result;
+    return statements.toArray(new SSAInstruction[0]);
   }
 
   private static IR makeIR(IMethod method, Context context) {

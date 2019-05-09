@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -116,10 +115,7 @@ public class HeapTracer {
       File fdir = new File(dir);
       classFileNames.addAll(findClassNames(dir, fdir));
     }
-    String[] result = new String[classFileNames.size()];
-    Iterator<String> it = classFileNames.iterator();
-    Arrays.setAll(result, i -> it.next());
-    return result;
+    return classFileNames.toArray(new String[0]);
   }
 
   /**
@@ -456,9 +452,7 @@ public class HeapTracer {
         }
         klass = klass.getSuperclass();
       }
-      Field[] result = new Field[s.size()];
-      Object[] temp = s.toArray();
-      Arrays.setAll(result, i -> (Field) temp[i]);
+      Field[] result = s.toArray(new Field[0]);
       allReferenceFieldsCache.put(c, result);
       return result;
     }

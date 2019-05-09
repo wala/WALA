@@ -120,14 +120,7 @@ public class MethodSummary {
   }
 
   public SSAInstruction[] getStatements() {
-    if (statements == null) {
-      return NO_STATEMENTS;
-    } else {
-      SSAInstruction[] result = new SSAInstruction[statements.size()];
-      Iterator<SSAInstruction> it = statements.iterator();
-      Arrays.setAll(result, i -> it.next());
-      return result;
-    }
+    return statements == null ? NO_STATEMENTS : statements.toArray(new SSAInstruction[0]);
   }
 
   public Map<Integer, ConstantValue> getConstants() {

@@ -205,10 +205,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
     statements.add(R);
 
-    SSAInstruction[] result = new SSAInstruction[statements.size()];
-    Iterator<SSAInstruction> it = statements.iterator();
-    Arrays.setAll(result, i -> it.next());
-    return result;
+    return statements.toArray(new SSAInstruction[0]);
   }
 
   /** @return an IR that encodes the behavior of the clone method for a given type. */

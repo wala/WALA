@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -468,11 +467,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     inheritCache.put(selector, null);
     return null;
-  }
-
-  protected void populateFieldArrayFromList(List<FieldImpl> L, IField[] A) {
-    Iterator<FieldImpl> it = L.iterator();
-    Arrays.setAll(A, i -> it.next());
   }
 
   /** @return Collection of IClasses, representing the interfaces this class implements. */
