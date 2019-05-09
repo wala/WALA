@@ -153,7 +153,7 @@ public class CFGSanitizer {
   /** What are the exception types which s may throw? */
   private static TypeReference[] computeExceptions(IClassHierarchy cha, IR ir, SSAInstruction s)
       throws InvalidClassFileException {
-    Collection<TypeReference> c = null;
+    final Collection<TypeReference> c;
     Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;
