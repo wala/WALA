@@ -1108,7 +1108,7 @@ public abstract class Decoder implements Constants {
         }
       }
     } else {
-      Arrays.setAll(handlers, i -> noHandlers);
+      Arrays.fill(handlers, noHandlers);
     }
 
     decoded = null;
