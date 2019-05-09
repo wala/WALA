@@ -150,10 +150,7 @@ public class FormalTypeParameter extends Signature {
       sigs.add(s.substring(beginToken, endToken));
       beginToken = endToken;
     }
-    Iterator<String> it = sigs.iterator();
-    String[] result = new String[sigs.size()];
-    Arrays.setAll(result, j -> it.next());
-    return result;
+    return sigs.toArray(new String[0]);
   }
 
   public TypeSignature[] getInterfaceBounds() {
