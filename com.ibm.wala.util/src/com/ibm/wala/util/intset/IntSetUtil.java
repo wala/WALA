@@ -53,9 +53,7 @@ public class IntSetUtil {
   }
 
   public static IntSet make(Set<Integer> x) {
-    int[] vals = new int[x.size()];
-    Iterator<Integer> vs = x.iterator();
-    Arrays.setAll(vals, i -> vs.next());
+    int[] vals = x.stream().mapToInt(Integer::intValue).toArray();
     return make(vals);
   }
 
