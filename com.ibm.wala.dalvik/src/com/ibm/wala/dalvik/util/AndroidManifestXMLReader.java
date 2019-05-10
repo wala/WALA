@@ -133,6 +133,7 @@ public class AndroidManifestXMLReader {
 
   private interface HistoryKey {}
   /** Only includes relevant tags. */
+  @SuppressWarnings("Convert2Lambda")
   private enum Tag implements HistoryKey {
     /** This tag is nat an actual part of the document. */
     ROOT(

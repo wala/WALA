@@ -22,6 +22,7 @@ public class InnerClassLexicalReads {
 	 */
 	public static IntConstant makeIntConstant(int x) {
 		final int y = x * x;
+		//noinspection Convert2Lambda
 		return new IntConstant() {
 //			CAst CONSTRUCTOR Instructions:
 //				1   invokespecial < Source, Ljava/lang/Object, <init>()V > v1 @1 exception:v3[20:9] -> [32:3]

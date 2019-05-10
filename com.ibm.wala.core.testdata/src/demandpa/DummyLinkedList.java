@@ -10,6 +10,7 @@
  */
 package demandpa;
 
+@SuppressWarnings("Convert2Lambda")
 public class DummyLinkedList {
 
   static class Element {
