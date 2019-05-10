@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ibm.wala</groupId>
         <artifactId>WALA</artifactId>
-        <version>1.5.3</version>
+        <version>1.5.4-SNAPSHOT</version>
     </parent>
     <groupId>com.ibm.wala</groupId>
     <artifactId>com.ibm.wala.cast.js.nodejs</artifactId>
