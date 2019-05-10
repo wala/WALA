@@ -46,7 +46,7 @@ def getRepositoryPassword() {
 }
 
 def needsSigning() {
-  return isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives')
+  return isReleaseBuild() && gradle.taskGraph.allTasks.any { it.name.equals('uploadArchives') }
 }
 
 afterEvaluate { project ->
