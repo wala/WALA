@@ -53,7 +53,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -647,14 +646,7 @@ public abstract class JavaIRTests extends IRTests {
       Collections.singletonList(
           new InstructionOperandAssertion(
               "Source#MiniaturList#main#([Ljava/lang/String;)V",
-              new Predicate<SSAInstruction>() {
-
-                @Override
-                public boolean test(SSAInstruction t) {
-                  return (t instanceof SSAAbstractInvokeInstruction)
-                      && t.toString().contains("cons");
-                }
-              },
+              t -> (t instanceof SSAAbstractInvokeInstruction) && t.toString().contains("cons"),
               1,
               new int[] {53, 38, 53, 60}));
 

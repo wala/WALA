@@ -35,8 +35,6 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -121,49 +119,45 @@ public class PaPanel extends JSplitPane {
         });
 
     heapTree.addTreeSelectionListener(
-        new TreeSelectionListener() {
-
-          @Override
-          public void valueChanged(TreeSelectionEvent e) {
-            TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
-            if (null == newLeadSelectionPath) {
-              return;
-            }
-            DefaultMutableTreeNode treeNode =
-                (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
-            Object userObject = treeNode.getUserObject();
-            fullName.setText(userObject.toString());
-            if (userObject instanceof LocalPointerKey) {
-              LocalPointerKey lpk = (LocalPointerKey) userObject;
-              IR ir1 = lpk.getNode().getIR();
-              SSAInstruction def = lpk.getNode().getDU().getDef(lpk.getValueNumber());
-              int pc1 = IrViewer.NA;
-              if (def != null) {
-                SSAInstruction[] instructions = ir1.getInstructions();
-                for (int i = 0; i < instructions.length; i++) {
-                  SSAInstruction instruction = instructions[i];
-                  if (def == instruction) {
-                    pc1 = i;
-                  }
+        e -> {
+          TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
+          if (null == newLeadSelectionPath) {
+            return;
+          }
+          DefaultMutableTreeNode treeNode =
+              (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
+          Object userObject = treeNode.getUserObject();
+          fullName.setText(userObject.toString());
+          if (userObject instanceof LocalPointerKey) {
+            LocalPointerKey lpk = (LocalPointerKey) userObject;
+            IR ir1 = lpk.getNode().getIR();
+            SSAInstruction def = lpk.getNode().getDU().getDef(lpk.getValueNumber());
+            int pc1 = IrViewer.NA;
+            if (def != null) {
+              SSAInstruction[] instructions = ir1.getInstructions();
+              for (int i = 0; i < instructions.length; i++) {
+                SSAInstruction instruction = instructions[i];
+                if (def == instruction) {
+                  pc1 = i;
                 }
               }
-              irViewer.setIRAndPc(ir1, pc1);
-            } else if (userObject instanceof InstanceFieldPointerKey) {
-              InstanceKey ik = ((InstanceFieldPointerKey) userObject).getInstanceKey();
-              if (ik instanceof NormalAllocationInNode) {
-                NormalAllocationInNode normalIk1 = (NormalAllocationInNode) ik;
-                IR ir2 = normalIk1.getNode().getIR();
-                int pc2 = normalIk1.getSite().getProgramCounter();
-                irViewer.setIRAndPc(ir2, pc2);
-              }
-            } else if (userObject instanceof NormalAllocationInNode) {
-              NormalAllocationInNode normalIk2 = (NormalAllocationInNode) userObject;
-              IR ir3 = normalIk2.getNode().getIR();
-              int pc3 = normalIk2.getSite().getProgramCounter();
-              irViewer.setIRAndPc(ir3, pc3);
-            } else if (userObject instanceof CGNode) {
-              irViewer.setIR(((CGNode) userObject).getIR());
             }
+            irViewer.setIRAndPc(ir1, pc1);
+          } else if (userObject instanceof InstanceFieldPointerKey) {
+            InstanceKey ik = ((InstanceFieldPointerKey) userObject).getInstanceKey();
+            if (ik instanceof NormalAllocationInNode) {
+              NormalAllocationInNode normalIk1 = (NormalAllocationInNode) ik;
+              IR ir2 = normalIk1.getNode().getIR();
+              int pc2 = normalIk1.getSite().getProgramCounter();
+              irViewer.setIRAndPc(ir2, pc2);
+            }
+          } else if (userObject instanceof NormalAllocationInNode) {
+            NormalAllocationInNode normalIk2 = (NormalAllocationInNode) userObject;
+            IR ir3 = normalIk2.getNode().getIR();
+            int pc3 = normalIk2.getSite().getProgramCounter();
+            irViewer.setIRAndPc(ir3, pc3);
+          } else if (userObject instanceof CGNode) {
+            irViewer.setIR(((CGNode) userObject).getIR());
           }
         });
   }

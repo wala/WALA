@@ -455,36 +455,32 @@ public class TabulationSolver<T, P, F> {
       final PathEdge<T> edge) {
     if (D5 != null) {
       D5.foreach(
-          new IntSetAction() {
-            @SuppressWarnings("unused")
-            @Override
-            public void act(final int d5) {
-              // [26 - 28]
-              // note that we've modified the algorithm here to account
-              // for potential
-              // multiple entry nodes. Instead of propagating the new
-              // summary edge
-              // with respect to one s_profOf(c), we have to propagate
-              // for each
-              // potential entry node s_p /in s_procof(c)
-              for (final T s_p : entries) {
-                if (DEBUG_LEVEL > 1) {
-                  System.err.println(" do entry " + s_p);
-                }
-                IntSet D3 = getInversePathEdges(s_p, c, d4);
-                if (DEBUG_LEVEL > 1) {
-                  System.err.println("D3" + D3);
-                }
-                if (D3 != null) {
-                  D3.foreach(
-                      d3 -> {
-                        // set curPathEdge to be consistent with its setting in processCall() when
-                        // applying a summary edge
-                        curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
-                        newSummaryEdge(curPathEdge, edge, retSite, d5);
-                        propagate(s_p, d3, retSite, d5);
-                      });
-                }
+          d5 -> {
+            // [26 - 28]
+            // note that we've modified the algorithm here to account
+            // for potential
+            // multiple entry nodes. Instead of propagating the new
+            // summary edge
+            // with respect to one s_profOf(c), we have to propagate
+            // for each
+            // potential entry node s_p /in s_procof(c)
+            for (final T s_p : entries) {
+              if (DEBUG_LEVEL > 1) {
+                System.err.println(" do entry " + s_p);
+              }
+              IntSet D3 = getInversePathEdges(s_p, c, d4);
+              if (DEBUG_LEVEL > 1) {
+                System.err.println("D3" + D3);
+              }
+              if (D3 != null) {
+                D3.foreach(
+                    d3 -> {
+                      // set curPathEdge to be consistent with its setting in processCall() when
+                      // applying a summary edge
+                      curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
+                      newSummaryEdge(curPathEdge, edge, retSite, d5);
+                      propagate(s_p, d3, retSite, d5);
+                    });
               }
             }
           });
