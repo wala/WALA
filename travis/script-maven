@@ -19,5 +19,3 @@ mvn javadoc:aggregate -B -q
   fi
   set -x
 }
-
-./build-maven-jars.py 'install -Dgpg.skip'
