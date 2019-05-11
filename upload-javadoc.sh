@@ -2,7 +2,9 @@
 
 if [ "$TRAVIS_REPO_SLUG" == "wala/WALA" ] &&
    [ "$TRAVIS_PULL_REQUEST" == "false" ] &&
-   [ "$TRAVIS_BRANCH" == "master" ]; then
+   [ "$TRAVIS_BRANCH" == "ms/agg-javadoc-gradle" ]; then
+
+    ./gradlew aggregatedJavadocs
 
     cd $HOME
     git config --global user.email "travis@travis-ci.org"
@@ -11,7 +13,7 @@ if [ "$TRAVIS_REPO_SLUG" == "wala/WALA" ] &&
 
     cd javadoc
     git rm -rf --quiet *
-    cp -Rf $HOME/build/wala/WALA/target/site/apidocs/* .
+    cp -Rf $HOME/build/wala/WALA/build/docs/javadoc/* .
     git add -f .
     git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
     git push > /dev/null

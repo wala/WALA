@@ -1,3 +1,11 @@
 #!/bin/sh -eux
 
 ./deploy_snapshot.sh
+
+{
+  set +x
+  if [ -n "$GH_TOKEN" ]; then
+    bash ./upload-javadoc.sh "$GH_TOKEN"
+  fi
+  set -x
+}
