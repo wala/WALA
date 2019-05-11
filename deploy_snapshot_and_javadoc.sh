@@ -8,7 +8,7 @@
 
 SLUG=wala/WALA
 JDK=oraclejdk8
-BRANCH=master
+BRANCH=ms/agg-javadoc-gradle
 OSNAME=linux
 
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then
@@ -30,11 +30,14 @@ else
 
   ./gradlew aggregatedJavadocs
 
-  cd $HOME
-  git config --global user.email "travis@travis-ci.org"
-  git config --global user.name "travis-ci"
-  git clone --quiet https://${GH_TOKEN}@github.com/wala/javadoc > /dev/null
-
+  {
+    set +x
+    cd $HOME
+    git config --global user.email "travis@travis-ci.org"
+    git config --global user.name "travis-ci"
+    git clone --quiet https://${GH_TOKEN}@github.com/wala/javadoc > /dev/null
+    set -x
+  }
   cd javadoc
   git rm -rf --quiet *
   cp -Rf $HOME/build/wala/WALA/build/docs/javadoc/* .
