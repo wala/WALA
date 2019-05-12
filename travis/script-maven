@@ -9,13 +9,3 @@ xvfb-run mvn clean install -B -q
   fi
   set -x
 }
-
-mvn javadoc:aggregate -B -q
-
-{
-  set +x
-  if [ -n "$GH_TOKEN" ]; then
-    bash ./upload-javascript.sh "$GH_TOKEN"
-  fi
-  set -x
-}
