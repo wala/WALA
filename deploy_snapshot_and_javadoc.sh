@@ -8,7 +8,7 @@
 
 SLUG=wala/WALA
 JDK=oraclejdk8
-BRANCH=master
+BRANCH=ms/agg-javadoc-gradle
 OSNAME=linux
 
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then
@@ -30,21 +30,24 @@ else
 
   ./gradlew aggregatedJavadocs
 
+  cd build/docs/javadoc
+  git init
+  git add .
+  git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
+
   {
     set +x
-    cd $HOME
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name "travis-ci"
-    git clone --quiet https://${GH_TOKEN}@github.com/wala/javadoc > /dev/null
+    git remote add origin "https://${GH_TOKEN}@github.com/wala/javadoc"
     set -x
   }
-  cd javadoc
-  git rm -rf --quiet *
-  cp -Rf $HOME/build/wala/WALA/build/docs/javadoc/* .
-  git add -f .
-  git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
-  git push > /dev/null
+
+  # we can force push here since we don't care about maintaining javadoc history for every commit
+  git push origin master --force
 
   echo -e "Published Javadoc to gh-pages.\n"
+
+  cd $TRAVIS_BUILD_DIR
   
 fi
