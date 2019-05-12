@@ -323,7 +323,9 @@ tasks.register('downloads') {
 	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
 }
 
-task aggregatedJavadocs(type: Javadoc, description: 'Generate javadocs from all child projects as if it was a single project', group: 'Documentation') {
+tasks.register('aggregatedJavadocs', Javadoc) {
+	description = 'Generate javadocs from all child projects as if it was a single project'
+	group = 'Documentation'
 	destinationDir = file("$buildDir/docs/javadoc")
 	title = "$project.name $version API"
 	options.author true
