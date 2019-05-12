@@ -49,5 +49,5 @@ else
 
   echo -e "Published Javadoc to gh-pages.\n"
   )
-  
+
 fi
