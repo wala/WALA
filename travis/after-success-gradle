@@ -1,3 +1,3 @@
 #!/bin/sh -eux
 
-./deploy_snapshot_and_javadoc.sh
+./deploy-snapshot-and-javadoc.sh
