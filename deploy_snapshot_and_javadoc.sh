@@ -8,7 +8,7 @@
 
 SLUG=wala/WALA
 JDK=oraclejdk8
-BRANCH=ms/agg-javadoc-gradle
+BRANCH=master
 OSNAME=linux
 
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then
