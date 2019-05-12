@@ -30,6 +30,7 @@ else
 
   ./gradlew aggregatedJavadocs
 
+  (
   cd build/docs/javadoc
   git init
   git add .
@@ -47,7 +48,6 @@ else
   git push origin master --force
 
   echo -e "Published Javadoc to gh-pages.\n"
-
-  cd $TRAVIS_BUILD_DIR
+  )
   
 fi
