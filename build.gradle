@@ -3,6 +3,10 @@
 //  plugin configuration must precede everything else
 //
 
+buildscript {
+	dependencies.classpath 'commons-io:commons-io:2.4'
+}
+
 plugins {
 	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
@@ -201,6 +205,26 @@ allprojects {
 	tasks.withType(Javadoc).configureEach {
 		options.addBooleanOption('Xdoclint:all,-missing', true)
 		options.quiet()
+	}
+}
+
+
+// shell scripts, provided they have ".sh" extension
+tasks.register('shellCheck', Exec) {
+	description 'Check all shell scripts using shellcheck, if available'
+	group 'lint'
+
+	inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
+	outputs.file "$temporaryDir/log"
+
+	executable 'shellcheck'
+	args inputs.files
+
+	doFirst {
+		final def consoleOutput = System.out
+		final def fileOutput = new FileOutputStream(outputs.files.singleFile)
+		final def bothOutput = new org.apache.tools.ant.util.TeeOutputStream(consoleOutput, fileOutput)
+		standardOutput = errorOutput = bothOutput
 	}
 }
 
