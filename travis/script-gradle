@@ -28,10 +28,9 @@ then
 else
   run_gradle \
     -PjavaCompiler=ecj \
-    verifyGoogleJavaFormat \
+    linters \
     compileJava \
     compileTestJava \
-    lintGradle \
     ${documentation:+$SUBMODULE_PREFIX$documentation}
   run_gradle "$SUBMODULE_PREFIX"build
 fi

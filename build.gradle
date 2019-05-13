@@ -177,9 +177,11 @@ subprojects {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  optional lint checking of Gradle scripts
+//  linters for various specific languages or file formats
 //
 
+
+// Gradle build scripts
 allprojects {
 	apply plugin: 'nebula.lint'
 	gradleLint.alwaysRun = false
@@ -194,16 +196,22 @@ allprojects {
 }
 
 
-////////////////////////////////////////////////////////////////////////
-//
-//  Javadoc linter
-//
-
+// Javadoc
 allprojects {
 	tasks.withType(Javadoc).configureEach {
 		options.addBooleanOption('Xdoclint:all,-missing', true)
 		options.quiet()
 	}
+}
+
+
+tasks.register('linters') {
+	group = 'lint'
+	dependsOn(
+			'lintGradle',
+			'shellCheck',
+			'verifyGoogleJavaFormat',
+	)
 }
 
 
