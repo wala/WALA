@@ -273,22 +273,32 @@ public class LambdaSummaryClass extends SyntheticClass {
   }
 
   private IMethod makeTrampoline() {
+
+    // value numbers:
+    // v1: anon class instance
+    // v2-vn: n-1 FI method args
+    // vn+1 - vn+k+1: k captured vals
+    // for new, vn+k+2 for new instance to be returned
     SSAInstructionFactory insts = getClassLoader().getInstructionFactory();
 
     MethodReference ref = trampoline();
+    int lastFIArgValNum = ref.getNumberOfParameters() + 1;
     MethodSummary summary = new MethodSummary(ref);
 
     int inst = 0;
-    int args = invoke.getNumberOfPositionalParameters(), v = args + 1;
+    int numCapturedValues = invoke.getNumberOfPositionalParameters();
+    int firstCapturedValNum = lastFIArgValNum + 1;
+    int curValNum = firstCapturedValNum;
     // arguments are the captured values, which were stored in the instance fields of the summary
     // class
-    for (int i = 0; i < invoke.getNumberOfPositionalParameters(); i++) {
+    for (int i = 0; i < numCapturedValues; i++) {
       summary.addStatement(
-          insts.GetInstruction(inst++, v++, 1, getField(getCaptureFieldName(i)).getReference()));
+          insts.GetInstruction(
+              inst++, curValNum++, 1, getField(getCaptureFieldName(i)).getReference()));
     }
 
     try {
-      MethodReference callee =
+      MethodReference lambdaBodyCallee =
           MethodReference.findOrCreate(
               ClassLoaderReference.Application,
               getLambdaCalleeClass(),
@@ -297,7 +307,6 @@ public class LambdaSummaryClass extends SyntheticClass {
 
       Dispatch code;
       boolean isNew = false;
-      int new_v = -1;
       int kind = getLambdaCalleeKind();
       switch (kind) {
         case 5:
@@ -320,38 +329,62 @@ public class LambdaSummaryClass extends SyntheticClass {
           throw new Error("unexpected dynamic invoke type " + kind);
       }
 
-      int numParams = getClassHierarchy().resolveMethod(callee).getNumberOfParameters();
+      int numParams = getClassHierarchy().resolveMethod(lambdaBodyCallee).getNumberOfParameters();
+      int offset = isNew ? 1 : 0;
+      if (numParams != (lastFIArgValNum - 1) + numCapturedValues + offset) {
+        throw new RuntimeException(
+            "unexpected # of args "
+                + numParams
+                + " lastFIArgValNum "
+                + lastFIArgValNum
+                + " numCaptured "
+                + numCapturedValues
+                + " "
+                + lambdaBodyCallee);
+      }
       int params[] = new int[numParams];
-      for (int i = isNew ? 1 : 0; i < invoke.getNumberOfPositionalParameters(); i++) {
-        params[i] = args + i + 1;
+      // first, pass the captured
+      for (int i = 0; i < numCapturedValues; i++) {
+        params[i + offset] = firstCapturedValNum + i;
       }
-      int n = 2;
-      for (int i = invoke.getNumberOfPositionalParameters(); i < numParams; i++) {
-        params[i] = n++;
+      for (int i = numCapturedValues; i < numParams - offset; i++) {
+        params[i + offset] = i - numCapturedValues + 2;
       }
-
+      int new_v = -1;
       if (isNew) {
         // v++;
         summary.addStatement(
             insts.NewInstruction(
-                inst++, new_v = n++, NewSiteReference.make(inst, callee.getDeclaringClass())));
+                inst++,
+                new_v = curValNum++,
+                NewSiteReference.make(inst, lambdaBodyCallee.getDeclaringClass())));
         params[0] = new_v;
       }
 
-      if (callee.getReturnType().equals(TypeReference.Void)) {
+      if (lambdaBodyCallee.getReturnType().equals(TypeReference.Void)) {
         summary.addStatement(
             insts.InvokeInstruction(
-                inst++, params, v++, CallSiteReference.make(inst, callee, code), null));
+                inst++,
+                params,
+                curValNum++,
+                CallSiteReference.make(inst, lambdaBodyCallee, code),
+                null));
         if (isNew) {
           summary.addStatement(insts.ReturnInstruction(inst++, new_v, false));
         }
       } else {
-        int ret = v++;
+        int ret = curValNum++;
         summary.addStatement(
             insts.InvokeInstruction(
-                inst++, ret, params, v++, CallSiteReference.make(inst, callee, code), null));
+                inst++,
+                ret,
+                params,
+                curValNum++,
+                CallSiteReference.make(inst, lambdaBodyCallee, code),
+                null));
         summary.addStatement(
-            insts.ReturnInstruction(inst++, ret, callee.getReturnType().isPrimitiveType()));
+            insts.ReturnInstruction(
+                inst++, ret, lambdaBodyCallee.getReturnType().isPrimitiveType()));
       }
     } catch (InvalidClassFileException e) {
       throw new RuntimeException(e);
