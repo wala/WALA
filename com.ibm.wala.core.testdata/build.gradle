@@ -176,10 +176,6 @@ tasks.register('downloadJavaCup', VerifiedDownload) {
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
 }
 
-tasks.register('cleanDownloadJavaCup', Delete) {
-	delete downloadJavaCup
-}
-
 tasks.named('clean') {
 	dependsOn 'cleanDownloadJavaCup'
 }
@@ -195,10 +191,6 @@ tasks.register('collectJLex', Jar) {
 	include 'JLex/'
 	archiveFileName.set 'JLex.jar'
 	destinationDirectory.set projectDir
-}
-
-tasks.register('cleanCollectJLex', Delete) {
-	delete collectJLex
 }
 
 tasks.named('clean') {
@@ -243,11 +235,12 @@ tasks.register('generateHelloHashJar', JavaExec) {
 	args ocamlSource, '-o', jarTarget
 }
 
-tasks.register('cleanGenerateHelloHashJar', Delete) {
-	delete generateHelloHashJar
-	delete fileTree('ocaml') {
-		exclude '*.ml'
-		exclude '.gitignore'
+tasks.named('cleanGenerateHelloHashJar', Delete) {
+	doLast {
+		delete fileTree('ocaml') {
+			exclude '*.ml'
+			exclude '.gitignore'
+		}
 	}
 }
 
@@ -267,10 +260,6 @@ tasks.register('collectTestData', Jar) {
 	from 'classes'
 	includeEmptyDirs false
 	destinationDirectory.set projectDir
-}
-
-tasks.register('cleanCollectTestData', Delete) {
-	delete collectTestData
 }
 
 tasks.named('clean') {
@@ -294,10 +283,6 @@ final def collectTestDataA = tasks.register('collectTestDataA', Jar) {
 		'**/SortingExample.class',
 		'**/A.class',
 		)
-}
-
-tasks.register('cleanColllectTestDataA', Delete) {
-	delete collectTestDataA
 }
 
 tasks.named('clean') {
