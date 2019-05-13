@@ -446,6 +446,7 @@ public class TabulationSolver<T, P, F> {
    * @param D5 facts to propagate to return site
    * @param edge the path edge ending at the exit site of the callee
    */
+  @SuppressWarnings("unused")
   private void propToReturnSite(
       final T c,
       final T[] entries,
