@@ -39,7 +39,7 @@ import java.util.Collection;
  * <p>As a more complex example, when we have lexical scoping, we can have the following IR
  * generated, which passes a local by reference:
  *
- * <p>Example B: <tt> foo: v3 = AddressOf v2; bar(v3) (1) bar(v1): StoreIndirect v1, #7. </tt>
+ * <p>Example B: {@code foo: v3 = AddressOf v2; bar(v3) (1) bar(v1): StoreIndirect v1, #7.}
  *
  * <p>In this case, the instruction (1) potentially defs the locals aliased by v2. The lexical
  * scoping support could/should use this information to rebuild SSA accounting for the fact that (1)
