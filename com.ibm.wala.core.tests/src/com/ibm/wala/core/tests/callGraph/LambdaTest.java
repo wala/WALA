@@ -27,10 +27,13 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import org.junit.Assert;
 import org.junit.Test;
@@ -163,7 +166,7 @@ public class LambdaTest extends WalaTestCase {
 
     System.out.println(cg);
     Assert.assertEquals(
-        "expected C1.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C2")).size());
+        "expected C1.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C1")).size());
     Assert.assertEquals(
         "expected C2.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C2")).size());
     Assert.assertEquals(
@@ -174,5 +177,58 @@ public class LambdaTest extends WalaTestCase {
         "expected C5.target() to *not* be reachable",
         0,
         cg.getNodes(getTargetRef.apply("C5")).size());
+  }
+
+  @Test
+  public void testParamsAndCapture()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "Llambda/ParamsAndCapture");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraph cg =
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+
+    Function<String, MethodReference> getTargetRef =
+        (klass) -> {
+          return MethodReference.findOrCreate(
+              TypeReference.findOrCreate(
+                  ClassLoaderReference.Application, "Llambda/ParamsAndCapture$" + klass),
+              Atom.findOrCreateUnicodeAtom("target"),
+              Descriptor.findOrCreateUTF8("()V"));
+        };
+
+    System.out.println(cg);
+    Consumer<String> checkCalledFromOneSite =
+        (klassName) -> {
+          Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
+          Assert.assertEquals(
+              "expected " + klassName + ".target() to be reachable", 1, nodes.size());
+          CGNode node = nodes.iterator().next();
+          List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
+          Assert.assertEquals(
+              "expected " + klassName + ".target() to be invoked from one calling method",
+              1,
+              predNodes.size());
+          CGNode pred = predNodes.get(0);
+          List<CallSiteReference> sites =
+              Iterator2Collection.toList(cg.getPossibleSites(pred, node));
+          Assert.assertEquals(
+              "expected " + klassName + ".target() to be invoked from one call site",
+              1,
+              sites.size());
+        };
+
+    checkCalledFromOneSite.accept("C1");
+    checkCalledFromOneSite.accept("C2");
+    checkCalledFromOneSite.accept("C3");
+    checkCalledFromOneSite.accept("C4");
+    checkCalledFromOneSite.accept("C5");
   }
 }
