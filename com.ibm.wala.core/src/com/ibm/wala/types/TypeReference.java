@@ -466,7 +466,7 @@ public final class TypeReference implements Serializable {
   }
 
   /**
-   * Find or create the canonical {@link TypeReference} instance for the given pair.
+   * Find or create the canonical {@code TypeReference} instance for the given pair.
    *
    * @param cl the classloader (defining/initiating depending on usage)
    * @param typeName something like "Ljava/util/Arrays"
