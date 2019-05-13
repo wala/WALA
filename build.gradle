@@ -185,7 +185,6 @@ tasks.register('aggregatedJavadocs', Javadoc) {
 	destinationDir = file("$buildDir/docs/javadoc")
 	title = "$project.name $version API"
 	options.author true
-	options.addStringOption 'Xdoclint:none', '-quiet'
 
 	subprojects.each { proj ->
 		proj.tasks.withType(Javadoc).each { javadocTask ->
