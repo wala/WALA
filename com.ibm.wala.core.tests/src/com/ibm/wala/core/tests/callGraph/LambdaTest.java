@@ -196,13 +196,12 @@ public class LambdaTest extends WalaTestCase {
         CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
 
     Function<String, MethodReference> getTargetRef =
-        (klass) -> {
-          return MethodReference.findOrCreate(
-              TypeReference.findOrCreate(
-                  ClassLoaderReference.Application, "Llambda/ParamsAndCapture$" + klass),
-              Atom.findOrCreateUnicodeAtom("target"),
-              Descriptor.findOrCreateUTF8("()V"));
-        };
+        (klass) ->
+            MethodReference.findOrCreate(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Llambda/ParamsAndCapture$" + klass),
+                Atom.findOrCreateUnicodeAtom("target"),
+                Descriptor.findOrCreateUTF8("()V"));
 
     System.out.println(cg);
     Consumer<String> checkCalledFromOneSite =
