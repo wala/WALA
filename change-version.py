@@ -21,7 +21,7 @@ runAndPrint("mvn clean -q")
 
 runAndPrint("find -E ./ -regex \".*(pom|mvncentral)\.xml\" | xargs -n 1 perl -pi -e \'s/" + oldVersion + "/" + newVersion + "/g\'")
 
-runAndPrint("perl -pi -e \'s/" + oldVersion + "/" + newVersion + "/g\' build.gradle gradle.properties")
+runAndPrint("perl -pi -e \'s/" + oldVersion + "/" + newVersion + "/g\' gradle.properties")
 
 oldIsSnapshot = oldVersion.endswith("SNAPSHOT")
 newIsSnapShot = newVersion.endswith("SNAPSHOT")
