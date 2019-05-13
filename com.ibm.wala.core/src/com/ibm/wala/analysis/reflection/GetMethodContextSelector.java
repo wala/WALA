@@ -61,7 +61,7 @@ public class GetMethodContextSelector implements ContextSelector {
    *   <li>the first argument is a constant,
    * </ul>
    *
-   * then return a {@link GetMethodContextSelector}.
+   * then return a {@code GetMethodContextSelector}.
    */
   @Override
   public Context getCalleeTarget(

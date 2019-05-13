@@ -705,7 +705,7 @@ public abstract class IR implements IRView {
     return cfg.getBasicBlock(bb);
   }
 
-  /** @return the {@link SSAOptions} which controlled how this {@link IR} was built */
+  /** @return the {@link SSAOptions} which controlled how this {@code IR} was built */
   public SSAOptions getOptions() {
     return options;
   }
