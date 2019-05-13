@@ -22,7 +22,7 @@ final def downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
 
 tasks.register('extractKawa') {
 	inputs.files downloadKawa.get()
-	outputs.file "$temporaryDir/kawa.jar"
+	outputs.file 'kawa.jar'
 
 	doLast {
 		copy {
@@ -36,6 +36,10 @@ tasks.register('extractKawa') {
 			includeEmptyDirs false
 		}
 	}
+}
+
+tasks.named('clean') {
+	dependsOn 'cleanExtractKawa'
 }
 
 
@@ -64,6 +68,7 @@ class CompileKawaJar extends Jar {
 		compile.dependsOn dependsOn
 		from compile
 		archiveVersion.set null
+		destinationDirectory.set project.projectDir
 	}
 
 	void setArgs(Object... args) {
@@ -111,6 +116,10 @@ tasks.register('buildChessJar', CompileKawaJar) {
 	baseName 'kawachess'
 }
 
+tasks.named('clean') {
+	dependsOn 'cleanBuildChessJar'
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -122,6 +131,10 @@ tasks.register('buildKawaTestJar', CompileKawaJar) {
 	args schemeFile
 	inputs.files schemeFile
 	baseName 'kawatest'
+}
+
+tasks.named('clean') {
+	dependsOn 'cleanBuildKawaTestJar'
 }
 
 
