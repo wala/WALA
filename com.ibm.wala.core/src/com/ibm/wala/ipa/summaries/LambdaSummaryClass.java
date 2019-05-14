@@ -395,7 +395,7 @@ public class LambdaSummaryClass extends SyntheticClass {
     return method;
   }
 
-  private Dispatch getDispatchForMethodHandleKind(int kind) {
+  private static Dispatch getDispatchForMethodHandleKind(int kind) {
     Dispatch code;
     switch (kind) {
       case REF_INVOKEVIRTUAL:
