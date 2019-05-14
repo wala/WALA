@@ -49,6 +49,15 @@ import java.util.Set;
  */
 public class LambdaSummaryClass extends SyntheticClass {
 
+  // Kinds of method handles.
+  // see https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-5.html#jvms-5.4.3.5
+
+  private static final int REF_INVOKEVIRTUAL = 5;
+  private static final int REF_INVOKESTATIC = 6;
+  private static final int REF_INVOKESPECIAL = 7;
+  private static final int REF_NEWINVOKESPECIAL = 8;
+  private static final int REF_INVOKEINTERFACE = 9;
+
   /**
    * Create a lambda summary class and add it to the class hierarchy.
    *
@@ -274,15 +283,17 @@ public class LambdaSummaryClass extends SyntheticClass {
 
   private IMethod makeTrampoline() {
 
-    // value numbers:
-    // v1: anon class instance
-    // v2-vn: n-1 FI method args
-    // vn+1 - vn+k+1: k captured vals
-    // for new, vn+k+2 for new instance to be returned
+    // Assume that the functional interface (FI) method takes n arguments (besides the receiver),
+    // and the lambda captures k variables.
+    // Value numbers v_1 through v_(n+1) are the formal parameters of the trampoline method.
+    // v_1 is the lambda summary class instance, and v_2 - v_(n+1) are the args for the FI method.
+    // we assign value number v_(n+2) - v_(n+k+2) the captured values, via getfield instructions
+    // that read the relevant fields from v_1.
     SSAInstructionFactory insts = getClassLoader().getInstructionFactory();
 
     MethodReference ref = trampoline();
-    int lastFIArgValNum = ref.getNumberOfParameters() + 1;
+    int numFIMethodArgs = ref.getNumberOfParameters();
+    int lastFIArgValNum = numFIMethodArgs + 1;
     MethodSummary summary = new MethodSummary(ref);
 
     int inst = 0;
@@ -305,36 +316,17 @@ public class LambdaSummaryClass extends SyntheticClass {
               getLambdaCalleeName(),
               getLambdaCalleeSignature());
 
-      Dispatch code;
-      boolean isNew = false;
       int kind = getLambdaCalleeKind();
-      switch (kind) {
-        case 5:
-          code = Dispatch.VIRTUAL;
-          break;
-        case 6:
-          code = Dispatch.STATIC;
-          break;
-        case 7:
-          code = Dispatch.SPECIAL;
-          break;
-        case 8:
-          code = Dispatch.SPECIAL;
-          isNew = true;
-          break;
-        case 9:
-          code = Dispatch.INTERFACE;
-          break;
-        default:
-          throw new Error("unexpected dynamic invoke type " + kind);
-      }
+      boolean isNew = kind == REF_NEWINVOKESPECIAL;
+      Dispatch code = getDispatchForMethodHandleKind(kind);
 
-      int numParams = getClassHierarchy().resolveMethod(lambdaBodyCallee).getNumberOfParameters();
-      int offset = isNew ? 1 : 0;
-      if (numParams != (lastFIArgValNum - 1) + numCapturedValues + offset) {
+      int numLambdaCalleeParams =
+          getClassHierarchy().resolveMethod(lambdaBodyCallee).getNumberOfParameters();
+      // new calls (i.e., <init>) take one extra argument at position 0, the newly allocated object
+      if (numLambdaCalleeParams != numFIMethodArgs + numCapturedValues + (isNew ? 1 : 0)) {
         throw new RuntimeException(
             "unexpected # of args "
-                + numParams
+                + numLambdaCalleeParams
                 + " lastFIArgValNum "
                 + lastFIArgValNum
                 + " numCaptured "
@@ -342,23 +334,31 @@ public class LambdaSummaryClass extends SyntheticClass {
                 + " "
                 + lambdaBodyCallee);
       }
-      int params[] = new int[numParams];
-      // first, pass the captured
-      for (int i = 0; i < numCapturedValues; i++) {
-        params[i + offset] = firstCapturedValNum + i;
-      }
-      for (int i = numCapturedValues; i < numParams - offset; i++) {
-        params[i + offset] = i - numCapturedValues + 2;
-      }
-      int new_v = -1;
+      int params[] = new int[numLambdaCalleeParams];
+
+      // if it's a new invocation, holds the value number for the new object
+      int newValNum = -1;
+      int curParamInd = 0;
       if (isNew) {
-        // v++;
+        // first pass the newly allocated object
         summary.addStatement(
             insts.NewInstruction(
                 inst++,
-                new_v = curValNum++,
+                newValNum = curValNum++,
                 NewSiteReference.make(inst, lambdaBodyCallee.getDeclaringClass())));
-        params[0] = new_v;
+        params[curParamInd] = newValNum;
+        curParamInd++;
+      }
+
+      // pass the captured values
+      for (int i = 0; i < numCapturedValues; i++, curParamInd++) {
+        params[curParamInd] = firstCapturedValNum + i;
+      }
+
+      // pass the FI method args
+      for (int i = 0; i < numFIMethodArgs; i++, curParamInd++) {
+        // args start at v_2
+        params[curParamInd] = 2 + i;
       }
 
       if (lambdaBodyCallee.getReturnType().equals(TypeReference.Void)) {
@@ -370,7 +370,8 @@ public class LambdaSummaryClass extends SyntheticClass {
                 CallSiteReference.make(inst, lambdaBodyCallee, code),
                 null));
         if (isNew) {
-          summary.addStatement(insts.ReturnInstruction(inst++, new_v, false));
+          // trampoline needs to return the new object
+          summary.addStatement(insts.ReturnInstruction(inst++, newValNum, false));
         }
       } else {
         int ret = curValNum++;
@@ -392,6 +393,28 @@ public class LambdaSummaryClass extends SyntheticClass {
 
     SummarizedMethod method = new SummarizedMethod(ref, summary, LambdaSummaryClass.this);
     return method;
+  }
+
+  private Dispatch getDispatchForMethodHandleKind(int kind) {
+    Dispatch code;
+    switch (kind) {
+      case REF_INVOKEVIRTUAL:
+        code = Dispatch.VIRTUAL;
+        break;
+      case REF_INVOKESTATIC:
+        code = Dispatch.STATIC;
+        break;
+      case REF_INVOKESPECIAL:
+      case REF_NEWINVOKESPECIAL:
+        code = Dispatch.SPECIAL;
+        break;
+      case REF_INVOKEINTERFACE:
+        code = Dispatch.INTERFACE;
+        break;
+      default:
+        throw new Error("unexpected dynamic invoke type " + kind);
+    }
+    return code;
   }
 
   @Override
