@@ -3,7 +3,6 @@
 *.out
 *.swp
 */bin/
-*/bin/*
 *~
 .classpath
 .metadata/
