@@ -38,8 +38,24 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Synthetic class modeling the anonymous class generated at runtime for a lambda expression. The
+ * anonymous class implements the relevant functional interface. Our synthetic classes contain
+ * instance fields corresponding to the values captured by the lambda. The implementation of the
+ * functional interface method is a "trampoline" that invokes the generated lambda body method with
+ * the captured values stored in the instance fields.
+ *
+ * @see LambdaMethodTargetSelector
+ */
 public class LambdaSummaryClass extends SyntheticClass {
 
+  /**
+   * Create a lambda summary class and add it to the class hierarchy.
+   *
+   * @param caller method containing the relevant invokedynamic instruction
+   * @param inst the invokedynamic instruction
+   * @return the summary class
+   */
   public static LambdaSummaryClass create(CGNode caller, SSAInvokeDynamicInstruction inst) {
     String bootstrapCls =
         caller.getMethod().getDeclaringClass().getName().toString().replace("/", "$").substring(1);
@@ -59,7 +75,7 @@ public class LambdaSummaryClass extends SyntheticClass {
 
   private final Map<Selector, IMethod> methods;
 
-  public LambdaSummaryClass(
+  private LambdaSummaryClass(
       TypeReference T, IClassHierarchy cha, SSAInvokeDynamicInstruction invoke) {
     super(T, cha);
     this.invoke = invoke;
@@ -87,11 +103,13 @@ public class LambdaSummaryClass extends SyntheticClass {
     return getClassHierarchy().getRootClass();
   }
 
+  /** @return singleton set containing the relevant functional interface */
   @Override
   public Collection<? extends IClass> getDirectInterfaces() {
     return Collections.singleton(getClassHierarchy().lookupClass(invoke.getDeclaredResultType()));
   }
 
+  /** @return relevant functional interface and all of its super-interfaces */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     IClass iface = getClassHierarchy().lookupClass(invoke.getDeclaredResultType());
@@ -148,9 +166,10 @@ public class LambdaSummaryClass extends SyntheticClass {
   private Map<Atom, IField> makeFields() {
     Map<Atom, IField> result = HashMapFactory.make();
     for (int i = 0; i < invoke.getNumberOfPositionalParameters(); i++) {
-      final int yuck = i;
+      // needed to reference current value in anonymous class
+      final int index = i;
       result.put(
-          Atom.findOrCreateUnicodeAtom("c" + yuck),
+          getCaptureFieldName(index),
           new IField() {
             @Override
             public IClass getDeclaringClass() {
@@ -159,7 +178,7 @@ public class LambdaSummaryClass extends SyntheticClass {
 
             @Override
             public Atom getName() {
-              return Atom.findOrCreateUnicodeAtom("c" + yuck);
+              return getCaptureFieldName(index);
             }
 
             @Override
@@ -174,7 +193,7 @@ public class LambdaSummaryClass extends SyntheticClass {
 
             @Override
             public TypeReference getFieldTypeReference() {
-              return invoke.getDeclaredTarget().getParameterType(yuck);
+              return invoke.getDeclaredTarget().getParameterType(index);
             }
 
             @Override
@@ -261,9 +280,11 @@ public class LambdaSummaryClass extends SyntheticClass {
 
     int inst = 0;
     int args = invoke.getNumberOfPositionalParameters(), v = args + 1;
+    // arguments are the captured values, which were stored in the instance fields of the summary
+    // class
     for (int i = 0; i < invoke.getNumberOfPositionalParameters(); i++) {
-      Atom f = Atom.findOrCreateUnicodeAtom("c" + i);
-      summary.addStatement(insts.GetInstruction(inst++, v++, 1, getField(f).getReference()));
+      summary.addStatement(
+          insts.GetInstruction(inst++, v++, 1, getField(getCaptureFieldName(i)).getReference()));
     }
 
     try {
@@ -348,5 +369,15 @@ public class LambdaSummaryClass extends SyntheticClass {
   @Override
   public boolean isReferenceType() {
     return true;
+  }
+
+  /**
+   * get the synthetic field name for a value captured by the lambda
+   *
+   * @param i index of the captured value
+   * @return the field name
+   */
+  public static Atom getCaptureFieldName(int i) {
+    return Atom.findOrCreateUnicodeAtom("c" + i);
   }
 }
