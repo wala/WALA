@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
@@ -64,13 +65,18 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
       SSAInvokeDynamicInstruction invoke =
           (SSAInvokeDynamicInstruction) caller.getIR().getCalls(site)[0];
 
-      return methodSummaries.computeIfAbsent(
-          invoke.getBootstrap(),
-          (b) -> {
-            MethodSummary summary = getLambdaFactorySummary(caller, site, target, invoke);
-            return new SummarizedMethod(
-                summary.getMethod(), summary, cha.lookupClass(target.getDeclaringClass()));
-          });
+      try {
+        return methodSummaries.computeIfAbsent(
+            invoke.getBootstrap(),
+            (b) -> {
+              MethodSummary summary = getLambdaFactorySummary(caller, site, target, invoke);
+              return new SummarizedMethod(
+                  summary.getMethod(), summary, cha.lookupClass(target.getDeclaringClass()));
+            });
+      } catch (UnresolvedLambdaBodyException e) {
+        // give up on modeling the lambda
+        return null;
+      }
     } else {
       return base.getCalleeTarget(caller, site, receiver);
     }
