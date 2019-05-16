@@ -56,8 +56,11 @@ public class Util {
     File f = File.createTempFile("convert", ".dex");
     // f.deleteOnExit();
     System.err.println(f);
+    // pass --min-sdk-version 26 to allow for invokedynamic
     com.android.dx.command.Main.main(
-        new String[] {"--dex", "--output=" + f.getAbsolutePath(), jarFile});
+        new String[] {
+          "--dex", "--min-sdk-version", "26", "--output=" + f.getAbsolutePath(), jarFile
+        });
     return f;
   }
 

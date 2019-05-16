@@ -49,6 +49,15 @@ import java.util.Set;
  */
 public class LambdaSummaryClass extends SyntheticClass {
 
+  // Kinds of method handles.
+  // see https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-5.html#jvms-5.4.3.5
+
+  private static final int REF_INVOKEVIRTUAL = 5;
+  private static final int REF_INVOKESTATIC = 6;
+  private static final int REF_INVOKESPECIAL = 7;
+  private static final int REF_NEWINVOKESPECIAL = 8;
+  private static final int REF_INVOKEINTERFACE = 9;
+
   /**
    * Create a lambda summary class and add it to the class hierarchy.
    *
@@ -273,85 +282,110 @@ public class LambdaSummaryClass extends SyntheticClass {
   }
 
   private IMethod makeTrampoline() {
+
+    // Assume that the functional interface (FI) method takes n arguments (besides the receiver),
+    // and the lambda captures k variables.
+    // Value numbers v_1 through v_(n+1) are the formal parameters of the trampoline method.
+    // v_1 is the lambda summary class instance, and v_2 - v_(n+1) are the args for the FI method.
+    // we assign value number v_(n+2) - v_(n+k+2) the captured values, via getfield instructions
+    // that read the relevant fields from v_1.
     SSAInstructionFactory insts = getClassLoader().getInstructionFactory();
 
     MethodReference ref = trampoline();
+    int numFIMethodArgs = ref.getNumberOfParameters();
+    int lastFIArgValNum = numFIMethodArgs + 1;
     MethodSummary summary = new MethodSummary(ref);
 
     int inst = 0;
-    int args = invoke.getNumberOfPositionalParameters(), v = args + 1;
+    int numCapturedValues = invoke.getNumberOfPositionalParameters();
+    int firstCapturedValNum = lastFIArgValNum + 1;
+    int curValNum = firstCapturedValNum;
     // arguments are the captured values, which were stored in the instance fields of the summary
     // class
-    for (int i = 0; i < invoke.getNumberOfPositionalParameters(); i++) {
+    for (int i = 0; i < numCapturedValues; i++) {
       summary.addStatement(
-          insts.GetInstruction(inst++, v++, 1, getField(getCaptureFieldName(i)).getReference()));
+          insts.GetInstruction(
+              inst++, curValNum++, 1, getField(getCaptureFieldName(i)).getReference()));
     }
 
     try {
-      MethodReference callee =
+      MethodReference lambdaBodyCallee =
           MethodReference.findOrCreate(
               ClassLoaderReference.Application,
               getLambdaCalleeClass(),
               getLambdaCalleeName(),
               getLambdaCalleeSignature());
 
-      Dispatch code;
-      boolean isNew = false;
-      int new_v = -1;
       int kind = getLambdaCalleeKind();
-      switch (kind) {
-        case 5:
-          code = Dispatch.VIRTUAL;
-          break;
-        case 6:
-          code = Dispatch.STATIC;
-          break;
-        case 7:
-          code = Dispatch.SPECIAL;
-          break;
-        case 8:
-          code = Dispatch.SPECIAL;
-          isNew = true;
-          break;
-        case 9:
-          code = Dispatch.INTERFACE;
-          break;
-        default:
-          throw new Error("unexpected dynamic invoke type " + kind);
-      }
+      boolean isNew = kind == REF_NEWINVOKESPECIAL;
+      Dispatch code = getDispatchForMethodHandleKind(kind);
 
-      int numParams = getClassHierarchy().resolveMethod(callee).getNumberOfParameters();
-      int params[] = new int[numParams];
-      for (int i = isNew ? 1 : 0; i < invoke.getNumberOfPositionalParameters(); i++) {
-        params[i] = args + i + 1;
+      int numLambdaCalleeParams =
+          getClassHierarchy().resolveMethod(lambdaBodyCallee).getNumberOfParameters();
+      // new calls (i.e., <init>) take one extra argument at position 0, the newly allocated object
+      if (numLambdaCalleeParams != numFIMethodArgs + numCapturedValues + (isNew ? 1 : 0)) {
+        throw new RuntimeException(
+            "unexpected # of args "
+                + numLambdaCalleeParams
+                + " lastFIArgValNum "
+                + lastFIArgValNum
+                + " numCaptured "
+                + numCapturedValues
+                + " "
+                + lambdaBodyCallee);
       }
-      int n = 2;
-      for (int i = invoke.getNumberOfPositionalParameters(); i < numParams; i++) {
-        params[i] = n++;
-      }
+      int params[] = new int[numLambdaCalleeParams];
 
+      // if it's a new invocation, holds the value number for the new object
+      int newValNum = -1;
+      int curParamInd = 0;
       if (isNew) {
-        // v++;
+        // first pass the newly allocated object
         summary.addStatement(
             insts.NewInstruction(
-                inst++, new_v = n++, NewSiteReference.make(inst, callee.getDeclaringClass())));
-        params[0] = new_v;
+                inst++,
+                newValNum = curValNum++,
+                NewSiteReference.make(inst, lambdaBodyCallee.getDeclaringClass())));
+        params[curParamInd] = newValNum;
+        curParamInd++;
       }
 
-      if (callee.getReturnType().equals(TypeReference.Void)) {
+      // pass the captured values
+      for (int i = 0; i < numCapturedValues; i++, curParamInd++) {
+        params[curParamInd] = firstCapturedValNum + i;
+      }
+
+      // pass the FI method args
+      for (int i = 0; i < numFIMethodArgs; i++, curParamInd++) {
+        // args start at v_2
+        params[curParamInd] = 2 + i;
+      }
+
+      if (lambdaBodyCallee.getReturnType().equals(TypeReference.Void)) {
         summary.addStatement(
             insts.InvokeInstruction(
-                inst++, params, v++, CallSiteReference.make(inst, callee, code), null));
+                inst++,
+                params,
+                curValNum++,
+                CallSiteReference.make(inst, lambdaBodyCallee, code),
+                null));
         if (isNew) {
-          summary.addStatement(insts.ReturnInstruction(inst++, new_v, false));
+          // trampoline needs to return the new object
+          summary.addStatement(insts.ReturnInstruction(inst++, newValNum, false));
         }
       } else {
-        int ret = v++;
+        int ret = curValNum++;
         summary.addStatement(
             insts.InvokeInstruction(
-                inst++, ret, params, v++, CallSiteReference.make(inst, callee, code), null));
+                inst++,
+                ret,
+                params,
+                curValNum++,
+                CallSiteReference.make(inst, lambdaBodyCallee, code),
+                null));
         summary.addStatement(
-            insts.ReturnInstruction(inst++, ret, callee.getReturnType().isPrimitiveType()));
+            insts.ReturnInstruction(
+                inst++, ret, lambdaBodyCallee.getReturnType().isPrimitiveType()));
       }
     } catch (InvalidClassFileException e) {
       throw new RuntimeException(e);
@@ -359,6 +393,28 @@ public class LambdaSummaryClass extends SyntheticClass {
 
     SummarizedMethod method = new SummarizedMethod(ref, summary, LambdaSummaryClass.this);
     return method;
+  }
+
+  private static Dispatch getDispatchForMethodHandleKind(int kind) {
+    Dispatch code;
+    switch (kind) {
+      case REF_INVOKEVIRTUAL:
+        code = Dispatch.VIRTUAL;
+        break;
+      case REF_INVOKESTATIC:
+        code = Dispatch.STATIC;
+        break;
+      case REF_INVOKESPECIAL:
+      case REF_NEWINVOKESPECIAL:
+        code = Dispatch.SPECIAL;
+        break;
+      case REF_INVOKEINTERFACE:
+        code = Dispatch.INTERFACE;
+        break;
+      default:
+        throw new Error("unexpected dynamic invoke type " + kind);
+    }
+    return code;
   }
 
   @Override
