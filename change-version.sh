@@ -14,7 +14,7 @@ replace() {
   shift 2
 
   find . \( "$@" \) -print0 |
-    xargs -0 -n 1 sed --in-place --expression="s/$pattern/$replacement/g"
+    xargs -0 -n 1 perl -pi -e "s/$pattern/$replacement/g"
 }
 
 if command -v mvn 2>/dev/null; then
