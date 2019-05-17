@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -35,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Assert;
 
-public abstract class TestCAstTranslator extends WalaTestCase {
+public abstract class TestCAstTranslator {
 
   protected static class TranslatorAssertions {
     private final Set<String> classes = new HashSet<>();

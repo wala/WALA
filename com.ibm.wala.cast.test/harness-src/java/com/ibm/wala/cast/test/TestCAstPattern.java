@@ -15,7 +15,6 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.cast.util.CAstPrinter;
-import com.ibm.wala.core.tests.util.WalaTestCase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestCAstPattern extends WalaTestCase {
+public class TestCAstPattern {
 
   private static final int NAME_ASSERTION_SINGLE = 501;
 
