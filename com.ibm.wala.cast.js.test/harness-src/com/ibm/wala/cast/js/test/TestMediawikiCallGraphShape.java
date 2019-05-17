@@ -21,10 +21,6 @@ import org.junit.Test;
 
 public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestMediawikiCallGraphShape.class);
-  }
-
   private static final Object[][] assertionsForSwineFlu = new Object[][] {};
 
   @Ignore("not terminating; Julian, take a look?")

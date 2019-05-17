@@ -20,10 +20,6 @@ import org.junit.Test;
 
 public abstract class TestPrototypeCallGraphShape extends TestJSCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestPrototypeCallGraphShape.class);
-  }
-
   private static final Object[][] assertionsForPrototype = new Object[][] {};
 
   @Ignore("reminder that this no longer works with correlation tracking")

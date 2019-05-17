@@ -28,7 +28,6 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     super();
   }
 
-  @Override
   @Before
   public void setUp() throws Exception {
     util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());

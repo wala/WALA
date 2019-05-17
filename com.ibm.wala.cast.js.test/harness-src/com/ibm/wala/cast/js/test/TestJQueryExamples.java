@@ -24,10 +24,6 @@ import org.junit.Test;
 
 public class TestJQueryExamples extends TestJSCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestJQueryExamples.class);
-  }
-
   @Before
   public void config() {
     JSSourceExtractor.USE_TEMP_NAME = false;

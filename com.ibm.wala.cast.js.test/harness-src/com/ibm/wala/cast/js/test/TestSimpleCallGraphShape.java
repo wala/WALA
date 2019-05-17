@@ -32,10 +32,6 @@ import org.junit.Test;
 
 public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestSimpleCallGraphShape.class);
-  }
-
   protected static final Object[][] assertionsForArgs =
       new Object[][] {
         new Object[] {ROOT, new String[] {"args.js"}},

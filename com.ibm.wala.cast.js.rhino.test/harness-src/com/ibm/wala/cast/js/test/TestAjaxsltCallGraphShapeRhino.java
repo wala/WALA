@@ -15,11 +15,6 @@ import org.junit.Before;
 
 public class TestAjaxsltCallGraphShapeRhino extends TestAjaxsltCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestAjaxsltCallGraphShapeRhino.class);
-  }
-
-  @Override
   @Before
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(

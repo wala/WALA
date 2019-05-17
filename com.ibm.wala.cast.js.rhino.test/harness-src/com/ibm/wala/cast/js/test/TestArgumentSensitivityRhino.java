@@ -16,7 +16,6 @@ import org.junit.Before;
 
 public class TestArgumentSensitivityRhino extends TestArgumentSensitivity {
 
-  @Override
   @Before
   public void setUp() {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());

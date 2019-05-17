@@ -16,11 +16,6 @@ import org.junit.Before;
 
 public class TestJQueryExamplesRhino extends TestJQueryExamples {
 
-  public static void main(String[] args) {
-    justThisTest(TestJQueryExamplesRhino.class);
-  }
-
-  @Override
   @Before
   public void setUp() {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());

@@ -38,10 +38,6 @@ public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCall
     com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
   }
 
-  public static void main(String[] args) {
-    justThisTest(TestSimplePageCallGraphShapeRhinoJericho.class);
-  }
-
   @Override
   protected IHtmlParser getParser() {
     return new JerichoHtmlParser();

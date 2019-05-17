@@ -47,10 +47,6 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
     com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
   }
 
-  public static void main(String[] args) {
-    justThisTest(TestSimplePageCallGraphShapeRhino.class);
-  }
-
   @Override
   protected abstract IHtmlParser getParser();
 

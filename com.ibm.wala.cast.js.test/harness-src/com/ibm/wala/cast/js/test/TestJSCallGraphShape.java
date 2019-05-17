@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
-import com.ibm.wala.cast.test.TestCallGraphShape;
+import com.ibm.wala.cast.util.test.TestCallGraphShape;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import java.util.Collection;
@@ -19,7 +19,7 @@ import java.util.Collection;
 public abstract class TestJSCallGraphShape extends TestCallGraphShape {
 
   @Override
-  protected Collection<CGNode> getNodes(CallGraph CG, String functionIdentifier) {
+  public Collection<CGNode> getNodes(CallGraph CG, String functionIdentifier) {
     return JSCallGraphUtil.getNodes(CG, functionIdentifier);
   }
 }

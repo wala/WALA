@@ -15,7 +15,6 @@ import org.junit.Before;
 
 public class TestForInLoopHackRhino extends TestForInLoopHack {
 
-  @Override
   @Before
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(

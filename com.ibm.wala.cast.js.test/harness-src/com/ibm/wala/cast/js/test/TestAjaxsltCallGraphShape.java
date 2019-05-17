@@ -20,10 +20,6 @@ import org.junit.Test;
 
 public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestAjaxsltCallGraphShape.class);
-  }
-
   private static final Object[][] assertionsForAjaxslt = new Object[][] {};
 
   @Test

@@ -24,13 +24,8 @@ import org.junit.Test;
 
 public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestSimplePageCallGraphShape.class);
-  }
-
   protected abstract IHtmlParser getParser();
 
-  @Override
   @Before
   public void setUp() {
     JSSourceExtractor.USE_TEMP_NAME = false;

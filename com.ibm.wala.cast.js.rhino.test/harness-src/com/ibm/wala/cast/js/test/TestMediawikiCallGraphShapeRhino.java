@@ -15,11 +15,6 @@ import org.junit.Before;
 
 public class TestMediawikiCallGraphShapeRhino extends TestMediawikiCallGraphShape {
 
-  public static void main(String[] args) {
-    justThisTest(TestMediawikiCallGraphShapeRhino.class);
-  }
-
-  @Override
   @Before
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
