@@ -8,12 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.cast.test;
+package com.ibm.wala.cast.util.test;
 
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
@@ -23,11 +22,10 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import java.util.Collection;
 import java.util.Iterator;
-import org.junit.Assert;
 
-public abstract class TestCallGraphShape extends WalaTestCase {
+public abstract class TestCallGraphShape {
 
-  protected void verifyCFGAssertions(CallGraph CG, Object[][] assertionData) {
+  public void verifyCFGAssertions(CallGraph CG, Object[][] assertionData) {
     for (Object[] dat : assertionData) {
       String function = (String) dat[0];
       for (CGNode N : getNodes(CG, function)) {
@@ -35,16 +33,16 @@ public abstract class TestCallGraphShape extends WalaTestCase {
         SSACFG cfg = N.getIR().getControlFlowGraph();
         for (int i = 0; i < edges.length; i++) {
           SSACFG.BasicBlock bb = cfg.getNode(i);
-          Assert.assertEquals("basic block " + i, edges[i].length, cfg.getSuccNodeCount(bb));
+          assert edges[i].length == cfg.getSuccNodeCount(bb) : "basic block " + i;
           for (int j = 0; j < edges[i].length; j++) {
-            Assert.assertTrue(cfg.hasEdge(bb, cfg.getNode(edges[i][j])));
+            assert cfg.hasEdge(bb, cfg.getNode(edges[i][j]));
           }
         }
       }
     }
   }
 
-  protected void verifySourceAssertions(CallGraph CG, Object[][] assertionData) {
+  public void verifySourceAssertions(CallGraph CG, Object[][] assertionData) {
     for (Object[] dat : assertionData) {
       String function = (String) dat[0];
       for (CGNode N : getNodes(CG, function)) {
@@ -77,9 +75,8 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                   }
                 }
 
-                Assert.assertTrue(
-                    "unexpected location " + pos + " for " + inst + " of " + M + "\n" + N.getIR(),
-                    false);
+                assert false
+                    : "unexpected location " + pos + " for " + inst + " of " + M + "\n" + N.getIR();
               }
             }
           }
@@ -88,7 +85,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     }
   }
 
-  protected static class Name {
+  public static class Name {
     String name;
 
     int instructionIndex;
@@ -102,7 +99,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     }
   }
 
-  protected void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
+  public void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
     for (Object[] element : assertionData) {
       Iterator<CGNode> NS = getNodes(CG, (String) element[0]).iterator();
       while (NS.hasNext()) {
@@ -122,7 +119,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
             }
           }
 
-          Assert.assertTrue("no name " + name.name + " for " + N + "\n" + ir, found);
+          assert found : "no name " + name.name + " for " + N + "\n" + ir;
         }
       }
     }
@@ -144,7 +141,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                 ? getNodes(CG, (String) assertionData[i][0]).iterator()
                 : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
-        Assert.assertTrue("cannot find " + assertionData[i][0], srcs.hasNext());
+        assert srcs.hasNext() : "cannot find " + assertionData[i][0];
 
         boolean checkAbsence = false;
         String targetName = ((String[]) assertionData[i][1])[j];
@@ -159,7 +156,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
             Iterator<CGNode> dsts = getNodes(CG, targetName).iterator();
             if (!checkAbsence) {
-              Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
+              assert dsts.hasNext() : "cannot find " + targetName;
             }
 
             while (dsts.hasNext()) {
@@ -168,8 +165,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                 if (cgNode.equals(dst)) {
                   if (checkAbsence) {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
-                    Assert.assertTrue(
-                        "found edge " + assertionData[i][0] + " ---> " + targetName, false);
+                    assert false : "found edge " + assertionData[i][0] + " ---> " + targetName;
                   } else {
                     System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
                     continue check_target;
@@ -181,8 +177,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
         }
 
         System.err.println("cannot find edge " + assertionData[i][0] + " ---> " + targetName);
-        Assert.assertTrue(
-            "cannot find edge " + assertionData[i][0] + " ---> " + targetName, checkAbsence);
+        assert checkAbsence : "cannot find edge " + assertionData[i][0] + " ---> " + targetName;
       }
     }
   }
@@ -192,21 +187,21 @@ public abstract class TestCallGraphShape extends WalaTestCase {
    * nodes that match the destination description. (Used for checking for false connections in the
    * callgraph)
    */
-  protected void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
+  public void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
     Collection<CGNode> sources = getNodes(CG, sourceDescription);
     Collection<CGNode> dests = getNodes(CG, destDescription);
     for (Object source : sources) {
       for (Object dest : dests) {
         for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes((CGNode) source))) {
           if (n.equals(dest)) {
-            Assert.fail("Found a link from " + source + " to " + dest);
+            assert false : "Found a link from " + source + " to " + dest;
           }
         }
       }
     }
   }
 
-  protected static final Object ROOT =
+  public static final Object ROOT =
       new Object() {
         @Override
         public String toString() {
@@ -214,5 +209,5 @@ public abstract class TestCallGraphShape extends WalaTestCase {
         }
       };
 
-  protected abstract Collection<CGNode> getNodes(CallGraph CG, String functionIdentifier);
+  public abstract Collection<CGNode> getNodes(CallGraph CG, String functionIdentifier);
 }

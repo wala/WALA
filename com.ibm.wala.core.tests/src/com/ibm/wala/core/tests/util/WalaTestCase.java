@@ -26,7 +26,6 @@ import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
 import java.io.IOException;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
 
@@ -95,7 +94,7 @@ public abstract class WalaTestCase {
     for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
       if (s.indexOf(elt) >= 0) {
         File e = new File(s);
-        Assert.assertTrue(elt + " expected to exist", e.exists());
+        assert e.exists() : elt + " expected to exist";
         if (e.isDirectory() && !s.endsWith("/")) {
           s += '/';
         }
@@ -106,11 +105,11 @@ public abstract class WalaTestCase {
         }
       }
     }
-    Assert.assertFalse("cannot find " + elt, result == null);
+    assert result != null : "cannot find " + elt;
     return result.toString();
   }
 
   protected <T> void assertEquals(T x, T y) {
-    Assert.assertEquals("Expecting " + x + ", but got " + y, x, y);
+    assert x == null ? y == null : x.equals(y) : "Expecting " + x + ", but got " + y;
   }
 }

@@ -524,7 +524,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.call = call;
       this.caller = caller;
       this.site = call.getCallSite();
-      this.params = IntSetUtil.toArray(getRelevantParameters(caller, site));
+      MutableIntSet indices = IntSetUtil.makeMutableCopy(getRelevantParameters(caller, site));
+      getRelevantParameters(caller, site)
+          .foreach(
+              (i) -> {
+                if (i >= call.getNumberOfUses()) {
+                  indices.remove(i);
+                }
+              });
+      this.params = IntSetUtil.toArray(indices);
       this.keys = new InstanceKey[params.length];
     }
 
@@ -1158,6 +1166,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
         }
       }
+
+      if (!params.isEmpty() && params.max() >= instruction.getNumberOfUses()) {
+        MutableIntSet trimmedParams = IntSetUtil.makeMutableCopy(params);
+        params.foreach(
+            (i) -> {
+              if (i >= instruction.getNumberOfUses()) trimmedParams.remove(i);
+            });
+        params = trimmedParams;
+      }
+
       if (params.isEmpty()) {
         for (CGNode n : getBuilder().getTargetsForCall(node, instruction, invariantParameters)) {
           getBuilder().processResolvedCall(node, instruction, n, invariantParameters, uniqueCatch);
