@@ -387,7 +387,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
 
     System.err.println("dump of CG");
     for (Map.Entry<String, Integer> e : packages.entrySet()) {
-      System.err.println(e.getValue().intValue() + " " + e.getKey());
+      System.err.println(e + " " + e.getKey());
     }
   }
 }

@@ -31,7 +31,7 @@ public class WelshPowellTest {
           continue;
         }
         Assert.assertTrue(
-            n + " and succ: " + succ + " have same color: " + colors.get(n).intValue(),
+            n + " and succ: " + succ + " have same color: " + colors.get(n),
             colors.get(n).intValue() != colors.get(succ).intValue());
       }
       for (T pred : Iterator2Iterable.make(G.getPredNodes(n))) {
@@ -39,7 +39,7 @@ public class WelshPowellTest {
           continue;
         }
         Assert.assertTrue(
-            n + " and pred: " + pred + " have same color:" + colors.get(n).intValue(),
+            n + " and pred: " + pred + " have same color:" + colors.get(n),
             colors.get(n).intValue() != colors.get(pred).intValue());
       }
     }

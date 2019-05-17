@@ -26,7 +26,9 @@ public abstract class AbstractSourcePosition implements Position {
           && getLastCol() == p.getLastCol()
           && getFirstOffset() == p.getFirstOffset()
           && getLastOffset() == p.getLastOffset()
-          && ((getURL() != null) ? getURL().equals(p.getURL()) : p.getURL() == null);
+          && ((getURL() != null)
+              ? getURL().toString().equals(p.getURL().toString())
+              : p.getURL() == null);
     } else {
       return false;
     }

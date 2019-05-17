@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -116,12 +115,7 @@ public class HeapTracer {
       File fdir = new File(dir);
       classFileNames.addAll(findClassNames(dir, fdir));
     }
-    String[] result = new String[classFileNames.size()];
-    Iterator<String> it = classFileNames.iterator();
-    for (int i = 0; i < result.length; i++) {
-      result[i] = it.next();
-    }
-    return result;
+    return classFileNames.toArray(new String[0]);
   }
 
   /**
@@ -216,10 +210,10 @@ public class HeapTracer {
     } else {
       Integer S = sizeMap.get(c);
       if (S == null) {
-        S = Integer.valueOf(computeSizeOf(o));
+        S = computeSizeOf(o);
         sizeMap.put(c, S);
       }
-      return S.intValue();
+      return S;
     }
   }
 
@@ -367,7 +361,7 @@ public class HeapTracer {
     } else if (status == BAD) {
       return true;
     } else {
-      if (p.getName() != null && p.getName().indexOf("sun.reflect") != -1) {
+      if (p.getName() != null && p.getName().contains("sun.reflect")) {
         if (DEBUG) {
           System.err.println(("making " + p + " a BAD package"));
         }
@@ -428,9 +422,9 @@ public class HeapTracer {
     Class<?> klass = c;
     while (klass != null) {
       Field[] fields = klass.getDeclaredFields();
-      for (int i = 0; i < fields.length; i++) {
-        if (!isStatic(fields[i])) {
-          result.add(fields[i]);
+      for (Field field : fields) {
+        if (!isStatic(field)) {
+          result.add(field);
         }
       }
       klass = klass.getSuperclass();
@@ -448,21 +442,17 @@ public class HeapTracer {
       Class<?> klass = c;
       while (klass != null) {
         Field[] fields = klass.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-          if (!isStatic(fields[i])) {
-            Class<?> fc = fields[i].getType();
+        for (Field field : fields) {
+          if (!isStatic(field)) {
+            Class<?> fc = field.getType();
             if (!fc.isPrimitive()) {
-              s.add(fields[i]);
+              s.add(field);
             }
           }
         }
         klass = klass.getSuperclass();
       }
-      Field[] result = new Field[s.size()];
-      Object[] temp = s.toArray();
-      for (int i = 0; i < result.length; i++) {
-        result[i] = (Field) temp[i];
-      }
+      Field[] result = s.toArray(new Field[0]);
       allReferenceFieldsCache.put(c, result);
       return result;
     }
@@ -495,11 +485,7 @@ public class HeapTracer {
       HeapTracer.Result r = (new HeapTracer(traceStatics)).perform();
       System.err.println("HeapTracer Analysis:");
       System.err.println(r.toString());
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
+    } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -525,11 +511,7 @@ public class HeapTracer {
       System.err.println("HeapTracer Analysis:");
       System.err.println(r.toString());
       return r;
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
+    } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
       e.printStackTrace();
     }
     return null;
@@ -558,14 +540,14 @@ public class HeapTracer {
      */
     public void registerObject(Object key, Object o) {
       Integer I = instanceCount.get(key);
-      int newCount = (I == null) ? 1 : I.intValue() + 1;
-      instanceCount.put(key, Integer.valueOf(newCount));
+      int newCount = (I == null) ? 1 : I + 1;
+      instanceCount.put(key, newCount);
       totalInstances++;
 
       I = sizeCount.get(key);
       int s = sizeOf(o);
-      int newSizeCount = (I == null) ? s : I.intValue() + s;
-      sizeCount.put(key, Integer.valueOf(newSizeCount));
+      int newSizeCount = (I == null) ? s : I + s;
+      sizeCount.put(key, newSizeCount);
       totalSize += s;
     }
 
@@ -579,7 +561,7 @@ public class HeapTracer {
         Integer I = instanceCount.get(key);
         Integer bytes = sizeCount.get(key);
         result.append("  ").append(I).append("   ").append(bytes).append("   ");
-        result.append(bytes.intValue() / I.intValue()).append("   ");
+        result.append(bytes / I).append("   ");
         result.append(key);
         result.append('\n');
       }
@@ -596,7 +578,7 @@ public class HeapTracer {
       public int compare(Object o1, Object o2) {
         Integer i1 = sizeCount.get(o1);
         Integer i2 = sizeCount.get(o2);
-        return i2.intValue() - i1.intValue();
+        return i2 - i1;
       }
     }
 

@@ -21,7 +21,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -55,10 +54,8 @@ public class JUnitEntryPoints {
 
           // return all the tests methods
           Collection<? extends IMethod> methods = klass.getAllMethods();
-          Iterator<? extends IMethod> methodsIt = methods.iterator();
 
-          while (methodsIt.hasNext()) {
-            IMethod m = methodsIt.next();
+          for (IMethod m : methods) {
             if (isJUnitMethod(m)) {
               result.add(new DefaultEntrypoint(m, cha));
               System.out.println("- adding test method as entry point: " + m.getName().toString());

@@ -119,12 +119,11 @@ public class JavaJavaScriptHybridCallGraphBuilder
   @Override
   protected TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph>
       makeRootNodeSelector() {
-    return (language, construct) -> {
-      return getOptions()
-          .getAnalysisScope()
-          .getLanguage(language)
-          .getFakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
-    };
+    return (language, construct) ->
+        getOptions()
+            .getAnalysisScope()
+            .getLanguage(language)
+            .getFakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
   }
 
   @Override

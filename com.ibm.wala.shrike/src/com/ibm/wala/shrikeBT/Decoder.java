@@ -12,6 +12,7 @@ package com.ibm.wala.shrikeBT;
 
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an array of Instruction
@@ -54,16 +55,16 @@ public abstract class Decoder implements Constants {
 
     table[OP_aconst_null] = ConstantInstruction.make(TYPE_null, null);
     for (int i = OP_iconst_m1; i <= OP_iconst_5; i++) {
-      table[i] = ConstantInstruction.make(TYPE_int, Integer.valueOf(i - OP_iconst_m1 - 1));
+      table[i] = ConstantInstruction.make(TYPE_int, i - OP_iconst_m1 - 1);
     }
     for (int i = OP_lconst_0; i <= OP_lconst_1; i++) {
-      table[i] = ConstantInstruction.make(TYPE_long, Long.valueOf(i - OP_lconst_0));
+      table[i] = ConstantInstruction.make(TYPE_long, (long) (i - OP_lconst_0));
     }
     for (int i = OP_fconst_0; i <= OP_fconst_2; i++) {
-      table[i] = ConstantInstruction.make(TYPE_float, Float.valueOf(i - OP_fconst_0));
+      table[i] = ConstantInstruction.make(TYPE_float, (float) (i - OP_fconst_0));
     }
     for (int i = OP_dconst_0; i <= OP_dconst_1; i++) {
-      table[i] = ConstantInstruction.make(TYPE_double, Double.valueOf(i - OP_dconst_0));
+      table[i] = ConstantInstruction.make(TYPE_double, (double) (i - OP_dconst_0));
     }
 
     for (int i = OP_iload_0; i <= OP_aload_3; i++) {
@@ -465,9 +466,7 @@ public abstract class Decoder implements Constants {
   private void computeSubroutineMap() {
     belongsToSub = new int[code.length];
 
-    for (int i = 0; i < belongsToSub.length; i++) {
-      belongsToSub[i] = -1;
-    }
+    Arrays.fill(belongsToSub, -1);
 
     assignSubroutine(0);
   }
@@ -854,10 +853,7 @@ public abstract class Decoder implements Constants {
       } catch (InvalidBytecodeException ex) {
         ex.setIndex(index);
         throw ex;
-      } catch (Error ex) {
-        System.err.println("Fatal error at index " + index);
-        throw ex;
-      } catch (RuntimeException ex) {
+      } catch (Error | RuntimeException ex) {
         System.err.println("Fatal error at index " + index);
         throw ex;
       }
@@ -1012,9 +1008,7 @@ public abstract class Decoder implements Constants {
 
     decoded = new ArrayList<>();
     decodedOffset = new int[code.length];
-    for (int i = 0; i < decodedOffset.length; i++) {
-      decodedOffset[i] = UNSEEN;
-    }
+    Arrays.fill(decodedOffset, UNSEEN);
     decodedSize = new byte[code.length];
 
     decodeAt(0, 0, stackWords);
@@ -1114,9 +1108,7 @@ public abstract class Decoder implements Constants {
         }
       }
     } else {
-      for (int i = 0; i < handlers.length; i++) {
-        handlers[i] = noHandlers;
-      }
+      Arrays.fill(handlers, noHandlers);
     }
 
     decoded = null;

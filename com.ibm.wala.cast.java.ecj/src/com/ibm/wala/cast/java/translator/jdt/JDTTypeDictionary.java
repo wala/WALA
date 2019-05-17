@@ -73,10 +73,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
   public CAstType getCAstTypeForUnion(UnionType astType) {
     List<?> types = astType.types();
     Set<CAstType> elts = HashSetFactory.make();
-    types.forEach(
-        (type) -> {
-          elts.add(getCAstTypeFor(((Type) type).resolveBinding()));
-        });
+    types.forEach((type) -> elts.add(getCAstTypeFor(((Type) type).resolveBinding())));
 
     return new JdtUnionType(elts);
   }

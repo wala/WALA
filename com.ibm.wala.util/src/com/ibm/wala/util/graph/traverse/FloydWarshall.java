@@ -15,6 +15,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -54,10 +55,8 @@ public class FloydWarshall<T> {
   public int[][] allPairsShortestPaths() {
     final int[][] result = new int[G.getNumberOfNodes()][G.getNumberOfNodes()];
 
-    for (int i = 0; i < result.length; i++) {
-      for (int j = 0; j < result[i].length; j++) {
-        result[i][j] = Integer.MAX_VALUE;
-      }
+    for (int[] ints : result) {
+      Arrays.fill(ints, Integer.MAX_VALUE);
     }
 
     for (T from : G) {
@@ -100,10 +99,8 @@ public class FloydWarshall<T> {
       }
 
       private GetPath<T> doit() {
-        for (int i = 0; i < next.length; i++) {
-          for (int j = 0; j < next[i].length; j++) {
-            next[i][j] = -1;
-          }
+        for (int[] ints : next) {
+          Arrays.fill(ints, -1);
         }
 
         final int[][] paths = allPairsShortestPaths();

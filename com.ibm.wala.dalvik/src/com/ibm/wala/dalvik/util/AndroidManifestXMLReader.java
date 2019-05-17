@@ -133,6 +133,7 @@ public class AndroidManifestXMLReader {
 
   private interface HistoryKey {}
   /** Only includes relevant tags. */
+  @SuppressWarnings("Convert2Lambda")
   private enum Tag implements HistoryKey {
     /** This tag is nat an actual part of the document. */
     ROOT(
@@ -163,7 +164,7 @@ public class AndroidManifestXMLReader {
             return EnumSet.of(Tag.ACTIVITY, Tag.SERVICE, Tag.RECEIVER, Tag.PROVIDER, Tag.ALIAS);
           }
         }, // Allowed children..
-        Collections.EMPTY_SET, // Interesting Attributes
+        Collections.emptySet(), // Interesting Attributes
         NoOpItem.class), // Handler
     ACTIVITY(
         "activity",
@@ -223,7 +224,7 @@ public class AndroidManifestXMLReader {
             return EnumSet.of(Tag.ACTION, Tag.DATA);
           }
         },
-        Collections.EMPTY_SET,
+        Collections.emptySet(),
         IntentItem.class),
     ACTION(
         "action",
@@ -238,7 +239,7 @@ public class AndroidManifestXMLReader {
         FinalItem.class), // (new ITagDweller() {
     // public Tag getTag() { return Tag.DATA; }})),
     /** Internal pseudo-tag used for tags in the documents, that have no parser representation. */
-    UNIMPORTANT("UNIMPORTANT", null, Collections.EMPTY_SET, null);
+    UNIMPORTANT("UNIMPORTANT", null, Collections.emptySet(), null);
 
     private final String tagName;
     private final Set<Attr> relevantAttributes;
@@ -333,11 +334,7 @@ public class AndroidManifestXMLReader {
     public static Tag fromString(String tag) {
       tag = tag.toLowerCase();
 
-      if (reverseMap.containsKey(tag)) {
-        return reverseMap.get(tag);
-      } else {
-        return Tag.UNIMPORTANT;
-      }
+      return reverseMap.getOrDefault(tag, Tag.UNIMPORTANT);
     }
 
     /** The Tag appears in the XML File using this name. */

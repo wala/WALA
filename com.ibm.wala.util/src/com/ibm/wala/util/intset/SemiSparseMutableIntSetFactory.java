@@ -28,11 +28,11 @@ public class SemiSparseMutableIntSetFactory
       // XXX not very efficient.
       TreeSet<Integer> T = new TreeSet<>();
       for (int element : set) {
-        T.add(Integer.valueOf(element));
+        T.add(element);
       }
       SemiSparseMutableIntSet result = new SemiSparseMutableIntSet();
       for (Integer I : T) {
-        result.add(I.intValue());
+        result.add(I);
       }
       return result;
     }

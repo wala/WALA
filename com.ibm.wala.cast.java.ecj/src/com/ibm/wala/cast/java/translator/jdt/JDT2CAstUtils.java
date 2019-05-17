@@ -142,9 +142,8 @@ public class JDT2CAstUtils {
    * (including boolean), returns CAstSymbol.NULL_DEFAULT_VALUE.
    */
   public static Object defaultValueForType(ITypeBinding type) {
-    if (isLongOrLess(type)) return Integer.valueOf(0);
-    else if (type.getBinaryName().equals("D") || type.getBinaryName().equals("F"))
-      return new Double(0.0);
+    if (isLongOrLess(type)) return 0;
+    else if (type.getBinaryName().equals("D") || type.getBinaryName().equals("F")) return 0.0;
     else return CAstSymbol.NULL_DEFAULT_VALUE;
   }
 

@@ -56,15 +56,12 @@ public class Runtime {
   private ThreadLocal<String> currentSite = new ThreadLocal<>();
 
   private ThreadLocal<Stack<String>> callStacks =
-      new ThreadLocal<Stack<String>>() {
-
-        @Override
-        protected Stack<String> initialValue() {
-          Stack<String> callStack = new Stack<>();
-          callStack.push("root");
-          return callStack;
-        }
-      };
+      ThreadLocal.withInitial(
+          () -> {
+            Stack<String> callStack = new Stack<>();
+            callStack.push("root");
+            return callStack;
+          });
 
   private Runtime(String fileName, String filterFileName, String policyClassName) {
     try (final FileInputStream in = new FileInputStream(filterFileName)) {
@@ -88,14 +85,7 @@ public class Runtime {
       handleCallback = new DefaultCallbackPolicy();
     }
 
-    java.lang.Runtime.getRuntime()
-        .addShutdownHook(
-            new Thread() {
-              @Override
-              public void run() {
-                endTrace();
-              }
-            });
+    java.lang.Runtime.getRuntime().addShutdownHook(new Thread(Runtime::endTrace));
   }
 
   public static void endTrace() {

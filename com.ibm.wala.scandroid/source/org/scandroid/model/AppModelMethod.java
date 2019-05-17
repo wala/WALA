@@ -153,8 +153,7 @@ public class AppModelMethod {
         insts.SwitchInstruction(
             methodSummary.getNumberOfStatements(), switchValue, defLabel, casesAndLabels));
 
-    for (int i = 0; i < callbackSize; i++) {
-      MethodParams mp = callBacks.get(i);
+    for (MethodParams mp : callBacks) {
       IMethod im = mp.getIMethod();
       IDispatch dispatch;
       if (im.isInit()) {
@@ -193,7 +192,7 @@ public class AppModelMethod {
     nextLocal = nParams + 1;
     symbolTable = HashMapFactory.make(5);
     for (int i = 0; i < nParams; i++) {
-      symbolTable.put("arg" + i, Integer.valueOf(i + 1));
+      symbolTable.put("arg" + i, i + 1);
     }
   }
 

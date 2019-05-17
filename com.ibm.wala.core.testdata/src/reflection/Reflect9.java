@@ -21,6 +21,6 @@ public class Reflect9 {
           NoSuchMethodException {
     Class<?> c = Class.forName("java.lang.Integer");
     Method m = c.getDeclaredMethod("toString", new Class[] {});
-    m.invoke(new Integer(2), new Object[] {});
+    m.invoke(2, new Object[] {});
   }
 }

@@ -441,16 +441,16 @@ public class OfflineDynamicCallGraph {
                 final byte itemType = p.getItemType(i);
                 switch (itemType) {
                   case CONSTANT_Integer:
-                    entries.put(Integer.valueOf(p.getCPInt(i)), i);
+                    entries.put(p.getCPInt(i), i);
                     break;
                   case CONSTANT_Long:
-                    entries.put(Long.valueOf(p.getCPLong(i)), i);
+                    entries.put(p.getCPLong(i), i);
                     break;
                   case CONSTANT_Float:
-                    entries.put(Float.valueOf(p.getCPFloat(i)), i);
+                    entries.put(p.getCPFloat(i), i);
                     break;
                   case CONSTANT_Double:
-                    entries.put(Double.valueOf(p.getCPDouble(i)), i);
+                    entries.put(p.getCPDouble(i), i);
                     break;
                   case CONSTANT_Utf8:
                     entries.put(p.getCPUtf8(i), i);
@@ -468,11 +468,7 @@ public class OfflineDynamicCallGraph {
             }
 
             private int findExistingEntry(Object o) {
-              if (entries.containsKey(o)) {
-                return entries.get(o);
-              } else {
-                return -1;
-              }
+              return entries.getOrDefault(o, -1);
             }
 
             @Override

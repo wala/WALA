@@ -266,7 +266,7 @@ public class AndroidAnalysisContext {
         summaries.putAll(nativeSummaries.getSummaries());
         summaryClasses.addAll(nativeSummaries.getAllocatableClasses());
         if (extraSummary != null) {
-          summaries.put((MethodReference) extraSummary.getMethod(), extraSummary);
+          summaries.put(extraSummary.getMethod(), extraSummary);
         }
 
         MethodTargetSelector ms =

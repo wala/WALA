@@ -256,7 +256,7 @@ public interface TranslatorToCAst {
     @Override
     public void addScopedEntity(CAstNode construct, CAstEntity e) {
       if (!scopedEntities.containsKey(construct)) {
-        scopedEntities.put(construct, new HashSet<CAstEntity>(1));
+        scopedEntities.put(construct, new HashSet<>(1));
       }
       scopedEntities.get(construct).add(e);
     }

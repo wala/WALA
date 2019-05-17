@@ -12,14 +12,12 @@ package com.ibm.wala.ipa.summaries;
 
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 /** Summary information for a method. */
@@ -91,7 +89,7 @@ public class MethodSummary {
    *
    * @return MethodReference
    */
-  public MemberReference getMethod() {
+  public MethodReference getMethod() {
     return method;
   }
 
@@ -122,16 +120,7 @@ public class MethodSummary {
   }
 
   public SSAInstruction[] getStatements() {
-    if (statements == null) {
-      return NO_STATEMENTS;
-    } else {
-      SSAInstruction[] result = new SSAInstruction[statements.size()];
-      Iterator<SSAInstruction> it = statements.iterator();
-      for (int i = 0; i < result.length; i++) {
-        result[i] = it.next();
-      }
-      return result;
-    }
+    return statements == null ? NO_STATEMENTS : statements.toArray(new SSAInstruction[0]);
   }
 
   public Map<Integer, ConstantValue> getConstants() {

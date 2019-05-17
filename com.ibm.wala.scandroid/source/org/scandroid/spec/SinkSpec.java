@@ -60,9 +60,7 @@ public abstract class SinkSpec implements ISinkSpec {
 
   public static int[] getNewArgNums(int n) {
     int[] newArgNums = new int[n];
-    for (int i = 0; i < n; i++) {
-      newArgNums[i] = i + 1;
-    }
+    Arrays.setAll(newArgNums, i -> i + 1);
     return newArgNums;
   }
 

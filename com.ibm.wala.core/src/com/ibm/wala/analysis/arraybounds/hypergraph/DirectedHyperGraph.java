@@ -57,8 +57,8 @@ public class DirectedHyperGraph<T> {
    */
   public void updateNodeEdges() {
     for (final HyperNode<T> node : this.getNodes().values()) {
-      node.setOutEdges(new HashSet<DirectedHyperEdge<T>>());
-      node.setInEdges(new HashSet<DirectedHyperEdge<T>>());
+      node.setOutEdges(new HashSet<>());
+      node.setInEdges(new HashSet<>());
     }
 
     for (final DirectedHyperEdge<T> edge : this.edges) {

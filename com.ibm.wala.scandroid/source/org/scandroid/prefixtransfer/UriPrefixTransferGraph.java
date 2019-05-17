@@ -338,8 +338,8 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 
   @Override
   public void addNode(final InstanceKeySite n) {
-    predecessors.put(n, new HashSet<InstanceKeySite>());
-    successors.put(n, new HashSet<InstanceKeySite>());
+    predecessors.put(n, new HashSet<>());
+    successors.put(n, new HashSet<>());
     nodes.add(n);
   }
 
@@ -370,18 +370,10 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 
   @Override
   public void addEdge(final InstanceKeySite src, final InstanceKeySite dst) {
-    Set<InstanceKeySite> predSet = predecessors.get(dst);
-    if (predSet == null) {
-      predSet = new HashSet<>();
-      predecessors.put(dst, predSet);
-    }
+    Set<InstanceKeySite> predSet = predecessors.computeIfAbsent(dst, k -> new HashSet<>());
     predSet.add(src);
 
-    Set<InstanceKeySite> succSet = successors.get(src);
-    if (succSet == null) {
-      succSet = new HashSet<>();
-      successors.put(src, succSet);
-    }
+    Set<InstanceKeySite> succSet = successors.computeIfAbsent(src, k -> new HashSet<>());
     succSet.add(dst);
   }
 

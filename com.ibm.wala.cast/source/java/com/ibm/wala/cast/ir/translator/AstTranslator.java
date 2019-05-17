@@ -644,20 +644,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public String getFollowingComment(int instructionOffset) throws IOException {
-      return getComment(
-          instructionOffset,
-          (p) -> {
-            return codePositions.tailSet(p);
-          });
+      return getComment(instructionOffset, (p) -> codePositions.tailSet(p));
     }
 
     @Override
     public String getLeadingComment(int instructionOffset) throws IOException {
-      return getComment(
-          instructionOffset,
-          (p) -> {
-            return codePositions.headSet(p);
-          });
+      return getComment(instructionOffset, (p) -> codePositions.headSet(p));
     }
   }
 
@@ -1385,8 +1377,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       init();
 
       if (hasDeadBlocks) {
-        for (int i = 0; i < blocks.size(); i++) {
-          PreBasicBlock src = blocks.get(i);
+        for (PreBasicBlock src : blocks) {
           if (liveBlocks.contains(src)) {
             if (normalEdges.containsKey(src)) {
               for (PreBasicBlock succ : normalEdges.get(src)) {
@@ -1406,25 +1397,22 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       int x = 0;
       instructions = new SSAInstruction[icfg.currentInstruction];
-      for (int i = 0; i < blocks.size(); i++) {
-        if (liveBlocks.contains(blocks.get(i))) {
-          List<SSAInstruction> bi = blocks.get(i).instructions();
-          for (int j = 0; j < bi.size(); j++) {
-            SSAInstruction inst = bi.get(j);
+      for (PreBasicBlock block : blocks) {
+        if (liveBlocks.contains(block)) {
+          List<SSAInstruction> bi = block.instructions();
+          for (SSAInstruction inst : bi) {
             if (inst instanceof SSAGetCaughtExceptionInstruction) {
               SSAGetCaughtExceptionInstruction ci = (SSAGetCaughtExceptionInstruction) inst;
-              if (ci.getBasicBlockNumber() != blocks.get(i).getNumber()) {
-                inst =
-                    insts.GetCaughtExceptionInstruction(
-                        x, blocks.get(i).getNumber(), ci.getException());
+              if (ci.getBasicBlockNumber() != block.getNumber()) {
+                inst = insts.GetCaughtExceptionInstruction(x, block.getNumber(), ci.getException());
               }
             } else if (inst instanceof SSAGotoInstruction) {
-              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(blocks.get(i)).iterator();
+              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               if (succs.hasNext()) {
                 PreBasicBlock target = succs.next();
                 assert !succs.hasNext()
                     : "unexpected successors for block "
-                        + blocks.get(i)
+                        + block
                         + ": "
                         + target
                         + " and "
@@ -1435,7 +1423,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 inst = null;
               }
             } else if (inst instanceof SSAConditionalBranchInstruction) {
-              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(blocks.get(i)).iterator();
+              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               assert succs.hasNext();
               int target;
               int t1 = succs.next().firstIndex;
@@ -1741,23 +1729,23 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public int getConstantValue(Object o) {
       if (o instanceof Integer) {
-        return getUnderlyingSymtab().getConstant(((Integer) o).intValue());
+        return getUnderlyingSymtab().getConstant((Integer) o);
       } else if (o instanceof Float) {
-        return getUnderlyingSymtab().getConstant(((Float) o).floatValue());
+        return getUnderlyingSymtab().getConstant((Float) o);
       } else if (o instanceof Double) {
-        return getUnderlyingSymtab().getConstant(((Double) o).doubleValue());
+        return getUnderlyingSymtab().getConstant((Double) o);
       } else if (o instanceof Long) {
-        return getUnderlyingSymtab().getConstant(((Long) o).longValue());
+        return getUnderlyingSymtab().getConstant((Long) o);
       } else if (o instanceof String) {
         return getUnderlyingSymtab().getConstant((String) o);
       } else if (o instanceof Boolean) {
         return getUnderlyingSymtab().getConstant((Boolean) o);
       } else if (o instanceof Character) {
-        return getUnderlyingSymtab().getConstant(((Character) o).charValue());
+        return getUnderlyingSymtab().getConstant((Character) o);
       } else if (o instanceof Byte) {
-        return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
+        return getUnderlyingSymtab().getConstant((Byte) o);
       } else if (o instanceof Short) {
-        return getUnderlyingSymtab().getConstant(((Short) o).shortValue());
+        return getUnderlyingSymtab().getConstant((Short) o);
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -2869,13 +2857,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public final int setValue(CAstNode n, int v) {
-      results.put(n, Integer.valueOf(v));
+      results.put(n, v);
       return v;
     }
 
     @Override
     public final int getValue(CAstNode n) {
-      if (results.containsKey(n)) return results.get(n).intValue();
+      if (results.containsKey(n)) return results.get(n);
       else {
         if (DEBUG) {
           System.err.println(("no value for " + n.getKind()));
@@ -2972,9 +2960,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       if (original.exposedNames != null) {
         exposedNames = new Pair[original.exposedNames.length];
-        for (int i = 0; i < exposedNames.length; i++) {
-          exposedNames[i] = Pair.make(original.exposedNames[i].fst, original.exposedNames[i].snd);
-        }
+        Arrays.setAll(
+            exposedNames,
+            i -> Pair.make(original.exposedNames[i].fst, original.exposedNames[i].snd));
       } else {
         exposedNames = null;
       }
@@ -3515,9 +3503,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       Set<String> names = entity2ExposedNames.get(n);
       if (names != null) {
         names.forEach(
-            (String nm) -> {
-              functionContext.currentScope().declare(new CAstSymbolImpl(nm, CAstType.DYNAMIC));
-            });
+            (String nm) ->
+                functionContext.currentScope().declare(new CAstSymbolImpl(nm, CAstType.DYNAMIC)));
       }
     }
     // entry block
@@ -3783,7 +3770,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 translateConditionOpcode(CAstOperator.OP_EQ),
                 null,
                 c.getValue(n.getChild(0)),
-                context.currentScope().getConstantValue(Integer.valueOf(0)),
+                context.currentScope().getConstantValue(0),
                 -1));
     PreBasicBlock branchB = context.cfg().getCurrentBlock();
 
@@ -3878,9 +3865,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int fun = c.getValue(n.getChild(0));
     CAstNode functionName = n.getChild(1);
     int[] args = new int[n.getChildCount() - 2];
-    for (int i = 0; i < args.length; i++) {
-      args[i] = c.getValue(n.getChild(i + 2));
-    }
+    Arrays.setAll(args, i -> c.getValue(n.getChild(i + 2)));
     doCall(context, n, result, exp, functionName, fun, args);
   }
 
@@ -4130,7 +4115,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                     translateConditionOpcode(CAstOperator.OP_NE),
                     null,
                     c.getValue(arg),
-                    context.currentScope().getConstantValue(Integer.valueOf(0)),
+                    context.currentScope().getConstantValue(0),
                     -1));
         context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
         break;
@@ -4223,7 +4208,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 translateConditionOpcode(CAstOperator.OP_EQ),
                 null,
                 c.getValue(l),
-                context.currentScope().getConstantValue(Integer.valueOf(0)),
+                context.currentScope().getConstantValue(0),
                 -1));
     context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(l));
     PreBasicBlock srcB = context.cfg().getCurrentBlock();
@@ -4389,7 +4374,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         context,
         c.getValue(n.getChild(0)),
         n,
-        new int[] {context.currentScope().getConstantValue(Integer.valueOf(i - 1))},
+        new int[] {context.currentScope().getConstantValue(i - 1)},
         c.getValue(n.getChild(i)));
   }
 
@@ -4907,12 +4892,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   private void setType(WalkContext context, CAstNode n, CAstType caughtType) {
     if (caughtType instanceof CAstType.Union) {
-      ((CAstType.Union) caughtType)
-          .getConstituents()
-          .forEach(
-              (type) -> {
-                setType(context, n, type);
-              });
+      ((CAstType.Union) caughtType).getConstituents().forEach((type) -> setType(context, n, type));
     } else {
       TypeReference caughtRef = makeType(caughtType);
       context.setCatchType(n, caughtRef);

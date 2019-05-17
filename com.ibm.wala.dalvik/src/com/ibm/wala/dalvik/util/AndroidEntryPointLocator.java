@@ -60,7 +60,6 @@ import com.ibm.wala.util.config.SetOfClasses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -205,7 +204,7 @@ public final class AndroidEntryPointLocator {
     }
 
     List<AndroidEntryPoint> ret = new ArrayList<>(entryPoints);
-    Collections.sort(ret, new AndroidEntryPoint.ExecutionOrderComperator());
+    ret.sort(new AndroidEntryPoint.ExecutionOrderComperator());
     mon.done();
     return ret;
   }
@@ -513,7 +512,7 @@ public final class AndroidEntryPointLocator {
       LoaderCB.populate(possibleEntryPoints);
     }
 
-    Collections.sort(possibleEntryPoints, new AndroidPossibleEntryPoint.ExecutionOrderComperator());
+    possibleEntryPoints.sort(new AndroidPossibleEntryPoint.ExecutionOrderComperator());
   }
 
   public static void debugDumpEntryPoints(List<AndroidPossibleEntryPoint> eps) {

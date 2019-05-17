@@ -44,7 +44,6 @@ import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
-import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -171,7 +170,7 @@ public class TestAgainstSimpleDriver {
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(
-            cg, builder, fam, cha, options, new DummyStateMachine.Factory<IFlowLabel>());
+            cg, builder, fam, cha, options, new DummyStateMachine.Factory<>());
     // fullDemandPointsTo.setCGRefinePolicy(new AlwaysRefineCGPolicy());
     // fullDemandPointsTo.setFieldRefinePolicy(new AlwaysRefineFieldsPolicy());
     fullDemandPointsTo.setRefinementPolicyFactory(

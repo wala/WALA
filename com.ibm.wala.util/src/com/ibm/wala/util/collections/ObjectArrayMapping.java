@@ -35,7 +35,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     }
     this.array = array;
     for (int i = 0; i < array.length; i++) {
-      map.put(array[i], Integer.valueOf(i));
+      map.put(array[i], i);
     }
   }
 
@@ -53,7 +53,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     if (map.get(o) == null) {
       return -1;
     }
-    return map.get(o).intValue();
+    return map.get(o);
   }
 
   @Override

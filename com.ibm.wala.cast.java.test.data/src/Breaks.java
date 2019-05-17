@@ -27,8 +27,8 @@ public class Breaks {
     if (objectClass != null) {
       String[] classes = reference.getClasses();
       int size = classes.length;
-      for (int i = 0; i < size; i++) {    
-	if (classes[i] == objectClass)
+      for (String aClass : classes) {
+        if (aClass == objectClass)
 	  break objectClassCheck;
       }
       return;

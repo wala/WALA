@@ -54,6 +54,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /** JUnit tests for some primitive operations. */
+@SuppressWarnings("UnnecessaryBoxing")
 public class PrimitivesTest extends WalaTestCase {
 
   /** Test the MutableSparseIntSet implementation */
@@ -694,7 +695,7 @@ public class PrimitivesTest extends WalaTestCase {
     // path should be 8, 6, 4, 2, 0
     System.err.println("Path is " + p);
     for (int i = 0; i < p.size(); i++) {
-      Assert.assertTrue((p.get(i)).intValue() == new int[] {8, 6, 4, 2, 0}[i]);
+      Assert.assertTrue(p.get(i) == new int[] {8, 6, 4, 2, 0}[i]);
     }
   }
 

@@ -60,6 +60,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.util.strings.StringStuff;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -279,13 +280,10 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
               "Canot find the constructor of " + this.abstractAndroidModel);
         }
         return ctor.newInstance(body, insts, paramManager, entryPoints);
-      } catch (java.lang.InstantiationException e) {
-        throw new IllegalStateException(e);
-      } catch (java.lang.IllegalAccessException e) {
-        throw new IllegalStateException(e);
-      } catch (java.lang.reflect.InvocationTargetException e) {
-        throw new IllegalStateException(e);
-      } catch (java.lang.NoSuchMethodException e) {
+      } catch (InstantiationException
+          | NoSuchMethodException
+          | InvocationTargetException
+          | IllegalAccessException e) {
         throw new IllegalStateException(e);
       }
     }

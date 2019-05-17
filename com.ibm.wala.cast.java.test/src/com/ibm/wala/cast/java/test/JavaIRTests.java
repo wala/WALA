@@ -51,10 +51,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -395,8 +393,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testCastFromNull() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true, null);
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
   }
 
   @Test
@@ -429,30 +426,20 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testNullArrayInit() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true, null);
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
   }
 
   @Test
   public void testInnerClassA() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
-        runTest(
-            singleTestSrc(),
-            rtJar,
-            simpleTestEntryPoint(),
-            new ArrayList<IRAssertion>(),
-            true,
-            null);
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
     CallGraph cg = x.fst;
     PointerAnalysis<? extends InstanceKey> pa = x.snd;
 
-    Iterator<CGNode> iter = cg.iterator();
-    while (iter.hasNext()) {
-      CGNode n = iter.next();
-
+    for (CGNode n : cg) {
       // assume in the test we have one enclosing instruction for each of the methods here.
       String methodSigs[] = {
         "InnerClassA$AB.getA_X_from_AB()I",
@@ -484,8 +471,9 @@ public abstract class JavaIRTests extends IRTests {
           for (SSAInstruction instr : n.getIR().getInstructions()) {
             if (instr instanceof EnclosingObjectReference) {
               StringBuilder allIksBuilder = new StringBuilder();
-              for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef())))
+              for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef()))) {
                 allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+              }
               // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
 
               final String allIks = allIksBuilder.toString();
@@ -510,29 +498,22 @@ public abstract class JavaIRTests extends IRTests {
   @Test
   public void testInnerClassSuper() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
-        runTest(
-            singleTestSrc(),
-            rtJar,
-            simpleTestEntryPoint(),
-            new ArrayList<IRAssertion>(),
-            true,
-            null);
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
     CallGraph cg = x.fst;
     PointerAnalysis<? extends InstanceKey> pa = x.snd;
 
-    Iterator<CGNode> iter = cg.iterator();
-    while (iter.hasNext()) {
-      CGNode n = iter.next();
+    for (CGNode n : cg) {
       if (n.getMethod().getSignature().equals("LInnerClassSuper$SuperOuter.test()V")) {
         // find enclosing instruction
         for (SSAInstruction instr : n.getIR().getInstructions()) {
           if (instr instanceof EnclosingObjectReference) {
             StringBuilder allIksBuilder = new StringBuilder();
-            for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef())))
+            for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef()))) {
               allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+            }
             final String allIks = allIksBuilder.toString();
             Assert.assertTrue(
                 "assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n",
@@ -624,13 +605,7 @@ public abstract class JavaIRTests extends IRTests {
   public void testSwitch1() {
     try {
       runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
-    } catch (IllegalArgumentException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (CancelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (IllegalArgumentException | IOException | CancelException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
@@ -668,17 +643,10 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   private static final List<IRAssertion> MLAssertions =
-      Arrays.asList(
+      Collections.singletonList(
           new InstructionOperandAssertion(
               "Source#MiniaturList#main#([Ljava/lang/String;)V",
-              new Predicate<SSAInstruction>() {
-
-                @Override
-                public boolean test(SSAInstruction t) {
-                  return (t instanceof SSAAbstractInvokeInstruction)
-                      && t.toString().contains("cons");
-                }
-              },
+              t -> (t instanceof SSAAbstractInvokeInstruction) && t.toString().contains("cons"),
               1,
               new int[] {53, 38, 53, 60}));
 

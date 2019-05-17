@@ -453,8 +453,7 @@ public class Analyzer {
     /** Print the path to the given stream, if there is one. */
     public void printPath(Writer w) throws IOException {
       if (path != null) {
-        for (int i = 0; i < path.size(); i++) {
-          PathElement elem = path.get(i);
+        for (PathElement elem : path) {
           String[] stack = elem.stack;
           String[] locals = elem.locals;
           w.write("Offset " + elem.index + ": [");
@@ -779,9 +778,7 @@ public class Analyzer {
 
     stackSizes = new int[instructions.length];
 
-    for (int i = 0; i < stackSizes.length; i++) {
-      stackSizes[i] = -1;
-    }
+    Arrays.fill(stackSizes, -1);
     computeStackSizesAt(stackSizes, 0, 0);
 
     return stackSizes;
@@ -834,7 +831,7 @@ public class Analyzer {
   public final void computeTypes(TypeVisitor v, BitSet makeTypesAt, boolean wantPath)
       throws FailureException {
     initTypeInfo();
-    computeTypes(0, v, makeTypesAt, wantPath ? new ArrayList<PathElement>() : null);
+    computeTypes(0, v, makeTypesAt, wantPath ? new ArrayList<>() : null);
   }
 
   public abstract class TypeVisitor extends IInstruction.Visitor {

@@ -53,6 +53,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PrimitiveAssignability;
 import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1244,9 +1245,7 @@ public class ParameterAccessor {
     // ****
     // Implementation starts here
 
-    for (int i = 0; i < params.length; ++i) {
-      params[i] = args.get(i).getNumber();
-    }
+    Arrays.setAll(params, i -> args.get(i).getNumber());
 
     return params;
   }
@@ -1506,7 +1505,6 @@ public class ParameterAccessor {
    * @param cha Optional class hierarchy for testing assignability
    * @return the parameter-list for the call of toMethod
    */
-  @SuppressWarnings("unchecked") // TODO: Can we do this for overrides and defaults only?
   public List<SSAValue> connectThrough(
       final ParameterAccessor callee,
       Set<? extends SSAValue> overrides,
@@ -1518,10 +1516,10 @@ public class ParameterAccessor {
       throw new IllegalArgumentException("Cannot connect through to null-callee");
     }
     if (overrides == null) {
-      overrides = Collections.EMPTY_SET;
+      overrides = Collections.emptySet();
     }
     if (defaults == null) {
-      defaults = Collections.EMPTY_SET;
+      defaults = Collections.emptySet();
     }
     if (callee.getNumberOfParameters() == 0) {
       return new ArrayList<>(0);

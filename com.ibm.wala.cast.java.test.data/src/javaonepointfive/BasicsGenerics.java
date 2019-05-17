@@ -64,12 +64,13 @@ public class BasicsGenerics {
 		System.out.println(frenchy);
 		System.out.println(sicilian);
 		strs.add("hello");
-		ints.add(Integer.valueOf(3));
+		ints.add(3);
 		
 		String qqq;
 		
 		for (Iterator<?> iter = ((Iterable<?>)ints).iterator(); iter.hasNext(); iter.next());
 		
+		//noinspection ForLoopReplaceableByForEach
 		for (Iterator<String> iter = strs.iterator(); iter.hasNext();) {
 			qqq = iter.next();
 			System.out.println(qqq);

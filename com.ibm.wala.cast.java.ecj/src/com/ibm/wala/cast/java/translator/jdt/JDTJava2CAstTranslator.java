@@ -76,6 +76,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -572,8 +573,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // this.
 
       List<CAstNode> bodyNodes = new ArrayList<>(staticInits.size());
-      for (int i = 0; i < staticInits.size(); i++)
-        bodyNodes.add(visitFieldInitNode(staticInits.get(i), newContext));
+      for (ASTNode staticInit : staticInits)
+        bodyNodes.add(visitFieldInitNode(staticInit, newContext));
       CAstNode staticInitAst = makeNode(newContext, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
       memberEntities.add(
           new ProcedureEntity(staticInitAst, typeBinding, childEntities, newContext, null));
@@ -647,9 +648,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // Make fake args that will be passed
     String[] fakeArguments = new String[superCtor.getParameterTypes().length + 1];
     ArrayList<CAstType> paramTypes = new ArrayList<>(superCtor.getParameterTypes().length);
-    for (int i = 0; i < fakeArguments.length; i++)
-      fakeArguments[i] =
-          (i == 0) ? "this" : ("argument" + i); // TODO: change to invalid name and don't use
+    // TODO: change to invalid name and don't use
+    Arrays.setAll(fakeArguments, i -> (i == 0) ? "this" : ("argument" + i));
     // singlevariabledeclaration below
     for (int i = 1; i < fakeArguments.length; i++) {
       // the name
@@ -681,7 +681,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     bodyNodes.add(makeNode(context, fFactory, n, CAstNode.CALL, children));
     // QUESTION: no handleExceptions?
 
-    for (int i = 0; i < inits.size(); i++) bodyNodes.add(visitFieldInitNode(inits.get(i), context));
+    for (ASTNode init : inits) bodyNodes.add(visitFieldInitNode(init, context));
 
     // finally, make the procedure entity
     CAstNode ast = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
@@ -2918,10 +2918,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // SWITCH_DEFAULT
     // somewhere else
     // polyglot converts all labels to longs. why? who knows...
-    if (constant instanceof Character) constant = new Long(((Character) constant).charValue());
-    else if (constant instanceof Byte) constant = new Long(((Byte) constant).longValue());
-    else if (constant instanceof Integer) constant = new Long(((Integer) constant).longValue());
-    else if (constant instanceof Short) constant = new Long(((Short) constant).longValue());
+    if (constant instanceof Character) constant = (long) (Character) constant;
+    else if (constant instanceof Byte) constant = ((Byte) constant).longValue();
+    else if (constant instanceof Integer) constant = ((Integer) constant).longValue();
+    else if (constant instanceof Short) constant = ((Short) constant).longValue();
 
     if (constant != null) {
       return fFactory.makeConstant(constant);
@@ -2959,8 +2959,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     List<Statement> cases = n.statements();
 
     // First compute the control flow edges for the various case labels
-    for (int i = 0; i < cases.size(); i++) {
-      Statement se = cases.get(i);
+    for (Statement se : cases) {
       if (se instanceof SwitchCase) {
         SwitchCase c = (SwitchCase) se;
 
@@ -4484,7 +4483,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       if (var.isEnumConstant()) constants.add(var);
 
     // constants are unsorted by default
-    Collections.sort(constants, (arg0, arg1) -> arg0.getVariableId() - arg1.getVariableId());
+    constants.sort(Comparator.comparingInt(IVariableBinding::getVariableId));
 
     // PART II: create values()
     memberEntities.add(createEnumValuesMethod(typeBinding, constants, context));
@@ -4638,7 +4637,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     bodyNodes.add(makeNode(context, fFactory, n, CAstNode.CALL, children));
     // QUESTION: no handleExceptions?
 
-    for (int i = 0; i < inits.size(); i++) bodyNodes.add(visitFieldInitNode(inits.get(i), context));
+    for (ASTNode init : inits) bodyNodes.add(visitFieldInitNode(init, context));
 
     if (nonDefaultCtor != null) bodyNodes.add(visitNode(nonDefaultCtor.getBody(), context));
 

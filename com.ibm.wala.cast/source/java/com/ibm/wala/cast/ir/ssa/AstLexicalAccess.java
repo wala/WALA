@@ -14,6 +14,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * This abstract class provides helper functionality for recording lexical uses and/or definitions.
@@ -59,9 +60,7 @@ public abstract class AstLexicalAccess extends SSAInstruction {
       return (other instanceof Access)
           && variableName.equals(((Access) other).variableName)
           && valueNumber == ((Access) other).valueNumber
-          && (variableDefiner == null
-              ? ((Access) other).variableDefiner == null
-              : variableDefiner.equals(((Access) other).variableDefiner));
+          && Objects.equals(variableDefiner, ((Access) other).variableDefiner);
     }
 
     @Override

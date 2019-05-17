@@ -12,7 +12,6 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import java.util.Iterator;
 import java.util.Set;
 
 /** Utilities for dealing with {@link IntSet}s */
@@ -54,11 +53,7 @@ public class IntSetUtil {
   }
 
   public static IntSet make(Set<Integer> x) {
-    int[] vals = new int[x.size()];
-    Iterator<Integer> vs = x.iterator();
-    for (int i = 0; i < vals.length; i++) {
-      vals[i] = vs.next();
-    }
+    int[] vals = x.stream().mapToInt(Integer::intValue).toArray();
     return make(vals);
   }
 

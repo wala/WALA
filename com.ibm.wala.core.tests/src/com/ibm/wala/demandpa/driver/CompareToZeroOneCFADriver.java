@@ -41,7 +41,6 @@ import com.ibm.wala.core.tests.demandpa.TestInfo;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
-import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.CallGraphMapUtil;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
@@ -169,7 +168,7 @@ public class CompareToZeroOneCFADriver {
     final class Helper {
       void checkPointersInMethod(CGNode node) {
         // TODO remove this hack
-        if (node.getMethod().getReference().toString().indexOf("clone()Ljava/lang/Object;") != -1) {
+        if (node.getMethod().getReference().toString().contains("clone()Ljava/lang/Object;")) {
           System.err.println(("SKIPPING " + node));
           return;
         }
@@ -240,7 +239,7 @@ public class CompareToZeroOneCFADriver {
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(
-            cg, builder, fam, cha, options, new DummyStateMachine.Factory<IFlowLabel>());
+            cg, builder, fam, cha, options, new DummyStateMachine.Factory<>());
     // fullDemandPointsTo.setOnTheFly(true);
     // fullDemandPointsTo.setRefineFields(true);
     return fullDemandPointsTo;

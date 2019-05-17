@@ -46,7 +46,7 @@ public class OverridesOnePointFour {
 		
     @Override
     public Long get() {
-			return Long.valueOf(6);
+			return 6L;
 		}
 	}
 

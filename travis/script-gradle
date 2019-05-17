@@ -16,17 +16,21 @@ case "$SUBMODULE_PREFIX" in
     ;;
 esac
 
+run_gradle() {
+  $headless ./gradlew --continue --no-build-cache --stacktrace "$@"
+}
+
 # TRAVIS_JDK_VERSION is unset on Mac with JDK 8
-MY_JDK_VERSION=${TRAVIS_JDK_VERSION:-}
-if [ "$MY_JDK_VERSION" = "openjdk11" ]
+if [ "${TRAVIS_JDK_VERSION:-}" = openjdk11 ]
 then
-    # only test WALA core on JDK 11 for now
-    $headless ./gradlew --continue --no-build-cache --stacktrace \
-              :com.ibm.wala.core.tests:test
+  # only test WALA core on JDK 11 for now
+  run_gradle :com.ibm.wala.core.tests:test
 else
-    $headless ./gradlew --continue --no-build-cache --stacktrace \
-	      verifyGoogleJavaFormat \
-	      "$SUBMODULE_PREFIX"build \
-	      ${documentation:+$SUBMODULE_PREFIX$documentation} \
-	      lintGradle
+  run_gradle \
+    -PjavaCompiler=ecj \
+    linters \
+    compileJava \
+    compileTestJava \
+    ${documentation:+$SUBMODULE_PREFIX$documentation}
+  run_gradle "$SUBMODULE_PREFIX"build
 fi

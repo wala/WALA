@@ -92,7 +92,7 @@ public abstract class WalaTestCase {
   protected static String getClasspathEntry(String elt) {
     StringBuilder result = null;
     for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
-      if (s.indexOf(elt) >= 0) {
+      if (s.contains(elt)) {
         File e = new File(s);
         assert e.exists() : elt + " expected to exist";
         if (e.isDirectory() && !s.endsWith("/")) {

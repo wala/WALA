@@ -111,7 +111,7 @@ public class AddSerialVersion {
           int flags = r.getFieldAccessFlags(f);
           if ((flags & ClassConstants.ACC_PRIVATE) == 0
               || (flags & (ClassConstants.ACC_STATIC | ClassConstants.ACC_TRANSIENT)) == 0) {
-            fields[fieldCount] = Integer.valueOf(f);
+            fields[fieldCount] = f;
             fieldNames[f] = r.getFieldName(f);
             fieldCount++;
           }
@@ -121,12 +121,12 @@ public class AddSerialVersion {
             0,
             fieldCount,
             (o1, o2) -> {
-              String name1 = fieldNames[o1.intValue()];
-              String name2 = fieldNames[o2.intValue()];
+              String name1 = fieldNames[o1];
+              String name2 = fieldNames[o2];
               return name1.compareTo(name2);
             });
         for (int i = 0; i < fieldCount; i++) {
-          int f = fields[i].intValue();
+          int f = fields[i];
           out.writeUTF(fieldNames[f]);
           out.writeInt(r.getFieldAccessFlags(f));
           out.writeUTF(r.getFieldType(f));
@@ -141,7 +141,7 @@ public class AddSerialVersion {
           String name = r.getMethodName(m);
           int flags = r.getMethodAccessFlags(m);
           if (name.equals("<clinit>") || (flags & ClassConstants.ACC_PRIVATE) == 0) {
-            methods[methodCount] = Integer.valueOf(m);
+            methods[methodCount] = m;
             methodSigs[m] = name + r.getMethodType(m);
             switch (name) {
               case "<clinit>":
@@ -162,8 +162,8 @@ public class AddSerialVersion {
             0,
             methodCount,
             (o1, o2) -> {
-              int m1 = o1.intValue();
-              int m2 = o2.intValue();
+              int m1 = o1;
+              int m2 = o2;
               if (methodKinds[m1] != methodKinds[m2]) {
                 return methodKinds[m1] - methodKinds[m2];
               }
@@ -172,7 +172,7 @@ public class AddSerialVersion {
               return name1.compareTo(name2);
             });
         for (int i = 0; i < methodCount; i++) {
-          int m = methods[i].intValue();
+          int m = methods[i];
           out.writeUTF(r.getMethodName(m));
           out.writeInt(r.getMethodAccessFlags(m));
           out.writeUTF(r.getMethodType(m));

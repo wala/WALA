@@ -59,15 +59,15 @@ public abstract class TestCallGraphShape {
                 if (fileName.lastIndexOf('/') >= 0) {
                   fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
                 }
-                for (int j = 0; j < assertionData.length; j++) {
-                  String file = (String) assertionData[j][1];
+                for (Object[] assertionDatum : assertionData) {
+                  String file = (String) assertionDatum[1];
                   if (file.indexOf('/') >= 0) {
                     file = file.substring(file.lastIndexOf('/') + 1);
                   }
                   if (file.equalsIgnoreCase(fileName)) {
-                    if (pos.getFirstLine() >= (Integer) assertionData[j][2]
+                    if (pos.getFirstLine() >= (Integer) assertionDatum[2]
                         && (pos.getLastLine() != -1 ? pos.getLastLine() : pos.getFirstLine())
-                            <= (Integer) assertionData[j][3]) {
+                            <= (Integer) assertionDatum[3]) {
                       System.err.println(
                           "found " + inst + " of " + M + " at expected position " + pos);
                       continue insts;
@@ -101,9 +101,7 @@ public abstract class TestCallGraphShape {
 
   public void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
     for (Object[] element : assertionData) {
-      Iterator<CGNode> NS = getNodes(CG, (String) element[0]).iterator();
-      while (NS.hasNext()) {
-        CGNode N = NS.next();
+      for (CGNode N : getNodes(CG, (String) element[0])) {
         IR ir = N.getIR();
         Name[] names = (Name[]) element[1];
         for (Name name : names) {
@@ -132,19 +130,19 @@ public abstract class TestCallGraphShape {
       return;
     }
 
-    for (int i = 0; i < assertionData.length; i++) {
+    for (Object[] assertionDatum : assertionData) {
 
       check_target:
-      for (int j = 0; j < ((String[]) assertionData[i][1]).length; j++) {
+      for (int j = 0; j < ((String[]) assertionDatum[1]).length; j++) {
         Iterator<CGNode> srcs =
-            (assertionData[i][0] instanceof String)
-                ? getNodes(CG, (String) assertionData[i][0]).iterator()
+            (assertionDatum[0] instanceof String)
+                ? getNodes(CG, (String) assertionDatum[0]).iterator()
                 : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
-        assert srcs.hasNext() : "cannot find " + assertionData[i][0];
+        assert srcs.hasNext() : "cannot find " + assertionDatum[0];
 
         boolean checkAbsence = false;
-        String targetName = ((String[]) assertionData[i][1])[j];
+        String targetName = ((String[]) assertionDatum[1])[j];
         if (targetName.startsWith("!")) {
           checkAbsence = true;
           targetName = targetName.substring(1);
@@ -165,7 +163,7 @@ public abstract class TestCallGraphShape {
                 if (cgNode.equals(dst)) {
                   if (checkAbsence) {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
-                    assert false : "found edge " + assertionData[i][0] + " ---> " + targetName;
+                    assert false : "found edge " + assertionDatum[0] + " ---> " + targetName;
                   } else {
                     System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
                     continue check_target;
@@ -176,8 +174,8 @@ public abstract class TestCallGraphShape {
           }
         }
 
-        System.err.println("cannot find edge " + assertionData[i][0] + " ---> " + targetName);
-        assert checkAbsence : "cannot find edge " + assertionData[i][0] + " ---> " + targetName;
+        System.err.println("cannot find edge " + assertionDatum[0] + " ---> " + targetName);
+        assert checkAbsence : "cannot find edge " + assertionDatum[0] + " ---> " + targetName;
       }
     }
   }

@@ -502,16 +502,16 @@ public class SSABuilder extends AbstractIntStackMachine {
           symbol = symbolTable.getNullConstant();
         } else if (l.isIntType(type)) {
           Integer value = (Integer) instruction.getValue();
-          symbol = symbolTable.getConstant(value.intValue());
+          symbol = symbolTable.getConstant(value);
         } else if (l.isLongType(type)) {
           Long value = (Long) instruction.getValue();
-          symbol = symbolTable.getConstant(value.longValue());
+          symbol = symbolTable.getConstant(value);
         } else if (l.isFloatType(type)) {
           Float value = (Float) instruction.getValue();
-          symbol = symbolTable.getConstant(value.floatValue());
+          symbol = symbolTable.getConstant(value);
         } else if (l.isDoubleType(type)) {
           Double value = (Double) instruction.getValue();
-          symbol = symbolTable.getConstant(value.doubleValue());
+          symbol = symbolTable.getConstant(value);
         } else if (l.isStringType(type)) {
           String value = (String) instruction.getValue();
           symbol = symbolTable.getConstant(value);

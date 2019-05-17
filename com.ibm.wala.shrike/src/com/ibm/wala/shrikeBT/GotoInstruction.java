@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import java.util.Arrays;
+
 /** This class represents goto and goto_w instructions. */
 public final class GotoInstruction extends Instruction {
   private final int[] label;
@@ -24,9 +26,7 @@ public final class GotoInstruction extends Instruction {
 
   private static GotoInstruction[] preallocate() {
     GotoInstruction[] r = new GotoInstruction[256];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = new GotoInstruction(i);
-    }
+    Arrays.setAll(r, GotoInstruction::new);
     return r;
   }
 

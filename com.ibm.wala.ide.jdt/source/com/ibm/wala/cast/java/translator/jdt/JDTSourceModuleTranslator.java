@@ -101,8 +101,8 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
         int length = problems.length;
         if (length > 0) {
           StringBuilder buffer = new StringBuilder();
-          for (int i = 0; i < length; i++) {
-            buffer.append(problems[i].getMessage());
+          for (IProblem problem : problems) {
+            buffer.append(problem.getMessage());
             buffer.append('\n');
           }
           if (length != 0)
@@ -169,7 +169,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
       if (!projectsFiles.containsKey(proj)) {
-        projectsFiles.put(proj, new HashMap<ICompilationUnit, EclipseSourceFileModule>());
+        projectsFiles.put(proj, new HashMap<>());
       }
       projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }

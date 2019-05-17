@@ -14,6 +14,7 @@ import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.CPAContextSelector;
 import com.ibm.wala.util.CancelException;

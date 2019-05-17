@@ -35,8 +35,7 @@ public class DalvikTypeInference extends TypeInference {
     public TypeVariable makeVariable(int valueNumber) {
       SymbolTable st = ir.getSymbolTable();
       if (st.isIntegerConstant(valueNumber) && st.isZero(valueNumber)) {
-        return new DalvikTypeVariable(
-            language.getPrimitive(language.getConstantType(Integer.valueOf(0))), true);
+        return new DalvikTypeVariable(language.getPrimitive(language.getConstantType(0)), true);
       } else {
         if (doPrimitives) {
           if (st.isConstant(valueNumber)) {
@@ -78,12 +77,9 @@ public class DalvikTypeInference extends TypeInference {
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       boolean ignoreZero = containsNonPrimitiveAndZero(rhs);
-      for (int i = 0; i < rhs.length; i++) {
-        if (rhs[i] != null
-            && rhs[i].getType() != null
-            && !(ignoreZero && rhs[i].isIntZeroConstant())) {
-          TypeVariable r = rhs[i];
-          meet = meet.meet(r.getType());
+      for (DalvikTypeVariable rh : rhs) {
+        if (rh != null && rh.getType() != null && !(ignoreZero && rh.isIntZeroConstant())) {
+          meet = meet.meet(rh.getType());
         }
       }
       if (lhsType.equals(meet)) {
@@ -97,14 +93,14 @@ public class DalvikTypeInference extends TypeInference {
     private static boolean containsNonPrimitiveAndZero(DalvikTypeVariable[] types) {
       boolean containsNonPrimitive = false;
       boolean containsZero = false;
-      for (int i = 0; i < types.length; i++) {
-        if (types[i] != null) {
-          if (types[i].getType() != null
-              && types[i].getType().getTypeReference() != null
-              && !types[i].getType().getTypeReference().isPrimitiveType()) {
+      for (DalvikTypeVariable type : types) {
+        if (type != null) {
+          if (type.getType() != null
+              && type.getType().getTypeReference() != null
+              && !type.getType().getTypeReference().isPrimitiveType()) {
             containsNonPrimitive = true;
           }
-          if (types[i].isIntZeroConstant()) {
+          if (type.isIntZeroConstant()) {
             containsZero = true;
           }
         }

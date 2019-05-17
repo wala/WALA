@@ -111,22 +111,22 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   private static final Map<String, Integer> elementMap = HashMapFactory.make(14);
 
   static {
-    elementMap.put("classloader", Integer.valueOf(E_CLASSLOADER));
-    elementMap.put("method", Integer.valueOf(E_METHOD));
-    elementMap.put("class", Integer.valueOf(E_CLASS));
-    elementMap.put("package", Integer.valueOf(E_PACKAGE));
-    elementMap.put("call", Integer.valueOf(E_CALL));
-    elementMap.put("new", Integer.valueOf(E_NEW));
-    elementMap.put("poison", Integer.valueOf(E_POISON));
-    elementMap.put("summary-spec", Integer.valueOf(E_SUMMARY_SPEC));
-    elementMap.put("return", Integer.valueOf(E_RETURN));
-    elementMap.put("putstatic", Integer.valueOf(E_PUTSTATIC));
-    elementMap.put("aastore", Integer.valueOf(E_AASTORE));
-    elementMap.put("putfield", Integer.valueOf(E_PUTFIELD));
-    elementMap.put("getfield", Integer.valueOf(E_GETFIELD));
-    elementMap.put("throw", Integer.valueOf(E_ATHROW));
-    elementMap.put("constant", Integer.valueOf(E_CONSTANT));
-    elementMap.put("aaload", Integer.valueOf(E_AALOAD));
+    elementMap.put("classloader", E_CLASSLOADER);
+    elementMap.put("method", E_METHOD);
+    elementMap.put("class", E_CLASS);
+    elementMap.put("package", E_PACKAGE);
+    elementMap.put("call", E_CALL);
+    elementMap.put("new", E_NEW);
+    elementMap.put("poison", E_POISON);
+    elementMap.put("summary-spec", E_SUMMARY_SPEC);
+    elementMap.put("return", E_RETURN);
+    elementMap.put("putstatic", E_PUTSTATIC);
+    elementMap.put("aastore", E_AASTORE);
+    elementMap.put("putfield", E_PUTFIELD);
+    elementMap.put("getfield", E_GETFIELD);
+    elementMap.put("throw", E_ATHROW);
+    elementMap.put("constant", E_CONSTANT);
+    elementMap.put("aaload", E_AALOAD);
   }
 
   //
@@ -259,7 +259,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (element == null) {
         Assertions.UNREACHABLE("Invalid element: " + qName);
       }
-      switch (element.intValue()) {
+      switch (element) {
         case E_CLASSLOADER:
           {
             String clName = atts.getValue(A_NAME);
@@ -349,7 +349,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (element == null) {
         Assertions.UNREACHABLE("Invalid element: " + name);
       }
-      switch (element.intValue()) {
+      switch (element) {
         case E_CLASSLOADER:
           governingLoader = null;
           break;
@@ -473,7 +473,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             valueNumber = Integer.parseInt(argString);
           }
         }
-        params[i] = valueNumber.intValue();
+        params[i] = valueNumber;
       }
 
       // allocate local for exceptions
@@ -488,7 +488,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         }
 
         int defNum = nextLocal;
-        symbolTable.put(defVar, Integer.valueOf(nextLocal++));
+        symbolTable.put(defVar, nextLocal++);
 
         governingMethod.addStatement(
             insts.InvokeInstruction(
@@ -527,7 +527,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         defVar = "L" + nextLocal;
       }
       int defNum = nextLocal;
-      symbolTable.put(defVar, Integer.valueOf(nextLocal++));
+      symbolTable.put(defVar, nextLocal++);
 
       // create the allocation statement and add it to the method summary
       NewSiteReference ref = NewSiteReference.make(governingMethod.getNumberOfStatements(), type);
@@ -546,10 +546,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
                 type.getDerivedMask() == ((ArrayMask << ElementBits) | PrimitiveMask));
         a =
             insts.NewInstruction(
-                governingMethod.getNumberOfStatements(),
-                defNum,
-                ref,
-                new int[] {sNumber.intValue()});
+                governingMethod.getNumberOfStatements(), defNum, ref, new int[] {sNumber});
       } else {
         a = insts.NewInstruction(governingMethod.getNumberOfStatements(), defNum, ref);
       }
@@ -572,7 +569,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
 
       SSAThrowInstruction T =
-          insts.ThrowInstruction(governingMethod.getNumberOfStatements(), valueNumber.intValue());
+          insts.ThrowInstruction(governingMethod.getNumberOfStatements(), valueNumber);
       governingMethod.addStatement(T);
     }
 
@@ -604,7 +601,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Must specify def for getfield " + governingMethod);
       }
       int defNum = nextLocal;
-      symbolTable.put(defVar, Integer.valueOf(nextLocal++));
+      symbolTable.put(defVar, nextLocal++);
 
       // get the ref read from
       String R = atts.getValue(A_REF);
@@ -617,8 +614,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
 
       SSAGetInstruction G =
-          insts.GetInstruction(
-              governingMethod.getNumberOfStatements(), defNum, refNumber.intValue(), field);
+          insts.GetInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber, field);
       governingMethod.addStatement(G);
     }
 
@@ -660,10 +656,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       SSAPutInstruction P =
           insts.PutInstruction(
-              governingMethod.getNumberOfStatements(),
-              refNumber.intValue(),
-              valueNumber.intValue(),
-              field);
+              governingMethod.getNumberOfStatements(), refNumber, valueNumber, field);
       governingMethod.addStatement(P);
     }
 
@@ -696,8 +689,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
       SSAPutInstruction P =
-          insts.PutInstruction(
-              governingMethod.getNumberOfStatements(), valueNumber.intValue(), field);
+          insts.PutInstruction(governingMethod.getNumberOfStatements(), valueNumber, field);
       governingMethod.addStatement(P);
     }
 
@@ -739,11 +731,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       /* BEGIN Custom change: expect type information in array-store instructions */
       SSAArrayStoreInstruction S =
           insts.ArrayStoreInstruction(
-              governingMethod.getNumberOfStatements(),
-              refNumber.intValue(),
-              0,
-              valueNumber.intValue(),
-              type);
+              governingMethod.getNumberOfStatements(), refNumber, 0, valueNumber, type);
       /* END Custom change: get type information in array-store instructions */
       governingMethod.addStatement(S);
     }
@@ -786,7 +774,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Must specify def for getfield " + governingMethod);
       }
       int defNum = nextLocal;
-      symbolTable.put(defVar, Integer.valueOf(nextLocal++));
+      symbolTable.put(defVar, nextLocal++);
       SSAArrayLoadInstruction S =
           insts.ArrayLoadInstruction(
               governingMethod.getNumberOfStatements(), defNum, refNumber, idxNumber, type);
@@ -815,7 +803,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
           boolean isPrimitive = governingMethod.getReturnType().isPrimitiveType();
           SSAReturnInstruction R =
               insts.ReturnInstruction(
-                  governingMethod.getNumberOfStatements(), valueNumber.intValue(), isPrimitive);
+                  governingMethod.getNumberOfStatements(), valueNumber, isPrimitive);
           governingMethod.addStatement(R);
         }
       }
@@ -825,7 +813,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       Integer valueNumber;
       valueNumber = symbolTable.get(V_NULL);
       if (valueNumber == null) {
-        valueNumber = Integer.valueOf(nextLocal++);
+        valueNumber = nextLocal++;
         symbolTable.put(V_NULL, valueNumber);
       }
       return valueNumber;
@@ -834,7 +822,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     private void processConstant(Attributes atts) {
       String var = atts.getValue(A_NAME);
       if (var == null) Assertions.UNREACHABLE("Must give name for constant");
-      Integer valueNumber = Integer.valueOf(nextLocal++);
+      Integer valueNumber = nextLocal++;
       symbolTable.put(var, valueNumber);
 
       String typeString = atts.getValue(A_TYPE);
@@ -950,7 +938,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       symbolTable = HashMapFactory.make(5);
       // create symbols for the parameters
       for (int i = 0; i < nParams; i++) {
-        symbolTable.put("arg" + i, Integer.valueOf(i + 1));
+        symbolTable.put("arg" + i, i + 1);
       }
 
       int pn = 1;

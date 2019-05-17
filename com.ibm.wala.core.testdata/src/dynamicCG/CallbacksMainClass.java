@@ -19,7 +19,7 @@ public class CallbacksMainClass {
   }
 
   public static void main(String[] args) {
-    Set<CallbacksMainClass> junk = new HashSet<CallbacksMainClass>();
+    Set<CallbacksMainClass> junk = new HashSet<>();
     junk.add(instance);
     System.err.println(junk.iterator().next().toString());
   }

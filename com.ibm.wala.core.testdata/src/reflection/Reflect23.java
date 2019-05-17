@@ -28,7 +28,7 @@ public class Reflect23 {
         Class<?> paramType = m.getParameterTypes()[0];
         if (!Modifier.isStatic(m.getModifiers())
             && paramType.getName().equals("java.lang.Integer")) {
-          Integer i = new Integer(1);
+          Integer i = 1;
           Object[] initArgs = new Object[] {i};
           m.invoke(helperObject, initArgs);
           break;

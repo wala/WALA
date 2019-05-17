@@ -146,18 +146,13 @@ public class BootstrapMethodsReader extends AttributeReader {
                   default:
                     assert false : "invalid type " + t;
                 }
-              } catch (IllegalArgumentException e) {
-                assert false : e;
-              } catch (InvalidClassFileException e) {
-                assert false : e;
-              } catch (ClassNotFoundException e) {
-                assert false : e;
-              } catch (NoSuchMethodException e) {
-                assert false : e;
-              } catch (SecurityException e) {
-                assert false : e;
-              } catch (IllegalAccessException e) {
-                assert false : e;
+              } catch (IllegalArgumentException
+                  | IllegalAccessException
+                  | SecurityException
+                  | NoSuchMethodException
+                  | ClassNotFoundException
+                  | InvalidClassFileException e) {
+                throw new RuntimeException(e);
               }
               return null;
             }

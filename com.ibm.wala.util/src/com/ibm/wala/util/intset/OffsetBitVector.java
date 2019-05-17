@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.util.Arrays;
+
 /** */
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
@@ -201,9 +203,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   /** Sets all bits. */
   public final void setAll() {
     expand(0, length() - 1);
-    for (int i = 0; i < bits.length; i++) {
-      bits[i] = MASK;
-    }
+    Arrays.fill(bits, MASK);
   }
 
   /**

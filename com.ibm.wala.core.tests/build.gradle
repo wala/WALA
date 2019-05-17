@@ -10,12 +10,6 @@ sourceSets.test {
 	resources.srcDirs = ['dat']
 }
 
-publishing.publications {
-	mavenJava(MavenPublication) {
-		artifact jarTest
-	}
-}
-
 dependencies {
 	testCompile(
 		'junit:junit:4.12',
@@ -31,12 +25,11 @@ dependencies {
 tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.tasks.named('compileTestJava')
-	dependsOn testdata.tasks.named('extractBcel')
 
 	from testdata.collectJLex
 	from testdata.collectTestData
 	from testdata.downloadJavaCup
-	from files(testdata.extractBcel)[0]
+	from testdata.extractBcel
 	from testdata.generateHelloHashJar
 	from testdata.extractKawa
 	from testdata.buildChessJar

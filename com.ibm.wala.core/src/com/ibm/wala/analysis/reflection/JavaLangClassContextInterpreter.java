@@ -383,12 +383,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       // SSAThrowInstruction t = insts.ThrowInstruction(retValue);
       // statements.add(t);
     }
-    SSAInstruction[] result = new SSAInstruction[statements.size()];
-    Iterator<SSAInstruction> it = statements.iterator();
-    for (int i = 0; i < result.length; i++) {
-      result[i] = it.next();
-    }
-    return result;
+    return statements.toArray(new SSAInstruction[0]);
   }
 
   /**
@@ -423,12 +418,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       // SSAThrowInstruction t = insts.ThrowInstruction(retValue);
       // statements.add(t);
     }
-    SSAInstruction[] result = new SSAInstruction[statements.size()];
-    Iterator<SSAInstruction> it = statements.iterator();
-    for (int i = 0; i < result.length; i++) {
-      result[i] = it.next();
-    }
-    return result;
+    return statements.toArray(new SSAInstruction[0]);
   }
 
   /** create statements for getConstructor() */

@@ -135,9 +135,7 @@ public class ClassPrinter {
         int val;
         try {
           val = element.getInt(null);
-        } catch (IllegalArgumentException e) {
-          throw new Error(e.getMessage());
-        } catch (IllegalAccessException e) {
+        } catch (IllegalArgumentException | IllegalAccessException e) {
           throw new Error(e.getMessage());
         }
         if ((flags & val) != 0) {

@@ -41,7 +41,7 @@ import java.util.Collection;
  */
 public class GetMethodContextSelector implements ContextSelector {
 
-  /** If <tt>true</tt>, debug information is emitted. */
+  /** If {@code true}, debug information is emitted. */
   protected static final boolean DEBUG = false;
 
   /** whether to only follow get method calls on application classes, ignoring system ones */
@@ -61,7 +61,7 @@ public class GetMethodContextSelector implements ContextSelector {
    *   <li>the first argument is a constant,
    * </ul>
    *
-   * then return a {@link GetMethodContextSelector}.
+   * then return a {@code GetMethodContextSelector}.
    */
   @Override
   public Context getCalleeTarget(
@@ -111,8 +111,8 @@ public class GetMethodContextSelector implements ContextSelector {
   }
 
   /**
-   * If <tt>instance</tt> is a {@link ConstantKey} and its value is an instance of {@link IClass},
-   * return that value. Otherwise, return <tt>null</tt>.
+   * If {@code instance} is a {@link ConstantKey} and its value is an instance of {@link IClass},
+   * return that value. Otherwise, return {@code null}.
    */
   private static IClass getTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {

@@ -406,7 +406,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Float.valueOf(Float.NaN))));
+                          context.currentScope().getConstantValue(Float.NaN)));
           break;
         case "GlobalInfinity":
           context
@@ -416,9 +416,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context
-                              .currentScope()
-                              .getConstantValue(Float.valueOf(Float.POSITIVE_INFINITY))));
+                          context.currentScope().getConstantValue(Float.POSITIVE_INFINITY)));
           break;
         case "MathE":
           context
@@ -428,7 +426,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Double.valueOf(Math.E))));
+                          context.currentScope().getConstantValue(Math.E)));
           break;
         case "MathPI":
           context
@@ -438,7 +436,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Double.valueOf(Math.PI))));
+                          context.currentScope().getConstantValue(Math.PI)));
           break;
         case "MathSQRT1_2":
           context
@@ -448,7 +446,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(.5)))));
+                          context.currentScope().getConstantValue(Math.sqrt(.5))));
           break;
         case "MathSQRT2":
           context
@@ -458,7 +456,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Double.valueOf(Math.sqrt(2)))));
+                          context.currentScope().getConstantValue(Math.sqrt(2))));
           break;
         case "MathLN2":
           context
@@ -468,7 +466,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Double.valueOf(Math.log(2)))));
+                          context.currentScope().getConstantValue(Math.log(2))));
           break;
         case "MathLN10":
           context
@@ -478,7 +476,7 @@ public class JSAstTranslator extends AstTranslator {
                       .AssignInstruction(
                           context.cfg().getCurrentInstruction(),
                           resultVal,
-                          context.currentScope().getConstantValue(Double.valueOf(Math.log(10)))));
+                          context.currentScope().getConstantValue(Math.log(10))));
           break;
         case "NewObject":
           doNewObject(context, null, resultVal, "Object", null);
@@ -635,7 +633,7 @@ public class JSAstTranslator extends AstTranslator {
 
         @Override
         public Collection<CAstType> getSupertypes() {
-          return Collections.EMPTY_SET;
+          return Collections.emptySet();
         }
       };
 

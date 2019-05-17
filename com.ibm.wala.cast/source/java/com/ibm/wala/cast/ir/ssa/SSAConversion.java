@@ -450,7 +450,7 @@ public class SSAConversion extends AbstractSSAConversion {
   @Override
   protected void placeNewPhiAt(int value, SSACFG.BasicBlock Y) {
     int[] params = new int[CFG.getPredNodeCount(Y)];
-    for (int i = 0; i < params.length; i++) params[i] = value;
+    Arrays.fill(params, value);
 
     SSAPhiInstruction phi = new SSAPhiInstruction(SSAInstruction.NO_INDEX, value, params);
 
@@ -569,8 +569,8 @@ public class SSAConversion extends AbstractSSAConversion {
 
     int[] lexicalUses = lexicalInfo.getExposedUses(index);
     if (lexicalUses != null) {
-      for (int j = 0; j < lexicalUses.length; j++) {
-        if (!skip(lexicalUses[j])) {
+      for (int lexicalUs : lexicalUses) {
+        if (!skip(lexicalUs)) {
           return false;
         }
       }
@@ -632,10 +632,10 @@ public class SSAConversion extends AbstractSSAConversion {
     }
 
     int[] params = symtab.getParameterValueNumbers();
-    for (int i = 0; i < params.length; i++) {
-      if (!skip(params[i])) {
-        S[params[i]].push(params[i]);
-        valueMap[params[i]] = params[i];
+    for (int param : params) {
+      if (!skip(param)) {
+        S[param].push(param);
+        valueMap[param] = param;
       }
     }
   }
@@ -722,32 +722,22 @@ public class SSAConversion extends AbstractSSAConversion {
 
   public static SSAInformation convert(
       AstMethod M, final AstIRFactory.AstIR ir, SSAOptions options, final IntSet values) {
-    try {
-      if (DEBUG) {
-        System.err.println(("starting conversion for " + values));
-        System.err.println(ir);
-      }
-      if (DEBUG_UNDO) System.err.println((">>> starting " + ir.getMethod()));
-      SSAConversion ssa =
-          new SSAConversion(M, ir, options) {
-            final int limit = ir.getSymbolTable().getMaxValueNumber();
-
-            @Override
-            protected boolean skip(int i) {
-              return (i >= 0) && (i <= limit) && (!values.contains(i));
-            }
-          };
-      ssa.perform();
-      if (DEBUG_UNDO) System.err.println(("<<< done " + ir.getMethod()));
-      return ssa.getComputedLocalMap();
-    } catch (RuntimeException e) {
-      //      System.err.println(("exception " + e + " while converting:"));
-      //      System.err.println(ir);
-      throw e;
-    } catch (Error e) {
-      //      System.err.println(("error " + e + " while converting:"));
-      //      System.err.println(ir);
-      throw e;
+    if (DEBUG) {
+      System.err.println(("starting conversion for " + values));
+      System.err.println(ir);
     }
+    if (DEBUG_UNDO) System.err.println((">>> starting " + ir.getMethod()));
+    SSAConversion ssa =
+        new SSAConversion(M, ir, options) {
+          final int limit = ir.getSymbolTable().getMaxValueNumber();
+
+          @Override
+          protected boolean skip(int i) {
+            return (i >= 0) && (i <= limit) && (!values.contains(i));
+          }
+        };
+    ssa.perform();
+    if (DEBUG_UNDO) System.err.println(("<<< done " + ir.getMethod()));
+    return ssa.getComputedLocalMap();
   }
 }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrikeBT;
 
+import java.util.Arrays;
+
 /** This instruction represents all return instructions. */
 public final class ReturnInstruction extends Instruction {
   protected ReturnInstruction(short opcode) {
@@ -22,9 +24,7 @@ public final class ReturnInstruction extends Instruction {
 
   private static ReturnInstruction[] preallocate() {
     ReturnInstruction[] r = new ReturnInstruction[OP_areturn - OP_ireturn + 1];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = new ReturnInstruction((short) (OP_ireturn + i));
-    }
+    Arrays.setAll(r, i -> new ReturnInstruction((short) (OP_ireturn + i)));
     return r;
   }
 

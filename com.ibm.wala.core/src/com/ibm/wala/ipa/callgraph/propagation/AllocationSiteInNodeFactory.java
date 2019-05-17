@@ -84,7 +84,7 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
       int lengthVN = newInstruction.getUse(0);
       if (ir.getSymbolTable().isIntegerConstant(lengthVN)) {
         Integer c = (Integer) ir.getSymbolTable().getConstantValue(lengthVN);
-        if (c.intValue() == 0) {
+        if (c == 0) {
           if (options.getHandleZeroLengthArray()) {
             return new ZeroLengthArrayInNode(nodeToUse, allocation, type);
           } else {

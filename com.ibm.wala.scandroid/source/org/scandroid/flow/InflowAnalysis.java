@@ -59,7 +59,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.scandroid.domain.CodeElement;
@@ -81,17 +80,10 @@ public class InflowAnalysis {
       BasicBlockInContext<E> block,
       FlowType taintType,
       Set<CodeElement> newElements) {
-    Map<FlowType<E>, Set<CodeElement>> blockMap = taintMap.get(block);
-    if (blockMap == null) {
-      blockMap = new HashMap<>();
-      taintMap.put(block, blockMap);
-    }
+    Map<FlowType<E>, Set<CodeElement>> blockMap =
+        taintMap.computeIfAbsent(block, k -> new HashMap<>());
 
-    Set<CodeElement> elements = blockMap.get(taintType);
-    if (elements == null) {
-      elements = new HashSet<>();
-      blockMap.put(taintType, elements);
-    }
+    Set<CodeElement> elements = blockMap.computeIfAbsent(taintType, k -> new HashSet<>());
     elements.addAll(newElements);
   }
 
@@ -162,20 +154,15 @@ public class InflowAnalysis {
     Collection<IMethod> targets = new HashSet<>();
     ArrayList<Collection<IMethod>> targetList = new ArrayList<>();
 
-    for (int i = 0; i < ssAL.size(); i++) {
-      Collection<IMethod> tempList = ssAL.get(i).getNamePattern().getPossibleTargets(cha);
+    for (SourceSpec sourceSpec : ssAL) {
+      Collection<IMethod> tempList = sourceSpec.getNamePattern().getPossibleTargets(cha);
       targets.addAll(tempList);
       targetList.add(tempList);
     }
 
-    Iterator<BasicBlockInContext<E>> graphIt = graph.iterator();
-    while (graphIt.hasNext()) {
-      BasicBlockInContext<E> block = graphIt.next();
-      Iterator<SSAInstruction> instructions = block.iterator();
+    for (BasicBlockInContext<E> block : graph) {
 
-      while (instructions.hasNext()) {
-        SSAInstruction inst = instructions.next();
-
+      for (SSAInstruction inst : block) {
         if (!(inst instanceof SSAInvokeInstruction)) {
           continue;
         }

@@ -16,14 +16,15 @@ public class Array1 {
     public void foo() {
 	int[] ary = new int[5];
 
+	//noinspection Java8ArraySetAll
 	for(int i= 0; i < ary.length; i++) {
 	    ary[i]= i;
 	}
 
 	int sum = 0;
 
-	for(int j= 0; j < ary.length; j++) {
-	    sum += ary[j];
+	for (int i : ary) {
+		sum += i;
 	}
     }
 }

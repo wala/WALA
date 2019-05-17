@@ -203,7 +203,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       HashSet<IClass> smushees = HashSetFactory.make(5);
       for (Map.Entry<IClass, Integer> e : count.entrySet()) {
         Integer i = e.getValue();
-        if (i.intValue() > SMUSH_LIMIT) {
+        if (i > SMUSH_LIMIT) {
           smushees.add(e.getKey());
         }
       }
@@ -219,12 +219,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     for (NewSiteReference n : Iterator2Iterable.make(contextInterpreter.iterateNewSites(node))) {
       IClass alloc = cha.lookupClass(n.getDeclaredType());
       if (alloc != null) {
-        Integer old = count.get(alloc);
-        if (old == null) {
-          count.put(alloc, Integer.valueOf(1));
-        } else {
-          count.put(alloc, Integer.valueOf(old.intValue() + 1));
-        }
+        count.merge(alloc, 1, Integer::sum);
       }
     }
     return count;

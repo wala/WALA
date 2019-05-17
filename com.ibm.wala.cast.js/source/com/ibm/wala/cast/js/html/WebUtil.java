@@ -27,10 +27,7 @@ public class WebUtil {
 
   public static final String preamble = "preamble.js";
 
-  private static IHtmlParserFactory factory =
-      () -> {
-        return new JerichoHtmlParser();
-      };
+  private static IHtmlParserFactory factory = JerichoHtmlParser::new;
 
   public static void setFactory(IHtmlParserFactory factory) {
     WebUtil.factory = factory;

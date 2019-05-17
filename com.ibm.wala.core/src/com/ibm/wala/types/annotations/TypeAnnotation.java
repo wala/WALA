@@ -146,7 +146,7 @@ public class TypeAnnotation {
    *   <li>{@link ShrikeClass#getTypeAnnotations(boolean)}
    * </ul>
    *
-   * @return A {@link TypeAnnotation} comprised of annotation, typePath and targetType
+   * @return A {@code TypeAnnotation} comprised of annotation, typePath and targetType
    */
   public static TypeAnnotation make(
       Annotation annotation,
@@ -168,7 +168,7 @@ public class TypeAnnotation {
    *   <li>{@link ShrikeClass#getTypeAnnotations(boolean)}
    * </ul>
    *
-   * @return A {@link TypeAnnotation} comprised of annotation, an empty typePath, and targetType
+   * @return A {@code TypeAnnotation} comprised of annotation, an empty typePath, and targetType
    */
   public static TypeAnnotation make(
       Annotation annotation, TypeAnnotationTarget typeAnnotationTarget, TargetType targetType) {
@@ -964,13 +964,13 @@ public class TypeAnnotation {
     };
   }
 
-  /** @return the {@link Annotation} of this {@link TypeAnnotation} */
+  /** @return the {@link Annotation} of this {@code TypeAnnotation} */
   public Annotation getAnnotation() {
     return annotation;
   }
 
   /**
-   * @return the typePath of this {@link TypeAnnotation}
+   * @return the typePath of this {@code TypeAnnotation}
    * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.20.2">JLS
    *     (SE8), 4.7.20.2</a>
    */
@@ -978,12 +978,12 @@ public class TypeAnnotation {
     return typePath;
   }
 
-  /** @return the {@link TypeAnnotationTarget} of this {@link TypeAnnotation} */
+  /** @return the {@link TypeAnnotationTarget} of this {@code TypeAnnotation} */
   public TypeAnnotationTarget getTypeAnnotationTarget() {
     return typeAnnotationTarget;
   }
 
-  /** @return the {@link TargetType} of this {@link TypeAnnotation} */
+  /** @return the {@link TargetType} of this {@code TypeAnnotation} */
   public TargetType getTargetType() {
     return targetType;
   }

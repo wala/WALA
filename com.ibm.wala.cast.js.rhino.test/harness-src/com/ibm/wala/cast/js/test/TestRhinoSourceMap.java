@@ -13,7 +13,7 @@ package com.ibm.wala.cast.js.test;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeHierarchy;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeLoaders;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory;
-import static com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.makeScriptScope;
+import static com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil.makeScriptScope;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;

@@ -31,8 +31,7 @@ public abstract class AstDynamicPropertyClass extends AstClass {
       short modifiers,
       Map<Selector, IMethod> declaredMethods,
       TypeReference defaultDescriptor) {
-    super(
-        sourcePosition, typeName, loader, modifiers, new HashMap<Atom, IField>(), declaredMethods);
+    super(sourcePosition, typeName, loader, modifiers, new HashMap<>(), declaredMethods);
     this.defaultDescriptor = defaultDescriptor;
   }
 

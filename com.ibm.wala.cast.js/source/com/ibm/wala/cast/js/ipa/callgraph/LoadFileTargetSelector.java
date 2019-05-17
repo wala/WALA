@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +45,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
 
   private final MethodReference loadFileFunRef = AstMethodReference.fnReference(loadFileRef);
 
-  private final HashSet<URL> loadedFiles = HashSetFactory.make();
+  private final HashSet<String> loadedFiles = HashSetFactory.make();
 
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
@@ -76,12 +75,12 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
             JavaScriptLoader cl =
                 (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
             URL url = new URL(builder.getBaseURL(), str);
-            if (!loadedFiles.contains(url)) {
+            if (!loadedFiles.contains(url.toString())) {
               // try to open the input stream for the URL.  if it fails, we'll get an IOException
               // and fall through to default case
               try (InputStream inputStream = url.openConnection().getInputStream()) {}
               JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy(), cl, url);
-              loadedFiles.add(url);
+              loadedFiles.add(url.toString());
               IClass script =
                   builder
                       .getClassHierarchy()
@@ -89,11 +88,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
                           TypeReference.findOrCreate(cl.getReference(), 'L' + url.getFile()));
               return script.getMethod(AstMethodReference.fnSelector);
             }
-          } catch (MalformedURLException e1) {
-            // do nothing, fall through and return 'target'
-          } catch (IOException e) {
-            // do nothing, fall through and return 'target'
-          } catch (RuntimeException e) {
+          } catch (RuntimeException | IOException e1) {
             // do nothing, fall through and return 'target'
           }
         }

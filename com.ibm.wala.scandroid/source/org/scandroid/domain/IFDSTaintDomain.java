@@ -75,11 +75,7 @@ public class IFDSTaintDomain<E extends ISSABasicBlock>
   }
 
   private void index(DomainElement e) {
-    Set<DomainElement> elements = elementIndex.get(e.codeElement);
-    if (elements == null) {
-      elements = new HashSet<>();
-      elementIndex.put(e.codeElement, elements);
-    }
+    Set<DomainElement> elements = elementIndex.computeIfAbsent(e.codeElement, k -> new HashSet<>());
     elements.add(e);
   }
 

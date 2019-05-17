@@ -50,7 +50,7 @@ public class BitVectorRepository {
     }
     int size = value.size();
     for (int i = size; i > size - SUBSET_DELTA; i--) {
-      LinkedList<WeakReference<BitVectorIntSet>> m = buckets.get(Integer.valueOf(i));
+      LinkedList<WeakReference<BitVectorIntSet>> m = buckets.get(i);
       if (m != null) {
         Iterator<WeakReference<BitVectorIntSet>> it = m.iterator();
         while (it.hasNext()) {
@@ -72,11 +72,8 @@ public class BitVectorRepository {
       }
     }
     // didn't find one. create one.
-    LinkedList<WeakReference<BitVectorIntSet>> m = buckets.get(size);
-    if (m == null) {
-      m = new LinkedList<>();
-      buckets.put(size, m);
-    }
+    LinkedList<WeakReference<BitVectorIntSet>> m =
+        buckets.computeIfAbsent(size, k -> new LinkedList<>());
     BitVectorIntSet bv = new BitVectorIntSet(value);
     m.add(new WeakReference<>(bv));
     return bv;

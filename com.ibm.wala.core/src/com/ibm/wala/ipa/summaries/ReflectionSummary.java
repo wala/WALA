@@ -33,7 +33,7 @@ public class ReflectionSummary {
   }
 
   private Set<TypeReference> findOrCreateSetForBCIndex(int bcIndex) {
-    Integer I = Integer.valueOf(bcIndex);
+    Integer I = bcIndex;
     Set<TypeReference> result = map.get(I);
     if (result == null) {
       result = HashSetFactory.make(10);
@@ -46,7 +46,7 @@ public class ReflectionSummary {
     if (cha == null) {
       throw new IllegalArgumentException("null cha");
     }
-    Set<TypeReference> S = map.get(Integer.valueOf(bcIndex));
+    Set<TypeReference> S = map.get(bcIndex);
     if (S == null) {
       return null;
     } else {
@@ -63,6 +63,6 @@ public class ReflectionSummary {
   }
 
   public Set<TypeReference> getTypesForProgramLocation(int bcIndex) {
-    return map.get(Integer.valueOf(bcIndex));
+    return map.get(bcIndex);
   }
 }

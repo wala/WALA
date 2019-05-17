@@ -249,12 +249,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     solver = makeSolver();
     try {
       solver.solve(monitor);
-    } catch (CancelException e) {
-      CallGraphBuilderCancelException c =
-          CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
-              e, callGraph, system.extractPointerAnalysis(this));
-      throw c;
-    } catch (CancelRuntimeException e) {
+    } catch (CancelException | CancelRuntimeException e) {
       CallGraphBuilderCancelException c =
           CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
               e, callGraph, system.extractPointerAnalysis(this));

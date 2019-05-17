@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -63,10 +64,8 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       }
 
       int functionVn = getMethod().isStatic() ? -1 : makeArgument(m, 0);
-      int paramVns[] = new int[Math.min(0, getNumberOfParameters() - 1)];
-      for (int j = 0; j < paramVns.length; j++) {
-        paramVns[j] = makeArgument(m, j + 1);
-      }
+      int paramVns[] = new int[Math.max(0, getNumberOfParameters() - 1)];
+      Arrays.setAll(paramVns, j -> makeArgument(m, j + 1));
 
       return ((ScriptFakeRoot) m).addDirectCall(functionVn, paramVns, site);
     }

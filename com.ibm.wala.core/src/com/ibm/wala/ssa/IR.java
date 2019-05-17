@@ -108,10 +108,10 @@ public abstract class IR implements IRView {
               ((SSAAbstractInvokeInstruction) x).getCallSite().getProgramCounter(), i);
         }
         if (x instanceof SSANewInstruction) {
-          newSiteMapping.put(((SSANewInstruction) x).getNewSite(), Integer.valueOf(i));
+          newSiteMapping.put(((SSANewInstruction) x).getNewSite(), i);
         }
         if (x.isPEI()) {
-          peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), Integer.valueOf(i));
+          peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), i);
         }
       }
     }
@@ -544,13 +544,13 @@ public abstract class IR implements IRView {
   /** Return the new instruction corresponding to an allocation site */
   public SSANewInstruction getNew(NewSiteReference site) {
     Integer i = newSiteMapping.get(site);
-    return (SSANewInstruction) instructions[i.intValue()];
+    return (SSANewInstruction) instructions[i];
   }
 
   /** Return the instruction index corresponding to an allocation site */
   public int getNewInstructionIndex(NewSiteReference site) {
     Integer i = newSiteMapping.get(site);
-    return i.intValue();
+    return i;
   }
 
   /**
@@ -560,7 +560,7 @@ public abstract class IR implements IRView {
   @Override
   public SSAInstruction getPEI(ProgramCounter pc) {
     Integer i = peiMapping.get(pc);
-    return instructions[i.intValue()];
+    return instructions[i];
   }
 
   /**
@@ -705,7 +705,7 @@ public abstract class IR implements IRView {
     return cfg.getBasicBlock(bb);
   }
 
-  /** @return the {@link SSAOptions} which controlled how this {@link IR} was built */
+  /** @return the {@link SSAOptions} which controlled how this {@code IR} was built */
   public SSAOptions getOptions() {
     return options;
   }

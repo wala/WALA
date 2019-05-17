@@ -110,11 +110,7 @@ public class OutflowAnalysis {
       Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> graph,
       FlowType<IExplodedBasicBlock> source,
       FlowType<IExplodedBasicBlock> dest) {
-    Set<FlowType<IExplodedBasicBlock>> dests = graph.get(source);
-    if (dests == null) {
-      dests = new HashSet<>();
-      graph.put(source, dests);
-    }
+    Set<FlowType<IExplodedBasicBlock>> dests = graph.computeIfAbsent(source, k -> new HashSet<>());
     dests.add(dest);
   }
 
@@ -126,17 +122,14 @@ public class OutflowAnalysis {
       List<SinkSpec> sinkSpecs) {
     List<Collection<IMethod>> targetList = new ArrayList<>();
 
-    for (int i = 0; i < sinkSpecs.size(); i++) {
-      Collection<IMethod> tempList = sinkSpecs.get(i).getNamePattern().getPossibleTargets(cha);
+    for (SinkSpec sinkSpec : sinkSpecs) {
+      Collection<IMethod> tempList = sinkSpec.getNamePattern().getPossibleTargets(cha);
       targetList.add(tempList);
     }
 
     // look for all uses of query function and taint the results with the
     // Uri used in those functions
-    Iterator<BasicBlockInContext<IExplodedBasicBlock>> graphIt = graph.iterator();
-    while (graphIt.hasNext()) {
-      BasicBlockInContext<IExplodedBasicBlock> block = graphIt.next();
-
+    for (BasicBlockInContext<IExplodedBasicBlock> block : graph) {
       Iterator<SSAInvokeInstruction> invokeInstrs =
           IteratorUtil.filter(block.iterator(), SSAInvokeInstruction.class);
 

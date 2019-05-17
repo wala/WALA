@@ -91,7 +91,7 @@ public class HeadlessUtil {
         EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
         IProject proj = entry.getIFile().getProject();
         if (!projectsFiles.containsKey(proj)) {
-          projectsFiles.put(proj, new HashMap<Unit, EclipseSourceFileModule>());
+          projectsFiles.put(proj, new HashMap<>());
         }
         projectsFiles.get(proj).put(compiler.getCompilationUnit(entry.getIFile()), entry);
       }
@@ -108,8 +108,8 @@ public class HeadlessUtil {
             int length = problems.length;
             if (length > 0) {
               StringBuilder buffer = new StringBuilder();
-              for (int i = 0; i < length; i++) {
-                buffer.append(problems[i].toString());
+              for (Object problem : problems) {
+                buffer.append(problem.toString());
                 buffer.append('\n');
               }
               if (length != 0) {

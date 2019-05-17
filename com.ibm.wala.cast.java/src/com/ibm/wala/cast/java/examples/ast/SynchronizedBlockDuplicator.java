@@ -21,6 +21,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * transforms each synchronized block to execute under a conditional test calling some method m(),
@@ -76,7 +77,7 @@ public class SynchronizedBlockDuplicator
       return (o instanceof UnwindKey)
           && ((UnwindKey) o).testDirection == testDirection
           && ((UnwindKey) o).syncNode == syncNode
-          && (rest == null ? ((UnwindKey) o).rest == null : rest.equals(((UnwindKey) o).rest));
+          && Objects.equals(rest, ((UnwindKey) o).rest);
     }
 
     @Override

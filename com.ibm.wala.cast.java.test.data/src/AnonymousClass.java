@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
+@SuppressWarnings("UnnecessaryBoxing")
 public class AnonymousClass {
     private interface Foo {
       public int getValue();
@@ -24,7 +25,7 @@ public class AnonymousClass {
       public int getValue() { return value; }
 	    
       @Override
-      public int getValueBase() { return value - base.intValue(); }
+      public int getValueBase() { return value - base; }
 	};
 
 	System.out.println(f.getValue());
@@ -50,7 +51,7 @@ public class AnonymousClass {
 	    
       @Override
       public int getValueBase() { 
-	      return y + getValue() - base.intValue(); 
+	      return y + getValue() - base;
 	    }
 	}
 

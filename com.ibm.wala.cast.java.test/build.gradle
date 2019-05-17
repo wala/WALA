@@ -10,12 +10,6 @@ sourceSets.test {
 	resources.srcDirs = ['data']
 }
 
-publishing.publications {
-	mavenJava(MavenPublication) {
-		artifact jarTest
-	}
-}
-
 dependencies {
 	testCompile(
 		'junit:junit:4.12',

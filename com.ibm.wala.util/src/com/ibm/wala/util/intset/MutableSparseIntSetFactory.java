@@ -32,7 +32,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
       int[] copy = new int[T.size()];
       int i = 0;
       for (Integer I : T) {
-        copy[i++] = I.intValue();
+        copy[i++] = I;
       }
       MutableSparseIntSet result = new MutableSparseIntSet(copy);
       return result;

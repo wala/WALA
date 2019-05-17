@@ -16,7 +16,7 @@ public class TestCD2 {
 
   public static void main(String[] args) {
     Integer I = (Integer) new A().foo();
-    int i = I.intValue();
+    int i = I;
     if (i > 0) {
       System.out.println("X");
       doNothing(I);

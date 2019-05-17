@@ -37,7 +37,7 @@ public abstract class AbstractVariable<T extends AbstractVariable<T>> extends No
    *
    * <ul>
    *   <li>we need this to be extremely fast .. it's in the inner loop of lots of stuff.
-   *   <li>these objects will probably only be hashed with each other {@link AbstractVariable}s, in
+   *   <li>these objects will probably only be hashed with each other {@code AbstractVariable}s, in
    *       which case incrementing hash codes is OK.
    *   <li>we want determinism, so we don't want to rely on System.identityHashCode
    * </ul>

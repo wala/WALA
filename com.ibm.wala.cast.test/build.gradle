@@ -7,12 +7,14 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.test.java.srcDirs = ['harness-src/java']
 
-compileTestJava.options.headerOutputDirectory.set file('build/headers')
+tasks.named('compileTestJava') {
+	options.headerOutputDirectory.set file('build/headers')
 
-publishing.publications {
-	mavenJava(MavenPublication) {
-		artifact jarTest
-	}
+	// ECJ does not implement the "-h" flag required when the
+	// headerOutputDirectory option is used, so we must switch
+	// back to the default Java compiler for this one task.
+	toolChain = it.ext.originalToolChain
+	options.compilerArgs = []
 }
 
 dependencies {

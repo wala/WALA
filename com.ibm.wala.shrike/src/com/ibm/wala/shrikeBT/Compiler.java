@@ -1261,9 +1261,7 @@ public abstract class Compiler implements Constants {
   private int[] buildBytecodeMap(int start, int end) {
     int[] r = new int[code.length];
 
-    for (int i = 0; i < r.length; i++) {
-      r[i] = -1;
-    }
+    Arrays.fill(r, -1);
 
     for (int i = start; i < end; i++) {
       int off = instructionsToOffsets[i];

@@ -41,9 +41,7 @@ public class SymbolTable implements Cloneable {
       throw new IllegalArgumentException("Illegal numberOfParameters: " + numberOfParameters);
     }
     parameters = new int[numberOfParameters];
-    for (int i = 0; i < parameters.length; i++) {
-      parameters[i] = getNewValueNumber();
-    }
+    Arrays.setAll(parameters, i -> getNewValueNumber());
   }
 
   /**
@@ -75,14 +73,14 @@ public class SymbolTable implements Cloneable {
     if (result == null) {
       assert !copy : "making value for " + o;
       int r = getNewValueNumber();
-      result = Integer.valueOf(r);
+      result = r;
       constants.put(v, result);
       assert r < nextFreeValueNumber;
       values[r] = v;
     } else {
-      assert values[result.intValue()] instanceof ConstantValue;
+      assert values[result] instanceof ConstantValue;
     }
-    return result.intValue();
+    return result;
   }
 
   public void setConstantValue(int vn, ConstantValue val) {
@@ -127,23 +125,23 @@ public class SymbolTable implements Cloneable {
   }
 
   public int getConstant(boolean b) {
-    return findOrCreateConstant(Boolean.valueOf(b));
+    return findOrCreateConstant(b);
   }
 
   public int getConstant(int i) {
-    return findOrCreateConstant(Integer.valueOf(i));
+    return findOrCreateConstant(i);
   }
 
   public int getConstant(long l) {
-    return findOrCreateConstant(Long.valueOf(l));
+    return findOrCreateConstant(l);
   }
 
   public int getConstant(float f) {
-    return findOrCreateConstant(Float.valueOf(f));
+    return findOrCreateConstant(f);
   }
 
   public int getConstant(double d) {
-    return findOrCreateConstant(Double.valueOf(d));
+    return findOrCreateConstant(d);
   }
 
   public int getOtherConstant(Object v) {
@@ -354,9 +352,7 @@ public class SymbolTable implements Cloneable {
   public PhiValue getPhiValue(int valueNumber) {
     try {
       return (PhiValue) values[valueNumber];
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber, e);
-    } catch (ClassCastException e) {
+    } catch (ArrayIndexOutOfBoundsException | ClassCastException e) {
       throw new IllegalArgumentException("invalid valueNumber: " + valueNumber, e);
     }
   }

@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /** Abstract base class for implementations of bitvectors */
 @SuppressWarnings("rawtypes")
@@ -59,9 +60,7 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
 
   /** Clears all bits. */
   public final void clearAll() {
-    for (int i = 0; i < bits.length; i++) {
-      bits[i] = 0;
-    }
+    Arrays.fill(bits, 0);
   }
 
   @Override

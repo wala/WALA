@@ -17,7 +17,7 @@ public class Slice6 {
 
   public static void main(String[] args) {
 
-    messages = new Vector<Integer>();
+    messages = new Vector<>();
     messages.add(5);
 
     int message = messages.elementAt(0);

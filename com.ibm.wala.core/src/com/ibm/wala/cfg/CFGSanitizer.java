@@ -29,7 +29,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import java.util.Collection;
-import java.util.Iterator;
 
 /** Utility class to remove exceptional edges to exit() from a CFG */
 public class CFGSanitizer {
@@ -154,7 +153,7 @@ public class CFGSanitizer {
   /** What are the exception types which s may throw? */
   private static TypeReference[] computeExceptions(IClassHierarchy cha, IR ir, SSAInstruction s)
       throws InvalidClassFileException {
-    Collection<TypeReference> c = null;
+    final Collection<TypeReference> c;
     Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;
@@ -162,15 +161,6 @@ public class CFGSanitizer {
     } else {
       c = s.getExceptionTypes();
     }
-    if (c == null) {
-      return null;
-    } else {
-      TypeReference[] exceptions = new TypeReference[c.size()];
-      Iterator<TypeReference> it = c.iterator();
-      for (int i = 0; i < exceptions.length; i++) {
-        exceptions[i] = it.next();
-      }
-      return exceptions;
-    }
+    return c == null ? null : c.toArray(new TypeReference[0]);
   }
 }

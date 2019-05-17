@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,9 +58,7 @@ public final class AnalysisUtil {
     final int[] parameterNumbers = new int[number];
     assert (parameterNumbers.length == invokeInstruction.getNumberOfUses());
 
-    for (int i = 0; i < parameterNumbers.length; i++) {
-      parameterNumbers[i] = invokeInstruction.getUse(i);
-    }
+    Arrays.setAll(parameterNumbers, invokeInstruction::getUse);
 
     return parameterNumbers;
   }

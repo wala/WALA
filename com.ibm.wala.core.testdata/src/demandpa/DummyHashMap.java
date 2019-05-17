@@ -11,6 +11,7 @@
 package demandpa;
 
 /** doesn't actually work; just for testing pointer analysis */
+@SuppressWarnings("Convert2Lambda")
 public class DummyHashMap {
 
   Object[] keys = new Object[10];

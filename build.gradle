@@ -3,14 +3,18 @@
 //  plugin configuration must precede everything else
 //
 
+buildscript {
+	dependencies.classpath 'commons-io:commons-io:2.4'
+}
+
 plugins {
 	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'com.github.sherter.google-java-format' version '0.8'
+	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '9.2.0'
 	id 'nebula.source-jar' version '9.5.0' apply false
-	id 'maven-publish'
 }
 
 repositories {
@@ -59,7 +63,7 @@ p2AsMaven {
 //
 
 group name
-version '1.5.3-SNAPSHOT'
+version '1.5.4-SNAPSHOT'
 
 subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever
@@ -73,7 +77,6 @@ subprojects { subproject ->
 	}
 
 	apply plugin: 'java'
-	apply plugin: 'maven-publish'
 	apply plugin: 'nebula.source-jar'
 
 	version rootProject.version
@@ -87,12 +90,6 @@ subprojects { subproject ->
 
 	jar.manifest.from('META-INF/MANIFEST.MF')
 
-	publishing.publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
 	tasks.register('afterEclipseBuildshipImport') {
 		dependsOn 'processTestResources'
 	}
@@ -105,6 +102,32 @@ subprojects { subproject ->
 		exclude '**/*AndroidLibs*.class'
 
 		maxParallelForks = Integer.MAX_VALUE
+	}
+
+	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
+	// :com.ibm.wala.cast.test:compileTestJava, which requires JNI support that ECJ does not offer.
+	tasks.withType(JavaCompile) {
+		it.ext.originalToolChain = it.toolChain
+	}
+
+	// Use ECJ instead of default Java compiler if "javaCompiler" project property is set to either
+	// "ecj" or "eclipse" (case-insensitive).  For example, use "-PjavaCompiler=ecj" on Gradle
+	// command line or add "javaCompiler=ecj" to the "gradle.properties" file.
+	final def javaCompilerProperty = subproject.findProperty('javaCompiler')?.toLowerCase()
+	switch (javaCompilerProperty) {
+		case 'ecj':
+		case 'eclipse':
+			apply plugin: 'de.set.ecj'
+			tasks.withType(JavaCompile) {
+				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
+			}
+			break
+		case 'default':
+		case '':
+		case null:
+			break
+		default:
+			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
 	}
 }
 
@@ -158,9 +181,11 @@ subprojects {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  optional lint checking of Gradle scripts
+//  linters for various specific languages or file formats
 //
 
+
+// Gradle build scripts
 allprojects {
 	apply plugin: 'nebula.lint'
 	gradleLint.alwaysRun = false
@@ -175,16 +200,47 @@ allprojects {
 }
 
 
-////////////////////////////////////////////////////////////////////////
-//
-//  Javadoc linter
-//
-
+// Javadoc
 allprojects {
 	tasks.withType(Javadoc).configureEach {
 		options.addBooleanOption('Xdoclint:all,-missing', true)
 		options.quiet()
 	}
+}
+
+
+// shell scripts, provided they have ".sh" extension
+tasks.register('shellCheck', Exec) {
+	description 'Check all shell scripts using shellcheck, if available'
+	group 'lint'
+
+	inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
+	outputs.file "$temporaryDir/log"
+
+	doFirst {
+		// quietly succeed if "shellcheck" is not available
+		executable 'shellcheck'
+		final def execPaths = System.getenv('PATH').split(File.pathSeparator)
+		final def isAvailable = execPaths.any { file("$it/$executable").exists() }
+		if (!isAvailable) executable 'true'
+
+		args inputs.files
+
+		final def consoleOutput = System.out
+		final def fileOutput = new FileOutputStream(outputs.files.singleFile)
+		final def bothOutput = new org.apache.tools.ant.util.TeeOutputStream(consoleOutput, fileOutput)
+		standardOutput = errorOutput = bothOutput
+	}
+}
+
+
+tasks.register('linters') {
+	group = 'lint'
+	dependsOn(
+			'lintGradle',
+			'shellCheck',
+			'verifyGoogleJavaFormat',
+	)
 }
 
 
@@ -287,10 +343,9 @@ final def getNativeLibraryOutput(task) {
 //
 
 tasks.register('installGitHooks', Copy) {
-	from(file('config/hooks/pre-commit-stub')) {
-		rename 'pre-commit-stub', 'pre-commit'
-	}
-	into file('.git/hooks')
+	from 'config/hooks/pre-commit-stub'
+	rename { 'pre-commit' }
+	into '.git/hooks'
 	fileMode 0777
 }
 
@@ -303,4 +358,23 @@ tasks.register('installGitHooks', Copy) {
 
 tasks.register('downloads') {
 	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
+}
+
+tasks.register('aggregatedJavadocs', Javadoc) {
+	description = 'Generate javadocs from all child projects as if it was a single project'
+	group = 'Documentation'
+	destinationDir = file("$buildDir/docs/javadoc")
+	title = "$project.name $version API"
+	options.author true
+	options.links 'http://docs.oracle.com/javase/8/docs/api/'
+	options.addStringOption 'Xdoclint:none', '-quiet'
+
+	subprojects.each { proj ->
+		proj.tasks.withType(Javadoc).each { javadocTask ->
+			source += javadocTask.source
+			classpath += javadocTask.classpath
+			excludes += javadocTask.excludes
+			includes += javadocTask.includes
+		}
+	}
 }
