@@ -18,12 +18,17 @@ tasks.named('compileTestJava') {
 }
 
 dependencies {
-	testCompile(
-		'junit:junit:4.12',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.util'),
-		)
+/*
+	api(project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests')) {
+		because 'public class TestCallGraphShape extends class WalaTestCase'
+	}
+*/
+	testImplementation(
+			'junit:junit:4.12',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.util'),
+	)
 }
 
 tasks.named('test') {

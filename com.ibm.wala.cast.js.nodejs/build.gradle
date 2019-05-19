@@ -1,13 +1,15 @@
 dependencies {
-	compile(
-		'commons-io:commons-io:2.4',
-		'org.json:json:20160212',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.js'),
-		project(':com.ibm.wala.cast.js.rhino'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.util'),
-		)
+	api(project(':com.ibm.wala.cast.js')) {
+		because 'public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil'
+	}
+	implementation(
+			'commons-io:commons-io:2.4',
+			'org.json:json:20160212',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.js.rhino'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.util'),
+	)
 }
 
 final def downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {

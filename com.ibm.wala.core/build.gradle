@@ -6,20 +6,22 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.main {
 	java {
-	     srcDir 'src'
-	     exclude 'wala.properties'
+		srcDir 'src'
+		exclude 'wala.properties'
 	}
 	resources.srcDirs = [
-		'dat',
-		'lib',
+			'dat',
+			'lib',
 	]
 }
 
 dependencies {
-	compile(
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		)
+	api(project(':com.ibm.wala.shrike')) {
+		because 'public class Entrypoint implements interface BytecodeConstraints'
+	}
+	api(project(':com.ibm.wala.util')) {
+		because 'public interface CallGraph extends interface NumberedGraph'
+	}
 }
 
 tasks.named('javadoc') {

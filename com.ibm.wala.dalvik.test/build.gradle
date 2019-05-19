@@ -150,17 +150,18 @@ configurations {
 
 dependencies {
 	sampleCup 'java_cup:java_cup:0.9e:sources'
-	testCompile(
-		'junit:junit:4.12',
-		'org.osgi:org.osgi.core:4.2.0',
-		files("${copyDxJar.get().destinationDir}/dx.jar"),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.dalvik'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
-		)
-	testRuntime files("${copyAndroidJar.destinationDir}/android.jar")
+	testImplementation(
+			'junit:junit:4.12',
+			'org.osgi:org.osgi.core:4.2.0',
+			'org.smali:dexlib2:2.2.6',
+			files("${copyDxJar.get().destinationDir}/dx.jar"),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.dalvik'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+	)
+	testRuntimeOnly files("${copyAndroidJar.destinationDir}/android.jar")
 }
 
 tasks.named('processTestResources') {

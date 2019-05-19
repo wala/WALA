@@ -1,15 +1,15 @@
 sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
-	compile(
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.java'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-                'org.eclipse.core:org.eclipse.core.runtime:3.7.0',
-                'org.eclipse.jdt:org.eclipse.jdt.core:3.10.0'
-		)
+	implementation(
+			'org.eclipse.core:org.eclipse.core.runtime:3.7.0',
+			'org.eclipse.jdt:org.eclipse.jdt.core:3.10.0',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.java'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+	)
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
