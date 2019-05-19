@@ -7,6 +7,8 @@ sourceSets.test.java.srcDirs = ['harness-src']
 dependencies {
 	testCompile(
 		'junit:junit:4.12',
+		'commons-io:commons-io:2.4',
+		'net.htmlparser.jericho:jericho-html:3.2',
 		project(':com.ibm.wala.cast'),
 		project(':com.ibm.wala.cast.js'),
 		project(':com.ibm.wala.cast.js.rhino'),
