@@ -320,8 +320,11 @@ public class LambdaSummaryClass extends SyntheticClass {
       boolean isNew = kind == REF_NEWINVOKESPECIAL;
       Dispatch code = getDispatchForMethodHandleKind(kind);
 
-      int numLambdaCalleeParams =
-          getClassHierarchy().resolveMethod(lambdaBodyCallee).getNumberOfParameters();
+      IMethod resolved = getClassHierarchy().resolveMethod(lambdaBodyCallee);
+      if (resolved == null) {
+        throw new UnresolvedLambdaBodyException("could not resolve " + lambdaBodyCallee);
+      }
+      int numLambdaCalleeParams = resolved.getNumberOfParameters();
       // new calls (i.e., <init>) take one extra argument at position 0, the newly allocated object
       if (numLambdaCalleeParams != numFIMethodArgs + numCapturedValues + (isNew ? 1 : 0)) {
         throw new RuntimeException(
@@ -435,5 +438,18 @@ public class LambdaSummaryClass extends SyntheticClass {
    */
   public static Atom getCaptureFieldName(int i) {
     return Atom.findOrCreateUnicodeAtom("c" + i);
+  }
+
+  /**
+   * Exception thrown when the method containing the body of the lambda (or the target of a method
+   * reference) cannot be resolved.
+   */
+  static class UnresolvedLambdaBodyException extends RuntimeException {
+
+    private static final long serialVersionUID = -6504849409929928820L;
+
+    public UnresolvedLambdaBodyException(String s) {
+      super(s);
+    }
   }
 }
