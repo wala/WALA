@@ -285,7 +285,7 @@ tasks.named('clean') {
 //  collect "com.ibm.wala.core.testdata_1.0.0a.jar"
 //
 
-final def collectTestDataA = tasks.register('collectTestDataA', Jar) {
+tasks.register('collectTestDataA', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0a.jar'
 	from compileTestJava
 	from 'classes'
