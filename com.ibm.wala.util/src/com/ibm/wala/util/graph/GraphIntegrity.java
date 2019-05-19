@@ -171,7 +171,7 @@ public class GraphIntegrity {
         msg = msg + ", 2nd iterator contained " + first;
         return new UnsoundGraphException(msg);
       } else {
-        msg = msg + "set2.size = 0";
+        msg += "set2.size = 0";
         return new UnsoundGraphException(msg);
       }
     }

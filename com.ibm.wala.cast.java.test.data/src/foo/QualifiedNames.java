@@ -53,7 +53,7 @@ public class QualifiedNames {
                 x = x / x / x;
 
                 field = 5;
-                field = QualifiedNames.field + field;
+                field += QualifiedNames.field;
                 this.x = 6;
                 QualifiedNames.field = 6;
                 QualifiedNames.this.x = 6;

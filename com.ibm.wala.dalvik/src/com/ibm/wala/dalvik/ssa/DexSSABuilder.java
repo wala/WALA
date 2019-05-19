@@ -253,7 +253,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         }
       }
       // check the remaining values
-      for (i = i + 1; i < rhs.length; i++) {
+      for (i++; i < rhs.length; i++) {
         if (rhs[i] != x && rhs[i] != TOP) return false;
       }
       return true;

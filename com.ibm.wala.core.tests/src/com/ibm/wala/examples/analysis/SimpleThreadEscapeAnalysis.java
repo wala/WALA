@@ -127,10 +127,10 @@ public class SimpleThreadEscapeAnalysis
       javaHomePath = System.getProperty("java.home");
 
       if (!javaHomePath.endsWith(File.separator)) {
-        javaHomePath = javaHomePath + File.separator;
+        javaHomePath += File.separator;
       }
 
-      javaHomePath = javaHomePath + "lib";
+      javaHomePath += "lib";
     }
 
     // find jars from chosen JRE lib path
