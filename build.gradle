@@ -76,7 +76,7 @@ subprojects { subproject ->
 			return
 	}
 
-	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'nebula.source-jar'
 
 	version rootProject.version

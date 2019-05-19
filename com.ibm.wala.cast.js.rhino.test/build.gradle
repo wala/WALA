@@ -5,20 +5,24 @@ plugins {
 sourceSets.test.java.srcDirs = ['harness-src']
 
 dependencies {
-	testCompile(
-		'junit:junit:4.12',
-		'commons-io:commons-io:2.4',
-		'net.htmlparser.jericho:jericho-html:3.2',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.js'),
-		project(':com.ibm.wala.cast.js.rhino'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.cast.test'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
-		)
+	testArchives(
+			'junit:junit:4.12',
+			project(':com.ibm.wala.cast.js.rhino'),
+	)
+	testImplementation(
+			'commons-io:commons-io:2.4',
+			'junit:junit:4.12',
+			'net.htmlparser.jericho:jericho-html:3.2',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.js'),
+			project(':com.ibm.wala.cast.js.rhino'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.test'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+	)
 }
 
 tasks.named('processTestResources') {

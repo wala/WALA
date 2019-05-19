@@ -11,16 +11,16 @@ sourceSets.test {
 }
 
 dependencies {
-	testCompile(
-		'junit:junit:4.12',
-		'org.osgi:org.osgi.core:4.2.0',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.java'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
-		)
+	testImplementation(
+			'junit:junit:4.12',
+			'org.osgi:org.osgi.core:4.2.0',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.java'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+	)
 }
 
 tasks.named('test') {

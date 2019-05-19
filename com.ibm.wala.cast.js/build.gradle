@@ -4,14 +4,16 @@ sourceSets.main {
 }
 
 dependencies {
-	compile(
-		'commons-io:commons-io:2.4',
-		'net.htmlparser.jericho:jericho-html:3.2',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		)
+	api(project(':com.ibm.wala.cast')) {
+		because 'public class JSCallGraphUtil extends class CAstCallGraphUtil'
+	}
+	implementation(
+			'commons-io:commons-io:2.4',
+			'net.htmlparser.jericho:jericho-html:3.2',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+	)
 }
 
 tasks.register('createPackageList', CreatePackageList) {

@@ -4,21 +4,21 @@ sourceSets.test {
 }
 
 dependencies {
-	testCompile(
-		'eclipse-deps:org.eclipse.core.runtime:+',
-		'eclipse-deps:org.eclipse.equinox.common:+',
-		'eclipse-deps:org.eclipse.osgi:+',
-		'junit:junit:4.12',
-		'org.osgi:org.osgi.core:4.2.0',
-		'wst-deps:org.eclipse.wst.jsdt.core:+',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.js'),
-		project(':com.ibm.wala.cast.js.rhino'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.ide.jsdt'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
-		)
+	testImplementation(
+			'eclipse-deps:org.eclipse.core.runtime:+',
+			'eclipse-deps:org.eclipse.equinox.common:+',
+			'eclipse-deps:org.eclipse.osgi:+',
+			'junit:junit:4.12',
+			'org.osgi:org.osgi.core:4.2.0',
+			'wst-deps:org.eclipse.wst.jsdt.core:+',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.js'),
+			project(':com.ibm.wala.cast.js.rhino'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.ide.jsdt'),
+			project(':com.ibm.wala.util'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
+	)
 }
 
 tasks.named('test') {
