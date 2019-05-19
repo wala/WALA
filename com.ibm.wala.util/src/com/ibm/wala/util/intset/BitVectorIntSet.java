@@ -315,7 +315,7 @@ public final class BitVectorIntSet implements MutableIntSet {
       }
       for (int i = 0; i < 31; i++) {
         startingIndex++;
-        word = word >>> 1;
+        word >>>= 1;
         if ((word & 0x1) != 0) {
           action.act(startingIndex);
         }

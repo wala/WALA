@@ -36,7 +36,7 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
   protected FileModule makeFile(File file) {
     String rootPath = root.getAbsolutePath();
     if (!rootPath.endsWith(File.separator)) {
-      rootPath = rootPath + File.separator;
+      rootPath += File.separator;
     }
 
     String filePath = file.getAbsolutePath();

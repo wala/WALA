@@ -90,7 +90,7 @@ public class StackMapTableWriter extends Element {
     int position = sms.next().getOffset();
     positions[0] = oldToNew.get(position);
     while (sms.hasNext()) {
-      position = position + sms.next().getOffset() + 1;
+      position += sms.next().getOffset() + 1;
       positions[i++] = oldToNew.get(position);
     }
 

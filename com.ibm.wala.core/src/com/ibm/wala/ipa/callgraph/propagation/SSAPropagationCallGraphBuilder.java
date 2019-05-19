@@ -2031,7 +2031,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (cs != null) {
             for (InstanceKey c : cs) {
               if (c != null) {
-                h = h ^ c.hashCode();
+                h ^= c.hashCode();
               }
             }
           }
