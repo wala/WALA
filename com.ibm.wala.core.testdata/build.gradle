@@ -71,7 +71,7 @@ class CompileKawaJar extends Jar {
 		destinationDirectory.set project.projectDir
 	}
 
-	void setArgs(Object... args) {
+	void args(Object... args) {
 		compile.args args
 	}
 
