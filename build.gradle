@@ -13,7 +13,7 @@ plugins {
 	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
-	id 'nebula.lint' version '9.2.0'
+	id 'nebula.lint' version '11.5.0'
 	id 'nebula.source-jar' version '9.5.0' apply false
 }
 
@@ -210,10 +210,10 @@ allprojects {
 	gradleLint {
 		rules = ['all-dependency']
 		excludedRules = [
-			'duplicate-dependency-class',
-			'transitive-duplicate-dependency-class',
-			'unused-dependency',
-			]
+				// <https://github.com/nebula-plugins/gradle-lint-plugin/issues/203>
+				'undeclared-dependency',
+				'unused-dependency',
+		]
 	}
 }
 
@@ -323,13 +323,17 @@ final def addJvmLibrary(project, recipient) {
 						case 'linux':
 							osIncludeSubdir = 'linux'
 							final def subdirs = ['jre/lib/amd64/server', 'lib/amd64/server', 'lib/server']
-							final def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.so") }
+							final def candidates = subdirs.collect {
+								file("$currentJavaHome/$it/libjvm.so")
+							}
 							libJVM = candidates.find { it.exists() }
 							break
 						case 'macos':
 							osIncludeSubdir = 'darwin'
 							final def subdirs = ['jre/lib/server', 'lib/server']
-							final def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.dylib") }
+							final def candidates = subdirs.collect {
+								file("$currentJavaHome/$it/libjvm.dylib")
+							}
 							libJVM = candidates.find { it.exists() }
 							break
 						case 'windows':
