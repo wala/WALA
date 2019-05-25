@@ -18,8 +18,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,9 +49,9 @@ public final class Debug {
 
   private static PrintStream OUT_STREAM = System.out;
 
-  private static final Map<LogLevel, LogStream> logStreams = new HashMap<>();
+  private static final Map<LogLevel, LogStream> logStreams = new EnumMap<>(LogLevel.class);
 
-  private static Set<LogLevel> allowed = new HashSet<>();
+  private static Set<LogLevel> allowed = EnumSet.noneOf(LogLevel.class);
 
   static {
     allowed.addAll(Arrays.asList(LogLevel.values()));
