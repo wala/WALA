@@ -44,6 +44,7 @@ public class ExplicitBoxingTest {
 		(new ExplicitBoxingTest()).doit();
 	}
 	
+	@SuppressWarnings("AssignmentReplaceableWithOperatorAssignment")
 	private void doit() {
 		int a = 6;
 		a = a + a;

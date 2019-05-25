@@ -62,6 +62,7 @@ public class EnumSwitch {
 			System.out.println("gold"); break;
 		case COPAS:
 			total = x * x;
+			//noinspection AssignmentReplaceableWithOperatorAssignment
 			y = y + y;
 			System.out.println("cups"); break;
 		case ESPADAS:

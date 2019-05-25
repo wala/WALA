@@ -16,6 +16,7 @@ public class SimpleStringOps {
     System.out.println(s.substring(5) + " and other garbage");
   }
 
+  @SuppressWarnings("AssignmentReplaceableWithOperatorAssignment")
   public static void main(String[] args) {
     if (args.length > 0) {
       @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
