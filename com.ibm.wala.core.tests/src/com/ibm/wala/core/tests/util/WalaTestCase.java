@@ -25,6 +25,7 @@ import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
@@ -110,6 +111,6 @@ public abstract class WalaTestCase {
   }
 
   protected <T> void assertEquals(T x, T y) {
-    assert x == null ? y == null : x.equals(y) : "Expecting " + x + ", but got " + y;
+    assert Objects.equals(x, y) : "Expecting " + x + ", but got " + y;
   }
 }
