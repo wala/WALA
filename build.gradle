@@ -308,6 +308,14 @@ final def addCastLibrary(project, recipient) {
 	addJvmLibrary(project, recipient)
 }
 
+final findJvmLibrary(extension, currentJavaHome, subdirs) {
+	for (final subdir : subdirs) {
+		final candidate = file "$currentJavaHome/$subdir/libjvm.$extension"
+		if (candidate.exists())
+			return candidate
+	}
+}
+
 final def addJvmLibrary(project, recipient) {
 	project.with {
 		recipient.with {
@@ -321,19 +329,18 @@ final def addJvmLibrary(project, recipient) {
 					switch (family) {
 						case 'linux':
 							osIncludeSubdir = 'linux'
-							final def subdirs = ['jre/lib/amd64/server', 'lib/amd64/server', 'lib/server']
-							final def candidates = subdirs.collect {
-								file("$currentJavaHome/$it/libjvm.so")
-							}
-							libJVM = candidates.find { it.exists() }
+							libJVM = findJvmLibrary('so', currentJavaHome, [
+									'jre/lib/amd64/server',
+									'lib/amd64/server',
+									'lib/server',
+							])
 							break
 						case 'macos':
 							osIncludeSubdir = 'darwin'
-							final def subdirs = ['jre/lib/server', 'lib/server']
-							final def candidates = subdirs.collect {
-								file("$currentJavaHome/$it/libjvm.dylib")
-							}
-							libJVM = candidates.find { it.exists() }
+							libJVM = findJvmLibrary('dylib', currentJavaHome, [
+									'jre/lib/server',
+									'lib/server',
+							])
 							break
 						case 'windows':
 							osIncludeSubdir = 'win32'
