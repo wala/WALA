@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.basic;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.graph.NumberedGraph;
