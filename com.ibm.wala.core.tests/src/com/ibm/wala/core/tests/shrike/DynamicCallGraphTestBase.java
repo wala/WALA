@@ -122,13 +122,11 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
               "exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
       jvmArgs += " -DdynamicCGFilter=" + tmpFile.getCanonicalPath();
     }
-    childJvm.setJvmargs(jvmArgs);
+    childJvm.createJvmarg().setLine(jvmArgs);
 
-    StringBuilder argsStr = new StringBuilder();
     for (String a : args) {
-      argsStr.append(a).append(' ');
+      childJvm.createArg().setValue(a);
     }
-    childJvm.setArgs(argsStr.toString());
 
     childJvm.setFailonerror(true);
     childJvm.setFork(true);
