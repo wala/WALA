@@ -12,7 +12,7 @@ triggerTravis() {
        -H "Travis-API-Version: 3" \
        -H "Authorization: token $authToken" \
        -d "$body" \
-       $travisURL
+       "$travisURL"
 }
 
 triggerTravis wala%2FClient
