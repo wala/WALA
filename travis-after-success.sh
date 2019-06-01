@@ -10,8 +10,7 @@
 
 SLUG=wala/WALA
 JDK=oraclejdk8
-# TODO switch back to master!!!
-BRANCH=ms/dependent-trigger-gradle
+BRANCH=master
 OSNAME=linux
 
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then

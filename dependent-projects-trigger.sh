@@ -16,8 +16,8 @@ triggerTravis() {
 }
 
 triggerTravis wala%2FClient
-#triggerTravis wala%2FWALA-Mobile
-#triggerTravis wala%2FMemSAT
-#triggerTravis april1989%2FIncremental_Points_to_Analysis
-#triggerTravis SunghoLee%2FHybriDroid
-#triggerTravis wala%2FML
+triggerTravis wala%2FWALA-Mobile
+triggerTravis wala%2FMemSAT
+triggerTravis april1989%2FIncremental_Points_to_Analysis
+triggerTravis SunghoLee%2FHybriDroid
+triggerTravis wala%2FML
