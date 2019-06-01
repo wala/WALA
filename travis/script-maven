@@ -1,11 +1,3 @@
 #!/bin/sh -ex
 
 xvfb-run mvn clean install -B -q
-
-{
-  set +x
-  if [ -n "$AUTH_TOKEN" ]; then
-    bash ./dependent-projects-trigger.sh "$AUTH_TOKEN"
-  fi
-  set -x
-}
