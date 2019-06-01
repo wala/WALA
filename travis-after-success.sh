@@ -1,7 +1,9 @@
 #!/bin/bash -eux
 #
-# Deploy a jar, source jar, and javadoc jar to Sonatype's snapshot repo.
-# Also deploy javadocs to our web site.
+# Execute various steps after a successful Travis build on master.
+# * Deploy a jar, source jar, and javadoc jar to Sonatype's snapshot repo.
+# * Deploy javadocs to our web site.
+# * Trigger Travis for dependent projects
 #
 # Adapted from https://coderwall.com/p/9b_lfq and
 # http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/
@@ -50,4 +52,11 @@ else
   echo -e "Published Javadoc to gh-pages.\n"
   )
 
+  {
+    set +x
+    if [ -n "$AUTH_TOKEN" ]; then
+      ./dependent-projects-trigger.sh "$AUTH_TOKEN"
+    fi
+    set -x
+  }
 fi
