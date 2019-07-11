@@ -155,13 +155,10 @@ recommended way to bring WALA up in IntelliJ IDEA.
 
 The first time you open the WALA project, IntelliJ IDEA will
 synchronize its project model with the Gradle build configuration,
-including downloading some large supporting libraries.  After the
-lengthy import process completes, **use “Run → Run… → After Opening
-Pristine Project” to perform some post-import configuration.** This
-also can take tens of minutes, but is only necessary in a clean,
-never-previously-built tree.  [Be
+including downloading some large supporting libraries.  [Be
 patient](#external-dependencies-patience-is-a-virtue) during the
-initial project open, especially if you have a slow network connection.
+initial project open, especially if you have a slow network
+connection.
 
 ### Benign Warning About Non-Managed Maven Project
 
