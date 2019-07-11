@@ -76,6 +76,7 @@ subprojects { subproject ->
 			return
 	}
 
+	apply plugin: 'eclipse'
 	apply plugin: 'java-library'
 	apply plugin: 'nebula.source-jar'
 
@@ -90,8 +91,8 @@ subprojects { subproject ->
 
 	jar.manifest.from('META-INF/MANIFEST.MF')
 
-	tasks.register('afterEclipseBuildshipImport') {
-		dependsOn 'processTestResources'
+	eclipse {
+		synchronizationTasks 'processTestResources'
 	}
 
 	tasks.named('test') {
@@ -272,10 +273,6 @@ tasks.register('linters') {
 //
 //  Eclipse IDE integration
 //
-
-tasks.register('afterEclipseBuildshipImport', Exec) {
-	commandLine './revert-launchers.sh'
-}
 
 // workaround for <https://github.com/gradle/gradle/issues/4802>
 allprojects {

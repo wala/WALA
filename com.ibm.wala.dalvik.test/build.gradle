@@ -106,8 +106,8 @@ tasks.named('compileTestJava') {
 	dependsOn 'copyDxJar'
 }
 
-tasks.named('afterEclipseBuildshipImport') {
-	dependsOn 'copyDxJar'
+eclipse {
+	synchronizationTasks 'copyDxJar'
 }
 
 tasks.register('copyAndroidJar', Sync) {
