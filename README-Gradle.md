@@ -82,8 +82,8 @@ required that each developer do this by hand.
 
 ### One-Time Eclipse Configuration
 
-To work with WALA inside Eclipse, first **install Eclipse Buildship**
-using either [the Eclipse
+To work with WALA inside Eclipse, first **install Eclipse Buildship
+3.1 or later** using either [the Eclipse
 Marketplace](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-marketplace)
 or [the Eclipse update
 manager](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-eclipse-update-manager).
@@ -104,11 +104,15 @@ distribution” choice should be set to “Gradle wrapper”.  You do not
 need to select each of WALA’s sub-projects; import only the top-level
 WALA source tree, and the rest will follow.
 
-After the lengthy import process completes, **use “Run → After
-Importing WALA Into Eclipse” to perform some post-import cleanup and
-configuration.** Immediately after importing, you may see some errors
-in the Eclipse “Problems” view.  These should all go away after
-running the “After Importing WALA Into Eclipse” step.
+The first time you import the WALA project, Eclipse will synchronize
+its project model with the Gradle build configuration, including
+downloading some large supporting libraries.  The “Import Gradle
+Project” wizard may spend tens of minutes showing “Importing root
+project: Configure project :” with no movement of its progress bar.
+This is normal.  [Be
+patient](#external-dependencies-patience-is-a-virtue) during the
+initial project import, especially if you have a slow network
+connection.
 
 Note: a pristine WALA source tree is *not* pre-configured as a group
 of Eclipse projects.  Using the standard Eclipse “Existing Projects
