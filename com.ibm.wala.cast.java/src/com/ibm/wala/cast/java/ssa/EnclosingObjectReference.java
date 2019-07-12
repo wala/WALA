@@ -65,7 +65,7 @@ public class EnclosingObjectReference extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstJavaInstructionFactory) insts)
-        .EnclosingObjectReference(iindex, defs == null ? lval : defs[0], type);
+        .EnclosingObjectReference(iIndex(), defs == null ? lval : defs[0], type);
   }
 
   @Override

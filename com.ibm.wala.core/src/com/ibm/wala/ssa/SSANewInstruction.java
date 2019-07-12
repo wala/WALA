@@ -67,10 +67,10 @@ public abstract class SSANewInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (params == null) {
-      return insts.NewInstruction(iindex, defs == null ? result : defs[0], site);
+      return insts.NewInstruction(iIndex(), defs == null ? result : defs[0], site);
     } else {
       return insts.NewInstruction(
-          iindex, defs == null ? result : defs[0], site, uses == null ? params : uses);
+          iIndex(), defs == null ? result : defs[0], site, uses == null ? params : uses);
     }
   }
 

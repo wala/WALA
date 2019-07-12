@@ -41,7 +41,7 @@ public class AstJavaInvokeInstruction extends FixedParametersInvokeInstruction {
   protected SSAInstruction copyInstruction(
       SSAInstructionFactory insts, int results[], int[] params, int exception) {
     return ((AstJavaInstructionFactory) insts)
-        .JavaInvokeInstruction(iindex, results, params, exception, getCallSite());
+        .JavaInvokeInstruction(iIndex(), results, params, exception, getCallSite());
   }
 
   @Override

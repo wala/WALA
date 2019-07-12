@@ -32,7 +32,7 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
       throw new IllegalArgumentException("uses.length < 2");
     }
     return insts.ArrayLoadInstruction(
-        iindex,
+        iIndex(),
         defs == null ? result : defs[0],
         uses == null ? getArrayRef() : uses[0],
         uses == null ? getIndex() : uses[1],

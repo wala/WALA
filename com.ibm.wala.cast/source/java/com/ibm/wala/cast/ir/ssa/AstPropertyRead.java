@@ -13,7 +13,7 @@ public abstract class AstPropertyRead extends AbstractReflectiveGet {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
         .PropertyRead(
-            iindex,
+            iIndex(),
             defs == null ? getDef() : defs[0],
             uses == null ? getObjectRef() : uses[0],
             uses == null ? getMemberRef() : uses[1]);

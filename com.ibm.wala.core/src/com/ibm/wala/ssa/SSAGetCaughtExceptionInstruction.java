@@ -32,7 +32,7 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert defs == null || defs.length == 1;
     return insts.GetCaughtExceptionInstruction(
-        iindex, bbNumber, defs == null ? exceptionValueNumber : defs[0]);
+        iIndex(), bbNumber, defs == null ? exceptionValueNumber : defs[0]);
   }
 
   @Override

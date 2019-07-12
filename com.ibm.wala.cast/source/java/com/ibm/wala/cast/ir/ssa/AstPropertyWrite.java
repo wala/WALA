@@ -14,7 +14,7 @@ public abstract class AstPropertyWrite extends AbstractReflectivePut {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
         .PropertyWrite(
-            iindex,
+            iIndex(),
             uses == null ? getObjectRef() : uses[0],
             uses == null ? getMemberRef() : uses[1],
             uses == null ? getValue() : uses[2]);

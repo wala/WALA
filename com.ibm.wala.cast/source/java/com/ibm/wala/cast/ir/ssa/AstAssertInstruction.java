@@ -49,7 +49,7 @@ public class AstAssertInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
-        .AssertInstruction(iindex, uses == null ? value : uses[0], fromSpecification);
+        .AssertInstruction(iIndex(), uses == null ? value : uses[0], fromSpecification);
   }
 
   @Override

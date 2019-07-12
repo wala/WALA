@@ -27,7 +27,7 @@ public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((JSInstructionFactory) insts)
         .TypeOfInstruction(
-            iindex, (defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
+            iIndex(), (defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
   }
 
   @Override

@@ -44,7 +44,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
   public boolean containsKey(Object key) {
     if (key instanceof SSAInstruction) {
       SSAInstruction instruction = (SSAInstruction) key;
-      if (instruction.iindex >= 0) {
+      if (instruction.iIndex() >= 0) {
         return map.containsKey(new InstructionByIIndexWrapper<>(instruction));
       }
     }
@@ -60,7 +60,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
   public T get(Object key) {
     if (key instanceof SSAInstruction) {
       SSAInstruction instruction = (SSAInstruction) key;
-      if (instruction.iindex >= 0) {
+      if (instruction.iIndex() >= 0) {
         return map.get(new InstructionByIIndexWrapper<>(instruction));
       }
     }
@@ -76,7 +76,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
   public T remove(Object key) {
     if (key instanceof SSAInstruction) {
       SSAInstruction instruction = (SSAInstruction) key;
-      if (instruction.iindex >= 0) {
+      if (instruction.iIndex() >= 0) {
         return map.remove(new InstructionByIIndexWrapper<>(instruction));
       }
     }

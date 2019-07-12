@@ -30,10 +30,10 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
-      return insts.PutInstruction(iindex, uses == null ? val : uses[0], getDeclaredField());
+      return insts.PutInstruction(iIndex(), uses == null ? val : uses[0], getDeclaredField());
     else
       return insts.PutInstruction(
-          iindex,
+          iIndex(),
           uses == null ? getRef() : uses[0],
           uses == null ? val : uses[1],
           getDeclaredField());

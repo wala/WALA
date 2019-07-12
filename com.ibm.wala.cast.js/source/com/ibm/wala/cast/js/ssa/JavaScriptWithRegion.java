@@ -29,7 +29,7 @@ public class JavaScriptWithRegion extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((JSInstructionFactory) insts)
-        .WithRegion(iindex, uses == null ? expr : uses[0], isEnter);
+        .WithRegion(iIndex(), uses == null ? expr : uses[0], isEnter);
   }
 
   @Override

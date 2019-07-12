@@ -36,15 +36,15 @@ public class SSASwitchInstruction extends SSAInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert uses == null || uses.length == 1;
     for (int i = 1; i < casesAndLabels.length; i += 2) {
-      assert casesAndLabels[i] != iindex : "do not branch to self: " + this;
+      assert casesAndLabels[i] != iIndex() : "do not branch to self: " + this;
     }
     return insts.SwitchInstruction(
-        iindex, uses == null ? val : uses[0], defaultLabel, casesAndLabels);
+        iIndex(), uses == null ? val : uses[0], defaultLabel, casesAndLabels);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    StringBuilder result = new StringBuilder(iindex + ": switch ");
+    StringBuilder result = new StringBuilder(iIndex() + ": switch ");
     result.append(getValueString(symbolTable, val));
     result.append(" [");
     for (int i = 0; i < casesAndLabels.length - 1; i++) {

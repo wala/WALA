@@ -47,7 +47,8 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
     }
-    return insts.LoadMetadataInstruction(iindex, defs == null ? lval : defs[0], entityType, token);
+    return insts.LoadMetadataInstruction(
+        iIndex(), defs == null ? lval : defs[0], entityType, token);
   }
 
   @Override

@@ -32,7 +32,7 @@ public class AstGlobalRead extends SSAGetInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
-        .GlobalRead(iindex, (defs == null) ? getDef() : defs[0], getDeclaredField());
+        .GlobalRead(iIndex(), (defs == null) ? getDef() : defs[0], getDeclaredField());
   }
 
   @Override

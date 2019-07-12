@@ -31,10 +31,10 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
       return insts.GetInstruction(
-          iindex, defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
+          iIndex(), defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
     else
       return insts.GetInstruction(
-          iindex,
+          iIndex(),
           defs == null || defs.length == 0 ? result : defs[0],
           uses == null ? getRef() : uses[0],
           getDeclaredField());

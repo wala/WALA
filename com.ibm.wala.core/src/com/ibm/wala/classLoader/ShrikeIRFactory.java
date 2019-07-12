@@ -100,7 +100,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
                 // overriding getExceptionTypes().
                 newInstrs[i] =
                     new SSANewInstruction(
-                        newInstr.iindex, newInstr.getDef(), newInstr.getNewSite(), params) {
+                        newInstr.iIndex(), newInstr.getDef(), newInstr.getNewSite(), params) {
                       @Override
                       public Collection<TypeReference> getExceptionTypes() {
                         return JavaLanguage.getNewSafeArrayExceptions();

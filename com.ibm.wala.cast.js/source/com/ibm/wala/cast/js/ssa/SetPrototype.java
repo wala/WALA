@@ -39,7 +39,7 @@ public class SetPrototype extends SSAInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((JSInstructionFactory) insts)
         .SetPrototype(
-            iindex, (uses != null ? uses[0] : object), (uses != null ? uses[1] : prototype));
+            iIndex(), (uses != null ? uses[0] : object), (uses != null ? uses[1] : prototype));
   }
 
   @Override

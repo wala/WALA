@@ -42,7 +42,7 @@ public class AstLexicalRead extends AstLexicalAccess {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (defs == null) {
-      return new AstLexicalRead(iindex, getAccesses());
+      return new AstLexicalRead(iIndex(), getAccesses());
     } else {
       Access[] accesses = new Access[getAccessCount()];
       for (int i = 0; i < accesses.length; i++) {
@@ -51,7 +51,7 @@ public class AstLexicalRead extends AstLexicalAccess {
             new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, defs[i]);
       }
 
-      return ((AstInstructionFactory) insts).LexicalRead(iindex, accesses);
+      return ((AstInstructionFactory) insts).LexicalRead(iIndex(), accesses);
     }
   }
 

@@ -61,7 +61,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
     return insts.CheckCastInstruction(
-        iindex,
+        iIndex(),
         defs == null ? result : defs[0],
         uses == null ? val : uses[0],
         declaredResultTypes,

@@ -398,7 +398,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     private Position getInstructionPosition(SSAInstruction instruction) {
       IMethod method = node.getMethod();
       if (method instanceof AstMethod) {
-        return ((AstMethod) method).getSourcePosition(instruction.iindex);
+        return ((AstMethod) method).getSourcePosition(instruction.iIndex());
       }
       return null;
     }

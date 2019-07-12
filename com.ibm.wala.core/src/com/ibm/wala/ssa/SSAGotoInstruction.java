@@ -29,12 +29,12 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return insts.GotoInstruction(iindex, target);
+    return insts.GotoInstruction(iIndex(), target);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "goto (from iindex= " + this.iindex + " to iindex = " + this.target + ')';
+    return "goto (from iindex= " + this.iIndex() + " to iindex = " + this.target + ')';
   }
 
   @Override

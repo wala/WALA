@@ -26,7 +26,7 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException("if non-null, uses.length must be 1");
     }
-    return insts.ThrowInstruction(iindex, uses == null ? getException() : uses[0]);
+    return insts.ThrowInstruction(iIndex(), uses == null ? getException() : uses[0]);
   }
 
   /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */

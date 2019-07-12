@@ -146,7 +146,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
         @Override
         public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
           return insts.BinaryOpInstruction(
-              iindex,
+              iIndex(),
               getOperator(),
               false,
               false,
@@ -234,7 +234,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
             throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
           }
           return insts.ConversionInstruction(
-              iindex,
+              iIndex(),
               defs == null || defs.length == 0 ? getDef(0) : defs[0],
               uses == null ? getUse(0) : uses[0],
               getFromType(),

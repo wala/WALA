@@ -62,7 +62,7 @@ public class SSAPhiInstruction extends SSAInstruction {
       throw new IllegalArgumentException();
     }
     return insts.PhiInstruction(
-        iindex, defs == null ? result : defs[0], uses == null ? params : uses);
+        iIndex(), defs == null ? result : defs[0], uses == null ? params : uses);
   }
 
   @Override

@@ -32,7 +32,7 @@ public class AstGlobalWrite extends SSAPutInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
-        .GlobalWrite(iindex, getDeclaredField(), (uses == null) ? getVal() : uses[0]);
+        .GlobalWrite(iIndex(), getDeclaredField(), (uses == null) ? getVal() : uses[0]);
   }
 
   @Override

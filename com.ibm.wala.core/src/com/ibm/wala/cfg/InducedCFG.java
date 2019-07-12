@@ -501,7 +501,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
           if (DEBUG) {
             System.err.println(
-                "GOTO: Add additional CF " + last.iindex + " to " + tgt + " is node " + target);
+                "GOTO: Add additional CF " + last.iIndex() + " to " + tgt + " is node " + target);
           }
           addNormalEdgeTo(target);
         }
@@ -718,7 +718,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         }
         continue;
       }
-      if (instructions[i].iindex == iindex) {
+      if (instructions[i].iIndex() == iindex) {
         return i;
       }
     }

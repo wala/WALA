@@ -36,7 +36,7 @@ public class SSAInvokeDynamicInstruction extends SSAInvokeInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return new SSAInvokeDynamicInstruction(
-        iindex,
+        iIndex(),
         defs == null || result == -1 ? result : defs[0],
         uses == null ? params : uses,
         defs == null ? exception : defs[result == -1 ? 0 : 1],

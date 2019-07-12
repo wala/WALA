@@ -126,7 +126,7 @@ public class ArrayboundsAnalysisTest {
               "Unexpected necessity for bounds check in "
                   + identifyer
                   + ":"
-                  + method.getLineNumber(key.iindex),
+                  + method.getLineNumber(key.iIndex()),
               unnecessary,
               matcher);
         }

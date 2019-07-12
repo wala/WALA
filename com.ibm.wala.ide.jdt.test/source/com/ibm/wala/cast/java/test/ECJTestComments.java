@@ -70,9 +70,9 @@ public class ECJTestComments extends IRTests {
         DebuggingInformation dbg = m.debugInfo();
         for (SSAInstruction inst : node.getIR().getInstructions()) {
           System.err.println("leading for " + inst.toString(node.getIR().getSymbolTable()));
-          System.err.println(dbg.getLeadingComment(inst.iindex));
+          System.err.println(dbg.getLeadingComment(inst.iIndex()));
           System.err.println("following for " + inst.toString(node.getIR().getSymbolTable()));
-          System.err.println(dbg.getFollowingComment(inst.iindex));
+          System.err.println(dbg.getFollowingComment(inst.iIndex()));
         }
       }
     }

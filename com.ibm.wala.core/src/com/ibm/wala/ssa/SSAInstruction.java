@@ -19,11 +19,11 @@ public abstract class SSAInstruction {
 
   public static final int NO_INDEX = -1;
 
-  public final int iindex;
+  private int instructionIndex;
 
   /** prevent instantiation by the outside */
   protected SSAInstruction(int iindex) {
-    this.iindex = iindex;
+    this.instructionIndex = iindex;
   }
 
   /**
@@ -261,7 +261,15 @@ public abstract class SSAInstruction {
   public final boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj != null && obj instanceof SSAInstruction)
-      return this.iindex == ((SSAInstruction) obj).iindex;
+      return this.instructionIndex == ((SSAInstruction) obj).instructionIndex;
     else return false;
+  }
+
+  public int iIndex() {
+    return instructionIndex;
+  }
+
+  public void setInstructionIndex(int instructionIndex) {
+    this.instructionIndex = instructionIndex;
   }
 }

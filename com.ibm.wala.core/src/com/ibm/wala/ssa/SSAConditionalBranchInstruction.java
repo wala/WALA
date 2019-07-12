@@ -59,7 +59,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
       throw new IllegalArgumentException("(uses != null) and (uses.length < 2)");
     }
     return insts.ConditionalBranchInstruction(
-        iindex,
+        iIndex(),
         operator,
         type,
         uses == null ? val1 : uses[0],

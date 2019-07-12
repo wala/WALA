@@ -39,7 +39,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
       throw new IllegalArgumentException("expected 2 uses or null, but got " + uses.length);
     }
     return insts.ComparisonInstruction(
-        iindex,
+        iIndex(),
         operator,
         defs == null || defs.length == 0 ? result : defs[0],
         uses == null ? val1 : uses[0],

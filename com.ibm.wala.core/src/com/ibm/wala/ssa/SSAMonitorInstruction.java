@@ -31,7 +31,7 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert uses == null || uses.length == 1;
-    return insts.MonitorInstruction(iindex, uses == null ? ref : uses[0], isEnter);
+    return insts.MonitorInstruction(iIndex(), uses == null ? ref : uses[0], isEnter);
   }
 
   @Override

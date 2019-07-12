@@ -36,7 +36,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
       throw new IllegalArgumentException("uses.length == 0");
     }
     return insts.InstanceofInstruction(
-        iindex,
+        iIndex(),
         defs == null || defs.length == 0 ? result : defs[0],
         uses == null ? ref : uses[0],
         checkedType);

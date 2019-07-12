@@ -19,7 +19,7 @@ public class InstructionByIIndexWrapper<T extends SSAInstruction> {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + getInstruction().iindex;
+    result = prime * result + getInstruction().iIndex();
     return result;
   }
 
@@ -29,7 +29,7 @@ public class InstructionByIIndexWrapper<T extends SSAInstruction> {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     InstructionByIIndexWrapper<?> other = (InstructionByIIndexWrapper<?>) obj;
-    if (getInstruction().iindex != other.getInstruction().iindex) return false;
+    if (getInstruction().iIndex() != other.getInstruction().iIndex()) return false;
     return true;
   }
 
@@ -38,7 +38,7 @@ public class InstructionByIIndexWrapper<T extends SSAInstruction> {
   }
 
   public InstructionByIIndexWrapper(T instruction) {
-    if (instruction.iindex < 0) {
+    if (instruction.iIndex() < 0) {
       throw new IllegalArgumentException("The given instruction, can not be identified by iindex.");
     }
     this.instruction = instruction;

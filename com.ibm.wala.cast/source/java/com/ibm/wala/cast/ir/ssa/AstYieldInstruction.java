@@ -22,7 +22,7 @@ public class AstYieldInstruction extends AstConsumeInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory) insts).EchoInstruction(iindex, uses == null ? rvals : uses);
+    return ((AstInstructionFactory) insts).EchoInstruction(iIndex(), uses == null ? rvals : uses);
   }
 
   @Override

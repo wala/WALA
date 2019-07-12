@@ -54,7 +54,7 @@ public class AstJavaNewEnclosingInstruction extends SSANewInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstJavaInstructionFactory) insts)
         .JavaNewEnclosingInstruction(
-            iindex,
+            iIndex(),
             defs == null ? getDef(0) : defs[0],
             getNewSite(),
             uses == null ? enclosing : uses[0]);

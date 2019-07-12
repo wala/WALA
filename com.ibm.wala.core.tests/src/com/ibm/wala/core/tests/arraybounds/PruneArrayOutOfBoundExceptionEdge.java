@@ -221,7 +221,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
                 + "nor ArrayIndexOutOfBoundsException: "
                 + identifyer
                 + ":"
-                + method.getLineNumber(lastInstruction.iindex),
+                + method.getLineNumber(lastInstruction.iIndex()),
             lastInstruction.getExceptionTypes(),
             matcher1);
 
@@ -236,7 +236,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
                 + "and ArrayIndexOutOfBoundsException: "
                 + identifyer
                 + ":"
-                + method.getLineNumber(lastInstruction.iindex),
+                + method.getLineNumber(lastInstruction.iIndex()),
             lastInstruction.getExceptionTypes(),
             matcher2);
 

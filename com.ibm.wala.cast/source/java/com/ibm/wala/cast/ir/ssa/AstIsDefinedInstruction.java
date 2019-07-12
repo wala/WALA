@@ -79,7 +79,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
 
     return ((AstInstructionFactory) insts)
         .IsDefinedInstruction(
-            iindex,
+            iIndex(),
             (defs == null) ? lval : defs[0],
             (uses == null) ? rval : uses[0],
             (uses == null || fieldVal == -1) ? fieldVal : uses[1],

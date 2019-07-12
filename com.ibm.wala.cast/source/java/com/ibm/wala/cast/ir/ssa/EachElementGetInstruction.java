@@ -38,7 +38,7 @@ public class EachElementGetInstruction extends SSAAbstractBinaryInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
         .EachElementGetInstruction(
-            iindex,
+            iIndex(),
             (defs == null) ? getDef(0) : defs[0],
             (uses == null) ? getUse(0) : uses[0],
             (uses == null) ? getUse(1) : uses[1]);

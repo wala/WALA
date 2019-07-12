@@ -35,7 +35,7 @@ public class JavaScriptInstanceOf extends SSAInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((JSInstructionFactory) insts)
         .InstanceOf(
-            iindex,
+            iIndex(),
             defs == null ? result : defs[0],
             uses == null ? objVal : uses[0],
             uses == null ? typeVal : uses[1]);

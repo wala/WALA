@@ -75,7 +75,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
       }
     }
 
-    return ((JSInstructionFactory) insts).Invoke(iindex, fn, newLvals, newParams, newExp, site);
+    return ((JSInstructionFactory) insts).Invoke(iIndex(), fn, newLvals, newParams, newExp, site);
   }
 
   @Override

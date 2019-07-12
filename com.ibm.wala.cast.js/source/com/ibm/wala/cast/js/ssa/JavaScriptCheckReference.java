@@ -32,7 +32,7 @@ public class JavaScriptCheckReference extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((JSInstructionFactory) insts).CheckReference(iindex, uses == null ? ref : uses[0]);
+    return ((JSInstructionFactory) insts).CheckReference(iIndex(), uses == null ? ref : uses[0]);
   }
 
   @Override

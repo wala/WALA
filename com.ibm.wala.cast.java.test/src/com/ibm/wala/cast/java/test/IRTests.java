@@ -237,7 +237,7 @@ public abstract class IRTests {
         DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
         for (SSAInstruction inst : cgNode.getIR().getInstructions()) {
           if (findInstruction.test(inst)) {
-            Position pos = dbg.getOperandPosition(inst.iindex, operand);
+            Position pos = dbg.getOperandPosition(inst.iIndex(), operand);
             if (pos != null) {
               if (pos.getFirstLine() == position[0]
                   && pos.getFirstCol() == position[1]

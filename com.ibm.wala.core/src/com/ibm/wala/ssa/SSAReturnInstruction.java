@@ -33,12 +33,12 @@ public class SSAReturnInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    if (result == -1) return insts.ReturnInstruction(iindex);
+    if (result == -1) return insts.ReturnInstruction(iIndex());
     else {
       if (uses != null && uses.length != 1) {
         throw new IllegalArgumentException("invalid uses.  must have exactly one use.");
       }
-      return insts.ReturnInstruction(iindex, uses == null ? result : uses[0], isPrimitive);
+      return insts.ReturnInstruction(iIndex(), uses == null ? result : uses[0], isPrimitive);
     }
   }
 

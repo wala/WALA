@@ -38,7 +38,7 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
         .AssignInstruction(
-            iindex, defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
+            iIndex(), defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
   }
 
   /*

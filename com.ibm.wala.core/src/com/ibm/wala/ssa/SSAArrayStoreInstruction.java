@@ -29,7 +29,7 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
       throw new IllegalArgumentException("uses.length < 3");
     }
     return insts.ArrayStoreInstruction(
-        iindex,
+        iIndex(),
         uses == null ? getArrayRef() : uses[0],
         uses == null ? getIndex() : uses[1],
         uses == null ? value : uses[2],

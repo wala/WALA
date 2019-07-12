@@ -32,7 +32,7 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
       throw new IllegalArgumentException();
     }
     return insts.ArrayLengthInstruction(
-        iindex, defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
+        iIndex(), defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
   }
 
   @Override

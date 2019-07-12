@@ -65,7 +65,7 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
     assert defs == null || defs.length == 1;
     assert uses == null || uses.length == 1;
     return insts.PiInstruction(
-        iindex,
+        iIndex(),
         defs == null ? result : defs[0],
         uses == null ? val : uses[0],
         piBlock,

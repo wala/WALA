@@ -34,7 +34,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
     return insts.UnaryOpInstruction(
-        iindex,
+        iIndex(),
         operator,
         defs == null || defs.length == 0 ? result : defs[0],
         uses == null ? val : uses[0]);

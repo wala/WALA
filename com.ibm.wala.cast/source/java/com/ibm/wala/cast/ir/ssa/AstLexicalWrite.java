@@ -42,7 +42,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (uses == null) {
-      return new AstLexicalWrite(iindex, getAccesses());
+      return new AstLexicalWrite(iIndex(), getAccesses());
     } else {
       Access[] accesses = new Access[getAccessCount()];
       for (int i = 0; i < accesses.length; i++) {
@@ -51,7 +51,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
             new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, uses[i]);
       }
 
-      return ((AstInstructionFactory) insts).LexicalWrite(iindex, accesses);
+      return ((AstInstructionFactory) insts).LexicalWrite(iIndex(), accesses);
     }
   }
 

@@ -266,26 +266,26 @@ public class VolatileMethodSummary {
     if (statement == null) {
       throw new NullPointerException("Statement is null!");
     }
-    if (statement.iindex < 0) {
+    if (statement.iIndex() < 0) {
       throw new IllegalArgumentException("Statement has a negative iindex");
     }
-    if ((!this.allowReservedPC) && isReserved(statement.iindex)) {
+    if ((!this.allowReservedPC) && isReserved(statement.iIndex())) {
       throw new IllegalStateException(
-          "ProgramCounter " + statement.iindex + " is reserved! Use allowReserved(true).");
+          "ProgramCounter " + statement.iIndex() + " is reserved! Use allowReserved(true).");
     }
-    if (statement.iindex > this.currentProgramCounter) {
+    if (statement.iIndex() > this.currentProgramCounter) {
       throw new IllegalArgumentException(
           "IIndex "
-              + statement.iindex
+              + statement.iIndex()
               + " is greater than currentProgramCounter. Use getNextProgramCounter.");
     }
 
-    boolean didOverwrite = isUsed(statement.iindex);
-    while (this.instructions.size() - 1 < statement.iindex) this.instructions.add(null);
+    boolean didOverwrite = isUsed(statement.iIndex());
+    while (this.instructions.size() - 1 < statement.iIndex()) this.instructions.add(null);
     if (DEBUG) {
-      System.err.printf("Setting %s to %s\n", statement.iindex, statement);
+      System.err.printf("Setting %s to %s\n", statement.iIndex(), statement);
     }
-    this.instructions.set(statement.iindex, statement);
+    this.instructions.set(statement.iIndex(), statement);
     return didOverwrite;
   }
 
@@ -361,12 +361,12 @@ public class VolatileMethodSummary {
    *     #overwriteStatement(SSAInstruction)}.
    */
   public void addStatement(SSAInstruction statement) {
-    if (isUsed(statement.iindex)) {
+    if (isUsed(statement.iIndex())) {
       throw new IllegalArgumentException(
           "ProgramCounter "
-              + statement.iindex
+              + statement.iIndex()
               + " is in use! By "
-              + getStatementAt(statement.iindex)
+              + getStatementAt(statement.iIndex())
               + " Use overwriteStatement().");
     }
 
