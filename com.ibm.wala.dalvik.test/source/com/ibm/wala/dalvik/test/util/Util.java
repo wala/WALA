@@ -6,14 +6,12 @@ import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAVA_JAR;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
+import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.TemporaryFile;
@@ -23,7 +21,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.jar.JarFile;
 
 public class Util {
 
@@ -104,38 +101,14 @@ public class Util {
     return libs.toArray(new URI[0]);
   }
 
-  public static AnalysisScope makeDalvikScope(
-      URI[] androidLibs, File androidAPIJar, String dexFileName) throws IOException {
-    if (androidLibs != null) {
-      return AndroidAnalysisScope.setUpAndroidAnalysisScope(
-          new File(dexFileName).toURI(),
-          CallGraphTestUtil.REGRESSION_EXCLUSIONS,
-          CallGraphTestUtil.class.getClassLoader(),
-          androidLibs);
-
-    } else {
-      AnalysisScope scope =
-          AndroidAnalysisScope.setUpAndroidAnalysisScope(
-              new File(dexFileName).toURI(),
-              CallGraphTestUtil.REGRESSION_EXCLUSIONS,
-              CallGraphTestUtil.class.getClassLoader());
-
-      if (androidAPIJar != null) {
-        scope.addToScope(
-            ClassLoaderReference.Primordial, new JarFileModule(new JarFile(androidAPIJar)));
-      }
-
-      return scope;
-    }
-  }
-
   public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
     File F = File.createTempFile("walatest", ".jar");
     F.deleteOnExit();
     TemporaryFile.urlToFile(
         F, (new FileProvider()).getResource("com.ibm.wala.core.testdata_1.0.0a.jar"));
     File androidDex = convertJarToDex(F.getAbsolutePath());
-    AnalysisScope dalvikScope = makeDalvikScope(null, null, androidDex.getAbsolutePath());
+    AnalysisScope dalvikScope =
+        DalvikCallGraphTestBase.makeDalvikScope(null, null, androidDex.getAbsolutePath());
     return ClassHierarchyFactory.make(dalvikScope);
   }
 }

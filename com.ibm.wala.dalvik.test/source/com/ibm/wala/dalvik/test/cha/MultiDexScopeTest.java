@@ -2,8 +2,8 @@ package com.ibm.wala.dalvik.test.cha;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
+import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
-import com.ibm.wala.dalvik.test.util.Util;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -77,7 +77,7 @@ public class MultiDexScopeTest {
     scope = setUpTestScope(testAPK, "", MultiDexScopeTest.class.getClassLoader());
     cha = ClassHierarchyFactory.make(scope);
 
-    scope2 = Util.makeDalvikScope(null, null, testAPK);
+    scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, testAPK);
     cha2 = ClassHierarchyFactory.make(scope2);
 
     Assert.assertEquals(
@@ -114,7 +114,7 @@ public class MultiDexScopeTest {
     cha = ClassHierarchyFactory.make(scope);
 
     // use setUpAndroidAnalysisScope
-    scope2 = Util.makeDalvikScope(null, null, multidexApk);
+    scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, multidexApk);
     cha2 = ClassHierarchyFactory.make(scope2);
 
     Assert.assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(5));

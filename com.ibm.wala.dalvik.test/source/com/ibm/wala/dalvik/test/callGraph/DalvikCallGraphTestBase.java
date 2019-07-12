@@ -10,15 +10,15 @@
  */
 package com.ibm.wala.dalvik.test.callGraph;
 
-import static com.ibm.wala.dalvik.test.util.Util.makeDalvikScope;
-
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
+import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
-import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.jar.JarFile;
 
 public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
@@ -124,7 +125,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
     IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
-    List<? extends Entrypoint> es = getEntrypoints(cha);
+    List<? extends Entrypoint> es = new AndroidEntryPointLocator().getEntryPoints(cha);
 
     assert !es.isEmpty();
 
@@ -143,14 +144,29 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
     return Pair.make(callGraph, ptrAnalysis);
   }
 
-  public static List<? extends Entrypoint> getEntrypoints(final IClassHierarchy cha) {
-    Set<LocatorFlags> flags = HashSetFactory.make();
-    flags.add(LocatorFlags.INCLUDE_CALLBACKS);
-    flags.add(LocatorFlags.EP_HEURISTIC);
-    flags.add(LocatorFlags.CB_HEURISTIC);
-    AndroidEntryPointLocator eps = new AndroidEntryPointLocator(flags);
-    List<? extends Entrypoint> es = eps.getEntryPoints(cha);
-    return es;
+  public static AnalysisScope makeDalvikScope(
+      URI[] androidLibs, File androidAPIJar, String dexFileName) throws IOException {
+    if (androidLibs != null) {
+      return AndroidAnalysisScope.setUpAndroidAnalysisScope(
+          new File(dexFileName).toURI(),
+          CallGraphTestUtil.REGRESSION_EXCLUSIONS,
+          CallGraphTestUtil.class.getClassLoader(),
+          androidLibs);
+
+    } else {
+      AnalysisScope scope =
+          AndroidAnalysisScope.setUpAndroidAnalysisScope(
+              new File(dexFileName).toURI(),
+              CallGraphTestUtil.REGRESSION_EXCLUSIONS,
+              CallGraphTestUtil.class.getClassLoader());
+
+      if (androidAPIJar != null) {
+        scope.addToScope(
+            ClassLoaderReference.Primordial, new JarFileModule(new JarFile(androidAPIJar)));
+      }
+
+      return scope;
+    }
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(
