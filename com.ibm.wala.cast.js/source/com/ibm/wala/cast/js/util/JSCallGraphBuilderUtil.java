@@ -109,11 +109,15 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   public static URL getURLforFile(String dir, String name, ClassLoader loader) throws IOException {
     File f = null;
     FileProvider provider = new FileProvider();
-    try {
-      f = provider.getFile(dir + File.separator + name, loader);
-    } catch (FileNotFoundException e) {
-      // I guess we need to do this on Windows sometimes?  --MS
-      // if this fails, we won't catch the exception
+    if (dir.startsWith(File.separator)) {
+      f = new File(dir + File.separator + name);
+    } else {
+      try {
+        f = provider.getFile(dir + File.separator + name, loader);
+      } catch (FileNotFoundException e) {
+        // I guess we need to do this on Windows sometimes?  --MS
+        // if this fails, we won't catch the exception
+      }
     }
     return f.toURI().toURL();
   }
@@ -272,7 +276,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
   public static JSCFABuilder makeCGBuilder(
       JavaScriptLoaderFactory loaders,
-      SourceModule[] scripts,
+      Module[] scripts,
       CGBuilderType builderType,
       IRFactory<IMethod> irFactory)
       throws WalaException {
