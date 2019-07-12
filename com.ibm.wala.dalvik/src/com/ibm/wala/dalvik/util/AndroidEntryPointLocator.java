@@ -56,6 +56,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.SetOfClasses;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,6 +109,18 @@ public final class AndroidEntryPointLocator {
 
   private static final List<AndroidPossibleEntryPoint> possibleEntryPoints = new ArrayList<>();
   protected final Set<LocatorFlags> flags;
+
+  private static Set<LocatorFlags> defaultFlags() {
+    Set<LocatorFlags> flags = HashSetFactory.make();
+    flags.add(LocatorFlags.INCLUDE_CALLBACKS);
+    flags.add(LocatorFlags.EP_HEURISTIC);
+    flags.add(LocatorFlags.CB_HEURISTIC);
+    return flags;
+  }
+
+  public AndroidEntryPointLocator() {
+    this(defaultFlags());
+  }
 
   public AndroidEntryPointLocator(final Set<LocatorFlags> flags) {
     if (flags == null) {
