@@ -529,6 +529,13 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
           break;
         }
 
+      case CAstNode.CLASS_STMT:
+        {
+          if (visitor.visitClassStmt(n, context, visitor)) break;
+          visitor.leaveClassStmt(n, context, visitor);
+          break;
+        }
+
       case CAstNode.LOCAL_SCOPE:
         {
           if (visitor.visitLocalScope(n, context, visitor)) break;
@@ -1179,6 +1186,27 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveFunctionStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
+  /**
+   * Visit a FunctionStmt node.
+   *
+   * @param n the node to process
+   * @param c a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  protected boolean visitClassStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
+    return visitor.visitNode(n, c, visitor);
+  }
+  /**
+   * Leave a FunctionStmt node.
+   *
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveClassStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
+    visitor.leaveNode(n, c, visitor);
+  }
+
   /**
    * Visit a LocalScope node.
    *

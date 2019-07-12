@@ -384,6 +384,27 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
     delegate.leaveFunctionStmt(n, c, visitor);
   }
   /**
+   * Visit a ClassStmt node.
+   *
+   * @param n the node to process
+   * @param c a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  @Override
+  protected boolean visitClassStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
+    return delegate.visitClassStmt(n, c, visitor);
+  }
+  /**
+   * Leave a FunctionStmt node.
+   *
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  @Override
+  protected void leaveClassStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
+    delegate.leaveClassStmt(n, c, visitor);
+  }
+  /**
    * Visit a LocalScope node.
    *
    * @param n the node to process

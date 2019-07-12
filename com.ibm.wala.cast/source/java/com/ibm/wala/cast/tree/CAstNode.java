@@ -114,6 +114,7 @@ public interface CAstNode {
   public static final int YIELD_STMT = 26;
   public static final int FORIN_LOOP = 27;
   public static final int GLOBAL_DECL = 28;
+  public static final int CLASS_STMT = 29;
 
   // expression kinds
   public static final int FUNCTION_EXPR = 100;
