@@ -333,11 +333,14 @@ public interface TranslatorToCAst {
 
   default <X extends WalkContext<X, Y>, Y> void pushSourcePosition(
       WalkContext<X, Y> context, CAstNode n, Position p) {
-    if (context.pos().getPosition(n) == null
-        && !(n.getKind() == CAstNode.FUNCTION_EXPR || n.getKind() == CAstNode.FUNCTION_STMT)) {
-      context.pos().setPosition(n, p);
-      for (CAstNode child : n.getChildren()) {
-        pushSourcePosition(context, child, p);
+    assert context.pos() != null;
+    if (n != null) {
+      if (context.pos().getPosition(n) == null
+          && !(n.getKind() == CAstNode.FUNCTION_EXPR || n.getKind() == CAstNode.FUNCTION_STMT)) {
+        context.pos().setPosition(n, p);
+        for (CAstNode child : n.getChildren()) {
+          pushSourcePosition(context, child, p);
+        }
       }
     }
   }

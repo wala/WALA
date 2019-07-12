@@ -1012,4 +1012,37 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     verifyNameAssertions(CG, renamingAssertions);
   }
+
+  @Test
+  public void testThrowCrash()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badthrow.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean save = CAstCallGraphUtil.AVOID_DUMP;
+    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = save;
+  }
+
+  @Test
+  public void testNrWrapperCrash()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "nrwrapper.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean save = CAstCallGraphUtil.AVOID_DUMP;
+    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = save;
+  }
+
+  @Test
+  public void testFinallyCrash()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "finallycrash.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean save = CAstCallGraphUtil.AVOID_DUMP;
+    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = save;
+  }
 }

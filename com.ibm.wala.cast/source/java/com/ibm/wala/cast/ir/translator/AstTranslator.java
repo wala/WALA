@@ -67,6 +67,7 @@ import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
+import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
@@ -925,6 +926,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
           PreBasicBlock endBlock = getCurrentBlock();
           if (exception) {
+            assert unwindData.get(endBlock) == null;
             addPreNode(dummy);
             doThrow(astContext, e);
           } else {
@@ -934,12 +936,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
           if (target != null) {
             addEdge(currentBlock, getCurrentBlock());
+            assert unwindData.get(getCurrentBlock()) == null;
             addEdge(endBlock, target);
+            assert unwindData.get(target) == null;
 
             // `null' target is idiom for branch/throw to exit
           } else {
-            if (exception) addEdge(currentBlock, getCurrentBlock());
-            addDelayedEdge(endBlock, exitMarker, exception);
+            if (exception) {
+              addEdge(currentBlock, getCurrentBlock());
+            } else {
+              addDelayedEdge(endBlock, exitMarker, exception);
+            }
           }
 
           code.put(key, startBlock);
@@ -1169,6 +1176,21 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public void addEdge(PreBasicBlock src, PreBasicBlock dst) {
       super.addEdge(src, dst);
+
+      if (src.getLastInstructionIndex() >= 0) {
+        SSAInstruction inst = src.instructions.get(src.instructions.size() - 1);
+        if (inst instanceof SSAGotoInstruction) {
+          Iterator<PreBasicBlock> blks = getSuccNodes(src);
+          int succ = 0;
+          while (blks.hasNext()) {
+            if (!blks.next().isHandlerBlock()) {
+              succ++;
+              assert succ <= 1;
+            }
+          }
+        }
+      }
+
       deadBlocks.remove(dst);
     }
 
@@ -1372,21 +1394,26 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           blockNumber++;
         }
       }
-      if (DEBUG_CFG) System.err.println((getMaxNumber() + " blocks total"));
 
       init();
+
+      if (DEBUG_CFG) System.err.println((getMaxNumber() + " blocks total"));
 
       if (hasDeadBlocks) {
         for (PreBasicBlock src : blocks) {
           if (liveBlocks.contains(src)) {
             if (normalEdges.containsKey(src)) {
               for (PreBasicBlock succ : normalEdges.get(src)) {
-                addNormalEdge(src, succ);
+                if (liveBlocks.contains(succ)) {
+                  addNormalEdge(src, succ);
+                }
               }
             }
             if (exceptionalEdges.containsKey(src)) {
               for (PreBasicBlock succ : exceptionalEdges.get(src)) {
-                addExceptionalEdge(src, succ);
+                if (liveBlocks.contains(succ)) {
+                  addExceptionalEdge(src, succ);
+                }
               }
             }
           }
@@ -1394,6 +1421,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       } else {
         transferEdges(liveBlocks, icfg, this::addNormalEdge, this::addExceptionalEdge);
       }
+
+      blocks.forEach(
+          (blk) -> {
+            if (!liveBlocks.contains(blk)) {}
+          });
 
       int x = 0;
       instructions = new SSAInstruction[icfg.currentInstruction];
@@ -1410,17 +1442,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               if (succs.hasNext()) {
                 PreBasicBlock target = succs.next();
-                assert !succs.hasNext()
-                    : "unexpected successors for block "
-                        + block
-                        + ": "
-                        + target
-                        + " and "
-                        + succs.next();
+                assert !succs.hasNext() || !liveBlocks.contains(succs.next())
+                    : "unexpected successors for block " + block + ": " + this;
                 inst = insts.GotoInstruction(x, target.firstIndex);
               } else {
                 // goto to the end of the method, so the instruction is unnecessary
                 inst = null;
+              }
+            } else if (inst instanceof SSAThrowInstruction) {
+              if (getExceptionalSuccessors(block).isEmpty()) {
+                addExceptionalEdge(block, exit());
               }
             } else if (inst instanceof SSAConditionalBranchInstruction) {
               Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
@@ -1449,6 +1480,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             }
 
             instructions[x++] = inst;
+          }
+        }
+      }
+
+      if (hasDeadBlocks) {
+        for (int i = 0; i < instructions.length; i++) {
+          if (instructions[i] != null) {
+            if (instructions[i].iIndex() != i) {
+              instructions[i].setInstructionIndex(i);
+            }
           }
         }
       }

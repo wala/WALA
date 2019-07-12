@@ -94,6 +94,14 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
     MapUtil.findOrCreateSet(entity2DeclaredNames, c.top()).add(nm);
   }
 
+  @Override
+  protected void leaveClassStmt(CAstNode n, EntityContext c, CAstVisitor<EntityContext> visitor) {
+    CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
+    String nm = fn.getName();
+    //    System.err.println("declaration of " + nm + " in " + c.top());
+    MapUtil.findOrCreateSet(entity2DeclaredNames, c.top()).add(nm);
+  }
+
   private void checkForLexicalAccess(Context c, String nm) {
     CAstEntity entity = c.top();
     final Set<String> entityNames = entity2DeclaredNames.get(entity);

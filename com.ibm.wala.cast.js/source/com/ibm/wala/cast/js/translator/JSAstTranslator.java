@@ -109,13 +109,16 @@ public class JSAstTranslator extends AstTranslator {
         .addInstruction(
             ((JSInstructionFactory) insts)
                 .CheckReference(context.cfg().getCurrentInstruction(), readVn));
-    CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
+    CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.Root);
+
+    context.cfg().addPreNode(n, context.getUnwindState());
+    context.cfg().newBlock(true);
+
     if (target != null) {
       context.cfg().addPreEdge(n, target, true);
     } else {
       context.cfg().addPreEdgeToExit(n, true);
     }
-    context.cfg().newBlock(true);
   }
 
   @Override
@@ -131,7 +134,10 @@ public class JSAstTranslator extends AstTranslator {
   protected int doGlobalRead(CAstNode n, WalkContext context, String name, TypeReference type) {
     int readVn = super.doGlobalRead(n, context, name, type);
     // add a check if name is undefined, unless we're reading the value 'undefined'
-    if (n != null && !("undefined".equals(name) || "$$undefined".equals(name))) {
+    if (n != null
+        && !("undefined".equals(name)
+            || "$$undefined".equals(name)
+            || "__WALA__int3rnal__global".equals(name))) {
       addDefinedCheck(n, context, readVn);
     }
     return readVn;

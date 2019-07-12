@@ -42,7 +42,9 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -286,10 +288,19 @@ public class CorrelationFinder {
     }
     IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
 
+    SSAOptions ssaOptions = SSAOptions.defaultOptions();
+    ssaOptions.setDefaultValues(
+        new DefaultValues() {
+          @Override
+          public int getDefaultValue(SymbolTable symtab, int valueNumber) {
+            return symtab.getNullConstant();
+          }
+        });
+
     Map<IMethod, CorrelationSummary> correlations = HashMapFactory.make();
     for (IClass klass : cha) {
       for (IMethod method : klass.getAllMethods()) {
-        IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
+        IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, ssaOptions);
         CorrelationSummary summary = findCorrelatedAccesses(method, ir);
         if (!summary.getCorrelations().isEmpty()) correlations.put(method, summary);
       }

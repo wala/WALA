@@ -997,7 +997,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               if (!representsNullType(instanceKey)) {
                 system.findOrCreateIndexForInstanceKey(instanceKey);
                 PointerKey p = getPointerKeyForInstanceField(instanceKey, f);
-                system.newConstraint(def, assignOperator, p);
+                if (p != null) {
+                  system.newConstraint(def, assignOperator, p);
+                }
               }
             }
           } else {
