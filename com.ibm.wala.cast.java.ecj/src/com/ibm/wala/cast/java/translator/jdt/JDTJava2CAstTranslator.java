@@ -3689,9 +3689,14 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(fNullPointerExcType))
       context.cfg().add(monitorExitNode, catchTarget.snd, catchTarget.fst);
 
-    CAstNode tryBody =
-        makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, monitorEnterNode, bodyNodes);
-    CAstNode bigBody = makeNode(context, fFactory, n, CAstNode.UNWIND, tryBody, monitorExitNode);
+    CAstNode bigBody =
+        makeNode(
+            context,
+            fFactory,
+            n,
+            CAstNode.BLOCK_STMT,
+            monitorEnterNode,
+            makeNode(context, fFactory, n, CAstNode.UNWIND, bodyNodes, monitorExitNode));
 
     return makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, declStmt, bigBody);
   }
