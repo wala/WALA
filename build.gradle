@@ -305,12 +305,10 @@ final def addCastLibrary(project, recipient) {
 	addJvmLibrary(project, recipient)
 }
 
-final findJvmLibrary(extension, currentJavaHome, subdirs) {
-	for (final subdir : subdirs) {
-		final candidate = file "$currentJavaHome/$subdir/libjvm.$extension"
-		if (candidate.exists())
-			return candidate
-	}
+final File findJvmLibrary(extension, currentJavaHome, subdirs) {
+	return subdirs
+			.collect { file "$currentJavaHome/$it/libjvm.$extension" }
+			.find { it.exists() }
 }
 
 final def addJvmLibrary(project, recipient) {
