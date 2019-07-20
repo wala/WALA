@@ -635,7 +635,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatUse(PointsToSetVariable v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -646,7 +645,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
     Iterator<INodeWithNumber> result = delegateGraph.getSuccNodes(v);
     for (int i = 0; i < invImplicitUnaryMap.size(); i++) {
-      UnaryOperator op = invImplicitUnaryMap.getKey(i);
+      UnaryOperator<PointsToSetVariable> op = invImplicitUnaryMap.getKey(i);
       IBinaryNaturalRelation R = invImplicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
@@ -673,7 +672,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
     Iterator<INodeWithNumber> result = delegateGraph.getPredNodes(v);
     for (int i = 0; i < implicitUnaryMap.size(); i++) {
-      UnaryOperator op = implicitUnaryMap.getKey(i);
+      UnaryOperator<PointsToSetVariable> op = implicitUnaryMap.getKey(i);
       IBinaryNaturalRelation R = implicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
