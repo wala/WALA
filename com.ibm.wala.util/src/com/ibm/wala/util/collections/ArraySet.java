@@ -49,8 +49,7 @@ import java.util.NoSuchElementException;
  */
 public class ArraySet<T> extends AbstractSet<T> {
 
-  @SuppressWarnings("rawtypes")
-  private static final ArraySet EMPTY =
+  private static final ArraySet<?> EMPTY =
       new ArraySet<Object>(0, true) {
         @Override
         /*

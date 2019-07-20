@@ -46,8 +46,7 @@ public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
   /** */
   private static final long serialVersionUID = -3475591699051060160L;
 
-  @SuppressWarnings("rawtypes")
-  public static final ArraySetMultiMap EMPTY =
+  public static final ArraySetMultiMap<?, ?> EMPTY =
       new ArraySetMultiMap<Object, Object>() {
 
         /** */
