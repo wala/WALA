@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /** A repository for shared bit vectors as described by Heintze */
+@SuppressWarnings("Java8MapApi")
 public class BitVectorRepository {
 
   private static final boolean STATS = false;
