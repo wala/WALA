@@ -12,7 +12,6 @@ package com.ibm.wala.analysis.reflection;
 
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PointType;
-import com.ibm.wala.analysis.typeInference.SetType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -448,11 +447,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         } else {
           Assertions.UNREACHABLE("Unexpected type " + T.getClass());
         }
-      } else if (T instanceof SetType) {
-        // This code has clearly bitrotted, since iteratePoints() returns an Iterator<TypeReference>
-        // and we need an Iterator<IClass>. Commenting out for now. --MS
-        Assertions.UNREACHABLE();
-        // addStatementsForSetOfTypes(((SetType) T).iteratePoints());
       } else {
         Assertions.UNREACHABLE("Unexpected type " + T.getClass());
       }
