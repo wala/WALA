@@ -21,6 +21,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -41,17 +43,21 @@ public class ChaPanel extends JSplitPane {
     this.setRightComponent(methodList);
 
     tree.addTreeSelectionListener(
-        e -> {
-          TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
-          if (null == newLeadSelectionPath) {
-            return;
-          }
-          DefaultMutableTreeNode treeNode =
-              (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
-          IClass klass = (IClass) treeNode.getUserObject();
-          methodListModel.clear();
-          for (IMethod m : klass.getDeclaredMethods()) {
-            methodListModel.addElement(m.toString());
+        new TreeSelectionListener() {
+
+          @Override
+          public void valueChanged(TreeSelectionEvent e) {
+            TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
+            if (null == newLeadSelectionPath) {
+              return;
+            }
+            DefaultMutableTreeNode treeNode =
+                (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
+            IClass klass = (IClass) treeNode.getUserObject();
+            methodListModel.clear();
+            for (IMethod m : klass.getDeclaredMethods()) {
+              methodListModel.addElement(m.toString());
+            }
           }
         });
   }

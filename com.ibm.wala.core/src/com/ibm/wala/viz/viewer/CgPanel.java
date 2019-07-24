@@ -23,6 +23,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -41,23 +43,27 @@ public class CgPanel extends JSplitPane {
     this.setRightComponent(irViewer.getComponent());
 
     tree.addTreeSelectionListener(
-        e -> {
-          TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
-          if (null == newLeadSelectionPath) {
-            return;
-          }
-          DefaultMutableTreeNode treeNode =
-              (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
-          Object userObject = treeNode.getUserObject();
-          if (userObject instanceof CGNode) {
-            CGNode node = (CGNode) userObject;
-            IR ir1 = node.getIR();
-            irViewer.setIR(ir1);
-          } else if (userObject instanceof CallSiteReference) {
-            CGNode parentNode =
-                (CGNode) ((DefaultMutableTreeNode) treeNode.getParent()).getUserObject();
-            IR ir2 = parentNode.getIR();
-            irViewer.setIRAndPc(ir2, ((CallSiteReference) userObject).getProgramCounter());
+        new TreeSelectionListener() {
+
+          @Override
+          public void valueChanged(TreeSelectionEvent e) {
+            TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
+            if (null == newLeadSelectionPath) {
+              return;
+            }
+            DefaultMutableTreeNode treeNode =
+                (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
+            Object userObject = treeNode.getUserObject();
+            if (userObject instanceof CGNode) {
+              CGNode node = (CGNode) userObject;
+              IR ir1 = node.getIR();
+              irViewer.setIR(ir1);
+            } else if (userObject instanceof CallSiteReference) {
+              CGNode parentNode =
+                  (CGNode) ((DefaultMutableTreeNode) treeNode.getParent()).getUserObject();
+              IR ir2 = parentNode.getIR();
+              irViewer.setIRAndPc(ir2, ((CallSiteReference) userObject).getProgramCounter());
+            }
           }
         });
   }
