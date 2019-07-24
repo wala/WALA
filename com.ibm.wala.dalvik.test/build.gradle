@@ -60,7 +60,7 @@ final def installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 	from zipTree(downloadAndroidSdk.get().dest)
 	into temporaryDir
 
-	def buildToolsVersion = '26.0.2'
+	def buildToolsVersion = '28.0.3'
 	ext {
 		components = [
 			'build-tools': buildToolsVersion,

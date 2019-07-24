@@ -73,7 +73,7 @@
 	<target name="fetchDxJar">
 		<mkdir dir="${basedir}/lib/"/>
 		<copy
-		    file="${androiddir}/build-tools/26.0.2/lib/dx.jar"
+		    file="${androiddir}/build-tools/28.0.3/lib/dx.jar"
 		    tofile="${basedir}/lib/dx.jar" force="true"/>
 	</target>
 
