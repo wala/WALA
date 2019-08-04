@@ -35,7 +35,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /** Test integrity of CFGs */
-public class CFGTest extends WalaTestCase {
+public abstract class CFGTest extends WalaTestCase {
 
   private final IClassHierarchy cha;
 

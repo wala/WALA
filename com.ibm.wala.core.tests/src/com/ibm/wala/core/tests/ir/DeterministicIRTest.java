@@ -37,7 +37,7 @@ import org.junit.Test;
  * <p>Introduced 05-AUG-03; the default implementation of hashCode was being invoked.
  * Object.hashCode is a source of random numbers and has no place in a deterministic program.
  */
-public class DeterministicIRTest extends WalaTestCase {
+public abstract class DeterministicIRTest extends WalaTestCase {
 
   private IClassHierarchy cha;
 

@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 
-public class TypeAnnotationTest extends WalaTestCase {
+public abstract class TypeAnnotationTest extends WalaTestCase {
 
   private final IClassHierarchy cha;
 

@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-public class JDTJavaIRTests extends JavaIRTests {
+public abstract class JDTJavaIRTests extends JavaIRTests {
 
   public static final String PROJECT_NAME = "com.ibm.wala.cast.java.test.data";
 
