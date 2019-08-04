@@ -120,6 +120,7 @@ public class PaPanel extends JSplitPane {
           public void treeCollapsed(TreeExpansionEvent event) {}
         });
 
+    //noinspection Convert2Lambda
     heapTree.addTreeSelectionListener(
         new TreeSelectionListener() {
 

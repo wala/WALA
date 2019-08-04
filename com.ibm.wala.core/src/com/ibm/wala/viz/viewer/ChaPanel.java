@@ -42,6 +42,7 @@ public class ChaPanel extends JSplitPane {
     JList<String> methodList = new JList<>(methodListModel);
     this.setRightComponent(methodList);
 
+    //noinspection Convert2Lambda
     tree.addTreeSelectionListener(
         new TreeSelectionListener() {
 
