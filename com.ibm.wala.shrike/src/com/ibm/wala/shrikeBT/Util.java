@@ -552,9 +552,7 @@ public final class Util {
 
   private static byte[] makeTypeIndices() {
     byte[] r = new byte[128];
-    for (int i = 0; i < r.length; i++) {
-      r[i] = -1;
-    }
+    Arrays.fill(r, (byte) -1);
     r['I'] = 0;
     r['J'] = 1;
     r['F'] = 2;
