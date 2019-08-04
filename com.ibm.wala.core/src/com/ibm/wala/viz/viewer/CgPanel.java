@@ -42,6 +42,7 @@ public class CgPanel extends JSplitPane {
     final IrAndSourceViewer irViewer = new IrAndSourceViewer();
     this.setRightComponent(irViewer.getComponent());
 
+    //noinspection Convert2Lambda
     tree.addTreeSelectionListener(
         new TreeSelectionListener() {
 
