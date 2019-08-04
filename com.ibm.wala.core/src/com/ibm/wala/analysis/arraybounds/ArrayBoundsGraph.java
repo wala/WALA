@@ -182,7 +182,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 
   public HyperNode<Integer> addNode(Integer value) {
     HyperNode<Integer> result;
-    if (!this.getNodes().keySet().contains(value)) {
+    if (!this.getNodes().containsKey(value)) {
       result = new HyperNode<>(value);
       this.getNodes().put(value, result);
     } else {
@@ -211,7 +211,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
    * [var] is set to 0 it will stay 0.
    */
   public void createSourceVar(Integer var) {
-    if (this.getNodes().keySet().contains(var)) {
+    if (this.getNodes().containsKey(var)) {
       throw new AssertionError("Source variables should only be created once.");
     }
 

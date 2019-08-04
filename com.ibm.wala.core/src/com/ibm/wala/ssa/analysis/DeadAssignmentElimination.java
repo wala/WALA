@@ -131,7 +131,7 @@ public class DeadAssignmentElimination {
           if (trivialDead.contains(ud)) {
             // do nothing ... u will not keep def live
           } else {
-            if (!vars.keySet().contains(ud)) {
+            if (!vars.containsKey(ud)) {
               // u is not potentially dead ... certainly v is live.
               // record this.
               B.set(true);

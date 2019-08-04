@@ -129,7 +129,7 @@ public class IFDSTaintDomain<E extends ISSABasicBlock>
 
   @Override
   public boolean hasMappedIndex(DomainElement o) {
-    return table.keySet().contains(o);
+    return table.containsKey(o);
   }
 
   @Override
