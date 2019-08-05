@@ -117,7 +117,7 @@ public class AndroidManifestXMLReader {
     }
   }
 
-  private void readXML(InputStream xml)
+  private static void readXML(InputStream xml)
       throws SAXException, IOException, ParserConfigurationException {
     assert (xml != null) : "xmlFile may not be null";
 
