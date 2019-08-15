@@ -37,7 +37,6 @@ env:
 matrix:
   include:
     - os: linux
-      dist: xenial
       env: BUILD_SYSTEM=gradle
       language: java
       jdk: openjdk11
