@@ -6,6 +6,7 @@ package arraybounds;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
+@SuppressWarnings("IfStatementMissingBreakInLoop")
 public class Detectable {
   private int[] memberArr = new int[5];
 
