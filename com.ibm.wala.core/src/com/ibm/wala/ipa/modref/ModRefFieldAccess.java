@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public final class ModRefFieldAccess {
 
-  private class TwoMaps {
+  private static class TwoMaps {
     private Map<IClass, Set<IField>> mods;
     private Map<IClass, Set<IField>> refs;
 

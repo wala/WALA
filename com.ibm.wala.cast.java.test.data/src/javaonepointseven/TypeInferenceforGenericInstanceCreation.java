@@ -9,6 +9,7 @@ import java.util.List;
  *     <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/language/type-inference-generic-instance-creation.html">Java 7 docs</a>
  */
 public class TypeInferenceforGenericInstanceCreation {
+  @SuppressWarnings("InnerClassMayBeStatic")
   class MyClass<X> {
     X a;
     <T> MyClass(T t) {

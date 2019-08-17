@@ -63,7 +63,7 @@ public class ContextSensitiveReachingDefs {
   }
 
   /** controls numbering of putstatic instructions for use in tabulation */
-  private class ReachingDefsDomain extends MutableMapping<Pair<CGNode, Integer>>
+  private static class ReachingDefsDomain extends MutableMapping<Pair<CGNode, Integer>>
       implements TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> {
 
     private static final long serialVersionUID = 4014252274660361965L;

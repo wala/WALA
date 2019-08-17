@@ -276,7 +276,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
    *
    * @author rfuhrer
    */
-  protected class JavaField extends AstField {
+  protected static class JavaField extends AstField {
     protected JavaField(
         CAstEntity fieldEntity,
         IClassLoader loader,

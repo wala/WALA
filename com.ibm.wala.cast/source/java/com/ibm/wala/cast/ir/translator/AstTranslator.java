@@ -770,7 +770,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  protected final class UnwindState {
+  protected static final class UnwindState {
     final CAstNode unwindAst;
 
     final WalkContext astContext;
@@ -1563,7 +1563,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   private static final boolean DEBUG = false;
 
-  protected class FinalCAstSymbol implements CAstSymbol {
+  protected static class FinalCAstSymbol implements CAstSymbol {
     private final String _name;
     private final CAstType type;
 
