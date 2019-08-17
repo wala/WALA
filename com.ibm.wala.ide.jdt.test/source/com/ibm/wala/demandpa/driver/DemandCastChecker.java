@@ -231,6 +231,7 @@ public class DemandCastChecker {
           for (TypeReference t : declaredResultTypes) {
             if (!t.isPrimitiveType()) {
               primOnly = false;
+              break;
             }
           }
           if (primOnly) {

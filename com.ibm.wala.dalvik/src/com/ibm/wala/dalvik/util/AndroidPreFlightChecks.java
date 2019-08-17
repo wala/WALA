@@ -250,6 +250,7 @@ public class AndroidPreFlightChecks {
         if (type.equals(
             TypeReference.JavaLangObject.getName())) { // Why if JavaLangObjectName private? .. narf
           pass = false;
+          break;
         }
       }
     }

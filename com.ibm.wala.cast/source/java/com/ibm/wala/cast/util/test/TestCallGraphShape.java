@@ -114,6 +114,7 @@ public abstract class TestCallGraphShape {
           for (String localName : localNames) {
             if (localName.equals(name.name)) {
               found = true;
+              break;
             }
           }
 

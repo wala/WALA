@@ -54,6 +54,7 @@ public class BatchVerifier {
     for (String arg : args) {
       if (arg.equals("-d")) {
         disasm = true;
+        break;
       }
     }
 
