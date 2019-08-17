@@ -55,7 +55,7 @@ public class SourceBuffer {
         }
       }
     } else {
-      lines.add(currentLine.substring(p.getFirstCol() < 0 ? 0 : p.getFirstCol()));
+      lines.add(currentLine.substring(Math.max(p.getFirstCol(), 0)));
     }
 
     while (p.getLastOffset() >= 0 ? p.getLastOffset() >= offset : p.getLastLine() >= line) {
