@@ -118,7 +118,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     return ti;
   }
 
-  protected class AstJavaInterestingVisitor extends AstInterestingVisitor
+  protected static class AstJavaInterestingVisitor extends AstInterestingVisitor
       implements AstJavaInstructionVisitor {
     protected AstJavaInterestingVisitor(int vn) {
       super(vn);

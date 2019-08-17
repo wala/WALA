@@ -67,7 +67,7 @@ import org.junit.Test;
 
 public abstract class TestPointerAnalyses {
 
-  private final class CheckPointers
+  private static final class CheckPointers
       implements Predicate<
           Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> {
     private Set<Pair<String, Integer>> map(Set<Pair<CGNode, NewSiteReference>> sites) {

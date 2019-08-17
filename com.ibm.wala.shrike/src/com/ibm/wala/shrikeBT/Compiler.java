@@ -413,7 +413,7 @@ public abstract class Compiler implements Constants {
     computeStackWordsAt(0, 0, new byte[instructions.length * 2], new boolean[instructions.length]);
   }
 
-  abstract class Patch {
+  abstract static class Patch {
     final int instrStart;
 
     final int instrOffset;

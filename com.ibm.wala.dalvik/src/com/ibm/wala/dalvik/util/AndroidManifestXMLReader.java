@@ -715,7 +715,7 @@ public class AndroidManifestXMLReader {
     }
   }
 
-  private class SAXHandler extends DefaultHandler {
+  private static class SAXHandler extends DefaultHandler {
     private int unimportantDepth = 0;
 
     public SAXHandler() {

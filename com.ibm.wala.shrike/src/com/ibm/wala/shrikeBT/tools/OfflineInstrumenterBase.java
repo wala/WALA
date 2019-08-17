@@ -72,7 +72,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * This class represents a resource which can be opened and read; either a file or a JAR entry.
    */
-  abstract class Input {
+  abstract static class Input {
     private String className;
 
     /** Tell us what the classname is supposed to be, if it's a class file. */
@@ -165,7 +165,7 @@ public abstract class OfflineInstrumenterBase {
    * This class represents a plain old class file in the filesystem. Non-class file resources are
    * not supported.
    */
-  final class ClassInput extends Input {
+  static final class ClassInput extends Input {
     private final File file;
     private final File baseDirectory;
 

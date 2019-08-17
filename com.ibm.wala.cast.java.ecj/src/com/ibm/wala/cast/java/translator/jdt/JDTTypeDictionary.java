@@ -208,7 +208,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     }
   }
 
-  public final class JdtUnionType implements Union {
+  public static final class JdtUnionType implements Union {
     private final Set<CAstType> constituents;
 
     public JdtUnionType(Set<CAstType> constituents) {

@@ -81,7 +81,7 @@ public class AstLoopUnwinder
     }
   }
 
-  private class LoopContext implements RewriteContext<UnwindKey> {
+  private static class LoopContext implements RewriteContext<UnwindKey> {
     private final CAstRewriter.RewriteContext<UnwindKey> parent;
     private final int iteration;
 

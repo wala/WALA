@@ -106,7 +106,7 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
-  public class PhiUseRecord {
+  public static class PhiUseRecord {
     final int BBnumber;
 
     final int phiNumber;
