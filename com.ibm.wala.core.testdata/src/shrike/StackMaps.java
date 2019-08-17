@@ -1,5 +1,6 @@
 package shrike;
 
+@SuppressWarnings("ManualMinMaxCalculation")
 public class StackMaps {
   private int field1;
   private int field2;
