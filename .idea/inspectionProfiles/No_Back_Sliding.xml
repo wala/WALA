@@ -3,9 +3,15 @@
     <option name="myName" value="No Back-Sliding" />
     <inspection_tool class="AccessStaticViaInstance" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="AnonymousHasLambdaAlternative" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="ArrayEquals" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ArrayHashCode" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AssignmentUsedAsCondition" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="BadExpressionStatementJS" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="BashSimpleVarUsage" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="BashUnresolvedVariable" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="BashUnusedFunctionParams" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -22,12 +28,21 @@
     <inspection_tool class="CharsetObjectCanBeUsed" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CheckEmptyScriptTag" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CheckTagEmptyBody" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ClassInitializerMayBeStatic" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="CollectionContainsUrl" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="CommaExpressionJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="ConditionCoveredByFurtherCondition" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ConditionalBreakInInfiniteLoop" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ConstantConditions" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="SUGGEST_NULLABLE_ANNOTATIONS" value="false" />
       <option name="DONT_REPORT_TRUE_ASSERT_STATEMENTS" value="false" />
+    </inspection_tool>
+    <inspection_tool class="Convert2Lambda" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
     </inspection_tool>
     <inspection_tool class="CopyConstructorMissesField" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CssInvalidPropertyValue" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -35,27 +50,76 @@
     <inspection_tool class="CssRedundantUnit" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CssReplaceWithShorthandSafely" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="CssUnitlessNumber" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CssUnknownProperty" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="myCustomPropertiesEnabled" value="false" />
+        <option name="myIgnoreVendorSpecificProperties" value="false" />
+        <option name="myCustomPropertiesList">
+          <value>
+            <list size="0" />
+          </value>
+        </option>
+      </scope>
+      <option name="myCustomPropertiesEnabled" value="false" />
+      <option name="myIgnoreVendorSpecificProperties" value="false" />
+      <option name="myCustomPropertiesList">
+        <value>
+          <list size="0" />
+        </value>
+      </option>
+    </inspection_tool>
     <inspection_tool class="CssUnresolvedCustomPropertySet" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="CssUnusedSymbol" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="DanglingJavadoc" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="DeprecatedIsStillUsed" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Deprecation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DuplicateExpressions" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="DuplicateThrows" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="DuplicatedCode" enabled="false" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="Duplicates" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="ES6ConvertVarToLetConst" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="ES6ModulesDependencies" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="EmptyMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="EmptyStatementBody" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="m_reportEmptyBlocks" value="true" />
     </inspection_tool>
+    <inspection_tool class="EmptyStatementBodyJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="m_reportEmptyBlocks" value="false" />
+      </scope>
+      <option name="m_reportEmptyBlocks" value="false" />
+    </inspection_tool>
     <inspection_tool class="EmptyTryBlock" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="EnumerationCanBeIteration" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="EnumerationCanBeIteration" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EqualsWhichDoesntCheckParameterClass" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="EqualsWithItself" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ExplicitArrayFilling" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="ExtendsObject" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="FallThroughInSwitchStatementJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="FieldCanBeLocal" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FinalPrivateMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="FinalStaticMethod" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ForCanBeForeach" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="REPORT_INDEXED_LOOP" value="true" />
+        <option name="ignoreUntypedCollections" value="false" />
+      </scope>
+      <option name="REPORT_INDEXED_LOOP" value="true" />
+      <option name="ignoreUntypedCollections" value="false" />
+    </inspection_tool>
     <inspection_tool class="FunctionalExpressionCanBeFolded" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="GrDeprecatedAPIUsage" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="GrMethodMayBeStatic" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -66,7 +130,28 @@
       <option name="ignoreObscureOperators" value="false" />
     </inspection_tool>
     <inspection_tool class="GroovyPointlessBoolean" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="HtmlTagCanBeJavadocTag" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="HtmlExtraClosingTag" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlTagCanBeJavadocTag" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="myValues">
+          <value>
+            <list size="0" />
+          </value>
+        </option>
+        <option name="myCustomValuesEnabled" value="true" />
+      </scope>
+      <option name="myValues">
+        <value>
+          <list size="0" />
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
     <inspection_tool class="HtmlUnknownTag" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="myValues">
         <value>
@@ -83,6 +168,9 @@
       <option name="myCustomValuesEnabled" value="true" />
     </inspection_tool>
     <inspection_tool class="IdempotentLoopBody" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="IfStatementMissingBreakInLoop" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="IgnoreResultOfCall" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="m_reportAllNonLibraryCalls" value="false" />
       <option name="callCheckString" value="java.io.File,.*,java.io.InputStream,read|skip|available|markSupported,java.io.Reader,read|skip|ready|markSupported,java.lang.Boolean,.*,java.lang.Byte,.*,java.lang.Character,.*,java.lang.Double,.*,java.lang.Float,.*,java.lang.Integer,.*,java.lang.Long,.*,java.lang.Math,.*,java.lang.Object,equals|hashCode|toString,java.lang.Short,.*,java.lang.StrictMath,.*,java.lang.String,.*,java.lang.Thread,interrupted,java.math.BigInteger,.*,java.math.BigDecimal,.*,java.net.InetAddress,.*,java.net.URI,.*,java.util.Arrays,.*,java.util.List,of,java.util.Set,of,java.util.Map,of|ofEntries|entry,java.util.Collections,(?!addAll).*,java.util.UUID,.*,java.util.regex.Matcher,pattern|toMatchResult|start|end|group|groupCount|matches|find|lookingAt|quoteReplacement|replaceAll|replaceFirst|regionStart|regionEnd|hasTransparentBounds|hasAnchoringBounds|hitEnd|requireEnd,java.util.regex.Pattern,.*,java.util.stream.BaseStream,.*" />
@@ -90,15 +178,78 @@
     <inspection_tool class="IgnoreUnusedEntry" enabled="false" level="UNUSED ENTRY" enabled_by_default="false" />
     <inspection_tool class="ImplicitArrayToString" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InfiniteRecursion" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="InfiniteRecursionJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="InnerClassMayBeStatic" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSAssignmentUsedAsCondition" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSBitwiseOperatorUsage" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSCheckFunctionSignatures" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSCommentMatchesSignature" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSConsecutiveCommasInArrayLiteral" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="JSConstructorReturnsPrimitive" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSDeprecatedSymbols" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="JSEqualityComparisonWithCoercion" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSMismatchedCollectionQueryUpdate" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="queries" value="trace,write,forEach,length" />
+        <option name="updates" value="pop,push,shift,splice,unshift,add,insert,remove" />
+      </scope>
+      <option name="queries" value="trace,write,forEach,length" />
+      <option name="updates" value="pop,push,shift,splice,unshift,add,insert,remove" />
+    </inspection_tool>
+    <inspection_tool class="JSPotentiallyInvalidConstructorUsage" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="myConsiderUppercaseFunctionsToBeConstructors" value="true" />
+      </scope>
+      <option name="myConsiderUppercaseFunctionsToBeConstructors" value="true" />
+    </inspection_tool>
     <inspection_tool class="JSPrimitiveTypeWrapperUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSRedundantSwitchStatement" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSSuspiciousNameCombination" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <group names="x,width,left,right" />
+        <group names="y,height,top,bottom" />
+        <exclude classes="Math" />
+      </scope>
+      <group names="x,width,left,right" />
+      <group names="y,height,top,bottom" />
+      <exclude classes="Math" />
+    </inspection_tool>
     <inspection_tool class="JSUndeclaredVariable" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSUnfilteredForInLoop" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="JSUnnecessarySemicolon" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="JSUnresolvedFunction" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSUnresolvedLibraryURL" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="JSUnresolvedVariable" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="JSUnusedAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JSUnusedGlobalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JSUnusedLocalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSValidateJSDoc" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="JSValidateTypes" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="JavaReflectionInvocation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavaReflectionMemberAccess" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -109,7 +260,16 @@
     <inspection_tool class="LoopConditionNotUpdatedInsideLoop" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="ignoreIterators" value="false" />
     </inspection_tool>
+    <inspection_tool class="LoopStatementThatDoesntLoopJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="LoopStatementsThatDontLoop" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ManualArrayCopy" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="ManualMinMaxCalculation" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="MapReplaceableByEnumMap" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MarkdownUnresolvedFileReference" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MismatchedArrayReadWrite" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -127,6 +287,12 @@
     <inspection_tool class="MismatchedStringBuilderQueryUpdate" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MissingDeprecatedAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MisspelledHeader" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="NodeJsCodingAssistanceForCoreModules" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="NpmUsedModulesInstalled" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WEAK WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="NullArgumentToVariableArgMethod" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="NullableProblems" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="REPORT_NULLABLE_METHOD_OVERRIDES_NOTNULL" value="true" />
@@ -138,6 +304,9 @@
       <option name="REPORT_ANNOTATION_NOT_PROPAGATED_TO_OVERRIDERS" value="true" />
       <option name="REPORT_NULLS_PASSED_TO_NON_ANNOTATED_METHOD" value="true" />
     </inspection_tool>
+    <inspection_tool class="OverflowingLoopIndex" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="PackageInfoWithoutPackage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PackageJsonMismatchedDependency" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ParameterCanBeLocal" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -146,6 +315,9 @@
     </inspection_tool>
     <inspection_tool class="PointlessBooleanExpression" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="m_ignoreExpressionsContainingConstants" value="true" />
+    </inspection_tool>
+    <inspection_tool class="PointlessBooleanExpressionJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
     </inspection_tool>
     <inspection_tool class="PyPep8Inspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PyPep8NamingInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -161,18 +333,34 @@
       <option name="ignoreEmptySuperMethods" value="false" />
       <option name="onlyReportWhenAnnotated" value="true" />
     </inspection_tool>
-    <inspection_tool class="ReplaceAssignmentWithOperatorAssignment" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="RegExpRedundantEscape" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="RegExpSingleCharAlternation" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="ReplaceAssignmentWithOperatorAssignment" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="ignoreLazyOperators" value="true" />
+        <option name="ignoreObscureOperators" value="false" />
+      </scope>
       <option name="ignoreLazyOperators" value="true" />
       <option name="ignoreObscureOperators" value="false" />
     </inspection_tool>
     <inspection_tool class="RequiredAttributes" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="myAdditionalRequiredHtmlAttributes" value="" />
     </inspection_tool>
+    <inspection_tool class="ReturnFromFinallyBlockJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="SameParameterValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SameReturnValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SetReplaceableByEnumSet" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ShiftOutOfRange" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SillyAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="SillyAssignmentJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="SimplifiableConditionalExpression" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SimplifiableJUnitAssertion" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SimplifyStreamApiCallChains" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -181,11 +369,20 @@
       <option name="processLiterals" value="true" />
       <option name="processComments" value="true" />
     </inspection_tool>
+    <inspection_tool class="StringBufferReplaceableByStringBuilder" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="StringBufferToStringInConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="StringConcatenationInLoops" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="StringEquality" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="StringEqualsEmptyString" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringOperationCanBeSimplified" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="StringReplaceableByStringBuffer" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="StringReplaceableByStringBuffer" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true">
+        <option name="onlyWarnOnLoop" value="true" />
+      </scope>
       <option name="onlyWarnOnLoop" value="true" />
     </inspection_tool>
     <inspection_tool class="SuspiciousListRemoveInLoop" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -209,14 +406,38 @@
     </inspection_tool>
     <inspection_tool class="SyntaxError" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="TestFailedLine" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ThisExpressionReferencesGlobalObjectJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="ThrowFromFinallyBlockJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="ThrowablePrintedToSystemOut" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="TrivialConditionalJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="TrivialIf" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="TrivialIfJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="TrivialStringConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="TryFinallyCanBeTryWithResources" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="TryWithIdenticalCatches" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="TypeParameterExtendsObject" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UNCHECKED_WARNING" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnnecessaryBoxing" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryConditionalExpression" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryContinue" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnnecessaryContinueJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="UnnecessaryEnumModifier" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryInheritDoc" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryInterfaceModifier" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -238,6 +459,12 @@
     <inspection_tool class="UnnecessaryReturn" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryReturnJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessarySemicolon" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnnecessaryUnboxing" enabled="true" level="INFORMATION" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
+    <inspection_tool class="UnreachableCodeJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="UnstableApiUsage" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnterminatedStatementJS" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="ignoreSemicolonAtEndOfBlock" value="true" />
@@ -255,8 +482,14 @@
       <option name="SUGGEST_PACKAGE_LOCAL_FOR_TOP_CLASSES" value="true" />
       <option name="SUGGEST_PRIVATE_FOR_INNERS" value="false" />
     </inspection_tool>
+    <inspection_tool class="WithStatementJS" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="WrapperTypeMayBePrimitive" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="XmlHighlighting" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="XmlUnboundNsPrefix" enabled="true" level="WARNING" enabled_by_default="false">
+      <scope name="Aggressively Linted" level="WARNING" enabled="true" />
+    </inspection_tool>
     <inspection_tool class="unused" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="LOCAL_VARIABLE" value="true" />
       <option name="FIELD" value="true" />
