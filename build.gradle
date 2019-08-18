@@ -339,6 +339,7 @@ final def addJvmLibrary(project, recipient) {
 							break
 						case 'windows':
 							osIncludeSubdir = 'win32'
+							//noinspection GrReassignedInClosureLocalVar
 							libJVM = file("$currentJavaHome/lib/jvm.lib")
 							break
 						default:
