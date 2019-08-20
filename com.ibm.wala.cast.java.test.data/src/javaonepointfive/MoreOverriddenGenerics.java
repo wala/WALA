@@ -38,7 +38,6 @@
 package javaonepointfive;
 
 public class MoreOverriddenGenerics {
-	@SuppressWarnings("InnerClassMayBeStatic")
 	class Super<T> {
 		T x;
 

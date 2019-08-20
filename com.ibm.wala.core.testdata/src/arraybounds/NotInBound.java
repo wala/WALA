@@ -70,7 +70,6 @@ public class NotInBound {
 
   public int unboundNegativeLoop(int[] arr, int index) {
     int sum = 0;
-    //noinspection OverflowingLoopIndex
     for (int i = 5; i < arr.length; i--) {
       sum += arr[i];
     }

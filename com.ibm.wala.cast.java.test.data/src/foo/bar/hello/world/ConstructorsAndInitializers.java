@@ -46,7 +46,6 @@ class Super {
 	}
 }
 
-@SuppressWarnings("ClassInitializerMayBeStatic")
 public class ConstructorsAndInitializers extends Super {
 	static int iX;
 	static int sX;

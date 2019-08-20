@@ -22,7 +22,6 @@ public class Foo {
     public void bar() {}
   }
 
-  @SuppressWarnings("unused")
   private static class B extends A {
     @Override
     public void bar() {}

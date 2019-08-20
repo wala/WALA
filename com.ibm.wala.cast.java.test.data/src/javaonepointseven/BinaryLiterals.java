@@ -74,7 +74,6 @@ public class BinaryLiterals {
     }
   }
 
-  @SuppressWarnings("InnerClassMayBeStatic")
   class State {
     int state = 0;
 

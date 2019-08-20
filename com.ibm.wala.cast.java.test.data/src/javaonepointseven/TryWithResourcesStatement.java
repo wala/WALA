@@ -29,7 +29,6 @@ public class TryWithResourcesStatement {
   public static void viewTable(Connection con) throws SQLException {
     String query = "select COF_NAME, SUP_ID, PRICE, SALES, TOTAL from COFFEES";
     try (Statement stmt = con.createStatement()) {
-      @SuppressWarnings("resource")
       ResultSet rs = stmt.executeQuery(query);
 
       while (rs.next()) {

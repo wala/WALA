@@ -11,7 +11,6 @@
 package cell;
 
 public class Cell<T> {
-  @SuppressWarnings("unused")
   private T field;
 
   public Cell(T t1) {

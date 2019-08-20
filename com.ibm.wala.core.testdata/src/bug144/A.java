@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 class A {
   void m() {
     Set<Object> set = new HashSet<>();
-    @SuppressWarnings("RedundantOperationOnEmptyContainer")
     Stream<Object> stream = set.parallelStream();
     stream.sorted();
     stream.collect(Collectors.toList()); // this call forces the error.

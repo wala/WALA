@@ -13,7 +13,6 @@ public class DefaultMethods {
     }
   }
 
-  @SuppressWarnings("unused")
   public static void main(String[] args) {
     int v1 = (new Test1().silly());
     int v2 = (new Test2().silly());

@@ -43,7 +43,6 @@ public class QualifiedNames {
         public QualifiedNames(int xx) {
         	x = xx;
         }
-        @SuppressWarnings("AssignmentReplaceableWithOperatorAssignment")
         public static void main(String args[]) {
         	QualifiedNames qn = new QualifiedNames(5);
         	int y = 3;

@@ -22,7 +22,6 @@ public class TestCD4 {
     doNothing(k);
   }
 
-  @SuppressWarnings("AssignmentReplaceableWithOperatorAssignment")
   static int foo(int i, int j) {
     int k = 0;
     if (i == 3) {
