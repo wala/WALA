@@ -40,7 +40,6 @@ package demandpa;
 class B extends A {
   @Override
   Object foo() {
-    //noinspection UnnecessaryBoxing
     return new Float(4);
   }
 }

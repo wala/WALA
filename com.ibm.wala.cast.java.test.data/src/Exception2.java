@@ -15,7 +15,6 @@ import java.io.IOException;
 
 public final class Exception2 {
 
-  @SuppressWarnings("resource")
   public static void main(String[] args) {
     Exception2 e2= new Exception2();
     FileInputStream fis = null;

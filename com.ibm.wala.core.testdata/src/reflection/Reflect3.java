@@ -21,6 +21,5 @@ public class Reflect3 {
     System.out.println(h.toString());
   }
 
-  @SuppressWarnings("unused")
   private static class Hash extends Hashtable<Object, Object> {}
 }

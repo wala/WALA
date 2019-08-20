@@ -100,7 +100,6 @@ public class MethodMadness {
 			return 233 + x;
 		}
 		
-		@SuppressWarnings("static-access")
 		public void hello() {
 			System.out.println(privateInteger()); // inner function, inner this, 200013
 			System.out.println(MethodMadness.this.privateInteger()); // outer function, outer this, 100007 

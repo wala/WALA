@@ -79,20 +79,17 @@ public class TypeAnnotatedClass2 extends @TypeAnnotationTypeUse Object {
 }
 
 class Outer {
-  @SuppressWarnings("InnerClassMayBeStatic")
   class Middle {
     class Inner {}
   }
 }
 
 class Outer2 {
-  @SuppressWarnings({"unused", "InnerClassMayBeStatic"})
   class Middle<S> {
     class Inner<T> {}
   }
 }
 
 class Foo {
-  @SuppressWarnings("InnerClassMayBeStatic")
   class Bar {}
 }

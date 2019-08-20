@@ -15,7 +15,6 @@ public class LibModels {
   }
 
   public static void main(String[] argv) {
-    //noinspection AnonymousHasLambdaAlternative
     Runtime.getRuntime()
         .addShutdownHook(
             new Thread() {

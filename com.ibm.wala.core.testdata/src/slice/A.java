@@ -16,7 +16,6 @@ class A {
   Object g;
 
   Object foo() {
-    //noinspection UnnecessaryBoxing
     return new Integer(3);
   }
 

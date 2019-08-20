@@ -6,7 +6,6 @@ package arraybounds;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
-@SuppressWarnings({"IfStatementMissingBreakInLoop", "ManualMinMaxCalculation"})
 public class Detectable {
   private int[] memberArr = new int[5];
 
@@ -37,7 +36,6 @@ public class Detectable {
   }
 
   public void loop(int[] arr) {
-    //noinspection Java8ArraySetAll
     for (int i = 0; i < arr.length; i++) {
       arr[i] = 0;
     }
@@ -62,7 +60,6 @@ public class Detectable {
     return result;
   }
 
-  @SuppressWarnings("ManualArrayCopy")
   public void copy(int[] src, int[] dst) {
     int lenSrc = src.length;
     int lenDst = dst.length;

@@ -12,6 +12,5 @@ package inner;
 
 public class TestInner {
 
-  @SuppressWarnings("InnerClassMayBeStatic")
   public class A {}
 }
