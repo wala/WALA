@@ -24,7 +24,7 @@ public class MultiModalIntVector implements IntVector {
 
   private static final float DIFF_GROWTH_FACTOR = INITIAL_GROWTH_FACTOR - MINIMUM_GROWTH_FACTOR;
 
-  private float CURRENT_GROWTH_RATE = INITIAL_GROWTH_FACTOR;
+  private float currentGrowthRate = INITIAL_GROWTH_FACTOR;
 
   private static final int MAX_SIZE = 10000;
 
@@ -80,12 +80,12 @@ public class MultiModalIntVector implements IntVector {
    * @return the new growth factor
    */
   float getGrowthFactor(int size) {
-    if (CURRENT_GROWTH_RATE >= MINIMUM_GROWTH_FACTOR) {
+    if (currentGrowthRate >= MINIMUM_GROWTH_FACTOR) {
       float val =
           (float) (1 / (1 + Math.pow(Math.E, (-1) * (((double) size / MAX_SIZE) * 12.0 - 6.0))));
-      CURRENT_GROWTH_RATE = INITIAL_GROWTH_FACTOR - DIFF_GROWTH_FACTOR * val;
+      currentGrowthRate = INITIAL_GROWTH_FACTOR - DIFF_GROWTH_FACTOR * val;
     }
-    return CURRENT_GROWTH_RATE;
+    return currentGrowthRate;
   }
 
   /*
