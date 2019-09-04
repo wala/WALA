@@ -30,8 +30,11 @@ import net.htmlparser.jericho.Source;
 public class JerichoHtmlParser implements IHtmlParser {
   static Set<Warning> warnings = HashSetFactory.make();
 
+  private static volatile Logger sourceLogger = null;
+
   static {
     class CAstLoggerProvider implements LoggerProvider {
+
       @Override
       public Logger getLogger(String arg0) {
         class CAstLogger implements Logger {
@@ -87,6 +90,12 @@ public class JerichoHtmlParser implements IHtmlParser {
         }
 
         return new CAstLogger();
+      }
+
+      @Override
+      public Logger getSourceLogger() {
+        if (sourceLogger == null) sourceLogger = getLogger("net.htmlparser.jericho");
+        return sourceLogger;
       }
     }
 
