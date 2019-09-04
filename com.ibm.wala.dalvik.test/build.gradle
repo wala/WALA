@@ -153,7 +153,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.12',
 			'org.osgi:org.osgi.core:4.2.0',
-			'org.smali:dexlib2:2.2.6',
+			'org.smali:dexlib2:2.3.1',
 			files("${copyDxJar.get().destinationDir}/dx.jar"),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
