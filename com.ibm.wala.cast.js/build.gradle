@@ -8,7 +8,7 @@ dependencies {
 		because 'public class JSCallGraphUtil extends class CAstCallGraphUtil'
 	}
 	implementation(
-			'commons-io:commons-io:2.4',
+			'commons-io:commons-io:2.6',
 			'net.htmlparser.jericho:jericho-html:3.2',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
