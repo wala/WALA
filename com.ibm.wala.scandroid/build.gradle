@@ -2,7 +2,7 @@ sourceSets.main.java.srcDirs = ['source']
 
 dependencies {
 	implementation(
-			'com.google.guava:guava:18.0',
+			'com.google.guava:guava:23.0',
 			'commons-cli:commons-cli:1.4',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
