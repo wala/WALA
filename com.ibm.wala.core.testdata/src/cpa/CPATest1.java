@@ -44,7 +44,6 @@ public class CPATest1 {
     return x;
   }
 
-  @SuppressWarnings("unused")
   public static void main(String[] args) {
     F f = new F(3.4);
     I i = new I(7);

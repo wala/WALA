@@ -2,6 +2,7 @@
 /compiler.xml
 /libraries/*.xml
 /modules.xml
+/shelf/
 /tasks.xml
 /usage.statistics.xml
 /workspace.xml

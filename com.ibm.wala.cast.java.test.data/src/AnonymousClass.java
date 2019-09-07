@@ -8,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-@SuppressWarnings("UnnecessaryBoxing")
 public class AnonymousClass {
     private interface Foo {
       public int getValue();

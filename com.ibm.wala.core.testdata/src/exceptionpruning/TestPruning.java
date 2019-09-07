@@ -64,7 +64,6 @@ public class TestPruning {
   public int testTryCatchMultipleExceptions(int i) {
     int res = 0;
 
-    //noinspection TryWithIdenticalCatches
     try {
       int[] a = new int[] {1, 3, 4};
 

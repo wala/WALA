@@ -13,7 +13,6 @@ package staticInit;
 public class TestSystemProperties {
 
   public static void main(String[] args) {
-    @SuppressWarnings("unused")
     char sep = System.getProperty("file.separator").toCharArray()[0];
   }
 }

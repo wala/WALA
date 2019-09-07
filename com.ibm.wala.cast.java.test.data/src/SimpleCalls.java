@@ -24,7 +24,6 @@ public class SimpleCalls implements ISimpleCalls {
 		System.out.println("another call");
 		return 5;
 	}
-	@SuppressWarnings("AssignmentReplaceableWithOperatorAssignment")
 	public static void main (String args[]) {
 		SimpleCalls sc = new SimpleCalls();
 		ISimpleCalls isc = sc;

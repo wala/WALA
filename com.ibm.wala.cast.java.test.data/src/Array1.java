@@ -16,7 +16,6 @@ public class Array1 {
     public void foo() {
 	int[] ary = new int[5];
 
-	//noinspection Java8ArraySetAll
 	for(int i= 0; i < ary.length; i++) {
 	    ary[i]= i;
 	}

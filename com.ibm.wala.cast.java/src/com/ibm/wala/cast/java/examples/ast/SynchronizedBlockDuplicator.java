@@ -41,7 +41,7 @@ public class SynchronizedBlockDuplicator
    * key type used for cloning the synchronized blocks and the true and false branches of the
    * introduced conditional
    */
-  class UnwindKey implements CAstRewriter.CopyKey<UnwindKey> {
+  static class UnwindKey implements CAstRewriter.CopyKey<UnwindKey> {
     /** are we on the true or false branch? */
     private boolean testDirection;
 
@@ -110,7 +110,7 @@ public class SynchronizedBlockDuplicator
   }
 
   /** context used within synchronized blocks */
-  class SyncContext implements RewriteContext<UnwindKey> {
+  static class SyncContext implements RewriteContext<UnwindKey> {
     /** context used for the parent AST node of the synchronized block */
     private final CAstRewriter.RewriteContext<UnwindKey> parent;
 

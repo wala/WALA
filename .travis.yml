@@ -37,7 +37,6 @@ env:
 matrix:
   include:
     - os: linux
-      dist: xenial
       env: BUILD_SYSTEM=gradle
       language: java
       jdk: openjdk11
@@ -49,11 +48,11 @@ matrix:
     - os: linux
       env: BUILD_SYSTEM=gradle
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
     - os: linux
       env: BUILD_SYSTEM=maven
       language: android
-      jdk: oraclejdk8
+      jdk: openjdk8
     - os: osx
       osx_image: xcode8.3
       env: BUILD_SYSTEM=gradle
@@ -62,157 +61,157 @@ matrix:
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.ecj
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.html.nu_validator
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test.data
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt.test
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt.tests
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.tests
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.scandroid
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.shrike
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: linux
       env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.util
       language: java
-      jdk: oraclejdk8
+      jdk: openjdk8
       if: type = cron
     - os: osx
       osx_image: xcode8.3

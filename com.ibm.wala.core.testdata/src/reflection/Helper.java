@@ -11,7 +11,6 @@
 package reflection;
 
 public class Helper {
-  @SuppressWarnings("unused")
   private final Object a, b;
 
   public Helper() {

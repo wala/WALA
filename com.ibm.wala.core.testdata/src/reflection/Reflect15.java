@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 
 /** Test of Class.getConstructors(). */
 public class Reflect15 {
-  @SuppressWarnings("null")
   public static void main(String[] args)
       throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
           IllegalAccessException, InvocationTargetException {

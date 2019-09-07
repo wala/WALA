@@ -69,7 +69,7 @@ public class PropertyReadExpander
   }
 
   /** for handling property reads within assignments with pre or post-ops, e.g., x.f++ */
-  private final class AssignPreOrPostOpContext extends RewriteContext {
+  private static final class AssignPreOrPostOpContext extends RewriteContext {
     private CAstNode receiverTemp;
 
     private CAstNode elementTemp;

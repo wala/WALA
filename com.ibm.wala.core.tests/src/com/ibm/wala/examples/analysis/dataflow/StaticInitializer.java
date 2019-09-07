@@ -66,7 +66,7 @@ public class StaticInitializer {
   }
 
   /** controls numbering of putstatic instructions for use in tabulation */
-  private class InitializerDomain extends MutableMapping<IClass>
+  private static class InitializerDomain extends MutableMapping<IClass>
       implements TabulationDomain<IClass, BasicBlockInContext<IExplodedBasicBlock>> {
 
     private static final long serialVersionUID = -1897766113586243833L;

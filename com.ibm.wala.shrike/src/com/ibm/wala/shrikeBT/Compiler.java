@@ -413,7 +413,7 @@ public abstract class Compiler implements Constants {
     computeStackWordsAt(0, 0, new byte[instructions.length * 2], new boolean[instructions.length]);
   }
 
-  abstract class Patch {
+  abstract static class Patch {
     final int instrStart;
 
     final int instrOffset;
@@ -1535,6 +1535,7 @@ public abstract class Compiler implements Constants {
         for (int j = 0; back != null && j < back.length; j++) {
           if (back[j] < start || back[j] >= start + len) {
             outsideBranch = true;
+            break;
           }
         }
         if (outsideBranch) {
@@ -1564,6 +1565,7 @@ public abstract class Compiler implements Constants {
         for (int target : targets) {
           if (target < start || target >= start + len) {
             outsideBranch = true;
+            break;
           }
         }
         if (outsideBranch) {
@@ -1586,12 +1588,14 @@ public abstract class Compiler implements Constants {
           int h = element.handler;
           if (h < start || h >= start + len) {
             out = true;
+            break;
           }
         }
         int[] targets = instructions[i].getBranchTargets();
         for (int t : targets) {
           if (t < start || t >= start + len) {
             out = true;
+            break;
           }
         }
         if (out) {

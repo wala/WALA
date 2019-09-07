@@ -834,7 +834,7 @@ public class Analyzer {
     computeTypes(0, v, makeTypesAt, wantPath ? new ArrayList<>() : null);
   }
 
-  public abstract class TypeVisitor extends IInstruction.Visitor {
+  public abstract static class TypeVisitor extends IInstruction.Visitor {
     public abstract void setState(
         int index, List<PathElement> path, String[] curStack, String[] curLocals);
 

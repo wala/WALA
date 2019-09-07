@@ -60,6 +60,7 @@ public class IrViewer extends JPanel {
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
         BorderLayout.CENTER);
 
+    //noinspection Convert2Lambda
     irLines.addListSelectionListener(
         new ListSelectionListener() {
 

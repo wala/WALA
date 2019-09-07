@@ -852,7 +852,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
     public abstract Instruction[] getInstructions();
 
     /** Update the machine state to account for an instruction */
-    protected class BasicRegisterMachineVisitor extends Visitor {
+    protected static class BasicRegisterMachineVisitor extends Visitor {
 
       /**
        * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayLength(ArrayLengthInstruction)

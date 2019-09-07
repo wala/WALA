@@ -27,7 +27,7 @@ import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import org.junit.Test;
 
-public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
+public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
   protected final String testJarLocation;
 

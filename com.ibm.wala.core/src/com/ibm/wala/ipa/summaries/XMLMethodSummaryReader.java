@@ -483,7 +483,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String defVar = atts.getValue(A_DEF);
       if (defVar != null) {
 
-        if (symbolTable.keySet().contains(defVar)) {
+        if (symbolTable.containsKey(defVar)) {
           Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
         }
 
@@ -518,7 +518,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       // register the local variable defined by this allocation
       String defVar = atts.getValue(A_DEF);
-      if (symbolTable.keySet().contains(defVar)) {
+      if (symbolTable.containsKey(defVar)) {
         Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
       }
       if (defVar == null) {
@@ -594,7 +594,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       // get the value def'fed
       String defVar = atts.getValue(A_DEF);
-      if (symbolTable.keySet().contains(defVar)) {
+      if (symbolTable.containsKey(defVar)) {
         Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
       }
       if (defVar == null) {
@@ -767,7 +767,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
       // get the value def'fed
       String defVar = atts.getValue(A_DEF);
-      if (symbolTable.keySet().contains(defVar)) {
+      if (symbolTable.containsKey(defVar)) {
         Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
       }
       if (defVar == null) {

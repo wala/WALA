@@ -37,14 +37,12 @@
  */
 package javaonepointfive;
 
-@SuppressWarnings({"UnnecessaryBoxing", "UnnecessaryUnboxing"})
 public class ExplicitBoxingTest {
 
 	public static void main(String[] args) {
 		(new ExplicitBoxingTest()).doit();
 	}
 	
-	@SuppressWarnings("AssignmentReplaceableWithOperatorAssignment")
 	private void doit() {
 		int a = 6;
 		a = a + a;

@@ -45,7 +45,7 @@ public class WelshPowellTest {
     }
   }
 
-  private class TypedNode<T> extends NodeWithNumberedEdges {
+  private static class TypedNode<T> extends NodeWithNumberedEdges {
     private final T data;
 
     private TypedNode(T data) {

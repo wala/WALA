@@ -159,7 +159,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   }
 
   /** A class that represents the a normal node in a call graph. */
-  public abstract class NodeImpl extends NodeWithNumber implements CGNode {
+  public abstract static class NodeImpl extends NodeWithNumber implements CGNode {
 
     /** The method this node represents. */
     protected final IMethod method;

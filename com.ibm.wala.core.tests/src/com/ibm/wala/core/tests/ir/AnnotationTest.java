@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.Set;
 import org.junit.Test;
 
-public class AnnotationTest extends WalaTestCase {
+public abstract class AnnotationTest extends WalaTestCase {
 
   private final IClassHierarchy cha;
 

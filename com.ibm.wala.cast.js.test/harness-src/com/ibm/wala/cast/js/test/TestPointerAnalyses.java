@@ -67,10 +67,10 @@ import org.junit.Test;
 
 public abstract class TestPointerAnalyses {
 
-  private final class CheckPointers
+  private static final class CheckPointers
       implements Predicate<
           Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> {
-    private Set<Pair<String, Integer>> map(Set<Pair<CGNode, NewSiteReference>> sites) {
+    private static Set<Pair<String, Integer>> map(Set<Pair<CGNode, NewSiteReference>> sites) {
       Set<Pair<String, Integer>> result = HashSetFactory.make();
       for (Pair<CGNode, NewSiteReference> s : sites) {
         result.add(Pair.make(s.fst.getMethod().toString(), s.snd.getProgramCounter()));

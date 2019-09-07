@@ -166,7 +166,7 @@ public class StringBuilderUseAnalysis {
     return null;
   }
 
-  public class StringBuilderToStringInstanceKeySite extends InstanceKeySite {
+  public static class StringBuilderToStringInstanceKeySite extends InstanceKeySite {
 
     final ArrayList<Integer> concatenatedInstanceKeys;
     final int instanceID;
