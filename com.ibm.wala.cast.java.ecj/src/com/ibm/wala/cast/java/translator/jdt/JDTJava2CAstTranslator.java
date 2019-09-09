@@ -3562,7 +3562,26 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
             CAstNode.CATCH,
             fFactory.makeConstant(formal.getName().getIdentifier()),
             visitNode(body, context));
-    CAstNode localScope = makeNode(context, fFactory, n, CAstNode.LOCAL_SCOPE, excDecl);
+
+    CAstNode declStmt =
+        makeNode(
+            context,
+            fFactory,
+            n,
+            CAstNode.DECL_STMT,
+            fFactory.makeConstant(
+                new CAstSymbolImpl(
+                    formal.getName().getIdentifier(),
+                    fTypeDict.getCAstTypeFor(formal.getName().resolveTypeBinding()),
+                    true)));
+
+    CAstNode localScope =
+        makeNode(
+            context,
+            fFactory,
+            n,
+            CAstNode.LOCAL_SCOPE,
+            makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, declStmt, excDecl));
 
     context.cfg().map(n, excDecl);
     CAstType type =

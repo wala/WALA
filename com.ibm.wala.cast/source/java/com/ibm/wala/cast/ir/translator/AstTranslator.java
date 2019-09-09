@@ -938,7 +938,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             addEdge(currentBlock, getCurrentBlock());
             assert unwindData.get(getCurrentBlock()) == null;
             addEdge(endBlock, target);
-            assert unwindData.get(target) == null;
+            // assert unwindData.get(target) == null;
 
             // `null' target is idiom for branch/throw to exit
           } else {
@@ -1176,21 +1176,21 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     @Override
     public void addEdge(PreBasicBlock src, PreBasicBlock dst) {
       super.addEdge(src, dst);
-
-      if (src.getLastInstructionIndex() >= 0) {
-        SSAInstruction inst = src.instructions.get(src.instructions.size() - 1);
-        if (inst instanceof SSAGotoInstruction) {
-          Iterator<PreBasicBlock> blks = getSuccNodes(src);
-          int succ = 0;
-          while (blks.hasNext()) {
-            if (!blks.next().isHandlerBlock()) {
-              succ++;
-              assert succ <= 1;
+      /*
+            if (src.getLastInstructionIndex() >= 0) {
+              SSAInstruction inst = src.instructions.get(src.instructions.size() - 1);
+              if (inst instanceof SSAGotoInstruction) {
+                Iterator<PreBasicBlock> blks = getSuccNodes(src);
+                int succ = 0;
+                while (blks.hasNext()) {
+                  if (!blks.next().isHandlerBlock()) {
+                    succ++;
+                    assert succ <= 1;
+                  }
+                }
+              }
             }
-          }
-        }
-      }
-
+      */
       deadBlocks.remove(dst);
     }
 
@@ -1437,6 +1437,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               if (succs.hasNext()) {
                 PreBasicBlock target = succs.next();
+                assert liveBlocks.contains(target);
                 assert !succs.hasNext() || !liveBlocks.contains(succs.next())
                     : "unexpected successors for block " + block + ": " + this;
                 inst = insts.GotoInstruction(x, target.firstIndex);
@@ -4911,9 +4912,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     String id = (String) n.getChild(0).getValue();
     context.cfg().setCurrentBlockAsHandler();
+    /*
     if (!context.currentScope().contains(id)) {
       context.currentScope().declare(new FinalCAstSymbol(id, exceptionType()));
     }
+    */
     int v = context.currentScope().allocateTempValue();
     context
         .cfg()
