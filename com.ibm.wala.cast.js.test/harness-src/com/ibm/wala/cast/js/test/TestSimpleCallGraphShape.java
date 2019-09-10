@@ -14,6 +14,7 @@ import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
+import com.ibm.wala.core.tests.util.SlowTests;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -30,6 +31,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
@@ -476,6 +478,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
 
   @Test
+  @Category(SlowTests.class)
   public void testStackOverflowOnSsaConversionBug()
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
@@ -927,6 +930,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
 
   @Test(expected = CallGraphBuilderCancelException.class)
+  @Category(SlowTests.class)
   public void testManyStrings()
       throws IllegalArgumentException, IOException, CancelException, WalaException {
     SSAPropagationCallGraphBuilder B =

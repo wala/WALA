@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ResourceJarFileModule;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
+import com.ibm.wala.core.tests.util.SlowTests;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -42,7 +43,9 @@ import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Set;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(SlowTests.class)
 public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
