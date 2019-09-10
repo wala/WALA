@@ -34,7 +34,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.strings.Atom;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -151,7 +150,9 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     int[] params = new int[nargs - 2];
     // add 3 to skip v1 (which points to Function.call() itself) and v2 (the
     // real function being invoked)
-    Arrays.setAll(params, i -> i + 3);
+    for (int i = 0; i < params.length; i++) {
+      params[i] = i + 3;
+    }
     // function being invoked is in v2
     S.addStatement(
         insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
