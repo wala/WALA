@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -315,12 +316,13 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "try.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    /*
+
     boolean x = CAstCallGraphUtil.AVOID_DUMP;
     CAstCallGraphUtil.AVOID_DUMP = false;
-    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(
+        (SSAContextInterpreter) B.getContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = x;
-    */
+
     verifyGraphAssertions(CG, assertionsForTry);
   }
 
@@ -1014,6 +1016,15 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
 
   @Test
+  public void testLexicalCatch()
+      throws IOException, WalaException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B =
+        JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "lexical_catch.js");
+    B.makeCallGraph(B.getOptions());
+    // test is just not to crash
+  }
+
+  @Test
   public void testThrowCrash()
       throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badthrow.js");
@@ -1040,6 +1051,46 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "finallycrash.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean save = CAstCallGraphUtil.AVOID_DUMP;
+    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = save;
+  }
+
+  @Test
+  public void testForInExpr()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "for_in_expr.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean save = CAstCallGraphUtil.AVOID_DUMP;
+    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = save;
+  }
+
+  private static final Object[][] assertionsForComplexFinally =
+      new Object[][] {
+        new Object[] {ROOT, new String[] {"complex_finally.js"}},
+        new Object[] {"complex_finally.js", new String[] {"complex_finally.js/e"}},
+        new Object[] {
+          "complex_finally.js/e",
+          new String[] {
+            "complex_finally.js/base",
+            "complex_finally.js/bad",
+            "complex_finally.js/good",
+            "complex_finally.js/oo1",
+            "complex_finally.js/oo2",
+          }
+        }
+      };
+
+  @Test
+  public void testComplexFinally()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "complex_finally.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyGraphAssertions(CG, assertionsForComplexFinally);
+
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
     // CAstCallGraphUtil.AVOID_DUMP = false;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
