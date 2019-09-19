@@ -3,7 +3,7 @@ sourceSets.main.java.srcDirs = ['src']
 dependencies {
 	implementation(
 			'org.slf4j:slf4j-api:1.7.2',
-			'org.smali:dexlib2:2.2.6',
+			'org.smali:dexlib2:2.3.2',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
