@@ -18,13 +18,13 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +52,10 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   private Set<Warning> messagesFor(ModuleEntry module) {
-    return errors.computeIfAbsent(module, (key) -> new HashSet<>());
+    if (!errors.containsKey(module)) {
+      errors.put(module, HashSetFactory.make());
+    }
+    return errors.get(module);
   }
 
   public void addMessages(ModuleEntry module, Set<Warning> message) {
@@ -159,6 +162,8 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public void removeAll(Collection<IClass> toRemove) {
-    types.values().removeIf(toRemove::contains);
+    for (IClass remove : toRemove) {
+      types.remove(remove.getName());
+    }
   }
 }

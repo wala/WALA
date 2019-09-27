@@ -13,6 +13,7 @@ package com.ibm.wala.cast.tree.impl;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -133,6 +134,10 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     assert from != null;
     assert to != null;
 
+    assert !((from instanceof CAstNode)
+        && ((CAstNode) from).getKind() == CAstNode.GOTO
+        && to == EXCEPTION_TO_EXIT);
+
     if (CAstToNode.containsKey(to)) {
       to = CAstToNode.get(to);
     }
@@ -143,10 +148,16 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
     table.put(new Key(label, from), to);
 
-    Set<Object> ls = labelMap.computeIfAbsent(from, k -> new LinkedHashSet<>(2));
+    if (!labelMap.containsKey(from)) {
+      labelMap.put(from, HashSetFactory.make(2));
+    }
+    Set<Object> ls = labelMap.get(from);
     ls.add(label);
 
-    Set<Object> ss = sourceMap.computeIfAbsent(to, k -> new LinkedHashSet<>(2));
+    if (!sourceMap.containsKey(to)) {
+      sourceMap.put(to, HashSetFactory.make(2));
+    }
+    Set<Object> ss = sourceMap.get(to);
     ss.add(from);
   }
 

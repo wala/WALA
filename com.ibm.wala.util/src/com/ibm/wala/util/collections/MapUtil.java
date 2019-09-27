@@ -87,8 +87,10 @@ public class MapUtil {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    List<T> result = M.computeIfAbsent(key, k -> new ArrayList<>());
-    return result;
+    if (!M.containsKey(key)) {
+      M.put(key, new ArrayList<>());
+    }
+    return M.get(key);
   }
 
   /**

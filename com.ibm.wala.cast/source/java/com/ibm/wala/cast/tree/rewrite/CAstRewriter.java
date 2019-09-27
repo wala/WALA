@@ -25,7 +25,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Abstract superclass for types performing a rewrite operation on a CAst. The CAst is not mutated;
@@ -138,9 +137,11 @@ public abstract class CAstRewriter<
 
   protected List<CAstNode> copyChildrenArray(
       CAstNode n, CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap) {
-    return n.getChildren().stream()
-        .map(child -> copyNodes(child, cfg, context, nodeMap))
-        .collect(Collectors.toList());
+    List<CAstNode> newChildren = new ArrayList<>(n.getChildCount());
+    for (CAstNode child : n.getChildren()) {
+      newChildren.add(copyNodes(child, cfg, context, nodeMap));
+    }
+    return newChildren;
   }
 
   protected List<CAstNode> copyChildrenArrayAndTargets(
@@ -394,7 +395,9 @@ public abstract class CAstRewriter<
     final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, cfg, rootContext, nodes);
     final CAstNode newDefaults[] = new CAstNode[defaults == null ? 0 : defaults.length];
-    Arrays.setAll(newDefaults, i -> copyNodes(defaults[i], cfg, rootContext, nodes));
+    for (int i = 0; i < newDefaults.length; i++) {
+      newDefaults[i] = copyNodes(defaults[i], cfg, rootContext, nodes);
+    }
 
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;

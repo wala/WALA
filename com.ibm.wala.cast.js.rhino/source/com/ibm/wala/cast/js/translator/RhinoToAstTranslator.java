@@ -864,10 +864,77 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     public CAstNode visitForInLoop(ForInLoop node, WalkContext arg) {
       CAstNode loop;
       CAstNode get;
+
+      CAstNode object = visit(node.getIteratedObject(), arg);
+
+      String name;
+      AstNode var = node.getIterator();
+      if (!(var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode)) {
+        String V = "$$V";
+
+        CAstNode obj =
+            Ast.makeNode(
+                CAstNode.DECL_STMT,
+                Ast.makeConstant(new CAstSymbolImpl("$$obj", JSAstTranslator.Any)),
+                object);
+
+        arg.addNameDecl(
+            Ast.makeNode(
+                CAstNode.DECL_STMT,
+                Ast.makeConstant(new CAstSymbolImpl(V, JSAstTranslator.Any)),
+                readName(arg, null, "$$undefined")));
+
+        arg.addNameDecl(
+            Ast.makeNode(
+                CAstNode.DECL_STMT,
+                Ast.makeConstant(new CAstSymbolImpl("$$P", JSAstTranslator.Any)),
+                readName(arg, null, "$$undefined")));
+
+        AstNode breakStmt = makeEmptyLabelStmt("breakLabel");
+        CAstNode breakLabel = visit(breakStmt, arg);
+        AstNode contStmt = makeEmptyLabelStmt("contLabel");
+        CAstNode contLabel = visit(contStmt, arg);
+
+        WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
+
+        loop =
+            Ast.makeNode(
+                CAstNode.LOCAL_SCOPE,
+                Ast.makeNode(
+                    CAstNode.BLOCK_STMT,
+                    obj,
+                    contLabel,
+                    Ast.makeNode(
+                        CAstNode.LOOP,
+                        Ast.makeNode(
+                            CAstNode.BINARY_EXPR,
+                            CAstOperator.OP_NE,
+                            Ast.makeConstant(null),
+                            Ast.makeNode(
+                                CAstNode.BLOCK_EXPR,
+                                Ast.makeNode(
+                                    CAstNode.ASSIGN,
+                                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$$P")),
+                                    Ast.makeNode(
+                                        CAstNode.EACH_ELEMENT_GET,
+                                        Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$$obj")),
+                                        readName(arg, null, "$$P"))),
+                                Ast.makeNode(
+                                    CAstNode.ASSIGN,
+                                    visit(var, loopContext),
+                                    readName(arg, null, "$$P")),
+                                readName(arg, null, "$$P"))),
+                        visit(node.getBody(), loopContext)),
+                    breakLabel));
+
+        arg.cfg().map(node, loop);
+
+        return loop;
+      }
+
       // TODO: fix the correlation-tracking rewriters, and kill the old for..in translation
       if (useNewForIn) {
         // set up
-        CAstNode object = visit(node.getIteratedObject(), arg);
         String tempName = "for in loop temp";
         CAstNode[] loopHeader =
             new CAstNode[] {
@@ -879,8 +946,6 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                   CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
             };
 
-        String name;
-        AstNode var = node.getIterator();
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
             : var.getClass() + " " + var;
         if (var instanceof Name) {
@@ -950,7 +1015,6 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                     breakLabel));
         arg.cfg().map(node, loop);
       } else {
-        CAstNode object = visit(node.getIteratedObject(), arg);
         String tempName = "for in loop temp";
         CAstNode[] loopHeader =
             new CAstNode[] {
@@ -963,10 +1027,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
             };
 
         CAstNode initNode;
-        String name;
-        AstNode var = node.getIterator();
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
-            : var.getClass() + " " + var;
+            : var.getClass() + " " + var + " " + var.getLineno() + ":" + var.getPosition();
         if (var instanceof Name) {
           name = ((Name) var).getString();
           initNode =
@@ -1526,8 +1588,49 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public CAstNode visitTryStatement(TryStatement node, WalkContext arg) {
+      WalkContext outer = arg;
+
       List<CatchClause> catches = node.getCatchClauses();
       CAstNode tryCatch;
+      String unwindName = null;
+      CAstNode unwindCatch = null;
+
+      if (node.getFinallyBlock() != null) {
+        unwindName = "$$unwind" + tempVarNum++;
+        String unwindCatchName = "$$unwind" + tempVarNum++;
+        CAstNode var = Ast.makeConstant(unwindCatchName);
+
+        arg.addNameDecl(
+            noteSourcePosition(
+                arg,
+                Ast.makeNode(
+                    CAstNode.DECL_STMT,
+                    Ast.makeConstant(new CAstSymbolImpl(unwindCatchName, JSAstTranslator.Any)),
+                    readName(arg, null, "$$undefined")),
+                node));
+
+        arg.addNameDecl(
+            noteSourcePosition(
+                arg,
+                Ast.makeNode(
+                    CAstNode.DECL_STMT,
+                    Ast.makeConstant(new CAstSymbolImpl(unwindName, JSAstTranslator.Any)),
+                    readName(arg, null, "$$undefined")),
+                node));
+
+        unwindCatch =
+            Ast.makeNode(
+                CAstNode.CATCH,
+                var,
+                Ast.makeNode(
+                    CAstNode.ASSIGN,
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(unwindName)),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(unwindCatchName))));
+
+        arg.cfg().map(unwindCatch, unwindCatch);
+
+        outer = new TryCatchContext(arg, unwindCatch);
+      }
 
       if (catches != null && catches.size() > 0) {
         String catchVarName = catches.get(0).getVarName().getString();
@@ -1549,17 +1652,17 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
             code =
                 Ast.makeNode(
                     CAstNode.IF_STMT,
-                    visit(clause.getCatchCondition(), arg),
-                    visit(clause.getBody(), arg),
+                    visit(clause.getCatchCondition(), outer),
+                    visit(clause.getBody(), outer),
                     code);
           } else {
-            code = visit(clause, arg);
+            code = visit(clause, outer);
           }
         }
         CAstNode catchBlock = Ast.makeNode(CAstNode.CATCH, var, code);
         arg.cfg().map(catchBlock, catchBlock);
 
-        TryCatchContext tryContext = new TryCatchContext(arg, catchBlock);
+        TryCatchContext tryContext = new TryCatchContext(outer, catchBlock);
         tryCatch =
             Ast.makeNode(
                 CAstNode.TRY,
@@ -1570,7 +1673,19 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       }
 
       if (node.getFinallyBlock() != null) {
-        return Ast.makeNode(CAstNode.UNWIND, tryCatch, visit(node.getFinallyBlock(), arg));
+        return Ast.makeNode(
+            CAstNode.BLOCK_STMT,
+            Ast.makeNode(CAstNode.TRY, tryCatch, unwindCatch),
+            visit(node.getFinallyBlock(), arg),
+            Ast.makeNode(
+                CAstNode.IF_STMT,
+                Ast.makeNode(
+                    CAstNode.BINARY_EXPR,
+                    CAstOperator.OP_NE,
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(unwindName)),
+                    readName(arg, null, "$$undefined")),
+                Ast.makeNode(
+                    CAstNode.THROW, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(unwindName)))));
       } else {
         return tryCatch;
       }

@@ -86,6 +86,8 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
           B.setCatchInstruction(
               (SSAGetCaughtExceptionInstruction) getInstructions()[B.getFirstInstructionIndex()]);
           getInstructions()[B.getFirstInstructionIndex()] = null;
+        } else {
+          assert !(ssacfg.getNode(i) instanceof ExceptionHandlerBasicBlock);
         }
     }
 
@@ -132,9 +134,9 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
       lexicalInfo = method.cloneLexicalInfo();
 
-      localMap = SSAConversion.convert(method, this, options);
-
       setCatchInstructions(getControlFlowGraph(), method.cfg());
+
+      localMap = SSAConversion.convert(method, this, options);
 
       setupCatchTypes(getControlFlowGraph(), method.catchTypes());
 

@@ -40,6 +40,69 @@ public interface CAstSourcePositionMap {
     Reader getReader() throws IOException;
   }
 
+  public static Position NO_INFORMATION =
+      new Position() {
+
+        @Override
+        public String toString() {
+          return "<no information>";
+        }
+
+        @Override
+        public int getFirstLine() {
+          return -1;
+        }
+
+        @Override
+        public int getLastLine() {
+          return -1;
+        }
+
+        @Override
+        public int getFirstCol() {
+          return -1;
+        }
+
+        @Override
+        public int getLastCol() {
+          return -1;
+        }
+
+        @Override
+        public int getFirstOffset() {
+          return -1;
+        }
+
+        @Override
+        public int getLastOffset() {
+          return -1;
+        }
+
+        @Override
+        public int compareTo(SourcePosition o) {
+          return -1;
+        }
+
+        @Override
+        public URL getURL() {
+          return null;
+        }
+
+        @Override
+        public Reader getReader() throws IOException {
+          return new Reader() {
+
+            @Override
+            public int read(char[] cbuf, int off, int len) throws IOException {
+              return -1;
+            }
+
+            @Override
+            public void close() throws IOException {}
+          };
+        }
+      };
+
   /**
    * Returns the position of a given node in its source file, or null if the position is not known
    * or does not exist.
