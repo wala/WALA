@@ -9,19 +9,24 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
- * @author Linghui Luo 
- *      <p>A factory to create call graph builders using 0-1-CFA
+ * @author Linghui Luo
+ *     <p>A factory to create call graph builders using 0-1-CFA
  */
 public class ZeroOneCFABuilderFactory {
   public AstJavaZeroXCFABuilder make(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
-    return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS
-        | ZeroXInstanceKeys.SMUSH_MANY
-        | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
-        | ZeroXInstanceKeys.SMUSH_STRINGS
-        | ZeroXInstanceKeys.SMUSH_THROWABLES);
+    return new AstJavaZeroXCFABuilder(
+        cha,
+        options,
+        cache,
+        null,
+        null,
+        ZeroXInstanceKeys.ALLOCATIONS
+            | ZeroXInstanceKeys.SMUSH_MANY
+            | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+            | ZeroXInstanceKeys.SMUSH_STRINGS
+            | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 }
