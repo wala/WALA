@@ -2,7 +2,7 @@ sourceSets.main.java.srcDirs = ['source']
 
 dependencies {
 	implementation(
-			'org.mozilla:rhino:1.7.10',
+			'org.mozilla:rhino:1.7.11',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.core'),
