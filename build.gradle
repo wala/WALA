@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.diffplug.gradle.p2.asmaven' version '3.18.0'
+	id 'com.diffplug.gradle.p2.asmaven' version '3.18.1'
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.set.ecj' version '1.4.1' apply false
