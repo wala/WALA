@@ -35,7 +35,7 @@ env:
     - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=
     - secure: "BQZTbI/fcMs6h8SIoAFZWGvrKNM3Yp+w1WGjBEpwt+YgRGkpG+Z6CejML4yTNwsic8qOKJDVexW2gZwOylQkGc6D/czsTMs7aIOc+SnkqD0IWgIXJ9kz3aN5liAvIqOqUtrfKmQfJdI3ZdOQcWvbufaiD532hIsE03a47oNt1O8="
     - secure: "CQCKoejOt96qiDOBOF4X/EUGdgeB/IG+ObjMhbBP7cimnqug9MpFe+5IaNhsAt10cBFdopOS29JpDvoPdinAIJpblkAR8rUG9eU587bknU7Z7lvuXRaSELot3jNEweoGxXMx9nEMFcf2eBy6RncWxtLU4/3BqI9VCfijIrqCULg="
-matrix:
+jobs:
   include:
     - os: linux
       env: BUILD_SYSTEM=gradle
