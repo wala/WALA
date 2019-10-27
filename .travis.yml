@@ -32,6 +32,7 @@ cache:
   - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
 env:
   global:
+    - BUILD_SYSTEM=gradle
     - secure: KcugjQYnBqeZ7XenZD5QY7jhekVPO0QpQyjDUteLytaokhyRK2g6eNvr/pPerN2uWUvsPwO18P9F+oOupge1cpPZf4cEY8RzLIromyUoRWd6JA0SKciUYdN2kSqnC4uZSJGXeGLoroyEEL4Q2sqimpkbIGxgxYtVniWgJULOyR4=
     - secure: jacvGPYX4ugG/HgwJEEpWnllWsS/ipX+qRJ7qM5mbDYryeqsz0eiaxBxQ6IpDyj0v6O4DUi74lSQs/UxCWcUxvOn/5AweCZfoF1U8vt1xivanR4MbC2kr6rJ6ohICuJ4PHDS4IffncgaP3Y8cfExHq6+d0tbibYkjRIiMUGpSik=
     - secure: "BQZTbI/fcMs6h8SIoAFZWGvrKNM3Yp+w1WGjBEpwt+YgRGkpG+Z6CejML4yTNwsic8qOKJDVexW2gZwOylQkGc6D/czsTMs7aIOc+SnkqD0IWgIXJ9kz3aN5liAvIqOqUtrfKmQfJdI3ZdOQcWvbufaiD532hIsE03a47oNt1O8="
@@ -39,14 +40,11 @@ env:
 jobs:
   include:
     - os: linux
-      env: BUILD_SYSTEM=gradle
       jdk: openjdk11
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle
       jdk: openjdk11
     - os: linux
-      env: BUILD_SYSTEM=gradle
       jdk: openjdk8
     - os: linux
       env: BUILD_SYSTEM=maven
@@ -54,253 +52,252 @@ jobs:
       jdk: openjdk8
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle
       jdk: oraclejdk8
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.ecj
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.ecj
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.html.nu_validator
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.html.nu_validator
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test.data
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test.data
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt.test
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt.tests
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt.tests
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.tests
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.tests
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.scandroid
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.scandroid
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.shrike
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.shrike
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.util
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.util
       jdk: openjdk8
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:cast
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.ecj
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.ecj
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.html.nu_validator
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.html.nu_validator
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test.data
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test.data
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jdt.test
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt.tests
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.jsdt.tests
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.tests
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide.tests
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.scandroid
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.scandroid
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.shrike
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.shrike
       if: type = cron
     - os: osx
       osx_image: xcode8.3
-      env: BUILD_SYSTEM=gradle BUILD_ONLY_SUBMODULE=com.ibm.wala.util
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.util
       if: type = cron
