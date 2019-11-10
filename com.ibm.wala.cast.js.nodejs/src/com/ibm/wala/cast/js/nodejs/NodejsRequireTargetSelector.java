@@ -37,6 +37,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.ssa.ClassLookupException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -231,7 +232,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
     File packageJsonFile = new File(d, "package.json");
     if (packageJsonFile.isFile()) {
       // 1.a.
-      String packageJsonContent = FileUtils.readFileToString(packageJsonFile);
+      String packageJsonContent = FileUtils.readFileToString(packageJsonFile, (Charset) null);
       JSONObject packageJson = new JSONObject(packageJsonContent);
       if (packageJson.has("main")) {
         String mainFileName = packageJson.getString("main");
