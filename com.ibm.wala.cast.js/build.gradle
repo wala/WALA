@@ -9,7 +9,7 @@ dependencies {
 	}
 	implementation(
 			'commons-io:commons-io:2.4',
-			'net.htmlparser.jericho:jericho-html:3.2',
+			'net.htmlparser.jericho:jericho-html:3.4',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),

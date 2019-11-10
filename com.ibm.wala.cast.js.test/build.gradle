@@ -8,7 +8,7 @@ dependencies {
 	testImplementation(
 			'commons-io:commons-io:2.4',
 			'junit:junit:4.12',
-			'net.htmlparser.jericho:jericho-html:3.2',
+			'net.htmlparser.jericho:jericho-html:3.4',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.cast.js.rhino'),
