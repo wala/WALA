@@ -210,12 +210,13 @@ public class PruneArrayOutOfBoundExceptionEdge {
         SSAInstruction lastInstruction = block.getLastInstruction();
         lastInstruction.getExceptionTypes();
 
-        final Matcher<Iterable<? super TypeReference>> isJLNPE =
-            hasItem(equalTo(TypeReference.JavaLangNullPointerException));
-        final Matcher<Iterable<? super TypeReference>> isJLAIOOBE =
-            hasItem(equalTo(TypeReference.JavaLangArrayIndexOutOfBoundsException));
-        final Matcher<Iterable<? super TypeReference>> matcher1 = anyOf(isJLNPE, isJLAIOOBE);
+        final Matcher<TypeReference> isJLNPE = equalTo(TypeReference.JavaLangNullPointerException);
+        final Matcher<TypeReference> isJLAIOOBE =
+            equalTo(TypeReference.JavaLangArrayIndexOutOfBoundsException);
 
+        final Matcher<Iterable<? super TypeReference>> hasJLNPE = hasItem(isJLNPE);
+        final Matcher<Iterable<? super TypeReference>> hasJLAIOOBE = hasItem(isJLAIOOBE);
+        final Matcher<Iterable<? super TypeReference>> matcher1 = anyOf(hasJLNPE, hasJLAIOOBE);
         collector.checkThat(
             "Edge deleted but cause instruction can't throw NullPointerException"
                 + "nor ArrayIndexOutOfBoundsException: "
@@ -225,12 +226,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
             lastInstruction.getExceptionTypes(),
             matcher1);
 
-        Matcher<Iterable<TypeReference>> matcher2 =
-            everyItem(
-                anyOf(
-                    equalTo(TypeReference.JavaLangNullPointerException),
-                    equalTo(TypeReference.JavaLangArrayIndexOutOfBoundsException)));
-
+        final Matcher<TypeReference> itemMatcher = anyOf(isJLNPE, isJLAIOOBE);
         collector.checkThat(
             "Edge deleted but cause instruction throws other exceptions as NullPointerException"
                 + "and ArrayIndexOutOfBoundsException: "
@@ -238,7 +234,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
                 + ":"
                 + method.getLineNumber(lastInstruction.iIndex()),
             lastInstruction.getExceptionTypes(),
-            matcher2);
+            everyItem(itemMatcher));
 
       } else {
         collector.addError(
