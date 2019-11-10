@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -62,7 +63,7 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
   public InputStream getInputStream() {
     String moduleSource = null;
     try (final InputStream inputStream = super.getInputStream()) {
-      moduleSource = IOUtils.toString(inputStream);
+      moduleSource = IOUtils.toString(inputStream, (Charset) null);
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.getMessage());
     }
@@ -92,7 +93,7 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
             .replace(DIRNAME_PLACEHOLDER, getFile().getParent())
             .replace(CODE_PLACEHOLDER, moduleSource);
 
-    return IOUtils.toInputStream(wrappedModuleSource);
+    return IOUtils.toInputStream(wrappedModuleSource, (Charset) null);
   }
 
   @Override
