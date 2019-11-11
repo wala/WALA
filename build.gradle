@@ -14,7 +14,7 @@ plugins {
 	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '14.2.5'
-	id 'nebula.source-jar' version '9.5.0' apply false
+	id 'nebula.source-jar' version '14.1.1' apply false
 }
 
 repositories {
