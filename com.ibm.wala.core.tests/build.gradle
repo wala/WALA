@@ -11,7 +11,7 @@ sourceSets.test {
 }
 
 dependencies {
-	testArchives 'org.apache.ant:ant:1.8.2'
+	testArchives 'org.apache.ant:ant:1.10.7'
 	testImplementation(
 			'junit:junit:4.12',
 			'org.apache.ant:ant:1.8.2',
