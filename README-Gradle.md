@@ -104,6 +104,16 @@ patient](#external-dependencies-patience-is-a-virtue) during the
 initial project open, especially if you have a slow network
 connection.
 
+### Benign Warning About Non-Managed Maven Project
+
+Each time you open the WALA project, IntelliJ IDEA may report
+“Non-managed pom.xml file found” in its event log.  This arises
+because WALA historically has built using both Gradle and Maven, but
+WALA in IntelliJ IDEA needs only the Gradle configuration.  You can
+safely ignore this notification, permanently disable it using the
+offered “Disable notification” link, or even disable the IntelliJ IDEA
+Maven plugin entirely if you have no other need for it.
+
 ### Project Configuration as Derived Model
 
 IntelliJ IDEA automatically derives its project models from the Gradle
