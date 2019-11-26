@@ -1,16 +1,37 @@
+plugins {
+	id 'com.diffplug.gradle.eclipse.mavencentral'
+}
+
 sourceSets.test {
 	java.srcDirs = ['src']
 	resources.srcDirs = ['testdata']
 }
 
+repositories {
+	maven {
+		url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
+		content {
+			includeGroup 'org.eclipse.wst.jsdt'
+		}
+	}
+}
+
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.runtime',
+				'org.eclipse.equinox.common',
+				'org.eclipse.osgi',
+		].each { dep 'testImplementation', it }
+		useNativesForRunningPlatform()
+	}
+}
+
 dependencies {
 	testImplementation(
-			'eclipse-deps:org.eclipse.core.runtime:+',
-			'eclipse-deps:org.eclipse.equinox.common:+',
-			'eclipse-deps:org.eclipse.osgi:+',
 			'junit:junit:4.12',
+			"org.eclipse.wst.jsdt:core:$eclipseWstJsdtVersion",
 			'org.osgi:org.osgi.core:4.2.0',
-			'wst-deps:org.eclipse.wst.jsdt.core:+',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.cast.js.rhino'),
