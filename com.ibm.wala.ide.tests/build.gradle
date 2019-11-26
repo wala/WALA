@@ -1,4 +1,5 @@
 plugins {
+	id 'com.diffplug.gradle.eclipse.mavencentral'
 	id 'com.github.hauner.jarTest'
 	id 'eclipse'
 }
@@ -7,17 +8,25 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 sourceSets.test.java.srcDirs = ['src']
 
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.commands',
+				'org.eclipse.core.jobs',
+				'org.eclipse.core.resources',
+				'org.eclipse.core.runtime',
+				'org.eclipse.equinox.common',
+				'org.eclipse.jface',
+				'org.eclipse.osgi',
+				'org.eclipse.ui.ide',
+				'org.eclipse.ui.workbench',
+		].each { dep 'testImplementation', it }
+		useNativesForRunningPlatform()
+	}
+}
+
 dependencies {
 	testImplementation(
-			'eclipse-deps:org.eclipse.core.commands:+',
-			'eclipse-deps:org.eclipse.core.jobs:+',
-			'eclipse-deps:org.eclipse.core.resources:+',
-			'eclipse-deps:org.eclipse.core.runtime:+',
-			'eclipse-deps:org.eclipse.equinox.common:+',
-			'eclipse-deps:org.eclipse.jface:+',
-			'eclipse-deps:org.eclipse.osgi:+',
-			'eclipse-deps:org.eclipse.ui.ide:+',
-			'eclipse-deps:org.eclipse.ui.workbench:+',
 			'org.osgi:org.osgi.core:4.2.0',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.ide'),

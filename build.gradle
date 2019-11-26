@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.diffplug.gradle.p2.asmaven' version '3.18.1'
+	id 'com.diffplug.gradle.eclipse.mavencentral' version '3.18.1' apply false
 	id 'com.github.hauner.jarTest' version '1.0.1' apply false
 	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.set.ecj' version '1.4.1' apply false
@@ -25,45 +25,15 @@ repositories {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  required Eclipse components
-//
-
-p2AsMaven {
-	group 'eclipse-deps', {
-		repoEclipse '4.7.2'
-		slicingOption 'latestVersionOnly', 'true'
-		iu 'org.eclipse.core.commands'
-		iu 'org.eclipse.core.contenttype'
-		iu 'org.eclipse.core.jobs'
-		iu 'org.eclipse.core.resources'
-		iu 'org.eclipse.core.runtime'
-		iu 'org.eclipse.equinox.app'
-		iu 'org.eclipse.equinox.common'
-		iu 'org.eclipse.equinox.preferences'
-		iu 'org.eclipse.jdt.core'
-		iu 'org.eclipse.jface'
-		iu 'org.eclipse.osgi'
-		iu 'org.eclipse.pde.core'
-		iu 'org.eclipse.swt'
-		iu 'org.eclipse.ui.ide'
-		iu 'org.eclipse.ui.workbench'
-	}
-	group 'wst-deps', {
-		repo 'http://download.eclipse.org/releases/oxygen'
-		slicingOption 'latestVersionOnly', 'true'
-		iu 'org.eclipse.wst.jsdt.core'
-		iu 'org.eclipse.wst.jsdt.ui'
-	}
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
 //  common Java setup shared by multiple projects
 //
 
 group name
 version VERSION_NAME
+
+// version of Eclipse JARs to use for Eclipse-integrated WALA components
+ext.eclipseVersion = '4.7.2'
+ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
 
 subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever
@@ -84,9 +54,6 @@ subprojects { subproject ->
 
 	repositories {
 		mavenCentral()
-		maven {
-			url "$rootProject.buildDir/p2asmaven/maven"
-		}
 	}
 
 	jar.manifest.from('META-INF/MANIFEST.MF')
@@ -129,41 +96,6 @@ subprojects { subproject ->
 			break
 		default:
 			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
-	}
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  find platform-specific SWT implementations
-//
-
-def osgi_platform
-
-switch (System.getProperty('os.name')) {
-	case ~/Mac OS X/:
-		osgi_platform = 'cocoa.macosx.x86_64'
-		break
-	case ~/Windows.*/:
-		osgi_platform = 'win32.win32.x86_64'
-		break
-	case ~/Linux/:
-		osgi_platform = 'gtk.linux.x86_64'
-		break
-	default:
-		throw new GradleException("unrecognized operating system name \"${System.getProperty('os.name')}\"")
-}
-
-System.setProperty('osgi.platform', osgi_platform)
-
-subprojects {
-	configurations.all {
-		resolutionStrategy {
-			// failOnVersionConflict()
-			dependencySubstitution {
-				substitute module('eclipse-deps:org.eclipse.swt.${osgi.platform}') with module("eclipse-deps:org.eclipse.swt.${System.getProperty('osgi.platform')}:3.+")
-			}
-		}
 	}
 }
 
