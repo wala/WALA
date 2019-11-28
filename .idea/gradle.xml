@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/com.ibm.wala.cast" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.java" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.java.ecj" />
+            <option value="$PROJECT_DIR$/com.ibm.wala.cast.java.ecj.test" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.java.test" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.java.test.data" />
             <option value="$PROJECT_DIR$/com.ibm.wala.cast.js" />
