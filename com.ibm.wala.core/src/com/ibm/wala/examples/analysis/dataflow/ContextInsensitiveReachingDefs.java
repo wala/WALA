@@ -99,7 +99,7 @@ public class ContextInsensitiveReachingDefs {
         }
       }
     }
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // to make ECJ happy
     ObjectArrayMapping<Pair<CGNode, Integer>> result =
         new ObjectArrayMapping<>(putInstrs.toArray(new Pair[0]));
     return result;
