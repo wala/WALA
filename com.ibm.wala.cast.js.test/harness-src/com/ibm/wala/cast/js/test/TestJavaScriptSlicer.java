@@ -14,7 +14,6 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -23,6 +22,7 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
+import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -45,7 +45,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    Assert.assertEquals(0, SlicerTest.countConditionals(result));
+    Assert.assertEquals(0, SlicerUtil.countConditionals(result));
   }
 
   @Test
@@ -58,7 +58,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    Assert.assertEquals(2, SlicerTest.countConditionals(result));
+    Assert.assertEquals(2, SlicerUtil.countConditionals(result));
   }
 
   @Test
@@ -71,7 +71,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    Assert.assertEquals(1, SlicerTest.countConditionals(result));
+    Assert.assertEquals(1, SlicerUtil.countConditionals(result));
   }
 
   private Collection<Statement> slice(

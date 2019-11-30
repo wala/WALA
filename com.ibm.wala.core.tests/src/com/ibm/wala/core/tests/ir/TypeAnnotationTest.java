@@ -56,7 +56,7 @@ public abstract class TypeAnnotationTest extends WalaTestCase {
   }
 
   public TypeAnnotationTest() throws ClassHierarchyException, IOException {
-    this(new JVMLTestAssertions(), WalaTestCase.makeCHA());
+    this(new JVMLTestAssertions(), AnnotationTest.makeCHA());
   }
 
   private final String typeAnnotatedClass1 = "Lannotations/TypeAnnotatedClass1";

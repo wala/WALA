@@ -15,10 +15,14 @@ import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.JVMLTestAssertions;
 import com.ibm.wala.core.tests.util.TestAssertions;
+import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -30,6 +34,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Arrays;
@@ -49,7 +55,16 @@ public abstract class AnnotationTest extends WalaTestCase {
   }
 
   public AnnotationTest() throws ClassHierarchyException, IOException {
-    this(new JVMLTestAssertions(), WalaTestCase.makeCHA());
+    this(new JVMLTestAssertions(), makeCHA());
+  }
+
+  public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
+    AnalysisScope scope =
+        AnalysisScopeReader.readJavaScope(
+            TestConstants.WALA_TESTDATA,
+            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
+            AnnotationTest.class.getClassLoader());
+    return ClassHierarchyFactory.make(scope);
   }
 
   @Test

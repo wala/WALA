@@ -1,0 +1,8 @@
+dependencies {
+	implementation(
+			'junit:junit:4.12',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util')
+	)
+}

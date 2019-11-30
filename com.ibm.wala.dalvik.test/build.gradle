@@ -159,7 +159,6 @@ dependencies {
 			project(':com.ibm.wala.dalvik'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
 	)
 	testRuntimeOnly files("${copyAndroidJar.destinationDir}/android.jar")
 }

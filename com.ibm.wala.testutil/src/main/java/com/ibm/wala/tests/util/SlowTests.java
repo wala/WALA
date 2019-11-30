@@ -1,4 +1,4 @@
-package com.ibm.wala.core.tests.util;
+package com.ibm.wala.tests.util;
 
 /**
  * JUnit category marker for slow tests
