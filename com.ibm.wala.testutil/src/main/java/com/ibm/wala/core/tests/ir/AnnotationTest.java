@@ -10,14 +10,16 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.util.JVMLTestAssertions;
-import com.ibm.wala.core.tests.util.TestAssertions;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -40,6 +42,7 @@ import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import org.junit.Test;
 
@@ -47,15 +50,12 @@ public abstract class AnnotationTest extends WalaTestCase {
 
   private final IClassHierarchy cha;
 
-  private final TestAssertions harness;
-
-  protected AnnotationTest(TestAssertions harness, IClassHierarchy cha) {
+  protected AnnotationTest(IClassHierarchy cha) {
     this.cha = cha;
-    this.harness = harness;
   }
 
   public AnnotationTest() throws ClassHierarchyException, IOException {
-    this(new JVMLTestAssertions(), makeCHA());
+    this(makeCHA());
   }
 
   public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
@@ -65,6 +65,22 @@ public abstract class AnnotationTest extends WalaTestCase {
             (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             AnnotationTest.class.getClassLoader());
     return ClassHierarchyFactory.make(scope);
+  }
+
+  public static <T> void assertEqualCollections(Collection<T> expected, Collection<T> actual) {
+    if (expected == null) {
+      expected = Collections.emptySet();
+    }
+    if (actual == null) {
+      actual = Collections.emptySet();
+    }
+
+    if (expected.size() != actual.size()) {
+      assertTrue("expected=" + expected + " actual=" + actual, false);
+    }
+    for (T a : expected) {
+      assertTrue("missing " + a.toString(), actual.contains(a));
+    }
   }
 
   @Test
@@ -129,17 +145,14 @@ public abstract class AnnotationTest extends WalaTestCase {
       Collection<Annotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    harness.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    harness.assertTrue(
-        classUnderTest + " must be BytecodeClass", classUnderTest instanceof BytecodeClass);
+    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
+    assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof BytecodeClass);
     BytecodeClass<?> bcClassUnderTest = (BytecodeClass<?>) classUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
     Collection<Annotation> runtimeVisibleAnnotations = bcClassUnderTest.getAnnotations(false);
-
-    harness.assertEqualCollections(
-        expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
-    harness.assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
+    assertEqualCollections(expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
+    assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
   }
 
   @Test
@@ -149,10 +162,10 @@ public abstract class AnnotationTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotatedClass3");
     IClass klass = cha.lookupClass(typeRef);
-    harness.assertNotNull(typeRef + " must exist", klass);
+    assertNotNull(typeRef + " must exist", klass);
     BytecodeClass<?> shrikeClass = (BytecodeClass<?>) klass;
     Collection<Annotation> classAnnotations = shrikeClass.getAnnotations(true);
-    harness.assertEquals(
+    assertEquals(
         "[Annotation type <Application,Lannotations/AnnotationWithParams> {strParam=classStrParam}]",
         classAnnotations.toString());
 
@@ -160,17 +173,17 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make("foo()V"));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    harness.assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
-    harness.assertTrue(
+    assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    assertTrue(
         methodUnderTest + " must be IBytecodeMethod", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
         (IBytecodeMethod<IInstruction>) methodUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcMethodUnderTest.getAnnotations(true);
-    harness.assertEquals(1, runtimeInvisibleAnnotations.size());
+    assertEquals(1, runtimeInvisibleAnnotations.size());
 
     Annotation x = runtimeInvisibleAnnotations.iterator().next();
-    harness.assertEquals(
+    assertEquals(
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotationWithParams"),
         x.getType());
@@ -185,7 +198,7 @@ public abstract class AnnotationTest extends WalaTestCase {
           Pair.make("intParam", "25"),
           Pair.make("klassParam", "Ljava/lang/Integer;")
         }) {
-      harness.assertEquals(n.snd, x.getNamedArguments().get(n.fst).toString());
+      assertEquals(n.snd, x.getNamedArguments().get(n.fst).toString());
     }
   }
 
@@ -200,10 +213,10 @@ public abstract class AnnotationTest extends WalaTestCase {
             typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int);
 
     IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
-    harness.assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
+    assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
-    harness.assertEquals(
+    assertEquals(
         "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>, Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
         annots.toString());
   }
@@ -251,14 +264,14 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    harness.assertTrue(methodRefUnderTest.toString() + " not found", methodUnderTest != null);
-    harness.assertTrue(
+    assertTrue(methodRefUnderTest.toString() + " not found", methodUnderTest != null);
+    assertTrue(
         methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
 
     Collection<Annotation>[] parameterAnnotations =
         IBytecodeMethodUnderTest.getParameterAnnotations();
-    harness.assertEquals(expected.length, parameterAnnotations.length);
+    assertEquals(expected.length, parameterAnnotations.length);
     for (int i = 0; i < expected.length; i++) {
       Set<String> e = HashSetFactory.make();
       e.addAll(Arrays.asList(expected[i]));
@@ -270,7 +283,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         }
       }
 
-      harness.assertTrue(e + " must be " + a, e.equals(a));
+      assertTrue(e + " must be " + a, e.equals(a));
     }
   }
 }
