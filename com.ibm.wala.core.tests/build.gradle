@@ -9,6 +9,20 @@ sourceSets.test {
 	resources.srcDirs = ['dat']
 }
 
+tasks.named('processTestResources') {
+	def testdata = project(':com.ibm.wala.core.testdata')
+	dependsOn testdata.tasks.named('compileTestJava')
+
+	from testdata.collectJLex
+	from testdata.collectTestData
+	from testdata.downloadJavaCup
+	from testdata.extractBcel
+	from testdata.generateHelloHashJar
+	from testdata.extractKawa
+	from testdata.buildChessJar
+	from testdata.buildKawaTestJar
+}
+
 dependencies {
 	testImplementation(
 			'junit:junit:4.12',

@@ -165,10 +165,15 @@ dependencies {
 }
 
 tasks.named('processTestResources') {
+	def testdata = project(':com.ibm.wala.core.testdata')
+
 	from copyAndroidJar
 	from downloadSampleCup
 	from downloadSampleLex
-	from project(':com.ibm.wala.core.testdata').collectTestDataA
+	from testdata.collectTestDataA
+	from testdata.collectJLex
+	from testdata.downloadJavaCup
+	from testdata.extractBcel
 }
 
 if (isWindows)
