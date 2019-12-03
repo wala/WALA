@@ -57,11 +57,6 @@ tasks.named('test') {
 		exclude '**/cha/LibraryVersionTest.class'
 		exclude '**/ir/TypeAnnotationTest.class'
 	}
-	if (project.hasProperty('excludeSlowTests')) {
-		useJUnit {
-			excludeCategories 'com.ibm.wala.core.tests.util.SlowTests'
-		}
-	}
 }
 
 tasks.register('cleanTestExtras', Delete) {
