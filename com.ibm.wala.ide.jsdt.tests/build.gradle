@@ -31,7 +31,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.12',
 			"org.eclipse.wst.jsdt:core:$eclipseWstJsdtVersion",
-			'org.osgi:org.osgi.core:4.2.0',
+			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.cast.js.rhino'),
