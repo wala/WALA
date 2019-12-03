@@ -1,0 +1,38 @@
+plugins {
+	id 'com.diffplug.gradle.eclipse.mavencentral'
+}
+
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.contenttype',
+				'org.eclipse.core.runtime',
+				'org.eclipse.equinox.preferences',
+				'org.eclipse.jdt.core',
+				'org.eclipse.osgi',
+		].each { dep 'testImplementation', it }
+		useNativesForRunningPlatform()
+	}
+}
+
+dependencies {
+	testImplementation(
+			'junit:junit:4.12',
+			'org.osgi:org.osgi.core:4.2.0',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.java'),
+			project(':com.ibm.wala.cast.java.ecj'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.java.test'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
+	)
+}
+
+tasks.named('test') {
+	maxHeapSize = '1200M'
+	
+	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
+}

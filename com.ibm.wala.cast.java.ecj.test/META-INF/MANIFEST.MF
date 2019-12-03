@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: com.ibm.wala.cast.java.ecj.test
+Bundle-Version: 1.5.5.qualifier
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: com.ibm.wala.cast.java,
+ com.ibm.wala.core,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.core,
+ com.ibm.wala.cast,
+ com.ibm.wala.shrike,
+ com.ibm.wala.cast.java.ecj
