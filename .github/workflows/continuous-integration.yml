@@ -1,0 +1,55 @@
+name: Continuous integration
+on:
+  - pull_request
+  - push
+jobs:
+  build:
+    name: Build and test
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        java-compiler:
+          - default
+          - ecj
+        exclude:
+          # testing ECJ compilation on any one OS is sufficient
+          - os: macos-latest
+            java-compiler: ecj
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out WALA sources
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Cache Goomph
+        uses: actions/cache@v1
+        with:
+          path: ~/.goomph
+          key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
+          restore-keys: ${{ runner.os }}-goomph-
+      - name: Cache Gradle caches
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle-caches-
+      - name: Cache Gradle wrapper
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradlew-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradlew-wrapper-
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Compile Java using Gradle and ECJ
+        run: ./gradlew --continue --no-build-cache --no-daemon -PjavaCompiler=${{ matrix.java-compiler }} compileJava compileTestJava
+        if: matrix.java-compiler == 'ecj'
+      - name: Build and test using Gradle and default JDK compiler
+        run: ./gradlew --continue --no-build-cache --no-daemon linters javadoc build
+        if: matrix.java-compiler != 'ecj'
+      - name: Clean up Gradle caches
+        run: travis/before-cache-gradle
