@@ -75,7 +75,18 @@ subprojects { subproject ->
 			}
 		}
 
-		maxParallelForks = Integer.MAX_VALUE
+		if (project.hasProperty('trial')) {
+			outputs.upToDateWhen { false }
+			afterTest { descriptor, result ->
+				def csv = new File("$rootProject.buildDir/time-trials.csv")
+				if (!csv.exists()) {
+					csv.append('trial,className,name,resultType,startTime,endTime\n')
+				}
+				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
+			}
+		} else {
+			maxParallelForks = Integer.MAX_VALUE
+		}
 	}
 
 	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
