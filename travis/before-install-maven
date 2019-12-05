@@ -1,7 +1,5 @@
 #!/bin/sh -eux
 
-"$(dirname "$0")"/before-install-gradle
-
 ./gradlew prepareMavenBuild
 
 git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
