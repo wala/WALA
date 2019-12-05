@@ -1,0 +1,50 @@
+#!/usr/bin/python3
+
+import numpy
+import pandas
+
+
+def main():
+    # load results, then identify successful and skipped tests
+    frame = pandas.read_csv('build/time-trials.csv')
+    results = frame['resultType']
+    successes = results == 'SUCCESS'
+    skips = results == 'SKIPPED'
+
+    # report failed tests, if any
+    failures = frame[~(successes | skips)]
+    if not failures.empty:
+        print('failed tests:')
+        print(failures)
+        return
+
+    # aggregate multiple trials of each individual test method
+    frame['elapsedTime'] = frame['endTime'] - frame['startTime']
+    grouped = frame[successes].groupby(['className', 'name'])['elapsedTime']
+
+    # print very wide tables in full; assume user can scroll horizontally
+    pandas.set_option('display.width', None)
+    pandas.set_option('display.max_colwidth', -1)
+
+    # summarize distribution of elapsed times, including fine-grained
+    # percentiles at the upper (slowest) end
+    times = grouped.mean()
+    times.sort_values(inplace=True)
+    print('Overall distribution and percentiles of elapsed times:\n')
+    print(times.describe(percentiles=numpy.arange(.8, 1, .01)))
+    print('\n')
+
+    # print slowest individual tests, showing only those in the 95% percentile
+    # or higher (slower)
+    rankedTimes = pandas.DataFrame(times)
+    rankedTimes['percentRank'] = times.rank(pct=True)
+    elapsedTimes = rankedTimes['elapsedTime']
+    rankedTimes['fractionOfTotal'] = elapsedTimes / elapsedTimes.sum()
+    isSlow = rankedTimes['percentRank'] >= .95
+    slowestTests = rankedTimes[isSlow][::-1]
+    print('Slowest individual tests:')
+    print(slowestTests.to_string(formatters={'percentRank': '{:.1%}'.format}))
+
+
+if __name__ == '__main__':
+    main()
