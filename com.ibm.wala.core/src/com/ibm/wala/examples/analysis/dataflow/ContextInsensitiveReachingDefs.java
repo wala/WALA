@@ -99,7 +99,11 @@ public class ContextInsensitiveReachingDefs {
         }
       }
     }
-    @SuppressWarnings("unchecked") // to make ECJ happy
+    // IntelliJ IDEA 2019.3 misdiagnoses "new ObjectArrayMapping<>(...)" below as a raw use of
+    // generic type ObjectArrayMapping.  It's actually a perfectly good use of Java generic type
+    // inference.  ECJ, on the other hand, apparently needs the "unchecked" suppression for some
+    // reason.
+    @SuppressWarnings({"rawtypes", "unchecked"})
     ObjectArrayMapping<Pair<CGNode, Integer>> result =
         new ObjectArrayMapping<>(putInstrs.toArray(new Pair[0]));
     return result;
