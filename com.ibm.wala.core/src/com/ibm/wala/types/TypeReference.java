@@ -456,13 +456,11 @@ public final class TypeReference implements Serializable {
 
     Key key = new Key(cl, typeName);
     TypeReference val = dictionary.get(key);
-    if (val != null) {
-      return val;
-    } else {
+    if (val == null) {
       val = new TypeReference(cl, typeName);
       dictionary.put(key, val);
-      return val;
     }
+    return val;
   }
 
   /**

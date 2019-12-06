@@ -163,18 +163,16 @@ public class GraphIntegrity {
     if (set1.size() > 0) {
       Object first = set1.iterator().next();
       msg = msg + ", first iterator contained " + first;
-      return new UnsoundGraphException(msg);
     } else {
       set2.removeAll(s1clone);
       if (set2.size() > 0) {
         Object first = set2.iterator().next();
         msg = msg + ", 2nd iterator contained " + first;
-        return new UnsoundGraphException(msg);
       } else {
         msg += "set2.size = 0";
-        return new UnsoundGraphException(msg);
       }
     }
+    return new UnsoundGraphException(msg);
   }
 
   public static class UnsoundGraphException extends Exception {

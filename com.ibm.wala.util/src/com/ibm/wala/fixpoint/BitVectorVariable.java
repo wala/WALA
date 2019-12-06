@@ -31,12 +31,10 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
       throw new IllegalArgumentException("null other");
     }
     if (V == null) {
-      if (other.V == null) {
-        return;
-      } else {
+      if (other.V != null) {
         V = new MutableSharedBitVectorIntSet(other.V);
-        return;
       }
+      return;
     }
     if (other.V != null) {
       V.copySet(other.V);

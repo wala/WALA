@@ -220,7 +220,6 @@ public class VolatileMethodSummary {
 
     if (instructions.size() - 1 < programCounter) return true;
     if (instructions.get(programCounter) == null) return true;
-    if (instructions.get(programCounter).equals(RESERVED)) return false;
     return false;
   }
 

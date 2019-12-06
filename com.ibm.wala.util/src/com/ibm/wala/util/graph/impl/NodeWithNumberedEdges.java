@@ -42,10 +42,8 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   public void addSucc(int eqNumber) {
     if (succNumbers == null) {
       succNumbers = new BimodalMutableIntSet();
-      succNumbers.add(eqNumber);
-    } else {
-      succNumbers.add(eqNumber);
     }
+    succNumbers.add(eqNumber);
   }
 
   /**
@@ -57,10 +55,8 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   public void addPred(int eqNumber) {
     if (predNumbers == null) {
       predNumbers = new BimodalMutableIntSet();
-      predNumbers.add(eqNumber);
-    } else {
-      predNumbers.add(eqNumber);
     }
+    predNumbers.add(eqNumber);
   }
 
   /** remove the edge that indicates this variable is Succd by a certain equation */

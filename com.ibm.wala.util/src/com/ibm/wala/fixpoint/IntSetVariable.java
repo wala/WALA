@@ -27,12 +27,10 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
   @Override
   public void copyState(T other) {
     if (V == null) {
-      if (other.V == null) {
-        return;
-      } else {
+      if (other.V != null) {
         V = IntSetUtil.getDefaultIntSetFactory().makeCopy(other.V);
-        return;
       }
+      return;
     } else {
       if (other.V != null) {
         V.copySet(other.V);

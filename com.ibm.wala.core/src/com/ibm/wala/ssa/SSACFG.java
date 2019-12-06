@@ -326,16 +326,14 @@ public class SSACFG
             result.add(phi);
           }
         }
-        if (localPhis == null) {
-          return result.iterator();
-        } else {
+        if (localPhis != null) {
           for (SSAPhiInstruction phi : localPhis) {
             if (phi != null) {
               result.add(phi);
             }
           }
-          return result.iterator();
         }
+        return result.iterator();
       }
     }
 

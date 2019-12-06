@@ -304,13 +304,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
-    if (allInterfaces != null) {
-      return allInterfaces;
-    } else {
+    if (allInterfaces == null) {
       Collection<IClass> C = computeAllInterfacesAsCollection();
       allInterfaces = Collections.unmodifiableCollection(C);
-      return allInterfaces;
     }
+    return allInterfaces;
   }
 
   /*
