@@ -1,11 +1,17 @@
-#!/bin/sh -e
+#!/bin/bash -ex
 
 REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
-files=$( (git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$') || true)
-if [ -n "$files" ]; then
-  comma_files=$(echo "$files" | paste -s -d , -)
+mapfile -t files < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$')
+
+join() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
+if [ "${#files[@]}" -gt 0 ]; then
+  comma_files=$(join , "${files[@]}")
   "${REPO_ROOT_DIR}/gradlew" goJF -DgoogleJavaFormat.include="$comma_files" >/dev/null 2>&1
-  # shellcheck disable=SC2046
-  git add $(echo "$files" | paste -s -d ' ' -)
+  git add "${files[@]}"
 fi
