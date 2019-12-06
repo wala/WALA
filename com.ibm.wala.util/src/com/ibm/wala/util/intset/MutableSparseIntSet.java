@@ -111,7 +111,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
       elements = new int[getInitialNonEmptySize()];
       size = 1;
       elements[0] = value;
-      return true;
     } else {
       int insert;
       if (size == 0 || value > max()) {
@@ -135,10 +134,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
         }
         size++;
         elements[insert] = value;
-        if (DEBUG_LARGE && size() > TRAP_SIZE) {
-          Assertions.UNREACHABLE();
-        }
-        return true;
       } else {
         // no space left. expand the backing array.
         float newExtent = elements.length * getExpansionFactor() + 1;
@@ -150,12 +145,12 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
         tmp[insert] = value;
         size++;
         elements = tmp;
-        if (DEBUG_LARGE && size() > TRAP_SIZE) {
-          Assertions.UNREACHABLE();
-        }
-        return true;
+      }
+      if (DEBUG_LARGE && size() > TRAP_SIZE) {
+        Assertions.UNREACHABLE();
       }
     }
+    return true;
   }
 
   /** @throws IllegalArgumentException if that == null */

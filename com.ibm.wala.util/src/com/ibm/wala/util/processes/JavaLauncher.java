@@ -247,15 +247,13 @@ public class JavaLauncher extends Launcher {
         inheritClasspath
             ? new StringBuilder(System.getProperty("java.class.path"))
             : new StringBuilder();
-    if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
-      return cp.toString().trim();
-    } else {
+    if (getXtraClassPath() != null && !getXtraClassPath().isEmpty()) {
       for (String p : Iterator2Iterable.make(getXtraClassPath().iterator())) {
         cp.append(File.pathSeparatorChar);
         cp.append(p);
       }
-      return cp.toString().trim();
     }
+    return cp.toString().trim();
   }
 
   /**

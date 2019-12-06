@@ -293,7 +293,6 @@ public class AndroidModelParameterManager {
         }
       }
       assert (didPhi);
-      return;
     } else {
       ManagedParameter param = new ManagedParameter();
       param.status = ValueStatus.ALLOCATED;
@@ -308,7 +307,6 @@ public class AndroidModelParameterManager {
       aParam.add(param);
 
       seenTypes.put(type, aParam);
-      return;
     }
   }
 

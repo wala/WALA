@@ -462,10 +462,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
       }
 
       // TODO: Add actual target to the Intent and compare these?
-      registerIntentForce(intent);
-    } else {
-      registerIntentForce(intent);
     }
+    registerIntentForce(intent);
   }
 
   /**

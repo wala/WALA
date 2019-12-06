@@ -21,31 +21,27 @@ public class ClassHierarchyUtil {
   public static IMethod getRootOfInheritanceTree(IMethod m) {
     IClass c = m.getDeclaringClass();
     IClass parent = c.getSuperclass();
-    if (parent == null) {
-      return m;
-    } else {
+    if (parent != null) {
       MethodReference ref = MethodReference.findOrCreate(parent.getReference(), m.getSelector());
       IMethod m2 = m.getClassHierarchy().resolveMethod(ref);
       if (m2 != null && !m2.equals(m)) {
         return getRootOfInheritanceTree(m2);
       }
-      return m;
     }
+    return m;
   }
 
   /** Return the method that m overrides, or null if none */
   public static IMethod getOverriden(IMethod m) {
     IClass c = m.getDeclaringClass();
     IClass parent = c.getSuperclass();
-    if (parent == null) {
-      return null;
-    } else {
+    if (parent != null) {
       MethodReference ref = MethodReference.findOrCreate(parent.getReference(), m.getSelector());
       IMethod m2 = m.getClassHierarchy().resolveMethod(ref);
       if (m2 != null && !m2.equals(m)) {
         return m2;
       }
-      return null;
     }
+    return null;
   }
 }

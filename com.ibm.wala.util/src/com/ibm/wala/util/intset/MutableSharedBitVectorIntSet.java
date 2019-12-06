@@ -973,19 +973,15 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
           return true;
         }
       }
-      if (privatePart != null && privatePart.containsAny(set)) {
-        return true;
-      }
-      return false;
     } else {
       if (sharedPart != null && sharedPart.containsAny(set)) {
         return true;
       }
-      if (privatePart != null && privatePart.containsAny(set)) {
-        return true;
-      }
-      return false;
     }
+    if (privatePart != null && privatePart.containsAny(set)) {
+      return true;
+    }
+    return false;
   }
 
   /*

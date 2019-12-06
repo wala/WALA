@@ -2259,10 +2259,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     MethodReference declaredTarget = instruction.getDeclaredTarget();
     IMethod resolvedTarget = getClassHierarchy().resolveMethod(declaredTarget);
-    if (resolvedTarget == null) {
-      // there's some problem that will be flagged as a warning
-      return true;
-    }
+    // if resolvedTarget == null, then there's some problem that will be flagged as a warning
 
     return true;
   }

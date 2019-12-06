@@ -1630,7 +1630,6 @@ public class ParameterAccessor {
                 "No type was assignable and the instantiator returned an invalidone! Using null for {}",
                 param);
             assigned.add(null);
-            continue forEachParameter;
           } else {
             final Parameter newParam;
             if (this.base == BasedOn.IMETHOD) {
@@ -1658,20 +1657,18 @@ public class ParameterAccessor {
             }
 
             assigned.add(newParam);
-            continue forEachParameter;
           }
         } else {
           warn("No IInstantiator given and no known parameter assignable - using null");
           assigned.add(null);
-          continue forEachParameter;
         }
       } else {
         // TODO: CreateInstance Call-Back
 
         warn("No type was equal. We can't ask isAssignable since we have no cha!");
         assigned.add(null);
-        continue forEachParameter;
       } // of (cha != null)
+      continue forEachParameter;
 
       // Assertions.UNREACHABLE(); // Well it's unreachable
     } // of final Parameter param : calleeParams
