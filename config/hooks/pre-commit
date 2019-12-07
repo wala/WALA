@@ -3,8 +3,11 @@
 REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
 # Set $files to an array of lines output by the "git diff ...| grep ..." pipeline, excluding the
-# trailing newlines.  Recommended by <https://github.com/koalaman/shellcheck/wiki/SC2207>.
-mapfile -t files < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$')
+# trailing newlines.  Forego `mapfile -t` for compatibility with Bash 3.x as found on macOS.
+# Recommended by <https://github.com/koalaman/shellcheck/wiki/SC2207>.
+files=()
+while IFS='' read -r line; do array+=("$line"); done \
+  < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$')
 
 join() {
   local IFS="$1"
