@@ -314,8 +314,9 @@ final def addRpath(linkTask, library) {
 
 final def getNativeLibraryOutput(task) {
 	final def outputsFiles = task.outputs.files
-	assert outputsFiles.size() == 2
-	final def (parent, library) = outputsFiles
+	final def parent = outputsFiles[0]
+	final def library = outputsFiles[1]
+	// on Windows, outputsFiles[2] is DLL
 	assert parent as String == library.parent
 	return library
 }
