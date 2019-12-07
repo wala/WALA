@@ -10,7 +10,7 @@ eclipseMavenCentral {
 		[
 				'org.eclipse.core.runtime',
 				'org.eclipse.jdt.core',
-		].each { dep 'implementation', it }
+		].each it.&implementation
 	}
 }
 
