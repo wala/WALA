@@ -10,12 +10,15 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
+          - windows-latest
         java-compiler:
           - default
           - ecj
         exclude:
           # testing ECJ compilation on any one OS is sufficient
           - os: macos-latest
+            java-compiler: ecj
+          - os: windows-latest
             java-compiler: ecj
       fail-fast: false
     runs-on: ${{ matrix.os }}
