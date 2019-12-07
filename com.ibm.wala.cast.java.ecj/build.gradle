@@ -1,11 +1,21 @@
-apply plugin: 'application'
+plugins {
+	id 'application'
+	id 'com.diffplug.gradle.eclipse.mavencentral'
+}
 
 sourceSets.main.java.srcDirs = ['src']
 
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.runtime',
+				'org.eclipse.jdt.core',
+		].each { dep 'implementation', it }
+	}
+}
+
 dependencies {
 	implementation(
-			'org.eclipse.platform:org.eclipse.core.runtime:3.16.0',
-			'org.eclipse.jdt:org.eclipse.jdt.core:3.19.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
 			project(':com.ibm.wala.core'),
