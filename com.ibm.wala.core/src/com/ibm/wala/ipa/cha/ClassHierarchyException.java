@@ -19,4 +19,8 @@ public class ClassHierarchyException extends WalaException {
   public ClassHierarchyException(String string) {
     super(string);
   }
+
+  public ClassHierarchyException(String s, Throwable cause) {
+    super(s, cause);
+  }
 }
