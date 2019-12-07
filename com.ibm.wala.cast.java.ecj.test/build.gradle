@@ -35,4 +35,7 @@ tasks.named('test') {
 	maxHeapSize = '1200M'
 	
 	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
+
+	// ensures the command-line driver for running ECJ works
+	dependsOn ':com.ibm.wala.cast.java.ecj:run'
 }
