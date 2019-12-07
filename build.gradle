@@ -93,6 +93,7 @@ subprojects { subproject ->
 	// :com.ibm.wala.cast.test:compileTestJava, which requires JNI support that ECJ does not offer.
 	tasks.withType(JavaCompile) {
 		it.ext.originalToolChain = it.toolChain
+		options.encoding = 'UTF-8'
 	}
 
 	// Use ECJ instead of default Java compiler if "javaCompiler" project property is set to either
@@ -125,6 +126,7 @@ subprojects { subproject ->
 allprojects {
 	tasks.withType(Javadoc).configureEach {
 		options.addBooleanOption('Xdoclint:all,-missing', true)
+		options.encoding = 'UTF-8'
 		options.quiet()
 	}
 }
