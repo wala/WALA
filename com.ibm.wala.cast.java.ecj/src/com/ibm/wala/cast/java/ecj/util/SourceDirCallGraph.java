@@ -44,10 +44,24 @@ public class SourceDirCallGraph {
   public static void main(String[] args)
       throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
           IOException {
-    long start = System.currentTimeMillis();
     Properties p = CommandLine.parse(args);
     String sourceDir = p.getProperty("sourceDir");
     String mainClass = p.getProperty("mainClass");
+    runForSourceDir(sourceDir, mainClass);
+  }
+
+  /**
+   * builds a call graph for a particular source directory and main class
+   *
+   * @param sourceDir the source directory
+   * @param mainClass the main class
+   * @throws IOException
+   * @throws ClassHierarchyException
+   * @throws CallGraphBuilderCancelException
+   */
+  public static void runForSourceDir(String sourceDir, String mainClass)
+      throws IOException, ClassHierarchyException, CallGraphBuilderCancelException {
+    long start = System.currentTimeMillis();
     AnalysisScope scope = new JavaSourceAnalysisScope();
     // add standard libraries to scope
     String[] stdlibs = WalaProperties.getJ2SEJarFiles();
