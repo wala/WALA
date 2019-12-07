@@ -4,7 +4,7 @@ sourceSets.main.java.srcDirs = ['src']
 
 dependencies {
 	implementation(
-			'org.eclipse.core:org.eclipse.core.runtime:3.7.0',
+			'org.eclipse.platform:org.eclipse.core.runtime:3.16.0',
 			'org.eclipse.jdt:org.eclipse.jdt.core:3.19.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
@@ -18,7 +18,7 @@ mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
 
 run {
 	// this is for testing purposes
-	args = ['-sourceDir', java.nio.file.Paths.get(rootDir.toString(), 'com.ibm.wala.cast.java.test.data', 'src'), '-mainClass', 'LArray1']
+	args = ['-sourceDir', file("$rootDir/com.ibm.wala.cast.java.test.data/src"), '-mainClass', 'LArray1']
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
