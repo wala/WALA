@@ -10,7 +10,10 @@
  */
 package com.ibm.wala.util.io;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
@@ -34,20 +37,27 @@ public class FileProviderTest {
   public void testURLWithInvalidURIChars() throws MalformedURLException {
     // setup:
     URL url = new URL("file:///[Eclipse]/File.jar");
-    String expected = PlatformUtil.onWindows() ? "/C:/[Eclipse]/File.jar" : "/[Eclipse]/File.jar";
     // exercise:
     String actual = (new FileProvider()).filePathFromURL(url);
     // verify:
-    assertEquals(expected, actual);
+    assertThat(
+        actual,
+        PlatformUtil.onWindows()
+            ? matchesPattern("\\A/[A-Z]:/\\[Eclipse\\]/File.jar\\z")
+            : equalTo("/[Eclipse]/File.jar"));
   }
 
   @Test
   public void testURLWithSpace() throws MalformedURLException {
+    // setup:
     URL url = new URL("file:///With%20Space/File.jar");
-    String expected = PlatformUtil.onWindows() ? "/C:/With Space/File.jar" : "/With Space/File.jar";
     // exercise:
     String actual = (new FileProvider()).filePathFromURL(url);
     // verify:
-    assertEquals(expected, actual);
+    assertThat(
+        actual,
+        PlatformUtil.onWindows()
+            ? matchesPattern("\\A/[A-Z]:/With Space/File\\.jar\\z")
+            : equalTo("/With Space/File.jar"));
   }
 }
