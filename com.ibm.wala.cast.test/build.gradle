@@ -26,15 +26,28 @@ dependencies {
 	)
 }
 
+final def getProjectLibraryDirectory(project_name, link_task_name) {
+	final def library_project = project(project_name)
+	final def link_task = library_project.tasks.getByName(link_task_name)
+	final def library_file = getNativeLibraryOutput(link_task)
+	return library_file.parent
+}
+
 tasks.named('test') {
 	final def xlator_project_name = 'xlator_test'
-	final def xlator_link_name = 'linkDebug'
-	dependsOn "$xlator_project_name:$xlator_link_name"
+	final def link_task_name = 'linkDebug'
+	dependsOn "$xlator_project_name:$link_task_name"
 
 	doFirst {
-		final def xlator_project = project(xlator_project_name)
-		final def xlator_link = xlator_project.tasks.getByName(xlator_link_name)
-		final def xlator_lib = getNativeLibraryOutput(xlator_link)
-		systemProperty 'java.library.path', xlator_lib.parent
+		systemProperty 'java.library.path', getProjectLibraryDirectory(xlator_project_name, link_task_name)
+
+		if (System.getProperty('os.name').startsWith('Windows')) {
+			// Windows has nothing akin to RPATH for embedding DLL search paths in other DLLs or
+			// executables.  Instead, we need to ensure that any required DLLs are in the standard
+			// executable search path at test run time.
+			final def path_key = environment.keySet().find { it.equalsIgnoreCase('path') }
+			assert path_key != null
+			environment[path_key] += ";${getProjectLibraryDirectory(':com.ibm.wala.cast:cast', link_task_name)}"
+		}
 	}
 }
