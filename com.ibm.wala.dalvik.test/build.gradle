@@ -10,9 +10,6 @@ sourceSets.test {
 		]
 }
 
-def osName = System.getProperty('os.name')
-ext.isWindows = osName.startsWith('Windows ')
-
 final def downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest "$temporaryDir/DroidBench_2.0.zip"
@@ -71,7 +68,7 @@ final def installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 	doLast {
 		exec {
 			def shell, shellFlags, yes, semicolon, discard
-			if (project.isWindows) {
+			if (isWindows) {
 				shell = 'PowerShell'
 				shellFlags = '-Command'
 				yes = 'echo y'

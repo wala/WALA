@@ -55,7 +55,11 @@ application {
 					}
 				}
 
-				check.dependsOn checkSmoke_main
+				if (!isWindows) {
+					// Known to be broken on Windows, but not intentionally so.  Please fix if you
+					// know how!  <https://github.com/wala/WALA/issues/608>
+					check.dependsOn checkSmoke_main
+				}
 			}
 		}
 	}

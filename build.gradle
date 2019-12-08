@@ -22,6 +22,9 @@ repositories {
 	mavenCentral()
 }
 
+ext.osName = System.getProperty('os.name')
+ext.isWindows = osName.startsWith('Windows ')
+
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -169,7 +172,7 @@ allprojects {
 }
 
 // shell scripts, provided they have ".sh" extension
-if (System.getProperty('os.name').startsWith('Windows')) {
+if (isWindows) {
 	// create a no-op "shellCheck" task so that "gradlew shellCheck" vacuously passes on Windows
 	tasks.register('shellCheck')
 } else {
@@ -221,8 +224,12 @@ tasks.register('linters') {
 	dependsOn(
 			'lintGradle',
 			'shellCheck',
-			'verifyGoogleJavaFormat',
 	)
+	if (!(isWindows && System.getenv('GITHUB_ACTIONS') == 'true')) {
+		// Known to be broken on Windows when running as a GitHub Action, but not intentionally so.
+		// Please fix if you know how!  <https://github.com/wala/WALA/issues/608>
+		dependsOn 'verifyGoogleJavaFormat'
+	}
 }
 
 
@@ -317,7 +324,7 @@ final def addJvmLibrary(project, recipient) {
 }
 
 final def addRpath(linkTask, library) {
-	if (!System.getProperty('os.name').startsWith('Windows')) {
+	if (!isWindows) {
 		linkTask.linkerArgs.add "-Wl,-rpath,$library.parent"
 	}
 }

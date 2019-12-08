@@ -1,5 +1,7 @@
 package com.ibm.wala.dalvik.test.cha;
 
+import static org.junit.Assume.assumeFalse;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
@@ -9,6 +11,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -70,6 +73,10 @@ public class MultiDexScopeTest {
 
   @Test
   public void testAPK() throws ClassHierarchyException, IOException {
+    // Known to be broken on Windows, but not intentionally so.  Please fix if you know how!
+    // <https://github.com/wala/WALA/issues/608>
+    assumeFalse(PlatformUtil.onWindows());
+
     AnalysisScope scope, scope2;
     ClassHierarchy cha, cha2;
     String testAPK = DroidBenchCGTest.getDroidBenchRoot() + "/apk/Aliasing/Merge1.apk";
