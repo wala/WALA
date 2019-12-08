@@ -6,8 +6,7 @@ sourceSets.test {
 dependencies {
 	testImplementation(
 			'junit:junit:4.12',
-			project(':com.ibm.wala.cast.js.nodejs'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
+			project(':com.ibm.wala.cast.js.nodejs')
 	)
 }
 
