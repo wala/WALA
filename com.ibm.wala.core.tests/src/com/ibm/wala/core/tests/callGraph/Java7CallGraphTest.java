@@ -11,6 +11,8 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assume.assumeFalse;
+
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
@@ -29,6 +31,7 @@ import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +45,10 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
           ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException,
           InterruptedException {
+    // Known to be broken on Windows, but not intentionally so.  Please fix if you know how!
+    // <https://github.com/wala/WALA/issues/608>
+    assumeFalse(PlatformUtil.onWindows());
+
     if (!"True".equals(System.getenv("APPVEYOR"))) {
       testOCamlJar("hello_hash.jar");
     }

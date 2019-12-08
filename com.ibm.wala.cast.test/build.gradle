@@ -40,7 +40,7 @@ tasks.named('test') {
 	doFirst {
 		systemProperty 'java.library.path', getProjectLibraryDirectory(xlator_project_name, link_task_name)
 
-		if (System.getProperty('os.name').startsWith('Windows')) {
+		if (isWindows) {
 			// Windows has nothing akin to RPATH for embedding DLL search paths in other DLLs or
 			// executables.  Instead, we need to ensure that any required DLLs are in the standard
 			// executable search path at test run time.
