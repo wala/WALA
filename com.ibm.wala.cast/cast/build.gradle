@@ -8,6 +8,9 @@ library {
 	source.from "$cSourceDir/jni"
 
 	binaries.whenElementFinalized {
+		compileTask.get().configure {
+			macros.put('BUILD_CAST_DLL', '1')
+		}
 		if (targetMachine.operatingSystemFamily.macOs) {
 			linkTask.get().configure {
 				final def library = getNativeLibraryOutput(it)
