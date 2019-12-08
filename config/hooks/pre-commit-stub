@@ -10,5 +10,5 @@ PRE_COMMIT_SCRIPT="${REPO_ROOT_DIR}/config/hooks/pre-commit"
 
 if [ -f "$PRE_COMMIT_SCRIPT" ]; then
   # shellcheck source=pre-commit
-  . "$PRE_COMMIT_SCRIPT"
+  "$PRE_COMMIT_SCRIPT"
 fi
