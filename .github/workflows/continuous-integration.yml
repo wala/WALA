@@ -17,6 +17,7 @@ jobs:
           # testing ECJ compilation on any one OS is sufficient
           - os: macos-latest
             java-compiler: ecj
+      fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out WALA sources
