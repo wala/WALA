@@ -311,7 +311,9 @@ final def addJvmLibrary(project, recipient) {
 }
 
 final def addRpath(linkTask, library) {
-	linkTask.linkerArgs.add "-Wl,-rpath,$library.parent"
+	if (!System.getProperty('os.name').startsWith('Windows')) {
+		linkTask.linkerArgs.add "-Wl,-rpath,$library.parent"
+	}
 }
 
 final def getNativeLibraryOutput(task) {
