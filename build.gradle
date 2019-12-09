@@ -169,26 +169,30 @@ allprojects {
 }
 
 // shell scripts, provided they have ".sh" extension
-tasks.register('shellCheck', Exec) {
-	description 'Check all shell scripts using shellcheck, if available'
-	group 'lint'
+if (System.getProperty('os.name').startsWith('Windows')) {
+	tasks.register('shellCheck')
+} else {
+	tasks.register('shellCheck', Exec) {
+		description 'Check all shell scripts using shellcheck, if available'
+		group 'lint'
 
-	inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
-	outputs.file "$temporaryDir/log"
+		inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
+		outputs.file "$temporaryDir/log"
 
-	doFirst {
-		// quietly succeed if "shellcheck" is not available
-		executable 'shellcheck'
-		final def execPaths = System.getenv('PATH').split(File.pathSeparator)
-		final def isAvailable = execPaths.any { file("$it/$executable").exists() }
-		if (!isAvailable) executable 'true'
+		doFirst {
+			// quietly succeed if "shellcheck" is not available
+			executable 'shellcheck'
+			final def execPaths = System.getenv('PATH').split(File.pathSeparator)
+			final def isAvailable = execPaths.any { file("$it/$executable").exists() }
+			if (!isAvailable) executable 'true'
 
-		args inputs.files
+			args inputs.files
 
-		final def consoleOutput = System.out
-		final def fileOutput = new FileOutputStream(outputs.files.singleFile)
-		final def bothOutput = new org.apache.tools.ant.util.TeeOutputStream(consoleOutput, fileOutput)
-		standardOutput = errorOutput = bothOutput
+			final def consoleOutput = System.out
+			final def fileOutput = new FileOutputStream(outputs.files.singleFile)
+			final def bothOutput = new org.apache.tools.ant.util.TeeOutputStream(consoleOutput, fileOutput)
+			standardOutput = errorOutput = bothOutput
+		}
 	}
 }
 
@@ -334,3 +338,5 @@ final def getNativeLibraryOutput(task) {
 tasks.register('downloads') {
 	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
 }
+
+// TODO: remove this comment
