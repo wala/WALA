@@ -17,7 +17,7 @@ using namespace std;
 
 #endif
 
-#if __WIN32__
+#if _WIN32
 #ifdef BUILD_CAST_DLL
 #define DLLEXPORT __declspec(dllexport)
 #else
