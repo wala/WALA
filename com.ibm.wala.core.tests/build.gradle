@@ -26,7 +26,7 @@ tasks.named('processTestResources') {
 dependencies {
 	testImplementation(
 			'junit:junit:4.12',
-			'org.apache.ant:ant:1.8.2',
+			'org.apache.ant:ant:1.10.7',
 			'org.hamcrest:hamcrest-core:2.2',
 			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.core'),
