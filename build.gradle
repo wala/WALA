@@ -338,5 +338,3 @@ final def getNativeLibraryOutput(task) {
 tasks.register('downloads') {
 	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
 }
-
-// TODO: remove this comment
