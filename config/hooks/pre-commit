@@ -17,7 +17,7 @@ REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 # trailing newlines.  Forego `mapfile -t` for compatibility with Bash 3.x as found on macOS.
 # Recommended by <https://github.com/koalaman/shellcheck/wiki/SC2207>.
 files=()
-while IFS='' read -r line; do array+=("$line"); done \
+while IFS='' read -r line; do files+=("$line"); done \
   < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$')
 
 join() {
