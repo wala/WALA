@@ -1,5 +1,16 @@
 #!/bin/bash -e
 
+# Do our best to make sure we are running in bash *without* posix compatibility
+# enabled.  This is needed to detect old and buggy versions of our
+# pre-commit-stub script
+if [ -z "${BASH}" ] || [ -n "${POSIXLY_CORRECT}" ]; then
+  echo "Your git pre-commit script is outdated.";
+  echo "Please re-run \`./gradlew installGitHooks\` to get the latest script,";
+  echo "or run \`rm .git/hooks/pre-commit\` to disable the pre-commit hook.";
+  echo "Aborting commit";
+  exit 1
+fi
+
 REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
 # Set $files to an array of lines output by the "git diff ...| grep ..." pipeline, excluding the
