@@ -24,6 +24,7 @@
  * returned.
  */
 
+#include "dll_export.h"
 #include <jni.h>
 
 extern "C" {
@@ -57,18 +58,7 @@ extern "C" {
   (CPP_EXP_NAME).throwException(__FILE__, __LINE__, "unexpected null value"); \
 }
 
-#if _WIN32
-#ifdef BUILD_CAST_DLL
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT __declspec(dllimport)
-#endif
 class DLLEXPORT Exceptions {
-
-#else
-class Exceptions {
-#endif
-
 private:
   JNIEnv *_java_env;
   jmp_buf& _c_env;

@@ -2,6 +2,7 @@
 #define _CAST_WRAPPER_H
 
 #include <list>
+#include "dll_export.h"
 #include "jni.h"
 #include "Exceptions.h"
 #include "launch.h"
@@ -17,23 +18,12 @@ using namespace std;
 
 #endif
 
-#if _WIN32
-#ifdef BUILD_CAST_DLL
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT __declspec(dllimport)
-#endif
-class DLLEXPORT CAstWrapper {
-#else
-
 /**
  *  This class is a simple wrapper that provides a C++ object veneer
  * over JNI calls to a CAst object in Javaland.  This wrapper is used
  * by native code to build a CAst tree in Javaland.
  */
-class CAstWrapper {
-#endif
-
+class DLLEXPORT CAstWrapper {
 
 protected:
   JNIEnv *env;
