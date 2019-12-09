@@ -10,21 +10,12 @@
  */
 package com.ibm.wala.core.tests.util;
 
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.ir.AnnotationTest;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.heapTrace.HeapTracer;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
-import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
@@ -69,15 +60,6 @@ public abstract class WalaTestCase {
 
   protected IAnalysisCacheView makeAnalysisCache(SSAOptions ssaOptions) {
     return new AnalysisCacheImpl(ssaOptions);
-  }
-
-  public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
-    AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
-            TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
-            AnnotationTest.class.getClassLoader());
-    return ClassHierarchyFactory.make(scope);
   }
 
   /**

@@ -47,6 +47,7 @@
             <option value="$PROJECT_DIR$/com.ibm.wala.shrike" />
             <option value="$PROJECT_DIR$/com.ibm.wala.tests.ide_feature" />
             <option value="$PROJECT_DIR$/com.ibm.wala.tests_feature" />
+            <option value="$PROJECT_DIR$/com.ibm.wala.testutil" />
             <option value="$PROJECT_DIR$/com.ibm.wala.util" />
             <option value="$PROJECT_DIR$/com.ibm.wala_feature" />
           </set>

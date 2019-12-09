@@ -19,7 +19,6 @@ import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -27,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
+import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -707,18 +707,18 @@ public abstract class JavaIRTests extends IRTests {
     Pair<Collection<Statement>, SDG<? extends InstanceKey>> y =
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
-    SlicerTest.dumpSlice(slice);
-    Assert.assertEquals(0, SlicerTest.countAllocations(slice));
-    Assert.assertEquals(1, SlicerTest.countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(0, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(1, SlicerUtil.countPutfields(slice));
 
     // test slice from main
     sliceRootRef = getSliceRootReference("MiniaturSliceBug", "main", "([Ljava/lang/String;)V");
     roots = cg.getNodes(sliceRootRef);
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
-    // SlicerTest.dumpSlice(slice);
-    Assert.assertEquals(2, SlicerTest.countAllocations(slice));
-    Assert.assertEquals(2, SlicerTest.countPutfields(slice));
+    // SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(2, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(2, SlicerUtil.countPutfields(slice));
   }
 
   @Test

@@ -44,7 +44,7 @@ public abstract class CFGTest extends WalaTestCase {
   }
 
   public CFGTest() throws ClassHierarchyException, IOException {
-    this(WalaTestCase.makeCHA());
+    this(AnnotationTest.makeCHA());
   }
 
   public static void main(String[] args) {

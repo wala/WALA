@@ -1,5 +1,4 @@
 plugins {
-	id 'com.github.hauner.jarTest'
 	id 'eclipse'
 }
 
@@ -8,19 +7,6 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 sourceSets.test {
 	java.srcDirs = ['src']
 	resources.srcDirs = ['dat']
-}
-
-dependencies {
-	testArchives 'org.apache.ant:ant:1.10.7'
-	testImplementation(
-			'junit:junit:4.12',
-			'org.apache.ant:ant:1.8.2',
-			'org.hamcrest:hamcrest-core:2.2',
-			'org.osgi:org.osgi.core:6.0.0',
-			project(':com.ibm.wala.core'),
-			project(':com.ibm.wala.shrike'),
-			project(':com.ibm.wala.util'),
-	)
 }
 
 tasks.named('processTestResources') {
@@ -35,6 +21,19 @@ tasks.named('processTestResources') {
 	from testdata.extractKawa
 	from testdata.buildChessJar
 	from testdata.buildKawaTestJar
+}
+
+dependencies {
+	testImplementation(
+			'junit:junit:4.12',
+			'org.apache.ant:ant:1.8.2',
+			'org.hamcrest:hamcrest-core:2.2',
+			'org.osgi:org.osgi.core:6.0.0',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.testutil'),
+			project(':com.ibm.wala.util'),
+	)
 }
 
 tasks.named('test') {

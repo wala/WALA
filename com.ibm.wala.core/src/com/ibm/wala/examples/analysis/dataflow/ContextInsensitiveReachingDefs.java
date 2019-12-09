@@ -99,7 +99,10 @@ public class ContextInsensitiveReachingDefs {
         }
       }
     }
-    return new ObjectArrayMapping<>(putInstrs.toArray(new Pair[0]));
+    @SuppressWarnings("unchecked") // to make ECJ happy
+    ObjectArrayMapping<Pair<CGNode, Integer>> result =
+        new ObjectArrayMapping<>(putInstrs.toArray(new Pair[0]));
+    return result;
   }
 
   private class TransferFunctions

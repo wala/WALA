@@ -20,6 +20,7 @@
 	<module>com.ibm.wala_feature</module>
 	<module>com.ibm.wala.core</module>
 	<module>com.ibm.wala.shrike</module>
+	<module>com.ibm.wala.testutil</module>
 	<module>com.ibm.wala.util</module>
 	<module>com.ibm.wala.core.testdata</module>
 	<module>com.ibm.wala.core.tests</module>

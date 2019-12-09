@@ -11,13 +11,14 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
-import com.ibm.wala.core.tests.util.JVMLTestAssertions;
-import com.ibm.wala.core.tests.util.TestAssertions;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -44,19 +45,16 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 
-public abstract class TypeAnnotationTest extends WalaTestCase {
+public class TypeAnnotationTest extends WalaTestCase {
 
   private final IClassHierarchy cha;
 
-  private final TestAssertions harness;
-
-  protected TypeAnnotationTest(TestAssertions harness, IClassHierarchy cha) {
+  protected TypeAnnotationTest(IClassHierarchy cha) {
     this.cha = cha;
-    this.harness = harness;
   }
 
   public TypeAnnotationTest() throws ClassHierarchyException, IOException {
-    this(new JVMLTestAssertions(), WalaTestCase.makeCHA());
+    this(AnnotationTest.makeCHA());
   }
 
   private final String typeAnnotatedClass1 = "Lannotations/TypeAnnotatedClass1";
@@ -268,19 +266,19 @@ public abstract class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    harness.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    harness.assertTrue(
-        classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
+    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
+    assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations =
         bcClassUnderTest.getTypeAnnotations(true);
-    harness.assertEqualCollections(
+    AnnotationTest.assertEqualCollections(
         expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
 
     Collection<TypeAnnotation> runtimeVisibleAnnotations =
         bcClassUnderTest.getTypeAnnotations(false);
-    harness.assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
+    AnnotationTest.assertEqualCollections(
+        expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
   }
 
   private void testMethodAnnotations(
@@ -289,21 +287,22 @@ public abstract class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    harness.assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
-    harness.assertTrue(
+    assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    assertTrue(
         methodUnderTest + " must be ShrikeCTMethod", methodUnderTest instanceof ShrikeCTMethod);
     ShrikeCTMethod bcMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(true));
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(true));
-    harness.assertEqualCollections(
+    AnnotationTest.assertEqualCollections(
         expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
 
     Collection<TypeAnnotation> runtimeVisibleAnnotations = HashSetFactory.make();
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(false));
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(false));
-    harness.assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
+    AnnotationTest.assertEqualCollections(
+        expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
   }
 
   private void testFieldAnnotations(
@@ -311,14 +310,13 @@ public abstract class TypeAnnotationTest extends WalaTestCase {
       TypeReference typeUnderTest,
       Collection<TypeAnnotation> expectedAnnotations) {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    harness.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    harness.assertTrue(
-        classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
+    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
+    assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     final Atom fieldName = Atom.findOrCreateUnicodeAtom(fieldNameStr);
     FieldImpl field = (FieldImpl) bcClassUnderTest.getField(fieldName);
     Collection<TypeAnnotation> annotations = field.getTypeAnnotations();
-    harness.assertEqualCollections(expectedAnnotations, annotations);
+    AnnotationTest.assertEqualCollections(expectedAnnotations, annotations);
   }
 }
