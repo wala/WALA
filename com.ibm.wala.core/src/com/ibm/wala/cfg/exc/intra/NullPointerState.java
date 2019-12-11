@@ -160,11 +160,10 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     if (lhs != State.BOTH && rhs != lhs && rhs != State.UNKNOWN) {
       if (lhs == State.UNKNOWN) {
         vars[varNum] = rhs;
-        return true;
       } else {
         vars[varNum] = State.BOTH;
-        return true;
       }
+      return true;
     } else {
       return false;
     }

@@ -136,13 +136,12 @@ public class MethodBypass {
       if (DEBUG) {
         System.err.println(("findSummary succeeded: " + p));
       }
-      return result;
     } else {
       if (DEBUG) {
         System.err.println(("findSummary failed: " + m));
       }
-      return result;
     }
+    return result;
   }
 
   /**

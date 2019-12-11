@@ -1299,13 +1299,11 @@ public abstract class Compiler implements Constants {
       int right = oldEdges.length - 1;
       while (true) {
         if (right - left < 2) {
-          if (oldEdges[left] < 0) {
-            break;
-          } else {
+          if (oldEdges[left] >= 0) {
             if (oldEdges[right] >= 0) throw new Error("Failed binary search");
             left = right;
-            break;
           }
+          break;
         } else {
           int mid = (left + right) / 2;
           if (oldEdges[mid] < 0) {

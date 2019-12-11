@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: com.ibm.wala.testutil
+Bundle-Version: 1.5.5.qualifier
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: com.ibm.wala.core,
+ com.ibm.wala.shrike,
+ org.apache.ant,
+ org.junit;bundle-version="4.0.0",
+ com.ibm.wala.util
+Export-Package: .,
+ com.ibm.wala.core.tests.ir,
+ com.ibm.wala.core.tests.shrike,
+ com.ibm.wala.core.tests.util,
+ com.ibm.wala.tests.util

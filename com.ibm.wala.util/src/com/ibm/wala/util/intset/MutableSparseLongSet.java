@@ -99,7 +99,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
       elements = new long[INITIAL_NONEMPTY_SIZE];
       size = 1;
       elements[0] = value;
-      return true;
     } else {
       int insert;
       if (size == 0 || value > max()) {
@@ -123,7 +122,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
         }
         size++;
         elements[insert] = value;
-        return true;
       } else {
         // no space left. expand the backing array.
         float newExtent = elements.length * EXPANSION_FACTOR + 1;
@@ -135,9 +133,9 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
         tmp[insert] = value;
         size++;
         elements = tmp;
-        return true;
       }
     }
+    return true;
   }
 
   /**

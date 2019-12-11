@@ -1040,16 +1040,6 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
             : var.getClass() + " " + var + " " + var.getLineno() + ":" + var.getPosition();
         if (var instanceof Name) {
           name = ((Name) var).getString();
-          initNode =
-              Ast.makeNode(
-                  CAstNode.ASSIGN,
-                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
-                  get =
-                      Ast.makeNode(
-                          CAstNode.EACH_ELEMENT_GET,
-                          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-                          readName(arg, null, name)));
-
         } else {
           VariableDeclaration decl;
           if (var instanceof LetNode) {
@@ -1067,17 +1057,16 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                   CAstNode.DECL_STMT,
                   Ast.makeConstant(new CAstSymbolImpl(name, JSAstTranslator.Any)),
                   readName(arg, null, "$$undefined")));
-
-          initNode =
-              Ast.makeNode(
-                  CAstNode.ASSIGN,
-                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
-                  get =
-                      Ast.makeNode(
-                          CAstNode.EACH_ELEMENT_GET,
-                          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
-                          readName(arg, null, name)));
         }
+        initNode =
+            Ast.makeNode(
+                CAstNode.ASSIGN,
+                Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+                get =
+                    Ast.makeNode(
+                        CAstNode.EACH_ELEMENT_GET,
+                        Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+                        readName(arg, null, name)));
 
         arg.cfg().map(get, get);
         CAstNode ctch = arg.getCatchTarget();

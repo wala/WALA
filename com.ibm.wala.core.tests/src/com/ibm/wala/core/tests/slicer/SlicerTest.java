@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFABuilder;
+import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -40,36 +41,19 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
+import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
-import com.ibm.wala.ssa.SSAArrayLoadInstruction;
-import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
-import com.ibm.wala.ssa.SSAGetInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAPutInstruction;
-import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Collections;
 import org.junit.AfterClass;
@@ -124,6 +108,10 @@ public class SlicerTest {
     cachedScope = null;
   }
 
+  public static Statement findCallToDoNothing(CGNode n) {
+    return SlicerUtil.findCallTo(n, "doNothing");
+  }
+
   @Test
   public void testSlice1()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -138,9 +126,9 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
-    Statement s = findCallTo(main, "println");
+    Statement s = SlicerUtil.findCallTo(main, "println");
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
@@ -148,7 +136,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
 
     int i = 0;
     for (Statement st : slice) {
@@ -178,9 +166,9 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMethod(cg, "baz");
+    CGNode main = CallGraphSearchUtil.findMethod(cg, "baz");
 
-    Statement s = findCallTo(main, "println");
+    Statement s = SlicerUtil.findCallTo(main, "println");
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
@@ -188,9 +176,9 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
 
-    Assert.assertEquals(slice.toString(), 9, countNormals(slice));
+    Assert.assertEquals(slice.toString(), 9, SlicerUtil.countNormals(slice));
   }
 
   @Test
@@ -207,17 +195,17 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMethod(cg, "main");
+    CGNode main = CallGraphSearchUtil.findMethod(cg, "main");
 
-    Statement s = findCallTo(main, "doNothing");
+    Statement s = SlicerUtil.findCallTo(main, "doNothing");
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countAllocations(slice));
   }
 
   @Test
@@ -235,8 +223,8 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
-    Statement s = findCallTo(main, "foo");
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+    Statement s = SlicerUtil.findCallTo(main, "foo");
     s = PDFSlice.getReturnStatementForCall(s);
     System.err.println("Statement: " + s);
     // compute a data slice
@@ -244,7 +232,7 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeForwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 4, slice.size());
   }
 
@@ -263,8 +251,8 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode n = findMethod(cg, "baz");
-    Statement s = findCallTo(n, "foo");
+    CGNode n = CallGraphSearchUtil.findMethod(cg, "baz");
+    Statement s = SlicerUtil.findCallTo(n, "foo");
     s = PDFSlice.getReturnStatementForCall(s);
     System.err.println("Statement: " + s);
     // compute a data slice
@@ -272,7 +260,7 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeForwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(slice.toString(), 7, slice.size());
   }
 
@@ -292,15 +280,15 @@ public class SlicerTest {
         Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
-    Statement s = findFirstAllocation(main);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+    Statement s = SlicerUtil.findFirstAllocation(main);
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
     Collection<Statement> slice =
         Slicer.computeForwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
   }
 
   /** test bug reported on mailing list by Ravi Chandhran, 4/16/2010 */
@@ -320,7 +308,8 @@ public class SlicerTest {
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode process =
-        findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
+        CallGraphSearchUtil.findMethod(
+            cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
     Statement s = findCallToDoNothing(process);
     System.err.println("Statement: " + s);
     // compute a backward slice, with data dependence and no exceptional control dependence
@@ -332,8 +321,8 @@ public class SlicerTest {
             pointerAnalysis,
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
-    dumpSlice(slice);
-    Assert.assertEquals(4, countInvokes(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(4, SlicerUtil.countInvokes(slice));
     // should only get 4 statements total when ignoring control dependences completely
     slice =
         Slicer.computeBackwardSlice(
@@ -356,7 +345,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
     // compute a backward slice, with data dependence and no exceptional control dependence
@@ -369,7 +358,7 @@ public class SlicerTest {
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     // dumpSlice(slice);
-    Assert.assertEquals(/*slice.toString(), */ 5, countApplicationNormals(slice));
+    Assert.assertEquals(/*slice.toString(), */ 5, SlicerUtil.countApplicationNormals(slice));
   }
 
   @Test
@@ -387,7 +376,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -396,8 +385,8 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 2, countConditionals(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countConditionals(slice));
   }
 
   @Test
@@ -415,7 +404,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -424,8 +413,8 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countConditionals(slice));
   }
 
   @Test
@@ -443,7 +432,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -452,8 +441,8 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 0, countConditionals(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 0, SlicerUtil.countConditionals(slice));
   }
 
   @Test
@@ -471,7 +460,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -481,15 +470,15 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
-    dumpSlice(slice);
-    Assert.assertEquals(0, countConditionals(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(0, SlicerUtil.countConditionals(slice));
 
     // compute a full slice
     slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countConditionals(slice));
   }
 
   @Test
@@ -507,7 +496,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = new MethodEntryStatement(main);
     System.err.println("Statement: " + s);
@@ -521,9 +510,9 @@ public class SlicerTest {
             pointerAnalysis,
             DataDependenceOptions.NONE,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(10, slice.size());
-    Assert.assertEquals(3, countReturns(slice));
+    Assert.assertEquals(3, SlicerUtil.countReturns(slice));
   }
 
   @Test
@@ -541,7 +530,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = new MethodEntryStatement(main);
     System.err.println("Statement: " + s);
@@ -555,9 +544,9 @@ public class SlicerTest {
             pointerAnalysis,
             DataDependenceOptions.NONE,
             ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(8, slice.size());
-    Assert.assertEquals(2, countReturns(slice));
+    Assert.assertEquals(2, SlicerUtil.countReturns(slice));
   }
 
   @Test
@@ -575,7 +564,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = new MethodEntryStatement(main);
     System.err.println("Statement: " + s);
@@ -589,8 +578,8 @@ public class SlicerTest {
             pointerAnalysis,
             DataDependenceOptions.NONE,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 2, countInvokes(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countInvokes(slice));
   }
 
   @Test
@@ -608,7 +597,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -617,8 +606,8 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countAllocations(slice));
   }
 
   @Test
@@ -636,7 +625,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -645,9 +634,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 1, countAloads(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countAloads(slice));
   }
 
   @Test
@@ -665,7 +654,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -674,9 +663,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countPutfields(slice));
   }
 
   @Test
@@ -694,7 +683,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -705,9 +694,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(3, countAllocations(slice));
-    Assert.assertEquals(2, countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(3, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(2, SlicerUtil.countPutfields(slice));
 
     // compute thin slice .. ignore base pointers
     Collection<Statement> computeBackwardSlice =
@@ -718,9 +707,9 @@ public class SlicerTest {
             DataDependenceOptions.NO_BASE_PTRS,
             ControlDependenceOptions.NONE);
     slice = computeBackwardSlice;
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countPutfields(slice));
   }
 
   @Test
@@ -738,7 +727,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -747,10 +736,10 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 2, countPutstatics(slice));
-    Assert.assertEquals(slice.toString(), 2, countGetstatics(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countPutstatics(slice));
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countGetstatics(slice));
   }
 
   @Test
@@ -768,7 +757,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -777,8 +766,8 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countAllocations(slice));
   }
 
   @Test
@@ -796,7 +785,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -806,9 +795,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 3, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 2, countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 3, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 2, SlicerUtil.countPutfields(slice));
   }
 
   @Test
@@ -826,7 +815,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode test = findMethod(cg, "test");
+    CGNode test = CallGraphSearchUtil.findMethod(cg, "test");
 
     PartialCallGraph pcg = PartialCallGraph.make(cg, Collections.singleton(test));
 
@@ -838,9 +827,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 0, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 0, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countPutfields(slice));
   }
 
   /**
@@ -886,7 +875,7 @@ public class SlicerTest {
 
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode test = findMainMethod(cg);
+    CGNode test = CallGraphSearchUtil.findMainMethod(cg);
 
     PartialCallGraph pcg = PartialCallGraph.make(cg, Collections.singleton(test));
 
@@ -897,9 +886,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
-    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countPutfields(slice));
   }
 
   @Test
@@ -917,7 +906,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -926,10 +915,10 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    dumpSlice(slice);
-    Assert.assertEquals(slice.toString(), 1, countApplicationAllocations(slice));
-    Assert.assertEquals(slice.toString(), 1, countThrows(slice));
-    Assert.assertEquals(slice.toString(), 1, countGetfields(slice));
+    SlicerUtil.dumpSlice(slice);
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countApplicationAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countThrows(slice));
+    Assert.assertEquals(slice.toString(), 1, SlicerUtil.countGetfields(slice));
   }
 
   @Test
@@ -947,14 +936,14 @@ public class SlicerTest {
         Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
     Statement seed = new NormalStatement(main, 2);
 
     System.err.println("Statement: " + seed);
     // compute a backwards thin slice
     ThinSlicer ts = new ThinSlicer(cg, builder.getPointerAnalysis());
     Collection<Statement> slice = ts.computeBackwardThinSlice(seed);
-    dumpSlice(slice);
+    SlicerUtil.dumpSlice(slice);
   }
 
   /** test for bug reported on mailing list by Joshua Garcia, 5/16/2010 */
@@ -997,7 +986,7 @@ public class SlicerTest {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    CGNode main = findMainMethod(cg);
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
 
     Statement s = findCallToDoNothing(main);
     System.err.println("Statement: " + s);
@@ -1010,279 +999,6 @@ public class SlicerTest {
             pointerAnalysis,
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
-    dumpSlice(slice);
-  }
-
-  public static int countAllocations(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSANewInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countApplicationAllocations(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSANewInstruction) {
-          AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
-          if (scope.isApplicationLoader(
-              s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countThrows(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAAbstractThrowInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countAloads(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAArrayLoadInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countNormals(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        count++;
-      }
-    }
-    return count;
-  }
-
-  public static int countApplicationNormals(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
-        if (scope.isApplicationLoader(
-            s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countConditionals(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAConditionalBranchInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countInvokes(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countPutfields(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAPutInstruction) {
-          SSAPutInstruction p = (SSAPutInstruction) ns.getInstruction();
-          if (!p.isStatic()) {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countReturns(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAReturnInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countGetfields(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAGetInstruction) {
-          SSAGetInstruction p = (SSAGetInstruction) ns.getInstruction();
-          if (!p.isStatic()) {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countPutstatics(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAPutInstruction) {
-          SSAPutInstruction p = (SSAPutInstruction) ns.getInstruction();
-          if (p.isStatic()) {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countGetstatics(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAGetInstruction) {
-          SSAGetInstruction p = (SSAGetInstruction) ns.getInstruction();
-          if (p.isStatic()) {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
-  }
-
-  public static void dumpSlice(Collection<Statement> slice) {
-    dumpSlice(slice, new PrintWriter(System.err));
-  }
-
-  public static void dumpSlice(Collection<Statement> slice, PrintWriter w) {
-    w.println("SLICE:\n");
-    int i = 1;
-    for (Statement s : slice) {
-      String line = (i++) + "   " + s;
-      w.println(line);
-      w.flush();
-    }
-  }
-
-  public static void dumpSliceToFile(Collection<Statement> slice, String fileName)
-      throws FileNotFoundException {
-    File f = new File(fileName);
-    FileOutputStream fo = new FileOutputStream(f);
-    try (final PrintWriter w = new PrintWriter(fo)) {
-      dumpSlice(slice, w);
-    }
-  }
-
-  public static CGNode findMainMethod(CallGraph cg) {
-    Descriptor d = Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V");
-    Atom name = Atom.findOrCreateUnicodeAtom("main");
-    return findMethod(cg, d, name);
-  }
-
-  private static CGNode findMethod(CallGraph cg, Descriptor d, Atom name) {
-    for (CGNode n : Iterator2Iterable.make(cg.getSuccNodes(cg.getFakeRootNode()))) {
-      if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {
-        return n;
-      }
-    }
-    // if it's not a successor of fake root, just iterate over everything
-    for (CGNode n : cg) {
-      if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {
-        return n;
-      }
-    }
-    Assertions.UNREACHABLE("failed to find method " + name);
-    return null;
-  }
-
-  public static CGNode findMethod(CallGraph cg, String name) {
-    Atom a = Atom.findOrCreateUnicodeAtom(name);
-    for (CGNode n : cg) {
-      if (n.getMethod().getName().equals(a)) {
-        return n;
-      }
-    }
-    System.err.println("call graph " + cg);
-    Assertions.UNREACHABLE("failed to find method " + name);
-    return null;
-  }
-
-  public static Statement findCallTo(CGNode n, String methodName) {
-    IR ir = n.getIR();
-    for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
-      if (s instanceof SSAInvokeInstruction) {
-        SSAInvokeInstruction call = (SSAInvokeInstruction) s;
-        if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
-          IntSet indices = ir.getCallInstructionIndices(((SSAInvokeInstruction) s).getCallSite());
-          Assertions.productionAssertion(
-              indices.size() == 1, "expected 1 but got " + indices.size());
-          return new NormalStatement(n, indices.intIterator().next());
-        }
-      }
-    }
-    Assertions.UNREACHABLE("failed to find call to " + methodName + " in " + n);
-    return null;
-  }
-
-  public static Statement findFirstAllocation(CGNode n) {
-    IR ir = n.getIR();
-    for (int i = 0; i < ir.getInstructions().length; i++) {
-      SSAInstruction s = ir.getInstructions()[i];
-      if (s instanceof SSANewInstruction) {
-        return new NormalStatement(n, i);
-      }
-    }
-    Assertions.UNREACHABLE("failed to find allocation in " + n);
-    return null;
-  }
-
-  private static Statement findCallToDoNothing(CGNode n) {
-    return findCallTo(n, "doNothing");
+    SlicerUtil.dumpSlice(slice);
   }
 }

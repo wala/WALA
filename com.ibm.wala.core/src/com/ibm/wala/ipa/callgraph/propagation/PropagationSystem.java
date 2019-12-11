@@ -825,7 +825,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       newStatement(
           as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {
-      IVariable[] rhs = as.getRHS();
+      IVariable<?>[] rhs = as.getRHS();
       PointsToSetVariable[] newRHS = new PointsToSetVariable[rhs.length];
       for (int i = 0; i < rhs.length; i++) {
         if (rhs[i].equals(p)) {

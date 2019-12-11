@@ -149,16 +149,14 @@ public abstract class OfflineInstrumenterBase {
    * time someone calls openCachedJar.
    */
   private JarFile openCachedJar(File file) throws IOException {
-    if (cachedJarFile != null && cachedJarFile.equals(file)) {
-      return cachedJar;
-    } else {
+    if (cachedJarFile == null || !cachedJarFile.equals(file)) {
       if (cachedJar != null) {
         cachedJar.close();
       }
       cachedJarFile = file;
       cachedJar = new JarFile(file, false);
-      return cachedJar;
     }
+    return cachedJar;
   }
 
   /**

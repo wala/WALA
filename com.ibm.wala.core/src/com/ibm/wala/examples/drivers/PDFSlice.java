@@ -12,7 +12,6 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -24,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.slicer.HeapStatement;
@@ -35,6 +35,7 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
+import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.properties.WalaProperties;
@@ -165,8 +166,8 @@ public class PDFSlice {
       SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
       // find the call statement of interest
-      CGNode callerNode = SlicerTest.findMethod(cg, srcCaller);
-      Statement s = SlicerTest.findCallTo(callerNode, srcCallee);
+      CGNode callerNode = CallGraphSearchUtil.findMethod(cg, srcCaller);
+      Statement s = SlicerUtil.findCallTo(callerNode, srcCallee);
       System.err.println("Statement: " + s);
 
       // compute the slice as a collection of statements
@@ -181,7 +182,7 @@ public class PDFSlice {
         final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
         slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
       }
-      SlicerTest.dumpSlice(slice);
+      SlicerUtil.dumpSlice(slice);
 
       // create a view of the SDG restricted to nodes in the slice
       Graph<Statement> g = pruneSDG(sdg, slice);

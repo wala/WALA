@@ -48,7 +48,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
   }
 
   public DeterministicIRTest() throws ClassHierarchyException, IOException {
-    this(WalaTestCase.makeCHA());
+    this(AnnotationTest.makeCHA());
   }
 
   public static void main(String[] args) {
