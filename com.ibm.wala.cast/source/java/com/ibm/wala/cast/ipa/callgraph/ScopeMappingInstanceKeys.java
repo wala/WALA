@@ -95,7 +95,7 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         } else {
           PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
           for (InstanceKey funcPtr : builder.getPointerAnalysis().getPointsToSet(funcKey)) {
-            if (funcPtr instanceof ScopeMappingInstanceKey) {
+            if (funcPtr != this && funcPtr instanceof ScopeMappingInstanceKey) {
               result =
                   new CompoundIterator<>(
                       result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name));
