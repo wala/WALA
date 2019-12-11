@@ -15,6 +15,7 @@ import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstInstructionFactory;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
@@ -433,12 +434,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           .cfg()
           .addInstruction(new AstGlobalWrite(context.cfg().currentInstruction, global, rval));
     }
-  }
-
-  /** generate instructions to check if ref has field, storing answer in result */
-  @SuppressWarnings("unused")
-  protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode field) {
-    Assertions.UNREACHABLE();
   }
 
   /**
@@ -5482,5 +5477,33 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
     entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
     walkEntities(N, context);
+  }
+
+  protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode f) {
+    if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
+      String field = (String) f.getValue();
+
+      FieldReference fieldRef =
+          FieldReference.findOrCreate(
+              loader.getLanguage().getRootType(),
+              Atom.findOrCreateUnicodeAtom(field),
+              loader.getLanguage().getRootType());
+
+      context
+          .cfg()
+          .addInstruction(
+              ((AstInstructionFactory) insts)
+                  .IsDefinedInstruction(
+                      context.cfg().getCurrentInstruction(), result, ref, fieldRef));
+
+    } else {
+
+      context
+          .cfg()
+          .addInstruction(
+              ((AstInstructionFactory) insts)
+                  .IsDefinedInstruction(
+                      context.cfg().getCurrentInstruction(), result, ref, context.getValue(f)));
+    }
   }
 }

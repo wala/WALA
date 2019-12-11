@@ -32,12 +32,10 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -519,33 +517,6 @@ public class JSAstTranslator extends AstTranslator {
     } catch (ClassCastException e) {
       throw new RuntimeException(
           "Cannot translate primitive " + primitiveCall.getChild(0).getValue(), e);
-    }
-  }
-
-  @Override
-  protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode f) {
-    if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
-      String field = (String) f.getValue();
-
-      FieldReference fieldRef =
-          FieldReference.findOrCreate(
-              JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root);
-
-      context
-          .cfg()
-          .addInstruction(
-              ((JSInstructionFactory) insts)
-                  .IsDefinedInstruction(
-                      context.cfg().getCurrentInstruction(), result, ref, fieldRef));
-
-    } else {
-
-      context
-          .cfg()
-          .addInstruction(
-              ((JSInstructionFactory) insts)
-                  .IsDefinedInstruction(
-                      context.cfg().getCurrentInstruction(), result, ref, context.getValue(f)));
     }
   }
 

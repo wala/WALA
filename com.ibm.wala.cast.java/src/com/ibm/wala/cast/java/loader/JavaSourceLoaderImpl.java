@@ -755,7 +755,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     @Override
     public AstIsDefinedInstruction IsDefinedInstruction(
         int iindex, int lval, int rval, int fieldVal) {
-      throw new UnsupportedOperationException();
+      return new AstIsDefinedInstruction(iindex, lval, rval, fieldVal);
     }
 
     @Override
