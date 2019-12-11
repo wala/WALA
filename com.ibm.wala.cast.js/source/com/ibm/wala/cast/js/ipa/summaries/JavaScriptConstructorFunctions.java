@@ -580,7 +580,7 @@ public class JavaScriptConstructorFunctions {
             }
           }
 
-          assert fcls != null : "cannot find class for " + fileName;
+          assert fcls != null : "cannot find class for " + fileName + " amongst " + fnNames;
 
           return makeFunctionConstructor(cls, fcls);
 
