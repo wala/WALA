@@ -915,10 +915,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                                 Ast.makeNode(
                                     CAstNode.ASSIGN,
                                     Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$$P")),
-                                    Ast.makeNode(
-                                        CAstNode.EACH_ELEMENT_GET,
-                                        Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$$obj")),
-                                        readName(arg, null, "$$P"))),
+                                    get =
+                                        Ast.makeNode(
+                                            CAstNode.EACH_ELEMENT_GET,
+                                            Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$$obj")),
+                                            readName(arg, null, "$$P"))),
                                 Ast.makeNode(
                                     CAstNode.ASSIGN,
                                     visit(var, loopContext),
@@ -928,6 +929,14 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                     breakLabel));
 
         arg.cfg().map(node, loop);
+
+        arg.cfg().map(get, get);
+        CAstNode ctch = arg.getCatchTarget();
+        if (ctch != null) {
+          arg.cfg().add(get, ctch, JavaScriptTypes.ReferenceError);
+        } else {
+          arg.cfg().add(get, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
+        }
 
         return loop;
       }
