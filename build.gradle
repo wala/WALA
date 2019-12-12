@@ -170,8 +170,10 @@ allprojects {
 
 // shell scripts, provided they have ".sh" extension
 if (System.getProperty('os.name').startsWith('Windows')) {
+	// create a no-op "shellCheck" task so that "gradlew shellCheck" vacuously passes on Windows
 	tasks.register('shellCheck')
 } else {
+	// create a real "shellCheck" task that actually runs the "shellcheck" linter, if available
 	tasks.register('shellCheck', Exec) {
 		description 'Check all shell scripts using shellcheck, if available'
 		group 'lint'
