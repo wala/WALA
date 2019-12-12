@@ -170,7 +170,10 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
     }
-    toRemove.stream().map(IClass::getName).forEach(syntheticClasses::remove);
+    for (IClass c : toRemove) {
+      syntheticClasses.remove(c.getName());
+    }
+    ;
   }
 
   @Override

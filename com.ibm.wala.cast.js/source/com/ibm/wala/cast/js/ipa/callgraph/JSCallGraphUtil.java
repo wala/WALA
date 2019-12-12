@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -189,7 +190,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     try {
       TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
       final Set<String> names = new HashSet<>();
-      JSAstTranslator toIR =
+      AstTranslator toIR =
           new JSAstTranslator(cl) {
             @Override
             protected void defineFunction(
