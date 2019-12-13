@@ -8,10 +8,11 @@ Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,
  com.ibm.wala.core.testdata,
  com.ibm.wala.testutil,
- org.junit;bundle-version="4.0.0",
- org.apache.ant,
- org.hamcrest.core;bundle-version="1.3.0"
+ org.apache.ant
 Bundle-Localization: plugin
+Import-Package: org.junit,
+ org.junit.rules,
+ org.junit.experimental.categories
 Export-Package: com.ibm.wala.core.tests.arraybounds,
  com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.callGraph,
@@ -37,3 +38,5 @@ Export-Package: com.ibm.wala.core.tests.arraybounds,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-RegisterBuddy: com.ibm.wala.core, com.ibm.wala.core.testdata
 Automatic-Module-Name: com.ibm.wala.core.tests
+Bundle-Classpath: .,
+ lib/hamcrest-2.2.jar
