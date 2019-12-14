@@ -4,8 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.cast.java.test
 Bundle-Version: 1.5.5.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: com.ibm.wala.core.tests,
- com.ibm.wala.cast.java,
+Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.shrike,

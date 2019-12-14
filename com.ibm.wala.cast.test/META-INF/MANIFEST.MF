@@ -6,7 +6,6 @@ Bundle-Version: 1.5.5.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: 
  org.junit;bundle-version="4.0.0",
- com.ibm.wala.core.tests,
  com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.shrike,
