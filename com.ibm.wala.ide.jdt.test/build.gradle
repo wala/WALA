@@ -32,7 +32,7 @@ dependencies {
 			project(':com.ibm.wala.ide.jdt'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.java.test'),
+			project(':com.ibm.wala.cast.java.test'),
 			project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
 	)
 }
