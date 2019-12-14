@@ -4,8 +4,8 @@ import java.lang.invoke.LambdaMetafactory;
 
 public class CallMetaFactory {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IllegalAccessException, InstantiationException {
     // shouldn't crash on this
-    LambdaMetafactory m = new LambdaMetafactory();
+    LambdaMetafactory m = LambdaMetafactory.class.newInstance();
   }
 }
