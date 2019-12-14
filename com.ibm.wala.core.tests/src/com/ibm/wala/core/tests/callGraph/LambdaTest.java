@@ -229,4 +229,22 @@ public class LambdaTest extends WalaTestCase {
     checkCalledFromOneSite.accept("C4");
     checkCalledFromOneSite.accept("C5");
   }
+
+  @Test
+  public void testLambaMetafactoryCall()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "Llambda/CallMetaFactory");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    // shouldn't crash
+    CallGraph cg =
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+  }
 }

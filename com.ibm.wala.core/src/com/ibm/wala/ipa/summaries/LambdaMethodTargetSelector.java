@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -62,8 +63,15 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     IClassHierarchy cha = caller.getClassHierarchy();
     MethodReference target = site.getDeclaredTarget();
     if (isNonClinitLambdaMetafactoryMethod(cha, target)) {
-      SSAInvokeDynamicInstruction invoke =
-          (SSAInvokeDynamicInstruction) caller.getIR().getCalls(site)[0];
+      SSAAbstractInvokeInstruction call = caller.getIR().getCalls(site)[0];
+      if (!(call instanceof SSAInvokeDynamicInstruction)) {
+        System.err.println("unexpected non-invokedynamic instruction!");
+        System.err.println("instruction type: " + call.getClass());
+        System.err.println("call site: " + site);
+        System.err.println("caller: " + caller);
+        throw new RuntimeException("unexpected non-invokedynamic instruction!");
+      }
+      SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction) call;
 
       try {
         return methodSummaries.computeIfAbsent(
@@ -136,7 +144,9 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
 
   private static boolean isNonClinitLambdaMetafactoryMethod(
       IClassHierarchy cha, MethodReference target) {
-    return !target.getName().equals(MethodReference.clinitName)
+    Atom name = target.getName();
+    return !name.equals(MethodReference.clinitName)
+        && !name.equals(MethodReference.initAtom)
         && Objects.equals(
             cha.lookupClass(TypeReference.LambdaMetaFactory),
             cha.lookupClass(target.getDeclaringClass()));
