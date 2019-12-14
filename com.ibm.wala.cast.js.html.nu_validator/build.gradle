@@ -11,7 +11,6 @@ dependencies {
 			project(':com.ibm.wala.util')
 	)
 	testImplementation(
-			project(':com.ibm.wala.cast.test'),
 			project(':com.ibm.wala.cast.js.test'),
 			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test'),
 			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
