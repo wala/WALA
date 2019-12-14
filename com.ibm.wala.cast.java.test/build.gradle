@@ -1,17 +1,15 @@
 plugins {
-	id 'com.github.hauner.jarTest'
 	id 'eclipse'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.test {
+sourceSets.main {
 	java.srcDirs = ['src']
-	resources.srcDirs = ['data']
 }
 
 dependencies {
-	testImplementation(
+	implementation(
 			'junit:junit:4.12',
 			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.cast'),
@@ -20,8 +18,4 @@ dependencies {
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
-}
-
-tasks.named('test') {
-	maxHeapSize = '800M'
 }
