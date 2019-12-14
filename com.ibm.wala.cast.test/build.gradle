@@ -1,5 +1,4 @@
 plugins {
-	id 'com.github.hauner.jarTest'
 	id 'eclipse'
 }
 
