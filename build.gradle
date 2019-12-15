@@ -74,7 +74,7 @@ subprojects { subproject ->
 
 		if (project.hasProperty('excludeSlowTests')) {
 			useJUnit {
-				excludeCategories 'com.ibm.wala.core.tests.util.SlowTests'
+				excludeCategories 'com.ibm.wala.tests.util.SlowTests'
 			}
 		}
 
