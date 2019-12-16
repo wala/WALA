@@ -46,6 +46,27 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.3</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/testdata</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/../com.ibm.wala.cast.java.test.data/bin</directory>
+                  <includes>
+                    <include>test_project.zip</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -80,10 +101,21 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>testdata</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
     </plugins>
     <resources>
       <resource>
-        <directory>../com.ibm.wala.core/dat</directory>
+        <directory>${basedir}/../com.ibm.wala.core/dat</directory>
         <includes>
           <include>J2SEClassHierarchyExclusions.txt</include>
         </includes>

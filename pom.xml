@@ -17,6 +17,7 @@
 
       <modules>
 	<module>targets</module>
+	<module>com.ibm.wala.cast.java.test.data</module>
 	<module>com.ibm.wala.ide_feature</module>
 	<module>com.ibm.wala.ide</module>
 	<module>com.ibm.wala.ide.tests</module>
