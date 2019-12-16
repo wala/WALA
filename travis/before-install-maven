@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-./gradlew prepareMavenBuild
+./gradlew prepareMavenBuild install -x javadoc
 
 git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
 
