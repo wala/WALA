@@ -20,3 +20,9 @@ dependencies {
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
+
+// don't upload artifacts to Maven Central; they are only used for the
+// com.ibm.wala.ide.* projects
+uploadArchives {
+	enabled = false
+}
