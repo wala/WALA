@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.ide.client;
 
-import com.ibm.wala.ide.plugin.CorePlugin;
-import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -19,9 +17,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
-import java.io.IOException;
 
 /** An {@link EclipseProjectAnalysisEngine} specialized for source code analysis */
 public abstract class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKey>
@@ -39,21 +34,21 @@ public abstract class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
   public EclipseProjectSourceAnalysisEngine(P project, String fileExt) {
     super(project);
     this.fileExt = fileExt;
-    try {
-      setExclusionsFile(
-          (new EclipseFileProvider())
-              .getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
-              .getAbsolutePath());
-    } catch (IOException e) {
-      try {
-        setExclusionsFile(
-            (new FileProvider())
-                .getFile("J2SEClassHierarchyExclusions.txt", getClass().getClassLoader())
-                .getAbsolutePath());
-      } catch (IOException f) {
-        Assertions.UNREACHABLE("Cannot find exclusions file");
-      }
-    }
+    //    try {
+    //      setExclusionsFile(
+    //          (new EclipseFileProvider())
+    //              .getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
+    //              .getAbsolutePath());
+    //    } catch (IOException e) {
+    //      try {
+    //        setExclusionsFile(
+    //            (new FileProvider())
+    //                .getFile("J2SEClassHierarchyExclusions.txt", getClass().getClassLoader())
+    //                .getAbsolutePath());
+    //      } catch (IOException f) {
+    //        Assertions.UNREACHABLE("Cannot find exclusions file");
+    //      }
+    //    }
   }
 
   /**
