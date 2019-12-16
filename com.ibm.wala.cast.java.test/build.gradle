@@ -11,7 +11,6 @@ sourceSets.main {
 dependencies {
 	implementation(
 			'junit:junit:4.12',
-			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
 			project(':com.ibm.wala.core'),
@@ -19,3 +18,5 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 }
+
+apply from: rootProject.file("gradle-mvn-push.gradle")
