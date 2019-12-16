@@ -66,5 +66,8 @@ Export-Package: com.ibm.wala.cast.js.client,
  org.mozilla.javascript.xmlimpl
 Bundle-ClassPath: .,
  target/dependency/com.ibm.wala.cast.js.jar,
- target/dependency/com.ibm.wala.cast.js.rhino.jar
+ target/dependency/com.ibm.wala.cast.js.rhino.jar,
+ target/dependency/rhino.jar,
+ target/dependency/jericho-html.jar
+
 

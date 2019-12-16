@@ -36,6 +36,20 @@
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>
+								<artifactItem>
+									<groupId>net.htmlparser.jericho</groupId>
+									<artifactId>jericho-html</artifactId>
+									<version>3.2</version>
+									<type>jar</type>
+									<overWrite>false</overWrite>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.mozilla</groupId>
+									<artifactId>rhino</artifactId>
+									<version>1.7.11</version>
+									<type>jar</type>
+									<overWrite>false</overWrite>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${basedir}/target/dependency</outputDirectory>
 							<stripVersion>true</stripVersion>
