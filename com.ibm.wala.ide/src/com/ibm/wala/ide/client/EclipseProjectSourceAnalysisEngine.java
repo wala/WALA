@@ -34,21 +34,6 @@ public abstract class EclipseProjectSourceAnalysisEngine<P, I extends InstanceKe
   public EclipseProjectSourceAnalysisEngine(P project, String fileExt) {
     super(project);
     this.fileExt = fileExt;
-    //    try {
-    //      setExclusionsFile(
-    //          (new EclipseFileProvider())
-    //              .getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
-    //              .getAbsolutePath());
-    //    } catch (IOException e) {
-    //      try {
-    //        setExclusionsFile(
-    //            (new FileProvider())
-    //                .getFile("J2SEClassHierarchyExclusions.txt", getClass().getClassLoader())
-    //                .getAbsolutePath());
-    //      } catch (IOException f) {
-    //        Assertions.UNREACHABLE("Cannot find exclusions file");
-    //      }
-    //    }
   }
 
   /**

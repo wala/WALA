@@ -45,13 +45,5 @@
         <version>2.3</version>
       </plugin>
     </plugins>
-    <resources>
-      <resource>
-        <directory>${basedir}/../com.ibm.wala.core/dat</directory>
-        <includes>
-          <include>J2SEClassHierarchyExclusions.txt</include>
-        </includes>
-      </resource>
-    </resources>
   </build>
 </project>
