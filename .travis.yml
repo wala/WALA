@@ -47,7 +47,6 @@ jobs:
       jdk: openjdk8
     - os: linux
       env: BUILD_SYSTEM=maven
-      language: android
       jdk: openjdk8
     - os: osx
       jdk: oraclejdk8
