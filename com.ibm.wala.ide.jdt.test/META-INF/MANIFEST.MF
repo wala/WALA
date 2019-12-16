@@ -26,5 +26,4 @@ Export-Package: com.ibm.wala.cast.java.jdt.test,
  com.ibm.wala.demandpa.driver
 Bundle-ClassPath: .,
  target/dependency/com.ibm.wala.cast.java.test.jar
-Eclipse-BuddyPolicy: registered
 

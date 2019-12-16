@@ -154,4 +154,3 @@ Bundle-ClassPath: .,
  target/dependency/com.ibm.wala.shrike.jar,
  target/dependency/com.ibm.wala.util.jar,
  target/dependency/com.ibm.wala.cast.jar
-Eclipse-RegisterBuddy: com.ibm.wala.ide.jdt.test
