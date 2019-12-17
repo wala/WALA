@@ -5,21 +5,15 @@ Bundle-SymbolicName: com.ibm.wala.ide.jdt
 Bundle-Version: 1.5.5.qualifier
 Bundle-Activator: com.ibm.wala.ide.jdt.Activator
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: com.ibm.wala.ide,
+ org.eclipse.ui,
  org.eclipse.core.runtime,
- com.ibm.wala.cast,
- com.ibm.wala.cast.java,
- com.ibm.wala.core,
- com.ibm.wala.ide,
- com.ibm.wala.shrike,
- com.ibm.wala.util,
  org.eclipse.core.resources,
  org.eclipse.jdt.core,
  org.eclipse.pde.core,
  org.eclipse.ui.ide,
  org.eclipse.jdt.launching,
- org.eclipse.jdt,
- com.ibm.wala.cast.java.ecj
+ org.eclipse.jdt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.client,
@@ -27,4 +21,23 @@ Export-Package: com.ibm.wala.cast.java.client,
  com.ibm.wala.eclipse.headless,
  com.ibm.wala.ide,
  com.ibm.wala.ide.jdt,
- com.ibm.wala.ide.util
+ com.ibm.wala.ide.util,
+ com.ibm.wala.cast.java.analysis.typeInference,
+ com.ibm.wala.cast.java.client,
+ com.ibm.wala.cast.java.client.impl,
+ com.ibm.wala.cast.java.examples.ast,
+ com.ibm.wala.cast.java.ipa.callgraph,
+ com.ibm.wala.cast.java.ipa.modref,
+ com.ibm.wala.cast.java.ipa.slicer,
+ com.ibm.wala.cast.java.loader,
+ com.ibm.wala.cast.java.ssa,
+ com.ibm.wala.cast.java.translator,
+ com.ibm.wala.cast.java.types,
+ com.ibm.wala.cast.java.client,
+ com.ibm.wala.cast.java.ecj.util,
+ com.ibm.wala.cast.java.translator.jdt,
+ com.ibm.wala.cast.java.translator.jdt.ecj
+Bundle-ClassPath: .,
+ target/dependency/com.ibm.wala.cast.java.jar,
+ target/dependency/com.ibm.wala.cast.java.ecj.jar
+
