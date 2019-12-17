@@ -61,6 +61,7 @@ import static org.jf.dexlib2.AccessFlags.STATIC;
 import static org.jf.dexlib2.AccessFlags.SYNTHETIC;
 import static org.jf.dexlib2.AccessFlags.VOLATILE;
 
+import com.google.common.collect.ImmutableMap;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IClass;
@@ -150,6 +151,8 @@ import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.value.ArrayEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
+import org.jf.dexlib2.immutable.ImmutableDexFile;
+import org.jf.dexlib2.immutable.ImmutableMultiDexContainer;
 
 /** A wrapper around a EncodedMethod object (from dexlib) that represents a method. */
 public class DexIMethod implements IBytecodeMethod<Instruction> {
@@ -714,12 +717,17 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   Iterable<? extends org.jf.dexlib2.iface.instruction.Instruction> deodex() {
     try {
       DexFileModule m = myClass.getContainer();
+      // wrap the dex file in a dummy container, so we can provide ClassPathResolver with a DexEntry
+      String dummyDexName = "classes.dex";
+      ImmutableMultiDexContainer container =
+          new ImmutableMultiDexContainer(
+              ImmutableMap.of(dummyDexName, ImmutableDexFile.of(m.getDexFile())));
 
       ClassPathResolver path =
           new ClassPathResolver(
               Collections.singletonList(m.getFile().getParent() + '/'),
               Collections.<String>emptyList(),
-              m.getDexFile());
+              container.getEntry(dummyDexName));
 
       ClassPath cp =
           new ClassPath(

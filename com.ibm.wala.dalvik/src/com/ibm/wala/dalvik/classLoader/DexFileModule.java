@@ -136,7 +136,11 @@ public class DexFileModule implements Module {
       this.f = f;
       dexfile =
           DexFileFactory.loadDexEntry(
-              f, entry, true, apiLevel == AUTO_INFER_API_LEVEL ? null : Opcodes.forApi(apiLevel));
+                  f,
+                  entry,
+                  true,
+                  apiLevel == AUTO_INFER_API_LEVEL ? null : Opcodes.forApi(apiLevel))
+              .getDexFile();
     } catch (IOException e) {
       throw new IllegalArgumentException(e);
     }
