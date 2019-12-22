@@ -59,8 +59,6 @@ subprojects { subproject ->
 		mavenCentral()
 	}
 
-	jar.manifest.from('META-INF/MANIFEST.MF')
-
 	eclipse {
 		synchronizationTasks 'processTestResources'
 	}
