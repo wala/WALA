@@ -1,1 +1,8 @@
-*.html
+/*.dump
+/*.html*
+/2009_swine_flu_outbreak
+/?game*
+/BunnyHunt
+/digg_attack
+/game.php*
+/xxxx
