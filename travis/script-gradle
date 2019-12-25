@@ -34,3 +34,11 @@ else
     ${documentation:+$SUBMODULE_PREFIX$documentation}
   run_gradle "$SUBMODULE_PREFIX"build
 fi
+
+# Validate ".gitignore" patterns.  All files created during testing should already be ignored, and
+# no git-tracked file should be modified during testing.  In other words, "git status" should still
+# report a clean tree after testing is done.
+if [ -n "$(git status --porcelain)" ]; then
+  git status
+  false
+fi
