@@ -4,10 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main {
-	java.srcDirs = ['src']
-}
-
 dependencies {
 	implementation(
 			'junit:junit:4.13',

@@ -2,8 +2,6 @@ plugins {
 	id 'com.diffplug.gradle.eclipse.mavencentral'
 }
 
-sourceSets.main.java.srcDirs = ['source']
-
 repositories {
 	maven {
 		url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'

@@ -2,11 +2,6 @@ plugins {
 	id 'com.diffplug.gradle.eclipse.mavencentral'
 }
 
-sourceSets.test {
-	java.srcDirs = ['source']
-	resources.srcDirs = ['testdata']
-}
-
 eclipseMavenCentral {
 	release eclipseVersion, {
 		[

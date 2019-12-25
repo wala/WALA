@@ -5,8 +5,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main.java.srcDirs = ['src']
-
 eclipseMavenCentral {
 	release eclipseVersion, {
 		api 'org.eclipse.pde.core'

@@ -2,14 +2,6 @@ plugins {
 	id 'com.github.hauner.jarTest'
 }
 
-sourceSets.test {
-	java.srcDirs = ['source']
-	resources.srcDirs = [
-		'data',
-		project(':com.ibm.wala.core.testdata').compileTestJava,
-		]
-}
-
 final def downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest "$temporaryDir/DroidBench_2.0.zip"
@@ -113,9 +105,11 @@ tasks.register('copyAndroidJar', Sync) {
 	into temporaryDir
 }
 
+final def resourceDir = sourceSets.test.resources.srcDirs.find()
+
 tasks.register('downloadSampleCup') {
 	inputs.file configurations.sampleCup.singleFile
-	outputs.file 'data/sample.cup'
+	outputs.file "$resourceDir/sample.cup"
 
 	doLast {
 		copy {
@@ -133,7 +127,7 @@ tasks.named('clean') {
 
 tasks.register('downloadSampleLex', VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
-	dest 'data/sample.lex'
+	dest "$resourceDir/sample.lex"
 	checksum 'ae887758b2657981d023a72a165da830'
 }
 
@@ -169,6 +163,7 @@ tasks.named('processTestResources') {
 	from downloadSampleLex
 	from testdata.collectTestDataA
 	from testdata.collectJLex
+	from testdata.compileTestJava
 	from testdata.downloadJavaCup
 	from testdata.extractBcel
 }

@@ -1,5 +1,3 @@
-sourceSets.test.resources.srcDirs = ['examples-src']
-
 final def downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) {
 	def version = '0.8.1'
 	def versionedArchive = "ajaxslt-${version}.tar.gz"

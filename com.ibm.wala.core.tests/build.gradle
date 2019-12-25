@@ -4,11 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.test {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['dat']
-}
-
 tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core.testdata')
 	dependsOn testdata.tasks.named('compileTestJava')

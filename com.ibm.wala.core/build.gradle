@@ -4,17 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main {
-	java {
-		srcDir 'src'
-		exclude 'wala.properties'
-	}
-	resources.srcDirs = [
-			'dat',
-			'lib',
-	]
-}
-
 dependencies {
 	api(project(':com.ibm.wala.shrike')) {
 		because 'public class Entrypoint implements interface BytecodeConstraints'

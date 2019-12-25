@@ -2,8 +2,6 @@ plugins {
 	id 'com.github.hauner.jarTest'
 }
 
-sourceSets.test.java.srcDirs = ['harness-src']
-
 dependencies {
 	testImplementation(
 			'commons-io:commons-io:2.6',
