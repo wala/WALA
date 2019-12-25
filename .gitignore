@@ -10,9 +10,6 @@
 /.gradle/
 /.vscode/settings.json
 /com.ibm.wala.*/out/
-/com.ibm.wala.cast.java.jdt.test/
-/com.ibm.wala.cast.java.polyglot/lib/
-/edu.kit.wala.smali.test/out/
 build/
 org.eclipse.buildship.core.prefs
 results
