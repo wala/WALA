@@ -4,8 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.test.java.srcDirs = ['src']
-
 
 ////////////////////////////////////////////////////////////////////////
 //

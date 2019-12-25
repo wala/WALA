@@ -4,8 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main.java.srcDirs = ['source/java']
-
 dependencies {
 	api(project(':com.ibm.wala.core')) {
 		because 'public method AstCGNode.addTarget receives an argument of type CGNode'

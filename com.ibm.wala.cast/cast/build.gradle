@@ -3,10 +3,6 @@ plugins {
 }
 
 library {
-	final def cSourceDir = '../source/c'
-	publicHeaders.from "$cSourceDir/include"
-	source.from "$cSourceDir/jni"
-
 	binaries.whenElementFinalized {
 		compileTask.get().configure {
 			macros.put('BUILD_CAST_DLL', '1')

@@ -5,8 +5,6 @@ plugins {
 evaluationDependsOn(':com.ibm.wala.cast.test:xlator_test')
 
 application {
-	source.from "../harness-src/c/${project.name}.cpp"
-
 	dependencies {
 		implementation project(':com.ibm.wala.cast:cast')
 		implementation project(':com.ibm.wala.cast.test:xlator_test')

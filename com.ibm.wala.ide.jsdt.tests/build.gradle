@@ -2,11 +2,6 @@ plugins {
 	id 'com.diffplug.gradle.eclipse.mavencentral'
 }
 
-sourceSets.test {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['testdata']
-}
-
 repositories {
 	maven {
 		url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
