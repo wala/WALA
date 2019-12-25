@@ -4,8 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main.java.srcDirs = ['src']
-
 tasks.named('javadoc') {
 	def coreName = ':com.ibm.wala.core'
 	dependsOn "$coreName:compileJava"

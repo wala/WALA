@@ -55,7 +55,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/testdata</outputDirectory>
+              <outputDirectory>${basedir}/src/test/resources</outputDirectory>
               <resources>
                 <resource>
                   <directory>${basedir}/../com.ibm.wala.cast.java.test.data/bin</directory>

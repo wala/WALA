@@ -3,8 +3,6 @@ plugins {
 	id 'com.diffplug.gradle.eclipse.mavencentral'
 }
 
-sourceSets.main.java.srcDirs = ['src']
-
 eclipseMavenCentral {
 	release eclipseVersion, {
 		[

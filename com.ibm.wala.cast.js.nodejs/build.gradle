@@ -45,8 +45,3 @@ tasks.named('processResources') {
 tasks.named('clean') {
 	dependsOn 'cleanUnpackNodeJSLib'
 }
-
-sourceSets.main {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['dat']
-}

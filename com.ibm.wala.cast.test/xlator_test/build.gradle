@@ -4,7 +4,6 @@ plugins {
 
 library {
 	privateHeaders.from project(':com.ibm.wala.cast.test').tasks.getByName('compileTestJava').options.headerOutputDirectory
-	source.from '../harness-src/c/smoke.cpp'
 
 	dependencies {
 		implementation project(':com.ibm.wala.cast:cast')

@@ -2,8 +2,6 @@ plugins {
 	id 'com.diffplug.gradle.eclipse.mavencentral'
 }
 
-sourceSets.main.java.srcDirs = ['source']
-
 eclipseMavenCentral {
 	release eclipseVersion, {
 		api 'org.eclipse.equinox.common'
