@@ -55,5 +55,12 @@ jobs:
       - name: Build and test using Gradle and default JDK compiler
         run: ./gradlew --continue --no-build-cache --no-daemon linters javadoc build
         if: matrix.java-compiler != 'ecj'
+      - name: Check for Git cleanliness after build and test
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo 'WALA source tree is unclean after testing; .gitignore patterns may need to be improved'
+            git status
+            false
+          fi
       - name: Clean up Gradle caches
         run: travis/before-cache-gradle
