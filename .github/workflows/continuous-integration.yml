@@ -56,12 +56,7 @@ jobs:
         run: ./gradlew --continue --no-build-cache --no-daemon linters javadoc build
         if: matrix.java-compiler != 'ecj'
       - name: Check for Git cleanliness after build and test
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo 'WALA source tree is unclean after testing; .gitignore patterns may need to be improved'
-            git status
-            false
-          fi
+        run: ./check-git-cleanliness.sh
         # not running in Borne or POSIX shell on Windows
         if: runner.os != 'Windows'
       - name: Clean up Gradle caches
