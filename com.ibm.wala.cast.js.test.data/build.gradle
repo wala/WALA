@@ -16,7 +16,7 @@ tasks.register('unpackAjaxslt', Sync) {
 			relativePath new RelativePath(!directory, newSegments)
 		}
 	}
-	into 'examples-src/ajaxslt'
+	into "${sourceSets.test.resources.srcDirs.find()}/ajaxslt"
 }
 
 tasks.named('clean') {
