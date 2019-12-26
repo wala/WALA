@@ -13,7 +13,7 @@ sourceSets.test.java.srcDirs = ['src']
 final def downloadJLex = tasks.register('downloadJLex', VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
 	checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
-	dest 'src/JLex/Main.java'
+	dest "${sourceSets.test.java.srcDirs.find()}/JLex/Main.java"
 }
 
 tasks.register('cleanDownloadJLex', Delete) {

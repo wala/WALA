@@ -18,6 +18,9 @@ final def downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
 }
 
+final def resourcesDir = sourceSets.main.resources.srcDirs.find()
+final def coreModulesDir = file("$resourcesDir/core-modules")
+
 tasks.register('unpackNodeJSLib', Copy) {
 	dependsOn downloadNodeJS
 	from(zipTree(downloadNodeJS.get().dest)) {
@@ -27,12 +30,12 @@ tasks.register('unpackNodeJSLib', Copy) {
 		}
 	}
 
-	into 'dat/core-modules'
+	into coreModulesDir
 	includeEmptyDirs false
 }
 
 tasks.register('cleanUnpackNodeJSLib', Delete) {
-	delete fileTree(dir: 'dat/core-modules', include: '*.js')
+	delete fileTree(dir: coreModulesDir, include: '*.js')
 }
 
 tasks.named('processResources') {
