@@ -62,5 +62,7 @@ jobs:
             git status
             false
           fi
+        # not running in Borne or POSIX shell on Windows
+        if: runner.os != 'Windows'
       - name: Clean up Gradle caches
         run: travis/before-cache-gradle
