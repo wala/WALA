@@ -20,7 +20,7 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
-			project(':com.ibm.wala.cast.java.test'),
+			testFixtures(project(':com.ibm.wala.cast.java.test')),
 	)
 }
 
