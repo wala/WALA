@@ -30,5 +30,4 @@ dependencies {
 			project(':com.ibm.wala.ide'),
 			project(':com.ibm.wala.util'),
 	)
-	testRuntimeOnly project(':com.ibm.wala.ide.jdt')
 }
