@@ -7,7 +7,7 @@ sourceSets.test.java.srcDirs = ['harness-src']
 dependencies {
 	testImplementation(
 			'commons-io:commons-io:2.6',
-			'junit:junit:4.12',
+			'junit:junit:4.13',
 			'net.htmlparser.jericho:jericho-html:3.2',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),

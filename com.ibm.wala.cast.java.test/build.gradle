@@ -10,7 +10,7 @@ sourceSets.main {
 
 dependencies {
 	implementation(
-			'junit:junit:4.12',
+			'junit:junit:4.13',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
 			project(':com.ibm.wala.core'),
