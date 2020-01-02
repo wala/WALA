@@ -26,8 +26,8 @@ dependencies {
 			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
-			project(':com.ibm.wala.testutil'),
 			project(':com.ibm.wala.util'),
+			testFixtures(project(':com.ibm.wala.testutil')),
 	)
 }
 

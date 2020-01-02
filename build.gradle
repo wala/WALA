@@ -72,7 +72,7 @@ subprojects { subproject ->
 
 		if (project.hasProperty('excludeSlowTests')) {
 			dependencies {
-				testRuntime project(':com.ibm.wala.testutil')
+				testRuntime testFixtures(project(':com.ibm.wala.testutil'))
 			}
 			useJUnit {
 				excludeCategories 'com.ibm.wala.tests.util.SlowTests'

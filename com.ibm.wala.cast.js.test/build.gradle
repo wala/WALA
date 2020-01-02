@@ -12,8 +12,8 @@ dependencies {
 			project(':com.ibm.wala.cast.js.rhino'),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
-			project(':com.ibm.wala.testutil'),
 			project(':com.ibm.wala.util'),
+			testFixtures(project(':com.ibm.wala.testutil')),
 	)
 }
 

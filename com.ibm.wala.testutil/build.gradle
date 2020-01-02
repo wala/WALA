@@ -1,5 +1,9 @@
+plugins {
+	id 'java-test-fixtures'
+}
+
 dependencies {
-	implementation(
+	testFixturesImplementation(
 			'junit:junit:4.12',
 			'org.apache.ant:ant:1.10.7',
 			project(':com.ibm.wala.core'),
