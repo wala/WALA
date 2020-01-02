@@ -23,3 +23,20 @@ apply from: rootProject.file("gradle-mvn-push.gradle")
 uploadArchives {
 	enabled = false
 }
+
+tasks.register('testFixturesSourcesJar', Jar) {
+	classifier = 'test-fixtures-sources'
+	from sourceSets.testFixtures.allSource
+}
+
+tasks.register('testFixturesJavadocJar', Jar) {
+	classifier = 'test-fixtures-javadoc'
+	from testFixturesJavadoc.destinationDir
+	dependsOn testFixturesJavadoc
+}
+
+artifacts.archives(
+		testFixturesJar,
+		testFixturesJavadocJar,
+		testFixturesSourcesJar,
+)
