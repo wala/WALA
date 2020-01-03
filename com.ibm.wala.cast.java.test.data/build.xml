@@ -52,16 +52,6 @@
   
   <target name="getSources" depends="fetchJLex" />
 
-  <target name="testdatadir" depends="init,testdata.exists" unless="testdatadir.present">
-    <mkdir dir="${basedir}/../com.ibm.wala.ide.jdt.test/testdata"/>
-  </target>
-
-  <target name="testdata.exists" depends="init">
-    <available file="${basedir}/../com.ibm.wala.ide.jdt.test/testdata" 
-	       type="dir" 
-	       property="testdatadir.present"/>
-  </target>
-
   <target name="bin.exists" depends="">
     <available file="${basedir}/bin" 
 	       type="dir" 
@@ -78,8 +68,8 @@
 	   excludes="**/Activator.java"/>
   </target>
   
-  <target name="jar" depends="compile,testdatadir">
-    <jar destfile="${basedir}/../com.ibm.wala.ide.jdt.test/testdata/test_project.zip" manifest="${basedir}/META-INF/MANIFEST.MF" basedir="${basedir}"/>
+  <target name="jar" depends="compile">
+    <jar destfile="${basedir}/bin/test_project.zip" manifest="${basedir}/META-INF/MANIFEST.MF" basedir="${basedir}"/>
   </target>
   
   <target name="init" depends="properties">

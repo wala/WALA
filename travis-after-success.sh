@@ -9,7 +9,7 @@
 # http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/
 
 SLUG=wala/WALA
-JDK=oraclejdk8
+JDK=openjdk8
 BRANCH=master
 OSNAME=linux
 
@@ -23,6 +23,8 @@ elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
   echo "Skipping snapshot deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
 elif [ "$TRAVIS_OS_NAME" != "$OSNAME" ]; then
   echo "Skipping snapshot deployment: wrong OS. Expected '$OSNAME' but was '$TRAVIS_OS_NAME'."
+elif [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then
+  echo "Skipping snapshot deployment; running cron job."
 else
   echo "Deploying snapshot..."
   ./gradlew clean uploadArchives

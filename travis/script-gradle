@@ -34,3 +34,5 @@ else
     ${documentation:+$SUBMODULE_PREFIX$documentation}
   run_gradle "$SUBMODULE_PREFIX"build
 fi
+
+./check-git-cleanliness.sh

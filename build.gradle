@@ -59,8 +59,6 @@ subprojects { subproject ->
 		mavenCentral()
 	}
 
-	jar.manifest.from('META-INF/MANIFEST.MF')
-
 	eclipse {
 		synchronizationTasks 'processTestResources'
 	}
@@ -73,8 +71,11 @@ subprojects { subproject ->
 		exclude '**/*AndroidLibs*.class'
 
 		if (project.hasProperty('excludeSlowTests')) {
+			dependencies {
+				testRuntime project(':com.ibm.wala.testutil')
+			}
 			useJUnit {
-				excludeCategories 'com.ibm.wala.core.tests.util.SlowTests'
+				excludeCategories 'com.ibm.wala.tests.util.SlowTests'
 			}
 		}
 

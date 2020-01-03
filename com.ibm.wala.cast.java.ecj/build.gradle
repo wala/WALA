@@ -28,7 +28,9 @@ mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
 
 run {
 	// this is for testing purposes
-	args = ['-sourceDir', file("$rootDir/com.ibm.wala.cast.java.test.data/src"), '-mainClass', 'LArray1']
+	final def javaTestData = ':com.ibm.wala.cast.java.test.data'
+	evaluationDependsOn javaTestData
+	args = ['-sourceDir', project(javaTestData).sourceSets.test.java.srcDirs.find(), '-mainClass', 'LArray1']
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

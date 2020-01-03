@@ -11,11 +11,18 @@ sourceSets.main {
 dependencies {
 	implementation(
 			'junit:junit:4.12',
-			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
+}
+
+apply from: rootProject.file("gradle-mvn-push.gradle")
+
+// don't upload artifacts to Maven Central; they are only used for the
+// com.ibm.wala.ide.* projects
+uploadArchives {
+	enabled = false
 }
