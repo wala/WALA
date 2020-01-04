@@ -93,7 +93,6 @@ import com.ibm.wala.dalvik.dex.instructions.Switch;
 import com.ibm.wala.dalvik.dex.instructions.Throw;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation.OpID;
-import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IndirectionData;
@@ -104,6 +103,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.util.ArrayList;
@@ -113,7 +113,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.analysis.ClassPath;
@@ -558,22 +557,25 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     return getReference().getName();
   }
 
-  private Map<Integer,Integer> sourceLines = null;
-  
-  
+  private Map<Integer, Integer> sourceLines = null;
+
   @Override
   public int getLineNumber(int bcIndex) {
-	  if (sourceLines == null 
-			  && eMethod.getImplementation() != null
-			  && eMethod.getImplementation().getDebugItems() != null) {
-		  sourceLines = HashMapFactory.make();
-		  eMethod.getImplementation().getDebugItems().forEach((dbg) -> {
-			  if (dbg.getDebugItemType() == DebugItemType.LINE_NUMBER) {
-				  sourceLines.put(dbg.getCodeAddress(), ((LineNumber)dbg).getLineNumber());
-			  }
-		  });
-	  }
-    return sourceLines.containsKey(bcIndex)? sourceLines.get(bcIndex): -1;
+    if (sourceLines == null
+        && eMethod.getImplementation() != null
+        && eMethod.getImplementation().getDebugItems() != null) {
+      sourceLines = HashMapFactory.make();
+      eMethod
+          .getImplementation()
+          .getDebugItems()
+          .forEach(
+              (dbg) -> {
+                if (dbg.getDebugItemType() == DebugItemType.LINE_NUMBER) {
+                  sourceLines.put(dbg.getCodeAddress(), ((LineNumber) dbg).getLineNumber());
+                }
+              });
+    }
+    return sourceLines.containsKey(bcIndex) ? sourceLines.get(bcIndex) : -1;
   }
 
   /*

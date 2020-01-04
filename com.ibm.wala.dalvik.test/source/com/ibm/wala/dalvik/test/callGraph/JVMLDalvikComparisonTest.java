@@ -13,11 +13,6 @@ package com.ibm.wala.dalvik.test.callGraph;
 import static com.ibm.wala.dalvik.test.util.Util.convertJarToDex;
 import static com.ibm.wala.dalvik.test.util.Util.getJavaJar;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -51,7 +46,10 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 import org.junit.Test;
 
 public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
@@ -130,48 +128,54 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
   private static void checkSourceLines(CallGraph java, CallGraph android) {
     MutableIntSet ajlines = IntSetUtil.make();
     MutableIntSet aalines = IntSetUtil.make();
-    java.forEach(jnode -> {
-      if (jnode.getMethod().getReference().getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application)) {
-        if (jnode.getMethod() instanceof ShrikeCTMethod) {
-          ShrikeCTMethod m = (ShrikeCTMethod) jnode.getMethod();
-          MutableIntSet jlines = IntSetUtil.make();
-          for(SSAInstruction inst : jnode.getIR().getInstructions()) {
-            if (inst != null) {
-              try { 
-                int bcIndex = m.getBytecodeIndex(inst.iIndex());
-                int javaLine = m.getLineNumber(bcIndex);
-                jlines.add(javaLine);
-                ajlines.add(javaLine);
-              } catch (InvalidClassFileException e) {
-                assert false : e;
-              }
-            }
-          }
-          
-          for(CGNode an : android.getNodes(m.getReference())) {
-            DexIMethod am = (DexIMethod) an.getMethod();
-            MutableIntSet alines = IntSetUtil.make();
-            for(SSAInstruction ainst : an.getIR().getInstructions()) {
-              if (ainst != null) {
-                int ai = am.getLineNumber(am.getBytecodeIndex(ainst.iIndex()));
-                if (ai >= 0) {
-                  alines.add(ai);
-                  aalines.add(ai);
+    java.forEach(
+        jnode -> {
+          if (jnode
+              .getMethod()
+              .getReference()
+              .getDeclaringClass()
+              .getClassLoader()
+              .equals(ClassLoaderReference.Application)) {
+            if (jnode.getMethod() instanceof ShrikeCTMethod) {
+              ShrikeCTMethod m = (ShrikeCTMethod) jnode.getMethod();
+              MutableIntSet jlines = IntSetUtil.make();
+              for (SSAInstruction inst : jnode.getIR().getInstructions()) {
+                if (inst != null) {
+                  try {
+                    int bcIndex = m.getBytecodeIndex(inst.iIndex());
+                    int javaLine = m.getLineNumber(bcIndex);
+                    jlines.add(javaLine);
+                    ajlines.add(javaLine);
+                  } catch (InvalidClassFileException e) {
+                    assert false : e;
+                  }
                 }
               }
+
+              for (CGNode an : android.getNodes(m.getReference())) {
+                DexIMethod am = (DexIMethod) an.getMethod();
+                MutableIntSet alines = IntSetUtil.make();
+                for (SSAInstruction ainst : an.getIR().getInstructions()) {
+                  if (ainst != null) {
+                    int ai = am.getLineNumber(am.getBytecodeIndex(ainst.iIndex()));
+                    if (ai >= 0) {
+                      alines.add(ai);
+                      aalines.add(ai);
+                    }
+                  }
+                }
+
+                assert jlines.intersection(alines).size() == alines.size();
+              }
             }
-              
-            assert jlines.intersection(alines).size()==alines.size();
           }
-        }
-      }
-    });
-    
+        });
+
     IntSet both = ajlines.intersection(aalines);
     assert both.size() == aalines.size();
     assert both.size() >= .8 * ajlines.size() : ajlines + " " + aalines;
   }
-  
+
   private static boolean checkEdgeDiff(
       Pair<CallGraph, PointerAnalysis<InstanceKey>> android,
       Set<MethodReference> androidMethods,
