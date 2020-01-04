@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.util.io;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;

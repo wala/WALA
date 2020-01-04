@@ -5,7 +5,7 @@ sourceSets.test {
 
 dependencies {
 	testImplementation(
-			'junit:junit:4.12',
+			'junit:junit:4.13',
 			project(':com.ibm.wala.cast.js.nodejs')
 	)
 }

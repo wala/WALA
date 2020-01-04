@@ -148,7 +148,7 @@ configurations {
 dependencies {
 	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testImplementation(
-			'junit:junit:4.12',
+			'junit:junit:4.13',
 			'org.osgi:org.osgi.core:6.0.0',
 			'org.smali:dexlib2:2.3.4',
 			files("${copyDxJar.get().destinationDir}/dx.jar"),
