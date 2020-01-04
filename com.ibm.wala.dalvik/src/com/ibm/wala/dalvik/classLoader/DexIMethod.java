@@ -563,7 +563,9 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   
   @Override
   public int getLineNumber(int bcIndex) {
-	  if (sourceLines == null) {
+	  if (sourceLines == null 
+			  && eMethod.getImplementation() != null
+			  && eMethod.getImplementation().getDebugItems() != null) {
 		  sourceLines = HashMapFactory.make();
 		  eMethod.getImplementation().getDebugItems().forEach((dbg) -> {
 			  if (dbg.getDebugItemType() == DebugItemType.LINE_NUMBER) {
