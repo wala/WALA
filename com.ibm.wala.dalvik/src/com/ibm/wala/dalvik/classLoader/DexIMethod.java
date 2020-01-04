@@ -93,6 +93,7 @@ import com.ibm.wala.dalvik.dex.instructions.Switch;
 import com.ibm.wala.dalvik.dex.instructions.Throw;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation.OpID;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IndirectionData;
@@ -112,6 +113,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.analysis.ClassPath;
 import org.jf.dexlib2.analysis.ClassPathResolver;
@@ -119,6 +122,7 @@ import org.jf.dexlib2.analysis.MethodAnalyzer;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.TryBlock;
+import org.jf.dexlib2.iface.debug.LineNumber;
 import org.jf.dexlib2.iface.instruction.SwitchPayload;
 import org.jf.dexlib2.iface.instruction.TwoRegisterInstruction;
 import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
@@ -554,9 +558,20 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     return getReference().getName();
   }
 
+  private Map<Integer,Integer> sourceLines = null;
+  
+  
   @Override
   public int getLineNumber(int bcIndex) {
-    return getInstructionIndex(bcIndex);
+	  if (sourceLines == null) {
+		  sourceLines = HashMapFactory.make();
+		  eMethod.getImplementation().getDebugItems().forEach((dbg) -> {
+			  if (dbg.getDebugItemType() == DebugItemType.LINE_NUMBER) {
+				  sourceLines.put(dbg.getCodeAddress(), ((LineNumber)dbg).getLineNumber());
+			  }
+		  });
+	  }
+    return sourceLines.containsKey(bcIndex)? sourceLines.get(bcIndex): -1;
   }
 
   /*
