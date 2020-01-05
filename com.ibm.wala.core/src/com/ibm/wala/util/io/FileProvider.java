@@ -176,7 +176,7 @@ public class FileProvider {
    * Properly creates the String file name of a {@link URL}. This works around a bug in the Sun
    * implementation of {@link URL#getFile()}, which doesn't properly handle file paths with spaces
    * (see <a href=
-   * "http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458"
+   * "http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1565842&amp;group_id=176742&amp;atid=878458"
    * >bug report</a>). For now, fails with an assertion if the url is malformed.
    *
    * @return the path name for the url
