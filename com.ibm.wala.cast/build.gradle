@@ -29,23 +29,4 @@ tasks.named('javadoc') {
 	}
 }
 
-// TODO: if we eventually stop supporting Maven, then we may be able
-// to discard the "copyJarsIntoLib" task and the corresponding lines
-// in "META-INF/MANIFEST.MF" and "build.properties"
-
-tasks.register('copyJarsIntoLib', Sync) {
-	def commonsIoJar = configurations.runtimeClasspath.files[1]
-	assert commonsIoJar.name.startsWith('commons-io-')
-	from commonsIoJar
-	into 'lib'
-}
-
-tasks.named('assemble') {
-	dependsOn 'copyJarsIntoLib'
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanCopyJarsIntoLib'
-}
-
 apply from: rootProject.file("gradle-mvn-push.gradle")
