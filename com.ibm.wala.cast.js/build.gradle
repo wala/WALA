@@ -17,7 +17,7 @@ dependencies {
 }
 
 tasks.register('createPackageList', CreatePackageList) {
-	sourceSet sourceSets.main.java
+	sourceSet sourceSets.main
 }
 
 tasks.named('javadoc') {
