@@ -215,7 +215,7 @@ public class PDFSDG {
       throw new UnsupportedOperationException("expected command-line to include -appJar");
     }
     if (p.get("mainClass") == null) {
-      throw new UnsupportedOperationException("expected command-line to include -appJar");
+      throw new UnsupportedOperationException("expected command-line to include -mainClass");
     }
   }
 }
