@@ -931,11 +931,11 @@ public class ClassWriter implements ClassConstants {
         } else if (o instanceof Float) {
           int offset = reserveBuf(5);
           buf[offset] = CONSTANT_Float;
-          setFloat(buf, offset + 1, ((Float) o).intValue());
+          setFloat(buf, offset + 1, (Float) o);
         } else if (o instanceof Double) {
           int offset = reserveBuf(9);
           buf[offset] = CONSTANT_Double;
-          setDouble(buf, offset + 1, ((Double) o).intValue());
+          setDouble(buf, offset + 1, (Double) o);
         }
       }
     }
