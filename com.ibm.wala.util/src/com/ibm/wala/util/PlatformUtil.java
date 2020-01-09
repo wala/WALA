@@ -59,7 +59,7 @@ public class PlatformUtil {
         classpath =
             String.join(
                 File.pathSeparator,
-                Files.list(Paths.get(System.getenv("JAVA_HOME"), "jmods"))
+                Files.list(Paths.get(System.getProperty("java.home"), "jmods"))
                     .map(Path::toString)
                     .collect(Collectors.toList()));
       } catch (IOException e) {
