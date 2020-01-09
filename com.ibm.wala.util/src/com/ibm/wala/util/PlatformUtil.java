@@ -53,7 +53,7 @@ public class PlatformUtil {
   public static String[] getBootClassPathJars() {
     String classpath = null;
     String javaVersion = System.getProperty("java.specification.version");
-    if (javaVersion.equals("9") || javaVersion.equals("10") || javaVersion.equals("11")) {
+    if (!javaVersion.equals("1.8")) {
       // java11 support for jmod files
       try {
         classpath =
