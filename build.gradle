@@ -15,6 +15,7 @@ plugins {
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '14.2.5'
 	id 'nebula.source-jar' version '14.1.1' apply false
+	id 'com.github.ben-manes.versions' version '0.27.0'
 }
 
 repositories {
