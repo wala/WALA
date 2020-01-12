@@ -352,7 +352,7 @@ public class AnalysisScope {
     return arrayClassLoader;
   }
 
-  /** @return the rt.jar (1.4) or core.jar (1.5) file, or null if not found. */
+  /** @return the rt.jar (1.4), core.jar (1.5), java.core.jmod (13) file, or null if not found. */
   private JarFile getRtJar() {
     return RtJar.getRtJar(
         new MapIterator<>(
@@ -366,6 +366,10 @@ public class AnalysisScope {
       if (rtJar == null) {
         throw new IllegalStateException("cannot find runtime libraries");
       }
+      assert !rtJar.getName().endsWith(".jmod")
+          : String.format(
+              "main runtime library is \"%s\", but WALA does not yet know how to get the library version of a Java module",
+              rtJar.getName());
       Manifest man = rtJar.getManifest();
       assert man != null : "runtime library has no manifest!";
       String result = man.getMainAttributes().getValue("Specification-Version");
