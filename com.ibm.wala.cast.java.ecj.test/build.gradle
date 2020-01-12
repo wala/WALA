@@ -29,6 +29,13 @@ tasks.named('test') {
 	
 	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
 
-	// ensures the command-line driver for running ECJ works
-	dependsOn ':com.ibm.wala.cast.java.ecj:run'
+	// temporarily turn off some tests on JDK 13+
+	if (JavaVersion.current() <= JavaVersion.VERSION_12) {
+		// ensure the command-line driver for running ECJ works
+		dependsOn ':com.ibm.wala.cast.java.ecj:run'
+	} else {
+		exclude '**/ECJJava17IRTest.class'
+		exclude '**/ECJJavaIRTest.class'
+		exclude '**/ECJSyncDuplicatorTest.class'
+	}
 }
