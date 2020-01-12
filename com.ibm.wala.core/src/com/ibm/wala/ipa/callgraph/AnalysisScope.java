@@ -344,8 +344,7 @@ public class AnalysisScope {
 
   public List<Module> getModules(ClassLoaderReference loader) {
     List<Module> result = moduleMap.get(loader);
-    List<Module> empty = Collections.emptyList();
-    return result == null ? empty : result;
+    return result == null ? Collections.emptyList() : result;
   }
 
   /** @return Returns the arrayClassLoader. */
