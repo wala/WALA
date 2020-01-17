@@ -203,7 +203,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
    */
   @Override
   protected int leaveAT_LAST(int PC) {
-    logger.info("Leaving Model with PC = {}", PC);
+    logger.trace("Leaving Model with PC = {}", PC);
     return PC;
   }
 }

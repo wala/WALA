@@ -477,7 +477,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
       throw new IllegalArgumentException("The given Intent is null");
     }
 
-    logger.info("Register Intent {}", intent);
+    logger.trace("Register Intent {}", intent);
     // Looks a bit weired but works as Intents are only matched based on their action and uri
     overrideIntents.put(intent, intent);
   }
@@ -610,7 +610,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
       throw new IllegalArgumentException("The Intent given as 'to' is null");
     }
 
-    logger.info("Override Intent {} to {}", from, to);
+    logger.trace("Override Intent {} to {}", from, to);
     overrideIntents.put(from, to);
   }
 
@@ -646,7 +646,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         }
       }
       ret = overrideIntents.get(ret); // Once again to get Info set in register
-      logger.info("Resolved {} to {}", intent, ret);
+      logger.debug("Resolved {} to {}", intent, ret);
       return ret;
     } else {
       logger.info("No information on {} hash: {}", intent, intent.hashCode());

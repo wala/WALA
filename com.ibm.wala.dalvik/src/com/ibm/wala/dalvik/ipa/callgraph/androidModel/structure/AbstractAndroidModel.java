@@ -410,7 +410,7 @@ public abstract class AbstractAndroidModel {
     if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.MIDDLE_OF_LOOP) <= 0)
         && (section.compareTo(AndroidEntryPoint.ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) >= 0)) {
       PC = enterMULTIPLE_TIMES_IN_LOOP(PC);
-      logger.info("ENTER: MULTIPLE_TIMES_IN_LOOP");
+      logger.debug("ENTER: MULTIPLE_TIMES_IN_LOOP");
       this.currentSection = AndroidEntryPoint.ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
     }
 

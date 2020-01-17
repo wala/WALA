@@ -135,7 +135,7 @@ public class IntentContextSelector implements ContextSelector {
           } else if (param.getConcreteType().getName().equals(AndroidTypes.IntentName)) {
             if (!intents.contains(param)) {
               logger.error("Unable to resolve Intent called from {}", caller.getMethod());
-              logger.error("Search Key: {} hash: {}", param, param.hashCode());
+              logger.info("Search Key: {} hash: {}", param, param.hashCode());
               break;
             } else {
               intent = intents.find(param);
@@ -310,7 +310,7 @@ public class IntentContextSelector implements ContextSelector {
       final InstanceKey self = actualParameters[0];
       final Intent intent = intents.find(self);
 
-      logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+      logger.info("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
 
       intent.setExplicit();
       intents.unbind(self);

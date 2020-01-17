@@ -447,7 +447,7 @@ public class AndroidManifestXMLReader {
         }
 
         attributesHistory.get(relevant).push(attr);
-        logger.debug("Pushing '{}' for {} in {}", attr, relevant, self);
+        logger.trace("Pushing '{}' for {} in {}", attr, relevant, self);
         // if there is no such value in saxAttrs it returns null
       }
     }
@@ -459,7 +459,7 @@ public class AndroidManifestXMLReader {
     public void popAttributes() {
       for (Attr relevant : self.getRelevantAttributes()) {
         try {
-          logger.debug(
+          logger.trace(
               "Popping {} of value {} in {}",
               relevant,
               attributesHistory.get(relevant).peek(),
@@ -702,10 +702,10 @@ public class AndroidManifestXMLReader {
       }
       final Intent intent = AndroidSettingFactory.intent(pack, name, null);
 
-      logger.info("\tRegister: {}", intent);
+      logger.trace("\tRegister: {}", intent);
       AndroidEntryPointManager.MANAGER.registerIntent(intent);
       for (Intent ovr : overrideTargets) {
-        logger.info("\tOverride: {} --> {}", ovr, intent);
+        logger.trace("\tOverride: {} --> {}", ovr, intent);
         if (ovr.equals(intent)) {
           AndroidEntryPointManager.MANAGER.registerIntent(intent);
         } else {

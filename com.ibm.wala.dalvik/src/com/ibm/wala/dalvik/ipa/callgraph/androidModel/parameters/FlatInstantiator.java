@@ -474,7 +474,7 @@ public class FlatInstantiator implements IInstantiator {
 
   /** Used internally to avoid endless recursion on getTypes(). */
   private Set<TypeReference> getTypes(final TypeReference T, final Set<TypeReference> seen) {
-    logger.debug("getTypes({}, {})", T, seen);
+    logger.trace("getTypes({}, {})", T, seen);
     final Set<TypeReference> ret = new HashSet<>();
     ret.add(T);
 
