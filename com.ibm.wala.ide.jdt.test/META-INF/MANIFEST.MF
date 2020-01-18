@@ -26,5 +26,5 @@ Export-Package: com.ibm.wala.cast.java.jdt.test,
  com.ibm.wala.cast.java.test,
  com.ibm.wala.demandpa.driver
 Bundle-ClassPath: .,
- target/dependency/com.ibm.wala.cast.java.test.jar
+ target/dependency/com.ibm.wala.cast.java.test-test-fixtures.jar
 
