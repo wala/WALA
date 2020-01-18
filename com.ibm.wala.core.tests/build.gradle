@@ -45,12 +45,11 @@ tasks.named('test') {
 		exceptionFormat = 'full'
 	}
 	// temporarily turn off some tests on JDK 11+
-	switch (JavaVersion.current()) {
-		case { it >= JavaVersion.VERSION_11 }:
-			exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
-			exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
-			exclude '**/cha/LibraryVersionTest.class'
-			exclude '**/ir/TypeAnnotationTest.class'
+	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
+		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
+		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
+		exclude '**/cha/LibraryVersionTest.class'
+		exclude '**/ir/TypeAnnotationTest.class'
 	}
 }
 
