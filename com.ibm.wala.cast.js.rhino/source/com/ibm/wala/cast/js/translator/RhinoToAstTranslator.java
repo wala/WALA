@@ -55,6 +55,7 @@ import java.util.Set;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Kit;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.Token;
@@ -2734,7 +2735,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     Parser P = new Parser(compilerEnv, compilerEnv.getErrorReporter());
 
-    AstRoot top = P.parse(sourceReader, scriptName, 1);
+    AstRoot top = P.parse(Kit.readReader(sourceReader), scriptName, 1);
 
     if (!reporter.w.isEmpty()) {
       throw new TranslatorToCAst.Error(reporter.w);

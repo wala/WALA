@@ -14,9 +14,8 @@ tasks.named('javadoc') {
 		classpath += files project(coreName).compileJava
 	}
 
-	options.links sourceCompatibility >= JavaVersion.VERSION_11
-			? "https://docs.oracle.com/en/java/javase/$sourceCompatibility/docs/api/"
-			: "https://docs.oracle.com/javase/$sourceCompatibility/docs/api/"
+	final def linksPrefix = sourceCompatibility >= JavaVersion.VERSION_11 ? 'en/java/' : ''
+	options.links "https://docs.oracle.com/${linksPrefix}javase/$sourceCompatibility.majorVersion/docs/api/"
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

@@ -44,13 +44,8 @@ tasks.named('test') {
 	testLogging {
 		exceptionFormat = 'full'
 	}
-	// temporarily turn off some tests on JDK 11
-	if (JavaVersion.current() == JavaVersion.VERSION_11) {
-		exclude '**/callGraph/CallGraphTest.class'
-		exclude '**/callGraph/Java7CallGraphTest.class'
-		exclude '**/callGraph/CloneTest.class'
-		exclude '**/callGraph/DebuggingBitsetCallGraphTest.class'
-		exclude '**/callGraph/KawaCallGraphTest.class'
+	// temporarily turn off some tests on JDK 11+
+	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
 		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
 		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
 		exclude '**/cha/LibraryVersionTest.class'
