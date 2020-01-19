@@ -12,7 +12,7 @@
     <booleanAttribute key="clearwslog" value="false"/>
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
     <booleanAttribute key="default" value="true"/>
-    <stringAttribute key="deselected_workspace_plugins" value="com.ibm.commons,com.ibm.domo.js.ibmjs,com.ibm.domo.js.ibmjs.test,com.ibm.jscript,com.ibm.jscript.test.rhino,com.ibm.wala.cast.java.polyglot,com.ibm.wala.cast.java.polyglot.test,com.ibm.wala.cast.java.test.data,com.ibm.wala.cast.js,com.ibm.wala.cast.js.html.nu_validator,com.ibm.wala.cast.js.rhino,com.ibm.wala.cast.js.rhino.test*1.0.0,com.ibm.wala.cast.js.test,com.ibm.wala.core.testdata"/>
+    <stringAttribute key="deselected_workspace_plugins" value="com.ibm.commons,com.ibm.domo.js.ibmjs,com.ibm.domo.js.ibmjs.test,com.ibm.jscript,com.ibm.jscript.test.rhino,com.ibm.wala.cast.java.polyglot,com.ibm.wala.cast.java.polyglot.test,com.ibm.wala.cast.java.test.data,com.ibm.wala.cast.js,com.ibm.wala.cast.js.html.nu_validator,com.ibm.wala.cast.js.rhino*1.0.0,com.ibm.wala.cast.js.test,com.ibm.wala.core.testdata"/>
     <booleanAttribute key="includeOptional" value="true"/>
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
