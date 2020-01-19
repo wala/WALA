@@ -1,3 +1,7 @@
+plugins {
+	id 'com.github.hauner.jarTest'
+}
+
 dependencies {
 	implementation(
 			'org.mozilla:rhino:1.7.12',
@@ -6,6 +10,43 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.util'),
 	)
+	testArchives(
+			'junit:junit:4.13',
+			project,
+	)
+	testImplementation(
+			'commons-io:commons-io:2.6',
+			'junit:junit:4.13',
+			'net.htmlparser.jericho:jericho-html:3.2',
+			project(':com.ibm.wala.shrike'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
+			testFixtures(project(':com.ibm.wala.testutil')),
+	)
 }
+
+tasks.named('processTestResources') {
+	def data = project(':com.ibm.wala.cast.js.test.data')
+	dependsOn data.tasks.named('processTestResources')
+	from data.sourceSets.test.resources
+}
+
+tasks.named('test') {
+	environment 'TRAVIS', 1
+	maxHeapSize = '800M'
+
+	if (gradle.startParameter.offline)
+		exclude '**/FieldBasedJQueryTest.class'
+}
+
+tasks.register('cleanTestExtras', Delete) {
+	delete 'actual.dump'
+	delete 'expected.dump'
+}
+
+tasks.named('cleanTest') {
+	dependsOn 'cleanTestExtras'
+}
+
+eclipseIgnoreOptionalTestProblems project
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

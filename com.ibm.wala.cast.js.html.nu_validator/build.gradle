@@ -7,8 +7,8 @@ dependencies {
 	)
 	testImplementation(
 			project(':com.ibm.wala.cast.js.test'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
+			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test'),
 	)
 }
 

@@ -11,7 +11,7 @@
 <booleanAttribute key="clearwslog" value="false"/>
 <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
 <booleanAttribute key="default" value="false"/>
-<stringAttribute key="deselected_workspace_plugins" value="com.ibm.wala.cast.java,com.ibm.wala.cast.java.test.data,com.ibm.wala.cast.js.html.nu_validator,com.ibm.wala.cast.js.rhino.test,com.ibm.wala.cast.js.test,com.ibm.wala.cast.js.test.data,com.ibm.wala.cast.test,com.ibm.wala.dalvik,com.ibm.wala.dalvik.test,com.ibm.wala.ide.jdt,com.ibm.wala.ide.jdt.test,com.ibm.wala.scandroid"/>
+<stringAttribute key="deselected_workspace_plugins" value="com.ibm.wala.cast.java,com.ibm.wala.cast.java.test.data,com.ibm.wala.cast.js.html.nu_validator,com.ibm.wala.cast.js.rhino,com.ibm.wala.cast.js.test,com.ibm.wala.cast.js.test.data,com.ibm.wala.cast.test,com.ibm.wala.dalvik,com.ibm.wala.dalvik.test,com.ibm.wala.ide.jdt,com.ibm.wala.ide.jdt.test,com.ibm.wala.scandroid"/>
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
