@@ -253,6 +253,17 @@ allprojects {
 	}
 }
 
+@SuppressWarnings("unused")
+final eclipseIgnoreOptionalTestProblems(subproject) {
+	subproject.eclipse.classpath.file.whenMerged {
+		entries.each {
+			if (it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.entryAttributes['test']) {
+				it.entryAttributes['ignore_optional_problems'] = true
+			}
+		}
+	}
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 //
