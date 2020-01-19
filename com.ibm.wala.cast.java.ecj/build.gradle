@@ -20,6 +20,10 @@ dependencies {
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
+	testImplementation(
+			'junit:junit:4.13',
+			testFixtures(project(':com.ibm.wala.cast.java.test')),
+	)
 }
 
 mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
@@ -37,6 +41,30 @@ run {
 		final def fileStream = outFile.newOutputStream()
 		standardOutput fileStream
 		errorOutput fileStream
+	}
+}
+
+tasks.named('test') {
+	maxHeapSize = '1200M'
+
+	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
+
+	// temporarily turn off some tests on JDK 9+
+	if (JavaVersion.current() <= JavaVersion.VERSION_1_8) {
+		// ensure the command-line driver for running ECJ works
+		dependsOn 'run'
+	} else {
+		exclude '**/ECJJava17IRTest.class'
+		exclude '**/ECJJavaIRTest.class'
+		exclude '**/ECJSyncDuplicatorTest.class'
+	}
+}
+
+eclipse.classpath.file.whenMerged {
+	entries.each {
+		if (it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.entryAttributes['test']) {
+			it.entryAttributes['ignore_optional_problems'] = true
+		}
 	}
 }
 
