@@ -60,6 +60,4 @@ tasks.named('test') {
 	}
 }
 
-eclipseIgnoreOptionalTestProblems project
-
 apply from: rootProject.file("gradle-mvn-push.gradle")

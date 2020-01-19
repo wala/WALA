@@ -31,7 +31,6 @@ public class TestCPA {
         new CAstRhinoTranslatorFactory());
   }
 
-  @SuppressWarnings("static-access")
   @Test
   public void testCPA()
       throws IOException, IllegalArgumentException, CancelException, WalaException {

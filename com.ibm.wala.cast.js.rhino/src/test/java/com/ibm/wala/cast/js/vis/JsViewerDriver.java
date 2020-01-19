@@ -67,7 +67,6 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
     CallGraph cg = builder.makeCallGraph(builder.getOptions());
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
-    @SuppressWarnings("unused")
     JsViewer jsViewer = new JsViewer(cg, pa);
   }
 
