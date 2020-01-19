@@ -6,7 +6,6 @@ include(
 	'com.ibm.wala.cast:cast',
 	'com.ibm.wala.cast.java',
 	'com.ibm.wala.cast.java.ecj',
-	'com.ibm.wala.cast.java.test',
 	'com.ibm.wala.cast.java.test.data',
 	'com.ibm.wala.cast.js',
 	'com.ibm.wala.cast.js.html.nu_validator',

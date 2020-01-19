@@ -22,7 +22,7 @@ dependencies {
 	)
 	testImplementation(
 			'junit:junit:4.13',
-			testFixtures(project(':com.ibm.wala.cast.java.test')),
+			testFixtures(project(':com.ibm.wala.cast.java')),
 	)
 }
 
@@ -60,12 +60,6 @@ tasks.named('test') {
 	}
 }
 
-eclipse.classpath.file.whenMerged {
-	entries.each {
-		if (it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.entryAttributes['test']) {
-			it.entryAttributes['ignore_optional_problems'] = true
-		}
-	}
-}
+eclipseIgnoreOptionalTestProblems project
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

@@ -67,10 +67,6 @@ jobs:
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data
       jdk: openjdk8
       if: type = cron
@@ -185,9 +181,6 @@ jobs:
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.ecj
-      if: type = cron
-    - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.java.test.data

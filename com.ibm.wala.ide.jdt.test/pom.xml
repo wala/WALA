@@ -79,7 +79,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
-									<artifactId>com.ibm.wala.cast.java.test</artifactId>
+									<artifactId>com.ibm.wala.cast.java</artifactId>
 									<version>1.5.5-SNAPSHOT</version>
                   <classifier>test-fixtures</classifier>
 									<type>jar</type>
