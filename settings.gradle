@@ -11,7 +11,6 @@ include(
 	'com.ibm.wala.cast.js.html.nu_validator',
 	'com.ibm.wala.cast.js.nodejs',
 	'com.ibm.wala.cast.js.rhino',
-	'com.ibm.wala.cast.js.test.data',
 	'com.ibm.wala.cast.test',
 	'com.ibm.wala.cast.test:smoke_main',
 	'com.ibm.wala.cast.test:xlator_test',

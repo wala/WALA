@@ -25,7 +25,7 @@ dependencies {
 }
 
 tasks.named('processTestResources') {
-	def data = project(':com.ibm.wala.cast.js.test.data')
+	def data = project(':com.ibm.wala.cast.js')
 	dependsOn data.tasks.named('processTestResources')
 	from data.sourceSets.test.resources
 }
