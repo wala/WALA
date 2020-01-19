@@ -2,19 +2,19 @@ plugins {
 	id 'cpp-application'
 }
 
-evaluationDependsOn(':com.ibm.wala.cast.test:xlator_test')
+evaluationDependsOn(':com.ibm.wala.cast:xlator_test')
 
 application {
 	dependencies {
 		implementation project(':com.ibm.wala.cast:cast')
-		implementation project(':com.ibm.wala.cast.test:xlator_test')
+		implementation project(':com.ibm.wala.cast:xlator_test')
 	}
 
 	addCastLibrary(project, it)
 
 	binaries.whenElementFinalized { binary ->
 		binary.linkTask.get().configure { linkTask ->
-			final def libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast.test:xlator_test').tasks.getByName(linkTask.name))
+			final def libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast:xlator_test').tasks.getByName(linkTask.name))
 			addRpath(linkTask, libxlator_test)
 
 			if (binary.debuggable && !binary.optimized) {

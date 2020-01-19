@@ -96,7 +96,7 @@ subprojects { subproject ->
 	}
 
 	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
-	// :com.ibm.wala.cast.test:compileTestJava, which requires JNI support that ECJ does not offer.
+	// :com.ibm.wala.cast:compileTestJava, which requires JNI support that ECJ does not offer.
 	tasks.withType(JavaCompile) {
 		it.ext.originalToolChain = it.toolChain
 		options.encoding = 'UTF-8'

@@ -91,15 +91,11 @@ jobs:
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:smoke_main
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:xlator_test
       jdk: openjdk8
       if: type = cron
     - os: linux
@@ -189,13 +185,10 @@ jobs:
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
       if: type = cron
     - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:smoke_main
       if: type = cron
     - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:smoke_main
-      if: type = cron
-    - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.test:xlator_test
+      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:xlator_test
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core
