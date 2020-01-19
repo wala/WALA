@@ -1,3 +1,7 @@
+plugins {
+	id 'com.github.hauner.jarTest'
+}
+
 dependencies {
 	api(project(':com.ibm.wala.cast')) {
 		because 'public class JSCallGraphUtil extends class CAstCallGraphUtil'
@@ -8,6 +12,10 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
+	)
+	testImplementation(
+			'junit:junit:4.13',
+			testFixtures(project(':com.ibm.wala.testutil')),
 	)
 }
 
@@ -22,6 +30,16 @@ tasks.named('javadoc') {
 	doFirst {
 		classpath += files project(rhinoName).compileJava
 	}
+}
+
+tasks.named('processTestResources') {
+	def data = project(':com.ibm.wala.cast.js.test.data')
+	dependsOn data.tasks.named('processTestResources')
+	from data.sourceSets.test.resources
+}
+
+tasks.named('test') {
+	maxHeapSize = '800M'
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

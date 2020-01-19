@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class JSProjectScopeTest extends AbstractJSProjectScopeTest {
 
-  public static final String PROJECT_NAME = "com.ibm.wala.cast.js.test.data";
+  public static final String PROJECT_NAME = "com.ibm.wala.cast.js";
 
   public static final String PROJECT_ZIP = "test_js_project.zip";
 
