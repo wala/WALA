@@ -31,6 +31,15 @@ run {
 	final def javaTestData = ':com.ibm.wala.cast.java.test.data'
 	evaluationDependsOn javaTestData
 	args = ['-sourceDir', project(javaTestData).sourceSets.test.java.srcDirs.find(), '-mainClass', 'LArray1']
+
+	// log output to file, although we don't validate it
+	final def outFile = file("$temporaryDir/stdout-and-stderr.log")
+	outputs.file outFile
+	doFirst {
+		final def fileStream = outFile.newOutputStream()
+		standardOutput fileStream
+		errorOutput fileStream
+	}
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
