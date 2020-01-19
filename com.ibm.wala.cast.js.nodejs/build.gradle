@@ -18,11 +18,6 @@ final def downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
 }
 
-sourceSets.main {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['dat']
-}
-
 final def resourcesDir = sourceSets.main.resources.srcDirs.find()
 final def coreModulesDir = file("$resourcesDir/core-modules")
 
