@@ -1,16 +1,5 @@
 package com.ibm.wala.core.tests.shrike;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
@@ -23,6 +12,15 @@ import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FloatingPointsTest extends WalaTestCase {
   private final String klass = "shrike/FloatingPoints";
@@ -49,7 +47,8 @@ public class FloatingPointsTest extends WalaTestCase {
     // Initialize the OfflineInstrumenter loading the class file specified in
     // 'klass' above
     instrumenter = new OfflineInstrumenter();
-    instrumenter.addInputClass(new File(testJarLocation), new File(testJarLocation + "/" + klass + ".class"));
+    instrumenter.addInputClass(
+        new File(testJarLocation), new File(testJarLocation + "/" + klass + ".class"));
     instrumenter.setPassUnmodifiedClasses(false);
     instrumenter.setOutputJar(instrumentedJarLocation.toFile());
     instrumenter.beginTraversal();
@@ -84,12 +83,14 @@ public class FloatingPointsTest extends WalaTestCase {
     // new value (from above)
     MethodEditor me = new MethodEditor(methodData);
     me.beginPass();
-    me.replaceWith(index, new MethodEditor.Patch() {
-      @Override
-      public void emitTo(Output w) {
-        w.emit(ConstantInstruction.make(newValue));
-      }
-    });
+    me.replaceWith(
+        index,
+        new MethodEditor.Patch() {
+          @Override
+          public void emitTo(Output w) {
+            w.emit(ConstantInstruction.make(newValue));
+          }
+        });
     me.applyPatches();
     me.endPass();
 
@@ -98,7 +99,8 @@ public class FloatingPointsTest extends WalaTestCase {
 
     // Read the saved application from shrike again and verify that the
     // altered constant instruction has the new value
-    double readValue = (double) getConstantInstructionValue(signature, index, Constants.TYPE_double);
+    double readValue =
+        (double) getConstantInstructionValue(signature, index, Constants.TYPE_double);
 
     // And finally (and most important) compare the value
     Assert.assertEquals(newValue, readValue, 0d);
@@ -126,12 +128,14 @@ public class FloatingPointsTest extends WalaTestCase {
     // new value (from above)
     MethodEditor me = new MethodEditor(methodData);
     me.beginPass();
-    me.replaceWith(index, new MethodEditor.Patch() {
-      @Override
-      public void emitTo(Output w) {
-        w.emit(ConstantInstruction.make(newValue));
-      }
-    });
+    me.replaceWith(
+        index,
+        new MethodEditor.Patch() {
+          @Override
+          public void emitTo(Output w) {
+            w.emit(ConstantInstruction.make(newValue));
+          }
+        });
     me.applyPatches();
     me.endPass();
 

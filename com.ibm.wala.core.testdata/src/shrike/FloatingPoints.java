@@ -18,5 +18,4 @@ public class FloatingPoints {
     double added = f + 1.337;
     System.out.println(added);
   }
-
 }
