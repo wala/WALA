@@ -83,10 +83,6 @@ jobs:
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
       jdk: openjdk8
       if: type = cron
@@ -193,9 +189,6 @@ jobs:
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs
-      if: type = cron
-    - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.nodejs.test
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
