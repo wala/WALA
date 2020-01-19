@@ -244,6 +244,9 @@ public class LambdaTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // shouldn't crash
-    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg =
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    // exceedingly unlikely to fail, but ensures that optimizer won't remove buildZeroCFA call
+    Assert.assertTrue(cg.getNumberOfNodes() > 0);
   }
 }
