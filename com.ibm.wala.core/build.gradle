@@ -4,6 +4,10 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
+sourceSets {
+	testSubjects
+}
+
 dependencies {
 	api(project(':com.ibm.wala.shrike')) {
 		because 'public class Entrypoint implements interface BytecodeConstraints'
@@ -11,6 +15,16 @@ dependencies {
 	api(project(':com.ibm.wala.util')) {
 		because 'public interface CallGraph extends interface NumberedGraph'
 	}
+	testImplementation(
+			'junit:junit:4.13',
+			'org.apache.ant:ant:1.10.7',
+			'org.hamcrest:hamcrest-core:2.2',
+			'org.osgi:org.osgi.core:6.0.0',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+			testFixtures(project(':com.ibm.wala.testutil')),
+	)
 }
 
 tasks.named('javadoc') {
@@ -285,7 +299,7 @@ tasks.named('clean') {
 
 tasks.register('collectTestData', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0.jar'
-	from compileTestJava
+	from compileTestSubjectsJava
 	from 'classes'
 	includeEmptyDirs false
 	destinationDirectory.set projectDir
@@ -303,7 +317,7 @@ tasks.named('clean') {
 
 tasks.register('collectTestDataA', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0a.jar'
-	from compileTestJava
+	from compileTestSubjectsJava
 	from 'classes'
 	includeEmptyDirs false
 	destinationDirectory.set projectDir
@@ -321,5 +335,45 @@ tasks.named('clean') {
 
 ////////////////////////////////////////////////////////////////////////
 
+
+tasks.named('processTestResources') {
+	[
+			'buildChessJar',
+			'buildKawaTestJar',
+			'collectJLex',
+			'collectTestData',
+			'downloadJavaCup',
+			'extractBcel',
+			'extractKawa',
+			'generateHelloHashJar',
+	].each {
+		from tasks.named(it)
+	}
+}
+
+tasks.named('test') {
+	maxHeapSize = '1500M'
+	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
+	systemProperty 'com.ibm.wala.junit.profile', 'short'
+	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
+	testLogging {
+		exceptionFormat = 'full'
+	}
+	// temporarily turn off some tests on JDK 11+
+	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
+		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
+		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
+		exclude '**/cha/LibraryVersionTest.class'
+		exclude '**/ir/TypeAnnotationTest.class'
+	}
+}
+
+tasks.register('cleanTestExtras', Delete) {
+	delete 'report'
+}
+
+tasks.named('cleanTest') {
+	dependsOn 'cleanTestExtras'
+}
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
