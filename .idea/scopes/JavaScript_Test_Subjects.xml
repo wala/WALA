@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JavaScript Test Subjects" pattern="file:resources//*.html||file:resources//*.js" />
+</component>
