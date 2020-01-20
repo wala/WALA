@@ -575,7 +575,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 }
               });
     }
-    return sourceLines.containsKey(bcIndex) ? sourceLines.get(bcIndex) : -1;
+    return sourceLines.getOrDefault(bcIndex, -1);
   }
 
   /*
