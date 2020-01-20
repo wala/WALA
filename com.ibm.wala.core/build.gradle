@@ -2,7 +2,16 @@ plugins {
 	id 'eclipse'
 }
 
-eclipse.project.natures 'org.eclipse.pde.PluginNature'
+eclipse {
+	project.natures 'org.eclipse.pde.PluginNature'
+	classpath.file.whenMerged {
+		entries.each {
+			if (it.path == 'src/testSubjects/java') {
+				it.entryAttributes['ignore_optional_problems'] = true
+			}
+		}
+	}
+}
 
 sourceSets {
 	testSubjects
@@ -15,6 +24,13 @@ dependencies {
 	api(project(':com.ibm.wala.util')) {
 		because 'public interface CallGraph extends interface NumberedGraph'
 	}
+	testFixturesImplementation(
+			'junit:junit:4.13',
+			'org.apache.ant:ant:1.10.7',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util')
+	)
 	testImplementation(
 			'junit:junit:4.13',
 			'org.apache.ant:ant:1.10.7',
@@ -23,7 +39,7 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
-			testFixtures(project(':com.ibm.wala.testutil')),
+			testFixtures(project(':com.ibm.wala.core')),
 	)
 }
 
@@ -81,7 +97,8 @@ tasks.named('clean') {
 @CacheableTask
 class CompileKawaJar extends Jar {
 
-	@Nested final def compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
+	@Nested
+	final def compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
 		dependsOn project.extractKawa
 		final def kawaJar = project.extractKawa.outputs.files.singleFile
 		classpath kawaJar
@@ -206,7 +223,6 @@ tasks.named('clean') {
 }
 
 
-
 ////////////////////////////////////////////////////////////////////////
 //
 //  download "java-cup-11a.jar"
@@ -321,7 +337,7 @@ tasks.register('collectTestDataA', Jar) {
 	from 'classes'
 	includeEmptyDirs false
 	destinationDirectory.set projectDir
-	exclude (
+	exclude(
 			'**/CodeDeleted.class',
 			'**/SortingExample.class',
 			'**/A.class',
