@@ -5,7 +5,7 @@ plugins {
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 tasks.named('processTestResources') {
-	def testdata = project(':com.ibm.wala.core.testdata')
+	def testdata = project(':com.ibm.wala.core')
 	dependsOn testdata.tasks.named('compileTestJava')
 
 	from testdata.collectJLex
@@ -35,7 +35,7 @@ tasks.named('test') {
 	maxHeapSize = '1500M'
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
-	classpath += files project(':com.ibm.wala.core.testdata').sourceSets.test.java.outputDir
+	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
 	testLogging {
 		exceptionFormat = 'full'
 	}

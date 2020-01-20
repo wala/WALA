@@ -14,7 +14,6 @@ include(
 	'com.ibm.wala.cast.js.nodejs',
 	'com.ibm.wala.cast.js.rhino',
 	'com.ibm.wala.core',
-	'com.ibm.wala.core.testdata',
 	'com.ibm.wala.core.tests',
 	'com.ibm.wala.dalvik',
 	'com.ibm.wala.ide',
