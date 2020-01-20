@@ -27,8 +27,7 @@ public class AnalysisScopeTest {
             AnalysisScopeTest.class.getClassLoader());
     // assumes com.ibm.wala.core.tests is the current working directory
     Path bcelJarPath =
-        Paths.get(
-            System.getProperty("user.dir"), "..", "com.ibm.wala.core.testdata", "bcel-5.2.jar");
+        Paths.get(System.getProperty("user.dir"), "..", "com.ibm.wala.core", "bcel-5.2.jar");
     scope.addInputStreamForJarToScope(
         ClassLoaderReference.Application, new FileInputStream(bcelJarPath.toString()));
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

@@ -36,7 +36,7 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
   }
 
   public DynamicCallGraphTest() {
-    this(getClasspathEntry("com.ibm.wala.core.testdata"));
+    this(getClasspathEntry("com.ibm.wala.core"));
   }
 
   private static CallGraph staticCG(String mainClass, String exclusionsFile)

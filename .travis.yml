@@ -29,7 +29,7 @@ cache:
   - "$HOME/.gradle/wrapper"
   - "$HOME/.m2"
   - "$HOME/apache-maven-3.5.0"
-  - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
+  - "$TRAVIS_BUILD_DIR/com.ibm.wala.core/ocaml/ocamljava-2.0-alpha1/lib"
 env:
   global:
     - BUILD_SYSTEM=gradle
@@ -100,10 +100,6 @@ jobs:
       if: type = cron
     - os: linux
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
       jdk: openjdk8
       if: type = cron
     - os: linux
@@ -192,9 +188,6 @@ jobs:
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core
-      if: type = cron
-    - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.testdata
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
