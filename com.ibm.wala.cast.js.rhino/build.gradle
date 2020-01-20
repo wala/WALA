@@ -20,7 +20,7 @@ dependencies {
 			'net.htmlparser.jericho:jericho-html:3.2',
 			project(':com.ibm.wala.shrike'),
 			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js'),
-			testFixtures(project(':com.ibm.wala.testutil')),
+			testFixtures(project(':com.ibm.wala.core')),
 	)
 }
 

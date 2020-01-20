@@ -58,7 +58,7 @@ public class WelshPowellTest {
     }
   }
 
-  private <T> NumberedGraph<TypedNode<T>> buildGraph(T[][] data) {
+  private static <T> NumberedGraph<TypedNode<T>> buildGraph(T[][] data) {
     DelegatingNumberedGraph<TypedNode<T>> G = new DelegatingNumberedGraph<>();
     Map<T, TypedNode<T>> nodes = HashMapFactory.make();
     for (T[] element : data) {

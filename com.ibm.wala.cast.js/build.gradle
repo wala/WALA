@@ -15,7 +15,7 @@ dependencies {
 	)
 	testImplementation(
 			'junit:junit:4.13',
-			testFixtures(project(':com.ibm.wala.testutil')),
+			testFixtures(project(':com.ibm.wala.core')),
 	)
 }
 

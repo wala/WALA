@@ -307,6 +307,7 @@ public class ReflectionTest extends WalaTestCase {
       Context context = node.getContext();
       if (context.isA(ReceiverInstanceContext.class)
           && node.getMethod().getReference().equals(newInstanceMr)) {
+        @SuppressWarnings("unchecked")
         ConstantKey<IMethod> c = (ConstantKey<IMethod>) context.get(ContextKey.RECEIVER);
         IMethod ctor = c.getValue();
         if (ctor.getSignature().equals(fpInitSig)) {

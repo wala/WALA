@@ -155,6 +155,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testClassAnnotations3() throws Exception {
 
