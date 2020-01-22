@@ -29,9 +29,3 @@ include(
 	'com.ibm.wala.util',
 	'com.ibm.wala_feature',
 )
-
-// Dalvik tests require additional libraries installed by the Android SDK Manager, but the latter is
-// incompatible with Java 9 or later: <https://issuetracker.google.com/issues/67495440>.
-if (JavaVersion.current() <= JavaVersion.VERSION_1_8) {
-	include 'com.ibm.wala.dalvik.test'
-}
