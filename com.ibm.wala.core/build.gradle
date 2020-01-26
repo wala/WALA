@@ -17,6 +17,13 @@ sourceSets {
 	testSubjects
 }
 
+if (javaCompiler == 'ecj') {
+	tasks.named('compileTestSubjectsJava', JavaCompile) {
+		options.compilerArgs << '-err:none'
+		options.compilerArgs << '-warn:none'
+	}
+}
+
 dependencies {
 	api(project(':com.ibm.wala.shrike')) {
 		because 'public class Entrypoint implements interface BytecodeConstraints'
