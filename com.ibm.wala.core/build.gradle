@@ -85,7 +85,7 @@ tasks.register('extractKawa') {
 			from(zipTree(downloadKawa.get().dest)) {
 				include "kawa-${downloadKawa.get().version}/lib/${outputs.files.singleFile.name}"
 				eachFile {
-					relativePath new RelativePath(!directory, relativePath.lastName)
+					relativePath RelativePath.parse(!directory, relativePath.lastName)
 				}
 			}
 			into outputs.files.singleFile.parent
@@ -219,7 +219,7 @@ tasks.register('extractBcel') {
 			from(tarTree(inputs.files.singleFile)) {
 				include "$basename/${basename}.jar"
 				eachFile {
-					relativePath new RelativePath(!directory, relativePath.lastName)
+					relativePath RelativePath.parse(!directory, relativePath.lastName)
 				}
 			}
 			into projectDir
