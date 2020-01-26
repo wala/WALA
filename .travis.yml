@@ -99,10 +99,6 @@ jobs:
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
       jdk: openjdk8
       if: type = cron
@@ -177,9 +173,6 @@ jobs:
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core
-      if: type = cron
-    - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.core.tests
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik

@@ -24,7 +24,7 @@ run_gradle() {
 if [ "${TRAVIS_JDK_VERSION:-}" = openjdk11 ]
 then
   # only test WALA core on JDK 11 for now
-  run_gradle :com.ibm.wala.core.tests:test
+  run_gradle :com.ibm.wala.core:test
 else
   run_gradle \
     -PjavaCompiler=ecj \
