@@ -48,6 +48,9 @@ dependencies {
 			project(':com.ibm.wala.util'),
 			testFixtures(project(':com.ibm.wala.core')),
 	)
+	testRuntime(
+			files(compileTestSubjectsJava.outputs.files.first())
+	)
 }
 
 tasks.named('javadoc') {

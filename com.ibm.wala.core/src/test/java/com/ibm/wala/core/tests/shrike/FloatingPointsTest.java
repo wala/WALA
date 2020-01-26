@@ -35,7 +35,7 @@ public class FloatingPointsTest extends WalaTestCase {
   }
 
   public FloatingPointsTest() {
-    this(getClasspathEntry("com.ibm.wala.core.testdata"));
+    this(getClasspathEntry("testSubjects"));
   }
 
   @Before
