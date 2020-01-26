@@ -110,6 +110,7 @@ subprojects { subproject ->
 		case 'ecj':
 		case 'eclipse':
 			apply plugin: 'de.set.ecj'
+			ext.javaCompiler = 'ecj'
 			tasks.withType(JavaCompile) {
 				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
 			}
@@ -117,6 +118,7 @@ subprojects { subproject ->
 		case 'default':
 		case '':
 		case null:
+			ext.javaCompiler = 'default'
 			break
 		default:
 			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
