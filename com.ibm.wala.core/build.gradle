@@ -34,19 +34,10 @@ dependencies {
 	testFixturesImplementation(
 			'junit:junit:4.13',
 			'org.apache.ant:ant:1.10.7',
-			project(':com.ibm.wala.core'),
-			project(':com.ibm.wala.shrike'),
-			project(':com.ibm.wala.util')
 	)
 	testImplementation(
 			'junit:junit:4.13',
-			'org.apache.ant:ant:1.10.7',
 			'org.hamcrest:hamcrest-core:2.2',
-			'org.osgi:org.osgi.core:6.0.0',
-			project(':com.ibm.wala.core'),
-			project(':com.ibm.wala.shrike'),
-			project(':com.ibm.wala.util'),
-			testFixtures(project(':com.ibm.wala.core')),
 	)
 	testRuntime(
 			files(compileTestSubjectsJava.outputs.files.first())
