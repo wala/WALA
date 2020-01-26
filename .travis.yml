@@ -87,10 +87,6 @@ jobs:
       jdk: openjdk8
       if: type = cron
     - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:smoke_main
       jdk: openjdk8
       if: type = cron
@@ -108,10 +104,6 @@ jobs:
       if: type = cron
     - os: linux
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
-      jdk: openjdk8
-      if: type = cron
-    - os: linux
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
       jdk: openjdk8
       if: type = cron
     - os: linux
@@ -178,9 +170,6 @@ jobs:
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.rhino
       if: type = cron
     - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast.js.test
-      if: type = cron
-    - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.cast:smoke_main
       if: type = cron
     - os: osx
@@ -194,9 +183,6 @@ jobs:
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik
-      if: type = cron
-    - os: osx
-      env: BUILD_ONLY_SUBMODULE=com.ibm.wala.dalvik.test
       if: type = cron
     - os: osx
       env: BUILD_ONLY_SUBMODULE=com.ibm.wala.ide
