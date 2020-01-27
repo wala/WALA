@@ -1,7 +1,3 @@
-plugins {
-	id 'com.github.hauner.jarTest'
-}
-
 dependencies {
 	implementation(
 			'org.mozilla:rhino:1.7.12',
@@ -10,17 +6,18 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.util'),
 	)
-	testArchives(
-			'junit:junit:4.13',
-			project,
-	)
 	testImplementation(
-			'commons-io:commons-io:2.6',
 			'junit:junit:4.13',
-			'net.htmlparser.jericho:jericho-html:3.2',
-			project(':com.ibm.wala.shrike'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js'),
-			testFixtures(project(':com.ibm.wala.core')),
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+	)
+	testFixturesImplementation(
+//			'commons-io:commons-io:2.6',
+			'junit:junit:4.13',
+//			'net.htmlparser.jericho:jericho-html:3.2',
+//			project(':com.ibm.wala.shrike'),
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
 	)
 }
 

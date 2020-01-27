@@ -3,11 +3,12 @@ dependencies {
 			'nu.validator.htmlparser:htmlparser:1.4',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
-			project(':com.ibm.wala.util')
+			project(':com.ibm.wala.util'),
 	)
 	testImplementation(
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino'),
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+			testFixtures(project(':com.ibm.wala.cast.js.rhino')),
 	)
 }
 

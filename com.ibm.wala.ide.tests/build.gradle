@@ -1,6 +1,6 @@
 plugins {
 	id 'com.diffplug.gradle.eclipse.mavencentral'
-	id 'com.github.hauner.jarTest'
+	id 'com.github.hauner.jarTest' version '1.0.1'
 	id 'eclipse'
 }
 
