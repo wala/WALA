@@ -29,7 +29,7 @@ tasks.register('unpackNodeJSLib', Copy) {
 	from(zipTree(downloadNodeJS.get().dest)) {
 		include 'nodejs-node-0a604e9/lib/*.js'
 		eachFile {
-			relativePath new RelativePath(!directory, relativePath.lastName)
+			relativePath RelativePath.parse(!directory, relativePath.lastName)
 		}
 	}
 
