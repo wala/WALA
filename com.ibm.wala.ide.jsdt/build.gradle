@@ -1,5 +1,5 @@
 plugins {
-	id 'com.diffplug.gradle.eclipse.mavencentral'
+	id 'com.diffplug.eclipse.mavencentral'
 }
 
 repositories {
