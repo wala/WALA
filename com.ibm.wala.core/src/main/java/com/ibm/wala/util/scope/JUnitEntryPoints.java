@@ -10,12 +10,6 @@
  */
 package com.ibm.wala.util.scope;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -29,6 +23,11 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * This class represents entry points ({@link Entrypoint})s of JUnit test methods. JUnit test
@@ -39,14 +38,24 @@ public class JUnitEntryPoints {
 
   private static final Logger logger = Logger.getLogger(JUnitEntryPoints.class.getName());
 
-  /**
-   * Names of annotations that denote JUnit4/5 test methods.
-   */
-  private static final Set<String> TEST_ENTRY_POINT_ANNOTATION_NAMES = new HashSet<>(
-      Arrays.asList("org.junit.After", "org.junit.AfterClass", "org.junit.Before", "org.junit.BeforeClass", "org.junit.ClassRule",
-        "org.junit.Rule", "org.junit.Test", "org.junit.runners.Parameterized.Parameters", "org.junit.jupiter.api.AfterAll",
-        "org.junit.jupiter.api.AfterEach", "org.junit.jupiter.api.BeforeAll", "org.junit.jupiter.api.BeforeEach",
-        "org.junit.jupiter.api.RepeatedTest", "org.junit.jupiter.api.Test"));
+  /** Names of annotations that denote JUnit4/5 test methods. */
+  private static final Set<String> TEST_ENTRY_POINT_ANNOTATION_NAMES =
+      new HashSet<>(
+          Arrays.asList(
+              "org.junit.After",
+              "org.junit.AfterClass",
+              "org.junit.Before",
+              "org.junit.BeforeClass",
+              "org.junit.ClassRule",
+              "org.junit.Rule",
+              "org.junit.Test",
+              "org.junit.runners.Parameterized.Parameters",
+              "org.junit.jupiter.api.AfterAll",
+              "org.junit.jupiter.api.AfterEach",
+              "org.junit.jupiter.api.BeforeAll",
+              "org.junit.jupiter.api.BeforeEach",
+              "org.junit.jupiter.api.RepeatedTest",
+              "org.junit.jupiter.api.Test"));
 
   /**
    * Construct JUnit entrypoints for all the JUnit test methods in the given scope.
@@ -83,7 +92,8 @@ public class JUnitEntryPoints {
           try {
             setUpTearDowns = getSetUpTearDownMethods(klass);
           } catch (Exception e) {
-            throw new IllegalArgumentException("Can't find test method entry points using class hierarchy: " + cha, e);
+            throw new IllegalArgumentException(
+                "Can't find test method entry points using class hierarchy: " + cha, e);
           }
           for (IMethod m : setUpTearDowns) {
             result.add(new DefaultEntrypoint(m, cha));
@@ -94,8 +104,7 @@ public class JUnitEntryPoints {
           // Since JUnit4 test classes are POJOs, look through each method.
           for (com.ibm.wala.classLoader.IMethod method : klass.getDeclaredMethods()) {
             // if method has an annotation
-            if (!(method instanceof ShrikeCTMethod))
-              continue;
+            if (!(method instanceof ShrikeCTMethod)) continue;
             for (Annotation annotation : ((ShrikeCTMethod) method).getAnnotations())
               if (isTestEntryPoint(annotation.getType().getName())) {
                 result.add(new DefaultEntrypoint(method, cha));
@@ -107,13 +116,11 @@ public class JUnitEntryPoints {
           if (isTestClass) {
             IMethod classInitializer = klass.getClassInitializer();
 
-            if (classInitializer != null)
-              result.add(new DefaultEntrypoint(classInitializer, cha));
+            if (classInitializer != null) result.add(new DefaultEntrypoint(classInitializer, cha));
 
             IMethod ctor = klass.getMethod(MethodReference.initSelector);
 
-            if (ctor != null)
-              result.add(new DefaultEntrypoint(ctor, cha));
+            if (ctor != null) result.add(new DefaultEntrypoint(ctor, cha));
           }
         }
       }
