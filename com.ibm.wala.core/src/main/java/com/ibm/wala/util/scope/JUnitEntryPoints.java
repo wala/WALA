@@ -13,7 +13,6 @@ package com.ibm.wala.util.scope;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -30,9 +29,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This class represents entry points ({@link Entrypoint})s of JUnit test methods. JUnit test
