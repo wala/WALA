@@ -84,7 +84,7 @@ public class JUnitEntryPoints {
           Set<IMethod> setUpTearDowns;
           try {
             setUpTearDowns = getSetUpTearDownMethods(klass);
-          } catch (ClassHierarchyException e) {
+          } catch (Exception e) {
             throw new IllegalArgumentException("Can't find test method entry points using class hierarchy: " + cha, e);
           }
           for (IMethod m : setUpTearDowns) {
