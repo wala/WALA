@@ -376,6 +376,7 @@ tasks.named('test') {
 	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
 	testLogging {
 		exceptionFormat = 'full'
+		events 'passed', 'skipped', 'failed'
 	}
 	// temporarily turn off some tests on JDK 11+
 	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
