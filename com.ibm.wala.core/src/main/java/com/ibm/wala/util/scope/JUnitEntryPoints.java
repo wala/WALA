@@ -23,6 +23,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.strings.StringStuff;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -129,16 +130,12 @@ public class JUnitEntryPoints {
   }
 
   private static boolean isTestEntryPoint(TypeName typeName) {
-    String javaName = walaTypeNameToJavaName(typeName);
-    return TEST_ENTRY_POINT_ANNOTATION_NAMES.contains(javaName);
-  }
-
-  private static String walaTypeNameToJavaName(TypeName typeName) {
-    String fullyQualifiedName = typeName.getPackage() + "." + typeName.getClassName();
-
     // WALA uses $ to refers to inner classes. We have to replace "$" by "."
     // to make it a valid class name in Java source code.
-    return fullyQualifiedName.replace("$", ".").replace("/", ".");
+    String javaName =
+        StringStuff.jvmToReadableType(typeName.getPackage() + "." + typeName.getClassName());
+
+    return TEST_ENTRY_POINT_ANNOTATION_NAMES.contains(javaName);
   }
 
   /**
