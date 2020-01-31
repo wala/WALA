@@ -267,6 +267,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                   : topType();
           Access A = new Access(arg, context.getEntityName(entity), makeType(type), argVN);
           context.cfg().addInstruction(new AstLexicalWrite(context.cfg().currentInstruction, A));
+
+          addExposedName(entity, entity, arg, argVN, true, context);
         }
       }
     }

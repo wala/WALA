@@ -772,4 +772,10 @@ public abstract class JavaIRTests extends IRTests {
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions$Excluded"));
     assert cha.lookupClass(exclType) == null;
   }
+
+  @Test
+  public void testLexicalAccessOfMethodVariablesFromAnonymousClass()
+      throws CancelException, IOException {
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+  }
 }
