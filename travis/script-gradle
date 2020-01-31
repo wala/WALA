@@ -17,7 +17,7 @@ case "$SUBMODULE_PREFIX" in
 esac
 
 run_gradle() {
-  $headless ./gradlew --info --continue --no-build-cache --stacktrace "$@"
+  $headless ./gradlew --continue --no-build-cache --stacktrace "$@"
 }
 
 # TRAVIS_JDK_VERSION is unset on Mac with JDK 8
