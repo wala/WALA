@@ -135,6 +135,7 @@ allprojects {
 		options.addBooleanOption('Xdoclint:all,-missing', true)
 		options.encoding = 'UTF-8'
 		options.quiet()
+		options.tags += "apiNote:a:API Note:"
 	}
 }
 
