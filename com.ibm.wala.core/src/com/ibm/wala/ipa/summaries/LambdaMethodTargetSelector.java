@@ -147,6 +147,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     Atom name = target.getName();
     return !name.equals(MethodReference.clinitName)
         && !name.equals(MethodReference.initAtom)
+        && cha.lookupClass(TypeReference.LambdaMetaFactory) != null
         && Objects.equals(
             cha.lookupClass(TypeReference.LambdaMetaFactory),
             cha.lookupClass(target.getDeclaringClass()));
