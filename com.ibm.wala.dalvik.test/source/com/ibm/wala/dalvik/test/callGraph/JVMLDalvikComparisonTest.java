@@ -14,8 +14,10 @@ import static com.ibm.wala.dalvik.test.util.Util.convertJarToDex;
 import static com.ibm.wala.dalvik.test.util.Util.getJavaJar;
 
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -32,18 +34,22 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
@@ -96,7 +102,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
   }
 
   private static void test(String mainClass, String javaScopeFile)
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
+      throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
 
     AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
@@ -110,11 +116,64 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 
     Iterator<Pair<CGNode, CGNode>> javaExtraEdges =
         edgeDiff(java.fst, android.fst, false).iterator();
-    Assert.assertFalse(checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges));
+    assert !checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges);
 
     Iterator<Pair<CGNode, CGNode>> androidExtraEdges =
         edgeDiff(android.fst, java.fst, true).iterator();
-    Assert.assertFalse(checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges));
+    assert !checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges);
+
+    checkSourceLines(java.fst, android.fst);
+  }
+
+  private static void checkSourceLines(CallGraph java, CallGraph android) {
+    MutableIntSet ajlines = IntSetUtil.make();
+    MutableIntSet aalines = IntSetUtil.make();
+    java.forEach(
+        jnode -> {
+          if (jnode
+              .getMethod()
+              .getReference()
+              .getDeclaringClass()
+              .getClassLoader()
+              .equals(ClassLoaderReference.Application)) {
+            if (jnode.getMethod() instanceof ShrikeCTMethod) {
+              ShrikeCTMethod m = (ShrikeCTMethod) jnode.getMethod();
+              MutableIntSet jlines = IntSetUtil.make();
+              for (SSAInstruction inst : jnode.getIR().getInstructions()) {
+                if (inst != null) {
+                  try {
+                    int bcIndex = m.getBytecodeIndex(inst.iIndex());
+                    int javaLine = m.getLineNumber(bcIndex);
+                    jlines.add(javaLine);
+                    ajlines.add(javaLine);
+                  } catch (InvalidClassFileException e) {
+                    assert false : e;
+                  }
+                }
+              }
+
+              for (CGNode an : android.getNodes(m.getReference())) {
+                DexIMethod am = (DexIMethod) an.getMethod();
+                MutableIntSet alines = IntSetUtil.make();
+                for (SSAInstruction ainst : an.getIR().getInstructions()) {
+                  if (ainst != null) {
+                    int ai = am.getLineNumber(am.getBytecodeIndex(ainst.iIndex()));
+                    if (ai >= 0) {
+                      alines.add(ai);
+                      aalines.add(ai);
+                    }
+                  }
+                }
+
+                assert jlines.intersection(alines).size() == alines.size();
+              }
+            }
+          }
+        });
+
+    IntSet both = ajlines.intersection(aalines);
+    assert both.size() == aalines.size();
+    assert both.size() >= .9 * ajlines.size() : ajlines + " " + aalines;
   }
 
   private static boolean checkEdgeDiff(
