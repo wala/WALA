@@ -14,11 +14,12 @@ For big features, please open an issue so that we can agree on the direction, an
 
 Small pull requests for things like typos, bug fixes, etc are always welcome.
 
-CI checks
----------
+Continous Integration Checks
+----------------------------
 
-Certain checks run on our CI jobs that do not run as part of a standard run of
-`./gradlew build`.  You can run these checks locally with the following command:
+Certain checks run on our continuous integration (CI) jobs that do not run as
+part of a standard run of `./gradlew build`.  You can run these checks locally
+with the following command:
 
 ```
 ./gradlew -PjavaCompiler=ecj linters compileJava compileTestJava
@@ -29,7 +30,7 @@ If this command fails, a CI job will fail as well.
 DOs and DON'Ts
 --------------
 
-* DO format your code using [Google Java Format](https://github.com/google/google-java-format).  You can do so by running `./gradlew goJF`.  A CI job will fail if your code is not formatted in this way.
+* DO format your code using [Google Java Format](https://github.com/google/google-java-format).  You can do so by running `./gradlew googleJavaFormat`.  A CI job will fail if your code is not formatted in this way.
 * DO include tests when adding new features. When fixing bugs, start with adding a test that highlights how the current behavior is broken.
 * DO keep the discussions focused. When a new or related topic comes up it's often better to create new issue than to side track the discussion.
 
