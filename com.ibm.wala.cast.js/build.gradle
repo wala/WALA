@@ -35,11 +35,6 @@ tasks.named('javadoc') {
 	}
 }
 
-tasks.named('processTestResources') {
-	def data = project(':com.ibm.wala.cast.js')
-	from data.sourceSets.test.resources
-}
-
 tasks.named('test') {
 	maxHeapSize = '800M'
 }
@@ -52,7 +47,7 @@ final def downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) 
 	checksum 'c995abe3310a401bb4db7f28a6409756'
 }
 
-tasks.register('unpackAjaxslt', Sync) {
+final unpackAjaxslt = tasks.register('unpackAjaxslt', Sync) {
 	dependsOn downloadAjaxslt
 	from(tarTree(downloadAjaxslt.get().dest)) {
 		eachFile {
@@ -60,11 +55,13 @@ tasks.register('unpackAjaxslt', Sync) {
 			relativePath new RelativePath(!directory, newSegments)
 		}
 	}
-	into "${tasks.named('processTestResources', Copy).get().destinationDir}/ajaxslt"
+	into temporaryDir
 }
 
-tasks.named('processTestResources') {
-	dependsOn 'unpackAjaxslt'
+tasks.named('processTestResources', Copy) {
+	from(unpackAjaxslt) {
+		into 'ajaxslt'
+	}
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
