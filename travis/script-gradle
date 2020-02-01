@@ -26,12 +26,16 @@ then
   # only test WALA core on JDK 11 for now
   run_gradle :com.ibm.wala.core:test
 else
-  run_gradle \
-    -PjavaCompiler=ecj \
-    linters \
-    compileJava \
-    compileTestJava \
-    ${documentation:+$SUBMODULE_PREFIX$documentation}
+  # linters only need to run on one operating system
+  if [ "${TRAVIS_OS_NAME:-}" = linux ]
+  then
+    run_gradle \
+      -PjavaCompiler=ecj \
+      linters \
+      compileJava \
+      compileTestJava \
+      ${documentation:+$SUBMODULE_PREFIX$documentation}
+  fi
   run_gradle "$SUBMODULE_PREFIX"build
 fi
 
