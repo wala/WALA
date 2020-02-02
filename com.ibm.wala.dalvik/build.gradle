@@ -142,7 +142,7 @@ tasks.register('copyAndroidJar', Sync) {
 
 final def resourceDir = sourceSets.test.resources.srcDirs.find()
 
-tasks.register('downloadSampleCup') {
+tasks.register('extractSampleCup') {
 	inputs.file configurations.sampleCup.singleFile
 	outputs.file "$resourceDir/sample.cup"
 
@@ -194,8 +194,8 @@ tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core')
 
 	from copyAndroidJar
-	from downloadSampleCup
 	from downloadSampleLex
+	from extractSampleCup
 	from testdata.collectTestDataA
 	from testdata.collectJLex
 	from testdata.compileTestJava
