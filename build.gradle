@@ -140,7 +140,7 @@ allprojects {
 }
 
 tasks.register('aggregatedJavadocs', Javadoc) {
-	description = 'Generate javadocs from all child projects as if it was a single project'
+	description = 'Generate javadocs from all child projects as if they were a single project'
 	group = 'Documentation'
 	destinationDir = file("$buildDir/docs/javadoc")
 	title = "$project.name $version API"
