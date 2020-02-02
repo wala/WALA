@@ -23,6 +23,10 @@ tasks.register('testFixturesSourcesJar', Jar) {
 	from sourceSets.testFixtures.allSource
 }
 
+tasks.named('testFixturesJavadoc') {
+	destinationDir = file("$docsDir/testFixturesJavadoc")
+}
+
 tasks.register('testFixturesJavadocJar', Jar) {
 	classifier = 'test-fixtures-javadoc'
 	from testFixturesJavadoc.destinationDir
