@@ -662,8 +662,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
           Set<CGNode> creators = getLexicalDefiners(node, Pair.make(name, definer));
 
-          System.err.println("definers " + creators.size());
-
           for (CGNode n : creators) {
             PointerKey funargKey = handleRootLexicalReference(name, definer, n);
             action(funargKey, vn);
