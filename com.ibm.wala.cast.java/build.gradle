@@ -18,25 +18,4 @@ dependencies {
 	)
 }
 
-tasks.register('testFixturesSourcesJar', Jar) {
-	classifier = 'test-fixtures-sources'
-	from sourceSets.testFixtures.allSource
-}
-
-tasks.named('testFixturesJavadoc') {
-	destinationDir = file("$docsDir/testFixturesJavadoc")
-}
-
-tasks.register('testFixturesJavadocJar', Jar) {
-	classifier = 'test-fixtures-javadoc'
-	from testFixturesJavadoc.destinationDir
-	dependsOn testFixturesJavadoc
-}
-
-artifacts.archives(
-		testFixturesJar,
-		testFixturesJavadocJar,
-		testFixturesSourcesJar,
-)
-
 apply from: rootProject.file("gradle-mvn-push.gradle")

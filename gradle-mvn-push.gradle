@@ -1,228 +1,155 @@
-/*
- * Copyright (C) Chris Banes
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// This script is derived from the version here:
-// https://github.com/uber/android-template/blob/master/gradle/gradle-mvn-push.gradle
-
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-def isReleaseBuild() {
-  return VERSION_NAME.contains("SNAPSHOT") == false
+final def isSnapshot = version.contains('SNAPSHOT')
+
+publishing {
+	publications {
+		wala(MavenPublication) {
+			from components.java
+			suppressPomMetadataWarningsFor 'testFixturesApiElements'
+			suppressPomMetadataWarningsFor 'testFixturesRuntimeElements'
+
+			// Special handling for test fixtures.
+			if (sourceSets.testFixtures.allSource.isEmpty()) {
+				// Test-fixtures jar would be empty except for the manifest, so skip it.
+				[
+						configurations.testFixturesApiElements,
+						configurations.testFixturesRuntimeElements,
+				].each {
+					components.java.withVariantsFromConfiguration(it) {
+						skip()
+					}
+				}
+			} else {
+				// Test-fixtures jar will have real contents, so add Javadoc and sources
+				tasks.named('testFixturesJavadoc') {
+					destinationDir = file("$docsDir/testFixturesJavadoc")
+				}
+
+				tasks.register('testFixturesJavadocJar', Jar) {
+					classifier = 'test-fixtures-javadoc'
+					from testFixturesJavadoc.destinationDir
+					dependsOn testFixturesJavadoc
+				}
+
+				tasks.register('testFixturesSourcesJar', Jar) {
+					classifier = 'test-fixtures-sources'
+					from sourceSets.testFixtures.allSource
+				}
+
+				publishing {
+					publications {
+						wala(MavenPublication) {
+							artifact testFixturesJavadocJar
+							artifact testFixturesSourcesJar
+						}
+					}
+				}
+			}
+
+			pom {
+				name = POM_NAME
+				description = 'T. J. Watson Libraries for Analysis'
+				inceptionYear = '2006'
+				url = 'https://github.com/wala/WALA'
+
+				ciManagement {
+					system = 'Travis CI'
+					url = 'https://travis-ci.org/wala/WALA'
+				}
+
+				developers {
+					[
+							// Current WALA maintainers, alphabetical by ID
+							juliandolby: 'Julian Dolby',
+							liblit     : 'Ben Liblit',
+							msridhar   : 'Manu Sridharan',
+							sjfink     : 'Stephen Fink',
+					].each { entry ->
+						developer {
+							id = entry.key
+							name = entry.value
+							url = "https://github.com/$entry.key"
+						}
+					}
+				}
+
+				issueManagement {
+					system = 'GitHub'
+					url = "${pom.url.get()}/issues"
+				}
+
+				licenses {
+					license {
+						name = 'Eclipse Public License v2.0'
+						url = "${pom.url.get()}/blob/master/LICENSE"
+					}
+				}
+
+				mailingLists {
+					[
+							'commits',
+							'wala',
+					].each { topic ->
+						mailingList {
+							name = "wala-$topic"
+							archive = "https://sourceforge.net/p/wala/mailman/wala-$topic"
+							subscribe = "https://sourceforge.net/projects/wala/lists/wala-$topic"
+							unsubscribe = "https://sourceforge.net/projects/wala/lists/wala-$topic/unsubscribe"
+							post = "wala-$topic@lists.sourceforge.net"
+						}
+					}
+				}
+
+				scm {
+					url = pom.url
+					connection = 'scm:git:git://github.com/wala/WALA.git'
+					developerConnection = 'scm:git:ssh://git@github.com/wala/WALA.git'
+				}
+			}
+		}
+	}
+
+	repositories {
+		maven {
+			url = (isSnapshot
+					? properties.getOrDefault('SNAPSHOT_REPOSITORY_URL', 'https://oss.sonatype.org/content/repositories/snapshots/')
+					: properties.getOrDefault('RELEASE_REPOSITORY_URL', 'https://oss.sonatype.org/service/local/staging/deploy/maven2/')
+			)
+			credentials {
+				username = properties.get('SONATYPE_NEXUS_USERNAME')
+				password = properties.get('SONATYPE_NEXUS_PASSWORD')
+			}
+		}
+
+		maven {
+			name = 'projectBuild'
+			url = "file://$rootProject.buildDir/maven-repository"
+		}
+	}
 }
 
-def getReleaseRepositoryUrl() {
-  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
-          : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+signing {
+	// Use external gpg cmd.  This makes it easy to use gpg-agent,
+	// to avoid being prompted for a password once per artifact
+	useGpgCmd()
+	sign publishing.publications.wala
+	required = true
 }
 
-def getSnapshotRepositoryUrl() {
-  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-          : "https://oss.sonatype.org/content/repositories/snapshots/"
+// Only sign the archives if we are uploading a snapshot or release.
+tasks.withType(Sign) {
+	onlyIf {
+		!isSnapshot &&
+				[
+						'publishWalaPublicationToProjectBuildRepository',
+						'publishWalaPublicationToSnapshotRepository',
+				].any { gradle.taskGraph.hasTask("$project.path:$it") }
+	}
 }
 
-def getRepositoryUsername() {
-  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
-}
-
-def getRepositoryPassword() {
-  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
-}
-
-def needsSigning() {
-  return isReleaseBuild() && gradle.taskGraph.allTasks.any { it.name == 'uploadArchives' }
-}
-
-afterEvaluate { project ->
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> if (needsSigning()) signing.signPom(deployment) }
-
-        pom.groupId = GROUP
-        pom.artifactId = POM_ARTIFACT_ID
-        pom.version = VERSION_NAME
-
-        repository(url: getReleaseRepositoryUrl()) {
-          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-        }
-        snapshotRepository(url: getSnapshotRepositoryUrl()) {
-          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-        }
-
-        pom.project {
-          name POM_NAME
-          packaging POM_PACKAGING
-          description POM_DESCRIPTION
-          url POM_URL
-
-          scm {
-            url POM_SCM_URL
-            connection POM_SCM_CONNECTION
-            developerConnection POM_SCM_DEV_CONNECTION
-          }
-
-          licenses {
-            license {
-              name POM_LICENCE_NAME
-              url POM_LICENCE_URL
-              distribution POM_LICENCE_DIST
-            }
-          }
-
-          developers {
-            developer {
-              id POM_DEVELOPER_ID
-              name POM_DEVELOPER_NAME
-            }
-          }
-        }
-      }
-    }
-  }
-
-  signing {
-    // Use external gpg cmd.  This makes it easy to use gpg-agent,
-    // to avoid being prompted for a password once per artifact
-    useGpgCmd()
-    sign configurations.archives
-  }
-
-  // only sign the archives if we are uploading a release build
-  tasks.withType(Sign) {
-    onlyIf { needsSigning() }
-  }
-
-  if (project.getPlugins().hasPlugin('com.android.application') ||
-          project.getPlugins().hasPlugin('com.android.library')) {
-    task install(type: Upload, dependsOn: assemble) {
-      repositories.mavenInstaller {
-        configuration = configurations.archives
-
-        pom.groupId = GROUP
-        pom.artifactId = POM_ARTIFACT_ID
-        pom.version = VERSION_NAME
-
-        pom.project {
-          name POM_NAME
-          packaging POM_PACKAGING
-          description POM_DESCRIPTION
-          url POM_URL
-
-          scm {
-            url POM_SCM_URL
-            connection POM_SCM_CONNECTION
-            developerConnection POM_SCM_DEV_CONNECTION
-          }
-
-          licenses {
-            license {
-              name POM_LICENCE_NAME
-              url POM_LICENCE_URL
-              distribution POM_LICENCE_DIST
-            }
-          }
-
-          developers {
-            developer {
-              id POM_DEVELOPER_ID
-              name POM_DEVELOPER_NAME
-            }
-          }
-        }
-      }
-    }
-
-    task androidJavadocs(type: Javadoc) {
-      if (!project.plugins.hasPlugin('kotlin-android')) {
-        source = android.sourceSets.main.java.srcDirs
-      }
-      classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-      exclude '**/internal/*'
-
-      if (JavaVersion.current().isJava8Compatible()) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-      }
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-      classifier = 'javadoc'
-      from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-      classifier = 'sources'
-      from android.sourceSets.main.java.sourceFiles
-    }
-  } else {
-    install {
-      repositories.mavenInstaller {
-        pom.groupId = GROUP
-        pom.artifactId = POM_ARTIFACT_ID
-        pom.version = VERSION_NAME
-
-        pom.project {
-          name POM_NAME
-          packaging POM_PACKAGING
-          description POM_DESCRIPTION
-          url POM_URL
-
-          scm {
-            url POM_SCM_URL
-            connection POM_SCM_CONNECTION
-            developerConnection POM_SCM_DEV_CONNECTION
-          }
-
-          licenses {
-            license {
-              name POM_LICENCE_NAME
-              url POM_LICENCE_URL
-              distribution POM_LICENCE_DIST
-            }
-          }
-
-          developers {
-            developer {
-              id POM_DEVELOPER_ID
-              name POM_DEVELOPER_NAME
-            }
-          }
-        }
-      }
-    }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-      classifier = 'sources'
-      from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-      classifier = 'javadoc'
-      from javadoc.destinationDir
-    }
-  }
-
-  artifacts {
-    if (project.getPlugins().hasPlugin('com.android.application') ||
-            project.getPlugins().hasPlugin('com.android.library')) {
-      archives androidSourcesJar
-      archives androidJavadocsJar
-    } else {
-      archives sourcesJar
-      archives javadocJar
-    }
-  }
+java {
+	withJavadocJar()
+	withSourcesJar()
 }
