@@ -14,7 +14,6 @@ plugins {
 	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '14.2.5'
-	id 'nebula.source-jar' version '16.0.0' apply false
 }
 
 repositories {
@@ -52,7 +51,8 @@ subprojects { subproject ->
 	apply plugin: 'eclipse'
 	apply plugin: 'java-library'
 	apply plugin: 'java-test-fixtures'
-	apply plugin: 'nebula.source-jar'
+	apply plugin: 'maven-publish'
+	apply plugin: 'signing'
 
 	version rootProject.version
 

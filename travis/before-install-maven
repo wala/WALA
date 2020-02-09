@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-./gradlew prepareMavenBuild install -x javadoc
+./gradlew prepareMavenBuild publishToMavenLocal -x javadoc
 
 if [ ! -d "$M2_HOME/bin" ]; then
   curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C "$HOME"
