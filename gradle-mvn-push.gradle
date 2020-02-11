@@ -3,24 +3,101 @@ apply plugin: 'signing'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
+final isRemoteRepository(taskGraph) {
+	return taskGraph.hasTask("$project.path:publishRemotePublicationToMavenRepository")
+}
+
+final skipTestFixtures() {
+	components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) {
+		skip()
+	}
+	components.java.withVariantsFromConfiguration(configurations.testFixturesRuntimeElements) {
+		skip()
+	}
+}
+
+final sharedPublicationConfiguration(publication) {
+	publication.from components.java
+	publication.pom {
+		name = POM_NAME
+		description = 'T. J. Watson Libraries for Analysis'
+		inceptionYear = '2006'
+		url = 'https://github.com/wala/WALA'
+
+		ciManagement {
+			system = 'Travis CI'
+			url = 'https://travis-ci.org/wala/WALA'
+		}
+
+		developers {
+			[
+					// Current WALA maintainers, alphabetical by ID
+					juliandolby: 'Julian Dolby',
+					liblit     : 'Ben Liblit',
+					msridhar   : 'Manu Sridharan',
+					sjfink     : 'Stephen Fink',
+			].each { entry ->
+				developer {
+					id = entry.key
+					name = entry.value
+					url = "https://github.com/$entry.key"
+				}
+			}
+		}
+
+		issueManagement {
+			system = 'GitHub'
+			url = "${publication.pom.url.get()}/issues"
+		}
+
+		licenses {
+			license {
+				name = 'Eclipse Public License v2.0'
+				url = "${publication.pom.url.get()}/blob/master/LICENSE"
+			}
+		}
+
+		mailingLists {
+			[
+					'commits',
+					'wala',
+			].each { topic ->
+				mailingList {
+					name = "wala-$topic"
+					archive = "https://sourceforge.net/p/wala/mailman/wala-$topic"
+					subscribe = "https://sourceforge.net/projects/wala/lists/wala-$topic"
+					unsubscribe = "https://sourceforge.net/projects/wala/lists/wala-$topic/unsubscribe"
+					post = "wala-$topic@lists.sourceforge.net"
+				}
+			}
+		}
+
+		scm {
+			url = publication.pom.url
+			connection = 'scm:git:git://github.com/wala/WALA.git'
+			developerConnection = 'scm:git:ssh://git@github.com/wala/WALA.git'
+		}
+	}
+}
+
 publishing {
 	publications {
-		wala(MavenPublication) {
-			from components.java
-			suppressPomMetadataWarningsFor 'testFixturesApiElements'
-			suppressPomMetadataWarningsFor 'testFixturesRuntimeElements'
 
-			// Special handling for test fixtures.
+		// Everything we want to publish to remote repositories.  That includes code, sources, and
+		// Javadoc for main sourceSet, but not tests or test fixtures.
+		remote(MavenPublication) {
+			sharedPublicationConfiguration it
+			skipTestFixtures()
+		}
+
+		// Everything we want to publish to local installations.  That includes code, sources, and
+		// Javadoc for the both main and test-fixtures sourceSets, but not tests.
+		local(MavenPublication) {
+			sharedPublicationConfiguration it
+
 			if (sourceSets.testFixtures.allSource.isEmpty()) {
 				// Test-fixtures jar would be empty except for the manifest, so skip it.
-				[
-						configurations.testFixturesApiElements,
-						configurations.testFixturesRuntimeElements,
-				].each {
-					components.java.withVariantsFromConfiguration(it) {
-						skip()
-					}
-				}
+				skipTestFixtures()
 			} else {
 				// Test-fixtures jar will have real contents, so add Javadoc and sources
 				tasks.named('testFixturesJavadoc') {
@@ -38,75 +115,9 @@ publishing {
 					from sourceSets.testFixtures.allSource
 				}
 
-				publishing {
-					publications {
-						wala(MavenPublication) {
-							artifact testFixturesJavadocJar
-							artifact testFixturesSourcesJar
-						}
-					}
-				}
-			}
-
-			pom {
-				name = POM_NAME
-				description = 'T. J. Watson Libraries for Analysis'
-				inceptionYear = '2006'
-				url = 'https://github.com/wala/WALA'
-
-				ciManagement {
-					system = 'Travis CI'
-					url = 'https://travis-ci.org/wala/WALA'
-				}
-
-				developers {
-					[
-							// Current WALA maintainers, alphabetical by ID
-							juliandolby: 'Julian Dolby',
-							liblit     : 'Ben Liblit',
-							msridhar   : 'Manu Sridharan',
-							sjfink     : 'Stephen Fink',
-					].each { entry ->
-						developer {
-							id = entry.key
-							name = entry.value
-							url = "https://github.com/$entry.key"
-						}
-					}
-				}
-
-				issueManagement {
-					system = 'GitHub'
-					url = "${pom.url.get()}/issues"
-				}
-
-				licenses {
-					license {
-						name = 'Eclipse Public License v2.0'
-						url = "${pom.url.get()}/blob/master/LICENSE"
-					}
-				}
-
-				mailingLists {
-					[
-							'commits',
-							'wala',
-					].each { topic ->
-						mailingList {
-							name = "wala-$topic"
-							archive = "https://sourceforge.net/p/wala/mailman/wala-$topic"
-							subscribe = "https://sourceforge.net/projects/wala/lists/wala-$topic"
-							unsubscribe = "https://sourceforge.net/projects/wala/lists/wala-$topic/unsubscribe"
-							post = "wala-$topic@lists.sourceforge.net"
-						}
-					}
-				}
-
-				scm {
-					url = pom.url
-					connection = 'scm:git:git://github.com/wala/WALA.git'
-					developerConnection = 'scm:git:ssh://git@github.com/wala/WALA.git'
-				}
+				artifact testFixturesJar
+				artifact testFixturesJavadocJar
+				artifact testFixturesSourcesJar
 			}
 		}
 	}
@@ -127,24 +138,39 @@ publishing {
 
 signing {
 	// Use external gpg cmd.  This makes it easy to use gpg-agent,
-	// to avoid being prompted for a password once per artifact
+	// to avoid being prompted for a password once per artifact.
 	useGpgCmd()
-	sign publishing.publications.wala
+
+	// If anything about signing is misconfigured, fail loudly rather than quietly continuing with
+	// unsigned artifacts.
 	required = true
+
+	// Only sign publications sent to remote repositories; local install installatios are unsigned.
+	sign publishing.publications.remote
 }
 
-// Only sign release uploads; snapshots and local installations are unsigned.
+// Only sign releases; snapshots are unsigned.
 tasks.withType(Sign) {
 	onlyIf {
-		!isSnapshot &&
-				[
-						'publishWalaPublicationToProjectBuildRepository',
-						'publishWalaPublicationToSnapshotRepository',
-				].any { gradle.taskGraph.hasTask("$project.path:$it") }
+		!isSnapshot
 	}
 }
 
 java {
 	withJavadocJar()
 	withSourcesJar()
+}
+
+// Remote publication set goes to remote repositories, so we don't publicly publish test fixtures.
+tasks.withType(PublishToMavenRepository) {
+	onlyIf {
+		publication == publishing.publications.remote
+	}
+}
+
+// Local publication set goes to local installations, so we can reuse test fixtures locally.
+tasks.withType(PublishToMavenLocal) {
+	onlyIf {
+		publication == publishing.publications.local
+	}
 }
