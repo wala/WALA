@@ -122,11 +122,6 @@ publishing {
 				password = properties.get('SONATYPE_NEXUS_PASSWORD')
 			}
 		}
-
-		maven {
-			name = 'projectBuild'
-			url = "file://$rootProject.buildDir/maven-repository"
-		}
 	}
 }
 
