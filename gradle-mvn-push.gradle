@@ -138,7 +138,7 @@ signing {
 	required = true
 }
 
-// Only sign the archives if we are uploading a snapshot or release.
+// Only sign release uploads; snapshots and local installations are unsigned.
 tasks.withType(Sign) {
 	onlyIf {
 		!isSnapshot &&
