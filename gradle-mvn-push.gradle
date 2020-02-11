@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-final def isSnapshot = version.contains('SNAPSHOT')
+final isSnapshot = version.contains('SNAPSHOT')
 
 publishing {
 	publications {
