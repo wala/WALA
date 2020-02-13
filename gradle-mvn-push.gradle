@@ -133,6 +133,11 @@ publishing {
 				password = properties.get('SONATYPE_NEXUS_PASSWORD')
 			}
 		}
+
+		maven {
+			name = 'fakeRemote'
+			url = "file://$rootProject.buildDir/maven-fake-remote-repository"
+		}
 	}
 }
 
