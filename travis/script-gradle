@@ -36,7 +36,7 @@ else
       compileTestJava \
       ${documentation:+$SUBMODULE_PREFIX$documentation}
   fi
-  run_gradle "$SUBMODULE_PREFIX"build publishToMavenLocal
+  run_gradle "$SUBMODULE_PREFIX"build "$SUBMODULE_PREFIX"publishToMavenLocal
 fi
 
 ./check-git-cleanliness.sh
