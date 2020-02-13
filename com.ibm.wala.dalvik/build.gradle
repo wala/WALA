@@ -116,22 +116,12 @@ final def installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 	outputs.cacheIf { true }
 }
 
-final def copyDxJar = tasks.register('copyDxJar', Sync) {
-	dependsOn installAndroidSdk
-	from "${files(installAndroidSdk).singleFile}/build-tools/${installAndroidSdk.get().components['build-tools']}/lib/dx.jar"
-	into 'lib'
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanCopyDxJar'
-}
-
 tasks.named('compileTestJava') {
-	dependsOn 'copyDxJar'
+	dependsOn 'installAndroidSdk'
 }
 
 eclipse {
-	synchronizationTasks 'copyDxJar'
+	synchronizationTasks 'installAndroidSdk'
 }
 
 tasks.register('copyAndroidJar', Sync) {
@@ -176,7 +166,7 @@ dependencies {
 			'junit:junit:4.13',
 			'org.osgi:org.osgi.core:6.0.0',
 			'org.smali:dexlib2:2.4.0',
-			files("${copyDxJar.get().destinationDir}/dx.jar"),
+			files("${files(installAndroidSdk).singleFile}/build-tools/${installAndroidSdk.get().components['build-tools']}/lib/dx.jar"),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
 			project(':com.ibm.wala.shrike'),
