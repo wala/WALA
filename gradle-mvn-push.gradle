@@ -125,12 +125,12 @@ publishing {
 	repositories {
 		maven {
 			url = (isSnapshot
-					? properties.getOrDefault('SNAPSHOT_REPOSITORY_URL', 'https://oss.sonatype.org/content/repositories/snapshots/')
-					: properties.getOrDefault('RELEASE_REPOSITORY_URL', 'https://oss.sonatype.org/service/local/staging/deploy/maven2/')
+					? project.properties.getOrDefault('SNAPSHOT_REPOSITORY_URL', 'https://oss.sonatype.org/content/repositories/snapshots/')
+					: project.properties.getOrDefault('RELEASE_REPOSITORY_URL', 'https://oss.sonatype.org/service/local/staging/deploy/maven2/')
 			)
 			credentials {
-				username = properties.get('SONATYPE_NEXUS_USERNAME')
-				password = properties.get('SONATYPE_NEXUS_PASSWORD')
+				username = project.properties.get('SONATYPE_NEXUS_USERNAME')
+				password = project.properties.get('SONATYPE_NEXUS_PASSWORD')
 			}
 		}
 
