@@ -3,10 +3,6 @@ apply plugin: 'signing'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
-final isRemoteRepository(taskGraph) {
-	return taskGraph.hasTask("$project.path:publishRemotePublicationToMavenRepository")
-}
-
 final skipTestFixtures() {
 	components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) {
 		skip()
