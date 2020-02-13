@@ -156,10 +156,6 @@ tasks.register('extractSampleCup') {
 	}
 }
 
-tasks.named('clean') {
-	dependsOn 'cleanDownloadSampleCup'
-}
-
 tasks.register('downloadSampleLex', VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
 	dest "$resourceDir/sample.lex"
