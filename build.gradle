@@ -122,6 +122,28 @@ subprojects { subproject ->
 		default:
 			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
 	}
+
+	// Special hack for WALA as an included build.  Composite
+	// builds only build and use artifacts from the default
+	// configuration of included builds:
+	// <https://docs.gradle.org/current/userguide/composite_builds.html#included_build_substitution_limitations>.
+	// This known limitation makes WALA test fixtures unavailable
+	// when WALA is included in a composite build.  As a
+	// workaround for composite projects that rely on those test
+	// fixtures, we extend the main sourceSet to include all
+	// test-fixture sources too.  This hack is only applied when
+	// WALA itself is an included build.
+	if (project.gradle.parent != null) {
+		afterEvaluate {
+			sourceSets {
+				main.java.srcDirs testFixtures.java.srcDirs
+			}
+
+			dependencies {
+				implementation configurations.testFixturesImplementation.dependencies
+			}
+		}
+	}
 }
 
 
