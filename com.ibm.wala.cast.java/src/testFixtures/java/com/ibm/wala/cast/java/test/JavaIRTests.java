@@ -14,6 +14,7 @@
 package com.ibm.wala.cast.java.test;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
@@ -24,10 +25,13 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
+import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
+import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
@@ -697,7 +701,7 @@ public abstract class JavaIRTests extends IRTests {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
 
-    PointerAnalysis<? extends InstanceKey> pa = x.snd;
+    PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
     CallGraph cg = x.fst;
 
     // test partial slice
@@ -719,6 +723,21 @@ public abstract class JavaIRTests extends IRTests {
     // SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(2, SlicerUtil.countAllocations(slice));
     Assert.assertEquals(2, SlicerUtil.countPutfields(slice));
+
+    Statement statement =
+        SlicerUtil.findCallTo(CallGraphSearchUtil.findMainMethod(cg), "validNonDispatchedCall");
+    AstJavaModRef<InstanceKey> modRef = new AstJavaModRef<>();
+    SDG<InstanceKey> sdg =
+        new SDG<>(
+            cg,
+            pa,
+            modRef,
+            Slicer.DataDependenceOptions.NO_BASE_PTRS,
+            Slicer.ControlDependenceOptions.NONE);
+    slice = AstJavaSlicer.computeBackwardSlice(sdg, Collections.singleton(statement));
+
+    ThinSlicer ts = new ThinSlicer(cg, pa, modRef);
+    ts.computeBackwardThinSlice(statement);
   }
 
   @Test

@@ -15,7 +15,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.modref.DelegatingExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.NormalStatement;
@@ -133,7 +132,7 @@ public class CISlicer {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }
-    ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
+    ExtendedHeapModel h = modRef.makeHeapModel(pa);
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (CGNode n : sdg.getCallGraph()) {
       IR ir = n.getIR();
@@ -162,7 +161,7 @@ public class CISlicer {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }
-    ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
+    ExtendedHeapModel h = modRef.makeHeapModel(pa);
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (CGNode n : sdg.getCallGraph()) {
       IR ir = n.getIR();
