@@ -13,6 +13,8 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
@@ -701,8 +703,7 @@ public abstract class JavaIRTests extends IRTests {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
 
-    @SuppressWarnings("unchecked")
-    PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
+    PointerAnalysis<? extends InstanceKey> pa = x.snd;
     CallGraph cg = x.fst;
 
     // test partial slice
@@ -712,7 +713,7 @@ public abstract class JavaIRTests extends IRTests {
     Pair<Collection<Statement>, SDG<? extends InstanceKey>> y =
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
-    SlicerUtil.dumpSlice(slice);
+    dumpSlice(slice);
     Assert.assertEquals(0, SlicerUtil.countAllocations(slice));
     Assert.assertEquals(1, SlicerUtil.countPutfields(slice));
 
@@ -724,7 +725,19 @@ public abstract class JavaIRTests extends IRTests {
     // SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(2, SlicerUtil.countAllocations(slice));
     Assert.assertEquals(2, SlicerUtil.countPutfields(slice));
+  }
 
+  @Test
+  public void testThinSlice() throws CancelException, IOException {
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+
+    @SuppressWarnings("unchecked")
+    PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
+    CallGraph cg = x.fst;
+
+    // we just run context-sensitive and context-insensitive thin slicing, to make sure
+    // it doesn't crash
     Statement statement =
         SlicerUtil.findCallTo(CallGraphSearchUtil.findMainMethod(cg), "validNonDispatchedCall");
     AstJavaModRef<InstanceKey> modRef = new AstJavaModRef<>();
@@ -735,10 +748,13 @@ public abstract class JavaIRTests extends IRTests {
             modRef,
             Slicer.DataDependenceOptions.NO_BASE_PTRS,
             Slicer.ControlDependenceOptions.NONE);
-    slice = AstJavaSlicer.computeBackwardSlice(sdg, Collections.singleton(statement));
+    Collection<Statement> slice =
+        AstJavaSlicer.computeBackwardSlice(sdg, Collections.singleton(statement));
+    dumpSlice(slice);
 
     ThinSlicer ts = new ThinSlicer(cg, pa, modRef);
-    ts.computeBackwardThinSlice(statement);
+    slice = ts.computeBackwardThinSlice(statement);
+    dumpSlice(slice);
   }
 
   @Test
