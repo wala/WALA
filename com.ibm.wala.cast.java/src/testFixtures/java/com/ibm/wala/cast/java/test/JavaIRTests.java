@@ -729,10 +729,11 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testThinSlice() throws CancelException, IOException {
+    String testName = "MiniaturSliceBug";
     List<String> sources =
-        Collections.singletonList(getTestSrcPath() + File.separator + "MiniaturSliceBug.java");
+        Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
-        runTest(sources, rtJar, simpleTestEntryPoint(), emptyList, true, null);
+        runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
 
     @SuppressWarnings("unchecked")
     PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
