@@ -701,6 +701,7 @@ public abstract class JavaIRTests extends IRTests {
     Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
 
+    @SuppressWarnings("unchecked")
     PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
     CallGraph cg = x.fst;
 
