@@ -124,12 +124,6 @@ eclipse {
 	synchronizationTasks 'installAndroidSdk'
 }
 
-tasks.register('copyAndroidJar', Sync) {
-	dependsOn installAndroidSdk
-	from "${installAndroidSdk.get().destinationDir}/platforms/${installAndroidSdk.get().components['platforms']}/android.jar"
-	into temporaryDir
-}
-
 final def resourceDir = sourceSets.test.resources.srcDirs.find()
 
 tasks.register('extractSampleCup') {
@@ -173,13 +167,15 @@ dependencies {
 			project(':com.ibm.wala.util'),
 			testFixtures(project(':com.ibm.wala.core')),
 	)
-	testRuntimeOnly files("${copyAndroidJar.destinationDir}/android.jar")
+	testRuntimeOnly(
+			// directory containing "android.jar", which various tests want to find as a resource
+			files("${files(installAndroidSdk).singleFile}/platforms/${installAndroidSdk.get().components['platforms']}"),
+	)
 }
 
 tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core')
 
-	from copyAndroidJar
 	from downloadSampleLex
 	from extractSampleCup
 	from testdata.collectTestDataA
