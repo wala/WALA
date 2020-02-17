@@ -16,6 +16,7 @@ tasks.named('javadoc') {
 tasks.named('test') {
 	enabled = enableDalvikTests
 }
+
 final def downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest "$temporaryDir/DroidBench_2.0.zip"
