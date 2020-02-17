@@ -1,13 +1,3 @@
-dependencies {
-	implementation(
-			'org.slf4j:slf4j-api:1.7.30',
-			'org.smali:dexlib2:2.4.0',
-			project(':com.ibm.wala.core'),
-			project(':com.ibm.wala.shrike'),
-			project(':com.ibm.wala.util'),
-	)
-}
-
 // Dalvik tests require additional libraries installed by the Android SDK Manager, but the latter is
 // incompatible with Java 9 or later: <https://issuetracker.google.com/issues/67495440>.
 final enableDalvikTests = JavaVersion.current() <= JavaVersion.VERSION_1_8
@@ -155,6 +145,13 @@ configurations {
 }
 
 dependencies {
+	implementation(
+			'org.slf4j:slf4j-api:1.7.30',
+			'org.smali:dexlib2:2.4.0',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+	)
 	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testImplementation(
 			'junit:junit:4.13',
