@@ -9,7 +9,6 @@ import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -38,10 +37,10 @@ public class SlicerUtil {
   public static Statement findCallTo(CGNode n, String methodName) {
     IR ir = n.getIR();
     for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
-      if (s instanceof SSAInvokeInstruction) {
-        SSAInvokeInstruction call = (SSAInvokeInstruction) s;
+      if (s instanceof SSAAbstractInvokeInstruction) {
+        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
-          IntSet indices = ir.getCallInstructionIndices(((SSAInvokeInstruction) s).getCallSite());
+          IntSet indices = ir.getCallInstructionIndices(call.getCallSite());
           Assertions.productionAssertion(
               indices.size() == 1, "expected 1 but got " + indices.size());
           return new NormalStatement(n, indices.intIterator().next());

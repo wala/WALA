@@ -13,7 +13,10 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
@@ -24,10 +27,13 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
+import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
+import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
@@ -707,7 +713,7 @@ public abstract class JavaIRTests extends IRTests {
     Pair<Collection<Statement>, SDG<? extends InstanceKey>> y =
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
-    SlicerUtil.dumpSlice(slice);
+    dumpSlice(slice);
     Assert.assertEquals(0, SlicerUtil.countAllocations(slice));
     Assert.assertEquals(1, SlicerUtil.countPutfields(slice));
 
@@ -719,6 +725,39 @@ public abstract class JavaIRTests extends IRTests {
     // SlicerUtil.dumpSlice(slice);
     Assert.assertEquals(2, SlicerUtil.countAllocations(slice));
     Assert.assertEquals(2, SlicerUtil.countPutfields(slice));
+  }
+
+  @Test
+  public void testThinSlice() throws CancelException, IOException {
+    String testName = "MiniaturSliceBug";
+    List<String> sources =
+        Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
+    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+        runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
+
+    @SuppressWarnings("unchecked")
+    PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
+    CallGraph cg = x.fst;
+
+    // we just run context-sensitive and context-insensitive thin slicing, to make sure
+    // it doesn't crash
+    Statement statement =
+        SlicerUtil.findCallTo(CallGraphSearchUtil.findMainMethod(cg), "validNonDispatchedCall");
+    AstJavaModRef<InstanceKey> modRef = new AstJavaModRef<>();
+    SDG<InstanceKey> sdg =
+        new SDG<>(
+            cg,
+            pa,
+            modRef,
+            Slicer.DataDependenceOptions.NO_BASE_PTRS,
+            Slicer.ControlDependenceOptions.NONE);
+    Collection<Statement> slice =
+        AstJavaSlicer.computeBackwardSlice(sdg, Collections.singleton(statement));
+    dumpSlice(slice);
+
+    ThinSlicer ts = new ThinSlicer(cg, pa, modRef);
+    slice = ts.computeBackwardThinSlice(statement);
+    dumpSlice(slice);
   }
 
   @Test

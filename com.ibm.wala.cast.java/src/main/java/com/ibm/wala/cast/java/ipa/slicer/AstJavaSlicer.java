@@ -37,7 +37,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class AstJavaSlicer extends Slicer {
+public class AstJavaSlicer {
 
   /*
    * Use the passed-in SDG
@@ -50,7 +50,7 @@ public class AstJavaSlicer extends Slicer {
   /** @param ss a collection of statements of interest */
   public static Collection<Statement> computeSlice(
       SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
-    return new AstJavaSlicer().slice(sdg, ss, backward);
+    return new Slicer().slice(sdg, ss, backward);
   }
 
   public static Set<Statement> gatherStatements(
@@ -105,8 +105,8 @@ public class AstJavaSlicer extends Slicer {
             pcg,
             pa,
             new AstJavaModRef<>(),
-            DataDependenceOptions.FULL,
-            ControlDependenceOptions.FULL);
+            Slicer.DataDependenceOptions.FULL,
+            Slicer.ControlDependenceOptions.FULL);
     // System.err.println(("SDG:\n" + sdg));
     Set<Statement> stmts = gatherAssertions(CG, partialRoots);
     if (multiThreadedCode) {
