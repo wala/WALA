@@ -75,8 +75,8 @@ public abstract class TestCorrelatedPairExtraction {
       String expected = new CAstDumper().dump(parseJS(tmp, ast));
       expected = TestForInBodyExtraction.eraseGeneratedNames(expected);
 
-      FileUtil.writeFile(new File("expected.dump"), expected);
-      FileUtil.writeFile(new File("actual.dump"), actual);
+      FileUtil.writeFile(new File("build/expected.dump"), expected);
+      FileUtil.writeFile(new File("build/actual.dump"), actual);
 
       if (ASSERT_EQUALS) {
         Assert.assertEquals(testName, expected, actual);
