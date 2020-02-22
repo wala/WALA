@@ -279,34 +279,28 @@ final def unpackOcamlJava = tasks.register('unpackOcamlJava', Sync) {
 	into temporaryDir
 }
 
+final prepareGenerateHelloHashJar = tasks.register('prepareGenerateHelloHashJar', Copy) {
+	from 'ocaml/hello_hash.ml'
+	into temporaryDir
+	ext.copiedOcamlSource = file("$temporaryDir/$source.singleFile.name")
+}
+
 tasks.register('generateHelloHashJar', JavaExec) {
-	dependsOn unpackOcamlJava
-	def ocamlSource = file('ocaml/hello_hash.ml')
+	dependsOn prepareGenerateHelloHashJar
+	final ocamlSource = prepareGenerateHelloHashJar.get().copiedOcamlSource
 	inputs.file ocamlSource
 
 	def jarTarget = file("$temporaryDir/hello_hash.jar")
 	outputs.file jarTarget
 	outputs.cacheIf { true }
 
+	dependsOn unpackOcamlJava
 	def ocamlJavaJar = new File("${unpackOcamlJava.get().destinationDir}/${downloadOcamlJava.get().basename}/lib/ocamljava.jar")
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
 	main 'ocaml.compilers.ocamljavaMain'
 	args ocamlSource, '-o', jarTarget
-}
-
-tasks.named('cleanGenerateHelloHashJar', Delete) {
-	doLast {
-		delete fileTree('ocaml') {
-			exclude '*.ml'
-			exclude '.gitignore'
-		}
-	}
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanGenerateHelloHashJar'
 }
 
 
