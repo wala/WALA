@@ -284,7 +284,7 @@ tasks.register('generateHelloHashJar', JavaExec) {
 	def ocamlSource = file('ocaml/hello_hash.ml')
 	inputs.file ocamlSource
 
-	def jarTarget = file('hello_hash.jar')
+	def jarTarget = file("$temporaryDir/hello_hash.jar")
 	outputs.file jarTarget
 	outputs.cacheIf { true }
 
