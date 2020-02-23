@@ -1,7 +1,7 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.test.ExtractingToPredictableFileNames;
 import com.ibm.wala.cast.js.test.TestSimplePageCallGraphShape;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
@@ -12,12 +12,8 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
   private void test(String file, Object[][] assertions, BuilderType builderType)
       throws WalaException, Error, CancelException {
-    boolean save = JSSourceExtractor.USE_TEMP_NAME;
-    try {
-      JSSourceExtractor.USE_TEMP_NAME = false;
+    try (ExtractingToPredictableFileNames predictable = new ExtractingToPredictableFileNames()) {
       runTest(file, assertions, builderType);
-    } finally {
-      JSSourceExtractor.USE_TEMP_NAME = save;
     }
   }
 
