@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("UnconstructableJUnitTestCase")
 public class FloatingPointsTest extends WalaTestCase {
   private final String klass = "shrike/FloatingPoints";
 
