@@ -12,13 +12,13 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
-import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,9 +26,16 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
 
   protected abstract IHtmlParser getParser();
 
+  private ExtractingToPredictableFileNames predictable;
+
   @Before
   public void setUp() {
-    JSSourceExtractor.USE_TEMP_NAME = false;
+    predictable = new ExtractingToPredictableFileNames();
+  }
+
+  @After
+  public void tearDown() {
+    predictable.close();
   }
 
   private static final Object[][] assertionsForPage1 =

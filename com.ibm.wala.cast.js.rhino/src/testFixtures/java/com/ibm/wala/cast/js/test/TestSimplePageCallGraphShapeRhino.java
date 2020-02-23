@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
-import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -53,10 +52,9 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
   @Override
   @Before
   public void setUp() {
+    super.setUp();
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());
     WebUtil.setFactory(TestSimplePageCallGraphShapeRhino.this::getParser);
-    JSSourceExtractor.USE_TEMP_NAME = false;
-    //		    JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
 }

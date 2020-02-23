@@ -23,6 +23,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -345,6 +347,8 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     return new HtmlCallback(entrypointUrl, urlResolver);
   }
 
+  public static Path OUTPUT_FILE_DIRECTORY = Paths.get("");
+
   private static File createOutputFile(URL url, boolean delete, boolean useTempName)
       throws IOException {
     File outputFile;
@@ -352,6 +356,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     if (fileName.length() < 5) {
       fileName = "xxxx" + fileName;
     }
+    fileName = OUTPUT_FILE_DIRECTORY.resolve(fileName).toString();
     if (useTempName) {
       outputFile = File.createTempFile(fileName, ".js");
     } else {

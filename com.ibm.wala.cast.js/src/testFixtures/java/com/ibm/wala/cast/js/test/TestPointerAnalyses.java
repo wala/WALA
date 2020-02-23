@@ -179,10 +179,7 @@ public abstract class TestPointerAnalyses {
       Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>>
           test)
       throws WalaException, CancelException {
-    boolean save = JSSourceExtractor.USE_TEMP_NAME;
-    try {
-      JSSourceExtractor.USE_TEMP_NAME = false;
-
+    try (ExtractingToPredictableFileNames predictable = new ExtractingToPredictableFileNames()) {
       FieldBasedCGUtil fb = new FieldBasedCGUtil(factory);
       Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult =
           fb.buildCG(page, BuilderType.OPTIMISTIC, true, DefaultSourceExtractor.factory);
@@ -192,9 +189,6 @@ public abstract class TestPointerAnalyses {
       PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
 
       test(filter, test, fbResult.fst, fbResult.snd, propCG, propPA);
-
-    } finally {
-      JSSourceExtractor.USE_TEMP_NAME = save;
     }
   }
 
