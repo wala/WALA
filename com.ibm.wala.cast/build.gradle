@@ -18,15 +18,19 @@ dependencies {
 	)
 }
 
-tasks.named('javadoc') {
-	def jsName = ':com.ibm.wala.cast.js'
-	dependsOn "$jsName:compileJava"
-	dependsOn "$jsName:createPackageList"
+tasks.named('javadoc', Javadoc) {
+	final jsTasks = project(':com.ibm.wala.cast.js').tasks
+	classpath += files jsTasks.named('compileJava', JavaCompile)
+	final jsCreatePackageList = jsTasks.named('createPackageList', CreatePackageList)
+	final packageListDirectory = jsCreatePackageList.flatMap { it.packageListDirectory }
+	it.inputs.dir packageListDirectory
 
 	doFirst {
-		def js = project(jsName)
-		classpath += files js.compileJava
-		options.linksOffline js.javadoc.outputDirectory.path, js.createPackageList.packageList.parent
+		final jsJavadoc = jsTasks.named('javadoc', Javadoc)
+		options.linksOffline(
+				jsJavadoc.get().destinationDir.path,
+				packageListDirectory.get().toString()
+		)
 	}
 }
 

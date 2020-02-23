@@ -3,7 +3,9 @@ plugins {
 }
 
 library {
-	privateHeaders.from project(':com.ibm.wala.cast').tasks.getByName('compileTestJava').options.headerOutputDirectory
+	privateHeaders.from project(':com.ibm.wala.cast').tasks.named('compileTestJava').map {
+		it.options.headerOutputDirectory
+	}
 
 	dependencies {
 		implementation project(':com.ibm.wala.cast:cast')

@@ -22,8 +22,7 @@ final def downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 }
 
 tasks.register('unpackNodeJSLib', Copy) {
-	dependsOn downloadNodeJS
-	from(zipTree(downloadNodeJS.get().dest)) {
+	from(downloadNodeJS.map { zipTree it.dest }) {
 		include 'nodejs-node-0a604e9/lib/*.js'
 		eachFile {
 			relativePath RelativePath.parse(!directory, relativePath.lastName)

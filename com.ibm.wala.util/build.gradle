@@ -5,13 +5,7 @@ plugins {
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 tasks.named('javadoc') {
-	def coreName = ':com.ibm.wala.core'
-	dependsOn "$coreName:compileJava"
-
-	doFirst {
-		classpath += files project(coreName).compileJava
-	}
-
+	classpath += files project(':com.ibm.wala.core').tasks.named('compileJava', JavaCompile)
 	final def linksPrefix = sourceCompatibility >= JavaVersion.VERSION_11 ? 'en/java/' : ''
 	options.links "https://docs.oracle.com/${linksPrefix}javase/$sourceCompatibility.majorVersion/docs/api/"
 }

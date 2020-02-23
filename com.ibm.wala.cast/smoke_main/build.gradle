@@ -12,18 +12,20 @@ application {
 
 	addCastLibrary(project, it)
 
-	binaries.whenElementFinalized { binary ->
+	binaries.whenElementFinalized(CppExecutable) { binary ->
 		binary.linkTask.get().configure { linkTask ->
 			final def libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast:xlator_test').tasks.getByName(linkTask.name))
 			addRpath(linkTask, libxlator_test)
 
 			if (binary.debuggable && !binary.optimized) {
 				tasks.register('checkSmoke_main', Exec) {
-					dependsOn linkTask
 
 					// main executable to run for test
-					def executableBinary = binary.executableFile.get()
-					executable executableBinary
+					final linkedFile = linkTask.linkedFile
+					inputs.file linkedFile
+					doFirst {
+						executable linkedFile.get().asFile
+					}
 
 					// xlator Java bytecode + implementation of native methods
 					def pathElements = ['../build/classes/java/test', libxlator_test.parent]
