@@ -1,3 +1,4 @@
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.*
 
 import java.nio.file.Path
@@ -10,12 +11,14 @@ import java.nio.file.Path
 @CacheableTask
 class CreatePackageList extends org.gradle.api.DefaultTask {
 
-	@OutputFile
-	final File packageList = new File("$temporaryDir/package-list")
+	@OutputDirectory
+	final DirectoryProperty packageListDirectory =
+			project.objects.directoryProperty().convention(project.layout.buildDirectory.dir(name))
 
 	private SortedSet<Path> sourceFileSubdirectories
 
-	@Input final getSourceFileSubdirectories() {
+	@Input
+	final getSourceFileSubdirectories() {
 		// serializable representation of subdirs suitable for cache indexing
 		return sourceFileSubdirectories*.toString()
 	}
@@ -38,7 +41,7 @@ class CreatePackageList extends org.gradle.api.DefaultTask {
 	@TaskAction
 	final def create() {
 		// relative subbdirs as dot-delimited qualified Java package names, one per line
-		packageList.text = getSourceFileSubdirectories()
-				*.replace(File.separator, '.').join('\n') + '\n'
+		packageListDirectory.get().file('package-list').asFile.text =
+				getSourceFileSubdirectories()*.replace(File.separator, '.').join('\n') + '\n'
 	}
 }

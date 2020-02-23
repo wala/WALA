@@ -27,12 +27,7 @@ tasks.register('createPackageList', CreatePackageList) {
 }
 
 tasks.named('javadoc') {
-	def rhinoName = ':com.ibm.wala.cast.js.rhino'
-	dependsOn "$rhinoName:compileJava"
-
-	doFirst {
-		classpath += files project(rhinoName).compileJava
-	}
+	classpath += files project(':com.ibm.wala.cast.js.rhino').tasks.named('compileJava', JavaCompile)
 }
 
 tasks.named('test') {
@@ -48,8 +43,7 @@ final def downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) 
 }
 
 final unpackAjaxslt = tasks.register('unpackAjaxslt', Sync) {
-	dependsOn downloadAjaxslt
-	from(tarTree(downloadAjaxslt.get().dest)) {
+	from(downloadAjaxslt.map { tarTree it.dest }) {
 		eachFile {
 			def newSegments = relativePath.segments[1 .. -1] as String[]
 			relativePath new RelativePath(!directory, newSegments)

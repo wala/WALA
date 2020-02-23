@@ -96,14 +96,13 @@ publishing {
 				skipTestFixtures()
 			} else {
 				// Test-fixtures jar will have real contents, so add Javadoc and sources
-				tasks.named('testFixturesJavadoc') {
+				final testFixturesJavadoc = tasks.named('testFixturesJavadoc') {
 					destinationDir = file("$docsDir/testFixturesJavadoc")
 				}
 
 				tasks.register('testFixturesJavadocJar', Jar) {
 					classifier = 'test-fixtures-javadoc'
-					from testFixturesJavadoc.destinationDir
-					dependsOn testFixturesJavadoc
+					from testFixturesJavadoc.map { it.destinationDir }
 				}
 
 				tasks.register('testFixturesSourcesJar', Jar) {

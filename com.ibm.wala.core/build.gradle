@@ -45,12 +45,7 @@ dependencies {
 }
 
 tasks.named('javadoc') {
-	def dalvik = ':com.ibm.wala.dalvik'
-	dependsOn "$dalvik:compileJava"
-
-	doFirst {
-		classpath += files project(dalvik).compileJava
-	}
+	classpath += files project(':com.ibm.wala.dalvik').tasks.named('compileJava', JavaCompile)
 }
 
 
@@ -68,12 +63,12 @@ final def downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
 }
 
 tasks.register('extractKawa') {
-	inputs.files downloadKawa.get()
+	inputs.files downloadKawa
 	outputs.file 'kawa.jar'
 
 	doLast {
 		copy {
-			from(zipTree(downloadKawa.get().dest)) {
+			from(downloadKawa.map { zipTree it.dest }) {
 				include "kawa-${downloadKawa.get().version}/lib/${outputs.files.singleFile.name}"
 				eachFile {
 					relativePath RelativePath.parse(!directory, relativePath.lastName)
@@ -274,8 +269,7 @@ final def downloadOcamlJava = tasks.register('downloadOcamlJava', VerifiedDownlo
 }
 
 final def unpackOcamlJava = tasks.register('unpackOcamlJava', Sync) {
-	dependsOn downloadOcamlJava
-	from tarTree(downloadOcamlJava.get().dest)
+	from downloadOcamlJava.map { tarTree it.dest }
 	into temporaryDir
 }
 
@@ -286,21 +280,29 @@ final prepareGenerateHelloHashJar = tasks.register('prepareGenerateHelloHashJar'
 }
 
 tasks.register('generateHelloHashJar', JavaExec) {
-	dependsOn prepareGenerateHelloHashJar
-	final ocamlSource = prepareGenerateHelloHashJar.get().copiedOcamlSource
+	final ocamlSource = prepareGenerateHelloHashJar.map { it.copiedOcamlSource }
 	inputs.file ocamlSource
 
 	def jarTarget = file("$temporaryDir/hello_hash.jar")
 	outputs.file jarTarget
 	outputs.cacheIf { true }
 
-	dependsOn unpackOcamlJava
-	def ocamlJavaJar = new File("${unpackOcamlJava.get().destinationDir}/${downloadOcamlJava.get().basename}/lib/ocamljava.jar")
+	final downloadOcamlJavaBasename = downloadOcamlJava.map { it.basename }
+	it.inputs.property 'downloadOcamlJavaBasename', downloadOcamlJavaBasename
+
+	final ocamlJavaJar = unpackOcamlJava.map {
+		file "$it.destinationDir/${downloadOcamlJavaBasename.get()}/lib/ocamljava.jar"
+	}
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
 	main 'ocaml.compilers.ocamljavaMain'
-	args ocamlSource, '-o', jarTarget
+	args '-o', jarTarget
+	argumentProviders.add(new CommandLineArgumentProvider() {
+		Iterable<String> asArguments() {
+			return [ocamlSource.get().toString()]
+		}
+	})
 }
 
 
