@@ -91,7 +91,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
           FailureException, SecurityException, IllegalArgumentException, InterruptedException {
     File F;
     try (final FileInputStream in = new FileInputStream(javaJarPath)) {
-      F = TemporaryFile.streamToFile(new File("test_jar.jar"), in);
+      F = TemporaryFile.streamToFile(new File("build/test_jar.jar"), in);
     }
     F.deleteOnExit();
     instrument(F.getAbsolutePath());

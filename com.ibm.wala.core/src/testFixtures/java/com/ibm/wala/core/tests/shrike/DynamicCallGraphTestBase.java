@@ -136,7 +136,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     childJvm.init();
     String commandLine = childJvm.getCommandLine().toString();
     System.err.println(commandLine);
-    Process x = Runtime.getRuntime().exec(commandLine);
+    Process x = Runtime.getRuntime().exec(commandLine, null, new File("build"));
     x.waitFor();
 
     Assert.assertTrue("expected to create call graph", Files.exists(cgLocation));

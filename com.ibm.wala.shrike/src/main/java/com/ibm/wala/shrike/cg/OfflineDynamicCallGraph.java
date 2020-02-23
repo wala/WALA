@@ -118,7 +118,7 @@ public class OfflineDynamicCallGraph {
       throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
     OfflineInstrumenter instrumenter;
     ClassInstrumenter ci;
-    try (final Writer w = new BufferedWriter(new FileWriter("report", false))) {
+    try (final Writer w = new BufferedWriter(new FileWriter("build/report", false))) {
 
       for (int i = 0; i < args.length; i++) {
         if ("--runtime".equals(args[i])) {
