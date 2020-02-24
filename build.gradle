@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
 	id 'com.diffplug.eclipse.mavencentral' version '3.21.0' apply false
-	id 'com.github.ben-manes.versions' version '0.27.0'
+	id 'com.github.ben-manes.versions' version '0.28.0'
 	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
