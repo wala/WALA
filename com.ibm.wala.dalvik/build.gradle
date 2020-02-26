@@ -31,7 +31,7 @@ tasks.register('unpackDroidBench', Sync) {
 		}
 	}
 
-	into '/tmp/DroidBench'
+	into layout.buildDirectory.dir('DroidBench')
 	includeEmptyDirs false
 }
 
