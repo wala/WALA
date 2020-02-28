@@ -13,7 +13,7 @@ plugins {
 	id 'com.github.sherter.google-java-format' version '0.8'
 	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
-	id 'nebula.lint' version '14.2.5'
+	id 'nebula.lint' version '16.2.1'
 }
 
 repositories {
