@@ -279,11 +279,11 @@ final prepareGenerateHelloHashJar = tasks.register('prepareGenerateHelloHashJar'
 	ext.copiedOcamlSource = file("$temporaryDir/$source.singleFile.name")
 }
 
-tasks.register('generateHelloHashJar', JavaExec) {
+final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {
 	final ocamlSource = prepareGenerateHelloHashJar.map { it.copiedOcamlSource }
 	inputs.file ocamlSource
 
-	def jarTarget = file("$temporaryDir/hello_hash.jar")
+	def jarTarget = layout.projectDirectory.file('ocaml/hello_hash.jar')
 	outputs.file jarTarget
 	outputs.cacheIf { true }
 
@@ -359,10 +359,15 @@ tasks.named('processTestResources') {
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
-			'generateHelloHashJar',
 	].each {
 		from tasks.named(it)
 	}
+
+	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
+	// missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
+	// downloading OCaml-Java if we haven't already: something we prefer to avoid.
+	final helloHashJar = generateHelloHashJar.get().outputs.files.singleFile
+	from helloHashJar.exists() ? helloHashJar : generateHelloHashJar
 }
 
 tasks.named('test') {

@@ -372,5 +372,10 @@ final def getNativeLibraryOutput(task) {
 //
 
 tasks.register('downloads') {
-	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
+	final allDownloaders = allprojects*.tasks*.withType(VerifiedDownload)
+	final neededDownloaders = allDownloaders.flatten().findAll {
+		// not used in typical builds
+		it.name != 'downloadOcamlJava'
+	}
+	inputs.files neededDownloaders
 }
