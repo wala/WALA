@@ -17,8 +17,10 @@ sourceSets {
 	testSubjects
 }
 
+final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
+
 if (javaCompiler == 'ecj') {
-	tasks.named('compileTestSubjectsJava', JavaCompile) {
+	compileTestSubjectsJava.configure {
 		options.compilerArgs << '-err:none'
 		options.compilerArgs << '-warn:none'
 	}
@@ -40,7 +42,7 @@ dependencies {
 			'org.hamcrest:hamcrest-core:2.2',
 	)
 	testRuntimeOnly(
-			files(compileTestSubjectsJava.outputs.files.first())
+			files(compileTestSubjectsJava.map { it.outputs.files.first() })
 	)
 }
 

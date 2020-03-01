@@ -28,7 +28,7 @@ dependencies {
 
 mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
 
-run {
+tasks.named('run') {
 	// this is for testing purposes
 	final def javaTestData = ':com.ibm.wala.cast.java.test.data'
 	evaluationDependsOn javaTestData
