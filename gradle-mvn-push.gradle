@@ -110,6 +110,10 @@ publishing {
 					from sourceSets.testFixtures.allSource
 				}
 
+				// For eachs subproject with test fixtures, the `artifact` calls below trigger
+				// creation of three tasks during configuration: `testFixturesJar`,
+				// `testFixturesJavadocJar`, and `testFixturesSourcesJar`.  Configuring those lazily
+				// instead will require a fix to <https://github.com/gradle/gradle/issues/6246>.
 				artifact testFixturesJar
 				artifact testFixturesJavadocJar
 				artifact testFixturesSourcesJar
@@ -146,6 +150,10 @@ signing {
 	required = true
 
 	// Only sign publications sent to remote repositories; local install installatios are unsigned.
+	// The `sign` invocation below causes eager creation of three tasks per subproject:
+	// `signRemotePublication` is created immediately and `generateMetadataFileForRemotePublication`
+	// and `generatePomFileForRemotePublication` are created during configuration.  Creating these
+	// lazily instead will require a fix to <https://github.com/gradle/gradle/issues/8796>.
 	sign publishing.publications.remote
 }
 
