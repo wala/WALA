@@ -96,7 +96,7 @@ subprojects { subproject ->
 
 	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
 	// :com.ibm.wala.cast:compileTestJava, which requires JNI support that ECJ does not offer.
-	tasks.withType(JavaCompile) {
+	tasks.withType(JavaCompile).configureEach {
 		it.ext.originalToolChain = it.toolChain
 		options.encoding = 'UTF-8'
 	}
@@ -110,7 +110,7 @@ subprojects { subproject ->
 		case 'eclipse':
 			apply plugin: 'de.set.ecj'
 			ext.javaCompiler = 'ecj'
-			tasks.withType(JavaCompile) {
+			tasks.withType(JavaCompile).configureEach {
 				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
 			}
 			break
@@ -169,7 +169,7 @@ tasks.register('aggregatedJavadocs', Javadoc) {
 	options.author true
 
 	subprojects.each { proj ->
-		proj.tasks.withType(Javadoc).each { javadocTask ->
+		proj.tasks.withType(Javadoc).configureEach { javadocTask ->
 			source += javadocTask.source
 			classpath += javadocTask.classpath
 			excludes += javadocTask.excludes

@@ -110,7 +110,7 @@ publishing {
 					from sourceSets.testFixtures.allSource
 				}
 
-				// For eachs subproject with test fixtures, the `artifact` calls below trigger
+				// For each subproject with test fixtures, the `artifact` calls below trigger
 				// creation of three tasks during configuration: `testFixturesJar`,
 				// `testFixturesJavadocJar`, and `testFixturesSourcesJar`.  Configuring those lazily
 				// instead will require a fix to <https://github.com/gradle/gradle/issues/6246>.
@@ -158,7 +158,7 @@ signing {
 }
 
 // Only sign releases; snapshots are unsigned.
-tasks.withType(Sign) {
+tasks.withType(Sign).configureEach {
 	onlyIf {
 		!isSnapshot
 	}
@@ -170,14 +170,14 @@ java {
 }
 
 // Remote publication set goes to remote repositories, so we don't publicly publish test fixtures.
-tasks.withType(PublishToMavenRepository) {
+tasks.withType(PublishToMavenRepository).configureEach {
 	onlyIf {
 		publication == publishing.publications.remote
 	}
 }
 
 // Local publication set goes to local installations, so we can reuse test fixtures locally.
-tasks.withType(PublishToMavenLocal) {
+tasks.withType(PublishToMavenLocal).configureEach {
 	onlyIf {
 		publication == publishing.publications.local
 	}
