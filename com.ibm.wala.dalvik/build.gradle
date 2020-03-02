@@ -180,18 +180,12 @@ else
 
 tasks.named('test') {
 	maxHeapSize = '800M'
-}
 
-tasks.register('cleanTestExtras', Delete) {
-	delete(
+	outputs.files([
 			'parser.java',
 			'report',
 			'sym.java',
-	)
-}
-
-tasks.named('cleanTest') {
-	dependsOn 'cleanTestExtras'
+	].collect(layout.buildDirectory.&file))
 }
 
 googleJavaFormat {
