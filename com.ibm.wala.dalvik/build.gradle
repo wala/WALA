@@ -12,7 +12,7 @@ final def downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDown
 	checksum '16726a48329835140e14f18470a1b4a3'
 }
 
-tasks.register('unpackDroidBench', Sync) {
+final unpackDroidBench = tasks.register('unpackDroidBench', Sync) {
 	from(downloadDroidBench.map { zipTree it.dest }) {
 		eachFile {
 			relativePath new RelativePath(!directory, relativePath.segments[1..-1] as String[])
@@ -175,7 +175,7 @@ if (isWindows)
 	}
 else
 	tasks.named('processTestResources') {
-		dependsOn 'unpackDroidBench'
+		dependsOn unpackDroidBench
 	}
 
 tasks.named('test') {
