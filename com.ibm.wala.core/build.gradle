@@ -388,14 +388,8 @@ tasks.named('test') {
 		exclude '**/cha/LibraryVersionTest.class'
 		exclude '**/ir/TypeAnnotationTest.class'
 	}
-}
 
-tasks.register('cleanTestExtras', Delete) {
-	delete 'report'
-}
-
-tasks.named('cleanTest') {
-	dependsOn 'cleanTestExtras'
+	outputs.file layout.buildDirectory.file('report')
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

@@ -28,15 +28,11 @@ tasks.named('test') {
 
 	if (gradle.startParameter.offline)
 		exclude '**/FieldBasedJQueryTest.class'
-}
 
-tasks.register('cleanTestExtras', Delete) {
-	delete 'actual.dump'
-	delete 'expected.dump'
-}
-
-tasks.named('cleanTest') {
-	dependsOn 'cleanTestExtras'
+	outputs.files([
+			'actual.dump',
+			'expected.dump',
+	].collect(layout.buildDirectory.&file))
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
