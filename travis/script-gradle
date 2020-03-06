@@ -5,17 +5,6 @@ case "$TRAVIS_OS_NAME" in
   (osx) headless= ;;
 esac
 
-case "$SUBMODULE_PREFIX" in
-  (:*:*:)
-    # native subsubcomponent: no Java code, so no Javadoc
-    documentation=
-    ;;
-  (*)
-    # Java subcomponent
-    documentation=javadoc
-    ;;
-esac
-
 run_gradle() {
   $headless ./gradlew --continue --no-build-cache --stacktrace "$@"
 }
@@ -34,9 +23,9 @@ else
       linters \
       compileJava \
       compileTestJava \
-      ${documentation:+$SUBMODULE_PREFIX$documentation}
+      javadoc
   fi
-  run_gradle "$SUBMODULE_PREFIX"build "$SUBMODULE_PREFIX"publishToMavenLocal
+  run_gradle build publishToMavenLocal
 fi
 
 ./check-git-cleanliness.sh
