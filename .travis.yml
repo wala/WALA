@@ -1,9 +1,6 @@
 version: ~> 1.0
 language: java
 osx_image: xcode8.3
-android:
-  components:
-    - build-tools-28.0.3
 addons:
   apt:
     packages:
