@@ -1,6 +1,5 @@
 version: ~> 1.0
 language: java
-osx_image: xcode8.3
 addons:
   apt:
     packages:
@@ -34,13 +33,13 @@ env:
 jobs:
   include:
     - os: linux
-      jdk: openjdk11
-    - os: osx
-      jdk: openjdk11
-    - os: linux
       jdk: openjdk8
     - os: linux
+      jdk: openjdk8
       env: BUILD_SYSTEM=maven
-      jdk: openjdk8
+    - os: linux
+      jdk: openjdk11
     - os: osx
-      jdk: oraclejdk8
+      osx_image: xcode9.3  # Java 1.8
+    - os: osx
+      osx_image: xcode9.4  # Java 13
