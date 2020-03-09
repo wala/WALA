@@ -9,7 +9,7 @@ run_gradle() {
   $headless ./gradlew --continue --no-build-cache --stacktrace "$@"
 }
 
-case "$(javac -version)" in
+case "$(javac -version 2>&1)" in
   (javac\ 1.8.*)
      # linters only need to run on one operating system
      if [ "${TRAVIS_OS_NAME:-}" = linux ]; then
