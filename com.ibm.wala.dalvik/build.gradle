@@ -105,7 +105,7 @@ final def resourceDir = sourceSets.test.resources.srcDirs.find()
 
 tasks.register('extractSampleCup') {
 	inputs.file configurations.sampleCup.singleFile
-	outputs.file "$resourceDir/sample.cup"
+	outputs.file layout.buildDirectory.file("$name/sample.cup")
 
 	doLast {
 		copy {
