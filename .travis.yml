@@ -3,7 +3,6 @@ language: java
 addons:
   apt:
     packages:
-    - realpath
     - xvfb
 before_install:
   - export M2_HOME=$HOME/apache-maven-3.5.0
