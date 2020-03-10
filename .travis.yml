@@ -1,9 +1,5 @@
 version: ~> 1.0
 language: java
-addons:
-  apt:
-    packages:
-    - xvfb
 before_install:
   - export M2_HOME=$HOME/apache-maven-3.5.0
   - "travis/before-install-$BUILD_SYSTEM"

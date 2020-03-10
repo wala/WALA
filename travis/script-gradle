@@ -1,12 +1,7 @@
 #!/bin/sh -eux
 
-case "$TRAVIS_OS_NAME" in
-  (linux) headless=xvfb-run ;;
-  (osx) headless= ;;
-esac
-
 run_gradle() {
-  $headless ./gradlew --continue --no-build-cache --stacktrace "$@"
+  ./gradlew --continue --no-build-cache --stacktrace "$@"
 }
 
 case "$(javac -version 2>&1)" in
