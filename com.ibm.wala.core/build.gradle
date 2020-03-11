@@ -234,12 +234,8 @@ tasks.register('downloadJavaCup', VerifiedDownload) {
 tasks.register('collectJLex', Jar) {
 	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
 	include 'JLex/'
-	archiveFileName.set 'JLex.jar'
-	destinationDirectory.set projectDir
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanCollectJLex'
+	archiveFileName = 'JLex.jar'
+	destinationDirectory = layout.buildDirectory.dir name
 }
 
 
