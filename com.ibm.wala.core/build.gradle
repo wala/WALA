@@ -93,9 +93,7 @@ class CompileKawaJar extends Jar {
 
 	@Nested
 	final def compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
-		dependsOn project.extractKawa
-		final def kawaJar = project.extractKawa.outputs.files.singleFile
-		classpath kawaJar
+		classpath project.tasks.named('extractKawa')
 		main 'kawa.repl'
 
 		args '-d', temporaryDir
