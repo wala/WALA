@@ -221,12 +221,8 @@ tasks.register('extractBcel') {
 tasks.register('downloadJavaCup', VerifiedDownload) {
 	def archive = 'java-cup-11a.jar'
 	src "http://www2.cs.tum.edu/projects/cup/$archive"
-	dest "$projectDir/$archive"
+	dest layout.buildDirectory.file("$name/$archive")
 	checksum '2bda8c40abd0cbc295d3038643d6e4ec'
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanDownloadJavaCup'
 }
 
 
