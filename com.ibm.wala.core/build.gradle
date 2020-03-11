@@ -92,7 +92,7 @@ tasks.register('extractKawa') {
 class CompileKawaJar extends Jar {
 
 	@Nested
-	final compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
+	final compile = project.tasks.register("compileKawaInto${name.capitalize()}", JavaExec) {
 		classpath project.tasks.named('extractKawa')
 		main 'kawa.repl'
 
@@ -100,20 +100,17 @@ class CompileKawaJar extends Jar {
 		outputs.dir temporaryDir
 
 		logging.captureStandardError LogLevel.INFO
-		args '--main', '-C'
+		args '--main', '-C', schemeFile.get()
+		inputs.file schemeFile
 	}
 
 	CompileKawaJar() {
-		compile.dependsOn dependsOn
 		from compile
 		archiveVersion.set null
 		destinationDirectory.set project.layout.buildDirectory.dir(name)
 	}
 
-	@SuppressWarnings("unused")
-	void args(Object... args) {
-		compile.args args
-	}
+	final RegularFileProperty schemeFile = project.objects.fileProperty()
 
 	void setBaseName(String name) {
 		archiveFileName.set "${name}.jar"
@@ -127,17 +124,17 @@ class CompileKawaJar extends Jar {
 //  download, unpack, and build kawa chess
 //
 
+final kawaChessCommitHash = 'f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8'
+
 final downloadKawaChess = tasks.register('downloadKawaChess', VerifiedDownload) {
-	ext.commitHash = 'f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8'
-	src "https://github.com/ttu-fpclub/kawa-chess/archive/${commitHash}.zip"
+	src "https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip"
 	dest "$temporaryDir/kawa-chess.zip"
 	checksum 'cf29613d2be5f476a475ee28b4df9d9e'
 }
 
 final unpackKawaChess = tasks.register('unpackKawaChess') {
-	final downloader = downloadKawaChess.get()
-	inputs.files downloader
-	outputs.dir "$temporaryDir/kawa-chess-$downloader.commitHash"
+	inputs.files downloadKawaChess
+	outputs.dir "$temporaryDir/kawa-chess-$kawaChessCommitHash"
 
 	doLast {
 		copy {
@@ -148,11 +145,9 @@ final unpackKawaChess = tasks.register('unpackKawaChess') {
 }
 
 tasks.register('buildChessJar', CompileKawaJar) {
-	dependsOn unpackKawaChess
-	final schemePath = { "${unpackKawaChess.get().outputs.files.singleFile}/${it}.scm" }
-	final schemeFiles = files(['chess', 'gui', 'img', 'main', 'pos'].collect(schemePath))
-	args schemePath('main')
-	inputs.files schemeFiles
+	final mainScheme = unpackKawaChess.map { file("$it.outputs.files.singleFile/main.scm") }
+	schemeFile.fileProvider mainScheme
+	inputs.files unpackKawaChess
 	baseName 'kawachess'
 }
 
@@ -163,9 +158,8 @@ tasks.register('buildChessJar', CompileKawaJar) {
 //
 
 tasks.register('buildKawaTestJar', CompileKawaJar) {
-	final schemeFile = file('kawasrc/test.scm')
-	args schemeFile
-	inputs.files schemeFile
+	final testScheme = file('kawasrc/test.scm')
+	schemeFile.fileValue testScheme
 	baseName 'kawatest'
 }
 
