@@ -44,11 +44,9 @@ application {
 					}
 
 					// all combined as a colon-delimited path list
-					argumentProviders.add(new CommandLineArgumentProvider() {
-						Iterable<String> asArguments() {
-							return [pathElements.get().join(':')]
-						}
-					})
+					argumentProviders.add({ ->
+						[pathElements.get().join(':')]
+					} as CommandLineArgumentProvider)
 
 					// log output to file, although we don't validate it
 					final def outFile = file("$temporaryDir/stdout-and-stderr.log")
