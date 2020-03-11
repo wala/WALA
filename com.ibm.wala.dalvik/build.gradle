@@ -101,8 +101,6 @@ eclipse {
 	synchronizationTasks 'installAndroidSdk'
 }
 
-final def resourceDir = sourceSets.test.resources.srcDirs.find()
-
 tasks.register('extractSampleCup') {
 	inputs.file configurations.sampleCup.singleFile
 	outputs.file layout.buildDirectory.file("$name/sample.cup")
@@ -119,12 +117,8 @@ tasks.register('extractSampleCup') {
 
 tasks.register('downloadSampleLex', VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
-	dest "$resourceDir/sample.lex"
+	dest layout.buildDirectory.file("$name/sample.lex")
 	checksum 'ae887758b2657981d023a72a165da830'
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanDownloadSampleLex'
 }
 
 configurations {
