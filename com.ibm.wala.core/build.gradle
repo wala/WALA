@@ -107,7 +107,7 @@ class CompileKawaJar extends Jar {
 		compile.dependsOn dependsOn
 		from compile
 		archiveVersion.set null
-		destinationDirectory.set project.projectDir
+		destinationDirectory.set project.layout.buildDirectory.dir(name)
 	}
 
 	@SuppressWarnings("unused")
@@ -156,10 +156,6 @@ tasks.register('buildChessJar', CompileKawaJar) {
 	baseName 'kawachess'
 }
 
-tasks.named('clean') {
-	dependsOn 'cleanBuildChessJar'
-}
-
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -171,10 +167,6 @@ tasks.register('buildKawaTestJar', CompileKawaJar) {
 	args schemeFile
 	inputs.files schemeFile
 	baseName 'kawatest'
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanBuildKawaTestJar'
 }
 
 
