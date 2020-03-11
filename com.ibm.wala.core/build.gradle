@@ -313,16 +313,12 @@ tasks.register('collectTestDataA', Jar) {
 	from compileTestSubjectsJava
 	from 'classes'
 	includeEmptyDirs false
-	destinationDirectory.set projectDir
+	destinationDirectory = layout.buildDirectory.dir name
 	exclude(
 			'**/CodeDeleted.class',
 			'**/SortingExample.class',
 			'**/A.class',
 	)
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanCollectTestDataA'
 }
 
 
