@@ -193,26 +193,23 @@ final def downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
 }
 
 tasks.register('extractBcel') {
-	final def basename = downloadBcel.get().basename
+	final basename = downloadBcel.map { it.basename }
+	final jarFile = basename.flatMap { layout.buildDirectory.file "$name/${it}.jar" }
 	inputs.files downloadBcel
-	outputs.file "${basename}.jar"
+	outputs.file jarFile
 
 	doLast {
 		copy {
 			from(tarTree(inputs.files.singleFile)) {
-				include "$basename/${basename}.jar"
+				include "${basename.get()}/${basename.get()}.jar"
 				eachFile {
 					relativePath RelativePath.parse(!directory, relativePath.lastName)
 				}
 			}
-			into projectDir
+			into jarFile.get().asFile.parent
 			includeEmptyDirs false
 		}
 	}
-}
-
-tasks.named('clean') {
-	dependsOn 'cleanExtractBcel'
 }
 
 

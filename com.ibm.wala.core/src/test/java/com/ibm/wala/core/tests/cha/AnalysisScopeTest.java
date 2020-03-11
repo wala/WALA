@@ -25,9 +25,8 @@ public class AnalysisScopeTest {
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             AnalysisScopeTest.class.getClassLoader());
-    // assumes com.ibm.wala.core.tests is the current working directory
-    Path bcelJarPath =
-        Paths.get(System.getProperty("user.dir"), "..", "com.ibm.wala.core", "bcel-5.2.jar");
+    // assumes com.ibm.wala.core is the current working directory
+    Path bcelJarPath = Paths.get("build", "extractBcel", "bcel-5.2.jar");
     scope.addInputStreamForJarToScope(
         ClassLoaderReference.Application, new FileInputStream(bcelJarPath.toString()));
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
