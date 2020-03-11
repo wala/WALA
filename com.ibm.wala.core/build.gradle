@@ -294,11 +294,9 @@ final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {
 
 	main 'ocaml.compilers.ocamljavaMain'
 	args '-o', jarTarget
-	argumentProviders.add(new CommandLineArgumentProvider() {
-		Iterable<String> asArguments() {
-			return [ocamlSource.get().toString()]
-		}
-	})
+	argumentProviders.add({ ->
+		[ocamlSource.get().toString()]
+	} as CommandLineArgumentProvider)
 }
 
 
