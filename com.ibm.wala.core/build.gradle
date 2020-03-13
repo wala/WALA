@@ -56,9 +56,9 @@ tasks.named('javadoc') {
 //  download and extract kawa 3.0 "kawa.jar"
 //
 
-final def downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
+final downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
 	ext.version = '3.0'
-	final def archive = "kawa-${version}.zip"
+	final archive = "kawa-${version}.zip"
 	src "https://ftp.gnu.org/pub/gnu/kawa/$archive"
 	dest "$temporaryDir/$archive"
 	checksum '2713e6dfb939274ba3b1d36daea68436'
@@ -92,7 +92,7 @@ tasks.register('extractKawa') {
 class CompileKawaJar extends Jar {
 
 	@Nested
-	final def compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
+	final compile = project.task("compileKawaInto${name.capitalize()}", type: JavaExec) {
 		classpath project.tasks.named('extractKawa')
 		main 'kawa.repl'
 
@@ -127,15 +127,15 @@ class CompileKawaJar extends Jar {
 //  download, unpack, and build kawa chess
 //
 
-final def downloadKawaChess = tasks.register('downloadKawaChess', VerifiedDownload) {
+final downloadKawaChess = tasks.register('downloadKawaChess', VerifiedDownload) {
 	ext.commitHash = 'f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8'
 	src "https://github.com/ttu-fpclub/kawa-chess/archive/${commitHash}.zip"
 	dest "$temporaryDir/kawa-chess.zip"
 	checksum 'cf29613d2be5f476a475ee28b4df9d9e'
 }
 
-final def unpackKawaChess = tasks.register('unpackKawaChess') {
-	final def downloader = downloadKawaChess.get()
+final unpackKawaChess = tasks.register('unpackKawaChess') {
+	final downloader = downloadKawaChess.get()
 	inputs.files downloader
 	outputs.dir "$temporaryDir/kawa-chess-$downloader.commitHash"
 
@@ -149,8 +149,8 @@ final def unpackKawaChess = tasks.register('unpackKawaChess') {
 
 tasks.register('buildChessJar', CompileKawaJar) {
 	dependsOn unpackKawaChess
-	final def schemePath = { "${unpackKawaChess.get().outputs.files.singleFile}/${it}.scm" }
-	final def schemeFiles = files(['chess', 'gui', 'img', 'main', 'pos'].collect(schemePath))
+	final schemePath = { "${unpackKawaChess.get().outputs.files.singleFile}/${it}.scm" }
+	final schemeFiles = files(['chess', 'gui', 'img', 'main', 'pos'].collect(schemePath))
 	args schemePath('main')
 	inputs.files schemeFiles
 	baseName 'kawachess'
@@ -163,7 +163,7 @@ tasks.register('buildChessJar', CompileKawaJar) {
 //
 
 tasks.register('buildKawaTestJar', CompileKawaJar) {
-	final def schemeFile = file('kawasrc/test.scm')
+	final schemeFile = file('kawasrc/test.scm')
 	args schemeFile
 	inputs.files schemeFile
 	baseName 'kawatest'
@@ -175,9 +175,9 @@ tasks.register('buildKawaTestJar', CompileKawaJar) {
 //  download and extract "bcel-5.2.jar"
 //
 
-final def downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
+final downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
 	ext.basename = 'bcel-5.2'
-	final def archive = "${basename}.tar.gz"
+	final archive = "${basename}.tar.gz"
 	src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
 	dest "$temporaryDir/$archive"
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
@@ -236,7 +236,7 @@ tasks.register('collectJLex', Jar) {
 //  generate "hello_hash.jar"
 //
 
-final def downloadOcamlJava = tasks.register('downloadOcamlJava', VerifiedDownload) {
+final downloadOcamlJava = tasks.register('downloadOcamlJava', VerifiedDownload) {
 	def version = '2.0-alpha1'
 	ext.basename = "ocamljava-$version"
 	def archive = "${basename}.tar.gz"
@@ -245,7 +245,7 @@ final def downloadOcamlJava = tasks.register('downloadOcamlJava', VerifiedDownlo
 	checksum '45feec6e3889f5073a39c2c4c84878d1'
 }
 
-final def unpackOcamlJava = tasks.register('unpackOcamlJava', Sync) {
+final unpackOcamlJava = tasks.register('unpackOcamlJava', Sync) {
 	from downloadOcamlJava.map { tarTree it.dest }
 	into temporaryDir
 }

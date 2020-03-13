@@ -6,7 +6,7 @@ tasks.named('test') {
 	enabled = enableDalvikTests
 }
 
-final def downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
+final downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest "$temporaryDir/DroidBench_2.0.zip"
 	checksum '16726a48329835140e14f18470a1b4a3'
@@ -23,7 +23,7 @@ final unpackDroidBench = tasks.register('unpackDroidBench', Sync) {
 	includeEmptyDirs false
 }
 
-final def downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDownload) {
+final downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDownload) {
 	def sdkOs
 	switch (osName) {
 		case ~/Linux/:
@@ -47,7 +47,7 @@ final def downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDown
 	algorithm 'SHA-256'
 }
 
-final def installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
+final installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 	enabled = enableDalvikTests
 	from downloadAndroidSdk.map { zipTree it.dest }
 	into temporaryDir

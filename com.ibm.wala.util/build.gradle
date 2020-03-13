@@ -6,7 +6,7 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 tasks.named('javadoc') {
 	classpath += files project(':com.ibm.wala.core').tasks.named('compileJava', JavaCompile)
-	final def linksPrefix = sourceCompatibility >= JavaVersion.VERSION_11 ? 'en/java/' : ''
+	final linksPrefix = sourceCompatibility >= JavaVersion.VERSION_11 ? 'en/java/' : ''
 	options.links "https://docs.oracle.com/${linksPrefix}javase/$sourceCompatibility.majorVersion/docs/api/"
 }
 
