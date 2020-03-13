@@ -9,7 +9,7 @@ library {
 		}
 		if (targetMachine.operatingSystemFamily.macOs) {
 			linkTask.get().configure {
-				final def library = getNativeLibraryOutput(it)
+				final library = getNativeLibraryOutput(it)
 				linkerArgs.add "-Wl,-install_name,@rpath/$library.name"
 			}
 		}

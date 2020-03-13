@@ -34,7 +34,7 @@ tasks.named('test') {
 	maxHeapSize = '800M'
 }
 
-final def downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) {
+final downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) {
 	def version = '0.8.1'
 	def versionedArchive = "ajaxslt-${version}.tar.gz"
 	src "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/$versionedArchive"

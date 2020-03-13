@@ -14,7 +14,7 @@ application {
 
 	binaries.whenElementFinalized(CppExecutable) { binary ->
 		binary.linkTask.get().configure { linkTask ->
-			final def libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast:xlator_test').tasks.getByName(linkTask.name))
+			final libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast:xlator_test').tasks.getByName(linkTask.name))
 			addRpath(linkTask, libxlator_test)
 
 			if (binary.debuggable && !binary.optimized) {
@@ -49,10 +49,10 @@ application {
 					} as CommandLineArgumentProvider)
 
 					// log output to file, although we don't validate it
-					final def outFile = file("$temporaryDir/stdout-and-stderr.log")
+					final outFile = file("$temporaryDir/stdout-and-stderr.log")
 					outputs.file outFile
 					doFirst {
-						final def fileStream = new FileOutputStream(outFile)
+						final fileStream = new FileOutputStream(outFile)
 						standardOutput fileStream
 						errorOutput fileStream
 					}
