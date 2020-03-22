@@ -55,6 +55,10 @@ public class Slicer {
     NO_HEAP("no_heap", false, true, false, false),
     NO_HEAP_NO_EXCEPTIONS("no_heap_no_exceptions", false, true, false, true),
     NO_EXCEPTIONS("no_exceptions", false, false, false, true),
+    /**
+     * Note that other code in the slicer checks for the NONE case explicitly, so its effect is not
+     * entirely captured by the {@code is*()} methods in {@link DataDependenceOptions}
+     */
     NONE("none", true, true, true, true),
     REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
 
@@ -121,7 +125,11 @@ public class Slicer {
     /** track all control dependencies */
     FULL("full", false, false),
 
-    /** track no control dependencies */
+    /**
+     * track no control dependencies. Note that other code in the slicer checks for the NONE case
+     * explicitly, so its effect is not entirely captured by the {@code is*()} methods in {@link
+     * ControlDependenceOptions}
+     */
     NONE("none", true, true),
 
     /** don't track control dependence due to exceptional control flow */
