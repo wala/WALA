@@ -58,6 +58,8 @@ subprojects { subproject ->
 
 	repositories {
 		mavenCentral()
+		// to get r8
+		google()
 	}
 
 	eclipse {
