@@ -46,5 +46,5 @@ public interface IBytecodeMethod<I> extends IMethod {
 
   Collection<Annotation>[] getParameterAnnotations();
 
-  Collection<Annotation> getAnnotations(boolean runtimeVisible) throws InvalidClassFileException;
+  Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException;
 }
