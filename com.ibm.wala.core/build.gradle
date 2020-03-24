@@ -89,10 +89,11 @@ tasks.register('extractKawa') {
 //
 
 @CacheableTask
-class CompileKawaJar extends Jar {
+class CompileKawaScheme extends JavaExec {
 
-	@Nested
-	final compile = project.tasks.register("compileKawaInto${name.capitalize()}", JavaExec) {
+	final RegularFileProperty schemeFile = project.objects.fileProperty()
+
+	CompileKawaScheme() {
 		classpath project.tasks.named('extractKawa')
 		main 'kawa.repl'
 
@@ -100,22 +101,10 @@ class CompileKawaJar extends Jar {
 		outputs.dir temporaryDir
 
 		logging.captureStandardError LogLevel.INFO
-		args '--main', '-C', schemeFile.get()
+		args '--main', '-C'
+		argumentProviders.add({ -> [schemeFile.get() as String] } as CommandLineArgumentProvider)
 		inputs.file schemeFile
 	}
-
-	CompileKawaJar() {
-		from compile
-		archiveVersion.set null
-		destinationDirectory.set project.layout.buildDirectory.dir(name)
-	}
-
-	final RegularFileProperty schemeFile = project.objects.fileProperty()
-
-	void setBaseName(String name) {
-		archiveFileName.set "${name}.jar"
-	}
-
 }
 
 
@@ -144,11 +133,17 @@ final unpackKawaChess = tasks.register('unpackKawaChess') {
 	}
 }
 
-tasks.register('buildChessJar', CompileKawaJar) {
-	final mainScheme = unpackKawaChess.map { file("$it.outputs.files.singleFile/main.scm") }
-	schemeFile.fileProvider mainScheme
-	inputs.files unpackKawaChess
-	baseName 'kawachess'
+final compileKawaSchemeChessMain = tasks.register('compileKawaSchemeChessMain', CompileKawaScheme) {
+	schemeFile.fileProvider unpackKawaChess.map {
+		file("$it.outputs.files.singleFile/main.scm")
+	}
+}
+
+tasks.register('buildChessJar', Jar) {
+	from compileKawaSchemeChessMain
+	destinationDirectory = project.layout.buildDirectory.dir name
+	archiveFileName = 'kawachess.jar'
+	archiveVersion = null
 }
 
 
@@ -157,10 +152,15 @@ tasks.register('buildChessJar', CompileKawaJar) {
 //  build the kawa test jar
 //
 
-tasks.register('buildKawaTestJar', CompileKawaJar) {
-	final testScheme = file('kawasrc/test.scm')
-	schemeFile.fileValue testScheme
-	baseName 'kawatest'
+final compileKawaSchemeTest = tasks.register('compileKawaSchemeTest', CompileKawaScheme) {
+	schemeFile = layout.projectDirectory.file('kawasrc/test.scm')
+}
+
+tasks.register('buildKawaTestJar', Jar) {
+	from compileKawaSchemeTest
+	destinationDirectory = project.layout.buildDirectory.dir name
+	archiveFileName = 'kawatest.jar'
+	archiveVersion = null
 }
 
 
