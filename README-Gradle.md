@@ -31,44 +31,38 @@ feature.
 
 ### Importing WALA Projects Into Eclipse
 
-Once you are running a Buildship-enabled Eclipse, **[use the “Existing
-Gradle Project” import
-wizard](http://www.vogella.com/tutorials/EclipseGradle/article.html#import-an-existing-gradle-project)
-to import WALA into Eclipse.** Select and import the topmost level of
-your WALA source tree.  On the “Import Options” page of the import
-wizard, leave all settings at their defaults: the “Override workspace
-settings” option should be off, and the grayed-out “Gradle
-distribution” choice should be set to “Gradle wrapper”.  You do not
-need to select each of WALA’s sub-projects; import only the top-level
-WALA source tree, and the rest will follow.
+Once you are running a Buildship-enabled Eclipse, run the following command:
+```bash
+./gradlew eclipse
+```
+This will build the Eclipse metadata. Then, import the **existing**
+projects to your workspace. Select and import the topmost level of
+your WALA source tree and select "search for nested projects."
+On the “Import Options” page of the import
 
 The first time you import the WALA project, Eclipse will synchronize
 its project model with the Gradle build configuration, including
-downloading some large supporting libraries.  The “Import Gradle
-Project” wizard may spend tens of minutes showing “Importing root
-project: Configure project :” with no movement of its progress bar.
+downloading some large supporting libraries.  The build may spend 
+tens of minutes showing with no movement of its progress bar.
 This is normal.  [Be
 patient](#external-dependencies-patience-is-a-virtue) during the
 initial project import, especially if you have a slow network
 connection.
 
 Note: a pristine WALA source tree is *not* pre-configured as a group
-of Eclipse projects.  Using the standard Eclipse “Existing Projects
-into Workspace” import wizard will not work correctly.  You must [use
-the “Existing Gradle Project” import
-wizard](http://www.vogella.com/tutorials/EclipseGradle/article.html#import-an-existing-gradle-project)
-instead.
+of Eclipse projects. They must be *generated* using the `eclipse`
+Gradle task (`cleanEclipse` can be used to remove them).
 
-### `.classpath` and `.project` as Generated Files
+### `.classpath`, `.project`, and `.settings` as Generated Files
 
-You will find no `.classpath` or `.project` files anywhere in [the
+You will find no `.classpath`, `.project`, or `.settings` files anywhere in [the
 Gradle fork of WALA’s git repository](https://github.com/liblit/WALA).
 Importing using the “Existing Gradle Project” wizard creates these
 Eclipse project configuration files automatically based on the
 underlying Gradle configuration.
 
 Therefore, when working with Eclipse + Gradle, you should **treat
-`.classpath` and `.project` files as *generated* artifacts,** not as
+`.classpath`, `.project`, and `.settings` files as *generated* artifacts,** not as
 files to edit directly or through the Eclipse project configuration
 GUI.  For example, avoid using the Java Build Path settings dialog to
 make changes that are stored in a `.classpath` file:  the modified
