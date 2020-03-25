@@ -50,17 +50,10 @@ final downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDownload
 final installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 	enabled = enableDalvikTests
 	from downloadAndroidSdk.map { zipTree it.dest }
-	into temporaryDir
+	into layout.buildDirectory.dir(name)
 
-	def buildToolsVersion = '28.0.3'
 	ext {
-		version = [
-				'build-tools': buildToolsVersion,
-				'platforms'  : "android-${buildToolsVersion.tokenize('.')[0]}"
-		]
-		component = {
-			file "${outputs.files.singleFile}/$it/${version[it]}"
-		}
+		platformsVersion = 'android-28'
 	}
 
 	doLast {
@@ -90,8 +83,7 @@ final installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 			// Gradle under Java 1.8.
 			environment('JAVA_HOME', System.properties.'java.home')
 
-			def componentArgs = version.collect { "$it.key$semicolon$it.value" }.join ' '
-			commandLine shell, shellFlags, "$yes | $temporaryDir/tools/bin/sdkmanager $componentArgs >$discard"
+			commandLine shell, shellFlags, "$yes | $destinationDir/tools/bin/sdkmanager platforms$semicolon$platformsVersion >$discard"
 		}
 	}
 	outputs.cacheIf { true }
@@ -147,7 +139,7 @@ dependencies {
 	)
 	testRuntimeOnly(
 			// directory containing "android.jar", which various tests want to find as a resource
-			files(installAndroidSdk.map { it.component('platforms') }),
+			files(installAndroidSdk.map { "$it.outputs.files.singleFile/platforms/$it.platformsVersion" }),
 	)
 }
 
