@@ -54,6 +54,11 @@ subprojects { subproject ->
 	apply plugin: 'maven-publish'
 	apply plugin: 'signing'
 
+	java {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
 	version rootProject.version
 
 	repositories {
