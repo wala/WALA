@@ -16,14 +16,15 @@ dependencies {
 }
 
 final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
-	src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
-	dest "$temporaryDir/nodejs.zip"
-	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
+	src 'https://nodejs.org/dist/v0.12.4/node-v0.12.4.tar.gz'
+	dest "$temporaryDir/nodejs.tar.gz"
+	algorithm 'SHA-1'
+	checksum '147ff79947752399b870fcf3f1fc37102100b545'
 }
 
 tasks.register('unpackNodeJSLib', Copy) {
-	from(downloadNodeJS.map { zipTree it.dest }) {
-		include 'nodejs-node-0a604e9/lib/*.js'
+	from(downloadNodeJS.map { tarTree it.dest }) {
+		include 'node-v0.12.4/lib/*.js'
 		eachFile {
 			relativePath RelativePath.parse(!directory, relativePath.lastName)
 		}
