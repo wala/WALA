@@ -50,12 +50,25 @@ public abstract class AnnotationTest extends WalaTestCase {
 
   private final IClassHierarchy cha;
 
-  protected AnnotationTest(IClassHierarchy cha) {
+  /**
+   * Should we only check for annotations whose retention is {@link
+   * java.lang.annotation.RetentionPolicy#RUNTIME}? Useful for d8 on Android, which strips
+   * everything but runtime retention annotations
+   */
+  private final boolean checkRuntimeRetentionOnly;
+
+  protected AnnotationTest(IClassHierarchy cha, boolean checkRuntimeRetentionOnly) {
     this.cha = cha;
+    this.checkRuntimeRetentionOnly = checkRuntimeRetentionOnly;
+  }
+
+  public AnnotationTest(boolean checkRuntimeRetentionOnly)
+      throws ClassHierarchyException, IOException {
+    this(makeCHA(), checkRuntimeRetentionOnly);
   }
 
   public AnnotationTest() throws ClassHierarchyException, IOException {
-    this(makeCHA());
+    this(false);
   }
 
   public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
@@ -151,7 +164,9 @@ public abstract class AnnotationTest extends WalaTestCase {
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
     Collection<Annotation> runtimeVisibleAnnotations = bcClassUnderTest.getAnnotations(false);
-    assertEqualCollections(expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
+    if (!checkRuntimeRetentionOnly) {
+      assertEqualCollections(expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
+    }
     assertEqualCollections(expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
   }
 
@@ -165,7 +180,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     IClass klass = cha.lookupClass(typeRef);
     assertNotNull(typeRef + " must exist", klass);
     BytecodeClass<?> shrikeClass = (BytecodeClass<?>) klass;
-    Collection<Annotation> classAnnotations = shrikeClass.getAnnotations(true);
+    Collection<Annotation> classAnnotations = shrikeClass.getAnnotations(false);
     assertEquals(
         "[Annotation type <Application,Lannotations/AnnotationWithParams> {strParam=classStrParam}]",
         classAnnotations.toString());
@@ -180,10 +195,10 @@ public abstract class AnnotationTest extends WalaTestCase {
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
         (IBytecodeMethod<IInstruction>) methodUnderTest;
 
-    Collection<Annotation> runtimeInvisibleAnnotations = bcMethodUnderTest.getAnnotations(true);
-    assertEquals(1, runtimeInvisibleAnnotations.size());
+    Collection<Annotation> runtimeVisibleAnnotations = bcMethodUnderTest.getAnnotations(false);
+    assertEquals(1, runtimeVisibleAnnotations.size());
 
-    Annotation x = runtimeInvisibleAnnotations.iterator().next();
+    Annotation x = runtimeVisibleAnnotations.iterator().next();
     assertEquals(
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotationWithParams"),
@@ -217,9 +232,18 @@ public abstract class AnnotationTest extends WalaTestCase {
     assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
-    assertEquals(
-        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>, Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
-        annots.toString());
+    Collection<Annotation> expectedAnnotations = HashSetFactory.make();
+    expectedAnnotations.add(
+        Annotation.make(
+            TypeReference.findOrCreate(
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+    if (!checkRuntimeRetentionOnly) {
+      expectedAnnotations.add(
+          Annotation.make(
+              TypeReference.findOrCreate(
+                  ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+    }
+    assertEqualCollections(expectedAnnotations, annots);
   }
 
   @Test
@@ -243,19 +267,29 @@ public abstract class AnnotationTest extends WalaTestCase {
         typeRef,
         "foo2(Ljava/lang/String;Ljava/lang/Integer;)V",
         new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"},
-        new String[] {"Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"});
+        checkRuntimeRetentionOnly
+            ? new String[] {}
+            : new String[] {
+              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"
+            });
     checkParameterAnnots(
         typeRef,
         "foo3(Ljava/lang/String;Ljava/lang/Integer;)V",
         new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"},
-        new String[] {"Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"});
+        checkRuntimeRetentionOnly
+            ? new String[] {}
+            : new String[] {
+              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"
+            });
     checkParameterAnnots(
         typeRef,
         "foo4(Ljava/lang/String;Ljava/lang/Integer;)V",
-        new String[] {
-          "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>",
-          "Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"
-        },
+        checkRuntimeRetentionOnly
+            ? new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"}
+            : new String[] {
+              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>",
+              "Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"
+            },
         new String[0]);
   }
 

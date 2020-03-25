@@ -18,6 +18,8 @@ import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -50,22 +52,27 @@ public class Util {
   }
 
   public static File convertJarToDex(String jarFile) throws IOException {
-    File f = File.createTempFile("convert", ".dex");
-    // f.deleteOnExit();
-    System.err.println(f);
-    // pass --min-sdk-version 26 to allow for invokedynamic
-    com.android.dx.command.Main.main(
+    Path tmpDir = Files.createTempDirectory("dex");
+    tmpDir.toFile().deleteOnExit();
+    System.err.println(tmpDir);
+    com.android.tools.r8.D8.main(
         new String[] {
-          "--dex", "--min-sdk-version", "26", "--output=" + f.getAbsolutePath(), jarFile
+          "--lib",
+          androidJavaLib().getAbsolutePath(),
+          "--min-api",
+          "26",
+          "--output",
+          tmpDir.toAbsolutePath().toString(),
+          jarFile
         });
-    return f;
+    return tmpDir.resolve("classes.dex").toFile();
   }
 
   public static File androidJavaLib() throws IOException {
     if (walaProperties != null && walaProperties.getProperty(ANDROID_RT_JAVA_JAR) != null) {
       return new File(walaProperties.getProperty(ANDROID_RT_JAVA_JAR));
     } else {
-      File F = File.createTempFile("android", "jar");
+      File F = File.createTempFile("android", ".jar");
       F.deleteOnExit();
       TemporaryFile.urlToFile(F, Util.class.getClassLoader().getResource("android.jar"));
       return F;

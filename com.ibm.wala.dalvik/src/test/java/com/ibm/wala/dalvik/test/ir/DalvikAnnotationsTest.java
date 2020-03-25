@@ -12,6 +12,6 @@ public class DalvikAnnotationsTest extends AnnotationTest {
   }
 
   public DalvikAnnotationsTest() throws ClassHierarchyException, IOException {
-    super(Util.makeCHA());
+    super(Util.makeCHA(), true);
   }
 }

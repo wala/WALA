@@ -135,10 +135,10 @@ dependencies {
 	)
 	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testImplementation(
+			'com.android.tools:r8:1.6.84',
 			'junit:junit:4.13',
 			'org.osgi:org.osgi.core:6.0.0',
 			'org.smali:dexlib2:2.4.0',
-			files(installAndroidSdk.map { "${it.component('build-tools')}/lib/dx.jar" }),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
 			project(':com.ibm.wala.shrike'),

@@ -57,6 +57,7 @@ subprojects { subproject ->
 	version rootProject.version
 
 	repositories {
+		google() // to get r8
 		mavenCentral()
 	}
 
