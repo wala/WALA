@@ -199,7 +199,8 @@ public final class Debug {
     LogStream logStream = logStreams.get(level);
     if (OUT_STREAM != null && logStream == null) {
       logStream = new LogStream(OUT_STREAM, level);
-      logStreams.put(level, logStream);
+      @SuppressWarnings({"resource", "unused"})
+      LogStream put = logStreams.put(level, logStream);
     }
 
     return logStream;
