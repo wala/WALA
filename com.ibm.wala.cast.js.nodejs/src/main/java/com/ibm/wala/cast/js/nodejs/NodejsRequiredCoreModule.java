@@ -106,7 +106,9 @@ public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
       names.put(name, f);
     }
     File file = names.get(name);
-    TemporaryFile.streamToFile(file, getModule(name));
+    try (InputStream module = getModule(name)) {
+      TemporaryFile.streamToFile(file, module);
+    }
     SourceFileModule sourceFileModule =
         CAstCallGraphUtil.makeSourceModule(file.toURI().toURL(), file.getName());
     return new NodejsRequiredCoreModule(file, sourceFileModule);
