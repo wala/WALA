@@ -46,6 +46,7 @@ import com.ibm.wala.util.warnings.Warning;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Collection;
@@ -87,7 +88,9 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     } else {
       File f = File.createTempFile("module", ".txt");
       f.deleteOnExit();
-      TemporaryFile.streamToFile(f, M.getInputStream());
+      try (InputStream inputStream = M.getInputStream()) {
+        TemporaryFile.streamToFile(f, inputStream);
+      }
       return f;
     }
   }
