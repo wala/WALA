@@ -124,7 +124,9 @@ public class OfflineDynamicCallGraph {
         if ("--runtime".equals(args[i])) {
           runtime = Class.forName(args[i + 1]);
         } else if ("--exclusions".equals(args[i])) {
-          filter = new FileOfClasses(new FileInputStream(args[i + 1]));
+          try (FileInputStream input = new FileInputStream(args[i + 1])) {
+            filter = new FileOfClasses(input);
+          }
         } else if ("--dont-patch-exits".equals(args[i])) {
           patchExits = false;
         } else if ("--patch-calls".equals(args[i])) {
