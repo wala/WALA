@@ -35,7 +35,9 @@ public class TemporaryFile {
   }
 
   public static File urlToFile(File F, URL input) throws IOException {
-    return streamToFile(F, input.openStream());
+    try (InputStream openStream = input.openStream()) {
+      return streamToFile(F, openStream);
+    }
   }
 
   public static File streamToFile(File F, InputStream... inputs) throws IOException {
