@@ -18,6 +18,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -72,7 +73,9 @@ public class JavaScriptEclipseProjectPath
     for (Pair<String, Plugin> model : models) {
       URL modelFile = JsdtUtil.getPrologueFile(model.fst, model.snd);
       assert modelFile != null : "cannot find file for " + model;
-      s.add(new JSCallGraphUtil.Bootstrap(model.fst, modelFile.openStream(), modelFile));
+      try (InputStream openStream = modelFile.openStream()) {
+        s.add(new JSCallGraphUtil.Bootstrap(model.fst, openStream, modelFile));
+      }
     }
 
     return path;
