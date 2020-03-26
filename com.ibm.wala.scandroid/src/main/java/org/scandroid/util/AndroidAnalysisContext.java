@@ -290,12 +290,13 @@ public class AndroidAnalysisContext {
 
   private static XMLMethodSummaryReader loadMethodSummaries(
       AnalysisScope scope, InputStream xmlIStream) {
-    try (InputStream s =
-        xmlIStream != null
-            ? xmlIStream
-            : AndroidAnalysisContext.class
-                .getClassLoader()
-                .getResourceAsStream(pathToSpec + File.separator + methodSpec)) {
+    try (@SuppressWarnings("resource")
+        InputStream s =
+            xmlIStream != null
+                ? xmlIStream
+                : AndroidAnalysisContext.class
+                    .getClassLoader()
+                    .getResourceAsStream(pathToSpec + File.separator + methodSpec)) {
       return new XMLMethodSummaryReader(s, scope);
     } catch (IOException e) {
       e.printStackTrace();
