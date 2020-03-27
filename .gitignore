@@ -4,7 +4,6 @@
 .DS_Store
 .project
 /*/.classpath
-.settings/
 /*/bin/
 /.gradle/
 /.vscode/settings.json
