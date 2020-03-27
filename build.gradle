@@ -113,8 +113,8 @@ subprojects { subproject ->
 		case 'eclipse':
 			apply plugin: 'de.set.ecj'
 			ext.javaCompiler = 'ecj'
-			// the toolVersion here is the version of the org.eclipse.jdt:org.eclipse.jdt.core
-			// artifact, which now contains ECJ
+			// the toolVersion here is the version of the org.eclipse.jdt:ecj artifact
+			// on Maven Central: https://search.maven.org/artifact/org.eclipse.jdt/ecj
 			ecj.toolVersion = '3.21.0'
 			tasks.withType(JavaCompile).configureEach {
 				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
