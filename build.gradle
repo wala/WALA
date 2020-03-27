@@ -113,6 +113,7 @@ subprojects { subproject ->
 		case 'eclipse':
 			apply plugin: 'de.set.ecj'
 			ext.javaCompiler = 'ecj'
+			ecj.toolVersion = '3.21.0'
 			tasks.withType(JavaCompile).configureEach {
 				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
 			}
