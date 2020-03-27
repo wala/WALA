@@ -53,16 +53,16 @@ Note: a pristine WALA source tree is *not* pre-configured as a group
 of Eclipse projects. They must be *generated* using the `eclipse`
 Gradle task (`cleanEclipse` can be used to remove them).
 
-### `.classpath`, `.project`, and `.settings` as Generated Files
+### `.classpath` and `.project` as Generated Files
 
-You will find no `.classpath`, `.project`, or `.settings` files anywhere in [the
+You will find no `.classpath` or `.project` files anywhere in [the
 Gradle fork of WALA’s git repository](https://github.com/liblit/WALA).
 Importing using the “Existing Gradle Project” wizard creates these
 Eclipse project configuration files automatically based on the
 underlying Gradle configuration.
 
 Therefore, when working with Eclipse + Gradle, you should **treat
-`.classpath`, `.project`, and `.settings` files as *generated* artifacts,** not as
+`.classpath` and `.project` files as *generated* artifacts,** not as
 files to edit directly or through the Eclipse project configuration
 GUI.  For example, avoid using the Java Build Path settings dialog to
 make changes that are stored in a `.classpath` file:  the modified
