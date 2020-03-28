@@ -341,6 +341,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     }
   }
 
+  @SuppressWarnings("resource")
   public static Module getPrologueFile(final String name) {
     return new Bootstrap(
         name,
