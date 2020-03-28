@@ -28,9 +28,4 @@ class EclipseJavaCompilerFactory implements JavaCompilerFactory {
   public Compiler<JavaCompileSpec> create(Class<? extends CompileSpec> type) {
     return new NormalizingJavaCompiler(new EclipseJavaCompiler(project));
   }
-
-  @Override
-  public Compiler<JavaCompileSpec> createForJointCompilation(Class<? extends CompileSpec> type) {
-    return create(type);
-  }
 }
