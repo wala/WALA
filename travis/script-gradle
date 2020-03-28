@@ -8,7 +8,7 @@ case "$(javac -version 2>&1)" in
   (javac\ 1.8.*)
      # linters only need to run on one operating system
      if [ "${TRAVIS_OS_NAME:-}" = linux ]; then
-       run_gradle -PjavaCompiler=ecj linters compileJava compileTestJava javadoc
+       run_gradle -PjavaCompiler=ecj linters compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava javadoc
      fi
      run_gradle build publishToMavenLocal
      ;;

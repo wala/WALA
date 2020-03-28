@@ -50,7 +50,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Compile Java using Gradle and ECJ
-        run: ./gradlew --continue --no-build-cache --no-daemon -PjavaCompiler=${{ matrix.java-compiler }} compileJava compileTestJava
+        run: ./gradlew --continue --no-build-cache --no-daemon -PjavaCompiler=${{ matrix.java-compiler }} compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava
         if: matrix.java-compiler == 'ecj'
       - name: Build and test using Gradle and default JDK compiler
         run: ./gradlew --continue --no-build-cache --no-daemon linters javadoc build
