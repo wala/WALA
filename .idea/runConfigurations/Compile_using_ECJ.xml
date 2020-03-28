@@ -12,6 +12,8 @@
         <list>
           <option value="compileJava" />
           <option value="compileTestJava" />
+	  <option value="compileTestFixturesJava" />
+	  <option value="compileTestSubjectsJava" />
         </list>
       </option>
       <option name="vmOptions" value="" />
