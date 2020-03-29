@@ -6,12 +6,12 @@ run_gradle() {
 
 case "$(javac -version 2>&1)" in
   (javac\ 1.8.*)
-     # linters only need to run on one operating system
-     if [ "${TRAVIS_OS_NAME:-}" = linux ]; then
-       run_gradle -PjavaCompiler=ecj linters compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava javadoc
-     fi
-     run_gradle build publishToMavenLocal
-     ;;
+    # ECJ compilation only needs to run on one operating system; we choose Linux arbitrarily
+    if [ "${TRAVIS_OS_NAME:-}" != linux ]; then
+      skip_ecj=-PskipJavaUsingEcjTasks
+    fi
+    run_gradle ${skip_ecj:-} linters javadoc build publishToMavenLocal
+    ;;
   (*)
     run_gradle :com.ibm.wala.core:test
     ;;

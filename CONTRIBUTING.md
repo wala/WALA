@@ -22,7 +22,7 @@ part of a standard run of `./gradlew build`.  You can run these checks locally
 with the following command:
 
 ```
-./gradlew -PjavaCompiler=ecj linters compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava
+./gradlew linters
 ```
 
 If this command fails, a CI job will fail as well.

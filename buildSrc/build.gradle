@@ -1,7 +1,11 @@
 repositories {
+	maven {
+		url 'https://plugins.gradle.org/m2/'
+	}
 	mavenCentral()
 }
 
 dependencies {
 	implementation 'de.undercouch:gradle-download-task:4.0.4'
+	implementation 'gradle.plugin.de.set.gradle:gradle-eclipse-compiler-plugin:1.4.1'
 }
