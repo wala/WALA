@@ -167,6 +167,13 @@ allprojects {
 	}
 }
 
+
+
+
+
+
+
+
 tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	description = 'Generate javadocs from all child projects as if they were a single project'
 	group = 'Documentation'
