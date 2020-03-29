@@ -167,7 +167,7 @@ allprojects {
 	}
 }
 
-tasks.register('aggregatedJavadocs', Javadoc) {
+tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	description = 'Generate javadocs from all child projects as if they were a single project'
 	group = 'Documentation'
 	destinationDir = file("$buildDir/docs/javadoc")
@@ -176,10 +176,10 @@ tasks.register('aggregatedJavadocs', Javadoc) {
 
 	subprojects.each { proj ->
 		proj.tasks.withType(Javadoc).configureEach { javadocTask ->
-			source += javadocTask.source
-			classpath += javadocTask.classpath
-			excludes += javadocTask.excludes
-			includes += javadocTask.includes
+			aggregated.source += javadocTask.source
+			aggregated.classpath += javadocTask.classpath
+			aggregated.excludes += javadocTask.excludes
+			aggregated.includes += javadocTask.includes
 		}
 	}
 }
