@@ -53,7 +53,7 @@ jobs:
         run: ./gradlew --continue --no-build-cache --no-daemon -PjavaCompiler=${{ matrix.java-compiler }} compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava
         if: matrix.java-compiler == 'ecj'
       - name: Build and test using Gradle and default JDK compiler
-        run: ./gradlew --continue --no-build-cache --no-daemon linters javadoc build
+        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build
         if: matrix.java-compiler != 'ecj'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
