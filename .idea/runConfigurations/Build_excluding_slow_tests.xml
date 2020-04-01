@@ -10,7 +10,6 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="linters" />
           <option value="javadoc" />
           <option value="build" />
         </list>

@@ -215,7 +215,7 @@ if (isWindows) {
 	// create a real "shellCheck" task that actually runs the "shellcheck" linter, if available
 	tasks.register('shellCheck', Exec) {
 		description 'Check all shell scripts using shellcheck, if available'
-		group 'lint'
+		group 'verification'
 
 		inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
 		outputs.file "$temporaryDir/log"
@@ -239,11 +239,16 @@ if (isWindows) {
 
 // Java formatting
 googleJavaFormat {
+	group 'verification'
 	toolVersion = '1.7'
 	// exclude since various tests make assertions based on
 	// source positions in the test inputs.  to auto-format
 	// we also need to update the test assertions
 	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
+}
+
+tasks.named('verifyGoogleJavaFormat') {
+	group 'verification'
 }
 
 // install Java reformatter as git pre-commit hook
@@ -255,8 +260,8 @@ tasks.register('installGitHooks', Copy) {
 }
 
 // run all known linters
-tasks.register('linters') {
-	group = 'lint'
+tasks.register('check') {
+	group = 'verification'
 	dependsOn(
 			// 'lintGradle',
 			'shellCheck',
