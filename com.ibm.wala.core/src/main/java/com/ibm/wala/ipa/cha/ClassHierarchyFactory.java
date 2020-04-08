@@ -29,6 +29,10 @@ public class ClassHierarchyFactory {
   }
 
   /**
+   * NOTE: phantom classes are a work-in-progress and this functionality has known bugs; see
+   * https://github.com/wala/WALA/pull/335. At this point, we recommend using {@link
+   * #makeWithRoot(AnalysisScope)} instead.
+   *
    * @return a ClassHierarchy object representing the analysis scope, where phantom classes are
    *     created when superclasses are missing
    */
