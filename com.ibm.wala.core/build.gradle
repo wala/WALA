@@ -19,11 +19,14 @@ sourceSets {
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
 
-if (javaCompiler == 'ecj') {
-	compileTestSubjectsJava.configure {
-		options.compilerArgs << '-err:none'
-		options.compilerArgs << '-warn:none'
-	}
+final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
+ecjCompileJavaTestSubjects.configure {
+	options.compilerArgs << '-err:none'
+	options.compilerArgs << '-warn:none'
+}
+
+tasks.named('check') {
+	dependsOn ecjCompileJavaTestSubjects
 }
 
 dependencies {
