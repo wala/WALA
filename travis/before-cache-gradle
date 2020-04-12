@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -ux
 
 caches="$HOME/.gradle/caches"
 
@@ -10,3 +10,6 @@ find "$caches" -name cache.properties -delete
 find "$caches" -name workerMain -type d -prune -exec rm -r "{}" \;
 find "$caches" -name '*.bin' -delete
 find "$caches" -name '*.lock' -delete
+
+# Consider script to have succeeded even if some "find ... -delete" commands failed.
+:
