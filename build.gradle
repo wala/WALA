@@ -11,7 +11,6 @@ plugins {
 	id 'com.diffplug.eclipse.mavencentral' version '3.22.0' apply false
 	id 'com.github.ben-manes.versions' version '0.28.0'
 	id 'com.github.sherter.google-java-format' version '0.8'
-	id 'de.set.ecj' version '1.4.1' apply false
 	id 'de.undercouch.download'
 //	id 'nebula.lint' version '14.2.5'
 }
@@ -97,36 +96,16 @@ subprojects { subproject ->
 		}
 	}
 
-	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
-	// :com.ibm.wala.cast:compileTestJava, which requires JNI support that ECJ does not offer.
-	tasks.withType(JavaCompile).configureEach {
-		it.ext.originalToolChain = it.toolChain
-		options.encoding = 'UTF-8'
+	final ecjCompileTaskProviders = sourceSets.collect { sourceSet ->
+		JavaCompileUsingEcj.withSourceSet(subproject, sourceSet)
 	}
 
-	// Use ECJ instead of default Java compiler if "javaCompiler" project property is set to either
-	// "ecj" or "eclipse" (case-insensitive).  For example, use "-PjavaCompiler=ecj" on Gradle
-	// command line or add "javaCompiler=ecj" to the "gradle.properties" file.
-	final javaCompilerProperty = subproject.findProperty('javaCompiler')?.toLowerCase()
-	switch (javaCompilerProperty) {
-		case 'ecj':
-		case 'eclipse':
-			apply plugin: 'de.set.ecj'
-			ext.javaCompiler = 'ecj'
-			// the toolVersion here is the version of the org.eclipse.jdt:ecj artifact
-			// on Maven Central: https://search.maven.org/artifact/org.eclipse.jdt/ecj
-			ecj.toolVersion = '3.21.0'
-			tasks.withType(JavaCompile).configureEach {
-				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
-			}
-			break
-		case 'default':
-		case '':
-		case null:
-			ext.javaCompiler = 'default'
-			break
-		default:
-			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
+	project.tasks.named('check').configure {
+		dependsOn ecjCompileTaskProviders
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = 'UTF-8'
 	}
 
 	// Special hack for WALA as an included build.  Composite

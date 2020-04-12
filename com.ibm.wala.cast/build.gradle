@@ -36,12 +36,6 @@ tasks.named('javadoc', Javadoc) {
 
 tasks.named('compileTestJava') {
 	options.headerOutputDirectory.set file('build/headers')
-
-	// ECJ does not implement the "-h" flag required when the
-	// headerOutputDirectory option is used, so we must switch
-	// back to the default Java compiler for this one task.
-	toolChain = it.ext.originalToolChain
-	options.compilerArgs = []
 }
 
 final getProjectLibraryDirectory(project_name, link_task_name) {
