@@ -24,7 +24,7 @@ which runs additional lint checks
 2. Checking that all code is formatted according to [Google Java
   Format](https://github.com/google/google-java-format) standards
 
-If your code fails check 2, you can run `./gradlew goJF` to automatically format
+If your code fails check 2, you can run `./gradlew googleJavaFormat` to automatically format
 it.  The CI job runs `./gradlew build` and will fail if any of these additional
 checks fail.
 
