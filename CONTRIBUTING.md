@@ -14,18 +14,20 @@ For big features, please open an issue so that we can agree on the direction, an
 
 Small pull requests for things like typos, bug fixes, etc are always welcome.
 
-Continous Integration Checks
-----------------------------
+Additional Checks
+-----------------
 
-Certain checks run on our continuous integration (CI) jobs that do not run as
-part of a standard run of `./gradlew build`.  You can run these checks locally
-with the following command:
+Beyond tests, other checks run as part of `./gradlew check` and `./gradlew build`, including:
 
-```
-./gradlew -PjavaCompiler=ecj compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava
-```
+1. Compilation with the Java compiler from [Eclipse JDT Core](https://www.eclipse.org/jdt/core/),
+which runs additional lint checks
+2. Checking that all code is formatted according to [Google Java
+  Format](https://github.com/google/google-java-format) standards
 
-If this command fails, a CI job will fail as well.
+If your code fails check 2, you can run `./gradlew goJF` to automatically format
+it.  The CI job runs `./gradlew build` and will fail if any of these additional
+checks fail.
+
 
 DOs and DON'Ts
 --------------
