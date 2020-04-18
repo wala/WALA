@@ -943,19 +943,19 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       }
 
       // TODO: fix the correlation-tracking rewriters, and kill the old for..in translation
-      if (useNewForIn) {
-        // set up
-        String tempName = "for in loop temp";
-        CAstNode[] loopHeader =
-            new CAstNode[] {
-              Ast.makeNode(
-                  CAstNode.DECL_STMT,
-                  Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)),
-                  readName(arg, null, "$$undefined")),
-              Ast.makeNode(
-                  CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
-            };
 
+      // set up
+      String tempName = "for in loop temp";
+      CAstNode[] loopHeader =
+          new CAstNode[] {
+            Ast.makeNode(
+                CAstNode.DECL_STMT,
+                Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)),
+                readName(arg, null, "$$undefined")),
+            Ast.makeNode(
+                CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
+          };
+      if (useNewForIn) {
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
             : var.getClass() + " " + var;
         if (var instanceof Name) {
@@ -1023,19 +1023,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                                 readName(arg, null, name))),
                         body),
                     breakLabel));
-        arg.cfg().map(node, loop);
       } else {
-        String tempName = "for in loop temp";
-        CAstNode[] loopHeader =
-            new CAstNode[] {
-              Ast.makeNode(
-                  CAstNode.DECL_STMT,
-                  Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)),
-                  readName(arg, null, "$$undefined")),
-              Ast.makeNode(
-                  CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
-            };
-
         CAstNode initNode;
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
             : var.getClass() + " " + var + " " + var.getLineno() + ":" + var.getPosition();
@@ -1112,8 +1100,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
                                     readName(arg, null, name))),
                         body),
                     breakLabel));
-        arg.cfg().map(node, loop);
       }
+      arg.cfg().map(node, loop);
 
       arg.cfg().map(get, get);
       CAstNode ctch = arg.getCatchTarget();
