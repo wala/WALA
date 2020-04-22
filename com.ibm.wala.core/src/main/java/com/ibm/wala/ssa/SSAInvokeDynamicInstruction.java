@@ -47,4 +47,17 @@ public class SSAInvokeDynamicInstruction extends SSAInvokeInstruction {
   public BootstrapMethod getBootstrap() {
     return bootstrap;
   }
+
+  /**
+   * Mark the instruction as an invokedynamic. The String will also contain the invocation type of
+   * the boostrap method
+   *
+   * @param symbolTable the symbol table
+   * @return result of {@link SSAAbstractInvokeInstruction#toString(SymbolTable)} with
+   *     "[invokedynamic] " pre-pended
+   */
+  @Override
+  public String toString(SymbolTable symbolTable) {
+    return "[invokedynamic] " + super.toString(symbolTable);
+  }
 }
