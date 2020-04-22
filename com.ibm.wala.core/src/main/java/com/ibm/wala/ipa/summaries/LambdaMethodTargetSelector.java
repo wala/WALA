@@ -82,7 +82,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
             MethodReference target = site.getDeclaredTarget();
             try {
               return methodSummaries.computeIfAbsent(
-                  invoke.getBootstrap(),
+                  bootstrap,
                   (b) -> {
                     MethodSummary summary = getLambdaFactorySummary(caller, site, target, invoke);
                     return new SummarizedMethod(
