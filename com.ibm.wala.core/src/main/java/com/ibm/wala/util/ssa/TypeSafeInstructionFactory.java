@@ -54,7 +54,6 @@ import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAGotoInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -266,8 +265,9 @@ public class TypeSafeInstructionFactory {
    * @param exception An SSAValue receiving the exception-object when something in the method throws
    *     unhandled
    * @param site The CallSiteReference to this call.
+   * @return the invocation instruction
    */
-  public SSAInvokeInstruction InvokeInstruction(
+  public SSAAbstractInvokeInstruction InvokeInstruction(
       final int iindex,
       List<? extends SSAValue> params,
       final SSAValue exception,

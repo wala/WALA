@@ -36,6 +36,7 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -478,7 +479,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         int[] params = new int[1];
         params[0] = alloc;
         int exc = getExceptionsForType(T);
-        SSAInvokeInstruction s =
+        SSAAbstractInvokeInstruction s =
             insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
         calls.add(s);
         allInstructions.add(s);
@@ -549,7 +550,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
                 getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
         int[] params = new int[1];
         params[0] = i;
-        SSAInvokeInstruction s =
+        SSAAbstractInvokeInstruction s =
             insts.InvokeInstruction(
                 allInstructions.size(), params, getExceptionsForType(T), site, null);
         calls.add(s);

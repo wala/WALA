@@ -310,35 +310,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAInvokeInstruction InvokeInstruction(
+    public SSAAbstractInvokeInstruction InvokeInstruction(
         int iindex,
         int[] params,
         int exception,
         CallSiteReference site,
         BootstrapMethod bootstrap) {
-      if (bootstrap != null) {
-        return new SSAInvokeDynamicInstruction(iindex, params, exception, site, bootstrap) {
-          @Override
-          public Collection<TypeReference> getExceptionTypes() {
-            if (!isStatic()) {
-              return getNullPointerException();
-            } else {
-              return Collections.emptySet();
-            }
-          }
-        };
-      } else {
-        return new SSAInvokeInstruction(iindex, params, exception, site) {
-          @Override
-          public Collection<TypeReference> getExceptionTypes() {
-            if (!isStatic()) {
-              return getNullPointerException();
-            } else {
-              return Collections.emptySet();
-            }
-          }
-        };
-      }
+      // -1 is used to represent no result
+      return InvokeInstruction(iindex, -1, params, exception, site, bootstrap);
     }
 
     @Override
