@@ -272,21 +272,14 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             IClassHierarchy cha = getClassHierarchy();
             TypeReference tRef = super.getParameterType(i);
 
-            if (tRef.isClassType()) {
-              if (cha.lookupClass(tRef) != null) {
-                return tRef;
-              } else {
-                for (IClass c : cha) {
-                  if (c.getName().toString().equals(tRef.getName().toString())) {
-                    return c.getReference();
-                  }
+            if (tRef.isClassType() && cha.lookupClass(tRef) == null) {
+              for (IClass c : cha) {
+                if (c.getName().toString().equals(tRef.getName().toString())) {
+                  return c.getReference();
                 }
               }
-              return tRef;
-              // throw new IllegalStateException("Error looking up " + tRef);
-            } else {
-              return tRef;
             }
+            return tRef;
           }
         };
 
