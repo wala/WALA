@@ -192,8 +192,8 @@ public class DotUtil {
       result.append("rankdir=").append(rankdir).append(';');
     }
     String fontsizeStr = "fontsize=" + fontSize;
-    String fontcolorStr = (fontColor != null) ? ",fontcolor=" + fontColor : "";
-    String fontnameStr = (fontName != null) ? ",fontname=" + fontName : "";
+    String fontcolorStr = ",fontcolor=" + fontColor;
+    String fontnameStr = ",fontname=" + fontName;
 
     result.append("center=true;");
     result.append(fontsizeStr);
