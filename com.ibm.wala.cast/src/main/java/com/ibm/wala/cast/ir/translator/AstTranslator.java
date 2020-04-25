@@ -642,12 +642,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public String getFollowingComment(int instructionOffset) throws IOException {
-      return getComment(instructionOffset, (p) -> codePositions.tailSet(p));
+      return getComment(instructionOffset, codePositions::tailSet);
     }
 
     @Override
     public String getLeadingComment(int instructionOffset) throws IOException {
-      return getComment(instructionOffset, (p) -> codePositions.headSet(p));
+      return getComment(instructionOffset, codePositions::headSet);
     }
   }
 
