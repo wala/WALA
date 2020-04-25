@@ -26,7 +26,7 @@ import org.junit.Test;
 public class FloatingPointsTest extends WalaTestCase {
   private final String klass = "shrike/FloatingPoints";
 
-  private String testJarLocation;
+  private final String testJarLocation;
   private OfflineInstrumenter instrumenter;
   private Path instrumentedJarLocation;
   private List<ClassInstrumenter> classInstrumenters;

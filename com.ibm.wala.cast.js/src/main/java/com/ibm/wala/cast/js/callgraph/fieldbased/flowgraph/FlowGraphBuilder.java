@@ -122,7 +122,7 @@ public class FlowGraphBuilder {
   }
 
   // primitive functions that are treated specially
-  private static String[] primitiveFunctions = {
+  private static final String[] primitiveFunctions = {
     "Object", "Function", "Array", "StringObject", "NumberObject", "BooleanObject", "RegExp"
   };
 

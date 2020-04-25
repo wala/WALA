@@ -51,8 +51,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.types.FieldReference;
 
 public class FieldElement extends CodeElement {
-  private FieldReference fieldRef;
-  private InstanceKey object;
+  private final FieldReference fieldRef;
+  private final InstanceKey object;
   //    private TypeReference object;
 
   public FieldElement(InstanceKey object, FieldReference fieldRef) {

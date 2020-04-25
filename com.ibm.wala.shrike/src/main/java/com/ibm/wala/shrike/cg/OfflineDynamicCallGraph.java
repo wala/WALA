@@ -104,7 +104,7 @@ public class OfflineDynamicCallGraph {
 
   private static boolean patchExits = true;
   private static boolean patchCalls = true;
-  private static boolean extractCalls = true;
+  private static final boolean extractCalls = true;
   private static boolean extractDynamicCalls = false;
   private static boolean extractConstructors = true;
 
@@ -112,7 +112,7 @@ public class OfflineDynamicCallGraph {
 
   private static SetOfClasses filter;
 
-  private static ClassHierarchyStore cha = new ClassHierarchyStore();
+  private static final ClassHierarchyStore cha = new ClassHierarchyStore();
 
   public static void main(String[] args)
       throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {

@@ -193,7 +193,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
      */
     private final Set<T> baseFor = new HashSet<>();
 
-    private int operationIndex;
+    private final int operationIndex;
 
     /** have we discovered a value to be passed as the 'this' parameter? */
     private boolean foundBase = false;

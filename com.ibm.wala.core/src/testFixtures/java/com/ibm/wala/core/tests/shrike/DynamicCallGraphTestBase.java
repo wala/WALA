@@ -48,9 +48,9 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
 
   private boolean instrumentedJarBuilt = false;
 
-  private java.nio.file.Path instrumentedJarLocation;
+  private final java.nio.file.Path instrumentedJarLocation;
 
-  private java.nio.file.Path cgLocation;
+  private final java.nio.file.Path cgLocation;
 
   protected DynamicCallGraphTestBase() {
     try {

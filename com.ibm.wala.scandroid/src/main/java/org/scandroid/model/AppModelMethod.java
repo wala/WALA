@@ -88,18 +88,18 @@ public class AppModelMethod {
 
   private final AnalysisScope scope;
 
-  private Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
+  private final Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
 
   SSAInstructionFactory insts;
 
   // Maps a Type to variable name
-  private Map<TypeReference, Integer> typeToID = new HashMap<>();
+  private final Map<TypeReference, Integer> typeToID = new HashMap<>();
   // innerclass dependencies
-  private Map<TypeReference, LinkedList<TypeReference>> icDependencies = new HashMap<>();
+  private final Map<TypeReference, LinkedList<TypeReference>> icDependencies = new HashMap<>();
   // all callbacks to consider
-  private List<MethodParams> callBacks = new ArrayList<>();
+  private final List<MethodParams> callBacks = new ArrayList<>();
 
-  private Map<TypeReference, TypeReference> aClassToTR = new HashMap<>();
+  private final Map<TypeReference, TypeReference> aClassToTR = new HashMap<>();
 
   private static class MethodParams {
     public IMethod im;

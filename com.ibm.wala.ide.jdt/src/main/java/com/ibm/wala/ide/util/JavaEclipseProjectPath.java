@@ -33,7 +33,7 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
   public enum JavaSourceLoader implements ILoader {
     SOURCE(JavaSourceAnalysisScope.SOURCE);
 
-    private ClassLoaderReference ref;
+    private final ClassLoaderReference ref;
 
     JavaSourceLoader(ClassLoaderReference ref) {
       this.ref = ref;

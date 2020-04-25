@@ -6,7 +6,7 @@ import java.util.Iterator;
 public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   private class PrependItterator implements Iterator<T> {
     private boolean usedFirst = false;
-    private Iterator<T> original;
+    private final Iterator<T> original;
     private T first;
 
     public PrependItterator(Iterator<T> original, T first) {

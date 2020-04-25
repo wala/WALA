@@ -17,7 +17,7 @@ import java.util.Map;
 
 public abstract class StoringExceptionFilter<Instruction>
     implements InterproceduralExceptionFilter<Instruction> {
-  private Map<CGNode, ExceptionFilter<Instruction>> store;
+  private final Map<CGNode, ExceptionFilter<Instruction>> store;
 
   public StoringExceptionFilter() {
     this.store = new LinkedHashMap<>();

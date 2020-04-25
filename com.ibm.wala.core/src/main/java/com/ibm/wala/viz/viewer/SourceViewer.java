@@ -24,9 +24,9 @@ import javax.swing.JTextField;
 public class SourceViewer extends JPanel {
   private static final long serialVersionUID = -1688405955293925453L;
   private URL sourceURL;
-  private JTextField sourceCodeLocation;
-  private DefaultListModel<String> sourceCodeLinesList = new DefaultListModel<>();
-  private JList<String> sourceCodeLines;
+  private final JTextField sourceCodeLocation;
+  private final DefaultListModel<String> sourceCodeLinesList = new DefaultListModel<>();
+  private final JList<String> sourceCodeLines;
 
   public SourceViewer() {
     super(new BorderLayout());

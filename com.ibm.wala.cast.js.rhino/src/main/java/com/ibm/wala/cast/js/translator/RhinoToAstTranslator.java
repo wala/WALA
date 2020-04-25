@@ -2684,7 +2684,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   public CAstEntity translateToCAst()
       throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
     class CAstErrorReporter implements ErrorReporter {
-      private Set<Warning> w = HashSetFactory.make();
+      private final Set<Warning> w = HashSetFactory.make();
 
       @Override
       public void error(

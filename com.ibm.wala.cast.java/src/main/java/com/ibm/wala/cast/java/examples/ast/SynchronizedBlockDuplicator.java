@@ -43,16 +43,16 @@ public class SynchronizedBlockDuplicator
    */
   static class UnwindKey implements CAstRewriter.CopyKey<UnwindKey> {
     /** are we on the true or false branch? */
-    private boolean testDirection;
+    private final boolean testDirection;
 
     /** the AST node representing the synchronized block */
-    private CAstNode syncNode;
+    private final CAstNode syncNode;
 
     /**
      * key associated with the {@link com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext
      * context} of the parent AST node of the synchronized block
      */
-    private UnwindKey rest;
+    private final UnwindKey rest;
 
     private UnwindKey(boolean testDirection, CAstNode syncNode, UnwindKey rest) {
       this.rest = rest;

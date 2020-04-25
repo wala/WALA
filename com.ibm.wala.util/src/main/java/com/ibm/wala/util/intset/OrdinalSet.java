@@ -61,7 +61,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     } else {
 
       return new Iterator<T>() {
-        IntIterator it = S.intIterator();
+        final IntIterator it = S.intIterator();
 
         @Override
         public boolean hasNext() {

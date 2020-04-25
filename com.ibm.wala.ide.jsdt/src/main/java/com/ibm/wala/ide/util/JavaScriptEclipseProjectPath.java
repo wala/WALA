@@ -37,7 +37,7 @@ public class JavaScriptEclipseProjectPath
   public enum JSLoader implements ILoader {
     JAVASCRIPT(JavaScriptTypes.jsLoader);
 
-    private ClassLoaderReference ref;
+    private final ClassLoaderReference ref;
 
     JSLoader(ClassLoaderReference ref) {
       this.ref = ref;

@@ -61,7 +61,7 @@ public class JarFileModule implements Module {
   public Iterator<ModuleEntry> getEntries() {
     return new Iterator<ModuleEntry>() {
 
-      private Enumeration<JarEntry> zipEntryEnumerator = file.entries();
+      private final Enumeration<JarEntry> zipEntryEnumerator = file.entries();
 
       @Override
       public boolean hasNext() {

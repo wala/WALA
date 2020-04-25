@@ -76,9 +76,10 @@ public class DexIField implements IField {
   /**
    * canonical FieldReference corresponding to this method, construct in the getReference method.
    */
-  private FieldReference fieldReference, myFieldRef;
+  private FieldReference fieldReference;
+  private final FieldReference myFieldRef;
 
-  private Atom name;
+  private final Atom name;
 
   public DexIField(Field encodedField, DexIClass klass) {
     // public DexIField(EncodedField encodedField) {

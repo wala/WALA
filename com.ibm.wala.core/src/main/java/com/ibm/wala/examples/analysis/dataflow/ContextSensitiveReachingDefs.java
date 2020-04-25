@@ -205,10 +205,10 @@ public class ContextSensitiveReachingDefs {
       implements PartiallyBalancedTabulationProblem<
           BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> {
 
-    private ReachingDefsFlowFunctions flowFunctions = new ReachingDefsFlowFunctions(domain);
+    private final ReachingDefsFlowFunctions flowFunctions = new ReachingDefsFlowFunctions(domain);
 
     /** path edges corresponding to all putstatic instructions, used as seeds for the analysis */
-    private Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds =
+    private final Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds =
         collectInitialSeeds();
 
     /**

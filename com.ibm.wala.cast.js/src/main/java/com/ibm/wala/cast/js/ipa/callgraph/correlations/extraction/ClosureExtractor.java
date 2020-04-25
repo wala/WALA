@@ -184,7 +184,7 @@ import java.util.Set;
  * @author mschaefer
  */
 public class ClosureExtractor extends CAstRewriterExt {
-  private LinkedList<ExtractionPolicy> policies = new LinkedList<>();
+  private final LinkedList<ExtractionPolicy> policies = new LinkedList<>();
   private final ExtractionPolicyFactory policyFactory;
 
   private static final boolean LOCALISE = true;
@@ -192,7 +192,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   // names for extracted functions are built from this string with a number appended
   private static final String EXTRACTED_FUN_BASENAME = "_forin_body_";
 
-  private NodeLabeller labeller = new NodeLabeller();
+  private final NodeLabeller labeller = new NodeLabeller();
 
   public ClosureExtractor(CAst Ast, ExtractionPolicyFactory policyFactory) {
     super(Ast, true, new RootPos());

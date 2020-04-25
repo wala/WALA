@@ -20,7 +20,7 @@ import java.util.Set;
 
 public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
     implements Map<Instruction, T> {
-  private Map<InstructionByIIndexWrapper<Instruction>, T> map;
+  private final Map<InstructionByIIndexWrapper<Instruction>, T> map;
 
   public InstructionByIIndexMap(Map<InstructionByIIndexWrapper<Instruction>, T> map) {
     this.map = map;

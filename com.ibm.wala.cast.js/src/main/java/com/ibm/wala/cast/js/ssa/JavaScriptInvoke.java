@@ -23,7 +23,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
   /** The value numbers of the arguments passed to the call. */
   private final int[] params;
 
-  private int function;
+  private final int function;
 
   public JavaScriptInvoke(
       int iindex,

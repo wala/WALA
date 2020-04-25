@@ -43,7 +43,7 @@ import org.junit.rules.ErrorCollector;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ArrayboundsAnalysisTest {
-  private static ClassLoader CLASS_LOADER = ArrayboundsAnalysisTest.class.getClassLoader();
+  private static final ClassLoader CLASS_LOADER = ArrayboundsAnalysisTest.class.getClassLoader();
 
   private static final String DETECTABLE_TESTDATA = "Larraybounds/Detectable";
   private static final int DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 34;

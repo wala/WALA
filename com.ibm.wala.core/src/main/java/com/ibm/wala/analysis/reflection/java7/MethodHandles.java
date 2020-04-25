@@ -62,7 +62,7 @@ public class MethodHandles {
 
   private static final IntSet self = IntSetUtil.make(new int[0]);
 
-  private static ContextKey METHOD_KEY =
+  private static final ContextKey METHOD_KEY =
       new ContextKey() {
         @Override
         public String toString() {
@@ -70,7 +70,7 @@ public class MethodHandles {
         }
       };
 
-  private static ContextKey CLASS_KEY =
+  private static final ContextKey CLASS_KEY =
       new ContextKey() {
         @Override
         public String toString() {
@@ -78,7 +78,7 @@ public class MethodHandles {
         }
       };
 
-  private static ContextKey NAME_KEY =
+  private static final ContextKey NAME_KEY =
       new ContextKey() {
         @Override
         public String toString() {

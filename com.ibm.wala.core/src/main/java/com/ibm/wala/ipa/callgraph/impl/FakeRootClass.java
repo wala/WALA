@@ -41,7 +41,7 @@ public class FakeRootClass extends SyntheticClass {
 
   private Map<Atom, IField> fakeRootStaticFields = null;
 
-  private Set<IMethod> methods = HashSetFactory.make();
+  private final Set<IMethod> methods = HashSetFactory.make();
 
   public FakeRootClass(ClassLoaderReference clr, IClassHierarchy cha) {
     this(fakeRootClass(clr), cha);

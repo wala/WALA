@@ -35,7 +35,7 @@ class InvalidRangeException extends Exception {
   }
 
   /** the cause for this exception */
-  private Cause cause;
+  private final Cause cause;
 
   /**
    * Constructs an instance of {@code InvalidRangeException} with the specified cause.

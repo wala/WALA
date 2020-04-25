@@ -29,9 +29,9 @@ import java.util.Set;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class CGIntraproceduralExceptionAnalysis {
-  private Map<CGNode, IntraproceduralExceptionAnalysis> analysis;
-  private Set<TypeReference> exceptions;
-  private CallGraph callGraph;
+  private final Map<CGNode, IntraproceduralExceptionAnalysis> analysis;
+  private final Set<TypeReference> exceptions;
+  private final CallGraph callGraph;
 
   public CGIntraproceduralExceptionAnalysis(
       CallGraph cg,

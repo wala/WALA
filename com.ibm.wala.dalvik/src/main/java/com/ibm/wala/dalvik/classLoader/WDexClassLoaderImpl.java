@@ -68,7 +68,7 @@ import java.util.Set;
 
 /** ClassLoader for Java &amp; Dalvik. */
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
-  private IClassLoader lParent;
+  private final IClassLoader lParent;
 
   private final SetOfClasses exclusions;
 

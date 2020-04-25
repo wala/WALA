@@ -73,7 +73,7 @@ public class ECJJava17IRTest extends IRTests {
             TypeReference.findOrCreate(
                 SOURCE, TypeName.findOrCreateClassName(packageName, "BinaryLiterals$State"));
 
-        private Pair<MethodReference, int[]> constants[] =
+        private final Pair<MethodReference, int[]>[] constants =
             new Pair[] {
               Pair.make(
                   MethodReference.findOrCreate(testClass, MethodReference.clinitSelector),

@@ -96,7 +96,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
   public final AndroidAnalysisContext analysisContext;
 
-  private List<Entrypoint> entrypoints;
+  private final List<Entrypoint> entrypoints;
   public CallGraph cg;
   public PointerAnalysis<InstanceKey> pa;
   public ISupergraph<BasicBlockInContext<E>, CGNode> graph;

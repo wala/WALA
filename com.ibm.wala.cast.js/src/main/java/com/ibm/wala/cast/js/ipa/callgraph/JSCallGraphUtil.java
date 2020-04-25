@@ -274,8 +274,8 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   }
 
   public static class Bootstrap implements SourceModule {
-    private String name;
-    private InputStream stream;
+    private final String name;
+    private final InputStream stream;
     private final URL url;
 
     public Bootstrap(String name, InputStream stream, URL url) {

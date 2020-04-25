@@ -48,7 +48,7 @@ import org.junit.rules.ErrorCollector;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysisTest {
-  private static ClassLoader CLASS_LOADER = ExceptionAnalysisTest.class.getClassLoader();
+  private static final ClassLoader CLASS_LOADER = ExceptionAnalysisTest.class.getClassLoader();
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
 
   private static ClassHierarchy cha;

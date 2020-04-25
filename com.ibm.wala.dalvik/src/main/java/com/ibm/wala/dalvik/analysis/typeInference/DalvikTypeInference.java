@@ -14,7 +14,7 @@ public class DalvikTypeInference extends TypeInference {
     return new DalvikTypeVariable[size];
   }
 
-  private static AbstractOperator<TypeVariable> dalvikPhiOp = new DalvikPhiOperator();
+  private static final AbstractOperator<TypeVariable> dalvikPhiOp = new DalvikPhiOperator();
 
   protected DalvikTypeInference(IR ir, boolean doPrimitives) {
     super(ir, doPrimitives);

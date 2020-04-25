@@ -34,9 +34,9 @@ public class JsPaPanel extends PaPanel {
 
   private static final long serialVersionUID = 1L;
 
-  private MutableMapping<List<ObjectPropertyCatalogKey>> instanceKeyIdToObjectPropertyCatalogKey =
+  private final MutableMapping<List<ObjectPropertyCatalogKey>> instanceKeyIdToObjectPropertyCatalogKey =
       MutableMapping.<List<ObjectPropertyCatalogKey>>make();
-  private List<AstGlobalPointerKey> globalsPointerKeys = new ArrayList<>();
+  private final List<AstGlobalPointerKey> globalsPointerKeys = new ArrayList<>();
 
   public JsPaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     super(cg, pa);
@@ -72,8 +72,8 @@ public class JsPaPanel extends PaPanel {
     return ret;
   }
 
-  private String cgNodesRoot = "CGNodes";
-  private String globalsRoot = "Globals";
+  private final String cgNodesRoot = "CGNodes";
+  private final String globalsRoot = "Globals";
 
   @Override
   protected List<Object> getRootNodes() {

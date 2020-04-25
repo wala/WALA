@@ -34,7 +34,7 @@ public final class Position {
   private static final int COLUMN_MASK = 1023;
 
   /** Stores the position as unsigned integer. */
-  private int position;
+  private final int position;
 
   /** Creates the undefined position. */
   Position() {

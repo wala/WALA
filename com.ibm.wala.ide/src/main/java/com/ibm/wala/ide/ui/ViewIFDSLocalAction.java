@@ -99,7 +99,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
   }
 
   private static class Labels<T, P, F> implements NodeDecorator<T> {
-    private TabulationResult<T, P, F> result;
+    private final TabulationResult<T, P, F> result;
 
     Labels(TabulationResult<T, P, F> result) {
       this.result = result;

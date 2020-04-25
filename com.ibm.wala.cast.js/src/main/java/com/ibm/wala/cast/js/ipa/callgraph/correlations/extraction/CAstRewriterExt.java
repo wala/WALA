@@ -47,9 +47,9 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
    * @author mschaefer
    */
   protected static class Edge {
-    private CAstNode from;
-    private Object label;
-    private CAstNode to;
+    private final CAstNode from;
+    private final Object label;
+    private final CAstNode to;
 
     public Edge(CAstNode from, Object label, CAstNode to) {
       assert from != null;

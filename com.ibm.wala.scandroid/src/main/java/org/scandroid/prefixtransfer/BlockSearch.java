@@ -56,7 +56,7 @@ import java.util.Set;
 
 public class BlockSearch {
 
-  private ArrayList<ISSABasicBlock> blockQueue = new ArrayList<>();
+  private final ArrayList<ISSABasicBlock> blockQueue = new ArrayList<>();
   private int location = 0;
 
   private final SSACFG cfg;

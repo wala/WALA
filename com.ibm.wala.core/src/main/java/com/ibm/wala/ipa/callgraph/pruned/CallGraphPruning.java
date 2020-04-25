@@ -30,9 +30,9 @@ public final class CallGraphPruning {
   private LinkedList<CGNode> visited;
   private List<CGNode> marked;
   private int depth;
-  private CallGraph cg;
+  private final CallGraph cg;
 
-  private boolean DEBUG = false;
+  private final boolean DEBUG = false;
 
   /**
    * Searches all nodes in the callgraph that correspond to a method of the application (and not the

@@ -210,9 +210,9 @@ public class GraphSlicer {
     final EdgeManager<E> edgeManager =
         new EdgeManager<E>() {
 
-          private Map<E, Collection<E>> succs = new HashMap<>();
+          private final Map<E, Collection<E>> succs = new HashMap<>();
 
-          private Map<E, Collection<E>> preds = new HashMap<>();
+          private final Map<E, Collection<E>> preds = new HashMap<>();
 
           private Set<E> getConnected(E inst, Function<E, Iterator<? extends E>> fconnected) {
             Set<E> result = new LinkedHashSet<>();

@@ -221,7 +221,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
     /** This value getts used by the detection heuristic - It is not recommended for manual use. */
     public static final ExecutionOrder DEFAULT = MIDDLE_OF_LOOP;
 
-    private int value;
+    private final int value;
     /**
      * Unrecommended way to generate the Order based on an Integer.
      *

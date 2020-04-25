@@ -28,9 +28,9 @@ import java.util.Set;
 
 public class ExceptionTransferFunctionProvider
     implements ITransferFunctionProvider<CGNode, BitVectorVariable> {
-  private Exception2BitvectorTransformer transformer;
-  private CallGraph cg;
-  private CGIntraproceduralExceptionAnalysis intraResult;
+  private final Exception2BitvectorTransformer transformer;
+  private final CallGraph cg;
+  private final CGIntraproceduralExceptionAnalysis intraResult;
 
   public ExceptionTransferFunctionProvider(
       CGIntraproceduralExceptionAnalysis intraResult,

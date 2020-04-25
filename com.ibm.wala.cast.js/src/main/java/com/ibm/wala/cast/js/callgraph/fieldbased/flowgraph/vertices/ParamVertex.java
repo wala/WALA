@@ -23,8 +23,8 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
  * @author mschaefer
  */
 public class ParamVertex extends Vertex {
-  private FuncVertex func;
-  private int index;
+  private final FuncVertex func;
+  private final int index;
 
   ParamVertex(FuncVertex func, int index) {
     this.func = func;

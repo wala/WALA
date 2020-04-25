@@ -136,7 +136,7 @@ public class AndroidSpecs implements ISpecs {
   static MethodNamePattern glStatusChanged = new MethodNamePattern(gl, "onGpsStatusChanged");
   static MethodNamePattern nlNmeaRecvd = new MethodNamePattern(nl, "onNmeaReceived");
 
-  private static MethodNamePattern[] defaultCallbacks = {
+  private static final MethodNamePattern[] defaultCallbacks = {
     actCreate,
     actStart,
     actResume,
@@ -167,7 +167,7 @@ public class AndroidSpecs implements ISpecs {
     return defaultCallbacks;
   }
 
-  private static SourceSpec[] sourceSpecs = {
+  private static final SourceSpec[] sourceSpecs = {
     //		new EntryArgSourceSpec( actCreate, null ),
     // doesn't have any parameters
     // new EntryArgSourceSpec( actStart, null ),
@@ -225,7 +225,7 @@ public class AndroidSpecs implements ISpecs {
   }
 
   /** TODO: document! */
-  private static SinkSpec[] sinkSpecs = {
+  private static final SinkSpec[] sinkSpecs = {
     new CallArgSinkSpec(actSetResult, new int[] {2}),
     //		new CallArgSinkSpec(bndTransact, new int[] { 2 }),
 

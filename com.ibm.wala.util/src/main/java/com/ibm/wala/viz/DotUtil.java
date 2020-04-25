@@ -43,8 +43,8 @@ public class DotUtil {
   private static DotOutputType outputType = DotOutputType.PDF;
 
   private static int fontSize = 6;
-  private static String fontColor = "black";
-  private static String fontName = "Arial";
+  private static final String fontColor = "black";
+  private static final String fontName = "Arial";
 
   public static void setOutputType(DotOutputType outType) {
     outputType = outType;

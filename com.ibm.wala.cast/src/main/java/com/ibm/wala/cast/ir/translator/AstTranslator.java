@@ -212,7 +212,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   /** used to generate instructions for array operations; defaults to this */
-  private ArrayOpHandler arrayOpHandler;
+  private final ArrayOpHandler arrayOpHandler;
 
   protected boolean isExceptionLabel(Object label) {
     if (label == null) return false;
@@ -478,19 +478,19 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   /** for keeping position information for the generated SSAInstructions and SSA locals */
   private static class AstDebuggingInformation implements DebuggingInformation {
-    private Position codeBodyPosition;
+    private final Position codeBodyPosition;
 
-    private Position codeBodyNamePosition;
+    private final Position codeBodyNamePosition;
 
-    private String[][] valueNumberNames;
+    private final String[][] valueNumberNames;
 
-    private Position[] instructionPositions;
+    private final Position[] instructionPositions;
 
-    private Position[][] operandPositions;
+    private final Position[][] operandPositions;
 
-    private Position[] parameterPositions;
+    private final Position[] parameterPositions;
 
-    private SortedSet<Position> codePositions;
+    private final SortedSet<Position> codePositions;
 
     AstDebuggingInformation(
         Position codeBodyNamePosition,
@@ -1693,11 +1693,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   public abstract static class AbstractSymbol implements Symbol {
     private Object constantValue;
 
-    private boolean isFinalValue;
+    private final boolean isFinalValue;
 
     private final Scope definingScope;
 
-    private Object defaultValue;
+    private final Object defaultValue;
 
     protected AbstractSymbol(Scope definingScope, boolean isFinalValue, Object defaultValue) {
       this.definingScope = definingScope;
@@ -1906,7 +1906,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   protected AbstractScope makeScriptScope(final CAstEntity s, Scope parent) {
     return new AbstractScope(parent) {
-      SymbolTable scriptGlobalSymtab = new SymbolTable(s.getArgumentCount());
+      final SymbolTable scriptGlobalSymtab = new SymbolTable(s.getArgumentCount());
 
       @Override
       public SymbolTable getUnderlyingSymtab() {
