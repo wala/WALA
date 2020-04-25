@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
@@ -28,7 +29,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Generates synthetic summaries to model the behavior of Java 8 lambdas. See
@@ -58,36 +58,45 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     this.base = base;
   }
 
+  /**
+   * Return a synthetic method target for invokedynamic calls corresponding to Java lambdas
+   *
+   * @param caller the GCNode in the call graph containing the call
+   * @param site the call site reference of the call site
+   * @param receiver the type of the target object or null
+   * @return a synthetic method if the call is an invokedynamic for Java lambdas; the callee target
+   *     from the base selector otherwise
+   */
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-    IClassHierarchy cha = caller.getClassHierarchy();
-    MethodReference target = site.getDeclaredTarget();
-    if (isNonClinitLambdaMetafactoryMethod(cha, target)) {
-      SSAAbstractInvokeInstruction call = caller.getIR().getCalls(site)[0];
-      if (!(call instanceof SSAInvokeDynamicInstruction)) {
-        System.err.println("unexpected non-invokedynamic instruction!");
-        System.err.println("instruction type: " + call.getClass());
-        System.err.println("call site: " + site);
-        System.err.println("caller: " + caller);
-        throw new RuntimeException("unexpected non-invokedynamic instruction!");
+    IR ir = caller.getIR();
+    if (ir.getCallInstructionIndices(site) != null) {
+      SSAAbstractInvokeInstruction call = ir.getCalls(site)[0];
+      if (call instanceof SSAInvokeDynamicInstruction) {
+        SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction) call;
+        BootstrapMethod bootstrap = invoke.getBootstrap();
+        if (bootstrap.isBootstrapForJavaLambdas()) {
+          IClassHierarchy cha = caller.getClassHierarchy();
+          // our summary generation relies on being able to resolve the Lambdametafactory class
+          if (cha.lookupClass(TypeReference.LambdaMetaFactory) != null) {
+            MethodReference target = site.getDeclaredTarget();
+            try {
+              return methodSummaries.computeIfAbsent(
+                  bootstrap,
+                  (b) -> {
+                    MethodSummary summary = getLambdaFactorySummary(caller, site, target, invoke);
+                    return new SummarizedMethod(
+                        summary.getMethod(), summary, cha.lookupClass(target.getDeclaringClass()));
+                  });
+            } catch (UnresolvedLambdaBodyException e) {
+              // give up on modeling the lambda
+              return null;
+            }
+          }
+        }
       }
-      SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction) call;
-
-      try {
-        return methodSummaries.computeIfAbsent(
-            invoke.getBootstrap(),
-            (b) -> {
-              MethodSummary summary = getLambdaFactorySummary(caller, site, target, invoke);
-              return new SummarizedMethod(
-                  summary.getMethod(), summary, cha.lookupClass(target.getDeclaringClass()));
-            });
-      } catch (UnresolvedLambdaBodyException e) {
-        // give up on modeling the lambda
-        return null;
-      }
-    } else {
-      return base.getCalleeTarget(caller, site, receiver);
     }
+    return base.getCalleeTarget(caller, site, receiver);
   }
 
   /**
@@ -140,16 +149,5 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     // return the anonymous class instance
     summary.addStatement(insts.ReturnInstruction(index++, v, false));
     return summary;
-  }
-
-  private static boolean isNonClinitLambdaMetafactoryMethod(
-      IClassHierarchy cha, MethodReference target) {
-    Atom name = target.getName();
-    return !name.equals(MethodReference.clinitName)
-        && !name.equals(MethodReference.initAtom)
-        && cha.lookupClass(TypeReference.LambdaMetaFactory) != null
-        && Objects.equals(
-            cha.lookupClass(TypeReference.LambdaMetaFactory),
-            cha.lookupClass(target.getDeclaringClass()));
   }
 }

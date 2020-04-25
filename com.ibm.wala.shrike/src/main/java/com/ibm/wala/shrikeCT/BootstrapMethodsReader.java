@@ -12,6 +12,7 @@
 package com.ibm.wala.shrikeCT;
 
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
@@ -20,6 +21,12 @@ import java.lang.reflect.Method;
 public class BootstrapMethodsReader extends AttributeReader {
 
   public interface BootstrapMethod {
+
+    static final String LAMBDA_METAFACTORY_CLASS = "java/lang/invoke/LambdaMetafactory";
+    static final String BOOTSTRAP_METHOD_NAME = "metafactory";
+    static final String BOOTSTRAP_METHOD_TYPE =
+        "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;";
+
     byte invokeType();
 
     String methodClass();
@@ -39,6 +46,19 @@ public class BootstrapMethodsReader extends AttributeReader {
     ConstantPoolParser getCP();
 
     int getIndexInClassFile();
+
+    /**
+     * Is this the bootstrap method used for compiling Java lambdas?
+     *
+     * @return {@code true} if the method is {@link
+     *     java.lang.invoke.LambdaMetafactory#metafactory(Lookup, String, MethodType, MethodType,
+     *     MethodHandle, MethodType)}
+     */
+    default boolean isBootstrapForJavaLambdas() {
+      return methodClass().equals(LAMBDA_METAFACTORY_CLASS)
+          && methodName().equals(BOOTSTRAP_METHOD_NAME)
+          && methodType().equals(BOOTSTRAP_METHOD_TYPE);
+    }
   }
 
   private BootstrapMethod entries[];
