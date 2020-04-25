@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class TestConstantCollector {
 
-  private CAst ast = new CAstImpl();
+  private final CAst ast = new CAstImpl();
 
   private static CAstEntity fakeEntity(CAstNode root) {
     return new CAstEntity() {
@@ -137,7 +137,7 @@ public class TestConstantCollector {
     };
   }
 
-  private CAstNode root1 =
+  private final CAstNode root1 =
       ast.makeNode(
           CAstNode.BLOCK_STMT,
           ast.makeNode(
@@ -158,7 +158,7 @@ public class TestConstantCollector {
     assert x.size() == 1;
   }
 
-  private CAstNode root2 =
+  private final CAstNode root2 =
       ast.makeNode(
           CAstNode.BLOCK_STMT,
           ast.makeNode(
@@ -177,7 +177,7 @@ public class TestConstantCollector {
     assert x.size() == 2;
   }
 
-  private CAstNode root3 =
+  private final CAstNode root3 =
       ast.makeNode(
           CAstNode.BLOCK_EXPR,
           ast.makeNode(
@@ -201,7 +201,7 @@ public class TestConstantCollector {
     assert matches.size() == 1;
   }
 
-  private CAstNode root4 =
+  private final CAstNode root4 =
       ast.makeNode(
           CAstNode.BLOCK_STMT,
           ast.makeNode(

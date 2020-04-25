@@ -558,7 +558,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
                   return node;
                 }
 
-                private MutableIntSet previous = IntSetUtil.make();
+                private final MutableIntSet previous = IntSetUtil.make();
 
                 @Override
                 public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable ptrs) {
@@ -644,7 +644,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         }
       } else {
         class ReceiverForDispatchOp extends UnaryOperator<PointsToSetVariable> {
-          MutableIntSet previous = IntSetUtil.make();
+          final MutableIntSet previous = IntSetUtil.make();
 
           private CGNode getNode() {
             return node;

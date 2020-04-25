@@ -87,13 +87,13 @@ import org.slf4j.LoggerFactory;
  *     loader? Currently: Primordial
  */
 public final /* singleton */ class AndroidModelClass extends SyntheticClass {
-  private static Logger logger = LoggerFactory.getLogger(AndroidModelClass.class);
+  private static final Logger logger = LoggerFactory.getLogger(AndroidModelClass.class);
 
   public static final TypeReference ANDROID_MODEL_CLASS =
       TypeReference.findOrCreate(
           ClassLoaderReference.Primordial,
           TypeName.string2TypeName("Lcom/ibm/wala/AndroidModelClass"));
-  private IClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   public static AndroidModelClass getInstance(IClassHierarchy cha) {
     IClass android = cha.lookupClass(ANDROID_MODEL_CLASS);
@@ -176,7 +176,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
   //
   private IMethod macroModel = null;
   //    private IMethod allActivitiesModel = null;
-  private Map<Selector, IMethod> methods = HashMapFactory.make(); // does not contain macroModel
+  private final Map<Selector, IMethod> methods = HashMapFactory.make(); // does not contain macroModel
 
   public boolean containsMethod(Selector selector) {
     return (((macroModel != null) && macroModel.getSelector().equals(selector))
@@ -243,7 +243,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
   //  Contents of the class: Fields
   //  We have none...
   //
-  private Map<Atom, IField> fields = new HashMap<>();
+  private final Map<Atom, IField> fields = new HashMap<>();
 
   @Override
   public IField getField(Atom name) {

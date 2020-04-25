@@ -53,9 +53,9 @@ public class Runtime {
   private PrintWriter output;
   private SetOfClasses filter;
   private Policy handleCallback;
-  private ThreadLocal<String> currentSite = new ThreadLocal<>();
+  private final ThreadLocal<String> currentSite = new ThreadLocal<>();
 
-  private ThreadLocal<Stack<String>> callStacks =
+  private final ThreadLocal<Stack<String>> callStacks =
       ThreadLocal.withInitial(
           () -> {
             Stack<String> callStack = new Stack<>();

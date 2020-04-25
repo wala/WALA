@@ -48,7 +48,7 @@ import com.ibm.wala.types.TypeReference;
 
 public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyDweller {
   /* BEGIN Custom change */
-  private IClassHierarchy cha;
+  private final IClassHierarchy cha;
   /* END Custom change */
   public DexEntryPoint(IMethod method, IClassHierarchy cha) {
     super(method, cha);

@@ -26,9 +26,9 @@ package com.ibm.wala.sourcepos;
 public class Range {
 
   /** stores the start position */
-  private Position start;
+  private final Position start;
   /** stores the end position */
-  private Position end;
+  private final Position end;
 
   /** Creates an empty range. */
   Range() {

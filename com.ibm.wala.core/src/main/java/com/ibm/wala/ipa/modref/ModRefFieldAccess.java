@@ -62,12 +62,12 @@ public final class ModRefFieldAccess {
 
   private final CallGraph cg;
 
-  private Map<CGNode, Map<IClass, Set<IField>>> mods;
-  private Map<CGNode, Map<IClass, Set<IField>>> refs;
-  private Map<CGNode, Map<IClass, Set<IField>>> tmods;
-  private Map<CGNode, Map<IClass, Set<IField>>> trefs;
+  private final Map<CGNode, Map<IClass, Set<IField>>> mods;
+  private final Map<CGNode, Map<IClass, Set<IField>>> refs;
+  private final Map<CGNode, Map<IClass, Set<IField>>> tmods;
+  private final Map<CGNode, Map<IClass, Set<IField>>> trefs;
 
-  private List<CGNode> done;
+  private final List<CGNode> done;
 
   private ModRefFieldAccess(CallGraph cg) {
     this.cg = cg;

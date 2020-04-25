@@ -274,10 +274,10 @@ public class StaticInitializer {
       implements PartiallyBalancedTabulationProblem<
           BasicBlockInContext<IExplodedBasicBlock>, CGNode, IClass> {
 
-    private InitializerFlowFunctions flowFunctions = new InitializerFlowFunctions(domain);
+    private final InitializerFlowFunctions flowFunctions = new InitializerFlowFunctions(domain);
 
     /** path edges corresponding to all putstatic instructions, used as seeds for the analysis */
-    private Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds =
+    private final Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds =
         collectInitialSeeds();
 
     /**

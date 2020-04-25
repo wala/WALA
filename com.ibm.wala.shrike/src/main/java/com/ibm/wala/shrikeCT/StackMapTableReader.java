@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StackMapTableReader extends AttributeReader {
-  private List<StackMapFrame> frames;
+  private final List<StackMapFrame> frames;
 
   public List<StackMapFrame> frames() {
     return frames;

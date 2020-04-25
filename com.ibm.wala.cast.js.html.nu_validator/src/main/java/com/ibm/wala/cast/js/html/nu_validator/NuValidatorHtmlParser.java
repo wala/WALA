@@ -54,7 +54,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
     parser.setContentHandler(
         new ContentHandler() {
           private Locator locator;
-          private Stack<ITag> tags = new Stack<>();
+          private final Stack<ITag> tags = new Stack<>();
 
           private int countLines(char[] ch, int start, int length) {
             LineNumberReader r =

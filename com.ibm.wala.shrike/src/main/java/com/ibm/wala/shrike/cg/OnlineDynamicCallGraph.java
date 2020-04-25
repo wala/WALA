@@ -17,9 +17,9 @@ import java.security.ProtectionDomain;
 
 public class OnlineDynamicCallGraph implements ClassFileTransformer {
 
-  private ClassHierarchyStore cha = new ClassHierarchyStore();
+  private final ClassHierarchyStore cha = new ClassHierarchyStore();
 
-  private Writer out = new PrintWriter(System.err);
+  private final Writer out = new PrintWriter(System.err);
 
   public OnlineDynamicCallGraph()
       throws IllegalArgumentException, IOException, InvalidClassFileException {

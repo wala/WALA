@@ -24,7 +24,7 @@ public class AstConstantFolder {
   }
 
   static class AssignSkipContext extends NonCopyingContext {
-    private Set<CAstNode> skip = HashSetFactory.make();
+    private final Set<CAstNode> skip = HashSetFactory.make();
   }
 
   public CAstEntity fold(CAstEntity ce) {

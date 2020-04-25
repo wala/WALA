@@ -52,12 +52,12 @@ import java.util.Set;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysis {
-  private BitVectorSolver<CGNode> solver;
-  private Exception2BitvectorTransformer transformer;
-  private InterproceduralExceptionFilter<SSAInstruction> filter;
-  private ClassHierarchy cha;
-  private CGIntraproceduralExceptionAnalysis intraResult;
-  private CallGraph cg;
+  private final BitVectorSolver<CGNode> solver;
+  private final Exception2BitvectorTransformer transformer;
+  private final InterproceduralExceptionFilter<SSAInstruction> filter;
+  private final ClassHierarchy cha;
+  private final CGIntraproceduralExceptionAnalysis intraResult;
+  private final CallGraph cg;
   private boolean isSolved = false;
 
   public ExceptionAnalysis(

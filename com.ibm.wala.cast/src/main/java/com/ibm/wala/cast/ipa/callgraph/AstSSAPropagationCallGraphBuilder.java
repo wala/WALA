@@ -771,7 +771,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    private Set<PointerKey> discoveredUpwardFunargs = HashSetFactory.make();
+    private final Set<PointerKey> discoveredUpwardFunargs = HashSetFactory.make();
 
     /**
      * add constraints that assign the final value of name in definingNode to the upward funarg

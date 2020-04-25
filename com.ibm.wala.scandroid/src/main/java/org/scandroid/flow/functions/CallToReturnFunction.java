@@ -50,7 +50,7 @@ import org.scandroid.domain.ReturnElement;
 
 public class CallToReturnFunction<E extends ISSABasicBlock> implements IUnaryFlowFunction {
 
-  private IFDSTaintDomain<E> domain;
+  private final IFDSTaintDomain<E> domain;
 
   public CallToReturnFunction(IFDSTaintDomain<E> domain) {
     this.domain = domain;

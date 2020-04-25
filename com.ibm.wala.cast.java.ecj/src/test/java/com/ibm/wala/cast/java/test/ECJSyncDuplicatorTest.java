@@ -43,7 +43,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
 
-  private static CallSiteReference guard =
+  private static final CallSiteReference guard =
       CallSiteReference.make(
           0,
           MethodReference.findOrCreate(

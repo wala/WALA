@@ -23,7 +23,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 
 final class TypeInferenceAssertion implements IRAssertion {
-  private String typeName;
+  private final String typeName;
 
   public TypeInferenceAssertion(String packageName) {
     this.typeName = packageName;

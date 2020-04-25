@@ -31,8 +31,8 @@ import java.util.stream.Stream;
 
 public class PrunedCallGraph implements CallGraph {
 
-  private CallGraph cg;
-  private Set<CGNode> keep;
+  private final CallGraph cg;
+  private final Set<CGNode> keep;
   private Map<CGNode, Set<CGNode>> remove = Collections.emptyMap();
 
   /**

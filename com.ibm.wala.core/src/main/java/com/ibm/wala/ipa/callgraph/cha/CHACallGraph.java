@@ -241,7 +241,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return n;
   }
 
-  private Stack<CGNode> newNodes = new Stack<>();
+  private final Stack<CGNode> newNodes = new Stack<>();
 
   private void closure() throws CancelException {
     while (!newNodes.isEmpty()) {

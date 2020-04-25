@@ -59,7 +59,7 @@ import org.junit.rules.ErrorCollector;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class PruneArrayOutOfBoundExceptionEdge {
-  private static ClassLoader CLASS_LOADER =
+  private static final ClassLoader CLASS_LOADER =
       PruneArrayOutOfBoundExceptionEdge.class.getClassLoader();
 
   private static final String DETECTABLE_TESTDATA = "Larraybounds/Detectable";

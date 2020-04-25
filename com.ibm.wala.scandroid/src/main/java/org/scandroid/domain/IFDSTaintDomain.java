@@ -61,10 +61,10 @@ import java.util.stream.Stream;
 
 public class IFDSTaintDomain<E extends ISSABasicBlock>
     implements TabulationDomain<DomainElement, BasicBlockInContext<E>> {
-  private Map<DomainElement, Integer> table = new HashMap<>();
-  private ArrayList<DomainElement> objects = new ArrayList<>();
+  private final Map<DomainElement, Integer> table = new HashMap<>();
+  private final ArrayList<DomainElement> objects = new ArrayList<>();
 
-  private Map<CodeElement, Set<DomainElement>> elementIndex = new HashMap<>();
+  private final Map<CodeElement, Set<DomainElement>> elementIndex = new HashMap<>();
 
   Set<DomainElement> emptySet = new HashSet<>();
 

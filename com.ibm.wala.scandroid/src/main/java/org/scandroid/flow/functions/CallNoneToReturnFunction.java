@@ -50,7 +50,7 @@ import org.scandroid.flow.types.FlowType;
 
 public final class CallNoneToReturnFunction<E extends ISSABasicBlock>
     implements IUnaryFlowFunction {
-  private IFDSTaintDomain<E> domain;
+  private final IFDSTaintDomain<E> domain;
 
   public CallNoneToReturnFunction(IFDSTaintDomain<E> domain) {
     this.domain = domain;

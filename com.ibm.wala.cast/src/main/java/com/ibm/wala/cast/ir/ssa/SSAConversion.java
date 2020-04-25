@@ -60,7 +60,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private SSAInformation computedLocalMap;
 
-  private Map<Integer, Integer> assignments = HashMapFactory.make();
+  private final Map<Integer, Integer> assignments = HashMapFactory.make();
 
   //
   // Copy propagation history

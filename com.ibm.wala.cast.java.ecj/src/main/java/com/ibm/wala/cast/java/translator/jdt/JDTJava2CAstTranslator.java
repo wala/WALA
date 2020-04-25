@@ -982,17 +982,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     MethodDeclaration fDecl; // TAGALONG serious tagalong...
 
-    private String[] fParameterNames; // INCLUDING this
+    private final String[] fParameterNames; // INCLUDING this
 
-    private ArrayList<CAstType> fParameterTypes;
+    private final ArrayList<CAstType> fParameterTypes;
 
-    private MethodContext fContext; // possibly TAGALONG, maybe not
+    private final MethodContext fContext; // possibly TAGALONG, maybe not
 
-    private ITypeBinding fType; // TAGALONG
+    private final ITypeBinding fType; // TAGALONG
 
     protected ITypeBinding fReturnType;
 
-    private int fModifiers;
+    private final int fModifiers;
 
     private final Set<CAstAnnotation> annotations;
 

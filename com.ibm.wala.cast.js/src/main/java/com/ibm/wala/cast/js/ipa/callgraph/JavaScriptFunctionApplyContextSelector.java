@@ -45,7 +45,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {};
 
   private final ContextSelector base;
-  private ContextSelector oneLevel;
+  private final ContextSelector oneLevel;
 
   public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
     this.base = base;

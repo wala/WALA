@@ -50,7 +50,7 @@ package org.scandroid.domain;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 public class InstanceKeyElement extends CodeElement {
-  private InstanceKey ik;
+  private final InstanceKey ik;
 
   public InstanceKeyElement(InstanceKey ik) {
     this.ik = ik;

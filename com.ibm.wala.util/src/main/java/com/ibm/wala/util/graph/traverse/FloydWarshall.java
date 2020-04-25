@@ -91,7 +91,7 @@ public class FloydWarshall<T> {
 
   public static <T> GetPath<T> allPairsShortestPath(final NumberedGraph<T> G) {
     return new FloydWarshall<T>(G) {
-      int[][] next = new int[G.getNumberOfNodes()][G.getNumberOfNodes()];
+      final int[][] next = new int[G.getNumberOfNodes()][G.getNumberOfNodes()];
 
       @Override
       protected void pathCallback(int i, int j, int k) {
@@ -147,7 +147,7 @@ public class FloydWarshall<T> {
 
   public static <T> GetPaths<T> allPairsShortestPaths(final NumberedGraph<T> G) {
     return new FloydWarshall<T>(G) {
-      MutableIntSet[][] next = new MutableIntSet[G.getNumberOfNodes()][G.getNumberOfNodes()];
+      final MutableIntSet[][] next = new MutableIntSet[G.getNumberOfNodes()][G.getNumberOfNodes()];
 
       @Override
       protected void pathCallback(int i, int j, int k) {

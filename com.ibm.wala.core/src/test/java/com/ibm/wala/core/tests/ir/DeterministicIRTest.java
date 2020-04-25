@@ -39,7 +39,7 @@ import org.junit.Test;
  */
 public abstract class DeterministicIRTest extends WalaTestCase {
 
-  private IClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final AnalysisOptions options = new AnalysisOptions();
 

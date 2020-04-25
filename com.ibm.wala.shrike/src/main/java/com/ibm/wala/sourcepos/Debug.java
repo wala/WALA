@@ -51,7 +51,7 @@ public final class Debug {
 
   private static final Map<LogLevel, LogStream> logStreams = new EnumMap<>(LogLevel.class);
 
-  private static Set<LogLevel> allowed = EnumSet.noneOf(LogLevel.class);
+  private static final Set<LogLevel> allowed = EnumSet.noneOf(LogLevel.class);
 
   static {
     allowed.addAll(Arrays.asList(LogLevel.values()));

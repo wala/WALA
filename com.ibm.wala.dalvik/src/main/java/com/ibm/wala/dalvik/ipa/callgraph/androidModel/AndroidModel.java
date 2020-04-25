@@ -130,7 +130,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
   protected AnalysisOptions options;
   protected IAnalysisCacheView cache;
   private AbstractAndroidModel labelSpecial;
-  private IInstantiationBehavior instanceBehavior;
+  private final IInstantiationBehavior instanceBehavior;
   private SSAValueManager paramManager;
   private ParameterAccessor modelAcc;
   private ReuseParameters reuseParameters;

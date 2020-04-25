@@ -49,7 +49,7 @@ import java.util.Iterator;
  */
 public class FallbackContextInterpreter implements SSAContextInterpreter {
 
-  private SSAContextInterpreter shrikeCI;
+  private final SSAContextInterpreter shrikeCI;
 
   public FallbackContextInterpreter(SSAContextInterpreter shrikeCI) {
     this.shrikeCI = shrikeCI;

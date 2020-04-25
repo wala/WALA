@@ -54,11 +54,11 @@ import org.json.JSONObject;
  */
 public class NodejsRequireTargetSelector implements MethodTargetSelector {
 
-  private File rootDir;
-  private MethodTargetSelector base;
+  private final File rootDir;
+  private final MethodTargetSelector base;
   private PropagationCallGraphBuilder builder;
 
-  private HashMap<String, IMethod> previouslyRequired = HashMapFactory.make();
+  private final HashMap<String, IMethod> previouslyRequired = HashMapFactory.make();
 
   public NodejsRequireTargetSelector(File rootDir, MethodTargetSelector base) {
     this.rootDir = rootDir;

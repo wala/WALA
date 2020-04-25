@@ -21,7 +21,7 @@ public abstract class LanguageImpl implements Language {
 
   private Language baseLang;
 
-  private Set<Language> derivedLangs = HashSetFactory.make();
+  private final Set<Language> derivedLangs = HashSetFactory.make();
 
   public LanguageImpl() {}
 

@@ -80,7 +80,7 @@ public abstract class EclipseProjectPath<E, P> {
     EXTENSION(ClassLoaderReference.Extension),
     PRIMORDIAL(ClassLoaderReference.Primordial);
 
-    private ClassLoaderReference ref;
+    private final ClassLoaderReference ref;
 
     Loader(ClassLoaderReference ref) {
       this.ref = ref;

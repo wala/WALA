@@ -79,7 +79,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
   private int defCounter = 0;
 
   /** Map the known defNum to local def names. */
-  private Map<Integer, String> localDefs = HashMapFactory.make();
+  private final Map<Integer, String> localDefs = HashMapFactory.make();
 
   /** XML document to use for creating elements. */
   private final Document doc;

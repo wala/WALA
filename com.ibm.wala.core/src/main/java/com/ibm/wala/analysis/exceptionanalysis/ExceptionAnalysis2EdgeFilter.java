@@ -21,8 +21,8 @@ import com.ibm.wala.ssa.SSAInstruction;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> {
-  private ExceptionAnalysis analysis;
-  private CGNode node;
+  private final ExceptionAnalysis analysis;
+  private final CGNode node;
 
   public ExceptionAnalysis2EdgeFilter(ExceptionAnalysis analysis, CGNode node) {
     this.analysis = analysis;

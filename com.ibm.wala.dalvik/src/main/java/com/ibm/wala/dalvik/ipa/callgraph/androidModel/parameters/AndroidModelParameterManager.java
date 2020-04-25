@@ -113,7 +113,7 @@ public class AndroidModelParameterManager {
   }
 
   /** The main data-structure of the management */
-  private Map<TypeReference, List<ManagedParameter>> seenTypes = new HashMap<>();
+  private final Map<TypeReference, List<ManagedParameter>> seenTypes = new HashMap<>();
 
   /**
    * Setting the behaviour may be handy in the later model.

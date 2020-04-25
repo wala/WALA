@@ -54,7 +54,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   public final ArrayList<SSAInstruction> statements = new ArrayList<>();
 
-  private Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
+  private final Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
 
   /**
    * The number of the next local value number available for the fake root method. Note that we

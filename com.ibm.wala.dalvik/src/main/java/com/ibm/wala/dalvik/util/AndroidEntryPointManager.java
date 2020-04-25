@@ -678,7 +678,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     return false;
   }
 
-  private transient Map<CallSiteReference, Intent> seenIntentCalls = HashMapFactory.make();
+  private final transient Map<CallSiteReference, Intent> seenIntentCalls = HashMapFactory.make();
   /**
    * DO NOT CALL! - This is for IntentContextSelector.
    *

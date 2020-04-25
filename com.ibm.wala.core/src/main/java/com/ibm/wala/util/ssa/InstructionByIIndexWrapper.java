@@ -13,7 +13,7 @@ package com.ibm.wala.util.ssa;
 import com.ibm.wala.ssa.SSAInstruction;
 
 public class InstructionByIIndexWrapper<T extends SSAInstruction> {
-  private T instruction;
+  private final T instruction;
 
   @Override
   public int hashCode() {

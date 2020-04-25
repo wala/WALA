@@ -53,9 +53,9 @@ public class CAstQualifier {
 
   private static int sNextBitNum = 0;
 
-  private String fName;
+  private final String fName;
 
-  private long fBit;
+  private final long fBit;
 
   public CAstQualifier(String name) {
     super();

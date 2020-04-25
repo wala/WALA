@@ -245,7 +245,7 @@ public final class InterprocNullPointerAnalysis {
    * @author Markus Herhoffer &lt;markus.herhoffer@student.kit.edu&gt;
    */
   private static class CallGraphFilter {
-    private Set<Atom> filter;
+    private final Set<Atom> filter;
 
     /**
      * Filter for CallGraphs

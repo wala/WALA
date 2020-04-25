@@ -31,9 +31,9 @@ import javax.swing.event.ListSelectionListener;
 
 public class IrViewer extends JPanel {
   private static final long serialVersionUID = -5668847442988389016L;
-  private JTextField methodName;
-  private DefaultListModel<String> irLineList = new DefaultListModel<>();
-  private JList<String> irLines;
+  private final JTextField methodName;
+  private final DefaultListModel<String> irLineList = new DefaultListModel<>();
+  private final JList<String> irLines;
 
   // mapping from ir viewer list line to source code line number.
   private Map<Integer, Integer> lineToPosition = null;

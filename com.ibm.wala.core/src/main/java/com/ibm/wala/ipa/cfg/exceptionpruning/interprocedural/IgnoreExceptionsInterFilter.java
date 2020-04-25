@@ -15,7 +15,7 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 
 public class IgnoreExceptionsInterFilter<Instruction>
     implements InterproceduralExceptionFilter<Instruction> {
-  private ExceptionFilter<Instruction> filter;
+  private final ExceptionFilter<Instruction> filter;
 
   public IgnoreExceptionsInterFilter(ExceptionFilter<Instruction> filter) {
     this.filter = filter;

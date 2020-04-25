@@ -25,8 +25,8 @@ public class AstLoopUnwinder
         CAstRewriter.RewriteContext<AstLoopUnwinder.UnwindKey>, AstLoopUnwinder.UnwindKey> {
 
   public static class UnwindKey implements CAstRewriter.CopyKey<UnwindKey> {
-    private int iteration;
-    private UnwindKey rest;
+    private final int iteration;
+    private final UnwindKey rest;
 
     private UnwindKey(int iteration, UnwindKey rest) {
       this.rest = rest;

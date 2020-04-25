@@ -87,7 +87,7 @@ public class JavaLauncher extends Launcher {
   private String javaExe;
 
   /** Extra args to pass to the JVM */
-  private List<String> vmArgs = new ArrayList<>();
+  private final List<String> vmArgs = new ArrayList<>();
 
   /** The last process returned by a call to start() on this object. */
   private Process lastProcess;

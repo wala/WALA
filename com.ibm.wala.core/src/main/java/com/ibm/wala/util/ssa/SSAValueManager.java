@@ -90,9 +90,9 @@ public class SSAValueManager {
   /** for managing cascaded code blocks */
   private int currentScope = 0;
   /** Description only used for toString() */
-  private String description;
+  private final String description;
 
-  private MethodReference forMethod;
+  private final MethodReference forMethod;
 
   /** User-Defined debugging info */
   public String breadCrumb = "";
@@ -126,9 +126,9 @@ public class SSAValueManager {
   }
 
   /** The main data-structure of the management */
-  private Map<VariableKey, List<Managed<? extends SSAValue>>> seenTypes = HashMapFactory.make();
+  private final Map<VariableKey, List<Managed<? extends SSAValue>>> seenTypes = HashMapFactory.make();
 
-  private List<SSAValue> unmanaged = new ArrayList<>();
+  private final List<SSAValue> unmanaged = new ArrayList<>();
 
   public SSAValueManager(ParameterAccessor acc) {
     this.nextLocal = acc.getFirstAfter();

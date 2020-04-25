@@ -69,13 +69,13 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
   private static final String PARTIAL_CALL_GRAPH = "partial-call-graph";
   private static final String CALL_GRAPH = "call-graph";
 
-  private CommandLineParser parser = new DefaultParser();
+  private final CommandLineParser parser = new DefaultParser();
   private CommandLine line;
-  private URI classpath;
-  private String filename;
-  private URI androidLib;
-  private URI summariesFile;
-  private ReflectionOptions reflectionOptions;
+  private final URI classpath;
+  private final String filename;
+  private final URI androidLib;
+  private final URI summariesFile;
+  private final ReflectionOptions reflectionOptions;
   private static final String USAGE = "[options] <.apk or .jar>";
 
   private final Options options = new Options();

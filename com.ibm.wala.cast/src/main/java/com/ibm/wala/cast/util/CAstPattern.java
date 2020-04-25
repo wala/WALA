@@ -28,9 +28,9 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public class CAstPattern {
-  private static boolean DEBUG_PARSER = false;
+  private static final boolean DEBUG_PARSER = false;
 
-  private static boolean DEBUG_MATCH = false;
+  private static final boolean DEBUG_MATCH = false;
 
   private static final int CHILD_KIND = -1;
 

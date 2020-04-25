@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * @author mschaefer
  */
 public class NodeLabeller {
-  private ArrayList<CAstNode> nodes = new ArrayList<>();
+  private final ArrayList<CAstNode> nodes = new ArrayList<>();
 
   /**
    * Adds a node to the mapping if it is not present yet.

@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class IntraproceduralExceptionAnalysis {
-  private Set<TypeReference> exceptions;
+  private final Set<TypeReference> exceptions;
   private Set<TypeReference> possiblyCaughtExceptions;
   private PointerAnalysis<InstanceKey> pointerAnalysis;
   private CGNode node;

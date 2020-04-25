@@ -20,9 +20,9 @@ import com.ibm.wala.cast.tree.CAstNode;
  * @author mschaefer
  */
 public class ChildPos extends NodePos {
-  private CAstNode parent;
-  private int index;
-  private NodePos parent_pos;
+  private final CAstNode parent;
+  private final int index;
+  private final NodePos parent_pos;
 
   public ChildPos(CAstNode parent, int index, NodePos parent_pos) {
     this.parent = parent;
