@@ -323,8 +323,10 @@ public class CAstPattern {
         if (s != null && name != null) s.add(name, tree);
 
         if (children == null || children.length == 0) {
-          if (DEBUG_MATCH && tree.getChildCount() != 0) {
-            System.err.println("match failed (c)");
+          if (DEBUG_MATCH) {
+            if (tree.getChildCount() != 0) {
+              System.err.println("match failed (c)");
+            }
           }
           return tree.getChildCount() == 0;
         } else {
