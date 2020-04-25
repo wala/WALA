@@ -618,6 +618,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       final int[] topFive = new int[5];
       value.foreach(
           x -> {
+            //noinspection SuspiciousSystemArraycopy
             System.arraycopy(topFive, 1, topFive, 0, 4);
             topFive[4] = x;
           });
