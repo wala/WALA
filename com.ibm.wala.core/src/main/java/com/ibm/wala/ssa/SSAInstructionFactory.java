@@ -102,7 +102,7 @@ public interface SSAInstructionFactory {
       CallSiteReference site,
       BootstrapMethod bootstrap);
 
-  SSAInvokeInstruction InvokeInstruction(
+  SSAAbstractInvokeInstruction InvokeInstruction(
       int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap);
 
   SSALoadIndirectInstruction LoadIndirectInstruction(

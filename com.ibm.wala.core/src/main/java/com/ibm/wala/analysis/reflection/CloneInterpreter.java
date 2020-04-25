@@ -30,10 +30,10 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -181,7 +181,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       int[] params = new int[2];
       params[0] = 1;
       params[1] = retValue;
-      SSAInvokeInstruction S =
+      SSAAbstractInvokeInstruction S =
           insts.InvokeInstruction(statements.size(), params, exceptionValue, ARRAYCOPY_SITE, null);
       statements.add(S);
     } else {

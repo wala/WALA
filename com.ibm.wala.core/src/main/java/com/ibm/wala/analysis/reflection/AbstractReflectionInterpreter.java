@@ -26,9 +26,9 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -252,7 +252,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       int[] params = new int[1];
       params[0] = alloc;
       int exc = getExceptionsForType(t);
-      SSAInvokeInstruction s =
+      SSAAbstractInvokeInstruction s =
           insts.InvokeInstruction(allInstructions.size(), params, exc, site, null);
       calls.add(s);
       allInstructions.add(s);
