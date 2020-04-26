@@ -21,8 +21,16 @@ final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSu
 
 final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
 ecjCompileJavaTestSubjects.configure {
-	options.compilerArgs << '-err:none'
 	options.compilerArgs << '-warn:none'
+	[
+			'serial',
+			'unchecked',
+			'unusedLocal',
+			'unusedParam',
+			'unusedThrown',
+	].each {
+		options.compilerArgs << "-err:-$it"
+	}
 }
 
 tasks.named('check') {
