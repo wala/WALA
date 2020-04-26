@@ -12,7 +12,6 @@
 package com.ibm.wala.shrikeCT;
 
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
@@ -51,8 +50,9 @@ public class BootstrapMethodsReader extends AttributeReader {
      * Is this the bootstrap method used for compiling Java lambdas?
      *
      * @return {@code true} if the method is {@link
-     *     java.lang.invoke.LambdaMetafactory#metafactory(Lookup, String, MethodType, MethodType,
-     *     MethodHandle, MethodType)}
+     *     java.lang.invoke.LambdaMetafactory#metafactory(java.lang.invoke.MethodHandles.Lookup,
+     *     String, java.lang.invoke.MethodType, java.lang.invoke.MethodType,
+     *     java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)}
      */
     default boolean isBootstrapForJavaLambdas() {
       return methodClass().equals(LAMBDA_METAFACTORY_CLASS)
