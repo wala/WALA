@@ -17,7 +17,7 @@ dependencies {
 
 final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 	src 'https://nodejs.org/dist/v0.12.4/node-v0.12.4.tar.gz'
-	dest "$temporaryDir/nodejs.tar.gz"
+	dest project.layout.buildDirectory.file('nodejs.tar.gz')
 	algorithm 'SHA-1'
 	checksum '147ff79947752399b870fcf3f1fc37102100b545'
 }

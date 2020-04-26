@@ -71,7 +71,7 @@ final downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
 	ext.version = '3.0'
 	final archive = "kawa-${version}.zip"
 	src "https://ftp.gnu.org/pub/gnu/kawa/$archive"
-	dest "$temporaryDir/$archive"
+	dest project.layout.buildDirectory.file(archive)
 	checksum '2713e6dfb939274ba3b1d36daea68436'
 }
 
@@ -108,8 +108,9 @@ class CompileKawaScheme extends JavaExec {
 		classpath project.tasks.named('extractKawa')
 		main 'kawa.repl'
 
-		args '-d', temporaryDir
-		outputs.dir temporaryDir
+		final outputDir = project.layout.buildDirectory.dir(name)
+		args '-d', outputDir.get().asFile
+		outputs.dir outputDir
 
 		logging.captureStandardError LogLevel.INFO
 		args '--main', '-C'
@@ -128,13 +129,13 @@ final kawaChessCommitHash = 'f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8'
 
 final downloadKawaChess = tasks.register('downloadKawaChess', VerifiedDownload) {
 	src "https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip"
-	dest "$temporaryDir/kawa-chess.zip"
+	dest project.layout.buildDirectory.file('kawa-chess.zip')
 	checksum 'cf29613d2be5f476a475ee28b4df9d9e'
 }
 
 final unpackKawaChess = tasks.register('unpackKawaChess') {
 	inputs.files downloadKawaChess
-	outputs.dir "$temporaryDir/kawa-chess-$kawaChessCommitHash"
+	outputs.dir project.layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash")
 
 	doLast {
 		copy {
@@ -184,7 +185,7 @@ final downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
 	ext.basename = 'bcel-5.2'
 	final archive = "${basename}.tar.gz"
 	src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
-	dest "$temporaryDir/$archive"
+	dest project.layout.buildDirectory.file(archive)
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
 	useETag false
 }
@@ -246,19 +247,20 @@ final downloadOcamlJava = tasks.register('downloadOcamlJava', VerifiedDownload) 
 	ext.basename = "ocamljava-$version"
 	def archive = "${basename}.tar.gz"
 	src "http://www.ocamljava.org/downloads/download.php?version=$version-bin"
-	dest "$temporaryDir/$archive"
+	dest project.layout.buildDirectory.file(archive)
 	checksum '45feec6e3889f5073a39c2c4c84878d1'
 }
 
 final unpackOcamlJava = tasks.register('unpackOcamlJava', Sync) {
 	from downloadOcamlJava.map { tarTree it.dest }
-	into temporaryDir
+	into project.layout.buildDirectory.dir(name)
 }
 
 final prepareGenerateHelloHashJar = tasks.register('prepareGenerateHelloHashJar', Copy) {
 	from 'ocaml/hello_hash.ml'
-	into temporaryDir
-	ext.copiedOcamlSource = file("$temporaryDir/$source.singleFile.name")
+	final outputDir = project.layout.buildDirectory.dir(name)
+	into outputDir
+	ext.copiedOcamlSource = file("$outputDir/$source.singleFile.name")
 }
 
 final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {

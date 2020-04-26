@@ -37,10 +37,10 @@ tasks.named('run') {
 	args = ['-sourceDir', project(javaTestData).sourceSets.test.java.srcDirs.find(), '-mainClass', 'LArray1']
 
 	// log output to file, although we don't validate it
-	final outFile = file("$temporaryDir/stdout-and-stderr.log")
+	final outFile = project.layout.buildDirectory.file 'SourceDirCallGraph.log'
 	outputs.file outFile
 	doFirst {
-		final fileStream = outFile.newOutputStream()
+		final fileStream = outFile.get().asFile.newOutputStream()
 		standardOutput fileStream
 		errorOutput fileStream
 	}

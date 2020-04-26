@@ -197,7 +197,7 @@ if (isWindows) {
 		group 'verification'
 
 		inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
-		outputs.file "$temporaryDir/log"
+		outputs.file project.layout.buildDirectory.file('shellcheck.log')
 
 		doFirst {
 			// quietly succeed if "shellcheck" is not available
