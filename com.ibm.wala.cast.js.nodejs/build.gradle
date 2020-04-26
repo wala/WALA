@@ -30,11 +30,11 @@ tasks.register('unpackNodeJSLib', Copy) {
 		}
 	}
 
-	into "${tasks.named('processResources', Copy).get().destinationDir}/core-modules"
+	into "${tasks.named('processTestResources', Copy).get().destinationDir}/core-modules"
 	includeEmptyDirs false
 }
 
-tasks.named('processResources') {
+tasks.named('processTestResources') {
 	dependsOn 'unpackNodeJSLib'
 }
 
