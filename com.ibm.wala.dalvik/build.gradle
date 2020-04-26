@@ -8,7 +8,7 @@ tasks.named('test') {
 
 final downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
-	dest "$temporaryDir/DroidBench_2.0.zip"
+	dest project.layout.buildDirectory.file('DroidBench_2.0.zip')
 	checksum '16726a48329835140e14f18470a1b4a3'
 }
 
@@ -43,7 +43,7 @@ final downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDownload
 	}
 	def archive = "sdk-tools-$sdkOs-3859397.zip"
 	src "https://dl.google.com/android/repository/$archive"
-	dest "$temporaryDir/$archive"
+	dest project.layout.buildDirectory.file(archive)
 	algorithm 'SHA-256'
 }
 

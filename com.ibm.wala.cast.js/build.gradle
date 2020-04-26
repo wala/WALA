@@ -38,7 +38,7 @@ final downloadAjaxslt = tasks.register('downloadAjaxslt', VerifiedDownload) {
 	def version = '0.8.1'
 	def versionedArchive = "ajaxslt-${version}.tar.gz"
 	src "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/$versionedArchive"
-	dest "$temporaryDir/$versionedArchive"
+	dest project.layout.buildDirectory.file(versionedArchive)
 	checksum 'c995abe3310a401bb4db7f28a6409756'
 }
 
@@ -49,7 +49,7 @@ final unpackAjaxslt = tasks.register('unpackAjaxslt', Sync) {
 			relativePath new RelativePath(!directory, newSegments)
 		}
 	}
-	into temporaryDir
+	into project.layout.buildDirectory.dir(name)
 }
 
 tasks.named('processTestResources', Copy) {

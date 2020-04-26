@@ -49,10 +49,10 @@ application {
 					} as CommandLineArgumentProvider)
 
 					// log output to file, although we don't validate it
-					final outFile = file("$temporaryDir/stdout-and-stderr.log")
+					final outFile = project.layout.buildDirectory.file("${name}.log")
 					outputs.file outFile
 					doFirst {
-						final fileStream = new FileOutputStream(outFile)
+						final fileStream = outFile.get().asFile.newOutputStream()
 						standardOutput fileStream
 						errorOutput fileStream
 					}
