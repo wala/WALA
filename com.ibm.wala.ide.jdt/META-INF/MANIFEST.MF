@@ -38,6 +38,6 @@ Export-Package: com.ibm.wala.cast.java.client,
  com.ibm.wala.cast.java.translator.jdt,
  com.ibm.wala.cast.java.translator.jdt.ecj
 Bundle-ClassPath: .,
- target/dependency/com.ibm.wala.cast.java.jar,
- target/dependency/com.ibm.wala.cast.java.ecj.jar
+ build/eclipse-plugin-dependencies/com.ibm.wala.cast.java.jar,
+ build/eclipse-plugin-dependencies/com.ibm.wala.cast.java.ecj.jar
 

@@ -30,3 +30,22 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 }
+
+final copyEclipsePluginDependencies = tasks.register('copyEclipsePluginDependencies', Sync) {
+	[
+		'cast.java',
+		'cast.java.ecj',
+	].each {
+		from project(":com.ibm.wala.$it").tasks.named('jar')
+	}
+	into project.layout.buildDirectory.dir('eclipse-plugin-dependencies')
+	rename "(.*)-${java.util.regex.Pattern.quote(version)}(.*)", '$1$2'
+}
+
+eclipse {
+	synchronizationTasks copyEclipsePluginDependencies
+}
+
+tasks.register('prepareMavenBuild') {
+	dependsOn copyEclipsePluginDependencies
+}
