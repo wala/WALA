@@ -50,5 +50,4 @@ eclipse {
 
 tasks.register('prepareMavenBuild') {
 	dependsOn copyEclipsePluginDependencies
-	dependsOn 'eclipse'
 }

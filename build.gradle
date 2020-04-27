@@ -270,10 +270,6 @@ allprojects {
 	}
 }
 
-tasks.register('prepareMavenBuild') {
-	dependsOn 'eclipse'
-}
-
 
 ////////////////////////////////////////////////////////////////////////
 //
