@@ -40,7 +40,7 @@ final copyEclipsePluginDependencies = tasks.register('copyEclipsePluginDependenc
 	].each {
 		from project(":com.ibm.wala.$it").tasks.named('jar')
 	}
-	into 'target/dependency'
+	into project.layout.buildDirectory.dir('eclipse-plugin-dependencies')
 	rename "(.*)-${java.util.regex.Pattern.quote(version)}(.*)", '$1$2'
 }
 
