@@ -47,3 +47,7 @@ final copyEclipsePluginDependencies = tasks.register('copyEclipsePluginDependenc
 eclipse {
 	synchronizationTasks copyEclipsePluginDependencies
 }
+
+tasks.register('prepareMavenBuild') {
+	dependsOn copyEclipsePluginDependencies
+}
