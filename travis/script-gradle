@@ -8,9 +8,10 @@ case "$(javac -version 2>&1)" in
   (javac\ 1.8.*)
      # ECJ compilation checks only need to run on one operating system
      if [ "${TRAVIS_OS_NAME:-}" = linux ]; then
-       run_gradle -PjavaCompiler=ecj compileJava compileTestJava compileTestFixturesJava compileTestSubjectsJava
+       run_gradle javadoc build publishToMavenLocal
+     else
+       run_gradle javadoc build publishToMavenLocal -PskipJavaUsingEcjTasks
      fi
-     run_gradle javadoc build publishToMavenLocal
      ;;
   (*)
     run_gradle :com.ibm.wala.core:test
