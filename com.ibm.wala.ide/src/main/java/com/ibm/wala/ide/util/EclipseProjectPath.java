@@ -142,7 +142,7 @@ public abstract class EclipseProjectPath<E, P> {
       // may be a corrupted zip file or a directory. ignore it.
       return;
     }
-    if (isPrimordialJarFile()) {
+    if (isPrimordialJarFile(j)) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
       s.add(
           file.isDirectory()
@@ -278,11 +278,12 @@ public abstract class EclipseProjectPath<E, P> {
   }
 
   /**
+   * @param j The jar file in question.
    * @return true if the given jar file should be handled by the Primordial loader. If false, other
    *     provisions should be made to add the jar file to the appropriate component of the
    *     AnalysisScope. Subclasses can override this method.
    */
-  protected boolean isPrimordialJarFile() {
+  protected boolean isPrimordialJarFile(JarFile j) {
     return true;
   }
 
