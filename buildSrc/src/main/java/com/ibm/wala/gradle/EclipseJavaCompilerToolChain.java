@@ -14,11 +14,7 @@ import org.gradle.api.internal.tasks.AbstractJavaToolChain;
  */
 public class EclipseJavaCompilerToolChain extends AbstractJavaToolChain {
 
-  /**
-   * Creates an ECJ tool chain for the given project.
-   *
-
-   */
+  /** Creates an ECJ tool chain for the given project. */
   public EclipseJavaCompilerToolChain(Project project) {
     super(new EclipseJavaCompilerFactory(project), null);
   }

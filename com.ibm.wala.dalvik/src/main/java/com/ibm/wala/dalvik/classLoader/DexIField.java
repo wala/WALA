@@ -77,6 +77,7 @@ public class DexIField implements IField {
    * canonical FieldReference corresponding to this method, construct in the getReference method.
    */
   private FieldReference fieldReference;
+
   private final FieldReference myFieldRef;
 
   private final Atom name;

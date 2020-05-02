@@ -176,7 +176,8 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
   //
   private IMethod macroModel = null;
   //    private IMethod allActivitiesModel = null;
-  private final Map<Selector, IMethod> methods = HashMapFactory.make(); // does not contain macroModel
+  private final Map<Selector, IMethod> methods =
+      HashMapFactory.make(); // does not contain macroModel
 
   public boolean containsMethod(Selector selector) {
     return (((macroModel != null) && macroModel.getSelector().equals(selector))
