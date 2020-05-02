@@ -55,7 +55,8 @@ import org.junit.rules.ErrorCollector;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionAnalysis2EdgeFilterTest {
-  private static final ClassLoader CLASS_LOADER = ExceptionAnalysis2EdgeFilterTest.class.getClassLoader();
+  private static final ClassLoader CLASS_LOADER =
+      ExceptionAnalysis2EdgeFilterTest.class.getClassLoader();
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
 
   private static ClassHierarchy cha;
