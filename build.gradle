@@ -239,7 +239,7 @@ tasks.register('installGitHooks', Copy) {
 }
 
 // run all known linters
-tasks.register('check') {
+final check = tasks.register('check') {
 	group = 'verification'
 	dependsOn(
 			// 'lintGradle',
@@ -250,6 +250,10 @@ tasks.register('check') {
 		// Please fix if you know how!  <https://github.com/wala/WALA/issues/608>
 		dependsOn 'verifyGoogleJavaFormat'
 	}
+}
+
+tasks.register('build') {
+	dependsOn check
 }
 
 
