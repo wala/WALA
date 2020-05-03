@@ -126,8 +126,7 @@ public class SSAValueManager {
   }
 
   /** The main data-structure of the management */
-  private final Map<VariableKey, List<Managed<? extends SSAValue>>> seenTypes =
-      HashMapFactory.make();
+  private final Map<VariableKey, List<Managed<? extends SSAValue>>> seenTypes = HashMapFactory.make();
 
   private final List<SSAValue> unmanaged = new ArrayList<>();
 
