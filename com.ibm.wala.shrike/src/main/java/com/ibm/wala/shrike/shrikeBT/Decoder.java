@@ -81,6 +81,7 @@ public abstract class Decoder implements Constants {
     }
 
     table[OP_pop] = PopInstruction.make(1);
+    table[OP_pop2] = PopInstruction.make(2);
     table[OP_dup] = DupInstruction.make(1, 0);
     table[OP_dup_x1] = DupInstruction.make(1, 1);
     table[OP_swap] = SwapInstruction.make();
@@ -531,9 +532,6 @@ public abstract class Decoder implements Constants {
                   wide ? decodeUShort(index) : (code[index] & 0xFF));
           index += wide ? 2 : 1;
           break;
-        case OP_pop2:
-          i = PopInstruction.make(elemCount(stackWords, stackLen - 1));
-          break;
         case OP_dup_x2:
           i = DupInstruction.make(1, elemCount(stackWords, stackLen - 2));
           break;
@@ -783,7 +781,7 @@ public abstract class Decoder implements Constants {
       byte pushedWords = i.getPushedWordSize();
       if (pushedWords > 0) {
         stackWords[stackLen] = pushedWords;
-        stackLen++;
+        stackLen += pushedWords;
       }
     }
 

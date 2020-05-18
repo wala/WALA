@@ -387,8 +387,9 @@ public class Analyzer {
       } else if (instr instanceof SwapInstruction) {
       } else {
         size -= instr.getPoppedCount();
-        if (instr.getPushedWordSize() > 0) {
-          size++;
+        byte pushedWordSize = instr.getPushedWordSize();
+        if (pushedWordSize > 0) {
+          size += pushedWordSize;
         }
       }
 
@@ -691,9 +692,14 @@ public class Analyzer {
           }
           if (pushed != null) {
             System.arraycopy(curStack, popped, curStack, 1, curStackSize - popped);
-            curStack[0] = Util.getStackType(pushed);
+            String stackType = Util.getStackType(pushed);
+            byte pushedWordSize = Util.getWordSize(stackType);
+            for (int topWordIndex = 0; topWordIndex < pushedWordSize - 1; topWordIndex++) {
+              curStack[topWordIndex] = "TOP";
+            }
+            curStack[pushedWordSize - 1] = stackType;
             instr.visit(localsUpdate); // visit localLoad after pushing
-            curStackSize -= popped - 1;
+            curStackSize -= popped - pushedWordSize;
           } else {
             instr.visit(localsUpdate); // visit localStore before popping
             System.arraycopy(curStack, popped, curStack, 0, curStackSize - popped);

@@ -8,14 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.shrike.shrikeBT;
+package com.ibm.wala.shrikeBT;
 
 /** PopInstructions pop one or two elements off the working stack. */
 public final class PopInstruction extends Instruction {
   private final byte size;
 
-  private PopInstruction(byte size) {
-    super((short) -1);
+  protected PopInstruction(byte size) {
+    super((short) (size >= 1 ? OP_pop + size - 1 : -1));
     this.size = size;
   }
 
