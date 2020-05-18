@@ -365,7 +365,7 @@ public abstract class Compiler implements Constants {
         byte w = instr.getPushedWordSize();
         if (w > 0) {
           stackWords[stackLen] = w;
-          stackLen++;
+          stackLen += w;
           checkStackWordSize(stackWords, stackLen);
         }
       }
@@ -522,10 +522,17 @@ public abstract class Compiler implements Constants {
             int stackLen = stackLenRef[0];
 
             while (count > 0) {
-              code[offset] = (byte) (stackWords[stackLen - 1] == 1 ? OP_pop : OP_pop2);
-              count--;
-              stackLen--;
-              offset++;
+              if (stackWords[stackLen - 1] == OP_pop) {
+                code[offset] = OP_pop;
+                count--;
+                stackLen--;
+                offset++;
+              } else {
+                code[offset] = OP_pop2;
+                count -= 2;
+                stackLen -= 2;
+                offset += 2;
+              }
             }
 
             curOffsetRef[0] = offset;
@@ -1144,7 +1151,7 @@ public abstract class Compiler implements Constants {
             byte w = instr.getPushedWordSize();
             if (w > 0) {
               stackWords[stackLen] = w;
-              stackLen++;
+              stackLen += w;
             }
           }
         } else {
