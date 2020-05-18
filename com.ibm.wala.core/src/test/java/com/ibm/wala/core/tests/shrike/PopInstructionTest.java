@@ -47,7 +47,8 @@ public class PopInstructionTest extends WalaTestCase {
     // Initialize the OfflineInstrumenter loading the class file specified in
     // 'klass' above
     instrumenter = new OfflineInstrumenter();
-    instrumenter.addInputClass(new File(testJarLocation), new File(testJarLocation + "/" + klass + ".class"));
+    instrumenter.addInputClass(
+        new File(testJarLocation), new File(testJarLocation + "/" + klass + ".class"));
     instrumenter.setPassUnmodifiedClasses(false);
     instrumenter.setOutputJar(instrumentedJarLocation.toFile());
     instrumenter.beginTraversal();
@@ -83,12 +84,14 @@ public class PopInstructionTest extends WalaTestCase {
     me.beginPass();
     // Replacing the original pop-Instruction forces shrike to re-write the
     // method instead of just copying the unchanged instructions
-    me.replaceWith(index, new MethodEditor.Patch() {
-      @Override
-      public void emitTo(Output w) {
-        w.emit(popInstruction);
-      }
-    });
+    me.replaceWith(
+        index,
+        new MethodEditor.Patch() {
+          @Override
+          public void emitTo(Output w) {
+            w.emit(popInstruction);
+          }
+        });
     me.applyPatches();
     me.endPass();
 
@@ -126,12 +129,14 @@ public class PopInstructionTest extends WalaTestCase {
     me.beginPass();
     // Replacing the original pop-Instruction forces shrike to re-write the
     // method instead of just copying the unchanged instructions
-    me.replaceWith(index, new MethodEditor.Patch() {
-      @Override
-      public void emitTo(Output w) {
-        w.emit(PopInstruction.make(2));
-      }
-    });
+    me.replaceWith(
+        index,
+        new MethodEditor.Patch() {
+          @Override
+          public void emitTo(Output w) {
+            w.emit(PopInstruction.make(2));
+          }
+        });
     me.applyPatches();
     me.endPass();
 
