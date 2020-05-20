@@ -20,6 +20,7 @@ public class Monitor2 {
   public void incr() { synchronized(this) { i++; } }
 
   public static void main(String[] a) {
+    randomIsolate();
     new Monitor2().incr();
   }
 }

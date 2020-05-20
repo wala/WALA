@@ -19,6 +19,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.ssa.SSAOptions.DefaultValues;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.warnings.Warnings;
@@ -68,9 +70,19 @@ public class SourceDirCallGraph {
     Iterable<Entrypoint> entrypoints =
         Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
     options.setEntrypoints(entrypoints);
+    options
+        .getSSAOptions()
+        .setDefaultValues(
+            new DefaultValues() {
+              @Override
+              public int getDefaultValue(SymbolTable symtab, int valueNumber) {
+                return symtab.getDefaultValue(valueNumber);
+              }
+            });
     // you can dial down reflection handling if you like
     //    options.setReflectionOptions(ReflectionOptions.NONE);
-    IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
+    IAnalysisCacheView cache =
+        new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory(), options.getSSAOptions());
     // CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache, cha, scope,
     // false);
     CallGraphBuilder<?> builder =

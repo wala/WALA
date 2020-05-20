@@ -144,7 +144,17 @@ public abstract class JavaSourceAnalysisEngine
 
   @Override
   public IAnalysisCacheView makeDefaultCache() {
-    return new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
+    return new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory(), getOptions().getSSAOptions());
+  }
+
+  @Override
+  public AnalysisOptions getOptions() {
+    AnalysisOptions options = super.getOptions();
+
+    SSAOptions so = options.getSSAOptions();
+    so.setDefaultValues(SymbolTable::getDefaultValue);
+
+    return options;
   }
 
   @Override

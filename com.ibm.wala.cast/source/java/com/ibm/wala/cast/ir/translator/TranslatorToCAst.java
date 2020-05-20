@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,6 +52,20 @@ public interface TranslatorToCAst {
   public interface WalkContext<C extends WalkContext<C, T>, T> {
 
     WalkContext<C, T> getParent();
+
+    /**
+     * Add a name declaration to this context. For variables or constants, n should be a {@link
+     * CAstNode#DECL_STMT}, and the initialization of the variable (if any) may occur in a separate
+     * assignment. For functions, n should be a {@link CAstNode#FUNCTION_STMT}, including the
+     * function body.
+     */
+    default void addNameDecl(CAstNode n) {
+      getParent().addNameDecl(n);
+    }
+
+    default List<CAstNode> getNameDecls() {
+      return getParent().getNameDecls();
+    }
 
     /**
      * get a mapping from CAstNodes to the scoped entities (e.g. functions or local classes)
@@ -109,6 +124,11 @@ public interface TranslatorToCAst {
     public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       assert false;
       return Collections.emptyMap();
+    }
+
+    @Override
+    public List<CAstNode> getNameDecls() {
+      return null;
     }
 
     @Override

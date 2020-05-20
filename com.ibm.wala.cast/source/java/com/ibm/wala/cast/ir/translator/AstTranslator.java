@@ -4712,10 +4712,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   private static boolean isSimpleSwitch(
       CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
+    boolean hasCase = false;
     CAstControlFlowMap ctrl = context.getControlFlow();
     Collection<Object> caseLabels = ctrl.getTargetLabels(n);
     for (Object x : caseLabels) {
       if (x == CAstControlFlowMap.SWITCH_DEFAULT) continue;
+
+      hasCase = true;
 
       CAstNode xn = (CAstNode) x;
       if (xn.getKind() == CAstNode.CONSTANT) {
@@ -4736,7 +4739,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return false;
     }
 
-    return true;
+    return hasCase;
   }
 
   private void doSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {

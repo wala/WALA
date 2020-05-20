@@ -36,7 +36,7 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC);
   }
 
-  @Test
+  // @Test
   public void testRiverRaider() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(
         new URL(
