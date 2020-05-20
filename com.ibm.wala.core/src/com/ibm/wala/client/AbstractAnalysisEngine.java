@@ -86,7 +86,7 @@ public abstract class AbstractAnalysisEngine<
   private AnalysisOptions options;
 
   /** A cache of IRs and stuff */
-  private IAnalysisCacheView cache = makeDefaultCache();
+  private IAnalysisCacheView cache = null;
 
   /** The standard J2SE libraries to analyze */
   protected Module[] j2seLibs;
@@ -290,6 +290,9 @@ public abstract class AbstractAnalysisEngine<
   }
 
   public IAnalysisCacheView getCache() {
+    if (cache == null) {
+      cache = makeDefaultCache();
+    }
     return cache;
   }
 
