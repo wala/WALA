@@ -278,6 +278,21 @@ allprojects {
 
 ////////////////////////////////////////////////////////////////////////
 //
+//  IntelliJ IDEA IDE integration
+//
+
+subprojects { subproject ->
+	apply plugin: 'idea'
+
+	idea.module {
+		// workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
+		excludeDirs += file('bin')
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
 //  helpers for building native CAst components
 //
 
