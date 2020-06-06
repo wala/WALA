@@ -229,6 +229,13 @@ googleJavaFormat {
 
 tasks.named('verifyGoogleJavaFormat') {
 	group 'verification'
+
+	// workaround for <https://github.com/sherter/google-java-format-gradle-plugin/issues/43>
+	final stampFile = project.layout.buildDirectory.file(name)
+	outputs.file stampFile
+	doLast {
+		stampFile.get().asFile.text = ''
+	}
 }
 
 // install Java reformatter as git pre-commit hook
