@@ -103,7 +103,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.util.ArrayList;
@@ -112,7 +111,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.TreeMap;
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.analysis.ClassPath;
@@ -121,6 +123,7 @@ import org.jf.dexlib2.analysis.MethodAnalyzer;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.TryBlock;
+import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.debug.LineNumber;
 import org.jf.dexlib2.iface.instruction.SwitchPayload;
 import org.jf.dexlib2.iface.instruction.TwoRegisterInstruction;
@@ -557,25 +560,26 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     return getReference().getName();
   }
 
-  private Map<Integer, Integer> sourceLines = null;
+  private NavigableMap<Integer, Integer> sourceLines = null;
 
   @Override
   public int getLineNumber(int bcIndex) {
     if (sourceLines == null
         && eMethod.getImplementation() != null
         && eMethod.getImplementation().getDebugItems() != null) {
-      sourceLines = HashMapFactory.make();
-      eMethod
-          .getImplementation()
-          .getDebugItems()
-          .forEach(
-              (dbg) -> {
-                if (dbg.getDebugItemType() == DebugItemType.LINE_NUMBER) {
-                  sourceLines.put(dbg.getCodeAddress(), ((LineNumber) dbg).getLineNumber());
-                }
-              });
+      sourceLines = new TreeMap<>();
+      int lineNumber = -1;
+      for (DebugItem dbg : eMethod.getImplementation().getDebugItems()) {
+        if (dbg.getDebugItemType() == DebugItemType.LINE_NUMBER) {
+          sourceLines.put(dbg.getCodeAddress(), lineNumber = ((LineNumber) dbg).getLineNumber());
+        } else if (dbg.getDebugItemType() == DebugItemType.ADVANCE_LINE) {
+          assert lineNumber != -1;
+          sourceLines.put(dbg.getCodeAddress(), lineNumber++);
+        }
+      }
     }
-    return sourceLines.getOrDefault(bcIndex, -1);
+    Entry<Integer, Integer> fe = sourceLines.floorEntry(bcIndex);
+    return fe != null ? fe.getValue() : -1;
   }
 
   /*

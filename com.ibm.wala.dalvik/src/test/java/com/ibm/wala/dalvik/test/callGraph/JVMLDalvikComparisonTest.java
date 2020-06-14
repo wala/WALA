@@ -165,15 +165,15 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
                   }
                 }
 
-                assert jlines.intersection(alines).size() == alines.size();
+                assert alines.size() > 0 : "no debug info";
               }
             }
           }
         });
 
     IntSet both = ajlines.intersection(aalines);
-    assert both.size() == aalines.size();
-    assert both.size() >= .8 * ajlines.size() : ajlines + " " + aalines;
+    assert both.size() >= .8 * ajlines.size()
+        : "inconsistent debug info: " + ajlines + " " + aalines;
   }
 
   private static boolean checkEdgeDiff(
