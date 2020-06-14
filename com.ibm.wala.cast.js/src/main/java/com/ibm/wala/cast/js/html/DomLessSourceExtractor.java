@@ -316,14 +316,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
   @Override
   public Set<MappedSourceModule> extractSources(
-      URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
+      URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver, Reader inputStreamReader)
       throws IOException, Error {
 
     IGeneratorCallback htmlCallback;
-    try (Reader inputStreamReader = WebUtil.getStream(entrypointUrl)) {
-      htmlCallback = createHtmlCallback(entrypointUrl, urlResolver);
-      htmlParser.parse(entrypointUrl, inputStreamReader, htmlCallback, entrypointUrl.getFile());
-    }
+    htmlCallback = createHtmlCallback(entrypointUrl, urlResolver);
+    htmlParser.parse(entrypointUrl, inputStreamReader, htmlCallback, entrypointUrl.getFile());
 
     SourceRegion finalRegion = new SourceRegion();
     htmlCallback.writeToFinalRegion(finalRegion);
@@ -378,8 +376,10 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     URL entrypointUrl = new URL(args[0]);
     IHtmlParser htmlParser = new JerichoHtmlParser();
     IUrlResolver urlResolver = new IdentityUrlResolver();
+    @SuppressWarnings("resource")
     Set<MappedSourceModule> res =
-        domLessScopeGenerator.extractSources(entrypointUrl, htmlParser, urlResolver);
+        domLessScopeGenerator.extractSources(
+            entrypointUrl, htmlParser, urlResolver, WebUtil.getStream(entrypointUrl));
     MappedSourceModule entry = res.iterator().next();
     System.out.println(entry);
     System.out.println(entry.getMapping());

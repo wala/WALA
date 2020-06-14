@@ -33,16 +33,25 @@ public class WebUtil {
     WebUtil.factory = factory;
   }
 
+  public static Pair<Set<MappedSourceModule>, File> extractScriptFromHTML(
+      URL url, Supplier<JSSourceExtractor> fSourceExtractor) throws Error {
+    try (Reader r = getStream(url)) {
+      return extractScriptFromHTML(url, fSourceExtractor, r);
+    } catch (IOException e) {
+      throw new RuntimeException("trouble with " + url, e);
+    }
+  }
+
   /**
    * @return a pair (S,F), where S is a set of extracted sources, and F is the temp file holding the
    *     combined sources (or {@code null} if no such file exists)
    */
   public static Pair<Set<MappedSourceModule>, File> extractScriptFromHTML(
-      URL url, Supplier<JSSourceExtractor> fSourceExtractor) throws Error {
+      URL url, Supplier<JSSourceExtractor> fSourceExtractor, Reader r) throws Error {
     try {
       JSSourceExtractor extractor = fSourceExtractor.get();
       Set<MappedSourceModule> sources =
-          extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
+          extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver(), r);
       return Pair.make(sources, extractor.getTempFile());
     } catch (IOException e) {
       throw new RuntimeException("trouble with " + url, e);
