@@ -136,18 +136,22 @@ public class BFSPathFinder<T> {
     }
   }
 
+  private LinkedList<T> Q = null;
+  private HashMap<Object, T> history = null;
+
   /**
    * @return a List of nodes that specifies the first path found from a root to a node accepted by
    *     the filter. Returns null if no path found.
    */
   public List<T> find() {
-
-    LinkedList<T> Q = new LinkedList<>();
-    HashMap<Object, T> history = HashMapFactory.make();
-    while (roots.hasNext()) {
-      T next = roots.next();
-      Q.addLast(next);
-      history.put(next, null);
+    if (Q == null) {
+      Q = new LinkedList<>();
+      history = HashMapFactory.make();
+      while (roots.hasNext()) {
+        T next = roots.next();
+        Q.addLast(next);
+        history.put(next, null);
+      }
     }
     while (!Q.isEmpty()) {
       T N = Q.removeFirst();
