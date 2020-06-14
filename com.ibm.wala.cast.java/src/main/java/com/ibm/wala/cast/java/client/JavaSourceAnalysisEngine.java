@@ -12,6 +12,7 @@ package com.ibm.wala.cast.java.client;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
+import com.ibm.wala.cast.java.ipa.callgraph.AstJavaZeroXCFABuilder;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
@@ -144,7 +145,17 @@ public abstract class JavaSourceAnalysisEngine
 
   @Override
   public IAnalysisCacheView makeDefaultCache() {
-    return new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
+    return new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory(), getOptions().getSSAOptions());
+  }
+
+  @Override
+  public AnalysisOptions getOptions() {
+    AnalysisOptions options = super.getOptions();
+
+    SSAOptions so = options.getSSAOptions();
+    so.setDefaultValues(SymbolTable::getDefaultValue);
+
+    return options;
   }
 
   @Override
@@ -160,7 +171,7 @@ public abstract class JavaSourceAnalysisEngine
   }
 
   @Override
-  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
+  protected AstJavaZeroXCFABuilder getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
   }
