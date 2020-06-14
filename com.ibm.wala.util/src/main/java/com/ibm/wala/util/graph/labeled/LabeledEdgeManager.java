@@ -48,9 +48,11 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * An object which tracks labeled edges in a graph.
@@ -75,6 +77,11 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    * @return an Iterator over the immediate predecessor nodes of this Node.
    */
   public Iterator<T> getPredNodes(T N, U label);
+
+  default Iterator<T> getPredNodes(T N, Predicate<U> pred) {
+    return new FilterIterator<>(
+        getPredNodes(N), (p) -> getEdgeLabels(p, N).stream().anyMatch(pred));
+  }
 
   /** @return the labels on edges whose destination is N */
   public Iterator<? extends U> getPredLabels(T N);
