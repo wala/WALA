@@ -167,7 +167,7 @@ public class CAstImpl implements CAst {
 
     @Override
     public int hashCode() {
-      return getKind() * toString().hashCode();
+      return System.identityHashCode(this) * ((value == null) ? 1 : System.identityHashCode(value));
     }
   }
 
