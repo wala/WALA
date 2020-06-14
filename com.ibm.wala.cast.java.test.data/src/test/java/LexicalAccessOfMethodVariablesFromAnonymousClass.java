@@ -5,7 +5,7 @@ public class LexicalAccessOfMethodVariablesFromAnonymousClass {
   }
 
   public void run(final String var) {
-    new Object() {
+    Object o = new Object() {
       @Override
       public int hashCode() {
         try { }
@@ -16,6 +16,7 @@ public class LexicalAccessOfMethodVariablesFromAnonymousClass {
         return 0;
       }
     };
+    o.hashCode();
   }
 
 }
