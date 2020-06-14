@@ -83,6 +83,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -905,6 +906,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // Polyglot comment: Presumably the MethodContext's parent is a ClassContext,
     // and he has the list of initializers. Hopefully the following
     // will glue that stuff in the right place in any constructor body.
+
+    if (context.getNameDecls() != null && !context.getNameDecls().isEmpty()) {
+      // new first statement will be a block declaring all names.
+      mdast =
+          fFactory.makeNode(
+              CAstNode.BLOCK_STMT,
+              context.getNameDecls().size() == 1
+                  ? context.getNameDecls().iterator().next()
+                  : fFactory.makeNode(CAstNode.BLOCK_STMT, context.getNameDecls()),
+              mdast);
+    }
 
     Set<CAstAnnotation> annotations = null;
     if (n.resolveBinding() != null) {
@@ -2683,15 +2695,50 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return ast;
   }
 
+  private int ceCounter = 0;
+
   private CAstNode visit(ConditionalExpression n, WalkContext context) {
+    String var = "ceTemporary" + ceCounter++;
+    CAstNode declNode =
+        makeNode(
+            context,
+            fFactory,
+            n,
+            CAstNode.DECL_STMT,
+            fFactory.makeConstant(
+                new InternalCAstSymbol(
+                    var,
+                    fTypeDict.getCAstTypeFor(n.getThenExpression().resolveTypeBinding()),
+                    true)));
+
+    context.addNameDecl(declNode);
+
     return makeNode(
         context,
         fFactory,
         n,
-        CAstNode.IF_EXPR,
-        visitNode(n.getExpression(), context),
-        visitNode(n.getThenExpression(), context),
-        visitNode(n.getElseExpression(), context));
+        CAstNode.BLOCK_EXPR,
+        makeNode(
+            context,
+            fFactory,
+            n,
+            CAstNode.IF_STMT,
+            visitNode(n.getExpression(), context),
+            makeNode(
+                context,
+                fFactory,
+                n,
+                CAstNode.ASSIGN,
+                makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(var)),
+                visitNode(n.getThenExpression(), context)),
+            makeNode(
+                context,
+                fFactory,
+                n,
+                CAstNode.ASSIGN,
+                makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(var)),
+                visitNode(n.getElseExpression(), context))),
+        makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(var)));
   }
 
   private CAstNode visit(PostfixExpression n, WalkContext context) {
@@ -4138,6 +4185,18 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // constructor did take: pd.procedureInstance(), memberEntities, context
       super(parent);
       fEntities = entities;
+    }
+
+    private final Vector<CAstNode> initializers = new Vector<>();
+
+    @Override
+    public void addNameDecl(CAstNode v) {
+      initializers.add(v);
+    }
+
+    @Override
+    public List<CAstNode> getNameDecls() {
+      return initializers;
     }
 
     @Override

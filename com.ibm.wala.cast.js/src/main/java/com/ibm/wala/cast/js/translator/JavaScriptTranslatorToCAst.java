@@ -30,20 +30,6 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       return getParent().script();
     }
 
-    /**
-     * Add a name declaration to this context. For variables or constants, n should be a {@link
-     * CAstNode#DECL_STMT}, and the initialization of the variable (if any) may occur in a separate
-     * assignment. For functions, n should be a {@link CAstNode#FUNCTION_STMT}, including the
-     * function body.
-     */
-    default void addNameDecl(CAstNode n) {
-      getParent().addNameDecl(n);
-    }
-
-    default List<CAstNode> getNameDecls() {
-      return getParent().getNameDecls();
-    }
-
     default int setOperation(T node) {
       return getParent().setOperation(node);
     }
