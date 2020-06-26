@@ -38,8 +38,13 @@
 package bugfixes;
 
 public class VarDeclInSwitch {
-	static int y = 7;
+	private int y = 7;
+
 	public static void main(String args[]) {
+		new VarDeclInSwitch().run(args);
+	}
+
+	public void run(String args[]) {
 		int x = 5;
 		x = x + x;
 		switch ( x ) {

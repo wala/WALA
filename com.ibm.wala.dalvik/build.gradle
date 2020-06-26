@@ -127,7 +127,7 @@ dependencies {
 	)
 	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testImplementation(
-			'com.android.tools:r8:1.6.84',
+			'com.android.tools:r8:2.0.88',
 			'junit:junit:4.13',
 			'org.osgi:org.osgi.core:6.0.0',
 			'org.smali:dexlib2:2.4.0',

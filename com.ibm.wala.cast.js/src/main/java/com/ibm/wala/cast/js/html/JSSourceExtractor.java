@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.html;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Set;
 
@@ -29,14 +30,22 @@ public abstract class JSSourceExtractor {
 
   public static boolean USE_TEMP_NAME = true;
 
-  public abstract Set<MappedSourceModule> extractSources(
-      URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
-      throws IOException, Error;
-
   /**
    * Returns the temporary file created by a call to {@link #extractSources(URL, IHtmlParser,
-   * IUrlResolver)} which holds all the discovered JS source. If no such file exists, returns {@code
-   * null}
+   * IUrlResolver, Reader)} which holds all the discovered JS source. If no such file exists,
+   * returns {@code null}
    */
   public abstract File getTempFile();
+
+  public Set<MappedSourceModule> extractSources(
+      URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
+      throws IOException, Error {
+    try (Reader r = WebUtil.getStream(entrypointUrl)) {
+      return extractSources(entrypointUrl, htmlParser, urlResolver, r);
+    }
+  }
+
+  public abstract Set<MappedSourceModule> extractSources(
+      URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver, Reader reader)
+      throws IOException, Error;
 }

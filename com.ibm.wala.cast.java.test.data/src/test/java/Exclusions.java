@@ -25,7 +25,12 @@ public class Exclusions {
     }
   }
 
-  public static void main(String[] args) {
+  public void run(String[] args) {
     int i = new Included(5).doit();
   }
+
+  public static void main(String[] args) {
+    new Exclusions().run(args);
+  }
+
 }

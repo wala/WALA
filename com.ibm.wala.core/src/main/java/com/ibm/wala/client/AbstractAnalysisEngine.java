@@ -86,7 +86,7 @@ public abstract class AbstractAnalysisEngine<
   private AnalysisOptions options;
 
   /** A cache of IRs and stuff */
-  private IAnalysisCacheView cache = makeDefaultCache();
+  private IAnalysisCacheView cache = null;
 
   /** The standard J2SE libraries to analyze */
   protected Module[] j2seLibs;
@@ -108,16 +108,16 @@ public abstract class AbstractAnalysisEngine<
 
   private EntrypointBuilder entrypointBuilder = this::makeDefaultEntrypoints;
 
-  protected abstract CallGraphBuilder<I> getCallGraphBuilder(
+  protected abstract X getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 
-  protected CallGraphBuilder<I> buildCallGraph(
+  protected X buildCallGraph(
       IClassHierarchy cha,
       AnalysisOptions options,
       boolean savePointerAnalysis,
       IProgressMonitor monitor)
       throws IllegalArgumentException, CancelException {
-    CallGraphBuilder<I> builder = getCallGraphBuilder(cha, options, cache);
+    X builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options, monitor);
 
@@ -273,8 +273,7 @@ public abstract class AbstractAnalysisEngine<
   /**
    * Builds the call graph for the analysis scope in effect, using all of the given entry points.
    */
-  public CallGraphBuilder<? super I> defaultCallGraphBuilder()
-      throws IllegalArgumentException, IOException {
+  public X defaultCallGraphBuilder() throws IllegalArgumentException, IOException {
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
@@ -290,6 +289,9 @@ public abstract class AbstractAnalysisEngine<
   }
 
   public IAnalysisCacheView getCache() {
+    if (cache == null) {
+      cache = makeDefaultCache();
+    }
     return cache;
   }
 

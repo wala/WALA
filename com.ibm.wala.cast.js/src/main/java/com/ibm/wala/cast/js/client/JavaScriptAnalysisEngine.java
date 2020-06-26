@@ -20,6 +20,7 @@ import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
+import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
@@ -194,7 +195,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
       extends JavaScriptAnalysisEngine<InstanceKey> {
 
     @Override
-    protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
+    protected JSZeroOrOneXCFABuilder getCallGraphBuilder(
         IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
       return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha);
     }
