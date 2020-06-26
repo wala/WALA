@@ -228,12 +228,6 @@ public abstract class Decoder implements Constants {
       if (stackPtr < 1) {
         throw new InvalidBytecodeException("Stack underflow");
       }
-
-      if (stack[stackPtr - 1] != 1) {
-        throw new InvalidBytecodeException(
-            "Trying to manipulate a pair of " + "one-word items but one of them is two words");
-      }
-
       return 2;
     }
   }
