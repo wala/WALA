@@ -103,11 +103,25 @@ public final class Verifier extends Analyzer {
     }
 
     private void checkStackSubtype(int i, String t) {
-      if (!isSubtypeOf(curStack[i], Util.getStackType(t))) {
+      // The stack indexes do not exactly match the parameter index since two-word elements
+      // need two elements on the stack. The given index "i" is the logical position of the
+      // parameter to verify.
+      // Subsequently calculate the stack index given the logical parameter index
+      int j, indexesCounted = 0;
+      for (j = 0; j < curStack.length && indexesCounted <= i; j++) {
+        if (curStack[j].contentEquals("TOP")) {
+          continue;
+        } else {
+          indexesCounted++;
+        }
+      }
+      j--;
+
+      if (!isSubtypeOf(curStack[j], Util.getStackType(t))) {
         ex =
             new FailureException(
                 curIndex,
-                "Expected type " + t + " at stack " + i + ", got " + curStack[i],
+                "Expected type " + t + " at stack " + j + ", got " + curStack[j],
                 curPath);
       }
     }
