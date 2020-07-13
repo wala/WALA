@@ -60,6 +60,11 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
   }
 
   @Override
+  public int getPoppedWordSize() {
+    return Util.getWordSize(getType());
+  }
+
+  @Override
   public String getPushedType(String[] types) {
     return getType();
   }

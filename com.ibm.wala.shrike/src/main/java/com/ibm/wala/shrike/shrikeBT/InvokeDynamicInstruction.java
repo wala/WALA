@@ -66,6 +66,12 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   }
 
   @Override
+  public final int getPoppedWordSize() {
+    return (getInvocationCode().equals(Dispatch.STATIC) ? 0 : 1)
+        + Util.getParamsWordSize(getMethodSignature());
+  }
+
+  @Override
   public final String getPushedType(String[] types) {
     String t = Util.getReturnType(getMethodSignature());
     if (t.equals(Constants.TYPE_void)) {

@@ -360,7 +360,7 @@ public abstract class Compiler implements Constants {
         stackWords[stackLen - 2] = stackWords[stackLen - 1];
         stackWords[stackLen - 1] = b;
       } else {
-        stackLen -= instr.getPoppedCount();
+        stackLen -= instr.getPoppedWordSize();
 
         byte w = instr.getPushedWordSize();
         if (w > 0) {
@@ -547,11 +547,11 @@ public abstract class Compiler implements Constants {
 
             int sizeWords = stackWords[stackLen - 1];
             if (size == 2) {
-              sizeWords += stackWords[stackLen - 2];
+              sizeWords = stackWords[stackLen - 2];
             }
             int deltaWords = delta == 0 ? 0 : stackWords[stackLen - 1 - size];
             if (delta == 2) {
-              deltaWords += stackWords[stackLen - 1 - size - 1];
+              deltaWords = stackWords[stackLen - 1 - size - 1];
             }
             if (sizeWords > 2 || deltaWords > 2) {
               throw new IllegalArgumentException("Invalid dup size");
@@ -1146,7 +1146,7 @@ public abstract class Compiler implements Constants {
             stackWords[stackLen - 1] = stackWords[stackLen - 2];
             stackWords[stackLen - 2] = b;
           } else {
-            stackLen -= instr.getPoppedCount();
+            stackLen -= instr.getPoppedWordSize();
 
             byte w = instr.getPushedWordSize();
             if (w > 0) {

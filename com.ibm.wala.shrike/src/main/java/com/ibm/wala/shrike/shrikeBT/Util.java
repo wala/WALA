@@ -8,9 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.shrike.shrikeBT;
+package com.ibm.wala.shrikeBT;
 
-import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.shrikeBT.analysis.Analyzer;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.io.InputStream;
@@ -274,7 +275,12 @@ public final class Util {
       int len = getTypeLength(type, index);
       String t = getStackType(type.substring(index, index + len));
 
-      r[count] = t;
+      if (getWordSize(t) == 2) {
+        r[count] = Analyzer.topType;
+        r[count + 1] = t;
+      } else {
+        r[count] = t;
+      }
       count += getWordSize(t);
       index += len;
     }

@@ -22,19 +22,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
-public class PopInstructionTest extends WalaTestCase {
-  private final String klass = "shrike/PopInstruction";
+public class SingleAndDoubleWordTest extends WalaTestCase {
+  private final String klass = "shrike/SingleAndDoubleWord";
 
   private final String testJarLocation;
   private OfflineInstrumenter instrumenter;
   private Path instrumentedJarLocation;
   private List<ClassInstrumenter> classInstrumenters;
 
-  protected PopInstructionTest(String testJarLocation) {
+  protected SingleAndDoubleWordTest(String testJarLocation) {
     this.testJarLocation = testJarLocation;
   }
 
-  public PopInstructionTest() {
+  public SingleAndDoubleWordTest() {
     this(getClasspathEntry("testSubjects").split(File.pathSeparator)[0]);
   }
 

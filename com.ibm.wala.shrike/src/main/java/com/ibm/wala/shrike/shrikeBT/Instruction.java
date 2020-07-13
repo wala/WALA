@@ -75,10 +75,16 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
     return this;
   }
 
-  /** @return the number of values this instruction pops off the working stack */
+  /** @return the logical number of elements this instruction pops off the working stack */
   @Override
   public int getPoppedCount() {
     return 0;
+  }
+
+  /** @return the number of stack elements (words) this instruction pops off the working stack */
+  @Override
+  public int getPoppedWordSize() {
+    return getPoppedCount();
   }
 
   /** @return the opcode selected for this instruction, or -1 if we don't know it yet */
